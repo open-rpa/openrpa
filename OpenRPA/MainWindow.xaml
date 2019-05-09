@@ -1,0 +1,108 @@
+﻿<Window x:Class="OpenRPA.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenRPA"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded" Closed="Window_Closed"
+        Title="MainWindow" Height="800" Width="1200">
+    <Window.Resources>
+        <local:BindingProxy x:Key="proxy" Data="{Binding}" />
+    </Window.Resources>
+    <DockPanel>
+        <Ribbon DockPanel.Dock="Top" Margin="0,-22,0,0">
+
+            <Ribbon.ApplicationMenu>
+                <RibbonApplicationMenu Visibility="Collapsed">
+                </RibbonApplicationMenu>
+            </Ribbon.ApplicationMenu>
+            <!-- 
+            -->
+            <!-- 
+
+            <Ribbon.ApplicationMenu>
+                <RibbonApplicationMenu SmallImageSource="/OpenRPA;component/Resources/Buttons/Export.png">
+
+                    <RibbonApplicationMenu.AuxiliaryPaneContent>
+                        <RibbonGallery ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <RibbonGalleryCategory MaxColumnCount="1">
+                                <RibbonGalleryItem x:Name="GalleryItem1" Content="Application menu content" 
+                                MouseOverBackground="Transparent"
+                                MouseOverBorderBrush="Transparent"
+                                CheckedBackground="Transparent"
+                                CheckedBorderBrush="Transparent"
+                                               />
+                                <RibbonGalleryItem>
+                                    <Hyperlink x:Name="hl1" >
+                                        <Run Text="http://www.bing.com"/>
+                                    </Hyperlink>
+                                </RibbonGalleryItem>
+                            </RibbonGalleryCategory>
+                        </RibbonGallery>
+                    </RibbonApplicationMenu.AuxiliaryPaneContent>
+                    <RibbonApplicationMenuItem x:Name="menuItem1" Header="Add" ImageSource="/OpenRPA;component/Resources/Buttons/Export.png" />
+                    <RibbonApplicationMenuItem x:Name="menuItem2" Header="Settings" ImageSource="/OpenRPA;component/Resources/Buttons/Export.png"/>
+
+                </RibbonApplicationMenu>
+            </Ribbon.ApplicationMenu>
+                        -->
+
+            <RibbonTab Header="General">
+                <RibbonGroup Header="Files">
+                    <RibbonButton Label="New" LargeImageSource="/OpenRPA;component/Resources/Buttons/New.png" 
+                                  Command="{Binding Data.NewCommand, Source={StaticResource proxy}}" 
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" KeyTip="N" />
+                    <RibbonButton Label="Save" LargeImageSource="/OpenRPA;component/Resources/Buttons/Save.png" 
+                                  Command="{Binding Data.SaveCommand, Source={StaticResource proxy}}" 
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" KeyTip="S" />
+                    <RibbonButton Label="Open" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
+                                  Command="{Binding Data.OpenCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                    <RibbonButton Label="Delete" LargeImageSource="/OpenRPA;component/Resources/Buttons/Delete.png" 
+                                  Command="{Binding Data.DeleteCommand, Source={StaticResource proxy}}" 
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
+                </RibbonGroup>
+                <RibbonGroup Header="Runtime">
+                    <RibbonButton Label="Play" LargeImageSource="/OpenRPA;component/Resources/Buttons/Play.png" 
+                                  Command="{Binding Data.PlayCommand, Source={StaticResource proxy}}" 
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}"/>
+                    <RibbonButton Label="Stop" LargeImageSource="/OpenRPA;component/Resources/Buttons/Stop.png" 
+                                  Command="{Binding Data.StopCommand, Source={StaticResource proxy}}" 
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
+                    <RibbonButton Label="Record" LargeImageSource="/OpenRPA;component/Resources/Buttons/Record.png"
+                                  Command="{Binding Data.RecordCommand, Source={StaticResource proxy}}" 
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
+                </RibbonGroup>
+            </RibbonTab>
+            <!-- 
+            <RibbonTab x:Name="rbnTab2" Header="Tab2">
+                <RibbonGroup x:Name="rbnGr3" Header="Other Group">
+                    <RibbonButton x:Name="btnRibbon5" Label="Play" LargeImageSource="/OpenRPA;component/Resources/Buttons/Export.png" />
+                    <RibbonButton x:Name="btnRibbon6" Label="List" LargeImageSource="/OpenRPA;component/Resources/Buttons/Export.png" />
+                </RibbonGroup>
+                <RibbonGroup x:Name="rbnGr4" Header="What a group">
+                    <RibbonButton x:Name="btnRibbon7" Label="Sleep" LargeImageSource="/OpenRPA;component/Resources/Buttons/Export.png" />
+                    <RibbonButton x:Name="btnRibbon8" Label="Add" LargeImageSource="/OpenRPA;component/Resources/Buttons/Export.png" />
+                </RibbonGroup>
+            </RibbonTab>
+            -->
+        </Ribbon>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="21"/>
+            </Grid.RowDefinitions>
+
+            <TabControl x:Name="mainTabControl">
+
+            </TabControl>
+
+            <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="1" Height="21" Grid.ColumnSpan="3" Background="Gray">
+                <StatusBarItem x:Name="LabelStatusBar" Foreground="White" FontSize="12">
+                </StatusBarItem>
+            </StatusBar>
+        </Grid>
+    </DockPanel>
+
+</Window>

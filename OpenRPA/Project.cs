@@ -1,0 +1,120 @@
+﻿using Newtonsoft.Json;
+using OpenRPA.Interfaces.entity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace OpenRPA
+{
+    public class Project : apibase
+    {
+        public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
+
+        [JsonIgnore]
+        public string Filepath { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        //public string Name { get; set; }
+        //public string Filename { get; set; }
+        //[JsonIgnore]
+        //public List<Workflow> Workflows { get; set; }
+        [JsonIgnore]
+        public System.Collections.ObjectModel.ObservableCollection<Workflow> Workflows { get; set; }
+        [JsonIgnore]
+        public string Path
+        {
+            get
+            {
+                return System.IO.Path.GetDirectoryName(Filepath);
+            }
+        }
+        public static Project[] loadProjects(string Path)
+        {
+            var ProjectFiles = System.IO.Directory.EnumerateFiles(Path, "*.rpaproj", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
+            var Projects = new List<Project>();
+            foreach (string file in ProjectFiles) Projects.Add(FromFile(file));
+            return Projects.ToArray();
+        }
+        public static Project FromFile(string Filepath)
+        {
+            Project project = JsonConvert.DeserializeObject<Project>(System.IO.File.ReadAllText(Filepath));
+            project.Filepath = Filepath;
+            project.Filename = System.IO.Path.GetFileName(Filepath);
+            if (string.IsNullOrEmpty(project.name)) { project.name = System.IO.Path.GetFileNameWithoutExtension(Filepath); }
+            project._type = "project";
+            project.Init();
+            return project;
+        }
+        public static async Task<Project> Create(string Path, string Name)
+        {
+            var basePath = System.IO.Path.Combine(Path, Name);
+            var Filepath = System.IO.Path.Combine(Path, Name, Name.Replace(" ", "_").Replace(".", "") + ".rpaproj");
+
+            if (string.IsNullOrEmpty(Filepath))
+            {
+                bool isUnique = false; int counter = 1;
+                while (!isUnique)
+                {
+                    if (counter == 1)
+                    {
+                        Filepath = System.IO.Path.Combine(Path, Name, Name.Replace(" ", "_").Replace(".", "") + ".rpaproj");
+                    }
+                    else
+                    {
+                        Filepath = System.IO.Path.Combine(Path, Name, Name.Replace(" ", "_").Replace(".", "") + counter.ToString() +  ".rpaproj");
+                    }
+                    if (!System.IO.File.Exists(Filepath)) isUnique = true;
+                    counter++;
+                }
+            }
+            if (!System.IO.Directory.Exists(basePath)) System.IO.Directory.CreateDirectory(basePath);
+            if (System.IO.Directory.GetFiles(basePath).Count() > 0) throw new Exception(basePath + " is not empty");
+            Project p = new Project();
+            p._type = "project";
+            p.name = Name;
+            p.Filename = System.IO.Path.GetFileName(Filepath);
+            p.Filepath = Filepath;
+            p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
+            p.Workflows.Add(Workflow.Create(p, "New Workflow"));
+            await p.Save();
+            return p;
+        }
+        public void Init()
+        {
+            var Path = System.IO.Path.GetDirectoryName(Filepath);
+            var ProjectFiles = System.IO.Directory.EnumerateFiles(Path, "*.xaml", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
+            Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
+            foreach (string file in ProjectFiles) Workflows.Add(Workflow.FromFile(this, file));
+            //return Workflows.ToArray();
+        }
+        public async Task Save()
+        {
+            var basePath = System.IO.Path.GetDirectoryName(Filepath);
+            if (!System.IO.Directory.Exists(basePath)) System.IO.Directory.CreateDirectory(basePath);
+            System.IO.File.WriteAllText(Filepath, JsonConvert.SerializeObject(this));
+            foreach(var workflow in Workflows)
+            {
+                await workflow.Save();
+            }
+            if (global.webSocketClient == null) return;
+            if (string.IsNullOrEmpty(_id))
+            {
+                await global.webSocketClient.InsertOne("openrpa", this);
+            }
+            else
+            {
+                await global.webSocketClient.UpdateOne("openrpa", this);
+            }
+        }
+        public async Task Delete()
+        {
+            foreach (var wf in Workflows.ToList()) { await wf.Delete(); }
+            var Files = System.IO.Directory.EnumerateFiles(Path, "*.*", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
+            foreach (var f in Files) System.IO.File.Delete(f);
+            if (!string.IsNullOrEmpty(_id))
+            {
+                await global.webSocketClient.DeleteOne("openrpa", this._id);
+            }
+        }
+    }
+}

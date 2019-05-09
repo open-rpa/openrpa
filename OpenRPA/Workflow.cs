@@ -1,0 +1,175 @@
+﻿using Newtonsoft.Json;
+using OpenRPA.Interfaces.entity;
+using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace OpenRPA
+{
+    public class Workflow : apibase
+    {
+        public string Xaml { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public List<workflowparameter> Parameters { get { return GetProperty<List<workflowparameter>>(); } set { SetProperty(value); } }
+        public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
+
+        [JsonIgnore]
+        public System.Collections.ObjectModel.ObservableCollection<WorkflowInstance> Instances {
+            get { if (_Instances == null) _Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>(); return _Instances; }
+            set { _Instances = value; }
+        }
+        [JsonIgnore]
+        public Action<Workflow, WorkflowInstance> idleOrComplete { get; set; }
+        [JsonIgnore]
+        public Project Project { get; set; }
+        private System.Collections.ObjectModel.ObservableCollection<WorkflowInstance> _Instances;
+        public static Workflow FromFile(Project project, string Filename)
+        {
+            var result = new Workflow();
+            result._type = "workflow";
+            result.Project = project;
+            result.Filename = Filename;
+            result.name = System.IO.Path.GetFileNameWithoutExtension(Filename);
+            result.Xaml = System.IO.File.ReadAllText(Filename);
+            result.Parameters = new List<workflowparameter>();
+            result.Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>();
+            return result;
+        }
+        public static Workflow Create(Project Project, string Name)
+        {
+            Workflow workflow = new Workflow { Project = Project, name = Name };
+            bool isUnique = false; int counter = 1;
+            while (!isUnique)
+            {
+                if (counter == 1)
+                {
+                    workflow.Filename = System.IO.Path.Combine(Project.Path, Name.Replace(" ", "_").Replace(".", "") + ".xaml");
+                }
+                else
+                {
+                    workflow.name = Name + counter.ToString();
+                    workflow.Filename = System.IO.Path.Combine(Project.Path, Name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".xaml");
+                }
+                if (!System.IO.File.Exists(workflow.Filename)) isUnique = true;
+                counter++;
+            }
+            workflow._type = "workflow";
+            workflow.Parameters = new List<workflowparameter>();
+            workflow.Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>();
+            workflow.projectid = Project._id;
+            return workflow;
+        }
+        public async Task Save()
+        {
+            if (string.IsNullOrEmpty(name)) return;
+            if (string.IsNullOrEmpty(Xaml)) return;
+            if (!Project.Workflows.Contains(this)) Project.Workflows.Add(this);
+            
+            if (string.IsNullOrEmpty(Filename))
+            {
+                Filename = UniqueName();
+            }
+            else
+            {
+                var guess = System.IO.Path.Combine(Project.Path, name.Replace(" ", "_").Replace(".", "") + ".xaml");
+                var newName = UniqueName();
+                if(guess== newName && Filename != guess)
+                {
+                    System.IO.File.WriteAllText(guess, Xaml);
+                    System.IO.File.Delete(Filename);
+                    Filename = guess;
+                    return;
+                }
+            }
+            System.IO.File.WriteAllText(Filename, Xaml);
+            if (global.webSocketClient == null) return;
+            projectid = Project._id;
+            if (string.IsNullOrEmpty(_id))
+            {
+                await global.webSocketClient.InsertOne("openrpa", this);
+            } else
+            {
+                await global.webSocketClient.UpdateOne("openrpa", this);
+            }
+        }
+        public async Task Delete()
+        {
+            if (Project.Workflows.Contains(this)) Project.Workflows.Remove(this);
+            if (string.IsNullOrEmpty(Filename)) return;
+            System.IO.File.Delete(Filename);
+            if (!string.IsNullOrEmpty(_id))
+            {
+                await global.webSocketClient.DeleteOne("openrpa", this._id);
+            }
+        }
+        private string UniqueName()
+        {
+            string Filename = "";
+            bool isUnique = false; int counter = 1;
+            while (!isUnique)
+            {
+                if (counter == 1)
+                {
+                    Filename = System.IO.Path.Combine(Project.Path, name.Replace(" ", "_").Replace(".", "") + ".xaml");
+                }
+                else
+                {
+                    Filename = System.IO.Path.Combine(Project.Path, name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".xaml");
+                }
+                if (!System.IO.File.Exists(Filename)) isUnique = true;
+                counter++;
+            }
+            return Filename;
+        }
+
+        [Newtonsoft.Json.JsonIgnore]
+        public System.Activities.Activity Activity
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Xaml)) return null;
+                var activitySettings = new System.Activities.XamlIntegration.ActivityXamlServicesSettings
+                {
+                    CompileExpressions = true
+                };
+                var xamlReaderSettings = new System.Xaml.XamlXmlReaderSettings { LocalAssembly = typeof(Workflow).Assembly };
+                var xamlReader = new System.Xaml.XamlXmlReader(new System.IO.StringReader(Xaml), xamlReaderSettings);
+                var wf = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, activitySettings);
+                return wf;
+            }
+        }
+        public void Run() { Run(new Dictionary<string, object>()); }
+        public void Run(Dictionary<string, object> Parameters)
+        {
+            var instance = WorkflowInstance.Create(this, Parameters);
+            instance.idleOrComplete += onIdleOrComplete;
+            Instances.Add(instance);
+            instance.Run();
+        }
+        public void onIdleOrComplete(WorkflowInstance instance)
+        {
+            Log.Debug("*******************************");
+            Log.Debug(instance.state);
+            if(!string.IsNullOrEmpty(instance.errormessage)) Log.Error(instance.errormessage);
+            Log.Debug("*******************************");
+            idleOrComplete?.Invoke(this, instance);
+        }
+    }
+    public enum workflowparameterdirection
+    {
+        @in = 0,
+        @out = 1,
+        inout = 2,
+    }
+    public class workflowparameter
+    {
+        public string name { get; set; }
+        public string type { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public workflowparameterdirection direction { get; set; }
+    }
+
+}

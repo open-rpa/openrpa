@@ -1,4 +1,4 @@
-﻿using Serilog;
+﻿using OpenRPA.Interfaces;
 using System;
 using System.Activities;
 using System.Activities.Core.Presentation;

@@ -22,23 +22,24 @@ namespace OpenRPA.Interfaces.Selector
     {
         public SelectorModel vm;
         public string pluginname;
-        IRecording plugin = null;
-        public SelectorWindow(string pluginname, treeelement[] treeelements)
+        IPlugin plugin = null;
+        public SelectorWindow(string pluginname)
         {
             InitializeComponent();
             this.pluginname = pluginname;
             plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
             plugin.OnUserAction += Plugin_OnUserAction;
-            vm = new SelectorModel(treeelements, this);
+            vm = new SelectorModel(this);
             DataContext = vm;
         }
-        public SelectorWindow(string pluginname, treeelement[] treeelements, Selector selector)
+        public SelectorWindow(string pluginname, Selector selector)
         {
             InitializeComponent();
             this.pluginname = pluginname;
             plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
             plugin.OnUserAction += Plugin_OnUserAction;
-            vm = new SelectorModel(treeelements, this, selector);
+            var treeelements = plugin.GetRootElements();
+            vm = new SelectorModel(this, selector);
             DataContext = vm;
         }
 
@@ -81,11 +82,13 @@ namespace OpenRPA.Interfaces.Selector
             GenericTools.minimize(this);
         }
 
-        private void Plugin_OnUserAction(IRecording sender, IRecordEvent e)
+        private void Plugin_OnUserAction(IPlugin sender, IRecordEvent e)
         {
             plugin.Stop();
+            e.ClickHandled = true;
             // GenericTools.restore(GenericTools.mainWindow);
             GenericTools.restore(this);
+            vm.Selector = e.Selector;
             vm.FocusElement(e.Selector);
             // e.Element
         }
@@ -100,5 +103,34 @@ namespace OpenRPA.Interfaces.Selector
 
         }
 
+        public ICommand SelectCommand { get { return new RelayCommand<treeelement>(onSelect); } }
+        private void onSelect(treeelement item)
+        {
+            var selector = plugin.GetSelector(item);
+            vm.Selector = selector;
+            vm.FocusElement(selector);
+
+            //if (item is uitreeelement) SelectElement(((uitreeelement)item).Element);
+            //if (item is htmltreeelement) SelectElement(((htmltreeelement)item).Element);
+            //if (item is javatreeelement) SelectElement(((javatreeelement)item).Element);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Task.Run(() =>
+            {
+                var treeelements = plugin.GetRootElements();
+                IElement[] elements = vm.Selector.GetElements();
+                IElement element = elements.FirstOrDefault();
+                GenericTools.RunUI(this, () =>
+                {
+                    System.Diagnostics.Trace.WriteLine("init selector model, with " + treeelements.Count() + " root elements", "Debug");
+                    vm.init(treeelements);
+                    //vm.FocusElement(vm.Selector);
+                });
+
+                
+            });
+        }
     }
 }

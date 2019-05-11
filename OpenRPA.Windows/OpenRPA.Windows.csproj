@@ -35,20 +35,15 @@
   <ItemGroup>
     <Reference Include="Accessibility" />
     <Reference Include="FlaUI.Core, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FlaUI.Core.1.3.0\lib\net45\FlaUI.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\FlaUI\src\FlaUI.UIA3\bin\Debug\net45\FlaUI.Core.dll</HintPath>
     </Reference>
     <Reference Include="FlaUI.UIA3, Version=1.3.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FlaUI.UIA3.1.3.1\lib\net45\FlaUI.UIA3.dll</HintPath>
-    </Reference>
-    <Reference Include="Interop.UIAutomationClient, Version=4.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FlaUI.UIA3.1.3.1\lib\net45\Interop.UIAutomationClient.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\FlaUI\src\FlaUI.UIA3\bin\Debug\net45\FlaUI.UIA3.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\packages\Serilog.2.8.0\lib\net46\Serilog.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Activities" />
     <Reference Include="System.Activities.Presentation" />
@@ -73,7 +68,7 @@
     </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Recording.cs" />
+    <Compile Include="Plugin.cs" />
     <Compile Include="WindowsSelector.cs" />
     <Compile Include="WindowsSelectorItem.cs" />
     <Compile Include="WindowsTreeElement.cs" />
@@ -95,9 +90,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\toolbox\getuielement.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

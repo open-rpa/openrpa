@@ -7,7 +7,7 @@
         xmlns:Selector="clr-namespace:OpenRPA.Interfaces.Selector;assembly=OpenRPA.Interfaces"
         xmlns:local="clr-namespace:OpenRPA.Interfaces.Selector"
         xmlns:root="clr-namespace:OpenRPA"
-        mc:Ignorable="d"
+        mc:Ignorable="d" Loaded="Window_Loaded"
         Title="Selector" Height="450" Width="800">
 
     <Window.Resources>
@@ -38,157 +38,196 @@
             </ToolBar>
         </ToolBarTray>
 
-        <TreeView DockPanel.Dock="Left" Background="Transparent" ItemsSource="{Binding Directories}" Margin="0,10,0,0" 
-                                          Grid.Column="0" Grid.RowSpan="3"
-                                      Height="Auto"  TreeViewItem.Expanded="TreeViewItem_Expanded" x:Name="treeview"
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition SharedSizeGroup="col1" Width="44*" MinWidth="50"></ColumnDefinition>
+                <ColumnDefinition Width="217*"/>
+                <ColumnDefinition Width="5"></ColumnDefinition>
+                <ColumnDefinition SharedSizeGroup="col2" Width="260*" MinWidth="50"></ColumnDefinition>
+                <ColumnDefinition Width="5"></ColumnDefinition>
+                <ColumnDefinition SharedSizeGroup="col3" Width="261*" MinWidth="50"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TreeView Grid.Column="0" Background="Transparent" ItemsSource="{Binding Directories}" Margin="0,10,0,0" 
+                                         MinWidth="50"
+                                      Height="Auto"  TreeViewItem.Expanded="TreeViewItem_Expanded" x:Name="treeview" Grid.ColumnSpan="2"
                   >
-            <TreeView.ItemContainerStyle>
-                <Style TargetType="{x:Type TreeViewItem}">
-                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
-                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-                    <EventSetter Event="Selected" Handler="TreeViewSelectedHandler" />
-                </Style>
-            </TreeView.ItemContainerStyle>
-            <TreeView.Resources>
-                <!-- DataType="{x:Type selector:treeelement}"  -->
-                <HierarchicalDataTemplate DataType="{x:Type local:treeelement}" ItemsSource="{Binding Children}" >
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="16" Height="16" Margin="0,0,5,0">
-                            <Image.Style>
-                                <Style TargetType="{x:Type Image}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Button}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Button.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Calendar}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Calendar.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.CheckBox}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/CheckBox.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.ComboBox}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/ComboBox.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Custom}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Custom.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.DataGrid}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/DataGrid.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.DataItem}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Item.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Document}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Document.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Edit}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Edit.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Group}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Group.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Header}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Header.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.HeaderItem}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/HeaderItem.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Hyperlink}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Hyperlink.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Image}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Image.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.List}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/List.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.ListItem}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Item.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Menu}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Menu.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.MenuBar}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Menu.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.MenuItem}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/MenuItem.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Pane}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Pane.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.ProgressBar}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/ProgressBar.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.RadioButton}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/RadioButton.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.ScrollBar}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/ScrollBar.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Slider}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Slider.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Spinner}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Spinner.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.SplitButton}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/SplitButton.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.StatusBar}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/StatusBar.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Tab}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Tab.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.TabItem}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Item.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Text}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Text.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Thumb}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Thumb.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.TitleBar}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/TitleBar.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.ToolBar}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/ToolBar.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.ToolTip}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/ToolTip.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Tree}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Tree.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.TreeItem}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Item.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Window}">
-                                            <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Window.png" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                        <Label Content="{Binding Path= Name}" Name="NodeLabel" />
-                        <StackPanel.ContextMenu >
-                            <ContextMenu>
-                                <MenuItem Header="Select Element" 
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                        <EventSetter Event="Selected" Handler="TreeViewSelectedHandler" />
+                    </Style>
+                </TreeView.ItemContainerStyle>
+                <TreeView.Resources>
+                    <!-- DataType="{x:Type selector:treeelement}"  -->
+                    <HierarchicalDataTemplate DataType="{x:Type local:treeelement}" ItemsSource="{Binding Children}" >
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="16" Height="16" Margin="0,0,5,0">
+                                <Image.Style>
+                                    <Style TargetType="{x:Type Image}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Button}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Button.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Calendar}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Calendar.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.CheckBox}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/CheckBox.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.ComboBox}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/ComboBox.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Custom}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Custom.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.DataGrid}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/DataGrid.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.DataItem}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Item.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Document}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Document.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Edit}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Edit.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Group}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Group.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Header}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Header.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.HeaderItem}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/HeaderItem.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Hyperlink}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Hyperlink.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Image}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Image.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.List}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/List.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.ListItem}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Item.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Menu}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Menu.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.MenuBar}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Menu.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.MenuItem}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/MenuItem.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Pane}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Pane.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.ProgressBar}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/ProgressBar.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.RadioButton}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/RadioButton.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.ScrollBar}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/ScrollBar.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Slider}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Slider.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Spinner}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Spinner.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.SplitButton}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/SplitButton.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.StatusBar}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/StatusBar.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Tab}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Tab.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.TabItem}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Item.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Text}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Text.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Thumb}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Thumb.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.TitleBar}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/TitleBar.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.ToolBar}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/ToolBar.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.ToolTip}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/ToolTip.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Tree}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Tree.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.TreeItem}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Item.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlType}" Value="{x:Static flauidef:ControlType.Window}">
+                                                <Setter Property="Source" Value="/OpenRPA.Interfaces;component/Resources/Selector/Window.png" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <Label Content="{Binding Path= Name}" Name="NodeLabel" />
+                            <StackPanel.ContextMenu >
+                                <ContextMenu>
+                                    <MenuItem Header="Select Element" 
         Command="{Binding Data.SelectCommand, Source={StaticResource proxy}}"                                                    
                                                     CommandParameter="{Binding}" />
-                                <!-- 
+                                    <!-- 
                                                     {Binding SelectCommand}"  
                                                     Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SelectCommand}"
                                                     
                                                     -->
-                            </ContextMenu>
-                        </StackPanel.ContextMenu>
-                    </StackPanel>
-                </HierarchicalDataTemplate>
-            </TreeView.Resources>
-        </TreeView>
+                                </ContextMenu>
+                            </StackPanel.ContextMenu>
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>
+            </TreeView>
+            <!-- <local:DockPanelSplitter Width="5" Grid.Column="1" /> -->
+            <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Stretch" />
+            <TreeView Grid.Column="3" x:Name="treeSelectors" ItemsSource="{Binding Selector}" Margin="0,10,0,0" MinWidth="50">
+                <TreeView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding Enabled}" IsEnabled="{Binding canDisable}" />
+                            <TextBlock Text="{Binding Path=Displayname}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+            <GridSplitter Grid.Column="4" Width="5" HorizontalAlignment="Stretch" />
+            <TreeView Grid.Column="5" DataContext="{Binding ElementName=treeSelectors, Path=SelectedValue}" Margin="0,10,0,0" 
+                                         ItemsSource="{Binding Path=Properties}"   >
+                <TreeView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding Enabled}" IsEnabled="{Binding canDisable}" />
+                            <TextBlock Text="{Binding Path=Name}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+        </Grid>
+
+
+
+
+
 
     </DockPanel>
 

@@ -29,9 +29,8 @@ namespace OpenRPA.Java
         {
             string SelectorString = ModelItem.GetValue<string>("Selector");
 
-            var root = Recording.GetRootElements();
             var selector = new JavaSelector(SelectorString);
-            var selectors = new Interfaces.Selector.SelectorWindow("Java", root, selector);
+            var selectors = new Interfaces.Selector.SelectorWindow("Java", selector);
             selectors.ShowDialog();
         }
     }

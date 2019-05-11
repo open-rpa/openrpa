@@ -25,12 +25,24 @@ namespace OpenRPA.Interfaces.Selector
             }
 
         }
-
+        public JObject json
+        {
+            get
+            {
+                var elements = new List<JObject>();
+                foreach (var j in Properties)
+                {
+                    if (j.Enabled) elements.Add(j.json);
+                }
+                return new JObject(elements);
+            }
+        }
         public void SelectorChanged(object sender, PropertyChangedEventArgs e)
         {
             ElementChanged?.Invoke();
         }
         public event Action ElementChanged;
+        public virtual IElement[] GetElements(IElement fromElement = null) { return new IElement[] { }; }
         public override string ToString()
         {
             var results = new List<JObject>();

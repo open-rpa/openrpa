@@ -16,6 +16,7 @@ namespace OpenRPA.Interfaces
         IBodyActivity a { get; set; }
         bool SupportInput { get; set; }
         Input.MouseButton Button { get; set; }
+        bool ClickHandled { get; set; }
         int X { get; set; }
         int Y { get; set; }
     }

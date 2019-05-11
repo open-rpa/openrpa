@@ -1,8 +1,4 @@
-﻿using Serilog;
-using Serilog.Configuration;
-using Serilog.Core;
-using Serilog.Events;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -12,75 +8,84 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Interfaces
 {
-    public static class OpenRPALoggerConfigurationExtensions
-    {
-        //public static LoggerConfiguration OpenRPATracing(this LoggerSinkConfiguration sinkConfiguration, LogEventLevel restrictedToMinimumLevel = LogEventLevel.Verbose, string outputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}", IFormatProvider formatProvider = null, LoggingLevelSwitch levelSwitch = null, LogEventLevel? standardErrorFromLevel = null)
-        //{
-        //    var result = new LoggerConfiguration();
-        //    result.
+    //public static class OpenRPALoggerConfigurationExtensions
+    //{
+    //    //public static LoggerConfiguration OpenRPATracing(this LoggerSinkConfiguration sinkConfiguration, LogEventLevel restrictedToMinimumLevel = LogEventLevel.Verbose, string outputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}", IFormatProvider formatProvider = null, LoggingLevelSwitch levelSwitch = null, LogEventLevel? standardErrorFromLevel = null)
+    //    //{
+    //    //    var result = new LoggerConfiguration();
+    //    //    result.
 
-        //    return result;
-        //}
+    //    //    return result;
+    //    //}
 
-        public static LoggerConfiguration OpenRPATracing(
-              this LoggerSinkConfiguration loggerConfiguration,
-              Tracing tracing,
-              IFormatProvider formatProvider = null)
-        {
+    //    public static LoggerConfiguration OpenRPATracing(
+    //          this LoggerSinkConfiguration loggerConfiguration,
+    //          Tracing tracing,
+    //          IFormatProvider formatProvider = null)
+    //    {
 
-            tracing.formatProvider = formatProvider;
-            return loggerConfiguration.Sink(tracing);
-            //return loggerConfiguration.Sink(new MySink(formatProvider));
-        }
-    }
-    public class Tracing : TraceListener, System.ComponentModel.INotifyPropertyChanged, ILogEventSink
+    //        tracing.formatProvider = formatProvider;
+    //        return loggerConfiguration.Sink(tracing);
+    //        //return loggerConfiguration.Sink(new MySink(formatProvider));
+    //    }
+    //}
+    public class Tracing : TraceListener, System.ComponentModel.INotifyPropertyChanged //, ILogEventSink
     {
         //public static string Error = "Error";
         //public static string Selector = "Selector";
         //public static string Output = "Output";
         private int maxLines = 20;
-        private readonly StringBuilder Tracebuilder = new StringBuilder();
-        private static object _lock = new object();
+        //private StringBuilder Tracebuilder = new StringBuilder();
+        private string _TraceMessages = "";
         public string TraceMessages
         {
             get
             {
                 string result = string.Empty;
-                lock (_lock)
-                {
-                    result = Tracebuilder.ToString();
-                }
+                result = _TraceMessages;
                 var lines = result.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                 int count = lines.Count();
                 if (count > maxLines)
                 {
-                    var arr = lines.ToList();
-                    //arr.RemoveRange(maxLines, (count - maxLines) );
-                    arr.RemoveRange(0, (count - maxLines));
-                    result = String.Join(Environment.NewLine, arr);
-                    Tracebuilder.Clear();
-                    Tracebuilder.Insert(0, result);
+                    var list = lines.ToList();
+                    list.RemoveRange((maxLines - 10), (count - maxLines) + 10);
+                    _TraceMessages = result;
+                    //Tracebuilder.Clear();
+                    //Tracebuilder.Insert(0, result);
+                    //var arr = lines.ToList();
+                    //arr.RemoveRange(0, (count - maxLines));
+                    //result = String.Join(Environment.NewLine, arr);
+                    //Tracebuilder.Clear();
+                    //Tracebuilder.Insert(0, result);
                 }
                 return result;
             }
             //get { return String.Join(Environment.NewLine, _result.ToArray()); }
         }
-        private readonly StringBuilder Outputbuilder = new StringBuilder();
+        //private StringBuilder Outputbuilder = new StringBuilder();
+        private string _OutputMessages = "";
         public string OutputMessages
         {
             get
             {
-                var result = Outputbuilder.ToString();
+                string result = "";
+                result = _OutputMessages;
                 var lines = result.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                 int count = lines.Count();
                 if (count > maxLines)
                 {
-                    var arr = lines.ToList();
+                    var list = lines.ToList();
+                    list.RemoveRange((maxLines - 10), (count - maxLines) + 10);
+                    _OutputMessages = result;
+                    //Outputbuilder.Clear();
+                    //Outputbuilder.Insert(0, result);
                     //arr.RemoveRange(maxLines, (count - maxLines) );
-                    arr.RemoveRange(0, (count - maxLines));
-                    result = String.Join(Environment.NewLine, arr);
-                    Outputbuilder.Clear();
-                    Outputbuilder.Insert(0, result);
+
+                    //var arr = lines.ToList();
+                    //arr.RemoveRange(0, (count - maxLines));
+                    //result = String.Join(Environment.NewLine, arr);
+                    //Outputbuilder.Clear();
+                    //Outputbuilder.Insert(0, result);
                 }
                 return result;
             }
@@ -118,15 +123,19 @@ namespace OpenRPA.Interfaces
 
         public override void WriteLine(string message, string category)
         {
+            if (category == "Tracing") return;
             //builder.Insert(0, message + Environment.NewLine);
             DateTime dt = DateTime.Now;
-            //builder.Append(string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
             if (category == "Output")
             {
-                Outputbuilder.Append(string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
+                //Outputbuilder.Append(string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
+                //Outputbuilder.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
+                _OutputMessages.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
                 OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("OutputMessages"));
             }
-            Tracebuilder.Append(string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
+            //Tracebuilder.Append(string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
+            // Tracebuilder.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
+            _TraceMessages.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Trace"));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("TraceMessages"));
         }
@@ -134,24 +143,30 @@ namespace OpenRPA.Interfaces
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
         {
-            PropertyChanged?.Invoke(this, e);
+            if(PropertyChanged != null)
+            {
+                Task.Run(() => { PropertyChanged?.Invoke(this, e); });
+            }
         }
 
         public IFormatProvider formatProvider { get; set; }
-        public void Emit(LogEvent logEvent)
-        {
-            DateTime dt = DateTime.Now;
-            var message = logEvent.RenderMessage(formatProvider);
-            if(logEvent.Level == LogEventLevel.Information)
-            {
-                Outputbuilder.Append(string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, logEvent.Level.ToString(), message));
-                OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("OutputMessages"));
-            }
-            Tracebuilder.Append(string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, logEvent.Level.ToString(), message));
-            OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Trace"));
-            OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("TraceMessages"));
+        //public void Emit(LogEvent logEvent)
+        //{
+        //    DateTime dt = DateTime.Now;
+        //    var message = logEvent.RenderMessage(formatProvider);
+        //    if(logEvent.Level == LogEventLevel.Information)
+        //    {
+        //        //Outputbuilder.Append(string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, logEvent.Level.ToString(), message));
+        //        Outputbuilder.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, logEvent.Level.ToString(), message));
+        //        OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("OutputMessages"));
+        //    }
+        //    //Tracebuilder.Append(string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, logEvent.Level.ToString(), message));
+        //    Tracebuilder.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, logEvent.Level.ToString(), message));
+        //    System.Diagnostics.Trace.WriteLine(string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}", dt, logEvent.Level.ToString(), message), "Tracing");
+        //    OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Trace"));
+        //    OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("TraceMessages"));
 
-        }
+        //}
 
     }
 

@@ -38,9 +38,9 @@ namespace OpenRPA.Windows
             string SelectorString = ModelItem.GetValue<string>("Selector");
             // if (!string.IsNullOrEmpty(ZenSelector)) ZenSelector = JArray.Parse(ZenSelector).ToString();
 
-            var root = Recording.GetRootElements();
+            
             var selector = new WindowsSelector(SelectorString);
-            var selectors = new Interfaces.Selector.SelectorWindow("Windows", root, selector);
+            var selectors = new Interfaces.Selector.SelectorWindow("Windows", selector);
 
             selectors.ShowDialog();
 

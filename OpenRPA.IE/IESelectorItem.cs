@@ -4,7 +4,6 @@ using FlaUI.Core.Conditions;
 using FlaUI.Core.Definitions;
 using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.Selector;
-using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,6 +22,7 @@ namespace OpenRPA.IE
         }
         // public IEElement element { get { return GetProperty<IEElement>(); } set { SetProperty(value); } }
 
+        public IEElement IEElement { get { return GetProperty<IEElement>(); } set { SetProperty(value); } }
         public string tagName
         {
             get
@@ -45,7 +45,7 @@ namespace OpenRPA.IE
         {
             get
             {
-                var e = Properties.Where(x => x.Name == "ClassName").FirstOrDefault();
+                var e = Properties.Where(x => x.Name == "className").FirstOrDefault();
                 if (e == null) return null;
                 return e.Value;
             }
@@ -78,14 +78,19 @@ namespace OpenRPA.IE
             };
 
         }
-        public IESelectorItem(mshtml.IHTMLElement element)
+        public IESelectorItem(Browser browser, mshtml.IHTMLElement element)
         {
-            this.Element = new IEElement(element);;
+            this.IEElement = new IEElement(browser, element);
+            this.Element = this.IEElement;
+
             if (this.Element == null) throw new Exception("Error!!!");
             Properties = new ObservableCollection<SelectorItemProperty>();
             if (!string.IsNullOrEmpty(element.tagName)) Properties.Add(new SelectorItemProperty("tagName", element.tagName));
             if (!string.IsNullOrEmpty(element.className)) Properties.Add(new SelectorItemProperty("className", element.className));
             if (!string.IsNullOrEmpty(element.id)) Properties.Add(new SelectorItemProperty("id", element.id));
+            if (this.IEElement.IndexInParent > -1) Properties.Add(new SelectorItemProperty("IndexInParent", this.IEElement.IndexInParent.ToString()));
+
+            
             //Enabled = (Properties.Count > 1);
             //canDisable = true;
             //Enabled = true;
@@ -107,7 +112,7 @@ namespace OpenRPA.IE
             if (Properties.Where(x => x.Name == "tagName").Count() == 1) result.Add("tagName");
             if (Properties.Where(x => x.Name == "className").Count() == 1) result.Add("className");
             if (Properties.Where(x => x.Name == "id").Count() == 1) result.Add("id");
-            if (Properties.Where(x => x.Name == "Index").Count() == 1) result.Add("Index");
+            if (Properties.Where(x => x.Name == "IndexInParent").Count() == 1) result.Add("IndexInParent");
             return result.ToArray();
         }
         public void EnumNeededProperties(mshtml.IHTMLElement element, mshtml.IHTMLElement parent)
@@ -162,7 +167,7 @@ namespace OpenRPA.IE
                     {
                         if (match(elementNode)) matchs.Add(elementNode);
                     }
-                    Log.Debug("match count: " + matchs.Count);
+                    Log.Verbose("match count: " + matchs.Count);
                     return matchs.ToArray();
                 }
                 catch (Exception)
@@ -184,30 +189,42 @@ namespace OpenRPA.IE
                         var v = m.tagName;
                         if (!PatternMatcher.FitsMask(v, p.Value))
                         {
-                            Log.Debug(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            Log.Verbose(p.Name + " mismatch '" + v + "' expected '" + p.Value + "'");
                             return false;
                         }
                     }
                     else
                     {
-                        Log.Debug(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        Log.Verbose(p.Name + " does not exists, but needed value '" + p.Value + "'");
                         return false;
                     }
                 }
                 if (p.Name == "className")
                 {
+                    var v = m.className;
+
                     if (!string.IsNullOrEmpty(m.className))
                     {
-                        var v = m.className;
-                        if (!PatternMatcher.FitsMask(m.className, p.Value))
+                        if (v.Contains(" ") && !p.Value.Contains(" "))
                         {
-                            Log.Debug(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            var arr = v.Split(' '); var found = false;
+                            foreach (var s in arr) {
+                                if (PatternMatcher.FitsMask(s, p.Value)) { found = true; }
+                            }
+                            if(!found) {
+                                Log.Verbose(p.Name + " mismatch '" + m.className + "' expected '" + p.Value + "'");
+                                return false;
+                            }
+                        }
+                        else if (!PatternMatcher.FitsMask(v, p.Value))
+                        {
+                            Log.Verbose(p.Name + " mismatch '" + m.className + "' expected '" + p.Value + "'");
                             return false;
                         }
                     }
                     else
                     {
-                        Log.Debug(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        Log.Verbose(p.Name + " does not exists, but needed value '" + p.Value + "'");
                         return false;
                     }
                 }
@@ -219,13 +236,13 @@ namespace OpenRPA.IE
                         var v = ele.type;
                         if (!PatternMatcher.FitsMask(ele.type, p.Value))
                         {
-                            Log.Debug(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            Log.Verbose(p.Name + " mismatch '" + v + "' expected '" + p.Value + "'");
                             return false;
                         }
                     }
                     else
                     {
-                        Log.Debug(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        Log.Verbose(p.Name + " does not exists, but needed value '" + p.Value + "'");
                         return false;
                     }
                 }
@@ -236,18 +253,40 @@ namespace OpenRPA.IE
                         var v = m.id;
                         if (!PatternMatcher.FitsMask(m.id, p.Value))
                         {
-                            Log.Debug(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            Log.Verbose(p.Name + " mismatch '" + v + "' expected '" + p.Value + "'");
                             return false;
                         }
                     }
                     else
                     {
-                        Log.Debug(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        Log.Verbose(p.Name + " does not exists, but needed value '" + p.Value + "'");
                         return false;
                     }
                 }
+                if (p.Name == "IndexInParent")
+                {
+                    mshtml.IHTMLUniqueName id = m as mshtml.IHTMLUniqueName;
+                    var uniqueID = id.uniqueID;
+                    var IndexInParent = -1;
+                    if (m.parentElement != null && !string.IsNullOrEmpty(uniqueID))
+                    {
+                        mshtml.IHTMLElementCollection children = m.children;
+                        for (int i = 0; i < children.length; i++)
+                        {
+                            mshtml.IHTMLUniqueName id2 = m as mshtml.IHTMLUniqueName;
+                            if (id2.uniqueID == uniqueID) { IndexInParent = i; break; }
+                        }
+                    } 
+                    if(IndexInParent != int.Parse(p.Value))
+                    {
+                        Log.Verbose(p.Name + " mismatch '" + IndexInParent + "' expected '" + p.Value + "'");
+                        return false;
+                    }
+
+                }
+
             }
-            Log.Debug("match: " + ToString());
+            Log.Verbose("match: " + ToString());
             return true;
         }
         public override string ToString()

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
+using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
-using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,15 @@ namespace OpenRPA
     {
         public string Xaml { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public List<workflowparameter> Parameters { get { return GetProperty<List<workflowparameter>>(); } set { SetProperty(value); } }
+        // public string FilePath { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string FilePath
+        {
+            get
+            {
+                return System.IO.Path.Combine(Project.Path, Filename);
+            }
+        }
         public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
 
         [JsonIgnore]
@@ -31,7 +39,7 @@ namespace OpenRPA
             var result = new Workflow();
             result._type = "workflow";
             result.Project = project;
-            result.Filename = Filename;
+            result.Filename = System.IO.Path.GetFileName(Filename);
             result.name = System.IO.Path.GetFileNameWithoutExtension(Filename);
             result.Xaml = System.IO.File.ReadAllText(Filename);
             result.Parameters = new List<workflowparameter>();
@@ -46,14 +54,16 @@ namespace OpenRPA
             {
                 if (counter == 1)
                 {
-                    workflow.Filename = System.IO.Path.Combine(Project.Path, Name.Replace(" ", "_").Replace(".", "") + ".xaml");
+                    // workflow.FilePath = System.IO.Path.Combine(Project.Path, Name.Replace(" ", "_").Replace(".", "") + ".xaml");
+                    workflow.Filename = Name.Replace(" ", "_").Replace(".", "") + ".xaml";
                 }
                 else
                 {
                     workflow.name = Name + counter.ToString();
-                    workflow.Filename = System.IO.Path.Combine(Project.Path, Name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".xaml");
+                    //workflow.FilePath = System.IO.Path.Combine(Project.Path, Name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".xaml");
+                    workflow.Filename = Name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".xaml";
                 }
-                if (!System.IO.File.Exists(workflow.Filename)) isUnique = true;
+                if (!System.IO.File.Exists(workflow.FilePath)) isUnique = true;
                 counter++;
             }
             workflow._type = "workflow";
@@ -68,23 +78,22 @@ namespace OpenRPA
             if (string.IsNullOrEmpty(Xaml)) return;
             if (!Project.Workflows.Contains(this)) Project.Workflows.Add(this);
             
-            if (string.IsNullOrEmpty(Filename))
+            if (string.IsNullOrEmpty(FilePath))
             {
                 Filename = UniqueName();
             }
             else
             {
-                var guess = System.IO.Path.Combine(Project.Path, name.Replace(" ", "_").Replace(".", "") + ".xaml");
+                var guess =  name.Replace(" ", "_").Replace(".", "") + ".xaml";
                 var newName = UniqueName();
                 if(guess== newName && Filename != guess)
                 {
-                    System.IO.File.WriteAllText(guess, Xaml);
-                    System.IO.File.Delete(Filename);
+                    System.IO.File.WriteAllText(System.IO.Path.Combine(Project.Path, guess), Xaml);
+                    System.IO.File.Delete(FilePath);
                     Filename = guess;
-                    return;
                 }
             }
-            System.IO.File.WriteAllText(Filename, Xaml);
+            System.IO.File.WriteAllText(FilePath, Xaml);
             if (global.webSocketClient == null) return;
             projectid = Project._id;
             if (string.IsNullOrEmpty(_id))
@@ -98,8 +107,8 @@ namespace OpenRPA
         public async Task Delete()
         {
             if (Project.Workflows.Contains(this)) Project.Workflows.Remove(this);
-            if (string.IsNullOrEmpty(Filename)) return;
-            System.IO.File.Delete(Filename);
+            if (string.IsNullOrEmpty(FilePath)) return;
+            System.IO.File.Delete(FilePath);
             if (!string.IsNullOrEmpty(_id))
             {
                 await global.webSocketClient.DeleteOne("openrpa", this._id);
@@ -107,19 +116,21 @@ namespace OpenRPA
         }
         private string UniqueName()
         {
-            string Filename = "";
+            string Filename = ""; string FilePath = "";
             bool isUnique = false; int counter = 1;
             while (!isUnique)
             {
                 if (counter == 1)
                 {
-                    Filename = System.IO.Path.Combine(Project.Path, name.Replace(" ", "_").Replace(".", "") + ".xaml");
+                    Filename = name.Replace(" ", "_").Replace(".", "") + ".xaml";
+                    FilePath = System.IO.Path.Combine(Project.Path, Filename);
                 }
                 else
                 {
-                    Filename = System.IO.Path.Combine(Project.Path, name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".xaml");
+                    Filename = name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".xaml";
+                    FilePath = System.IO.Path.Combine(Project.Path, Filename);
                 }
-                if (!System.IO.File.Exists(Filename)) isUnique = true;
+                if (!System.IO.File.Exists(FilePath)) isUnique = true;
                 counter++;
             }
             return Filename;

@@ -14,34 +14,23 @@ namespace OpenRPA.Interfaces.Selector
         public void init(treeelement[] treeelements)
         {
             Directories.Clear();
-            //string anchortype = null;
-            //IElement anchorelement = null;
             foreach(var te in treeelements) Directories.Add(te);
-
-
-            //if (Anchor != null)
-            //{
-            //    anchortype = Anchor.First().Selector;
-            //    if (anchortype == null) anchortype = "uia3";
-            //    anchorelement = Interfaces.Selector.Selector.GetElementsWithSelector(Anchor.ToString()).FirstOrDefault();
-            //}
         }
-        public SelectorModel(treeelement[] treeelements, SelectorWindow window)
+        public SelectorModel(SelectorWindow window)
         {
             Directories = new ObservableCollection<treeelement>();
             this.window = window;
-            init(treeelements);
         }
-        public SelectorModel(treeelement[] treeelements, SelectorWindow window, Interfaces.Selector.Selector anchor)
+        public SelectorModel(SelectorWindow window, Selector Selector, Selector Anchor = null)
         {
-            this.Anchor = anchor;
+            this.Anchor = Anchor;
+            this.Selector = Selector;
             Directories = new ObservableCollection<treeelement>();
             this.window = window;
-            init(treeelements);
         }
         private SelectorWindow window;
-        public Interfaces.Selector.Selector Selector { get; set; }
-        private Interfaces.Selector.Selector Anchor;
+        public Selector Selector { get { return GetProperty<Selector>(); } set { SetProperty(value); } }
+        public Selector Anchor { get { return GetProperty<Selector>(); } set { SetProperty(value); } }
 
         private ObservableCollection<treeelement> directories;
         public ObservableCollection<treeelement> Directories

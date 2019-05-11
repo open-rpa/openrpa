@@ -1,6 +1,5 @@
 ﻿using NamedPipeWrapper;
 using OpenRPA.Interfaces;
-using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,12 +84,19 @@ namespace OpenRPA.Java
             }
             if (!isrunning)
             {
-                var _childProcess = new System.Diagnostics.Process();
-                _childProcess.StartInfo.FileName = "OpenRPA.JavaBridge.exe";
-                _childProcess.StartInfo.UseShellExecute = false;
-                if (!_childProcess.Start())
+                try
                 {
-                    throw new Exception("Failed starting OpenRPA JavaBridge");
+                    var _childProcess = new System.Diagnostics.Process();
+                    _childProcess.StartInfo.FileName = "OpenRPA.JavaBridge.exe";
+                    _childProcess.StartInfo.UseShellExecute = false;
+                    if (!_childProcess.Start())
+                    {
+                        throw new Exception("Failed starting OpenRPA JavaBridge");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Failed launching OpenRPA.JavaBridge.exe");
                 }
             }
         }

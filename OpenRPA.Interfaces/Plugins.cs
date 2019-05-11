@@ -1,5 +1,4 @@
-﻿using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,7 +9,7 @@ namespace OpenRPA.Interfaces
 {
     public class Plugins
     {
-        public static ICollection<IRecording> recordPlugins = new List<IRecording>();
+        public static ICollection<IPlugin> recordPlugins = new List<IPlugin>();
         public static void loadPlugins(string projectsDirectory)
         {
             List<string> dllFileNames = new List<string>();
@@ -29,26 +28,33 @@ namespace OpenRPA.Interfaces
                     Log.Error(ex, "");
                 }
             }
-            Type pluginType = typeof(IRecording);
+            Type pluginType = typeof(IPlugin);
             ICollection<Type> pluginTypes = new List<Type>();
             foreach (Assembly assembly in assemblies)
             {
                 if (assembly != null)
                 {
-                    Type[] types = assembly.GetTypes();
-                    foreach (Type type in types)
+                    try
                     {
-                        if (type.IsInterface || type.IsAbstract)
+                        Type[] types = assembly.GetTypes();
+                        foreach (Type type in types)
                         {
-                            continue;
-                        }
-                        else
-                        {
-                            if (type.GetInterface(pluginType.FullName) != null)
+                            if (type.IsInterface || type.IsAbstract)
                             {
-                                pluginTypes.Add(type);
+                                continue;
+                            }
+                            else
+                            {
+                                if (type.GetInterface(pluginType.FullName) != null)
+                                {
+                                    pluginTypes.Add(type);
+                                }
                             }
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, "loadPlugins");
                     }
                 }
             }
@@ -56,7 +62,7 @@ namespace OpenRPA.Interfaces
             //ICollection<IRecording> plugins = new List<IRecording>();
             foreach (Type type in pluginTypes)
             {
-                IRecording plugin = (IRecording)Activator.CreateInstance(type);
+                IPlugin plugin = (IPlugin)Activator.CreateInstance(type);
                 plugin.Initialize();
                 Plugins.recordPlugins.Add(plugin);
             }

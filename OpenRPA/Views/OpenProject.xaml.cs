@@ -52,10 +52,6 @@ namespace OpenRPA.Views
             var p = (Project)listWorkflows.SelectedItem;
             if (p == null) return;
             onOpenProject?.Invoke(p);
-            foreach (var wf in p.Workflows)
-            {
-                onOpenWorkflow?.Invoke(wf);
-            }
 
         }
 

@@ -69,13 +69,23 @@ namespace OpenRPA.IE
         {
             mshtml.IHTMLElementCollection children = IEElement.rawElement.children;
             foreach (mshtml.IHTMLElement elementNode in children) {
-                var ele = new IEElement(elementNode);
+                var ele = new IEElement(IEElement.Browser, elementNode);
                 var exists = Children.Where(x => ((IEElement)x.Element).uniqueID == ele.uniqueID).FirstOrDefault();
                 if(exists==null)
                 {
                     Console.WriteLine("Adding " + ele.ToString());
                     Children.Add(new IETreeElement(this, false, ele));
                 }
+            }
+            int frameoffsetx = 0;
+            int frameoffsety = 0;
+            if (IEElement.tagName.ToLower() == "frame")
+            {
+                frameoffsetx += IEElement.rawElement.offsetLeft;
+                frameoffsety += IEElement.rawElement.offsetTop;
+                var web = IEElement.rawElement as SHDocVw.IWebBrowser2;
+                var _doc = (mshtml.HTMLDocument)web.Document;
+                Children.Add(new IETreeElement(this, false, new IEElement(IEElement.Browser, _doc.documentElement)));
             }
         }
     }

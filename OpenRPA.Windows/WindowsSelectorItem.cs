@@ -1,10 +1,10 @@
 ﻿using FlaUI.Core;
+using FlaUI.Core.AutomationElements;
 using FlaUI.Core.AutomationElements.Infrastructure;
 using FlaUI.Core.Conditions;
 using FlaUI.Core.Definitions;
 using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.Selector;
-using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,7 +17,8 @@ namespace OpenRPA.Windows
     class WindowsSelectorItem : SelectorItem
     {
         public WindowsSelectorItem() { }
-        public WindowsSelectorItem(SelectorItem item) {
+        public WindowsSelectorItem(SelectorItem item)
+        {
             SetBackingFieldValues(item._backingFieldValues);
             Properties = item.Properties;
             Element = item.Element;
@@ -97,14 +98,13 @@ namespace OpenRPA.Windows
                 if (element.Properties.AutomationId.IsSupported && !string.IsNullOrEmpty(element.Properties.AutomationId)) Properties.Add(new SelectorItemProperty("AutomationId", element.Properties.AutomationId.Value));
                 //Enabled = (Properties.Count > 1);
                 //canDisable = true;
-                //Enabled = true;
-                //canDisable = true;
                 foreach (var p in Properties)
                 {
                     p.Enabled = true;
                     p.canDisable = (Properties.Count > 1);
                 };
-
+                Enabled = true;
+                canDisable = true;
             }
             foreach (var p in Properties) p.PropertyChanged += (sender, e) =>
             {
@@ -130,7 +130,7 @@ namespace OpenRPA.Windows
             string name = null;
             if (element.Properties.Name.IsSupported) name = element.Properties.Name.Value;
             var props = GetProperties();
-            int i = props.Length -1;
+            int i = props.Length - 1;
             int matchcounter = 0;
 
             var automation = AutomationUtil.getAutomation();
@@ -146,12 +146,8 @@ namespace OpenRPA.Windows
             using (cacheRequest.Activate())
             {
 
-                Log.Debug("#****************************************#");
-                Log.Debug("# EnumNeededProperties ");
                 do
                 {
-                    Log.Debug("#****************************************#");
-                    Log.Debug("# " + i);
                     var selectedProps = props.Take(i).ToArray();
                     foreach (var p in Properties) p.Enabled = selectedProps.Contains(p.Name);
 
@@ -166,7 +162,7 @@ namespace OpenRPA.Windows
                     }
                 } while (matchcounter != 1 && i < props.Count());
 
-                Log.Debug("EnumNeededProperties match with " + i + " gave " + matchcounter + " result");
+                //Log.Debug("EnumNeededProperties match with " + i + " gave " + matchcounter + " result");
                 Properties.ForEach((e) => e.Enabled = false);
                 foreach (var p in props.Take(i).ToArray())
                 {
@@ -183,13 +179,9 @@ namespace OpenRPA.Windows
             int i = 1;
             int matchcounter = 0;
 
-            Log.Debug("#****************************************#");
-            Log.Debug("# EnumNeededProperties ");
             var children = parent.FindAllChildren();
             do
             {
-                Log.Debug("#****************************************#");
-                Log.Debug("# " + i);
                 var selectedProps = props.Take(i).ToArray();
                 foreach (var p in Properties) p.Enabled = selectedProps.Contains(p.Name);
 
@@ -210,7 +202,7 @@ namespace OpenRPA.Windows
                 }
             } while (matchcounter != 1 && i < props.Count());
 
-            Log.Debug("EnumNeededProperties match with " + i + " gave " + matchcounter + " result");
+            //Log.Debug("EnumNeededProperties match with " + i + " gave " + matchcounter + " result");
             Properties.ForEach((e) => e.Enabled = false);
             foreach (var p in props.Take(i).ToArray())
             {
@@ -261,41 +253,36 @@ namespace OpenRPA.Windows
                 return new AndCondition(cond);
             }
         }
-        public AutomationElement[] matches(AutomationElement element, ITreeWalker _treeWalker)
+        public AutomationElement[] matches(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count)
         {
-            int counter = 0;
-            do
+            var matchs = new List<AutomationElement>();
+
+
+            var c = GetConditionsWithoutStar();
+            Log.Debug("matches::FindAllChildren");
+            //var elements = element.FindAllChildren(c);
+            //foreach (var elementNode in elements)
+            //{
+            //    Log.Debug("matches::match");
+            //    if (match(elementNode)) matchs.Add(elementNode);
+            //}
+            var nodes = new List<AutomationElement>();
+            var elementNode = _treeWalker.GetFirstChild(element);
+            var i = 0;
+            while (elementNode != null)
             {
-                try
-                {
-                    var c = GetConditionsWithoutStar();
-                    var matchs = new List<AutomationElement>();
-                    var elements = element.FindAllChildren(c);
-                    foreach (var elementNode in elements)
-                    {
-                        if (match(elementNode)) matchs.Add(elementNode);
-                    }
-                    //var elementNode = _treeWalker.GetFirstChild(element);
-                    //while (elementNode != null)
-                    //{
-                    //    if (match(elementNode)) matchs.Add(elementNode);
-                    //    if (recursive)
-                    //    {
-                    //        var subresult = match(elementNode, _treeWalker, false);
-                    //        matchs.AddRange(subresult);
-                    //    }
-                    //    elementNode = _treeWalker.GetNextSibling(elementNode);
-                    //}
-                    Log.Debug("match count: " + matchs.Count);
-                    return matchs.ToArray();
-                }
-                catch (Exception)
-                {
-                    ++counter;
-                    if (counter == 2) throw;
-                }
-            } while (counter < 2);
-            return new AutomationElement[] { };
+                nodes.Add(elementNode);
+                i++;
+                Console.WriteLine(i + ") " + elementNode.ToString());
+                if (match(elementNode)) matchs.Add(elementNode);
+                if (matchs.Count >= count) break;
+                elementNode = _treeWalker.GetNextSibling(elementNode);
+            }
+            //foreach (var _elementNode in nodes)
+            //{
+            //    if (match(_elementNode)) matchs.Add(_elementNode);
+            //}
+            return matchs.ToArray();
         }
 
         public bool match(AutomationElement m)
@@ -372,7 +359,6 @@ namespace OpenRPA.Windows
                     }
                 }
             }
-            Log.Debug("match: " + ToString());
             return true;
         }
 

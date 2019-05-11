@@ -1,6 +1,5 @@
 ﻿using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.Selector;
-using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,7 +34,7 @@ namespace OpenRPA.Java
             if (!string.IsNullOrEmpty(element.Name)) Properties.Add(new SelectorItemProperty("Name", element.Name));
             if (!string.IsNullOrEmpty(element.role)) Properties.Add(new SelectorItemProperty("role", element.role));
             if (!string.IsNullOrEmpty(element.title)) Properties.Add(new SelectorItemProperty("title", element.title));
-            if (element.IndexInParent > -1) Properties.Add(new SelectorItemProperty("Index", element.IndexInParent.ToString()));
+            if (element.IndexInParent > -1) Properties.Add(new SelectorItemProperty("IndexInParent", element.IndexInParent.ToString()));
             Enabled = (Properties.Count > 1);
             foreach (var p in Properties)
             {
@@ -85,11 +84,11 @@ namespace OpenRPA.Java
                 return e.Value;
             }
         }
-        public string Index
+        public string IndexInParent
         {
             get
             {
-                var e = Properties.Where(x => x.Name == "Index").FirstOrDefault();
+                var e = Properties.Where(x => x.Name == "IndexInParent").FirstOrDefault();
                 if (e == null) return null;
                 return e.Value;
             }
@@ -121,7 +120,7 @@ namespace OpenRPA.Java
             if (Properties.Where(x => x.Name == "Name").Count() == 1) result.Add("Name");
             if (Properties.Where(x => x.Name == "role").Count() == 1) result.Add("role");
             if (Properties.Where(x => x.Name == "title").Count() == 1) result.Add("title");
-            if (Properties.Where(x => x.Name == "Index").Count() == 1) result.Add("Index");
+            if (Properties.Where(x => x.Name == "IndexInParent").Count() == 1) result.Add("IndexInParent");
             return result.ToArray();
         }
         public void EnumNeededProperties(JavaElement element, JavaElement parent)

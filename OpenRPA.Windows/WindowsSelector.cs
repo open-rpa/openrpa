@@ -1,8 +1,8 @@
 ﻿using FlaUI.Core;
+using FlaUI.Core.AutomationElements;
 using FlaUI.Core.AutomationElements.Infrastructure;
 using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.Selector;
-using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Windows
 {
-    class WindowsSelector : Selector
+    public class WindowsSelector : Selector
     {
         UIElement element { get; set; }
         public WindowsSelector(string json) : base(json) { }
@@ -20,10 +20,7 @@ namespace OpenRPA.Windows
         {
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
-            Log.Debug(string.Format("windowsselector::AutomationElement::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
-            Log.Debug(string.Format("windowsselector::GetControlViewWalker::end {0:mm\\:ss\\.fff}", sw.Elapsed));
-
-
+            Log.Debug(string.Format("windowsselector::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
 
             AutomationElement root = null;
             AutomationElement baseElement = null;
@@ -53,7 +50,6 @@ namespace OpenRPA.Windows
                     return;
                 }
             }
-            Log.Debug("pathToRoot.Count: " + pathToRoot.Count);
             Log.Debug(string.Format("windowsselector::create pathToRoot::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             pathToRoot.Reverse();
             if (anchor != null)
@@ -117,27 +113,51 @@ namespace OpenRPA.Windows
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
             OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
         }
-
+        public override IElement[] GetElements(IElement fromElement = null)
+        {
+            return WindowsSelector.GetElementsWithuiSelector(this, fromElement);
+        }
         public static UIElement[] GetElementsWithuiSelector(WindowsSelector selector, IElement fromElement = null)
         {
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
+            Log.Debug(string.Format("GetElementsWithuiSelector::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
 
             UIElement _fromElement = fromElement as UIElement;
             var selectors = selector.Where(x => x.Enabled == true && x.Selector == null).ToList();
 
             var current = new List<UIElement>();
+            var automation = AutomationUtil.getAutomation();
 
             UIElement[] result = null;
-            using (var automation = AutomationUtil.getAutomation())
+            //var cacheRequest = new CacheRequest();
+            ////cacheRequest.TreeScope = TreeScope.Element | TreeScope.Subtree;
+            //// cacheRequest.TreeScope = FlaUI.Core.Definitions.TreeScope.Element;
+            //cacheRequest.TreeScope = FlaUI.Core.Definitions.TreeScope.Element | FlaUI.Core.Definitions.TreeScope.Children;
+            //// cacheRequest.TreeScope = FlaUI.Core.Definitions.TreeScope.Element | FlaUI.Core.Definitions.TreeScope.Subtree;
+            ////cacheRequest.TreeScope = FlaUI.Core.Definitions.TreeScope.Element | FlaUI.Core.Definitions.TreeScope.Children;
+            ////cacheRequest.TreeScope = FlaUI.Core.Definitions.TreeScope.Ancestors | FlaUI.Core.Definitions.TreeScope.Element | FlaUI.Core.Definitions.TreeScope.Children;
+            //cacheRequest.AutomationElementMode = FlaUI.Core.Definitions.AutomationElementMode.Full;
+            //cacheRequest.Add(automation.PropertyLibrary.Element.AutomationId);
+            //cacheRequest.Add(automation.PropertyLibrary.Element.ProcessId);
+            //cacheRequest.Add(automation.PropertyLibrary.Element.Name);
+            //cacheRequest.Add(automation.PropertyLibrary.Element.ClassName);
+            //cacheRequest.Add(automation.PropertyLibrary.Element.ControlType);
+
+
+            using (automation)
+            //using (cacheRequest.Activate())
             {
                 var _treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
 
+
                 AutomationElement startfrom = null;
                 if (_fromElement != null) startfrom = _fromElement.rawElement;
+                Log.Debug("automation.GetDesktop");
                 if (startfrom == null) startfrom = automation.GetDesktop();
+
                 current.Add(new UIElement(startfrom));
-                for (var i = 1; i < selectors.Count; i++)
+                for (var i = 0; i < selectors.Count; i++)
                 {
                     var s = new WindowsSelectorItem(selectors[i]);
                     var elements = new List<UIElement>();
@@ -148,7 +168,7 @@ namespace OpenRPA.Windows
                     {
                         foreach (var _element in elements)
                         {
-                            var matches = ((WindowsSelectorItem)s).matches(_element.rawElement, _treeWalker);
+                            var matches = ((WindowsSelectorItem)s).matches(automation, _element.rawElement, _treeWalker, 1);
                             var uimatches = new List<UIElement>();
                             foreach (var m in matches)
                             {
@@ -160,15 +180,12 @@ namespace OpenRPA.Windows
 
                             //result = uimatches.ToArray();
                             current.AddRange(uimatches.ToArray());
-                            Log.Debug("add " + uimatches.Count + " matches to current");
                         }
                         if (current.Count == 0)
                         {
                             ++failcounter;
-                            Log.Debug(string.Format("Failer # " + failcounter + " finding any hits for selector # " + i + " {0:mm\\:ss\\.fff}", sw.Elapsed));
                             foreach (var element in elements)
                             {
-                                Log.Debug(element.ToString());
                                 var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
                                 var children = element.rawElement.FindAllChildren();
                                 foreach (var c in children)
@@ -213,9 +230,15 @@ namespace OpenRPA.Windows
                         return new UIElement[] { };
                     }
                 }
+
+
             }
-            if (result == null) return new UIElement[] { };
-            Log.Debug(string.Format("GetElementsWithuiSelector::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+            if (result == null)
+            {
+                Log.Debug(string.Format("GetElementsWithuiSelector::ended with 0 results after {0:mm\\:ss\\.fff}", sw.Elapsed));
+                return new UIElement[] { };
+            }
+            Log.Debug(string.Format("GetElementsWithuiSelector::ended with " + result.Count() + " results after {0:mm\\:ss\\.fff}", sw.Elapsed));
             return result;
         }
 

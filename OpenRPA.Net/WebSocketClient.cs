@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Serilog;
+using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -194,7 +194,7 @@ namespace OpenRPA.Net
         {
             if (!string.IsNullOrEmpty(msg.replyto))
             {
-                if (msg.command != "pong") { Log.Debug(msg.command + " / replyto: " + msg.replyto); }
+                if (msg.command != "pong") { Log.Verbose(msg.command + " / replyto: " + msg.replyto); }
                     else { Log.Verbose(msg.command + " / replyto: " + msg.replyto);  }
 
                 foreach (var qm in _messageQueue)
@@ -217,7 +217,7 @@ namespace OpenRPA.Net
             }
             else
             {
-                if (msg.command != "ping" && msg.command != "refreshtoken") { Log.Debug(msg.command + " / " + msg.id); }
+                if (msg.command != "ping" && msg.command != "refreshtoken") { Log.Verbose(msg.command + " / " + msg.id); }
                     else { Log.Verbose(msg.command + " / replyto: " + msg.replyto); }
                 switch (msg.command)
                 {

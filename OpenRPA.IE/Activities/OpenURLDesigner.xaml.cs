@@ -13,9 +13,9 @@ using System.Windows.Media.Imaging;
 
 namespace OpenRPA.IE
 {
-    public partial class GetElementDesigner : INotifyPropertyChanged
+    public partial class OpenURLDesigner : INotifyPropertyChanged
     {
-        public GetElementDesigner()
+        public OpenURLDesigner()
         {
             InitializeComponent();
         }
@@ -24,15 +24,11 @@ namespace OpenRPA.IE
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        private void Open_Selector(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string SelectorString = ModelItem.GetValue<string>("Selector");
-
-            var selector = new IESelector(SelectorString);
-            var selectors = new Interfaces.Selector.SelectorWindow("IE", selector);
-
-            selectors.ShowDialog();
+            var browser = Browser.GetBrowser();
+            if (browser == null) return;
+            ModelItem.Properties["Url"].SetValue(new InArgument<string>(browser.wBrowser.LocationURL));
 
         }
     }

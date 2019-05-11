@@ -1,6 +1,5 @@
 ﻿using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.Selector;
-using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -87,6 +86,10 @@ namespace OpenRPA.Java
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
             OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
+        }
+        public override IElement[] GetElements(IElement fromElement = null)
+        {
+            return JavaSelector.GetElementsWithuiSelector(this, fromElement);
         }
         public static JavaElement[] GetElementsWithuiSelector(JavaSelector selector, IElement fromElement = null)
         {

@@ -8,7 +8,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Serilog;
 
 namespace OpenRPA.Windows
 {
@@ -30,13 +29,31 @@ namespace OpenRPA.Windows
             var selector = Selector.Get(context);
             var sel = new WindowsSelector(selector);
             var timeout = TimeSpan.FromSeconds(5);
-
+#if DEBUG
+#endif
 
             UIElement[] elements = { };
             var sw = new Stopwatch();
             sw.Start();
             do
             {
+                //    //var t = Task.Factory.StartNew(() =>
+                //    //{
+                //    //    elements = WindowsSelector.GetElementsWithuiSelector(sel, null);
+                //    //});
+                //    //if (!t.Wait(TimeSpan.FromMilliseconds(5000)))
+                //    //{
+                //    //    //if (IgnoreErrors.Get(context))
+                //    //    //{
+                //    //    //    context.SetValue(Element, result);
+                //    //    //    System.Diagnostics.Debug.WriteLine("Timeout getting " + xpath);
+                //    //    //    return;
+                //    //    //}
+                //    //    //throw new rpaActionTimedOut("Timeout getting " + xpath);
+                //    //}
+                //    //if (elements.Count() > 0) result = (UIElement)elements[0];
+                //    if (result==null)
+                //    {
                 elements = OpenRPA.AutomationHelper.RunSTAThread<UIElement[]>(() =>
                 {
                     try
@@ -45,7 +62,6 @@ namespace OpenRPA.Windows
                     }
                     catch (System.Threading.ThreadAbortException)
                     {
-                        Log.Debug("Timeout getting element");
                     }
                     catch (Exception ex)
                     {
@@ -53,12 +69,15 @@ namespace OpenRPA.Windows
                     }
                     return new UIElement[] { };
                 }, TimeSpan.FromMilliseconds(250)).Result;
-                if(elements==null) 
+                if (elements == null)
                 {
                     elements = new UIElement[] { };
                 }
+                //    }
                 if (elements.Count() > 0) result = (UIElement)elements[0];
             } while (result == null && sw.Elapsed < timeout);
+
+            elements = WindowsSelector.GetElementsWithuiSelector(sel, null);
             if (elements.Count() > 0) result = (UIElement)elements[0];
             context.SetValue(Element, result);
             if (result != null) {

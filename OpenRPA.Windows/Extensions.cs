@@ -1,5 +1,5 @@
-﻿using OpenRPA.Interfaces;
-using Serilog;
+﻿using FlaUI.Core.AutomationElements;
+using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace OpenRPA.Windows
 {
     public static class Extensions
     {
-        public static ProcessInfo GetProcessInfo(this FlaUI.Core.AutomationElements.Infrastructure.AutomationElement element)
+        public static ProcessInfo GetProcessInfo(this AutomationElement element)
         {
             if (!element.Properties.ProcessId.IsSupported) return null;
             ProcessInfo result = new ProcessInfo();

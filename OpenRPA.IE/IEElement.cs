@@ -9,8 +9,9 @@ namespace OpenRPA.IE
 {
     public class IEElement : IElement
     {
-        public IEElement(mshtml.IHTMLElement Element)
+        public IEElement(Browser browser, mshtml.IHTMLElement Element)
         {
+            Browser = browser;
             rawElement = Element;
             className = Element.className;
             id = Element.id;
@@ -22,17 +23,35 @@ namespace OpenRPA.IE
             }
             try
             {
-                uniqueID = ((dynamic)rawElement).uniqueID;
+                //var e1 = rawElement as mshtml.IHTMLElement;
+                //var e2 = rawElement as mshtml.IHTMLElement2;
+                //var e3 = rawElement as mshtml.IHTMLElement3;
+                //var e4 = rawElement as mshtml.IHTMLElement4;
+                //uniqueID = ((dynamic)rawElement).uniqueID;
+                mshtml.IHTMLUniqueName id = rawElement as mshtml.IHTMLUniqueName;
+                uniqueID = id.uniqueID;
             }
             catch (Exception)
             {
             }
+            IndexInParent = -1;
+            if (Element.parentElement != null && !string.IsNullOrEmpty(uniqueID))
+            {
+                mshtml.IHTMLElementCollection children = Element.children;
+                for (int i = 0; i < children.length; i++)
+                {
+                    mshtml.IHTMLUniqueName id = rawElement as mshtml.IHTMLUniqueName;
+                    if (id.uniqueID== uniqueID) { IndexInParent = i; break; }
+                }
+            }
         }
+        public Browser Browser { get; set; }
         public string className { get; set; }
         public string uniqueID { get; set; }
         public string id { get; set; }
         public string tagName { get; set; }
         public string type { get; set; }
+        public int IndexInParent { get; set; }
         public mshtml.IHTMLElement rawElement { get; private set; }
 
         //public HTMLElement rawElement { get; private set; }
@@ -43,6 +62,15 @@ namespace OpenRPA.IE
                 var ele = (mshtml.IHTMLInputElement)rawElement;
                 var _ele2 = ele as mshtml.IHTMLElement;
                 _ele2.click();
+            }
+            else if (rawElement.tagName.ToLower() == "a")
+            {
+                var ele = (mshtml.IHTMLLinkElement)rawElement;
+                var _ele2 = ele as mshtml.IHTMLElement;
+                _ele2.click();
+            } else
+            {
+                rawElement.click();
             }
         }
         public void Focus()
@@ -57,8 +85,11 @@ namespace OpenRPA.IE
                 {
                     var ele = (mshtml.IHTMLInputElement)rawElement;
                     return ele.value;
+                } else
+                {
+                    return rawElement.innerText;
                 }
-                return null;
+                // return null;
             }
             set
             {

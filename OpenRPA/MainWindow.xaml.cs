@@ -1,7 +1,6 @@
 ﻿using OpenRPA.Input;
 using OpenRPA.Interfaces;
 using OpenRPA.Net;
-using Serilog;
 using System;
 using System.Activities.Core.Presentation;
 using System.Collections.Generic;
@@ -43,11 +42,11 @@ namespace OpenRPA
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
             // .WriteTo.Console()
-            Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
+            //Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
 
-                .WriteTo.File("log-.txt", rollingInterval: RollingInterval.Day)
-                .WriteTo.OpenRPATracing(tracing)
-                .CreateLogger();
+            //    .WriteTo.File("log-.txt", rollingInterval: RollingInterval.Day)
+            //    .WriteTo.OpenRPATracing(tracing)
+            //    .CreateLogger();
 
             System.Diagnostics.Trace.Listeners.Add(tracing);
             Console.SetOut(new DebugTextWriter());
@@ -62,7 +61,7 @@ namespace OpenRPA
             Exception ex = (Exception)args.ExceptionObject;
             Log.Error(ex, "");
             Log.Error("MyHandler caught : " + ex.Message);
-            Log.Error("Runtime terminating: {0}", args.IsTerminating);
+            Log.Error("Runtime terminating: {0}", (args.IsTerminating).ToString());
         }
         private void AddHotKeys()
         {
@@ -164,7 +163,7 @@ namespace OpenRPA
                 if (tab.Content is Views.WFDesigner)
                 {
                     designer = (Views.WFDesigner)tab.Content;
-                    if (designer.Workflow.Filename == Filename)
+                    if (designer.Workflow.FilePath == Filename)
                     {
                         return designer;
                     }
@@ -192,7 +191,7 @@ namespace OpenRPA
         {
             AutomationHelper.syncContext.Post(o =>
             {
-                Views.WFDesigner designer = getWorkflowDesignerByFilename(workflow.Filename);
+                Views.WFDesigner designer = getWorkflowDesignerByFilename(workflow.FilePath);
                 if (designer == null && !string.IsNullOrEmpty(workflow._id)) designer = getWorkflowDesignerById(workflow._id);
                 if (designer != null)
                 {
@@ -232,7 +231,7 @@ namespace OpenRPA
                     if (tab.Content is Views.WFDesigner)
                     {
                         designer = (Views.WFDesigner)tab.Content;
-                        if (designer.Workflow.Filename == view.Workflow.Filename)
+                        if (designer.Workflow.FilePath == view.Workflow.FilePath)
                         {
                             var t = (Views.ClosableTab)tab;
                             t.Title = (designer.HasChanged ? designer.Workflow.name + "*" : designer.Workflow.name);
@@ -246,6 +245,10 @@ namespace OpenRPA
         }
         public void onOpenProject(Project project)
         {
+            foreach (var wf in project.Workflows)
+            {
+                onOpenWorkflow(wf);
+            }
         }
         private bool canSave(object item) { return (item is Views.WFDesigner); }
         private async void onSave(object item)
@@ -305,7 +308,8 @@ namespace OpenRPA
 
         private async void onDelete(object item)
         {
-            var view = (Views.OpenProject)item;
+            var view = item as Views.OpenProject;
+            if (view == null) return;
             var val = view.listWorkflows.SelectedValue;
             var wf = val as Workflow;
             var p = val as Project;
@@ -313,7 +317,7 @@ namespace OpenRPA
 
             if (wf != null)
             {
-                Views.WFDesigner designer = getWorkflowDesignerByFilename(wf.Filename);
+                Views.WFDesigner designer = getWorkflowDesignerByFilename(wf.FilePath);
                 if (designer == null && !string.IsNullOrEmpty(wf._id)) { designer = getWorkflowDesignerById(wf._id); }
                 if (designer != null) { designer.tab.Close(); }
 
@@ -330,7 +334,7 @@ namespace OpenRPA
                     if (messageBoxResult != MessageBoxResult.Yes) return;
                     foreach (var _wf in p.Workflows.ToList())
                     {
-                        Views.WFDesigner designer = getWorkflowDesignerByFilename(_wf.Filename);
+                        Views.WFDesigner designer = getWorkflowDesignerByFilename(_wf.FilePath);
                         if (designer == null && !string.IsNullOrEmpty(_wf._id)) { designer = getWorkflowDesignerById(_wf._id); }
                         if (designer != null) { designer.tab.Close(); }
                         await _wf.Delete();
@@ -391,9 +395,8 @@ namespace OpenRPA
             {
                 StopRecordPlugins();
                 InputDriver.Instance.CallNext = true;
-                InputDriver.Instance.OnMouseDown -= OnMouseDown;
-                InputDriver.Instance.OnMouseUp -= OnMouseUp;
                 InputDriver.Instance.OnKeyDown -= OnKeyDown;
+                InputDriver.Instance.OnKeyUp -= OnKeyUp;
             }
         }
         private bool canRecord(object item)
@@ -409,15 +412,10 @@ namespace OpenRPA
             }
             return !isRecording;
         }
-        // private Input.InputEventArgs lastInputEventArgs;
-        private void OnMouseDown(Input.InputEventArgs e)
-        {
-            // lastInputEventArgs = e;
-        }
-        private void OnMouseUp(Input.InputEventArgs e)
-        {
-        }
         private void OnKeyDown(Input.InputEventArgs e)
+        {
+        }
+        private void OnKeyUp(Input.InputEventArgs e)
         {
         }
         private void StartRecordPlugins()
@@ -450,7 +448,7 @@ namespace OpenRPA
             //    p.Stop();
             //}
         }
-        public void OnUserAction(IRecording sender, IRecordEvent e)
+        public void OnUserAction(IPlugin sender, IRecordEvent e)
         {
             StopRecordPlugins();
             AutomationHelper.syncContext.Post(o =>
@@ -493,12 +491,15 @@ namespace OpenRPA
                         }
                     }
                     view.addActivity(e.a.Activity);
-                    InputDriver.Instance.CallNext = true;
-                    Log.Debug("MouseMove to " + e.X + "," + e.Y + " and click " + e.Button + " button");
-                    InputDriver.Instance.MouseMove(e.X, e.Y);
-                    // InputDriver.Instance.Click(lastInputEventArgs.Button);
-                    InputDriver.DoMouseClick();
-                    Log.Debug("Click done");
+                    if(e.ClickHandled == false)
+                    {
+                        InputDriver.Instance.CallNext = true;
+                        Log.Debug("MouseMove to " + e.X + "," + e.Y + " and click " + e.Button + " button");
+                        InputDriver.Instance.MouseMove(e.X, e.Y);
+                        // InputDriver.Instance.Click(lastInputEventArgs.Button);
+                        InputDriver.DoMouseClick();
+                        Log.Debug("Click done");
+                    }
                     System.Threading.Thread.Sleep(200);
                 }
                 InputDriver.Instance.CallNext = false;
@@ -509,9 +510,8 @@ namespace OpenRPA
         {
             if (!(item is Views.WFDesigner)) return;
             var designer = (Views.WFDesigner)item;
-            InputDriver.Instance.OnMouseDown += OnMouseDown;
-            InputDriver.Instance.OnMouseUp += OnMouseUp;
             InputDriver.Instance.OnKeyDown += OnKeyDown;
+            InputDriver.Instance.OnKeyUp += OnKeyUp;
             StartRecordPlugins();
             InputDriver.Instance.CallNext = false;
         }
@@ -646,6 +646,10 @@ namespace OpenRPA
                     }
                 }
                 LabelStatusBar.Content = "Connected to " + Config.local.wsurl + " as " + user.name;
+                if (Projects.Count > 0)
+                {
+                    onOpenProject(Projects[0]);
+                }
             }, null);
         }
 

@@ -1,6 +1,6 @@
-﻿using FlaUI.Core.AutomationElements.Infrastructure;
+﻿using FlaUI.Core.AutomationElements;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using OpenRPA.Interfaces;
-using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,7 +71,7 @@ namespace OpenRPA
                 {
                     try
                     {
-                        if (automation.FromPoint(new System.Windows.Point(X, Y)) is AutomationElement rawElement)
+                        if (automation.FromPoint(new System.Drawing.Point(X, Y)) is AutomationElement rawElement)
                         {
                             return new UIElement(rawElement);
                         }
@@ -84,7 +84,7 @@ namespace OpenRPA
                     {
                         var task = Task.Run(() =>
                         {
-                            if (automation.FromPoint(new System.Windows.Point(X, Y)) is AutomationElement rawElement)
+                            if (automation.FromPoint(new System.Drawing.Point(X, Y)) is AutomationElement rawElement)
                             {
                                 return new UIElement(rawElement);
                             }

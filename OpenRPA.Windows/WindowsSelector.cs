@@ -85,7 +85,6 @@ namespace OpenRPA.Windows
                 item.Enabled = true;
                 //item.canDisable = false;
                 Items.Add(item);
-                item.PropertyChanged += SelectorChanged;
             }
             for (var i = 0; i < pathToRoot.Count(); i++)
             {
@@ -105,7 +104,6 @@ namespace OpenRPA.Windows
                 if (doEnum) item.EnumNeededProperties(o, o.Parent);
 
                 Items.Add(item);
-                item.PropertyChanged += SelectorChanged;
             }
             pathToRoot.Reverse();
             Log.Debug(string.Format("windowsselector::EnumNeededProperties::end {0:mm\\:ss\\.fff}", sw.Elapsed));

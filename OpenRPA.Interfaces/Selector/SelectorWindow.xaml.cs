@@ -42,7 +42,6 @@ namespace OpenRPA.Interfaces.Selector
             vm = new SelectorModel(this, selector);
             DataContext = vm;
         }
-
         private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
         {
             TreeViewItem tvi = e.OriginalSource as TreeViewItem;
@@ -54,7 +53,6 @@ namespace OpenRPA.Interfaces.Selector
                     //treeele.IsExpanded = !treeele.IsExpanded;
                     //tvi.BringIntoView();
                 }
-                //MessageBox.Show(string.Format());
             }
         }
         private void TreeViewSelectedHandler(object sender, RoutedEventArgs e)
@@ -67,8 +65,6 @@ namespace OpenRPA.Interfaces.Selector
                 var treeele = item.DataContext as treeelement;
                 if (treeele != null)
                 {
-                    // vm.SelectedItemInTree = treeele;
-                    //tvi.BringIntoView();
                     treeele.LoadDetails();
                     vm.NotifyPropertyChanged("SelectedItemDetails");
                 }
@@ -81,7 +77,6 @@ namespace OpenRPA.Interfaces.Selector
             GenericTools.minimize(GenericTools.mainWindow);
             GenericTools.minimize(this);
         }
-
         private void Plugin_OnUserAction(IPlugin sender, IRecordEvent e)
         {
             plugin.Stop();
@@ -92,36 +87,26 @@ namespace OpenRPA.Interfaces.Selector
             vm.FocusElement(e.Selector);
             // e.Element
         }
-
         private void BtnSyncTree_Click(object sender, RoutedEventArgs e)
         {
 
         }
-
         private void BtnHighlight_Click(object sender, RoutedEventArgs e)
         {
 
         }
-
         public ICommand SelectCommand { get { return new RelayCommand<treeelement>(onSelect); } }
         private void onSelect(treeelement item)
         {
             var selector = plugin.GetSelector(item);
             vm.Selector = selector;
             vm.FocusElement(selector);
-
-            //if (item is uitreeelement) SelectElement(((uitreeelement)item).Element);
-            //if (item is htmltreeelement) SelectElement(((htmltreeelement)item).Element);
-            //if (item is javatreeelement) SelectElement(((javatreeelement)item).Element);
         }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Task.Run(() =>
             {
                 var treeelements = plugin.GetRootElements();
-                IElement[] elements = vm.Selector.GetElements();
-                IElement element = elements.FirstOrDefault();
                 GenericTools.RunUI(this, () =>
                 {
                     System.Diagnostics.Trace.WriteLine("init selector model, with " + treeelements.Count() + " root elements", "Debug");
@@ -131,6 +116,10 @@ namespace OpenRPA.Interfaces.Selector
 
                 
             });
+        }
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            plugin.OnUserAction -= Plugin_OnUserAction;
         }
     }
 }

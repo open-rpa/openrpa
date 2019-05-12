@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Interfaces.Selector
 {
-    public class ExtendedObservableCollection<T> : ObservableCollection<T>
+    public class ExtendedObservableCollection<T> : ObservableCollection<T> where T : INotifyPropertyChanged
     {
         public ExtendedObservableCollection()
         {
@@ -18,6 +18,17 @@ namespace OpenRPA.Interfaces.Selector
         }
         public ExtendedObservableCollection(List<T> list) : base(list)
         {
+        }
+        public event PropertyChangedEventHandler ItemPropertyChanged;
+        private void _ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            ItemPropertyChanged?.Invoke(this, e);
+        }
+
+        protected override void ClearItems()
+        {
+            foreach (var item in Items) item.PropertyChanged -= _ItemPropertyChanged;
+            base.ClearItems();
         }
         public void AddRange(IEnumerable<T> range)
         {
@@ -32,6 +43,7 @@ namespace OpenRPA.Interfaces.Selector
             {
                 Items.Add(item);
             }
+            foreach (var item in range) item.PropertyChanged += _ItemPropertyChanged;
             OnPropertyChanged(new PropertyChangedEventArgs("Count"));
             OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
             OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
@@ -70,6 +82,25 @@ namespace OpenRPA.Interfaces.Selector
                 OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
             }
         }
+        protected override void InsertItem(int index, T item)
+        {
+            item.PropertyChanged += _ItemPropertyChanged;
+            base.InsertItem(index, item);
+        }
+
+        protected override void RemoveItem(int index)
+        {
+            this[index].PropertyChanged -= _ItemPropertyChanged;
+            base.RemoveItem(index);
+        }
+
+        protected override void SetItem(int index, T item)
+        {
+            this[index].PropertyChanged -= _ItemPropertyChanged;
+            item.PropertyChanged += _ItemPropertyChanged;
+            base.SetItem(index, item);
+        }
+
         public void Reset(IEnumerable<T> range)
         {
             ClearItems();

@@ -11,8 +11,15 @@ namespace OpenRPA.Interfaces.Selector
 {
     public partial class Selector : ExtendedObservableCollection<SelectorItem>
     {
-        public ObservableCollection<SelectorItem> Properties { get; set; }
-        public Selector() { }
+        public Selector() {  }
+
+        //public event PropertyChangedEventHandler ElementPropertyChanged;
+        //public void NotifyPropertyChanged(string propertyName)
+        //{
+        //    ElementPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        //}
+
+
         public Selector(string json)
         {
             //if (string.IsNullOrEmpty(json)) return; We want to know, if someone sends illegal json
@@ -21,27 +28,15 @@ namespace OpenRPA.Interfaces.Selector
             {
                 var item = new SelectorItem(o);
                 item.Enabled = true;
-                Items.Add(item);
+                // Items.Add(item);
+                Add(item);
             }
+            //foreach(var p in Items) p.PropertyChanged += (sender, e) =>
+            //{
+            //    OnPropertyChanged(e);
+            //};
 
         }
-        public JObject json
-        {
-            get
-            {
-                var elements = new List<JObject>();
-                foreach (var j in Properties)
-                {
-                    if (j.Enabled) elements.Add(j.json);
-                }
-                return new JObject(elements);
-            }
-        }
-        public void SelectorChanged(object sender, PropertyChangedEventArgs e)
-        {
-            ElementChanged?.Invoke();
-        }
-        public event Action ElementChanged;
         public virtual IElement[] GetElements(IElement fromElement = null) { return new IElement[] { }; }
         public override string ToString()
         {

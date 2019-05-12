@@ -37,14 +37,20 @@ namespace OpenRPA.Interfaces.Selector
             {
                 p.Enabled = true;
                 p.canDisable = true;
+                p.PropertyChanged += (sender, e) =>
+                {
+                    OnPropertyChanged("Displayname");
+                    OnPropertyChanged("json");
+                };
             };
-            Enabled = true;
-            canDisable = string.IsNullOrEmpty(Selector);
-            foreach (var p in Properties) p.PropertyChanged += (sender, e) =>
+            PropertyChanged += (sender, e) =>
             {
+                if (e.PropertyName == "Displayname" || e.PropertyName == "json") return;
                 OnPropertyChanged("Displayname");
                 OnPropertyChanged("json");
             };
+           Enabled = true;
+            canDisable = string.IsNullOrEmpty(Selector);
         }
         public JObject json
         {

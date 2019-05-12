@@ -89,7 +89,6 @@ namespace OpenRPA.IE
                 item.Enabled = true;
                 //item.canDisable = false;
                 Items.Add(item);
-                item.PropertyChanged += SelectorChanged;
             }
             for (var i = 0; i < pathToRoot.Count(); i++)
             {
@@ -108,7 +107,6 @@ namespace OpenRPA.IE
                 if (doEnum) item.EnumNeededProperties(o, o.parentElement);
 
                 Items.Add(item);
-                item.PropertyChanged += SelectorChanged;
             }
             if(frameTags.Contains(baseelement.tagName.ToUpper()))
             {

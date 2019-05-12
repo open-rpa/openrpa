@@ -488,10 +488,10 @@ namespace OpenRPA
                                 To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
                                 Value = win.Text
                             }, "item");
-                        }
+                        } else { e.SupportInput = false;  }
                     }
                     view.addActivity(e.a.Activity);
-                    if(e.ClickHandled == false)
+                    if(e.ClickHandled == false && e.SupportInput == false)
                     {
                         InputDriver.Instance.CallNext = true;
                         Log.Debug("MouseMove to " + e.X + "," + e.Y + " and click " + e.Button + " button");

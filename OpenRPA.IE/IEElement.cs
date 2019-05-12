@@ -52,21 +52,21 @@ namespace OpenRPA.IE
         //public HTMLElement rawElement { get; private set; }
         public void Click()
         {
-            if (rawElement.tagName.ToLower() == "input")
-            {
-                var ele = (mshtml.IHTMLInputElement)rawElement;
-                var _ele2 = ele as mshtml.IHTMLElement;
-                _ele2.click();
-            }
-            else if (rawElement.tagName.ToLower() == "a")
-            {
-                var ele = (mshtml.IHTMLLinkElement)rawElement;
-                var _ele2 = ele as mshtml.IHTMLElement;
-                _ele2.click();
-            } else
-            {
-                rawElement.click();
-            }
+            //if (rawElement.tagName.ToLower() == "input")
+            //{
+            //    var ele = (mshtml.IHTMLInputElement)rawElement;
+            //    var _ele2 = ele as mshtml.IHTMLElement;
+            //    _ele2.click();
+            //}
+            //else if (rawElement.tagName.ToLower() == "a")
+            //{
+            //    var ele = (mshtml.IHTMLLinkElement)rawElement;
+            //    var _ele2 = ele as mshtml.IHTMLElement;
+            //    _ele2.click();
+            //} else
+            //{
+            //}
+            rawElement.click();
         }
         public void Focus()
         {

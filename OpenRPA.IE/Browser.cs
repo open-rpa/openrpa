@@ -116,23 +116,30 @@ namespace OpenRPA.IE
             {
                 using (var automation = Interfaces.AutomationUtil.getAutomation())
                 {
-                    var doc = (w.Document as mshtml.HTMLDocument);
-                    if (doc != null)
+                    try
                     {
-                        wBrowser = w as SHDocVw.WebBrowser;
-                        var _Document = (wBrowser.Document as mshtml.HTMLDocument);
-                        var _Document2 = (wBrowser.Document as mshtml.IHTMLDocument2);
+                        var doc = (w.Document as mshtml.HTMLDocument);
+                        if (doc != null)
+                        {
+                            wBrowser = w as SHDocVw.WebBrowser;
+                            var _Document = (wBrowser.Document as mshtml.HTMLDocument);
+                            var _Document2 = (wBrowser.Document as mshtml.IHTMLDocument2);
 
-                        var _ele = automation.FromHandle(new IntPtr(w.HWND));
+                            var _ele = automation.FromHandle(new IntPtr(w.HWND));
 
-                        panel = _ele.FindFirst(TreeScope.Descendants,
-                            new AndCondition(new PropertyCondition(automation.PropertyLibrary.Element.ControlType, ControlType.Pane),
-                            new PropertyCondition(automation.PropertyLibrary.Element.ClassName, "TabWindowClass"))); // Frame Tab
-                        elementx = Convert.ToInt32(panel.BoundingRectangle.X);
-                        elementy = Convert.ToInt32(panel.BoundingRectangle.Y);
+                            panel = _ele.FindFirst(TreeScope.Descendants,
+                                new AndCondition(new PropertyCondition(automation.PropertyLibrary.Element.ControlType, ControlType.Pane),
+                                new PropertyCondition(automation.PropertyLibrary.Element.ClassName, "TabWindowClass"))); // Frame Tab
+                            elementx = Convert.ToInt32(panel.BoundingRectangle.X);
+                            elementy = Convert.ToInt32(panel.BoundingRectangle.Y);
+                        }
+                    }
+                    catch (Exception)
+                    {
                     }
                 }
             }
+            if (wBrowser.Document == null) throw new Exception("Failed initializing Internet Eexplorer");
             Document = wBrowser.Document as mshtml.HTMLDocument;
             title = Document.title;
         }

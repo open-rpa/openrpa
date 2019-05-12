@@ -47,7 +47,12 @@
                 <ColumnDefinition Width="5"></ColumnDefinition>
                 <ColumnDefinition SharedSizeGroup="col3" Width="261*" MinWidth="50"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TreeView Grid.Column="0" Background="Transparent" ItemsSource="{Binding Directories}" Margin="0,10,0,0" 
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="5"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <TreeView Grid.Column="0" Grid.RowSpan="3" Background="Transparent" ItemsSource="{Binding Directories}" Margin="0,10,0,0" 
                                          MinWidth="50"
                                       Height="Auto"  TreeViewItem.Expanded="TreeViewItem_Expanded" x:Name="treeview" Grid.ColumnSpan="2"
                   >
@@ -199,7 +204,7 @@
                 </TreeView.Resources>
             </TreeView>
             <!-- <local:DockPanelSplitter Width="5" Grid.Column="1" /> -->
-            <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Stretch" />
+            <GridSplitter Grid.Column="2" Grid.RowSpan="3" Width="5" HorizontalAlignment="Stretch" />
             <TreeView Grid.Column="3" x:Name="treeSelectors" ItemsSource="{Binding Selector}" Margin="0,10,0,0" MinWidth="50">
                 <TreeView.ItemTemplate>
                     <DataTemplate>
@@ -222,6 +227,9 @@
                     </DataTemplate>
                 </TreeView.ItemTemplate>
             </TreeView>
+            <GridSplitter Grid.Column="2" Grid.ColumnSpan="4" Grid.Row="1" Height="5" MinWidth="100" HorizontalAlignment="Stretch" 
+            VerticalAlignment="Stretch"  />
+            <TextBox Grid.Column="3" Grid.ColumnSpan="4" Grid.Row="2">wfwe</TextBox>
         </Grid>
 
 

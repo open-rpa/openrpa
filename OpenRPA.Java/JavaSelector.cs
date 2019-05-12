@@ -13,7 +13,7 @@ namespace OpenRPA.Java
     {
         JavaElement element { get; set; }
         public JavaSelector(string json) : base(json) { }
-        public JavaSelector(JavaElement element, JavaSelector anchor)
+        public JavaSelector(JavaElement element, JavaSelector anchor, bool doEnum)
         {
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
@@ -77,7 +77,7 @@ namespace OpenRPA.Java
                 var o = pathToRoot[i];
                 item = new JavaSelectorItem(o, false);
                 if (i == 0 || i == (pathToRoot.Count() - 1)) item.canDisable = false;
-                item.EnumNeededProperties(o, o.Parent);
+                if (doEnum) { item.EnumNeededProperties(o, o.Parent); }
                 Items.Add(item);
             }
             pathToRoot.Reverse();
@@ -120,21 +120,22 @@ namespace OpenRPA.Java
                         result = ((JavaSelectorItem)s).matches(_element);
                         current.AddRange(result);
                     }
-                    if (current.Count == 0)
-                    {
-                        foreach (var _subelement in elements)
-                        {
-                            foreach (var _element in _subelement.Children)
-                            {
-                                result = ((JavaSelectorItem)s).matches(_element);
-                                current.AddRange(result);
-                            }
-                        }
-                    }
+                    //if (current.Count == 0)
+                    //{
+                    //    foreach (var _subelement in elements)
+                    //    {
+                    //        foreach (var _element in _subelement.Children)
+                    //        {
+                    //            result = ((JavaSelectorItem)s).matches(_element);
+                    //            current.AddRange(result);
+                    //        }
+                    //    }
+                    //}
                     if (i == (selectors.Count - 1)) result = current.ToArray();
                     if (current.Count == 0)
                     {
-                        Log.Debug("needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: ");
+                        var _c = new JavaSelectorItem(selectors[i]);
+                        var message = "needed to find " + Environment.NewLine + _c.ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
                         foreach (var element in elements)
                         {
                             var children = element.Children;
@@ -142,7 +143,9 @@ namespace OpenRPA.Java
                             {
                                 try
                                 {
-                                    Log.Debug(c.id + " " + c.role + " " + c.Name);
+                                    message += c.ToString() + Environment.NewLine;
+                                    // Log.Debug(c.ToString());
+                                    // Log.Debug(c.id + " " + c.role + " " + c.Name);
                                     //System.Diagnostics.Trace.WriteLine(java.javahook.getSelector(c, (i == selectors.Count - 1)), rpanet.tracecategory.Selector);
                                 }
                                 catch (Exception)
@@ -150,6 +153,7 @@ namespace OpenRPA.Java
                                 }
                             }
                         }
+                        Log.Debug(message);
                         return new JavaElement[] { };
                     }
                 }

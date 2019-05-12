@@ -131,29 +131,43 @@ namespace OpenRPA.Java
             if (!string.IsNullOrEmpty(element.title)) name = element.title;
             if (!string.IsNullOrEmpty(element.id)) name = element.id;
             var props = GetProperties();
-            int i = props.Length -1;
+            //int i = props.Length -1;
+            int i = 1;
             int matchcounter = 0;
 
             Log.Debug("#****************************************#");
             Log.Debug("# EnumNeededProperties ");
+
+            foreach (var p in Properties) p.Enabled = false;
             do
             {
+                //if(id == "menu" || id == "menu#Window")
+                //{
+                //    Log.Debug("#****************************************#");
+                //}
                 Log.Debug("#****************************************#");
                 Log.Debug("# " + i);
                 var selectedProps = props.Take(i).ToArray();
                 foreach (var p in Properties) p.Enabled = selectedProps.Contains(p.Name);
-                JavaElement[] children = element.Children;
+                JavaElement[] children = { };
+                if(element.Parent != null) { children = element.Parent.Children; }
+                matchcounter = 0;
                 foreach (JavaElement elementNode in children)
                 {
+                    Console.WriteLine("Match using " + i + " properties.");
                     if (match(elementNode)) matchcounter++;
-                    if (matchcounter > 1) break;
+                    if (matchcounter > 1)
+                    {
+                        break;
+                    }
                 }
-                if (matchcounter != 1)
-                {
-                    Log.Debug("EnumNeededProperties match with " + i + " gave more than 1 result");
-                    ++i;
-                    if (i >= props.Count()) break;
-                }
+                if (matchcounter != 1) { ++i; }
+                //if (matchcounter > 1)
+                //{
+                //    Log.Debug("EnumNeededProperties match with " + i + " gave more than 1 result");
+                //    ++i;
+                //    if (i >= props.Count()) break;
+                //}
             } while (matchcounter != 1 && i < props.Count());
 
             Log.Debug("EnumNeededProperties match with " + i + " gave " + matchcounter + " result");

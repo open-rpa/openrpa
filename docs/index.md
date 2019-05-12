@@ -35,6 +35,8 @@ Java Components
 
 Images, OCR and browsers comming soon
 
+Join slack for for help or giving feedback [#openrpa](https://join.slack.com/t/openrpa/shared_invite/enQtNjI2ODE5NDIzNDg5LTFhMzRmMzJiNTYzMDU5OTAxOTA3ZTRiZjA1ZWQ4ZDViMzY5NmVmYTgyZDExNzhiOThkZjE0ZmY2OTMyZjVhNTQ)
+
 Try out [OpenRPA](https://github.com/open-rpa/OpenRPA) here
 
 Try with central management using [OpenFlow](https://github.com/open-rpa/OpenFlow) here

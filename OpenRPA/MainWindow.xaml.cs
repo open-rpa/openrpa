@@ -424,9 +424,9 @@ namespace OpenRPA
             var p = Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
             p.OnUserAction += OnUserAction;
             p.Start();
-            var p2 = Plugins.recordPlugins.Where(x => x.Name == "Java").First();
-            p2.OnUserAction += OnUserAction;
-            p2.Start();
+            //var p2 = Plugins.recordPlugins.Where(x => x.Name == "Java").First();
+            //p2.OnUserAction += OnUserAction;
+            //p2.Start();
             //foreach (var p in Plugins.recordPlugins)
             //{
             //    p.OnUserAction += OnUserAction;
@@ -459,6 +459,20 @@ namespace OpenRPA
                     {
                         if (p.parseUserAction(ref e)) continue;
                     }
+                }
+                if(e.a == null)
+                {
+                    StartRecordPlugins();
+                    if (e.ClickHandled == false)
+                    {
+                        InputDriver.Instance.CallNext = true;
+                        Log.Debug("MouseMove to " + e.X + "," + e.Y + " and click " + e.Button + " button");
+                        InputDriver.Instance.MouseMove(e.X, e.Y);
+                        // InputDriver.Instance.Click(lastInputEventArgs.Button);
+                        InputDriver.DoMouseClick();
+                        Log.Debug("Click done");
+                    }
+                    return;
                 }
                 //if(lastInputEventArgs==null)
                 //{

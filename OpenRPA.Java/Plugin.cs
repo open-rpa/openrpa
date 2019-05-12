@@ -30,30 +30,18 @@ namespace OpenRPA.Java
         public Interfaces.Selector.Selector GetSelector(Interfaces.Selector.treeelement item)
         {
             var javaitem = item as JavaTreeElement;
-            return new JavaSelector(javaitem.JavaElement, null);
+            return new JavaSelector(javaitem.JavaElement, null, true);
         }
         public event Action<IPlugin, IRecordEvent> OnUserAction;
         public string Name { get => "Java"; }
         public Javahook hook { get; set; } = new Javahook();
         public void Start()
         {
-            try
-            {
-                hook.init();
-                hook.OnJavaShutDown += Hook_OnJavaShutDown;
-                hook.OnMouseClicked += Hook_OnMouseClicked;
-                hook.OnMouseEntered += Hook_OnMouseEntered; ;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "");
-            }
+            hook.OnMouseClicked += Hook_OnMouseClicked;
         }
         public void Stop()
         {
-            hook.OnJavaShutDown -= Hook_OnJavaShutDown;
             hook.OnMouseClicked -= Hook_OnMouseClicked;
-            hook.OnMouseEntered -= Hook_OnMouseEntered;
         }
         private void Hook_OnJavaShutDown(int vmID)
         {
@@ -73,7 +61,7 @@ namespace OpenRPA.Java
             sw.Start();
             JavaSelector sel = null;
             // sel = new JavaSelector(e.Element.rawElement, null, true);
-            sel = new JavaSelector(lastElement, null);
+            sel = new JavaSelector(lastElement, null, true);
             if (sel == null) return;
             if (sel.Count < 2) return;
             a.Selector = sel.ToString();
@@ -95,25 +83,40 @@ namespace OpenRPA.Java
         }
         public bool parseUserAction(ref IRecordEvent e)
         {
-            if (e.UIElement == null) return false;
-            if (e.UIElement.ProcessId < 1) return false;
-            var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-            if (p.ProcessName.ToLower() != "java") return false;
             if (lastElement == null) return false;
+            if (e.UIElement == null) return false;
 
-            var selector = new JavaSelector(lastElement, null);
+            if(e.UIElement.ClassName == null || !e.UIElement.ClassName.StartsWith("SunAwt"))
+            {
+                if (e.UIElement.ProcessId < 1) return false;
+                var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
+                if (p.ProcessName.ToLower() != "java") return false;
+            }
+            
 
+            var selector = new JavaSelector(lastElement, null, true);
             var a = new GetElement { DisplayName = lastElement.id + " " + lastElement.role + " " + lastElement.Name };
             a.Selector = selector.ToString();
 
             e.a = new GetElementResult(a);
             e.SupportInput = lastElement.SupportInput;
-            return false;
+            return true;
         }
 
         public void Initialize()
         {
             Javahook.Instance.init();
+            try
+            {
+                hook.init();
+                hook.OnJavaShutDown += Hook_OnJavaShutDown;
+                hook.OnMouseEntered += Hook_OnMouseEntered;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+            }
+
         }
     }
     public class GetElementResult : IBodyActivity

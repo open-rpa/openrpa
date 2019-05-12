@@ -53,6 +53,7 @@ namespace OpenRPA.Java
         {
             get
             {
+                if (role == "menu" || role == "menu item") return false;
                 if (info.accessibleText != 0)
                 {
                     AccessibleTextItemsInfo textItems;
@@ -330,6 +331,11 @@ namespace OpenRPA.Java
         public void Focus()
         {
             throw new NotImplementedException();
+        }
+        public override string ToString()
+        {
+            if (!string.IsNullOrEmpty(title)) return title;
+            return "id:" + id + " role:" + role + " Name: " + Name;
         }
         public override bool Equals(object obj)
         {

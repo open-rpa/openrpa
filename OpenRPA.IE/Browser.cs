@@ -128,6 +128,8 @@ namespace OpenRPA.IE
                         panel = _ele.FindFirst(TreeScope.Descendants,
                             new AndCondition(new PropertyCondition(automation.PropertyLibrary.Element.ControlType, ControlType.Pane),
                             new PropertyCondition(automation.PropertyLibrary.Element.ClassName, "TabWindowClass"))); // Frame Tab
+                        elementx = Convert.ToInt32(panel.BoundingRectangle.X);
+                        elementy = Convert.ToInt32(panel.BoundingRectangle.Y);
                     }
                 }
             }
@@ -137,11 +139,53 @@ namespace OpenRPA.IE
 
         public mshtml.IHTMLElement ElementFromPoint(int X, int Y)
         {
-            int elementx = Convert.ToInt32(panel.BoundingRectangle.X);
-            int elementy = Convert.ToInt32(panel.BoundingRectangle.Y);
             mshtml.IHTMLElement htmlelement = Document.elementFromPoint(X - elementx, Y - elementy);
 
             return htmlelement;
+        }
+        public int elementx { get; set; } = 0;
+        public int elementy { get; set; } = 0;
+        public int frameoffsetx { get; set; } = 0;
+        public int frameoffsety { get;  set; } = 0;
+        public mshtml.IHTMLElement ElementFromPoint(mshtml.IHTMLElement frame , int X, int Y)
+        {
+            frame = Document.elementFromPoint(X - elementx, Y - elementy);
+            frameoffsetx = 0;
+            frameoffsety = 0;
+            bool isFrame = (frame.tagName == "FRAME");
+            while (isFrame)
+            {
+                var web = frame as SHDocVw.IWebBrowser2;
+                elementx += frame.offsetLeft;
+                elementy += frame.offsetTop;
+                frameoffsetx += frame.offsetLeft;
+                frameoffsety += frame.offsetTop;
+                //int elementw = el.offsetWidth;
+                //int elementh = el.offsetHeight;
+
+                var dd = (mshtml.HTMLDocument)web.Document;
+                frame = dd.elementFromPoint(X - elementx, Y - elementy);
+                if(frame==null) frame = dd.elementFromPoint(X, Y );
+                var tag = frame.tagName;
+                var html = frame.innerHTML;
+                System.Diagnostics.Debug.WriteLine("tag: " + tag);
+                System.Diagnostics.Debug.WriteLine("html: " + html);
+                System.Diagnostics.Debug.WriteLine("-----");
+
+                isFrame = (frame.tagName == "FRAME");
+            }
+            return frame as mshtml.IHTMLElement;
+
+            //mshtml.IHTMLElement htmlelement;
+            //// Document = (mshtml.DispHTMLDocument)((SHDocVw.IWebBrowser2)frame).Document;
+            //Document = (mshtml.HTMLDocument)((SHDocVw.IWebBrowser2)frame).Document;
+            //elementx += frame.offsetLeft;
+            //elementy += frame.offsetTop;
+            //frameoffsetx += frame.offsetLeft;
+            //frameoffsety += frame.offsetTop;
+            //htmlelement = Document.elementFromPoint(X - elementx, Y - elementy);
+            //if (htmlelement == null) throw new Exception("Nothing found at " + (X - elementx) + "," + (Y - elementy));
+            //return htmlelement;
         }
     }
 }

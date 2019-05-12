@@ -59,7 +59,16 @@ namespace OpenRPA.IE
                 return e.Value;
             }
         }
-
+        public string type
+        {
+            get
+            {
+                var e = Properties.Where(x => x.Name == "type").FirstOrDefault();
+                if (e == null) return null;
+                return e.Value;
+            }
+        }
+        
         public IESelectorItem(mshtml.HTMLDocument Document)
         {
             // this.element = new IEElement(element);
@@ -86,6 +95,11 @@ namespace OpenRPA.IE
             if (this.Element == null) throw new Exception("Error!!!");
             Properties = new ObservableCollection<SelectorItemProperty>();
             if (!string.IsNullOrEmpty(element.tagName)) Properties.Add(new SelectorItemProperty("tagName", element.tagName));
+            if(element.tagName.ToUpper() == "INPUT")
+            {
+                if (!string.IsNullOrEmpty(((mshtml.IHTMLInputElement)element).type)) Properties.Add(new SelectorItemProperty("type", ((mshtml.IHTMLInputElement)element).type));
+            }
+            
             if (!string.IsNullOrEmpty(element.className)) Properties.Add(new SelectorItemProperty("className", element.className));
             if (!string.IsNullOrEmpty(element.id)) Properties.Add(new SelectorItemProperty("id", element.id));
             if (this.IEElement.IndexInParent > -1) Properties.Add(new SelectorItemProperty("IndexInParent", this.IEElement.IndexInParent.ToString()));
@@ -110,9 +124,10 @@ namespace OpenRPA.IE
         {
             var result = new List<string>();
             if (Properties.Where(x => x.Name == "tagName").Count() == 1) result.Add("tagName");
-            if (Properties.Where(x => x.Name == "className").Count() == 1) result.Add("className");
-            if (Properties.Where(x => x.Name == "id").Count() == 1) result.Add("id");
             if (Properties.Where(x => x.Name == "IndexInParent").Count() == 1) result.Add("IndexInParent");
+            if (Properties.Where(x => x.Name == "className").Count() == 1) result.Add("className");
+            if (Properties.Where(x => x.Name == "type").Count() == 1) result.Add("type");
+            if (Properties.Where(x => x.Name == "id").Count() == 1) result.Add("id");
             return result.ToArray();
         }
         public void EnumNeededProperties(mshtml.IHTMLElement element, mshtml.IHTMLElement parent)
@@ -270,10 +285,10 @@ namespace OpenRPA.IE
                     var IndexInParent = -1;
                     if (m.parentElement != null && !string.IsNullOrEmpty(uniqueID))
                     {
-                        mshtml.IHTMLElementCollection children = m.children;
+                        mshtml.IHTMLElementCollection children = m.parentElement.children;
                         for (int i = 0; i < children.length; i++)
                         {
-                            mshtml.IHTMLUniqueName id2 = m as mshtml.IHTMLUniqueName;
+                            mshtml.IHTMLUniqueName id2 = children.item(i) as mshtml.IHTMLUniqueName;
                             if (id2.uniqueID == uniqueID) { IndexInParent = i; break; }
                         }
                     } 

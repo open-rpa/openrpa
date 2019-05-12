@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamedPipeWrapper", "NamedPi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.JavaBridge", "OpenRPA.JavaBridge\OpenRPA.JavaBridge.csproj", "{5EE14A60-E944-4A66-BC06-20EF6C6AF704}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsAccessBridgeInterop", "WindowsAccessBridgeInterop\WindowsAccessBridgeInterop.csproj", "{4B5DE0E1-2F0A-426D-BB12-BECB0F6F8B51}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B5DE0E1-2F0A-426D-BB12-BECB0F6F8B51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B5DE0E1-2F0A-426D-BB12-BECB0F6F8B51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B5DE0E1-2F0A-426D-BB12-BECB0F6F8B51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B5DE0E1-2F0A-426D-BB12-BECB0F6F8B51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
 ﻿using FlaUI.Core.AutomationElements;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;

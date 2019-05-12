@@ -79,7 +79,7 @@ namespace OpenRPA.IE
             }
             int frameoffsetx = 0;
             int frameoffsety = 0;
-            if (IEElement.tagName.ToLower() == "frame")
+            if (IESelector.frameTags.Contains(IEElement.tagName.ToUpper()))
             {
                 frameoffsetx += IEElement.rawElement.offsetLeft;
                 frameoffsety += IEElement.rawElement.offsetTop;

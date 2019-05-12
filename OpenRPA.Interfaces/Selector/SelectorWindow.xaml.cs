@@ -21,26 +21,24 @@ namespace OpenRPA.Interfaces.Selector
     public partial class SelectorWindow : Window
     {
         public SelectorModel vm;
-        public string pluginname;
-        IPlugin plugin = null;
         public SelectorWindow(string pluginname)
         {
             InitializeComponent();
-            this.pluginname = pluginname;
-            plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
-            plugin.OnUserAction += Plugin_OnUserAction;
             vm = new SelectorModel(this);
             DataContext = vm;
+            vm.PluginName = pluginname;
+            vm.Plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
+            vm.Plugin.OnUserAction += Plugin_OnUserAction;
         }
         public SelectorWindow(string pluginname, Selector selector)
         {
             InitializeComponent();
-            this.pluginname = pluginname;
-            plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
-            plugin.OnUserAction += Plugin_OnUserAction;
-            var treeelements = plugin.GetRootElements();
             vm = new SelectorModel(this, selector);
             DataContext = vm;
+            vm.PluginName = pluginname;
+            vm.Plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
+            vm.Plugin.OnUserAction += Plugin_OnUserAction;
+            // var treeelements = vm.Plugin.GetRootElements();
         }
         private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
         {
@@ -73,13 +71,13 @@ namespace OpenRPA.Interfaces.Selector
         }
         private void Select_Click(object sender, RoutedEventArgs e)
         {
-            plugin.Start();
+            vm.Plugin.Start();
             GenericTools.minimize(GenericTools.mainWindow);
             GenericTools.minimize(this);
         }
         private void Plugin_OnUserAction(IPlugin sender, IRecordEvent e)
         {
-            plugin.Stop();
+            vm.Plugin.Stop();
             e.ClickHandled = true;
             // GenericTools.restore(GenericTools.mainWindow);
             GenericTools.restore(this);
@@ -93,12 +91,13 @@ namespace OpenRPA.Interfaces.Selector
         }
         private void BtnHighlight_Click(object sender, RoutedEventArgs e)
         {
-
+            vm.Highlight = !vm.Highlight;
+            vm.doHighlight();
         }
         public ICommand SelectCommand { get { return new RelayCommand<treeelement>(onSelect); } }
         private void onSelect(treeelement item)
         {
-            var selector = plugin.GetSelector(item);
+            var selector = vm.Plugin.GetSelector(item);
             vm.Selector = selector;
             vm.FocusElement(selector);
         }
@@ -106,7 +105,7 @@ namespace OpenRPA.Interfaces.Selector
         {
             Task.Run(() =>
             {
-                var treeelements = plugin.GetRootElements();
+                var treeelements = vm.Plugin.GetRootElements();
                 GenericTools.RunUI(this, () =>
                 {
                     System.Diagnostics.Trace.WriteLine("init selector model, with " + treeelements.Count() + " root elements", "Debug");
@@ -119,7 +118,7 @@ namespace OpenRPA.Interfaces.Selector
         }
         private void Window_Closed(object sender, EventArgs e)
         {
-            plugin.OnUserAction -= Plugin_OnUserAction;
+            vm.Plugin.OnUserAction -= Plugin_OnUserAction;
         }
     }
 }

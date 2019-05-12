@@ -166,7 +166,8 @@ namespace OpenRPA.Windows
                     {
                         foreach (var _element in elements)
                         {
-                            var matches = ((WindowsSelectorItem)s).matches(automation, _element.rawElement, _treeWalker, 1);
+                            //var matches = ((WindowsSelectorItem)s).matches(automation, _element.rawElement, _treeWalker, (i == (selectors.Count - 1) ? 500 : 1));
+                            var matches = ((WindowsSelectorItem)s).matches(automation, _element.rawElement, _treeWalker, (i == 0 ? 1: 500));
                             var uimatches = new List<UIElement>();
                             foreach (var m in matches)
                             {

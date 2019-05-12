@@ -48,7 +48,6 @@ namespace OpenRPA.Java
         public int Height { get; set; }
         public bool IsVisible { get; set; }
         public Dictionary<string, object> properties { get; set; }
-
         public bool SupportInput
         {
             get
@@ -115,7 +114,6 @@ namespace OpenRPA.Java
 
             }
         }
-
         public JavaElement(AccessibleNode c)
         {
             this.c = c;
@@ -281,7 +279,6 @@ namespace OpenRPA.Java
                 return result.ToArray();
             }
         }
-
         public void Click()
         {
             AccessibleActions _actions;
@@ -331,6 +328,9 @@ namespace OpenRPA.Java
         public void Focus()
         {
             throw new NotImplementedException();
+        }
+        public void Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
+        {
         }
         public override string ToString()
         {

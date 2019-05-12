@@ -123,11 +123,11 @@ namespace OpenRPA.IE
         private string[] GetProperties()
         {
             var result = new List<string>();
+            if (Properties.Where(x => x.Name == "id").Count() == 1) result.Add("id");
             if (Properties.Where(x => x.Name == "tagName").Count() == 1) result.Add("tagName");
-            if (Properties.Where(x => x.Name == "IndexInParent").Count() == 1) result.Add("IndexInParent");
             if (Properties.Where(x => x.Name == "className").Count() == 1) result.Add("className");
             if (Properties.Where(x => x.Name == "type").Count() == 1) result.Add("type");
-            if (Properties.Where(x => x.Name == "id").Count() == 1) result.Add("id");
+            if (Properties.Where(x => x.Name == "IndexInParent").Count() == 1) result.Add("IndexInParent");
             return result.ToArray();
         }
         public void EnumNeededProperties(mshtml.IHTMLElement element, mshtml.IHTMLElement parent)
@@ -137,29 +137,39 @@ namespace OpenRPA.IE
             if (!string.IsNullOrEmpty(element.className)) name = element.className;
             if (!string.IsNullOrEmpty(element.id)) name = element.id;
             var props = GetProperties();
-            int i = props.Length -1;
+            int i = 1;
             int matchcounter = 0;
 
             Log.Debug("#****************************************#");
             Log.Debug("# EnumNeededProperties ");
+            foreach (var p in Properties) p.Enabled = false;
             do
             {
+                if(className == "gNO89b")
+                {
+                    Log.Debug("#****************************************#");
+                }
                 Log.Debug("#****************************************#");
                 Log.Debug("# " + i);
                 var selectedProps = props.Take(i).ToArray();
                 foreach (var p in Properties) p.Enabled = selectedProps.Contains(p.Name);
-                mshtml.IHTMLElementCollection children = element.children;
-                foreach (mshtml.IHTMLElement elementNode in children)
+                mshtml.IHTMLElementCollection children = null;
+                if(element.parentElement != null) { children = element.parentElement.children; }
+                matchcounter = 0;
+                if (children!=null)
                 {
-                    if (match(elementNode)) matchcounter++;
-                    if (matchcounter > 1) break;
-                }
-                if (matchcounter != 1)
-                {
-                    Log.Debug("EnumNeededProperties match with " + i + " gave more than 1 result");
-                    ++i;
-                    if (i >= props.Count()) break;
-                }
+                    foreach (mshtml.IHTMLElement elementNode in children)
+                    {
+                        if (match(elementNode)) matchcounter++;
+                        if (matchcounter > 1) break;
+                    }
+                    if (matchcounter != 1)
+                    {
+                        Log.Debug("EnumNeededProperties match with " + i + " gave more than 1 result");
+                        ++i;
+                        if (i >= props.Count()) break;
+                    }
+                } else { ++i;  }
             } while (matchcounter != 1 && i < props.Count());
 
             Log.Debug("EnumNeededProperties match with " + i + " gave " + matchcounter + " result");

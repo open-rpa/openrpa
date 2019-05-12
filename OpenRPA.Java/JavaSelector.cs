@@ -13,7 +13,7 @@ namespace OpenRPA.Java
     {
         JavaElement element { get; set; }
         public JavaSelector(string json) : base(json) { }
-        public JavaSelector(JavaElement element, JavaSelector anchor)
+        public JavaSelector(JavaElement element, JavaSelector anchor, bool doEnum)
         {
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
@@ -77,7 +77,7 @@ namespace OpenRPA.Java
                 var o = pathToRoot[i];
                 item = new JavaSelectorItem(o, false);
                 if (i == 0 || i == (pathToRoot.Count() - 1)) item.canDisable = false;
-                item.EnumNeededProperties(o, o.Parent);
+                if (doEnum) { item.EnumNeededProperties(o, o.Parent); }
                 Items.Add(item);
             }
             pathToRoot.Reverse();

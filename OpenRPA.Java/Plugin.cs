@@ -30,7 +30,7 @@ namespace OpenRPA.Java
         public Interfaces.Selector.Selector GetSelector(Interfaces.Selector.treeelement item)
         {
             var javaitem = item as JavaTreeElement;
-            return new JavaSelector(javaitem.JavaElement, null);
+            return new JavaSelector(javaitem.JavaElement, null, true);
         }
         public event Action<IPlugin, IRecordEvent> OnUserAction;
         public string Name { get => "Java"; }
@@ -61,7 +61,7 @@ namespace OpenRPA.Java
             sw.Start();
             JavaSelector sel = null;
             // sel = new JavaSelector(e.Element.rawElement, null, true);
-            sel = new JavaSelector(lastElement, null);
+            sel = new JavaSelector(lastElement, null, true);
             if (sel == null) return;
             if (sel.Count < 2) return;
             a.Selector = sel.ToString();
@@ -94,7 +94,7 @@ namespace OpenRPA.Java
             }
             
 
-            var selector = new JavaSelector(lastElement, null);
+            var selector = new JavaSelector(lastElement, null, true);
             var a = new GetElement { DisplayName = lastElement.id + " " + lastElement.role + " " + lastElement.Name };
             a.Selector = selector.ToString();
 

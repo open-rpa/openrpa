@@ -54,7 +54,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="WindowsAccessBridgeInterop, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\WindowsAccessBridgeInterop\bin\Debug\WindowsAccessBridgeInterop.dll</HintPath>
+      <HintPath>..\WindowsAccessBridgeInterop\obj\Debug\WindowsAccessBridgeInterop.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -89,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\GetElementDesigner.xaml">

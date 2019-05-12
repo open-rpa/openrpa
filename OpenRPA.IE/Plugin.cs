@@ -102,20 +102,21 @@ namespace OpenRPA.IE
             var htmlelement = browser.ElementFromPoint(e.X, e.Y);
             if (htmlelement == null) { return false; }
 
-            var selector = new IESelector(browser, htmlelement, null, false, e.X, e.Y);
+            var selector = new IESelector(browser, htmlelement, null, true, e.X, e.Y);
 
             var a = new GetElement { DisplayName = htmlelement.id + "-" + htmlelement.tagName + "-" + htmlelement.className };
             a.Selector = selector.ToString();
+            var last = selector.Last() as IESelectorItem;
 
 
-            var tagName = htmlelement.tagName;
+            var tagName = last.tagName;
             if (string.IsNullOrEmpty(tagName)) tagName = "";
             tagName = tagName.ToLower();
             e.a = new GetElementResult(a);
             if (tagName == "input")
             {
-                mshtml.IHTMLInputElement inputelement = (mshtml.IHTMLInputElement)htmlelement;
-                e.SupportInput = (inputelement.type.ToLower() == "text" || inputelement.type.ToLower() == "password");
+                // mshtml.IHTMLInputElement inputelement = (mshtml.IHTMLInputElement)htmlelement;
+                e.SupportInput = (last.type.ToLower() == "text" || last.type.ToLower() == "password");
             }
 
             return true;

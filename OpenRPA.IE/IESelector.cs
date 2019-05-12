@@ -13,6 +13,7 @@ namespace OpenRPA.IE
 {
     class IESelector : Selector
     {
+        public static readonly string[] frameTags = { "FRAME", "IFRAME" };
         IEElement element { get; set; }
         public IESelector(string json) : base(json) { }
         public IESelector(Browser browser, mshtml.IHTMLElement baseelement, IESelector anchor, bool doEnum, int X, int Y)
@@ -109,29 +110,30 @@ namespace OpenRPA.IE
                 Items.Add(item);
                 item.PropertyChanged += SelectorChanged;
             }
-            if(baseelement.tagName == "FRAME")
+            if(frameTags.Contains(baseelement.tagName.ToUpper()))
             {
-                var ele2 = baseelement as mshtml.IHTMLElement2;
-                var col2 = ele2.getClientRects();
-                var rect2 = col2.item(0);
-                X -= rect2.left;
-                Y -= rect2.top;
+                //var ele2 = baseelement as mshtml.IHTMLElement2;
+                //var col2 = ele2.getClientRects();
+                //var rect2 = col2.item(0);
+                //X -= rect2.left;
+                //Y -= rect2.top;
                 var frame = baseelement as mshtml.HTMLFrameElement;
 
                 var fffff = frame.contentWindow;
                 mshtml.IHTMLWindow2 window = frame.contentWindow;
                 mshtml.IHTMLElement el2 = null;
 
-                string[] frameTags = new string[] { "FRAME", "IFRAME" };
+                
                 foreach (string frameTag in frameTags)
                 {
                     mshtml.IHTMLElementCollection framesCollection = document.getElementsByTagName(frameTag);
                     foreach (mshtml.IHTMLElement _frame in framesCollection)
                     {
-                        var _f = _frame as mshtml.HTMLFrameElement;
-                        var _wb = _f as SHDocVw.IWebBrowser2;
-                        document = _wb.Document as mshtml.HTMLDocument;
-                        el2 = document.elementFromPoint(X, Y);
+                        // var _f = _frame as mshtml.HTMLFrameElement;
+                        el2 = browser.ElementFromPoint(_frame, X, Y);
+                        //var _wb = _f as SHDocVw.IWebBrowser2;
+                        //document = _wb.Document as mshtml.HTMLDocument;
+                        //el2 = document.elementFromPoint(X, Y);
                         if (el2 != null)
                         {
                             var tag = el2.tagName;
@@ -143,8 +145,8 @@ namespace OpenRPA.IE
                     }
                 }
             }
-
         }
+
         public override IElement[] GetElements(IElement fromElement = null)
         {
             return IESelector.GetElementsWithuiSelector(this, fromElement);
@@ -183,17 +185,25 @@ namespace OpenRPA.IE
                 {
                     foreach (var _element in elements)
                     {
-                        var matches = ((IESelectorItem)s).matches(_element.rawElement);
+                        mshtml.IHTMLElement[] matches;
+                        if (frameTags.Contains(_element.tagName.ToUpper()))
+                        {
+                            if(s.tagName.ToUpper()=="HTML") { i++; s = new IESelectorItem(selectors[i]); }
+                            var _f = _element.rawElement as mshtml.HTMLFrameElement;
+                            mshtml.DispHTMLDocument doc = (mshtml.DispHTMLDocument)((SHDocVw.IWebBrowser2)_f).Document;
+                            var _doc = doc.documentElement as mshtml.IHTMLElement;
+                            matches = ((IESelectorItem)s).matches(_doc);
+                        }
+                        else
+                        {
+                            matches = ((IESelectorItem)s).matches(_element.rawElement);
+                        }
                         var uimatches = new List<IEElement>();
                         foreach (var m in matches)
                         {
                             var ui = new IEElement(browser, m);
-                            var list = selectors.Take(i).ToList();
-                            list.Add(new IESelectorItem(browser, m));
                             uimatches.Add(ui);
                         }
-
-                        //result = uimatches.ToArray();
                         current.AddRange(uimatches.ToArray());
                         Log.Verbose("add " + uimatches.Count + " matches to current");
                     }

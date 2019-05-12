@@ -91,5 +91,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\toolbox\getuielement.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

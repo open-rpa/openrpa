@@ -23,11 +23,6 @@ namespace OpenRPA.IE
             }
             try
             {
-                //var e1 = rawElement as mshtml.IHTMLElement;
-                //var e2 = rawElement as mshtml.IHTMLElement2;
-                //var e3 = rawElement as mshtml.IHTMLElement3;
-                //var e4 = rawElement as mshtml.IHTMLElement4;
-                //uniqueID = ((dynamic)rawElement).uniqueID;
                 mshtml.IHTMLUniqueName id = rawElement as mshtml.IHTMLUniqueName;
                 uniqueID = id.uniqueID;
             }
@@ -37,10 +32,10 @@ namespace OpenRPA.IE
             IndexInParent = -1;
             if (Element.parentElement != null && !string.IsNullOrEmpty(uniqueID))
             {
-                mshtml.IHTMLElementCollection children = Element.children;
+                mshtml.IHTMLElementCollection children = Element.parentElement.children;
                 for (int i = 0; i < children.length; i++)
                 {
-                    mshtml.IHTMLUniqueName id = rawElement as mshtml.IHTMLUniqueName;
+                    mshtml.IHTMLUniqueName id = children.item(i) as mshtml.IHTMLUniqueName;
                     if (id.uniqueID== uniqueID) { IndexInParent = i; break; }
                 }
             }

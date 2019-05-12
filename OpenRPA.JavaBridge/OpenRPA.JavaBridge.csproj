@@ -35,7 +35,7 @@
     <StartupObject />
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\OpenRPA.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\OpenRPA2.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -82,6 +82,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\OpenRPA.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\OpenRPA2.ico" />
+    <Content Include="Resources\OpenRPA2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

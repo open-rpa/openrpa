@@ -132,7 +132,6 @@ namespace OpenRPA.Windows
             var props = GetProperties();
             int i = props.Length - 1;
             int matchcounter = 0;
-
             var automation = AutomationUtil.getAutomation();
             var cacheRequest = new CacheRequest();
             cacheRequest.TreeScope = FlaUI.Core.Definitions.TreeScope.Element | FlaUI.Core.Definitions.TreeScope.Subtree;
@@ -145,12 +144,10 @@ namespace OpenRPA.Windows
             cacheRequest.Add(automation.PropertyLibrary.Element.ControlType);
             using (cacheRequest.Activate())
             {
-
                 do
                 {
                     var selectedProps = props.Take(i).ToArray();
                     foreach (var p in Properties) p.Enabled = selectedProps.Contains(p.Name);
-
                     var c = GetConditions(props.Take(i).ToArray());
                     matchcounter = parent.FindAllChildren(c).Count();
                     if (matchcounter > 1) break;
@@ -168,45 +165,6 @@ namespace OpenRPA.Windows
                 {
                     Properties.Where(x => x.Name == p).First().Enabled = true;
                 }
-            }
-        }
-        public void EnumNeededProperties2(AutomationElement element, AutomationElement parent)
-        {
-            string name = null;
-            if (element.Properties.Name.IsSupported) name = element.Properties.Name.Value;
-            var props = GetProperties();
-            //AutomationElement[] test = null;
-            int i = 1;
-            int matchcounter = 0;
-
-            var children = parent.FindAllChildren();
-            do
-            {
-                var selectedProps = props.Take(i).ToArray();
-                foreach (var p in Properties) p.Enabled = selectedProps.Contains(p.Name);
-
-                //var c = GetConditions(props.Take(i).ToArray());
-                //matchcounter = match.FindAllChildren(c).Count();
-                //var elementNode = _treeWalker.GetFirstChild(parent);
-                matchcounter = 0;
-                foreach (var elementNode in children)
-                {
-                    if (match(elementNode)) matchcounter++;
-                    if (matchcounter > 1) break;
-                }
-                if (matchcounter != 1)
-                {
-                    Log.Debug("EnumNeededProperties match with " + i + " gave more than 1 result");
-                    ++i;
-                    if (i >= props.Count()) break;
-                }
-            } while (matchcounter != 1 && i < props.Count());
-
-            //Log.Debug("EnumNeededProperties match with " + i + " gave " + matchcounter + " result");
-            Properties.ForEach((e) => e.Enabled = false);
-            foreach (var p in props.Take(i).ToArray())
-            {
-                Properties.Where(x => x.Name == p).First().Enabled = true;
             }
         }
         private AndCondition GetConditions(string[] properties)
@@ -256,8 +214,6 @@ namespace OpenRPA.Windows
         public AutomationElement[] matches(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count)
         {
             var matchs = new List<AutomationElement>();
-
-
             var c = GetConditionsWithoutStar();
             Log.Debug("matches::FindAllChildren");
             //var elements = element.FindAllChildren(c);

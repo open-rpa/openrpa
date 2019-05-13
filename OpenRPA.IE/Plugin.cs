@@ -124,6 +124,12 @@ namespace OpenRPA.IE
         public void Initialize()
         {
         }
+        public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null)
+        {
+            var result = IESelector.GetElementsWithuiSelector(selector as IESelector, fromElement);
+            return result;
+        }
+
     }
     public class GetElementResult : IBodyActivity
     {

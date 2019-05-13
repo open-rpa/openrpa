@@ -102,7 +102,6 @@ namespace OpenRPA.Java
             e.SupportInput = lastElement.SupportInput;
             return true;
         }
-
         public void Initialize()
         {
             Javahook.Instance.init();
@@ -117,6 +116,11 @@ namespace OpenRPA.Java
                 Log.Error(ex, "");
             }
 
+        }
+        public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null)
+        {
+            var result = JavaSelector.GetElementsWithuiSelector(selector as JavaSelector, fromElement);
+            return result;
         }
     }
     public class GetElementResult : IBodyActivity

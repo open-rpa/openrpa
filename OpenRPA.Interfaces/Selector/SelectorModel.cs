@@ -11,29 +11,80 @@ namespace OpenRPA.Interfaces.Selector
 {
     public class SelectorModel : ObservableObject
     {
+        public string PluginName { get; set; }
+        public IPlugin Plugin { get; set; }
+
+        private string _json = null;
+        public string json
+        {
+            get
+            {
+                if (Selector == null) return null;
+                //if (_json == null)
+                //{
+                //    _json = Selector.ToString();
+                //}
+                _json = Selector.ToString();
+                return _json;
+            }
+            set
+            {
+                _json = value;
+                if (_json != null) _json = _json.Trim();
+                //if (Selector == null && !string.IsNullOrEmpty(_json))
+                //{
+                //    Selector = new Selector(_json);
+                //    OnPropertyChanged("Selector");
+                //}
+                Selector = new Selector(_json);
+                OnPropertyChanged("json");
+            }
+        }
+        public bool Highlight { get; set; }
         public void init(treeelement[] treeelements)
         {
             Directories.Clear();
-            foreach(var te in treeelements) Directories.Add(te);
+            foreach (var te in treeelements) Directories.Add(te);
+            foreach (var te in Directories) te.PropertyChanged += (sender, e) =>
+                {
+                    OnPropertyChanged("json");
+                };
+
+            Selector.ItemPropertyChanged += (sender, e) =>
+            {
+                OnPropertyChanged("json");
+            };
+            //Selector.ElementPropertyChanged += (sender, e) =>
+            //{
+            //    OnPropertyChanged("json");
+            //};
         }
         public SelectorModel(SelectorWindow window)
         {
-            Directories = new ObservableCollection<treeelement>();
+            Directories = new ExtendedObservableCollection<treeelement>();
             this.window = window;
+            Directories.ItemPropertyChanged += (sender, e) =>
+            {
+                NotifyPropertyChanged("json");
+            };
+
         }
         public SelectorModel(SelectorWindow window, Selector Selector, Selector Anchor = null)
         {
             this.Anchor = Anchor;
             this.Selector = Selector;
-            Directories = new ObservableCollection<treeelement>();
+            Directories = new ExtendedObservableCollection<treeelement>();
             this.window = window;
+            Directories.ItemPropertyChanged += (sender, e) =>
+            {
+                NotifyPropertyChanged("json");
+            };
         }
         private SelectorWindow window;
         public Selector Selector { get { return GetProperty<Selector>(); } set { SetProperty(value); } }
         public Selector Anchor { get { return GetProperty<Selector>(); } set { SetProperty(value); } }
-
-        private ObservableCollection<treeelement> directories;
-        public ObservableCollection<treeelement> Directories
+        private ExtendedObservableCollection<treeelement> directories;
+        public ExtendedObservableCollection<treeelement> Directories
         {
             get
             {
@@ -45,14 +96,12 @@ namespace OpenRPA.Interfaces.Selector
                 NotifyPropertyChanged("Directories");
             }
         }
-
-
-        internal void FocusElement(Selector Selector)
+        public void FocusElement(Selector Selector)
         {
             AutomationHelper.syncContext.Post(o =>
             {
                 ObservableCollection<treeelement> current = Directories;
-                foreach (var node in Selector.Where(x => x.Selector==null))
+                foreach (var node in Selector.Where(x => x.Selector == null))
                 {
                     System.Diagnostics.Trace.WriteLine("****************************************");
                     var s = node.ToString();
@@ -69,7 +118,7 @@ namespace OpenRPA.Interfaces.Selector
                             treenode.IsSelected = true;
                             continue;
                         }
-                        else if(found == false)
+                        else if (found == false)
                         {
                             var c = treenode.Children.FirstOrDefault();
                             if (c != null) { System.Diagnostics.Trace.WriteLine(c.ToString()); }
@@ -87,10 +136,17 @@ namespace OpenRPA.Interfaces.Selector
                             }
                         }
                     }
-                    if(!found) { return; }
+                    if (!found) { return; }
                 }
             }, null);
         }
-
+        public void doHighlight()
+        {
+            var results = Plugin.GetElementsWithSelector(Selector, null);
+            foreach (var element in results)
+            {
+                element.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(5));
+            }
+        }
     }
 }

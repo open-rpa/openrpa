@@ -85,7 +85,6 @@ namespace OpenRPA.Windows
                 item.Enabled = true;
                 //item.canDisable = false;
                 Items.Add(item);
-                item.PropertyChanged += SelectorChanged;
             }
             for (var i = 0; i < pathToRoot.Count(); i++)
             {
@@ -105,7 +104,6 @@ namespace OpenRPA.Windows
                 if (doEnum) item.EnumNeededProperties(o, o.Parent);
 
                 Items.Add(item);
-                item.PropertyChanged += SelectorChanged;
             }
             pathToRoot.Reverse();
             Log.Debug(string.Format("windowsselector::EnumNeededProperties::end {0:mm\\:ss\\.fff}", sw.Elapsed));
@@ -168,7 +166,8 @@ namespace OpenRPA.Windows
                     {
                         foreach (var _element in elements)
                         {
-                            var matches = ((WindowsSelectorItem)s).matches(automation, _element.rawElement, _treeWalker, 1);
+                            //var matches = ((WindowsSelectorItem)s).matches(automation, _element.rawElement, _treeWalker, (i == (selectors.Count - 1) ? 500 : 1));
+                            var matches = ((WindowsSelectorItem)s).matches(automation, _element.rawElement, _treeWalker, (i == 0 ? 1: 500));
                             var uimatches = new List<UIElement>();
                             foreach (var m in matches)
                             {

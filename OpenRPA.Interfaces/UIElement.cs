@@ -44,7 +44,6 @@ namespace OpenRPA
                 Log.Error(ex, "");
             }
         }
-
         public AutomationElement rawElement { get; private set; }
         public int ProcessId { get; set; }
         public string Id { get; set; }
@@ -52,7 +51,6 @@ namespace OpenRPA
         public string ClassName { get; set; }
         public string Type { get; set; }
         public string Path => string.Format("{0}/{1}", Parent == null ? string.Empty : Parent.Path, Type);
-
         public string ControlType
         {
             get
@@ -67,7 +65,6 @@ namespace OpenRPA
                 return FlaUI.Core.Definitions.ControlType.Custom.ToString();
             }
         }
-
         public bool SupportInput
         {
             get
@@ -84,7 +81,6 @@ namespace OpenRPA
                 return false;
             }
         }
-
         public UIElement Parent
         {
             get
@@ -115,7 +111,6 @@ namespace OpenRPA
             var process = System.Diagnostics.Process.GetProcessById(ProcessId);
             while (!process.Responding) { }
         }
-
         public void Click()
         {
             try
@@ -130,6 +125,10 @@ namespace OpenRPA
             {
                 throw;
             }
+        }
+        public void Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
+        {
+            rawElement.DrawHighlight(Blocking, Color, Duration);
         }
         public string Value
         {

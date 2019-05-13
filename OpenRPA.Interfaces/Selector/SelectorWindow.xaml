@@ -7,7 +7,7 @@
         xmlns:Selector="clr-namespace:OpenRPA.Interfaces.Selector;assembly=OpenRPA.Interfaces"
         xmlns:local="clr-namespace:OpenRPA.Interfaces.Selector"
         xmlns:root="clr-namespace:OpenRPA"
-        mc:Ignorable="d" Loaded="Window_Loaded"
+        mc:Ignorable="d" Loaded="Window_Loaded" Closed="Window_Closed"
         Title="Selector" Height="450" Width="800">
 
     <Window.Resources>
@@ -229,7 +229,7 @@
             </TreeView>
             <GridSplitter Grid.Column="2" Grid.ColumnSpan="4" Grid.Row="1" Height="5" MinWidth="100" HorizontalAlignment="Stretch" 
             VerticalAlignment="Stretch"  />
-            <TextBox Grid.Column="3" Grid.ColumnSpan="4" Grid.Row="2">wfwe</TextBox>
+            <TextBox Grid.Column="3" Grid.ColumnSpan="4" Grid.Row="2" Text="{Binding Path=json, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         </Grid>
 
 

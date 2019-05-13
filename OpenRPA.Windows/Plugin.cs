@@ -11,6 +11,8 @@ using FlaUI.Core;
 using FlaUI.Core.AutomationElements.Infrastructure;
 using OpenRPA.Input;
 using OpenRPA.Interfaces;
+using OpenRPA.Interfaces.Selector;
+
 namespace OpenRPA.Windows
 {
     public class Plugin : IPlugin
@@ -100,6 +102,11 @@ namespace OpenRPA.Windows
 
         public void Initialize()
         {
+        }
+        public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null)
+        {
+            var result = WindowsSelector.GetElementsWithuiSelector(selector as WindowsSelector, fromElement);
+            return result;
         }
     }
     public class GetElementResult : IBodyActivity

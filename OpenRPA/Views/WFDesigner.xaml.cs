@@ -34,7 +34,8 @@ namespace OpenRPA.Views
         public Workflow Workflow { get; private set; }
         public bool HasChanged { get; private set; }
         public ModelItem selectedActivity { get; private set; }
-        public Project Project {
+        public Project Project
+        {
             get
             {
                 return Workflow.Project;
@@ -47,7 +48,7 @@ namespace OpenRPA.Views
             InitializeActivitiesToolbox();
         }
         public readonly ClosableTab tab;
-        public WFDesigner(ClosableTab tab, Workflow workflow, Type[] extratypes )
+        public WFDesigner(ClosableTab tab, Workflow workflow, Type[] extratypes)
         {
             this.tab = tab;
             InitializeComponent();
@@ -168,11 +169,11 @@ namespace OpenRPA.Views
             Workflow.name = modelItem.GetValue<string>("Name");
             Workflow.Xaml = wfDesigner.Text;
             await Workflow.Save();
-            if(HasChanged)
+            if (HasChanged)
             {
                 HasChanged = false;
                 onChanged?.Invoke(this);
-            }            
+            }
         }
 
         private void SelectionChanged(Selection item)
@@ -189,55 +190,77 @@ namespace OpenRPA.Views
                 _wfToolbox = new ToolboxControl();
 
                 // get all loaded assemblies
-                IEnumerable<System.Reflection.Assembly> appAssemblies = AppDomain.CurrentDomain.GetAssemblies().OrderBy(a => a.GetName().Name);
+                IEnumerable<System.Reflection.Assembly> appAssemblies = AppDomain.CurrentDomain.GetAssemblies().OrderBy(a => a.GetName().Name)
+                    .Where(a => a.GetName().Name != "System.ServiceModel.Activities");
 
                 // check if assemblies contain activities
                 int activitiesCount = 0;
                 foreach (System.Reflection.Assembly activityLibrary in appAssemblies)
                 {
                     try
-                    { 
-
-                    var wfToolboxCategory = new ToolboxCategory(activityLibrary.GetName().Name);
-                    var actvities = from
-                                        activityType in activityLibrary.GetExportedTypes()
-                                    where
-                                        (activityType.IsSubclassOf(typeof(Activity))
-                                        || activityType.IsSubclassOf(typeof(NativeActivity))
-                                        || activityType.IsSubclassOf(typeof(DynamicActivity))
-                                        || activityType.IsSubclassOf(typeof(ActivityWithResult))
-                                        || activityType.IsSubclassOf(typeof(AsyncCodeActivity))
-                                        || activityType.IsSubclassOf(typeof(CodeActivity))
-                                        || activityType == typeof(System.Activities.Core.Presentation.Factories.ForEachWithBodyFactory<Type>)
-                                        || activityType == typeof(System.Activities.Statements.FlowNode)
-                                        || activityType == typeof(System.Activities.Statements.State)
-                                        || activityType == typeof(System.Activities.Core.Presentation.FinalState)
-                                        || activityType == typeof(System.Activities.Statements.FlowDecision)
-                                        || activityType == typeof(System.Activities.Statements.FlowNode)
-                                        || activityType == typeof(System.Activities.Statements.FlowStep)
-                                        || activityType == typeof(System.Activities.Statements.FlowSwitch<Type>)
-                                        || activityType == typeof(System.Activities.Statements.ForEach<Type>)
-                                        || activityType == typeof(System.Activities.Statements.Switch<Type>)
-                                        || activityType == typeof(System.Activities.Statements.TryCatch)
-                                        || activityType == typeof(System.Activities.Statements.While))
-                                        && activityType.IsVisible
-                                        && activityType.IsPublic
-                                        && !activityType.IsNested
-                                        && !activityType.IsAbstract
-                                        && (activityType.GetConstructor(Type.EmptyTypes) != null)
-                                        && !activityType.Name.Contains('`') //optional, for extra cleanup
-                                    orderby
-                                        activityType.Name
-                                    select
-                                        new ToolboxItemWrapper(activityType);
-
-                    actvities.ToList().ForEach(wfToolboxCategory.Add);
-
-                    if (wfToolboxCategory.Tools.Count > 0)
                     {
-                        _wfToolbox.Categories.Add(wfToolboxCategory);
-                        activitiesCount += wfToolboxCategory.Tools.Count;
-                    }
+
+                        string[] excludeActivities = { "AddValidationError", "AndAlso", "AssertValidation", "CreateBookmarkScope", "DeleteBookmarkScope", "DynamicActivity",
+                            "CancellationScope", "CompensableActivity", "Compensate", "Confirm", "GetChildSubtree", "GetParentChain", "GetWorkflowTree", "Add`3",  "And`3", "As`2", "Cast`2",
+                        "Cast`2", "ArgumentValue`1", "ArrayItemReference`1", "ArrayItemValue`1", "Assign`1", "Constraint`1","CSharpReference`1", "CSharpValue`1", "DelegateArgumentReference`1",
+                            "DelegateArgumentValue`1", "Divide`3", "DynamicActivity`1", "Equal`3", "FieldReference`2", "FieldValue`2", "ForEach`1", "InvokeAction", "InvokeDelegate",
+                        "ArgumentReference`1", "VariableReference`1", "VariableValue`1", "VisualBasicReference`1", "VisualBasicValue`1", "InvokeMethod`1" };
+
+                        var wfToolboxCategory = new ToolboxCategory(activityLibrary.GetName().Name);
+                        var actvities = from
+                                            activityType in activityLibrary.GetExportedTypes()
+                                        where
+                                            (activityType.IsSubclassOf(typeof(Activity))
+                                            || activityType.IsSubclassOf(typeof(NativeActivity))
+                                            || activityType.IsSubclassOf(typeof(DynamicActivity))
+                                            || activityType.IsSubclassOf(typeof(ActivityWithResult))
+                                            || activityType.IsSubclassOf(typeof(AsyncCodeActivity))
+                                            || activityType.IsSubclassOf(typeof(CodeActivity))
+                                            || activityType.GetInterfaces().Contains(typeof(IActivityTemplateFactory))
+                                            )
+                                            && activityType.IsVisible
+                                            && activityType.IsPublic
+                                            && !activityType.IsNested
+                                            && !activityType.IsAbstract
+                                            && (activityType.GetConstructor(Type.EmptyTypes) != null)
+                                            && !excludeActivities.Contains(activityType.Name)
+                                            && !activityType.Name.StartsWith("InvokeAction`")
+                                            && !activityType.Name.StartsWith("InvokeFunc`")
+                                            && !activityType.Name.StartsWith("Subtract`")
+                                            && !activityType.Name.StartsWith("GreaterThan`")
+                                            && !activityType.Name.StartsWith("GreaterThanOrEqual`")
+                                            && !activityType.Name.StartsWith("LessThan`")
+                                            && !activityType.Name.StartsWith("LessThanOrEqual`")
+                                            && !activityType.Name.StartsWith("Literal`")
+                                            && !activityType.Name.StartsWith("MultidimensionalArrayItemReference`")
+                                            && !activityType.Name.StartsWith("Multiply`")
+                                            && !activityType.Name.StartsWith("New`")
+                                            && !activityType.Name.StartsWith("NewArray`")
+                                            && !activityType.Name.StartsWith("Or`")
+                                            && !activityType.Name.StartsWith("OrElse")
+                                            && !activityType.Name.EndsWith("`2")
+                                            && !activityType.Name.EndsWith("`3")
+                                        orderby
+                                            activityType.Name
+                                        select
+                                            new ToolboxItemWrapper(activityType, activityType.Name.Replace("`1", ""));
+                        (actvities).ToList().ForEach(Console.WriteLine);
+
+                        //Console.WriteLine("******************************");
+                        //actvities.ToList().ForEach(Console.WriteLine);
+                        //Console.WriteLine("******************************");
+                        actvities.ToList().ForEach(wfToolboxCategory.Add);
+
+                        if (wfToolboxCategory.Tools.Count > 0)
+                        {
+                            _wfToolbox.Categories.Add(wfToolboxCategory);
+                            activitiesCount += wfToolboxCategory.Tools.Count;
+                            //if(wfToolboxCategory.CategoryName == "System.Activities")
+                            //{
+                            //    wfToolboxCategory.Tools.Add(new ToolboxItemWrapper(typeof(System.Activities.Core.Presentation.Factories.ForEachWithBodyFactory<>), "ForEach"));
+                            //    wfToolboxCategory.Tools.Add(new ToolboxItemWrapper(typeof(System.Activities.Core.Presentation.Factories.ParallelForEachWithBodyFactory<>), "ParallelForEach"));
+                            //}
+                        }
                     }
                     catch (Exception)
                     {
@@ -245,16 +268,16 @@ namespace OpenRPA.Views
 
                 }
                 //fixed ForEach
-                _wfToolbox.Categories.Add(
-                       new ToolboxCategory
-                       {
-                           CategoryName = "CustomForEach",
-                           Tools = {
-                                new ToolboxItemWrapper(typeof(System.Activities.Core.Presentation.Factories.ForEachWithBodyFactory<>)),
-                                new ToolboxItemWrapper(typeof(System.Activities.Core.Presentation.Factories.ParallelForEachWithBodyFactory<>))
-                           }
-                       }
-                );
+                //_wfToolbox.Categories.Add(
+                //       new ToolboxCategory
+                //       {
+                //           CategoryName = "CustomForEach",
+                //           Tools = {
+                //                new ToolboxItemWrapper(typeof(System.Activities.Core.Presentation.Factories.ForEachWithBodyFactory<>)),
+                //                new ToolboxItemWrapper(typeof(System.Activities.Core.Presentation.Factories.ParallelForEachWithBodyFactory<>))
+                //           }
+                //       }
+                //);
 
                 //LabelStatusBar.Content = String.Format("Loaded Activities: {0}", activitiesCount.ToString());
                 WfToolboxBorder.Child = _wfToolbox;

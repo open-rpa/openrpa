@@ -62,9 +62,6 @@
     <Compile Include="Activities\GetElementDesigner.xaml.cs">
       <DependentUpon>GetElementDesigner.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Activities\UserControl1.xaml.cs">
-      <DependentUpon>UserControl1.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Browser.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IEElement.cs" />
@@ -82,10 +79,6 @@
     <Page Include="Activities\GetElementDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Activities\UserControl1.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -115,13 +108,13 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Resources\designer\gethtmlelement.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\toolbox\gethtmlelement.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

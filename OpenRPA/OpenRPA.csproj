@@ -39,7 +39,7 @@
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\OpenRPA2.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\open_rpa.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
@@ -350,14 +350,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\openflow.ico" />
-    <Resource Include="Resources\openflow.png" />
-    <Resource Include="Resources\OpenRPA.ico" />
-    <Resource Include="Resources\OpenRPA.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\OpenRPA2.ico" />
-    <Resource Include="Resources\OpenRPA2.png" />
+    <Resource Include="Resources\open_flow.ico" />
+    <Resource Include="Resources\open_flow_org.ico" />
+    <Resource Include="Resources\open_rpa.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

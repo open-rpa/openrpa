@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.Activities
 {
     [System.ComponentModel.Designer(typeof(ClickElementDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ClickElement), "Resources.toolbox.elementclick.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.elementclick.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class ClickElement : CodeActivity
     {

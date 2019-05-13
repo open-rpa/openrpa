@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.Java
 {
     [System.ComponentModel.Designer(typeof(GetElementDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(GetElement), "Resources.toolbox.gethtmlelement.png")]
+    [System.Drawing.ToolboxBitmap(typeof(GetElement), "Resources.toolbox.getjavaelement.png")]
     [System.Windows.Markup.ContentProperty("Body")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class GetElement : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory

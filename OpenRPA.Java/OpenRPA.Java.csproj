@@ -63,9 +63,6 @@
     <Compile Include="Activities\GetElementDesigner.xaml.cs">
       <DependentUpon>GetElementDesigner.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Activities\UserControl1.xaml.cs">
-      <DependentUpon>UserControl1.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="HwndCache.cs" />
     <Compile Include="JavaTreeElement.cs" />
@@ -96,10 +93,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Activities\UserControl1.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\designer\getjavaelement.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\toolbox\getjavaelement.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

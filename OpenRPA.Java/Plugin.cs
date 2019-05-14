@@ -117,9 +117,9 @@ namespace OpenRPA.Java
             }
 
         }
-        public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null)
+        public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
-            var result = JavaSelector.GetElementsWithuiSelector(selector as JavaSelector, fromElement);
+            var result = JavaSelector.GetElementsWithuiSelector(selector as JavaSelector, fromElement, maxresults );
             return result;
         }
     }

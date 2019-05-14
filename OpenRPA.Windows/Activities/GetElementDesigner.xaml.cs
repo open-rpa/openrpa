@@ -36,13 +36,18 @@ namespace OpenRPA.Windows
             //if (fromstring != null) from = new selector.zenselector(fromstring);
             
             string SelectorString = ModelItem.GetValue<string>("Selector");
+            int maxresult = ModelItem.GetValue<int>("MaxResults");
             // if (!string.IsNullOrEmpty(ZenSelector)) ZenSelector = JArray.Parse(ZenSelector).ToString();
 
-            
-            var selector = new WindowsSelector(SelectorString);
-            var selectors = new Interfaces.Selector.SelectorWindow("Windows", selector);
 
-            selectors.ShowDialog();
+            var selector = new WindowsSelector(SelectorString);
+            var selectors = new Interfaces.Selector.SelectorWindow("Windows", selector, maxresult);
+
+            if(selectors.ShowDialog() == true)
+            {
+                ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(selectors.vm.json) });
+            }
+
 
             //OpenRPA.p selector.Selector selector = null;
             //if (from != null) selector = new selector.Selector(rpaactivities.selector.elementtype.uia3, from);

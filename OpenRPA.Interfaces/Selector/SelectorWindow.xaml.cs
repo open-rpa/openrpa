@@ -21,19 +21,21 @@ namespace OpenRPA.Interfaces.Selector
     public partial class SelectorWindow : Window
     {
         public SelectorModel vm;
-        public SelectorWindow(string pluginname)
+        public SelectorWindow(string pluginname, int maxresult)
         {
             InitializeComponent();
             vm = new SelectorModel(this);
+            vm.maxresult = maxresult;
             DataContext = vm;
             vm.PluginName = pluginname;
             vm.Plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
             vm.Plugin.OnUserAction += Plugin_OnUserAction;
         }
-        public SelectorWindow(string pluginname, Selector selector)
+        public SelectorWindow(string pluginname, Selector selector, int maxresult)
         {
             InitializeComponent();
             vm = new SelectorModel(this, selector);
+            vm.maxresult = maxresult;
             DataContext = vm;
             vm.PluginName = pluginname;
             vm.Plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
@@ -119,6 +121,16 @@ namespace OpenRPA.Interfaces.Selector
         private void Window_Closed(object sender, EventArgs e)
         {
             vm.Plugin.OnUserAction -= Plugin_OnUserAction;
+        }
+
+        private void Ok_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
         }
     }
 }

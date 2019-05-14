@@ -28,9 +28,11 @@ namespace OpenRPA.IE
         private void Open_Selector(object sender, RoutedEventArgs e)
         {
             string SelectorString = ModelItem.GetValue<string>("Selector");
+            //int maxresult = ModelItem.GetValue<int>("MaxResults");
+            int maxresult = 1;
 
             var selector = new IESelector(SelectorString);
-            var selectors = new Interfaces.Selector.SelectorWindow("IE", selector);
+            var selectors = new Interfaces.Selector.SelectorWindow("IE", selector, maxresult);
 
             selectors.ShowDialog();
 

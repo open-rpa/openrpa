@@ -73,7 +73,6 @@ namespace OpenRPA.Windows
                 Log.Debug(string.Format("Windows.Recording::OnMouseUp::begin"));
                 var re = new RecordEvent(); re.Button = e.Button;
                 var a = new GetElement { DisplayName = e.Element.Id + "-" + e.Element.Name };
-
                 var sw = new System.Diagnostics.Stopwatch();
                 sw.Start();
                 WindowsSelector sel = null;
@@ -82,6 +81,7 @@ namespace OpenRPA.Windows
                 if (sel.Count < 2) return;
                 if (sel == null) return;
                 a.Selector = sel.ToString();
+                a.MaxResults = 1;
                 re.UIElement = e.Element;
                 re.Element = e.Element;
                 re.Selector = sel;
@@ -97,15 +97,13 @@ namespace OpenRPA.Windows
             thread.IsBackground = true;
             thread.Start();
         }
-
         public bool parseUserAction(ref IRecordEvent e) { return true; }
-
         public void Initialize()
         {
         }
-        public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null)
+        public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
-            var result = WindowsSelector.GetElementsWithuiSelector(selector as WindowsSelector, fromElement);
+            var result = WindowsSelector.GetElementsWithuiSelector(selector as WindowsSelector, fromElement, maxresults);
             return result;
         }
     }

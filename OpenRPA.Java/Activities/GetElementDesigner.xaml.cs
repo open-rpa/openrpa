@@ -28,9 +28,11 @@ namespace OpenRPA.Java
         private void Open_Selector(object sender, RoutedEventArgs e)
         {
             string SelectorString = ModelItem.GetValue<string>("Selector");
+            //int maxresult = ModelItem.GetValue<int>("MaxResults");
+            int maxresult = 1;
 
             var selector = new JavaSelector(SelectorString);
-            var selectors = new Interfaces.Selector.SelectorWindow("Java", selector);
+            var selectors = new Interfaces.Selector.SelectorWindow("Java", selector, maxresult);
             selectors.ShowDialog();
         }
     }

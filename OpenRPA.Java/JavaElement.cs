@@ -331,6 +331,7 @@ namespace OpenRPA.Java
         }
         public void Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
         {
+
         }
         public override string ToString()
         {

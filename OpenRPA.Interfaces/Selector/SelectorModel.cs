@@ -40,6 +40,9 @@ namespace OpenRPA.Interfaces.Selector
                 OnPropertyChanged("json");
             }
         }
+
+        public int maxresult { get; set; }
+
         public bool Highlight { get; set; }
         public void init(treeelement[] treeelements)
         {
@@ -142,7 +145,7 @@ namespace OpenRPA.Interfaces.Selector
         }
         public void doHighlight()
         {
-            var results = Plugin.GetElementsWithSelector(Selector, null);
+            var results = Plugin.GetElementsWithSelector(Selector, null, maxresult);
             foreach (var element in results)
             {
                 element.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(5));

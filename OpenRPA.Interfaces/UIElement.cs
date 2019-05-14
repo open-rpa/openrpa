@@ -192,5 +192,9 @@ namespace OpenRPA
             if (e.Type != Type) return false;
             return true;
         }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

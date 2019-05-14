@@ -9,6 +9,13 @@ namespace OpenRPA.IE
 {
     public class IEElement : IElement
     {
+        public System.Drawing.Rectangle Rectangle
+        {
+            get
+            {
+                return System.Drawing.Rectangle.Empty;
+            }
+        }
         public IEElement(Browser browser, mshtml.IHTMLElement Element)
         {
             Browser = browser;
@@ -107,10 +114,14 @@ namespace OpenRPA.IE
             var e = obj as IEElement;
             if (e == null) return false;
             if (e.uniqueID == uniqueID) return true;
-            if (rawElement.sourceIndex == e.rawElement.sourceIndex) return true;    
+            if (rawElement.sourceIndex == e.rawElement.sourceIndex) return true;
             if (rawElement.GetHashCode() == e.rawElement.GetHashCode()) return true;
             return false;
             //return base.Equals(obj);
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

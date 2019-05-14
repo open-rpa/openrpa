@@ -25,7 +25,7 @@ namespace OpenRPA.Windows
                 var automation = AutomationUtil.getAutomation();
                 var _rootElement = automation.GetDesktop();
                 var _treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
-                Interfaces.Selector.treeelement ui = null;
+                // Interfaces.Selector.treeelement ui = null;
                 //var elementNode = _rootElement;
                 //ui = new WindowsTreeElement(null, false, automation, elementNode, _treeWalker);
                 if (_rootElement != null)

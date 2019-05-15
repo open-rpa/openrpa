@@ -82,7 +82,7 @@ namespace OpenRPA.Windows
             int maxresults = ModelItem.GetValue<int>("MaxResults");
             var selector = new WindowsSelector(SelectorString);
             var elements = WindowsSelector.GetElementsWithuiSelector(selector, null, maxresults);
-            foreach (var ele in elements) ele.Highlight(true, System.Drawing.Color.Red, TimeSpan.FromSeconds(3));
+            foreach (var ele in elements) ele.Highlight(true, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
         }
     }
 }

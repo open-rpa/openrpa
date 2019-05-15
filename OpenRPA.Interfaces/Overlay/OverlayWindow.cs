@@ -22,11 +22,21 @@ namespace OpenRPA.Interfaces.Overlay
         public void SetTimeout(TimeSpan closeAfter)
         {
             tmr = new System.Windows.Forms.Timer();
-            tmr.Tick += delegate {
-                this.Close();
-            };
+            tmr.Tick += Tmr_Tick; ;
             tmr.Interval = (int)closeAfter.TotalMilliseconds;
             tmr.Start();
+        }
+
+        private void Tmr_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                Close();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         protected override CreateParams CreateParams
         {

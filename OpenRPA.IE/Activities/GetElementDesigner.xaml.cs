@@ -46,7 +46,7 @@ namespace OpenRPA.IE
             int maxresults = ModelItem.GetValue<int>("MaxResults");
             var selector = new IESelector(SelectorString);
             var elements = IESelector.GetElementsWithuiSelector(selector, null, maxresults);
-            foreach (var ele in elements) ele.Highlight(true, System.Drawing.Color.Red, TimeSpan.FromSeconds(3));
+            foreach (var ele in elements) ele.Highlight(true, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
 
         }
     }

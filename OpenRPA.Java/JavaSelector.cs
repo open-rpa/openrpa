@@ -87,11 +87,11 @@ namespace OpenRPA.Java
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
             OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
         }
-        public override IElement[] GetElements(IElement fromElement = null)
+        public override IElement[] GetElements(IElement fromElement = null, int maxresults = 1)
         {
-            return JavaSelector.GetElementsWithuiSelector(this, fromElement);
+            return JavaSelector.GetElementsWithuiSelector(this, fromElement, maxresults);
         }
-        public static JavaElement[] GetElementsWithuiSelector(JavaSelector selector, IElement fromElement = null)
+        public static JavaElement[] GetElementsWithuiSelector(JavaSelector selector, IElement fromElement = null, int maxresults = 1)
         {
             Javahook.Instance.refreshJvms();
 
@@ -120,17 +120,6 @@ namespace OpenRPA.Java
                         result = ((JavaSelectorItem)s).matches(_element);
                         current.AddRange(result);
                     }
-                    //if (current.Count == 0)
-                    //{
-                    //    foreach (var _subelement in elements)
-                    //    {
-                    //        foreach (var _element in _subelement.Children)
-                    //        {
-                    //            result = ((JavaSelectorItem)s).matches(_element);
-                    //            current.AddRange(result);
-                    //        }
-                    //    }
-                    //}
                     if (i == (selectors.Count - 1)) result = current.ToArray();
                     if (current.Count == 0)
                     {
@@ -144,9 +133,6 @@ namespace OpenRPA.Java
                                 try
                                 {
                                     message += c.ToString() + Environment.NewLine;
-                                    // Log.Debug(c.ToString());
-                                    // Log.Debug(c.id + " " + c.role + " " + c.Name);
-                                    //System.Diagnostics.Trace.WriteLine(java.javahook.getSelector(c, (i == selectors.Count - 1)), rpanet.tracecategory.Selector);
                                 }
                                 catch (Exception)
                                 {

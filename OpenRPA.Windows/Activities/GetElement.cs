@@ -19,46 +19,30 @@ namespace OpenRPA.Windows
     {
         [Browsable(false)]
         public ActivityAction<UIElement> Body { get; set; }
+        public InArgument<int> MaxResults { get; set; }
         public InArgument<string> Selector { get; set; }
         public InArgument<UIElement> From { get; set; }
-        public OutArgument<UIElement> Element { get; set; }
+        public OutArgument<UIElement[]> Elements { get; set; }
+
+        private Variable<IEnumerator<UIElement>> _elements = new Variable<IEnumerator<UIElement>>("_elements");
+        [System.ComponentModel.Browsable(false)]
+        public Activity LoopAction { get; set; }
         protected override void Execute(NativeActivityContext context)
         {
-            UIElement result = null;
-
+            UIElement[] elements = null;
             var selector = Selector.Get(context);
             var sel = new WindowsSelector(selector);
             var timeout = TimeSpan.FromSeconds(5);
-#if DEBUG
-#endif
-
-            UIElement[] elements = { };
+            var maxresults = MaxResults.Get(context);
             var sw = new Stopwatch();
             sw.Start();
             do
             {
-                //    //var t = Task.Factory.StartNew(() =>
-                //    //{
-                //    //    elements = WindowsSelector.GetElementsWithuiSelector(sel, null);
-                //    //});
-                //    //if (!t.Wait(TimeSpan.FromMilliseconds(5000)))
-                //    //{
-                //    //    //if (IgnoreErrors.Get(context))
-                //    //    //{
-                //    //    //    context.SetValue(Element, result);
-                //    //    //    System.Diagnostics.Debug.WriteLine("Timeout getting " + xpath);
-                //    //    //    return;
-                //    //    //}
-                //    //    //throw new rpaActionTimedOut("Timeout getting " + xpath);
-                //    //}
-                //    //if (elements.Count() > 0) result = (UIElement)elements[0];
-                //    if (result==null)
-                //    {
                 elements = OpenRPA.AutomationHelper.RunSTAThread<UIElement[]>(() =>
                 {
                     try
                     {
-                        return WindowsSelector.GetElementsWithuiSelector(sel, null);
+                        return WindowsSelector.GetElementsWithuiSelector(sel, null, maxresults);
                     }
                     catch (System.Threading.ThreadAbortException)
                     {
@@ -73,29 +57,50 @@ namespace OpenRPA.Windows
                 {
                     elements = new UIElement[] { };
                 }
-                //    }
-                if (elements.Count() > 0) result = (UIElement)elements[0];
-            } while (result == null && sw.Elapsed < timeout);
+            } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
 
-            elements = WindowsSelector.GetElementsWithuiSelector(sel, null);
-            if (elements.Count() > 0) result = (UIElement)elements[0];
-            context.SetValue(Element, result);
-            if (result != null) {
-                context.ScheduleAction(Body, result, OnBodyComplete);
-            } else
+            context.SetValue(Elements, elements);
+            IEnumerator<UIElement> _enum = elements.ToList().GetEnumerator();
+            context.SetValue(_elements, _enum);
+            bool more = _enum.MoveNext();
+            if (more)
+            {
+                context.ScheduleAction<UIElement>(Body, _enum.Current, OnBodyComplete);
+            }
+            else
             {
                 throw new ElementNotFoundException("Failed locating item");
             }
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
+            IEnumerator<UIElement> _enum = _elements.Get(context);
+            bool more = _enum.MoveNext();
+            if (more)
+            {
+                context.ScheduleAction<UIElement>(Body, _enum.Current, OnBodyComplete);
+            }
+            else
+            {
+                if (LoopAction != null)
+                {
+                    context.ScheduleActivity(LoopAction, LoopActionComplete);
+                }
+            }
+        }
+        private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
+        {
+            Execute(context);
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {
             metadata.AddDelegate(Body);
             Interfaces.Extensions.AddCacheArgument(metadata, "Selector", Selector);
             Interfaces.Extensions.AddCacheArgument(metadata, "From", From);
-            Interfaces.Extensions.AddCacheArgument(metadata, "Element", Element);
+            Interfaces.Extensions.AddCacheArgument(metadata, "Elements", Elements);
+            Interfaces.Extensions.AddCacheArgument(metadata, "MaxResults", MaxResults);
+
+            metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)

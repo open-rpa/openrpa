@@ -124,9 +124,9 @@ namespace OpenRPA.IE
         public void Initialize()
         {
         }
-        public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null)
+        public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
-            var result = IESelector.GetElementsWithuiSelector(selector as IESelector, fromElement);
+            var result = IESelector.GetElementsWithuiSelector(selector as IESelector, fromElement, maxresults);
             return result;
         }
 

@@ -78,6 +78,12 @@
     <Compile Include="IBodyActivity.cs" />
     <Compile Include="IElement.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="Overlay\OverlayWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Overlay\OverlayWindow.Designer.cs">
+      <DependentUpon>OverlayWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Plugins.cs" />
     <Compile Include="Selector\BindingProxy.cs" />
     <Compile Include="Selector\SelectorModel.cs" />
@@ -221,6 +227,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Selector\Window.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Overlay\OverlayWindow.resx">
+      <DependentUpon>OverlayWindow.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

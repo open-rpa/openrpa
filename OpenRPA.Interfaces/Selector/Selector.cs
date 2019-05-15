@@ -37,7 +37,7 @@ namespace OpenRPA.Interfaces.Selector
             //};
 
         }
-        public virtual IElement[] GetElements(IElement fromElement = null) { return new IElement[] { }; }
+        public virtual IElement[] GetElements(IElement fromElement = null, int maxresults = 1) { return new IElement[] { }; }
         public override string ToString()
         {
             var results = new List<JObject>();

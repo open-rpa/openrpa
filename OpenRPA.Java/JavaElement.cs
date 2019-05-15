@@ -34,6 +34,13 @@ namespace OpenRPA.Java
         public AccessibleContextInfo info = null;
 
         private JavaObjectHandle _ac;
+        public System.Drawing.Rectangle Rectangle
+        {
+            get
+            {
+                return new System.Drawing.Rectangle(X, Y, Width, Height);
+            }
+        }
 
         public string Name { get; set; }
         public string role { get; set; }
@@ -329,10 +336,16 @@ namespace OpenRPA.Java
         {
             throw new NotImplementedException();
         }
+        private Interfaces.Overlay.OverlayWindow _overlayWindow;
         public void Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
         {
-        }
-        public override string ToString()
+            if (_overlayWindow == null) { _overlayWindow = new Interfaces.Overlay.OverlayWindow(); }
+            _overlayWindow.Visible = true;
+            _overlayWindow.SetTimeout(Duration);
+            _overlayWindow.Bounds = Rectangle;
+            Console.WriteLine(Rectangle.ToString());
+    }
+    public override string ToString()
         {
             if (!string.IsNullOrEmpty(title)) return title;
             return "id:" + id + " role:" + role + " Name: " + Name;

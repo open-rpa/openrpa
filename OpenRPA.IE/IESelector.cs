@@ -145,11 +145,11 @@ namespace OpenRPA.IE
             }
         }
 
-        public override IElement[] GetElements(IElement fromElement = null)
+        public override IElement[] GetElements(IElement fromElement = null, int maxresults = 1)
         {
-            return IESelector.GetElementsWithuiSelector(this, fromElement);
+            return IESelector.GetElementsWithuiSelector(this, fromElement, maxresults );
         }
-        public static IEElement[] GetElementsWithuiSelector(IESelector selector, IElement fromElement = null)
+        public static IEElement[] GetElementsWithuiSelector(IESelector selector, IElement fromElement = null, int maxresults = 1)
         {
             var browser = Browser.GetBrowser();
             if (browser == null)

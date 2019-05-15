@@ -45,6 +45,17 @@ namespace OpenRPA
             }
         }
         public AutomationElement rawElement { get; private set; }
+        public System.Drawing.Rectangle Rectangle
+        {
+            get
+            {
+                if (rawElement == null) return System.Drawing.Rectangle.Empty;
+                if (!rawElement.Properties.BoundingRectangle.IsSupported) return System.Drawing.Rectangle.Empty;
+                return new System.Drawing.Rectangle((int)rawElement.Properties.BoundingRectangle.Value.X,
+                    (int)rawElement.Properties.BoundingRectangle.Value.Y, (int)rawElement.Properties.BoundingRectangle.Value.Width,
+                    (int)rawElement.Properties.BoundingRectangle.Value.Height);
+            }
+        }
         public int ProcessId { get; set; }
         public string Id { get; set; }
         public string Name { get; set; }
@@ -126,9 +137,15 @@ namespace OpenRPA
                 throw;
             }
         }
+        private Interfaces.Overlay.OverlayWindow _overlayWindow;
         public void Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
         {
-            rawElement.DrawHighlight(Blocking, Color, Duration);
+            if(_overlayWindow == null) { _overlayWindow = new Interfaces.Overlay.OverlayWindow();  }
+            _overlayWindow.Visible = true;
+            _overlayWindow.SetTimeout(Duration);
+            _overlayWindow.Bounds = Rectangle;
+            Console.WriteLine(Rectangle.ToString());
+            //rawElement.DrawHighlight(Blocking, Color, Duration);
         }
         public string Value
         {

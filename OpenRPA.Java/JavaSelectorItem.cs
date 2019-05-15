@@ -273,6 +273,15 @@ namespace OpenRPA.Java
                         return false;
                     }
                 }
+                if (p.Name == "IndexInParent")
+                {
+                    if (m.IndexInParent != int.Parse(p.Value))
+                    {
+                        Log.Debug(p.Name + " mismatch '" + m.IndexInParent + "' / '" + p.Value + "'");
+                        return false;
+                    }
+                }
+
             }
             Log.Debug("match: " + ToString());
             return true;

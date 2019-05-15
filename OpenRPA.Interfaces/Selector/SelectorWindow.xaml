@@ -51,6 +51,7 @@
                 <RowDefinition></RowDefinition>
                 <RowDefinition Height="5"></RowDefinition>
                 <RowDefinition></RowDefinition>
+                <RowDefinition Height="35"></RowDefinition>
             </Grid.RowDefinitions>
             <TreeView Grid.Column="0" Grid.RowSpan="3" Background="Transparent" ItemsSource="{Binding Directories}" Margin="0,10,0,0" 
                                          MinWidth="50"
@@ -230,8 +231,26 @@
             <GridSplitter Grid.Column="2" Grid.ColumnSpan="4" Grid.Row="1" Height="5" MinWidth="100" HorizontalAlignment="Stretch" 
             VerticalAlignment="Stretch"  />
             <TextBox Grid.Column="3" Grid.ColumnSpan="4" Grid.Row="2" Text="{Binding Path=json, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-        </Grid>
 
+            <ToolBarTray Grid.Column="0" Grid.ColumnSpan="7" Grid.Row="4" HorizontalAlignment="Right">
+                <ToolBar HorizontalContentAlignment="Right" >
+                    <Button ToolTip="Cancel" Click="Cancel_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/OpenRPA.Interfaces;component/Resources/Selector/Button.png" />
+                            <TextBlock Margin="3,0,0,0">Cancel</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button ToolTip="Ok" Click="Ok_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/OpenRPA.Interfaces;component/Resources/Selector/Button.png" />
+                            <TextBlock Margin="3,0,0,0">Ok</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </ToolBar>
+            </ToolBarTray>
+            
+            
+        </Grid>
 
 
 

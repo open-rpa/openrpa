@@ -17,7 +17,7 @@ namespace OpenRPA.Interfaces
         bool parseUserAction(ref IRecordEvent e);
         Selector.treeelement[] GetRootElements();
         Selector.Selector GetSelector(Selector.treeelement item);
-        IElement[] GetElementsWithSelector(Selector.Selector selector, IElement fromElement = null);
+        IElement[] GetElementsWithSelector(Selector.Selector selector, IElement fromElement = null, int maxresults = 1);
 
     }
 }

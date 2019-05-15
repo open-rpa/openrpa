@@ -111,11 +111,11 @@ namespace OpenRPA.Windows
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
             OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
         }
-        public override IElement[] GetElements(IElement fromElement = null)
+        public override IElement[] GetElements(IElement fromElement = null, int maxresults = 1)
         {
-            return WindowsSelector.GetElementsWithuiSelector(this, fromElement);
+            return WindowsSelector.GetElementsWithuiSelector(this, fromElement, maxresults);
         }
-        public static UIElement[] GetElementsWithuiSelector(WindowsSelector selector, IElement fromElement = null)
+        public static UIElement[] GetElementsWithuiSelector(WindowsSelector selector, IElement fromElement = null, int maxresults = 1)
         {
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
@@ -128,27 +128,9 @@ namespace OpenRPA.Windows
             var automation = AutomationUtil.getAutomation();
 
             UIElement[] result = null;
-            //var cacheRequest = new CacheRequest();
-            ////cacheRequest.TreeScope = TreeScope.Element | TreeScope.Subtree;
-            //// cacheRequest.TreeScope = FlaUI.Core.Definitions.TreeScope.Element;
-            //cacheRequest.TreeScope = FlaUI.Core.Definitions.TreeScope.Element | FlaUI.Core.Definitions.TreeScope.Children;
-            //// cacheRequest.TreeScope = FlaUI.Core.Definitions.TreeScope.Element | FlaUI.Core.Definitions.TreeScope.Subtree;
-            ////cacheRequest.TreeScope = FlaUI.Core.Definitions.TreeScope.Element | FlaUI.Core.Definitions.TreeScope.Children;
-            ////cacheRequest.TreeScope = FlaUI.Core.Definitions.TreeScope.Ancestors | FlaUI.Core.Definitions.TreeScope.Element | FlaUI.Core.Definitions.TreeScope.Children;
-            //cacheRequest.AutomationElementMode = FlaUI.Core.Definitions.AutomationElementMode.Full;
-            //cacheRequest.Add(automation.PropertyLibrary.Element.AutomationId);
-            //cacheRequest.Add(automation.PropertyLibrary.Element.ProcessId);
-            //cacheRequest.Add(automation.PropertyLibrary.Element.Name);
-            //cacheRequest.Add(automation.PropertyLibrary.Element.ClassName);
-            //cacheRequest.Add(automation.PropertyLibrary.Element.ControlType);
-
-
             using (automation)
-            //using (cacheRequest.Activate())
             {
                 var _treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
-
-
                 AutomationElement startfrom = null;
                 if (_fromElement != null) startfrom = _fromElement.rawElement;
                 Log.Debug("automation.GetDesktop");
@@ -166,8 +148,7 @@ namespace OpenRPA.Windows
                     {
                         foreach (var _element in elements)
                         {
-                            //var matches = ((WindowsSelectorItem)s).matches(automation, _element.rawElement, _treeWalker, (i == (selectors.Count - 1) ? 500 : 1));
-                            var matches = ((WindowsSelectorItem)s).matches(automation, _element.rawElement, _treeWalker, (i == 0 ? 1: 500));
+                            var matches = ((WindowsSelectorItem)s).matches(automation, _element.rawElement, _treeWalker, (i == 0 ? 1: maxresults));
                             var uimatches = new List<UIElement>();
                             foreach (var m in matches)
                             {
@@ -176,8 +157,6 @@ namespace OpenRPA.Windows
                                 list.Add(new WindowsSelectorItem(m, false));
                                 uimatches.Add(ui);
                             }
-
-                            //result = uimatches.ToArray();
                             current.AddRange(uimatches.ToArray());
                         }
                         if (current.Count == 0)
@@ -198,7 +177,6 @@ namespace OpenRPA.Windows
                                     }
                                 }
                                 Log.Debug(message);
-
                             }
                         }
                         else
@@ -229,8 +207,6 @@ namespace OpenRPA.Windows
                         return new UIElement[] { };
                     }
                 }
-
-
             }
             if (result == null)
             {

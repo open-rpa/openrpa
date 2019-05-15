@@ -28,10 +28,25 @@ namespace OpenRPA.Java
         private void Open_Selector(object sender, RoutedEventArgs e)
         {
             string SelectorString = ModelItem.GetValue<string>("Selector");
+            //int maxresult = ModelItem.GetValue<int>("MaxResults");
+            int maxresult = 1;
 
             var selector = new JavaSelector(SelectorString);
-            var selectors = new Interfaces.Selector.SelectorWindow("Java", selector);
-            selectors.ShowDialog();
+            var selectors = new Interfaces.Selector.SelectorWindow("Java", selector, maxresult);
+            if (selectors.ShowDialog() == true)
+            {
+                ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(selectors.vm.json) });
+            }
+
+        }
+
+        private void Highlight_Click(object sender, RoutedEventArgs e)
+        {
+            string SelectorString = ModelItem.GetValue<string>("Selector");
+            int maxresults = ModelItem.GetValue<int>("MaxResults");
+            var selector = new JavaSelector(SelectorString);
+            var elements = JavaSelector.GetElementsWithuiSelector(selector, null, maxresults);
+            foreach (var ele in elements) ele.Highlight(true, System.Drawing.Color.Red, TimeSpan.FromSeconds(3));
         }
     }
 }

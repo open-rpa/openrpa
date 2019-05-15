@@ -65,6 +65,7 @@ namespace OpenRPA.Java
             if (sel == null) return;
             if (sel.Count < 2) return;
             a.Selector = sel.ToString();
+            a.MaxResults = 1;
             re.Element = lastElement;
             re.Selector = sel;
             re.X = lastElement.X;
@@ -97,6 +98,7 @@ namespace OpenRPA.Java
             var selector = new JavaSelector(lastElement, null, true);
             var a = new GetElement { DisplayName = lastElement.id + " " + lastElement.role + " " + lastElement.Name };
             a.Selector = selector.ToString();
+            a.MaxResults = 1;
 
             e.a = new GetElementResult(a);
             e.SupportInput = lastElement.SupportInput;

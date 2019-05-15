@@ -33,7 +33,11 @@ namespace OpenRPA.Java
 
             var selector = new JavaSelector(SelectorString);
             var selectors = new Interfaces.Selector.SelectorWindow("Java", selector, maxresult);
-            selectors.ShowDialog();
+            if (selectors.ShowDialog() == true)
+            {
+                ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(selectors.vm.json) });
+            }
+
         }
     }
 }

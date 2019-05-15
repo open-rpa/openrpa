@@ -97,7 +97,7 @@ namespace OpenRPA.Windows
             thread.IsBackground = true;
             thread.Start();
         }
-        public bool parseUserAction(ref IRecordEvent e) { return true; }
+        public bool parseUserAction(ref IRecordEvent e) { return false; }
         public void Initialize()
         {
         }

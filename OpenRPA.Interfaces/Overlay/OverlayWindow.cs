@@ -19,18 +19,24 @@ namespace OpenRPA.Interfaces.Overlay
             AllowTransparency = true;
             Opacity = 0.5;
         }
-        public OverlayWindow(TimeSpan closeAfter) : this()
-        {
-            SetTimeout(closeAfter);
-        }
         public void SetTimeout(TimeSpan closeAfter)
         {
             tmr = new System.Windows.Forms.Timer();
-            tmr.Tick += delegate {
-                this.Close();
-            };
+            tmr.Tick += Tmr_Tick; ;
             tmr.Interval = (int)closeAfter.TotalMilliseconds;
             tmr.Start();
+        }
+
+        private void Tmr_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                Close();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         protected override CreateParams CreateParams
         {
@@ -75,7 +81,6 @@ namespace OpenRPA.Interfaces.Overlay
         }
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern bool SetWindowPos(HandleRef hWnd, HandleRef hWndInsertAfter, int x, int y, int cx, int cy, int flags);
-
     }
 
     [Flags]

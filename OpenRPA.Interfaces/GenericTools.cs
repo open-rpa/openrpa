@@ -93,6 +93,19 @@ namespace OpenRPA.Interfaces
                 action();
             }
         }
+        private delegate void SafeCallDelegate();
+        public static void RunUI(System.Windows.Forms.Form window, Action action)
+        {
+            if (window != null)
+            {
+                var d = new SafeCallDelegate(action);
+                window.Invoke(d);
+            }
+            else
+            {
+                action();
+            }
+        }
 
     }
 }

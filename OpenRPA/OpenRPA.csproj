@@ -74,7 +74,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Activities\HighlightElement.cs" />
     <Compile Include="Activities\ClickElement.cs" />
+    <Compile Include="Activities\HighlightElementDesigner.xaml.cs">
+      <DependentUpon>HighlightElementDesigner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\ClickElementDesigner.xaml.cs">
       <DependentUpon>ClickElementDesigner.xaml</DependentUpon>
     </Compile>
@@ -101,6 +105,10 @@
     </Compile>
     <Compile Include="Workflow.cs" />
     <Compile Include="WorkflowInstance.cs" />
+    <Page Include="Activities\HighlightElementDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Activities\ClickElementDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

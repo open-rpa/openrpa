@@ -1,4 +1,4 @@
-﻿<sap:ActivityDesigner x:Class="OpenRPA.IE.GetElementDesigner"
+﻿<sap:ActivityDesigner x:Class="OpenRPA.Activities.HighlightElementDesigner"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
@@ -15,36 +15,20 @@
                         <Rect Location="0,0" Size="16,16" ></Rect>
                     </ImageDrawing.Rect>
                     <ImageDrawing.ImageSource>
-                        <BitmapImage UriSource="/OpenRPA.IE;component/Resources/designer/gethtmlelement.png" ></BitmapImage>
+                        <BitmapImage UriSource="/OpenRPA;component/Resources/designer/highlight.png" ></BitmapImage>
                     </ImageDrawing.ImageSource>
                 </ImageDrawing>
             </DrawingBrush.Drawing>
         </DrawingBrush>
     </sap:ActivityDesigner.Icon>
 
-
-    
     <sap:ActivityDesigner.Resources>
         <DataTemplate x:Key="Collapsed">
             <StackPanel>
-                <Image Source="{Binding Image}"></Image>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="Expanded">
             <StackPanel>
-                <!-- <Button Content="Select element" /> -->
-                <Button Content="Open Selector" Click="Open_Selector"  />
-                <Button Click="Highlight_Click" >
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding HighlightImage}" Height="16" Width="16" />
-                        <TextBlock>Highlight</TextBlock>
-                    </StackPanel>
-                </Button>
-
-                <Image Source="{Binding Image}"></Image>
-                <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
-                                    HintText="Drop activity" AllowedItemType="sa:Activity"
-                                      Grid.Row="1" />
             </StackPanel>
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">

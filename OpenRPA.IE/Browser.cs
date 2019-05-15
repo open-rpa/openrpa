@@ -88,6 +88,7 @@ namespace OpenRPA.IE
             if (result.wBrowser == null) return null;
             result.Document = result.wBrowser.Document as mshtml.HTMLDocument;
             result.title = result.Document.title;
+            result.findPanel();
             return result;
         }
 
@@ -111,39 +112,45 @@ namespace OpenRPA.IE
                 }
                 ele = ele.Parent;
             }
-            var wbs = new SHDocVw.ShellWindowsClass().Cast<SHDocVw.WebBrowser>().ToList();
-            foreach (var w in wbs)
-            {
-                using (var automation = Interfaces.AutomationUtil.getAutomation())
-                {
-                    try
-                    {
-                        var doc = (w.Document as mshtml.HTMLDocument);
-                        if (doc != null)
-                        {
-                            wBrowser = w as SHDocVw.WebBrowser;
-                            var _Document = (wBrowser.Document as mshtml.HTMLDocument);
-                            var _Document2 = (wBrowser.Document as mshtml.IHTMLDocument2);
-
-                            var _ele = automation.FromHandle(new IntPtr(w.HWND));
-
-                            panel = _ele.FindFirst(TreeScope.Descendants,
-                                new AndCondition(new PropertyCondition(automation.PropertyLibrary.Element.ControlType, ControlType.Pane),
-                                new PropertyCondition(automation.PropertyLibrary.Element.ClassName, "TabWindowClass"))); // Frame Tab
-                            elementx = Convert.ToInt32(panel.BoundingRectangle.X);
-                            elementy = Convert.ToInt32(panel.BoundingRectangle.Y);
-                        }
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-            }
+            findBrowser();
             if (wBrowser.Document == null) throw new Exception("Failed initializing Internet Eexplorer");
             Document = wBrowser.Document as mshtml.HTMLDocument;
             title = Document.title;
         }
+        private void findBrowser()
+        {
+            var wbs = new SHDocVw.ShellWindowsClass().Cast<SHDocVw.WebBrowser>().ToList();
+            foreach (var w in wbs)
+            {
+                try
+                {
+                    var doc = (w.Document as mshtml.HTMLDocument);
+                    if (doc != null)
+                    {
+                        wBrowser = w as SHDocVw.WebBrowser;
+                        var _Document = (wBrowser.Document as mshtml.HTMLDocument);
+                        var _Document2 = (wBrowser.Document as mshtml.IHTMLDocument2);
+                        findPanel();
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+        private void findPanel()
+        {
+            using (var automation = Interfaces.AutomationUtil.getAutomation())
+            {
+                var _ele = automation.FromHandle(new IntPtr(wBrowser.HWND));
 
+                panel = _ele.FindFirst(TreeScope.Descendants,
+                    new AndCondition(new PropertyCondition(automation.PropertyLibrary.Element.ControlType, ControlType.Pane),
+                    new PropertyCondition(automation.PropertyLibrary.Element.ClassName, "TabWindowClass"))); // Frame Tab
+                elementx = Convert.ToInt32(panel.BoundingRectangle.X);
+                elementy = Convert.ToInt32(panel.BoundingRectangle.Y);
+            }
+        }
         public mshtml.IHTMLElement ElementFromPoint(int X, int Y)
         {
             mshtml.IHTMLElement htmlelement = Document.elementFromPoint(X - elementx, Y - elementy);

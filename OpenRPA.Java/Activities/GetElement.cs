@@ -22,15 +22,11 @@ namespace OpenRPA.Java
         [RequiredArgument]
         public InArgument<string> Selector { get; set; }
         public InArgument<JavaElement> From { get; set; }
-        public OutArgument<JavaElement> Element { get; set; }
-
-        public GetElement()
-        {
-        }
+        public OutArgument<JavaElement[]> Elements { get; set; }
+        private Variable<IEnumerator<JavaElement>> _elements = new Variable<IEnumerator<JavaElement>>("_elements");
+        public Activity LoopAction { get; set; }
         protected override void Execute(NativeActivityContext context)
         {
-            
-            JavaElement result = null;
             var selector = Selector.Get(context);
             var sel = new JavaSelector(selector);
             var timeout = TimeSpan.FromSeconds(3);
@@ -41,12 +37,15 @@ namespace OpenRPA.Java
             do
             {
                 elements = JavaSelector.GetElementsWithuiSelector(sel, null, maxresults);
-                if (elements.Count() > 0) result = (JavaElement)elements[0];
-            } while (result == null && sw.Elapsed < timeout);
-            context.SetValue(Element, result);
-            if (result != null)
+            } while (elements.Count() > 0 && sw.Elapsed < timeout);
+
+            context.SetValue(Elements, elements);
+            IEnumerator<JavaElement> _enum = elements.ToList().GetEnumerator();
+            context.SetValue(_elements, _enum);
+            bool more = _enum.MoveNext();
+            if (more)
             {
-                context.ScheduleAction(Body, result, OnBodyComplete);
+                context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
             else
             {
@@ -55,19 +54,34 @@ namespace OpenRPA.Java
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
+            IEnumerator<JavaElement> _enum = _elements.Get(context);
+            bool more = _enum.MoveNext();
+            if (more)
+            {
+                context.ScheduleAction<JavaElement>(Body, _enum.Current, OnBodyComplete);
+            }
+            else
+            {
+                if (LoopAction != null)
+                {
+                    context.ScheduleActivity(LoopAction, LoopActionComplete);
+                }
+            }
         }
-
+        private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
+        {
+            Execute(context);
+        }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {
             metadata.AddDelegate(Body);
             Interfaces.Extensions.AddCacheArgument(metadata, "Selector", Selector);
             Interfaces.Extensions.AddCacheArgument(metadata, "From", From);
-            //Interfaces.Extensions.AddCacheArgument(metadata, "Elements", Elements);
+            Interfaces.Extensions.AddCacheArgument(metadata, "Elements", Elements);
             Interfaces.Extensions.AddCacheArgument(metadata, "MaxResults", MaxResults);
-            //metadata.AddImplementationVariable(_elements);
+            metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
         }
-
         public Activity Create(System.Windows.DependencyObject target)
         {
             var fef = new GetElement();
@@ -78,6 +92,5 @@ namespace OpenRPA.Java
             aa.Argument = da;
             return fef;
         }
-
     }
 }

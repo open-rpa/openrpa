@@ -19,20 +19,20 @@ namespace OpenRPA.IE
         //[RequiredArgument]
         //public InArgument<string> XPath { get; set; }
 
+        [System.ComponentModel.Browsable(false)]
+        public ActivityAction<IEElement> Body { get; set; }
+        public InArgument<int> MaxResults { get; set; }
         [RequiredArgument]
         public InArgument<string> Selector { get; set; }
         public InArgument<IEElement> From { get; set; }
-        public OutArgument<IEElement> Element { get; set; }
-        [System.ComponentModel.Browsable(false)]
-        public ActivityAction<IEElement> Body { get; set; }
-
+        public OutArgument<IEElement[]> Elements { get; set; }
+        private Variable<IEnumerator<IEElement>> _elements = new Variable<IEnumerator<IEElement>>("_elements");
+        public Activity LoopAction { get; set; }
         public GetElement()
         {
         }
-
         protected override void Execute(NativeActivityContext context)
         {
-            IEElement result = null;
             var selector = Selector.Get(context);
             var sel = new IESelector(selector);
             var timeout = TimeSpan.FromSeconds(3);
@@ -42,12 +42,14 @@ namespace OpenRPA.IE
             do
             {
                 elements = IESelector.GetElementsWithuiSelector(sel, null);
-                if (elements.Count() > 0) result = (IEElement)elements[0];
-            } while (result == null && sw.Elapsed < timeout);
-            context.SetValue(Element, result);
-            if (result != null)
+            } while (elements .Count() == 0 && sw.Elapsed < timeout);
+            context.SetValue(Elements, elements);
+            IEnumerator<IEElement> _enum = elements.ToList().GetEnumerator();
+            context.SetValue(_elements, _enum);
+            bool more = _enum.MoveNext();
+            if (more)
             {
-                context.ScheduleAction(Body, result, OnBodyComplete);
+                context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
             else
             {
@@ -56,13 +58,34 @@ namespace OpenRPA.IE
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
+            IEnumerator<IEElement> _enum = _elements.Get(context);
+            bool more = _enum.MoveNext();
+            if (more)
+            {
+                context.ScheduleAction<IEElement>(Body, _enum.Current, OnBodyComplete);
+            }
+            else
+            {
+                if (LoopAction != null)
+                {
+                    context.ScheduleActivity(LoopAction, LoopActionComplete);
+                }
+            }
         }
-
+        private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
+        {
+            Execute(context);
+        }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {
+            metadata.AddDelegate(Body);
+            Interfaces.Extensions.AddCacheArgument(metadata, "Selector", Selector);
+            Interfaces.Extensions.AddCacheArgument(metadata, "From", From);
+            Interfaces.Extensions.AddCacheArgument(metadata, "Elements", Elements);
+            Interfaces.Extensions.AddCacheArgument(metadata, "MaxResults", MaxResults);
+            metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
         }
-
         public Activity Create(System.Windows.DependencyObject target)
         {
             var fef = new GetElement();

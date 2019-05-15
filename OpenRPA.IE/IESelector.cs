@@ -137,6 +137,13 @@ namespace OpenRPA.IE
                             var tag = el2.tagName;
                             // var html = el2.innerHTML;
                             Log.Debug("tag: " + tag);
+
+                            //browser.elementx += _frame.offsetLeft;
+                            //browser.elementy += _frame.offsetTop;
+                            //browser.frameoffsetx += _frame.offsetLeft;
+                            //browser.frameoffsety += _frame.offsetTop;
+
+
                             enumElements(browser, el2 , anchor, doEnum, X, Y);
                             return;
                         }
@@ -191,6 +198,12 @@ namespace OpenRPA.IE
                             mshtml.DispHTMLDocument doc = (mshtml.DispHTMLDocument)((SHDocVw.IWebBrowser2)_f).Document;
                             var _doc = doc.documentElement as mshtml.IHTMLElement;
                             matches = ((IESelectorItem)s).matches(_doc);
+
+                            browser.elementx += _f.offsetLeft;
+                            browser.elementy += _f.offsetTop;
+                            browser.frameoffsetx += _f.offsetLeft;
+                            browser.frameoffsety += _f.offsetTop;
+
                         }
                         else
                         {

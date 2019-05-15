@@ -13,6 +13,7 @@ namespace OpenRPA.Interfaces
         public static void loadPlugins(string projectsDirectory)
         {
             List<string> dllFileNames = new List<string>();
+            win32.Zone.UnblockPath(projectsDirectory);
             foreach (var path in System.IO.Directory.GetFiles(projectsDirectory, "*.dll")) dllFileNames.Add(path);
             ICollection<Assembly> assemblies = new List<Assembly>();
             foreach (string dllFile in dllFileNames)

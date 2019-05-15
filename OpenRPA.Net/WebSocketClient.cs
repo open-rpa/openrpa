@@ -271,6 +271,12 @@ namespace OpenRPA.Net
             jwt = signin.jwt;
             return signin.user;
         }
+        public async Task RegisterUser(string name, string username, string password)
+        {
+            RegisterUserMessage RegisterQueue = new RegisterUserMessage(name, username, password);
+            RegisterQueue = await RegisterQueue.SendMessage<RegisterUserMessage>(this);
+            if (!string.IsNullOrEmpty(RegisterQueue.error)) throw new Exception(RegisterQueue.error);
+        }
         public async Task RegisterQueue(string queuename)
         {
             RegisterQueueMessage RegisterQueue = new RegisterQueueMessage(queuename);

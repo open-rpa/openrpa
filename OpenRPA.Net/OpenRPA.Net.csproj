@@ -52,6 +52,7 @@
     <Compile Include="QueryMessage.cs" />
     <Compile Include="QueuedMessage.cs" />
     <Compile Include="QueueMessage.cs" />
+    <Compile Include="RegisterUserMessage.cs" />
     <Compile Include="RegisterQueueMessage.cs" />
     <Compile Include="Rolemember.cs" />
     <Compile Include="SigninMessage.cs" />

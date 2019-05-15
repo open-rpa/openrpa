@@ -84,6 +84,7 @@
     <Compile Include="Overlay\OverlayWindow.Designer.cs">
       <DependentUpon>OverlayWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Overlay\ScreenUtils.cs" />
     <Compile Include="Plugins.cs" />
     <Compile Include="Selector\BindingProxy.cs" />
     <Compile Include="Selector\SelectorModel.cs" />

@@ -4,14 +4,23 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenRPA.Views"
-        mc:Ignorable="d"
-        Title="LoginWindow" Height="450" Width="800">
-
-    <StackPanel>
-        <TextBlock Text="Username" />
-        <TextBox x:Name="TxtUsername" />
-        <TextBlock Text="Password" />
-        <PasswordBox x:Name="txtPassword" />
-        <Button Content="OK" Click="OKButton_Click" />
-    </StackPanel>
+        mc:Ignorable="d" Loaded="Window_Loaded"
+        Title="Login" Height="350" Width="525">
+    <Grid>
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="10,10,0,0" Name="LoginHeading" Text="Login:" VerticalAlignment="Top" FontSize="17" FontStretch="ExtraCondensed"/>
+        <TextBlock Height="50" HorizontalAlignment="Left" Margin="24,48,0,0" Name="textBlockHeading" VerticalAlignment="Top" FontSize="12" FontStyle="Italic" Padding="5">  
+            Please login into <TextBlock x:Name="txtFQDN" />. If you are new on this site then <LineBreak /><!--line break-->  
+            please 
+            <TextBlock>  
+                 <Hyperlink Click="buttonRegister_Click" FontSize="14"  FontStyle="Italic">Register</Hyperlink>  
+            </TextBlock>  
+            here first. 
+        </TextBlock>
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="66,120,0,0" Text="Username" VerticalAlignment="Top" Width="67" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="58,168,0,0" Text="Password" VerticalAlignment="Top" Width="77" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="118,115,0,0" Name="TxtUsername" VerticalAlignment="Top" Width="247" KeyUp="TxtUsername_KeyUp" />
+        <PasswordBox Height="23" HorizontalAlignment="Left" Margin="118,168,0,0" Name="txtPassword" VerticalAlignment="Top" Width="247" KeyUp="TxtPassword_KeyUp" />
+        <Button Content="Login" Height="23" HorizontalAlignment="Left" Margin="118,211,0,0" Name="button1" VerticalAlignment="Top" Width="104" Click="OKButton_Click" />
+        <TextBlock Height="23" HorizontalAlignment="Left" x:Name ="txtErrormessage" VerticalAlignment="Top" Width="247" Margin="118,253,0,0"  OpacityMask="Crimson" Foreground="#FFE5572C"  />
+    </Grid>
 </Window>

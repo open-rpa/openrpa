@@ -581,6 +581,7 @@ namespace OpenRPA
                 TokenUser user = null;
                 while (user == null)
                 {
+                    string errormessage = string.Empty;
                     if (!string.IsNullOrEmpty(Config.local.username))
                     {
                         try
@@ -589,75 +590,71 @@ namespace OpenRPA
                         }
                         catch (Exception ex)
                         {
+                            this.Hide();
                             Log.Error(ex, "");
-                            MessageBox.Show("WebSocketClient_OnOpen::signing in " + ex.Message);
+                            errormessage = ex.Message;
                         }
                     }
                     if (user == null)
                     {
                         var w = new Views.LoginWindow();
-                        if (w.ShowDialog() != true) { return; }
+                        w.username = Config.local.username;
+                        w.errormessage = errormessage;
+                        w.fqdn = new Uri(Config.local.wsurl).Host;
+                        this.Hide();
+                        if (w.ShowDialog() != true) { this.Show();  return; }
                         Config.local.username = w.username; Config.local.password = Config.local.ProtectString(w.password);
-
-                        try
-                        {
-                            user = await global.webSocketClient.Signin(Config.local.username, Config.local.UnprotectString(Config.local.password));
-                            Config.Save();
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error(ex, "");
-                            MessageBox.Show("WebSocketClient_OnOpen::signing in " + ex.Message);
-                        }
+                        Config.Save();
                     }
-                    try
+                }
+                this.Show();
+                try
+                {
+                    await global.webSocketClient.RegisterQueue("robot." + Config.local.username);
+                    var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}");
+                    var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}");
+                    foreach (var p in projects)
                     {
-                        await global.webSocketClient.RegisterQueue("robot." + Config.local.username);
-                        var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}");
-                        var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}");
-                        foreach (var p in projects)
+                        p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
+                        p.Filepath = System.IO.Path.Combine(Extensions.projectsDirectory, p.name, p.Filename);
+                        foreach (var workflow in workflows)
                         {
-                            p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
-                            p.Filepath = System.IO.Path.Combine(Extensions.projectsDirectory, p.name, p.Filename);
-                            foreach (var workflow in workflows)
+                            if (workflow.projectid == p._id)
                             {
-                                if (workflow.projectid == p._id)
-                                {
-                                    workflow.Project = p;
-                                    // workflow.Filepath = System.IO.Path.Combine(p.Path, workflow.Filename);
-                                    p.Workflows.Add(workflow);
-                                }
+                                workflow.Project = p;
+                                // workflow.Filepath = System.IO.Path.Combine(p.Path, workflow.Filename);
+                                p.Workflows.Add(workflow);
                             }
-                            await p.Save();
-                            Projects.Add(p);
                         }
-                        if (workflows.Count() == 0 && projects.Count() == 0)
+                        await p.Save();
+                        Projects.Add(p);
+                    }
+                    if (workflows.Count() == 0 && projects.Count() == 0)
+                    {
+                        var _Projects = Project.loadProjects(Extensions.projectsDirectory);
+                        if (_Projects.Count() > 0)
                         {
-                            var _Projects = Project.loadProjects(Extensions.projectsDirectory);
-                            if (_Projects.Count() > 0)
+                            foreach (var _project in _Projects)
                             {
-                                foreach (var _project in _Projects)
+                                var p = await global.webSocketClient.InsertOne("openrpa", _project);
+                                p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
+                                p.Filepath = System.IO.Path.Combine(Extensions.projectsDirectory, p.name, p.Filename);
+                                Projects.Add(p);
+                                foreach (var _workflow in _project.Workflows)
                                 {
-                                    var p = await global.webSocketClient.InsertOne("openrpa", _project);
-                                    p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
-                                    p.Filepath = System.IO.Path.Combine(Extensions.projectsDirectory, p.name, p.Filename);
-                                    Projects.Add(p);
-                                    foreach (var _workflow in _project.Workflows)
-                                    {
-                                        _workflow.projectid = p._id;
-                                        var w = await global.webSocketClient.InsertOne("openrpa", _workflow);
-                                        w.Project = p;
-                                        p.Workflows.Add(w);
-                                    }
+                                    _workflow.projectid = p._id;
+                                    var w = await global.webSocketClient.InsertOne("openrpa", _workflow);
+                                    w.Project = p;
+                                    p.Workflows.Add(w);
                                 }
                             }
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex, "");
-                        MessageBox.Show("WebSocketClient_OnOpen::Sync projects " + ex.Message);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "");
+                    MessageBox.Show("WebSocketClient_OnOpen::Sync projects " + ex.Message);
                 }
                 LabelStatusBar.Content = "Connected to " + Config.local.wsurl + " as " + user.name;
                 if (Projects.Count > 0)

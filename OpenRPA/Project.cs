@@ -74,9 +74,9 @@ namespace OpenRPA
             p.name = Name;
             p.Filename = System.IO.Path.GetFileName(Filepath);
             p.Filepath = Filepath;
+            p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
             await p.Save();
             var w = Workflow.Create(p, "New Workflow");
-            p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
             p.Workflows.Add(w);
             await w.Save();
             return p;
@@ -101,7 +101,8 @@ namespace OpenRPA
             if (global.webSocketClient == null) return;
             if (string.IsNullOrEmpty(_id))
             {
-                await global.webSocketClient.InsertOne("openrpa", this);
+                var result = await global.webSocketClient.InsertOne("openrpa", this);
+                this._id = result._id;
             }
             else
             {

@@ -57,27 +57,36 @@ namespace OpenRPA.IE
                 mshtml.IHTMLElement2 ele = rawElement as mshtml.IHTMLElement2;
                 if (ele == null) return _Rectangle.Value;
                 var col = ele.getClientRects();
-                var _rect = col.item(0);
-                var left = _rect.left;
-                var top = _rect.top;
-                var right = _rect.right;
-                var bottom = _rect.bottom;
-                elementx = left;
-                elementy = top;
-                elementw = right - left;
-                elementh = bottom - top;
+                if (col == null) return _Rectangle.Value;
+                try
+                {
+                    var _rect = col.item(0);
+                    var left = _rect.left;
+                    var top = _rect.top;
+                    var right = _rect.right;
+                    var bottom = _rect.bottom;
+                    elementx = left;
+                    elementy = top;
+                    elementw = right - left;
+                    elementh = bottom - top;
 
 
-                elementx += Browser.frameoffsetx;
-                elementy += Browser.frameoffsety;
+                    elementx += Browser.frameoffsetx;
+                    elementy += Browser.frameoffsety;
 
-                elementx += Convert.ToInt32(Browser.panel.BoundingRectangle.X);
-                elementy += Convert.ToInt32(Browser.panel.BoundingRectangle.Y);
-                //var t = Task.Factory.StartNew(() =>
-                //{
-                //});
-                //t.Wait();
-                _Rectangle = new System.Drawing.Rectangle(elementx, elementy, elementw, elementh);
+                    elementx += Convert.ToInt32(Browser.panel.BoundingRectangle.X);
+                    elementy += Convert.ToInt32(Browser.panel.BoundingRectangle.Y);
+                    //var t = Task.Factory.StartNew(() =>
+                    //{
+                    //});
+                    //t.Wait();
+                    _Rectangle = new System.Drawing.Rectangle(elementx, elementy, elementw, elementh);
+                    return _Rectangle.Value;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
                 return _Rectangle.Value;
             }
         }

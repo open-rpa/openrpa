@@ -27,7 +27,6 @@ namespace OpenRPA.Java
         public Activity LoopAction { get; set; }
         protected override void Execute(NativeActivityContext context)
         {
-            JavaElement result = null;
             var selector = Selector.Get(context);
             var sel = new JavaSelector(selector);
             var timeout = TimeSpan.FromSeconds(3);
@@ -38,16 +37,15 @@ namespace OpenRPA.Java
             do
             {
                 elements = JavaSelector.GetElementsWithuiSelector(sel, null, maxresults);
-                if (elements.Count() > 0) result = (JavaElement)elements[0];
-            } while (result == null && sw.Elapsed < timeout);
+            } while (elements.Count() > 0 && sw.Elapsed < timeout);
 
             context.SetValue(Elements, elements);
             IEnumerator<JavaElement> _enum = elements.ToList().GetEnumerator();
             context.SetValue(_elements, _enum);
             bool more = _enum.MoveNext();
-            if (result != null)
+            if (more)
             {
-                context.ScheduleAction(Body, result, OnBodyComplete);
+                context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
             else
             {

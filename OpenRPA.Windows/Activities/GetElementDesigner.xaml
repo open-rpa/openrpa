@@ -32,16 +32,14 @@
         </DataTemplate>
         <DataTemplate x:Key="Expanded">
             <StackPanel>
-                <Button Content="Select element" />
+                <!-- <Button Content="Select element" /> -->
                 <Button Content="Open Selector" Click="Open_Selector" />
-                <!-- 
-                <Button >
+                <Button Click="Highlight_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{Binding HighlightImage}" Height="16" Width="16" />
                         <TextBlock>Highlight</TextBlock>
                     </StackPanel>
                 </Button>
--->
                 <Image Source="{Binding Image}"></Image>
                 <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
                                     HintText="Drop activity" AllowedItemType="sa:Activity"

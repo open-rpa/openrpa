@@ -39,5 +39,14 @@ namespace OpenRPA.Java
             }
 
         }
+
+        private void Highlight_Click(object sender, RoutedEventArgs e)
+        {
+            string SelectorString = ModelItem.GetValue<string>("Selector");
+            int maxresults = ModelItem.GetValue<int>("MaxResults");
+            var selector = new JavaSelector(SelectorString);
+            var elements = JavaSelector.GetElementsWithuiSelector(selector, null, maxresults);
+            foreach (var ele in elements) ele.Highlight(true, System.Drawing.Color.Red, TimeSpan.FromSeconds(3));
+        }
     }
 }

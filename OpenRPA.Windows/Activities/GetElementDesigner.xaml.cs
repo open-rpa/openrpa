@@ -36,12 +36,12 @@ namespace OpenRPA.Windows
             //if (fromstring != null) from = new selector.zenselector(fromstring);
             
             string SelectorString = ModelItem.GetValue<string>("Selector");
-            int maxresult = ModelItem.GetValue<int>("MaxResults");
+            int maxresults = ModelItem.GetValue<int>("MaxResults");
             // if (!string.IsNullOrEmpty(ZenSelector)) ZenSelector = JArray.Parse(ZenSelector).ToString();
 
 
             var selector = new WindowsSelector(SelectorString);
-            var selectors = new Interfaces.Selector.SelectorWindow("Windows", selector, maxresult);
+            var selectors = new Interfaces.Selector.SelectorWindow("Windows", selector, maxresults);
 
             if(selectors.ShowDialog() == true)
             {
@@ -74,6 +74,15 @@ namespace OpenRPA.Windows
             ////ModelItem.Properties["OffsetY"].SetValue(new System.Activities.InArgument<int>(offsety));
             //rpaExtension.Current.restore();
 
+        }
+
+        private void Highlight_Click(object sender, RoutedEventArgs e)
+        {
+            string SelectorString = ModelItem.GetValue<string>("Selector");
+            int maxresults = ModelItem.GetValue<int>("MaxResults");
+            var selector = new WindowsSelector(SelectorString);
+            var elements = WindowsSelector.GetElementsWithuiSelector(selector, null, maxresults);
+            foreach (var ele in elements) ele.Highlight(true, System.Drawing.Color.Red, TimeSpan.FromSeconds(3));
         }
     }
 }

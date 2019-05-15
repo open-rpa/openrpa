@@ -9,13 +9,6 @@ namespace OpenRPA.IE
 {
     public class IEElement : IElement
     {
-        public System.Drawing.Rectangle Rectangle
-        {
-            get
-            {
-                return System.Drawing.Rectangle.Empty;
-            }
-        }
         public IEElement(Browser browser, mshtml.IHTMLElement Element)
         {
             Browser = browser;
@@ -45,6 +38,43 @@ namespace OpenRPA.IE
                     mshtml.IHTMLUniqueName id = children.item(i) as mshtml.IHTMLUniqueName;
                     if (id.uniqueID== uniqueID) { IndexInParent = i; break; }
                 }
+            }
+        }
+
+        public System.Drawing.Rectangle Rectangle
+        {
+            get
+            {
+                System.Drawing.Rectangle result = System.Drawing.Rectangle.Empty;
+                int elementx = 0;
+                int elementy = 0;
+                int elementw = 0;
+                int elementh = 0;
+                    mshtml.IHTMLElement2 ele = rawElement as mshtml.IHTMLElement2;
+                    if (ele == null) return result;
+                var col = ele.getClientRects();
+                    var _rect = col.item(0);
+                    var left = _rect.left;
+                    var top = _rect.top;
+                    var right = _rect.right;
+                    var bottom = _rect.bottom;
+                    elementx = left;
+                    elementy = top;
+                    elementw = right - left;
+                    elementh = bottom - top;
+
+
+                    elementx += Browser.frameoffsetx;
+                    elementy += Browser.frameoffsety;
+
+                    elementx += Convert.ToInt32(Browser.panel.BoundingRectangle.X);
+                    elementy += Convert.ToInt32(Browser.panel.BoundingRectangle.Y);
+                //var t = Task.Factory.StartNew(() =>
+                //{
+                //});
+                //t.Wait();
+                result = new System.Drawing.Rectangle(elementx, elementy, elementw, elementh);
+                return result;
             }
         }
         public Browser Browser { get; set; }
@@ -78,8 +108,14 @@ namespace OpenRPA.IE
         public void Focus()
         {
         }
+        private Interfaces.Overlay.OverlayWindow _overlayWindow;
         public void Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
         {
+
+            if (_overlayWindow == null) { _overlayWindow = new Interfaces.Overlay.OverlayWindow(); }
+            _overlayWindow.Visible = true;
+            _overlayWindow.SetTimeout(Duration);
+            _overlayWindow.Bounds = Rectangle;
         }
         public string Value
         {

@@ -116,6 +116,7 @@
     <Compile Include="Selector\SelectorItemProperty.cs" />
     <Compile Include="TaskWithTimeoutWrapper.cs" />
     <Compile Include="UIElement.cs" />
+    <Compile Include="win32\Zone.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

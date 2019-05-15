@@ -91,61 +91,64 @@ namespace OpenRPA.Java
         {
             return JavaSelector.GetElementsWithuiSelector(this, fromElement, maxresults);
         }
-        public static JavaElement[] GetElementsWithuiSelector(JavaSelector selector, IElement fromElement = null, int maxresults = 1)
+
+
+        private static JavaElement[] GetElementsWithuiSelector(WindowsAccessBridgeInterop.AccessibleJvm jvm, JavaSelector selector, IElement fromElement, int maxresults)
         {
-            Javahook.Instance.refreshJvms();
-
             JavaElement[] result = null;
-
-
             JavaElement _fromElement = fromElement as JavaElement;
             var selectors = selector.Where(x => x.Enabled == true && x.Selector == null).ToList();
-
             var current = new List<JavaElement>();
-
-            foreach (var jvm in Javahook.Instance.jvms)
+            JavaElement startfrom = null;
+            if (_fromElement != null) startfrom = _fromElement;
+            if (startfrom == null) startfrom = new JavaElement(jvm);
+            current.Add(startfrom);
+            for (var i = 0; i < selectors.Count; i++)
             {
-                JavaElement startfrom = null;
-                if (_fromElement != null) startfrom = _fromElement;
-                if (startfrom == null) startfrom = new JavaElement(jvm);
-                current.Add(startfrom);
-                for (var i = 0; i < selectors.Count; i++)
+                var s = new JavaSelectorItem(selectors[i]);
+                var elements = new List<JavaElement>();
+                elements.AddRange(current);
+                current.Clear();
+                foreach (var _element in elements)
                 {
-                    var s = new JavaSelectorItem(selectors[i] );
-                    var elements = new List<JavaElement>();
-                    elements.AddRange(current);
-                    current.Clear();
-                    foreach (var _element in elements)
+                    result = ((JavaSelectorItem)s).matches(_element);
+                    current.AddRange(result);
+                }
+                if (i == (selectors.Count - 1)) result = current.ToArray();
+                if (current.Count == 0)
+                {
+                    var _c = new JavaSelectorItem(selectors[i]);
+                    var message = "needed to find " + Environment.NewLine + _c.ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
+                    foreach (var element in elements)
                     {
-                        result = ((JavaSelectorItem)s).matches(_element);
-                        current.AddRange(result);
-                    }
-                    if (i == (selectors.Count - 1)) result = current.ToArray();
-                    if (current.Count == 0)
-                    {
-                        var _c = new JavaSelectorItem(selectors[i]);
-                        var message = "needed to find " + Environment.NewLine + _c.ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
-                        foreach (var element in elements)
+                        var children = element.Children;
+                        foreach (var c in children)
                         {
-                            var children = element.Children;
-                            foreach (var c in children)
+                            try
                             {
-                                try
-                                {
-                                    message += c.ToString() + Environment.NewLine;
-                                }
-                                catch (Exception)
-                                {
-                                }
+                                message += c.ToString() + Environment.NewLine;
+                            }
+                            catch (Exception)
+                            {
                             }
                         }
-                        Log.Debug(message);
-                        return new JavaElement[] { };
                     }
+                    Log.Debug(message);
+                    return new JavaElement[] { };
                 }
             }
-
-
+            if (result == null) return new JavaElement[] { };
+            return result;
+        }
+        public static JavaElement[] GetElementsWithuiSelector( JavaSelector selector, IElement fromElement = null, int maxresults = 1)
+        {
+            Javahook.Instance.refreshJvms();
+            JavaElement[] result = null;
+            foreach (var jvm in Javahook.Instance.jvms)
+            {
+                result = GetElementsWithuiSelector(jvm, selector, fromElement, maxresults);
+                if (result.Count() > 0) return result;
+            }
 
             if (result == null) return new JavaElement[] { };
             return result;

@@ -93,8 +93,6 @@ namespace OpenRPA.Java
                 var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
                 if (p.ProcessName.ToLower() != "java") return false;
             }
-            
-
             var selector = new JavaSelector(lastElement, null, true);
             var a = new GetElement { DisplayName = lastElement.id + " " + lastElement.role + " " + lastElement.Name };
             a.Selector = selector.ToString();
@@ -102,6 +100,8 @@ namespace OpenRPA.Java
 
             e.a = new GetElementResult(a);
             e.SupportInput = lastElement.SupportInput;
+            e.ClickHandled = true;
+            lastElement.Click();
             return true;
         }
         public void Initialize()

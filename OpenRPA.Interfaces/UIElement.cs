@@ -144,7 +144,6 @@ namespace OpenRPA
             _overlayWindow.Visible = true;
             _overlayWindow.SetTimeout(Duration);
             _overlayWindow.Bounds = Rectangle;
-            Console.WriteLine(Rectangle.ToString());
             //rawElement.DrawHighlight(Blocking, Color, Duration);
         }
         public string Value

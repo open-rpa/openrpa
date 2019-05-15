@@ -154,7 +154,7 @@ namespace OpenRPA.Java
                 matchcounter = 0;
                 foreach (JavaElement elementNode in children)
                 {
-                    Console.WriteLine("Match using " + i + " properties.");
+                    Log.Debug("Match using " + i + " properties.");
                     if (match(elementNode)) matchcounter++;
                     if (matchcounter > 1)
                     {

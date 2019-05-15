@@ -137,7 +137,7 @@ namespace OpenRPA.Java
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine(ex.ToString());
+                Log.Error(ex.ToString());
             }
             if (properties.ContainsKey("role"))
             {
@@ -194,7 +194,7 @@ namespace OpenRPA.Java
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine(ex.ToString());
+                Log.Error(ex.ToString());
             }
         }
         public void SetPath()
@@ -245,8 +245,8 @@ namespace OpenRPA.Java
                     }
                     catch (Exception ex)
                     {
-                        System.Diagnostics.Trace.WriteLine(name);
-                        System.Diagnostics.Trace.WriteLine(ex.ToString());
+                        Log.Error(name);
+                        Log.Error(ex.ToString());
                     }
                 }
                 else
@@ -303,7 +303,6 @@ namespace OpenRPA.Java
                             if (!actions.ContainsKey(a.name))
                             {
                                 actions.Add(a.name, a);
-                                System.Diagnostics.Trace.WriteLine(a.name);
                             }
                         }
                     }
@@ -319,17 +318,17 @@ namespace OpenRPA.Java
                 actiontodo.actionsCount = 1;
                 if (_accessBridge.Functions.DoAccessibleActions(ac.JvmId, _ac, ref actiontodo, out failure))
                 {
-                    System.Diagnostics.Trace.WriteLine("Success, click!");
+                    Log.Debug("Success, click!");
                 }
                 else
                 {
-                    System.Diagnostics.Trace.WriteLine("Click was NOT Successful!");
+                    Log.Error("Click was NOT Successful!");
                 }
 
             }
             else
             {
-                System.Diagnostics.Trace.WriteLine("No click action attached to element!");
+                Log.Error("No click action attached to element!");
             }
         }
         public void Focus()
@@ -343,7 +342,6 @@ namespace OpenRPA.Java
             _overlayWindow.Visible = true;
             _overlayWindow.SetTimeout(Duration);
             _overlayWindow.Bounds = Rectangle;
-            Console.WriteLine(Rectangle.ToString());
     }
     public override string ToString()
         {

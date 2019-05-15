@@ -130,12 +130,12 @@ namespace OpenRPA.Interfaces
             {
                 //Outputbuilder.Append(string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
                 //Outputbuilder.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
-                _OutputMessages.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
+                _OutputMessages = _OutputMessages.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
                 OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("OutputMessages"));
             }
             //Tracebuilder.Append(string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
             // Tracebuilder.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
-            _TraceMessages.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
+            _TraceMessages = _TraceMessages.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Trace"));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("TraceMessages"));
         }
@@ -162,7 +162,7 @@ namespace OpenRPA.Interfaces
         //    }
         //    //Tracebuilder.Append(string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, logEvent.Level.ToString(), message));
         //    Tracebuilder.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, logEvent.Level.ToString(), message));
-        //    System.Diagnostics.Trace.WriteLine(string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}", dt, logEvent.Level.ToString(), message), "Tracing");
+        //    System.Diagnostics.Trace.Write Line(string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}", dt, logEvent.Level.ToString(), message), "Tracing");
         //    OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Trace"));
         //    OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("TraceMessages"));
 
@@ -192,7 +192,7 @@ namespace OpenRPA.Interfaces
                 //if (lastmsg == msg && lastmsg == Environment.NewLine) return;
                 //lastmsg = msg;
                 char c = msg[0];
-                Log.Information(msg);
+                Log.Output(msg);
 
                 // Log.Debug(msg, Tracing.Output);
                 // Debug.Write(Encoding.Unicode.GetString(buffer, offset, count));

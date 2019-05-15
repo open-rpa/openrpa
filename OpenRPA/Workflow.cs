@@ -72,21 +72,21 @@ namespace OpenRPA
             workflow.projectid = Project._id;
             return workflow;
         }
-        public async Task Save()
+        public void SaveFile()
         {
             if (string.IsNullOrEmpty(name)) return;
             if (string.IsNullOrEmpty(Xaml)) return;
             if (!Project.Workflows.Contains(this)) Project.Workflows.Add(this);
-            
+
             if (string.IsNullOrEmpty(FilePath))
             {
-                Filename = UniqueName();
+                Filename = UniqueFilename();
             }
             else
             {
-                var guess =  name.Replace(" ", "_").Replace(".", "") + ".xaml";
-                var newName = UniqueName();
-                if(guess== newName && Filename != guess)
+                var guess = name.Replace(" ", "_").Replace(".", "") + ".xaml";
+                var newName = UniqueFilename();
+                if (guess == newName && Filename != guess)
                 {
                     System.IO.File.WriteAllText(System.IO.Path.Combine(Project.Path, guess), Xaml);
                     System.IO.File.Delete(FilePath);
@@ -94,11 +94,16 @@ namespace OpenRPA
                 }
             }
             System.IO.File.WriteAllText(FilePath, Xaml);
+        }
+        public async Task Save()
+        {
+            SaveFile();
             if (global.webSocketClient == null) return;
             projectid = Project._id;
             if (string.IsNullOrEmpty(_id))
             {
-                await global.webSocketClient.InsertOne("openrpa", this);
+                var result = await global.webSocketClient.InsertOne("openrpa", this);
+                _id = result._id;
             } else
             {
                 await global.webSocketClient.UpdateOne("openrpa", this);
@@ -114,7 +119,7 @@ namespace OpenRPA
                 await global.webSocketClient.DeleteOne("openrpa", this._id);
             }
         }
-        private string UniqueName()
+        public string UniqueFilename()
         {
             string Filename = ""; string FilePath = "";
             bool isUnique = false; int counter = 1;

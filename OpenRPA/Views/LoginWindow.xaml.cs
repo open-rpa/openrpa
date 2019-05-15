@@ -22,6 +22,13 @@ namespace OpenRPA.Views
         public LoginWindow()
         {
             InitializeComponent();
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+        }
+        
+        public string fqdn
+        {
+            get { return txtFQDN.Text; }
+            set { txtFQDN.Text = value; }
         }
         public string username
         {
@@ -33,9 +40,37 @@ namespace OpenRPA.Views
             get { return txtPassword.Password; }
             set { txtPassword.Password = value; }
         }
+        public string errormessage
+        {
+            get { return txtErrormessage.Text; }
+            set { txtErrormessage.Text = value; }
+        }
+        
         private void OKButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             DialogResult = true;
+        }
+
+        private void buttonRegister_Click(object sender, RoutedEventArgs e)
+        {
+            var registration = new RegistrationWindow();
+            registration.ShowDialog();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(TxtUsername.Text)) TxtUsername.Focus();
+            if (!string.IsNullOrEmpty(TxtUsername.Text)) txtPassword.Focus();
+        }
+
+        private void TxtUsername_KeyUp(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter) { e.Handled = true; txtPassword.Focus(); }
+        }
+
+        private void TxtPassword_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter) { e.Handled = true; OKButton_Click(null,null); }
         }
     }
 }

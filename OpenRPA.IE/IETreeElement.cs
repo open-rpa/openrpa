@@ -73,7 +73,7 @@ namespace OpenRPA.IE
                 var exists = Children.Where(x => ((IEElement)x.Element).uniqueID == ele.uniqueID).FirstOrDefault();
                 if(exists==null)
                 {
-                    Console.WriteLine("Adding " + ele.ToString());
+                    Interfaces.Log.Debug("Adding " + ele.ToString());
                     Children.Add(new IETreeElement(this, false, ele));
                 }
             }

@@ -134,7 +134,7 @@ namespace OpenRPA.Java
                 {
                     _windowCache.Clear();
                     var _jvms = EnumJvms();
-                    System.Diagnostics.Trace.WriteLine("jvms: " + _jvms.Count);
+                    Log.Debug("jvms: " + _jvms.Count);
                     foreach (var jvm in _jvms)
                     {
                         if (!jvms.Contains(jvm))

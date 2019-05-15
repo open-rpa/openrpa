@@ -244,11 +244,6 @@ namespace OpenRPA.Views
                                             activityType.Name
                                         select
                                             new ToolboxItemWrapper(activityType, activityType.Name.Replace("`1", ""));
-                        (actvities).ToList().ForEach(Console.WriteLine);
-
-                        //Console.WriteLine("******************************");
-                        //actvities.ToList().ForEach(Console.WriteLine);
-                        //Console.WriteLine("******************************");
                         actvities.ToList().ForEach(wfToolboxCategory.Add);
 
                         if (wfToolboxCategory.Tools.Count > 0)

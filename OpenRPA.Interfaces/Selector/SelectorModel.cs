@@ -148,7 +148,7 @@ namespace OpenRPA.Interfaces.Selector
             var results = Plugin.GetElementsWithSelector(Selector, null, maxresult);
             foreach (var element in results)
             {
-                element.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(5));
+                element.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
             }
         }
     }

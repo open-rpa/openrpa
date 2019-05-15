@@ -136,7 +136,7 @@ namespace OpenRPA.IE
                         {
                             var tag = el2.tagName;
                             // var html = el2.innerHTML;
-                            System.Diagnostics.Debug.WriteLine("tag: " + tag);
+                            Log.Debug("tag: " + tag);
                             enumElements(browser, el2 , anchor, doEnum, X, Y);
                             return;
                         }

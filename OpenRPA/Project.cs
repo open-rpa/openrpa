@@ -12,8 +12,8 @@ namespace OpenRPA
     {
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
 
-        [JsonIgnore]
-        public string Filepath { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        // [JsonIgnore]
+        // public string Filepath { get { return GetProperty<string>(); } set { SetProperty(value); } }
         //public string Name { get; set; }
         //public string Filename { get; set; }
         //[JsonIgnore]
@@ -21,13 +21,23 @@ namespace OpenRPA
         [JsonIgnore]
         public System.Collections.ObjectModel.ObservableCollection<Workflow> Workflows { get; set; }
         [JsonIgnore]
-        public string Path
+        public string Path { get { return GetProperty<string>(); } set { SetProperty(value); } }
+
+        [JsonIgnore]
+        public string Filepath
         {
             get
             {
-                return System.IO.Path.GetDirectoryName(Filepath);
+                return System.IO.Path.Combine(Path, Filename);
             }
         }
+        //public string Path
+        //{
+        //    get
+        //    {
+        //        return System.IO.Path.GetDirectoryName(Filepath);
+        //    }
+        //}
         public static Project[] loadProjects(string Path)
         {
             var ProjectFiles = System.IO.Directory.EnumerateFiles(Path, "*.rpaproj", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
@@ -38,7 +48,6 @@ namespace OpenRPA
         public static Project FromFile(string Filepath)
         {
             Project project = JsonConvert.DeserializeObject<Project>(System.IO.File.ReadAllText(Filepath));
-            project.Filepath = Filepath;
             project.Filename = System.IO.Path.GetFileName(Filepath);
             if (string.IsNullOrEmpty(project.name)) { project.name = System.IO.Path.GetFileNameWithoutExtension(Filepath); }
             project._type = "project";
@@ -73,7 +82,6 @@ namespace OpenRPA
             p._type = "project";
             p.name = Name;
             p.Filename = System.IO.Path.GetFileName(Filepath);
-            p.Filepath = Filepath;
             p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
             await p.Save();
             var w = Workflow.Create(p, "New Workflow");
@@ -89,12 +97,27 @@ namespace OpenRPA
             foreach (string file in ProjectFiles) Workflows.Add(Workflow.FromFile(this, file));
             //return Workflows.ToArray();
         }
-        public async Task Save()
+        public void SaveFile()
         {
             var basePath = System.IO.Path.GetDirectoryName(Filepath);
             if (!System.IO.Directory.Exists(basePath)) System.IO.Directory.CreateDirectory(basePath);
             System.IO.File.WriteAllText(Filepath, JsonConvert.SerializeObject(this));
-            foreach(var workflow in Workflows)
+            var filenames = new List<string>();
+            foreach (var workflow in Workflows)
+            {
+                if(filenames.Contains(workflow.Filename))
+                {
+                    workflow.Filename = workflow.UniqueFilename();
+                    _ = workflow.Save();
+                }
+                filenames.Add(workflow.Filename);
+                workflow.SaveFile();
+            }
+        }
+        public async Task Save()
+        {
+            SaveFile();
+            foreach (var workflow in Workflows)
             {
                 await workflow.Save();
             }

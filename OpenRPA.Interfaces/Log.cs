@@ -20,6 +20,10 @@ namespace OpenRPA.Interfaces
         {
             System.Diagnostics.Trace.WriteLine(message, "Information");
         }
+        public static void Output(string message)
+        {
+            System.Diagnostics.Trace.WriteLine(message, "Output");
+        }
         public static void Warning(string message)
         {
             System.Diagnostics.Trace.WriteLine(message, "Warning");

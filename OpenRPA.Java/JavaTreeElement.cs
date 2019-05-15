@@ -53,7 +53,7 @@ namespace OpenRPA.Java
                 //var exists = Children.Where(x => !ele.Equals( ((JavaTreeElement)x).Element) ).FirstOrDefault();
                 if (!exists)
                 {
-                    Console.WriteLine("Adding " + ele.ToString());
+                    Interfaces.Log.Debug("Adding " + ele.ToString());
                     Children.Add(new JavaTreeElement(this, false, ele));
                 }
             }

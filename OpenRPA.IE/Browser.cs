@@ -45,7 +45,7 @@ namespace OpenRPA.IE
 
                 if (filename.Equals("iexplore"))
                 {
-                    //Debug.WriteLine("Web Site   : {0}", _ie.LocationURL);
+                    Log.Debug(string.Format("Web Site   : {0}", _ie.LocationURL));
                     try
                     {
                         result.wBrowser = _ie as SHDocVw.WebBrowser;
@@ -175,9 +175,9 @@ namespace OpenRPA.IE
                 if(frame==null) frame = dd.elementFromPoint(X, Y );
                 var tag = frame.tagName;
                 var html = frame.innerHTML;
-                System.Diagnostics.Debug.WriteLine("tag: " + tag);
-                System.Diagnostics.Debug.WriteLine("html: " + html);
-                System.Diagnostics.Debug.WriteLine("-----");
+                Log.Debug("tag: " + tag);
+                Log.Debug("html: " + html);
+                Log.Debug("-----");
 
                 isFrame = (frame.tagName == "FRAME");
             }

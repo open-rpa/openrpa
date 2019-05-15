@@ -45,14 +45,14 @@ namespace OpenRPA.Java
         }
         private void Hook_OnJavaShutDown(int vmID)
         {
-            Console.WriteLine("JavaShutDown: " + vmID);
+            Log.Information("JavaShutDown: " + vmID);
         }
         public JavaElement lastElement { get; set; }
         private void Hook_OnMouseClicked(int vmID, WindowsAccessBridgeInterop.AccessibleContextNode ac)
         {
             lastElement = new JavaElement(ac);
             lastElement.SetPath();
-            Console.WriteLine("OnMouseClicked: " + lastElement.id + " " + lastElement.role + " " + lastElement.Name);
+            Log.Debug("OnMouseClicked: " + lastElement.id + " " + lastElement.role + " " + lastElement.Name);
             if (lastElement == null) return;
 
             var re = new RecordEvent(); re.Button = MouseButton.Left;
@@ -80,7 +80,7 @@ namespace OpenRPA.Java
         {
             lastElement = new JavaElement(ac);
             lastElement.SetPath();
-            Console.WriteLine("MouseEntered: " + lastElement.id + " " + lastElement.role + " " + lastElement.Name);
+            Log.Verbose("MouseEntered: " + lastElement.id + " " + lastElement.role + " " + lastElement.Name);
         }
         public bool parseUserAction(ref IRecordEvent e)
         {

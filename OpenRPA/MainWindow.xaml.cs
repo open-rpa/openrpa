@@ -613,20 +613,31 @@ namespace OpenRPA
                     await global.webSocketClient.RegisterQueue("robot." + Config.local.username);
                     var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}");
                     var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}");
+
+
+                    var folders = new List<string>();
+                    foreach (var p in projects)
+                    {
+                        p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p.name);
+                        if (folders.Contains(p.Path))
+                        {
+                            p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p._id);
+                        }
+                        folders.Add(p.Path);
+                    }
+
                     foreach (var p in projects)
                     {
                         p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
-                        p.Filepath = System.IO.Path.Combine(Extensions.projectsDirectory, p.name, p.Filename);
                         foreach (var workflow in workflows)
                         {
                             if (workflow.projectid == p._id)
                             {
                                 workflow.Project = p;
-                                // workflow.Filepath = System.IO.Path.Combine(p.Path, workflow.Filename);
                                 p.Workflows.Add(workflow);
                             }
                         }
-                        await p.Save();
+                        p.SaveFile();
                         Projects.Add(p);
                     }
                     if (workflows.Count() == 0 && projects.Count() == 0)
@@ -638,7 +649,7 @@ namespace OpenRPA
                             {
                                 var p = await global.webSocketClient.InsertOne("openrpa", _project);
                                 p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
-                                p.Filepath = System.IO.Path.Combine(Extensions.projectsDirectory, p.name, p.Filename);
+                                p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p.name);
                                 Projects.Add(p);
                                 foreach (var _workflow in _project.Workflows)
                                 {

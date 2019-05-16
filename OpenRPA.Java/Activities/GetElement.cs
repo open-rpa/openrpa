@@ -28,8 +28,8 @@ namespace OpenRPA.Java
         public Activity LoopAction { get; set; }
         protected override void Execute(NativeActivityContext context)
         {
-            var selector = Selector.Get(context);
-            var sel = new JavaSelector(selector);
+            var SelectorString = Selector.Get(context);
+            var sel = new JavaSelector(SelectorString);
             var timeout = TimeSpan.FromSeconds(3);
             var maxresults = MaxResults.Get(context);
             JavaElement[] elements = { };
@@ -37,9 +37,11 @@ namespace OpenRPA.Java
             sw.Start();
             do
             {
-                elements = JavaSelector.GetElementsWithuiSelector(sel, null, maxresults);
-            } while (elements.Count() > 0 && sw.Elapsed < timeout);
-            Log.Debug(string.Format("OpenRPA.Java::GetElement::fouund {1} elements in {0:mm\\:ss\\.fff}", sw.Elapsed, elements.Count()));
+                var selector = new JavaSelector(SelectorString);
+                elements = JavaSelector.GetElementsWithuiSelector(selector, null, maxresults);
+
+            } while (elements.Count() == 0 && sw.Elapsed < timeout);
+            Log.Debug(string.Format("OpenRPA.Java::GetElement::found {1} elements in {0:mm\\:ss\\.fff}", sw.Elapsed, elements.Count()));
             context.SetValue(Elements, elements);
             IEnumerator<JavaElement> _enum = elements.ToList().GetEnumerator();
             context.SetValue(_elements, _enum);

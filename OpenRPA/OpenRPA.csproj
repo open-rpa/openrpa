@@ -32,11 +32,14 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\dist\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>7.1</LangVersion>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\open_rpa.ico</ApplicationIcon>
@@ -74,6 +77,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Activities\AsyncHelper.cs" />
+    <Compile Include="Activities\GetElement.cs" />
+    <Compile Include="Activities\GetElementDesigner.xaml.cs">
+      <DependentUpon>GetElementDesigner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Activities\OpenApplication.cs" />
+    <Compile Include="Activities\OpenApplicationDesigner.xaml.cs">
+      <DependentUpon>OpenApplicationDesigner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\HighlightElement.cs" />
     <Compile Include="Activities\ClickElement.cs" />
     <Compile Include="Activities\HighlightElementDesigner.xaml.cs">
@@ -105,6 +117,14 @@
     </Compile>
     <Compile Include="Workflow.cs" />
     <Compile Include="WorkflowInstance.cs" />
+    <Page Include="Activities\GetElementDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\OpenApplicationDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Activities\HighlightElementDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -372,5 +392,10 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>taskkill /f /fi "pid gt 0" /im OpenRPA.JavaBridge.exe</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>cd $(TargetDir)
+del *.xml
+del *.pdb</PostBuildEvent>
   </PropertyGroup>
 </Project>

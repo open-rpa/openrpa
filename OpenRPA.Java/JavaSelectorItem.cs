@@ -135,18 +135,11 @@ namespace OpenRPA.Java
             int i = 1;
             int matchcounter = 0;
 
-            Log.Debug("#****************************************#");
-            Log.Debug("# EnumNeededProperties ");
-
             foreach (var p in Properties) p.Enabled = false;
             do
             {
-                //if(id == "menu" || id == "menu#Window")
-                //{
-                //    Log.Debug("#****************************************#");
-                //}
-                Log.Debug("#****************************************#");
-                Log.Debug("# " + i);
+                Log.Selector("#*******************************#");
+                Log.Selector("# " + i);
                 var selectedProps = props.Take(i).ToArray();
                 foreach (var p in Properties) p.Enabled = selectedProps.Contains(p.Name);
                 JavaElement[] children = { };
@@ -154,8 +147,8 @@ namespace OpenRPA.Java
                 matchcounter = 0;
                 foreach (JavaElement elementNode in children)
                 {
-                    Log.Debug("Match using " + i + " properties.");
-                    if (match(elementNode)) matchcounter++;
+                    Log.Selector("Match using " + i + " properties.");
+                    if (Match(elementNode)) matchcounter++;
                     if (matchcounter > 1)
                     {
                         break;
@@ -164,13 +157,13 @@ namespace OpenRPA.Java
                 if (matchcounter != 1) { ++i; }
                 //if (matchcounter > 1)
                 //{
-                //    Log.Debug("EnumNeededProperties match with " + i + " gave more than 1 result");
+                //    Log.Selector("EnumNeededProperties match with " + i + " gave more than 1 result");
                 //    ++i;
                 //    if (i >= props.Count()) break;
                 //}
             } while (matchcounter != 1 && i < props.Count());
 
-            Log.Debug("EnumNeededProperties match with " + i + " gave " + matchcounter + " result");
+            Log.Selector("EnumNeededProperties match with " + i + " gave " + matchcounter + " result");
             Properties.ForEach((e) => e.Enabled = false);
             foreach (var p in props.Take(i).ToArray())
             {
@@ -188,9 +181,9 @@ namespace OpenRPA.Java
                     JavaElement[] elements = element.Children;
                     foreach (JavaElement elementNode in elements)
                     {
-                        if (match(elementNode)) matchs.Add(elementNode);
+                        if (Match(elementNode)) matchs.Add(elementNode);
                     }
-                    Log.Debug("match count: " + matchs.Count);
+                    Log.Selector("match count: " + matchs.Count);
                     return matchs.ToArray();
                 }
                 catch (Exception)
@@ -201,9 +194,18 @@ namespace OpenRPA.Java
             } while (counter < 2);
             return new JavaElement[] { };
         }
-        public bool match(JavaElement m)
+        public override string ToString()
         {
-            foreach (var p in Properties.Where(x => x.Enabled == true && x.Value != null))
+            if (!string.IsNullOrEmpty(title)) return title;
+            return "id:" + id + " role:" + role + " Name: " + Name;
+        }
+        public bool Match(JavaElement m)
+        {
+            return Match(this, m);
+        }
+        public static bool Match(SelectorItem item, JavaElement m)
+        {
+            foreach (var p in item.Properties.Where(x => x.Enabled == true && x.Value != null))
             {
                 if (p.Name == "Name")
                 {
@@ -212,13 +214,13 @@ namespace OpenRPA.Java
                         var v = m.Name;
                         if (!PatternMatcher.FitsMask(v, p.Value))
                         {
-                            Log.Debug(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            Log.Selector(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
                             return false;
                         }
                     }
                     else
                     {
-                        Log.Debug(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        Log.Selector(p.Name + " does not exists, but needed value '" + p.Value + "'");
                         return false;
                     }
                 }
@@ -229,13 +231,13 @@ namespace OpenRPA.Java
                         var v = m.role;
                         if (!PatternMatcher.FitsMask(m.role, p.Value))
                         {
-                            Log.Debug(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            Log.Selector(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
                             return false;
                         }
                     }
                     else
                     {
-                        Log.Debug(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        Log.Selector(p.Name + " does not exists, but needed value '" + p.Value + "'");
                         return false;
                     }
                 }
@@ -246,13 +248,13 @@ namespace OpenRPA.Java
                         var v = m.title;
                         if (!PatternMatcher.FitsMask(m.title, p.Value))
                         {
-                            Log.Debug(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            Log.Selector(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
                             return false;
                         }
                     }
                     else
                     {
-                        Log.Debug(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        Log.Selector(p.Name + " does not exists, but needed value '" + p.Value + "'");
                         return false;
                     }
                 }
@@ -263,13 +265,13 @@ namespace OpenRPA.Java
                         var v = m.id;
                         if (!PatternMatcher.FitsMask(m.id, p.Value))
                         {
-                            Log.Debug(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            Log.Selector(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
                             return false;
                         }
                     }
                     else
                     {
-                        Log.Debug(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        Log.Selector(p.Name + " does not exists, but needed value '" + p.Value + "'");
                         return false;
                     }
                 }
@@ -277,20 +279,13 @@ namespace OpenRPA.Java
                 {
                     if (m.IndexInParent != int.Parse(p.Value))
                     {
-                        Log.Debug(p.Name + " mismatch '" + m.IndexInParent + "' / '" + p.Value + "'");
+                        Log.Selector(p.Name + " mismatch '" + m.IndexInParent + "' / '" + p.Value + "'");
                         return false;
                     }
                 }
 
             }
-            Log.Debug("match: " + ToString());
             return true;
         }
-        public override string ToString()
-        {
-            if (!string.IsNullOrEmpty(title)) return title;
-            return "id:" + id + " role:" + role + " Name: " + Name;
-        }
-
     }
 }

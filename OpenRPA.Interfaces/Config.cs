@@ -13,28 +13,15 @@ namespace OpenRPA.Interfaces
         public string wsurl = "wss://demo1.openrpa.dk/";
         public string username = "";
         public byte[] password;
-
-        private byte[] _entropy;
-        public string entropy
-        {
-            get
-            {
-                loadEntropy();
-                return Encoding.UTF8.GetString(_entropy);
-            }
-            set
-            {
-                _entropy = Encoding.UTF8.GetBytes(value);
-            }
-        }
+        public byte[] entropy;
         private void loadEntropy()
         {
-            if (_entropy == null || _entropy.Length == 0)
+            if (entropy == null || entropy.Length == 0)
             {
-                _entropy = new byte[20];
+                entropy = new byte[20];
                 using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
                 {
-                    rng.GetBytes(_entropy);
+                    rng.GetBytes(entropy);
                 }
             }
         }
@@ -45,7 +32,7 @@ namespace OpenRPA.Interfaces
             byte[] plaintext = Encoding.UTF8.GetBytes(data);
 
             // Generate additional entropy (will be used as the Initialization vector)
-            byte[] ciphertext = ProtectedData.Protect(plaintext, _entropy, DataProtectionScope.CurrentUser);
+            byte[] ciphertext = ProtectedData.Protect(plaintext, entropy, DataProtectionScope.CurrentUser);
             return ciphertext;
         }
 
@@ -56,7 +43,7 @@ namespace OpenRPA.Interfaces
             // byte[] plaintext = Encoding.UTF8.GetBytes(data);
 
             SecureString SecureData = new SecureString();
-            byte[] ciphertext = ProtectedData.Unprotect(data, _entropy, DataProtectionScope.CurrentUser);
+            byte[] ciphertext = ProtectedData.Unprotect(data, entropy, DataProtectionScope.CurrentUser);
             foreach (var c in Encoding.Default.GetString(ciphertext))
             {
                 SecureData.AppendChar(c);

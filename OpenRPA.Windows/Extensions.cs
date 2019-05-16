@@ -43,37 +43,54 @@ namespace OpenRPA.Windows
             string ApplicationUserModelId = null;
             if (_isImmersiveProcess)
             {
+                var automation = AutomationUtil.getAutomation();
+                var pc = new FlaUI.Core.Conditions.PropertyCondition(automation.PropertyLibrary.Element.ClassName, "Windows.UI.Core.CoreWindow");
+                var _el = element.FindFirstChild(pc);
+                processId = _el.Properties.ProcessId.Value;
 
                 IntPtr ptrProcess = OpenProcess(QueryLimitedInformation, false, processId);
-                if (IntPtr.Zero != ptrProcess)
-                {
-                    uint cchLen = 130; // Currently APPLICATION_USER_MODEL_ID_MAX_LENGTH = 130
-                    StringBuilder sbName = new StringBuilder((int)cchLen);
-                    Int32 lResult = GetApplicationUserModelId(ptrProcess, ref cchLen, sbName);
-                    if (ERROR_SUCCESS == lResult)
+                    if (IntPtr.Zero != ptrProcess)
                     {
-                        ApplicationUserModelId = sbName.ToString();
-                    }
-                    else if (ERROR_INSUFFICIENT_BUFFER == lResult)
-                    {
-                        sbName = new StringBuilder((int)cchLen);
-                        if (ERROR_SUCCESS == GetApplicationUserModelId(ptrProcess, ref cchLen, sbName))
+                        uint cchLen = 130; // Currently APPLICATION_USER_MODEL_ID_MAX_LENGTH = 130
+                        StringBuilder sbName = new StringBuilder((int)cchLen);
+                        Int32 lResult = GetApplicationUserModelId(ptrProcess, ref cchLen, sbName);
+                        if (APPMODEL_ERROR_NO_APPLICATION == lResult)
+                        {
+                            _isImmersiveProcess = false;
+                        }
+                        else if (ERROR_SUCCESS == lResult)
                         {
                             ApplicationUserModelId = sbName.ToString();
                         }
+                        else if (ERROR_INSUFFICIENT_BUFFER == lResult)
+                        {
+                            sbName = new StringBuilder((int)cchLen);
+                            if (ERROR_SUCCESS == GetApplicationUserModelId(ptrProcess, ref cchLen, sbName))
+                            {
+                                ApplicationUserModelId = sbName.ToString();
+                            }
+                        }
+                        CloseHandle(ptrProcess);
                     }
-                    CloseHandle(ptrProcess);
-                }
+
             }
             var arguments = GetCommandLine(processId);
             var arr = parseCommandLine(arguments);
-            result.arguments = "";
-            if (arr.Length > 0)
+
+            if(arguments.Contains("\"" + arr[0] + "\"") )
             {
-                var resultarr = new string[arr.Length - 1];
-                Array.Copy(arr, 1, resultarr, 0, arr.Length - 1);
-                result.arguments = string.Join(" ", resultarr).replaceEnvironmentVariable();
+                result.arguments = arguments.Replace("\"" + arr[0] + "\"", "");
+            } else
+            {
+                result.arguments = arguments.Replace(arr[0], "");
             }
+            result.arguments = result.arguments.replaceEnvironmentVariable();
+            //if (arr.Length > 0)
+            //{
+            //    var resultarr = new string[arr.Length - 1];
+            //    Array.Copy(arr, 1, resultarr, 0, arr.Length - 1);
+            //    result.arguments = string.Join(" ", resultarr).replaceEnvironmentVariable();
+            //}
             result.applicationUserModelId = ApplicationUserModelId;
             result.isImmersiveProcess = _isImmersiveProcess;
             return result;
@@ -109,6 +126,7 @@ namespace OpenRPA.Windows
         public const int QueryLimitedInformation = 0x1000;
         public const int ERROR_INSUFFICIENT_BUFFER = 0x7a;
         public const int ERROR_SUCCESS = 0x0;
+        public const int APPMODEL_ERROR_NO_APPLICATION = 15703;
         public static String[] parseCommandLine(String commandLine)
         {
             List<String> arguments = new List<String>();

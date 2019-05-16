@@ -24,8 +24,5 @@ namespace OpenRPA.Activities
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        public BitmapFrame HighlightImage { get; set; }
-        public BitmapImage Image { get; set; }
     }
 }

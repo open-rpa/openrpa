@@ -65,6 +65,7 @@ namespace OpenRPA.Interfaces.Selector
                 var treeele = item.DataContext as treeelement;
                 if (treeele != null)
                 {
+                    if (vm.Highlight) { treeele.Element.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1)); }
                     treeele.LoadDetails();
                     vm.NotifyPropertyChanged("SelectedItemDetails");
                 }
@@ -89,19 +90,51 @@ namespace OpenRPA.Interfaces.Selector
         }
         private void BtnSyncTree_Click(object sender, RoutedEventArgs e)
         {
-
+            var currentNode = vm.Directories;
+            vm.Highlight = false;
+            for (var i = 1; i < vm.Selector.Count; i++)
+            {
+                var s = vm.Selector[i]; var found = false;
+                foreach (var treenode in currentNode)
+                {
+                    if (vm.Plugin.Match(s, treenode.Element))
+                    {
+                        found = true;
+                        treenode.IsExpanded = true;
+                        treenode.IsSelected = true;
+                        currentNode = new ExtendedObservableCollection<treeelement>();
+                        foreach (var subc in treenode.Children) currentNode.Add(subc);
+                        //currentNode = c.Children;
+                        continue;
+                    }
+                }
+                if(!found)
+                {
+                    foreach (var treenode in currentNode)
+                    {
+                        foreach (var subtreenode in treenode.Children)
+                        {
+                            if (vm.Plugin.Match(s, subtreenode.Element))
+                            {
+                                found = true;
+                                subtreenode.IsExpanded = true;
+                                
+                                subtreenode.IsSelected = true;
+                                currentNode = new ExtendedObservableCollection<treeelement>();
+                                foreach (var subc in subtreenode.Children) currentNode.Add(subc);
+                                //currentNode = c.Children;
+                                continue;
+                            }
+                        }
+                    }
+                }
+                if (!found) break;
+            }
+            vm.Highlight = true;
         }
         private void BtnHighlight_Click(object sender, RoutedEventArgs e)
         {
-            vm.Highlight = !vm.Highlight;
             vm.doHighlight();
-        }
-        public ICommand SelectCommand { get { return new RelayCommand<treeelement>(onSelect); } }
-        private void onSelect(treeelement item)
-        {
-            var selector = vm.Plugin.GetSelector(item);
-            vm.Selector = selector;
-            vm.FocusElement(selector);
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -112,22 +145,19 @@ namespace OpenRPA.Interfaces.Selector
                 {
                     System.Diagnostics.Trace.WriteLine("init selector model, with " + treeelements.Count() + " root elements", "Debug");
                     vm.init(treeelements);
-                    //vm.FocusElement(vm.Selector);
+                    // vm.FocusElement(vm.Selector);
                 });
-
-                
             });
         }
         private void Window_Closed(object sender, EventArgs e)
         {
             vm.Plugin.OnUserAction -= Plugin_OnUserAction;
+            GenericTools.restore(GenericTools.mainWindow);
         }
-
         private void Ok_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
         }
-
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;

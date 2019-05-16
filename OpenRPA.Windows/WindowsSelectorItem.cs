@@ -23,8 +23,6 @@ namespace OpenRPA.Windows
             Properties = item.Properties;
             Element = item.Element;
         }
-        // public UIElement element { get { return GetProperty<UIElement>(); } set { SetProperty(value); } }
-
         public string Name
         {
             get
@@ -81,7 +79,7 @@ namespace OpenRPA.Windows
                         Properties.Add(new SelectorItemProperty("processname", info.processname));
                         Properties.Add(new SelectorItemProperty("arguments", info.arguments));
                     }
-                    Properties.Add(new SelectorItemProperty("Selector", "windows"));
+                    Properties.Add(new SelectorItemProperty("Selector", "Windows"));
                     //Properties.Add(new SelectorItemProperty("", info.));
                 }
                 foreach (var p in Properties)
@@ -153,13 +151,13 @@ namespace OpenRPA.Windows
                     if (matchcounter > 1) break;
                     if (matchcounter != 1)
                     {
-                        Log.Debug("EnumNeededProperties match with " + i + " gave more than 1 result");
+                        Log.Selector("EnumNeededProperties match with " + i + " gave more than 1 result");
                         ++i;
                         if (i >= props.Count()) break;
                     }
                 } while (matchcounter != 1 && i < props.Count());
 
-                //Log.Debug("EnumNeededProperties match with " + i + " gave " + matchcounter + " result");
+                //Log.Selector("EnumNeededProperties match with " + i + " gave " + matchcounter + " result");
                 Properties.ForEach((e) => e.Enabled = false);
                 foreach (var p in props.Take(i).ToArray())
                 {
@@ -215,11 +213,11 @@ namespace OpenRPA.Windows
         {
             var matchs = new List<AutomationElement>();
             var c = GetConditionsWithoutStar();
-            Log.Debug("matches::FindAllChildren");
+            Log.Selector("matches::FindAllChildren");
             //var elements = element.FindAllChildren(c);
             //foreach (var elementNode in elements)
             //{
-            //    Log.Debug("matches::match");
+            //    Log.Selector("matches::match");
             //    if (match(elementNode)) matchs.Add(elementNode);
             //}
             var nodes = new List<AutomationElement>();
@@ -230,7 +228,7 @@ namespace OpenRPA.Windows
                 nodes.Add(elementNode);
                 i++;
                 // Console.WriteLine(i + ") " + elementNode.ToString());
-                if (match(elementNode)) matchs.Add(elementNode);
+                if (Match(elementNode)) matchs.Add(elementNode);
                 if (matchs.Count >= count) break;
                 elementNode = _treeWalker.GetNextSibling(elementNode);
             }
@@ -240,10 +238,13 @@ namespace OpenRPA.Windows
             //}
             return matchs.ToArray();
         }
-
-        public bool match(AutomationElement m)
+        public bool Match(AutomationElement m)
         {
-            foreach (var p in Properties.Where(x => x.Enabled == true && x.Value != null))
+            return Match(this, m);
+        }
+        public static bool Match(SelectorItem item, AutomationElement m)
+        {
+            foreach (var p in item.Properties.Where(x => x.Enabled == true && x.Value != null))
             {
                 if (p.Name == "ControlType")
                 {
@@ -252,13 +253,13 @@ namespace OpenRPA.Windows
                         var v = m.Properties.ControlType.Value.ToString();
                         if (!PatternMatcher.FitsMask(v, p.Value))
                         {
-                            Log.Debug(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            Log.Selector(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
                             return false;
                         }
                     }
                     else
                     {
-                        Log.Debug(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        Log.Selector(p.Name + " does not exists, but needed value '" + p.Value + "'");
                         return false;
                     }
                 }
@@ -269,13 +270,13 @@ namespace OpenRPA.Windows
                         var v = m.Properties.Name.Value;
                         if (!PatternMatcher.FitsMask(m.Properties.Name.Value, p.Value))
                         {
-                            Log.Debug(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            Log.Selector(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
                             return false;
                         }
                     }
                     else
                     {
-                        Log.Debug(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        Log.Selector(p.Name + " does not exists, but needed value '" + p.Value + "'");
                         return false;
                     }
                 }
@@ -287,13 +288,13 @@ namespace OpenRPA.Windows
                         var v = m.Properties.ClassName.Value;
                         if (!PatternMatcher.FitsMask(m.Properties.ClassName.Value, p.Value))
                         {
-                            Log.Debug(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            Log.Selector(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
                             return false;
                         }
                     }
                     else
                     {
-                        Log.Debug(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        Log.Selector(p.Name + " does not exists, but needed value '" + p.Value + "'");
                         return false;
                     }
                 }
@@ -304,20 +305,19 @@ namespace OpenRPA.Windows
                         var v = m.Properties.AutomationId.Value;
                         if (!PatternMatcher.FitsMask(m.Properties.AutomationId.Value, p.Value))
                         {
-                            Log.Debug(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            Log.Selector(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
                             return false;
                         }
                     }
                     else
                     {
-                        Log.Debug(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        Log.Selector(p.Name + " does not exists, but needed value '" + p.Value + "'");
                         return false;
                     }
                 }
             }
             return true;
         }
-
         public override string ToString()
         {
             return "AutomationId:" + AutomationId + " Name:" + Name + " ClassName: " + ClassName;

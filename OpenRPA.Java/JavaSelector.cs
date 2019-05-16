@@ -17,8 +17,8 @@ namespace OpenRPA.Java
         {
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
-            Log.Debug(string.Format("Javaselector::AutomationElement::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
-            Log.Debug(string.Format("Javaselector::GetControlVJavawWalker::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Selector(string.Format("Javaselector::AutomationElement::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Selector(string.Format("Javaselector::GetControlVJavawWalker::end {0:mm\\:ss\\.fff}", sw.Elapsed));
 
             JavaElement root = null;
             JavaElement baseElement = null;
@@ -47,7 +47,7 @@ namespace OpenRPA.Java
                 var anchorlist = anchor.Where(x => x.Enabled && x.Selector == null).ToList();
                 for (var i = 0; i < anchorlist.Count; i++)
                 {
-                    if (((JavaSelectorItem)anchorlist[i]).match(pathToRoot[0]))
+                    if (((JavaSelectorItem)anchorlist[i]).Match(pathToRoot[0]))
                     {
                         pathToRoot.Remove(pathToRoot[0]);
                     }
@@ -82,7 +82,7 @@ namespace OpenRPA.Java
             }
             pathToRoot.Reverse();
 
-            Log.Debug(string.Format("Javaselector::EnumNeededProperties::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Selector(string.Format("Javaselector::EnumNeededProperties::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
             OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
@@ -133,7 +133,7 @@ namespace OpenRPA.Java
                             }
                         }
                     }
-                    Log.Debug(message);
+                    Log.Selector(message);
                     return new JavaElement[] { };
                 }
             }

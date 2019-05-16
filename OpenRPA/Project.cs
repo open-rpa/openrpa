@@ -50,6 +50,7 @@ namespace OpenRPA
             Project project = JsonConvert.DeserializeObject<Project>(System.IO.File.ReadAllText(Filepath));
             project.Filename = System.IO.Path.GetFileName(Filepath);
             if (string.IsNullOrEmpty(project.name)) { project.name = System.IO.Path.GetFileNameWithoutExtension(Filepath); }
+            project.Path = System.IO.Path.GetDirectoryName(Filepath);
             project._type = "project";
             project.Init();
             return project;

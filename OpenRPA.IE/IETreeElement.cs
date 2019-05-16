@@ -67,7 +67,7 @@ namespace OpenRPA.IE
 
         public override void AddSubElements()
         {
-            mshtml.IHTMLElementCollection children = IEElement.rawElement.children;
+            mshtml.IHTMLElementCollection children = IEElement.RawElement.children;
             foreach (mshtml.IHTMLElement elementNode in children) {
                 var ele = new IEElement(IEElement.Browser, elementNode);
                 var exists = Children.Where(x => ((IEElement)x.Element).uniqueID == ele.uniqueID).FirstOrDefault();
@@ -81,9 +81,9 @@ namespace OpenRPA.IE
             int frameoffsety = 0;
             if (IESelector.frameTags.Contains(IEElement.tagName.ToUpper()))
             {
-                frameoffsetx += IEElement.rawElement.offsetLeft;
-                frameoffsety += IEElement.rawElement.offsetTop;
-                var web = IEElement.rawElement as SHDocVw.IWebBrowser2;
+                frameoffsetx += IEElement.RawElement.offsetLeft;
+                frameoffsety += IEElement.RawElement.offsetTop;
+                var web = IEElement.RawElement as SHDocVw.IWebBrowser2;
                 var _doc = (mshtml.HTMLDocument)web.Document;
                 Children.Add(new IETreeElement(this, false, new IEElement(IEElement.Browser, _doc.documentElement)));
             }

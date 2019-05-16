@@ -8,8 +8,9 @@ namespace OpenRPA.Interfaces
 {
     public interface IElement
     {
+        Object RawElement { get; set; }
         void Focus();
         void Click();
-        void Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration);
+        Task Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration);
     }
 }

@@ -8,13 +8,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace OpenRPA.Activities
 {
     [System.ComponentModel.Designer(typeof(HighlightElementDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.highlight.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
-    public class HighlightElement : CodeActivity
+    public class HighlightElement : AsyncTaskCodeActivity<int>
     {
         public HighlightElement()
         {
@@ -22,17 +23,27 @@ namespace OpenRPA.Activities
             {
                 Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<IElement>("item")
             };
+            Blocking = false;
+            //Duration = TimeSpan.FromMilliseconds(250);
+            Duration = new InArgument<TimeSpan>()
+            {
+                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(1000)")
+            };
+
         }
         [RequiredArgument]
         public InArgument<IElement> Element { get; set; }
-        protected override void Execute(CodeActivityContext context)
+        [RequiredArgument]
+        public InArgument<bool> Blocking { get; set; }
+        [RequiredArgument]
+        public InArgument<TimeSpan> Duration { get; set; }
+        protected async override Task<int> ExecuteAsync(AsyncCodeActivityContext context)
         {
-            GenericTools.RunUI(() =>
-            {
-                var el = Element.Get(context);
-                if (el == null) throw new ArgumentException("element cannot be null");
-                el.Highlight(true, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
-            });
+            var el = Element.Get(context);
+            var blocking = Blocking.Get(context);
+            var duration = Duration.Get(context);
+            await el.Highlight(blocking, System.Drawing.Color.Red, duration);
+            return 13;
         }
     }
 }

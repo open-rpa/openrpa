@@ -474,11 +474,6 @@ namespace OpenRPA
                     }
                     return;
                 }
-                //if(lastInputEventArgs==null)
-                //{
-                //    Log.Debug("lastInputEventArgs is null");
-                //    return;
-                //}
                 InputDriver.Instance.CallNext = true;
                 if (mainTabControl.SelectedContent is Views.WFDesigner view)
                 {
@@ -573,6 +568,7 @@ namespace OpenRPA
             await Task.Delay(1000);
             _ = global.webSocketClient.Connect();
         }
+        private bool loginInProgress = false;
         private void WebSocketClient_OnOpen()
         {
             AutomationHelper.syncContext.Post(async o =>
@@ -597,14 +593,23 @@ namespace OpenRPA
                     }
                     if (user == null)
                     {
-                        var w = new Views.LoginWindow();
-                        w.username = Config.local.username;
-                        w.errormessage = errormessage;
-                        w.fqdn = new Uri(Config.local.wsurl).Host;
-                        this.Hide();
-                        if (w.ShowDialog() != true) { this.Show();  return; }
-                        Config.local.username = w.username; Config.local.password = Config.local.ProtectString(w.password);
-                        Config.Save();
+                        if(loginInProgress==false)
+                        {
+                            loginInProgress = true;
+                            var w = new Views.LoginWindow();
+                            w.username = Config.local.username;
+                            w.errormessage = errormessage;
+                            w.fqdn = new Uri(Config.local.wsurl).Host;
+                            this.Hide();
+                            if (w.ShowDialog() != true) { this.Show(); return; }
+                            Config.local.username = w.username; Config.local.password = Config.local.ProtectString(w.password);
+                            Config.Save();
+                            loginInProgress = false;
+                        } 
+                        else
+                        {
+                            return;
+                        }
                     }
                 }
                 this.Show();

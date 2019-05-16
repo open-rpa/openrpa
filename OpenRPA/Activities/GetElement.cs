@@ -9,39 +9,47 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenRPA.Java
+namespace OpenRPA.Activities
 {
     [System.ComponentModel.Designer(typeof(GetElementDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(GetElement), "Resources.toolbox.getjavaelement.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.gethtmlelement.png")]
     [System.Windows.Markup.ContentProperty("Body")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class GetElement : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {
+        //[RequiredArgument]
+        //public InArgument<string> XPath { get; set; }
+
         [System.ComponentModel.Browsable(false)]
-        public ActivityAction<JavaElement> Body { get; set; }
+        public ActivityAction<IElement> Body { get; set; }
         public InArgument<int> MaxResults { get; set; }
         [RequiredArgument]
         public InArgument<string> Selector { get; set; }
-        public InArgument<JavaElement> From { get; set; }
-        public OutArgument<JavaElement[]> Elements { get; set; }
-        private Variable<IEnumerator<JavaElement>> _elements = new Variable<IEnumerator<JavaElement>>("_elements");
+        public InArgument<IElement> From { get; set; }
+        public OutArgument<IElement[]> Elements { get; set; }
+        private Variable<IEnumerator<IElement>> _elements = new Variable<IEnumerator<IElement>>("_elements");
         public Activity LoopAction { get; set; }
+        public GetElement()
+        {
+        }
         protected override void Execute(NativeActivityContext context)
         {
-            var selector = Selector.Get(context);
-            var sel = new JavaSelector(selector);
+            var selectorstring = Selector.Get(context);
+            var selector = new Interfaces.Selector.Selector(selectorstring);
             var timeout = TimeSpan.FromSeconds(3);
-            var maxresults = MaxResults.Get(context);
-            JavaElement[] elements = { };
+
+            var pluginname = selector.First().Selector;
+            var Plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
+
+            IElement[] elements = { };
             var sw = new Stopwatch();
             sw.Start();
             do
             {
-                elements = JavaSelector.GetElementsWithuiSelector(sel, null, maxresults);
-            } while (elements.Count() > 0 && sw.Elapsed < timeout);
-            Log.Debug(string.Format("OpenRPA.Java::GetElement::fouund {1} elements in {0:mm\\:ss\\.fff}", sw.Elapsed, elements.Count()));
+                elements = Plugin.GetElementsWithSelector(selector, null);
+            } while (elements .Count() == 0 && sw.Elapsed < timeout);
             context.SetValue(Elements, elements);
-            IEnumerator<JavaElement> _enum = elements.ToList().GetEnumerator();
+            IEnumerator<IElement> _enum = elements.ToList().GetEnumerator();
             context.SetValue(_elements, _enum);
             bool more = _enum.MoveNext();
             if (more)
@@ -55,11 +63,11 @@ namespace OpenRPA.Java
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
-            IEnumerator<JavaElement> _enum = _elements.Get(context);
+            IEnumerator<IElement> _enum = _elements.Get(context);
             bool more = _enum.MoveNext();
             if (more)
             {
-                context.ScheduleAction<JavaElement>(Body, _enum.Current, OnBodyComplete);
+                context.ScheduleAction<IElement>(Body, _enum.Current, OnBodyComplete);
             }
             else
             {
@@ -86,12 +94,13 @@ namespace OpenRPA.Java
         public Activity Create(System.Windows.DependencyObject target)
         {
             var fef = new GetElement();
-            var aa = new ActivityAction<JavaElement>();
-            var da = new DelegateInArgument<JavaElement>();
+            var aa = new ActivityAction<IElement>();
+            var da = new DelegateInArgument<IElement>();
             da.Name = "item";
             fef.Body = aa;
             aa.Argument = da;
             return fef;
         }
+
     }
 }

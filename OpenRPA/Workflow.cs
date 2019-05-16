@@ -167,10 +167,8 @@ namespace OpenRPA
         }
         public void onIdleOrComplete(WorkflowInstance instance)
         {
-            Log.Debug("*******************************");
-            Log.Debug(instance.state);
-            if(!string.IsNullOrEmpty(instance.errormessage)) Log.Error(instance.errormessage);
-            Log.Debug("*******************************");
+            Log.Debug("onIdleOrComplete state: " + instance.state);
+            if (!string.IsNullOrEmpty(instance.errormessage)) Log.Error(instance.errormessage);
             idleOrComplete?.Invoke(this, instance);
         }
     }

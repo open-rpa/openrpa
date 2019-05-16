@@ -31,6 +31,7 @@ namespace OpenRPA.Java
         private AccessBridge _accessBridge;
         private AccessibleContextNode ac;
         private AccessibleNode c;
+        object IElement.RawElement { get => c; set => c = value as AccessibleNode; }
         public AccessibleContextInfo info = null;
 
         private JavaObjectHandle _ac;
@@ -335,15 +336,42 @@ namespace OpenRPA.Java
         {
             throw new NotImplementedException();
         }
-        private Interfaces.Overlay.OverlayWindow _overlayWindow;
-        public void Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
+        public Task Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
         {
-            if (_overlayWindow == null) { _overlayWindow = new Interfaces.Overlay.OverlayWindow(); }
-            _overlayWindow.Visible = true;
-            _overlayWindow.SetTimeout(Duration);
-            _overlayWindow.Bounds = Rectangle;
-    }
-    public override string ToString()
+            if (!Blocking)
+            {
+                Task.Run(() => _Highlight(Color, Duration));
+                return Task.CompletedTask;
+            }
+            return _Highlight(Color, Duration);
+        }
+        public Task _Highlight(System.Drawing.Color Color, TimeSpan Duration)
+        {
+            using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow())
+            {
+                _overlayWindow.Visible = true;
+                _overlayWindow.SetTimeout(Duration);
+                _overlayWindow.Bounds = Rectangle;
+                var sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+                do
+                {
+                    System.Threading.Thread.Sleep(10);
+                    _overlayWindow.TopMost = true;
+                } while (_overlayWindow.Visible && sw.Elapsed < Duration);
+                return Task.CompletedTask;
+            }
+        }
+        //private Interfaces.Overlay.OverlayWindow _overlayWindow;
+        //public async Task _Highlight(System.Drawing.Color Color, TimeSpan Duration)
+        //{
+        //    if (_overlayWindow == null) { _overlayWindow = new Interfaces.Overlay.OverlayWindow(); }
+        //    _overlayWindow.Visible = true;
+        //    _overlayWindow.SetTimeout(Duration);
+        //    _overlayWindow.Bounds = Rectangle;
+        //    await Task.Delay(10);
+        //}
+        public override string ToString()
         {
             if (!string.IsNullOrEmpty(title)) return title;
             return "id:" + id + " role:" + role + " Name: " + Name;

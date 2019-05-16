@@ -137,14 +137,30 @@ namespace OpenRPA
                 throw;
             }
         }
-        private Interfaces.Overlay.OverlayWindow _overlayWindow;
-        public void Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
+        public Task Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
         {
-            if(_overlayWindow == null) { _overlayWindow = new Interfaces.Overlay.OverlayWindow();  }
-            _overlayWindow.Visible = true;
-            _overlayWindow.SetTimeout(Duration);
-            _overlayWindow.Bounds = Rectangle;
-            //rawElement.DrawHighlight(Blocking, Color, Duration);
+            if (!Blocking) {
+                Task.Run(() => _Highlight(Color, Duration));
+                return Task.CompletedTask;
+            }
+            return _Highlight(Color, Duration);
+        }
+        public Task _Highlight(System.Drawing.Color Color, TimeSpan Duration)
+        {
+            using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow())
+            {
+                _overlayWindow.Visible = true;
+                _overlayWindow.SetTimeout(Duration);
+                _overlayWindow.Bounds = Rectangle;
+                var sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+                do
+                {
+                    System.Threading.Thread.Sleep(10);
+                    _overlayWindow.TopMost = true;
+                } while (_overlayWindow.Visible && sw.Elapsed < Duration);
+                return Task.CompletedTask;
+            }
         }
         public string Value
         {

@@ -22,6 +22,7 @@ namespace OpenRPA.Net
         {
             msg.data = JsonConvert.SerializeObject(this);
             var reply = await ws.SendMessage(msg);
+            if (reply.command == "error") throw new Exception("server error: " + reply.data);
             var result = JsonConvert.DeserializeObject<T>(reply.data);
             return result;
         }

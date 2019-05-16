@@ -65,6 +65,7 @@ namespace OpenRPA.Interfaces.Selector
                 var treeele = item.DataContext as treeelement;
                 if (treeele != null)
                 {
+                    if (vm.Highlight) { treeele.Element.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1)); }
                     treeele.LoadDetails();
                     vm.NotifyPropertyChanged("SelectedItemDetails");
                 }
@@ -93,15 +94,7 @@ namespace OpenRPA.Interfaces.Selector
         }
         private void BtnHighlight_Click(object sender, RoutedEventArgs e)
         {
-            vm.Highlight = !vm.Highlight;
             vm.doHighlight();
-        }
-        public ICommand SelectCommand { get { return new RelayCommand<treeelement>(onSelect); } }
-        private void onSelect(treeelement item)
-        {
-            var selector = vm.Plugin.GetSelector(item);
-            vm.Selector = selector;
-            vm.FocusElement(selector);
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -112,15 +105,14 @@ namespace OpenRPA.Interfaces.Selector
                 {
                     System.Diagnostics.Trace.WriteLine("init selector model, with " + treeelements.Count() + " root elements", "Debug");
                     vm.init(treeelements);
-                    //vm.FocusElement(vm.Selector);
+                    // vm.FocusElement(vm.Selector);
                 });
-
-                
             });
         }
         private void Window_Closed(object sender, EventArgs e)
         {
             vm.Plugin.OnUserAction -= Plugin_OnUserAction;
+            GenericTools.restore(GenericTools.mainWindow);
         }
 
         private void Ok_Click(object sender, RoutedEventArgs e)

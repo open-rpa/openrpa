@@ -31,6 +31,7 @@ namespace OpenRPA.IE
             //int maxresult = ModelItem.GetValue<int>("MaxResults");
             int maxresult = 1;
 
+            if (string.IsNullOrEmpty(SelectorString)) SelectorString = "[]";
             var selector = new IESelector(SelectorString);
             var selectors = new Interfaces.Selector.SelectorWindow("IE", selector, maxresult);
 
@@ -40,13 +41,13 @@ namespace OpenRPA.IE
             }
         }
 
-        private void Highlight_Click(object sender, RoutedEventArgs e)
+        private async void Highlight_Click(object sender, RoutedEventArgs e)
         {
             string SelectorString = ModelItem.GetValue<string>("Selector");
             int maxresults = ModelItem.GetValue<int>("MaxResults");
             var selector = new IESelector(SelectorString);
             var elements = IESelector.GetElementsWithuiSelector(selector, null, maxresults);
-            foreach (var ele in elements) ele.Highlight(true, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
+            foreach (var ele in elements) await ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
 
         }
     }

@@ -39,7 +39,6 @@ namespace OpenRPA.IE
                     if (id.uniqueID == uniqueID) { IndexInParent = i; break; }
                 }
             }
-            var rect = Rectangle;
         }
 
         private System.Drawing.Rectangle? _Rectangle = null;
@@ -121,18 +120,45 @@ namespace OpenRPA.IE
         public void Focus()
         {
         }
-        private Interfaces.Overlay.OverlayWindow _overlayWindow;
-        public void Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
+        public Task Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
         {
-            if (_overlayWindow == null) { _overlayWindow = new Interfaces.Overlay.OverlayWindow(); }
-            _overlayWindow.Visible = true;
-            _overlayWindow.SetTimeout(Duration);
-            if(_Rectangle == null)
+            if (!Blocking)
             {
-                Console.WriteLine("whut ??");
+                Task.Run(() => _Highlight(Color, Duration));
+                return Task.CompletedTask;
             }
-            _overlayWindow.Bounds = Rectangle;
+            return _Highlight(Color, Duration);
         }
+        public Task _Highlight(System.Drawing.Color Color, TimeSpan Duration)
+        {
+            using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow())
+            {
+                _overlayWindow.Visible = true;
+                _overlayWindow.SetTimeout(Duration);
+                _overlayWindow.Bounds = Rectangle;
+                var sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+                do
+                {
+                    System.Threading.Thread.Sleep(10);
+                    _overlayWindow.TopMost = true;
+                } while (_overlayWindow.Visible && sw.Elapsed < Duration);
+                return Task.CompletedTask;
+            }
+        }
+        //private Interfaces.Overlay.OverlayWindow _overlayWindow;
+        //public async Task Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
+        //{
+        //    if (_overlayWindow == null) { _overlayWindow = new Interfaces.Overlay.OverlayWindow(); }
+        //    _overlayWindow.Visible = true;
+        //    _overlayWindow.SetTimeout(Duration);
+        //    if(_Rectangle == null)
+        //    {
+        //        Console.WriteLine("whut ??");
+        //    }
+        //    _overlayWindow.Bounds = Rectangle;
+        //    await Task.Delay(10);
+        //}
         public string Value
         {
             get

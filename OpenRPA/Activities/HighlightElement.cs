@@ -8,13 +8,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace OpenRPA.Activities
 {
     [System.ComponentModel.Designer(typeof(HighlightElementDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.highlight.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
-    public class HighlightElement : CodeActivity
+    public class HighlightElement : AsyncTaskCodeActivity<int>
     {
         public HighlightElement()
         {
@@ -22,17 +23,28 @@ namespace OpenRPA.Activities
             {
                 Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<IElement>("item")
             };
+            Blocking = false;
         }
         [RequiredArgument]
         public InArgument<IElement> Element { get; set; }
-        protected override void Execute(CodeActivityContext context)
+        [RequiredArgument]
+        public InArgument<bool> Blocking { get; set; }
+        //private AutoResetEvent syncEvent = new AutoResetEvent(false);
+        private bool blocking = false;
+        private IElement el;
+
+        protected async override Task<int> ExecuteAsync(AsyncCodeActivityContext context)
         {
-            GenericTools.RunUI(() =>
-            {
-                var el = Element.Get(context);
-                if (el == null) throw new ArgumentException("element cannot be null");
-                el.Highlight(true, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
-            });
+            el = Element.Get(context);
+            blocking = Blocking.Get(context);
+            //GenericTools.RunUI(() =>
+            //{
+            //    if (el == null) throw new ArgumentException("element cannot be null");
+            //    el.Highlight(true, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
+            //});
+            await el.Highlight(blocking, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
+            //await Task.Delay(TimeSpan.FromSeconds(1));
+            return 13;
         }
     }
 }

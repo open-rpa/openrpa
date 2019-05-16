@@ -64,6 +64,7 @@ namespace OpenRPA.Interfaces.Selector
         }
         public SelectorModel(SelectorWindow window)
         {
+            Highlight = true;
             Directories = new ExtendedObservableCollection<treeelement>();
             this.window = window;
             Directories.ItemPropertyChanged += (sender, e) =>
@@ -74,6 +75,7 @@ namespace OpenRPA.Interfaces.Selector
         }
         public SelectorModel(SelectorWindow window, Selector Selector, Selector Anchor = null)
         {
+            Highlight = true;
             this.Anchor = Anchor;
             this.Selector = Selector;
             Directories = new ExtendedObservableCollection<treeelement>();
@@ -118,7 +120,9 @@ namespace OpenRPA.Interfaces.Selector
                             found = true;
                             treenode.IsExpanded = true;
                             current = treenode.Children;
+                            Highlight = false;
                             treenode.IsSelected = true;
+                            Highlight = true;
                             continue;
                         }
                         else if (found == false)
@@ -134,7 +138,9 @@ namespace OpenRPA.Interfaces.Selector
 
                                 current = c.Children;
                                 c.IsExpanded = true;
+                                Highlight = false;
                                 c.IsSelected = true;
+                                Highlight = true;
                                 continue;
                             }
                         }
@@ -151,5 +157,14 @@ namespace OpenRPA.Interfaces.Selector
                 element.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
             }
         }
+
+        public System.Windows.Input.ICommand SelectCommand { get { return new RelayCommand<treeelement>(onSelect); } }
+        private void onSelect(treeelement item)
+        {
+            var selector = Plugin.GetSelector(item);
+            Selector = selector;
+            // FocusElement(selector);
+        }
+
     }
 }

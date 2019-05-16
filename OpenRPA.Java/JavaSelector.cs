@@ -105,7 +105,10 @@ namespace OpenRPA.Java
             current.Add(startfrom);
             for (var i = 0; i < selectors.Count; i++)
             {
+                var sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
                 var s = new JavaSelectorItem(selectors[i]);
+                Log.Selector(string.Format("OpenRPA.Java::GetElementsWithuiSelector::Find for selector {0} {1}", i, s.ToString()));
                 var elements = new List<JavaElement>();
                 elements.AddRange(current);
                 current.Clear();
@@ -136,6 +139,7 @@ namespace OpenRPA.Java
                     Log.Selector(message);
                     return new JavaElement[] { };
                 }
+                Log.Selector(string.Format("OpenRPA.Java::GetElement::found {1} for selector {2} in {0:mm\\:ss\\.fff}", sw.Elapsed, elements.Count(), i));
             }
             if (result == null) return new JavaElement[] { };
             return result;

@@ -24,26 +24,25 @@ namespace OpenRPA.Activities
                 Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<IElement>("item")
             };
             Blocking = false;
+            //Duration = TimeSpan.FromMilliseconds(250);
+            Duration = new InArgument<TimeSpan>()
+            {
+                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(1000)")
+            };
+
         }
         [RequiredArgument]
         public InArgument<IElement> Element { get; set; }
         [RequiredArgument]
         public InArgument<bool> Blocking { get; set; }
-        //private AutoResetEvent syncEvent = new AutoResetEvent(false);
-        private bool blocking = false;
-        private IElement el;
-
+        [RequiredArgument]
+        public InArgument<TimeSpan> Duration { get; set; }
         protected async override Task<int> ExecuteAsync(AsyncCodeActivityContext context)
         {
-            el = Element.Get(context);
-            blocking = Blocking.Get(context);
-            //GenericTools.RunUI(() =>
-            //{
-            //    if (el == null) throw new ArgumentException("element cannot be null");
-            //    el.Highlight(true, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
-            //});
-            await el.Highlight(blocking, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
-            //await Task.Delay(TimeSpan.FromSeconds(1));
+            var el = Element.Get(context);
+            var blocking = Blocking.Get(context);
+            var duration = Duration.Get(context);
+            await el.Highlight(blocking, System.Drawing.Color.Red, duration);
             return 13;
         }
     }

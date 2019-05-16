@@ -135,17 +135,10 @@ namespace OpenRPA.Java
             int i = 1;
             int matchcounter = 0;
 
-            Log.Debug("#****************************************#");
-            Log.Debug("# EnumNeededProperties ");
-
             foreach (var p in Properties) p.Enabled = false;
             do
             {
-                //if(id == "menu" || id == "menu#Window")
-                //{
-                //    Log.Debug("#****************************************#");
-                //}
-                Log.Debug("#****************************************#");
+                Log.Debug("#*******************************#");
                 Log.Debug("# " + i);
                 var selectedProps = props.Take(i).ToArray();
                 foreach (var p in Properties) p.Enabled = selectedProps.Contains(p.Name);

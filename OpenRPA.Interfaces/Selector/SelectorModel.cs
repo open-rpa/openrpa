@@ -108,9 +108,6 @@ namespace OpenRPA.Interfaces.Selector
                 ObservableCollection<treeelement> current = Directories;
                 foreach (var node in Selector.Where(x => x.Selector == null))
                 {
-                    System.Diagnostics.Trace.WriteLine("****************************************");
-                    var s = node.ToString();
-                    System.Diagnostics.Trace.WriteLine(node.ToString());
                     bool found = false;
                     foreach (var treenode in current)
                     {

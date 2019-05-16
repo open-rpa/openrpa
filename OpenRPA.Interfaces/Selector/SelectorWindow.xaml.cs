@@ -42,6 +42,17 @@ namespace OpenRPA.Interfaces.Selector
             vm.Plugin.OnUserAction += Plugin_OnUserAction;
             // var treeelements = vm.Plugin.GetRootElements();
         }
+        public SelectorWindow(string pluginname, Selector selector, Selector anchor, int maxresult)
+        {
+            InitializeComponent();
+            vm = new SelectorModel(this, selector, anchor);
+            vm.maxresult = maxresult;
+            DataContext = vm;
+            vm.PluginName = pluginname;
+            vm.Plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
+            vm.Plugin.OnUserAction += Plugin_OnUserAction;
+            // var treeelements = vm.Plugin.GetRootElements();
+        }
         private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
         {
             TreeViewItem tvi = e.OriginalSource as TreeViewItem;
@@ -140,7 +151,7 @@ namespace OpenRPA.Interfaces.Selector
         {
             Task.Run(() =>
             {
-                var treeelements = vm.Plugin.GetRootElements();
+                var treeelements = vm.Plugin.GetRootElements(vm.Anchor);
                 GenericTools.RunUI(this, () =>
                 {
                     System.Diagnostics.Trace.WriteLine("init selector model, with " + treeelements.Count() + " root elements", "Debug");

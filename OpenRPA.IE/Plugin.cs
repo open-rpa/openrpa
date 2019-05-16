@@ -16,7 +16,7 @@ namespace OpenRPA.IE
 {
     class Plugin : IPlugin
     {
-        public static treeelement[] _GetRootElements()
+        public static treeelement[] _GetRootElements(Selector anchor)
         {
             var browser = Browser.GetBrowser();
             if (browser == null)
@@ -24,12 +24,29 @@ namespace OpenRPA.IE
                 Log.Warning("Failed locating an Internet Explore instance");
                 return new treeelement[] { };
             }
-            var e = new IETreeElement(null, true, new IEElement(browser, browser.Document.documentElement));
-            return new treeelement[] { e };
+            if(anchor != null)
+            {
+                IESelector ieselector = anchor as IESelector;
+                if (ieselector == null) { ieselector = new IESelector(anchor.ToString()); }
+                var elements = IESelector.GetElementsWithuiSelector(ieselector, null, 5);
+                var result = new List<treeelement>();
+                foreach (var _ele in elements)
+                {
+                    var e = new IETreeElement(null, true, _ele);
+                    result.Add(e);
+
+                }
+                return result.ToArray();
+            }
+            else
+            {
+                var e = new IETreeElement(null, true, new IEElement(browser, browser.Document.documentElement));
+                return new treeelement[] { e };
+            }
         }
-        public treeelement[] GetRootElements()
+        public treeelement[] GetRootElements(Selector anchor)
         {
-            return Plugin._GetRootElements();
+            return Plugin._GetRootElements(anchor);
         }
         public Interfaces.Selector.Selector GetSelector(Interfaces.Selector.treeelement item)
         {

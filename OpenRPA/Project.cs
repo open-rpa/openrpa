@@ -82,6 +82,7 @@ namespace OpenRPA
             Project p = new Project();
             p._type = "project";
             p.name = Name;
+            p.Path = System.IO.Path.GetDirectoryName(Filepath);
             p.Filename = System.IO.Path.GetFileName(Filepath);
             p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
             await p.Save();

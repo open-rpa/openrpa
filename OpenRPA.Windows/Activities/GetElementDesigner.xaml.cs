@@ -30,6 +30,20 @@ namespace OpenRPA.Windows
 
         private void Open_Selector(object sender, RoutedEventArgs e)
         {
+            ModelItem loadFrom = ModelItem.Parent;
+            string loadFromSelectorString = "";
+            WindowsSelector anchor = null;
+            while (loadFrom.Parent != null)
+            {
+                var p = loadFrom.Properties.Where(x => x.Name == "Selector").FirstOrDefault();
+                if(p != null)
+                {
+                    loadFromSelectorString = loadFrom.GetValue<string>("Selector");
+                    anchor = new WindowsSelector(loadFromSelectorString);
+                    break;
+                }
+                loadFrom = loadFrom.Parent;
+            }
             //WindowsSelector from = null;
             //string fromstring = null;
             //if (loadFrom != null) fromstring = loadFrom.GetValue<string>("Selector");
@@ -41,7 +55,7 @@ namespace OpenRPA.Windows
 
 
             var selector = new WindowsSelector(SelectorString);
-            var selectors = new Interfaces.Selector.SelectorWindow("Windows", selector, maxresults);
+            var selectors = new Interfaces.Selector.SelectorWindow("Windows", selector, anchor,  maxresults);
 
             if(selectors.ShowDialog() == true)
             {

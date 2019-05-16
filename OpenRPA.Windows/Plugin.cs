@@ -17,17 +17,25 @@ namespace OpenRPA.Windows
 {
     public class Plugin : IPlugin
     {
-        public static Interfaces.Selector.treeelement[] _GetRootElements()
+        public static Interfaces.Selector.treeelement[] _GetRootElements(Selector anchor)
         {
             var result = new List<Interfaces.Selector.treeelement>();
             Task.Run(() =>
             {
                 var automation = AutomationUtil.getAutomation();
                 var _rootElement = automation.GetDesktop();
+                if(anchor!=null)
+                {
+                    WindowsSelector Windowsselector = anchor as WindowsSelector;
+                    if (Windowsselector == null) { Windowsselector = new WindowsSelector(anchor.ToString()); }
+                    var elements = WindowsSelector.GetElementsWithuiSelector(Windowsselector, null, 5);
+                    if(elements.Count() > 0 )
+                    {
+                        _rootElement = elements[0].RawElement;
+                    }
+
+                }
                 var _treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
-                // Interfaces.Selector.treeelement ui = null;
-                //var elementNode = _rootElement;
-                //ui = new WindowsTreeElement(null, false, automation, elementNode, _treeWalker);
                 if (_rootElement != null)
                 {
                     var elementNode = _treeWalker.GetFirstChild(_rootElement);
@@ -47,9 +55,9 @@ namespace OpenRPA.Windows
             }).Wait(1000);
             return result.ToArray();
         }
-        public Interfaces.Selector.treeelement[] GetRootElements()
+        public Interfaces.Selector.treeelement[] GetRootElements(Selector anchor)
         {
-            return Plugin._GetRootElements();
+            return Plugin._GetRootElements(anchor);
         }
         public Interfaces.Selector.Selector GetSelector(Interfaces.Selector.treeelement item)
         {

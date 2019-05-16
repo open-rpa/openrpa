@@ -13,19 +13,35 @@ namespace OpenRPA.Java
 {
     public class Plugin : IPlugin
     {
-        public static treeelement[] _GetRootElements()
+        public static treeelement[] _GetRootElements(Selector anchor)
         {
             var result = new List<treeelement>();
             Javahook.Instance.refreshJvms();
-            foreach (var jvm in Javahook.Instance.jvms)
+            if (anchor != null)
             {
-                result.Add(new JavaTreeElement(null, true, new JavaElement(jvm)));
+                JavaSelector Javaselector = anchor as JavaSelector;
+                if (Javaselector == null) { Javaselector = new JavaSelector(anchor.ToString()); }
+                var elements = JavaSelector.GetElementsWithuiSelector(Javaselector, null, 1);
+                foreach (var _ele in elements)
+                {
+                    var e = new JavaTreeElement(null, true, _ele);
+                    result.Add(e);
+
+                }
+                return result.ToArray();
+            }
+            else
+            {
+                foreach (var jvm in Javahook.Instance.jvms)
+                {
+                    result.Add(new JavaTreeElement(null, true, new JavaElement(jvm)));
+                }
             }
             return result.ToArray();
         }
-        public treeelement[] GetRootElements()
+        public treeelement[] GetRootElements(Selector anchor)
         {
-            return Plugin._GetRootElements();
+            return Plugin._GetRootElements(anchor);
         }
         public Interfaces.Selector.Selector GetSelector(Interfaces.Selector.treeelement item)
         {

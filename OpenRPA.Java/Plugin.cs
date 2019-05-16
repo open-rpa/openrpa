@@ -124,6 +124,10 @@ namespace OpenRPA.Java
             var result = JavaSelector.GetElementsWithuiSelector(selector as JavaSelector, fromElement, maxresults );
             return result;
         }
+        public void LaunchBySelector(Selector selector, TimeSpan timeout)
+        {
+            throw new NotImplementedException();
+        }
     }
     public class GetElementResult : IBodyActivity
     {

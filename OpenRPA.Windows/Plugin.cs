@@ -103,8 +103,83 @@ namespace OpenRPA.Windows
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
-            var result = WindowsSelector.GetElementsWithuiSelector(selector as WindowsSelector, fromElement, maxresults);
+            WindowsSelector winselector = selector as WindowsSelector;
+            if(winselector == null)
+            {
+                winselector = new WindowsSelector(selector.ToString());
+            }
+            var result = WindowsSelector.GetElementsWithuiSelector(winselector, fromElement, maxresults);
             return result;
+        }
+        public void LaunchBySelector(Selector selector, TimeSpan timeout)
+        {
+            IElement[] elements = { };
+            var sw = new Stopwatch();
+            sw.Start();
+            do
+            {
+                elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
+                {
+                    try
+                    {
+                        return GetElementsWithSelector(selector, null, 1);
+                    }
+                    catch (System.Threading.ThreadAbortException)
+                    {
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, "");
+                    }
+                    return new UIElement[] { };
+                }, TimeSpan.FromMilliseconds(250)).Result;
+                if (elements == null)
+                {
+                    elements = new IElement[] { };
+                }
+            } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
+
+            if (elements.Length > 0)
+            {
+                return;
+            }
+
+            if (selector == null || selector.Count == 0) return;
+            var f = selector.First();
+            SelectorItemProperty p;
+            bool isImmersiveProcess = false;
+            string applicationUserModelId = null;
+            string filename = null;
+            string processname = null;
+            string arguments = null;
+
+            p = f.Properties.Where(x => x.Name == "isImmersiveProcess").FirstOrDefault();
+            if (p != null) isImmersiveProcess = bool.Parse(p.Value);
+            p = f.Properties.Where(x => x.Name == "applicationUserModelId").FirstOrDefault();
+            if (p != null) applicationUserModelId = p.Value;
+            p = f.Properties.Where(x => x.Name == "filename").FirstOrDefault();
+            if (p != null) filename = p.Value;
+            p = f.Properties.Where(x => x.Name == "processname").FirstOrDefault();
+            if (p != null) processname = p.Value;
+            p = f.Properties.Where(x => x.Name == "arguments").FirstOrDefault();
+            if (p != null) arguments = p.Value;
+
+            Process process = null;
+            if (isImmersiveProcess)
+            {
+                process = FlaUI.Core.Tools.WindowsStoreAppLauncher.Launch(applicationUserModelId, arguments);
+            }
+            else
+            {
+                System.Diagnostics.Trace.WriteLine("Starting a new instance of " + processname);
+                process = Process.Start(new ProcessStartInfo
+                {
+                    FileName = Environment.ExpandEnvironmentVariables(filename),
+                    Arguments = Environment.ExpandEnvironmentVariables(arguments)
+                });
+            }
+            process.WaitForInputIdle();
+
         }
     }
     public class GetElementResult : IBodyActivity

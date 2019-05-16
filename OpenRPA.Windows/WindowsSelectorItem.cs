@@ -81,7 +81,7 @@ namespace OpenRPA.Windows
                         Properties.Add(new SelectorItemProperty("processname", info.processname));
                         Properties.Add(new SelectorItemProperty("arguments", info.arguments));
                     }
-                    Properties.Add(new SelectorItemProperty("Selector", "windows"));
+                    Properties.Add(new SelectorItemProperty("Selector", "Windows"));
                     //Properties.Add(new SelectorItemProperty("", info.));
                 }
                 foreach (var p in Properties)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OpenRPA.Interfaces.Selector;
 
 namespace OpenRPA.Interfaces
 {
@@ -18,6 +19,6 @@ namespace OpenRPA.Interfaces
         Selector.treeelement[] GetRootElements();
         Selector.Selector GetSelector(Selector.treeelement item);
         IElement[] GetElementsWithSelector(Selector.Selector selector, IElement fromElement = null, int maxresults = 1);
-
+        void LaunchBySelector(Selector.Selector selector, TimeSpan timeout);
     }
 }

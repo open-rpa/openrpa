@@ -103,6 +103,7 @@ namespace OpenRPA.IE
             if (htmlelement == null) { return false; }
 
             var selector = new IESelector(browser, htmlelement, null, true, e.X, e.Y);
+            e.Selector = selector;
 
             var a = new GetElement { DisplayName = htmlelement.id + "-" + htmlelement.tagName + "-" + htmlelement.className };
             a.Selector = selector.ToString();
@@ -126,10 +127,34 @@ namespace OpenRPA.IE
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
-            var result = IESelector.GetElementsWithuiSelector(selector as IESelector, fromElement, maxresults);
+            IESelector ieselector = selector as IESelector;
+            if(ieselector == null) { ieselector = new IESelector(selector.ToString());  }
+            var result = IESelector.GetElementsWithuiSelector(ieselector, fromElement, maxresults);
             return result;
         }
-
+        public void LaunchBySelector(Selector selector, TimeSpan timeout)
+        {
+            if (selector == null || selector.Count == 0) return;
+            var f = selector.First();
+            var p = f.Properties.Where(x => x.Name == "url").FirstOrDefault();
+            if (p == null) return;
+            var url = p.Value;
+            if (string.IsNullOrEmpty(url)) return;
+            GenericTools.RunUI(() =>
+            {
+                var browser = Browser.GetBrowser(url);
+                var doc = browser.Document;
+                if (url != doc.url) doc.url = url;
+                browser.Show();
+                var sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+                while (sw.Elapsed < timeout && doc.readyState != "complete" && doc.readyState != "interactive")
+                {
+                    Log.Debug("pending complete, readyState: " + doc.readyState);
+                    Thread.Sleep(100);
+                }
+            });
+        }
     }
     public class GetElementResult : IBodyActivity
     {

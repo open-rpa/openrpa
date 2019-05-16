@@ -75,6 +75,7 @@ namespace OpenRPA.IE
             Properties = new ObservableCollection<SelectorItemProperty>();
             if (!string.IsNullOrEmpty(Document.title)) Properties.Add(new SelectorItemProperty("title", Document.title));
             Properties.Add(new SelectorItemProperty("Selector", "IE"));
+            Properties.Add(new SelectorItemProperty("url", Document.url));
             foreach (var p in Properties)
             {
                 p.Enabled = true;

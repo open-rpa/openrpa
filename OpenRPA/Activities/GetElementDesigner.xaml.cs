@@ -13,9 +13,9 @@ using System.Windows.Media.Imaging;
 
 namespace OpenRPA.Activities
 {
-    public partial class OpenApplicationDesigner : INotifyPropertyChanged
+    public partial class GetElementDesigner : INotifyPropertyChanged
     {
-        public OpenApplicationDesigner()
+        public GetElementDesigner()
         {
             InitializeComponent();
         }
@@ -24,8 +24,6 @@ namespace OpenRPA.Activities
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-
 
         private void Open_Selector(object sender, RoutedEventArgs e)
         {
@@ -61,7 +59,6 @@ namespace OpenRPA.Activities
         {
             Interfaces.GenericTools.minimize(Interfaces.GenericTools.mainWindow);
             StartRecordPlugins();
-
         }
         private void StartRecordPlugins()
         {
@@ -88,10 +85,7 @@ namespace OpenRPA.Activities
                         if (p.parseUserAction(ref e)) continue;
                     }
                 }
-
-                e.Selector.RemoveRange(3, e.Selector.Count - 3);
-                ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(e.Selector.ToString() ) });
-
+                ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(e.Selector.ToString()) });
             }, null);
         }
     }

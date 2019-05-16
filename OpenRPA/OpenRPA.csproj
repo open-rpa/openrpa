@@ -78,6 +78,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Activities\AsyncHelper.cs" />
+    <Compile Include="Activities\GetElement.cs" />
+    <Compile Include="Activities\GetElementDesigner.xaml.cs">
+      <DependentUpon>GetElementDesigner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\OpenApplication.cs" />
     <Compile Include="Activities\OpenApplicationDesigner.xaml.cs">
       <DependentUpon>OpenApplicationDesigner.xaml</DependentUpon>
@@ -113,6 +117,10 @@
     </Compile>
     <Compile Include="Workflow.cs" />
     <Compile Include="WorkflowInstance.cs" />
+    <Page Include="Activities\GetElementDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Activities\OpenApplicationDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -474,11 +474,6 @@ namespace OpenRPA
                     }
                     return;
                 }
-                //if(lastInputEventArgs==null)
-                //{
-                //    Log.Debug("lastInputEventArgs is null");
-                //    return;
-                //}
                 InputDriver.Instance.CallNext = true;
                 if (mainTabControl.SelectedContent is Views.WFDesigner view)
                 {

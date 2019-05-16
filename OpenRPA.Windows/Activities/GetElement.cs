@@ -17,9 +17,20 @@ namespace OpenRPA.Windows
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class GetElement : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {
+        public GetElement()
+        {
+            MaxResults = 1;
+            MinResults = 1;
+            Timeout = new InArgument<TimeSpan>()
+            {
+                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(3000)")
+            };
+        }
         [Browsable(false)]
         public ActivityAction<UIElement> Body { get; set; }
+        public InArgument<TimeSpan> Timeout { get; set; }
         public InArgument<int> MaxResults { get; set; }
+        public InArgument<int> MinResults { get; set; }
         public InArgument<string> Selector { get; set; }
         public InArgument<UIElement> From { get; set; }
         public OutArgument<UIElement[]> Elements { get; set; }
@@ -32,9 +43,11 @@ namespace OpenRPA.Windows
             UIElement[] elements = null;
             var selector = Selector.Get(context);
             var sel = new WindowsSelector(selector);
-            var timeout = TimeSpan.FromSeconds(5);
+            var timeout = Timeout.Get(context);
             var maxresults = MaxResults.Get(context);
+            var minresults = MinResults.Get(context);
             var sw = new Stopwatch();
+            var from = From.Get(context);
             sw.Start();
             do
             {
@@ -42,7 +55,7 @@ namespace OpenRPA.Windows
                 {
                     try
                     {
-                        return WindowsSelector.GetElementsWithuiSelector(sel, null, maxresults);
+                        return WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
                     }
                     catch (System.Threading.ThreadAbortException)
                     {
@@ -60,16 +73,16 @@ namespace OpenRPA.Windows
             } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
 
             context.SetValue(Elements, elements);
+            if(elements.Count() < minresults)
+            {
+                throw new ElementNotFoundException("Failed locating " + minresults + " item(s)");
+            }
             IEnumerator<UIElement> _enum = elements.ToList().GetEnumerator();
             context.SetValue(_elements, _enum);
             bool more = _enum.MoveNext();
             if (more)
             {
                 context.ScheduleAction<UIElement>(Body, _enum.Current, OnBodyComplete);
-            }
-            else
-            {
-                throw new ElementNotFoundException("Failed locating item");
             }
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)

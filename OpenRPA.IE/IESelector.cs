@@ -20,13 +20,13 @@ namespace OpenRPA.IE
         {
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
-            Log.Debug(string.Format("IEselector::AutomationElement::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
-            Log.Debug(string.Format("IEselector::GetControlViewWalker::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Selector(string.Format("IEselector::AutomationElement::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Selector(string.Format("IEselector::GetControlViewWalker::end {0:mm\\:ss\\.fff}", sw.Elapsed));
 
             Clear();
             enumElements(browser, baseelement, anchor, doEnum, X, Y);
 
-            Log.Debug(string.Format("IEselector::EnumNeededProperties::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Selector(string.Format("IEselector::EnumNeededProperties::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
             OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
@@ -55,20 +55,20 @@ namespace OpenRPA.IE
                     return;
                 }
             }
-            // Log.Debug(string.Format("IEselector::create pathToRoot::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+            // Log.Selector(string.Format("IEselector::create pathToRoot::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             pathToRoot.Reverse();
             if (anchor != null)
             {
                 var anchorlist = anchor.Where(x => x.Enabled && x.Selector == null).ToList();
                 for (var i = 0; i < anchorlist.Count(); i++)
                 {
-                    if (((IESelectorItem)anchorlist[i]).match(pathToRoot[0]))
+                    if (((IESelectorItem)anchorlist[i]).Match(pathToRoot[0]))
                     {
                         pathToRoot.Remove(pathToRoot[0]);
                     }
                     else
                     {
-                        Log.Debug("Element does not match the anchor path");
+                        Log.Selector("Element does not match the anchor path");
                         return;
                     }
                 }
@@ -81,7 +81,7 @@ namespace OpenRPA.IE
             }
             element = pathToRoot.Last();
             // 
-            // Log.Debug(string.Format("IEselector::remove anchor if needed::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+            // Log.Selector(string.Format("IEselector::remove anchor if needed::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             IESelectorItem item;
             if (anchor == null && Items.Count == 0)
             {
@@ -136,7 +136,7 @@ namespace OpenRPA.IE
                         {
                             var tag = el2.tagName;
                             // var html = el2.innerHTML;
-                            Log.Debug("tag: " + tag);
+                            Log.Selector("tag: " + tag);
 
                             //browser.elementx += _frame.offsetLeft;
                             //browser.elementy += _frame.offsetTop;
@@ -176,7 +176,7 @@ namespace OpenRPA.IE
             IEElement[] result = null;
 
             mshtml.IHTMLElement startfrom = null;
-            if (_fromElement != null) startfrom = _fromElement.rawElement;
+            if (_fromElement != null) startfrom = _fromElement.RawElement;
             if (startfrom == null) startfrom = browser.Document.documentElement;
             current.Add(new IEElement(browser, startfrom));
             for (var i = 1; i < selectors.Count; i++)
@@ -194,7 +194,7 @@ namespace OpenRPA.IE
                         if (frameTags.Contains(_element.tagName.ToUpper()))
                         {
                             if(s.tagName.ToUpper()=="HTML") { i++; s = new IESelectorItem(selectors[i]); }
-                            var _f = _element.rawElement as mshtml.HTMLFrameElement;
+                            var _f = _element.RawElement as mshtml.HTMLFrameElement;
                             mshtml.DispHTMLDocument doc = (mshtml.DispHTMLDocument)((SHDocVw.IWebBrowser2)_f).Document;
                             var _doc = doc.documentElement as mshtml.IHTMLElement;
                             matches = ((IESelectorItem)s).matches(_doc);
@@ -207,7 +207,7 @@ namespace OpenRPA.IE
                         }
                         else
                         {
-                            matches = ((IESelectorItem)s).matches(_element.rawElement);
+                            matches = ((IESelectorItem)s).matches(_element.RawElement);
                         }
                         var uimatches = new List<IEElement>();
                         foreach (var m in matches)
@@ -216,7 +216,7 @@ namespace OpenRPA.IE
                             uimatches.Add(ui);
                         }
                         current.AddRange(uimatches.ToArray());
-                        Log.Verbose("add " + uimatches.Count + " matches to current");
+                        Log.Selector("add " + uimatches.Count + " matches to current");
                     }
                     if (current.Count == 0)
                     {
@@ -225,18 +225,18 @@ namespace OpenRPA.IE
                         message += "lookin for \n" + s.ToString() + "\n";
                         foreach (var _element in elements)
                         {
-                            mshtml.IHTMLElementCollection children = _element.rawElement.children;
+                            mshtml.IHTMLElementCollection children = _element.RawElement.children;
                             foreach (mshtml.IHTMLElement elementNode in children) {
                                 var ui = new IEElement(browser, elementNode);
                                 message += ui.ToString() + "\n";
                             }
-                            var matches = ((IESelectorItem)s).matches(_element.rawElement);
+                            var matches = ((IESelectorItem)s).matches(_element.RawElement);
                         }
-                        Log.Debug(message);
+                        Log.Selector(message);
                     }
                     else
                     {
-                        Log.Verbose(string.Format("Found " + current.Count + " hits for selector # " + i + " {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        Log.Selector(string.Format("Found " + current.Count + " hits for selector # " + i + " {0:mm\\:ss\\.fff}", sw.Elapsed));
                     }
                 } while (failcounter < 2 && current.Count == 0);
 
@@ -246,7 +246,7 @@ namespace OpenRPA.IE
                     var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
                     foreach (var element in elements)
                     {
-                        mshtml.IHTMLElementCollection children = element.rawElement.children;
+                        mshtml.IHTMLElementCollection children = element.RawElement.children;
                         foreach (mshtml.IHTMLElement c in children)
                         {
                             try
@@ -258,12 +258,12 @@ namespace OpenRPA.IE
                             }
                         }
                     }
-                    Log.Debug(message);
+                    Log.Selector(message);
                     return new IEElement[] { };
                 }
             }
             if (result == null) return new IEElement[] { };
-            Log.Verbose(string.Format("GetElementsWithuiSelector::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Selector(string.Format("GetElementsWithuiSelector::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             return result;
         }
 

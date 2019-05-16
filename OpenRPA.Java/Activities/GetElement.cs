@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenRPA.Interfaces;
+using System;
 using System.Activities;
 using System.Activities.Presentation.PropertyEditing;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace OpenRPA.Java
             {
                 elements = JavaSelector.GetElementsWithuiSelector(sel, null, maxresults);
             } while (elements.Count() > 0 && sw.Elapsed < timeout);
-
+            Log.Debug(string.Format("OpenRPA.Java::GetElement::fouund {1} elements in {0:mm\\:ss\\.fff}", sw.Elapsed, elements.Count()));
             context.SetValue(Elements, elements);
             IEnumerator<JavaElement> _enum = elements.ToList().GetEnumerator();
             context.SetValue(_elements, _enum);

@@ -15,7 +15,7 @@ namespace OpenRPA
     {
         public UIElement(AutomationElement Element)
         {
-            rawElement = Element;
+            RawElement = Element;
             ProcessId = Element.Properties.ProcessId.ValueOrDefault;
             Id = Element.Properties.AutomationId.ValueOrDefault;
             Name = Element.Properties.Name.ValueOrDefault;
@@ -27,33 +27,34 @@ namespace OpenRPA
             try
             {
                 int pendingCounter = 0;
-                while (!rawElement.Properties.BoundingRectangle.IsSupported && pendingCounter < 6)
+                while (!RawElement.Properties.BoundingRectangle.IsSupported && pendingCounter < 6)
                 {
                     System.Windows.Forms.Application.DoEvents();
                     System.Threading.Thread.Sleep(50);
                     pendingCounter++;
                 }
-                ProcessId = rawElement.Properties.ProcessId.ValueOrDefault;
-                Id = rawElement.Properties.AutomationId.ValueOrDefault;
-                Name = rawElement.Properties.Name.ValueOrDefault;
-                ClassName = rawElement.Properties.ClassName.ValueOrDefault;
-                Type = rawElement.Properties.ControlType.ValueOrDefault.ToString();
+                ProcessId = RawElement.Properties.ProcessId.ValueOrDefault;
+                Id = RawElement.Properties.AutomationId.ValueOrDefault;
+                Name = RawElement.Properties.Name.ValueOrDefault;
+                ClassName = RawElement.Properties.ClassName.ValueOrDefault;
+                Type = RawElement.Properties.ControlType.ValueOrDefault.ToString();
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "");
             }
         }
-        public AutomationElement rawElement { get; private set; }
+        public AutomationElement RawElement { get; private set; }
+        object IElement.RawElement { get => RawElement; set => RawElement = value as AutomationElement; }
         public System.Drawing.Rectangle Rectangle
         {
             get
             {
-                if (rawElement == null) return System.Drawing.Rectangle.Empty;
-                if (!rawElement.Properties.BoundingRectangle.IsSupported) return System.Drawing.Rectangle.Empty;
-                return new System.Drawing.Rectangle((int)rawElement.Properties.BoundingRectangle.Value.X,
-                    (int)rawElement.Properties.BoundingRectangle.Value.Y, (int)rawElement.Properties.BoundingRectangle.Value.Width,
-                    (int)rawElement.Properties.BoundingRectangle.Value.Height);
+                if (RawElement == null) return System.Drawing.Rectangle.Empty;
+                if (!RawElement.Properties.BoundingRectangle.IsSupported) return System.Drawing.Rectangle.Empty;
+                return new System.Drawing.Rectangle((int)RawElement.Properties.BoundingRectangle.Value.X,
+                    (int)RawElement.Properties.BoundingRectangle.Value.Y, (int)RawElement.Properties.BoundingRectangle.Value.Width,
+                    (int)RawElement.Properties.BoundingRectangle.Value.Height);
             }
         }
         public int ProcessId { get; set; }
@@ -68,7 +69,7 @@ namespace OpenRPA
             {
                 try
                 {
-                    return rawElement.Properties.ControlType.ToString();
+                    return RawElement.Properties.ControlType.ToString();
                 }
                 catch (Exception)
                 {
@@ -83,8 +84,8 @@ namespace OpenRPA
                 try
                 {
                     //return rawElement.Patterns.TextEdit.IsSupported || rawElement.Patterns.Text.IsSupported || rawElement.Patterns.Text2.IsSupported
-                    return rawElement.ControlType == FlaUI.Core.Definitions.ControlType.Edit
-                        || rawElement.ControlType == FlaUI.Core.Definitions.ControlType.Document;
+                    return RawElement.ControlType == FlaUI.Core.Definitions.ControlType.Edit
+                        || RawElement.ControlType == FlaUI.Core.Definitions.ControlType.Document;
                 }
                 catch (Exception)
                 {
@@ -100,7 +101,7 @@ namespace OpenRPA
                 //{
                 //    return new UIElement(rawParent);
                 //}
-                return new UIElement(rawElement.Parent);
+                return new UIElement(RawElement.Parent);
                 //return null;
             }
         }
@@ -110,7 +111,7 @@ namespace OpenRPA
             try
             {
                 //rawElement.SetFocus();
-                rawElement.Focus();
+                RawElement.Focus();
             }
             catch
             {
@@ -126,9 +127,9 @@ namespace OpenRPA
         {
             try
             {
-                if (rawElement.Patterns.Invoke.IsSupported)
+                if (RawElement.Patterns.Invoke.IsSupported)
                 {
-                    var invokePattern = rawElement.Patterns.Invoke.Pattern;
+                    var invokePattern = RawElement.Patterns.Invoke.Pattern;
                     invokePattern.Invoke();
                 }
             }
@@ -166,16 +167,16 @@ namespace OpenRPA
         {
             get
             {
-                if (rawElement.Properties.IsPassword.TryGetValue(out var isPassword) && isPassword)
+                if (RawElement.Properties.IsPassword.TryGetValue(out var isPassword) && isPassword)
                 {
                     throw new FlaUI.Core.Exceptions.MethodNotSupportedException($"Text from element '{ToString()}' cannot be retrieved because it is set as password.");
                 }
-                if (rawElement.Patterns.Value.TryGetPattern(out var valuePattern) &&
+                if (RawElement.Patterns.Value.TryGetPattern(out var valuePattern) &&
                     valuePattern.Value.TryGetValue(out var value))
                 {
                     return value;
                 }
-                if (rawElement.Patterns.Text.TryGetPattern(out var textPattern))
+                if (RawElement.Patterns.Text.TryGetPattern(out var textPattern))
                 {
                     return textPattern.DocumentRange.GetText(Int32.MaxValue);
                 }
@@ -183,7 +184,7 @@ namespace OpenRPA
             }
             set
             {
-                if (rawElement.Patterns.Value.TryGetPattern(out var valuePattern))
+                if (RawElement.Patterns.Value.TryGetPattern(out var valuePattern))
                 {
                     valuePattern.SetValue(value);
                 }
@@ -195,8 +196,8 @@ namespace OpenRPA
         }
         public void Enter(string value)
         {
-            rawElement.Focus();
-            var valuePattern = rawElement.Patterns.Value.PatternOrDefault;
+            RawElement.Focus();
+            var valuePattern = RawElement.Patterns.Value.PatternOrDefault;
             valuePattern?.SetValue(String.Empty);
             if (String.IsNullOrEmpty(value)) return;
 

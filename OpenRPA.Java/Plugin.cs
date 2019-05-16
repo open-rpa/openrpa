@@ -128,6 +128,12 @@ namespace OpenRPA.Java
         {
             throw new NotImplementedException();
         }
+        public bool Match(SelectorItem item, IElement m)
+        {
+            var el = new JavaElement(m.RawElement as WindowsAccessBridgeInterop.AccessibleNode);
+            return JavaSelectorItem.Match(item, el);
+        }
+
     }
     public class GetElementResult : IBodyActivity
     {

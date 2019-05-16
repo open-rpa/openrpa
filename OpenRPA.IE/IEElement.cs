@@ -12,7 +12,7 @@ namespace OpenRPA.IE
         public IEElement(Browser browser, mshtml.IHTMLElement Element)
         {
             Browser = browser;
-            rawElement = Element;
+            RawElement = Element;
             className = Element.className;
             id = Element.id;
             tagName = Element.tagName.ToLower();
@@ -23,7 +23,7 @@ namespace OpenRPA.IE
             }
             try
             {
-                mshtml.IHTMLUniqueName id = rawElement as mshtml.IHTMLUniqueName;
+                mshtml.IHTMLUniqueName id = RawElement as mshtml.IHTMLUniqueName;
                 uniqueID = id.uniqueID;
             }
             catch (Exception)
@@ -53,7 +53,7 @@ namespace OpenRPA.IE
                 int elementy = 0;
                 int elementw = 0;
                 int elementh = 0;
-                mshtml.IHTMLElement2 ele = rawElement as mshtml.IHTMLElement2;
+                mshtml.IHTMLElement2 ele = RawElement as mshtml.IHTMLElement2;
                 if (ele == null) return _Rectangle.Value;
                 var col = ele.getClientRects();
                 if (col == null) return _Rectangle.Value;
@@ -96,9 +96,8 @@ namespace OpenRPA.IE
         public string tagName { get; set; }
         public string type { get; set; }
         public int IndexInParent { get; set; }
-        public mshtml.IHTMLElement rawElement { get; private set; }
-
-        //public HTMLElement rawElement { get; private set; }
+        public mshtml.IHTMLElement RawElement { get; private set; }
+        object IElement.RawElement { get => RawElement; set => RawElement = value as mshtml.IHTMLElement; }
         public void Click()
         {
             //if (rawElement.tagName.ToLower() == "input")
@@ -115,7 +114,7 @@ namespace OpenRPA.IE
             //} else
             //{
             //}
-            rawElement.click();
+            RawElement.click();
         }
         public void Focus()
         {
@@ -163,22 +162,22 @@ namespace OpenRPA.IE
         {
             get
             {
-                if (rawElement.tagName.ToLower() == "input")
+                if (RawElement.tagName.ToLower() == "input")
                 {
-                    var ele = (mshtml.IHTMLInputElement)rawElement;
+                    var ele = (mshtml.IHTMLInputElement)RawElement;
                     return ele.value;
                 }
                 else
                 {
-                    return rawElement.innerText;
+                    return RawElement.innerText;
                 }
                 // return null;
             }
             set
             {
-                if (rawElement.tagName.ToLower() == "input")
+                if (RawElement.tagName.ToLower() == "input")
                 {
-                    var ele = (mshtml.IHTMLInputElement)rawElement;
+                    var ele = (mshtml.IHTMLInputElement)RawElement;
                     ele.value = value;
                 }
 
@@ -193,8 +192,8 @@ namespace OpenRPA.IE
             var e = obj as IEElement;
             if (e == null) return false;
             if (e.uniqueID == uniqueID) return true;
-            if (rawElement.sourceIndex == e.rawElement.sourceIndex) return true;
-            if (rawElement.GetHashCode() == e.rawElement.GetHashCode()) return true;
+            if (RawElement.sourceIndex == e.RawElement.sourceIndex) return true;
+            if (RawElement.GetHashCode() == e.RawElement.GetHashCode()) return true;
             return false;
             //return base.Equals(obj);
         }

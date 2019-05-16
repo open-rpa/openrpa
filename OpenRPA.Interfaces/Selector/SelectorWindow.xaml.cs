@@ -90,7 +90,47 @@ namespace OpenRPA.Interfaces.Selector
         }
         private void BtnSyncTree_Click(object sender, RoutedEventArgs e)
         {
-
+            var currentNode = vm.Directories;
+            vm.Highlight = false;
+            for (var i = 1; i < vm.Selector.Count; i++)
+            {
+                var s = vm.Selector[i]; var found = false;
+                foreach (var treenode in currentNode)
+                {
+                    if (vm.Plugin.Match(s, treenode.Element))
+                    {
+                        found = true;
+                        treenode.IsExpanded = true;
+                        treenode.IsSelected = true;
+                        currentNode = new ExtendedObservableCollection<treeelement>();
+                        foreach (var subc in treenode.Children) currentNode.Add(subc);
+                        //currentNode = c.Children;
+                        continue;
+                    }
+                }
+                if(!found)
+                {
+                    foreach (var treenode in currentNode)
+                    {
+                        foreach (var subtreenode in treenode.Children)
+                        {
+                            if (vm.Plugin.Match(s, subtreenode.Element))
+                            {
+                                found = true;
+                                subtreenode.IsExpanded = true;
+                                
+                                subtreenode.IsSelected = true;
+                                currentNode = new ExtendedObservableCollection<treeelement>();
+                                foreach (var subc in subtreenode.Children) currentNode.Add(subc);
+                                //currentNode = c.Children;
+                                continue;
+                            }
+                        }
+                    }
+                }
+                if (!found) break;
+            }
+            vm.Highlight = true;
         }
         private void BtnHighlight_Click(object sender, RoutedEventArgs e)
         {
@@ -114,12 +154,10 @@ namespace OpenRPA.Interfaces.Selector
             vm.Plugin.OnUserAction -= Plugin_OnUserAction;
             GenericTools.restore(GenericTools.mainWindow);
         }
-
         private void Ok_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
         }
-
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;

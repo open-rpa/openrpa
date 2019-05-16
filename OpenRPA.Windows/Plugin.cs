@@ -77,7 +77,7 @@ namespace OpenRPA.Windows
                 sw.Start();
                 WindowsSelector sel = null;
                 // sel = new WindowsSelector(e.Element.rawElement, null, true);
-                sel = new WindowsSelector(e.Element.rawElement, null, false);
+                sel = new WindowsSelector(e.Element.RawElement, null, false);
                 if (sel.Count < 2) return;
                 if (sel == null) return;
                 a.Selector = sel.ToString();
@@ -180,6 +180,10 @@ namespace OpenRPA.Windows
             }
             process.WaitForInputIdle();
 
+        }
+        public bool Match(SelectorItem item, IElement m)
+        {
+            return WindowsSelectorItem.Match(item, m.RawElement as AutomationElement);
         }
     }
     public class GetElementResult : IBodyActivity

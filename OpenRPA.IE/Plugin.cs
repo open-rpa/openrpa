@@ -34,7 +34,7 @@ namespace OpenRPA.IE
         public Interfaces.Selector.Selector GetSelector(Interfaces.Selector.treeelement item)
         {
             var ieitem = item as IETreeElement;
-            return new IESelector(ieitem.IEElement.Browser, ieitem.IEElement.rawElement, null, true, 0, 0);
+            return new IESelector(ieitem.IEElement.Browser, ieitem.IEElement.RawElement, null, true, 0, 0);
         }
 
         public event Action<IPlugin, IRecordEvent> OnUserAction;
@@ -55,7 +55,7 @@ namespace OpenRPA.IE
                 var re = new RecordEvent(); re.Button = e.Button;
                 var a = new GetElement { DisplayName = e.Element.Id + "-" + e.Element.Name };
 
-                var browser = new Browser(e.Element.rawElement);
+                var browser = new Browser(e.Element.RawElement);
                 var htmlelement = browser.ElementFromPoint(e.X, e.Y);
                 if (htmlelement == null) { return; }
 
@@ -96,7 +96,7 @@ namespace OpenRPA.IE
             var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
             if(p.ProcessName!="iexplore" && p.ProcessName != "iexplore.exe") return false;
 
-            var browser = new Browser(e.UIElement.rawElement);
+            var browser = new Browser(e.UIElement.RawElement);
 
 
             var htmlelement = browser.ElementFromPoint(e.X, e.Y);
@@ -154,6 +154,10 @@ namespace OpenRPA.IE
                     Thread.Sleep(100);
                 }
             });
+        }
+        public bool Match(SelectorItem item, IElement m)
+        {
+            return IESelectorItem.Match(item, m.RawElement as mshtml.IHTMLElement);
         }
     }
     public class GetElementResult : IBodyActivity

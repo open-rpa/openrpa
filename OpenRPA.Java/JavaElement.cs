@@ -31,6 +31,7 @@ namespace OpenRPA.Java
         private AccessBridge _accessBridge;
         private AccessibleContextNode ac;
         private AccessibleNode c;
+        object IElement.RawElement { get => c; set => c = value as AccessibleNode; }
         public AccessibleContextInfo info = null;
 
         private JavaObjectHandle _ac;

@@ -158,8 +158,11 @@ namespace OpenRPA.Interfaces.Selector
         public System.Windows.Input.ICommand SelectCommand { get { return new RelayCommand<treeelement>(onSelect); } }
         private void onSelect(treeelement item)
         {
-            var selector = Plugin.GetSelector(item);
+            var selector = Plugin.GetSelector(Anchor, item);
             Selector = selector;
+
+            OnPropertyChanged("Selector");
+            OnPropertyChanged("json");
             // FocusElement(selector);
         }
 

@@ -36,12 +36,13 @@ namespace OpenRPA.IE
             var selector = Selector.Get(context);
             var sel = new IESelector(selector);
             var timeout = TimeSpan.FromSeconds(3);
+            var from = From.Get(context);
             IEElement[] elements = { };
             var sw = new Stopwatch();
             sw.Start();
             do
             {
-                elements = IESelector.GetElementsWithuiSelector(sel, null);
+                elements = IESelector.GetElementsWithuiSelector(sel, from);
             } while (elements .Count() == 0 && sw.Elapsed < timeout);
             context.SetValue(Elements, elements);
             IEnumerator<IEElement> _enum = elements.ToList().GetEnumerator();

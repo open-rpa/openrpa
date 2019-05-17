@@ -47,7 +47,8 @@ namespace OpenRPA.Java
                 var anchorlist = anchor.Where(x => x.Enabled && x.Selector == null).ToList();
                 for (var i = 0; i < anchorlist.Count; i++)
                 {
-                    if (((JavaSelectorItem)anchorlist[i]).Match(pathToRoot[0]))
+                    //if (((JavaSelectorItem)anchorlist[i]).Match(pathToRoot[0]))
+                    if (JavaSelectorItem.Match(anchorlist[i], pathToRoot[0]))
                     {
                         pathToRoot.Remove(pathToRoot[0]);
                     }
@@ -68,10 +69,14 @@ namespace OpenRPA.Java
             element = pathToRoot.Last();
             Clear();
             JavaSelectorItem item;
-            item = new JavaSelectorItem(root, true);
-            item.Enabled = true;
-            item.canDisable = false;
-            Items.Add(item);
+            if (anchor == null)
+            {
+
+                item = new JavaSelectorItem(root, true);
+                item.Enabled = true;
+                item.canDisable = false;
+                Items.Add(item);
+            }
             for (var i = 0; i < pathToRoot.Count(); i++)
             {
                 var o = pathToRoot[i];

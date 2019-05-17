@@ -19,6 +19,8 @@ namespace OpenRPA.Windows
     {
         public static Interfaces.Selector.treeelement[] _GetRootElements(Selector anchor)
         {
+            int CurrentProcessId = System.Diagnostics.Process.GetCurrentProcess().Id;
+
             var result = new List<Interfaces.Selector.treeelement>();
             Task.Run(() =>
             {
@@ -41,7 +43,14 @@ namespace OpenRPA.Windows
                     var elementNode = _treeWalker.GetFirstChild(_rootElement);
                     while (elementNode != null)
                     {
-                        result.Add(new WindowsTreeElement(null, false, automation, elementNode, _treeWalker));
+                        if(!elementNode.Properties.ProcessId.IsSupported)
+                        {
+                            result.Add(new WindowsTreeElement(null, false, automation, elementNode, _treeWalker));
+                        } else if(elementNode.Properties.ProcessId.ValueOrDefault != CurrentProcessId)
+                        {
+                            result.Add(new WindowsTreeElement(null, false, automation, elementNode, _treeWalker));
+                        }
+                        
                         try
                         {
                             elementNode = _treeWalker.GetNextSibling(elementNode);
@@ -59,10 +68,15 @@ namespace OpenRPA.Windows
         {
             return Plugin._GetRootElements(anchor);
         }
-        public Interfaces.Selector.Selector GetSelector(Interfaces.Selector.treeelement item)
+        public Interfaces.Selector.Selector GetSelector(Selector anchor, Interfaces.Selector.treeelement item)
         {
             var windowsitem = item as WindowsTreeElement;
-            return new WindowsSelector(windowsitem.RawElement, null, true);
+            WindowsSelector winanchor = anchor as WindowsSelector;
+            if (winanchor == null && anchor != null)
+            {
+                winanchor = new WindowsSelector(anchor.ToString());
+            }
+            return new WindowsSelector(windowsitem.RawElement, winanchor, true);
         }
         public string Name { get => "Windows"; }
         public event Action<IPlugin, IRecordEvent> OnUserAction;

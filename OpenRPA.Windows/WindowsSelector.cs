@@ -57,7 +57,8 @@ namespace OpenRPA.Windows
                 var anchorlist = anchor.Where(x => x.Enabled && x.Selector == null).ToList();
                 for (var i = 0; i < anchorlist.Count(); i++)
                 {
-                    if (((WindowsSelectorItem)anchorlist[i]).Match(pathToRoot[0]))
+                    if(WindowsSelectorItem.Match(anchorlist[i], pathToRoot[0]))
+                    //if (((WindowsSelectorItem)anchorlist[i]).Match(pathToRoot[0]))
                     {
                         pathToRoot.Remove(pathToRoot[0]);
                     }

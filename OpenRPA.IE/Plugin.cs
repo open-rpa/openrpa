@@ -48,10 +48,15 @@ namespace OpenRPA.IE
         {
             return Plugin._GetRootElements(anchor);
         }
-        public Interfaces.Selector.Selector GetSelector(Interfaces.Selector.treeelement item)
+        public Interfaces.Selector.Selector GetSelector(Selector anchor, Interfaces.Selector.treeelement item)
         {
             var ieitem = item as IETreeElement;
-            return new IESelector(ieitem.IEElement.Browser, ieitem.IEElement.RawElement, null, true, 0, 0);
+            IESelector ieanchor = anchor as IESelector;
+            if (ieanchor == null && anchor != null)
+            {
+                ieanchor = new IESelector(anchor.ToString());
+            }
+            return new IESelector(ieitem.IEElement.Browser, ieitem.IEElement.RawElement, ieanchor, true, 0, 0);
         }
 
         public event Action<IPlugin, IRecordEvent> OnUserAction;

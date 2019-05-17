@@ -27,17 +27,44 @@ namespace OpenRPA.IE
 
         private void Open_Selector(object sender, RoutedEventArgs e)
         {
+            ModelItem loadFrom = ModelItem.Parent;
+            string loadFromSelectorString = "";
+            IESelector anchor = null;
+            while (loadFrom.Parent != null)
+            {
+                var p = loadFrom.Properties.Where(x => x.Name == "Selector").FirstOrDefault();
+                if (p != null)
+                {
+                    loadFromSelectorString = loadFrom.GetValue<string>("Selector");
+                    anchor = new IESelector(loadFromSelectorString);
+                    break;
+                }
+                loadFrom = loadFrom.Parent;
+            }
             string SelectorString = ModelItem.GetValue<string>("Selector");
-            //int maxresult = ModelItem.GetValue<int>("MaxResults");
-            int maxresult = 1;
-
-            if (string.IsNullOrEmpty(SelectorString)) SelectorString = "[]";
-            var selector = new IESelector(SelectorString);
-            var selectors = new Interfaces.Selector.SelectorWindow("IE", selector, maxresult);
-
+            int maxresults = ModelItem.GetValue<int>("MaxResults");
+            Interfaces.Selector.SelectorWindow selectors;
+            if (!string.IsNullOrEmpty(SelectorString))
+            {
+                var selector = new IESelector(SelectorString);
+                selectors = new Interfaces.Selector.SelectorWindow("IE", selector, anchor, maxresults);
+            }
+            else
+            {
+                var selector = new IESelector("[{Selector: 'IE'}]");
+                selectors = new Interfaces.Selector.SelectorWindow("IE", selector, anchor, maxresults);
+            }
             if (selectors.ShowDialog() == true)
             {
                 ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(selectors.vm.json) });
+                if (anchor != null)
+                {
+                    ModelItem.Properties["From"].SetValue(new InArgument<IEElement>()
+                    {
+                        Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<IEElement>("item")
+                    });
+
+                }
             }
         }
 

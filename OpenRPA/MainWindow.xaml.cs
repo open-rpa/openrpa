@@ -28,6 +28,7 @@ namespace OpenRPA
     {
         public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; } = new System.Collections.ObjectModel.ObservableCollection<Project>();
         private bool isRecording = false;
+        private bool autoReconnect = true;
         public static Tracing tracing = new Tracing();
         public MainWindow()
         {
@@ -91,6 +92,9 @@ namespace OpenRPA
         {
             DeleteCommand.Execute(mainTabControl.SelectedContent);
         }
+        public ICommand SettingsCommand { get { return new RelayCommand<object>(onSettings, canSettings); } }
+        public ICommand SignoutCommand { get { return new RelayCommand<object>(onSignout, canSignout); } }
+        
         public ICommand OpenCommand { get { return new RelayCommand<object>(onOpen, canOpen); } }
         public ICommand SaveCommand { get { return new RelayCommand<object>(onSave, canSave); } }
         public ICommand NewCommand { get { return new RelayCommand<object>(onNew, canNew); } }
@@ -98,6 +102,41 @@ namespace OpenRPA
         public ICommand PlayCommand { get { return new RelayCommand<object>(onPlay, canPlay); } }
         public ICommand StopCommand { get { return new RelayCommand<object>(onStop, canStop); } }
         public ICommand RecordCommand { get { return new RelayCommand<object>(onRecord, canRecord); } }
+        private bool canSettings(object item)
+        {
+            return true;
+        }
+        private void onSettings(object item)
+        {
+            try
+            {
+                var filename = "settings.json";
+                var path = System.IO.Directory.GetCurrentDirectory();
+                string settingsFile = System.IO.Path.Combine(path, filename);
+                var process = new System.Diagnostics.Process();
+                process.StartInfo = new System.Diagnostics.ProcessStartInfo()
+                {
+                    UseShellExecute = true,
+                    FileName = settingsFile
+                };
+                process.Start();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("onSettings: " + ex.Message);
+            }
+        }
+        private bool canSignout(object item)
+        {
+            if (!global.isConnected) return false;
+            return true;
+        }
+        private void onSignout(object item)
+        {
+            autoReconnect = true;
+            Config.local.password = Config.local.ProtectString("BadPassword");
+            _ = global.webSocketClient.Close();
+        }
         private bool canOpen(object item)
         {
             foreach (TabItem tab in mainTabControl.Items)
@@ -142,7 +181,7 @@ namespace OpenRPA
             Views.WFDesigner designer = tab.Content as Views.WFDesigner;
             if (designer == null) return;
             if (!designer.HasChanged) return;
-            if (designer.HasChanged && global.webSocketClient.user.hasRole("robot admins"))
+            if (designer.HasChanged && (global.isConnected?global.webSocketClient.user.hasRole("robot admins"):true))
             {
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Save " + designer.Workflow.name + " ?", "Workflow unsaved", MessageBoxButton.YesNoCancel);
                 if (messageBoxResult == MessageBoxResult.Yes)
@@ -565,8 +604,12 @@ namespace OpenRPA
         private async void WebSocketClient_OnClose(string reason)
         {
             Log.Information("Disconnected " + reason);
+            AutomationHelper.syncContext.Post(o =>
+            {
+                LabelStatusBar.Content = "Disconnected from " + Config.local.wsurl + " reason " + reason;
+            }, null);
             await Task.Delay(1000);
-            _ = global.webSocketClient.Connect();
+            if(autoReconnect) _ = global.webSocketClient.Connect();
         }
         private bool loginInProgress = false;
         private void WebSocketClient_OnOpen()

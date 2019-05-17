@@ -46,9 +46,11 @@ namespace OpenRPA.Windows
                 var automation = AutomationUtil.getAutomation();
                 var pc = new FlaUI.Core.Conditions.PropertyCondition(automation.PropertyLibrary.Element.ClassName, "Windows.UI.Core.CoreWindow");
                 var _el = element.FindFirstChild(pc);
-                processId = _el.Properties.ProcessId.Value;
+                if (_el != null)
+                {
+                    processId = _el.Properties.ProcessId.Value;
 
-                IntPtr ptrProcess = OpenProcess(QueryLimitedInformation, false, processId);
+                    IntPtr ptrProcess = OpenProcess(QueryLimitedInformation, false, processId);
                     if (IntPtr.Zero != ptrProcess)
                     {
                         uint cchLen = 130; // Currently APPLICATION_USER_MODEL_ID_MAX_LENGTH = 130
@@ -72,19 +74,26 @@ namespace OpenRPA.Windows
                         }
                         CloseHandle(ptrProcess);
                     }
+                } else { _isImmersiveProcess = false; }
+
 
             }
             var arguments = GetCommandLine(processId);
             var arr = parseCommandLine(arguments);
 
-            if(arguments.Contains("\"" + arr[0] + "\"") )
+            if(arr.Length == 0)
+            {
+
+            }
+            else if (arguments.Contains("\"" + arr[0] + "\""))
             {
                 result.arguments = arguments.Replace("\"" + arr[0] + "\"", "");
-            } else
+            }
+            else
             {
                 result.arguments = arguments.Replace(arr[0], "");
             }
-            result.arguments = result.arguments.replaceEnvironmentVariable();
+            if (result.arguments != null) { result.arguments = result.arguments.replaceEnvironmentVariable(); }
             //if (arr.Length > 0)
             //{
             //    var resultarr = new string[arr.Length - 1];

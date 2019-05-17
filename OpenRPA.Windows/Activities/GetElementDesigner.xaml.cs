@@ -44,50 +44,29 @@ namespace OpenRPA.Windows
                 }
                 loadFrom = loadFrom.Parent;
             }
-            //WindowsSelector from = null;
-            //string fromstring = null;
-            //if (loadFrom != null) fromstring = loadFrom.GetValue<string>("Selector");
-            //if (fromstring != null) from = new selector.zenselector(fromstring);
-            
             string SelectorString = ModelItem.GetValue<string>("Selector");
             int maxresults = ModelItem.GetValue<int>("MaxResults");
-            // if (!string.IsNullOrEmpty(ZenSelector)) ZenSelector = JArray.Parse(ZenSelector).ToString();
-
-
-            var selector = new WindowsSelector(SelectorString);
-            var selectors = new Interfaces.Selector.SelectorWindow("Windows", selector, anchor,  maxresults);
-
-            if(selectors.ShowDialog() == true)
+            Interfaces.Selector.SelectorWindow selectors;
+            if (!string.IsNullOrEmpty(SelectorString)) {
+                var selector = new WindowsSelector(SelectorString);
+                selectors = new Interfaces.Selector.SelectorWindow("Windows", selector, anchor, maxresults);
+            } else
+            {
+                var selector = new WindowsSelector("[{Selector: 'Windows'}]");
+                selectors = new Interfaces.Selector.SelectorWindow("Windows", selector, anchor, maxresults);
+            }
+            if (selectors.ShowDialog() == true)
             {
                 ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(selectors.vm.json) });
+                if(anchor!=null)
+                {
+                    ModelItem.Properties["From"].SetValue(new InArgument<UIElement>()
+                    {
+                        Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<UIElement>("item")
+                    });
+
+                }
             }
-
-
-            //OpenRPA.p selector.Selector selector = null;
-            //if (from != null) selector = new selector.Selector(rpaactivities.selector.elementtype.uia3, from);
-            //if (from == null) selector = new selector.Selector(rpaactivities.selector.elementtype.uia3);
-            //if (!string.IsNullOrEmpty(ZenSelector)) selector.SetSelector(ZenSelector);
-            //selector.btnSetAnchor.Visibility = Visibility.Collapsed;
-            //selector.ShowDialog();
-
-            //if (selector.vm.json != ZenSelector)
-            //{
-            //    ModelItem.Properties["ZenSelector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(selector.vm.json) });
-            //    var element = (UIElement)selector.vm.element;
-            //    if (element != null)
-            //    {
-            //        ModelItem.Properties["Image"].SetValue(element.Image());
-            //        ModelItem.Properties["ScreenImage"].SetValue(element.ScreenImage());
-            //        NotifyPropertyChanged("Image");
-            //        NotifyPropertyChanged("ScreenImageImage");
-            //    }
-            //}
-            ////var offsetx = zensel.click.offsetx;
-            ////var offsety = zensel.click.offsety;
-            ////ModelItem.Properties["OffsetX"].SetValue(new System.Activities.InArgument<int>(offsetx));
-            ////ModelItem.Properties["OffsetY"].SetValue(new System.Activities.InArgument<int>(offsety));
-            //rpaExtension.Current.restore();
-
         }
 
         private void Highlight_Click(object sender, RoutedEventArgs e)

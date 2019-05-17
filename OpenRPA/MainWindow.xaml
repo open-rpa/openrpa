@@ -14,10 +14,19 @@
         <Ribbon DockPanel.Dock="Top" Margin="0,-22,0,0">
 
             <Ribbon.ApplicationMenu>
+                <RibbonApplicationMenu SmallImageSource="/OpenRPA;component/Resources/Buttons/Export.png">
+                    <RibbonApplicationMenuItem Header="Settings" ImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
+                                               Command="{Binding Data.SettingsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                    <RibbonApplicationMenuItem Header="Signout" ImageSource="/OpenRPA;component/Resources/Buttons/Signout.png" 
+                                               Command="{Binding Data.SignoutCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                </RibbonApplicationMenu>
+            </Ribbon.ApplicationMenu>
+            
+            <!-- 
+            <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu Visibility="Collapsed">
                 </RibbonApplicationMenu>
             </Ribbon.ApplicationMenu>
-            <!-- 
             -->
             <!-- 
 

@@ -27,7 +27,15 @@ namespace OpenRPA.Net
 
         public TokenUser user { get; private set; }
         public string jwt { get; private set; }
-
+        public bool isConnected
+        {
+            get
+            {
+                if (ws == null) return false;
+                if(ws.State != WebSocketState.Open) return false;
+                return true;
+            }
+        }
         public WebSocketClient(string url)
         {
             this.url = url;
@@ -37,12 +45,14 @@ namespace OpenRPA.Net
             try
             {
                 Log.Debug("Connecting to " + url);
-                if (ws.State == WebSocketState.Aborted || ws.State == WebSocketState.Closed)
+                if (ws != null && (ws.State == WebSocketState.Aborted || ws.State == WebSocketState.Closed))
                 {
                     ws.Dispose();
                     ws = null;
                     ws = new ClientWebSocket();
+                    src = new CancellationTokenSource();
                 }
+                if(ws == null) { ws = new ClientWebSocket();  src = new CancellationTokenSource(); }
                 await ws.ConnectAsync(new Uri(url), src.Token);
                 Log.Information("Connected to " + url);
                 Task receiveTask = Task.Run(async () => await receiveLoop(), src.Token);
@@ -66,8 +76,8 @@ namespace OpenRPA.Net
                 catch (Exception)
                 {
                 }
-                ws.Dispose();
-                ws = null;
+                //ws.Dispose();
+                //ws = null;
             }
             src.Cancel();
         }
@@ -80,11 +90,14 @@ namespace OpenRPA.Net
                 try
                 {
                     if (ws == null) { return; }
-                    if (ws.State != WebSocketState.Open) { return; }
+                    if (ws.State != WebSocketState.Open) {
+                        OnClose?.Invoke("");
+                        return;
+                    }
                     WebSocketReceiveResult result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), src.Token);
                     json = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
                     var message = JsonConvert.DeserializeObject<SocketMessage>(json);
-                    _receiveQueue.Add(message);
+                    if(message!=null) _receiveQueue.Add(message);
                     await ProcessQueue();
                 }
                 catch (Exception ex)
@@ -104,7 +117,7 @@ namespace OpenRPA.Net
         private async Task PingLoop()
         {
             byte[] buffer = new byte[1024];
-            while (true)
+            while (isConnected)
             {
                 await Task.Delay(1000);
                 var msg = new Message("ping");
@@ -118,7 +131,18 @@ namespace OpenRPA.Net
             try
             {
                 await ReceiveSemaphore.WaitAsync();
-                var ids = (from m in _receiveQueue group m by new { m.id } into mygroup select mygroup.Key.id).ToList();
+                if (_receiveQueue == null) return;
+                var tttt = _receiveQueue;
+                List<string> ids = new List<string>();
+                for(var i = 0; i < _receiveQueue.Count; i++)
+                {
+                    if(_receiveQueue[i]!=null)
+                    {
+                        string id = _receiveQueue[i].id;
+                        if (!ids.Contains(id)) ids.Add(id);
+                    }
+                }
+                // ids = (from m in _receiveQueue group m by new { m.id } into mygroup select mygroup.Key.id).ToList();
                 foreach (var id in ids)
                 {
                     var first = _receiveQueue.Where((x) => x.id == id).First();

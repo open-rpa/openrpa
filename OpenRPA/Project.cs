@@ -123,7 +123,7 @@ namespace OpenRPA
             {
                 await workflow.Save();
             }
-            if (global.webSocketClient == null) return;
+            if (!global.isConnected) return;
             if (string.IsNullOrEmpty(_id))
             {
                 var result = await global.webSocketClient.InsertOne("openrpa", this);
@@ -139,6 +139,7 @@ namespace OpenRPA
             foreach (var wf in Workflows.ToList()) { await wf.Delete(); }
             var Files = System.IO.Directory.EnumerateFiles(Path, "*.*", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
             foreach (var f in Files) System.IO.File.Delete(f);
+            if (!global.isConnected) return;
             if (!string.IsNullOrEmpty(_id))
             {
                 await global.webSocketClient.DeleteOne("openrpa", this._id);

@@ -43,10 +43,15 @@ namespace OpenRPA.Java
         {
             return Plugin._GetRootElements(anchor);
         }
-        public Interfaces.Selector.Selector GetSelector(Interfaces.Selector.treeelement item)
+        public Interfaces.Selector.Selector GetSelector(Selector anchor, Interfaces.Selector.treeelement item)
         {
             var javaitem = item as JavaTreeElement;
-            return new JavaSelector(javaitem.JavaElement, null, true);
+            JavaSelector javaanchor = anchor as JavaSelector;
+            if (javaanchor == null)
+            {
+                javaanchor = new JavaSelector(anchor.ToString());
+            }
+            return new JavaSelector(javaitem.JavaElement, javaanchor, true);
         }
         public event Action<IPlugin, IRecordEvent> OnUserAction;
         public string Name { get => "Java"; }

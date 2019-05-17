@@ -98,8 +98,8 @@ namespace OpenRPA
         public async Task Save()
         {
             SaveFile();
-            if (global.webSocketClient == null) return;
             projectid = Project._id;
+            if (!global.isConnected) return;
             if (string.IsNullOrEmpty(_id))
             {
                 var result = await global.webSocketClient.InsertOne("openrpa", this);
@@ -114,6 +114,7 @@ namespace OpenRPA
             if (Project.Workflows.Contains(this)) Project.Workflows.Remove(this);
             if (string.IsNullOrEmpty(FilePath)) return;
             System.IO.File.Delete(FilePath);
+            if (!global.isConnected) return;
             if (!string.IsNullOrEmpty(_id))
             {
                 await global.webSocketClient.DeleteOne("openrpa", this._id);

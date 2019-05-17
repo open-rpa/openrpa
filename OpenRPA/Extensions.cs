@@ -11,6 +11,14 @@ namespace OpenRPA
     public class global
     {
         public static WebSocketClient webSocketClient = null;
+        public static bool isConnected
+        {
+            get
+            {
+                if (webSocketClient == null || !webSocketClient.isConnected ) return false;
+                return true;
+            }
+        }
     }
     public static class Extensions
     {

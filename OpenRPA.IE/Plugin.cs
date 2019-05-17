@@ -52,7 +52,7 @@ namespace OpenRPA.IE
         {
             var ieitem = item as IETreeElement;
             IESelector ieanchor = anchor as IESelector;
-            if (ieanchor == null)
+            if (ieanchor == null && anchor != null)
             {
                 ieanchor = new IESelector(anchor.ToString());
             }

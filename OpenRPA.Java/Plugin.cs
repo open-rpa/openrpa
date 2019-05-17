@@ -47,7 +47,7 @@ namespace OpenRPA.Java
         {
             var javaitem = item as JavaTreeElement;
             JavaSelector javaanchor = anchor as JavaSelector;
-            if (javaanchor == null)
+            if (javaanchor == null && anchor != null)
             {
                 javaanchor = new JavaSelector(anchor.ToString());
             }

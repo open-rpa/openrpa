@@ -32,13 +32,15 @@ namespace OpenRPA.Java
             var sel = new JavaSelector(SelectorString);
             var timeout = TimeSpan.FromSeconds(3);
             var maxresults = MaxResults.Get(context);
+            var from = From.Get(context);
+
             JavaElement[] elements = { };
             var sw = new Stopwatch();
             sw.Start();
             do
             {
                 var selector = new JavaSelector(SelectorString);
-                elements = JavaSelector.GetElementsWithuiSelector(selector, null, maxresults);
+                elements = JavaSelector.GetElementsWithuiSelector(selector, from, maxresults);
 
             } while (elements.Count() == 0 && sw.Elapsed < timeout);
             Log.Debug(string.Format("OpenRPA.Java::GetElement::found {1} elements in {0:mm\\:ss\\.fff}", sw.Elapsed, elements.Count()));

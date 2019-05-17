@@ -62,7 +62,8 @@ namespace OpenRPA.IE
                 var anchorlist = anchor.Where(x => x.Enabled && x.Selector == null).ToList();
                 for (var i = 0; i < anchorlist.Count(); i++)
                 {
-                    if (((IESelectorItem)anchorlist[i]).Match(pathToRoot[0]))
+                    //if (((IESelectorItem)anchorlist[i]).Match(pathToRoot[0]))
+                    if (IESelectorItem.Match(anchorlist[i], pathToRoot[0]))
                     {
                         pathToRoot.Remove(pathToRoot[0]);
                     }

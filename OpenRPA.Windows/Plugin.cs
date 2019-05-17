@@ -72,7 +72,7 @@ namespace OpenRPA.Windows
         {
             var windowsitem = item as WindowsTreeElement;
             WindowsSelector winanchor = anchor as WindowsSelector;
-            if (winanchor == null)
+            if (winanchor == null && anchor != null)
             {
                 winanchor = new WindowsSelector(anchor.ToString());
             }

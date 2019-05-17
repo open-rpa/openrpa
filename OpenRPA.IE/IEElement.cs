@@ -41,6 +41,26 @@ namespace OpenRPA.IE
             }
         }
 
+        public IEElement[] Children
+        {
+            get
+            {
+                var result = new List<IEElement>();
+                mshtml.IHTMLElementCollection children = RawElement.children;
+                foreach (mshtml.IHTMLElement c in children)
+                {
+                    try
+                    {
+                        result.Add(new IEElement(Browser, c));
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                return result.ToArray();
+            }
+        }
+
         private System.Drawing.Rectangle? _Rectangle = null;
         public System.Drawing.Rectangle Rectangle
         {

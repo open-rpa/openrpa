@@ -159,7 +159,15 @@ namespace OpenRPA.IE
         }
         public static IEElement[] GetElementsWithuiSelector(IESelector selector, IElement fromElement = null, int maxresults = 1)
         {
-            var browser = Browser.GetBrowser();
+            IEElement iefromElement = fromElement as IEElement;
+            Browser browser;
+            if (iefromElement != null)
+            {
+                browser = iefromElement.Browser;
+            } else
+            {
+                browser = Browser.GetBrowser();
+            }
             if (browser == null)
             {
                 Log.Warning("Failed locating an Internet Explore instance");
@@ -176,11 +184,20 @@ namespace OpenRPA.IE
 
             IEElement[] result = null;
 
-            mshtml.IHTMLElement startfrom = null;
-            if (_fromElement != null) startfrom = _fromElement.RawElement;
-            if (startfrom == null) startfrom = browser.Document.documentElement;
-            current.Add(new IEElement(browser, startfrom));
-            for (var i = 1; i < selectors.Count; i++)
+            int startIndex = 1;
+
+            if(iefromElement != null)
+            {
+                startIndex = 0;
+                current.Add(iefromElement);
+            }
+             else
+            {
+                mshtml.IHTMLElement startfrom = null;
+                startfrom = browser.Document.documentElement;
+                current.Add(new IEElement(browser, startfrom));
+            }
+            for (var i = startIndex; i < selectors.Count; i++)
             {
                 var s = new IESelectorItem(selectors[i]);
                 var elements = new List<IEElement>();

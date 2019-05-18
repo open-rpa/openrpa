@@ -68,6 +68,10 @@ namespace OpenRPA
             }
             return result;
         }
+        public static bool IsSerializable2(this Type t)
+        {
+            return Attribute.IsDefined(t, typeof(System.Runtime.Serialization.DataContractAttribute)) || t.IsSerializable;
 
+        }
     }
 }

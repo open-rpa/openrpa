@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using OpenRPA.Interfaces;
+using OpenRPA.Interfaces.entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,20 @@ using System.Threading.Tasks;
 
 namespace OpenRPA
 {
-    public class WorkflowInstance : ObservableObject
+    public class WorkflowInstance : apibase
     {
+        public static List<WorkflowInstance> Instances = new List<WorkflowInstance>();
+        [JsonIgnore]
         public Action<WorkflowInstance> idleOrComplete { get; set; }
-        public IDictionary<string, object> Parameters { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
-        public IDictionary<string, object> Bookmarks { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
+        public Dictionary<string, object> Parameters { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
+        public Dictionary<string, object> Bookmarks { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
         public string InstanceId { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string WorkflowId { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string xml { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string owner { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string ownerid { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string host { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string fqdn { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string errormessage { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public bool isCompleted { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public bool hasError { get { return GetProperty<bool>(); } set { SetProperty(value); } }
@@ -22,10 +31,18 @@ namespace OpenRPA
         public Workflow Workflow { get { return GetProperty<Workflow>(); } set { SetProperty(value); } }
         [JsonIgnore]
         public System.Activities.WorkflowApplication wfApp { get; set; }
-        public static WorkflowInstance Create(Workflow Workflow, Dictionary<string, object> Parameters)
+        public static async Task<WorkflowInstance> Create(Workflow Workflow, Dictionary<string, object> Parameters)
         {
-            var result = new WorkflowInstance() { Workflow = Workflow, Parameters = Parameters };
+            var result = new WorkflowInstance() { Workflow = Workflow, WorkflowId = Workflow._id, Parameters = Parameters, name = Workflow.name };
+            Instances.Add(result);
+            if (global.isConnected) { 
+                result.owner = global.webSocketClient.user.name;
+                result.ownerid = global.webSocketClient.user._id;
+            }
+            result.host = Environment.MachineName.ToLower();
+            result.fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
             result.createApp();
+            await result.Save();
             return result;
         }
         public void createApp()
@@ -38,7 +55,7 @@ namespace OpenRPA
                     var allowed = Workflow.Parameters.Where(x => x.name == param.Key).FirstOrDefault();
                     if (allowed == null || allowed.direction == workflowparameterdirection.@out)
                     {
-                        Parameters.Remove(param);
+                        Parameters.Remove(param.Key);
                     }
                 }
                 // Ensure Type
@@ -59,24 +76,37 @@ namespace OpenRPA
                         }
                     }
                 }
-                //if (workflow.serializable)
-                //{
-                //    if (extension.socket.settings.localState)
-                //    {
-                //        wfApp.InstanceStore = new store.XMLFileInstanceStore();
-                //    }
-                //    else
-                //    {
-                //        wfApp.InstanceStore = new store.OpenFlowInstanceStore(extension.socket);
-                //    }
-                //}
                 wfApp = new System.Activities.WorkflowApplication(Workflow.Activity, Parameters);
+                if (Workflow.Serializable)
+                {
+                    if (Config.local.localstate)
+                    {
+                        if (!System.IO.Directory.Exists(System.IO.Directory.GetCurrentDirectory() + "\\state")) System.IO.Directory.CreateDirectory(System.IO.Directory.GetCurrentDirectory() + "\\state");
+                        wfApp.InstanceStore = new Store.XMLFileInstanceStore(System.IO.Directory.GetCurrentDirectory() + "\\state");
+                    }
+                    else
+                    {
+                        wfApp.InstanceStore = new Store.OpenFlowInstanceStore();
+                    }
+                }
                 addwfApphandlers(wfApp);
             }
             else
             {
                 wfApp = new System.Activities.WorkflowApplication(Workflow.Activity);
                 addwfApphandlers(wfApp);
+                if (Workflow.Serializable)
+                {
+                    if (Config.local.localstate)
+                    {
+                        if (!System.IO.Directory.Exists(System.IO.Directory.GetCurrentDirectory() + "\\state")) System.IO.Directory.CreateDirectory(System.IO.Directory.GetCurrentDirectory() + "\\state");
+                        wfApp.InstanceStore = new Store.XMLFileInstanceStore(System.IO.Directory.GetCurrentDirectory() + "\\state");
+                    }
+                    else
+                    {
+                        wfApp.InstanceStore = new Store.OpenFlowInstanceStore();
+                    }
+                }
                 wfApp.Load(new Guid(InstanceId));
             }
             state = "loaded";
@@ -92,33 +122,21 @@ namespace OpenRPA
             }
             hasError = true;
             isCompleted = true;
-            //Task.Run(() =>
-            //{
-            //    Thread.Sleep(500);
-            //    try
-            //    {
-            //        store.XMLFileInstanceStore.cleanup(Guid.Parse(instance.instanceid));
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Log.Error(ex, "");
-            //    }
-
-            //});
             state = "aborted";
             errormessage = Reason;
-            Save();
+            _ = Save();
             idleOrComplete?.Invoke(this);
         }
-        public void Run()
+        public async Task Run()
         {
             try
             {
                 if (string.IsNullOrEmpty(InstanceId))
                 {
                     wfApp.Run();
+                    InstanceId = wfApp.Id.ToString();
                     state = "running";
-                    Save();
+                    await Save();
                 }
                 else
                 {
@@ -126,8 +144,12 @@ namespace OpenRPA
                     {
                         if (b.Value != null && !string.IsNullOrEmpty(b.Value.ToString())) wfApp.ResumeBookmark(b.Key, b.Value);
                     }
+                    if(Bookmarks.Count() == 0)
+                    {
+                        wfApp.Run();
+                    }
                     state = "running";
-                    Save();
+                    await Save();
                 }
             }
             catch (Exception ex)
@@ -138,7 +160,7 @@ namespace OpenRPA
                 //isUnloaded = true;
                 state = "failed";
                 errormessage = ex.Message;
-                Save();
+                await Save();
                 idleOrComplete?.Invoke(this);
             }
         }
@@ -147,18 +169,6 @@ namespace OpenRPA
             wfApp.Completed = delegate (System.Activities.WorkflowApplicationCompletedEventArgs e)
             {
                 isCompleted = true;
-                //Task.Run(() =>
-                //{
-                //    try
-                //    {
-                //        Thread.Sleep(500);
-                //        store.XMLFileInstanceStore.cleanup(e.InstanceId);
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        Log.Error(ex, "");
-                //    }
-                //});
                 if (e.CompletionState == System.Activities.ActivityInstanceState.Faulted)
                 {
                 }
@@ -175,8 +185,7 @@ namespace OpenRPA
                             Parameters[prop.Key] = prop.Value;
                         }
                     }
-
-                    Parameters = e.Outputs;
+                    foreach (var o in e.Outputs) e.Outputs.Add(o);
                     idleOrComplete?.Invoke(this);
                 }
                 else if (e.CompletionState == System.Activities.ActivityInstanceState.Executing)
@@ -192,23 +201,9 @@ namespace OpenRPA
             {
                 hasError = true;
                 isCompleted = true;
-                //Task.Run(() =>
-                //{
-                //    Thread.Sleep(500);
-                //    try
-                //    {
-                //        store.XMLFileInstanceStore.cleanup(e.InstanceId);
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        Log.Error(ex, "");
-                //    }
-
-                //});
-
                 state = "aborted";
                 errormessage = e.Reason.Message;
-                Save();
+                _ = Save();
                 idleOrComplete?.Invoke(this);
             };
 
@@ -219,10 +214,9 @@ namespace OpenRPA
                 {
                     bookmarks.Add(b.BookmarkName, null);
                 }
-                //workflowinstance.setBookmarks(extension, instance._id, e.InstanceId, bookmarks).Wait();
                 Bookmarks = bookmarks;
                 state = "idle";
-                Save();
+                _ = Save();
                 if (state != "completed")
                 {
                     idleOrComplete?.Invoke(this);
@@ -232,7 +226,7 @@ namespace OpenRPA
             wfApp.PersistableIdle = delegate (System.Activities.WorkflowApplicationIdleEventArgs e)
             {
                 //return PersistableIdleAction.Unload;
-                Save();
+                _ = Save();
                 return System.Activities.PersistableIdleAction.Persist;
             };
 
@@ -244,25 +238,13 @@ namespace OpenRPA
 
                 }
                 //isUnloaded = true;
-                Save();
+                _ = Save();
             };
 
             wfApp.OnUnhandledException = delegate (System.Activities.WorkflowApplicationUnhandledExceptionEventArgs e)
             {
                 hasError = true;
                 isCompleted = true;
-                //Task.Run(() =>
-                //{
-                //    Thread.Sleep(500);
-                //    try
-                //    {
-                //        store.XMLFileInstanceStore.cleanup(e.InstanceId);
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        Log.Error(ex, "");
-                //    }
-                //});
                 state = "failed";
                 errormessage = e.UnhandledException.ToString();
                 //exceptionsource = e.ExceptionSource.Id;
@@ -270,13 +252,28 @@ namespace OpenRPA
                 return System.Activities.UnhandledExceptionAction.Terminate;
             };
 
-        } // addwfApphandlers
-
-        public void Save()
-        {
-
         }
-
-
+        public async Task Save()
+        {
+            try
+            {
+                if (!global.isConnected) return;
+                Log.Debug("Saving workflow instance");
+                if (string.IsNullOrEmpty(_id))
+                {
+                    var result = await global.webSocketClient.InsertOne("openrpa_instances", this);
+                    _id = result._id;
+                }
+                else
+                {
+                    await global.webSocketClient.UpdateOne("openrpa_instances", this);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                throw;
+            }
+        }
     }
 }

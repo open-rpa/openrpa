@@ -53,9 +53,13 @@
     <Reference Include="System" />
     <Reference Include="System.Activities" />
     <Reference Include="System.Activities.Core.Presentation" />
+    <Reference Include="System.Activities.DurableInstancing" />
     <Reference Include="System.Activities.Presentation" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.DurableInstancing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Controls.Ribbon" />
     <Reference Include="System.Windows.Forms" />
@@ -96,6 +100,14 @@
     </Compile>
     <Compile Include="BindingProxy.cs" />
     <Compile Include="Resources\ResFinder.cs" />
+    <Compile Include="Store\AsyncResult.cs" />
+    <Compile Include="Store\CompletedAsyncResult.cs" />
+    <Compile Include="Store\CustomInstanceStoreBase.cs" />
+    <Compile Include="Store\JsonInstanceStoreBase.cs" />
+    <Compile Include="Store\MemoryCacheInstanceStore.cs" />
+    <Compile Include="Store\OpenFlowInstanceStore.cs" />
+    <Compile Include="Store\XMLFileInstanceStore.cs" />
+    <Compile Include="Store\xmlInstanceStoreBase.cs" />
     <Compile Include="Views\ClosableTab.cs" />
     <Compile Include="Views\CloseableHeader.xaml.cs">
       <DependentUpon>CloseableHeader.xaml</DependentUpon>

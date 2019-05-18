@@ -9,7 +9,9 @@ using System.Activities.Presentation.Toolbox;
 using System.Activities.Presentation.View;
 using System.Activities.Statements;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -122,7 +124,6 @@ namespace OpenRPA.Views
             WeakEventManager<System.ComponentModel.INotifyPropertyChanged, System.ComponentModel.PropertyChangedEventArgs>.
                 AddHandler(MainWindow.tracing, "PropertyChanged", traceOnPropertyChanged);
         }
-
         private void traceOnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "OutputMessages")
@@ -150,20 +151,18 @@ namespace OpenRPA.Views
                 OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("TraceMessages"));
             }
         }
-
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e);
         }
-
         private void onIdleOrComplete(Workflow workflow, WorkflowInstance instance)
         {
             onChanged?.Invoke(this);
         }
-
         public async Task Save()
         {
+            parseparameters();
             wfDesigner.Flush();
             var modelItem = wfDesigner.Context.Services.GetService<ModelService>().Root;
             Workflow.name = modelItem.GetValue<string>("Name");
@@ -175,7 +174,141 @@ namespace OpenRPA.Views
                 onChanged?.Invoke(this);
             }
         }
+        public KeyedCollection<string, DynamicActivityProperty> GetParameters()
+        {
+            ActivityBuilder ab2;
 
+            using (var stream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(Workflow.Xaml)))
+            {
+                ab2 = System.Xaml.XamlServices.Load(
+                    System.Activities.XamlIntegration.ActivityXamlServices.CreateBuilderReader(
+                    new System.Xaml.XamlXmlReader(stream))) as ActivityBuilder;
+            }
+            return ab2.Properties;
+        }
+        public void parseparameters()
+        {
+            Workflow.Serializable = true;
+            Workflow.Parameters.Clear();
+            var parameters = GetParameters();
+            foreach (var prop in parameters)
+            {
+                var par = new workflowparameter() { name = prop.Name };
+                string baseTypeName = prop.Type.BaseType.FullName;
+                if (!prop.Type.IsSerializable2())
+                {
+                    Log.Activity(string.Format("Name: {0}, Type: {1} is not serializable, therefor saving state will not be supported", prop.Name, prop.Type));
+                    Workflow.Serializable = false;
+                }
+                if (baseTypeName == "System.Activities.InArgument")
+                {
+                    par.direction = workflowparameterdirection.@in;
+                }
+                if (baseTypeName == "System.Activities.InOutArgument")
+                {
+                    par.direction = workflowparameterdirection.inout;
+                }
+                if (baseTypeName == "System.Activities.OutArgument")
+                {
+                    par.direction = workflowparameterdirection.@out;
+                }
+                par.type = prop.Type.GenericTypeArguments[0].FullName;
+                Log.Activity(string.Format("Name: '{0}', Type: {1}", prop.Name, prop.Type));
+                Workflow.Parameters.Add(par);
+            }
+            if (Workflow.Serializable == true)
+            {
+                ModelTreeManager mtm = wfDesigner.Context.Services.GetService<ModelTreeManager>();
+                bool canIdle = false;
+                foreach (ModelItem item in this.GetWorkflowActivities(null))
+                {
+                    try
+                    {
+                        var a = item.GetCurrentValue();
+                        var prop = a.GetType().GetProperty("CanInduceIdle", BindingFlags.NonPublic | BindingFlags.Instance);
+                        if (prop != null)
+                        {
+                            var CanInduceIdle = (bool)prop.GetValue(a);
+                            if (CanInduceIdle == true)
+                            {
+                                Log.Activity(string.Format("Activity: '{0}' Can induce idle, need to check if workflow is serializable", ToString()));
+                                canIdle = true;
+                            }
+                        }
+
+                        //var i = item.GetCurrentValue() as Activity;
+                        //var i2 = i;
+                        //ModelItemImpl i = item.instan as System.Activities.Presentation.Model.ModelItemImpl;
+                        //item.can
+
+                    }
+                    catch (Exception)
+                    {
+
+                        throw;
+                    }
+                }
+                if (canIdle == true)
+                {
+                    foreach (ModelItem item in this.GetWorkflowActivities(null))
+                    {
+                        var vars = item.Properties["Variables"];
+                        if (vars != null && vars.Collection != null)
+                        {
+                            foreach (var v in vars.Collection)
+                            {
+                                try
+                                {
+                                    string baseTypeName = v.ItemType.GenericTypeArguments[0].BaseType.FullName;
+                                    if (!v.ItemType.GenericTypeArguments[0].IsSerializable2())
+                                    {
+                                        var _v = v.GetCurrentValue();
+                                        var prop = _v.GetType().GetProperty("Name");
+                                        if (prop != null)
+                                        {
+                                            Log.Activity(string.Format("Variable name: '{0}', Type: {1} is not serializable", (string)prop.GetValue(_v), baseTypeName));
+                                        }
+                                        else
+                                        {
+                                            Log.Activity(string.Format("TypeName: '{0}', Type: {1} is not serializable", v.ItemType.GenericTypeArguments[0].Name, baseTypeName));
+                                        }
+                                        Workflow.Serializable = false;
+                                        //throw new NotSerializable("All properties on a workflow needs to be serializable '" + prop.Name + "'");
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.Debug(ex.ToString());
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+        public List<ModelItem> GetWorkflowActivities(ModelItem startingPoint = null)
+        {
+            List<ModelItem> list = new List<ModelItem>();
+
+            ModelService modelService = wfDesigner.Context.Services.GetService<ModelService>();
+            list = modelService.Find(modelService.Root, typeof(Activity)).ToList<ModelItem>();
+
+            list.AddRange(modelService.Find(modelService.Root, (Predicate<Type>)(type => (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(FlowSwitch<>))))));
+            list.AddRange(modelService.Find(modelService.Root, typeof(FlowDecision)));
+            return list;
+        }
+        private static List<ModelItem> GetWorkflowActivities(WorkflowDesigner wfDesigner, ModelItem startingPoint = null)
+        {
+            List<ModelItem> list = new List<ModelItem>();
+
+            ModelService modelService = wfDesigner.Context.Services.GetService<ModelService>();
+            list = modelService.Find(modelService.Root, typeof(Activity)).ToList<ModelItem>();
+
+            list.AddRange(modelService.Find(modelService.Root, (Predicate<Type>)(type => (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(FlowSwitch<>))))));
+            list.AddRange(modelService.Find(modelService.Root, typeof(FlowDecision)));
+            return list;
+        }
         private void SelectionChanged(Selection item)
         {
             var selection = item;
@@ -283,7 +416,6 @@ namespace OpenRPA.Views
                 MessageBox.Show("InitializeActivitiesToolbox: " + ex.Message);
             }
         }
-
         public void AddVBNamespaceSettings(object rootObject, params Type[] types)
         {
             var vbsettings = Microsoft.VisualBasic.Activities.VisualBasic.GetSettings(rootObject);
@@ -305,7 +437,6 @@ namespace OpenRPA.Views
 
             Microsoft.VisualBasic.Activities.VisualBasic.SetSettings(rootObject, vbsettings);
         }
-
         public ModelItem addActivity(Activity a)
         {
             ModelItem newItem = null;
@@ -387,7 +518,6 @@ namespace OpenRPA.Views
             }
             return parent;
         }
-
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             DataContext = this;

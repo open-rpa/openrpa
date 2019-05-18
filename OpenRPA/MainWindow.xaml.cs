@@ -658,7 +658,12 @@ namespace OpenRPA
                 this.Show();
                 try
                 {
+                    var host = Environment.MachineName.ToLower();
+                    var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
                     await global.webSocketClient.RegisterQueue("robot." + Config.local.username);
+                    await global.webSocketClient.RegisterQueue("robot." + fqdn);
+
+
                     var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}");
                     var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}");
 
@@ -687,6 +692,10 @@ namespace OpenRPA
                         }
                         p.SaveFile();
                         Projects.Add(p);
+                    }
+                    foreach(var workflow in workflows)
+                    {
+                        await workflow.RunPendingInstances();
                     }
                     if (workflows.Count() == 0 && projects.Count() == 0)
                     {

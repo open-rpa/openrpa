@@ -396,5 +396,21 @@ namespace OpenRPA.Java
         {
             return base.GetHashCode();
         }
+        public string ImageString()
+        {
+            var AddedWidth = 10;
+            var AddedHeight = 10;
+            var ScreenImageWidth = Rectangle.Width + AddedWidth;
+            var ScreenImageHeight = Rectangle.Height + AddedHeight;
+            var ScreenImagex = Rectangle.X - (AddedWidth / 2);
+            var ScreenImagey = Rectangle.Y - (AddedHeight / 2);
+            if (ScreenImagex < 0) ScreenImagex = 0; if (ScreenImagey < 0) ScreenImagey = 0;
+            using (var image = Interfaces.Image.Util.Screenshot(ScreenImagex, ScreenImagey, ScreenImageWidth, ScreenImageHeight, Interfaces.Image.Util.ActivityPreviewImageWidth, Interfaces.Image.Util.ActivityPreviewImageHeight))
+            {
+                // Interfaces.Image.Util.SaveImageStamped(image, System.IO.Directory.GetCurrentDirectory(), "JavaElement");
+                return Interfaces.Image.Util.Bitmap2Base64(image);
+            }
+        }
+
     }
 }

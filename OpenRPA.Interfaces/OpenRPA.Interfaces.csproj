@@ -78,6 +78,7 @@
     <Compile Include="GenericTools.cs" />
     <Compile Include="IBodyActivity.cs" />
     <Compile Include="IElement.cs" />
+    <Compile Include="Image\Util.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Overlay\OverlayWindow.cs">
       <SubType>Form</SubType>

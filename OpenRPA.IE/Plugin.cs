@@ -92,6 +92,7 @@ namespace OpenRPA.IE
                 if (sel == null) return;
                 if (sel.Count < 2) return;
                 a.Selector = sel.ToString();
+                a.Image = sel.Last().Element.ImageString();
                 re.UIElement = e.Element;
                 re.Element = new IEElement(browser, htmlelement);
                 re.Selector = sel;
@@ -129,6 +130,7 @@ namespace OpenRPA.IE
 
             var a = new GetElement { DisplayName = htmlelement.id + "-" + htmlelement.tagName + "-" + htmlelement.className };
             a.Selector = selector.ToString();
+            a.Image = selector.Last().Element.ImageString();
             var last = selector.Last() as IESelectorItem;
 
 

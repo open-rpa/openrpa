@@ -24,6 +24,8 @@ namespace OpenRPA.Java
         public InArgument<string> Selector { get; set; }
         public InArgument<JavaElement> From { get; set; }
         public OutArgument<JavaElement[]> Elements { get; set; }
+        [Browsable(false)]
+        public String Image { get; set; }
         private Variable<IEnumerator<JavaElement>> _elements = new Variable<IEnumerator<JavaElement>>("_elements");
         public Activity LoopAction { get; set; }
         protected override void Execute(NativeActivityContext context)

@@ -24,10 +24,7 @@ namespace OpenRPA.Windows
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
         public BitmapFrame HighlightImage { get; set; }
-        public BitmapImage Image { get; set; }
-
         private void Open_Selector(object sender, RoutedEventArgs e)
         {
             ModelItem loadFrom = ModelItem.Parent;
@@ -58,7 +55,13 @@ namespace OpenRPA.Windows
             if (selectors.ShowDialog() == true)
             {
                 ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(selectors.vm.json) });
-                if(anchor!=null)
+                var l = selectors.vm.Selector.Last();
+                if(l.Element != null)
+                {
+                    ModelItem.Properties["Image"].SetValue(l.Element.ImageString());
+                    NotifyPropertyChanged("Image");
+                }
+                if (anchor!=null)
                 {
                     ModelItem.Properties["From"].SetValue(new InArgument<UIElement>()
                     {
@@ -68,7 +71,6 @@ namespace OpenRPA.Windows
                 }
             }
         }
-
         private void Highlight_Click(object sender, RoutedEventArgs e)
         {
             string SelectorString = ModelItem.GetValue<string>("Selector");
@@ -76,6 +78,34 @@ namespace OpenRPA.Windows
             var selector = new WindowsSelector(SelectorString);
             var elements = WindowsSelector.GetElementsWithuiSelector(selector, null, maxresults);
             foreach (var ele in elements) ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
+        }
+        public string ImageString
+        {
+            get
+            {
+                string result = string.Empty;
+                result = ModelItem.GetValue<string>("Image");
+                return result;
+            }
+        }
+        public BitmapImage Image
+        {
+            get
+            {
+                var base64 = ImageString;
+                if (string.IsNullOrEmpty(base64)) return null;
+                //if (System.Text.RegularExpressions.Regex.Match(base64, "[a-f0-9]{24}").Success)
+                //{
+                //    return image.Screenutil.BitmapToImageSource(image.util.loadWorkflowImage(base64), image.Screenutil.ActivityPreviewImageWidth, image.Screenutil.ActivityPreviewImageHeight);
+                //}
+                
+                // return OpenRPA.Interfaces.Image.Util.BitmapToImageSource
+                using (var image = Interfaces.Image.Util.Base642Bitmap(base64))
+                {
+                    // Interfaces.Image.Util.SaveImageStamped(image, System.IO.Directory.GetCurrentDirectory(), "WindowsGetElement");
+                    return Interfaces.Image.Util.BitmapToImageSource(image, Interfaces.Image.Util.ActivityPreviewImageWidth, Interfaces.Image.Util.ActivityPreviewImageHeight);
+                }
+            }
         }
     }
 }

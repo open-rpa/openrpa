@@ -12,5 +12,6 @@ namespace OpenRPA.Interfaces
         void Focus();
         void Click();
         Task Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration);
+        string ImageString();
     }
 }

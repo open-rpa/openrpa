@@ -26,6 +26,8 @@ namespace OpenRPA.IE
         public InArgument<string> Selector { get; set; }
         public InArgument<IEElement> From { get; set; }
         public OutArgument<IEElement[]> Elements { get; set; }
+        [Browsable(false)]
+        public String Image { get; set; }
         private Variable<IEnumerator<IEElement>> _elements = new Variable<IEnumerator<IEElement>>("_elements");
         public Activity LoopAction { get; set; }
         public GetElement()

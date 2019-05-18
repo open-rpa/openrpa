@@ -11,6 +11,10 @@ namespace OpenRPA
 {
     public class WorkflowInstance : apibase
     {
+        public WorkflowInstance()
+        {
+            _type = "workflowinstance";
+        }
         public static List<WorkflowInstance> Instances = new List<WorkflowInstance>();
         [JsonIgnore]
         public Action<WorkflowInstance> idleOrComplete { get; set; }

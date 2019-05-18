@@ -34,7 +34,8 @@ namespace OpenRPA.Windows
         public InArgument<string> Selector { get; set; }
         public InArgument<UIElement> From { get; set; }
         public OutArgument<UIElement[]> Elements { get; set; }
-
+        [Browsable(false)]
+        public String Image { get; set; }
         private Variable<IEnumerator<UIElement>> _elements = new Variable<IEnumerator<UIElement>>("_elements");
         [System.ComponentModel.Browsable(false)]
         public Activity LoopAction { get; set; }

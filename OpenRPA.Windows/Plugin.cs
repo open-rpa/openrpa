@@ -104,6 +104,7 @@ namespace OpenRPA.Windows
                 if (sel == null) return;
                 a.Selector = sel.ToString();
                 a.MaxResults = 1;
+                a.Image = e.Element.ImageString();
                 re.UIElement = e.Element;
                 re.Element = e.Element;
                 re.Selector = sel;

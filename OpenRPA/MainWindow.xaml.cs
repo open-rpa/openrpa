@@ -664,6 +664,8 @@ namespace OpenRPA
                     await global.webSocketClient.RegisterQueue("robot." + fqdn);
 
 
+                    if (Projects.Count != 0) return;
+
                     var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}");
                     var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}");
 

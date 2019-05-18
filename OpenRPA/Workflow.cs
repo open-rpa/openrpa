@@ -13,7 +13,7 @@ namespace OpenRPA
     {
         public string Xaml { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public List<workflowparameter> Parameters { get { return GetProperty<List<workflowparameter>>(); } set { SetProperty(value); } }
-        // public string FilePath { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public bool Serializable { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string FilePath
         {
@@ -21,9 +21,8 @@ namespace OpenRPA
             {
                 return System.IO.Path.Combine(Project.Path, Filename);
             }
-        }
+        }   
         public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
-
         [JsonIgnore]
         public System.Collections.ObjectModel.ObservableCollection<WorkflowInstance> Instances {
             get { if (_Instances == null) _Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>(); return _Instances; }
@@ -97,6 +96,7 @@ namespace OpenRPA
         }
         public async Task Save()
         {
+            //parseparameters();
             SaveFile();
             projectid = Project._id;
             if (!global.isConnected) return;
@@ -120,6 +120,18 @@ namespace OpenRPA
                 await global.webSocketClient.DeleteOne("openrpa", this._id);
             }
         }
+        public async Task RunPendingInstances()
+        {
+            var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{WorkflowId: '" + _id + "', state: 'idle'}");
+            foreach(var i in results)
+            {
+                i.Workflow = this;
+                WorkflowInstance.Instances.Add(i);
+                i.createApp();
+                await i.Run();
+            }
+            
+        }
         public string UniqueFilename()
         {
             string Filename = ""; string FilePath = "";
@@ -141,7 +153,6 @@ namespace OpenRPA
             }
             return Filename;
         }
-
         [Newtonsoft.Json.JsonIgnore]
         public System.Activities.Activity Activity
         {
@@ -159,12 +170,12 @@ namespace OpenRPA
             }
         }
         public void Run() { Run(new Dictionary<string, object>()); }
-        public void Run(Dictionary<string, object> Parameters)
+        public async void Run(Dictionary<string, object> Parameters)
         {
-            var instance = WorkflowInstance.Create(this, Parameters);
+            var instance = await WorkflowInstance.Create(this, Parameters);
             instance.idleOrComplete += onIdleOrComplete;
             Instances.Add(instance);
-            instance.Run();
+            await instance.Run();
         }
         public void onIdleOrComplete(WorkflowInstance instance)
         {

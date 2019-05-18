@@ -12,6 +12,10 @@ namespace OpenRPA.Interfaces
         {
             // System.Diagnostics.Trace.WriteLine(message, "Verbose");
         }
+        public static void Activity(string message)
+        {
+            System.Diagnostics.Trace.WriteLine(message, "Activity");
+        }
         public static void Debug(string message)
         {
             System.Diagnostics.Trace.WriteLine(message, "Debug");

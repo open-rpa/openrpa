@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,8 @@ namespace OpenRPA
         /// </summary>
         protected T GetProperty<T>([CallerMemberName] string propertyName = null)
         {
+            try
+            {
             if (propertyName == null)
             {
                 throw new ArgumentNullException(nameof(propertyName));
@@ -39,29 +42,42 @@ namespace OpenRPA
             object value;
             if (_backingFieldValues.TryGetValue(propertyName, out value))
             {
-                //if(value is JArray)
-                //{
-                //    //JObject rItemValueJson = (JObject)rItem.Value;
-                //    //Races rowsResult = item.Value<JObject>("races").ToObject<Races>();
-                //    return ((JArray)value).ToList<T>();
-                //}
                 return (T)value;
             }
             return default(T);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                throw;
+            }
         }
         /// <summary>
         /// Saves a property value to the internal backing field
         /// </summary>
         protected bool SetProperty<T>(T newValue, [CallerMemberName] string propertyName = null)
         {
-            if (propertyName == null)
+            try
             {
-                throw new ArgumentNullException(nameof(propertyName));
+                if (propertyName == null)
+                {
+                    throw new ArgumentNullException(nameof(propertyName));
+                }
+                if (IsEqual(GetProperty<T>(propertyName), newValue)) return false;
+                _backingFieldValues[propertyName] = newValue;
+                OnPropertyChanged(propertyName);
+                Type typeParameterType = typeof(T);
+                if(typeParameterType.Name.ToLower().Contains("readonly"))
+                {
+                    return true;
+                }
+                return true;
             }
-            if (IsEqual(GetProperty<T>(propertyName), newValue)) return false;
-            _backingFieldValues[propertyName] = newValue;
-            OnPropertyChanged(propertyName);
-            return true;
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                throw;
+            }
         }
         /// <summary>
         /// Sets a property value to the backing field

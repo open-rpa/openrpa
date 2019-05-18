@@ -40,9 +40,6 @@
                 </Button>
 
                 <Image Source="{Binding Image}"></Image>
-                <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
-                                    HintText="Drop activity" AllowedItemType="sa:Activity"
-                                      Grid.Row="1" />
             </StackPanel>
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">

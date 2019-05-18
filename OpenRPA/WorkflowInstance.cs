@@ -79,15 +79,16 @@ namespace OpenRPA
                 wfApp = new System.Activities.WorkflowApplication(Workflow.Activity, Parameters);
                 if (Workflow.Serializable)
                 {
-                    if (Config.local.localstate)
-                    {
-                        if (!System.IO.Directory.Exists(System.IO.Directory.GetCurrentDirectory() + "\\state")) System.IO.Directory.CreateDirectory(System.IO.Directory.GetCurrentDirectory() + "\\state");
-                        wfApp.InstanceStore = new Store.XMLFileInstanceStore(System.IO.Directory.GetCurrentDirectory() + "\\state");
-                    }
-                    else
-                    {
-                        wfApp.InstanceStore = new Store.OpenFlowInstanceStore();
-                    }
+                    //if (Config.local.localstate)
+                    //{
+                    //    if (!System.IO.Directory.Exists(System.IO.Directory.GetCurrentDirectory() + "\\state")) System.IO.Directory.CreateDirectory(System.IO.Directory.GetCurrentDirectory() + "\\state");
+                    //    wfApp.InstanceStore = new Store.XMLFileInstanceStore(System.IO.Directory.GetCurrentDirectory() + "\\state");
+                    //}
+                    //else
+                    //{
+                    //    wfApp.InstanceStore = new Store.OpenFlowInstanceStore();
+                    //}
+                    wfApp.InstanceStore = new Store.OpenFlowInstanceStore();
                 }
                 addwfApphandlers(wfApp);
             }
@@ -97,15 +98,16 @@ namespace OpenRPA
                 addwfApphandlers(wfApp);
                 if (Workflow.Serializable)
                 {
-                    if (Config.local.localstate)
-                    {
-                        if (!System.IO.Directory.Exists(System.IO.Directory.GetCurrentDirectory() + "\\state")) System.IO.Directory.CreateDirectory(System.IO.Directory.GetCurrentDirectory() + "\\state");
-                        wfApp.InstanceStore = new Store.XMLFileInstanceStore(System.IO.Directory.GetCurrentDirectory() + "\\state");
-                    }
-                    else
-                    {
-                        wfApp.InstanceStore = new Store.OpenFlowInstanceStore();
-                    }
+                    //if (Config.local.localstate)
+                    //{
+                    //    if (!System.IO.Directory.Exists(System.IO.Directory.GetCurrentDirectory() + "\\state")) System.IO.Directory.CreateDirectory(System.IO.Directory.GetCurrentDirectory() + "\\state");
+                    //    wfApp.InstanceStore = new Store.XMLFileInstanceStore(System.IO.Directory.GetCurrentDirectory() + "\\state");
+                    //}
+                    //else
+                    //{
+                    //    wfApp.InstanceStore = new Store.OpenFlowInstanceStore();
+                    //}
+                    wfApp.InstanceStore = new Store.OpenFlowInstanceStore();
                 }
                 wfApp.Load(new Guid(InstanceId));
             }
@@ -267,6 +269,11 @@ namespace OpenRPA
                 else
                 {
                     await global.webSocketClient.UpdateOne("openrpa_instances", this);
+                }
+                // Catch up if others havent been saved
+                foreach(var i in Instances.ToList())
+                {
+                    if (string.IsNullOrEmpty(_id)) await i.Save();
                 }
             }
             catch (Exception ex)

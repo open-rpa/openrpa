@@ -37,7 +37,7 @@ namespace OpenRPA.Net
                 return;
             }
             var messages = data.Split(1024).ToArray();
-            Log.Debug("Send (" + messages.Length.ToString() + ") " + command + " / " + data);
+            Log.Verbose("Send (" + messages.Length.ToString() + ") " + command + " / " + data);
             for (var i = 0; i < messages.Length; i++)
             {
                 var message = new SocketMessage(this, messages[i], messages.Length, i);

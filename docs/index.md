@@ -17,7 +17,8 @@ Supports remote management, and remote handling of state, projects and workflows
 OpenFlow can initiate workflows on robots and robots can initiate workflows in OpenFlow
 Robots have easy access to save any data and files centrally, all protected with access control lists, and support for EAS 265 bit encryption
 
-For shedulering and central management of state and workflows have a look at [OpenFlow](https://github.com/open-rpa/OpenFlow)
+For shedulering and central management of state and workflows, graphs and more have a look at [OpenFlow](https://github.com/open-rpa/OpenFlow)
+<img src="img/graphs.png" alt="Workflow graphs in OpenFlow"/>
 
 For now, the robot supports 
 

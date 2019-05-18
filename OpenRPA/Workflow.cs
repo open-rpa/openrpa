@@ -122,7 +122,9 @@ namespace OpenRPA
         }
         public async Task RunPendingInstances()
         {
-            var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{WorkflowId: '" + _id + "', state: 'idle'}");
+            var host = Environment.MachineName.ToLower();
+            var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
+            var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{WorkflowId: '" + _id + "', state: 'idle', fqdn: '" + fqdn + "'}");
             foreach(var i in results)
             {
                 i.Workflow = this;

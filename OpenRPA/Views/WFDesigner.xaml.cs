@@ -190,31 +190,34 @@ namespace OpenRPA.Views
         {
             Workflow.Serializable = true;
             Workflow.Parameters.Clear();
-            var parameters = GetParameters();
-            foreach (var prop in parameters)
+            if(!string.IsNullOrEmpty(Workflow.Xaml))
             {
-                var par = new workflowparameter() { name = prop.Name };
-                string baseTypeName = prop.Type.BaseType.FullName;
-                if (!prop.Type.IsSerializable2())
+                var parameters = GetParameters();
+                foreach (var prop in parameters)
                 {
-                    Log.Activity(string.Format("Name: {0}, Type: {1} is not serializable, therefor saving state will not be supported", prop.Name, prop.Type));
-                    Workflow.Serializable = false;
+                    var par = new workflowparameter() { name = prop.Name };
+                    string baseTypeName = prop.Type.BaseType.FullName;
+                    if (!prop.Type.IsSerializable2())
+                    {
+                        Log.Activity(string.Format("Name: {0}, Type: {1} is not serializable, therefor saving state will not be supported", prop.Name, prop.Type));
+                        Workflow.Serializable = false;
+                    }
+                    if (baseTypeName == "System.Activities.InArgument")
+                    {
+                        par.direction = workflowparameterdirection.@in;
+                    }
+                    if (baseTypeName == "System.Activities.InOutArgument")
+                    {
+                        par.direction = workflowparameterdirection.inout;
+                    }
+                    if (baseTypeName == "System.Activities.OutArgument")
+                    {
+                        par.direction = workflowparameterdirection.@out;
+                    }
+                    par.type = prop.Type.GenericTypeArguments[0].FullName;
+                    Log.Activity(string.Format("Name: '{0}', Type: {1}", prop.Name, prop.Type));
+                    Workflow.Parameters.Add(par);
                 }
-                if (baseTypeName == "System.Activities.InArgument")
-                {
-                    par.direction = workflowparameterdirection.@in;
-                }
-                if (baseTypeName == "System.Activities.InOutArgument")
-                {
-                    par.direction = workflowparameterdirection.inout;
-                }
-                if (baseTypeName == "System.Activities.OutArgument")
-                {
-                    par.direction = workflowparameterdirection.@out;
-                }
-                par.type = prop.Type.GenericTypeArguments[0].FullName;
-                Log.Activity(string.Format("Name: '{0}', Type: {1}", prop.Name, prop.Type));
-                Workflow.Parameters.Add(par);
             }
             if (Workflow.Serializable == true)
             {

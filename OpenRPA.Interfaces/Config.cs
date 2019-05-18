@@ -14,7 +14,6 @@ namespace OpenRPA.Interfaces
         public string username = "";
         public byte[] password;
         public byte[] entropy;
-        public bool localstate = true;
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)

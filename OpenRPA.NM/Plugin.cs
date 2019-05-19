@@ -1,6 +1,7 @@
 ﻿using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.Selector;
 using System;
+using System.Activities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,29 +11,137 @@ namespace OpenRPA.NM
 {
     public class Plugin : IPlugin
     {
-        public string Name => throw new NotImplementedException();
+        public NMElement lastElement { get; set; }
+        public string Name => "NM";
+        public string Status => (NMHook.connected ? "online" : "offline");
 
         public event Action<IPlugin, IRecordEvent> OnUserAction;
 
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
-            throw new NotImplementedException();
+            var result = NMSelector.GetElementsWithuiSelector(selector as NMSelector, fromElement, maxresults);
+            return result;
+        }
+        public static treeelement[] _GetRootElements(Selector anchor)
+        {
+            var rootelements = new List<treeelement>();
+
+            NMHook.reloadtabs();
+            var tab = NMHook.tabs.Where(x => x.highlighted == true && x.browser == "chrome").FirstOrDefault();
+            if (tab == null)
+            {
+                tab = NMHook.tabs.Where(x => x.browser == "chrome").FirstOrDefault();
+            }
+            // getelement.data = "getdom";
+            var getelement = new NativeMessagingMessage("getelement");
+            getelement.browser = "chrome";
+            getelement.tabid = tab.id;
+            getelement.xPath = "/html";
+            NativeMessagingMessage result = null;
+            try
+            {
+                result = NMHook.sendMessageResult(getelement, true);
+            }
+            catch (Exception)
+            {
+            }
+            if (result != null && result.result != null && result.results == null)
+            {
+                result.results = new NativeMessagingMessage[] { result };
+            }
+            if (result != null && result.results != null && result.results.Count() > 0)
+            {
+                foreach (var res in result.results)
+                {
+                    if (res.result != null)
+                    {
+                        //var html = new HtmlElement(getelement.xPath, getelement.cssPath, res.tabid, res.frameId, res.result);
+                        var html = new NMElement(res);
+                        rootelements.Add(new NMTreeElement(null, true, html));
+                    }
+                }
+                //result = result.results[0];
+            }
+            return rootelements.ToArray();
         }
 
         public treeelement[] GetRootElements(Selector anchor)
         {
-            throw new NotImplementedException();
+            return Plugin._GetRootElements(anchor);
         }
 
         public Selector GetSelector(Selector anchor, treeelement item)
         {
-            throw new NotImplementedException();
+            var nmitem = item as NMTreeElement;
+            NMSelector nmanchor = anchor as NMSelector;
+            if (nmitem == null && anchor != null)
+            {
+                nmanchor = new NMSelector(anchor.ToString());
+            }
+            return new NMSelector(nmitem.NMElement, nmanchor, true);
         }
 
         public void Initialize()
         {
             NMHook.registreChromeNativeMessagingHost(false);
             NMHook.registreffNativeMessagingHost(false);
+            NMHook.checkForPipes(true, false);
+            NMHook.onMessage += onMessage;
+            NMHook.Connected += omConnected;        }
+
+        private void omConnected(string obj)
+        {
+            Task.Run(() =>
+            {
+                var test = _GetRootElements(null);
+            });
+        }
+
+        private void onMessage(NativeMessagingMessage message)
+        {
+            if (message.uiy > 0 && message.uix > 0 && message.uiwidth > 0 && message.uiheight > 0)
+            {
+                //int x = message.uix;
+                //int y = message.uiy;
+                //int width = message.uiwidth;
+                //int height = message.uiheight;
+                //x = x + 7;
+                //y = y - 7;
+                Console.WriteLine("{0} {1},{2} {3},{4} - {5} ", message.functionName, message.uix, message.uiy, message.uiwidth, message.uiheight,  message.xPath);
+
+                if (!string.IsNullOrEmpty(message.data))
+                {
+                    lastElement = new NMElement(message);
+                    //if (highlighter != null) highlighter.setMessage(message.xPath + Environment.NewLine + html.tagName + " " + html.Name + Environment.NewLine + string.Format("{0},{1},{2},{3}", x, y, width, height));
+                }
+                else
+                {
+                    lastElement = new NMElement(message);
+                    //if (highlighter != null) highlighter.setMessage(message.xPath + Environment.NewLine + string.Format("{0},{1},{2},{3}", x, y, width, height));
+                }
+                //if (highlighter != null) highlighter.moveto(x, y, width, height);
+            }
+
+            if (message.functionName == "click")
+            {
+                var getelement = new NativeMessagingMessage("getelement");
+                //getelement.tabid = message.tabid;
+                getelement.cssPath = message.cssPath;
+                getelement.xPath = message.xPath;
+                NativeMessagingMessage subresult = null;
+                //if (message.browser == "chrome") subresult = rpaactivities.nm.nmhook.sendMessageChromeResult(getelement, true);
+                //if (message.browser == "ff") subresult = rpaactivities.nm.nmhook.sendMessageFFResult(getelement, true);
+                if (subresult == null)
+                {
+                    Console.WriteLine("getelement returned null???");
+                    return;
+                }
+                Console.WriteLine(getelement.messageid + " " + getelement.functionName + " " + subresult.messageid + " " + subresult.functionName);
+                Console.WriteLine(subresult.cssPath + " " + subresult.xPath);
+                //rpaactivities.nm.nmhook.sendMessageChromeResult(getelement);
+                //Console.WriteLine(getelement.messageid + " " + getelement.functionName);
+
+            }
         }
 
         public void LaunchBySelector(Selector selector, TimeSpan timeout)
@@ -46,7 +155,28 @@ namespace OpenRPA.NM
 
         public bool parseUserAction(ref IRecordEvent e)
         {
-            throw new NotImplementedException();
+            if (lastElement == null) return false;
+            if (e.UIElement == null) return false;
+
+            if (e.UIElement.ProcessId < 1) return false;
+            var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
+            if (p.ProcessName.ToLower() != "chrome") return false;
+
+
+
+            var selector = new NMSelector(lastElement, null, true);
+            var a = new GetElement { DisplayName = lastElement.id + " " + lastElement.type + " " + lastElement.Name };
+            a.Selector = selector.ToString();
+            a.Image = lastElement.ImageString();
+            a.MaxResults = 1;
+
+            e.a = new GetElementResult(a);
+            e.SupportInput = lastElement.SupportInput;
+            e.ClickHandled = true;
+            lastElement.Click();
+            return true;
+
+
         }
 
         public void Start()
@@ -57,4 +187,22 @@ namespace OpenRPA.NM
         {
         }
     }
+    public class GetElementResult : IBodyActivity
+    {
+        public GetElementResult(GetElement activity)
+        {
+            Activity = activity;
+        }
+        public Activity Activity { get; set; }
+        public void addActivity(Activity a, string Name)
+        {
+            var aa = new ActivityAction<NMElement>();
+            var da = new DelegateInArgument<NMElement>();
+            da.Name = Name;
+            aa.Handler = a;
+            ((GetElement)Activity).Body = aa;
+            aa.Argument = da;
+        }
+    }
+
 }

@@ -161,22 +161,30 @@ namespace NamedPipeWrapper
 
         private void ListenSync()
         {
-            // Get the name of the data pipe that should be used from now on by this NamedPipeClient
-            var handshake = PipeClientFactory.Connect<string, string>(_pipeName,_serverName);
-            var dataPipeName = handshake.ReadObject();
-            handshake.Close();
+            try
+            {
+                // Get the name of the data pipe that should be used from now on by this NamedPipeClient
+                var handshake = PipeClientFactory.Connect<string, string>(_pipeName, _serverName);
+                var dataPipeName = handshake.ReadObject();
+                handshake.Close();
 
-            // Connect to the actual data pipe
-            var dataPipe = PipeClientFactory.CreateAndConnectPipe(dataPipeName,_serverName);
-            // Create a Connection object for the data pipe
-            _connection = ConnectionFactory.CreateConnection<TRead, TWrite>(dataPipe);
-            Connected?.Invoke(_connection);
-            _connection.Disconnected += OnDisconnected;
-            _connection.ReceiveMessage += OnReceiveMessage;
-            _connection.Error += ConnectionOnError;
-            _connection.Open();
+                // Connect to the actual data pipe
+                var dataPipe = PipeClientFactory.CreateAndConnectPipe(dataPipeName, _serverName);
+                // Create a Connection object for the data pipe
+                _connection = ConnectionFactory.CreateConnection<TRead, TWrite>(dataPipe);
+                Connected?.Invoke(_connection);
+                _connection.Disconnected += OnDisconnected;
+                _connection.ReceiveMessage += OnReceiveMessage;
+                _connection.Error += ConnectionOnError;
+                _connection.Open();
 
-            _connected.Set();
+                _connected.Set();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine(ex.ToString(), "Error");
+                throw;
+            }
         }
 
         private void OnDisconnected(NamedPipeConnection<TRead, TWrite> connection)

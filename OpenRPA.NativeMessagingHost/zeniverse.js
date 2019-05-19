@@ -285,6 +285,9 @@ if (typeof document.zeniverse === 'undefined') {
                 message.cssPath = UTILS.cssPath(targetElement);
                 message.xPath = UTILS.xPath(targetElement, true);
                 message.zn_id = zeniverse.getuniqueid(targetElement);
+                message.c = targetElement.childNodes.length;
+                message.result = zeniverse.mapDOM(targetElement, true);
+                // message.result = zeniverse.mapDOM(ele, true);
                 //console.log('zn_id: ', message.zn_id);
                 //if (action === 'mousemove') {
                 //    console.log(message.xPath);
@@ -442,9 +445,6 @@ if (typeof document.zeniverse === 'undefined') {
                                         object["content"].push(nodeList[i].nodeValue);
                                     }
                                 }
-                                //if (object["tagName"] !== 'STYLE' && object["tagName"] !== 'SCRIPT' && object["tagName"] !== 'HEAD') {
-                                //    
-                                //}
                             } else {
                                 if (ident < maxiden) {
                                     object["content"].push({});
@@ -465,6 +465,11 @@ if (typeof document.zeniverse === 'undefined') {
                         }
                         var attributecount = 0;
                         //object["attributes"] = {};
+                        
+                        if (element.attributes["zn_id"] == undefined || element.attributes["zn_id"] == null) {
+                            var zn_id = zeniverse.getuniqueid(element);
+                        }
+                        object["zn_id"] = element.attributes["zn_id"].nodeValue;
                         for (var r = 0; r < element.attributes.length; r++) {
                             var name = element.attributes[r].nodeName;
                             var value = element.attributes[r].nodeValue;

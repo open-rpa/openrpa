@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using NamedPipeWrapper;
+using Newtonsoft.Json;
 using OpenRPA.Interfaces;
+using OpenRPA.NM.pipe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,36 +15,225 @@ namespace OpenRPA.NM
         public static event Action<NativeMessagingMessage> onMessage;
         public static event Action<string> onDisconnected;
         public static event Action<string> Connected;
+        private static NamedPipeClientAsync<NativeMessagingMessage> chromepipe = null;
+        private static NamedPipeClientAsync<NativeMessagingMessage> ffpipe = null;
+        public const string PIPE_NAME = "openrpa_nativebridge";
+        public static bool chromeconnected
+        {
+            get
+            {
+                if (chromepipe == null) return false;
+                return chromepipe.isConnected;
+            }
+        }
+        public static bool ffconnected
+        {
+            get
+            {
+                if (ffpipe == null) return false;
+                return ffpipe.isConnected;
+            }
+        }
+        public static bool connected
+        {
+            get
+            {
+                if (chromeconnected || ffconnected) return true;
+                return false;
+            }
+        }
+        public static void checkForPipes(bool chrome, bool ff)
+        {
+            registreChromeNativeMessagingHost(false);
+            registreffNativeMessagingHost(false);
+            if (chromepipe == null && chrome)
+            {
+                chromepipe = new NamedPipeClientAsync<NativeMessagingMessage>(PIPE_NAME + "_chrome");
+                chromepipe.ServerMessage += Client_OnReceivedMessage;
+                chromepipe.Disconnected += () => { onDisconnected?.Invoke("chrome"); };
+                chromepipe.Connected += () => { Connected?.Invoke("chrome"); };
+                chromepipe.Error += (e) => { Log.Debug(e.ToString()); };
+                chromepipe.Start();
+                //chromepipe.OnReceivedMessage += Client_OnReceivedMessage;
+                //chromepipe.onDisconnected += () => { onDisconnected?.Invoke(); };
+                //chromepipe.onConnected += (pipe) => { FoundBrowser?.Invoke("chrome"); };
+            }
+            if (ffpipe == null && ff)
+            {
+                ffpipe = new NamedPipeClientAsync<NativeMessagingMessage>(PIPE_NAME + "_ff");
+                ffpipe.ServerMessage += Client_OnReceivedMessage;
+                ffpipe.Disconnected += () => { onDisconnected?.Invoke("ff"); };
+                ffpipe.Connected += () => { Connected?.Invoke("ff"); };
+                ffpipe.Error += (e) => { Log.Debug(e.ToString()); };
+                ffpipe.Start();
+                //ffpipe = new rpa.pipe.NamedPipeClient<NativeMessagingMessage>(PIPE_NAME + "_ff", true);
+                //ffpipe.OnReceivedMessage += Client_OnReceivedMessage;
+                //ffpipe.onDisconnected += () => { onDisconnected?.Invoke(); };
+                //ffpipe.onConnected += (pipe) => { FoundBrowser?.Invoke("ff"); };
+            }
+        }
+        public static List<int> windows = new List<int>();
+        public static List<NativeMessagingMessageTab> tabs = new List<NativeMessagingMessageTab>();
+        private static void Client_OnReceivedMessage(NativeMessagingMessage message)
+        {
+            try
+            {
+                NativeMessagingMessage msg;
+                try
+                {
+                    msg = message;
+                    //msg = JsonConvert.DeserializeObject<NativeMessagingMessage>(e.Message);
+                    if (string.IsNullOrEmpty(message.functionName) || message.functionName == "ping") return;
+                }
+                catch (Exception)
+                {
+                    return;
+                }
+                if (msg.functionName == "windowcreated" && !windows.Contains(msg.windowId)) windows.Add(msg.windowId);
+                if (msg.functionName == "windowremoved" && windows.Contains(msg.windowId)) windows.Remove(msg.windowId);
+                if (msg.tab != null)
+                {
+                    if (msg.functionName == "tabcreated")
+                    {
+                        var tab = tabs.Where(x => x.id == msg.tab.id && x.browser == msg.browser).FirstOrDefault();
+                        if (tab != null) tabs.Remove(tab);
+                        msg.tab.browser = msg.browser;
+                        Log.Debug(msg.browser + " " + msg.functionName + " " + msg.tab.id + " " + msg.tab.status);
+                        tabs.Add(msg.tab);
+                    }
+                    if (msg.functionName == "tabremoved" || msg.functionName == "tabupdated")
+                    {
+                        var tab = tabs.Where(x => x.id == msg.tab.id && x.browser == msg.browser).FirstOrDefault();
+                        if (tab != null) tabs.Remove(tab);
+                        if (msg.functionName == "tabupdated")
+                        {
+                            msg.tab.browser = msg.browser;
+                            tabs.Add(msg.tab);
+                            Log.Debug(msg.browser + " " + msg.functionName + " " + msg.tab.id + " " + msg.tab.status);
+                        }
+                        else
+                        {
+                            Log.Debug(msg.browser + " " + msg.functionName + " " + msg.tab.id);
+                        }
 
-        //public static List<rpa.pipe.NamedPipeClient> pipeclients = new List<rpa.pipe.NamedPipeClient>();
-        //private static NamedPipeClientAsync<NativeMessagingMessage> chromepipe = null;
-        //private static NamedPipeClientAsync<NativeMessagingMessage> ffpipe = null;
-        public const string PIPE_NAME = "zeniverse_nativebridge";
+                    }
+                }
 
-        //public static bool chromeconnected
-        //{
-        //    get
-        //    {
-        //        if (chromepipe == null) return false;
-        //        return chromepipe.isConnected;
-        //    }
-        //}
-        //public static bool ffconnected
-        //{
-        //    get
-        //    {
-        //        if (ffpipe == null) return false;
-        //        return ffpipe.isConnected;
-        //    }
-        //}
-        //public static bool connected
-        //{
-        //    get
-        //    {
-        //        if (chromeconnected || ffconnected) return true;
-        //        return false;
-        //    }
-        //}
+                if (msg.functionName == "tabactivated")
+                {
+                    foreach (var tab in tabs.Where(x => x.browser == msg.browser && x.windowId == msg.windowId))
+                    {
+                        tab.highlighted = (tab.id == msg.tabid);
+                    }
+                }
+                Task.Run(() => { onMessage?.Invoke(msg); });
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+        }
+        async public static Task<NativeMessagingMessage> sendMessageResultAsync(NativeMessagingMessage message, bool throwError)
+        {
+            NativeMessagingMessage result = null;
+            if (message.browser == "ff")
+            {
+                if (ffconnected)
+                {
+                    result = await ffpipe.MessageAsync(message, throwError);
+                }
+            }
+            else
+            {
+                if (chromeconnected)
+                {
+                    result = await chromepipe.MessageAsync(message, throwError);
+                }
+            }
+            return result;
+        }
+        public static NativeMessagingMessage sendMessageResult(NativeMessagingMessage message, bool throwError)
+        {
+            NativeMessagingMessage result = null;
+            if (message.browser == "ff")
+            {
+                if (ffconnected)
+                {
+                    result = ffpipe.Message(message, throwError);
+                }
+            }
+            else
+            {
+                if (chromeconnected)
+                {
+                    result = chromepipe.Message(message, throwError);
+                }
+            }
+            return result;
+        }
+        public static void reloadtabs()
+        {
+            tabs.Clear();
+            NativeMessagingMessage result = null;
+            NativeMessagingMessage message = new NativeMessagingMessage("refreshtabs");
+            result = sendMessageChromeResult(message, true);
+            result = sendMessageFFResult(message, true);
+        }
+
+        public static NMElement[] getElement(int tabid, string browser, string xPath)
+        {
+            var results = new List<NMElement>();
+            var getelement = new NativeMessagingMessage("getelement");
+            getelement.browser = browser;
+            getelement.tabid = tabid;
+            getelement.xPath = xPath;
+            NativeMessagingMessage result = null;
+            try
+            {
+                result = NMHook.sendMessageResult(getelement, true);
+            }
+            catch (Exception)
+            {
+            }
+            if (result != null && result.result != null && result.results == null)
+            {
+                result.results = new NativeMessagingMessage[] { result };
+            }
+            if (result != null && result.results != null && result.results.Count() > 0)
+            {
+                foreach (var res in result.results)
+                {
+                    if (res.result != null)
+                    {
+                        //var html = new HtmlElement(getelement.xPath, getelement.cssPath, res.tabid, res.frameId, res.result);
+                        var html = new NMElement(res);
+                        results.Add(html);
+                    }
+                }
+                //result = result.results[0];
+            }
+            return results.ToArray();
+        }
+
+
+        public static NativeMessagingMessage sendMessageChromeResult(NativeMessagingMessage message, bool throwError)
+        {
+            NativeMessagingMessage result = null;
+            if (chromeconnected)
+            {
+                result = chromepipe.Message(message, throwError);
+            }
+            return result;
+        }
+        public static NativeMessagingMessage sendMessageFFResult(NativeMessagingMessage message, bool throwError)
+        {
+            NativeMessagingMessage result = null;
+            if (ffconnected)
+            {
+                result = ffpipe.Message(message, throwError);
+            }
+            return result;
+        }
 
         internal static Func<string, bool> hklmExists = delegate (string KeyLocation)
         {
@@ -90,10 +281,10 @@ namespace OpenRPA.NM
                 }
                 //if(!regKey(@"HKEY_CURRENT_USER\stuff  ...  ", "value"))
                 var basepath = System.IO.Directory.GetCurrentDirectory();
-                var filename = System.IO.Path.Combine(basepath, "chromemanifest.json");
+                var filename = System.IO.Path.Combine(basepath, "nm", "chromemanifest.json");
                 string json = System.IO.File.ReadAllText(filename);
                 dynamic jsonObj = JsonConvert.DeserializeObject(json);
-                jsonObj["path"] = System.IO.Path.Combine(basepath, "OpenRPA.NativeMessagingHost.exe");
+                jsonObj["path"] = System.IO.Path.Combine(basepath, "nm", "OpenRPA.NativeMessagingHost.exe");
                 string output = JsonConvert.SerializeObject(jsonObj, Formatting.Indented);
                 System.IO.File.WriteAllText(filename, output);
 
@@ -125,10 +316,10 @@ namespace OpenRPA.NM
                 }
 
                 var basepath = System.IO.Directory.GetCurrentDirectory();
-                var filename = System.IO.Path.Combine(basepath, "ffmanifest.json");
+                var filename = System.IO.Path.Combine(basepath, "nm", "ffmanifest.json");
                 string json = System.IO.File.ReadAllText(filename);
                 dynamic jsonObj = JsonConvert.DeserializeObject(json);
-                jsonObj["path"] = System.IO.Path.Combine(basepath, "OpenRPA.NativeMessagingHost.exe");
+                jsonObj["path"] = System.IO.Path.Combine(basepath, "nm", "OpenRPA.NativeMessagingHost.exe");
                 string output = JsonConvert.SerializeObject(jsonObj, Formatting.Indented);
                 System.IO.File.WriteAllText(filename, output);
 

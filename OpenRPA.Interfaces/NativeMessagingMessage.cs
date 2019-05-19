@@ -49,6 +49,7 @@ namespace OpenRPA.Interfaces
         public int uiwidth { get; set; } = -1;
         public int uiheight { get; set; } = -1;
         public string data { get; set; }
-
+        public int c { get; set; }
+        
     }
 }

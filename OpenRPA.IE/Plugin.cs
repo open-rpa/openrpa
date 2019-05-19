@@ -61,6 +61,8 @@ namespace OpenRPA.IE
 
         public event Action<IPlugin, IRecordEvent> OnUserAction;
         public string Name { get => "IE"; }
+        public string Status => _status;
+        private string _status = "offline";
         public void Start()
         {
             InputDriver.Instance.OnMouseUp += OnMouseUp;

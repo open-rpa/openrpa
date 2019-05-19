@@ -386,13 +386,13 @@
       <Project>{481bd5a1-5e8d-42a9-bd31-78becfaf15f3}</Project>
       <Name>OpenRPA.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OpenRPA.Java\OpenRPA.Java.csproj">
-      <Project>{f811cd0f-01e8-488d-bf80-c788c2b28b27}</Project>
-      <Name>OpenRPA.Java</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj">
       <Project>{84971661-e141-410f-8e9e-ade610d1961a}</Project>
       <Name>OpenRPA.Net</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenRPA.NM\OpenRPA.NM.csproj">
+      <Project>{0217c47b-55fb-473c-b579-38d08d9949cd}</Project>
+      <Name>OpenRPA.NM</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenRPA.Windows\OpenRPA.Windows.csproj">
       <Project>{22575d87-a99d-4706-b022-c7e575314a94}</Project>

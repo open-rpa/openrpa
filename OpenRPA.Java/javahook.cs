@@ -87,7 +87,7 @@ namespace OpenRPA.Java
                 try
                 {
                     var _childProcess = new System.Diagnostics.Process();
-                    _childProcess.StartInfo.FileName = "OpenRPA.JavaBridge.exe";
+                    _childProcess.StartInfo.FileName = "java\\OpenRPA.JavaBridge.exe";
                     _childProcess.StartInfo.UseShellExecute = false;
                     if (!_childProcess.Start())
                     {

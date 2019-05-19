@@ -79,6 +79,9 @@ namespace OpenRPA.Windows
             return new WindowsSelector(windowsitem.RawElement, winanchor, true);
         }
         public string Name { get => "Windows"; }
+        public string Status => _status;
+        private string _status = "offline";
+
         public event Action<IPlugin, IRecordEvent> OnUserAction;
         public void Start()
         {

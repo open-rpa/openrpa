@@ -72,7 +72,19 @@ namespace OpenRPA.NM
         {
             if (string.IsNullOrEmpty(_chromeelement)) return;
             {
-                var c = JObject.Parse(_chromeelement);
+                JObject c = null;
+                try
+                {
+                    c = JObject.Parse(_chromeelement);
+                }
+                catch (Exception)
+                {
+                }
+                if(c == null)
+                {
+                    var a = JArray.Parse(_chromeelement);
+                }
+                
                 chromeelement = new Dictionary<string, object>();
                 foreach (var kp in c )
                 {

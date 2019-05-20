@@ -1,4 +1,5 @@
-﻿using OpenRPA.Interfaces;
+﻿using Newtonsoft.Json.Linq;
+using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.Selector;
 using System;
 using System.Collections.Generic;
@@ -116,7 +117,7 @@ namespace OpenRPA.NM
             {
                 NativeMessagingMessage subresult = null;
 
-                var getelement = new NativeMessagingMessage("getelement");
+                var getelement = new NativeMessagingMessage("getelements");
                 getelement.xPath = xpath;
                 getelement.cssPath = cssselector;
                 subresult = NMHook.sendMessageResult(getelement, false);
@@ -124,7 +125,18 @@ namespace OpenRPA.NM
                 {
                     if (b.cssPath == "true" || b.xPath == "true")
                     {
-                        results.Add(new NMElement(b));
+                        var data = b.result;
+                        var arr = JArray.Parse(data);
+                        foreach(var _e in arr)
+                        {
+                            var json = _e.ToString();
+                            var subsubresult = Newtonsoft.Json.JsonConvert.DeserializeObject<NativeMessagingMessage>(json);
+                            subsubresult.tabid = b.tabid;
+                            subsubresult.tab = b.tab;
+                            results.Add(new NMElement(subsubresult));
+                        }
+
+                        
                     }
                 }
             }

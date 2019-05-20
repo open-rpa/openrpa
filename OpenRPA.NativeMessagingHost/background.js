@@ -79,8 +79,8 @@ async function runtimeOnMessage(sender, msg, fnResponse) {
         sender.uix += currentWindow.left;
         sender.uiy += currentWindow.top;
         console.log("after: " + sender.uix + "," + sender.uiy);
-        sender.uix = sender.uix + 7;
-        sender.uiy = sender.uiy - 7;
+        sender.uix += 7;
+        sender.uiy -= 7;
 
         // https://docs.microsoft.com/en-us/dotnet/framework/winforms/controls/how-to-size-a-windows-forms-label-control-to-fit-its-contents
         var message = sender;
@@ -201,10 +201,10 @@ async function portOnMessage(message) {
                 var currentWindow = await windowsgetCurrent();
                 if (result.uix !== undefined && result.uiy !== undefined) {
                     if (!('id' in currentWindow)) return;
-                    result.uix = result.uix + currentWindow.left;
-                    result.uiy = result.uiy + currentWindow.top;
-                    //result.uix = result.uix + 7;
-                    //result.uiy = result.uiy - 7;
+                    result.uix += currentWindow.left;
+                    result.uiy += currentWindow.top;
+                    //result.uix += 7;
+                    //result.uiy -= 7;
 
                     console.log('sendMessage reply with uix and uiy ' + result.functionName + ' for tab ' + result.tabid + ' - ' + result.messageid);
                     port.postMessage(JSON.parse(JSON.stringify(result)));
@@ -260,13 +260,33 @@ async function portOnMessage(message) {
                     messageSent(tabresult);
                 }
                 else {
-                    if (result.uix && result.uiy) {
-                        var currentWindow = await windowsget(message.windowId);
-                        if (!('id' in currentWindow)) return;
-                        result.uix = result.uix + currentWindow.left;
-                        result.uiy = result.uiy + currentWindow.top;
-                        result.uix = result.uix + 7;
-                        result.uiy = result.uiy - 7;
+                    var currentWindow = await windowsget(message.windowId);
+                    if (result.result !== null && result.result !== undefined) {
+                        try {
+                            var arr = JSON.parse(result.result);
+                            if (Array.isArray(arr)) {
+                                for (var i = 0; i < arr.length; i++) {
+                                    arr[i].uix += currentWindow.left;
+                                    arr[i].uiy += currentWindow.top;
+                                    arr[i].uix += 7;
+                                    arr[i].uiy -= 7;
+
+                                }
+                            }
+                            result.result = JSON.stringify(arr);
+                        } catch (e) {
+                            console.log(e);
+                        }
+                    }
+                    console.log(result.result);
+                    if (result.result !== undefined && result.result !== null && ('id' in currentWindow)) {
+
+                    }
+                    if (result.uix && result.uiy && ('id' in currentWindow)) {
+                        result.uix += currentWindow.left;
+                        result.uiy += currentWindow.top;
+                        result.uix += 7;
+                        result.uiy -= 7;
 
                         console.log('sendMessage log reply ' + result.functionName + ' from Tab: ' + result.tabid + ' Frame: ' + result.frameId + ' messageid: ' + result.messageid);
                         messageSent(result);

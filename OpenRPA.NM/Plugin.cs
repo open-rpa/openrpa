@@ -17,7 +17,12 @@ namespace OpenRPA.NM
         public event Action<IPlugin, IRecordEvent> OnUserAction;
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
-            var result = NMSelector.GetElementsWithuiSelector(selector as NMSelector, fromElement, maxresults);
+            NMSelector nmselector = selector as NMSelector;
+            if (nmselector == null)
+            {
+                nmselector = new NMSelector(selector.ToString());
+            }
+            var result = NMSelector.GetElementsWithuiSelector(nmselector, fromElement, maxresults);
             return result;
         }
         public static treeelement[] _GetRootElements(Selector anchor)

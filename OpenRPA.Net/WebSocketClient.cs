@@ -53,6 +53,7 @@ namespace OpenRPA.Net
                     src = new CancellationTokenSource();
                 }
                 if(ws == null) { ws = new ClientWebSocket();  src = new CancellationTokenSource(); }
+                if (ws.State == WebSocketState.Connecting || ws.State == WebSocketState.Open) return;
                 await ws.ConnectAsync(new Uri(url), src.Token);
                 Log.Information("Connected to " + url);
                 Task receiveTask = Task.Run(async () => await receiveLoop(), src.Token);

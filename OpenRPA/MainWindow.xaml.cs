@@ -52,6 +52,8 @@ namespace OpenRPA
             System.Diagnostics.Trace.Listeners.Add(tracing);
             Console.SetOut(new DebugTextWriter());
 
+            lvDataBinding.ItemsSource = Plugins.recordPlugins;
+
         }
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
@@ -478,9 +480,9 @@ namespace OpenRPA
             var p = Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
             p.OnUserAction -= OnUserAction;
             p.Stop();
-            var p2 = Plugins.recordPlugins.Where(x => x.Name == "Java").First();
-            p2.OnUserAction -= OnUserAction;
-            p2.Stop();
+            //var p2 = Plugins.recordPlugins.Where(x => x.Name == "Java").First();
+            //p2.OnUserAction -= OnUserAction;
+            //p2.Stop();
             //foreach (var p in Plugins.recordPlugins)
             //{
             //    p.OnUserAction -= OnUserAction;
@@ -569,7 +571,7 @@ namespace OpenRPA
             DataContext = this;
             if (!string.IsNullOrEmpty(Config.local.wsurl))
             {
-                LabelStatusBar.Content = "Connecting to " + Config.local.wsurl;
+                // LabelStatusBar.Content = "Connecting to " + Config.local.wsurl;
             }
             Plugins.loadPlugins(Extensions.projectsDirectory);
             Task.Run(() =>
@@ -606,7 +608,7 @@ namespace OpenRPA
             Log.Information("Disconnected " + reason);
             AutomationHelper.syncContext.Post(o =>
             {
-                LabelStatusBar.Content = "Disconnected from " + Config.local.wsurl + " reason " + reason;
+                // LabelStatusBar.Content = "Disconnected from " + Config.local.wsurl + " reason " + reason;
             }, null);
             await Task.Delay(1000);
             if(autoReconnect) _ = global.webSocketClient.Connect();
@@ -616,7 +618,7 @@ namespace OpenRPA
         {
             AutomationHelper.syncContext.Post(async o =>
             {
-                LabelStatusBar.Content = "Connected to " + Config.local.wsurl;
+                // LabelStatusBar.Content = "Connected to " + Config.local.wsurl;
                 TokenUser user = null;
                 while (user == null)
                 {
@@ -656,6 +658,8 @@ namespace OpenRPA
                     }
                 }
                 this.Show();
+                lvDataBinding.ItemsSource = Plugins.recordPlugins;
+
                 try
                 {
                     var host = Environment.MachineName.ToLower();
@@ -663,6 +667,8 @@ namespace OpenRPA
                     await global.webSocketClient.RegisterQueue("robot." + Config.local.username);
                     await global.webSocketClient.RegisterQueue("robot." + fqdn);
 
+
+                    if (Projects.Count != 0) return;
 
                     var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}");
                     var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}");
@@ -724,7 +730,7 @@ namespace OpenRPA
                     Log.Error(ex, "");
                     MessageBox.Show("WebSocketClient_OnOpen::Sync projects " + ex.Message);
                 }
-                LabelStatusBar.Content = "Connected to " + Config.local.wsurl + " as " + user.name;
+                // LabelStatusBar.Content = "Connected to " + Config.local.wsurl + " as " + user.name;
                 if (Projects.Count > 0)
                 {
                     onOpenProject(Projects[0]);

@@ -1,0 +1,7 @@
+{
+    "name": "com.zenamic.msg",
+    "description": "Zenamic messaging host",
+    "type": "stdio",
+    "allowed_extensions": [ "info@zenamic.dk" ],
+    "path": "C:\\code\\openrpa\\bin\\rpaNativeMessagingHost.exe"
+}

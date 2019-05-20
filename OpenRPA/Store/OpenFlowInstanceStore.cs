@@ -45,7 +45,7 @@ namespace OpenRPA.Store
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Trace.WriteLine("ZeniverseInstanceStore.save: " + ex.Message);
+                    System.Diagnostics.Trace.WriteLine("OpenFlowInstanceStore.save: " + ex.Message);
                 }
             }
         }
@@ -63,13 +63,13 @@ namespace OpenRPA.Store
                 //var results = global.webSocketClient.Query< WorkflowInstanceState>("openrpa_instances", "{instance: '" + instanceId.ToString() + "'}").Result;
                 //if (results == null)
                 //{
-                //    System.Diagnostics.Trace.WriteLine("Cannot resume workflow instanse with id " + instanceId.ToString() + " it has no state in zeniverse");
-                //    throw new ArgumentException("Cannot resume workflow instanse with id " + instanceId.ToString() + " it has no state in zeniverse");
+                //    System.Diagnostics.Trace.WriteLine("Cannot resume workflow instanse with id " + instanceId.ToString() + " it has no state in OpenFlow");
+                //    throw new ArgumentException("Cannot resume workflow instanse with id " + instanceId.ToString() + " it has no state in OpenFlow");
                 //}
                 //if (results.Count() == 0)
                 //{
-                //    System.Diagnostics.Trace.WriteLine("Cannot resume workflow instanse with id " + instanceId.ToString() + " it has no state in zeniverse");
-                //    throw new ArgumentException("Cannot resume workflow instanse with id " + instanceId.ToString() + " it has no state in zeniverse");
+                //    System.Diagnostics.Trace.WriteLine("Cannot resume workflow instanse with id " + instanceId.ToString() + " it has no state in OpenFlow");
+                //    throw new ArgumentException("Cannot resume workflow instanse with id " + instanceId.ToString() + " it has no state in OpenFlow");
                 //}
 
                 //if (results.Count() > 2)
@@ -81,7 +81,7 @@ namespace OpenRPA.Store
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine("ZeniverseInstanceStore.save: " + ex.Message);
+                System.Diagnostics.Trace.WriteLine("OpenFlowInstanceStore.save: " + ex.Message);
             }
             return null;
         }

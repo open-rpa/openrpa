@@ -34,7 +34,11 @@ Java Components
 
 <img src="img/SelectorJava.png" alt="Selector with Internet Explorer component"/>
 
-Images, OCR and browsers comming soon
+Chrome/Firefox/Edge
+
+<img src="img/SelectorNative.png" alt="Selector with Native Messaging"/>
+
+Images and OCR comming soon
 
 Join slack for for help or giving feedback [#openrpa](https://join.slack.com/t/openrpa/shared_invite/enQtNjI2ODE5NDIzNDg5LTFhMzRmMzJiNTYzMDU5OTAxOTA3ZTRiZjA1ZWQ4ZDViMzY5NmVmYTgyZDExNzhiOThkZjE0ZmY2OTMyZjVhNTQ)
 

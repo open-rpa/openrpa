@@ -1,0 +1,14 @@
+{
+    "name": "com.zenamic.msg",
+    "description": "Zenamic messaging host",
+    "path": "C:\\code\\openrpa\\bin\\OpenRPA.NativeMessagingHost.exe",
+    "type": "stdio",
+    "allowed_origins": [
+        "chrome-extension://cjjehhadngahcdkbkeopdlmjedddkedh/",
+        "chrome-extension://meoobaegjobjgfnlfndegpnpdmonbnbe/",
+        "chrome-extension://eglkkjllkdooicijpbolleoemogkagbp/",
+        "chrome-extension://inhepbikmioclaolbahmnieiinemlmfp/",
+        "chrome-extension://ijabkdeadobnodfdgilkjhbploikblbg/",
+        "chrome-extension://cfhdojbkjhnklbpkdaibdccddilifddb/"
+    ]
+}

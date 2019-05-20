@@ -183,6 +183,10 @@ namespace OpenRPA
         {
             Log.Debug("onIdleOrComplete state: " + instance.state);
             if (!string.IsNullOrEmpty(instance.errormessage)) Log.Error(instance.errormessage);
+            if(instance.state != "idle")
+            {
+                Console.WriteLine("Workflow " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
+            }
             idleOrComplete?.Invoke(this, instance);
         }
     }

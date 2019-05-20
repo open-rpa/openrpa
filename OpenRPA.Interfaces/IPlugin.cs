@@ -11,6 +11,8 @@ namespace OpenRPA.Interfaces
     public interface IPlugin
     {
         string Name { get; }
+        string Status { get; }
+        
         void Initialize();
         void Start();
         void Stop();

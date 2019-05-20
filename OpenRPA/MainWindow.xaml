@@ -108,8 +108,18 @@
             </TabControl>
 
             <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="1" Height="21" Grid.ColumnSpan="3" Background="Gray">
-                <StatusBarItem x:Name="LabelStatusBar" Foreground="White" FontSize="12">
-                </StatusBarItem>
+                <!--<StatusBarItem x:Name="LabelStatusBar" Foreground="White" FontSize="12">
+                </StatusBarItem>-->
+                <ListView Margin="10" Name="lvDataBinding">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <WrapPanel>
+                                <TextBlock Text="{Binding Name}" />
+                                <TextBlock Text="{Binding Status}" FontWeight="Bold" />
+                            </WrapPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </StatusBar>
         </Grid>
     </DockPanel>

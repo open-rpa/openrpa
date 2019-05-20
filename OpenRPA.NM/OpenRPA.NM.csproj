@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F811CD0F-01E8-488D-BF80-C788C2B28B27}</ProjectGuid>
+    <ProjectGuid>{0217C47B-55FB-473C-B579-38D08D9949CD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpenRPA.Java</RootNamespace>
-    <AssemblyName>OpenRPA.Java</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <RootNamespace>OpenRPA.NM</RootNamespace>
+    <AssemblyName>OpenRPA.NM</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -35,6 +35,9 @@
     <Reference Include="FlaUI.Core, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FlaUI.Core.1.3.0\lib\net45\FlaUI.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -58,33 +61,33 @@
     <Compile Include="Activities\GetElementDesigner.xaml.cs">
       <DependentUpon>GetElementDesigner.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Activities\OpenURL.cs" />
+    <Compile Include="Activities\OpenURLDesigner.xaml.cs">
+      <DependentUpon>OpenURLDesigner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Extensions.cs" />
-    <Compile Include="HwndCache.cs" />
-    <Compile Include="JavaTreeElement.cs" />
-    <Compile Include="JavaSelector.cs" />
-    <Compile Include="JavaSelectorItem.cs" />
-    <Compile Include="JavaElement.cs" />
-    <Compile Include="JavaEvent.cs" />
-    <Compile Include="javahook.cs" />
+    <Compile Include="NMTreeElement.cs" />
+    <Compile Include="NMSelectorItem.cs" />
+    <Compile Include="NMSelector.cs" />
+    <Compile Include="NMElement.cs" />
+    <Compile Include="NMHook.cs" />
+    <Compile Include="pipe\NamedPipeClient.cs" />
+    <Compile Include="pipe\NamedPipeClientAsync.cs" />
+    <Compile Include="pipe\queuemsg.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NamedPipeWrapper\NamedPipeWrapper.csproj">
-      <Project>{1d6d60c3-b42e-465e-886b-30ab2176fd37}</Project>
+      <Project>{1D6D60C3-B42E-465E-886B-30AB2176FD37}</Project>
       <Name>NamedPipeWrapper</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj">
       <Project>{481bd5a1-5e8d-42a9-bd31-78becfaf15f3}</Project>
       <Name>OpenRPA.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WindowsAccessBridgeInterop\WindowsAccessBridgeInterop.csproj">
-      <Project>{4b5de0e1-2f0a-426d-bb12-becb0f6f8b51}</Project>
-      <Name>WindowsAccessBridgeInterop</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -92,15 +95,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\designer\getjavaelement.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\toolbox\getjavaelement.png" />
+    <Page Include="Activities\OpenURLDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>taskkill /f /fi "pid gt 0" /im OpenRPA.JavaBridge.exe</PreBuildEvent>
-  </PropertyGroup>
 </Project>

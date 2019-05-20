@@ -80,6 +80,8 @@
     <Compile Include="IElement.cs" />
     <Compile Include="Image\Util.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="NativeMessagingMessage.cs" />
+    <Compile Include="NativeMessagingMessageTab.cs" />
     <Compile Include="Overlay\OverlayWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -236,6 +238,12 @@
     <EmbeddedResource Include="Overlay\OverlayWindow.resx">
       <DependentUpon>OverlayWindow.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NamedPipeWrapper\NamedPipeWrapper.csproj">
+      <Project>{1D6D60C3-B42E-465E-886B-30AB2176FD37}</Project>
+      <Name>NamedPipeWrapper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

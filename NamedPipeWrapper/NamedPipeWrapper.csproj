@@ -49,6 +49,7 @@
     <Compile Include="IO\PipeStreamWriter.cs" />
     <Compile Include="NamedPipeClient.cs" />
     <Compile Include="NamedPipeConnection.cs" />
+    <Compile Include="NamedPipeException.cs" />
     <Compile Include="NamedPipeServer.cs" />
     <Compile Include="PipeExceptionEventHandler.cs" />
     <Compile Include="pipemessage.cs" />

@@ -95,6 +95,40 @@ namespace OpenRPA.NM
         //}
         public static NMElement[] GetElementsWithuiSelector(NMSelector selector, IElement fromElement = null, int maxresults = 1)
         {
+            var results = new List<NMElement>();
+            var first = selector[0];
+            var second = selector[1];
+            var p = first.Properties.Where(x => x.Name == "browser").FirstOrDefault();
+            string browser = "";
+            if (p != null) { browser = p.Value; }
+            p = second.Properties.Where(x => x.Name == "xpath").FirstOrDefault();
+            string xpath = "";
+            if (p != null) { xpath = p.Value; }
+            p = second.Properties.Where(x => x.Name == "cssselector").FirstOrDefault();
+            string cssselector = "";
+            if (p != null) { cssselector = p.Value; }
+
+            NMHook.checkForPipes(true, true);
+            NMHook.reloadtabs();
+            var tabs = NMHook.tabs;
+            if (!string.IsNullOrEmpty(browser)) { tabs = NMHook.tabs.Where(x => x.browser == browser).ToList(); }
+            foreach (var tab in tabs)
+            {
+                NativeMessagingMessage subresult = null;
+
+                var getelement = new NativeMessagingMessage("getelement");
+                getelement.xPath = xpath;
+                getelement.cssPath = cssselector;
+                subresult = NMHook.sendMessageResult(getelement, false);
+                foreach (var b in subresult.results)
+                {
+                    if (b.cssPath == "true" || b.xPath == "true")
+                    {
+                        results.Add(new NMElement(b));
+                    }
+                }
+            }
+            return results.ToArray();
             //NMHook.Instance.refreshJvms();
             //NMElement[] result = null;
             //foreach (var jvm in NMHook.Instance.jvms)
@@ -105,7 +139,7 @@ namespace OpenRPA.NM
 
             //if (result == null) return new NMElement[] { };
             //return result;
-            return new NMElement[] { };
+            //return new NMElement[] { };
         }
 
 

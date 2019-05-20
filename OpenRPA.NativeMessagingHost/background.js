@@ -73,12 +73,14 @@ async function runtimeOnMessage(sender, msg, fnResponse) {
     sender.windowId = msg.tab.windowId;
     if (sender.uix && sender.uiy) {
         var currentWindow = await windowsget(sender.windowId);
+        console.log(sender.uix + "," + sender.uiy);
         if (!('id' in currentWindow)) return;
 
-        sender.uix = sender.uix + currentWindow.left;
-        sender.uiy = sender.uiy + currentWindow.top;
-        //sender.uix = sender.uix + 7;
-        //sender.uiy = sender.uiy - 7;
+        sender.uix += currentWindow.left;
+        sender.uiy += currentWindow.top;
+        console.log("after: " + sender.uix + "," + sender.uiy);
+        sender.uix = sender.uix + 7;
+        sender.uiy = sender.uiy - 7;
 
         // https://docs.microsoft.com/en-us/dotnet/framework/winforms/controls/how-to-size-a-windows-forms-label-control-to-fit-its-contents
         var message = sender;
@@ -196,17 +198,20 @@ async function portOnMessage(message) {
                     return;
                 }
                 var result = singleresult.result;
-                if (result.uix && result.uiy) {
-                    var currentWindow = await windowsgetCurrent();
+                var currentWindow = await windowsgetCurrent();
+                if (result.uix !== undefined && result.uiy !== undefined) {
                     if (!('id' in currentWindow)) return;
                     result.uix = result.uix + currentWindow.left;
                     result.uiy = result.uiy + currentWindow.top;
+                    //result.uix = result.uix + 7;
+                    //result.uiy = result.uiy - 7;
 
-                    console.log('sendMessage reply ' + result.functionName + ' for tab ' + result.tabid + ' - ' + result.messageid);
+                    console.log('sendMessage reply with uix and uiy ' + result.functionName + ' for tab ' + result.tabid + ' - ' + result.messageid);
                     port.postMessage(JSON.parse(JSON.stringify(result)));
                 }
                 else {
-                    console.log('sendMessage reply ' + result.functionName + ' for tab ' + result.tabid + ' - ' + result.messageid);
+                    console.log(result);
+                    console.log('sendMessage reply no cords ' + result.functionName + ' for tab ' + result.tabid + ' - ' + result.messageid);
                     port.postMessage(JSON.parse(JSON.stringify(result)));
                 }
                 return;
@@ -260,6 +265,9 @@ async function portOnMessage(message) {
                         if (!('id' in currentWindow)) return;
                         result.uix = result.uix + currentWindow.left;
                         result.uiy = result.uiy + currentWindow.top;
+                        result.uix = result.uix + 7;
+                        result.uiy = result.uiy - 7;
+
                         console.log('sendMessage log reply ' + result.functionName + ' from Tab: ' + result.tabid + ' Frame: ' + result.frameId + ' messageid: ' + result.messageid);
                         messageSent(result);
                     }

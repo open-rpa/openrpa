@@ -173,7 +173,7 @@ if (typeof document.zeniverse === 'undefined') {
                     } catch (e) {
                         console.error(e);
                     }
-                    console.log(message.functionName + ' - ' + message.messageid + ' [' + message.uix + ',' + message.uiy + ',' + message.uiwidth + ',' + message.uiheight + ']');
+                    // console.log(message.functionName + ' - ' + message.messageid + ' [' + message.uix + ',' + message.uiy + ',' + message.uiwidth + ',' + message.uiheight + ']');
                 } catch (e) {
                     console.error(e);
                 }
@@ -190,6 +190,7 @@ if (typeof document.zeniverse === 'undefined') {
                 console.log('skip mapping dom object, no results');
             }
             //return simpleStringify(message);
+            console.log(message);
             var test = JSON.parse(JSON.stringify(message));
             return test;
         },
@@ -503,8 +504,6 @@ if (typeof document.zeniverse === 'undefined') {
                 }
             }
             treeHTML(element, treeObject, maxiden);
-
-            console.log(JSON.stringify(treeObject));
             return json ? JSON.stringify(treeObject) : treeObject;
         },
         getFrameName: function (frame) {

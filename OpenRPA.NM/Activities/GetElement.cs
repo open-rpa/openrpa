@@ -39,6 +39,7 @@ namespace OpenRPA.NM
             var sel = new NMSelector(selector);
             var timeout = TimeSpan.FromSeconds(3);
             var from = From.Get(context);
+            var maxresults = MaxResults.Get(context);
             NMElement[] elements = { };
             var sw = new Stopwatch();
             sw.Start();
@@ -46,6 +47,7 @@ namespace OpenRPA.NM
             {
                 elements = NMSelector.GetElementsWithuiSelector(sel, from);
             } while (elements .Count() == 0 && sw.Elapsed < timeout);
+            if (elements.Count() > maxresults) elements = elements.Take(maxresults).ToArray();
             context.SetValue(Elements, elements);
             IEnumerator<NMElement> _enum = elements.ToList().GetEnumerator();
             context.SetValue(_elements, _enum);

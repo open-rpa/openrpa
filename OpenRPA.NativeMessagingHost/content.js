@@ -19,7 +19,7 @@ if (window.zeniverse_contentlistner === null || window.zeniverse_contentlistner 
             return;
         }
         if (typeof document.zeniverse !== 'undefined') {
-            console.log(sender.functionName);
+            // console.log(sender.functionName);
             var func = zeniverse[sender.functionName];
             if (func) {
                 sender.result = func(sender);

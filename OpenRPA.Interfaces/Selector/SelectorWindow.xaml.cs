@@ -97,6 +97,7 @@ namespace OpenRPA.Interfaces.Selector
             GenericTools.restore(this);
             vm.Selector = e.Selector;
             vm.FocusElement(e.Selector);
+            vm.NotifyPropertyChanged("json");
             // e.Element
         }
         private void BtnSyncTree_Click(object sender, RoutedEventArgs e)

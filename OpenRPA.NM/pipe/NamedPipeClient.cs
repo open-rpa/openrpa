@@ -1,4 +1,5 @@
 ﻿using NamedPipeWrapper;
+using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,14 +52,14 @@ namespace OpenRPA.NM.pipe
 
             var queue = new queuemsg<T>(message);
             replyqueue.Add(queue);
-            System.Diagnostics.Trace.WriteLine("Send and queue message " + message.messageid);
+            Log.Verbose("Send and queue message " + message.messageid);
             using (queue.autoReset = new AutoResetEvent(false))
             {
                 pipe.PushMessage(message);
                 queue.autoReset.WaitOne();
                 queue.sw.Stop();
             }
-            System.Diagnostics.Trace.WriteLine("received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));
+            Log.Verbose("received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));
             replyqueue.Remove(queue);
             result = queue.result;
             if (!string.IsNullOrEmpty(result.error)) throw new NamedPipeException(result.error);

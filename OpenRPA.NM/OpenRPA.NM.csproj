@@ -61,6 +61,10 @@
     <Compile Include="Activities\GetElementDesigner.xaml.cs">
       <DependentUpon>GetElementDesigner.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Activities\OpenURL.cs" />
+    <Compile Include="Activities\OpenURLDesigner.xaml.cs">
+      <DependentUpon>OpenURLDesigner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="NMTreeElement.cs" />
     <Compile Include="NMSelectorItem.cs" />
@@ -88,6 +92,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\GetElementDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\OpenURLDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

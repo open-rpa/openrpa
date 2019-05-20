@@ -14,9 +14,7 @@ namespace OpenRPA.NM
         public NMElement lastElement { get; set; }
         public string Name => "NM";
         public string Status => (NMHook.connected ? "online" : "offline");
-
         public event Action<IPlugin, IRecordEvent> OnUserAction;
-
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
             var result = NMSelector.GetElementsWithuiSelector(selector as NMSelector, fromElement, maxresults);
@@ -64,12 +62,10 @@ namespace OpenRPA.NM
             }
             return rootelements.ToArray();
         }
-
         public treeelement[] GetRootElements(Selector anchor)
         {
             return Plugin._GetRootElements(anchor);
         }
-
         public Selector GetSelector(Selector anchor, treeelement item)
         {
             var nmitem = item as NMTreeElement;
@@ -80,7 +76,6 @@ namespace OpenRPA.NM
             }
             return new NMSelector(nmitem.NMElement, nmanchor, true);
         }
-
         public void Initialize()
         {
             NMHook.registreChromeNativeMessagingHost(false);
@@ -88,71 +83,86 @@ namespace OpenRPA.NM
             NMHook.checkForPipes(true, false);
             NMHook.onMessage += onMessage;
             NMHook.Connected += omConnected;        }
-
         private void omConnected(string obj)
         {
-            Task.Run(() =>
-            {
-                var test = _GetRootElements(null);
-            });
+            //Task.Run(() =>
+            //{
+            //    var test = _GetRootElements(null);
+            //});
         }
-
         private void onMessage(NativeMessagingMessage message)
         {
             if (message.uiy > 0 && message.uix > 0 && message.uiwidth > 0 && message.uiheight > 0)
             {
-                //int x = message.uix;
-                //int y = message.uiy;
-                //int width = message.uiwidth;
-                //int height = message.uiheight;
-                //x = x + 7;
-                //y = y - 7;
-                Console.WriteLine("{0} {1},{2} {3},{4} - {5} ", message.functionName, message.uix, message.uiy, message.uiwidth, message.uiheight,  message.xPath);
-
+                // Console.WriteLine("{0} {1},{2} {3},{4} - {5} ", message.functionName, message.uix, message.uiy, message.uiwidth, message.uiheight,  message.xPath);
                 if (!string.IsNullOrEmpty(message.data))
                 {
                     lastElement = new NMElement(message);
-                    //if (highlighter != null) highlighter.setMessage(message.xPath + Environment.NewLine + html.tagName + " " + html.Name + Environment.NewLine + string.Format("{0},{1},{2},{3}", x, y, width, height));
                 }
                 else
                 {
                     lastElement = new NMElement(message);
-                    //if (highlighter != null) highlighter.setMessage(message.xPath + Environment.NewLine + string.Format("{0},{1},{2},{3}", x, y, width, height));
                 }
-                //if (highlighter != null) highlighter.moveto(x, y, width, height);
             }
 
             if (message.functionName == "click")
             {
-                var getelement = new NativeMessagingMessage("getelement");
-                //getelement.tabid = message.tabid;
-                getelement.cssPath = message.cssPath;
-                getelement.xPath = message.xPath;
-                NativeMessagingMessage subresult = null;
-                //if (message.browser == "chrome") subresult = rpaactivities.nm.nmhook.sendMessageChromeResult(getelement, true);
-                //if (message.browser == "ff") subresult = rpaactivities.nm.nmhook.sendMessageFFResult(getelement, true);
-                if (subresult == null)
+                if(recording)
                 {
-                    Console.WriteLine("getelement returned null???");
+                    if (lastElement == null) return;
+                    var re = new RecordEvent(); re.Button = Input.MouseButton.Left;
+                    var a = new GetElement { DisplayName = lastElement.ToString() };
+
+                    var selector = new NMSelector(lastElement, null, true);
+                    a.Selector = selector.ToString();
+                    a.Image = lastElement.ImageString();
+                    a.MaxResults = 1;
+
+                    re.Selector = selector;
+                    re.a = new GetElementResult(a);
+                    re.SupportInput = lastElement.SupportInput;
+                    re.ClickHandled = true;
+                    OnUserAction?.Invoke(this, re);
                     return;
                 }
-                Console.WriteLine(getelement.messageid + " " + getelement.functionName + " " + subresult.messageid + " " + subresult.functionName);
-                Console.WriteLine(subresult.cssPath + " " + subresult.xPath);
-                //rpaactivities.nm.nmhook.sendMessageChromeResult(getelement);
-                //Console.WriteLine(getelement.messageid + " " + getelement.functionName);
+                //var getelement = new NativeMessagingMessage("getelement");
+                ////getelement.tabid = message.tabid;
+                //getelement.cssPath = message.cssPath;
+                //getelement.xPath = message.xPath;
+                //NativeMessagingMessage subresult = null;
+                ////if (message.browser == "chrome") subresult = rpaactivities.nm.nmhook.sendMessageChromeResult(getelement, true);
+                ////if (message.browser == "ff") subresult = rpaactivities.nm.nmhook.sendMessageFFResult(getelement, true);
+                //if (subresult == null)
+                //{
+                //    // Console.WriteLine("getelement returned null???");
+                //    return;
+                //}
+                //// Console.WriteLine(getelement.messageid + " " + getelement.functionName + " " + subresult.messageid + " " + subresult.functionName);
+                //// Console.WriteLine(subresult.cssPath + " " + subresult.xPath);
+                ////rpaactivities.nm.nmhook.sendMessageChromeResult(getelement);
+                ////Console.WriteLine(getelement.messageid + " " + getelement.functionName);
 
             }
         }
-
         public void LaunchBySelector(Selector selector, TimeSpan timeout)
         {
-        }
+            var first = selector[0];
+            var second = selector[1];
+            var p = first.Properties.Where(x => x.Name == "browser").FirstOrDefault();
+            string browser = "";
+            if (p != null) { browser = p.Value; }
 
+            p = first.Properties.Where(x => x.Name == "url").FirstOrDefault();
+            string url = "";
+            if (p != null) { url = p.Value; }
+
+            NMHook.openurl(browser, url);
+
+        }
         public bool Match(SelectorItem item, IElement m)
         {
             throw new NotImplementedException();
         }
-
         public bool parseUserAction(ref IRecordEvent e)
         {
             if (lastElement == null) return false;
@@ -162,29 +172,27 @@ namespace OpenRPA.NM
             var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
             if (p.ProcessName.ToLower() != "chrome") return false;
 
-
-
             var selector = new NMSelector(lastElement, null, true);
             var a = new GetElement { DisplayName = lastElement.id + " " + lastElement.type + " " + lastElement.Name };
             a.Selector = selector.ToString();
             a.Image = lastElement.ImageString();
             a.MaxResults = 1;
 
+            e.Selector = selector;
             e.a = new GetElementResult(a);
             e.SupportInput = lastElement.SupportInput;
             e.ClickHandled = true;
             lastElement.Click();
             return true;
-
-
         }
-
+        public bool recording { get; set; } = false;
         public void Start()
         {
+            recording = true;
         }
-
         public void Stop()
         {
+            recording = false;
         }
     }
     public class GetElementResult : IBodyActivity
@@ -204,5 +212,16 @@ namespace OpenRPA.NM
             aa.Argument = da;
         }
     }
-
+    public class RecordEvent : IRecordEvent
+    {
+        public UIElement UIElement { get; set; }
+        public IElement Element { get; set; }
+        public Selector Selector { get; set; }
+        public IBodyActivity a { get; set; }
+        public bool SupportInput { get; set; }
+        public bool ClickHandled { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public Input.MouseButton Button { get; set; }
+    }
 }

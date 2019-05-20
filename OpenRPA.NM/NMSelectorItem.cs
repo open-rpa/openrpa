@@ -26,8 +26,9 @@ namespace OpenRPA.NM
             if (isRoot)
             {
                 Properties.Add(new SelectorItemProperty("Selector", "NM"));
-                Properties.Add(new SelectorItemProperty("browse", element.message.browser));
+                Properties.Add(new SelectorItemProperty("browser", element.message.browser));
                 Properties.Add(new SelectorItemProperty("frame", element.message.frame));
+                Properties.Add(new SelectorItemProperty("url", element.message.tab.url));
                 Enabled = true;
                 canDisable = false;
                 return;

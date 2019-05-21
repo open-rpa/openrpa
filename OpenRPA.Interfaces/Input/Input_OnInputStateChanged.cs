@@ -297,10 +297,17 @@ namespace OpenRPA.Input
         }
         private void RaiseOnMouseUp(InputEventArgs e)
         {
-            e.Element = Element;
-            e.Element.Refresh();
-            if (e.Element != null && e.Element.ProcessId == currentprocessid) return;
-            OnMouseUp(e);
+            try
+            {
+                e.Element = Element;
+                e.Element.Refresh();
+                if (e.Element != null && e.Element.ProcessId == currentprocessid) return;
+                OnMouseUp(e);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         private InputDriver()
         {

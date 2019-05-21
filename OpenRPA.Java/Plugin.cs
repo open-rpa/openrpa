@@ -133,6 +133,14 @@ namespace OpenRPA.Java
         public void Initialize()
         {
             Javahook.Instance.init();
+            //try
+            //{
+            //    Javahook.Instance.init();
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex.ToString());
+            //}
             try
             {
                 hook.init();

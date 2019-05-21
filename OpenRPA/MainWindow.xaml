@@ -100,26 +100,30 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition />
-                <RowDefinition Height="21"/>
+                <RowDefinition Height="25"/>
             </Grid.RowDefinitions>
 
             <TabControl x:Name="mainTabControl">
 
             </TabControl>
 
-            <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="1" Height="21" Grid.ColumnSpan="3" Background="Gray">
-                <!--<StatusBarItem x:Name="LabelStatusBar" Foreground="White" FontSize="12">
-                </StatusBarItem>-->
-                <ListView Margin="10" Name="lvDataBinding">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <WrapPanel>
-                                <TextBlock Text="{Binding Name}" />
+            <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="1" Height="25" Grid.ColumnSpan="3" Background="Gray">
+                <StackPanel Orientation="Horizontal">
+                    <StatusBarItem x:Name="LabelStatusBar" Foreground="White" FontSize="12">
+                    </StatusBarItem>
+                    <ListView Margin="10" Name="lvDataBinding">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"></StackPanel>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
                                 <TextBlock Text="{Binding Status}" FontWeight="Bold" />
-                            </WrapPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
             </StatusBar>
         </Grid>
     </DockPanel>

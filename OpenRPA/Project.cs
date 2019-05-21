@@ -127,7 +127,8 @@ namespace OpenRPA
             if (string.IsNullOrEmpty(_id))
             {
                 var result = await global.webSocketClient.InsertOne("openrpa", this);
-                this._id = result._id;
+                _id = result._id;
+                _acl = result._acl;
             }
             else
             {

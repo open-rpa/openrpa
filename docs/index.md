@@ -26,7 +26,7 @@ Windows Components
 
 <img src="img/SelectorWindows.png" alt="Selector with Windows component"/>
 
-Interet Explorer Components
+Internet Explorer Components
 
 <img src="img/SelectorIE.png" alt="Selector with Internet Explorer component"/>
 

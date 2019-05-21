@@ -404,6 +404,7 @@ namespace OpenRPA
             if (!(item is Views.WFDesigner)) return;
             var designer = (Views.WFDesigner)item;
             if (designer.HasChanged) { await designer.Save(); }
+            GenericTools.minimize(GenericTools.mainWindow);
             designer.Workflow.Run();
             return;
         }
@@ -438,6 +439,7 @@ namespace OpenRPA
                 InputDriver.Instance.CallNext = true;
                 InputDriver.Instance.OnKeyDown -= OnKeyDown;
                 InputDriver.Instance.OnKeyUp -= OnKeyUp;
+                GenericTools.restore(GenericTools.mainWindow);
             }
         }
         private bool canRecord(object item)
@@ -455,9 +457,74 @@ namespace OpenRPA
         }
         private void OnKeyDown(Input.InputEventArgs e)
         {
+            if (!isRecording) return;
+            if(e.Key == KeyboardKey.Escape)
+            {
+                StopRecordPlugins();
+                InputDriver.Instance.CallNext = true;
+                InputDriver.Instance.OnKeyDown -= OnKeyDown;
+                InputDriver.Instance.OnKeyUp -= OnKeyUp;
+                GenericTools.restore(GenericTools.mainWindow);
+                return;
+            }
+            // if (e.Key == KeyboardKey. 255) return;
+            try
+            {
+                if (mainTabControl.SelectedContent is Views.WFDesigner view)
+                {
+                    // if (lastinsertedmodel != null && lastinsertedmodel.ItemType == typeof(Activities.TypeText))
+                    if (view.lastinserted != null && view.lastinserted is Activities.TypeText)
+                    {
+                        Log.Debug("re-use existing TypeText");
+                        var item = (Activities.TypeText)view.lastinserted;
+                        item.AddKey(new Activities.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, false), view.lastinsertedmodel);
+                    }
+                    else
+                    {
+                        Log.Debug("Add new TypeText");
+                        var rme = new Activities.TypeText();
+                        view.lastinsertedmodel = view.addActivity(rme);
+                        rme.AddKey(new Activities.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, false), view.lastinsertedmodel);
+                        view.lastinserted = rme;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+
         }
         private void OnKeyUp(Input.InputEventArgs e)
         {
+            if (!isRecording) return;
+            // if (e.KeyValue == 255) return;
+            try
+            {
+                if (mainTabControl.SelectedContent is Views.WFDesigner view)
+                {
+                    // if(lastinsertedmodel != null && lastinsertedmodel.ItemType == typeof(Activities.TypeText))
+                    if (view.lastinserted != null && view.lastinserted is Activities.TypeText)
+                    {
+                        Log.Debug("re-use existing TypeText");
+                        var item = (Activities.TypeText)view.lastinserted;
+                        item.AddKey(new Activities.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, true), view.lastinsertedmodel);
+                    }
+                    else
+                    {
+                        Log.Debug("Add new TypeText");
+                        var rme = new Activities.TypeText();
+                        view.lastinsertedmodel = view.addActivity(rme);
+                        rme.AddKey(new Activities.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, true), view.lastinsertedmodel);
+                        view.lastinserted = rme;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         private void StartRecordPlugins()
         {
@@ -465,14 +532,6 @@ namespace OpenRPA
             var p = Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
             p.OnUserAction += OnUserAction;
             p.Start();
-            //var p2 = Plugins.recordPlugins.Where(x => x.Name == "Java").First();
-            //p2.OnUserAction += OnUserAction;
-            //p2.Start();
-            //foreach (var p in Plugins.recordPlugins)
-            //{
-            //    p.OnUserAction += OnUserAction;
-            //    p.Start();
-            //}
         }
         private void StopRecordPlugins()
         {
@@ -480,14 +539,6 @@ namespace OpenRPA
             var p = Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
             p.OnUserAction -= OnUserAction;
             p.Stop();
-            //var p2 = Plugins.recordPlugins.Where(x => x.Name == "Java").First();
-            //p2.OnUserAction -= OnUserAction;
-            //p2.Stop();
-            //foreach (var p in Plugins.recordPlugins)
-            //{
-            //    p.OnUserAction -= OnUserAction;
-            //    p.Stop();
-            //}
         }
         public void OnUserAction(IPlugin sender, IRecordEvent e)
         {
@@ -540,7 +591,8 @@ namespace OpenRPA
                             }, "item");
                         } else { e.SupportInput = false;  }
                     }
-                    view.addActivity(e.a.Activity);
+                    view.lastinserted = e.a.Activity;
+                    view.lastinsertedmodel = view.addActivity(e.a.Activity);
                     if(e.ClickHandled == false && e.SupportInput == false)
                     {
                         InputDriver.Instance.CallNext = true;
@@ -560,10 +612,13 @@ namespace OpenRPA
         {
             if (!(item is Views.WFDesigner)) return;
             var designer = (Views.WFDesigner)item;
+            designer.lastinserted = null;
+            designer.lastinsertedmodel = null;
             InputDriver.Instance.OnKeyDown += OnKeyDown;
             InputDriver.Instance.OnKeyUp += OnKeyUp;
             StartRecordPlugins();
             InputDriver.Instance.CallNext = false;
+            GenericTools.minimize(GenericTools.mainWindow);
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -576,6 +631,7 @@ namespace OpenRPA
             Plugins.loadPlugins(Extensions.projectsDirectory);
             Task.Run(() =>
             {
+                ExpressionEditor.EditorUtil.init();
 
                 if (!string.IsNullOrEmpty(Config.local.wsurl))
                 {

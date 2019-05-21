@@ -131,7 +131,7 @@ namespace OpenRPA
             state = "aborted";
             errormessage = Reason;
             _ = Save();
-            runWatch.Stop();
+            if (runWatch != null) runWatch.Stop();
             idleOrComplete?.Invoke(this);
         }
         public System.Diagnostics.Stopwatch runWatch { get; private set; }
@@ -171,7 +171,7 @@ namespace OpenRPA
                 state = "failed";
                 errormessage = ex.Message;
                 await Save();
-                runWatch.Stop();
+                if (runWatch != null) runWatch.Stop();
                 idleOrComplete?.Invoke(this);
             }
         }
@@ -197,7 +197,7 @@ namespace OpenRPA
                         }
                     }
                     foreach (var o in e.Outputs) e.Outputs.Add(o);
-                    runWatch.Stop();
+                    if (runWatch != null) runWatch.Stop();
                     idleOrComplete?.Invoke(this);
                 }
                 else if (e.CompletionState == System.Activities.ActivityInstanceState.Executing)
@@ -216,7 +216,7 @@ namespace OpenRPA
                 state = "aborted";
                 errormessage = e.Reason.Message;
                 _ = Save();
-                runWatch.Stop();
+                if(runWatch!=null) runWatch.Stop();
                 idleOrComplete?.Invoke(this);
             };
 
@@ -261,7 +261,7 @@ namespace OpenRPA
                 state = "failed";
                 errormessage = e.UnhandledException.ToString();
                 //exceptionsource = e.ExceptionSource.Id;
-                runWatch.Stop();
+                if (runWatch != null) runWatch.Stop();
                 idleOrComplete?.Invoke(this);
                 return System.Activities.UnhandledExceptionAction.Terminate;
             };

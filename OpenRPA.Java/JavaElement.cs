@@ -81,7 +81,7 @@ namespace OpenRPA.Java
                 return false;
             }
         }
-        public string value
+        public string Value
         {
             get
             {

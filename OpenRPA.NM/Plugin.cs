@@ -183,6 +183,7 @@ namespace OpenRPA.NM
             a.Image = lastElement.ImageString();
             a.MaxResults = 1;
 
+            e.Element = lastElement;
             e.Selector = selector;
             e.a = new GetElementResult(a);
             e.SupportInput = lastElement.SupportInput;

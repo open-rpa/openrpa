@@ -125,6 +125,8 @@ namespace OpenRPA.Java
             e.a = new GetElementResult(a);
             e.SupportInput = lastElement.SupportInput;
             e.ClickHandled = true;
+            e.Selector = selector;
+            e.Element = lastElement;
             lastElement.Click();
             return true;
         }

@@ -129,6 +129,7 @@ namespace OpenRPA.IE
 
             var selector = new IESelector(browser, htmlelement, null, true, e.X, e.Y);
             e.Selector = selector;
+            e.Element = new IEElement(browser, htmlelement);
 
             var a = new GetElement { DisplayName = htmlelement.id + "-" + htmlelement.tagName + "-" + htmlelement.className };
             a.Selector = selector.ToString();

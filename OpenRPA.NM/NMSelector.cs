@@ -131,6 +131,7 @@ namespace OpenRPA.NM
                         {
                             var json = _e.ToString();
                             var subsubresult = Newtonsoft.Json.JsonConvert.DeserializeObject<NativeMessagingMessage>(json);
+                            subsubresult.result = json;
                             subsubresult.tabid = b.tabid;
                             subsubresult.tab = b.tab;
                             results.Add(new NMElement(subsubresult));

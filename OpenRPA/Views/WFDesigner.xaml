@@ -10,24 +10,28 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="4*" />
+            <RowDefinition Height="5" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
 
         <GridSplitter Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Left" VerticalAlignment="Stretch" ResizeDirection="Columns" Margin="0" Padding="0" Background = "Gray" Width = "2" />
-        <GridSplitter Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Right" VerticalAlignment="Stretch" ResizeDirection="Columns" Margin="0" Padding="0" Background = "Gray" Width = "2" />
+        <GridSplitter Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Right" VerticalAlignment="Stretch" ResizeDirection="Columns" Margin="0" Padding="0" Background = "Gray" Width = "2" />
 
-        <TextBox Text="{Binding TraceMessages}" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Column="1" Grid.Row="1" IsReadOnly="True" Margin="3,40,0,0" HorizontalAlignment="Left" Width="329"  />
-        <TextBox Text="{Binding OutputMessages}" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Column="1" Grid.Row="1" IsReadOnly="True" Margin="348,40,3,0" />
-        <Label Grid.Column="1" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" Height="34" Content="Execution Log" Margin="3,15,0,0" FontWeight="Bold" />
-        <Label Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Height="34" Content="Output" Margin="348,15,0,0" FontWeight="Bold" />
+        <GridSplitter Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1" Height="5" MinWidth="100" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  />
 
-        <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Name="WfToolboxBorder"/>
-        <Border Grid.Column="1" Grid.Row="0" Name="WfDesignerBorder" Padding="3"/>
-        <Border Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Name="WfPropertyBorder"/>
+        <TextBox Text="{Binding TraceMessages}" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Column="1" Grid.Row="2" IsReadOnly="True" Margin="3,40,0,0" />
+        <TextBox Text="{Binding OutputMessages}" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Column="2" Grid.Row="2" IsReadOnly="True" Margin="3,40,3,0" />
+        <Label Grid.Column="1" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Top" Height="34" Content="Execution Log" Margin="3,15,0,0" FontWeight="Bold" />
+        <Label Grid.Column="2" Grid.Row="2" VerticalAlignment="Top" Height="34" Content="Output" Margin="3,15,0,0" FontWeight="Bold" />
+
+        <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Name="WfToolboxBorder" />
+        <Border Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0" Name="WfDesignerBorder" Padding="3"/>
+        <Border Grid.Column="3" Grid.Row="0" Grid.RowSpan="3" Name="WfPropertyBorder"/>
     </Grid>
 </UserControl>

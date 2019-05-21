@@ -104,6 +104,7 @@ namespace OpenRPA
             {
                 var result = await global.webSocketClient.InsertOne("openrpa", this);
                 _id = result._id;
+                _acl = result._acl;
             } else
             {
                 await global.webSocketClient.UpdateOne("openrpa", this);

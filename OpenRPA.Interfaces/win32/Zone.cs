@@ -21,17 +21,29 @@ namespace OpenRPA.Interfaces.win32
         {
             string[] files = System.IO.Directory.GetFiles(path);
             string[] dirs = System.IO.Directory.GetDirectories(path);
-
-            foreach (string file in files)
+            try
             {
-                UnblockFile(file);
+                foreach (string file in files)
+                {
+                    UnblockFile(file);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
             }
 
-            foreach (string dir in dirs)
+            try
             {
-                UnblockPath(dir);
+                foreach (string dir in dirs)
+                {
+                    UnblockPath(dir);
+                }
             }
-
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
 
         public static bool UnblockFile(string fileName)

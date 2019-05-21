@@ -141,6 +141,7 @@ namespace OpenRPA
         }
         private bool canOpen(object item)
         {
+            if (!isConnected) return false;
             foreach (TabItem tab in mainTabControl.Items)
             {
                 if (tab.Content is Views.OpenProject)
@@ -176,7 +177,6 @@ namespace OpenRPA
                 newTabItem.IsSelected = true;
             }, null);
         }
-
         private async void NewTabItem_OnClose(object sender, RoutedEventArgs e)
         {
             Views.ClosableTab tab = sender as Views.ClosableTab;
@@ -309,7 +309,7 @@ namespace OpenRPA
                 }
             }
         }
-        private bool canNew(object item) { return (item is Views.WFDesigner || item is Views.OpenProject || item == null); }
+        private bool canNew(object item) { if (!isConnected) return false; return (item is Views.WFDesigner || item is Views.OpenProject || item == null); }
         private async void onNew(object item)
         {
             try
@@ -387,6 +387,7 @@ namespace OpenRPA
         }
         private bool canPlay(object item)
         {
+            if (!isConnected) return false;
             if (isRecording) return false;
             if (!(item is Views.WFDesigner)) return false;
             var designer = (Views.WFDesigner)item;
@@ -410,6 +411,7 @@ namespace OpenRPA
         }
         private bool canStop(object item)
         {
+            if (!isConnected) return false;
             if (isRecording) return true;
             if (!(item is Views.WFDesigner)) return false;
             var designer = (Views.WFDesigner)item;
@@ -444,6 +446,7 @@ namespace OpenRPA
         }
         private bool canRecord(object item)
         {
+            if (!isConnected) return false;
             if (!(item is Views.WFDesigner)) return false;
             var designer = (Views.WFDesigner)item;
             foreach (var i in designer.Workflow.Instances)
@@ -621,51 +624,12 @@ namespace OpenRPA
             InputDriver.Instance.CallNext = false;
             GenericTools.minimize(GenericTools.mainWindow);
         }
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
-            DataContext = this;
-            if (!string.IsNullOrEmpty(Config.local.wsurl))
-            {
-                // LabelStatusBar.Content = "Connecting to " + Config.local.wsurl;
-            }
-            Plugins.loadPlugins(Extensions.projectsDirectory);
-            Task.Run(() =>
-            {
-                ExpressionEditor.EditorUtil.init();
-
-                if (!string.IsNullOrEmpty(Config.local.wsurl))
-                {
-                    global.webSocketClient = new WebSocketClient(Config.local.wsurl);
-                    global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
-                    global.webSocketClient.OnClose += WebSocketClient_OnClose;
-                    _ = global.webSocketClient.Connect();
-                }
-                else
-                {
-                    var _Projects = Project.loadProjects(Extensions.projectsDirectory);
-                    Projects = new System.Collections.ObjectModel.ObservableCollection<Project>();
-                    foreach (Project p in _Projects)
-                    {
-                        Projects.Add(p);
-                    }
-                }
-                AutomationHelper.init();
-                new DesignerMetadata().Register();
-                onOpen(null);
-                if (Projects.Count > 0)
-                {
-                    onOpenWorkflow(Projects[0].Workflows.First());
-                }
-                AddHotKeys();
-            });
-        }
         private async void WebSocketClient_OnClose(string reason)
         {
             Log.Information("Disconnected " + reason);
             AutomationHelper.syncContext.Post(o =>
             {
-                // LabelStatusBar.Content = "Disconnected from " + Config.local.wsurl + " reason " + reason;
+                LabelStatusBar.Content = "Disconnected from " + Config.local.wsurl + " reason " + reason;
             }, null);
             await Task.Delay(1000);
             if(autoReconnect) _ = global.webSocketClient.Connect();
@@ -675,7 +639,7 @@ namespace OpenRPA
         {
             AutomationHelper.syncContext.Post(async o =>
             {
-                // LabelStatusBar.Content = "Connected to " + Config.local.wsurl;
+                LabelStatusBar.Content = "Connected to " + Config.local.wsurl;
                 TokenUser user = null;
                 while (user == null)
                 {
@@ -787,7 +751,7 @@ namespace OpenRPA
                     Log.Error(ex, "");
                     MessageBox.Show("WebSocketClient_OnOpen::Sync projects " + ex.Message);
                 }
-                // LabelStatusBar.Content = "Connected to " + Config.local.wsurl + " as " + user.name;
+                LabelStatusBar.Content = "Connected to " + Config.local.wsurl + " as " + user.name;
                 if (Projects.Count > 0)
                 {
                     onOpenProject(Projects[0]);
@@ -795,6 +759,61 @@ namespace OpenRPA
             }, null);
         }
 
+        public bool usingOpenFlow
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(Config.local.wsurl);
+            }
+        }
+        public bool isConnected
+        {
+            get
+            {
+                if (!usingOpenFlow) return true; // IF working offline, were allways connected, right ?
+                if (global.webSocketClient == null) return false;
+                return global.webSocketClient.isConnected;
+            }
+        }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
+            DataContext = this;
+            if (!string.IsNullOrEmpty(Config.local.wsurl))
+            {
+                LabelStatusBar.Content = "Connecting to " + Config.local.wsurl;
+            }
+            Plugins.loadPlugins(Extensions.projectsDirectory);
+            Task.Run(() =>
+            {
+                ExpressionEditor.EditorUtil.init();
+
+                if (!string.IsNullOrEmpty(Config.local.wsurl))
+                {
+                    global.webSocketClient = new WebSocketClient(Config.local.wsurl);
+                    global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
+                    global.webSocketClient.OnClose += WebSocketClient_OnClose;
+                    _ = global.webSocketClient.Connect();
+                }
+                else
+                {
+                    var _Projects = Project.loadProjects(Extensions.projectsDirectory);
+                    Projects = new System.Collections.ObjectModel.ObservableCollection<Project>();
+                    foreach (Project p in _Projects)
+                    {
+                        Projects.Add(p);
+                    }
+                }
+                AutomationHelper.init();
+                new DesignerMetadata().Register();
+                onOpen(null);
+                if (Projects.Count > 0)
+                {
+                    onOpenWorkflow(Projects[0].Workflows.First());
+                }
+                AddHotKeys();
+            });
+        }
         private void Window_Closed(object sender, EventArgs e)
         {
             // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds

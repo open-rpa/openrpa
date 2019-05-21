@@ -46,7 +46,7 @@ namespace OpenRPA.Java
                 if(_instance == null)
                 {
                     _instance = new Javahook();
-                    _instance.init();
+                    // _instance.init();
                 }
                 return _instance;
             }
@@ -54,22 +54,29 @@ namespace OpenRPA.Java
 
         public void init()
         {
-            EnsureJavaBridge();
-            if (Initilized) return;
-            Initilized = false;
-            _windowCache = new HwndCache();
-            Log.Debug("javahook.init()");
-            accessBridge.Initilized += (e1, e2) =>
+            try
             {
-                Initilized = true;
-                Log.Information("javahook._accessBridge.Initilized");
-            };
-            accessBridge.Initialize();
-            refreshJvms(200);
-            pipeclient = new NamedPipeClient<JavaEvent>("openrpa_javabridge");
-            pipeclient.ServerMessage += Pipeclient_ServerMessage;
-            pipeclient.AutoReconnect = true;
-            pipeclient.Start();
+                if (Initilized) return;
+                Initilized = false;
+                _windowCache = new HwndCache();
+                Log.Debug("javahook.init()");
+                accessBridge.Initilized += (e1, e2) =>
+                {
+                    Initilized = true;
+                    Log.Information("javahook._accessBridge.Initilized");
+                };
+                accessBridge.Initialize();
+                refreshJvms(200);
+                EnsureJavaBridge();
+                pipeclient = new NamedPipeClient<JavaEvent>("openrpa_javabridge");
+                pipeclient.ServerMessage += Pipeclient_ServerMessage;
+                pipeclient.AutoReconnect = true;
+                pipeclient.Start();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         public static void EnsureJavaBridge()
         {

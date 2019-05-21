@@ -56,7 +56,6 @@ namespace OpenRPA.Java
         public event Action<IPlugin, IRecordEvent> OnUserAction;
         public string Name { get => "Java"; }
         public string Status => (hook!=null && hook.jvms.Count>0 ? "online":"offline");
-        private string _status = "offline";
         public Javahook hook { get; set; } = new Javahook();
         public void Start()
         {

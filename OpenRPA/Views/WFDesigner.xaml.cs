@@ -1,4 +1,5 @@
-﻿using OpenRPA.Interfaces;
+﻿using OpenRPA.ExpressionEditor;
+using OpenRPA.Interfaces;
 using System;
 using System.Activities;
 using System.Activities.Core.Presentation;
@@ -29,7 +30,7 @@ namespace OpenRPA.Views
     /// <summary>
     /// Interaction logic for WFDesigner.xaml
     /// </summary>
-    public partial class WFDesigner : UserControl, System.ComponentModel.INotifyPropertyChanged
+    public partial class WFDesigner : UserControl, System.ComponentModel.INotifyPropertyChanged, IDesigner
     {
         public Action<WFDesigner> onChanged { get; set; }
         public WorkflowDesigner wfDesigner { get; private set; }
@@ -50,6 +51,10 @@ namespace OpenRPA.Views
             InitializeActivitiesToolbox();
         }
         public readonly ClosableTab tab;
+
+        // private static RoslynExpressionEditorService _expressionEditorService;
+        private static EditorService _expressionEditorServiceVB;
+        private ExpressionNode autoCompletionTree;
         public WFDesigner(ClosableTab tab, Workflow workflow, Type[] extratypes)
         {
             this.tab = tab;
@@ -58,6 +63,12 @@ namespace OpenRPA.Views
             Workflow = workflow;
             Workflow.idleOrComplete += onIdleOrComplete;
             wfDesigner = new WorkflowDesigner();
+
+            // Register the runtime metadata for the designer.
+            new DesignerMetadata().Register();
+
+            this.autoCompletionTree = EditorUtil.CreateDefaultAutoCompletionTree();
+
 
             DesignerConfigurationService configService = wfDesigner.Context.Services.GetRequiredService<DesignerConfigurationService>();
             configService.TargetFrameworkName = new System.Runtime.Versioning.FrameworkName(".NETFramework", new Version(4, 5));
@@ -72,6 +83,11 @@ namespace OpenRPA.Views
             configService.PanModeEnabled = true;
             configService.RubberBandSelectionEnabled = true;
             configService.LoadingFromUntrustedSourceEnabled = false;
+
+            //if (_expressionEditorServiceVB == null) _expressionEditorServiceVB = new EditorService();
+            //wfDesigner.Context.Services.Publish<IExpressionEditorService>(_expressionEditorServiceVB);
+
+            wfDesigner.Context.Services.Publish<IExpressionEditorService>(new EditorService { AutoCompletionData = this.autoCompletionTree });
 
             if (!string.IsNullOrEmpty(workflow.Xaml))
             {
@@ -335,7 +351,6 @@ namespace OpenRPA.Views
                 {
                     try
                     {
-
                         string[] excludeActivities = { "AddValidationError", "AndAlso", "AssertValidation", "CreateBookmarkScope", "DeleteBookmarkScope", "DynamicActivity",
                             "CancellationScope", "CompensableActivity", "Compensate", "Confirm", "GetChildSubtree", "GetParentChain", "GetWorkflowTree", "Add`3",  "And`3", "As`2", "Cast`2",
                         "Cast`2", "ArgumentValue`1", "ArrayItemReference`1", "ArrayItemValue`1", "Assign`1", "Constraint`1","CSharpReference`1", "CSharpValue`1", "DelegateArgumentReference`1",
@@ -525,5 +540,115 @@ namespace OpenRPA.Views
         {
             DataContext = this;
         }
+        public Argument GetArgument(string Name, bool add, Type type)
+        {
+            ModelService modelService = wfDesigner.Context.Services.GetService<ModelService>();
+            ModelItemCollection args = modelService.Root.Properties["Properties"].Collection;
+
+            foreach (var _v in args)
+            {
+                var nameprop = (string)_v.Properties["Name"].ComputedValue;
+                if (Name == nameprop) return _v.GetCurrentValue() as Argument;
+            }
+            if (add)
+            {
+                Argument myArg = Argument.Create(type, ArgumentDirection.InOut);
+                args.Add(myArg);
+                return myArg;
+            }
+            return null;
+        }
+        public DynamicActivityProperty GetArgumentOf<T>(string Name, bool add)
+        {
+            ModelService modelService = wfDesigner.Context.Services.GetService<ModelService>();
+            ModelItemCollection args = modelService.Root.Properties["Properties"].Collection;
+
+            foreach (var _v in args)
+            {
+                var nameprop = (string)_v.Properties["Name"].ComputedValue;
+                if (Name == nameprop) return _v.GetCurrentValue() as DynamicActivityProperty;
+            }
+            if (add)
+            {
+                args.Add(new DynamicActivityProperty
+                {
+                    Name = Name,
+                    Type = typeof(OutArgument<T>),
+                    Value = new OutArgument<T>() // new OutArgument<T>(myPara) // uses myPara.ToString() for default expression
+                });
+            }
+            return null;
+        }
+        public Variable GetVariable(string Name, Type type)
+        {
+            try
+            {
+                MethodInfo method = typeof(WFDesigner).GetMethod("GetVariableOf");
+                MethodInfo generic = method.MakeGenericMethod(type);
+                var res = generic.Invoke(this, new object[] { Name });
+                return (Variable)res;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                throw;
+            }
+        }
+        public Variable<T> GetVariableOf<T>(string Name)
+        {
+            if (selectedActivity == null) throw new Exception("Cannot get variable when no activity has been selected");
+            var seq = GetVariableScope(selectedActivity);
+            if (seq == null) throw new Exception("Cannot add variables to root activity!");
+            Variable<T> result = null;
+            result = GetVariableModel<T>(Name, selectedActivity);
+            if (result == null)
+            {
+                ModelService modelService = wfDesigner.Context.Services.GetService<ModelService>();
+                using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
+                {
+                    var Variables = seq.Properties["Variables"].Collection;
+                    result = new Variable<T>() { Name = Name };
+                    Variables.Add(result);
+                    editingScope.Complete();
+                }
+            }
+            return result;
+        }
+        public Variable<T> GetVariableModel<T>(string Name, ModelItem model)
+        {
+            Variable<T> result = null;
+
+            if (model.Properties["Variables"] != null)
+            {
+                var Variables = model.Properties["Variables"].Collection;
+                foreach (var _v in Variables)
+                {
+                    var nameprop = (string)_v.Properties["Name"].ComputedValue;
+                    if (Name == nameprop) return _v.GetCurrentValue() as Variable<T>;
+                }
+            }
+            if (model.Parent != null)
+            {
+                result = GetVariableModel<T>(Name, model.Parent);
+            }
+            return result;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

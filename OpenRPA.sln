@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.NativeMessagingHost
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.NM", "OpenRPA.NM\OpenRPA.NM.csproj", "{0217C47B-55FB-473C-B579-38D08D9949CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.ExpressionEditor", "OpenRPA.ExpressionEditor\OpenRPA.ExpressionEditor.csproj", "{0D52B2E1-1998-4238-B601-57A2D6ADE2E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{0217C47B-55FB-473C-B579-38D08D9949CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0217C47B-55FB-473C-B579-38D08D9949CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0217C47B-55FB-473C-B579-38D08D9949CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D52B2E1-1998-4238-B601-57A2D6ADE2E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D52B2E1-1998-4238-B601-57A2D6ADE2E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D52B2E1-1998-4238-B601-57A2D6ADE2E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D52B2E1-1998-4238-B601-57A2D6ADE2E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

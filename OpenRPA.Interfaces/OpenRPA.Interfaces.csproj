@@ -51,6 +51,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Presentation" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Security" />
@@ -77,6 +78,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="GenericTools.cs" />
     <Compile Include="IBodyActivity.cs" />
+    <Compile Include="IDesigner.cs" />
     <Compile Include="IElement.cs" />
     <Compile Include="Image\Util.cs" />
     <Compile Include="Log.cs" />

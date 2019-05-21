@@ -12,7 +12,10 @@ namespace OpenRPA.ExpressionEditor
 {
     public class EditorService : IExpressionEditorService
     {
-
+        public EditorService()
+        {
+            AutoCompletionData = EditorUtil.autoCompletionTree;
+        }
         private IExpressionEditorInstance CreateEditor(ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text)
         {
             ExpressionNode data = AutoCompletionData;

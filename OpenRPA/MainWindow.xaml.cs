@@ -576,6 +576,7 @@ namespace OpenRPA
             Plugins.loadPlugins(Extensions.projectsDirectory);
             Task.Run(() =>
             {
+                ExpressionEditor.EditorUtil.init();
 
                 if (!string.IsNullOrEmpty(Config.local.wsurl))
                 {

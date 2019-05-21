@@ -122,6 +122,14 @@ namespace OpenRPA.Java
                     result = ((JavaSelectorItem)s).matches(_element);
                     current.AddRange(result);
                 }
+                if (current.Count == 0)
+                {
+                    // TODO: Figure out, why this is needed when working with Java Menu's
+                    foreach(var _e in elements)
+                    {
+                        if(s.Match(_e)) current.Add(_e);
+                    }
+                }
                 if (i == (selectors.Count - 1)) result = current.ToArray();
                 if (current.Count == 0)
                 {

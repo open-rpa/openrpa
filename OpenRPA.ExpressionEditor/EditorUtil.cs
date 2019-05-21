@@ -9,7 +9,12 @@ namespace OpenRPA.ExpressionEditor
 {
     public class EditorUtil
     {
+        public static ExpressionNode autoCompletionTree;
 
+        public static void init()
+        {
+            autoCompletionTree = CreateDefaultAutoCompletionTree();
+        }
         /// <summary>Builds a default auto-completion navigation tree based on the currently loaded 
         /// assemblies.</summary>
         public static ExpressionNode CreateDefaultAutoCompletionTree()

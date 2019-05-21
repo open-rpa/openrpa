@@ -54,7 +54,6 @@ namespace OpenRPA.Views
 
         // private static RoslynExpressionEditorService _expressionEditorService;
         private static EditorService _expressionEditorServiceVB;
-        private ExpressionNode autoCompletionTree;
         public WFDesigner(ClosableTab tab, Workflow workflow, Type[] extratypes)
         {
             this.tab = tab;
@@ -67,7 +66,6 @@ namespace OpenRPA.Views
             // Register the runtime metadata for the designer.
             new DesignerMetadata().Register();
 
-            this.autoCompletionTree = EditorUtil.CreateDefaultAutoCompletionTree();
 
 
             DesignerConfigurationService configService = wfDesigner.Context.Services.GetRequiredService<DesignerConfigurationService>();
@@ -87,7 +85,7 @@ namespace OpenRPA.Views
             //if (_expressionEditorServiceVB == null) _expressionEditorServiceVB = new EditorService();
             //wfDesigner.Context.Services.Publish<IExpressionEditorService>(_expressionEditorServiceVB);
 
-            wfDesigner.Context.Services.Publish<IExpressionEditorService>(new EditorService { AutoCompletionData = this.autoCompletionTree });
+            wfDesigner.Context.Services.Publish<IExpressionEditorService>(new EditorService());
 
             if (!string.IsNullOrEmpty(workflow.Xaml))
             {

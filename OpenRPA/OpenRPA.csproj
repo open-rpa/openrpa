@@ -105,6 +105,7 @@
     <Compile Include="Activities\ClickElementDesigner.xaml.cs">
       <DependentUpon>ClickElementDesigner.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Activities\vKey.cs" />
     <Compile Include="BindingProxy.cs" />
     <Compile Include="Resources\ResFinder.cs" />
     <Compile Include="Store\AsyncResult.cs" />

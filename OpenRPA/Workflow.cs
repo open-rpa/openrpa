@@ -186,6 +186,7 @@ namespace OpenRPA
             if(instance.state != "idle")
             {
                 Console.WriteLine("Workflow " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
+                GenericTools.restore(GenericTools.mainWindow);
             }
             idleOrComplete?.Invoke(this, instance);
         }

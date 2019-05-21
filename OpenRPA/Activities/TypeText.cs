@@ -113,5 +113,51 @@ namespace OpenRPA.Activities
             System.Threading.Thread.Sleep(postdelay);
 
         }
+
+        private List<vKey> _keys;
+
+        public void AddKey(vKey _key, System.Activities.Presentation.Model.ModelItem lastinsertedmodel)
+        {
+            if(_keys == null) _keys = new List<vKey>();
+            _keys.Add(_key);
+            string result = "";
+            for (var i = 0; i < _keys.Count; i++)
+            {
+                string val = "";
+                var key = _keys[i];
+                if (key.up == false && (i + 1) < _keys.Count)
+                {
+                    if (key.KeyCode == _keys[i + 1].KeyCode && _keys[i + 1].up)
+                    {
+                        i++;
+                        val = "{" + key.KeyCode.ToString() + "}";
+                        if (key.KeyCode.ToString().StartsWith("KEY_"))
+                        {
+                            val = key.KeyCode.ToString().Substring(4).ToLower();
+                        }
+                        if (key.KeyCode == FlaUI.Core.WindowsAPI.VirtualKeyShort.SPACE)
+                        {
+                            val = " ";
+                        }
+                    }
+                }
+                if (string.IsNullOrEmpty(val))
+                {
+                    if (key.up == false)
+                    {
+                        val = "{" + key.KeyCode.ToString() + " down}";
+                    }
+                    else
+                    {
+                        val = "{" + key.KeyCode.ToString() + " up}";
+                    }
+
+                }
+                result += val;
+            }
+            //Text = result;
+            if (result == null) result = "";
+            lastinsertedmodel.Properties["Text"].SetValue(new InArgument<string>(result));
+        }
     }
 }

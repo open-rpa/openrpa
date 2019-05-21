@@ -32,6 +32,9 @@ namespace OpenRPA.Views
     /// </summary>
     public partial class WFDesigner : UserControl, System.ComponentModel.INotifyPropertyChanged, IDesigner
     {
+        public System.Activities.Activity lastinserted { get; set; }
+        public System.Activities.Presentation.Model.ModelItem lastinsertedmodel { get; set; }
+
         public Action<WFDesigner> onChanged { get; set; }
         public WorkflowDesigner wfDesigner { get; private set; }
         public Workflow Workflow { get; private set; }

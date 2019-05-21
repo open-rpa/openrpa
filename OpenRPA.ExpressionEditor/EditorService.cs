@@ -13,13 +13,15 @@ namespace OpenRPA.ExpressionEditor
     public class EditorService : IExpressionEditorService
     {
 
-        private IExpressionEditorInstance CreateEditor(    AssemblyContextControlItem assemblies, ImportedNamespaceContextItem importedNamespaces,
-    List<ModelItem> variables, string text, Type expressionType)
+        private IExpressionEditorInstance CreateEditor(ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text)
         {
+            ExpressionNode data = AutoCompletionData;
+            data = AddVariablesToAutoCompletionList(data, variables);
+            data = AddNamespacesToAutoCompletionList(data, importedNamespaces);
             EditorInstance instance = new EditorInstance
             {
-                AutoCompletionList = this.AddVariablesToAutoCompletionList(variables),
-                LanguageKeywords = this.LanguageKeywords,
+                AutoCompletionList = data,
+                LanguageKeywords = LanguageKeywords,
                 Text = text
             };
             return instance;
@@ -40,15 +42,27 @@ namespace OpenRPA.ExpressionEditor
         /// Gets or sets the root node in the expression auto-completion tree.
         /// </summary>
         public ExpressionNode AutoCompletionData { get; set; }
+        private ExpressionNode AddNamespacesToAutoCompletionList(ExpressionNode data, ImportedNamespaceContextItem importedNamespaces)
+        {
+            foreach(var ns in importedNamespaces.ImportedNamespaces)
+            {
 
+                var foundNodes = ExpressionNode.SearchForNode(data, ns, true, true);
+                foreach(var node in foundNodes.Nodes)
+                {
+                    data.Add(node);
+                }
+            }
+            return data;
+        }
+        
         /// <summary>
         /// Returns an updated auto-completion expression tree that uses the baseline data in the 
         /// <see cref="AutoCompletionData" /> property and appends the specified variable names.
         /// </summary>
         /// <param name="variables">The collection of variables to include.</param>
-        private ExpressionNode AddVariablesToAutoCompletionList(List<ModelItem> variables)
+        private ExpressionNode AddVariablesToAutoCompletionList(ExpressionNode data, List<ModelItem> variables)
         {
-            ExpressionNode data = this.AutoCompletionData;
             Type systemType;
             ModelProperty property;
 
@@ -66,60 +80,45 @@ x.Name.Equals(computedName)
 
                 if (results.Count == 0)
                 {
-                    data.Nodes.Add(new ExpressionNode
+                    Type child = item.ItemType.GenericTypeArguments[0];
+                    var entityNode = new ExpressionNode
                     {
                         Name = computedName,
                         ItemType = "variable",
                         Description = "Variable: " + computedName
-                    });
+                    };
+                    EditorUtil.AddFieldNodes(entityNode, child);
+                    EditorUtil.AddPropertyNodes(entityNode, child);
+                    EditorUtil.AddMethodNodes(entityNode, child);
+                    data.Nodes.Add(entityNode);
+
                 }
             }
 
             return data;
         }
-
+        private IExpressionEditorInstance CreateEditor(AssemblyContextControlItem assemblies, ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text, Type expressionType)
+        {
+            return CreateEditor(importedNamespaces, variables, text);
+        }
         public IExpressionEditorInstance CreateExpressionEditor(AssemblyContextControlItem assemblies, ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text, Type expressionType)
         {
-            EditorInstance instance = new EditorInstance
-            {
-                AutoCompletionList = this.AddVariablesToAutoCompletionList(variables),
-                LanguageKeywords = this.LanguageKeywords,
-                Text = text
-            };
-            return instance;
+            return CreateEditor(importedNamespaces, variables, text);
         }
 
         public IExpressionEditorInstance CreateExpressionEditor(AssemblyContextControlItem assemblies, ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text, Type expressionType, Size initialSize)
         {
-            EditorInstance instance = new EditorInstance
-            {
-                AutoCompletionList = this.AddVariablesToAutoCompletionList(variables),
-                LanguageKeywords = this.LanguageKeywords,
-                Text = text
-            };
-            return instance;
+            return CreateEditor(importedNamespaces, variables, text);
         }
 
         public IExpressionEditorInstance CreateExpressionEditor(AssemblyContextControlItem assemblies, ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text)
         {
-            EditorInstance instance = new EditorInstance
-            {
-                AutoCompletionList = this.AddVariablesToAutoCompletionList(variables),
-                LanguageKeywords = this.LanguageKeywords,
-                Text = text
-            };
-            return instance;
+            return CreateEditor(importedNamespaces, variables, text);
         }
 
         public IExpressionEditorInstance CreateExpressionEditor(AssemblyContextControlItem assemblies, ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text, Size initialSize)
         {
-            EditorInstance instance = new EditorInstance
-            {
-                AutoCompletionList = this.AddVariablesToAutoCompletionList(variables),
-                LanguageKeywords = this.LanguageKeywords,
-                Text = text
-            };
-            return instance;
+            return CreateEditor(importedNamespaces, variables, text);
         }
 
         public void CloseExpressionEditors()

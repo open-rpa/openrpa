@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="EditorInstance.cs" />
     <Compile Include="EditorService.cs" />
+    <Compile Include="EditorUtil.cs" />
     <Compile Include="ExpressionNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

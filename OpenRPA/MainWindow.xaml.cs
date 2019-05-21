@@ -589,6 +589,7 @@ namespace OpenRPA
                                 To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
                                 Value = win.Text
                             }, "item");
+                            e.Element.Value = win.Text;
                         } else { e.SupportInput = false;  }
                     }
                     view.lastinserted = e.a.Activity;

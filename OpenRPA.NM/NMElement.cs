@@ -120,50 +120,19 @@ namespace OpenRPA.NM
             Y = message.uiy;
             Width = message.uiwidth;
             Height = message.uiheight;
-            //nativebrowser = message.browser;
-            //tabid = message.tabid;
-            //frameId = message.frameId;
-            //zn_id = message.zn_id;
-            //uix = message.uix;
-            //uiy = message.uiy;
-            //uiwidth = message.uiwidth;
-            //uiheight = message.uiheight;
-            //var _chromeelement = message.result;
-            //if (!string.IsNullOrEmpty(_chromeelement))
-            //{
-            //    var c = JObject.Parse(_chromeelement);
-            //    this.chromeelement = c.ToObject<Dictionary<string, object>>();
-            //    if (this.chromeelement.ContainsKey("xPath")) xpath = this.chromeelement["xPath"].ToString();
-            //    if (this.chromeelement.ContainsKey("cssPath")) cssselector = this.chromeelement["cssPath"].ToString();
-            //    //this.xpath = xpath;
-            //    //this.cssselector = cssselector;
-            //    if (chromeelement.ContainsKey("attributes"))
-            //    {
-            //        JObject _c = (JObject)chromeelement["attributes"];
-            //        var attributes = _c.ToObject<Dictionary<string, object>>();
-            //        foreach (var a in attributes)
-            //        {
-            //            chromeelement[a.Key] = a.Value;
-            //        }
-            //    }
-            //}
-            //if (zn_id == -1) throw new Exception("FAILED!");
         }
         public NMElement(NativeMessagingMessage message, string _chromeelement)
         {
-            //this.tabid = tabid;
-            //this.frameid = frameId;
-            //this.nativebrowser = nativebrowser;
             this.message = message;
             parseChromeString(_chromeelement);
         }
         object IElement.RawElement { get => message; set => message = value as NativeMessagingMessage; }
-        public string value
+        public string Value
         {
             get
             {
-                if (chromeelement.ContainsKey("value")) return (string)chromeelement["value"];
-                if (chromeelement.ContainsKey("innerText")) return (string)chromeelement["innerText"];
+                if (chromeelement.ContainsKey("value")) return chromeelement["value"].ToString();
+                if (chromeelement.ContainsKey("innertext")) return chromeelement["innertext"].ToString();
                 return null;
             }
             set

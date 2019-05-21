@@ -126,6 +126,7 @@ namespace OpenRPA.Interfaces
             if (category == "Tracing") return;
             //builder.Insert(0, message + Environment.NewLine);
             DateTime dt = DateTime.Now;
+            System.IO.File.AppendAllText("log.txt", string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
             if (category == "Output")
             {
                 //Outputbuilder.Append(string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));

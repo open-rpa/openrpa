@@ -846,7 +846,10 @@ namespace OpenRPA
                 _ = global.webSocketClient.QueueMessage(instance.queuename, command, instance.correlationId);
             } else
             {
-                GenericTools.restore(GenericTools.mainWindow);
+                if(instance.state != "idle")
+                {
+                    GenericTools.restore(GenericTools.mainWindow);
+                }
             }
 
         }

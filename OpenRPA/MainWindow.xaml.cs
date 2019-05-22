@@ -1,4 +1,5 @@
-﻿using OpenRPA.Input;
+﻿using Newtonsoft.Json.Linq;
+using OpenRPA.Input;
 using OpenRPA.Interfaces;
 using OpenRPA.Net;
 using System;
@@ -400,7 +401,9 @@ namespace OpenRPA
             var designer = (Views.WFDesigner)item;
             if (designer.HasChanged) { await designer.Save(); }
             GenericTools.minimize(GenericTools.mainWindow);
-            designer.Workflow.Run();
+
+            var param = new Dictionary<string, object>();
+            await designer.Workflow.Run(param, null, null, onIdle);
             return;
         }
         private bool canStop(object item)
@@ -634,6 +637,7 @@ namespace OpenRPA
                     {
                         try
                         {
+                            Log.Debug("Signing in as " + Config.local.username);
                             user = await global.webSocketClient.Signin(Config.local.username, Config.local.UnprotectString(Config.local.password));
                         }
                         catch (Exception ex)
@@ -690,7 +694,9 @@ namespace OpenRPA
 
                     if (Projects.Count != 0) return;
 
+                    Log.Debug("Get workflows from server");
                     var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}");
+                    Log.Debug("Get projects from server");
                     var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}");
 
 
@@ -753,6 +759,7 @@ namespace OpenRPA
                 LabelStatusBar.Content = "Connected to " + Config.local.wsurl + " as " + user.name;
                 if (Projects.Count > 0)
                 {
+                    Log.Debug("Opening first project");
                     onOpenProject(Projects[0]);
                 }
             }, null);
@@ -792,6 +799,8 @@ namespace OpenRPA
                     global.webSocketClient = new WebSocketClient(Config.local.wsurl);
                     global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
                     global.webSocketClient.OnClose += WebSocketClient_OnClose;
+                    global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
+                    
                     _ = global.webSocketClient.Connect();
                 }
                 else
@@ -813,6 +822,75 @@ namespace OpenRPA
                 AddHotKeys();
             });
         }
+
+        private Workflow GetWorkflowById(string id)
+        {
+            foreach(var p in Projects)
+            {
+                foreach(var wf in p.Workflows)
+                {
+                    if (wf._id == id) return wf;
+                }
+            }
+            return null;
+        }
+        private void onIdle(WorkflowInstance instance, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
+            {
+                RobotCommand command = new RobotCommand();
+                var data = JObject.FromObject(instance.Parameters);
+                command.command = "invoke" + instance.state;
+                command.workflowid = instance.WorkflowId;
+                command.data = data;
+                _ = global.webSocketClient.QueueMessage(instance.queuename, command, instance.correlationId);
+            } else
+            {
+                GenericTools.restore(GenericTools.mainWindow);
+            }
+
+        }
+        private async void WebSocketClient_OnQueueMessage(QueueMessage message)
+        {
+            RobotCommand command = null;
+            try
+            {
+                command = Newtonsoft.Json.JsonConvert.DeserializeObject<RobotCommand>(message.data.ToString());
+                var data = JObject.Parse(command.data.ToString());
+                if (command.command == "invoke")
+                {
+                    var workflow = GetWorkflowById(command.workflowid);
+                    if (workflow == null) throw new Exception("Unknown workflow " + command.workflowid);
+                    var param = new Dictionary<string, object>();
+                    foreach(var k in data)
+                    {
+                        switch (k.Value.Type)
+                        {
+                            case JTokenType.Integer: param.Add(k.Key, k.Value.Value<int>()); break;
+                            case JTokenType.Float: param.Add(k.Key, k.Value.Value<float>()); break;
+                            case JTokenType.Boolean: param.Add(k.Key, k.Value.Value<bool>()); break;
+                            case JTokenType.Date: param.Add(k.Key, k.Value.Value<DateTime>()); break;
+                            case JTokenType.TimeSpan: param.Add(k.Key, k.Value.Value<TimeSpan>()); break;
+                            default: param.Add(k.Key, k.Value.Value<string>()); break;
+                        }
+                    }
+                    await workflow.Run(param, message.replyto, message.correlationId, onIdle);
+                    command.command = "invokesuccess";
+                }
+            }
+            catch (Exception ex)
+            {
+                command = new RobotCommand();
+                command.command = "error";
+                command.data = JObject.FromObject(ex);
+            }
+            // string data = Newtonsoft.Json.JsonConvert.SerializeObject(command);
+            if(message.replyto != message.queuename)
+            {
+                await global.webSocketClient.QueueMessage(message.replyto, command, message.correlationId);
+            }
+        }
+
         private void Window_Closed(object sender, EventArgs e)
         {
             // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds

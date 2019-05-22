@@ -1,4 +1,5 @@
-﻿using OpenRPA.Input;
+﻿using Newtonsoft.Json.Linq;
+using OpenRPA.Input;
 using OpenRPA.Interfaces;
 using OpenRPA.Net;
 using System;
@@ -36,22 +37,16 @@ namespace OpenRPA
             GenericTools.mainWindow = this;
             System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Critical;
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-
             AppDomain currentDomain = AppDomain.CurrentDomain;
-
             System.Windows.Forms.Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-
             // .WriteTo.Console()
             //Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
-
             //    .WriteTo.File("log-.txt", rollingInterval: RollingInterval.Day)
             //    .WriteTo.OpenRPATracing(tracing)
             //    .CreateLogger();
-
             System.Diagnostics.Trace.Listeners.Add(tracing);
             Console.SetOut(new DebugTextWriter());
-
             lvDataBinding.ItemsSource = Plugins.recordPlugins;
 
         }
@@ -406,7 +401,9 @@ namespace OpenRPA
             var designer = (Views.WFDesigner)item;
             if (designer.HasChanged) { await designer.Save(); }
             GenericTools.minimize(GenericTools.mainWindow);
-            designer.Workflow.Run();
+
+            var param = new Dictionary<string, object>();
+            await designer.Workflow.Run(param, null, null, onIdle);
             return;
         }
         private bool canStop(object item)
@@ -475,7 +472,6 @@ namespace OpenRPA
             {
                 if (mainTabControl.SelectedContent is Views.WFDesigner view)
                 {
-                    // if (lastinsertedmodel != null && lastinsertedmodel.ItemType == typeof(Activities.TypeText))
                     if (view.lastinserted != null && view.lastinserted is Activities.TypeText)
                     {
                         Log.Debug("re-use existing TypeText");
@@ -506,20 +502,11 @@ namespace OpenRPA
             {
                 if (mainTabControl.SelectedContent is Views.WFDesigner view)
                 {
-                    // if(lastinsertedmodel != null && lastinsertedmodel.ItemType == typeof(Activities.TypeText))
                     if (view.lastinserted != null && view.lastinserted is Activities.TypeText)
                     {
                         Log.Debug("re-use existing TypeText");
                         var item = (Activities.TypeText)view.lastinserted;
                         item.AddKey(new Activities.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, true), view.lastinsertedmodel);
-                    }
-                    else
-                    {
-                        Log.Debug("Add new TypeText");
-                        var rme = new Activities.TypeText();
-                        view.lastinsertedmodel = view.addActivity(rme);
-                        rme.AddKey(new Activities.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, true), view.lastinsertedmodel);
-                        view.lastinserted = rme;
                     }
                 }
 
@@ -583,6 +570,7 @@ namespace OpenRPA
                     {
                         var win = new Views.InsertText();
                         win.Topmost = true;
+                        isRecording = false;
                         if (win.ShowDialog() == true)
                         {
                             e.a.addActivity(new System.Activities.Statements.Assign<string>
@@ -594,6 +582,7 @@ namespace OpenRPA
                             }, "item");
                             e.Element.Value = win.Text;
                         } else { e.SupportInput = false;  }
+                        isRecording = true;
                     }
                     view.lastinserted = e.a.Activity;
                     view.lastinsertedmodel = view.addActivity(e.a.Activity);
@@ -648,6 +637,7 @@ namespace OpenRPA
                     {
                         try
                         {
+                            Log.Debug("Signing in as " + Config.local.username);
                             user = await global.webSocketClient.Signin(Config.local.username, Config.local.UnprotectString(Config.local.password));
                         }
                         catch (Exception ex)
@@ -681,17 +671,32 @@ namespace OpenRPA
                 this.Show();
                 lvDataBinding.ItemsSource = Plugins.recordPlugins;
 
+                _ = Task.Run(async () =>
+                  {
+                      try
+                      {
+                          var host = Environment.MachineName.ToLower();
+                          var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
+                          Log.Debug("Registering robot in robot." + Config.local.username + " queue");
+                          await global.webSocketClient.RegisterQueue("robot." + Config.local.username);
+                          Log.Debug("Registering robot in robot." + fqdn + " queue");
+                          await global.webSocketClient.RegisterQueue("robot." + fqdn);
+                      }
+                      catch (Exception ex)
+                      {
+                          Log.Error("Error RegisterQueue" + ex.ToString());
+                      }
+                  });
+
                 try
                 {
-                    var host = Environment.MachineName.ToLower();
-                    var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
-                    await global.webSocketClient.RegisterQueue("robot." + Config.local.username);
-                    await global.webSocketClient.RegisterQueue("robot." + fqdn);
 
 
                     if (Projects.Count != 0) return;
 
+                    Log.Debug("Get workflows from server");
                     var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}");
+                    Log.Debug("Get projects from server");
                     var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}");
 
 
@@ -754,6 +759,7 @@ namespace OpenRPA
                 LabelStatusBar.Content = "Connected to " + Config.local.wsurl + " as " + user.name;
                 if (Projects.Count > 0)
                 {
+                    Log.Debug("Opening first project");
                     onOpenProject(Projects[0]);
                 }
             }, null);
@@ -793,6 +799,8 @@ namespace OpenRPA
                     global.webSocketClient = new WebSocketClient(Config.local.wsurl);
                     global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
                     global.webSocketClient.OnClose += WebSocketClient_OnClose;
+                    global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
+                    
                     _ = global.webSocketClient.Connect();
                 }
                 else
@@ -814,6 +822,78 @@ namespace OpenRPA
                 AddHotKeys();
             });
         }
+
+        private Workflow GetWorkflowById(string id)
+        {
+            foreach(var p in Projects)
+            {
+                foreach(var wf in p.Workflows)
+                {
+                    if (wf._id == id) return wf;
+                }
+            }
+            return null;
+        }
+        private void onIdle(WorkflowInstance instance, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
+            {
+                RobotCommand command = new RobotCommand();
+                var data = JObject.FromObject(instance.Parameters);
+                command.command = "invoke" + instance.state;
+                command.workflowid = instance.WorkflowId;
+                command.data = data;
+                _ = global.webSocketClient.QueueMessage(instance.queuename, command, instance.correlationId);
+            } else
+            {
+                if(instance.state != "idle")
+                {
+                    GenericTools.restore(GenericTools.mainWindow);
+                }
+            }
+
+        }
+        private async void WebSocketClient_OnQueueMessage(QueueMessage message)
+        {
+            RobotCommand command = null;
+            try
+            {
+                command = Newtonsoft.Json.JsonConvert.DeserializeObject<RobotCommand>(message.data.ToString());
+                var data = JObject.Parse(command.data.ToString());
+                if (command.command == "invoke")
+                {
+                    var workflow = GetWorkflowById(command.workflowid);
+                    if (workflow == null) throw new Exception("Unknown workflow " + command.workflowid);
+                    var param = new Dictionary<string, object>();
+                    foreach(var k in data)
+                    {
+                        switch (k.Value.Type)
+                        {
+                            case JTokenType.Integer: param.Add(k.Key, k.Value.Value<int>()); break;
+                            case JTokenType.Float: param.Add(k.Key, k.Value.Value<float>()); break;
+                            case JTokenType.Boolean: param.Add(k.Key, k.Value.Value<bool>()); break;
+                            case JTokenType.Date: param.Add(k.Key, k.Value.Value<DateTime>()); break;
+                            case JTokenType.TimeSpan: param.Add(k.Key, k.Value.Value<TimeSpan>()); break;
+                            default: param.Add(k.Key, k.Value.Value<string>()); break;
+                        }
+                    }
+                    await workflow.Run(param, message.replyto, message.correlationId, onIdle);
+                    command.command = "invokesuccess";
+                }
+            }
+            catch (Exception ex)
+            {
+                command = new RobotCommand();
+                command.command = "error";
+                command.data = JObject.FromObject(ex);
+            }
+            // string data = Newtonsoft.Json.JsonConvert.SerializeObject(command);
+            if(message.replyto != message.queuename)
+            {
+                await global.webSocketClient.QueueMessage(message.replyto, command, message.correlationId);
+            }
+        }
+
         private void Window_Closed(object sender, EventArgs e)
         {
             // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds

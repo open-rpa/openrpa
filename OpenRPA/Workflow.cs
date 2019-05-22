@@ -28,8 +28,9 @@ namespace OpenRPA
             get { if (_Instances == null) _Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>(); return _Instances; }
             set { _Instances = value; }
         }
-        [JsonIgnore]
-        public Action<Workflow, WorkflowInstance> idleOrComplete { get; set; }
+        //[JsonIgnore]
+        // public Action<Workflow, WorkflowInstance> idleOrComplete { get; set; }
+        public event WorkflowInstance.idleOrComplete OnIdleOrComplete;
         [JsonIgnore]
         public Project Project { get; set; }
         private System.Collections.ObjectModel.ObservableCollection<WorkflowInstance> _Instances;
@@ -172,13 +173,15 @@ namespace OpenRPA
                 return wf;
             }
         }
-        public void Run() { Run(new Dictionary<string, object>()); }
-        public async void Run(Dictionary<string, object> Parameters)
+        public async Task<WorkflowInstance> Run() { return await Run(new Dictionary<string, object>(), null, null, null); }
+        public async Task<WorkflowInstance> Run(Dictionary<string, object> Parameters, string queuename, string correlationId, WorkflowInstance.idleOrComplete idleOrComplete)
         {
             var instance = await WorkflowInstance.Create(this, Parameters);
-            instance.idleOrComplete += onIdleOrComplete;
+            instance.queuename = queuename; instance.correlationId = correlationId;
+            if (idleOrComplete != null) instance.OnIdleOrComplete += idleOrComplete;
             Instances.Add(instance);
             await instance.Run();
+            return instance;
         }
         public void onIdleOrComplete(WorkflowInstance instance)
         {
@@ -189,7 +192,7 @@ namespace OpenRPA
                 Console.WriteLine("Workflow " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
                 GenericTools.restore(GenericTools.mainWindow);
             }
-            idleOrComplete?.Invoke(this, instance);
+            OnIdleOrComplete?.Invoke(instance, EventArgs.Empty);
         }
     }
     public enum workflowparameterdirection

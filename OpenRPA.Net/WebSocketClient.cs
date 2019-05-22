@@ -23,6 +23,7 @@ namespace OpenRPA.Net
 
         public event Action OnOpen;
         public event Action<string> OnClose;
+        public event Action<QueueMessage> OnQueueMessage;
         // public event Action OnMessage;
 
         public TokenUser user { get; private set; }
@@ -120,7 +121,7 @@ namespace OpenRPA.Net
             byte[] buffer = new byte[1024];
             while (isConnected)
             {
-                await Task.Delay(1000);
+                await Task.Delay(10000);
                 var msg = new Message("ping");
                 msg.SendMessage(this);
             }
@@ -214,7 +215,6 @@ namespace OpenRPA.Net
         {
             _sendQueue.Add(msg);
         }
-        static bool dofail = false;
         private void Process(Message msg)
         {
             if (!string.IsNullOrEmpty(msg.replyto))
@@ -259,15 +259,18 @@ namespace OpenRPA.Net
                         break;
                     case "queuemessage":
                         msg.reply();
-                        var qm = JsonConvert.DeserializeObject<QueueMessage>(msg.data);
-                        if (dofail)
+                        try
                         {
-                            qm.error = "Go away !!!!";
-                        } else { 
-                            qm.data = "{\"payload\": \"Reply from robot client at " + DateTime.Now + "\"}";
+                            var qm = JsonConvert.DeserializeObject<QueueMessage>(msg.data);
+
+                            OnQueueMessage?.Invoke(qm);
+                            msg.data = JsonConvert.SerializeObject(qm);
                         }
-                        dofail = !dofail;
-                        msg.data = JsonConvert.SerializeObject(qm);
+                        catch (Exception ex)
+                        {
+                            msg.command = "error";
+                            msg.data = ex.ToString();
+                        }
                         msg.SendMessage(this);
                         break;
                     default:
@@ -307,6 +310,14 @@ namespace OpenRPA.Net
             RegisterQueueMessage RegisterQueue = new RegisterQueueMessage(queuename);
             RegisterQueue = await RegisterQueue.SendMessage<RegisterQueueMessage>(this);
             if (!string.IsNullOrEmpty(RegisterQueue.error)) throw new Exception(RegisterQueue.error);
+        }
+        public async Task QueueMessage(string queuename, object data, string correlationId = null)
+        {
+            QueueMessage qm = new QueueMessage(queuename);
+            qm.data = data;
+            qm.correlationId = correlationId;
+            qm = await qm.SendMessage<QueueMessage>(this);
+            if (!string.IsNullOrEmpty(qm.error)) throw new Exception(qm.error);
         }
 
         public async Task<T[]> Query<T>(string collectionname, string query)

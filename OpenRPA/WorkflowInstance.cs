@@ -16,10 +16,14 @@ namespace OpenRPA
             _type = "workflowinstance";
         }
         public static List<WorkflowInstance> Instances = new List<WorkflowInstance>();
-        [JsonIgnore]
-        public Action<WorkflowInstance> idleOrComplete { get; set; }
+
+        public delegate void idleOrComplete(WorkflowInstance sender, EventArgs e);
+
+        public event idleOrComplete OnIdleOrComplete;
         public Dictionary<string, object> Parameters { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
         public Dictionary<string, object> Bookmarks { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
+        public string queuename { get; set; }
+        public string correlationId { get; set; }
         public string InstanceId { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string WorkflowId { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string xml { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -132,7 +136,7 @@ namespace OpenRPA
             errormessage = Reason;
             _ = Save();
             if (runWatch != null) runWatch.Stop();
-            idleOrComplete?.Invoke(this);
+            OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
         }
         public System.Diagnostics.Stopwatch runWatch { get; private set; }
         public async Task Run()
@@ -172,7 +176,7 @@ namespace OpenRPA
                 errormessage = ex.Message;
                 await Save();
                 if (runWatch != null) runWatch.Stop();
-                idleOrComplete?.Invoke(this);
+                OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
             }
         }
         private void addwfApphandlers(System.Activities.WorkflowApplication wfApp)
@@ -189,16 +193,9 @@ namespace OpenRPA
                 else if (e.CompletionState == System.Activities.ActivityInstanceState.Closed)
                 {
                     state = "completed";
-                    foreach (var prop in Parameters.ToList())
-                    {
-                        if (e.Outputs.ContainsKey(prop.Key))
-                        {
-                            Parameters[prop.Key] = prop.Value;
-                        }
-                    }
-                    foreach (var o in e.Outputs) e.Outputs.Add(o);
+                    foreach (var o in e.Outputs) Parameters[o.Key] = o.Value;
                     if (runWatch != null) runWatch.Stop();
-                    idleOrComplete?.Invoke(this);
+                    OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
                 }
                 else if (e.CompletionState == System.Activities.ActivityInstanceState.Executing)
                 {
@@ -217,7 +214,7 @@ namespace OpenRPA
                 errormessage = e.Reason.Message;
                 _ = Save();
                 if(runWatch!=null) runWatch.Stop();
-                idleOrComplete?.Invoke(this);
+                OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
             };
 
             wfApp.Idle = delegate (System.Activities.WorkflowApplicationIdleEventArgs e)
@@ -232,7 +229,7 @@ namespace OpenRPA
                 _ = Save();
                 if (state != "completed")
                 {
-                    idleOrComplete?.Invoke(this);
+                    OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
                 }
             };
 
@@ -262,7 +259,7 @@ namespace OpenRPA
                 errormessage = e.UnhandledException.ToString();
                 //exceptionsource = e.ExceptionSource.Id;
                 if (runWatch != null) runWatch.Stop();
-                idleOrComplete?.Invoke(this);
+                OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
                 return System.Activities.UnhandledExceptionAction.Terminate;
             };
 

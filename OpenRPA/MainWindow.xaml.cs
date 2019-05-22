@@ -36,22 +36,16 @@ namespace OpenRPA
             GenericTools.mainWindow = this;
             System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Critical;
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-
             AppDomain currentDomain = AppDomain.CurrentDomain;
-
             System.Windows.Forms.Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-
             // .WriteTo.Console()
             //Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
-
             //    .WriteTo.File("log-.txt", rollingInterval: RollingInterval.Day)
             //    .WriteTo.OpenRPATracing(tracing)
             //    .CreateLogger();
-
             System.Diagnostics.Trace.Listeners.Add(tracing);
             Console.SetOut(new DebugTextWriter());
-
             lvDataBinding.ItemsSource = Plugins.recordPlugins;
 
         }
@@ -475,7 +469,6 @@ namespace OpenRPA
             {
                 if (mainTabControl.SelectedContent is Views.WFDesigner view)
                 {
-                    // if (lastinsertedmodel != null && lastinsertedmodel.ItemType == typeof(Activities.TypeText))
                     if (view.lastinserted != null && view.lastinserted is Activities.TypeText)
                     {
                         Log.Debug("re-use existing TypeText");
@@ -506,20 +499,11 @@ namespace OpenRPA
             {
                 if (mainTabControl.SelectedContent is Views.WFDesigner view)
                 {
-                    // if(lastinsertedmodel != null && lastinsertedmodel.ItemType == typeof(Activities.TypeText))
                     if (view.lastinserted != null && view.lastinserted is Activities.TypeText)
                     {
                         Log.Debug("re-use existing TypeText");
                         var item = (Activities.TypeText)view.lastinserted;
                         item.AddKey(new Activities.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, true), view.lastinsertedmodel);
-                    }
-                    else
-                    {
-                        Log.Debug("Add new TypeText");
-                        var rme = new Activities.TypeText();
-                        view.lastinsertedmodel = view.addActivity(rme);
-                        rme.AddKey(new Activities.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, true), view.lastinsertedmodel);
-                        view.lastinserted = rme;
                     }
                 }
 
@@ -583,6 +567,7 @@ namespace OpenRPA
                     {
                         var win = new Views.InsertText();
                         win.Topmost = true;
+                        isRecording = false;
                         if (win.ShowDialog() == true)
                         {
                             e.a.addActivity(new System.Activities.Statements.Assign<string>
@@ -594,6 +579,7 @@ namespace OpenRPA
                             }, "item");
                             e.Element.Value = win.Text;
                         } else { e.SupportInput = false;  }
+                        isRecording = true;
                     }
                     view.lastinserted = e.a.Activity;
                     view.lastinsertedmodel = view.addActivity(e.a.Activity);
@@ -681,12 +667,25 @@ namespace OpenRPA
                 this.Show();
                 lvDataBinding.ItemsSource = Plugins.recordPlugins;
 
+                _ = Task.Run(async () =>
+                  {
+                      try
+                      {
+                          var host = Environment.MachineName.ToLower();
+                          var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
+                          Log.Debug("Registering robot in robot." + Config.local.username + " queue");
+                          await global.webSocketClient.RegisterQueue("robot." + Config.local.username);
+                          Log.Debug("Registering robot in robot." + fqdn + " queue");
+                          await global.webSocketClient.RegisterQueue("robot." + fqdn);
+                      }
+                      catch (Exception ex)
+                      {
+                          Log.Error("Error RegisterQueue" + ex.ToString());
+                      }
+                  });
+
                 try
                 {
-                    var host = Environment.MachineName.ToLower();
-                    var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
-                    await global.webSocketClient.RegisterQueue("robot." + Config.local.username);
-                    await global.webSocketClient.RegisterQueue("robot." + fqdn);
 
 
                     if (Projects.Count != 0) return;

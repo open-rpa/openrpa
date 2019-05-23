@@ -83,7 +83,11 @@ x.Name.Equals(computedName)
 
                 if (results.Count == 0)
                 {
-                    Type child = item.ItemType.GenericTypeArguments[0];
+                    Type child = typeof(string);
+                    if (item.ItemType.GenericTypeArguments != null && item.ItemType.GenericTypeArguments.Length > 0)
+                    {
+                        child = item.ItemType.GenericTypeArguments[0];
+                    }
                     var entityNode = new ExpressionNode
                     {
                         Name = computedName,

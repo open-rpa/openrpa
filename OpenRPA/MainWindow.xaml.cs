@@ -131,6 +131,7 @@ namespace OpenRPA
         private void onSignout(object item)
         {
             autoReconnect = true;
+            Projects.Clear();
             Config.local.password = Config.local.ProtectString("BadPassword");
             _ = global.webSocketClient.Close();
         }
@@ -628,6 +629,9 @@ namespace OpenRPA
         {
             AutomationHelper.syncContext.Post(async o =>
             {
+                var sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+                Log.Debug("WebSocketClient_OnOpen::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                 LabelStatusBar.Content = "Connected to " + Config.local.wsurl;
                 TokenUser user = null;
                 while (user == null)
@@ -637,8 +641,11 @@ namespace OpenRPA
                     {
                         try
                         {
-                            Log.Debug("Signing in as " + Config.local.username);
+                            LabelStatusBar.Content = "Connected to " + Config.local.wsurl + " signing in as " + Config.local.username + " ...";
+                            Log.Debug("Signing in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                             user = await global.webSocketClient.Signin(Config.local.username, Config.local.UnprotectString(Config.local.password));
+                            Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                            LabelStatusBar.Content = "Connected to " + Config.local.wsurl + " as " + user.name;
                         }
                         catch (Exception ex)
                         {
@@ -677,10 +684,11 @@ namespace OpenRPA
                       {
                           var host = Environment.MachineName.ToLower();
                           var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
-                          Log.Debug("Registering robot in robot." + Config.local.username + " queue");
+                          Log.Debug("Registering robot in robot." + Config.local.username + " queue " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                           await global.webSocketClient.RegisterQueue("robot." + Config.local.username);
-                          Log.Debug("Registering robot in robot." + fqdn + " queue");
+                          Log.Debug("Registering robot in robot." + fqdn + " queue " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                           await global.webSocketClient.RegisterQueue("robot." + fqdn);
+                          Log.Debug("Registering robot conplete " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                       }
                       catch (Exception ex)
                       {
@@ -694,10 +702,11 @@ namespace OpenRPA
 
                     if (Projects.Count != 0) return;
 
-                    Log.Debug("Get workflows from server");
+                    Log.Debug("Get workflows from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                     var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}");
-                    Log.Debug("Get projects from server");
+                    Log.Debug("Get projects from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                     var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}");
+                    Log.Debug("Done getting workflows and projects " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
 
 
                     var folders = new List<string>();
@@ -722,13 +731,16 @@ namespace OpenRPA
                                 p.Workflows.Add(workflow);
                             }
                         }
+                        Log.Debug("Saving project " + p.name + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         p.SaveFile();
                         Projects.Add(p);
                     }
-                    foreach(var workflow in workflows)
+                    Log.Debug("RunPendingInstances::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                    foreach (var workflow in workflows)
                     {
                         await workflow.RunPendingInstances();
                     }
+                    Log.Debug("RunPendingInstances::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                     if (workflows.Count() == 0 && projects.Count() == 0)
                     {
                         var _Projects = Project.loadProjects(Extensions.projectsDirectory);
@@ -756,6 +768,7 @@ namespace OpenRPA
                     Log.Error(ex, "");
                     MessageBox.Show("WebSocketClient_OnOpen::Sync projects " + ex.Message);
                 }
+                Log.Debug("WebSocketClient_OnOpen::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                 LabelStatusBar.Content = "Connected to " + Config.local.wsurl + " as " + user.name;
                 if (Projects.Count > 0)
                 {

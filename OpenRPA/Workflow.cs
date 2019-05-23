@@ -129,10 +129,17 @@ namespace OpenRPA
             var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{WorkflowId: '" + _id + "', state: 'idle', fqdn: '" + fqdn + "'}");
             foreach(var i in results)
             {
-                i.Workflow = this;
-                WorkflowInstance.Instances.Add(i);
-                i.createApp();
-                await i.Run();
+                try
+                {
+                    i.Workflow = this;
+                    WorkflowInstance.Instances.Add(i);
+                    i.createApp();
+                    await i.Run();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("RunPendingInstances: " + ex.ToString());
+                }
             }
             
         }

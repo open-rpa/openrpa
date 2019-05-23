@@ -18,6 +18,7 @@ namespace OpenRPA.Windows
         public GetElementDesigner()
         {
             InitializeComponent();
+            HighlightImage = Extensions.GetImageSourceFromResource("search.png");
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
@@ -73,10 +74,17 @@ namespace OpenRPA.Windows
         }
         private void Highlight_Click(object sender, RoutedEventArgs e)
         {
+            HighlightImage = Extensions.GetImageSourceFromResource(".x.png");
+            NotifyPropertyChanged("HighlightImage");
             string SelectorString = ModelItem.GetValue<string>("Selector");
             int maxresults = ModelItem.GetValue<int>("MaxResults");
             var selector = new WindowsSelector(SelectorString);
             var elements = WindowsSelector.GetElementsWithuiSelector(selector, null, maxresults);
+            if(elements.Count()>0)
+            {
+                HighlightImage = Extensions.GetImageSourceFromResource("check.png");
+                NotifyPropertyChanged("HighlightImage");
+            }
             foreach (var ele in elements) ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
         }
         public string ImageString

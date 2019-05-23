@@ -85,7 +85,7 @@ namespace OpenRPA
                     }
                 }
                 wfApp = new System.Activities.WorkflowApplication(Workflow.Activity, Parameters);
-                if (Workflow.Serializable)
+                if (Workflow.Serializable || !Workflow.Serializable)
                 {
                     //if (Config.local.localstate)
                     //{
@@ -104,7 +104,7 @@ namespace OpenRPA
             {
                 wfApp = new System.Activities.WorkflowApplication(Workflow.Activity);
                 addwfApphandlers(wfApp);
-                if (Workflow.Serializable)
+                if (Workflow.Serializable || !Workflow.Serializable)
                 {
                     //if (Config.local.localstate)
                     //{

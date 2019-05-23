@@ -34,6 +34,8 @@ namespace OpenRPA.Views
         {
             try
             {
+                btnsubmit.IsEnabled = false;
+                btnclick.IsEnabled = false;
                 await global.webSocketClient.RegisterUser(txtName.Text, txtEmail.Text, txtPassword.Password);
                 DialogResult = true;
             }
@@ -41,7 +43,8 @@ namespace OpenRPA.Views
             {
                 txtErrorMessage.Text = ex.Message;
             }
-
+            btnsubmit.IsEnabled = true;
+            btnclick.IsEnabled = true;
         }
     }
 }

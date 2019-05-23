@@ -122,6 +122,9 @@
     <Compile Include="Views\CloseableHeader.xaml.cs">
       <DependentUpon>CloseableHeader.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DetectorsView.xaml.cs">
+      <DependentUpon>DetectorsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\InsertText.xaml.cs">
       <DependentUpon>InsertText.xaml</DependentUpon>
     </Compile>
@@ -173,6 +176,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\CloseableHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetectorsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

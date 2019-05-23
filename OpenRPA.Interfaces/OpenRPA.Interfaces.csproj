@@ -75,11 +75,14 @@
     <Compile Include="Config.cs" />
     <Compile Include="entity\ace.cs" />
     <Compile Include="entity\apibase.cs" />
+    <Compile Include="entity\Detector.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GenericTools.cs" />
     <Compile Include="IBodyActivity.cs" />
     <Compile Include="IDesigner.cs" />
+    <Compile Include="IDetectorEvent.cs" />
+    <Compile Include="IDetectorPlugin.cs" />
     <Compile Include="IElement.cs" />
     <Compile Include="Image\Util.cs" />
     <Compile Include="Log.cs" />
@@ -247,6 +250,11 @@
       <Project>{1D6D60C3-B42E-465E-886B-30AB2176FD37}</Project>
       <Name>NamedPipeWrapper</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\check.png" />
+    <EmbeddedResource Include="Resources\search.png" />
+    <EmbeddedResource Include="Resources\x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

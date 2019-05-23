@@ -22,8 +22,8 @@
             <TextBox Height="23" HorizontalAlignment="Left" Margin="183,20,0,0" Name="txtName" VerticalAlignment="Top" Width="222" />
             <TextBox Height="23" HorizontalAlignment="Left" Margin="183,50,0,0" Name="txtEmail" VerticalAlignment="Top" Width="222" />
             <PasswordBox Height="23" HorizontalAlignment="Left" Margin="183,80,0,0" Name="txtPassword" VerticalAlignment="Top" Width="222" />
-            <Button Content="Submit" Height="23" HorizontalAlignment="Left" Margin="259,107,0,0" VerticalAlignment="Top" Width="70" Click="Submit_Click" />
-            <Button Content="Cancel" Height="23" HorizontalAlignment="Right" Margin="0,107,60,0" VerticalAlignment="Top" Width="70" Click="Cancel_Click" />
+            <Button x:Name="btnsubmit" Content="Submit" Height="23" HorizontalAlignment="Left" Margin="259,107,0,0" VerticalAlignment="Top" Width="70" Click="Submit_Click" />
+            <Button x:Name="btnclick" Content="Cancel" Height="23" HorizontalAlignment="Right" Margin="0,107,60,0" VerticalAlignment="Top" Width="70" Click="Cancel_Click" />
         </Grid>
     </Grid>
 

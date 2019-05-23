@@ -31,7 +31,7 @@
                 </Button>
                 <Button ToolTip="Highligt element(s) effected by current selector" Click="BtnHighlight_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OpenRPA.Interfaces;component/Resources/Selector/Button.png" />
+                        <Image Source="{Binding HighlightImage}" Height="16" Width="16" />
                         <TextBlock Margin="3,0,0,0">Highlight</TextBlock>
                     </StackPanel>
                 </Button>

@@ -11,18 +11,10 @@ namespace OpenRPA
     public class Project : apibase
     {
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
-
-        // [JsonIgnore]
-        // public string Filepath { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        //public string Name { get; set; }
-        //public string Filename { get; set; }
-        //[JsonIgnore]
-        //public List<Workflow> Workflows { get; set; }
         [JsonIgnore]
         public System.Collections.ObjectModel.ObservableCollection<Workflow> Workflows { get; set; }
         [JsonIgnore]
         public string Path { get { return GetProperty<string>(); } set { SetProperty(value); } }
-
         [JsonIgnore]
         public string Filepath
         {
@@ -31,13 +23,6 @@ namespace OpenRPA
                 return System.IO.Path.Combine(Path, Filename);
             }
         }
-        //public string Path
-        //{
-        //    get
-        //    {
-        //        return System.IO.Path.GetDirectoryName(Filepath);
-        //    }
-        //}
         public static Project[] loadProjects(string Path)
         {
             var ProjectFiles = System.IO.Directory.EnumerateFiles(Path, "*.rpaproj", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();

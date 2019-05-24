@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenRPA.Interfaces.Selector;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,6 +11,33 @@ namespace OpenRPA.Interfaces
     public class Plugins
     {
         public static ICollection<IPlugin> recordPlugins = new List<IPlugin>();
+        public static ExtendedObservableCollection<IDetectorPlugin> detectorPlugins = new ExtendedObservableCollection<IDetectorPlugin>();
+        public static Dictionary<string, Type> detectorPluginTypes = new Dictionary<string, Type>();
+
+
+        public static IDetectorPlugin AddDetector(entity.Detector entity)
+        {
+            foreach(var d in detectorPluginTypes)
+            {
+                if(d.Key == entity.Plugin)
+                {
+                    try
+                    {
+                        IDetectorPlugin plugin = (IDetectorPlugin)Activator.CreateInstance(d.Value);
+                        plugin.Entity = entity;
+                        plugin.Entity.name = plugin.Name;
+                        plugin.Initialize();
+                        Plugins.detectorPlugins.Add(plugin);
+                        return plugin;
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("OpenRPA.Interfaces.Plugins.AddDetector: " + ex.ToString());
+                    }
+                }
+            }
+            return null;
+        }
         public static void loadPlugins(string projectsDirectory)
         {
             List<string> dllFileNames = new List<string>();
@@ -29,7 +57,6 @@ namespace OpenRPA.Interfaces
                     Log.Error(ex, "");
                 }
             }
-            Type pluginType = typeof(IPlugin);
             ICollection<Type> pluginTypes = new List<Type>();
             foreach (Assembly assembly in assemblies)
             {
@@ -46,9 +73,13 @@ namespace OpenRPA.Interfaces
                             }
                             else
                             {
-                                if (type.GetInterface(pluginType.FullName) != null)
+                                if (type.GetInterface(typeof(IPlugin).FullName) != null)
                                 {
                                     pluginTypes.Add(type);
+                                }
+                                if (type.GetInterface(typeof(IDetectorPlugin).FullName) != null)
+                                {
+                                    detectorPluginTypes.Add(type.FullName, type);
                                 }
                             }
                         }

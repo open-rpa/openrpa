@@ -11,6 +11,7 @@ namespace OpenRPA
     {
         public string command { get; set; }
         public string workflowid { get; set; }
+        public string detectorid { get; set; }
         public JObject data { get; set; }
         // public Dictionary<string, object> parameters { get; set; }
     }

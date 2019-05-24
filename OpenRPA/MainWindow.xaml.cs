@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using OpenRPA.Input;
 using OpenRPA.Interfaces;
+using OpenRPA.Interfaces.entity;
 using OpenRPA.Net;
 using System;
 using System.Activities.Core.Presentation;
@@ -40,15 +41,9 @@ namespace OpenRPA
             AppDomain currentDomain = AppDomain.CurrentDomain;
             System.Windows.Forms.Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-            // .WriteTo.Console()
-            //Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
-            //    .WriteTo.File("log-.txt", rollingInterval: RollingInterval.Day)
-            //    .WriteTo.OpenRPATracing(tracing)
-            //    .CreateLogger();
             System.Diagnostics.Trace.Listeners.Add(tracing);
             Console.SetOut(new DebugTextWriter());
             lvDataBinding.ItemsSource = Plugins.recordPlugins;
-
         }
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
@@ -91,8 +86,8 @@ namespace OpenRPA
         }
         public ICommand SettingsCommand { get { return new RelayCommand<object>(onSettings, canSettings); } }
         public ICommand SignoutCommand { get { return new RelayCommand<object>(onSignout, canSignout); } }
-        
         public ICommand OpenCommand { get { return new RelayCommand<object>(onOpen, canOpen); } }
+        public ICommand DetectorsCommand { get { return new RelayCommand<object>(onDetectors, canDetectors); } }
         public ICommand SaveCommand { get { return new RelayCommand<object>(onSave, canSave); } }
         public ICommand NewCommand { get { return new RelayCommand<object>(onNew, canNew); } }
         public ICommand DeleteCommand { get { return new RelayCommand<object>(onDelete, canDelete); } }
@@ -147,6 +142,18 @@ namespace OpenRPA
             }
             return true;
         }
+        private bool canDetectors(object item)
+        {
+            if (!isConnected) return false;
+            foreach (TabItem tab in mainTabControl.Items)
+            {
+                if (tab.Content is Views.DetectorsView)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         private void onOpen(object item)
         {
             AutomationHelper.syncContext.Post(o =>
@@ -166,6 +173,30 @@ namespace OpenRPA
                 {
                     Title = "Open project",
                     Name = "openproject",
+                    Content = view
+                };
+                newTabItem.OnClose += NewTabItem_OnClose;
+                mainTabControl.Items.Add(newTabItem);
+                newTabItem.IsSelected = true;
+            }, null);
+        }
+        private void onDetectors(object item)
+        {
+            AutomationHelper.syncContext.Post(o =>
+            {
+                foreach (TabItem tab in mainTabControl.Items)
+                {
+                    if (tab.Content is Views.DetectorsView)
+                    {
+                        tab.IsSelected = true;
+                        return;
+                    }
+                }
+                var view = new Views.DetectorsView(this);
+                Views.ClosableTab newTabItem = new Views.ClosableTab
+                {
+                    Title = "Detectors",
+                    Name = "detectors",
                     Content = view
                 };
                 newTabItem.OnClose += NewTabItem_OnClose;
@@ -342,7 +373,6 @@ namespace OpenRPA
             if (val == null) return false;
             return true;
         }
-
         private async void onDelete(object item)
         {
             var view = item as Views.OpenProject;
@@ -678,23 +708,22 @@ namespace OpenRPA
                 this.Show();
                 lvDataBinding.ItemsSource = Plugins.recordPlugins;
 
-                _ = Task.Run(async () =>
-                  {
-                      try
-                      {
-                          var host = Environment.MachineName.ToLower();
-                          var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
-                          Log.Debug("Registering robot in robot." + Config.local.username + " queue " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                          await global.webSocketClient.RegisterQueue("robot." + Config.local.username);
-                          Log.Debug("Registering robot in robot." + fqdn + " queue " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                          await global.webSocketClient.RegisterQueue("robot." + fqdn);
-                          Log.Debug("Registering robot conplete " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                      }
-                      catch (Exception ex)
-                      {
-                          Log.Error("Error RegisterQueue" + ex.ToString());
-                      }
-                  });
+                try
+                {
+                    //var host = Environment.MachineName.ToLower();
+                    //var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
+                    //Log.Debug("Registering robot in robot." + Config.local.username + " queue " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                    //await global.webSocketClient.RegisterQueue("robot." + Config.local.username);
+                    //Log.Debug("Registering robot in robot." + fqdn + " queue " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                    //await global.webSocketClient.RegisterQueue("robot." + fqdn);
+                    //Log.Debug("Registering robot conplete " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                    Log.Debug("Registering queue for robot " + global.webSocketClient.user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                    await global.webSocketClient.RegisterQueue(global.webSocketClient.user._id);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Error RegisterQueue" + ex.ToString());
+                }
 
                 try
                 {
@@ -706,9 +735,16 @@ namespace OpenRPA
                     var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}");
                     Log.Debug("Get projects from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                     var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}");
+                    Log.Debug("Get detectors from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                    var detectors = await global.webSocketClient.Query<Interfaces.entity.Detector>("openrpa", "{_type: 'detector'}");
                     Log.Debug("Done getting workflows and projects " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-
-
+                    foreach (var d in detectors)
+                    {
+                        IDetectorPlugin dp = null;
+                        d.Path = Extensions.projectsDirectory;
+                        dp = Plugins.AddDetector(d);
+                        dp.OnDetector += OnDetector;
+                    }
                     var folders = new List<string>();
                     foreach (var p in projects)
                     {
@@ -777,7 +813,6 @@ namespace OpenRPA
                 }
             }, null);
         }
-
         public bool usingOpenFlow
         {
             get
@@ -803,6 +838,20 @@ namespace OpenRPA
                 LabelStatusBar.Content = "Connecting to " + Config.local.wsurl;
             }
             Plugins.loadPlugins(Extensions.projectsDirectory);
+
+            
+
+            if (string.IsNullOrEmpty(Config.local.wsurl))
+            {
+                var Detectors = Interfaces.entity.Detector.loadDetectors(Extensions.projectsDirectory);
+                foreach(var d in Detectors)
+                {
+                    IDetectorPlugin dp = null;
+                    d.Path = Extensions.projectsDirectory;
+                    dp = Plugins.AddDetector(d);
+                    dp.OnDetector += OnDetector;
+                }
+            }
             Task.Run(() =>
             {
                 ExpressionEditor.EditorUtil.init();
@@ -835,7 +884,30 @@ namespace OpenRPA
                 AddHotKeys();
             });
         }
+        internal void OnDetector(IDetectorPlugin plugin, IDetectorEvent detector, EventArgs e)
+        {
+            foreach (var wi in WorkflowInstance.Instances)
+            {
+                if (wi.isCompleted) continue;
+                foreach (var b in wi.Bookmarks)
+                {
+                    Log.Debug(b.Key + " -> " + "detector_" + plugin.Entity._id);
+                    if (b.Key == "detector_" + plugin.Entity._id)
+                    {
+                        wi.ResumeBookmark(b.Key, detector);
+                    }
+                }
+            }
+            if (!global.isConnected) return;
+            RobotCommand command = new RobotCommand();
+            detector.user = global.webSocketClient.user;
+            var data = JObject.FromObject(detector);
+            command.command = "detector";
+            command.detectorid = plugin.Entity._id;
+            command.data = data;
+            _ = global.webSocketClient.QueueMessage(plugin.Entity._id, command, null);
 
+        }
         private Workflow GetWorkflowById(string id)
         {
             foreach(var p in Projects)
@@ -906,7 +978,6 @@ namespace OpenRPA
                 await global.webSocketClient.QueueMessage(message.replyto, command, message.correlationId);
             }
         }
-
         private void Window_Closed(object sender, EventArgs e)
         {
             // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds

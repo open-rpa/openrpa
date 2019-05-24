@@ -14,6 +14,18 @@ namespace OpenRPA.Windows
 {
     public static class Extensions
     {
+        public static System.Windows.Media.Imaging.BitmapFrame GetImageSourceFromResource(string resourceName)
+        {
+            string[] names = typeof(Extensions).Assembly.GetManifestResourceNames();
+            foreach (var name in names)
+            {
+                if (name.EndsWith(resourceName))
+                {
+                    return System.Windows.Media.Imaging.BitmapFrame.Create(typeof(Extensions).Assembly.GetManifestResourceStream(name));
+                }
+            }
+            return null;
+        }
         public static ProcessInfo GetProcessInfo(this AutomationElement element)
         {
             if (!element.Properties.ProcessId.IsSupported) return null;

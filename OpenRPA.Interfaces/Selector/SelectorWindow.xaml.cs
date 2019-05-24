@@ -1,6 +1,7 @@
 ﻿using OpenRPA.Interfaces.Selector;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace OpenRPA.Interfaces.Selector
     /// <summary>
     /// Interaction logic for Selector.xaml
     /// </summary>
-    public partial class SelectorWindow : Window
+    public partial class SelectorWindow : Window, INotifyPropertyChanged
     {
         public SelectorModel vm;
         public SelectorWindow(string pluginname, int maxresult)
@@ -30,6 +31,7 @@ namespace OpenRPA.Interfaces.Selector
             vm.PluginName = pluginname;
             vm.Plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
             vm.Plugin.OnUserAction += Plugin_OnUserAction;
+            
         }
         public SelectorWindow(string pluginname, Selector selector, int maxresult)
         {
@@ -52,6 +54,11 @@ namespace OpenRPA.Interfaces.Selector
             vm.Plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
             vm.Plugin.OnUserAction += Plugin_OnUserAction;
             // var treeelements = vm.Plugin.GetRootElements();
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged(String propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
         {
@@ -146,7 +153,9 @@ namespace OpenRPA.Interfaces.Selector
         }
         private void BtnHighlight_Click(object sender, RoutedEventArgs e)
         {
-            vm.doHighlight();
+            if (vm.doHighlight())
+            {
+            }
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {

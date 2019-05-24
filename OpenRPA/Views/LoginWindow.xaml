@@ -20,7 +20,7 @@
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="58,168,0,0" Text="Password" VerticalAlignment="Top" Width="77" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="118,115,0,0" Name="TxtUsername" VerticalAlignment="Top" Width="247" KeyUp="TxtUsername_KeyUp" />
         <PasswordBox Height="23" HorizontalAlignment="Left" Margin="118,168,0,0" Name="txtPassword" VerticalAlignment="Top" Width="247" KeyUp="TxtPassword_KeyUp" />
-        <Button Content="Login" Height="23" HorizontalAlignment="Left" Margin="118,211,0,0" Name="button1" VerticalAlignment="Top" Width="104" Click="OKButton_Click" />
+        <Button x:Name="btnlogin" Content="Login" Height="23" HorizontalAlignment="Left" Margin="118,211,0,0" VerticalAlignment="Top" Width="104" Click="OKButton_Click" />
         <TextBlock Height="23" HorizontalAlignment="Left" x:Name ="txtErrormessage" VerticalAlignment="Top" Width="247" Margin="118,253,0,0"  OpacityMask="Crimson" Foreground="#FFE5572C"  />
     </Grid>
 </Window>

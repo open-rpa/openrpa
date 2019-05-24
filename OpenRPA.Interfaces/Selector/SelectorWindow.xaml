@@ -17,21 +17,21 @@
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
-                <Button ToolTip="Select element by clicking it" Click="Select_Click">
+                <Button ToolTip="Select element by clicking it" Click="Select_Click" Margin="5,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/OpenRPA.Interfaces;component/Resources/Selector/Button.png" />
                         <TextBlock Margin="3,0,0,0">Select</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button ToolTip="Sync tree to current element" Click="BtnSyncTree_Click">
+                <Button ToolTip="Sync tree to current element" Click="BtnSyncTree_Click" Margin="5,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/OpenRPA.Interfaces;component/Resources/Selector/Button.png" />
                         <TextBlock Margin="3,0,0,0">Sync tree</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button ToolTip="Highligt element(s) effected by current selector" Click="BtnHighlight_Click">
+                <Button ToolTip="Highligt element(s) effected by current selector" Click="BtnHighlight_Click" Margin="5,0,5,0">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OpenRPA.Interfaces;component/Resources/Selector/Button.png" />
+                        <Image Source="{Binding HighlightImage}" Height="16" Width="16" />
                         <TextBlock Margin="3,0,0,0">Highlight</TextBlock>
                     </StackPanel>
                 </Button>

@@ -23,6 +23,7 @@ namespace OpenRPA.Interfaces.Selector
         private void _ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             ItemPropertyChanged?.Invoke(this, e);
+            // OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
         }
 
         protected override void ClearItems()

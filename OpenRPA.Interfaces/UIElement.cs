@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Automation;
 using FlaUI.Core.AutomationElements;
+using Newtonsoft.Json;
 
 namespace OpenRPA
 {
@@ -44,6 +45,7 @@ namespace OpenRPA
                 Log.Error(ex, "");
             }
         }
+        [JsonIgnore]
         public AutomationElement RawElement { get; private set; }
         object IElement.RawElement { get => RawElement; set => RawElement = value as AutomationElement; }
         public System.Drawing.Rectangle Rectangle
@@ -62,7 +64,6 @@ namespace OpenRPA
         public string Name { get; set; }
         public string ClassName { get; set; }
         public string Type { get; set; }
-        public string Path => string.Format("{0}/{1}", Parent == null ? string.Empty : Parent.Path, Type);
         public string ControlType
         {
             get
@@ -93,6 +94,7 @@ namespace OpenRPA
                 return false;
             }
         }
+        [JsonIgnore]
         public UIElement Parent
         {
             get
@@ -167,20 +169,27 @@ namespace OpenRPA
         {
             get
             {
-                if (RawElement.Properties.IsPassword.TryGetValue(out var isPassword) && isPassword)
+                try
                 {
-                    throw new FlaUI.Core.Exceptions.MethodNotSupportedException($"Text from element '{ToString()}' cannot be retrieved because it is set as password.");
+                    if (RawElement.Properties.IsPassword.TryGetValue(out var isPassword) && isPassword)
+                    {
+                        throw new FlaUI.Core.Exceptions.MethodNotSupportedException($"Text from element '{ToString()}' cannot be retrieved because it is set as password.");
+                    }
+                    if (RawElement.Patterns.Value.TryGetPattern(out var valuePattern) &&
+                        valuePattern.Value.TryGetValue(out var value))
+                    {
+                        return value;
+                    }
+                    if (RawElement.Patterns.Text.TryGetPattern(out var textPattern))
+                    {
+                        return textPattern.DocumentRange.GetText(Int32.MaxValue);
+                    }
                 }
-                if (RawElement.Patterns.Value.TryGetPattern(out var valuePattern) &&
-                    valuePattern.Value.TryGetValue(out var value))
+                catch (Exception)
                 {
-                    return value;
                 }
-                if (RawElement.Patterns.Text.TryGetPattern(out var textPattern))
-                {
-                    return textPattern.DocumentRange.GetText(Int32.MaxValue);
-                }
-                throw new FlaUI.Core.Exceptions.MethodNotSupportedException($"AutomationElement '{ToString()}' supports neither ValuePattern or TextPattern");
+                return null;
+                // throw new FlaUI.Core.Exceptions.MethodNotSupportedException($"AutomationElement '{ToString()}' supports neither ValuePattern or TextPattern");
             }
             set
             {

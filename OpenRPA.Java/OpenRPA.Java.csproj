@@ -36,6 +36,9 @@
     <Reference Include="FlaUI.Core, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FlaUI.Core.1.3.0\lib\net45\FlaUI.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -69,6 +72,10 @@
     <Compile Include="javahook.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\JavaClickDetectorView.xaml.cs">
+      <DependentUpon>JavaClickDetectorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="JavaClickDetectorPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NamedPipeWrapper\NamedPipeWrapper.csproj">
@@ -90,6 +97,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\GetElementDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\JavaClickDetectorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

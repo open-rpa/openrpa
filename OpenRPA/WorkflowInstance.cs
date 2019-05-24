@@ -85,7 +85,7 @@ namespace OpenRPA
                     }
                 }
                 wfApp = new System.Activities.WorkflowApplication(Workflow.Activity, Parameters);
-                if (Workflow.Serializable)
+                if (Workflow.Serializable || !Workflow.Serializable)
                 {
                     //if (Config.local.localstate)
                     //{
@@ -104,7 +104,7 @@ namespace OpenRPA
             {
                 wfApp = new System.Activities.WorkflowApplication(Workflow.Activity);
                 addwfApphandlers(wfApp);
-                if (Workflow.Serializable)
+                if (Workflow.Serializable || !Workflow.Serializable)
                 {
                     //if (Config.local.localstate)
                     //{
@@ -137,6 +137,37 @@ namespace OpenRPA
             _ = Save();
             if (runWatch != null) runWatch.Stop();
             OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
+        }
+        public void ResumeBookmark(string bookmarkName, object value)
+        {
+            try
+            {
+                Log.Debug("[workflow] Resume workflow at bookmark '" + bookmarkName + "'");
+                if (isCompleted)
+                {
+                    throw new ArgumentException("cannot resume bookmark on completed workflow!");
+                }
+                Log.Debug(String.Format("Workflow {0} resuming at bookmark '{1}' value '{2}'", wfApp.Id.ToString(), bookmarkName, value));
+                Task.Run(() =>
+                {
+                    System.Threading.Thread.Sleep(50);
+                    try
+                    {
+                        wfApp.ResumeBookmark(bookmarkName, value);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                });
+                state = "running";
+                Log.Debug(String.Format("Workflow {0} resumed bookmark '{1}' value '{2}'", wfApp.Id.ToString(), bookmarkName, value));
+                _ = Save();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
         public System.Diagnostics.Stopwatch runWatch { get; private set; }
         public async Task Run()

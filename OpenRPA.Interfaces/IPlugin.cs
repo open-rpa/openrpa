@@ -12,7 +12,6 @@ namespace OpenRPA.Interfaces
     {
         string Name { get; }
         string Status { get; }
-        
         void Initialize();
         void Start();
         void Stop();

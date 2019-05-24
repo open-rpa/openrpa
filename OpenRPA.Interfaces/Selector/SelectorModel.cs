@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace OpenRPA.Interfaces.Selector
 {
@@ -44,8 +45,12 @@ namespace OpenRPA.Interfaces.Selector
         public int maxresult { get; set; }
 
         public bool Highlight { get; set; }
+        public BitmapFrame HighlightImage { get; set; }
+
         public void init(treeelement[] treeelements)
         {
+            HighlightImage = Extensions.GetImageSourceFromResource("search.png");
+            NotifyPropertyChanged("HighlightImage");
             Directories.Clear();
             foreach (var te in treeelements) Directories.Add(te);
             foreach (var te in Directories) te.PropertyChanged += (sender, e) =>
@@ -146,13 +151,21 @@ namespace OpenRPA.Interfaces.Selector
                 }
             }, null);
         }
-        public void doHighlight()
+        public bool doHighlight()
         {
+            HighlightImage = Extensions.GetImageSourceFromResource(".x.png");
+            NotifyPropertyChanged("HighlightImage");
             var results = Plugin.GetElementsWithSelector(Selector, null, maxresult);
             foreach (var element in results)
             {
                 element.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
             }
+            if(results.Count() > 0)
+            {
+                HighlightImage = Extensions.GetImageSourceFromResource("check.png");
+                NotifyPropertyChanged("HighlightImage");
+            }
+            return (results.Count() > 0);
         }
 
         public System.Windows.Input.ICommand SelectCommand { get { return new RelayCommand<treeelement>(onSelect); } }

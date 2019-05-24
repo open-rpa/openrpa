@@ -55,14 +55,12 @@
     <Compile Include="QueueMessage.cs" />
     <Compile Include="RegisterUserMessage.cs" />
     <Compile Include="RegisterQueueMessage.cs" />
-    <Compile Include="Rolemember.cs" />
     <Compile Include="SigninMessage.cs" />
     <Compile Include="SocketCommand.cs" />
     <Compile Include="SocketMessage.cs" />
     <Compile Include="UpdateOneMessage.cs" />
     <Compile Include="WebSocketClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TokenUser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

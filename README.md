@@ -1,7 +1,7 @@
 # OpenRPA
 OpenSource Robotic Process Automation Software
 
-[![First time run](https://img.youtube.com/vi/uQPAgmlcfgk/3.jpg)](https://youtu.be/uQPAgmlcfgk)
+[![First time run](https://img.youtube.com/vi/SqLHlMpQhZA/3.jpg)](https://youtu.be/SqLHlMpQhZA)
 
 Join slack for for help or giving feedback [#openrpa](https://join.slack.com/t/openrpa/shared_invite/enQtNjI2ODE5NDIzNDg5LTFhMzRmMzJiNTYzMDU5OTAxOTA3ZTRiZjA1ZWQ4ZDViMzY5NmVmYTgyZDExNzhiOThkZjE0ZmY2OTMyZjVhNTQ)
 

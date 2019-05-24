@@ -36,7 +36,7 @@ Java Components
 
 Chrome/Firefox/Edge
 
-<img src="img/SelectorNative.png" alt="Selector with Native Messaging"/>
+![1558724619238](C:\code\openrpa\docs\img\SelectorNative.png)
 
 Images and OCR comming soon
 

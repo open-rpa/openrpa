@@ -8,19 +8,18 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <CollectionViewSource Source="{Binding detectorPlugins}" x:Key="detectorPlugins" />
         <CollectionViewSource Source="{Binding DetectorTypes}" x:Key="DetectorTypes" />
     </UserControl.Resources>
 
         <DockPanel>
         <ToolBarTray DockPanel.Dock="Top">
-            <ToolBar x:Name="toolbar" ItemsSource="{Binding Source={StaticResource DetectorTypes}}">
+            <ToolBar x:Name="toolbar" ItemsSource="{Binding Source={StaticResource DetectorTypes}}" >
                 <ToolBar.ItemTemplate>
                     <DataTemplate>
-                        <Button ToolTip="{Binding Key}" Click="Button_Click">
+                        <Button ToolTip="{Binding Key}" Click="Button_Click" Margin="5,0,5,0">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/OpenRPA.Interfaces;component/Resources/Selector/Button.png" />
-                                <TextBlock Margin="3,0,0,0" Text="{Binding Key}" />
+                                <TextBlock Margin="3,0,0,0" Text="Add " /><TextBlock Margin="3,0,0,0" Text="{Binding Value.Name}" />
                             </StackPanel>
                         </Button>
                     </DataTemplate>
@@ -33,7 +32,7 @@
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
 
-            <TreeView x:Name="lidtDetectors" ItemsSource="{Binding Source={StaticResource detectorPlugins}}" BorderThickness="0" Grid.Column="0" Margin="0,4,0,4" >
+            <TreeView x:Name="lidtDetectors" ItemsSource="{Binding detectorPlugins}" BorderThickness="0" Grid.Column="0" Margin="0,4,0,4" KeyUp="LidtDetectors_KeyUp" >
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate DataType="{x:Type TreeViewItem}">
                         <StackPanel Orientation="Horizontal">

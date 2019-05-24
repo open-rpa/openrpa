@@ -33,8 +33,8 @@ namespace OpenRPA.Windows
                     view.PropertyChanged += (s, e) =>
                     {
                         NotifyPropertyChanged("Entity");
+                        NotifyPropertyChanged("Name");
                     };
-                    
                 }
                 return view;
             }
@@ -44,11 +44,17 @@ namespace OpenRPA.Windows
         {
             Start();
         }
+        private AutomationElement desktop;
         public void Start()
         {
             var automation = AutomationUtil.getAutomation();
-            var desktop = automation.GetDesktop();
+            desktop = automation.GetDesktop();
             StructureChangedEventHandler = desktop.RegisterStructureChangedEvent(FlaUI.Core.Definitions.TreeScope.Descendants, detectorCheck);
+
+        }
+        public void Stop()
+        {
+            desktop.RemoveStructureChangedEventHandler(StructureChangedEventHandler);
 
         }
         private FlaUI.Core.EventHandlers.IAutomationStructureChangedEventHandler StructureChangedEventHandler;
@@ -97,16 +103,13 @@ namespace OpenRPA.Windows
                     }
                     else { return; }
                 }
-                var _e = new DetectorEvent();
+                var _e = new DetectorEvent(new UIElement(element));
                 OnDetector?.Invoke(this, _e, EventArgs.Empty);
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
             }
-        }
-        public void Stop()
-        {
         }
     }
 }

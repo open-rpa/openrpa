@@ -27,6 +27,7 @@ namespace OpenRPA.Interfaces.entity
         {
             get
             {
+                if(Filename==null) { Filename = ""; }
                 return System.IO.Path.Combine(Path, Filename);
             }
         }
@@ -50,6 +51,10 @@ namespace OpenRPA.Interfaces.entity
 
         public void SaveFile()
         {
+            if(string.IsNullOrEmpty(Filename))
+            {
+                Filename = UniqueFilename();
+            }
             var basePath = System.IO.Path.GetDirectoryName(Filepath);
             if (!System.IO.Directory.Exists(basePath)) System.IO.Directory.CreateDirectory(basePath);
             System.IO.File.WriteAllText(Filepath, JsonConvert.SerializeObject(this));
@@ -58,5 +63,27 @@ namespace OpenRPA.Interfaces.entity
         {
             if (System.IO.File.Exists(Filename)) System.IO.File.Delete(Filename);
         }
+        public string UniqueFilename()
+        {
+            string Filename = ""; string FilePath = "";
+            bool isUnique = false; int counter = 1;
+            while (!isUnique)
+            {
+                if (counter == 1)
+                {
+                    Filename = name.Replace(" ", "_").Replace(".", "") + ".rpadetector";
+                    FilePath = System.IO.Path.Combine(Path, Filename);
+                }
+                else
+                {
+                    Filename = name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".rpadetector";
+                    FilePath = System.IO.Path.Combine(Path, Filename);
+                }
+                if (!System.IO.File.Exists(FilePath)) isUnique = true;
+                counter++;
+            }
+            return Filename;
+        }
+
     }
 }

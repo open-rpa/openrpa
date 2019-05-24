@@ -76,6 +76,8 @@
     <Compile Include="entity\ace.cs" />
     <Compile Include="entity\apibase.cs" />
     <Compile Include="entity\Detector.cs" />
+    <Compile Include="entity\Rolemember.cs" />
+    <Compile Include="entity\TokenUser.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GenericTools.cs" />

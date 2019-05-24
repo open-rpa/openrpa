@@ -1,4 +1,5 @@
-﻿using OpenRPA.Interfaces;
+﻿using Newtonsoft.Json;
+using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,6 +62,7 @@ namespace OpenRPA.Java
             get
             {
                 if (role == "menu" || role == "menu item") return false;
+                if (info == null) return false;
                 if (info.accessibleText != 0)
                 {
                     AccessibleTextItemsInfo textItems;
@@ -259,6 +261,7 @@ namespace OpenRPA.Java
                 }
             }
         }
+        [JsonIgnore]
         public JavaElement Parent
         {
             get
@@ -269,6 +272,7 @@ namespace OpenRPA.Java
                 return new JavaElement(_parent);
             }
         }
+        [JsonIgnore]
         public JavaElement[] Children
         {
             get

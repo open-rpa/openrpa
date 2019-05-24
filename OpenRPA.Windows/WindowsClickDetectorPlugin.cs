@@ -31,12 +31,15 @@ namespace OpenRPA.Windows
                 if(view==null)
                 {
                     view = new Views.WindowsClickDetectorView(this);
-                    
+                    view.PropertyChanged += (s, e) =>
+                    {
+                        NotifyPropertyChanged("Entity");
+                        NotifyPropertyChanged("Name");
+                    };
                 }
                 return view;
             }
         }
-
         public event DetectorDelegate OnDetector;
         public void Initialize()
         {
@@ -45,6 +48,10 @@ namespace OpenRPA.Windows
         public void Start()
         {
             InputDriver.Instance.OnMouseUp += OnMouseUp;
+        }
+        public void Stop()
+        {
+            InputDriver.Instance.OnMouseUp -= OnMouseUp;
         }
         private void OnMouseUp(InputEventArgs e)
         {
@@ -88,7 +95,7 @@ namespace OpenRPA.Windows
                     }
                     else { return; }
                 }
-                var _e = new DetectorEvent();
+                var _e = new DetectorEvent(e.Element);
                 OnDetector?.Invoke(this, _e, EventArgs.Empty);
             }
             catch (Exception ex)
@@ -96,12 +103,19 @@ namespace OpenRPA.Windows
                 Log.Error(ex.ToString());
             }
         }
-        public void Stop()
-        {
-        }
     }
     public class DetectorEvent : IDetectorEvent
     {
+        public IElement element { get; set; }
+        public string host { get; set; }
+        public string fqdn { get; set; }
+        public TokenUser user { get; set; }
+        public DetectorEvent(UIElement element)
+        {
+            this.element = element;
+            host = Environment.MachineName.ToLower();
+            fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
+        }
 
     }
 }

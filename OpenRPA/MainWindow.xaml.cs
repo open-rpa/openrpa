@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using OpenRPA.Input;
 using OpenRPA.Interfaces;
+using OpenRPA.Interfaces.entity;
 using OpenRPA.Net;
 using System;
 using System.Activities.Core.Presentation;
@@ -741,6 +742,7 @@ namespace OpenRPA
                     foreach (var d in detectors)
                     {
                         IDetectorPlugin dp = null;
+                        d.Path = Extensions.projectsDirectory;
                         dp = Plugins.AddDetector(d);
                         dp.OnDetector += OnDetector;
                     }
@@ -840,12 +842,13 @@ namespace OpenRPA
 
             
 
-            if (!string.IsNullOrEmpty(Config.local.wsurl))
+            if (string.IsNullOrEmpty(Config.local.wsurl))
             {
                 var Detectors = Interfaces.entity.Detector.loadDetectors(Extensions.projectsDirectory);
                 foreach(var d in Detectors)
                 {
                     IDetectorPlugin dp = null;
+                    d.Path = Extensions.projectsDirectory;
                     dp = Plugins.AddDetector(d);
                     dp.OnDetector += OnDetector;
                 }
@@ -884,7 +887,27 @@ namespace OpenRPA
         }
         internal void OnDetector(IDetectorPlugin plugin, IDetectorEvent detector, EventArgs e)
         {
-            Log.Output(plugin.Name + " triggered !!!!");
+            foreach (var wi in WorkflowInstance.Instances)
+            {
+                if (wi.isCompleted) continue;
+                foreach (var b in wi.Bookmarks)
+                {
+                    Log.Debug(b.Key + " -> " + "detector_" + plugin.Entity._id);
+                    if (b.Key == "detector_" + plugin.Entity._id)
+                    {
+                        wi.ResumeBookmark(b.Key, detector);
+                    }
+                }
+            }
+            if (!global.isConnected) return;
+            RobotCommand command = new RobotCommand();
+            detector.user = global.webSocketClient.user;
+            var data = JObject.FromObject(detector);
+            command.command = "detector";
+            command.detectorid = plugin.Entity._id;
+            command.data = data;
+            _ = global.webSocketClient.QueueMessage(plugin.Entity._id, command, null);
+
         }
         private Workflow GetWorkflowById(string id)
         {

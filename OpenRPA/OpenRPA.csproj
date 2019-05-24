@@ -86,6 +86,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Activities\AsyncHelper.cs" />
+    <Compile Include="Activities\Detector.cs" />
+    <Compile Include="Activities\DetectorDesigner.xaml.cs">
+      <DependentUpon>DetectorDesigner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\TypeText.cs" />
     <Compile Include="Activities\TypeTextDesigner.xaml.cs">
       <DependentUpon>TypeTextDesigner.xaml</DependentUpon>
@@ -142,6 +146,10 @@
     </Compile>
     <Compile Include="Workflow.cs" />
     <Compile Include="WorkflowInstance.cs" />
+    <Page Include="Activities\DetectorDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Activities\TypeTextDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

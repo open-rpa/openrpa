@@ -8,6 +8,18 @@ namespace OpenRPA.Java
 {
     public static class Extensions
     {
+        public static System.Windows.Media.Imaging.BitmapFrame GetImageSourceFromResource(string resourceName)
+        {
+            string[] names = typeof(Extensions).Assembly.GetManifestResourceNames();
+            foreach (var name in names)
+            {
+                if (name.EndsWith(resourceName))
+                {
+                    return System.Windows.Media.Imaging.BitmapFrame.Create(typeof(Extensions).Assembly.GetManifestResourceStream(name));
+                }
+            }
+            return null;
+        }
         public static bool TryCast<T>(this object obj, out T result)
         {
             if (obj is T)

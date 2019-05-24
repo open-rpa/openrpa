@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
@@ -11,9 +12,23 @@ using System.Threading.Tasks;
 
 namespace OpenRPA
 {
-    public class NotifyChange : System.ComponentModel.INotifyPropertyChanged
+    public class NotifyChange : INotifyPropertyChanged
     {
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
+        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
+        {
+            add
+            {
+                PropertyChanged += value;
+            }
+
+            remove
+            {
+                PropertyChanged -= value;
+            }
+        }
+
+        //public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));

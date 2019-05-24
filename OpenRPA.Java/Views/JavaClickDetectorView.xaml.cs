@@ -2,6 +2,8 @@
 using OpenRPA.Interfaces.entity;
 using System;
 using System.Collections.Generic;
+
+
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -16,19 +18,19 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace OpenRPA.Windows.Views
+namespace OpenRPA.Java.Views
 {
     /// <summary>
-    /// Interaction logic for WindowsClickDetectorView.xaml
+    /// Interaction logic for JavaClickDetectorView.xaml
     /// </summary>
-    public partial class WindowsClickDetectorView : UserControl, INotifyPropertyChanged
+    public partial class JavaClickDetectorView : UserControl, INotifyPropertyChanged
     {
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
-        public WindowsClickDetectorView(IDetectorPlugin plugin)
+        public JavaClickDetectorView(IDetectorPlugin plugin)
         {
             InitializeComponent();
             this.plugin = plugin;
@@ -62,13 +64,13 @@ namespace OpenRPA.Windows.Views
             Interfaces.Selector.SelectorWindow selectors;
             if (!string.IsNullOrEmpty(SelectorString))
             {
-                var selector = new WindowsSelector(SelectorString);
-                selectors = new Interfaces.Selector.SelectorWindow("Windows", selector, null, 10);
+                var selector = new JavaSelector(SelectorString);
+                selectors = new Interfaces.Selector.SelectorWindow("Java", selector, null, 10);
             }
             else
             {
-                var selector = new WindowsSelector("[{Selector: 'Windows'}]");
-                selectors = new Interfaces.Selector.SelectorWindow("Windows", selector, null, 10);
+                var selector = new JavaSelector("[{Selector: 'Java'}]");
+                selectors = new Interfaces.Selector.SelectorWindow("Java", selector, null, 10);
             }
             if (selectors.ShowDialog() == true)
             {
@@ -80,8 +82,8 @@ namespace OpenRPA.Windows.Views
         {
             HighlightImage.Source = Extensions.GetImageSourceFromResource(".x.png");
             string SelectorString = Entity.Selector;
-            var selector = new WindowsSelector(SelectorString);
-            var elements = WindowsSelector.GetElementsWithuiSelector(selector, null, 10);
+            var selector = new JavaSelector(SelectorString);
+            var elements = JavaSelector.GetElementsWithuiSelector(selector, null, 10);
             if (elements.Count() > 0)
             {
                 HighlightImage.Source = Extensions.GetImageSourceFromResource("check.png");
@@ -95,13 +97,13 @@ namespace OpenRPA.Windows.Views
         }
         private void StartRecordPlugins()
         {
-            var p = Interfaces.Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
+            var p = Interfaces.Plugins.recordPlugins.Where(x => x.Name == "Java").First();
             p.OnUserAction += OnUserAction;
             p.Start();
         }
         private void StopRecordPlugins()
         {
-            var p = Interfaces.Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
+            var p = Interfaces.Plugins.recordPlugins.Where(x => x.Name == "Java").First();
             p.OnUserAction -= OnUserAction;
             p.Stop();
         }

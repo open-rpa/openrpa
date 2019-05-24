@@ -708,23 +708,22 @@ namespace OpenRPA
                 this.Show();
                 lvDataBinding.ItemsSource = Plugins.recordPlugins;
 
-                _ = Task.Run(async () =>
-                  {
-                      try
-                      {
-                          var host = Environment.MachineName.ToLower();
-                          var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
-                          Log.Debug("Registering robot in robot." + Config.local.username + " queue " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                          await global.webSocketClient.RegisterQueue("robot." + Config.local.username);
-                          Log.Debug("Registering robot in robot." + fqdn + " queue " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                          await global.webSocketClient.RegisterQueue("robot." + fqdn);
-                          Log.Debug("Registering robot conplete " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                      }
-                      catch (Exception ex)
-                      {
-                          Log.Error("Error RegisterQueue" + ex.ToString());
-                      }
-                  });
+                try
+                {
+                    //var host = Environment.MachineName.ToLower();
+                    //var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
+                    //Log.Debug("Registering robot in robot." + Config.local.username + " queue " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                    //await global.webSocketClient.RegisterQueue("robot." + Config.local.username);
+                    //Log.Debug("Registering robot in robot." + fqdn + " queue " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                    //await global.webSocketClient.RegisterQueue("robot." + fqdn);
+                    //Log.Debug("Registering robot conplete " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                    Log.Debug("Registering queue for robot " + global.webSocketClient.user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                    await global.webSocketClient.RegisterQueue(global.webSocketClient.user._id);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Error RegisterQueue" + ex.ToString());
+                }
 
                 try
                 {

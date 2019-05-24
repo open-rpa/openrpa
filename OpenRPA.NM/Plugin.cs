@@ -35,6 +35,7 @@ namespace OpenRPA.NM
             {
                 tab = NMHook.tabs.Where(x => x.browser == "chrome").FirstOrDefault();
             }
+            if(NMHook.tabs.Count==0) { return rootelements.ToArray(); }
             // getelement.data = "getdom";
             var getelement = new NativeMessagingMessage("getelement");
             getelement.browser = "chrome";
@@ -166,7 +167,8 @@ namespace OpenRPA.NM
         }
         public bool Match(SelectorItem item, IElement m)
         {
-            throw new NotImplementedException();
+            var el = new NMElement(m.RawElement as NativeMessagingMessage);
+            return NMSelectorItem.Match(item, el);
         }
         public bool parseUserAction(ref IRecordEvent e)
         {

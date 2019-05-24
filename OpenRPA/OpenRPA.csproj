@@ -441,6 +441,9 @@
     <Resource Include="Resources\open_flow_org.ico" />
     <Resource Include="Resources\open_rpa.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\toolbox\detector2.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>taskkill /f /fi "pid gt 0" /im OpenRPA.JavaBridge.exe</PreBuildEvent>

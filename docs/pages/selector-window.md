@@ -1,3 +1,8 @@
+---
+layout: page
+title: Overview of the Selector window
+description: Overview of the Selector window using an example using DataView
+---
 Selector window
 
 ![1558793970496](../img/1558793970496.png)

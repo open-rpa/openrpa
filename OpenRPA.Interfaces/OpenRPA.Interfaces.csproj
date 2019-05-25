@@ -133,6 +133,10 @@
     <Compile Include="Views\KeyboardDetectorView.xaml.cs">
       <DependentUpon>KeyboardDetectorView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\KeyboardSeqWindow.xaml.cs">
+      <DependentUpon>KeyboardSeqWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\vKey.cs" />
     <Compile Include="win32\Zone.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +154,10 @@
     <Page Include="Views\KeyboardDetectorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\KeyboardSeqWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

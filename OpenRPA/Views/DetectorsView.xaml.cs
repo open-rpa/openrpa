@@ -111,6 +111,10 @@ namespace OpenRPA.Views
                 var item = lidtDetectors.SelectedValue as IDetectorPlugin;
                 item.Stop();
                 item.OnDetector -= main.OnDetector;
+                var d = item.Entity as OpenRPA.Interfaces.entity.Detector;
+                if (d != null) d.Delete();
+                var kd = item.Entity as OpenRPA.Interfaces.entity.KeyboardDetector;
+                if (kd != null) kd.Delete();
                 if (global.isConnected)
                 {
                     var _id = (item.Entity as Interfaces.entity.Detector)._id;

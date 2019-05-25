@@ -126,6 +126,9 @@
     <Compile Include="Views\DetectorsView.xaml.cs">
       <DependentUpon>DetectorsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\KeyboardSeqWindow.xaml.cs">
+      <DependentUpon>KeyboardSeqWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\InsertText.xaml.cs">
       <DependentUpon>InsertText.xaml</DependentUpon>
     </Compile>
@@ -187,6 +190,10 @@
     <Page Include="Views\DetectorsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\KeyboardSeqWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\InsertText.xaml">
       <SubType>Designer</SubType>

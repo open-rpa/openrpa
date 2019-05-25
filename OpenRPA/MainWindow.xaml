@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:OpenRPA"
         mc:Ignorable="d"
         Loaded="Window_Loaded" Closed="Window_Closed"
-        Title="MainWindow" Height="600" Width="1200">
+        Title="MainWindow" Height="750" Width="1200">
     <Window.Resources>
         <local:BindingProxy x:Key="proxy" Data="{Binding}" />
     </Window.Resources>

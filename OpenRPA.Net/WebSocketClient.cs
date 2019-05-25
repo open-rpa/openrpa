@@ -157,8 +157,13 @@ namespace OpenRPA.Net
                 // ids = (from m in _receiveQueue group m by new { m.id } into mygroup select mygroup.Key.id).ToList();
                 foreach (var id in ids)
                 {
-                    var first = _receiveQueue.Where((x) => x.id == id).First();
-                    var msgs = _receiveQueue.Where((x) => x.id == id).ToList();
+                    SocketMessage first = null;
+                    List<SocketMessage> msgs = null;
+                    lock (_receiveQueue)
+                    {
+                        first = _receiveQueue.Where((x) => x.id == id).First();
+                        msgs = _receiveQueue.Where((x) => x.id == id).ToList();
+                    }
                     if (first.count == msgs.Count)
                     {
 

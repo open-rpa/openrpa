@@ -288,9 +288,15 @@ namespace OpenRPA
                 {
                     state = "unloaded";
 
+                } else
+                {
+                    DeleteFile();
                 }
                 //isUnloaded = true;
-                _ = Save();
+                if(global.isConnected)
+                {
+                    _ = Save();
+                }
             };
 
             wfApp.OnUnhandledException = delegate (System.Activities.WorkflowApplicationUnhandledExceptionEventArgs e)
@@ -311,9 +317,24 @@ namespace OpenRPA
         {
             if (string.IsNullOrEmpty(InstanceId)) return;
             if (string.IsNullOrEmpty(Path)) return;
+            if (isCompleted || hasError) return;
             if (!System.IO.Directory.Exists(System.IO.Path.Combine(Path, "state"))) System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Path, "state"));
             var Filepath = System.IO.Path.Combine(Path, "state", InstanceId + ".json");
             System.IO.File.WriteAllText(Filepath, JsonConvert.SerializeObject(this));
+        }
+        public void DeleteFile()
+        {
+            if (string.IsNullOrEmpty(InstanceId)) return;
+            if (string.IsNullOrEmpty(Path)) return;
+            var Filepath = System.IO.Path.Combine(Path, "state", InstanceId + ".json");
+            try
+            {
+                if (System.IO.File.Exists(Filepath)) System.IO.File.Delete(Filepath);
+            }
+            catch (Exception ex)
+            {
+                Log.Debug(ex.ToString());
+            }
         }
         public async Task Save()
         {
@@ -335,6 +356,11 @@ namespace OpenRPA
                 {
                     //if (string.IsNullOrEmpty(_id)) await i.Save();
                     if (string.IsNullOrEmpty(_id)) await i.Save();
+                }
+
+                if (isCompleted || hasError)
+                {
+                    DeleteFile();
                 }
             }
             catch (Exception ex)

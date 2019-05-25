@@ -33,6 +33,7 @@ namespace OpenRPA.Interfaces
         {
             get
             {
+                if (Entity != null && string.IsNullOrEmpty(Entity.name)) Entity.name = "KeyboardSequence";
                 if (Entity != null && !string.IsNullOrEmpty(Entity.name)) return Entity.name;
                 return "KeyboardSequence";
             }
@@ -63,8 +64,8 @@ namespace OpenRPA.Interfaces
         {
             InputDriver.Instance.OnKeyDown += OnKeyDown; ;
             InputDriver.Instance.OnKeyUp += OnKeyUp;
+            Entity.Keys = "{LCONTROL, c}";
             ParseTest(Entity.Keys);
-            ParseTest("{LCONTROL, c}");
         }
         public void Stop()
         {

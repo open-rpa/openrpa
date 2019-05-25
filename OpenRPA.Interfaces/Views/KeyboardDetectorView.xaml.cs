@@ -33,11 +33,11 @@ namespace OpenRPA.Interfaces.Views
             DataContext = this;
         }
         private IDetectorPlugin plugin;
-        public entity.Detector Entity
+        public entity.KeyboardDetector Entity
         {
             get
             {
-                return plugin.Entity as entity.Detector;
+                return plugin.Entity as entity.KeyboardDetector;
             }
         }
         public string EntityName
@@ -52,6 +52,30 @@ namespace OpenRPA.Interfaces.Views
                 Entity.name = value;
                 NotifyPropertyChanged("Entity");
             }
+        }
+        public string Keys
+        {
+            get
+            {
+                if (Entity == null) return string.Empty;
+                return Entity.Keys;
+            }
+            set
+            {
+                Entity.Keys = value;
+                NotifyPropertyChanged("Keys");
+                NotifyPropertyChanged("Entity");
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var view = new KeyboardSeqWindow();
+            if(view.ShowDialog() == true)
+            {
+                Keys = view.Text;
+            }
+
         }
     }
 }

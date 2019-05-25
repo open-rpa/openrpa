@@ -1,0 +1,14 @@
+﻿<Window x:Class="OpenRPA.Views.KeyboardSeqWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenRPA.Views"
+        mc:Ignorable="d"
+        Title="InsertText" Height="61" Width="524"
+         Loaded="Window_Loaded" Closed="Window_Closed" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp"
+        LostFocus="Window_LostFocus">
+    <Grid>
+        <TextBlock x:Name="textbox" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+    </Grid>
+</Window>

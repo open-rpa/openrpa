@@ -74,12 +74,45 @@ namespace OpenRPA.Windows
         }
         private void Highlight_Click(object sender, RoutedEventArgs e)
         {
+            ModelItem loadFrom = ModelItem.Parent;
+            string loadFromSelectorString = "";
+            WindowsSelector anchor = null;
+            while (loadFrom.Parent != null)
+            {
+                var p = loadFrom.Properties.Where(x => x.Name == "Selector").FirstOrDefault();
+                if (p != null)
+                {
+                    loadFromSelectorString = loadFrom.GetValue<string>("Selector");
+                    anchor = new WindowsSelector(loadFromSelectorString);
+                    break;
+                }
+                loadFrom = loadFrom.Parent;
+            }
+
             HighlightImage = Extensions.GetImageSourceFromResource(".x.png");
             NotifyPropertyChanged("HighlightImage");
             string SelectorString = ModelItem.GetValue<string>("Selector");
             int maxresults = ModelItem.GetValue<int>("MaxResults");
             var selector = new WindowsSelector(SelectorString);
-            var elements = WindowsSelector.GetElementsWithuiSelector(selector, null, maxresults);
+
+
+            var elements = new List<UIElement>();
+            if (anchor != null)
+            {
+                var _base = WindowsSelector.GetElementsWithuiSelector(anchor, null, 10);
+                foreach (var _e in _base)
+                {
+                    var res = WindowsSelector.GetElementsWithuiSelector(selector, _e, maxresults);
+                    elements.AddRange(res);
+                }
+
+            }
+            else
+            {
+                var res = WindowsSelector.GetElementsWithuiSelector(selector, null, maxresults);
+                elements.AddRange(res);
+            }
+
             if(elements.Count()>0)
             {
                 HighlightImage = Extensions.GetImageSourceFromResource("check.png");

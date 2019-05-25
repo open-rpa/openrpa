@@ -159,7 +159,7 @@ namespace OpenRPA.Interfaces.Selector
                 var results = new List<IElement>();
                 if(Anchor!=null)
                 {
-                    var _base = Plugin.GetElementsWithSelector(Anchor, null, maxresult);
+                    var _base = Plugin.GetElementsWithSelector(Anchor, null, 10);
                     foreach (var _e in _base)
                     {
                         var res = Plugin.GetElementsWithSelector(Selector, _e, maxresult);

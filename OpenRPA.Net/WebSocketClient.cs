@@ -223,7 +223,10 @@ namespace OpenRPA.Net
         }
         public void PushMessage(SocketMessage msg)
         {
-            _sendQueue.Add(msg);
+            lock(_sendQueue)
+            {
+                _sendQueue.Add(msg);
+            }
         }
         private void Process(Message msg)
         {
@@ -300,7 +303,11 @@ namespace OpenRPA.Net
         public async Task<Message> SendMessage(Message msg)
         {
             var qm = new QueuedMessage(msg);
-            _messageQueue.Add(qm);
+            lock(_messageQueue)
+            {
+                _messageQueue.Add(qm);
+            }
+            
             using (qm.autoReset = new AutoResetEvent(false))
             {
                 msg.SendMessage(this);

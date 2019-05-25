@@ -709,96 +709,95 @@ namespace OpenRPA
                 }
                 this.Show();
                 lvDataBinding.ItemsSource = Plugins.recordPlugins;
-
                 try
                 {
-                    //var host = Environment.MachineName.ToLower();
-                    //var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
-                    //Log.Debug("Registering robot in robot." + Config.local.username + " queue " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    //await global.webSocketClient.RegisterQueue("robot." + Config.local.username);
-                    //Log.Debug("Registering robot in robot." + fqdn + " queue " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    //await global.webSocketClient.RegisterQueue("robot." + fqdn);
-                    //Log.Debug("Registering robot conplete " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    Log.Debug("Registering queue for robot " + global.webSocketClient.user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    await global.webSocketClient.RegisterQueue(global.webSocketClient.user._id);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("Error RegisterQueue" + ex.ToString());
-                }
-
-                try
-                {
-
-
-                    if (Projects.Count != 0) return;
-
-                    Log.Debug("Get workflows from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}");
-                    Log.Debug("Get projects from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}");
-                    Log.Debug("Get detectors from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    var detectors = await global.webSocketClient.Query<Interfaces.entity.Detector>("openrpa", "{_type: 'detector'}");
-                    Log.Debug("Done getting workflows and projects " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    foreach (var d in detectors)
+                    if (Projects.Count == 0)
                     {
-                        IDetectorPlugin dp = null;
-                        d.Path = Extensions.projectsDirectory;
-                        dp = Plugins.AddDetector(d);
-                        dp.OnDetector += OnDetector;
-                    }
-                    var folders = new List<string>();
-                    foreach (var p in projects)
-                    {
-                        p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p.name);
-                        if (folders.Contains(p.Path))
+
+                        Log.Debug("Get workflows from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}");
+                        Log.Debug("Get projects from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}");
+                        Log.Debug("Get detectors from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        var detectors = await global.webSocketClient.Query<Interfaces.entity.Detector>("openrpa", "{_type: 'detector'}");
+                        Log.Debug("Done getting workflows and projects " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        foreach (var d in detectors)
                         {
-                            p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p._id);
+                            IDetectorPlugin dp = null;
+                            d.Path = Extensions.projectsDirectory;
+                            dp = Plugins.AddDetector(d);
+                            dp.OnDetector += OnDetector;
                         }
-                        folders.Add(p.Path);
-                    }
+                        var folders = new List<string>();
+                        foreach (var p in projects)
+                        {
+                            p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p.name);
+                            if (folders.Contains(p.Path))
+                            {
+                                p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p._id);
+                            }
+                            folders.Add(p.Path);
+                        }
 
-                    foreach (var p in projects)
-                    {
-                        p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
+                        foreach (var p in projects)
+                        {
+                            p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
+                            foreach (var workflow in workflows)
+                            {
+                                if (workflow.projectid == p._id)
+                                {
+                                    workflow.Project = p;
+                                    p.Workflows.Add(workflow);
+                                }
+                            }
+                            Log.Debug("Saving project " + p.name + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                            p.SaveFile();
+                            Projects.Add(p);
+                        }
+                        Log.Debug("RunPendingInstances::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         foreach (var workflow in workflows)
                         {
-                            if (workflow.projectid == p._id)
-                            {
-                                workflow.Project = p;
-                                p.Workflows.Add(workflow);
-                            }
+                            await workflow.RunPendingInstances();
                         }
-                        Log.Debug("Saving project " + p.name + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        p.SaveFile();
-                        Projects.Add(p);
-                    }
-                    Log.Debug("RunPendingInstances::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    foreach (var workflow in workflows)
-                    {
-                        await workflow.RunPendingInstances();
-                    }
-                    Log.Debug("RunPendingInstances::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    if (workflows.Count() == 0 && projects.Count() == 0)
-                    {
-                        var _Projects = Project.loadProjects(Extensions.projectsDirectory);
-                        if (_Projects.Count() > 0)
+                        Log.Debug("RunPendingInstances::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        if (workflows.Count() == 0 && projects.Count() == 0)
                         {
-                            foreach (var _project in _Projects)
+                            var _Projects = Project.loadProjects(Extensions.projectsDirectory);
+                            if (_Projects.Count() > 0)
                             {
-                                var p = await global.webSocketClient.InsertOne("openrpa", _project);
-                                p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
-                                p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p.name);
-                                Projects.Add(p);
-                                foreach (var _workflow in _project.Workflows)
+                                foreach (var _project in _Projects)
                                 {
-                                    _workflow.projectid = p._id;
-                                    var w = await global.webSocketClient.InsertOne("openrpa", _workflow);
-                                    w.Project = p;
-                                    p.Workflows.Add(w);
+                                    var p = await global.webSocketClient.InsertOne("openrpa", _project);
+                                    p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
+                                    p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p.name);
+                                    Projects.Add(p);
+                                    foreach (var _workflow in _project.Workflows)
+                                    {
+                                        _workflow.projectid = p._id;
+                                        var w = await global.webSocketClient.InsertOne("openrpa", _workflow);
+                                        w.Project = p;
+                                        p.Workflows.Add(w);
+                                    }
                                 }
                             }
                         }
+                    }
+
+                    try
+                    {
+                        //var host = Environment.MachineName.ToLower();
+                        //var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
+                        //Log.Debug("Registering robot in robot." + Config.local.username + " queue " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        //await global.webSocketClient.RegisterQueue("robot." + Config.local.username);
+                        //Log.Debug("Registering robot in robot." + fqdn + " queue " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        //await global.webSocketClient.RegisterQueue("robot." + fqdn);
+                        //Log.Debug("Registering robot conplete " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        Log.Debug("Registering queue for robot " + global.webSocketClient.user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        await global.webSocketClient.RegisterQueue(global.webSocketClient.user._id);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Error RegisterQueue" + ex.ToString());
                     }
                 }
                 catch (Exception ex)

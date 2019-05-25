@@ -116,11 +116,8 @@
     <Compile Include="robotCommand.cs" />
     <Compile Include="Store\AsyncResult.cs" />
     <Compile Include="Store\CompletedAsyncResult.cs" />
-    <Compile Include="Store\CustomInstanceStoreBase.cs" />
     <Compile Include="Store\JsonInstanceStoreBase.cs" />
-    <Compile Include="Store\MemoryCacheInstanceStore.cs" />
     <Compile Include="Store\OpenFlowInstanceStore.cs" />
-    <Compile Include="Store\XMLFileInstanceStore.cs" />
     <Compile Include="Store\xmlInstanceStoreBase.cs" />
     <Compile Include="Views\ClosableTab.cs" />
     <Compile Include="Views\CloseableHeader.xaml.cs">

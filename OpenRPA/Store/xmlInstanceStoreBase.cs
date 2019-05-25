@@ -65,6 +65,7 @@ namespace OpenRPA.Store
             else if (command is LoadWorkflowCommand)
             {
                 var xml = Load(context.InstanceView.InstanceId, this._storeId);
+                if (xml == null) throw new ArgumentNullException("Failed locating instance data for " + context.InstanceView.InstanceId.ToString());
                 instanceStateData = XmlToDictionary(xml);
                 //load the data into the persistence Context
                 context.LoadedInstance(InstanceState.Initialized, instanceStateData, null, null, null);

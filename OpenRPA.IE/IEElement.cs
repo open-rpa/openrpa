@@ -165,19 +165,6 @@ namespace OpenRPA.IE
                 return Task.CompletedTask;
             }
         }
-        //private Interfaces.Overlay.OverlayWindow _overlayWindow;
-        //public async Task Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
-        //{
-        //    if (_overlayWindow == null) { _overlayWindow = new Interfaces.Overlay.OverlayWindow(); }
-        //    _overlayWindow.Visible = true;
-        //    _overlayWindow.SetTimeout(Duration);
-        //    if(_Rectangle == null)
-        //    {
-        //        Console.WriteLine("whut ??");
-        //    }
-        //    _overlayWindow.Bounds = Rectangle;
-        //    await Task.Delay(10);
-        //}
         public string Value
         {
             get

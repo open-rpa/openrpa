@@ -47,8 +47,6 @@ namespace OpenRPA.Interfaces.entity
             detector._type = "detector";
             return detector;
         }
-
-
         public void SaveFile()
         {
             if(string.IsNullOrEmpty(Filename))

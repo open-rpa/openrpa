@@ -164,7 +164,7 @@ namespace OpenRPA.Interfaces.Selector
                 var treeelements = vm.Plugin.GetRootElements(vm.Anchor);
                 GenericTools.RunUI(this, () =>
                 {
-                    System.Diagnostics.Trace.WriteLine("init selector model, with " + treeelements.Count() + " root elements", "Debug");
+                    Log.Debug("init selector model, with " + treeelements.Count() + " root elements");
                     vm.init(treeelements);
                     // vm.FocusElement(vm.Selector);
                 });

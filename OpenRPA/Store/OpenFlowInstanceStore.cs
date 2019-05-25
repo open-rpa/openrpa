@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenRPA.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,23 +30,10 @@ namespace OpenRPA.Store
                         i.xml = Base64Encode(doc);
                         _ = i.Save();
                     }
-                    //if (!global.isConnected) return;
-                    //Console.WriteLine(instanceId.ToString());
-                    //var results = global.webSocketClient.Query<WorkflowInstanceState>("openrpa_instances", "{InstanceId: '" + instanceId.ToString() + "'}").Result;
-                    //if(results!=null && results.Count()>0)
-                    //{
-                    //    var i = results[0];
-                    //    i.xml = Base64Encode(doc);
-                    //    _ = global.webSocketClient.UpdateOne("openrpa_instances", i);
-                    //}
-
-                    //var s = new WorkflowInstanceState { fqdn = fqdn, host = host, InstanceId = instanceId.ToString(), xml = Base64Encode(doc) };
-                    //if (!global.isConnected) return;
-                    //_ = global.webSocketClient.InsertOne("openrpa_instances", s);
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Trace.WriteLine("OpenFlowInstanceStore.save: " + ex.Message);
+                    Log.Error("OpenFlowInstanceStore.save: " + ex.Message);
                 }
             }
         }
@@ -59,29 +47,10 @@ namespace OpenRPA.Store
                     return Base64Decode(i.xml);
                 }
                 return null;
-                //if (!global.isConnected) return null;
-                //var results = global.webSocketClient.Query< WorkflowInstanceState>("openrpa_instances", "{instance: '" + instanceId.ToString() + "'}").Result;
-                //if (results == null)
-                //{
-                //    System.Diagnostics.Trace.WriteLine("Cannot resume workflow instanse with id " + instanceId.ToString() + " it has no state in OpenFlow");
-                //    throw new ArgumentException("Cannot resume workflow instanse with id " + instanceId.ToString() + " it has no state in OpenFlow");
-                //}
-                //if (results.Count() == 0)
-                //{
-                //    System.Diagnostics.Trace.WriteLine("Cannot resume workflow instanse with id " + instanceId.ToString() + " it has no state in OpenFlow");
-                //    throw new ArgumentException("Cannot resume workflow instanse with id " + instanceId.ToString() + " it has no state in OpenFlow");
-                //}
-
-                //if (results.Count() > 2)
-                //{
-                //    var s2 = results.First();
-                //}
-                //var s = results.First();
-                //return Base64Decode(s.xml);
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine("OpenFlowInstanceStore.save: " + ex.Message);
+                Log.Error("OpenFlowInstanceStore.save: " + ex.Message);
             }
             return null;
         }
@@ -92,6 +61,7 @@ namespace OpenRPA.Store
         }
         public static string Base64Decode(string base64EncodedData)
         {
+            if (string.IsNullOrEmpty(base64EncodedData)) return null;
             var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }

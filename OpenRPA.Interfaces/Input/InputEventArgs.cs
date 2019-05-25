@@ -41,6 +41,7 @@ namespace OpenRPA.Input
         public MouseButton Button { get; internal set; }
 
         public KeyboardKey Key { get; internal set; }
+        public int KeyValue { get; internal set; }
 
         public bool AltKey { get; internal set; }
 

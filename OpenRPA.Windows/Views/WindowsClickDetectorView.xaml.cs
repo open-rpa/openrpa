@@ -40,7 +40,7 @@ namespace OpenRPA.Windows.Views
         {
             get
             {
-                return plugin.Entity;
+                return plugin.Entity as Detector;
             }
         }
         public string EntityName

@@ -43,7 +43,6 @@ namespace OpenRPA.Views
                 return Plugins.detectorPluginTypes;
             }
         }
-
         public DetectorsView(MainWindow main)
         {
             InitializeComponent();
@@ -51,25 +50,27 @@ namespace OpenRPA.Views
             DataContext = this;
             detectorPlugins.ItemPropertyChanged += DetectorPlugins_ItemPropertyChanged;
         }
-
+        private bool isSaving = false;
         private async void DetectorPlugins_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             try
             {
+                if (isSaving) return;
                 var list = (ExtendedObservableCollection<OpenRPA.Interfaces.IDetectorPlugin>)sender;
                 foreach(var p in list.ToList())
                 {
-                    Console.WriteLine(p.Entity.name);
-                    p.Entity.SaveFile();
+                    var Entity = (p.Entity as Interfaces.entity.Detector);
+                    isSaving = true;
+                    Entity.SaveFile();
                     if (global.isConnected)
                     {
                         try
                         {
-                            if (string.IsNullOrEmpty(p.Entity._id))
+                            if (string.IsNullOrEmpty(Entity._id))
                             {
-                                var result = await global.webSocketClient.InsertOne("openrpa", p.Entity);
-                                p.Entity._id = result._id;
-                                p.Entity._acl = result._acl;
+                                var result = await global.webSocketClient.InsertOne("openrpa", Entity);
+                                Entity._id = result._id;
+                                Entity._acl = result._acl;
                             }
                             else
                             {
@@ -81,6 +82,7 @@ namespace OpenRPA.Views
                             Log.Error(ex.ToString());
                         }
                     }
+                    isSaving = false;
                 }
             }
             catch (Exception ex)
@@ -88,7 +90,6 @@ namespace OpenRPA.Views
                 Log.Error(ex.ToString());
             }
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as System.Windows.Controls.Button;
@@ -100,13 +101,9 @@ namespace OpenRPA.Views
             dp.OnDetector += main.OnDetector;
             NotifyPropertyChanged("detectorPlugins");
         }
-
         private void ContentPresenter_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            var b = true;
-
         }
-
         private async void LidtDetectors_KeyUp(object sender, KeyEventArgs e)
         {
             if(e.Key == Key.Delete)
@@ -116,9 +113,10 @@ namespace OpenRPA.Views
                 item.OnDetector -= main.OnDetector;
                 if (global.isConnected)
                 {
-                    if (!string.IsNullOrEmpty(item.Entity._id))
+                    var _id = (item.Entity as Interfaces.entity.Detector)._id;
+                    if (!string.IsNullOrEmpty(_id))
                     {
-                        await global.webSocketClient.DeleteOne("openrpa", item.Entity._id);
+                        await global.webSocketClient.DeleteOne("openrpa", _id);
                     }
                 }
                 detectorPlugins.Remove(item);

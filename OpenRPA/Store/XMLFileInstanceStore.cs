@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,48 +30,6 @@ namespace OpenRPA.Store
         }
 
         private static object _lock = new object();
-        //public override void Save(Guid instanceId, Guid storeId, XmlDocument doc)
-        //{
-        //    try
-        //    {
-        //        var filename = getFilePath(instanceId, storeId);
-        //        var directoryName = new FileInfo(filename).Directory.FullName;
-        //        Directory.CreateDirectory(directoryName);
-        //        lock (_lock)
-        //        {
-        //            File.WriteAllText(filename, doc.InnerXml);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        System.Diagnostics.Trace.WriteLine("XMLFileInstanceStore.save: " + ex.Message);
-        //    }
-        //}
-        //public override XmlDocument Load(Guid instanceId, Guid storeId)
-        //{
-        //    try
-        //    {
-        //        var filename = getFilePath(instanceId, storeId);
-        //        if (!System.IO.File.Exists(filename))
-        //        {
-        //            System.Diagnostics.Trace.WriteLine("Cannot resume workflow instanse with id " + instanceId.ToString() + " cannot find file " + filename);
-        //            throw new ArgumentException("Cannot resume workflow instanse with id " + instanceId.ToString() + " cannot find file " + filename);
-        //            //return null;
-        //        }
-        //        var xmlDoc = new XmlDocument();
-        //        //xmlDoc.Load(filename);
-        //        lock (_lock)
-        //        {
-        //            xmlDoc.Load(new MemoryStream(File.ReadAllBytes(filename)));
-        //        }
-        //        return xmlDoc;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        System.Diagnostics.Trace.WriteLine("XMLFileInstanceStore.save: " + ex.Message);
-        //    }
-        //    return null;
-        //}
         public override void Save(Guid instanceId, Guid storeId, string doc)
         {
             try
@@ -85,7 +44,7 @@ namespace OpenRPA.Store
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine("XMLFileInstanceStore.save: " + ex.Message);
+                Log.Error("XMLFileInstanceStore.save: " + ex.Message);
             }
         }
         public override string Load(Guid instanceId, Guid storeId)
@@ -95,7 +54,7 @@ namespace OpenRPA.Store
                 var filename = getFilePath(instanceId, storeId);
                 if (!System.IO.File.Exists(filename))
                 {
-                    System.Diagnostics.Trace.WriteLine("Cannot resume workflow instanse with id " + instanceId.ToString() + " cannot find file " + filename);
+                    Log.Error("Cannot resume workflow instanse with id " + instanceId.ToString() + " cannot find file " + filename);
                     throw new ArgumentException("Cannot resume workflow instanse with id " + instanceId.ToString() + " cannot find file " + filename);
                     //return null;
                 }
@@ -111,7 +70,7 @@ namespace OpenRPA.Store
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine("XMLFileInstanceStore.save: " + ex.Message);
+                Log.Error("XMLFileInstanceStore.save: " + ex.Message);
             }
             return null;
         }

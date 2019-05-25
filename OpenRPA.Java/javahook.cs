@@ -152,7 +152,7 @@ namespace OpenRPA.Java
                 }
                 catch (Exception e)
                 {
-                    System.Diagnostics.Trace.WriteLine(e.ToString());
+                    Log.Error(e.ToString());
                 }
                 finally
                 {

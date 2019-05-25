@@ -138,6 +138,10 @@ namespace OpenRPA
                 }
                 catch (Exception ex)
                 {
+                    i.state = "failed";
+                    i.Exception = ex;
+                    i.errormessage = ex.Message;
+                    _ = i.Save();
                     Log.Error("RunPendingInstances: " + ex.ToString());
                 }
             }
@@ -180,23 +184,33 @@ namespace OpenRPA
                 return wf;
             }
         }
-        public async Task<WorkflowInstance> Run() { return await Run(new Dictionary<string, object>(), null, null, null); }
-        public async Task<WorkflowInstance> Run(Dictionary<string, object> Parameters, string queuename, string correlationId, WorkflowInstance.idleOrComplete idleOrComplete)
+        public WorkflowInstance CreateInstance() { return CreateInstance(new Dictionary<string, object>(), null, null, null); }
+        public WorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, WorkflowInstance.idleOrComplete idleOrComplete)
         {
-            var instance = await WorkflowInstance.Create(this, Parameters);
+            var instance = WorkflowInstance.Create(this, Parameters);
             instance.queuename = queuename; instance.correlationId = correlationId;
             if (idleOrComplete != null) instance.OnIdleOrComplete += idleOrComplete;
             Instances.Add(instance);
-            await instance.Run();
+            //instance.Run();
             return instance;
         }
+        //public WorkflowInstance Run() { return Run(new Dictionary<string, object>(), null, null, null); }
+        //public WorkflowInstance Run(Dictionary<string, object> Parameters, string queuename, string correlationId, WorkflowInstance.idleOrComplete idleOrComplete)
+        //{
+        //    var instance = WorkflowInstance.Create(this, Parameters);
+        //    instance.queuename = queuename; instance.correlationId = correlationId;
+        //    if (idleOrComplete != null) instance.OnIdleOrComplete += idleOrComplete;
+        //    Instances.Add(instance);
+        //    instance.Run();
+        //    return instance;
+        //}
         public void onIdleOrComplete(WorkflowInstance instance)
         {
             Log.Debug("onIdleOrComplete state: " + instance.state);
             if (!string.IsNullOrEmpty(instance.errormessage)) Log.Error(instance.errormessage);
             if(instance.state != "idle")
             {
-                Console.WriteLine("Workflow " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
+                Log.Output("Workflow " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
                 GenericTools.restore(GenericTools.mainWindow);
             }
             OnIdleOrComplete?.Invoke(instance, EventArgs.Empty);

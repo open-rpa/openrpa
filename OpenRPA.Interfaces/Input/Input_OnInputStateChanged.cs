@@ -170,15 +170,18 @@ namespace OpenRPA.Input
 
                 var k = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));
                 e.Key = (KeyboardKey)k.vkCode; // virtual key
+                e.KeyValue = unchecked((int)k.vkCode);
                 if (VK_PACKET == (Int32)e.Key)
                 {
                     e.Key = (KeyboardKey)(-k.scanCode); // unicode char
+                    e.KeyValue = unchecked((int)-k.scanCode);
                 }
                 else if (k.flags.HasFlag(LLKHF.LLKHF_EXTENDED))
                 {
                     e.Key += VK_EXTENDED; // extended virtual key
+                    e.KeyValue += VK_EXTENDED;
                 }
-
+                
                 switch ((Int32)wParam)
                 {
                     case WM_KEYUP:
@@ -300,7 +303,10 @@ namespace OpenRPA.Input
             try
             {
                 e.Element = Element;
-                e.Element.Refresh();
+                if (e.Element != null)
+                {
+                    e.Element.Refresh();
+                }
                 if (e.Element != null && e.Element.ProcessId == currentprocessid) return;
                 OnMouseUp(e);
             }

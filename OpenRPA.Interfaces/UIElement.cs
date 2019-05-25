@@ -112,7 +112,8 @@ namespace OpenRPA
             UntilResponsive();
             try
             {
-                //rawElement.SetFocus();
+                RawElement.SetForeground();
+                RawElement.FocusNative();
                 RawElement.Focus();
             }
             catch
@@ -129,6 +130,7 @@ namespace OpenRPA
         {
             try
             {
+                RawElement.SetForeground();
                 if (RawElement.Patterns.Invoke.IsSupported)
                 {
                     var invokePattern = RawElement.Patterns.Invoke.Pattern;

@@ -13,6 +13,7 @@ namespace OpenRPA.Java
 {
     public class JavaClickDetectorPlugin : ObservableObject, IDetectorPlugin
     {
+        object IDetectorPlugin.Entity { get => Entity; set => Entity = value as Detector; }
         public Detector Entity { get; set; }
         public string Name
         {

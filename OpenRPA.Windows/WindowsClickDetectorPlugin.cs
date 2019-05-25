@@ -77,8 +77,9 @@ namespace OpenRPA.Windows
                     }
                     catch (Exception ex)
                     {
+                        element = null;
                         Log.Error(ex, "");
-                        return;
+                        // return;
                     }
                 }
                 WindowsSelector selector = new WindowsSelector(Entity.Selector);

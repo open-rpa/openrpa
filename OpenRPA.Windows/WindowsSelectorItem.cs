@@ -148,7 +148,7 @@ namespace OpenRPA.Windows
                     foreach (var p in Properties) p.Enabled = selectedProps.Contains(p.Name);
                     var c = GetConditions(props.Take(i).ToArray());
                     matchcounter = parent.FindAllChildren(c).Count();
-                    if (matchcounter > 1) break;
+                    // if (matchcounter > 1) break;
                     if (matchcounter != 1)
                     {
                         Log.Selector("EnumNeededProperties match with " + i + " gave more than 1 result");

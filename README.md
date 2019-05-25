@@ -7,6 +7,8 @@ Join slack for for help or giving feedback [#openrpa](https://join.slack.com/t/o
 
 Activities Documentation [under progress here](https://openrpa.openrpa.dk/pages/activities)
 
+Read about Selector Window [here](https://openrpa.openrpa.dk/pages/selector-window)
+
 Try out OpenRPA [here](https://github.com/open-rpa/openrpa/releases) 
 
 Also checkout the "backend" for mangeging multiple robots at [OpenFlow](https://github.com/open-rpa/OpenFlow)

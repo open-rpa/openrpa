@@ -153,27 +153,52 @@ namespace OpenRPA.Interfaces.Selector
         {
             HighlightImage = Extensions.GetImageSourceFromResource(".x.png");
             NotifyPropertyChanged("HighlightImage");
-            var results = Plugin.GetElementsWithSelector(Selector, null, maxresult);
-            foreach (var element in results)
+            // IElement[] results = new IElement[] { };
+            Task.Run(() =>
             {
-                element.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
-            }
-            if(results.Count() > 0)
-            {
-                HighlightImage = Extensions.GetImageSourceFromResource("check.png");
-                NotifyPropertyChanged("HighlightImage");
-            }
-            return (results.Count() > 0);
+                var results = new List<IElement>();
+                if(Anchor!=null)
+                {
+                    var _base = Plugin.GetElementsWithSelector(Anchor, null, 10);
+                    foreach (var _e in _base)
+                    {
+                        var res = Plugin.GetElementsWithSelector(Selector, _e, maxresult);
+                        results.AddRange(res);
+                    }
+                } else
+                {
+                    var res = Plugin.GetElementsWithSelector(Selector, null, maxresult);
+                    results.AddRange(res);
+
+                }
+                GenericTools.RunUI(() =>
+                {
+                    foreach (var element in results)
+                    {
+                        element.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
+                    }
+                    if (results.Count() > 0)
+                    {
+                        HighlightImage = Extensions.GetImageSourceFromResource("check.png");
+                        NotifyPropertyChanged("HighlightImage");
+                    }
+                });
+            });
+            // return (results.Count() > 0);
+            return true;
         }
 
         public System.Windows.Input.ICommand SelectCommand { get { return new RelayCommand<treeelement>(onSelect); } }
         private void onSelect(treeelement item)
         {
-            var selector = Plugin.GetSelector(Anchor, item);
-            Selector = selector;
+            Task.Run(() =>
+            {
+                var selector = Plugin.GetSelector(Anchor, item);
+                Selector = selector;
 
-            OnPropertyChanged("Selector");
-            OnPropertyChanged("json");
+                OnPropertyChanged("Selector");
+                OnPropertyChanged("json");
+            });
             // FocusElement(selector);
         }
 

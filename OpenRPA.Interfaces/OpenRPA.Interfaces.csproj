@@ -75,6 +75,7 @@
     <Compile Include="Config.cs" />
     <Compile Include="entity\ace.cs" />
     <Compile Include="entity\apibase.cs" />
+    <Compile Include="entity\KeyboardDetector.cs" />
     <Compile Include="entity\Detector.cs" />
     <Compile Include="entity\Rolemember.cs" />
     <Compile Include="entity\TokenUser.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="IDetectorPlugin.cs" />
     <Compile Include="IElement.cs" />
     <Compile Include="Image\Util.cs" />
+    <Compile Include="KeyboardDetectorPlugin.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="NativeMessagingMessage.cs" />
     <Compile Include="NativeMessagingMessageTab.cs" />
@@ -128,6 +130,9 @@
     <Compile Include="Selector\SelectorItemProperty.cs" />
     <Compile Include="TaskWithTimeoutWrapper.cs" />
     <Compile Include="UIElement.cs" />
+    <Compile Include="Views\KeyboardDetectorView.xaml.cs">
+      <DependentUpon>KeyboardDetectorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="win32\Zone.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +146,10 @@
     <Page Include="Selector\SelectorWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\KeyboardDetectorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

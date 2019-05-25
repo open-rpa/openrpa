@@ -13,6 +13,14 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Net
 {
+    public class QueueMessageEventArgs : EventArgs
+    {
+        public bool isBusy { get; set; }
+        public QueueMessageEventArgs()
+        {
+            this.isBusy = false;
+        }
+    }
     public class WebSocketClient
     {
         private ClientWebSocket ws = new ClientWebSocket(); // WebSocket
@@ -22,9 +30,10 @@ namespace OpenRPA.Net
         private List<SocketMessage> _sendQueue = new List<SocketMessage>();
         private List<QueuedMessage> _messageQueue = new List<QueuedMessage>();
 
+        public delegate void QueueMessageDelegate(QueueMessage message, QueueMessageEventArgs e);
         public event Action OnOpen;
         public event Action<string> OnClose;
-        public event Action<QueueMessage> OnQueueMessage;
+        public event QueueMessageDelegate OnQueueMessage;
         // public event Action OnMessage;
 
         public TokenUser user { get; private set; }
@@ -225,7 +234,7 @@ namespace OpenRPA.Net
 
                 foreach (var qm in _messageQueue)
                 {
-                    if (qm.msg.id == msg.replyto)
+                    if (qm != null && qm.msg.id == msg.replyto)
                     {
                         try
                         {
@@ -263,9 +272,17 @@ namespace OpenRPA.Net
                         try
                         {
                             var qm = JsonConvert.DeserializeObject<QueueMessage>(msg.data);
-
-                            OnQueueMessage?.Invoke(qm);
+                            var e = new QueueMessageEventArgs();
+                            OnQueueMessage?.Invoke(qm, e);
                             msg.data = JsonConvert.SerializeObject(qm);
+                            if(e.isBusy)
+                            {
+                                msg.command = "error";
+                                msg.data = "Sorry, I'm bussy";
+                                Log.Warning("Cannot invoke, I'm busy.");
+                                msg.SendMessage(this);
+                                return;
+                            }
                         }
                         catch (Exception ex)
                         {

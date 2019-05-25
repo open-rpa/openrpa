@@ -42,7 +42,7 @@ namespace OpenRPA.Java.Views
         {
             get
             {
-                return plugin.Entity;
+                return plugin.Entity as Detector;
             }
         }
         public string EntityName

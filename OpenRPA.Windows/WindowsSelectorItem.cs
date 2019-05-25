@@ -227,7 +227,6 @@ namespace OpenRPA.Windows
             {
                 nodes.Add(elementNode);
                 i++;
-                // Console.WriteLine(i + ") " + elementNode.ToString());
                 if (Match(elementNode)) matchs.Add(elementNode);
                 if (matchs.Count >= count) break;
                 elementNode = _treeWalker.GetNextSibling(elementNode);

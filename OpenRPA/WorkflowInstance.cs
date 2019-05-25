@@ -32,6 +32,8 @@ namespace OpenRPA
         public string host { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string fqdn { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string errormessage { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        [JsonIgnore]
+        public Exception Exception { get { return GetProperty<Exception>(); } set { SetProperty(value); } }
         public bool isCompleted { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public bool hasError { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string state { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -39,18 +41,22 @@ namespace OpenRPA
         public Workflow Workflow { get { return GetProperty<Workflow>(); } set { SetProperty(value); } }
         [JsonIgnore]
         public System.Activities.WorkflowApplication wfApp { get; set; }
-        public static async Task<WorkflowInstance> Create(Workflow Workflow, Dictionary<string, object> Parameters)
+        public static WorkflowInstance Create(Workflow Workflow, Dictionary<string, object> Parameters)
         {
             var result = new WorkflowInstance() { Workflow = Workflow, WorkflowId = Workflow._id, Parameters = Parameters, name = Workflow.name };
             Instances.Add(result);
-            if (global.isConnected) { 
+            if (global.isConnected)
+            {
                 result.owner = global.webSocketClient.user.name;
                 result.ownerid = global.webSocketClient.user._id;
             }
             result.host = Environment.MachineName.ToLower();
             result.fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
             result.createApp();
-            await result.Save();
+            foreach(var i in Instances.ToList())
+            {
+                if (i.isCompleted) Instances.Remove(i);
+            }
             return result;
         }
         public void createApp()
@@ -133,6 +139,7 @@ namespace OpenRPA
             hasError = true;
             isCompleted = true;
             state = "aborted";
+            Exception = new Exception(Reason);
             errormessage = Reason;
             _ = Save();
             if (runWatch != null) runWatch.Stop();
@@ -204,6 +211,7 @@ namespace OpenRPA
                 isCompleted = true;
                 //isUnloaded = true;
                 state = "failed";
+                Exception = ex;
                 errormessage = ex.Message;
                 await Save();
                 if (runWatch != null) runWatch.Stop();
@@ -242,6 +250,7 @@ namespace OpenRPA
                 hasError = true;
                 isCompleted = true;
                 state = "aborted";
+                Exception =  e.Reason;
                 errormessage = e.Reason.Message;
                 _ = Save();
                 if(runWatch!=null) runWatch.Stop();
@@ -287,6 +296,7 @@ namespace OpenRPA
                 hasError = true;
                 isCompleted = true;
                 state = "failed";
+                Exception = e.UnhandledException;
                 errormessage = e.UnhandledException.ToString();
                 //exceptionsource = e.ExceptionSource.Id;
                 if (runWatch != null) runWatch.Stop();
@@ -300,7 +310,6 @@ namespace OpenRPA
             try
             {
                 if (!global.isConnected) return;
-                Log.Debug("Saving workflow instance");
                 if (string.IsNullOrEmpty(_id))
                 {
                     var result = await global.webSocketClient.InsertOne("openrpa_instances", this);
@@ -313,6 +322,7 @@ namespace OpenRPA
                 // Catch up if others havent been saved
                 foreach(var i in Instances.ToList())
                 {
+                    //if (string.IsNullOrEmpty(_id)) await i.Save();
                     if (string.IsNullOrEmpty(_id)) await i.Save();
                 }
             }

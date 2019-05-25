@@ -164,9 +164,10 @@ namespace OpenRPA.Windows
                     elements = new IElement[] { };
                 }
             } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
-
+            Process process = null;
             if (elements.Length > 0)
             {
+                elements[0].Focus();
                 return;
             }
 
@@ -190,19 +191,27 @@ namespace OpenRPA.Windows
             p = f.Properties.Where(x => x.Name == "arguments").FirstOrDefault();
             if (p != null) arguments = p.Value;
 
-            Process process = null;
+            
             if (isImmersiveProcess)
             {
                 process = FlaUI.Core.Tools.WindowsStoreAppLauncher.Launch(applicationUserModelId, arguments);
             }
             else
             {
-                System.Diagnostics.Trace.WriteLine("Starting a new instance of " + processname);
+                Log.Debug("Starting a new instance of " + processname);
                 process = Process.Start(new ProcessStartInfo
                 {
                     FileName = Environment.ExpandEnvironmentVariables(filename),
                     Arguments = Environment.ExpandEnvironmentVariables(arguments)
                 });
+            }
+            try
+            {
+                GenericTools.restore(process.MainWindowHandle);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("restore window: " + ex.ToString());
             }
             process.WaitForInputIdle();
 

@@ -116,7 +116,6 @@ namespace OpenRPA.Interfaces.Selector
                     bool found = false;
                     foreach (var treenode in current)
                     {
-                        System.Diagnostics.Trace.WriteLine(treenode.ToString());
                         if (node.Element.Equals(treenode.Element) && found == false)
                         {
                             found = true;
@@ -130,7 +129,6 @@ namespace OpenRPA.Interfaces.Selector
                         else if (found == false)
                         {
                             var c = treenode.Children.FirstOrDefault();
-                            if (c != null) { System.Diagnostics.Trace.WriteLine(c.ToString()); }
                             if (c != null && node.Element.Equals(c.Element) && found == false)
                             {
                                 found = true;

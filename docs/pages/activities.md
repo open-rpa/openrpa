@@ -1,3 +1,8 @@
+---
+layout: page
+title: Overview of Activies
+description: A short Overview of base Activies
+---
 # OpenApplication
 
 ![1558717936148](..\img\1558717936148.png)

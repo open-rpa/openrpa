@@ -1,3 +1,8 @@
+---
+layout: page
+title: Overview of TypeText Acitvity
+description: Overview of how the TypeText Acitvity works
+---
 # TypeText syntax
 
 ![](C:\code\openrpa\docs\img\1558718403772.png)

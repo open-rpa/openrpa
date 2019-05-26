@@ -182,6 +182,41 @@ namespace OpenRPA.IE
                 }
             });
         }
+        public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)
+        {
+            string url = "";
+            var f = selector.First();
+            var p = f.Properties.Where(x => x.Name == "url").FirstOrDefault();
+            if (p != null) url = p.Value;
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindowsClass();
+            foreach (SHDocVw.InternetExplorer _ie in shellWindows)
+            {
+                var filename = System.IO.Path.GetFileNameWithoutExtension(_ie.FullName).ToLower();
+                if (filename.Equals("iexplore"))
+                {
+                    try
+                    {
+                        var wBrowser = _ie as SHDocVw.WebBrowser;
+                        if(wBrowser.LocationURL == url || string.IsNullOrEmpty(url))
+                        {
+                            using (var automation = Interfaces.AutomationUtil.getAutomation())
+                            {
+                                var _ele = automation.FromHandle(new IntPtr(_ie.HWND));
+                                using (var app = new FlaUI.Core.Application(_ele.Properties.ProcessId.Value, false))
+                                {
+                                    app.Close();
+                                }
+
+                            }
+                        }
+                    }
+                    catch (Exception ex)    
+                    {
+                        Log.Error(ex, "");
+                    }
+                }
+            }
+        }
         public bool Match(SelectorItem item, IElement m)
         {
             return IESelectorItem.Match(item, m.RawElement as mshtml.IHTMLElement);

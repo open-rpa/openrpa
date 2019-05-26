@@ -220,6 +220,51 @@ namespace OpenRPA.Windows
         {
             return WindowsSelectorItem.Match(item, m.RawElement as AutomationElement);
         }
+
+        public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)
+        {
+            IElement[] elements = { };
+            var sw = new Stopwatch();
+            sw.Start();
+            do
+            {
+                elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
+                {
+                    try
+                    {
+                        return GetElementsWithSelector(selector, null, 1);
+                    }
+                    catch (System.Threading.ThreadAbortException)
+                    {
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, "");
+                    }
+                    return new UIElement[] { };
+                }, TimeSpan.FromMilliseconds(250)).Result;
+                if (elements == null)
+                {
+                    elements = new IElement[] { };
+                }
+            } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
+            if (elements.Length > 0)
+            {
+                using (var automation = Interfaces.AutomationUtil.getAutomation())
+                {
+                    foreach (var _ele in elements)
+                    {
+                        var element = _ele.RawElement as AutomationElement;
+                        using (var app = new FlaUI.Core.Application(element.Properties.ProcessId.Value, false))
+                        {
+                            app.Close();
+                        }
+
+                    }
+                }
+
+            }
+        }
     }
     public class GetElementResult : IBodyActivity
     {

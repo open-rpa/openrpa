@@ -165,6 +165,25 @@ namespace OpenRPA.NM
             NMHook.openurl(browser, url);
 
         }
+        public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)
+        {
+            var first = selector[0];
+            var second = selector[1];
+            var p = first.Properties.Where(x => x.Name == "browser").FirstOrDefault();
+            string browser = "";
+            if (p != null) { browser = p.Value; }
+
+            p = first.Properties.Where(x => x.Name == "url").FirstOrDefault();
+            string url = "";
+            if (p != null) { url = p.Value; }
+            NMHook.reloadtabs();
+            var tabs = NMHook.tabs.Where(x => x.browser == browser && x.url == url).ToList();
+            if(string.IsNullOrEmpty(url)) tabs = NMHook.tabs.Where(x => x.browser == browser).ToList();
+            foreach (var tab in tabs)
+            {
+                NMHook.CloseTab(tab);
+            }
+        }
         public bool Match(SelectorItem item, IElement m)
         {
             var el = new NMElement(m.RawElement as NativeMessagingMessage);

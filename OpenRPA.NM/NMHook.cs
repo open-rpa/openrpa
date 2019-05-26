@@ -195,6 +195,17 @@ namespace OpenRPA.NM
                 WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
             }
         }
+        public static void CloseTab(NativeMessagingMessageTab tab)
+        {
+            NativeMessagingMessage message = new NativeMessagingMessage("closetab");
+            NativeMessagingMessage result = null;
+            message.browser = tab.browser; message.tabid = tab.id; message.tab = tab;
+            message.windowId = tab.windowId;
+            if (connected)
+            {
+                result = sendMessageResult(message, true);
+            }
+        }
         public static void HighlightTab(NativeMessagingMessageTab tab)
         {
             if (!tab.highlighted)

@@ -5,6 +5,14 @@ tagline: Open Source Enterprise Grade RPA
 description: First Open Source full Robotic Process Automation solution
 ---
 
+![OpenRPA](img/OpenRPA-logo.png)Open Source Robotic Process Automation Software
+
+Join slack for for help or giving feedback [#openrpa](https://join.slack.com/t/openrpa/shared_invite/enQtNjI2ODE5NDIzNDg5LTFhMzRmMzJiNTYzMDU5OTAxOTA3ZTRiZjA1ZWQ4ZDViMzY5NmVmYTgyZDExNzhiOThkZjE0ZmY2OTMyZjVhNTQ)
+
+Check out the documentation on our [wiki pages](https://github.com/open-rpa/openrpa/wiki)
+
+Download and try it out here [here](https://github.com/open-rpa/openrpa/releases) 
+
 RPA solution under active development.
 <img src="img/MainWindowProjects.png" alt="Mainwindow with projects expanded"/>
 
@@ -36,7 +44,7 @@ Java Components
 
 Chrome/Firefox/Edge
 
-![1558724619238](C:\code\openrpa\docs\img\SelectorNative.png)
+![1558724619238](img/SelectorNative.png)
 
 Images and OCR comming soon
 

@@ -38,4 +38,30 @@ Now press Play, and try clicking the Help menu item and enjoy how helpful this w
 
 ## Keyboard detector
 
-Used to monitor for a sequence of keys. Simply click "set keys" and start pressing the keys in the EXACT sequence, when done, press "OK" to set the new sequence.
+![1558884176717](detectors/1558884176717.png)
+
+Used to monitor for a sequence of keys. Simply click "set keys" and start pressing the keys in the EXACT sequence you need, when done, press "OK" to set the new sequence. You can limit the detector to only react when focus is on window where process name matches. ( ? and * supported )
+
+## File watch detector
+
+![1558884377884](detectors/1558884377884.png)
+
+Used to monitor for creation or editing of files in a specific folder. To improve performance and avoid querying the filesystem all the time, it uses file watches, meaning it will only work on the local filesystem, you can limit the search by using file name filter ( ? and * supported)
+
+## Java Click Detector
+
+![1558885135165](detectors/1558885135165.png)
+
+Used to monitor for clicks on Java controls. Click Select to choose an element to detect, use "Open Selector" if you need to fine tune the selector, test everything is working, using the "Highlight" button
+
+## Window Click Detector
+
+![1558885741349](detectors/1558885741349.png)
+
+Used to monitor for clicks on Windows controls. Click Select to choose an element to detect, use "Open Selector" if you need to fine tune the selector, test everything is working, using the "Highlight" button.
+
+## Windows Element Detector
+
+![1558885857711](detectors/1558885857711.png)
+
+Used to monitor for creation of new Windows controls. This works AFTER an application has started, meaning you can not select an element created doing the application start up. Use it to detect opening new windows, or alert/popups and other elements created after the initial start of the application. Click Select to choose an element to detect, use "Open Selector" if you need to fine tune the selector, test everything is working, using the "Highlight" button.

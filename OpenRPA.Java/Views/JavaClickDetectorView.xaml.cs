@@ -55,7 +55,19 @@ namespace OpenRPA.Java.Views
             set
             {
                 Entity.name = value;
-                NotifyPropertyChanged("Entity");
+                NotifyPropertyChanged("EntityName");
+            }
+        }
+        public string Selector
+        {
+            get
+            {
+                return plugin.Selector.Replace(Environment.NewLine, "");
+            }
+            set
+            {
+                plugin.Selector = value;
+                NotifyPropertyChanged("Selector");
             }
         }
         private void Open_Selector_Click(object sender, RoutedEventArgs e)
@@ -75,7 +87,7 @@ namespace OpenRPA.Java.Views
             if (selectors.ShowDialog() == true)
             {
                 plugin.Selector = selectors.vm.json;
-                NotifyPropertyChanged("Entity");
+                NotifyPropertyChanged("Selector");
             }
         }
         private void Highlight_Click(object sender, RoutedEventArgs e)
@@ -120,8 +132,11 @@ namespace OpenRPA.Java.Views
                         if (p.parseUserAction(ref e)) continue;
                     }
                 }
+                var jelement = e.Element as JavaElement;
+                EntityName = jelement.title;
                 plugin.Selector = e.Selector.ToString();
-                NotifyPropertyChanged("Entity");
+                NotifyPropertyChanged("EntityName");
+                NotifyPropertyChanged("Selector");
             }, null);
         }
     }

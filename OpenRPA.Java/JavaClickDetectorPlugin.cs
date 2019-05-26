@@ -74,6 +74,7 @@ namespace OpenRPA.Java
         }
         private void Hook_OnMouseClicked(int vmID, WindowsAccessBridgeInterop.AccessibleContextNode ac)
         {
+            if (string.IsNullOrEmpty(Selector)) return;
             var element = new JavaElement(ac);
             element.SetPath();
             Log.Debug("OnMouseClicked: " + element.id + " " + element.role + " " + element.Name);

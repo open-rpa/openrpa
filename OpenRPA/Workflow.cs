@@ -158,6 +158,14 @@ namespace OpenRPA
                 try
                 {
                     i.Workflow = this;
+                    if(!string.IsNullOrEmpty(i.InstanceId) && string.IsNullOrEmpty(i.xml))
+                    {
+                        Log.Error("Refuse to load instance " + i.InstanceId + " it contains no state!");
+                        i.state = "aborted";
+                        i.errormessage = "Refuse to load instance " + i.InstanceId + " it contains no state!";
+                        await i.Save();
+                        continue;
+                    }
                     WorkflowInstance.Instances.Add(i);
                     i.createApp();
                     await i.Run();
@@ -167,7 +175,7 @@ namespace OpenRPA
                     i.state = "failed";
                     i.Exception = ex;
                     i.errormessage = ex.Message;
-                    _ = i.Save();
+                    await i.Save();
                     Log.Error("RunPendingInstances: " + ex.ToString());
                 }
             }

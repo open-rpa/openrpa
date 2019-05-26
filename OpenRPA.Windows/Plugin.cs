@@ -140,31 +140,31 @@ namespace OpenRPA.Windows
         public void LaunchBySelector(Selector selector, TimeSpan timeout)
         {
             IElement[] elements = { };
-            //var sw = new Stopwatch();
-            //sw.Start();
-            //do
-            //{
-            //    elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
-            //    {
-            //        try
-            //        {
-            //            return GetElementsWithSelector(selector, null, 1);
-            //        }
-            //        catch (System.Threading.ThreadAbortException)
-            //        {
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            Log.Error(ex, "");
-            //        }
-            //        return new UIElement[] { };
-            //    }, TimeSpan.FromMilliseconds(250)).Result;
-            //    if (elements == null)
-            //    {
-            //        elements = new IElement[] { };
-            //    }
-            //} while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
-            elements = GetElementsWithSelector(selector, null, 1);
+            var sw = new Stopwatch();
+            sw.Start();
+            do
+            {
+                elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
+                {
+                    try
+                    {
+                        return GetElementsWithSelector(selector, null, 1);
+                    }
+                    catch (System.Threading.ThreadAbortException)
+                    {
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, "");
+                    }
+                    return new UIElement[] { };
+                }, TimeSpan.FromMilliseconds(250)).Result;
+                if (elements == null)
+                {
+                    elements = new IElement[] { };
+                }
+            } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
+            // elements = GetElementsWithSelector(selector, null, 1);
             Process process = null;
             if (elements.Length > 0)
             {
@@ -225,31 +225,31 @@ namespace OpenRPA.Windows
         public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)
         {
             IElement[] elements = { };
-            //var sw = new Stopwatch();
-            //sw.Start();
-            //do
-            //{
-            //    elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
-            //    {
-            //        try
-            //        {
-            //            return GetElementsWithSelector(selector, null, 1);
-            //        }
-            //        catch (System.Threading.ThreadAbortException)
-            //        {
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            Log.Error(ex, "");
-            //        }
-            //        return new UIElement[] { };
-            //    }, TimeSpan.FromMilliseconds(250)).Result;
-            //    if (elements == null)
-            //    {
-            //        elements = new IElement[] { };
-            //    }
-            //} while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
-            elements = GetElementsWithSelector(selector, null, 1);
+            var sw = new Stopwatch();
+            sw.Start();
+            do
+            {
+                elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
+                {
+                    try
+                    {
+                        return GetElementsWithSelector(selector, null, 1);
+                    }
+                    catch (System.Threading.ThreadAbortException)
+                    {
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, "");
+                    }
+                    return new UIElement[] { };
+                }, TimeSpan.FromMilliseconds(250)).Result;
+                if (elements == null)
+                {
+                    elements = new IElement[] { };
+                }
+            } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
+            // elements = GetElementsWithSelector(selector, null, 1);
             if (elements.Length > 0)
             {
                 //using (var automation = Interfaces.AutomationUtil.getAutomation())

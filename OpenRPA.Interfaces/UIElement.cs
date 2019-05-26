@@ -223,7 +223,12 @@ namespace OpenRPA
         }
         public override string ToString()
         {
-            return "id:" + Id + " Name:" + Name + " ClassName: " + ClassName;
+            string result = "";
+            if (!string.IsNullOrEmpty(ControlType)) result += " " + ControlType;
+            if (!string.IsNullOrEmpty(Id)) result += " id: " + Id;
+            if (!string.IsNullOrEmpty(Name)) result += " Name: " + Name;
+            if (!string.IsNullOrEmpty(ClassName)) result += " ClassName: " + ClassName;
+            return result.Trim();
         }
         public override bool Equals(object obj)
         {

@@ -9,9 +9,11 @@
     <Grid>
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,20,0,0" Text="Name:" VerticalAlignment="Top" Width="110" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="183,20,0,0" Text="{Binding Path=EntityName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
-        <Button Content="Set keys" HorizontalAlignment="Left" Margin="67,93,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.769,-0.134" Click="Button_Click"  />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,48,0,0" Text="Keys:" VerticalAlignment="Top" Width="110" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="183,48,0,0" Text="{Binding Keys, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
+        <Button Content="Set keys" HorizontalAlignment="Left" Margin="67,104,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.769,-0.134" Click="Button_Click"  />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,76,0,0" Text="Keys:" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="183,76,0,0" Text="{Binding Keys, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,48,0,0" Text="Process restriction:" VerticalAlignment="Top" Width="110" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="183,48,0,0" Text="{Binding Processname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
 
     </Grid>
 </UserControl>

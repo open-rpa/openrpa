@@ -82,7 +82,7 @@ namespace OpenRPA.Views
                         }
                     } else
                     {
-                        if (string.IsNullOrEmpty(Entity._id)) Entity._id = Guid.NewGuid().ToString();
+                        if (string.IsNullOrEmpty(Entity._id)) Entity._id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", ""); 
                     }
                     Entity.SaveFile();
                     isSaving = false;

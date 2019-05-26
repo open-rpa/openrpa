@@ -150,6 +150,12 @@ async function portOnMessage(message) {
         port.postMessage(JSON.parse(JSON.stringify(message)));
         return;
     }
+    if (message.functionName === "closetab") {
+        chrome.tabs.remove(message.tab.id, function () {
+            port.postMessage(JSON.parse(JSON.stringify(message)));
+        });
+        return;
+    }
     if (message.functionName === "refreshtabs") {
         try {
             var subtabsList2 = await tabsquery();

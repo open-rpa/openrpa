@@ -53,6 +53,19 @@ namespace OpenRPA.Interfaces.Views
                 NotifyPropertyChanged("Entity");
             }
         }
+        public string Processname
+        {
+            get
+            {
+                if (Entity == null) return string.Empty;
+                return plugin.Processname;
+            }
+            set
+            {
+                plugin.Processname = value;
+                NotifyPropertyChanged("Processname");
+            }
+        }
         public string Keys
         {
             get

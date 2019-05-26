@@ -8,14 +8,16 @@
     <Grid>
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,20,0,0" Text="Name:" VerticalAlignment="Top" Width="110" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="183,20,0,0" Text="{Binding Path=EntityName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
-        <Button Content="Select" HorizontalAlignment="Left" Margin="67,48,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.769,-0.134" Click="Select_Click" />
-        <Button Content="Open Selector" HorizontalAlignment="Left" Margin="67,72,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.769,-0.134" Click="Open_Selector_Click" />
-        <Button HorizontalAlignment="Left" Margin="67,97,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.769,-0.134" Click="Highlight_Click" >
+        <Button Content="Select" HorizontalAlignment="Left" Margin="67,76,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.769,-0.134" Click="Select_Click" />
+        <Button Content="Open Selector" HorizontalAlignment="Left" Margin="67,100,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.769,-0.134" Click="Open_Selector_Click" />
+        <Button HorizontalAlignment="Left" Margin="67,125,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.769,-0.134" Click="Highlight_Click" >
             <StackPanel Orientation="Horizontal">
                 <Image x:Name="HighlightImage" Height="16" Width="16" />
                 <TextBlock>Highlight</TextBlock>
             </StackPanel>
         </Button>
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,48,0,0" Text="Selector:" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="183,48,0,0" Text="{Binding Selector, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
 
     </Grid>
 </UserControl>

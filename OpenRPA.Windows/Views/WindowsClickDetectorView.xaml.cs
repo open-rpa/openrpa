@@ -53,16 +53,18 @@ namespace OpenRPA.Windows.Views
             set
             {
                 Entity.name = value;
-                NotifyPropertyChanged("Entity");
+                NotifyPropertyChanged("EntityName");
             }
         }
         public string Selector
         {
             get
             {
+                if (Entity == null) return null;
+                if(!Entity.Properties.ContainsKey("Selector")) return null;
                 var _val = Entity.Properties["Selector"];
                 if (_val == null) return null;
-                return _val.ToString();
+                return _val.ToString().Replace(Environment.NewLine, "");
             }
             set
             {
@@ -87,7 +89,8 @@ namespace OpenRPA.Windows.Views
             if (selectors.ShowDialog() == true)
             {
                 Selector = selectors.vm.json;
-                NotifyPropertyChanged("Entity");
+                NotifyPropertyChanged("EntityName");
+                NotifyPropertyChanged("Selector");
             }
         }
         private void Highlight_Click(object sender, RoutedEventArgs e)
@@ -133,7 +136,8 @@ namespace OpenRPA.Windows.Views
                     }
                 }
                 Selector = e.Selector.ToString();
-                NotifyPropertyChanged("Entity");
+                EntityName = e.UIElement.ToString();
+                NotifyPropertyChanged("EntityName");
             }, null);
         }
     }

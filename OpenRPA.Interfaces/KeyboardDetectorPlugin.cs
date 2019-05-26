@@ -50,7 +50,7 @@ namespace OpenRPA.Interfaces
             get
             {
                 if (Entity == null) return null;
-                if(!Entity.Properties.ContainsKey("Keys")) return null;
+                if (!Entity.Properties.ContainsKey("Keys")) return null;
                 var _val = Entity.Properties["Keys"];
                 if (_val == null) return null;
                 return _val.ToString();
@@ -61,15 +61,52 @@ namespace OpenRPA.Interfaces
                 Entity.Properties["Keys"] = value;
             }
         }
+        public string Processname
+        {
+            get
+            {
+                if (Entity == null) return null;
+                if (!Entity.Properties.ContainsKey("Processname")) return null;
+                var _val = Entity.Properties["Processname"];
+                if (_val == null) return null;
+                return _val.ToString();
+            }
+            set
+            {
+                if (Entity == null) return;
+                Entity.Properties["Processname"] = value;
+            }
+        }
         public void Start()
         {
-            InputDriver.Instance.OnKeyDown += OnKeyDown; ;
+            InputDriver.Instance.OnKeyDown += OnKeyDown;
             InputDriver.Instance.OnKeyUp += OnKeyUp;
             ParseText(Keys);
         }
         public void Stop()
         {
             InputDriver.Instance.OnKeyUp -= OnKeyUp;
+        }
+        private void RaiseDetector()
+        {
+            if(!string.IsNullOrEmpty(Processname))
+            {
+                using (var automation = AutomationUtil.getAutomation())
+                {
+                    var current = automation.FocusedElement();
+                    if(current.Properties.ProcessId.IsSupported)
+                    {
+                        var ProcessId = automation.FocusedElement().Properties.ProcessId.Value;
+                        var p = System.Diagnostics.Process.GetProcessById(automation.FocusedElement().Properties.ProcessId.Value);
+                        if (!PatternMatcher.FitsMask(p.ProcessName.ToLower(), Processname.ToLower()))
+                        {
+                            Log.Information("KeyboardDetector skipped, expected " + Processname + ", but got " + p.ProcessName);
+                            return;
+                        }
+                    }
+                }
+            }
+            OnDetector?.Invoke(this, new DetectorEvent(), EventArgs.Empty);
         }
         private int keysindex = 0;
         private bool isMatch(keyset k, InputEventArgs e, keytype keytype)
@@ -110,7 +147,7 @@ namespace OpenRPA.Interfaces
             if (keysindex >= keys.Count)
             {
                 keysindex = 0;
-                OnDetector?.Invoke(this, new DetectorEvent(), EventArgs.Empty);
+                RaiseDetector();
             }
 
         }
@@ -138,7 +175,7 @@ namespace OpenRPA.Interfaces
                 if (keysindex >= keys.Count)
                 {
                     keysindex = 0;
-                    OnDetector?.Invoke(this, new DetectorEvent(), EventArgs.Empty);
+                    RaiseDetector();
                 }
             }
             catch (Exception ex)

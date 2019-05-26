@@ -67,13 +67,13 @@ namespace OpenRPA.Views
                         {
                             if (string.IsNullOrEmpty(Entity._id))
                             {
-                                var result = await global.webSocketClient.InsertOne("openrpa", Entity);
+                                var result = await global.webSocketClient.InsertOne("openrpa", 0, false, Entity);
                                 Entity._id = result._id;
                                 Entity._acl = result._acl;
                             }
                             else
                             {
-                                await global.webSocketClient.UpdateOne("openrpa", p.Entity);
+                                await global.webSocketClient.UpdateOne("openrpa", 0, false, p.Entity);
                             }
                         }
                         catch (Exception ex)
@@ -82,7 +82,7 @@ namespace OpenRPA.Views
                         }
                     } else
                     {
-                        if (string.IsNullOrEmpty(Entity._id)) Entity._id = Guid.NewGuid().ToString();
+                        if (string.IsNullOrEmpty(Entity._id)) Entity._id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", ""); 
                     }
                     Entity.SaveFile();
                     isSaving = false;

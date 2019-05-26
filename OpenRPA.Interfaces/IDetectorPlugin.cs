@@ -13,7 +13,7 @@ namespace OpenRPA.Interfaces
     {
         void Initialize(Detector Entity);
         string Name { get; }
-        entity.Detector Entity { get; }
+        entity.Detector Entity { get; set;  }
         System.Windows.Controls.UserControl editor { get; }
         event DetectorDelegate OnDetector;
         void Start();

@@ -12,15 +12,9 @@ using System.Windows.Controls;
 
 namespace OpenRPA.FileWatcher
 {
-    public class FileWatcherDetector : Detector
-    {
-        public string Watchpath { get; set; }
-        public string WatchFilter { get; set; }
-    }
     public class FileWatcherDetectorPlugin : ObservableObject, IDetectorPlugin
     {
-        Detector IDetectorPlugin.Entity { get => Entity; }
-        public FileWatcherDetector Entity { get; set; }
+        public Detector Entity { get; set; }
         public string Name
         {
             get
@@ -50,39 +44,48 @@ namespace OpenRPA.FileWatcher
         FileSystemWatcher watcher = null;
         public void Initialize(Detector InEntity)
         {
-            Entity = InEntity as FileWatcherDetector;
-            if (Entity == null)
-            {
-                if (System.IO.File.Exists(InEntity.Filepath))
-                    Entity = JsonConvert.DeserializeObject<FileWatcherDetector>(System.IO.File.ReadAllText(InEntity.Filepath));
-            }
-            if (Entity == null)
-            { 
-                Entity = new FileWatcherDetector();
-                if (InEntity != null)
-                {
-                    Entity.Filename = InEntity.Filename;
-                    Entity.name = InEntity.name;
-                    Entity.Path = InEntity.Path;
-                    Entity.Plugin = InEntity.Plugin;
-                    Entity.Selector = InEntity.Selector;
-                    Entity._acl = InEntity._acl;
-                    Entity._id = InEntity._id;
-                    Entity._type = InEntity._type;
-                }
-                if (string.IsNullOrEmpty(Entity.name)) Entity.name = Name;
-            }
-            Entity.Path = InEntity.Path;
+            Entity = InEntity;
             watcher = new FileSystemWatcher();
             Start();
+        }
+        public string Watchpath
+        {
+            get
+            {
+                if (Entity == null) return null;
+                if (!Entity.Properties.ContainsKey("Watchpath")) return null;
+                var _val = Entity.Properties["Watchpath"];
+                if (_val == null) return null;
+                return _val.ToString();
+            }
+            set
+            {
+                Entity.Properties["Watchpath"] = value;
+            }
+        }
+        public string WatchFilter
+        {
+            get
+            {
+                if (Entity == null) return null;
+                if (!Entity.Properties.ContainsKey("WatchFilter")) return null;
+                var _val = Entity.Properties["WatchFilter"];
+                if (_val == null) return null;
+                return _val.ToString();
+            }
+            set
+            {
+                if (Entity == null) return;
+                Entity.Properties["WatchFilter"] = value;
+            }
         }
         public void Start()
         {
             try
             {
-                watcher.Path = Entity.Watchpath;
+                watcher.Path = Watchpath;
                 watcher.NotifyFilter = NotifyFilters.LastWrite;
-                watcher.Filter = Entity.WatchFilter;
+                watcher.Filter = WatchFilter;
                 watcher.Changed += new FileSystemEventHandler(OnChanged);
                 watcher.EnableRaisingEvents = true;
             }

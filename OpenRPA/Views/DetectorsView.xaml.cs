@@ -61,7 +61,6 @@ namespace OpenRPA.Views
                 {
                     var Entity = (p.Entity as Interfaces.entity.Detector);
                     isSaving = true;
-                    Entity.SaveFile();
                     if (global.isConnected)
                     {
                         try
@@ -81,7 +80,11 @@ namespace OpenRPA.Views
                         {
                             Log.Error(ex.ToString());
                         }
+                    } else
+                    {
+                        if (string.IsNullOrEmpty(Entity._id)) Entity._id = Guid.NewGuid().ToString();
                     }
+                    Entity.SaveFile();
                     isSaving = false;
                 }
             }
@@ -113,7 +116,7 @@ namespace OpenRPA.Views
                 item.OnDetector -= main.OnDetector;
                 var d = item.Entity as OpenRPA.Interfaces.entity.Detector;
                 if (d != null) d.Delete();
-                var kd = item.Entity as OpenRPA.Interfaces.entity.KeyboardDetector;
+                var kd = item.Entity;
                 if (kd != null) kd.Delete();
                 if (global.isConnected)
                 {

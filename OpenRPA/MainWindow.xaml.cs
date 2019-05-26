@@ -850,7 +850,7 @@ namespace OpenRPA
                     IDetectorPlugin dp = null;
                     d.Path = Extensions.projectsDirectory;
                     dp = Plugins.AddDetector(d);
-                    dp.OnDetector += OnDetector;
+                    if(dp != null) dp.OnDetector += OnDetector;
                 }
             }
             Task.Run(() =>

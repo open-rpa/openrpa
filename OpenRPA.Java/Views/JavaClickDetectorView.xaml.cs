@@ -30,19 +30,19 @@ namespace OpenRPA.Java.Views
         {
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
-        public JavaClickDetectorView(IDetectorPlugin plugin)
+        public JavaClickDetectorView(JavaClickDetectorPlugin plugin)
         {
             InitializeComponent();
             this.plugin = plugin;
             HighlightImage.Source = Extensions.GetImageSourceFromResource("search.png");
             DataContext = this;
         }
-        private IDetectorPlugin plugin;
+        private JavaClickDetectorPlugin plugin;
         public Detector Entity
         {
             get
             {
-                return plugin.Entity as Detector;
+                return plugin.Entity;
             }
         }
         public string EntityName
@@ -60,7 +60,7 @@ namespace OpenRPA.Java.Views
         }
         private void Open_Selector_Click(object sender, RoutedEventArgs e)
         {
-            string SelectorString = Entity.Selector;
+            string SelectorString = plugin.Selector;
             Interfaces.Selector.SelectorWindow selectors;
             if (!string.IsNullOrEmpty(SelectorString))
             {
@@ -74,14 +74,14 @@ namespace OpenRPA.Java.Views
             }
             if (selectors.ShowDialog() == true)
             {
-                Entity.Selector = selectors.vm.json;
+                plugin.Selector = selectors.vm.json;
                 NotifyPropertyChanged("Entity");
             }
         }
         private void Highlight_Click(object sender, RoutedEventArgs e)
         {
             HighlightImage.Source = Extensions.GetImageSourceFromResource(".x.png");
-            string SelectorString = Entity.Selector;
+            string SelectorString = plugin.Selector;
             var selector = new JavaSelector(SelectorString);
             var elements = JavaSelector.GetElementsWithuiSelector(selector, null, 10);
             if (elements.Count() > 0)
@@ -120,7 +120,7 @@ namespace OpenRPA.Java.Views
                         if (p.parseUserAction(ref e)) continue;
                     }
                 }
-                Entity.Selector = e.Selector.ToString();
+                plugin.Selector = e.Selector.ToString();
                 NotifyPropertyChanged("Entity");
             }, null);
         }

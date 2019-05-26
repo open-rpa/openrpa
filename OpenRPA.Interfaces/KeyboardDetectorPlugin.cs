@@ -12,8 +12,7 @@ namespace OpenRPA.Interfaces
     public class KeyboardDetectorPlugin : ObservableObject, IDetectorPlugin
     {
         //object IDetectorPlugin.Entity { get => Entity; set => Entity = value as entity.KeyboardDetector; }
-        entity.Detector IDetectorPlugin.Entity { get => Entity; }
-        public entity.KeyboardDetector Entity { get; set; }
+        public entity.Detector Entity { get; set; }
         public string Name
         {
             get
@@ -43,36 +42,30 @@ namespace OpenRPA.Interfaces
         public event DetectorDelegate OnDetector;
         public void Initialize(entity.Detector InEntity)
         {
-            Entity = InEntity as entity.KeyboardDetector;
-            if (Entity == null)
-            {
-                if (System.IO.File.Exists(InEntity.Filepath))
-                    Entity = JsonConvert.DeserializeObject<entity.KeyboardDetector>(System.IO.File.ReadAllText(InEntity.Filepath));
-            }
-            if (Entity == null)
-            {
-                Entity = new entity.KeyboardDetector();
-                if (InEntity != null)
-                {
-                    Entity.Filename = InEntity.Filename;
-                    Entity.name = InEntity.name;
-                    Entity.Path = InEntity.Path;
-                    Entity.Plugin = InEntity.Plugin;
-                    Entity.Selector = InEntity.Selector;
-                    Entity._acl = InEntity._acl;
-                    Entity._id = InEntity._id;
-                    Entity._type = InEntity._type;
-                }
-                if (string.IsNullOrEmpty(Entity.name)) Entity.name = Name;
-            }
-            Entity.Path = InEntity.Path;
+            Entity = InEntity;
             Start();
+        }
+        public string Keys
+        {
+            get
+            {
+                if (Entity == null) return null;
+                if(!Entity.Properties.ContainsKey("Keys")) return null;
+                var _val = Entity.Properties["Keys"];
+                if (_val == null) return null;
+                return _val.ToString();
+            }
+            set
+            {
+                if (Entity == null) return;
+                Entity.Properties["Keys"] = value;
+            }
         }
         public void Start()
         {
             InputDriver.Instance.OnKeyDown += OnKeyDown; ;
             InputDriver.Instance.OnKeyUp += OnKeyUp;
-            ParseText(Entity.Keys);
+            ParseText(Keys);
         }
         public void Stop()
         {
@@ -87,17 +80,18 @@ namespace OpenRPA.Interfaces
             {
                 if (k.Key > 0)
                 {
-                    if (k.Key == e.Key) { return true; } else { Console.WriteLine(k.Key + " != " + e.Key); }
+                    if (k.Key == e.Key) { return true; } // else { Console.WriteLine(k.Key + " != " + e.Key); }
                 }
                 else
                 {
-                    if (k.c == (char)e.KeyValue) { return true; } else { Console.WriteLine(k.c + " != " + (char)e.KeyValue); }
+                    if (k.c == (char)e.KeyValue) { return true; } // else { Console.WriteLine(k.c + " != " + (char)e.KeyValue); }
                 }
             }
             return false;
         }
         private void OnKeyDown(InputEventArgs e)
         {
+            if (keys.Count == 0) return;
             if (keysindex > 0)
             {
                 var lastk = keys[keysindex - 1];
@@ -112,7 +106,7 @@ namespace OpenRPA.Interfaces
                 var lastk = keys[keysindex - 1];
                 if (!isMatch(lastk, e, keytype.down)) keysindex = 0;
             }
-            Console.WriteLine(keysindex + " / " + keys.Count);
+            // Console.WriteLine(keysindex + " / " + keys.Count);
             if (keysindex >= keys.Count)
             {
                 keysindex = 0;
@@ -122,6 +116,7 @@ namespace OpenRPA.Interfaces
         }
         private void OnKeyUp(InputEventArgs e)
         {
+            if (keys.Count == 0) return;
             if (keysindex > 0)
             {
                 var lastk = keys[keysindex - 1];
@@ -139,7 +134,7 @@ namespace OpenRPA.Interfaces
                     var lastk = keys[keysindex - 1];
                     if (!isMatch(lastk, e, keytype.up)) keysindex = 0;
                 }
-                Console.WriteLine(keysindex + " / " + keys.Count);
+                // Console.WriteLine(keysindex + " / " + keys.Count);
                 if (keysindex >= keys.Count)
                 {
                     keysindex = 0;

@@ -31,12 +31,12 @@ namespace OpenRPA.FileWatcher.Views
             this.plugin = plugin;
             DataContext = this;
         }
-        private IDetectorPlugin plugin;
-        public FileWatcherDetector Entity
+        private FileWatcherDetectorPlugin plugin;
+        public Detector Entity
         {
             get
             {
-                return plugin.Entity as FileWatcherDetector;
+                return plugin.Entity;
             }
         }
         public string EntityName
@@ -56,14 +56,13 @@ namespace OpenRPA.FileWatcher.Views
         {
             get
             {
-                if (Entity == null) return string.Empty;
-                plugin.Stop();
-                plugin.Start();
-                return Entity.Watchpath;
+                return plugin.Watchpath;
             }
             set
             {
-                Entity.Watchpath = value;
+                plugin.Watchpath = value;
+                plugin.Stop();
+                plugin.Start();
                 NotifyPropertyChanged("Entity");
             }
         }
@@ -71,14 +70,13 @@ namespace OpenRPA.FileWatcher.Views
         {
             get
             {
-                if (Entity == null) return string.Empty;
-                plugin.Stop();
-                plugin.Start();
-                return Entity.WatchFilter;
+                return plugin.WatchFilter;
             }
             set
             {
-                Entity.WatchFilter = value;
+                plugin.WatchFilter = value;
+                plugin.Stop();
+                plugin.Start();
                 NotifyPropertyChanged("Entity");
             }
         }

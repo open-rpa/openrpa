@@ -33,11 +33,11 @@ namespace OpenRPA.Interfaces.Views
             DataContext = this;
         }
         private KeyboardDetectorPlugin plugin;
-        public entity.KeyboardDetector Entity
+        public entity.Detector Entity
         {
             get
             {
-                return plugin.Entity as entity.KeyboardDetector;
+                return plugin.Entity;
             }
         }
         public string EntityName
@@ -57,12 +57,11 @@ namespace OpenRPA.Interfaces.Views
         {
             get
             {
-                if (Entity == null) return string.Empty;
-                return Entity.Keys;
+                return plugin.Keys;
             }
             set
             {
-                Entity.Keys = value;
+                plugin.Keys = value;
                 NotifyPropertyChanged("Keys");
                 NotifyPropertyChanged("Entity");
             }

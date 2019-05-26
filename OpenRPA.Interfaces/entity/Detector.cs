@@ -16,10 +16,11 @@ namespace OpenRPA.Interfaces.entity
         public Detector()
         {
             _type = "detector";
+            Properties = new Dictionary<string, object>();
         }
         public string Plugin { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        public string Selector { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public Dictionary<string, object> Properties { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
         [JsonIgnore]
         public string Path { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [JsonIgnore]
@@ -50,6 +51,7 @@ namespace OpenRPA.Interfaces.entity
         }
         public void SaveFile()
         {
+
             if(string.IsNullOrEmpty(Filename))
             {
                 Filename = UniqueFilename();

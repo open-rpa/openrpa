@@ -13,7 +13,6 @@ namespace OpenRPA.Java
 {
     public class JavaClickDetectorPlugin : ObservableObject, IDetectorPlugin
     {
-        Detector IDetectorPlugin.Entity { get => Entity; }
         public Detector Entity { get; set; }
         public string Name
         {
@@ -23,6 +22,23 @@ namespace OpenRPA.Java
                 return "JavaClick";
             }
         }
+        public string Selector
+        {
+            get
+            {
+                if (Entity == null) return null;
+                if (!Entity.Properties.ContainsKey("Selector")) return null;
+                var _val = Entity.Properties["Selector"];
+                if (_val == null) return null;
+                return _val.ToString();
+            }
+            set
+            {
+                if (Entity == null) return;
+                Entity.Properties["Selector"] = value;
+            }
+        }
+
         private Views.JavaClickDetectorView view;
         public UserControl editor
         {
@@ -44,7 +60,7 @@ namespace OpenRPA.Java
         public Javahook hook { get; set; } = new Javahook();
         public void Initialize(Detector InEntity)
         {
-            Entity = InEntity as Detector;
+            Entity = InEntity;
             hook.init();
             Start();
         }
@@ -83,7 +99,7 @@ namespace OpenRPA.Java
                     return;
                 }
             }
-            JavaSelector selector = new JavaSelector(Entity.Selector);
+            JavaSelector selector = new JavaSelector(Selector);
             if (pathToRoot.Count < (selector.Count - 1)) return;
             if (pathToRoot.Count > (selector.Count - 1)) return;
             pathToRoot.Reverse();

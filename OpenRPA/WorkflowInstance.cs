@@ -313,6 +313,7 @@ namespace OpenRPA
             };
 
         }
+        private object filelock = new object();
         public void SaveFile()
         {
             if (string.IsNullOrEmpty(InstanceId)) return;
@@ -320,7 +321,10 @@ namespace OpenRPA
             if (isCompleted || hasError) return;
             if (!System.IO.Directory.Exists(System.IO.Path.Combine(Path, "state"))) System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Path, "state"));
             var Filepath = System.IO.Path.Combine(Path, "state", InstanceId + ".json");
-            System.IO.File.WriteAllText(Filepath, JsonConvert.SerializeObject(this));
+            lock(filelock)
+            {
+                System.IO.File.WriteAllText(Filepath, JsonConvert.SerializeObject(this));
+            }
         }
         public void DeleteFile()
         {

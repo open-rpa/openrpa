@@ -10,7 +10,7 @@ using System.Xml.Linq;
 
 namespace OpenRPA.Store
 {
-    public abstract class xmlInstanceStoreBase : InstanceStore, IDisposable
+    public abstract class CustomInstanceStoreBase : InstanceStore, IDisposable
     {
         /// <summary>
         /// A unique identifier for the store of instances. There will usually be one store id for all workflows
@@ -22,7 +22,7 @@ namespace OpenRPA.Store
         /// </summary>
         private InstanceHandle _handle;
         private IFormatter serializer = null;
-        public xmlInstanceStoreBase(Guid storeId)
+        public CustomInstanceStoreBase(Guid storeId)
         {
             //serializer = new NetDataContractSerializer();
             serializer = new NetDataContractSerializer();
@@ -69,8 +69,7 @@ namespace OpenRPA.Store
                 instanceStateData = XmlToDictionary(xml);
                 //load the data into the persistence Context
                 context.LoadedInstance(InstanceState.Initialized, instanceStateData, null, null, null);
-            }
-
+            } 
             return new CompletedAsyncResult<bool>(true, callback, state);
         }
         protected override bool EndTryCommand(IAsyncResult result)

@@ -124,6 +124,29 @@ namespace OpenRPA
         }
         public async Task RunPendingInstances()
         {
+            var statepath = System.IO.Path.Combine(Project.Path, "state");
+            var ProjectFiles = System.IO.Directory.EnumerateFiles(statepath, "*.json", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
+            foreach(var f in ProjectFiles)
+            {
+                try
+                {
+                    var i = JsonConvert.DeserializeObject<WorkflowInstance>(System.IO.File.ReadAllText(f));
+                    i.Workflow = this;
+                    i.Path = Project.Path;
+                    var exists = WorkflowInstance.Instances.Where(x => x.InstanceId == i.InstanceId).FirstOrDefault();
+                    if (exists != null) continue;
+                    WorkflowInstance.Instances.Add(i);
+                    if(i.state != "failed" && i.state != "aborted" && i.state != "completed")
+                    {
+                        i.createApp();
+                        await i.Run();
+                    }                    
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("RunPendingInstances: " + ex.ToString());
+                }
+            }
             var host = Environment.MachineName.ToLower();
             var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
             var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{WorkflowId: '" + _id + "', state: 'idle', fqdn: '" + fqdn + "'}");

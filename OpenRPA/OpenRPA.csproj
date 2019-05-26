@@ -116,11 +116,8 @@
     <Compile Include="robotCommand.cs" />
     <Compile Include="Store\AsyncResult.cs" />
     <Compile Include="Store\CompletedAsyncResult.cs" />
-    <Compile Include="Store\CustomInstanceStoreBase.cs" />
     <Compile Include="Store\JsonInstanceStoreBase.cs" />
-    <Compile Include="Store\MemoryCacheInstanceStore.cs" />
     <Compile Include="Store\OpenFlowInstanceStore.cs" />
-    <Compile Include="Store\XMLFileInstanceStore.cs" />
     <Compile Include="Store\xmlInstanceStoreBase.cs" />
     <Compile Include="Views\ClosableTab.cs" />
     <Compile Include="Views\CloseableHeader.xaml.cs">
@@ -128,6 +125,9 @@
     </Compile>
     <Compile Include="Views\DetectorsView.xaml.cs">
       <DependentUpon>DetectorsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\KeyboardSeqWindow.xaml.cs">
+      <DependentUpon>KeyboardSeqWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\InsertText.xaml.cs">
       <DependentUpon>InsertText.xaml</DependentUpon>
@@ -190,6 +190,10 @@
     <Page Include="Views\DetectorsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\KeyboardSeqWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\InsertText.xaml">
       <SubType>Designer</SubType>
@@ -410,6 +414,10 @@
     <ProjectReference Include="..\OpenRPA.ExpressionEditor\OpenRPA.ExpressionEditor.csproj">
       <Project>{0d52b2e1-1998-4238-b601-57a2d6ade2e8}</Project>
       <Name>OpenRPA.ExpressionEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenRPA.FileWatcher\OpenRPA.FileWatcher.csproj">
+      <Project>{d33652d0-ce28-4226-9a9f-0fc1c2b81cbd}</Project>
+      <Name>OpenRPA.FileWatcher</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenRPA.IE\OpenRPA.IE.csproj">
       <Project>{ce483c6b-ebef-47ba-b3d5-5c7582dafd1d}</Project>

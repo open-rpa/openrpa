@@ -44,8 +44,10 @@ namespace OpenRPA.Store
                 var i = WorkflowInstance.Instances.Where(x => x.InstanceId == instanceId.ToString()).FirstOrDefault();
                 if (i != null)
                 {
+                    Log.Debug("Loading " + instanceId.ToString() + " from Instance Store");
                     return Base64Decode(i.xml);
                 }
+                Log.Error("Error locating " + instanceId.ToString() + " in Instance Store");
                 return null;
             }
             catch (Exception ex)

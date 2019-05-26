@@ -13,7 +13,6 @@ namespace OpenRPA.Windows
 {
     public class WindowsClickDetectorPlugin : ObservableObject, IDetectorPlugin
     {
-        object IDetectorPlugin.Entity { get => Entity; set => Entity = value as Detector; }
         public Detector Entity { get; set; }
         public string Name
         {
@@ -21,6 +20,22 @@ namespace OpenRPA.Windows
             {
                 if (Entity != null && !string.IsNullOrEmpty(Entity.name)) return Entity.name;
                 return "WindowsClick";
+            }
+        }
+        public string Selector
+        {
+            get
+            {
+                if (Entity == null) return null;
+                if (!Entity.Properties.ContainsKey("Selector")) return null;
+                var _val = Entity.Properties["Selector"];
+                if (_val == null) return null;
+                return _val.ToString();
+            }
+            set
+            {
+                if (Entity == null) return;
+                Entity.Properties["Selector"] = value;
             }
         }
         private Views.WindowsClickDetectorView view;
@@ -41,8 +56,9 @@ namespace OpenRPA.Windows
             }
         }
         public event DetectorDelegate OnDetector;
-        public void Initialize()
+        public void Initialize(Detector InEntity)
         {
+            Entity = InEntity;
             Start();
         }
         public void Start()
@@ -58,7 +74,7 @@ namespace OpenRPA.Windows
             try
             {
                 if (e.Element == null) return;
-                if (Entity == null || string.IsNullOrEmpty(Entity.Selector)) return;
+                if (Entity == null || string.IsNullOrEmpty(Selector)) return;
                 var pathToRoot = new List<AutomationElement>();
                 AutomationElement element = e.Element.RawElement;
                 while (element != null)
@@ -82,7 +98,7 @@ namespace OpenRPA.Windows
                         // return;
                     }
                 }
-                WindowsSelector selector = new WindowsSelector(Entity.Selector);
+                WindowsSelector selector = new WindowsSelector(Selector);
                 if (pathToRoot.Count < (selector.Count - 1)) return;
                 if (pathToRoot.Count > (selector.Count - 1)) return;
                 pathToRoot.Reverse();

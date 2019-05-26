@@ -22,6 +22,8 @@ namespace OpenRPA
         public event idleOrComplete OnIdleOrComplete;
         public Dictionary<string, object> Parameters { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
         public Dictionary<string, object> Bookmarks { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
+        [JsonIgnore]
+        public string Path { get; set; }
         public string queuename { get; set; }
         public string correlationId { get; set; }
         public string InstanceId { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -43,7 +45,7 @@ namespace OpenRPA
         public System.Activities.WorkflowApplication wfApp { get; set; }
         public static WorkflowInstance Create(Workflow Workflow, Dictionary<string, object> Parameters)
         {
-            var result = new WorkflowInstance() { Workflow = Workflow, WorkflowId = Workflow._id, Parameters = Parameters, name = Workflow.name };
+            var result = new WorkflowInstance() { Workflow = Workflow, WorkflowId = Workflow._id, Parameters = Parameters, name = Workflow.name, Path = Workflow.Project.Path };
             Instances.Add(result);
             if (global.isConnected)
             {
@@ -154,7 +156,7 @@ namespace OpenRPA
                 {
                     throw new ArgumentException("cannot resume bookmark on completed workflow!");
                 }
-                Log.Debug(String.Format("Workflow {0} resuming at bookmark '{1}' value '{2}'", wfApp.Id.ToString(), bookmarkName, value));
+                // Log.Debug(String.Format("Workflow {0} resuming at bookmark '{1}' value '{2}'", wfApp.Id.ToString(), bookmarkName, value));
                 Task.Run(() =>
                 {
                     System.Threading.Thread.Sleep(50);
@@ -168,7 +170,7 @@ namespace OpenRPA
                     }
                 });
                 state = "running";
-                Log.Debug(String.Format("Workflow {0} resumed bookmark '{1}' value '{2}'", wfApp.Id.ToString(), bookmarkName, value));
+                // Log.Debug(String.Format("Workflow {0} resumed bookmark '{1}' value '{2}'", wfApp.Id.ToString(), bookmarkName, value));
                 _ = Save();
             }
             catch (Exception)
@@ -286,9 +288,15 @@ namespace OpenRPA
                 {
                     state = "unloaded";
 
+                } else
+                {
+                    DeleteFile();
                 }
                 //isUnloaded = true;
-                _ = Save();
+                if(global.isConnected)
+                {
+                    _ = Save();
+                }
             };
 
             wfApp.OnUnhandledException = delegate (System.Activities.WorkflowApplicationUnhandledExceptionEventArgs e)
@@ -305,8 +313,36 @@ namespace OpenRPA
             };
 
         }
+        private object filelock = new object();
+        public void SaveFile()
+        {
+            if (string.IsNullOrEmpty(InstanceId)) return;
+            if (string.IsNullOrEmpty(Path)) return;
+            if (isCompleted || hasError) return;
+            if (!System.IO.Directory.Exists(System.IO.Path.Combine(Path, "state"))) System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Path, "state"));
+            var Filepath = System.IO.Path.Combine(Path, "state", InstanceId + ".json");
+            lock(filelock)
+            {
+                System.IO.File.WriteAllText(Filepath, JsonConvert.SerializeObject(this));
+            }
+        }
+        public void DeleteFile()
+        {
+            if (string.IsNullOrEmpty(InstanceId)) return;
+            if (string.IsNullOrEmpty(Path)) return;
+            var Filepath = System.IO.Path.Combine(Path, "state", InstanceId + ".json");
+            try
+            {
+                if (System.IO.File.Exists(Filepath)) System.IO.File.Delete(Filepath);
+            }
+            catch (Exception ex)
+            {
+                Log.Debug(ex.ToString());
+            }
+        }
         public async Task Save()
         {
+            SaveFile();
             try
             {
                 if (!global.isConnected) return;
@@ -324,6 +360,11 @@ namespace OpenRPA
                 {
                     //if (string.IsNullOrEmpty(_id)) await i.Save();
                     if (string.IsNullOrEmpty(_id)) await i.Save();
+                }
+
+                if (isCompleted || hasError)
+                {
+                    DeleteFile();
                 }
             }
             catch (Exception ex)

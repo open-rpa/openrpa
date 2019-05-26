@@ -16,10 +16,11 @@ namespace OpenRPA.Interfaces.entity
         public Detector()
         {
             _type = "detector";
+            Properties = new Dictionary<string, object>();
         }
         public string Plugin { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        public string Selector { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public Dictionary<string, object> Properties { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
         [JsonIgnore]
         public string Path { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [JsonIgnore]
@@ -35,12 +36,13 @@ namespace OpenRPA.Interfaces.entity
         {
             var ProjectFiles = System.IO.Directory.EnumerateFiles(Path, "*.rpadetector", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
             var Detectors = new List<Detector>();
-            foreach (string file in ProjectFiles) Detectors.Add(FromFile(file));
+            foreach (string file in ProjectFiles) { var d = FromFile(file); if (d != null) {  Detectors.Add(d); } }
             return Detectors.ToArray();
         }
         public static Detector FromFile(string Filepath)
         {
             Detector detector = JsonConvert.DeserializeObject<Detector>(System.IO.File.ReadAllText(Filepath));
+            if (detector == null) return null;
             detector.Filename = System.IO.Path.GetFileName(Filepath);
             if (string.IsNullOrEmpty(detector.name)) { detector.name = System.IO.Path.GetFileNameWithoutExtension(Filepath); }
             detector.Path = System.IO.Path.GetDirectoryName(Filepath);
@@ -49,6 +51,7 @@ namespace OpenRPA.Interfaces.entity
         }
         public void SaveFile()
         {
+
             if(string.IsNullOrEmpty(Filename))
             {
                 Filename = UniqueFilename();

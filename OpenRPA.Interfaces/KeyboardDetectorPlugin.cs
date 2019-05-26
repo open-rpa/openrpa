@@ -1,4 +1,5 @@
-﻿using OpenRPA.Input;
+﻿using Newtonsoft.Json;
+using OpenRPA.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,31 +9,15 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Interfaces
 {
-    class KeyboardDetectorPlugin : ObservableObject, IDetectorPlugin
+    public class KeyboardDetectorPlugin : ObservableObject, IDetectorPlugin
     {
         //object IDetectorPlugin.Entity { get => Entity; set => Entity = value as entity.KeyboardDetector; }
-        object IDetectorPlugin.Entity
-        {
-            get => Entity;
-            set
-            {
-                Entity = value as entity.KeyboardDetector;
-                if(Entity == null) {
-                    Entity = new entity.KeyboardDetector();
-                    var temp = value as entity.Detector;
-                    if(temp != null) {
-                        Entity.Plugin = temp.Plugin;
-                        Entity.Path = temp.Path;
-                        Entity._id = temp._id;
-                    }
-                }
-            }
-        }
-        public entity.KeyboardDetector Entity { get; set; }
+        public entity.Detector Entity { get; set; }
         public string Name
         {
             get
             {
+                if (Entity != null && string.IsNullOrEmpty(Entity.name)) Entity.name = "KeyboardSequence";
                 if (Entity != null && !string.IsNullOrEmpty(Entity.name)) return Entity.name;
                 return "KeyboardSequence";
             }
@@ -55,41 +40,63 @@ namespace OpenRPA.Interfaces
             }
         }
         public event DetectorDelegate OnDetector;
-        public void Initialize()
+        public void Initialize(entity.Detector InEntity)
         {
+            Entity = InEntity;
             Start();
+        }
+        public string Keys
+        {
+            get
+            {
+                if (Entity == null) return null;
+                if(!Entity.Properties.ContainsKey("Keys")) return null;
+                var _val = Entity.Properties["Keys"];
+                if (_val == null) return null;
+                return _val.ToString();
+            }
+            set
+            {
+                if (Entity == null) return;
+                Entity.Properties["Keys"] = value;
+            }
         }
         public void Start()
         {
             InputDriver.Instance.OnKeyDown += OnKeyDown; ;
             InputDriver.Instance.OnKeyUp += OnKeyUp;
-            ParseTest(Entity.Keys);
-            ParseTest("{LCONTROL, c}");
+            ParseText(Keys);
         }
         public void Stop()
         {
             InputDriver.Instance.OnKeyUp -= OnKeyUp;
         }
         private int keysindex = 0;
-
         private bool isMatch(keyset k, InputEventArgs e, keytype keytype)
         {
-            
-            if ((keytype == keytype.down && (k.press == keytype.down || k.press == keytype.press)) || keytype == k.press)
+
+            //if ((keytype == keytype.down && (k.press == keytype.down || k.press == keytype.press)) || keytype == k.press)
+            if (keytype == k.press)
             {
                 if (k.Key > 0)
                 {
-                    if (k.Key == e.Key) { return true; }
+                    if (k.Key == e.Key) { return true; } // else { Console.WriteLine(k.Key + " != " + e.Key); }
                 }
                 else
                 {
-                    if (k.c == (char)e.KeyValue) { return true; }
+                    if (k.c == (char)e.KeyValue) { return true; } // else { Console.WriteLine(k.c + " != " + (char)e.KeyValue); }
                 }
             }
             return false;
         }
         private void OnKeyDown(InputEventArgs e)
         {
+            if (keys.Count == 0) return;
+            if (keysindex > 0)
+            {
+                var lastk = keys[keysindex - 1];
+                if (isMatch(lastk, e, keytype.down)) return;
+            }
             var k = keys[keysindex];
             if(isMatch(k, e, keytype.down))
             {
@@ -99,6 +106,7 @@ namespace OpenRPA.Interfaces
                 var lastk = keys[keysindex - 1];
                 if (!isMatch(lastk, e, keytype.down)) keysindex = 0;
             }
+            // Console.WriteLine(keysindex + " / " + keys.Count);
             if (keysindex >= keys.Count)
             {
                 keysindex = 0;
@@ -108,18 +116,25 @@ namespace OpenRPA.Interfaces
         }
         private void OnKeyUp(InputEventArgs e)
         {
+            if (keys.Count == 0) return;
+            if (keysindex > 0)
+            {
+                var lastk = keys[keysindex - 1];
+                if (isMatch(lastk, e, keytype.up)) return;
+            }
             try
             {
                 var k = keys[keysindex];
-                if (isMatch(k, e, keytype.down))
+                if (isMatch(k, e, keytype.up))
                 {
                     keysindex++;
                 }
                 else if (keysindex > 0)
                 {
                     var lastk = keys[keysindex - 1];
-                    if (!isMatch(lastk, e, keytype.down)) keysindex = 0;
+                    if (!isMatch(lastk, e, keytype.up)) keysindex = 0;
                 }
+                // Console.WriteLine(keysindex + " / " + keys.Count);
                 if (keysindex >= keys.Count)
                 {
                     keysindex = 0;
@@ -157,7 +172,7 @@ namespace OpenRPA.Interfaces
             public keytype press { get; set; }
         }
         private List<keyset> keys = new List<keyset>();
-        private void ParseTest(string text)
+        internal void ParseText(string text)
         {
             keys.Clear();
             if (string.IsNullOrEmpty(text)) return;
@@ -216,18 +231,24 @@ namespace OpenRPA.Interfaces
                         {
                             if (vk > 0)
                             {
-                                keys.Add(new keyset(keytype.press, vk));
+                                //keys.Add(new keyset(keytype.press, vk));
+                                keys.Add(new keyset(keytype.down, vk));
+                                keys.Add(new keyset(keytype.up, vk));
                             }
                             else
                             {
-                                keys.Add(new keyset(keytype.press, key[0]));
+                                //keys.Add(new keyset(keytype.press, key[0]));
+                                keys.Add(new keyset(keytype.down, key[0]));
+                                keys.Add(new keyset(keytype.up, key[0]));
                             }
                         }
                     }
                 }
                 else
                 {
-                    keys.Add(new keyset(keytype.press, c));
+                    //keys.Add(new keyset(keytype.press, c));
+                    keys.Add(new keyset(keytype.down, c));
+                    keys.Add(new keyset(keytype.up, c));
                 }
             }
         }

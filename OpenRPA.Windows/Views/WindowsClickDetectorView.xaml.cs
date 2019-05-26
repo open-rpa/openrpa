@@ -56,9 +56,23 @@ namespace OpenRPA.Windows.Views
                 NotifyPropertyChanged("Entity");
             }
         }
+        public string Selector
+        {
+            get
+            {
+                var _val = Entity.Properties["Selector"];
+                if (_val == null) return null;
+                return _val.ToString();
+            }
+            set
+            {
+                Entity.Properties["Selector"] = value;
+            }
+        }
+
         private void Open_Selector_Click(object sender, RoutedEventArgs e)
         {
-            string SelectorString = Entity.Selector;
+            string SelectorString = Selector;
             Interfaces.Selector.SelectorWindow selectors;
             if (!string.IsNullOrEmpty(SelectorString))
             {
@@ -72,14 +86,14 @@ namespace OpenRPA.Windows.Views
             }
             if (selectors.ShowDialog() == true)
             {
-                Entity.Selector = selectors.vm.json;
+                Selector = selectors.vm.json;
                 NotifyPropertyChanged("Entity");
             }
         }
         private void Highlight_Click(object sender, RoutedEventArgs e)
         {
             HighlightImage.Source = Extensions.GetImageSourceFromResource(".x.png");
-            string SelectorString = Entity.Selector;
+            string SelectorString = Selector;
             var selector = new WindowsSelector(SelectorString);
             var elements = WindowsSelector.GetElementsWithuiSelector(selector, null, 10);
             if (elements.Count() > 0)
@@ -118,7 +132,7 @@ namespace OpenRPA.Windows.Views
                         if (p.parseUserAction(ref e)) continue;
                     }
                 }
-                Entity.Selector = e.Selector.ToString();
+                Selector = e.Selector.ToString();
                 NotifyPropertyChanged("Entity");
             }, null);
         }

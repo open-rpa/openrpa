@@ -114,13 +114,14 @@ namespace OpenRPA.Activities
 
         }
 
-        private List<vKey> _keys;
+        internal List<vKey> _keys;
+        internal string result;
 
         public void AddKey(vKey _key, System.Activities.Presentation.Model.ModelItem lastinsertedmodel)
         {
             if(_keys == null) _keys = new List<vKey>();
             _keys.Add(_key);
-            string result = "";
+            result = "";
             for (var i = 0; i < _keys.Count; i++)
             {
                 string val = "";
@@ -157,7 +158,7 @@ namespace OpenRPA.Activities
             }
             //Text = result;
             if (result == null) result = "";
-            lastinsertedmodel.Properties["Text"].SetValue(new InArgument<string>(result));
+            if(lastinsertedmodel!=null) lastinsertedmodel.Properties["Text"].SetValue(new InArgument<string>(result));
         }
     }
 }

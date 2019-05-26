@@ -1,4 +1,6 @@
-﻿    using System;
+﻿using OpenRPA.Interfaces;
+using OpenRPA.Interfaces.entity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -14,26 +16,23 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace OpenRPA.Interfaces.Views
+namespace OpenRPA.FileWatcher.Views
 {
-    /// <summary>
-    /// Interaction logic for KeyboardDetectorView.xaml
-    /// </summary>
-    public partial class KeyboardDetectorView : UserControl, INotifyPropertyChanged
+    public partial class FileWatcherView : UserControl, INotifyPropertyChanged
     {
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
-        public KeyboardDetectorView(KeyboardDetectorPlugin plugin)
+        public FileWatcherView(FileWatcherDetectorPlugin plugin)
         {
             InitializeComponent();
             this.plugin = plugin;
             DataContext = this;
         }
-        private KeyboardDetectorPlugin plugin;
-        public entity.Detector Entity
+        private FileWatcherDetectorPlugin plugin;
+        public Detector Entity
         {
             get
             {
@@ -53,29 +52,51 @@ namespace OpenRPA.Interfaces.Views
                 NotifyPropertyChanged("Entity");
             }
         }
-        public string Keys
+        public string EntityPath
         {
             get
             {
-                return plugin.Keys;
+                return plugin.Watchpath;
             }
             set
             {
-                plugin.Keys = value;
-                NotifyPropertyChanged("Keys");
+                plugin.Watchpath = value;
+                plugin.Stop();
+                plugin.Start();
                 NotifyPropertyChanged("Entity");
             }
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
+        public string EntityFilter
         {
-            var view = new KeyboardSeqWindow();
-            if(view.ShowDialog() == true)
+            get
             {
-                Keys = view.Text;
-                plugin.ParseText(view.Text);
+                return plugin.WatchFilter;
             }
-
+            set
+            {
+                plugin.WatchFilter = value;
+                plugin.Stop();
+                plugin.Start();
+                NotifyPropertyChanged("Entity");
+            }
+        }
+        private void Open_Selector_Click(object sender, RoutedEventArgs e)
+        {
+        }
+        private void Highlight_Click(object sender, RoutedEventArgs e)
+        {
+        }
+        private void Select_Click(object sender, RoutedEventArgs e)
+        {
+        }
+        private void StartRecordPlugins()
+        {
+        }
+        private void StopRecordPlugins()
+        {
+        }
+        public void OnUserAction(Interfaces.IPlugin sender, Interfaces.IRecordEvent e)
+        {
         }
     }
 }

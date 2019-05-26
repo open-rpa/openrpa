@@ -25,8 +25,7 @@ namespace OpenRPA.Interfaces
                     {
                         IDetectorPlugin plugin = (IDetectorPlugin)Activator.CreateInstance(d.Value);
                         entity.name = plugin.Name;
-                        plugin.Entity = entity;
-                        plugin.Initialize();
+                        plugin.Initialize(entity);
                         Plugins.detectorPlugins.Add(plugin);
                         return plugin;
                     }

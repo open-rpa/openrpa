@@ -767,14 +767,14 @@ namespace OpenRPA
                             {
                                 foreach (var _project in _Projects)
                                 {
-                                    var p = await global.webSocketClient.InsertOne("openrpa", _project);
+                                    var p = await global.webSocketClient.InsertOne("openrpa", 0, false, _project);
                                     p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
                                     p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p.name);
                                     Projects.Add(p);
                                     foreach (var _workflow in _project.Workflows)
                                     {
                                         _workflow.projectid = p._id;
-                                        var w = await global.webSocketClient.InsertOne("openrpa", _workflow);
+                                        var w = await global.webSocketClient.InsertOne("openrpa", 0, false, _workflow);
                                         w.Project = p;
                                         p.Workflows.Add(w);
                                     }

@@ -342,18 +342,25 @@ namespace OpenRPA
         }
         public async Task Save()
         {
+            if(string.IsNullOrEmpty(xml))
+            {
+                Log.Warning("Saving instance with no state !!!!" + InstanceId);
+            } else
+            {
+                Log.Information("Saving instance with state :-) " + InstanceId);
+            }
             SaveFile();
             try
             {
                 if (!global.isConnected) return;
                 if (string.IsNullOrEmpty(_id))
                 {
-                    var result = await global.webSocketClient.InsertOne("openrpa_instances", this);
+                    var result = await global.webSocketClient.InsertOne("openrpa_instances", 1, false, this);
                     _id = result._id;
                 }
                 else
                 {
-                    await global.webSocketClient.UpdateOne("openrpa_instances", this);
+                    await global.webSocketClient.UpdateOne("openrpa_instances", 1, false, this);
                 }
                 // Catch up if others havent been saved
                 foreach(var i in Instances.ToList())

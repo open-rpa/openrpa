@@ -111,13 +111,13 @@ namespace OpenRPA
             if (!global.isConnected) return;
             if (string.IsNullOrEmpty(_id))
             {
-                var result = await global.webSocketClient.InsertOne("openrpa", this);
+                var result = await global.webSocketClient.InsertOne("openrpa", 0, false, this);
                 _id = result._id;
                 _acl = result._acl;
             }
             else
             {
-                await global.webSocketClient.UpdateOne("openrpa", this);
+                await global.webSocketClient.UpdateOne("openrpa", 0, false, this);
             }
         }
         public async Task Delete()

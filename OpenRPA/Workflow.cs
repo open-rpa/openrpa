@@ -103,12 +103,12 @@ namespace OpenRPA
             if (!global.isConnected) return;
             if (string.IsNullOrEmpty(_id))
             {
-                var result = await global.webSocketClient.InsertOne("openrpa", this);
+                var result = await global.webSocketClient.InsertOne("openrpa", 0, false, this);
                 _id = result._id;
                 _acl = result._acl;
             } else
             {
-                await global.webSocketClient.UpdateOne("openrpa", this);
+                await global.webSocketClient.UpdateOne("openrpa", 0, false, this);
             }
         }
         public async Task Delete()
@@ -126,25 +126,28 @@ namespace OpenRPA
         {
             var statepath = System.IO.Path.Combine(Project.Path, "state");
             var ProjectFiles = System.IO.Directory.EnumerateFiles(statepath, "*.json", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
-            foreach(var f in ProjectFiles)
+            if(!global.isConnected)
             {
-                try
+                foreach (var f in ProjectFiles)
                 {
-                    var i = JsonConvert.DeserializeObject<WorkflowInstance>(System.IO.File.ReadAllText(f));
-                    i.Workflow = this;
-                    i.Path = Project.Path;
-                    var exists = WorkflowInstance.Instances.Where(x => x.InstanceId == i.InstanceId).FirstOrDefault();
-                    if (exists != null) continue;
-                    WorkflowInstance.Instances.Add(i);
-                    if(i.state != "failed" && i.state != "aborted" && i.state != "completed")
+                    try
                     {
-                        i.createApp();
-                        await i.Run();
-                    }                    
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("RunPendingInstances: " + ex.ToString());
+                        var i = JsonConvert.DeserializeObject<WorkflowInstance>(System.IO.File.ReadAllText(f));
+                        i.Workflow = this;
+                        i.Path = Project.Path;
+                        var exists = WorkflowInstance.Instances.Where(x => x.InstanceId == i.InstanceId).FirstOrDefault();
+                        if (exists != null) continue;
+                        WorkflowInstance.Instances.Add(i);
+                        if (i.state != "failed" && i.state != "aborted" && i.state != "completed")
+                        {
+                            i.createApp();
+                            await i.Run();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("RunPendingInstances: " + ex.ToString());
+                    }
                 }
             }
             var host = Environment.MachineName.ToLower();

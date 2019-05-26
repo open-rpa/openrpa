@@ -53,6 +53,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="addon\manifest.json" />
+    <None Include="addon\package.json" />
     <None Include="App.config" />
     <None Include="chromemanifest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -84,6 +86,9 @@
     <Resource Include="Resources\OpenRPA.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="addon\background.js" />
+    <Content Include="addon\favicon.png" />
+    <Content Include="addon\OpenRPA.png" />
     <Content Include="Resources\OpenRPA2.ico" />
     <Content Include="Resources\OpenRPA2.png" />
   </ItemGroup>

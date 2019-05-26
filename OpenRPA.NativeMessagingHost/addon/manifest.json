@@ -1,0 +1,20 @@
+{
+    "manifest_version": 2,
+    "name": "openrpa",
+    "version": "0.0.0.8",
+    "description": "Support extension for OpenRPA",
+    "permissions": [ "tabs", "nativeMessaging", "<all_urls>", "webNavigation", "webRequest", "file:///*" ],
+    "background": {
+        "scripts": [ "background.js" ]
+    },
+    "applications": {
+        "gecko": {
+            "id": "info@openrpa.dk",
+            "strict_min_version": "50.0"
+        }
+    },
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+    "icons": { "16": "OpenRPA16.png",
+           "48": "OpenRPA48.png",
+          "128": "OpenRPA128.png" }
+}

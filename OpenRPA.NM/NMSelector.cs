@@ -136,8 +136,6 @@ namespace OpenRPA.NM
                             subsubresult.tab = b.tab;
                             results.Add(new NMElement(subsubresult));
                         }
-
-                        
                     }
                 }
             }

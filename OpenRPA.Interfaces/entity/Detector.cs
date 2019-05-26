@@ -35,12 +35,13 @@ namespace OpenRPA.Interfaces.entity
         {
             var ProjectFiles = System.IO.Directory.EnumerateFiles(Path, "*.rpadetector", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
             var Detectors = new List<Detector>();
-            foreach (string file in ProjectFiles) Detectors.Add(FromFile(file));
+            foreach (string file in ProjectFiles) { var d = FromFile(file); if (d != null) {  Detectors.Add(d); } }
             return Detectors.ToArray();
         }
         public static Detector FromFile(string Filepath)
         {
             Detector detector = JsonConvert.DeserializeObject<Detector>(System.IO.File.ReadAllText(Filepath));
+            if (detector == null) return null;
             detector.Filename = System.IO.Path.GetFileName(Filepath);
             if (string.IsNullOrEmpty(detector.name)) { detector.name = System.IO.Path.GetFileNameWithoutExtension(Filepath); }
             detector.Path = System.IO.Path.GetDirectoryName(Filepath);

@@ -887,6 +887,7 @@ namespace OpenRPA
         }
         internal void OnDetector(IDetectorPlugin plugin, IDetectorEvent detector, EventArgs e)
         {
+            Log.Information("Detector " + plugin.Entity.name + " was triggered, with id " + plugin.Entity._id);
             foreach (var wi in WorkflowInstance.Instances)
             {
                 if (wi.isCompleted) continue;
@@ -909,7 +910,6 @@ namespace OpenRPA
             command.detectorid = Entity._id;
             if (string.IsNullOrEmpty(Entity._id)) return;
             command.data = data;
-            Console.WriteLine("QueueMessage for detector " + Entity.name + " " + Entity._id);
             _ = global.webSocketClient.QueueMessage(Entity._id, command, null);
 
         }

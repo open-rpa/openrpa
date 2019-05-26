@@ -415,6 +415,10 @@
       <Project>{0d52b2e1-1998-4238-b601-57a2d6ade2e8}</Project>
       <Name>OpenRPA.ExpressionEditor</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OpenRPA.FileWatcher\OpenRPA.FileWatcher.csproj">
+      <Project>{d33652d0-ce28-4226-9a9f-0fc1c2b81cbd}</Project>
+      <Name>OpenRPA.FileWatcher</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenRPA.IE\OpenRPA.IE.csproj">
       <Project>{ce483c6b-ebef-47ba-b3d5-5c7582dafd1d}</Project>
       <Name>OpenRPA.IE</Name>

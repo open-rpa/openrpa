@@ -11,9 +11,9 @@ namespace OpenRPA.Interfaces
     public delegate void DetectorDelegate(IDetectorPlugin plugin, IDetectorEvent detector, EventArgs e);
     public interface IDetectorPlugin : INotifyPropertyChanged
     {
-        void Initialize();
+        void Initialize(Detector Entity);
         string Name { get; }
-        Object Entity { get; set; }
+        entity.Detector Entity { get; }
         System.Windows.Controls.UserControl editor { get; }
         event DetectorDelegate OnDetector;
         void Start();

@@ -13,7 +13,7 @@ namespace OpenRPA.Java
 {
     public class JavaClickDetectorPlugin : ObservableObject, IDetectorPlugin
     {
-        object IDetectorPlugin.Entity { get => Entity; set => Entity = value as Detector; }
+        Detector IDetectorPlugin.Entity { get => Entity; }
         public Detector Entity { get; set; }
         public string Name
         {
@@ -40,11 +40,11 @@ namespace OpenRPA.Java
                 return view;
             }
         }
-
         public event DetectorDelegate OnDetector;
         public Javahook hook { get; set; } = new Javahook();
-        public void Initialize()
+        public void Initialize(Detector InEntity)
         {
+            Entity = InEntity as Detector;
             hook.init();
             Start();
         }

@@ -109,7 +109,7 @@ namespace OpenRPA.Net
                     WebSocketReceiveResult result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), src.Token);
                     json = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
                     var message = JsonConvert.DeserializeObject<SocketMessage>(json);
-                    if(message!=null) _receiveQueue.Add(message);
+                    if (message != null) _receiveQueue.Add(message);
                     await ProcessQueue();
                 }
                 catch (Exception ex)
@@ -136,15 +136,16 @@ namespace OpenRPA.Net
                 msg.SendMessage(this);
             }
         }
-        static SemaphoreSlim ReceiveSemaphore = new SemaphoreSlim(1, 1);
-        static SemaphoreSlim SendSemaphore = new SemaphoreSlim(1, 1);
+        //static SemaphoreSlim ReceiveSemaphore = new SemaphoreSlim(1, 1);
+        //static SemaphoreSlim SendSemaphore = new SemaphoreSlim(1, 1);
+        static SemaphoreSlim ProcessingSemaphore = new SemaphoreSlim(1, 1);
         public async Task ProcessQueue()
         {
             try
             {
-                await ReceiveSemaphore.WaitAsync();
+                //await ReceiveSemaphore.WaitAsync();
+                await ProcessingSemaphore.WaitAsync();
                 if (_receiveQueue == null) return;
-                var tttt = _receiveQueue;
                 List<string> ids = new List<string>();
                 for(var i = 0; i < _receiveQueue.Count; i++)
                 {
@@ -183,12 +184,12 @@ namespace OpenRPA.Net
             }
             finally
             {
-                ReceiveSemaphore.Release();
+                //ReceiveSemaphore.Release();
             }
 
             try
             {
-                await SendSemaphore.WaitAsync();
+                // await SendSemaphore.WaitAsync();
                 foreach (var msg in _sendQueue.ToList())
                 {
                     if (await SendString(JsonConvert.SerializeObject(msg), src.Token))
@@ -199,7 +200,8 @@ namespace OpenRPA.Net
             }
             finally
             {
-                SendSemaphore.Release();
+                //SendSemaphore.Release();
+                ProcessingSemaphore.Release();
             }
         }
         static SemaphoreSlim SendStringSemaphore = new SemaphoreSlim(1, 1);

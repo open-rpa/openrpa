@@ -139,6 +139,8 @@ if (typeof document.zeniverse === 'undefined') {
                     console.error(e);
                 }
             }
+            console.log(message.xPath);
+            console.log(ele.length);
             message.result = JSON.stringify(message.result);
             //return simpleStringify(message);
             var test = JSON.parse(JSON.stringify(message));

@@ -117,5 +117,14 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\toolbox\gethtmlelement.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\check.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\search.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

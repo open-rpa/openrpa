@@ -1,4 +1,6 @@
 console.log('n/a');
+var backgroundscript = null;
+var port = null;
 if (backgroundscript === undefined) backgroundscript = null;
 if (port === undefined) port = null;
 var content_script = '';
@@ -365,7 +367,8 @@ async function portOnMessage(message) {
 }
 function portOnDisconnect(message) {
     console.log("onDisconnect from native port");
-    //setTimeout(function () { connect(); }, 3000);
+    console.log(message);
+    setTimeout(function () { connect(); }, 5000);
 }
 function connect() {
     if (port !== null) {

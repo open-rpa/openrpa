@@ -122,15 +122,26 @@ namespace OpenRPA.Store
             {
                 XmlElement newInstance = doc.CreateElement("InstanceValue");
 
-                XmlElement newKey = SerializeObject("key", valPair.Key, doc);
-                newInstance.AppendChild(newKey);
-
-                XmlElement newValue = SerializeObject("value", valPair.Value.Value, doc);
-                if(newValue!=null)
+                try
                 {
-                    newInstance.AppendChild(newValue);
+                    XmlElement newKey = SerializeObject("key", valPair.Key, doc);
+                    if(newKey!=null)
+                    {
+                        newInstance.AppendChild(newKey);
 
-                    doc.DocumentElement.AppendChild(newInstance);
+                        XmlElement newValue = SerializeObject("value", valPair.Value.Value, doc);
+                        if (newValue != null)
+                        {
+                            newInstance.AppendChild(newValue);
+
+                            doc.DocumentElement.AppendChild(newInstance);
+                        }
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("CustomInstanceStoreBase.DictionaryToXml: " + ex.Message);
                 }
             }
 
@@ -155,7 +166,8 @@ namespace OpenRPA.Store
             }
             catch (Exception ex)
             {
-                Log.Error(ex.ToString());
+                //Log.Error(ex.ToString());
+                Log.Error("CustomInstanceStoreBase.SerializeObject: " + ex.Message);
                 return null;
             }
         }

@@ -343,15 +343,15 @@ namespace OpenRPA.Net
             RegisterQueue = await RegisterQueue.SendMessage<RegisterQueueMessage>(this);
             if (!string.IsNullOrEmpty(RegisterQueue.error)) throw new Exception(RegisterQueue.error);
         }
-        public async Task QueueMessage(string queuename, object data, string correlationId = null)
+        public async Task<object> QueueMessage(string queuename, object data, string correlationId = null)
         {
             QueueMessage qm = new QueueMessage(queuename);
             qm.data = data;
             qm.correlationId = correlationId;
             qm = await qm.SendMessage<QueueMessage>(this);
             if (!string.IsNullOrEmpty(qm.error)) throw new Exception(qm.error);
+            return qm.data;
         }
-
         public async Task<T[]> Query<T>(string collectionname, string query)
         {
             QueryMessage<T> q = new QueryMessage<T>();

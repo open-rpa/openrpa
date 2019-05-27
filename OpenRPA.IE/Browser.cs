@@ -45,7 +45,7 @@ namespace OpenRPA.IE
 
                 if (filename.Equals("iexplore"))
                 {
-                    Log.Debug(string.Format("Web Site   : {0}", _ie.LocationURL));
+                    // Log.Debug(string.Format("Web Site : {0}", _ie.LocationURL));
                     try
                     {
                         result.wBrowser = _ie as SHDocVw.WebBrowser;
@@ -74,7 +74,7 @@ namespace OpenRPA.IE
                         var timeout = TimeSpan.FromSeconds(5);
                         while (sw.Elapsed < timeout && doc.readyState != "complete" && doc.readyState != "interactive")
                         {
-                            Log.Debug("pending complete, readyState: " + doc.readyState);
+                            // Log.Debug("pending complete, readyState: " + doc.readyState);
                             System.Threading.Thread.Sleep(100);
                         }
                         result.wBrowser = ie as SHDocVw.WebBrowser;

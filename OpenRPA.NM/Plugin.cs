@@ -214,7 +214,7 @@ namespace OpenRPA.NM
             Activity = activity;
         }
         public Activity Activity { get; set; }
-        public void addActivity(Activity a, string Name)
+        public void AddActivity(Activity a, string Name)
         {
             var aa = new ActivityAction<NMElement>();
             var da = new DelegateInArgument<NMElement>();
@@ -222,6 +222,15 @@ namespace OpenRPA.NM
             aa.Handler = a;
             ((GetElement)Activity).Body = aa;
             aa.Argument = da;
+        }
+        public void AddInput(string value, IElement element)
+        {
+            AddActivity(new System.Activities.Statements.Assign<string>
+            {
+                To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
+                Value = value
+            }, "item");
+            element.Value = value;
         }
     }
     public class RecordEvent : IRecordEvent

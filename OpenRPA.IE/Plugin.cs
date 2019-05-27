@@ -77,7 +77,7 @@ namespace OpenRPA.IE
             {
                 Log.Debug(string.Format("IE.Recording::OnMouseUp::begin"));
                 var re = new RecordEvent(); re.Button = e.Button;
-                var a = new GetElement { DisplayName = e.Element.Id + "-" + e.Element.Name };
+                var a = new GetElement { DisplayName = (e.Element.Id + "-" + e.Element.Name).Replace(Environment.NewLine, "").Trim() };
 
                 var browser = new Browser(e.Element.RawElement);
                 var htmlelement = browser.ElementFromPoint(e.X, e.Y);
@@ -131,7 +131,7 @@ namespace OpenRPA.IE
             e.Selector = selector;
             e.Element = new IEElement(browser, htmlelement);
 
-            var a = new GetElement { DisplayName = htmlelement.id + "-" + htmlelement.tagName + "-" + htmlelement.className };
+            var a = new GetElement { DisplayName = (htmlelement.id + "-" + htmlelement.tagName + "-" + htmlelement.className).Replace(Environment.NewLine, "").Trim() };
             a.Selector = selector.ToString();
             a.Image = selector.Last().Element.ImageString();
             var last = selector.Last() as IESelectorItem;
@@ -229,7 +229,7 @@ namespace OpenRPA.IE
             Activity = activity;
         }
         public Activity Activity { get; set; }
-        public void addActivity(Activity a, string Name)
+        public void AddActivity(Activity a, string Name)
         {
             //var aa = new ActivityAction<IEElement>();
             //var da = new DelegateInArgument<IEElement>();
@@ -242,6 +242,15 @@ namespace OpenRPA.IE
             aa.Handler = a;
             ((GetElement)Activity).Body = aa;
             aa.Argument = da;
+        }
+        public void AddInput(string value, IElement element)
+        {
+            AddActivity(new System.Activities.Statements.Assign<string>
+            {
+                To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
+                Value = value
+            }, "item");
+            element.Value = value;
         }
     }
     public class RecordEvent : IRecordEvent

@@ -241,17 +241,17 @@ namespace OpenRPA
         //    instance.Run();
         //    return instance;
         //}
-        public void onIdleOrComplete(WorkflowInstance instance)
-        {
-            Log.Debug("onIdleOrComplete state: " + instance.state);
-            if (!string.IsNullOrEmpty(instance.errormessage)) Log.Error(instance.errormessage);
-            if(instance.state != "idle")
-            {
-                Log.Output("Workflow " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
-                GenericTools.restore(GenericTools.mainWindow);
-            }
-            OnIdleOrComplete?.Invoke(instance, EventArgs.Empty);
-        }
+        //public void onIdleOrComplete(WorkflowInstance instance)
+        //{
+        //    Log.Debug("onIdleOrComplete state: " + instance.state);
+        //    if (!string.IsNullOrEmpty(instance.errormessage)) Log.Error(instance.errormessage);
+        //    if(instance.state != "idle")
+        //    {
+        //        Log.Output("Workflow " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
+        //        GenericTools.restore(GenericTools.mainWindow);
+        //    }
+        //    OnIdleOrComplete?.Invoke(instance, EventArgs.Empty);
+        //}
     }
     public enum workflowparameterdirection
     {

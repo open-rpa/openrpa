@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenRPA.Office
+namespace OpenRPA
 {
-    public class Class1
+    class ResFinder
     {
     }
 }

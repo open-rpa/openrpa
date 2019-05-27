@@ -22,6 +22,7 @@ namespace OpenRPA.NM
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<NMElement> Body { get; set; }
         public InArgument<int> MaxResults { get; set; }
+        public InArgument<TimeSpan> Timeout { get; set; }
         [RequiredArgument]
         public InArgument<string> Selector { get; set; }
         public InArgument<NMElement> From { get; set; }
@@ -32,12 +33,17 @@ namespace OpenRPA.NM
         public Activity LoopAction { get; set; }
         public GetElement()
         {
+            MaxResults = 1;
+            Timeout = new InArgument<TimeSpan>()
+            {
+                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromSeconds(3)")
+            };
         }
         protected override void Execute(NativeActivityContext context)
         {
             var selector = Selector.Get(context);
             var sel = new NMSelector(selector);
-            var timeout = TimeSpan.FromSeconds(3);
+            var timeout = Timeout.Get(context);
             var from = From.Get(context);
             var maxresults = MaxResults.Get(context);
             NMElement[] elements = { };

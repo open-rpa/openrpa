@@ -87,6 +87,8 @@ namespace OpenRPA.Views
                                             && !activityType.Name.StartsWith("OrElse")
                                             && !activityType.Name.EndsWith("`2")
                                             && !activityType.Name.EndsWith("`3")
+                                            && activityType.Name != "ExcelActivity"
+                                            && activityType.Name != "ExcelActivityOf`1"
                                         orderby
                                             activityType.Name
                                         select

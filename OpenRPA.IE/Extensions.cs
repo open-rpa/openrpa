@@ -11,7 +11,18 @@ namespace OpenRPA.IE
 {
     public static class Extensions
     {
-       
+        public static System.Windows.Media.Imaging.BitmapFrame GetImageSourceFromResource(string resourceName)
+        {
+            string[] names = typeof(Extensions).Assembly.GetManifestResourceNames();
+            foreach (var name in names)
+            {
+                if (name.EndsWith(resourceName))
+                {
+                    return System.Windows.Media.Imaging.BitmapFrame.Create(typeof(Extensions).Assembly.GetManifestResourceStream(name));
+                }
+            }
+            return null;
+        }
         public static mshtml.IHTMLElement GetXPath(this SHDocVw.WebBrowser wb, string xpath)
         {
             CallScript(wb);

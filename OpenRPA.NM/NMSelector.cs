@@ -118,6 +118,7 @@ namespace OpenRPA.NM
                 NativeMessagingMessage subresult = null;
 
                 var getelement = new NativeMessagingMessage("getelements");
+                getelement.browser = browser;
                 getelement.xPath = xpath;
                 getelement.cssPath = cssselector;
                 subresult = NMHook.sendMessageResult(getelement, false);
@@ -131,6 +132,7 @@ namespace OpenRPA.NM
                         {
                             var json = _e.ToString();
                             var subsubresult = Newtonsoft.Json.JsonConvert.DeserializeObject<NativeMessagingMessage>(json);
+                            subsubresult.browser = browser;
                             subsubresult.result = json;
                             subsubresult.tabid = b.tabid;
                             subsubresult.tab = b.tab;

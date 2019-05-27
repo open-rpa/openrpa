@@ -18,12 +18,14 @@ namespace OpenRPA.Java
         public GetElementDesigner()
         {
             InitializeComponent();
+            HighlightImage = Extensions.GetImageSourceFromResource("search.png");
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        public BitmapFrame HighlightImage { get; set; }
         private void Open_Selector(object sender, RoutedEventArgs e)
         {
             ModelItem loadFrom = ModelItem.Parent;
@@ -74,10 +76,49 @@ namespace OpenRPA.Java
         }
         private void Highlight_Click(object sender, RoutedEventArgs e)
         {
+            ModelItem loadFrom = ModelItem.Parent;
+            string loadFromSelectorString = "";
+            JavaSelector anchor = null;
+            while (loadFrom.Parent != null)
+            {
+                var p = loadFrom.Properties.Where(x => x.Name == "Selector").FirstOrDefault();
+                if (p != null)
+                {
+                    loadFromSelectorString = loadFrom.GetValue<string>("Selector");
+                    anchor = new JavaSelector(loadFromSelectorString);
+                    break;
+                }
+                loadFrom = loadFrom.Parent;
+            }
+
+            HighlightImage = Extensions.GetImageSourceFromResource(".x.png");
+            NotifyPropertyChanged("HighlightImage");
             string SelectorString = ModelItem.GetValue<string>("Selector");
             int maxresults = ModelItem.GetValue<int>("MaxResults");
             var selector = new JavaSelector(SelectorString);
-            var elements = JavaSelector.GetElementsWithuiSelector(selector, null, maxresults);
+
+            var elements = new List<JavaElement>();
+            if (anchor != null)
+            {
+                var _base = JavaSelector.GetElementsWithuiSelector(anchor, null, 10);
+                foreach (var _e in _base)
+                {
+                    var res = JavaSelector.GetElementsWithuiSelector(selector, _e, maxresults);
+                    elements.AddRange(res);
+                }
+
+            }
+            else
+            {
+                var res = JavaSelector.GetElementsWithuiSelector(selector, null, maxresults);
+                elements.AddRange(res);
+            }
+
+            if (elements.Count() > 0)
+            {
+                HighlightImage = Extensions.GetImageSourceFromResource("check.png");
+                NotifyPropertyChanged("HighlightImage");
+            }
             foreach (var ele in elements) ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
         }
         public string ImageString

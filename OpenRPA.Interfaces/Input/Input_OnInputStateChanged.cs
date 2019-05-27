@@ -282,15 +282,18 @@ namespace OpenRPA.Input
         // private bool mouseDownWaiting = false;
         private void RaiseOnMouseMove(InputEventArgs e)
         {
-            try
+            if (e.Button == MouseButton.None)
             {
-                e.Element = AutomationHelper.GetFromPoint(e.X, e.Y);
+                try
+                {
+                    e.Element = AutomationHelper.GetFromPoint(e.X, e.Y);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "");
+                }
+                Element = e.Element;
             }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "");
-            }
-            Element = e.Element;
             OnMouseMove(e);
         }
         private void RaiseOnMouseDown(InputEventArgs e)

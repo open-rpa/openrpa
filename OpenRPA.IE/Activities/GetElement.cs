@@ -21,6 +21,7 @@ namespace OpenRPA.IE
 
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<IEElement> Body { get; set; }
+        public InArgument<TimeSpan> Timeout { get; set; }
         public InArgument<int> MaxResults { get; set; }
         [RequiredArgument]
         public InArgument<string> Selector { get; set; }
@@ -32,13 +33,19 @@ namespace OpenRPA.IE
         public Activity LoopAction { get; set; }
         public GetElement()
         {
+            MaxResults = 1;
+            Timeout = new InArgument<TimeSpan>()
+            {
+                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromSeconds(3)")
+            };
         }
         protected override void Execute(NativeActivityContext context)
         {
             var selector = Selector.Get(context);
             var sel = new IESelector(selector);
-            var timeout = TimeSpan.FromSeconds(3);
+            var timeout = Timeout.Get(context);
             var from = From.Get(context);
+            var maxresults = MaxResults.Get(context);
             IEElement[] elements = { };
             var sw = new Stopwatch();
             sw.Start();
@@ -46,6 +53,7 @@ namespace OpenRPA.IE
             {
                 elements = IESelector.GetElementsWithuiSelector(sel, from);
             } while (elements .Count() == 0 && sw.Elapsed < timeout);
+            if (elements.Count() > maxresults) elements = elements.Take(maxresults).ToArray();  
             context.SetValue(Elements, elements);
             IEnumerator<IEElement> _enum = elements.ToList().GetEnumerator();
             context.SetValue(_elements, _enum);

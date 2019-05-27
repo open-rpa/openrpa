@@ -36,7 +36,7 @@ namespace OpenRPA.IE
                 for (int i = 0; i < children.length; i++)
                 {
                     mshtml.IHTMLUniqueName id = children.item(i) as mshtml.IHTMLUniqueName;
-                    if (id.uniqueID == uniqueID) { IndexInParent = i; break; }
+                    if (id != null && id.uniqueID == uniqueID) { IndexInParent = i; break; }
                 }
             }
         }

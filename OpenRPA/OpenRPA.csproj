@@ -447,6 +447,10 @@
       <Project>{0217c47b-55fb-473c-b579-38d08d9949cd}</Project>
       <Name>OpenRPA.NM</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OpenRPA.Office\OpenRPA.Office.csproj">
+      <Project>{69853616-0e24-4be4-b4a8-497183d298e0}</Project>
+      <Name>OpenRPA.Office</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenRPA.Windows\OpenRPA.Windows.csproj">
       <Project>{22575d87-a99d-4706-b022-c7e575314a94}</Project>
       <Name>OpenRPA.Windows</Name>

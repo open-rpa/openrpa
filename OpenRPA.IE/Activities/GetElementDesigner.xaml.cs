@@ -18,8 +18,10 @@ namespace OpenRPA.IE
         public GetElementDesigner()
         {
             InitializeComponent();
+            HighlightImage = Extensions.GetImageSourceFromResource("search.png");
         }
         public event PropertyChangedEventHandler PropertyChanged;
+        public BitmapFrame HighlightImage { get; set; }
         private void NotifyPropertyChanged(String propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -72,14 +74,52 @@ namespace OpenRPA.IE
                 }
             }
         }
-        private async void Highlight_Click(object sender, RoutedEventArgs e)
+        private void Highlight_Click(object sender, RoutedEventArgs e)
         {
+            ModelItem loadFrom = ModelItem.Parent;
+            string loadFromSelectorString = "";
+            IESelector anchor = null;
+            while (loadFrom.Parent != null)
+            {
+                var p = loadFrom.Properties.Where(x => x.Name == "Selector").FirstOrDefault();
+                if (p != null)
+                {
+                    loadFromSelectorString = loadFrom.GetValue<string>("Selector");
+                    anchor = new IESelector(loadFromSelectorString);
+                    break;
+                }
+                loadFrom = loadFrom.Parent;
+            }
+
+            HighlightImage = Extensions.GetImageSourceFromResource(".x.png");
+            NotifyPropertyChanged("HighlightImage");
+
             string SelectorString = ModelItem.GetValue<string>("Selector");
             int maxresults = ModelItem.GetValue<int>("MaxResults");
             var selector = new IESelector(SelectorString);
-            var elements = IESelector.GetElementsWithuiSelector(selector, null, maxresults);
-            foreach (var ele in elements) await ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
+            var elements = new List<IEElement>();
+            if (anchor != null)
+            {
+                var _base = IESelector.GetElementsWithuiSelector(anchor, null, 10);
+                foreach (var _e in _base)
+                {
+                    var res = IESelector.GetElementsWithuiSelector(selector, _e, maxresults);
+                    elements.AddRange(res);
+                }
 
+            }
+            else
+            {
+                var res = IESelector.GetElementsWithuiSelector(selector, null, maxresults);
+                elements.AddRange(res);
+            }
+
+            if (elements.Count() > 0)
+            {
+                HighlightImage = Extensions.GetImageSourceFromResource("check.png");
+                NotifyPropertyChanged("HighlightImage");
+            }
+            foreach (var ele in elements) ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
         }
         public string ImageString
         {

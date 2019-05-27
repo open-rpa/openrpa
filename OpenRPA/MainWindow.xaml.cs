@@ -592,7 +592,7 @@ namespace OpenRPA
                 InputDriver.Instance.CallNext = true;
                 if (mainTabControl.SelectedContent is Views.WFDesigner view)
                 {
-                    e.a.addActivity(new Activities.ClickElement
+                    e.a.AddActivity(new Activities.ClickElement
                     {
                         Element = new System.Activities.InArgument<IElement>()
                         {
@@ -606,14 +606,7 @@ namespace OpenRPA
                         isRecording = false;
                         if (win.ShowDialog() == true)
                         {
-                            e.a.addActivity(new System.Activities.Statements.Assign<string>
-                            {
-                                // TODO: use assign 
-                                //To = new VisualBasicReference<string>("item.Text")
-                                To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
-                                Value = win.Text
-                            }, "item");
-                            e.Element.Value = win.Text;
+                            e.a.AddInput(win.Text, e.Element);
                         } else { e.SupportInput = false;  }
                         isRecording = true;
                     }
@@ -943,6 +936,10 @@ namespace OpenRPA
                 if(instance.state != "idle")
                 {
                     GenericTools.restore(GenericTools.mainWindow);
+                    string message = "#*****************************#" + Environment.NewLine;
+                    message += ("# " + instance.Workflow.name + " " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
+                    if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
+                    Log.Output(message);
                 }
             }
 

@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.ExpressionEditor", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.FileWatcher", "OpenRPA.FileWatcher\OpenRPA.FileWatcher.csproj", "{D33652D0-CE28-4226-9A9F-0FC1C2B81CBD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.Office", "OpenRPA.Office\OpenRPA.Office.csproj", "{69853616-0E24-4BE4-B4A8-497183D298E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{D33652D0-CE28-4226-9A9F-0FC1C2B81CBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D33652D0-CE28-4226-9A9F-0FC1C2B81CBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D33652D0-CE28-4226-9A9F-0FC1C2B81CBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69853616-0E24-4BE4-B4A8-497183D298E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69853616-0E24-4BE4-B4A8-497183D298E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69853616-0E24-4BE4-B4A8-497183D298E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69853616-0E24-4BE4-B4A8-497183D298E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

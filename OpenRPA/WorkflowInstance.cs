@@ -342,14 +342,6 @@ namespace OpenRPA
         }
         public async Task Save()
         {
-            if (string.IsNullOrEmpty(xml))
-            {
-                Log.Warning("Saving instance " + _id + " with no state !!!!" + InstanceId);
-            }
-            else
-            {
-                Log.Information("Saving instance  " + _id + " with state :-) " + InstanceId);
-            }
             SaveFile();
             try
             {

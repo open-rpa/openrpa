@@ -10,7 +10,7 @@ namespace OpenRPA.Interfaces
     public interface IBodyActivity
     {
         Activity Activity { get; set; }
-        void addActivity(Activity a, string Name);
-
+        void AddActivity(Activity a, string Name);
+        void AddInput(string value, IElement element);
     }
 }

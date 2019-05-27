@@ -54,9 +54,6 @@ namespace OpenRPA.NM
                 chromepipe.Connected += () => { Connected?.Invoke("chrome"); Task.Run(()=> reloadtabs());  };
                 chromepipe.Error += (e) => { Log.Debug(e.ToString()); };
                 chromepipe.Start();
-                //chromepipe.OnReceivedMessage += Client_OnReceivedMessage;
-                //chromepipe.onDisconnected += () => { onDisconnected?.Invoke(); };
-                //chromepipe.onConnected += (pipe) => { FoundBrowser?.Invoke("chrome"); };
             }
             if (ffpipe == null && ff)
             {
@@ -66,10 +63,6 @@ namespace OpenRPA.NM
                 ffpipe.Connected += () => { Connected?.Invoke("ff"); Task.Run(() => reloadtabs()); };
                 ffpipe.Error += (e) => { Log.Debug(e.ToString()); };
                 ffpipe.Start();
-                //ffpipe = new rpa.pipe.NamedPipeClient<NativeMessagingMessage>(PIPE_NAME + "_ff", true);
-                //ffpipe.OnReceivedMessage += Client_OnReceivedMessage;
-                //ffpipe.onDisconnected += () => { onDisconnected?.Invoke(); };
-                //ffpipe.onConnected += (pipe) => { FoundBrowser?.Invoke("ff"); };
             }
         }
         public static List<int> windows = new List<int>();

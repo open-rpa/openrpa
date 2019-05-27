@@ -30,15 +30,17 @@ namespace OpenRPA.NM
             var rootelements = new List<treeelement>();
 
             NMHook.reloadtabs();
-            var tab = NMHook.tabs.Where(x => x.highlighted == true && x.browser == "chrome").FirstOrDefault();
+            // var tab = NMHook.tabs.Where(x => x.highlighted == true && x.browser == "chrome").FirstOrDefault();
+            var tab = NMHook.tabs.Where(x => x.highlighted == true).FirstOrDefault();
             if (tab == null)
             {
-                tab = NMHook.tabs.Where(x => x.browser == "chrome").FirstOrDefault();
+                // tab = NMHook.tabs.Where(x => x.browser == "chrome").FirstOrDefault();
+                tab = NMHook.tabs.FirstOrDefault();
             }
             if(NMHook.tabs.Count==0) { return rootelements.ToArray(); }
             // getelement.data = "getdom";
             var getelement = new NativeMessagingMessage("getelement");
-            getelement.browser = "chrome";
+            getelement.browser = tab.browser;
             getelement.tabid = tab.id;
             getelement.xPath = "/html";
             NativeMessagingMessage result = null;
@@ -86,7 +88,7 @@ namespace OpenRPA.NM
         {
             NMHook.registreChromeNativeMessagingHost(false);
             NMHook.registreffNativeMessagingHost(false);
-            NMHook.checkForPipes(true, false);
+            NMHook.checkForPipes(true, true);
             NMHook.onMessage += onMessage;
             NMHook.Connected += omConnected;        }
         private void omConnected(string obj)
@@ -131,23 +133,6 @@ namespace OpenRPA.NM
                     OnUserAction?.Invoke(this, re);
                     return;
                 }
-                //var getelement = new NativeMessagingMessage("getelement");
-                ////getelement.tabid = message.tabid;
-                //getelement.cssPath = message.cssPath;
-                //getelement.xPath = message.xPath;
-                //NativeMessagingMessage subresult = null;
-                ////if (message.browser == "chrome") subresult = rpaactivities.nm.nmhook.sendMessageChromeResult(getelement, true);
-                ////if (message.browser == "ff") subresult = rpaactivities.nm.nmhook.sendMessageFFResult(getelement, true);
-                //if (subresult == null)
-                //{
-                //    // Console.WriteLine("getelement returned null???");
-                //    return;
-                //}
-                //// Console.WriteLine(getelement.messageid + " " + getelement.functionName + " " + subresult.messageid + " " + subresult.functionName);
-                //// Console.WriteLine(subresult.cssPath + " " + subresult.xPath);
-                ////rpaactivities.nm.nmhook.sendMessageChromeResult(getelement);
-                ////Console.WriteLine(getelement.messageid + " " + getelement.functionName);
-
             }
         }
         public void LaunchBySelector(Selector selector, TimeSpan timeout)
@@ -196,7 +181,7 @@ namespace OpenRPA.NM
 
             if (e.UIElement.ProcessId < 1) return false;
             var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-            if (p.ProcessName.ToLower() != "chrome") return false;
+            if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox") return false;
 
             var selector = new NMSelector(lastElement, null, true);
             var a = new GetElement { DisplayName = lastElement.id + " " + lastElement.type + " " + lastElement.Name };
@@ -229,7 +214,7 @@ namespace OpenRPA.NM
             Activity = activity;
         }
         public Activity Activity { get; set; }
-        public void addActivity(Activity a, string Name)
+        public void AddActivity(Activity a, string Name)
         {
             var aa = new ActivityAction<NMElement>();
             var da = new DelegateInArgument<NMElement>();
@@ -237,6 +222,15 @@ namespace OpenRPA.NM
             aa.Handler = a;
             ((GetElement)Activity).Body = aa;
             aa.Argument = da;
+        }
+        public void AddInput(string value, IElement element)
+        {
+            AddActivity(new System.Activities.Statements.Assign<string>
+            {
+                To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
+                Value = value
+            }, "item");
+            element.Value = value;
         }
     }
     public class RecordEvent : IRecordEvent

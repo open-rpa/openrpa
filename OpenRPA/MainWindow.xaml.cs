@@ -951,7 +951,26 @@ namespace OpenRPA
             try
             {
                 command = Newtonsoft.Json.JsonConvert.DeserializeObject<RobotCommand>(message.data.ToString());
+                if (command.data == null)
+                {
+                    if(!string.IsNullOrEmpty(message.correlationId))
+                    {
+                        foreach (var wi in WorkflowInstance.Instances)
+                        {
+                            if (wi.isCompleted) continue;
+                            foreach (var b in wi.Bookmarks)
+                            {
+                                if (b.Key == message.correlationId)
+                                {
+                                    wi.ResumeBookmark(b.Key, message.data.ToString());
+                                }
+                            }
+                        }
+                    }
+                    return;
+                }
                 var data = JObject.Parse(command.data.ToString());
+                if (command.command == null) return;
                 if (command.command == "invoke")
                 {
                     WorkflowInstance instance = null;
@@ -977,7 +996,18 @@ namespace OpenRPA
                                 case JTokenType.Boolean: param.Add(k.Key, k.Value.Value<bool>()); break;
                                 case JTokenType.Date: param.Add(k.Key, k.Value.Value<DateTime>()); break;
                                 case JTokenType.TimeSpan: param.Add(k.Key, k.Value.Value<TimeSpan>()); break;
-                                default: param.Add(k.Key, k.Value.Value<string>()); break;
+                                default:
+                                    try
+                                    {
+                                        param.Add(k.Key, k.Value.Value<string>());
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Log.Debug("WebSocketClient_OnQueueMessage: " + ex.Message);
+                                    }
+                                    break;
+
+                                    // default: param.Add(k.Key, k.Value.Value<string>()); break;
                             }
                         }
                         Log.Information("Create instance of " + workflow.name);

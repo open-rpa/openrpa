@@ -18,6 +18,7 @@ namespace OpenRPA.Activities
         public OpenApplicationDesigner()
         {
             InitializeComponent();
+            DataContext = this;
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)

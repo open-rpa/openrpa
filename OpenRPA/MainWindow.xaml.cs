@@ -996,7 +996,18 @@ namespace OpenRPA
                                 case JTokenType.Boolean: param.Add(k.Key, k.Value.Value<bool>()); break;
                                 case JTokenType.Date: param.Add(k.Key, k.Value.Value<DateTime>()); break;
                                 case JTokenType.TimeSpan: param.Add(k.Key, k.Value.Value<TimeSpan>()); break;
-                                default: param.Add(k.Key, k.Value.Value<string>()); break;
+                                default:
+                                    try
+                                    {
+                                        param.Add(k.Key, k.Value.Value<string>());
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Log.Debug("WebSocketClient_OnQueueMessage: " + ex.Message);
+                                    }
+                                    break;
+
+                                    // default: param.Add(k.Key, k.Value.Value<string>()); break;
                             }
                         }
                         Log.Information("Create instance of " + workflow.name);

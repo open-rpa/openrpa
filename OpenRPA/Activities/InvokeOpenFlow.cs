@@ -36,8 +36,11 @@ namespace OpenRPA.Activities
                     try
                     {
                         var test = new { value = value};
-                        var asjson = JObject.FromObject(test);
                         if (value.GetType() == typeof(System.Data.DataTable)) continue;
+                        if (value.GetType() == typeof(System.Data.DataView)) continue;
+                        if (value.GetType() == typeof(System.Data.DataRowView)) continue;
+                        //
+                        var asjson = JObject.FromObject(test);
                         _payload[v.DisplayName] = value;
                     }
                     catch (Exception)

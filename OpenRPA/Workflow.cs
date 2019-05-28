@@ -137,6 +137,8 @@ namespace OpenRPA
                             var i = JsonConvert.DeserializeObject<WorkflowInstance>(System.IO.File.ReadAllText(f));
                             i.Workflow = this;
                             i.Path = Project.Path;
+                            //if (idleOrComplete != null) i.OnIdleOrComplete += idleOrComplete;
+                            //if (VisualTracking != null) i.OnVisualTracking += VisualTracking;
                             var exists = WorkflowInstance.Instances.Where(x => x.InstanceId == i.InstanceId).FirstOrDefault();
                             if (exists != null) continue;
                             WorkflowInstance.Instances.Add(i);
@@ -169,6 +171,8 @@ namespace OpenRPA
                         await i.Save();
                         continue;
                     }
+                    //if (idleOrComplete != null) i.OnIdleOrComplete += idleOrComplete;
+                    //if (VisualTracking != null) i.OnVisualTracking += VisualTracking;
                     WorkflowInstance.Instances.Add(i);
                     i.createApp();
                     await i.Run();
@@ -221,12 +225,13 @@ namespace OpenRPA
                 return wf;
             }
         }
-        public WorkflowInstance CreateInstance() { return CreateInstance(new Dictionary<string, object>(), null, null, null); }
-        public WorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, WorkflowInstance.idleOrComplete idleOrComplete)
+        // public WorkflowInstance CreateInstance() { return CreateInstance(new Dictionary<string, object>(), null, null, null, null); }
+        public WorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, WorkflowInstance.idleOrComplete idleOrComplete, WorkflowInstance.VisualTrackingHandler VisualTracking)
         {
             var instance = WorkflowInstance.Create(this, Parameters);
             instance.queuename = queuename; instance.correlationId = correlationId;
             if (idleOrComplete != null) instance.OnIdleOrComplete += idleOrComplete;
+            if (VisualTracking != null) instance.OnVisualTracking += VisualTracking;
             Instances.Add(instance);
             //instance.Run();
             return instance;

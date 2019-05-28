@@ -28,6 +28,10 @@ namespace OpenRPA
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        public bool VisualTracking { get; set; }
+        public bool SlowMotion { get; set; }
+
         public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; } = new System.Collections.ObjectModel.ObservableCollection<Project>();
         private bool isRecording = false;
         private bool autoReconnect = true;
@@ -85,6 +89,8 @@ namespace OpenRPA
             DeleteCommand.Execute(mainTabControl.SelectedContent);
         }
         public ICommand SettingsCommand { get { return new RelayCommand<object>(onSettings, canSettings); } }
+        public ICommand VisualTrackingCommand { get { return new RelayCommand<object>(onVisualTracking, canVisualTracking); } }
+        public ICommand SlowMotionCommand { get { return new RelayCommand<object>(onSlowMotion, canSlowMotion); } }
         public ICommand SignoutCommand { get { return new RelayCommand<object>(onSignout, canSignout); } }
         public ICommand OpenCommand { get { return new RelayCommand<object>(onOpen, canOpen); } }
         public ICommand DetectorsCommand { get { return new RelayCommand<object>(onDetectors, canDetectors); } }
@@ -94,6 +100,41 @@ namespace OpenRPA
         public ICommand PlayCommand { get { return new RelayCommand<object>(onPlay, canPlay); } }
         public ICommand StopCommand { get { return new RelayCommand<object>(onStop, canStop); } }
         public ICommand RecordCommand { get { return new RelayCommand<object>(onRecord, canRecord); } }
+        private bool canVisualTracking(object item)
+        {
+            return true;
+        }
+        private void onVisualTracking(object item)
+        {
+            var b = (bool)item;
+            VisualTracking = b;
+            foreach (TabItem tab in mainTabControl.Items)
+            {
+                if (tab.Content is Views.WFDesigner && tab.IsSelected)
+                {
+                    var designer = tab.Content as Views.WFDesigner;
+                    designer.VisualTracking = b;
+                }
+            }
+        }
+        private bool canSlowMotion(object item)
+        {
+            return true;
+        }
+        private void onSlowMotion(object item)
+        {
+            var b = (bool)item;
+            SlowMotion = b;
+            foreach (TabItem tab in mainTabControl.Items)
+            {
+                if (tab.Content is Views.WFDesigner && tab.IsSelected)
+                {
+                    var designer = tab.Content as Views.WFDesigner;
+                    designer.SlowMotion = b;
+                }
+            }
+        }
+
         private bool canSettings(object item)
         {
             return true;
@@ -210,7 +251,7 @@ namespace OpenRPA
             Views.WFDesigner designer = tab.Content as Views.WFDesigner;
             if (designer == null) return;
             if (!designer.HasChanged) return;
-            if (designer.HasChanged && (global.isConnected?global.webSocketClient.user.hasRole("robot admins"):true))
+            if (designer.HasChanged && (global.isConnected ? global.webSocketClient.user.hasRole("robot admins") : true))
             {
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Save " + designer.Workflow.name + " ?", "Workflow unsaved", MessageBoxButton.YesNoCancel);
                 if (messageBoxResult == MessageBoxResult.Yes)
@@ -417,6 +458,7 @@ namespace OpenRPA
             if (isRecording) return false;
             if (!(item is Views.WFDesigner)) return false;
             var designer = (Views.WFDesigner)item;
+            if (designer.BreakPointhit) return true;
             foreach (var i in designer.Workflow.Instances)
             {
                 if (i.isCompleted == false)
@@ -431,13 +473,7 @@ namespace OpenRPA
             if (!(item is Views.WFDesigner)) return;
             var designer = (Views.WFDesigner)item;
             if (designer.HasChanged) { await designer.Save(); }
-            GenericTools.minimize(GenericTools.mainWindow);
-
-            WorkflowInstance instance = null;
-            var param = new Dictionary<string, object>();
-            instance = designer.Workflow.CreateInstance(param, null, null, onIdle);
-            await instance.Run();
-            return;
+            await designer.Run(VisualTracking, SlowMotion);
         }
         private bool canStop(object item)
         {
@@ -491,7 +527,7 @@ namespace OpenRPA
         private void OnKeyDown(Input.InputEventArgs e)
         {
             if (!isRecording) return;
-            if(e.Key == KeyboardKey.ESCAPE)
+            if (e.Key == KeyboardKey.ESCAPE)
             {
                 StopRecordPlugins();
                 InputDriver.Instance.CallNext = true;
@@ -575,7 +611,7 @@ namespace OpenRPA
                         if (p.parseUserAction(ref e)) continue;
                     }
                 }
-                if(e.a == null)
+                if (e.a == null)
                 {
                     StartRecordPlugins();
                     if (e.ClickHandled == false)
@@ -607,12 +643,13 @@ namespace OpenRPA
                         if (win.ShowDialog() == true)
                         {
                             e.a.AddInput(win.Text, e.Element);
-                        } else { e.SupportInput = false;  }
+                        }
+                        else { e.SupportInput = false; }
                         isRecording = true;
                     }
                     view.lastinserted = e.a.Activity;
                     view.lastinsertedmodel = view.addActivity(e.a.Activity);
-                    if(e.ClickHandled == false && e.SupportInput == false)
+                    if (e.ClickHandled == false && e.SupportInput == false)
                     {
                         InputDriver.Instance.CallNext = true;
                         Log.Debug("MouseMove to " + e.X + "," + e.Y + " and click " + e.Button + " button");
@@ -647,7 +684,7 @@ namespace OpenRPA
                 LabelStatusBar.Content = "Disconnected from " + Config.local.wsurl + " reason " + reason;
             }, null);
             await Task.Delay(1000);
-            if(autoReconnect) _ = global.webSocketClient.Connect();
+            if (autoReconnect) _ = global.webSocketClient.Connect();
         }
         private bool loginInProgress = false;
         private void WebSocketClient_OnOpen()
@@ -681,7 +718,7 @@ namespace OpenRPA
                     }
                     if (user == null)
                     {
-                        if(loginInProgress==false)
+                        if (loginInProgress == false)
                         {
                             loginInProgress = true;
                             var w = new Views.LoginWindow();
@@ -693,7 +730,7 @@ namespace OpenRPA
                             Config.local.username = w.username; Config.local.password = Config.local.ProtectString(w.password);
                             Config.Save();
                             loginInProgress = false;
-                        } 
+                        }
                         else
                         {
                             return;
@@ -833,17 +870,17 @@ namespace OpenRPA
             }
             Plugins.loadPlugins(Extensions.projectsDirectory);
 
-            
+
 
             if (string.IsNullOrEmpty(Config.local.wsurl))
             {
                 var Detectors = Interfaces.entity.Detector.loadDetectors(Extensions.projectsDirectory);
-                foreach(var d in Detectors)
+                foreach (var d in Detectors)
                 {
                     IDetectorPlugin dp = null;
                     d.Path = Extensions.projectsDirectory;
                     dp = Plugins.AddDetector(d);
-                    if(dp != null) dp.OnDetector += OnDetector;
+                    if (dp != null) dp.OnDetector += OnDetector;
                 }
             }
             Task.Run(() =>
@@ -856,7 +893,7 @@ namespace OpenRPA
                     global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
                     global.webSocketClient.OnClose += WebSocketClient_OnClose;
                     global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
-                    
+
                     _ = global.webSocketClient.Connect();
                 }
                 else
@@ -908,42 +945,16 @@ namespace OpenRPA
         }
         private Workflow GetWorkflowById(string id)
         {
-            foreach(var p in Projects)
+            foreach (var p in Projects)
             {
-                foreach(var wf in p.Workflows)
+                foreach (var wf in p.Workflows)
                 {
                     if (wf._id == id) return wf;
                 }
             }
             return null;
         }
-        private void onIdle(WorkflowInstance instance, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
-            {
-                RobotCommand command = new RobotCommand();
-                var data = JObject.FromObject(instance.Parameters);
-                command.command = "invoke" + instance.state;
-                command.workflowid = instance.WorkflowId;
-                command.data = data;
-                if ((instance.state == "failed" || instance.state == "aborted") && instance.Exception != null)
-                {
-                    command.data = JObject.FromObject(instance.Exception);
-                }
-                _ = global.webSocketClient.QueueMessage(instance.queuename, command, instance.correlationId);
-            } else
-            {
-                if(instance.state != "idle")
-                {
-                    GenericTools.restore(GenericTools.mainWindow);
-                    string message = "#*****************************#" + Environment.NewLine;
-                    message += ("# " + instance.Workflow.name + " " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
-                    if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
-                    Log.Output(message);
-                }
-            }
 
-        }
         private static object statelock = new object();
         private async void WebSocketClient_OnQueueMessage(QueueMessage message, QueueMessageEventArgs e)
         {
@@ -953,11 +964,12 @@ namespace OpenRPA
                 command = Newtonsoft.Json.JsonConvert.DeserializeObject<RobotCommand>(message.data.ToString());
                 if (command.data == null)
                 {
-                    if(!string.IsNullOrEmpty(message.correlationId))
+                    if (!string.IsNullOrEmpty(message.correlationId))
                     {
                         foreach (var wi in WorkflowInstance.Instances)
                         {
                             if (wi.isCompleted) continue;
+                            if (wi.Bookmarks == null) continue;
                             foreach (var b in wi.Bookmarks)
                             {
                                 if (b.Key == message.correlationId)
@@ -976,11 +988,11 @@ namespace OpenRPA
                     WorkflowInstance instance = null;
                     var workflow = GetWorkflowById(command.workflowid);
                     if (workflow == null) throw new ArgumentException("Unknown workflow " + command.workflowid);
-                    lock(statelock)
+                    lock (statelock)
                     {
                         foreach (var i in WorkflowInstance.Instances)
                         {
-                            if (i.state == "running" || ( !string.IsNullOrEmpty(i.correlationId) && !i.isCompleted))
+                            if (i.state == "running" || (!string.IsNullOrEmpty(i.correlationId) && !i.isCompleted))
                             {
                                 Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
                                 e.isBusy = true; return;
@@ -1011,7 +1023,7 @@ namespace OpenRPA
                             }
                         }
                         Log.Information("Create instance of " + workflow.name);
-                        instance = workflow.CreateInstance(param, message.replyto, message.correlationId, onIdle);
+                        instance = workflow.CreateInstance(param, message.replyto, message.correlationId, null, null);
                     }
                     command.command = "invokesuccess";
                     GenericTools.RunUI(() =>

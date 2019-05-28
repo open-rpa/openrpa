@@ -154,6 +154,7 @@
     </Compile>
     <Compile Include="Workflow.cs" />
     <Compile Include="WorkflowInstance.cs" />
+    <Compile Include="WorkflowTrackingParticipant.cs" />
     <Page Include="Activities\InvokeOpenFlowDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

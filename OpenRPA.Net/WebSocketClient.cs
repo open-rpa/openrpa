@@ -162,8 +162,8 @@ namespace OpenRPA.Net
                     List<SocketMessage> msgs = null;
                     lock (_receiveQueue)
                     {
-                        first = _receiveQueue.Where((x) => x.id == id).First();
-                        msgs = _receiveQueue.Where((x) => x.id == id).ToList();
+                        first = _receiveQueue.ToList().Where((x) => x.id == id).First();
+                        msgs = _receiveQueue.ToList().Where((x) => x.id == id).ToList();
                     }
                     if (first.count == msgs.Count)
                     {

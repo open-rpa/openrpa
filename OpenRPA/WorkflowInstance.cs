@@ -17,15 +17,20 @@ namespace OpenRPA
         }
         public static List<WorkflowInstance> Instances = new List<WorkflowInstance>();
 
+        public delegate void VisualTrackingHandler(WorkflowInstance Instance, string ActivityId, string State);
+        public event VisualTrackingHandler OnVisualTracking;
+
         public delegate void idleOrComplete(WorkflowInstance sender, EventArgs e);
 
         public event idleOrComplete OnIdleOrComplete;
         public Dictionary<string, object> Parameters { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
         public Dictionary<string, object> Bookmarks { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
         [JsonIgnore]
-        public string Path { get; set; }
-        public string queuename { get; set; }
-        public string correlationId { get; set; }
+        public string Path { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string correlationId { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string queuename { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        [JsonIgnore]
+        public Dictionary<string, ValueType> Variables { get { return GetProperty<Dictionary<string, ValueType>>(); } set { SetProperty(value); } }
         public string InstanceId { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string WorkflowId { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string xml { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -63,6 +68,11 @@ namespace OpenRPA
         }
         public void createApp()
         {
+            //var xh = new XamlHelper(workflow.xaml);
+            //extraextension.updateProfile(xh.Variables.ToArray(), xh.ArgumentNames.ToArray());
+            var CustomTrackingParticipant = new WorkflowTrackingParticipant();
+            CustomTrackingParticipant.OnVisualTracking += Participant_OnVisualTracking;
+
             if (string.IsNullOrEmpty(InstanceId))
             {
                 // Remove unknown Parameters, if we don't the workflow will fail
@@ -93,6 +103,7 @@ namespace OpenRPA
                     }
                 }
                 wfApp = new System.Activities.WorkflowApplication(Workflow.Activity, Parameters);
+                wfApp.Extensions.Add(CustomTrackingParticipant);
                 if (Workflow.Serializable || !Workflow.Serializable)
                 {
                     //if (Config.local.localstate)
@@ -111,6 +122,7 @@ namespace OpenRPA
             else
             {
                 wfApp = new System.Activities.WorkflowApplication(Workflow.Activity);
+                wfApp.Extensions.Add(CustomTrackingParticipant);
                 addwfApphandlers(wfApp);
                 if (Workflow.Serializable || !Workflow.Serializable)
                 {
@@ -129,6 +141,12 @@ namespace OpenRPA
             }
             state = "loaded";
         }
+
+        private void Participant_OnVisualTracking(WorkflowInstance Instance, string ActivityId, string State)
+        {
+            OnVisualTracking?.Invoke(Instance, ActivityId, State);
+        }
+
         public void Abort(string Reason)
         {
             if (wfApp == null) return;
@@ -151,7 +169,7 @@ namespace OpenRPA
         {
             try
             {
-                Log.Debug("[workflow] Resume workflow at bookmark '" + bookmarkName + "'");
+                Log.Verbose("[workflow] Resume workflow at bookmark '" + bookmarkName + "'");
                 if (isCompleted)
                 {
                     throw new ArgumentException("cannot resume bookmark on completed workflow!");
@@ -376,5 +394,12 @@ namespace OpenRPA
                 throw;
             }
         }
+    }
+
+    public class ValueType
+    {
+        public ValueType(Type type, object value) { this.type = type; this.value = value; }
+        public Type type { get; set; }
+        public object value { get; set; }
     }
 }

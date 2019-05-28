@@ -1,4 +1,5 @@
-﻿using OpenRPA.ExpressionEditor;
+﻿using Newtonsoft.Json.Linq;
+using OpenRPA.ExpressionEditor;
 using OpenRPA.Interfaces;
 using System;
 using System.Activities;
@@ -32,6 +33,17 @@ namespace OpenRPA.Views
     /// </summary>
     public partial class WFDesigner : UserControl, System.ComponentModel.INotifyPropertyChanged, IDesigner
     {
+        public Dictionary<ModelItem, System.Activities.Debugger.SourceLocation> _modelLocationMapping = new Dictionary<ModelItem, System.Activities.Debugger.SourceLocation>();
+        public Dictionary<string, System.Activities.Debugger.SourceLocation> _sourceLocationMapping = new Dictionary<string, System.Activities.Debugger.SourceLocation>();
+        public Dictionary<string, Activity> _activityIdMapping = new Dictionary<string, Activity>();
+        public Dictionary<Activity, System.Activities.Debugger.SourceLocation> _activitysourceLocationMapping = new Dictionary<Activity, System.Activities.Debugger.SourceLocation>();
+        public Dictionary<string, ModelItem> _activityIdModelItemMapping = new Dictionary<string, ModelItem>();
+        public bool BreakPointhit { get; set; }
+        public bool Singlestep { get; set; }
+        public bool SlowMotion { get; set; }
+        public bool VisualTracking { get; set; }
+        
+        public System.Threading.AutoResetEvent resumeRuntimeFromHost { get; set; }
         public ToolboxControl InitializeActivitiesToolbox()
         {
             try
@@ -121,7 +133,6 @@ namespace OpenRPA.Views
         }
         public System.Activities.Activity lastinserted { get; set; }
         public System.Activities.Presentation.Model.ModelItem lastinsertedmodel { get; set; }
-
         public Action<WFDesigner> onChanged { get; set; }
         public WorkflowDesigner wfDesigner { get; private set; }
         public Workflow Workflow { get; private set; }
@@ -149,7 +160,6 @@ namespace OpenRPA.Views
             ;
             WfToolboxBorder.Child = InitializeActivitiesToolbox();
             Workflow = workflow;
-            Workflow.OnIdleOrComplete += onIdleOrComplete;
             wfDesigner = new WorkflowDesigner();
 
             // Register the runtime metadata for the designer.
@@ -259,14 +269,22 @@ namespace OpenRPA.Views
         {
             PropertyChanged?.Invoke(this, e);
         }
-        private void onIdleOrComplete(WorkflowInstance workflow, EventArgs e)
-        {
-            onChanged?.Invoke(this);
-        }
         public async Task Save()
         {
+
             parseparameters();
             wfDesigner.Flush();
+            if (_activityIdMapping.Count == 0)
+            {
+                int failCounter = 0;
+                while (_activityIdMapping.Count == 0 && failCounter < 1)
+                {
+                    InitializeStateEnvironment();
+                    System.Threading.Thread.Sleep(500);
+                    failCounter++;
+                }
+            }
+
             var modelItem = wfDesigner.Context.Services.GetService<ModelService>().Root;
             Workflow.name = modelItem.GetValue<string>("Name");
             Workflow.Xaml = wfDesigner.Text;
@@ -620,6 +638,373 @@ namespace OpenRPA.Views
                 result = GetVariableModel<T>(Name, model.Parent);
             }
             return result;
+        }
+        private void EnsureSourceLocationUpdated()
+        {
+            var debugView = wfDesigner.DebugManagerView;
+
+            var nonPublicInstance = BindingFlags.Instance | BindingFlags.NonPublic;
+            var debuggerServiceType = typeof(System.Activities.Presentation.Debug.DebuggerService);
+            var ensureMappingMethodName = "EnsureSourceLocationUpdated";
+            var ensureMappingMethod = debuggerServiceType.GetMethod(ensureMappingMethodName, nonPublicInstance);
+            var res = ensureMappingMethod.Invoke(debugView, new object[0]);
+        }
+        private Dictionary<Activity, System.Activities.Debugger.SourceLocation> CreateSourceLocationMapping(ModelService modelService)
+        {
+            var debugView = wfDesigner.DebugManagerView;
+
+            var nonPublicInstance = BindingFlags.Instance | BindingFlags.NonPublic;
+            var debuggerServiceType = typeof(System.Activities.Presentation.Debug.DebuggerService);
+            var mappingFieldName = "instanceToSourceLocationMapping";
+            var mappingField = debuggerServiceType.GetField(mappingFieldName, nonPublicInstance);
+            if (mappingField == null)
+                throw new MissingFieldException(debuggerServiceType.FullName, mappingFieldName);
+
+            var rootActivity = modelService.Root.GetCurrentValue() as Activity;
+            if (rootActivity == null)
+            {
+                wfDesigner.Flush();
+                System.Activities.XamlIntegration.ActivityXamlServicesSettings activitySettings = new System.Activities.XamlIntegration.ActivityXamlServicesSettings
+                {
+                    CompileExpressions = true
+                };
+                var xamlReaderSettings = new System.Xaml.XamlXmlReaderSettings { LocalAssembly = typeof(WFDesigner).Assembly };
+                var xamlReader = new System.Xaml.XamlXmlReader(new System.IO.StringReader(wfDesigner.Text), xamlReaderSettings);
+                rootActivity = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, activitySettings);
+            }
+            WorkflowInspectionServices.CacheMetadata(rootActivity);
+
+            EnsureSourceLocationUpdated();
+            var mapping = (Dictionary<object, System.Activities.Debugger.SourceLocation>)mappingField.GetValue(debugView);
+            var result = new Dictionary<Activity, System.Activities.Debugger.SourceLocation>();
+            foreach (var m in mapping)
+            {
+                try
+                {
+                    var a = m.Key as Activity;
+                    if (a != null) result.Add(a, m.Value);
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug(ex.ToString());
+                }
+            }
+            return result;
+        }
+        private System.Activities.Debugger.SourceLocation GetSourceLocationFromModelItem(ModelItem modelItem)
+        {
+            var debugView = wfDesigner.DebugManagerView;
+            var nonPublicInstance = BindingFlags.Instance | BindingFlags.NonPublic;
+            var debuggerServiceType = typeof(System.Activities.Presentation.Debug.DebuggerService);
+            var ensureMappingMethodName = "GetSourceLocationFromModelItem";
+            var ensureMappingMethod = debuggerServiceType.GetMethod(ensureMappingMethodName, nonPublicInstance);
+            var res = ensureMappingMethod.Invoke(debugView, new object[] { modelItem });
+            return res as System.Activities.Debugger.SourceLocation;
+        }
+        public void SetDebugLocation(string id, System.Activities.Debugger.SourceLocation location, bool moveTo)
+        {
+            if (moveTo || true)
+            {
+                wfDesigner.DebugManagerView.CurrentLocation = location;
+            }
+            else
+            {
+                wfDesigner.DebugManagerView.CurrentLocation = location;
+            }
+        }
+        public void NavigateTo(ModelItem item)
+        {
+            var validation = wfDesigner.Context.Services.GetService<System.Activities.Presentation.Validation.ValidationService>();
+            //private ModelSearchServiceImpl modelSearchService;
+
+            var modelSearchService = typeof(System.Activities.Presentation.Validation.ValidationService).GetField("modelSearchService", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(validation);
+            //this.modelSearchService.NavigateTo(itemToFocus);
+            var methods = modelSearchService.GetType().GetMethods().Where(x => x.Name == "NavigateTo");
+            foreach (var methodInfo in methods)
+            {
+                ParameterInfo[] parameters = methodInfo.GetParameters();
+                if (parameters.Length == 1)
+                {
+                    if (parameters[0].Name == "itemToFocus")
+                    {
+                        methodInfo.Invoke(modelSearchService, new Object[] { item });
+                    }
+                }
+            }
+
+        }
+        public void InitializeStateEnvironment()
+        {
+            GenericTools.RunUI(() =>
+            {
+                Log.Debug("****** Create activity Map");
+                var modelService = wfDesigner.Context.Services.GetService<ModelService>();
+                try
+                {
+                    wfDesigner.Flush();
+                    using (var ms = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(wfDesigner.Text)))
+                    {
+                        var _workflowToRun = System.Activities.XamlIntegration.ActivityXamlServices.Load(ms) as DynamicActivity;
+                        WorkflowInspectionServices.CacheMetadata(_workflowToRun);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                    return;
+                }
+                _sourceLocationMapping.Clear();
+                _activitysourceLocationMapping.Clear();
+                _modelLocationMapping.Clear();
+                IEnumerable<ModelItem> wfElements = modelService.Find(modelService.Root, typeof(Activity)).Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.State)));
+                ModelItem lastItem = null;
+                var map = CreateSourceLocationMapping(modelService);
+                foreach (var modelItem in wfElements)
+                {
+                    NavigateTo(modelItem);
+                    // optimize, should we just use GetSourceLocationFromModelItem or continue using "select and get location" ?
+                    var loc = GetSourceLocationFromModelItem(modelItem);
+
+                    //if (modelItem.ItemType.BaseType == typeof(Literal)) continue;
+                    if (modelItem.ItemType.Name.StartsWith("Literal")) continue;
+                    if (modelItem.ItemType.Name.StartsWith("VisualBasicValue")) continue;
+                    if (modelItem.ItemType.Name.StartsWith("VisualBasicReference")) continue;
+
+
+
+                    var activity = modelItem.GetCurrentValue() as Activity;
+                    if (activity == null)
+                    {
+                        var state = modelItem.GetCurrentValue() as System.Activities.Debugger.State;
+                        var property = typeof(System.Activities.Debugger.State).GetProperty("InternalState", BindingFlags.Instance | BindingFlags.NonPublic);
+                        activity = property.GetValue(state) as Activity;
+                    }
+                    if (activity != null && activity.Id != null && !_sourceLocationMapping.ContainsKey(activity.Id))
+                    {
+                        Selection.SelectOnly(wfDesigner.Context, modelItem);
+
+                        if (wfDesigner.DebugManagerView.SelectedLocation != null)
+                        {
+                            _modelLocationMapping[modelItem] = wfDesigner.DebugManagerView.SelectedLocation;
+                            _activitysourceLocationMapping[activity] = wfDesigner.DebugManagerView.SelectedLocation;
+                            _sourceLocationMapping[activity.Id] = wfDesigner.DebugManagerView.SelectedLocation;
+                            _activityIdMapping[activity.Id] = activity;
+                            _activityIdModelItemMapping[activity.Id] = modelItem;
+                        }
+                        else
+                        {
+                            var t = wfDesigner.DebugManagerView.SelectedLocation;
+                            if (map.ContainsKey(activity))
+                            {
+                                _modelLocationMapping[modelItem] = map[activity];
+                                _activitysourceLocationMapping[activity] = map[activity];
+                                _sourceLocationMapping[activity.Id] = map[activity];
+                                _activityIdMapping[activity.Id] = activity;
+
+                                Log.Debug(string.Format("Failed mapping '{0}' / '{1}' ", activity.Id, activity.DisplayName));
+                            }
+                            else
+                            {
+                                Log.Debug(string.Format("Failed mapping '{0}' / '{1}' ", activity.Id, activity.DisplayName));
+                            }
+                        }
+                    }
+                    lastItem = modelItem;
+                }
+                if (lastItem != null) Selection.Toggle(wfDesigner.Context, lastItem);
+                Log.Debug("****** Activity Map completed");
+            });
+        }
+        public void ToggleBreakpoint()
+        {
+            var debugManagerView = wfDesigner.DebugManagerView;
+            var selectedLocation = debugManagerView.SelectedLocation;
+            try
+            {
+                if (selectedLocation != null)
+                {
+                    if (debugManagerView.GetBreakpointLocations().ContainsKey(selectedLocation))
+                    {
+                        debugManagerView.DeleteBreakpoint(selectedLocation);
+                    }
+                    else
+                    {
+                        debugManagerView.InsertBreakpoint(selectedLocation, System.Activities.Presentation.Debug.BreakpointTypes.Bounded | System.Activities.Presentation.Debug.BreakpointTypes.Enabled);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+        }
+        private void onVisualTracking(WorkflowInstance Instance, string ActivityId, string State)
+        {
+            if (SlowMotion) System.Threading.Thread.Sleep(500);
+            if (_activityIdMapping == null || ActivityId == "1") return;
+            if (!_activityIdMapping.ContainsKey(ActivityId))
+            {
+                Log.Debug("Failed locating ActivityId : " + ActivityId);
+                return;
+            }
+            if (!_sourceLocationMapping.ContainsKey(ActivityId)) return;
+
+
+            var location = _sourceLocationMapping[ActivityId];
+            BreakPointhit = wfDesigner.DebugManagerView.GetBreakpointLocations().ContainsKey(location);
+            ModelItem model = _activityIdModelItemMapping[ActivityId];
+            if (VisualTracking || BreakPointhit || Singlestep)
+            {
+                GenericTools.RunUI(() =>
+                {
+                    NavigateTo(model);
+                    SetDebugLocation(ActivityId, location, true);
+                });
+            }
+            if (BreakPointhit || Singlestep)
+            {
+                using (resumeRuntimeFromHost = new System.Threading.AutoResetEvent(false))
+                {
+                    BreakPointhit = true;
+                    // showVariables(wfi.variables);
+                    GenericTools.restore();
+                    resumeRuntimeFromHost.WaitOne();
+                }
+                resumeRuntimeFromHost = null;
+            }
+        }
+        internal void onIdle(WorkflowInstance instance, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
+            {
+                RobotCommand command = new RobotCommand();
+                var data = JObject.FromObject(instance.Parameters);
+                command.command = "invoke" + instance.state;
+                command.workflowid = instance.WorkflowId;
+                command.data = data;
+                if ((instance.state == "failed" || instance.state == "aborted") && instance.Exception != null)
+                {
+                    command.data = JObject.FromObject(instance.Exception);
+                }
+                _ = global.webSocketClient.QueueMessage(instance.queuename, command, instance.correlationId);
+                onChanged?.Invoke(this);
+            }
+            else
+            {
+                if (instance.state == "completed")
+                {
+                    GenericTools.RunUI(() =>
+                    {
+                        SetDebugLocation(null, null, true);
+                    });
+                }
+                if (instance.state != "idle")
+                {
+                    BreakPointhit = false; Singlestep = false;
+                    GenericTools.restore(GenericTools.mainWindow);
+                    string message = "#*****************************#" + Environment.NewLine;
+                    if (instance.runWatch != null)
+                    {
+                        message += ("# " + instance.Workflow.name + " " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
+                    }
+                    else
+                    {
+                        message += ("# " + instance.Workflow.name + " " + instance.state);
+                    }
+                    if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
+                    Log.Output(message);
+                    onChanged?.Invoke(this);
+                }
+            }
+
+        }
+        public async Task Run(bool VisualTracking, bool SlowMotion)
+        {
+            this.VisualTracking = VisualTracking; this.SlowMotion = SlowMotion;
+            if(!VisualTracking) GenericTools.minimize(GenericTools.mainWindow);
+            if (BreakPointhit)
+            {
+                Singlestep = false;
+                BreakPointhit = false;
+                resumeRuntimeFromHost.Set();
+                return;
+            }
+
+            WorkflowInstance instance = null;
+            var param = new Dictionary<string, object>();
+            instance = Workflow.CreateInstance(param, null, null, onIdle, onVisualTracking);
+            wfDesigner.Flush();
+            if (_activityIdMapping.Count == 0)
+            {
+                int failCounter = 0;
+                while (_activityIdMapping.Count == 0 && failCounter < 3)
+                {
+                    InitializeStateEnvironment();
+                    System.Threading.Thread.Sleep(500);
+                    failCounter++;
+                }
+            }
+            await instance.Run();
+        }
+        private void UserControl_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.F11)
+            {
+                Singlestep = true;
+                if (BreakPointhit)
+                {
+                    if(resumeRuntimeFromHost!=null) resumeRuntimeFromHost.Set();
+                    return;
+                } else
+                {
+                    WorkflowInstance instance = null;
+                    var param = new Dictionary<string, object>();
+                    instance = Workflow.CreateInstance(param, null, null, onIdle, onVisualTracking);
+                    wfDesigner.Flush();
+                    if (_activityIdMapping.Count == 0)
+                    {
+                        int failCounter = 0;
+                        while (_activityIdMapping.Count == 0 && failCounter < 3)
+                        {
+                            InitializeStateEnvironment();
+                            System.Threading.Thread.Sleep(500);
+                            failCounter++;
+                        }
+                    }
+                    _ = instance.Run();
+
+                }
+            }
+            if (e.Key == Key.F5)
+            {
+                if (BreakPointhit)
+                {
+                    Singlestep = false;
+                    BreakPointhit = false;
+                    resumeRuntimeFromHost.Set();
+                    return;
+                }
+                WorkflowInstance instance = null;
+                var param = new Dictionary<string, object>();
+                instance = Workflow.CreateInstance(param, null, null, onIdle, onVisualTracking);
+                wfDesigner.Flush();
+                if (_activityIdMapping.Count == 0)
+                {
+                    int failCounter = 0;
+                    while (_activityIdMapping.Count == 0 && failCounter < 1)
+                    {
+                        InitializeStateEnvironment();
+                        System.Threading.Thread.Sleep(500);
+                        failCounter++;
+                    }
+                }
+                _ = instance.Run();
+            }
+            if (e.Key == System.Windows.Input.Key.F9)
+            {
+                ToggleBreakpoint();
+            }
+
         }
     }
 }

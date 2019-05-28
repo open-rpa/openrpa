@@ -167,7 +167,7 @@ namespace OpenRPA.Store
             catch (Exception ex)
             {
                 //Log.Error(ex.ToString());
-                Log.Error("CustomInstanceStoreBase.SerializeObject: " + ex.Message);
+                Log.Verbose("CustomInstanceStoreBase.SerializeObject: " + ex.Message);
                 return null;
             }
         }

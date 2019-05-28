@@ -18,7 +18,7 @@ namespace OpenRPA
         {
             RawElement = Element;
             ProcessId = Element.Properties.ProcessId.ValueOrDefault;
-            Id = Element.Properties.AutomationId.ValueOrDefault;
+            if(Element.Properties.AutomationId.IsSupported) Id = Element.Properties.AutomationId.ValueOrDefault;
             Name = Element.Properties.Name.ValueOrDefault;
             ClassName = Element.Properties.ClassName.ValueOrDefault;
             Type = Element.Properties.ControlType.ValueOrDefault.ToString();

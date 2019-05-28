@@ -81,8 +81,19 @@
                     <RibbonButton Label="Record" LargeImageSource="/OpenRPA;component/Resources/Buttons/Record.png"
                                   Command="{Binding Data.RecordCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
+                    <StackPanel Orientation="Horizontal">
+                        <RibbonCheckBox IsChecked="{Binding VisualTracking}" Command="{Binding Data.VisualTrackingCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
+                        <TextBlock Text="VisualTracking"></TextBlock>
+                        
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <RibbonCheckBox IsChecked="{Binding SlowMotion}" Command="{Binding Data.SlowMotionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"  />
+                        <TextBlock Text="Slow motion"></TextBlock>
+                    </StackPanel>
                 </RibbonGroup>
-                <RibbonGroup Header="Runtime">
+                <RibbonGroup Header="Detectors">
                     <RibbonButton Label="Detectors" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
                                   Command="{Binding Data.DetectorsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                 </RibbonGroup>

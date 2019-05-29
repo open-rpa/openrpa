@@ -12,7 +12,7 @@ namespace OpenRPA
 {
     class WorkflowTrackingParticipant : TrackingParticipant
     {
-        public delegate void VisualTrackingHandler(WorkflowInstance Instance, string ActivityId, string State);
+        public delegate void VisualTrackingHandler(WorkflowInstance Instance, string ActivityId, string ChildActivityId, string State);
         public event VisualTrackingHandler OnVisualTracking;
         public WorkflowTrackingParticipant()
         {
@@ -148,7 +148,7 @@ namespace OpenRPA
                     }
                 }
                 
-                OnVisualTracking?.Invoke(Instance, (ChildActivityId==null?ActivityId: ChildActivityId), State);
+                OnVisualTracking?.Invoke(Instance, ActivityId, ChildActivityId, State);
             } else
             {
                 // Log.Debug(trackRecord.ToString());

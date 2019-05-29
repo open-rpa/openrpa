@@ -95,10 +95,20 @@ namespace OpenRPA.Interfaces.Selector
             vm.Plugin.Start();
             GenericTools.minimize(GenericTools.mainWindow);
             GenericTools.minimize(this);
+            GenericTools.OnCancel += OnCancel;
         }
+
+        private void OnCancel(EventArgs e)
+        {
+            vm.Plugin.Stop();
+            GenericTools.OnCancel -= OnCancel;
+            GenericTools.restore(this);
+        }
+
         private void Plugin_OnUserAction(IPlugin sender, IRecordEvent e)
         {
             vm.Plugin.Stop();
+            GenericTools.OnCancel -= OnCancel;
             e.ClickHandled = true;
             // GenericTools.restore(GenericTools.mainWindow);
             GenericTools.restore(this);

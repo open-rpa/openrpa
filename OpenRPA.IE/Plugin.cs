@@ -77,7 +77,7 @@ namespace OpenRPA.IE
             {
                 Log.Debug(string.Format("IE.Recording::OnMouseUp::begin"));
                 var re = new RecordEvent(); re.Button = e.Button;
-                var a = new GetElement { DisplayName = (e.Element.Id + "-" + e.Element.Name).Replace(Environment.NewLine, "").Trim() };
+                var a = new GetElement { DisplayName = (e.Element.Name).Replace(Environment.NewLine, "").Trim() };
 
                 var browser = new Browser(e.Element.RawElement);
                 var htmlelement = browser.ElementFromPoint(e.X, e.Y);

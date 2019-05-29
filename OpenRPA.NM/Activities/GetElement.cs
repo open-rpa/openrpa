@@ -46,6 +46,7 @@ namespace OpenRPA.NM
             var timeout = Timeout.Get(context);
             var from = From.Get(context);
             var maxresults = MaxResults.Get(context);
+            if (maxresults < 1) maxresults = 1;
             NMElement[] elements = { };
             var sw = new Stopwatch();
             sw.Start();

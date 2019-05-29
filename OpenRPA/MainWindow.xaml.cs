@@ -787,7 +787,11 @@ namespace OpenRPA
                         Log.Debug("RunPendingInstances::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         foreach (var workflow in workflows)
                         {
-                            await workflow.RunPendingInstances();
+                            if(workflow.Project != null)
+                            {
+                                await workflow.RunPendingInstances();
+                            }
+                            
                         }
                         Log.Debug("RunPendingInstances::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         if (workflows.Count() == 0 && projects.Count() == 0)

@@ -18,7 +18,7 @@ namespace OpenRPA
         {
             RawElement = Element;
             ProcessId = Element.Properties.ProcessId.ValueOrDefault;
-            if(Element.Properties.AutomationId.IsSupported) Id = Element.Properties.AutomationId.ValueOrDefault;
+            // if(Element.Properties.AutomationId.IsSupported) Id = Element.Properties.AutomationId.ValueOrDefault;
             Name = Element.Properties.Name.ValueOrDefault;
             ClassName = Element.Properties.ClassName.ValueOrDefault;
             Type = Element.Properties.ControlType.ValueOrDefault.ToString();
@@ -35,7 +35,7 @@ namespace OpenRPA
                     pendingCounter++;
                 }
                 ProcessId = RawElement.Properties.ProcessId.ValueOrDefault;
-                Id = RawElement.Properties.AutomationId.ValueOrDefault;
+                // Id = RawElement.Properties.AutomationId.ValueOrDefault;
                 Name = RawElement.Properties.Name.ValueOrDefault;
                 ClassName = RawElement.Properties.ClassName.ValueOrDefault;
                 Type = RawElement.Properties.ControlType.ValueOrDefault.ToString();
@@ -60,7 +60,7 @@ namespace OpenRPA
             }
         }
         public int ProcessId { get; set; }
-        public string Id { get; set; }
+        // public string Id { get; set; }
         public string Name { get; set; }
         public string ClassName { get; set; }
         public string Type { get; set; }
@@ -225,7 +225,7 @@ namespace OpenRPA
         {
             string result = "";
             if (!string.IsNullOrEmpty(ControlType)) result += " " + ControlType;
-            if (!string.IsNullOrEmpty(Id)) result += " id: " + Id;
+            // if (!string.IsNullOrEmpty(Id)) result += " id: " + Id;
             if (!string.IsNullOrEmpty(Name)) result += " Name: " + Name;
             if (!string.IsNullOrEmpty(ClassName)) result += " ClassName: " + ClassName;
             return result.Trim();
@@ -235,7 +235,7 @@ namespace OpenRPA
             var e = obj as UIElement;
             if (e == null) return false;
             if (e.ProcessId != ProcessId) return false;
-            if (e.Id != Id) return false;
+            // if (e.Id != Id) return false;
             if (e.Name != Name) return false;
             if (e.ClassName != ClassName) return false;
             if (e.Type != Type) return false;

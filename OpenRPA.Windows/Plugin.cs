@@ -97,7 +97,7 @@ namespace OpenRPA.Windows
             {
                 Log.Debug(string.Format("Windows.Recording::OnMouseUp::begin"));
                 var re = new RecordEvent(); re.Button = e.Button;
-                var a = new GetElement { DisplayName = e.Element.Id + "-" + e.Element.Name };
+                var a = new GetElement { DisplayName = e.Element.Name };
                 var sw = new System.Diagnostics.Stopwatch();
                 sw.Start();
                 WindowsSelector sel = null;

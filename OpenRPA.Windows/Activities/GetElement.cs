@@ -47,6 +47,7 @@ namespace OpenRPA.Windows
             var timeout = Timeout.Get(context);
             var maxresults = MaxResults.Get(context);
             var minresults = MinResults.Get(context);
+            if (maxresults < 1) maxresults = 1;
             var sw = new Stopwatch();
             var from = From.Get(context);
             sw.Start();

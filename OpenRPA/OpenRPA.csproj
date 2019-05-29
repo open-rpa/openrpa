@@ -61,6 +61,7 @@
     <Reference Include="System.Activities.Presentation" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Memory, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.DurableInstancing" />
     <Reference Include="System.Runtime.Serialization" />
@@ -140,6 +141,7 @@
     <Compile Include="Views\InsertText.xaml.cs">
       <DependentUpon>InsertText.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\LevelConverter.cs" />
     <Compile Include="Views\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
@@ -149,6 +151,11 @@
     <Compile Include="Views\RegistrationWindow.xaml.cs">
       <DependentUpon>RegistrationWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\showVariables.xaml.cs">
+      <DependentUpon>showVariables.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\variable.cs" />
+    <Compile Include="Views\VisibilityConverter.cs" />
     <Compile Include="Views\WFDesigner.xaml.cs">
       <DependentUpon>WFDesigner.xaml</DependentUpon>
     </Compile>
@@ -225,6 +232,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RegistrationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\showVariables.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -472,6 +483,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\toolbox\detector2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\close.png" />
+    <Resource Include="Resources\open.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

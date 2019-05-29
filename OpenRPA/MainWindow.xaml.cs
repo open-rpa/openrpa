@@ -28,10 +28,8 @@ namespace OpenRPA
     /// </summary>
     public partial class MainWindow : Window
     {
-
         public bool VisualTracking { get; set; }
         public bool SlowMotion { get; set; }
-
         public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; } = new System.Collections.ObjectModel.ObservableCollection<Project>();
         private bool isRecording = false;
         private bool autoReconnect = true;
@@ -134,7 +132,6 @@ namespace OpenRPA
                 }
             }
         }
-
         private bool canSettings(object item)
         {
             return true;
@@ -470,10 +467,17 @@ namespace OpenRPA
         }
         private async void onPlay(object item)
         {
-            if (!(item is Views.WFDesigner)) return;
-            var designer = (Views.WFDesigner)item;
-            if (designer.HasChanged) { await designer.Save(); }
-            await designer.Run(VisualTracking, SlowMotion);
+            try
+            {
+                if (!(item is Views.WFDesigner)) return;
+                var designer = (Views.WFDesigner)item;
+                if (designer.HasChanged) { await designer.Save(); }
+                await designer.Run(VisualTracking, SlowMotion);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("onPlay " + ex.Message);
+            }
         }
         private bool canStop(object item)
         {
@@ -501,6 +505,7 @@ namespace OpenRPA
                     i.Abort("User clicked stop");
                 }
             }
+            if (designer.resumeRuntimeFromHost != null) designer.resumeRuntimeFromHost.Set();
             if (isRecording)
             {
                 StopRecordPlugins();
@@ -787,7 +792,11 @@ namespace OpenRPA
                         Log.Debug("RunPendingInstances::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         foreach (var workflow in workflows)
                         {
-                            await workflow.RunPendingInstances();
+                            if(workflow.Project != null)
+                            {
+                                await workflow.RunPendingInstances();
+                            }
+                            
                         }
                         Log.Debug("RunPendingInstances::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         if (workflows.Count() == 0 && projects.Count() == 0)

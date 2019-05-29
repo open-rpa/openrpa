@@ -17,7 +17,7 @@ namespace OpenRPA
         }
         public static List<WorkflowInstance> Instances = new List<WorkflowInstance>();
 
-        public delegate void VisualTrackingHandler(WorkflowInstance Instance, string ActivityId, string State);
+        public delegate void VisualTrackingHandler(WorkflowInstance Instance, string ActivityId, string ChildActivityId, string State);
         public event VisualTrackingHandler OnVisualTracking;
 
         public delegate void idleOrComplete(WorkflowInstance sender, EventArgs e);
@@ -142,9 +142,9 @@ namespace OpenRPA
             state = "loaded";
         }
 
-        private void Participant_OnVisualTracking(WorkflowInstance Instance, string ActivityId, string State)
+        private void Participant_OnVisualTracking(WorkflowInstance Instance, string ActivityId, string ChildActivityId, string State)
         {
-            OnVisualTracking?.Invoke(Instance, ActivityId, State);
+            OnVisualTracking?.Invoke(Instance, ActivityId, ChildActivityId, State);
         }
 
         public void Abort(string Reason)

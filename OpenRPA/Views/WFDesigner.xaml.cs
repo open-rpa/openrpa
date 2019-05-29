@@ -42,7 +42,6 @@ namespace OpenRPA.Views
         public bool Singlestep { get; set; }
         public bool SlowMotion { get; set; }
         public bool VisualTracking { get; set; }
-        
         public System.Threading.AutoResetEvent resumeRuntimeFromHost { get; set; }
         public ToolboxControl InitializeActivitiesToolbox()
         {
@@ -145,16 +144,69 @@ namespace OpenRPA.Views
                 return Workflow.Project;
             }
         }
+        private void OnKeyUp(Input.InputEventArgs e)
+        {
+            if (!tab.IsSelected) return;
+            if (e.Key == Input.KeyboardKey.F10 || e.Key == Input.KeyboardKey.F11)
+            {
+                Singlestep = true;
+                // if (e.Key == Input.KeyboardKey.F11) { StepInto = true; }
+                if (BreakPointhit)
+                {
+                    if (resumeRuntimeFromHost != null) resumeRuntimeFromHost.Set();
+                    return;
+                }
+                else
+                {
+                    _ = Run(VisualTracking, SlowMotion);
+                }
+            }
+            if(e.Key == Input.KeyboardKey.ESC)
+            {
+                foreach (var i in WorkflowInstance.Instances)
+                {
+                    if(i.WorkflowId==Workflow._id && !i.isCompleted)
+                    {
+                        i.Abort("User canceled workflow with cancel key");
+                    }
+                }
+                if (resumeRuntimeFromHost != null) resumeRuntimeFromHost.Set();
+            }
+        }
+        private async void UserControl_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F5)
+            {
+                if (BreakPointhit)
+                {
+                    Singlestep = false;
+                    BreakPointhit = false;
+                    resumeRuntimeFromHost.Set();
+                    return;
+                }
+                try
+                {
+                    await Run(VisualTracking, SlowMotion);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("onPlay " + ex.Message);
+                }
+            }
+            if (e.Key == Key.F9)
+            {
+                ToggleBreakpoint();
+            }
+        }
+
+        public readonly ClosableTab tab;
         private WFDesigner()
         {
             InitializeComponent();
         }
-        public readonly ClosableTab tab;
-
-        // private static RoslynExpressionEditorService _expressionEditorService;
-        // private static EditorService _expressionEditorServiceVB;
         public WFDesigner(ClosableTab tab, Workflow workflow, Type[] extratypes)
         {
+            Input.InputDriver.Instance.OnKeyUp += OnKeyUp;
             this.tab = tab;
             InitializeComponent();
             ;
@@ -701,16 +753,9 @@ namespace OpenRPA.Views
             var res = ensureMappingMethod.Invoke(debugView, new object[] { modelItem });
             return res as System.Activities.Debugger.SourceLocation;
         }
-        public void SetDebugLocation(string id, System.Activities.Debugger.SourceLocation location, bool moveTo)
+        public void SetDebugLocation(System.Activities.Debugger.SourceLocation location)
         {
-            if (moveTo || true)
-            {
-                wfDesigner.DebugManagerView.CurrentLocation = location;
-            }
-            else
-            {
-                wfDesigner.DebugManagerView.CurrentLocation = location;
-            }
+            wfDesigner.DebugManagerView.CurrentLocation = location;
         }
         public void NavigateTo(ModelItem item)
         {
@@ -750,8 +795,7 @@ namespace OpenRPA.Views
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex.ToString());
-                    return;
+                    Log.Debug("InitializeStateEnvironment: " + ex.Message);
                 }
                 _sourceLocationMapping.Clear();
                 _activitysourceLocationMapping.Clear();
@@ -838,9 +882,10 @@ namespace OpenRPA.Views
                 Log.Error(ex.ToString());
             }
         }
-        private void onVisualTracking(WorkflowInstance Instance, string ActivityId, string State)
+        private void onVisualTracking(WorkflowInstance Instance, string ActivityId, string ChildActivityId, string State)
         {
             if (SlowMotion) System.Threading.Thread.Sleep(500);
+
             if (_activityIdMapping == null || ActivityId == "1") return;
             if (!_activityIdMapping.ContainsKey(ActivityId))
             {
@@ -848,17 +893,27 @@ namespace OpenRPA.Views
                 return;
             }
             if (!_sourceLocationMapping.ContainsKey(ActivityId)) return;
+            if (!_sourceLocationMapping.ContainsKey(ChildActivityId)) return;
 
 
-            var location = _sourceLocationMapping[ActivityId];
-            BreakPointhit = wfDesigner.DebugManagerView.GetBreakpointLocations().ContainsKey(location);
-            ModelItem model = _activityIdModelItemMapping[ActivityId];
+            System.Activities.Debugger.SourceLocation location;
+
+            //location = _sourceLocationMapping[ActivityId];
+            //BreakPointhit = wfDesigner.DebugManagerView.GetBreakpointLocations().ContainsKey(location);
+
+            location = _sourceLocationMapping[ChildActivityId];
+            if(!BreakPointhit)
+            {
+                BreakPointhit = wfDesigner.DebugManagerView.GetBreakpointLocations().ContainsKey(location);
+            }
+            ModelItem model = _activityIdModelItemMapping[ChildActivityId];
             if (VisualTracking || BreakPointhit || Singlestep)
             {
                 GenericTools.RunUI(() =>
                 {
                     NavigateTo(model);
-                    SetDebugLocation(ActivityId, location, true);
+                    SetDebugLocation(location);
+
                 });
             }
             if (BreakPointhit || Singlestep)
@@ -866,7 +921,7 @@ namespace OpenRPA.Views
                 using (resumeRuntimeFromHost = new System.Threading.AutoResetEvent(false))
                 {
                     BreakPointhit = true;
-                    // showVariables(wfi.variables);
+                    showVariables(Instance.Variables);
                     GenericTools.restore();
                     resumeRuntimeFromHost.WaitOne();
                 }
@@ -895,12 +950,13 @@ namespace OpenRPA.Views
                 {
                     GenericTools.RunUI(() =>
                     {
-                        SetDebugLocation(null, null, true);
+                        SetDebugLocation(null);
+                        WfPropertyBorder.Child = wfDesigner.PropertyInspectorView;
                     });
                 }
                 if (instance.state != "idle")
                 {
-                    BreakPointhit = false; Singlestep = false;
+                    BreakPointhit = false; Singlestep = false; 
                     GenericTools.restore(GenericTools.mainWindow);
                     string message = "#*****************************#" + Environment.NewLine;
                     if (instance.runWatch != null)
@@ -913,6 +969,12 @@ namespace OpenRPA.Views
                     }
                     if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
                     Log.Output(message);
+
+                    GenericTools.RunUI(() =>
+                    {
+                        WfPropertyBorder.Child = wfDesigner.PropertyInspectorView;
+                    });
+
                     onChanged?.Invoke(this);
                 }
             }
@@ -921,90 +983,59 @@ namespace OpenRPA.Views
         public async Task Run(bool VisualTracking, bool SlowMotion)
         {
             this.VisualTracking = VisualTracking; this.SlowMotion = SlowMotion;
-            if(!VisualTracking) GenericTools.minimize(GenericTools.mainWindow);
             if (BreakPointhit)
             {
                 Singlestep = false;
                 BreakPointhit = false;
+                if (!VisualTracking) GenericTools.minimize(GenericTools.mainWindow);
                 resumeRuntimeFromHost.Set();
                 return;
             }
-
-            WorkflowInstance instance = null;
-            var param = new Dictionary<string, object>();
-            instance = Workflow.CreateInstance(param, null, null, onIdle, onVisualTracking);
             wfDesigner.Flush();
-            if (_activityIdMapping.Count == 0)
-            {
-                int failCounter = 0;
-                while (_activityIdMapping.Count == 0 && failCounter < 3)
-                {
-                    InitializeStateEnvironment();
-                    System.Threading.Thread.Sleep(500);
-                    failCounter++;
-                }
-            }
-            await instance.Run();
-        }
-        private void UserControl_KeyDown(object sender, KeyEventArgs e)
-        {
-            if(e.Key == Key.F11)
-            {
-                Singlestep = true;
-                if (BreakPointhit)
-                {
-                    if(resumeRuntimeFromHost!=null) resumeRuntimeFromHost.Set();
-                    return;
-                } else
-                {
-                    WorkflowInstance instance = null;
-                    var param = new Dictionary<string, object>();
-                    instance = Workflow.CreateInstance(param, null, null, onIdle, onVisualTracking);
-                    wfDesigner.Flush();
-                    if (_activityIdMapping.Count == 0)
-                    {
-                        int failCounter = 0;
-                        while (_activityIdMapping.Count == 0 && failCounter < 3)
-                        {
-                            InitializeStateEnvironment();
-                            System.Threading.Thread.Sleep(500);
-                            failCounter++;
-                        }
-                    }
-                    _ = instance.Run();
+            InitializeStateEnvironment();
 
-                }
-            }
-            if (e.Key == Key.F5)
+            GenericTools.RunUI(() =>
             {
-                if (BreakPointhit)
-                {
-                    Singlestep = false;
-                    BreakPointhit = false;
-                    resumeRuntimeFromHost.Set();
-                    return;
-                }
-                WorkflowInstance instance = null;
-                var param = new Dictionary<string, object>();
-                instance = Workflow.CreateInstance(param, null, null, onIdle, onVisualTracking);
-                wfDesigner.Flush();
                 if (_activityIdMapping.Count == 0)
                 {
                     int failCounter = 0;
-                    while (_activityIdMapping.Count == 0 && failCounter < 1)
+                    while (_activityIdMapping.Count == 0 && failCounter < 3)
                     {
+                        System.Windows.Forms.Application.DoEvents();
                         InitializeStateEnvironment();
                         System.Threading.Thread.Sleep(500);
                         failCounter++;
                     }
                 }
-                _ = instance.Run();
-            }
-            if (e.Key == System.Windows.Input.Key.F9)
+            });
+            if (_activityIdMapping.Count == 0)
             {
-                ToggleBreakpoint();
+                Log.Error("Failed mapping activites!!!!!");
+                throw new Exception("Failed mapping activites!!!!!");
             }
-
+            WorkflowInstance instance = null;
+            var param = new Dictionary<string, object>();
+            instance = Workflow.CreateInstance(param, null, null, onIdle, onVisualTracking);
+            if (!VisualTracking) GenericTools.minimize(GenericTools.mainWindow);
+            await instance.Run();
         }
+        private void showVariables(IDictionary<string, ValueType> Variables)
+        {
+            GenericTools.RunUI(() =>
+            {
+                var form = new showVariables();
+                form.variables = new System.Collections.ObjectModel.ObservableCollection<variable>();
+                Variables?.ForEach(x =>
+                {
+                    form.addVariable(x.Key, x.Value.value, x.Value.type);
+                });
+                WfPropertyBorder.Child = form;
+            });
+        }
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Input.InputDriver.Instance.OnKeyUp -= OnKeyUp;
+        }
+
     }
 }

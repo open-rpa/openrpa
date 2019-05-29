@@ -226,7 +226,8 @@ namespace OpenRPA
             }
         }
         // public WorkflowInstance CreateInstance() { return CreateInstance(new Dictionary<string, object>(), null, null, null, null); }
-        public WorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, WorkflowInstance.idleOrComplete idleOrComplete, WorkflowInstance.VisualTrackingHandler VisualTracking)
+        public WorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, 
+            WorkflowInstance.idleOrComplete idleOrComplete, WorkflowInstance.VisualTrackingHandler VisualTracking)
         {
             var instance = WorkflowInstance.Create(this, Parameters);
             instance.queuename = queuename; instance.correlationId = correlationId;

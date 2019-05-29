@@ -1,0 +1,109 @@
+﻿<UserControl x:Class="OpenRPA.Views.showVariables"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:OpenRPA.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Loaded="Window_Loaded">
+    <UserControl.Resources>
+        <GridLength x:Key="TreeToggleWidth">20</GridLength>
+        <local:LevelConverter x:Key="LevelSpaceConverter" LevelWidth="{StaticResource TreeToggleWidth}"/>
+        <local:VisibilityConverter x:Key="TreeToggleConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0"/>
+
+        <DataGrid AutoGenerateColumns="False" Name="grid" Grid.Row="1" CanUserAddRows="False"
+				  AlternationCount="2" AlternatingRowBackground="LightGray"
+                  ItemsSource="{Binding Path=variables}"
+                  RowDetailsVisibilityMode="Collapsed"
+                  >
+            <DataGrid.Columns>
+                <DataGridTemplateColumn
+					Header="Name">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="{Binding Level, Converter={StaticResource LevelSpaceConverter}}"/>
+                                    <ColumnDefinition Width="{StaticResource TreeToggleWidth}"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <ToggleButton Content="" Foreground="Black" Grid.Column="1"
+                                    IsChecked="{Binding IsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									Visibility="{Binding HasChildren, Converter={StaticResource TreeToggleConverter}}"
+                                              Click="ToggleButton_Click"
+
+                                              >
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image>
+                                                    <Image.Style>
+                                                        <Style>
+                                                            <Setter Property="Image.Source" 
+                                Value="/OpenRPA;component/Resources/close.png" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsChecked, 
+                                    RelativeSource={RelativeSource AncestorType=
+                                    {x:Type ToggleButton}}}" Value="True">
+                                                                    <Setter Property="Image.Source" 
+                                        Value="/OpenRPA;component/Resources/open.png" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Image.Style>
+                                                </Image>
+                                                <ContentPresenter Content="{TemplateBinding Content}" 
+                    Margin="5,0,0,0" />
+                                            </StackPanel>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+                                <!-- 
+                                <CheckBox 
+									Grid.Column="1"
+									IsChecked="{Binding IsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									Visibility="{Binding HasChildren, Converter={StaticResource TreeToggleConverter}}"
+                                    Checked="CheckBox_Checked" Unchecked="CheckBox_Checked"
+                                     
+                                    />
+                                -->
+                                <TextBlock
+									Grid.Column="2"
+									Text="{Binding name}" />
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn
+					Header="Value"
+					Binding="{Binding value}" />
+                <DataGridTextColumn
+					Header="Type"
+					Binding="{Binding typename}" />
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Click="ShowHideDetails">Details</Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding details}" Margin="10" />
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
+        </DataGrid>
+    </Grid>
+</UserControl>

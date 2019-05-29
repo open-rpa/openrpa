@@ -35,6 +35,7 @@ namespace OpenRPA.Java
             var timeout = TimeSpan.FromSeconds(3);
             var maxresults = MaxResults.Get(context);
             var from = From.Get(context);
+            if (maxresults < 1) maxresults = 1;
 
             JavaElement[] elements = { };
             var sw = new Stopwatch();

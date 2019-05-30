@@ -52,17 +52,17 @@ Images and OCR comming soon
 
 [Recording](recording) with the robot
 
-Working with the [selector window](selector-window)
+Working with the [selector window](pages/selector-window)
 
-Demystifying the [type text activity](typetext-syntax) syntax 
+Demystifying the [type text activity](pages/typetext-syntax) syntax 
 
-All most complete list of [basic activities](activities)
+All most complete list of [pages/basic activities](activities)
 
-Working with [detectors](detectors)
+Working with [detectors](pages/detectors)
 
-How to connect the robot with [Chrome and Firefox](nativemessaging)
+How to connect the robot with [Chrome and Firefox](pages/nativemessaging)
 
-The basics behind the [plugin model](plugin-model) used by the robot
+The basics behind the [plugin model](pages/plugin-model) used by the robot
 
 Join slack for for help or giving feedback [#openrpa](https://join.slack.com/t/openrpa/shared_invite/enQtNjI2ODE5NDIzNDg5LTFhMzRmMzJiNTYzMDU5OTAxOTA3ZTRiZjA1ZWQ4ZDViMzY5NmVmYTgyZDExNzhiOThkZjE0ZmY2OTMyZjVhNTQ)
 

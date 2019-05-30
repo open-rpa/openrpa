@@ -50,7 +50,7 @@ Images and OCR comming soon
 
 
 
-[Recording](recording) with the robot
+[Recording](pages/recording) with the robot
 
 Working with the [selector window](pages/selector-window)
 

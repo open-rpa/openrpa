@@ -48,6 +48,22 @@ Chrome/Firefox/Edge
 
 Images and OCR comming soon
 
+
+
+[Recording](recording) with the robot
+
+Working with the [selector window](selector-window)
+
+Demystifying the [type text activity](typetext-syntax) syntax 
+
+All most complete list of [basic activities](activities)
+
+Working with [detectors](detectors)
+
+How to connect the robot with [Chrome and Firefox](nativemessaging)
+
+The basics behind the [plugin model](plugin-model) used by the robot
+
 Join slack for for help or giving feedback [#openrpa](https://join.slack.com/t/openrpa/shared_invite/enQtNjI2ODE5NDIzNDg5LTFhMzRmMzJiNTYzMDU5OTAxOTA3ZTRiZjA1ZWQ4ZDViMzY5NmVmYTgyZDExNzhiOThkZjE0ZmY2OTMyZjVhNTQ)
 
 Try out OpenRPA [here](https://github.com/open-rpa/openrpa/releases) 

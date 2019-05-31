@@ -11,17 +11,17 @@ You can extend the toolbar in the robot to include new activities besides those 
 
 ![1559203556546](plugin-model/1559203556546.png)
 
-The robot uses Microsoft Workflow Foundation ( .NET version 4.6.2 ). A lot of different products uses this platform ( even other RPA products, for instance UIPath), and in many cases activities created for one platform will also work here ( say someone created an activity that reads the content of a PDF file and inserted that into a string, that activity would most likely also work inside OpenRPA.
+The robot uses Microsoft Workflow Foundation ( .NET version 4.6.2 ). A lot of different products uses this platform ( even other RPA products, for instance UIPath), and in many cases activities created for one platform will also work here. Say someone created an activity that reads the content of a PDF file and inserted that into a string, that activity would most likely also work inside OpenRPA.
 
 There are many very good resources on the web on how to create activities, [like this one](https://docs.microsoft.com/en-us/dotnet/framework/windows-workflow-foundation/how-to-create-an-activity).
 
 You can also find community developed general purpose activities. 
 
-When you found or developed one, just place the dll inside the directory with the robot binaries, (or install the in the Global Assembly Cache (GAC)) and the robot will automatically load them, doing startup
+When you found or developed one, just place the dll inside the directory with the robot binaries, (or install the dll in the Global Assembly Cache (GAC)) and the robot will automatically load them, doing startup
 
 ## New Detectors
 
-If you want the ability to activity a workflow by some external trigger, you can create a new detector. An example could be a detector that monitors and SQL server for new records and raises an event, or you could create a tool that checks for new orders in your ERP system and raises an event when that happens.
+If you want the ability to activity a workflow by some external trigger, you can create a new detector. An example could be a detector that monitors an SQL server for new records and raises an event, or you could create a tool that checks for new orders in your ERP system and raises an event when that happens.
 
 Create a new class and implement the IDetectorPlugin interface. 
 

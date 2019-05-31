@@ -17,6 +17,6 @@ Each recording plugin have the option to detect if you click a input field. In t
 
 If you press the cancel key (Esc), the robot will revert back to adding a click for the element.
 
-While recording the robot will also catch all keyboard presses, and add them to an Type Text activity, this will send the sequence of keys to windows when re-played. Keep in mind, this is not bound to a specific element, so if nothing has focus, the input might be "lost", try to always assign input using item.Value instead of Type Text, but for those cases when using a shortcut key is more handy, feel free to use it.
+While recording the robot will also catch all keyboard presses, and add them to an Type Text activity, this will send the sequence of keys to the active window when re-played. Keep in mind, this is not bound to a specific element, so if nothing has focus, the input might be "lost", try to always assign input using item.Value instead of Type Text, but for those cases where using a shortcut key is more handy, feel free to use it.
 
-While recording, have patience. Do one click at the time, wait at least 1 second between each click to allow the robot to process your last click ( you might have noticed that every time you click the is a small delay, that is the robot working behind the scene )
+While recording, have patience. Do one click at the time, wait at least 1 second between each click to allow the robot to process your last click ( you might have noticed that every time you click there is a small delay, that is the robot working behind the scene )

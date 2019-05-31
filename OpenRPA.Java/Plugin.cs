@@ -127,7 +127,7 @@ namespace OpenRPA.Java
             e.ClickHandled = true;
             e.Selector = selector;
             e.Element = lastElement;
-            lastElement.Click();
+            lastElement.Click(true, 0,0);
             return true;
         }
         public void Initialize()

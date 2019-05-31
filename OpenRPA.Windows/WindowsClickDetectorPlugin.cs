@@ -99,18 +99,23 @@ namespace OpenRPA.Windows
                     }
                 }
                 WindowsSelector selector = new WindowsSelector(Selector);
-                if (pathToRoot.Count < (selector.Count - 1)) return;
-                if (pathToRoot.Count > (selector.Count - 1)) return;
+                if (pathToRoot.Count < (selector.Count - 1))
+                {
+                    return;
+                }
+                if (pathToRoot.Count > (selector.Count - 1))
+                {
+                    return;
+                }
                 pathToRoot.Reverse();
                 for (var i = 0; i < pathToRoot.Count; i++)
                 {
                     element = pathToRoot[i];
-                    if (selector.Count > (i + 1))
-                    {
-                        WindowsSelectorItem s = new WindowsSelectorItem(selector[(i + 1)]);
-                        if (!s.Match(element)) { return; }
+                    WindowsSelectorItem s = new WindowsSelectorItem(selector[(i + 1)]);
+                    if (!s.Match(element)) {
+                        Log.Debug("Element " + i + " does not match with selector");
+                        return;
                     }
-                    else { return; }
                 }
                 var _e = new DetectorEvent(e.Element);
                 OnDetector?.Invoke(this, _e, EventArgs.Empty);

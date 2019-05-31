@@ -6,6 +6,7 @@ using OpenRPA.Net;
 using System;
 using System.Activities.Core.Presentation;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -26,10 +27,13 @@ namespace OpenRPA
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        public bool VisualTracking { get; set; }
-        public bool SlowMotion { get; set; }
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        public void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
         public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; } = new System.Collections.ObjectModel.ObservableCollection<Project>();
         private bool isRecording = false;
         private bool autoReconnect = true;
@@ -37,6 +41,7 @@ namespace OpenRPA
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
             GenericTools.mainWindow = this;
             System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Critical;
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -47,6 +52,63 @@ namespace OpenRPA
             Console.SetOut(new DebugTextWriter());
             lvDataBinding.ItemsSource = Plugins.recordPlugins;
         }
+        public Views.WFDesigner designer
+        {
+            get
+            {
+                foreach (TabItem tab in mainTabControl.Items)
+                {
+                    if (tab.Content is Views.WFDesigner)
+                    {
+                        Views.WFDesigner _designer = tab.Content as Views.WFDesigner;
+                        if (tab.IsSelected) return _designer;
+                    }
+                }
+                return null;
+            }
+        }
+        public bool VisualTracking
+        {
+            get
+            {
+                if (designer == null) return false;
+                Log.Debug(designer.Workflow.name);
+                return designer.VisualTracking;
+            }
+            set
+            {
+                if (designer == null) return;
+                Log.Debug(designer.Workflow.name);
+                designer.VisualTracking = value;
+                NotifyPropertyChanged("VisualTracking");
+            }
+        }
+        public bool SlowMotion
+        {
+            get
+            {
+                if (designer == null) return false;
+                return designer.SlowMotion;
+            }
+            set
+            {
+                if (designer == null) return;
+                designer.SlowMotion = value;
+                NotifyPropertyChanged("SlowMotion");
+            }
+        }
+        public ICommand SettingsCommand { get { return new RelayCommand<object>(onSettings, canSettings); } }
+        public ICommand VisualTrackingCommand { get { return new RelayCommand<object>(onVisualTracking, canVisualTracking); } }
+        public ICommand SlowMotionCommand { get { return new RelayCommand<object>(onSlowMotion, canSlowMotion); } }
+        public ICommand SignoutCommand { get { return new RelayCommand<object>(onSignout, canSignout); } }
+        public ICommand OpenCommand { get { return new RelayCommand<object>(onOpen, canOpen); } }
+        public ICommand DetectorsCommand { get { return new RelayCommand<object>(onDetectors, canDetectors); } }
+        public ICommand SaveCommand { get { return new RelayCommand<object>(onSave, canSave); } }
+        public ICommand NewCommand { get { return new RelayCommand<object>(onNew, canNew); } }
+        public ICommand DeleteCommand { get { return new RelayCommand<object>(onDelete, canDelete); } }
+        public ICommand PlayCommand { get { return new RelayCommand<object>(onPlay, canPlay); } }
+        public ICommand StopCommand { get { return new RelayCommand<object>(onStop, canStop); } }
+        public ICommand RecordCommand { get { return new RelayCommand<object>(onRecord, canRecord); } }
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
             Log.Error(e.Exception, "");
@@ -86,34 +148,22 @@ namespace OpenRPA
         {
             DeleteCommand.Execute(mainTabControl.SelectedContent);
         }
-        public ICommand SettingsCommand { get { return new RelayCommand<object>(onSettings, canSettings); } }
-        public ICommand VisualTrackingCommand { get { return new RelayCommand<object>(onVisualTracking, canVisualTracking); } }
-        public ICommand SlowMotionCommand { get { return new RelayCommand<object>(onSlowMotion, canSlowMotion); } }
-        public ICommand SignoutCommand { get { return new RelayCommand<object>(onSignout, canSignout); } }
-        public ICommand OpenCommand { get { return new RelayCommand<object>(onOpen, canOpen); } }
-        public ICommand DetectorsCommand { get { return new RelayCommand<object>(onDetectors, canDetectors); } }
-        public ICommand SaveCommand { get { return new RelayCommand<object>(onSave, canSave); } }
-        public ICommand NewCommand { get { return new RelayCommand<object>(onNew, canNew); } }
-        public ICommand DeleteCommand { get { return new RelayCommand<object>(onDelete, canDelete); } }
-        public ICommand PlayCommand { get { return new RelayCommand<object>(onPlay, canPlay); } }
-        public ICommand StopCommand { get { return new RelayCommand<object>(onStop, canStop); } }
-        public ICommand RecordCommand { get { return new RelayCommand<object>(onRecord, canRecord); } }
         private bool canVisualTracking(object item)
         {
             return true;
         }
         private void onVisualTracking(object item)
         {
-            var b = (bool)item;
-            VisualTracking = b;
-            foreach (TabItem tab in mainTabControl.Items)
-            {
-                if (tab.Content is Views.WFDesigner && tab.IsSelected)
-                {
-                    var designer = tab.Content as Views.WFDesigner;
-                    designer.VisualTracking = b;
-                }
-            }
+            //var b = (bool)item;
+            //model.VisualTracking = b;
+            //foreach (TabItem tab in mainTabControl.Items)
+            //{
+            //    if (tab.Content is Views.WFDesigner && tab.IsSelected)
+            //    {
+            //        var designer = tab.Content as Views.WFDesigner;
+            //        designer.VisualTracking = b;
+            //    }
+            //}
         }
         private bool canSlowMotion(object item)
         {
@@ -121,16 +171,16 @@ namespace OpenRPA
         }
         private void onSlowMotion(object item)
         {
-            var b = (bool)item;
-            SlowMotion = b;
-            foreach (TabItem tab in mainTabControl.Items)
-            {
-                if (tab.Content is Views.WFDesigner && tab.IsSelected)
-                {
-                    var designer = tab.Content as Views.WFDesigner;
-                    designer.SlowMotion = b;
-                }
-            }
+            //var b = (bool)item;
+            //model.SlowMotion = b;
+            //foreach (TabItem tab in mainTabControl.Items)
+            //{
+            //    if (tab.Content is Views.WFDesigner && tab.IsSelected)
+            //    {
+            //        var designer = tab.Content as Views.WFDesigner;
+            //        designer.SlowMotion = b;
+            //    }
+            //}
         }
         private bool canSettings(object item)
         {
@@ -872,7 +922,6 @@ namespace OpenRPA
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
-            DataContext = this;
             if (!string.IsNullOrEmpty(Config.local.wsurl))
             {
                 LabelStatusBar.Content = "Connecting to " + Config.local.wsurl;
@@ -930,13 +979,16 @@ namespace OpenRPA
             foreach (var wi in WorkflowInstance.Instances)
             {
                 if (wi.isCompleted) continue;
-                foreach (var b in wi.Bookmarks)
+                if(wi.Bookmarks != null)
                 {
-                    var _id = (plugin.Entity as Detector)._id;
-                    Log.Debug(b.Key + " -> " + "detector_" + _id);
-                    if (b.Key == "detector_" + _id)
+                    foreach (var b in wi.Bookmarks)
                     {
-                        wi.ResumeBookmark(b.Key, detector);
+                        var _id = (plugin.Entity as Detector)._id;
+                        Log.Debug(b.Key + " -> " + "detector_" + _id);
+                        if (b.Key == "detector_" + _id)
+                        {
+                            wi.ResumeBookmark(b.Key, detector);
+                        }
                     }
                 }
             }
@@ -1059,6 +1111,15 @@ namespace OpenRPA
             // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds
             Environment.Exit(Environment.ExitCode);
 
+        }
+        private void MainTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (mainTabControl.SelectedContent == null) return;
+            NotifyPropertyChanged("VisualTracking");
+            NotifyPropertyChanged("SlowMotion");
+            //Console.WriteLine("*************************");
+            //Console.WriteLine(mainTabControl.SelectedContent.ToString() + " " + mainTabControl.SelectedContent.GetType().FullName);
+            //Console.WriteLine("*************************");
         }
     }
 }

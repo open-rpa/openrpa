@@ -158,11 +158,19 @@ namespace OpenRPA.NM
                 }
             }
         }
-        public void Click()
+        public void Click(bool VirtualClick, int OffsetX, int OffsetY)
         {
+            if (!VirtualClick)
+            {
+                Log.Debug("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
+                Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+                Input.InputDriver.DoMouseClick();
+                Log.Debug("Click done");
+                return;
+            }
             bool virtualClick = true;
-            int OffsetX = 0;
-            int OffsetY = 0;
+            //int OffsetX = 0;
+            //int OffsetY = 0;
             bool AnimateMouse = false;
             bool DoubleClick = false;
             FlaUI.Core.Input.MouseButton button = FlaUI.Core.Input.MouseButton.Left; 
@@ -215,7 +223,6 @@ namespace OpenRPA.NM
                 }
                 System.Threading.Thread.Sleep(500);
                 NMHook.WaitForTab(getelement.tabid, getelement.browser, TimeSpan.FromSeconds(5));
-
             }
         }
         public void Focus()

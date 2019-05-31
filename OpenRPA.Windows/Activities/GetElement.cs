@@ -51,29 +51,29 @@ namespace OpenRPA.Windows
             var sw = new Stopwatch();
             var from = From.Get(context);
             sw.Start();
-            do
-            {
-                elements = OpenRPA.AutomationHelper.RunSTAThread<UIElement[]>(() =>
-                {
-                    try
-                    {
-                        return WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
-                    }
-                    catch (System.Threading.ThreadAbortException)
-                    {
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex, "");
-                    }
-                    return new UIElement[] { };
-                }, TimeSpan.FromMilliseconds(250)).Result;
-                if (elements == null)
-                {
-                    elements = new UIElement[] { };
-                }
-            } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
-
+            //do
+            //{
+            //    elements = OpenRPA.AutomationHelper.RunSTAThread<UIElement[]>(() =>
+            //    {
+            //        try
+            //        {
+            //            return WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+            //        }
+            //        catch (System.Threading.ThreadAbortException)
+            //        {
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            Log.Error(ex, "");
+            //        }
+            //        return new UIElement[] { };
+            //    }, TimeSpan.FromMilliseconds(250)).Result;
+            //    if (elements == null)
+            //    {
+            //        elements = new UIElement[] { };
+            //    }
+            //} while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
+            elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
             context.SetValue(Elements, elements);
             if(elements.Count() < minresults)
             {

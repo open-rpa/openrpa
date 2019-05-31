@@ -22,10 +22,8 @@ namespace OpenRPA.Activities
 
         protected override async void Execute(NativeActivityContext context)
         {
-            //var _payload = new JObject();
-            // dynamic _payload = new System.Dynamic.ExpandoObject();
+            string id = null;
             IDictionary<string, object> _payload = new System.Dynamic.ExpandoObject();
-
             var vars = context.DataContext.GetProperties();
             foreach (dynamic v in vars)
             {
@@ -50,14 +48,24 @@ namespace OpenRPA.Activities
             }
             try
             {
-                var id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
+                id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
                 context.CreateBookmark(id, new BookmarkCallback(OnBookmarkCallback));
-                var result = await global.webSocketClient.QueueMessage(workflow, _payload, id);
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
                 throw;
+            }
+            try
+            {
+                if(!string.IsNullOrEmpty(id))
+                {
+                    var result = await global.webSocketClient.QueueMessage(workflow, _payload, id);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
             }
         }
 

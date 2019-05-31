@@ -817,11 +817,15 @@ namespace OpenRPA.Views
 
 
                     var activity = modelItem.GetCurrentValue() as Activity;
-                    if (activity == null)
+                    if (activity == null || activity.Id == null)
                     {
                         var state = modelItem.GetCurrentValue() as System.Activities.Debugger.State;
                         var property = typeof(System.Activities.Debugger.State).GetProperty("InternalState", BindingFlags.Instance | BindingFlags.NonPublic);
                         activity = property.GetValue(state) as Activity;
+                    }
+                    if (activity == null || activity.Id == null)
+                    {
+                        Log.Verbose("Debug!");
                     }
                     if (activity != null && activity.Id != null && !_sourceLocationMapping.ContainsKey(activity.Id))
                     {

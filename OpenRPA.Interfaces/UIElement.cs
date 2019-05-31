@@ -126,15 +126,33 @@ namespace OpenRPA
             var process = System.Diagnostics.Process.GetProcessById(ProcessId);
             while (!process.Responding) { }
         }
-        public void Click()
+        public void Click(bool VirtualClick, int OffsetX, int OffsetY)
         {
             try
             {
-                RawElement.SetForeground();
-                if (RawElement.Patterns.Invoke.IsSupported)
+                //var automation = AutomationUtil.getAutomation();
+                //var pc = new FlaUI.Core.Conditions.PropertyCondition(automation.PropertyLibrary.Element.ClassName, "Windows.UI.Core.CoreWindow");
+                //var _el = element.FindFirstChild(pc);
+                // RawElement.SetForeground();
+            }
+            catch (Exception)
+            {
+            }
+            try
+            {
+                if (VirtualClick && RawElement.Patterns.Invoke.IsSupported)
                 {
                     var invokePattern = RawElement.Patterns.Invoke.Pattern;
                     invokePattern.Invoke();
+                } else
+                {
+                    //Log.Debug("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
+                    Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+                    Input.InputDriver.DoMouseClick();
+                    //Log.Debug("Click done");
+                    //var point = new FlaUI.Core.Shapes.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+                    ////FlaUI.Core.Input.Mouse.MoveTo(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+                    //FlaUI.Core.Input.Mouse.Click(FlaUI.Core.Input.MouseButton.Left, point);
                 }
             }
             catch (Exception)

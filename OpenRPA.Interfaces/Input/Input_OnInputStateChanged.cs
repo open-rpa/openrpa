@@ -278,7 +278,7 @@ namespace OpenRPA.Input
                 return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
             }
         }
-        private UIElement Element = null;
+        public UIElement Element = null;
         // private bool mouseDownWaiting = false;
         private void RaiseOnMouseMove(InputEventArgs e)
         {
@@ -303,6 +303,17 @@ namespace OpenRPA.Input
         }
         private void RaiseOnMouseUp(InputEventArgs e)
         {
+            try
+            {
+                if(Element == null)
+                {
+                    Element = AutomationHelper.GetFromPoint(e.X, e.Y);
+                }
+            }
+            catch (Exception)
+            {
+            }
+
             try
             {
                 e.Element = Element;

@@ -64,6 +64,7 @@ namespace OpenRPA.Input
 
         public static void DoMouseClick()
         {
+            InputDriver.Instance.Element = null;
             mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
         }
 

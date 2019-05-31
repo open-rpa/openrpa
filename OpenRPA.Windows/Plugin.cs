@@ -108,6 +108,8 @@ namespace OpenRPA.Windows
                 a.Selector = sel.ToString();
                 a.MaxResults = 1;
                 a.Image = e.Element.ImageString();
+                re.OffsetX = e.X - e.Element.Rectangle.X;
+                re.OffsetY = e.Y - e.Element.Rectangle.Y;
                 re.UIElement = e.Element;
                 re.Element = e.Element;
                 re.Selector = sel;
@@ -313,6 +315,8 @@ namespace OpenRPA.Windows
         public bool SupportInput { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public int OffsetX { get; set; }
+        public int OffsetY { get; set; }
         public bool ClickHandled { get; set; }
         public MouseButton Button { get; set; }
     }

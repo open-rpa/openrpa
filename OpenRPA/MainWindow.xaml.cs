@@ -558,6 +558,7 @@ namespace OpenRPA
             if (designer.resumeRuntimeFromHost != null) designer.resumeRuntimeFromHost.Set();
             if (isRecording)
             {
+                StartDetectorPlugins();
                 StopRecordPlugins();
                 InputDriver.Instance.CallNext = true;
                 InputDriver.Instance.OnKeyDown -= OnKeyDown;
@@ -584,6 +585,7 @@ namespace OpenRPA
             if (!isRecording) return;
             if (e.Key == KeyboardKey.ESCAPE)
             {
+                StartDetectorPlugins();
                 StopRecordPlugins();
                 InputDriver.Instance.CallNext = true;
                 InputDriver.Instance.OnKeyDown -= OnKeyDown;
@@ -640,6 +642,14 @@ namespace OpenRPA
                 Log.Error(ex.ToString());
             }
         }
+        private void StartDetectorPlugins()
+        {
+            foreach(var detector in Plugins.detectorPlugins) detector.Start();
+        }
+        private void StopDetectorPlugins()
+        {
+            foreach (var detector in Plugins.detectorPlugins) detector.Stop();
+        }
         private void StartRecordPlugins()
         {
             isRecording = true;
@@ -688,7 +698,9 @@ namespace OpenRPA
                         Element = new System.Activities.InArgument<IElement>()
                         {
                             Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<IElement>("item")
-                        }
+                        },
+                        OffsetX = e.OffsetX,
+                        OffsetY = e.OffsetY
                     }, "item");
                     if (e.SupportInput)
                     {
@@ -725,6 +737,7 @@ namespace OpenRPA
             var designer = (Views.WFDesigner)item;
             designer.lastinserted = null;
             designer.lastinsertedmodel = null;
+            StopDetectorPlugins();
             InputDriver.Instance.OnKeyDown += OnKeyDown;
             InputDriver.Instance.OnKeyUp += OnKeyUp;
             StartRecordPlugins();

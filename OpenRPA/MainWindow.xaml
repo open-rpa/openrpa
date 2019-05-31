@@ -118,7 +118,7 @@
                 <RowDefinition Height="25"/>
             </Grid.RowDefinitions>
 
-            <TabControl x:Name="mainTabControl">
+            <TabControl x:Name="mainTabControl" SelectionChanged="MainTabControl_SelectionChanged">
 
             </TabControl>
 

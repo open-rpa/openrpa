@@ -118,7 +118,7 @@ namespace OpenRPA.IE
         public int IndexInParent { get; set; }
         public mshtml.IHTMLElement RawElement { get; private set; }
         object IElement.RawElement { get => RawElement; set => RawElement = value as mshtml.IHTMLElement; }
-        public void Click()
+        public void Click(bool VirtualClick, int OffsetX, int OffsetY)
         {
             //if (rawElement.tagName.ToLower() == "input")
             //{
@@ -134,7 +134,16 @@ namespace OpenRPA.IE
             //} else
             //{
             //}
-            RawElement.click();
+            if(VirtualClick)
+            {
+                RawElement.click();
+            } else
+            {
+                Log.Debug("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
+                Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+                Input.InputDriver.DoMouseClick();
+                Log.Debug("Click done");
+            }
         }
         public void Focus()
         {

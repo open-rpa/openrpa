@@ -127,7 +127,7 @@ namespace OpenRPA.Java
             e.ClickHandled = true;
             e.Selector = selector;
             e.Element = lastElement;
-            lastElement.Click();
+            lastElement.Click(true, 0,0);
             return true;
         }
         public void Initialize()
@@ -208,6 +208,8 @@ namespace OpenRPA.Java
         public bool ClickHandled { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public int OffsetX { get; set; }
+        public int OffsetY { get; set; }
         public MouseButton Button { get; set; }
     }
 

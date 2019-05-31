@@ -24,10 +24,18 @@ namespace OpenRPA
         }   
         public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [JsonIgnore]
-        public System.Collections.ObjectModel.ObservableCollection<WorkflowInstance> Instances {
-            get { if (_Instances == null) _Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>(); return _Instances; }
-            set { _Instances = value; }
+        public List<WorkflowInstance> Instances
+        {
+            get
+            {
+                return WorkflowInstance.Instances.Where(x => x.WorkflowId == _id).ToList();
+            }
         }
+        //[JsonIgnore]
+        //public System.Collections.ObjectModel.ObservableCollection<WorkflowInstance> Instances {
+        //    get { if (_Instances == null) _Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>(); return _Instances; }
+        //    set { _Instances = value; }
+        //}
         //[JsonIgnore]
         // public Action<Workflow, WorkflowInstance> idleOrComplete { get; set; }
         public event WorkflowInstance.idleOrComplete OnIdleOrComplete;
@@ -43,7 +51,7 @@ namespace OpenRPA
             result.name = System.IO.Path.GetFileNameWithoutExtension(Filename);
             result.Xaml = System.IO.File.ReadAllText(Filename);
             result.Parameters = new List<workflowparameter>();
-            result.Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>();
+            //sresult.Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>();
             return result;
         }
         public static Workflow Create(Project Project, string Name)
@@ -68,7 +76,7 @@ namespace OpenRPA
             }
             workflow._type = "workflow";
             workflow.Parameters = new List<workflowparameter>();
-            workflow.Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>();
+            //workflow.Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>();
             workflow.projectid = Project._id;
             return workflow;
         }

@@ -161,7 +161,7 @@ namespace OpenRPA.Views
                     _ = Run(VisualTracking, SlowMotion);
                 }
             }
-            if(e.Key == Input.KeyboardKey.ESC)
+            if(e.Key == Input.KeyboardKey.ESCAPE)
             {
                 foreach (var i in WorkflowInstance.Instances)
                 {
@@ -817,11 +817,17 @@ namespace OpenRPA.Views
 
 
                     var activity = modelItem.GetCurrentValue() as Activity;
-                    if (activity == null)
+                    if (activity == null || activity.Id == null)
                     {
                         var state = modelItem.GetCurrentValue() as System.Activities.Debugger.State;
                         var property = typeof(System.Activities.Debugger.State).GetProperty("InternalState", BindingFlags.Instance | BindingFlags.NonPublic);
-                        activity = property.GetValue(state) as Activity;
+                        if (state!=null && property != null) {
+                            activity = property.GetValue(state) as Activity;
+                        }
+                    }
+                    if (activity == null || activity.Id == null)
+                    {
+                        Log.Verbose("Debug!");
                     }
                     if (activity != null && activity.Id != null && !_sourceLocationMapping.ContainsKey(activity.Id))
                     {

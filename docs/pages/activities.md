@@ -7,11 +7,11 @@ description: A short Overview of base Activies
 
 ![1558717936148](..\img\1558717936148.png)
 
-**What:** The basic idea behind this activity, is to make it easy to check for an running application, and launch it, if it is not, at the time of writing this, the activity supports Windows components, Internet Explorer and NativeMessaging (chrome/Firefox)
+**What:** The basic idea behind this activity, is to make it easy to check for a running application, and launch it, if it is not. At the time of writing this, the activity supports Windows components, Internet Explorer and NativeMessaging (chrome/Firefox)
 
 **How:** Click any running application/webpage and a selector for that application will be created. To fine tune, click Open Selector and make your modifications (like what elements to look for) To test the selector is working, click Highlight
 
-**Why:** Use it instead of clicking though the start menu or opening files directly. The selector will include details like parameters, so if you opened word by clicking a document, the selector will detect the that too.
+**Why:** Use it instead of clicking though the start menu or opening files directly. The selector will include details like parameters, so if you opened word by clicking a document, the selector will detect that too.
 
 # HighlightElement
 
@@ -21,25 +21,25 @@ description: A short Overview of base Activies
 
 **How:** Drag this inside a GetElement activity, to highlight it. The workflow will continue while highlighting, to block the workflow from running while highlighting, set Clicking=True
 
-**Why:** Use if for debugging, or use it to make cool effects while robot is running.
+**Why:** Use for debugging, or use it to make nice effects while the robot is running.
 
 # TypeText
 
 ![1558718403772](..\img\1558718403772.png)
 
-**What:** To assign a value you generally should use the Value parameter an item's, but if you need to send a Key combination to an application, this is your friend. 
+**What:** To assign a value you generally should use the Value property on item's, but if you need to send a Key combination to an application, this is your friend. 
 
 **How:** I strongly recommend using the Record function to use this, but in case your interested in understanding the syntax, you can [read more here](typetext-syntax.md).
 
-**Why:** Sometimes its just easier/faster to use short cut keys, or the element will not receive the input properly.
+**Why:** Sometimes its just easier/faster to use a short cut key, or if the element will not receive the input properly.
 
 # ClickElement
 
 ![1558720283840](..\img\1558720283840.png)
 
-**What:** Represents a mouse click, default is using virtual clicks. This means different things depending on the object type and provider, but generally you can think if it as a click without moving the mouse. Set VirtualClick=False to do a real Mouse Click and use OffsetX/OffsetY to make the click hit within the element (0,0 will be the top left corner of the element)
+**What:** Represents a mouse click, the default is using virtual clicks. This means different things depending on the object type and provider, but generally you can think if it as a click without moving the mouse. Set VirtualClick to False, to do a real Mouse Click and then use OffsetX/OffsetY to make the click hit within the element (0,0 will be the top left corner of the element)
 
-**How:** I strongly recommend using the Record function to use this, but if you frag this inside an GetElement activity it will automatically use the element it was placed within ( Element=item )
+**How:** I strongly recommend using the Record function to use this, but if you drag this inside an GetElement activity remember to set the Element property to item.
 
 **Why:** Clicking is needed, not everything can be done using shortcut keys.
 
@@ -47,9 +47,9 @@ description: A short Overview of base Activies
 
 ![1558720872448](..\img\1558720872448.png)
 
-**What:** The primary tool of the robot, used for locating items in the environment. Depending on the provider the settings may differ a little, but generally this can be used to locate one or many elements based on a selector. Use Open Selector to fine tune what you want. Per default we only find 1 item, and throw an error if we find less than one object, use MaxResults and MinResults to change the behevouiur. 
-For instance if you want to loop though a DataSet you could select the DataRow and set MaxResults to 100. Then within the GetElement you add new GetElement's to "pick out" different elements per DataRow.
-Setting MinResults to 0, effecly means your only checking if an object exists, but is not throwing an error, if nothing is found
+**What:** The primary tool of the robot, used for locating items in the environment. Depending on the provider the settings may differ, but generally this can be used to locate one or many elements based on a selector. Use Open Selector to fine tune what you want. Per default, we will only find 1 item, and throw an error if we find less than one object. Use MaxResults and MinResults to change this behaviour. 
+For instance if you want to loop though a DataSet you could select the DataRow and set MaxResults to 100. Then within the GetElement you add new GetElement to "pick" different elements per DataRow.
+Setting MinResults to 0, effectively means your only checking if an object exists, but is not throwing an error, if nothing is found
 
 **How:** Either press Record and click an element, the robot will try and figure out what type of element you clicked and insert the appropriate GetElement activity, or you can drag one in your self and use Open Selector to precisely select the element your interested in.
 
@@ -61,11 +61,13 @@ Detector
 
 **What:** Make workflow wait for an detector to be triggered
 
-**How:** Drag it into your workflow, and once it gets to this activity the workflow will go idle and wait until the selected detector gets triggered. ( state is saved, so if the robot or the machine is rebooted, the workflow will continue from this activity )
+**How:** Drag it onto your workflow, and select a detector from the dropdown menu. When the workflow is running, when it gets to this activity the workflow will go idle and wait until the selected detector gets triggered. ( state is saved, so if the robot or the machine is rebooted, the workflow will continue from this activity )
 
-Why: This is an excellent way if making workflows react to things in the environment. You could make a workflow that helps fill out information in a form when the user presses a specific keyboard combination, or you would show a helpful dialog, when ever a user opens a Timesheet, or maybe you want to add extra actions to an existing button. 
+**Why:** This is an excellent way to make a workflow react to things in the environment. You could make a workflow that helps filling in information into a form when the user presses a specific keyboard combination, or you would show a helpful dialog, when ever a user opens a Timesheet, or maybe you want to add extra actions to an existing button. 
 
-Note, as soon as an activity has been created, all actions will also be sent to OpenFlow
+Note, as soon as an activity has been created, all actions will also be sent to OpenFlow.
+You can use OpenFlow to trigger other robots based on a trigger ( or interact with one of the more than 2000 different systems supported )
+
 ![1558723403613](..\img\1558723403613.png)
 
 # OpenURL

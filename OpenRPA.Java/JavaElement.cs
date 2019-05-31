@@ -291,10 +291,17 @@ namespace OpenRPA.Java
                 return result.ToArray();
             }
         }
-        public void Click()
+        public void Click(bool VirtualClick, int OffsetX, int OffsetY)
         {
+            if(!VirtualClick)
+            {
+                Log.Debug("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
+                Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+                Input.InputDriver.DoMouseClick();
+                Log.Debug("Click done");
+                return;
+            }
             AccessibleActions _actions;
-
             var actions = new Dictionary<string, object>();
             if (_accessBridge.Functions.GetAccessibleActions(ac.JvmId, _ac, out _actions))
             {

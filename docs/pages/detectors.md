@@ -5,7 +5,7 @@ description: Overview of how detectors works
 ---
 # Detectors
 
-Workflows needs to be activated in some way. And opening the workflow and pressing Play is not always the best solution. Detectors is a way to make the robot serve as a detection probe for OpenFlow and/or as a way of activating Workflow locally on the robot machine. For instance, when implementing Assisted Robotics, where the robot will help a human at the PC, it would make a lot of sense to teach the users that pressing a certain key combination, for instance Ctrl+M will activate a robot sequence that does something, like copying the content of the select field, call an workflow in OpenFlow and insert data in the form, based on the result. Another common detector is the FileWatch detector. Setting op a job that monitors a folder for CSV files, and processes them, once a new one arrives, is easy.
+Workflows needs to be activated in some way. And opening the workflow and pressing Play is not always the best solution. Detectors is a way to make the robot serve as a detection probe for OpenFlow and/or as a way of activating Workflow locally on the robot machine. For instance, when implementing Assisted Robotics, where the robot will help a human at the PC, it would make a lot of sense to teach the users that pressing a certain key combination, for instance Ctrl+M will activate a robot sequence that does something, like copying the content of the select field, call an workflow in OpenFlow and insert data in the form, based on the result. Another common detector is the FileWatch detector. Setting op a job that monitors a folder for CSV files, and processes them, once a new one arrives.
 
 ## Setting up detector
 
@@ -15,7 +15,7 @@ As soon as the detector is added, it becomes active, and you will be able to lis
 
 ## Using a detetor
 
-There a  main uses for detector. Listening for events from Openflow to react on robot computer events, or inside running workflows. Once a detector have been added it will be visible inside OpenFlow. Just drag in a detector node, and select the new detector from the drop down list
+There are 2 main uses for detector. Listening for events from OpenFlow to react on robot computer events, or inside running workflows. Once a detector have been added it will be visible inside OpenFlow. Just drag in a detector node, and select the new detector from the drop down list
 
 ![1558865708406](detectors/1558865708406.png)
 

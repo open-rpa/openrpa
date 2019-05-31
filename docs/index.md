@@ -42,33 +42,17 @@ Java Components
 
 <img src="img/SelectorJava.png" alt="Selector with Internet Explorer component"/>
 
-Chrome/Firefox/Edge
+Chrome/Firefox
 
 ![1558724619238](img/SelectorNative.png)
 
-Images and OCR comming soon
-
-
-
-[Recording](pages/recording) with the robot
-
-Working with the [selector window](pages/selector-window)
-
-Demystifying the [type text activity](pages/typetext-syntax) syntax 
-
-All most complete list of [pages/basic activities](activities)
-
-Working with [detectors](pages/detectors)
-
-How to connect the robot with [Chrome and Firefox](pages/nativemessaging)
-
-The basics behind the [plugin model](pages/plugin-model) used by the robot
+Images and OCR coming soon
 
 Join slack for for help or giving feedback [#openrpa](https://join.slack.com/t/openrpa/shared_invite/enQtNjI2ODE5NDIzNDg5LTFhMzRmMzJiNTYzMDU5OTAxOTA3ZTRiZjA1ZWQ4ZDViMzY5NmVmYTgyZDExNzhiOThkZjE0ZmY2OTMyZjVhNTQ)
 
-Try out OpenRPA [here](https://github.com/open-rpa/openrpa/releases) 
+Check out the documentation on our [wiki pages](https://github.com/open-rpa/openrpa/wiki)
 
-Check out the code [here](https://github.com/open-rpa/openrpa) 
+Download and try it out here [here](https://github.com/open-rpa/openrpa/releases) 
 
 Try with central management using [OpenFlow](https://github.com/open-rpa/OpenFlow) here
 

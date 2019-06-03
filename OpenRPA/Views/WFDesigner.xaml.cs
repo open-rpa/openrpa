@@ -331,7 +331,7 @@ namespace OpenRPA.Views
                 int failCounter = 0;
                 while (_activityIdMapping.Count == 0 && failCounter < 1)
                 {
-                    InitializeStateEnvironment();
+                    InitializeStateEnvironment(true);
                     System.Threading.Thread.Sleep(500);
                     failCounter++;
                 }
@@ -778,7 +778,7 @@ namespace OpenRPA.Views
             }
 
         }
-        public void InitializeStateEnvironment()
+        public void InitializeStateEnvironment(bool Toggle)
         {
             GenericTools.RunUI(() =>
             {
@@ -861,7 +861,7 @@ namespace OpenRPA.Views
                     }
                     lastItem = modelItem;
                 }
-                if (lastItem != null) Selection.Toggle(wfDesigner.Context, lastItem);
+                if (lastItem != null && Toggle == true) Selection.Toggle(wfDesigner.Context, lastItem);
                 Log.Debug("****** Activity Map completed");
             });
         }
@@ -998,7 +998,7 @@ namespace OpenRPA.Views
                 return;
             }
             wfDesigner.Flush();
-            InitializeStateEnvironment();
+            // InitializeStateEnvironment();
 
             GenericTools.RunUI(() =>
             {
@@ -1008,7 +1008,7 @@ namespace OpenRPA.Views
                     while (_activityIdMapping.Count == 0 && failCounter < 3)
                     {
                         System.Windows.Forms.Application.DoEvents();
-                        InitializeStateEnvironment();
+                        InitializeStateEnvironment(true);
                         System.Threading.Thread.Sleep(500);
                         failCounter++;
                     }

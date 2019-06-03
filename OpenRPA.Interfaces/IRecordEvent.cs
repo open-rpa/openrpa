@@ -17,6 +17,7 @@ namespace OpenRPA.Interfaces
         bool SupportInput { get; set; }
         Input.MouseButton Button { get; set; }
         bool ClickHandled { get; set; }
+        bool SupportVirtualClick { get; set; }
         int X { get; set; }
         int Y { get; set; }
         int OffsetX { get; set; }

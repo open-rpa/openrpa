@@ -255,6 +255,7 @@ namespace OpenRPA.IE
     }
     public class RecordEvent : IRecordEvent
     {
+        public RecordEvent() { SupportVirtualClick = true; }
         // public AutomationElement Element { get; set; }
         public UIElement UIElement { get; set; }
         public IElement Element { get; set; }
@@ -266,6 +267,7 @@ namespace OpenRPA.IE
         public int OffsetX { get; set; }
         public int OffsetY { get; set; }
         public bool ClickHandled { get; set; }
+        public bool SupportVirtualClick { get; set; }
         public MouseButton Button { get; set; }
     }
 

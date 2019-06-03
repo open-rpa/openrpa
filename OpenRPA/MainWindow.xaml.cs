@@ -693,6 +693,8 @@ namespace OpenRPA
                 InputDriver.Instance.CallNext = true;
                 if (mainTabControl.SelectedContent is Views.WFDesigner view)
                 {
+                    var VirtualClick = true;
+                    if (!e.SupportVirtualClick) VirtualClick = false;
                     e.a.AddActivity(new Activities.ClickElement
                     {
                         Element = new System.Activities.InArgument<IElement>()
@@ -700,7 +702,8 @@ namespace OpenRPA
                             Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<IElement>("item")
                         },
                         OffsetX = e.OffsetX,
-                        OffsetY = e.OffsetY
+                        OffsetY = e.OffsetY,
+                        VirtualClick = VirtualClick
                     }, "item");
                     if (e.SupportInput)
                     {

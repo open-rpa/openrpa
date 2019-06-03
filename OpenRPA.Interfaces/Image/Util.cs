@@ -94,7 +94,6 @@ namespace OpenRPA.Interfaces.Image
                 }
             }
         }
-
         public static Bitmap Resize(Bitmap image, int tWidth, int tHeight)
         {
             var brush = new SolidBrush(Color.White);

@@ -91,19 +91,23 @@ namespace OpenRPA.Java
             }
             if (!isrunning)
             {
-                try
+                var filename = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "java\\OpenRPA.JavaBridge.exe");
+                if(System.IO.File.Exists(filename))
                 {
-                    var _childProcess = new System.Diagnostics.Process();
-                    _childProcess.StartInfo.FileName = "java\\OpenRPA.JavaBridge.exe";
-                    _childProcess.StartInfo.UseShellExecute = false;
-                    if (!_childProcess.Start())
+                    try
                     {
-                        throw new Exception("Failed starting OpenRPA JavaBridge");
+                        var _childProcess = new System.Diagnostics.Process();
+                        _childProcess.StartInfo.FileName = filename;
+                        _childProcess.StartInfo.UseShellExecute = false;
+                        if (!_childProcess.Start())
+                        {
+                            throw new Exception("Failed starting OpenRPA JavaBridge");
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "Failed launching OpenRPA.JavaBridge.exe");
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, "Failed launching OpenRPA.JavaBridge.exe");
+                    }
                 }
             }
         }

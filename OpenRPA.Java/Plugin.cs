@@ -200,12 +200,14 @@ namespace OpenRPA.Java
     }
     public class RecordEvent : IRecordEvent
     {
+        public RecordEvent() { SupportVirtualClick = true; }
         public UIElement UIElement { get; set; }
         public IElement Element { get; set; }
         public Selector Selector { get; set; }
         public IBodyActivity a { get; set; }
         public bool SupportInput { get; set; }
         public bool ClickHandled { get; set; }
+        public bool SupportVirtualClick { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public int OffsetX { get; set; }

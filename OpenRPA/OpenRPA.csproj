@@ -443,33 +443,13 @@
       <Project>{0d52b2e1-1998-4238-b601-57a2d6ade2e8}</Project>
       <Name>OpenRPA.ExpressionEditor</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OpenRPA.FileWatcher\OpenRPA.FileWatcher.csproj">
-      <Project>{d33652d0-ce28-4226-9a9f-0fc1c2b81cbd}</Project>
-      <Name>OpenRPA.FileWatcher</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenRPA.IE\OpenRPA.IE.csproj">
-      <Project>{ce483c6b-ebef-47ba-b3d5-5c7582dafd1d}</Project>
-      <Name>OpenRPA.IE</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj">
       <Project>{481bd5a1-5e8d-42a9-bd31-78becfaf15f3}</Project>
       <Name>OpenRPA.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OpenRPA.Java\OpenRPA.Java.csproj">
-      <Project>{f811cd0f-01e8-488d-bf80-c788c2b28b27}</Project>
-      <Name>OpenRPA.Java</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj">
       <Project>{84971661-e141-410f-8e9e-ade610d1961a}</Project>
       <Name>OpenRPA.Net</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenRPA.NM\OpenRPA.NM.csproj">
-      <Project>{0217c47b-55fb-473c-b579-38d08d9949cd}</Project>
-      <Name>OpenRPA.NM</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenRPA.Office\OpenRPA.Office.csproj">
-      <Project>{69853616-0e24-4be4-b4a8-497183d298e0}</Project>
-      <Name>OpenRPA.Office</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenRPA.Windows\OpenRPA.Windows.csproj">
       <Project>{22575d87-a99d-4706-b022-c7e575314a94}</Project>

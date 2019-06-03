@@ -115,6 +115,15 @@ namespace OpenRPA.Windows
                 re.Selector = sel;
                 re.X = e.X;
                 re.Y = e.Y;
+                if(sel.Count > 3)
+                {
+                    var p1 = sel[1].Properties.Where(x => x.Name == "ClassName").FirstOrDefault();
+                    var p2 = sel[2].Properties.Where(x => x.Name == "AutomationId").FirstOrDefault();
+                    if(p1!=null && p2 != null)
+                    {
+                        if (p1.Value.StartsWith("Windows.UI") && p2.Value == "SplitViewFrameXAMLWindow") re.SupportVirtualClick = false;
+                    }
+                }
 
                 re.a = new GetElementResult(a);
                 re.SupportInput = e.Element.SupportInput;
@@ -307,6 +316,7 @@ namespace OpenRPA.Windows
     }
     public class RecordEvent : IRecordEvent
     {
+        public RecordEvent() { SupportVirtualClick = true; }
         // public AutomationElement Element { get; set; }
         public UIElement UIElement { get; set; }
         public IElement Element { get; set; }
@@ -318,6 +328,7 @@ namespace OpenRPA.Windows
         public int OffsetX { get; set; }
         public int OffsetY { get; set; }
         public bool ClickHandled { get; set; }
+        public bool SupportVirtualClick { get; set; }
         public MouseButton Button { get; set; }
     }
 }

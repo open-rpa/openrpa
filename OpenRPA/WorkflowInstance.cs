@@ -369,6 +369,7 @@ namespace OpenRPA
                     _id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
                     var result = await global.webSocketClient.InsertOne("openrpa_instances", 1, false, this);
                     _id = result._id;
+                    _acl = result._acl;
                     Log.Debug("Saved with id: " + _id);
                 }
                 else

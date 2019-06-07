@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
+    <Compile Include="AsyncNativeActivity.cs" />
     <Compile Include="AsyncTaskCodeActivity.cs" />
     <Compile Include="AutomationHelper.cs" />
     <Compile Include="AutomationUtil.cs" />

@@ -104,7 +104,7 @@ namespace OpenRPA
                 }
                 wfApp = new System.Activities.WorkflowApplication(Workflow.Activity, Parameters);
                 wfApp.Extensions.Add(CustomTrackingParticipant);
-                if (Workflow.Serializable || !Workflow.Serializable)
+                if (Workflow.Serializable )
                 {
                     //if (Config.local.localstate)
                     //{

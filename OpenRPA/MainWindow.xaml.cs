@@ -522,7 +522,7 @@ namespace OpenRPA
                 if (!(item is Views.WFDesigner)) return;
                 var designer = (Views.WFDesigner)item;
                 if (designer.HasChanged) { await designer.Save(); }
-                await designer.Run(VisualTracking, SlowMotion);
+                await designer.Run(VisualTracking, SlowMotion, null);
             }
             catch (Exception ex)
             {
@@ -537,7 +537,7 @@ namespace OpenRPA
             var designer = (Views.WFDesigner)item;
             foreach (var i in designer.Workflow.Instances)
             {
-                if (i.isCompleted != true)
+                if (i.isCompleted != true && i.state != "loaded")
                 {
                     return true;
                 }
@@ -1031,6 +1031,18 @@ namespace OpenRPA
             }
             return null;
         }
+        private Views.WFDesigner GetDesginerById(string workflowid)
+        {
+            foreach (TabItem tab in mainTabControl.Items)
+            {
+                if (tab.Content is Views.WFDesigner)
+                {
+                    Views.WFDesigner _designer = tab.Content as Views.WFDesigner;
+                    if (_designer.Workflow._id == workflowid) return _designer;
+                }
+            }
+            return null;
+        }
 
         private static object statelock = new object();
         private async void WebSocketClient_OnQueueMessage(QueueMessage message, QueueMessageEventArgs e)
@@ -1100,14 +1112,22 @@ namespace OpenRPA
                             }
                         }
                         Log.Information("Create instance of " + workflow.name);
-                        instance = workflow.CreateInstance(param, message.replyto, message.correlationId, null, null);
+                        GenericTools.RunUI(() =>
+                        {
+                            var designer = GetDesginerById(command.workflowid);
+                            if (designer != null)
+                            {
+                                instance = workflow.CreateInstance(param, message.replyto, message.correlationId, designer.onIdle, designer.onVisualTracking);
+                                _ = designer.Run(VisualTracking, SlowMotion, instance);
+                            }
+                            else
+                            {
+                                instance = workflow.CreateInstance(param, message.replyto, message.correlationId, idleOrComplete, null);
+                                _ = instance.Run();
+                            }
+                        });
+                        command.command = "invokesuccess";
                     }
-                    command.command = "invokesuccess";
-                    GenericTools.RunUI(() =>
-                    {
-                        _ = instance.Run();
-                    });
-
                 }
             }
             catch (Exception ex)
@@ -1122,6 +1142,24 @@ namespace OpenRPA
                 await global.webSocketClient.QueueMessage(message.replyto, command, message.correlationId);
             }
         }
+
+        private void idleOrComplete(WorkflowInstance instance, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
+            {
+                RobotCommand command = new RobotCommand();
+                var data = JObject.FromObject(instance.Parameters);
+                command.command = "invoke" + instance.state;
+                command.workflowid = instance.WorkflowId;
+                command.data = data;
+                if ((instance.state == "failed" || instance.state == "aborted") && instance.Exception != null)
+                {
+                    command.data = JObject.FromObject(instance.Exception);
+                }
+                _ = global.webSocketClient.QueueMessage(instance.queuename, command, instance.correlationId);
+            }
+        }
+
         private void Window_Closed(object sender, EventArgs e)
         {
             // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds

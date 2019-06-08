@@ -158,10 +158,10 @@ namespace OpenRPA.Views
                 }
                 else
                 {
-                    _ = Run(VisualTracking, SlowMotion);
+                    _ = Run(VisualTracking, SlowMotion, null);
                 }
             }
-            if(e.Key == Input.KeyboardKey.ESCAPE)
+            if(e.Key == Input.KeyboardKey.ESCAPE || e.Key == Input.KeyboardKey.ESC)
             {
                 foreach (var i in WorkflowInstance.Instances)
                 {
@@ -186,11 +186,11 @@ namespace OpenRPA.Views
                 }
                 try
                 {
-                    await Run(VisualTracking, SlowMotion);
+                    await Run(VisualTracking, SlowMotion, null);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("onPlay " + ex.Message);
+                    MessageBox.Show("UserControl_KeyUp " + ex.Message);
                 }
             }
             if (e.Key == Key.F9)
@@ -369,12 +369,8 @@ namespace OpenRPA.Views
                 foreach (var prop in parameters)
                 {
                     var par = new workflowparameter() { name = prop.Name };
+                    par.type = prop.Type.GenericTypeArguments[0].FullName;
                     string baseTypeName = prop.Type.BaseType.FullName;
-                    if (!prop.Type.IsSerializable2())
-                    {
-                        Log.Activity(string.Format("Name: {0}, Type: {1} is not serializable, therefor saving state will not be supported", prop.Name, prop.Type));
-                        Workflow.Serializable = false;
-                    }
                     if (baseTypeName == "System.Activities.InArgument")
                     {
                         par.direction = workflowparameterdirection.@in;
@@ -387,7 +383,11 @@ namespace OpenRPA.Views
                     {
                         par.direction = workflowparameterdirection.@out;
                     }
-                    par.type = prop.Type.GenericTypeArguments[0].FullName;
+                    if (!prop.Type.GenericTypeArguments[0].IsSerializable2())
+                    {
+                        Log.Activity(string.Format("Name: {0}, Type: {1} is not serializable, therefor saving state will not be supported", prop.Name, prop.Type));
+                        Workflow.Serializable = false;
+                    }
                     Log.Activity(string.Format("Name: '{0}', Type: {1}", prop.Name, prop.Type));
                     Workflow.Parameters.Add(par);
                 }
@@ -435,7 +435,9 @@ namespace OpenRPA.Views
                             {
                                 try
                                 {
-                                    string baseTypeName = v.ItemType.GenericTypeArguments[0].BaseType.FullName;
+                                    //string baseTypeName = v.ItemType.GenericTypeArguments[0].BaseType.FullName;
+                                    string baseTypeName = v.ItemType.GenericTypeArguments[0].FullName;
+                                    Console.WriteLine(baseTypeName);
                                     if (!v.ItemType.GenericTypeArguments[0].IsSerializable2())
                                     {
                                         var _v = v.GetCurrentValue();
@@ -888,7 +890,7 @@ namespace OpenRPA.Views
                 Log.Error(ex.ToString());
             }
         }
-        private void onVisualTracking(WorkflowInstance Instance, string ActivityId, string ChildActivityId, string State)
+        public void onVisualTracking(WorkflowInstance Instance, string ActivityId, string ChildActivityId, string State)
         {
             if (SlowMotion) System.Threading.Thread.Sleep(500);
 
@@ -950,43 +952,42 @@ namespace OpenRPA.Views
                 _ = global.webSocketClient.QueueMessage(instance.queuename, command, instance.correlationId);
                 onChanged?.Invoke(this);
             }
-            else
+            if (instance.state == "completed")
             {
-                if (instance.state == "completed")
+                GenericTools.RunUI(() =>
                 {
-                    GenericTools.RunUI(() =>
-                    {
-                        SetDebugLocation(null);
-                        WfPropertyBorder.Child = wfDesigner.PropertyInspectorView;
-                    });
-                }
-                if (instance.state != "idle")
-                {
-                    BreakPointhit = false; Singlestep = false; 
-                    GenericTools.restore(GenericTools.mainWindow);
-                    string message = "#*****************************#" + Environment.NewLine;
-                    if (instance.runWatch != null)
-                    {
-                        message += ("# " + instance.Workflow.name + " " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
-                    }
-                    else
-                    {
-                        message += ("# " + instance.Workflow.name + " " + instance.state);
-                    }
-                    if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
-                    Log.Output(message);
-
-                    GenericTools.RunUI(() =>
-                    {
-                        WfPropertyBorder.Child = wfDesigner.PropertyInspectorView;
-                    });
-
-                    onChanged?.Invoke(this);
-                }
+                    SetDebugLocation(null);
+                    WfPropertyBorder.Child = wfDesigner.PropertyInspectorView;
+                });
             }
+            if (instance.state != "idle")
+            {
+                BreakPointhit = false; Singlestep = false;
+                if (string.IsNullOrEmpty(instance.queuename) && string.IsNullOrEmpty(instance.correlationId))
+                {
+                    GenericTools.restore(GenericTools.mainWindow);
+                }
+                string message = "#*****************************#" + Environment.NewLine;
+                if (instance.runWatch != null)
+                {
+                    message += ("# " + instance.Workflow.name + " " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
+                }
+                else
+                {
+                    message += ("# " + instance.Workflow.name + " " + instance.state);
+                }
+                if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
+                Log.Output(message);
 
+                GenericTools.RunUI(() =>
+                {
+                    WfPropertyBorder.Child = wfDesigner.PropertyInspectorView;
+                });
+
+                onChanged?.Invoke(this);
+            }
         }
-        public async Task Run(bool VisualTracking, bool SlowMotion)
+        public async Task Run(bool VisualTracking, bool SlowMotion, WorkflowInstance instance)
         {
             this.VisualTracking = VisualTracking; this.SlowMotion = SlowMotion;
             if (BreakPointhit)
@@ -1019,9 +1020,11 @@ namespace OpenRPA.Views
                 Log.Error("Failed mapping activites!!!!!");
                 throw new Exception("Failed mapping activites!!!!!");
             }
-            WorkflowInstance instance = null;
-            var param = new Dictionary<string, object>();
-            instance = Workflow.CreateInstance(param, null, null, onIdle, onVisualTracking);
+            if(instance == null)
+            {
+                var param = new Dictionary<string, object>();
+                instance = Workflow.CreateInstance(param, null, null, onIdle, onVisualTracking);
+            }
             if (!VisualTracking) GenericTools.minimize(GenericTools.mainWindow);
             await instance.Run();
         }

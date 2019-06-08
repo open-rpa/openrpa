@@ -22,7 +22,8 @@ namespace OpenRPA.Activities
 
         protected override async void Execute(NativeActivityContext context)
         {
-            string id = null;
+            string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            string bookmarkname = null;
             IDictionary<string, object> _payload = new System.Dynamic.ExpandoObject();
             var vars = context.DataContext.GetProperties();
             foreach (dynamic v in vars)
@@ -33,7 +34,7 @@ namespace OpenRPA.Activities
                     //_payload.Add(v.DisplayName, value);
                     try
                     {
-                        var test = new { value = value};
+                        var test = new { value = value };
                         if (value.GetType() == typeof(System.Data.DataTable)) continue;
                         if (value.GetType() == typeof(System.Data.DataView)) continue;
                         if (value.GetType() == typeof(System.Data.DataRowView)) continue;
@@ -48,8 +49,8 @@ namespace OpenRPA.Activities
             }
             try
             {
-                id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
-                context.CreateBookmark(id, new BookmarkCallback(OnBookmarkCallback));
+                bookmarkname = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
+                context.CreateBookmark(bookmarkname, new BookmarkCallback(OnBookmarkCallback));
             }
             catch (Exception ex)
             {
@@ -58,13 +59,19 @@ namespace OpenRPA.Activities
             }
             try
             {
-                if(!string.IsNullOrEmpty(id))
+                if (!string.IsNullOrEmpty(bookmarkname))
                 {
-                    var result = await global.webSocketClient.QueueMessage(workflow, _payload, id);
+                    var result = await global.webSocketClient.QueueMessage(workflow, _payload, bookmarkname);
                 }
             }
             catch (Exception ex)
             {
+                var i = WorkflowInstance.Instances.Where(x => x.InstanceId == WorkflowInstanceId).FirstOrDefault();
+                if(i != null)
+                {
+                    i.Abort(ex.Message);
+                }
+                //context.RemoveBookmark(bookmarkname);
                 Log.Error(ex.ToString());
             }
         }

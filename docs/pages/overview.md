@@ -7,7 +7,7 @@ Here is a short description of different parts of the robot
 
 [Recording](recording) with the robot
 
-basic [debugging](debugging) of robot workflows
+Basic [debugging](debugging) in robot workflows
 
 Working with the [selector window](selector-window)
 

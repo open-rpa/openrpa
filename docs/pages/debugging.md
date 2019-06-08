@@ -15,7 +15,7 @@ That is perfectly good way of keeping an eye on how a workflow is performing and
 
 ## Breakpoints
 
-Select any activity in a workflow and press F9. This will toggle a break point at the given location, show with the little red icon in the top left corner.
+Select any activity in a workflow and press F9. This will toggle a break point at the given location, shown with the little red icon in the top left corner.
 
 ![1559997615758](debugging/1559997615758.png)
 
@@ -33,7 +33,9 @@ You do not need to single step over every activity, by pressing F5 ( or the Play
 
 Breakpoints also work, when workflows have been started remotely from OpenFlow, making debugging parameters from OpenFlow very easy.
 
-![1559998653028](debugging/1559998653028.png)
+![1559999293327](debugging/1559999293327.png)
 
 ![1559998760787](debugging/1559998760787.png)
+
+You can also start a workflow by using these keys. F10 will start the workflow and stop at the first activity, where as F5 will start the workflow as if you had pressed the Play button.
 

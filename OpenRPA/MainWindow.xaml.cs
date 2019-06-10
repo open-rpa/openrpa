@@ -127,6 +127,57 @@ namespace OpenRPA
         public ICommand PlayCommand { get { return new RelayCommand<object>(onPlay, canPlay); } }
         public ICommand StopCommand { get { return new RelayCommand<object>(onStop, canStop); } }
         public ICommand RecordCommand { get { return new RelayCommand<object>(onRecord, canRecord); } }
+        public ICommand ImportCommand { get { return new RelayCommand<object>(onImport, canImport); } }
+        public ICommand ExportCommand { get { return new RelayCommand<object>(onExport, canExport); } }
+
+        private bool canImport(object item) { if (!isConnected) return false; return (item is Views.WFDesigner || item is Views.OpenProject || item == null); }
+        private void onImport(object item)
+        {
+            try
+            {
+                if (item is Views.WFDesigner)
+                {
+                    var designer = (Views.WFDesigner)item;
+                    Workflow workflow = Workflow.Create(designer.Project, "New Workflow");
+                    onOpenWorkflow(workflow);
+                    return;
+                }
+                else
+                {
+                    using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+                    {
+                        System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                        if(result == System.Windows.Forms.DialogResult.OK)
+                        {
+                            var _Projects = Project.loadProjects(Extensions.projectsDirectory);
+                            if (_Projects.Count() > 0)
+                            {
+                                var ProjectFiles = System.IO.Directory.EnumerateFiles(dialog.SelectedPath, "*.rpaproj", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
+                                foreach(var file in ProjectFiles)
+                                {
+                                    if()
+                                }
+
+                            }
+
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private bool canExport(object item) { if (!isConnected) return false; return (item is Views.WFDesigner || item is Views.OpenProject || item == null); }
+        private void onExport(object item)
+        {
+            if (!(item is Views.WFDesigner)) return;
+            var designer = (Views.WFDesigner)item;
+        }
+
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
             Log.Error(e.Exception, "");
@@ -1126,6 +1177,7 @@ namespace OpenRPA
                         await global.webSocketClient.RegisterQueue(global.webSocketClient.user._id);
                         foreach(var role in global.webSocketClient.user.roles)
                         {
+                            Log.Debug("Registering queue for role " + role.name + " " + role._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                             await global.webSocketClient.RegisterQueue(role._id);
                         }
                     }

@@ -23,6 +23,12 @@ namespace OpenRPA
     }
     public static class Extensions
     {
+        public static string NormalizePath(string path)
+        {
+            return System.IO.Path.GetFullPath(new Uri(path).LocalPath)
+                       .TrimEnd(System.IO.Path.DirectorySeparatorChar, System.IO.Path.AltDirectorySeparatorChar)
+                       .ToUpperInvariant();
+        }
         public static PropertyInfo[] GetPublicProperties(this Type type)
         {
             if (type.IsInterface)

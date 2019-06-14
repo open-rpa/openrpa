@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:OpenRPA"
         mc:Ignorable="d"
         Loaded="Window_Loaded" Closed="Window_Closed"
-        Title="MainWindow" Height="750" Width="1200">
+        Title="OpenRPA" Height="750" Width="1200">
     <Window.Resources>
         <local:BindingProxy x:Key="proxy" Data="{Binding}" />
     </Window.Resources>
@@ -70,12 +70,12 @@
                     <RibbonButton Label="Delete" LargeImageSource="/OpenRPA;component/Resources/Buttons/Delete.png" 
                                   Command="{Binding Data.DeleteCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
-                    <RibbonButton Label="Import" LargeImageSource="/OpenRPA;component/Resources/Buttons/Import.png" 
+<!--                     <RibbonButton Label="Import" LargeImageSource="/OpenRPA;component/Resources/Buttons/Import.png" 
                                   Command="{Binding Data.ImportCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                     <RibbonButton Label="Export" LargeImageSource="/OpenRPA;component/Resources/Buttons/Export.png" 
                                   Command="{Binding Data.ExportCommand, Source={StaticResource proxy}}" 
-                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />-->
                 </RibbonGroup>
                 <RibbonGroup Header="Runtime">
                     <RibbonButton Label="Play" LargeImageSource="/OpenRPA;component/Resources/Buttons/Play.png" 

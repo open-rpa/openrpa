@@ -150,7 +150,7 @@ namespace OpenRPA.NM
                     updateelement.tabid = message.tabid;
                     updateelement.frameId = message.frameId;
                     updateelement.data = value;
-                    var subsubresult = NMHook.sendMessageResult(updateelement, true);
+                    var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(2));
                     if (subsubresult == null) throw new Exception("Failed clicking html element");
                     System.Threading.Thread.Sleep(500);
                     NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
@@ -186,7 +186,7 @@ namespace OpenRPA.NM
                     getelement2.xPath = xpath;
                     getelement2.tabid = message.tabid;
                     getelement2.frameId = message.frameId;
-                    subsubresult = NMHook.sendMessageResult(getelement2, true);
+                    subsubresult = NMHook.sendMessageResult(getelement2, true, TimeSpan.FromSeconds(2));
                     if (subsubresult == null) throw new Exception("Failed clicking html element");
                     System.Threading.Thread.Sleep(500);
                     NMHook.WaitForTab(getelement2.tabid, getelement2.browser, TimeSpan.FromSeconds(5));
@@ -199,7 +199,7 @@ namespace OpenRPA.NM
                 getelement.xPath = xpath;
                 getelement.tabid = message.tabid;
                 getelement.frameId = message.frameId;
-                if (NMHook.connected) subresult = NMHook.sendMessageResult(getelement, true);
+                if (NMHook.connected) subresult = NMHook.sendMessageResult(getelement, true, TimeSpan.FromSeconds(2));
                 if (subresult == null) throw new Exception("Failed clicking html element");
                 int hitx = subresult.uix;
                 int hity = subresult.uiy;

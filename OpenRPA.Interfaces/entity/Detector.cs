@@ -72,7 +72,7 @@ namespace OpenRPA.Interfaces.entity
             {
                 if (counter == 1)
                 {
-                    Filename = name.Replace(" ", "_").Replace(".", "") + ".rpadetector";
+                    Filename = System.Text.RegularExpressions.Regex.Replace(name, @"[^0-9a-zA-Z]+", "") + ".rpadetector";
                     FilePath = System.IO.Path.Combine(Path, Filename);
                 }
                 else

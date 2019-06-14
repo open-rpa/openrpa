@@ -204,7 +204,7 @@ namespace OpenRPA
             {
                 if (counter == 1)
                 {
-                    Filename = name.Replace(" ", "_").Replace(".", "") + ".xaml";
+                    Filename = System.Text.RegularExpressions.Regex.Replace(name, @"[^0-9a-zA-Z]+", "") + ".xaml";
                     FilePath = System.IO.Path.Combine(Project.Path, Filename);
                 }
                 else

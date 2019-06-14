@@ -149,16 +149,16 @@ namespace OpenRPA
                         System.Windows.Forms.DialogResult result = dialog.ShowDialog();
                         if(result == System.Windows.Forms.DialogResult.OK)
                         {
-                            var _Projects = Project.loadProjects(Extensions.projectsDirectory);
-                            if (_Projects.Count() > 0)
-                            {
-                                var ProjectFiles = System.IO.Directory.EnumerateFiles(dialog.SelectedPath, "*.rpaproj", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
-                                foreach(var file in ProjectFiles)
-                                {
-                                    if()
-                                }
+                            //var _Projects = Project.loadProjects(Extensions.projectsDirectory);
+                            //if (_Projects.Count() > 0)
+                            //{
+                            //    var ProjectFiles = System.IO.Directory.EnumerateFiles(dialog.SelectedPath, "*.rpaproj", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
+                            //    foreach(var file in ProjectFiles)
+                            //    {
+                            //        if()
+                            //    }
 
-                            }
+                            //}
 
                         }
                     }

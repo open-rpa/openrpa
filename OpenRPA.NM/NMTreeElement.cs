@@ -47,7 +47,7 @@ namespace OpenRPA.NM
         {
             foreach (var e in NMElement.Children)
             {
-                var ele = NMHook.getElement(NMElement.message.tabid, NMElement.message.browser, "//*[@zn_id=\"" + e.zn_id + "\"]" );
+                var ele = NMHook.getElement(NMElement.message.tabid, NMElement.message.browser, "//*[@zn_id=\"" + e.zn_id + "\"]", TimeSpan.FromSeconds(2));
                 if(ele.Length > 0)
                 {
                     Children.Add(new NMTreeElement(this, false, ele[0]));

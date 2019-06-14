@@ -45,7 +45,7 @@ namespace OpenRPA.NM.pipe
         {
             pipe.PushMessage(message);
         }
-        public T Message(T message, bool throwError)
+        public T Message(T message, bool throwError, TimeSpan timeout)
         {
             T result = default(T);
             if (pipe == null || !pipe.isConnected) return result;
@@ -56,13 +56,13 @@ namespace OpenRPA.NM.pipe
             using (queue.autoReset = new AutoResetEvent(false))
             {
                 pipe.PushMessage(message);
-                queue.autoReset.WaitOne();
+                queue.autoReset.WaitOne(timeout);
                 queue.sw.Stop();
             }
             Log.Verbose("received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));
             replyqueue.Remove(queue);
             result = queue.result;
-            if (!string.IsNullOrEmpty(result.error)) throw new NamedPipeException(result.error);
+            if (result != null && !string.IsNullOrEmpty(result.error)) throw new NamedPipeException(result.error);
             return result;
         }
         [Serializable()]

@@ -1196,7 +1196,12 @@ namespace OpenRPA
                 if (Projects.Count > 0)
                 {
                     Log.Debug("Opening first project");
-                    onOpenProject(Projects[0]);
+                    //onOpenProject(Projects[0]);
+                    var wf = Projects[0].Workflows.FirstOrDefault();
+                    if(wf!=null)
+                    {
+                        onOpenWorkflow(wf);
+                    }                    
                 }
             }, null);
         }

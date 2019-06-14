@@ -149,21 +149,21 @@ namespace OpenRPA.NM
             }
             return result;
         }
-        public static NativeMessagingMessage sendMessageResult(NativeMessagingMessage message, bool throwError)
+        public static NativeMessagingMessage sendMessageResult(NativeMessagingMessage message, bool throwError, TimeSpan timeout)
         {
             NativeMessagingMessage result = null;
             if (message.browser == "ff")
             {
                 if (ffconnected)
                 {
-                    result = ffpipe.Message(message, throwError);
+                    result = ffpipe.Message(message, throwError, timeout);
                 }
             }
             else
             {
                 if (chromeconnected)
                 {
-                    result = chromepipe.Message(message, throwError);
+                    result = chromepipe.Message(message, throwError, timeout);
                 }
             }
             return result;
@@ -173,8 +173,8 @@ namespace OpenRPA.NM
             tabs.Clear();
             NativeMessagingMessage result = null;
             NativeMessagingMessage message = new NativeMessagingMessage("refreshtabs");
-            result = sendMessageChromeResult(message, true);
-            result = sendMessageFFResult(message, true);
+            result = sendMessageChromeResult(message, true, TimeSpan.FromSeconds(2));
+            result = sendMessageFFResult(message, true, TimeSpan.FromSeconds(2));
         }
         public static void UpdateTab(NativeMessagingMessageTab tab)
         {
@@ -184,7 +184,7 @@ namespace OpenRPA.NM
             message.windowId = tab.windowId;
             if (connected)
             {
-                result = sendMessageResult(message, true);
+                result = sendMessageResult(message, true, TimeSpan.FromSeconds(2));
                 WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
             }
         }
@@ -196,7 +196,7 @@ namespace OpenRPA.NM
             message.windowId = tab.windowId;
             if (connected)
             {
-                result = sendMessageResult(message, true);
+                result = sendMessageResult(message, true, TimeSpan.FromSeconds(2));
             }
         }
         public static void HighlightTab(NativeMessagingMessageTab tab)
@@ -269,11 +269,11 @@ namespace OpenRPA.NM
                     message.data = url;
                     tab.highlighted = true;
                     message.tab = tab;
-                    result = ffpipe.Message(message, true);
+                    result = ffpipe.Message(message, true, TimeSpan.FromSeconds(2));
                     WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
                     return;
                 }
-                result = ffpipe.Message(message, true);
+                result = ffpipe.Message(message, true, TimeSpan.FromSeconds(2));
                 WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
                 return;
             }
@@ -301,16 +301,16 @@ namespace OpenRPA.NM
                     message.data = url;
                     tab.highlighted = true;
                     message.tab = tab;
-                    result = chromepipe.Message(message, true);
+                    result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
                     WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
                     return;
                 }
-                result = chromepipe.Message(message, true);
+                result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
                 WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
                 return;
             }
         }
-        public static NMElement[] getElement(int tabid, string browser, string xPath)
+        public static NMElement[] getElement(int tabid, string browser, string xPath, TimeSpan timeout)
         {
             var results = new List<NMElement>();
             var getelement = new NativeMessagingMessage("getelement");
@@ -320,7 +320,7 @@ namespace OpenRPA.NM
             NativeMessagingMessage result = null;
             try
             {
-                result = NMHook.sendMessageResult(getelement, true);
+                result = NMHook.sendMessageResult(getelement, true, timeout);
             }
             catch (Exception)
             {
@@ -366,21 +366,21 @@ namespace OpenRPA.NM
             } while (tab != null && tab.status != "ready" && tab.status != "complete" && sw.Elapsed < timeout);
             return;
         }
-        public static NativeMessagingMessage sendMessageChromeResult(NativeMessagingMessage message, bool throwError)
+        public static NativeMessagingMessage sendMessageChromeResult(NativeMessagingMessage message, bool throwError, TimeSpan timeout)
         {
             NativeMessagingMessage result = null;
             if (chromeconnected)
             {
-                result = chromepipe.Message(message, throwError);
+                result = chromepipe.Message(message, throwError, timeout);
             }
             return result;
         }
-        public static NativeMessagingMessage sendMessageFFResult(NativeMessagingMessage message, bool throwError)
+        public static NativeMessagingMessage sendMessageFFResult(NativeMessagingMessage message, bool throwError, TimeSpan timeout)
         {
             NativeMessagingMessage result = null;
             if (ffconnected)
             {
-                result = ffpipe.Message(message, throwError);
+                result = ffpipe.Message(message, throwError, timeout);
             }
             return result;
         }

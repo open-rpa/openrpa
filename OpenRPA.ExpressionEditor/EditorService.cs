@@ -12,11 +12,12 @@ namespace OpenRPA.ExpressionEditor
 {
     public class EditorService : IExpressionEditorService
     {
-        public EditorService()
+        public EditorService(Interfaces.IDesigner designer)
         {
+            this.designer = designer;
             AutoCompletionData = EditorUtil.autoCompletionTree;
         }
-        private IExpressionEditorInstance CreateEditor(ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text)
+        private IExpressionEditorInstance CreateEditor(ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text, Type expressionType)
         {
             ExpressionNode data = AutoCompletionData;
             data = AddVariablesToAutoCompletionList(data, variables);
@@ -25,10 +26,13 @@ namespace OpenRPA.ExpressionEditor
             {
                 AutoCompletionList = data,
                 LanguageKeywords = LanguageKeywords,
-                Text = text
+                Text = text,
+                expressionType = expressionType,
+                designer = designer
             };
             return instance;
         }
+        private Interfaces.IDesigner designer = null;
 
         /// <summary>
         /// Gets a collection of editing language keywords the editor should support.
@@ -66,7 +70,7 @@ namespace OpenRPA.ExpressionEditor
         /// <param name="variables">The collection of variables to include.</param>
         private ExpressionNode AddVariablesToAutoCompletionList(ExpressionNode data, List<ModelItem> variables)
         {
-            Type systemType;
+            //Type systemType;
             ModelProperty property;
 
             foreach (ModelItem item in variables)
@@ -106,26 +110,26 @@ x.Name.Equals(computedName)
         }
         private IExpressionEditorInstance CreateEditor(AssemblyContextControlItem assemblies, ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text, Type expressionType)
         {
-            return CreateEditor(importedNamespaces, variables, text);
+            return CreateEditor(importedNamespaces, variables, text, expressionType);
         }
         public IExpressionEditorInstance CreateExpressionEditor(AssemblyContextControlItem assemblies, ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text, Type expressionType)
         {
-            return CreateEditor(importedNamespaces, variables, text);
+            return CreateEditor(importedNamespaces, variables, text, expressionType);
         }
 
         public IExpressionEditorInstance CreateExpressionEditor(AssemblyContextControlItem assemblies, ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text, Type expressionType, Size initialSize)
         {
-            return CreateEditor(importedNamespaces, variables, text);
+            return CreateEditor(importedNamespaces, variables, text, expressionType);
         }
 
         public IExpressionEditorInstance CreateExpressionEditor(AssemblyContextControlItem assemblies, ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text)
         {
-            return CreateEditor(importedNamespaces, variables, text);
+            return CreateEditor(importedNamespaces, variables, text, null);
         }
 
         public IExpressionEditorInstance CreateExpressionEditor(AssemblyContextControlItem assemblies, ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text, Size initialSize)
         {
-            return CreateEditor(importedNamespaces, variables, text);
+            return CreateEditor(importedNamespaces, variables, text, null);
         }
 
         public void CloseExpressionEditors()

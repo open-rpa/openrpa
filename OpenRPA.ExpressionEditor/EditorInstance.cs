@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenRPA.Interfaces;
+using System;
 using System.Activities.Presentation.View;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,8 @@ namespace OpenRPA.ExpressionEditor
         public event EventHandler LostAggregateFocus;
         public event EventHandler GotAggregateFocus;
         public event EventHandler Closing;
+        public Type expressionType = null;
+        public IDesigner designer = null;
         /// <summary>
         /// Creates a new instance of the <see cref="EditorInstance" /> class.
         /// </summary>
@@ -39,11 +42,25 @@ namespace OpenRPA.ExpressionEditor
 
             editor = new TextBox();
             editor.KeyDown += Editor_KeyDown;
+            editor.KeyUp += Editor_KeyUp;
             editor.GotFocus += Editor_GotFocus;
             editor.LostFocus += Editor_LostFocus;
             editor.PreviewKeyDown += Editor_KeyPress;
             editor.TextChanged += Editor_TextChanged;
             editor.Unloaded += Editor_Unloaded;
+        }
+
+        private void Editor_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyboardDevice.Modifiers != ModifierKeys.Control || e.Key != Key.K) return;
+            if (designer == null) return;
+            string Variablename = Text;
+            if (expressionType == null) { expressionType = typeof(string); }
+            var arg = designer.GetArgument(Variablename, false, expressionType);
+            if (arg == null)
+            {
+                var _var = designer.GetVariable(Variablename, expressionType);
+            }
         }
 
         private void Editor_Unloaded(object sender, RoutedEventArgs e)
@@ -305,7 +322,7 @@ namespace OpenRPA.ExpressionEditor
             {
                 e.Handled = true;
                 TraversalRequest navigator = new TraversalRequest(FocusNavigationDirection.Next);
-                UIElement element = Keyboard.FocusedElement as UIElement;
+                System.Windows.UIElement element = Keyboard.FocusedElement as System.Windows.UIElement;
 
                 if (element != null)
                 {

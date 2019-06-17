@@ -392,7 +392,7 @@ namespace OpenRPA
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
-                throw;
+                // throw;
             }
         }
     }

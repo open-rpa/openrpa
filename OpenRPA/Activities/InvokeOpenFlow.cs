@@ -46,6 +46,10 @@ namespace OpenRPA.Activities
                     {
                     }
                 }
+                else
+                {
+                    _payload[v.DisplayName] = value;
+                }
             }
             try
             {

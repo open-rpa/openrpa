@@ -42,6 +42,22 @@ namespace OpenRPA.Views
         public bool Singlestep { get; set; }
         public bool SlowMotion { get; set; }
         public bool VisualTracking { get; set; }
+        public bool isRunnning {
+            get
+            {
+                foreach(var i in WorkflowInstance.Instances)
+                {
+                    if(!string.IsNullOrEmpty(Workflow._id) && i.WorkflowId == Workflow._id)
+                    {
+                        if(i.state != "completed" && i.state != "aborted" && i.state != "failed")
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        }
         public System.Threading.AutoResetEvent resumeRuntimeFromHost { get; set; }
         public ToolboxControl InitializeActivitiesToolbox()
         {
@@ -149,6 +165,12 @@ namespace OpenRPA.Views
             if (!tab.IsSelected) return;
             if (e.Key == Input.KeyboardKey.F10 || e.Key == Input.KeyboardKey.F11)
             {
+                if (!isRunnning)
+                {
+                    if (currentprocessid == 0) currentprocessid = System.Diagnostics.Process.GetCurrentProcess().Id;
+                    var element = AutomationHelper.GetFromFocusedElement();
+                    if (element.ProcessId != currentprocessid) return;
+                }
                 Singlestep = true;
                 // if (e.Key == Input.KeyboardKey.F11) { StepInto = true; }
                 if (BreakPointhit)
@@ -173,8 +195,15 @@ namespace OpenRPA.Views
                 if (resumeRuntimeFromHost != null) resumeRuntimeFromHost.Set();
             }
         }
+        private int currentprocessid = 0;
         private async void UserControl_KeyUp(object sender, KeyEventArgs e)
         {
+            if(!isRunnning)
+            {
+                if (currentprocessid == 0) currentprocessid = System.Diagnostics.Process.GetCurrentProcess().Id;
+                var element = AutomationHelper.GetFromFocusedElement();
+                if (element.ProcessId != currentprocessid) return;
+            }
             if (e.Key == Key.F5)
             {
                 if (BreakPointhit)
@@ -236,7 +265,7 @@ namespace OpenRPA.Views
             //if (_expressionEditorServiceVB == null) _expressionEditorServiceVB = new EditorService();
             //wfDesigner.Context.Services.Publish<IExpressionEditorService>(_expressionEditorServiceVB);
 
-            wfDesigner.Context.Services.Publish<IExpressionEditorService>(new EditorService());
+            wfDesigner.Context.Services.Publish<IExpressionEditorService>(new EditorService(this));
 
             if (!string.IsNullOrEmpty(workflow.Xaml))
             {

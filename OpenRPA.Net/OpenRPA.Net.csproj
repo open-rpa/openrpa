@@ -48,6 +48,7 @@
     <Compile Include="BaseMessage.cs" />
     <Compile Include="DeleteOneMessage.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="InsertOrUpdateOneMessage.cs" />
     <Compile Include="InsertOneMessage.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="QueryMessage.cs" />

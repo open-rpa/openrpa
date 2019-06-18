@@ -14,6 +14,7 @@ namespace OpenRPA
         public WorkflowInstance()
         {
             _type = "workflowinstance";
+            _id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
         }
         public static List<WorkflowInstance> Instances = new List<WorkflowInstance>();
 
@@ -364,18 +365,11 @@ namespace OpenRPA
             try
             {
                 if (!global.isConnected) return;
-                if (string.IsNullOrEmpty(_id))
-                {
-                    _id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
-                    var result = await global.webSocketClient.InsertOne("openrpa_instances", 1, false, this);
-                    _id = result._id;
-                    _acl = result._acl;
-                    Log.Debug("Saved with id: " + _id);
-                }
-                else
-                {
-                    await global.webSocketClient.UpdateOne("openrpa_instances", 1, false, this);
-                }
+                var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, this);
+                _id = result._id;
+                _acl = result._acl;
+                Log.Debug("Saved with id: " + _id);
+                    
                 
                 // Catch up if others havent been saved
                 foreach (var i in Instances.ToList())
@@ -392,7 +386,7 @@ namespace OpenRPA
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
-                throw;
+                // throw;
             }
         }
     }

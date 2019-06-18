@@ -952,16 +952,23 @@ namespace OpenRPA
                             {
                                 if (b.Key == message.correlationId)
                                 {
-                                    wi.ResumeBookmark(b.Key, message.data.ToString());
+                                    if(!string.IsNullOrEmpty(message.error))
+                                    {
+                                        wi.Abort(message.error);
+                                    } else
+                                    {
+                                        wi.ResumeBookmark(b.Key, message.data.ToString());
+                                    }
+                                    
                                 }
                             }
                         }
                     }
-                    return;
                 }
-                var data = JObject.Parse(command.data.ToString());
+                JObject data;
+                if(command.data != null) { data = JObject.Parse(command.data.ToString()); } else { data = JObject.Parse("{}"); }
                 if (command.command == null) return;
-                if (command.command == "invoke")
+                if (command.command == "invoke" && !string.IsNullOrEmpty(command.workflowid))
                 {
                     WorkflowInstance instance = null;
                     var workflow = GetWorkflowById(command.workflowid);
@@ -1026,7 +1033,7 @@ namespace OpenRPA
                 command.data = JObject.FromObject(ex);
             }
             // string data = Newtonsoft.Json.JsonConvert.SerializeObject(command);
-            if (message.replyto != message.queuename)
+            if (!string.IsNullOrEmpty(message.replyto) && message.replyto != message.queuename)
             {
                 await global.webSocketClient.QueueMessage(message.replyto, command, message.correlationId);
             }

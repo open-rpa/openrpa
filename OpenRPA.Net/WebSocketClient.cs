@@ -360,6 +360,17 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
             return q.result;
         }
+
+        
+        public async Task<T> InsertOrUpdateOne<T>(string collectionname, int w, bool j, T item)
+        {
+            InsertOrUpdateOneMessage<T> q = new InsertOrUpdateOneMessage<T>();
+            q.w = w; q.j = j;
+            q.collectionname = collectionname; q.item = item;
+            q = await q.SendMessage<InsertOrUpdateOneMessage<T>>(this);
+            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            return q.result;
+        }
         public async Task<T> InsertOne<T>(string collectionname, int w, bool j, T item)
         {
             InsertOneMessage<T> q = new InsertOneMessage<T>();

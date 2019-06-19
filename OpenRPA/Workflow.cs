@@ -11,6 +11,7 @@ namespace OpenRPA
 {
     public class Workflow : apibase
     {
+        public string queue { get { return GetProperty<string>(); } set { SetProperty(value); } }        
         public string Xaml { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public List<workflowparameter> Parameters { get { return GetProperty<List<workflowparameter>>(); } set { SetProperty(value); } }
         public bool Serializable { get { return GetProperty<bool>(); } set { SetProperty(value); } }

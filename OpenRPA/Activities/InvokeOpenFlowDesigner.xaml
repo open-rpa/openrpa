@@ -33,7 +33,7 @@
                 <ComboBox 
                 ItemsSource="{Binding workflows}"
                 DisplayMemberPath="name"
-                SelectedValuePath="name"
+                SelectedValuePath="queue"
                 SelectedValue="{Binding Path=ModelItem.workflow, Mode=TwoWay}"
                 >
                 </ComboBox>

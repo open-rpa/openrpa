@@ -101,9 +101,12 @@ namespace OpenRPA.Windows
                         if (idx2 > idx) p.Value = p.Value.Substring(0, idx2 + 1) + "*";
                     }
                     //if (p.Name == "ClassName" && p.Value.StartsWith("WindowsForms10")) p.Value = "WindowsForms10*";
+                    if(p.Name == "ClassName" && p.Value.ToLower() == "shelldll_defview")
+                    {
+                        item.Enabled = false;
+                    }
                 }
                 if (doEnum) item.EnumNeededProperties(o, o.Parent);
-
                 Items.Add(item);
             }
             pathToRoot.Reverse();

@@ -42,10 +42,12 @@ namespace OpenRPA.Activities
 
             var virtualClick = false;
             if (VirtualClick != null) virtualClick = VirtualClick.Get(context);
+            // if (button != (int)Input.MouseButton.Left) { VirtualClick = false; }
 
             //var flabuttun = (FlaUI.Core.Input.MouseButton)Enum.Parse(typeof(FlaUI.Core.Input.MouseButton), button.ToString(), true);
             //el.Click(AnimateMouse.Get(context), flabuttun, doubleClick, OffsetX, OffsetY, timeout, virtualClick);
-            el.Click(virtualClick, OffsetX, OffsetY);
+            var _button = (Input.MouseButton)button;
+            el.Click(virtualClick, _button, OffsetX, OffsetY);
 
         }
     }

@@ -752,9 +752,14 @@ namespace OpenRPA
                     {
                         InputDriver.Instance.CallNext = true;
                         Log.Debug("MouseMove to " + e.X + "," + e.Y + " and click " + e.Button + " button");
-                        InputDriver.Instance.MouseMove(e.X, e.Y);
+                        //var point = new FlaUI.Core.Shapes.Point(e.X + e.OffsetX, e.Y + e.OffsetY);
+                        var point = new FlaUI.Core.Shapes.Point(e.X, e.Y);
+                        FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
+                        if (e.Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
+                        if (e.Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
+                        FlaUI.Core.Input.Mouse.Click(flabuttun, point);
                         // InputDriver.Instance.Click(lastInputEventArgs.Button);
-                        InputDriver.DoMouseClick();
+                        //InputDriver.DoMouseClick();
                         Log.Debug("Click done");
                     }
                     return;
@@ -772,6 +777,7 @@ namespace OpenRPA
                         },
                         OffsetX = e.OffsetX,
                         OffsetY = e.OffsetY,
+                        Button = (int)e.Button,
                         VirtualClick = VirtualClick
                     }, "item");
                     if (e.SupportInput)
@@ -792,9 +798,21 @@ namespace OpenRPA
                     {
                         InputDriver.Instance.CallNext = true;
                         Log.Debug("MouseMove to " + e.X + "," + e.Y + " and click " + e.Button + " button");
-                        InputDriver.Instance.MouseMove(e.X, e.Y);
+
+                        //var point = new FlaUI.Core.Shapes.Point(e.X + e.OffsetX, e.Y + e.OffsetY);
+                        //FlaUI.Core.Input.Mouse.MoveTo(e.X + e.OffsetX, e.Y + e.OffsetY);
+
+                        var point = new FlaUI.Core.Shapes.Point(e.X , e.Y);
+                        FlaUI.Core.Input.Mouse.MoveTo(e.X , e.Y);
+
+                        FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
+                        if (e.Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
+                        if (e.Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
+                        FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+
+                        //InputDriver.Instance.MouseMove(e.X, e.Y);
                         // InputDriver.Instance.Click(lastInputEventArgs.Button);
-                        InputDriver.DoMouseClick();
+                        // InputDriver.DoMouseClick();
                         Log.Debug("Click done");
                     }
                     System.Threading.Thread.Sleep(200);

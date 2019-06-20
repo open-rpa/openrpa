@@ -194,7 +194,7 @@ namespace OpenRPA.NM
             e.a = new GetElementResult(a);
             e.SupportInput = lastElement.SupportInput;
             e.ClickHandled = true;
-            lastElement.Click(true, 0, 0);
+            lastElement.Click(true, e.Button, e.X, e.Y);
             return true;
         }
         public bool recording { get; set; } = false;

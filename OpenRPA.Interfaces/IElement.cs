@@ -11,7 +11,7 @@ namespace OpenRPA.Interfaces
         Object RawElement { get; set; }
         string Value { get; set; }
         void Focus();
-        void Click(bool VirtualClick, int OffsetX, int OffsetY);
+        void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY);
         Task Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration);
         string ImageString();
     }

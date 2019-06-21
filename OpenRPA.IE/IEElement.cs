@@ -203,7 +203,21 @@ namespace OpenRPA.IE
                     var ele = (mshtml.IHTMLInputElement)RawElement;
                     ele.value = value;
                 }
-
+                if(RawElement.tagName.ToLower() == "select")
+                {
+                    var ele = (mshtml.IHTMLSelectElement)RawElement;
+                    foreach(mshtml.IHTMLOptionElement e in ele.options)
+                    {
+                        Console.WriteLine(e.value);
+                        if(e.value == value)
+                        {
+                            ele.value = value;
+                        } else if (e.text == value)
+                        {
+                            ele.value = e.value;
+                        }
+                    }
+                }
             }
         }
         public override string ToString()

@@ -103,7 +103,7 @@ namespace OpenRPA.IE
 
                 Log.Debug(e.Element.SupportInput + " / " + e.Element.ControlType);
                 re.a = new GetElementResult(a);
-                if (htmlelement.tagName.ToLower() == "input")
+                if (htmlelement.tagName.ToLower() == "input" && htmlelement.tagName.ToLower() == "select")
                 {
                     mshtml.IHTMLInputElement inputelement = (mshtml.IHTMLInputElement)htmlelement;
                     re.SupportInput = (inputelement.type.ToLower() == "text" || inputelement.type.ToLower() == "password");

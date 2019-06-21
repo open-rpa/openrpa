@@ -218,6 +218,8 @@ if (typeof document.zeniverse === 'undefined') {
                 ele = cssEle;
             }
             if (ele) {
+                //console.log(ele);
+                //console.log(message.data);
                 ele.value = message.data;
             }
 

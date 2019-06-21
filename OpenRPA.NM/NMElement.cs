@@ -53,9 +53,16 @@ namespace OpenRPA.NM
         public bool SupportInput {
             get
             {
-                if (tagname.ToLower() != "input") return false;
-                if (type.ToLower() == "text" || type.ToLower() == "password") return true;
-                return false;
+                if (tagname.ToLower() != "input" && tagname.ToLower() != "select") return false;
+                if(tagname.ToLower() == "input")
+                {
+                    if (type.ToLower() == "text" || type.ToLower() == "password") return true;
+                    return false;
+                } else
+                {
+                    return true;
+                }
+                
             }
         }
         private Dictionary<string, object> chromeelement { get; set; }

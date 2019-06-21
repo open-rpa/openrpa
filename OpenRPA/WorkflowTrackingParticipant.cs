@@ -40,7 +40,7 @@ namespace OpenRPA
                                 // Extract workflow variables and arguments as a part of the activity tracking record
                                 // VariableName = "*" allows for extraction of all variables in the scope
                                 // of the activity
-                                Variables = { "*" },
+                                Variables = {"item" },
                                 Arguments = { "*" }
                             },
                             new ActivityScheduledQuery()
@@ -58,6 +58,26 @@ namespace OpenRPA
             ActivityStateRecord activityStateRecord = trackRecord as ActivityStateRecord;
             ActivityScheduledRecord activityScheduledRecord = trackRecord as ActivityScheduledRecord;
             //if (activityStateRecord != null || activityScheduledRecord != null)
+            if(activityStateRecord != null)
+            {
+                var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
+                foreach (var v in activityStateRecord.Variables)
+                {
+                    if (Instance.Variables.ContainsKey(v.Key))
+                    {
+                        Instance.Variables[v.Key].value = v.Value;
+                    } else
+                    {
+                        if(v.Value != null)
+                        {
+                            Instance.Variables.Add(v.Key, new ValueType(v.Value.GetType(), v.Value));
+                        }
+                        
+                    }
+                    //wfi.variables.Add(v.Key, v.Value);
+                }
+
+            }
             if (activityScheduledRecord != null)
             {
                 string ActivityId = null;

@@ -1,0 +1,148 @@
+﻿using System;
+using System.Activities;
+using OpenRPA.Interfaces;
+using System.Activities.Presentation.PropertyEditing;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+
+namespace OpenRPA.Activities
+{
+    [System.ComponentModel.Designer(typeof(InvokeOpenRPADesigner), typeof(System.ComponentModel.Design.IDesigner))]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.invokerpaworkflow.png")]
+    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    public class InvokeOpenRPA : NativeActivity
+    {
+        [RequiredArgument]
+        public string workflow { get; set; }
+
+        protected override void Execute(NativeActivityContext context)
+        {
+            string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            // IDictionary<string, object> _payload = new System.Dynamic.ExpandoObject();
+            var param = new Dictionary<string, object>();
+            var vars = context.DataContext.GetProperties();
+            foreach (dynamic v in vars)
+            {
+                var value = v.GetValue(context.DataContext);
+                if (value != null)
+                {
+                    //_payload.Add(v.DisplayName, value);
+                    try
+                    {
+                        var test = new { value = value };
+                        if (value.GetType() == typeof(System.Data.DataTable)) continue;
+                        if (value.GetType() == typeof(System.Data.DataView)) continue;
+                        if (value.GetType() == typeof(System.Data.DataRowView)) continue;
+                        //
+                        var asjson = JObject.FromObject(test);
+                        param[v.DisplayName] = value;
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                else
+                {
+                    param[v.DisplayName] = value;
+                }
+            }
+            try
+            {
+                var workflow = MainWindow.instance.GetWorkflowById(this.workflow);
+                WorkflowInstance instance = null;
+                Views.WFDesigner designer = null;
+                GenericTools.RunUI(() =>
+                {
+                    designer = MainWindow.instance.GetDesignerById(this.workflow);
+                    if (designer != null)
+                    {
+                        instance = workflow.CreateInstance(param, null, null, designer.onIdle, designer.onVisualTracking);
+                    }
+                    else
+                    {
+                        instance = workflow.CreateInstance(param, null, null, MainWindow.instance.idleOrComplete,  null);
+                    }
+                });
+                Log.Information("Run Instance ID " + instance._id);
+                context.CreateBookmark(instance._id, new BookmarkCallback(OnBookmarkCallback));
+                GenericTools.RunUI(() =>
+                {
+                    if (designer != null)
+                    {
+                        _ = designer.Run(MainWindow.instance.VisualTracking, MainWindow.instance.SlowMotion, instance);
+                    }
+                    else
+                    {
+                        _ = instance.Run();
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                throw;
+            }
+        }
+
+        void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object obj)
+        {
+            try
+            {
+                context.RemoveBookmark(bookmark.Name);
+                var instance = obj as WorkflowInstance;
+                if (instance == null) throw new Exception("Bookmark returned a non WorkflowInstance");
+                if(instance.hasError) throw new Exception(instance.errormessage);
+                foreach (var prop in instance.Parameters)
+                {
+                    var myVar = context.DataContext.GetProperties().Find(prop.Key, true);
+                    if (myVar != null)
+                    {
+                        //var myValue = myVar.GetValue(context.DataContext);
+                        myVar.SetValue(context.DataContext, prop.Value);
+                    }
+                    else
+                    {
+                        //rpaExtension.Current.debugWriteLine("Recived property " + prop.Key + " but no variable exists to save the value in " + prop.Value);
+                        Log.Debug("Recived property " + prop.Key + " but no variable exists to save the value in " + prop.Value);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                throw;
+            }
+
+            //var payload = JObject.Parse(obj.ToString());
+            //List<string> keys = payload.Properties().Select(p => p.Name).ToList();
+            //foreach (var key in keys)
+            //{
+            //    var myVar = context.DataContext.GetProperties().Find(key, true);
+            //    if (myVar != null)
+            //    {
+            //        //var myValue = myVar.GetValue(context.DataContext);
+            //        myVar.SetValue(context.DataContext, payload[key].ToString());
+            //    }
+            //    else
+            //    {
+            //        Log.Debug("Recived property " + key + " but no variable exists to save the value in " + payload[key]);
+            //    }
+            //    //action.setvariable(key, payload[key]);
+
+            //}
+        }
+        protected override bool CanInduceIdle
+        {
+            get
+            {
+                return true;
+            }
+        }
+    }
+}

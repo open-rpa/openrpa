@@ -88,6 +88,10 @@
     </ApplicationDefinition>
     <Compile Include="Activities\AsyncHelper.cs" />
     <Compile Include="Activities\InvokeOpenFlow.cs" />
+    <Compile Include="Activities\InvokeOpenRPA.cs" />
+    <Compile Include="Activities\InvokeOpenRPADesigner.xaml.cs">
+      <DependentUpon>InvokeOpenRPADesigner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\InvokeOpenFlowDesigner.xaml.cs">
       <DependentUpon>InvokeOpenFlowDesigner.xaml</DependentUpon>
     </Compile>
@@ -162,6 +166,10 @@
     <Compile Include="Workflow.cs" />
     <Compile Include="WorkflowInstance.cs" />
     <Compile Include="WorkflowTrackingParticipant.cs" />
+    <Page Include="Activities\InvokeOpenRPADesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Activities\InvokeOpenFlowDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

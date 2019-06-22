@@ -117,11 +117,11 @@ namespace OpenRPA.Interfaces
             {
                 if (k.Key > 0)
                 {
-                    if (k.Key == e.Key) { return true; } // else { Console.WriteLine(k.Key + " != " + e.Key); }
+                    if (k.Key == e.Key) { return true; }
                 }
                 else
                 {
-                    if (k.c == (char)e.KeyValue) { return true; } // else { Console.WriteLine(k.c + " != " + (char)e.KeyValue); }
+                    if (k.c == (char)e.KeyValue) { return true; }
                 }
             }
             return false;
@@ -143,7 +143,6 @@ namespace OpenRPA.Interfaces
                 var lastk = keys[keysindex - 1];
                 if (!isMatch(lastk, e, keytype.down)) keysindex = 0;
             }
-            // Console.WriteLine(keysindex + " / " + keys.Count);
             if (keysindex >= keys.Count)
             {
                 keysindex = 0;
@@ -171,7 +170,6 @@ namespace OpenRPA.Interfaces
                     var lastk = keys[keysindex - 1];
                     if (!isMatch(lastk, e, keytype.up)) keysindex = 0;
                 }
-                // Console.WriteLine(keysindex + " / " + keys.Count);
                 if (keysindex >= keys.Count)
                 {
                     keysindex = 0;

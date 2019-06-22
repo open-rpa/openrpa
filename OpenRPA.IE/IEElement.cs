@@ -208,7 +208,6 @@ namespace OpenRPA.IE
                     var ele = (mshtml.IHTMLSelectElement)RawElement;
                     foreach(mshtml.IHTMLOptionElement e in ele.options)
                     {
-                        Console.WriteLine(e.value);
                         if(e.value == value)
                         {
                             ele.value = value;

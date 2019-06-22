@@ -13,6 +13,18 @@ description: A short Overview of base Activies
 
 **Why:** Use it instead of clicking though the start menu or opening files directly. The selector will include details like parameters, so if you opened word by clicking a document, the selector will detect that too.
 
+# CloseApplication
+
+![1561190659342](activities/1561190659342.png)
+
+**What:** Close an application or webpage
+
+**How:** Click any running application/webpage and a selector for that application will be created. To fine tune, click Open Selector and make your modifications (like what elements to look for) To test the selector is working, click Highlight
+
+**Why:** Use it instead of clicking the close button. Can be handy if the application some times hangs, or you just want an efficient way of forcing an application to close.
+
+
+
 # HighlightElement
 
 ![1558718230861](..\img\1558718230861.png)
@@ -55,7 +67,7 @@ Setting MinResults to 0, effectively means your only checking if an object exist
 
 **Why:** Without elements, it's not really RPA 
 
-Detector
+# Detector
 
 ![1558723009540](..\img\1558723009540.png)
 
@@ -70,6 +82,64 @@ You can use OpenFlow to trigger other robots based on a trigger ( or interact wi
 
 ![1558723403613](..\img\1558723403613.png)
 
+# InvokeOpenFlow
+
+![1561191035011](activities/1561191035011.png)
+
+![1561191004924](activities/1561191004924.png)
+
+**What:** Call a workflow inside OpenFlow
+
+**How:** Insert a workflow node inside OpenFlow, check RPA to make it visible to robots and click deploy. Now you can select this workflow inside the InvokeOpenFlow activity inside OpenRPA. All variables in the workflow will be sent to the workflow in msg.payload, and any data in msg.payload will be sent back to the robot once completed, if a corresponding variable exists.
+
+**Why:** Greatly improves to possibilities in RPA workflow, by giving access to other robors and more than 2000 other systems, using an easy to use drag and drop workflow engine.
+
+# InvokeOpenRPA
+
+![1561191739107](activities/1561191739107.png)
+
+**What:** Call other workflow in OpenRPA
+
+**How:** Drag in InvokeOpenRPA and select the workflow you would like to call. Any arguments in the targeted workflow will be mapped to local variables of the same name, to support transferring parameters between the two workflows. Click "Add variable" to have all the in and out arguments in the targeted workflow created locally in the current scope/sequence.
+
+Why: More complex workflows is easier to manage if split up to smaller "chucks" that call each other. Having multiple smaller workflows also give easy access to run statistics on each part of the workflow using OpenFlow.
+
+# ReadCell
+
+![1561199876085](activities/1561199876085.png)
+
+**What:** Read a single cell in an excel spreadsheet. Type of data is selected in the ArgumentType dropdown list.
+
+**How:** Can be added doing recording by pressed esc when clicking inside excel or manually dragged into a workflow. Select the type of data your reading, select the cell to read from in the Cell property for instance "A2" and set the receiving variable in the Result property. To force excel to read from the correct Sheet, also set the worksheet property.
+
+**Why:** Classical RPA technologies can have a hard time working with application that does a lot of UI manipulation doing run time, such as Microsoft Excel, so using Office COM interfaces is more convenient. It also offers more options, like reading the formula or the value etc.
+
+# WriteCell
+
+![1561200369356](activities/1561200369356.png)
+
+![1561200410099](activities/1561200410099.png)
+
+**What:** Write a value into an excel spreadsheet. Type of data is selected in the ArgumentType dropdown list.
+
+**How:** Can be added doing recording by typing a value in the input dialog when clicking inside excel or manually dragged into a workflow. Select the type of data your reading, select the cell to write in too the Cell property for instance "A2" and set the value/variable in the Value property. To force excel to read from the correct Sheet, also set the worksheet property. Use Formula if you want excel to calculate the field instead of just adding the value.
+
+**Why:** Classical RPA technologies can have a hard time working with application that does a lot of UI manipulation doing run time, such as Microsoft Excel, so using Office COM interfaces is more convenient. It also offers more options, like reading the formula or the value etc.
+
+# ReadRange
+
+![1561200631996](activities/1561200631996.png)
+
+**What:** Read several cell or a whole sheet into a DataTable. Can also be used to easily find next empty cell using LastUsedColumn and LastUsedRow
+
+**How:** Drag a ReadRange in and select the spreadsheet to open. To force a specific sheet, fill in Worksheet property. Set the range to read in Cells property and the receiving property in "DataTable" property
+
+**Why:** Classical RPA technologies can have a hard time working with application that does a lot of UI manipulation doing run time, such as Microsoft Excel, so using Office COM interfaces is more convenient. It also offers more options, like reading the formula or the value etc.
+
+
+
+
+
 # OpenURL
 
 ![1558722430092](..\img\1558722430092.png)
@@ -79,3 +149,4 @@ You can use OpenFlow to trigger other robots based on a trigger ( or interact wi
 **How:** Click Get current, to automatically fetch the URL of the active tab of first browser it finds.
 
 **Why:** Not sure, OpenApplication should be good enough for now.
+

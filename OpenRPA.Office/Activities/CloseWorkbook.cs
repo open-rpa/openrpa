@@ -17,7 +17,7 @@ using Microsoft.Office.Interop.Excel;
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(CloseWorkbookDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(CloseWorkbook), "Resources.toolbox.readexcel.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.closeworkbook.png")]
     //[designer.ToolboxTooltip(Text = "Read CSV, xls or xlsx file and loads it into a DataSet")]
     public class CloseWorkbook : CodeActivity
     {

@@ -109,13 +109,22 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\toolbox\comment.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\designer\readexcel.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\toolbox\readexcel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\toolbox\writeexcel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\designer\writeexcel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\toolbox\closeworkbook.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\designer\closeworkbook.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

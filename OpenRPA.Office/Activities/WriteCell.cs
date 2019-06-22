@@ -17,7 +17,7 @@ using Microsoft.Office.Interop.Excel;
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(WriteCellDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.readexcel.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.writeexcel.png")]
     //[designer.ToolboxTooltip(Text = "Read CSV, xls or xlsx file and loads it into a DataSet")]
     public class WriteCell<TResult> : ExcelActivityOf<TResult>
     {

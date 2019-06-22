@@ -346,8 +346,14 @@ namespace OpenRPA.Views
         }
         public async Task Save()
         {
-
-            parseparameters();
+            try
+            {
+                parseparameters();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
             wfDesigner.Flush();
             if (_activityIdMapping.Count == 0)
             {

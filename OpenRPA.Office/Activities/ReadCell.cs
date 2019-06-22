@@ -11,7 +11,7 @@ using System.Collections.ObjectModel;
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(ReadCellDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.comment.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.readexcel.png")]
     [System.Activities.Presentation.DefaultTypeArgument(typeof(String))]
     public class ReadCell<TResult> : ExcelActivityOf<TResult>
     {

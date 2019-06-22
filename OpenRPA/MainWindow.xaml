@@ -67,6 +67,9 @@
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" KeyTip="S" />
                     <RibbonButton Label="Open" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
                                   Command="{Binding Data.OpenCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                    <RibbonButton Label="Copy" LargeImageSource="/OpenRPA;component/Resources/Buttons/Copy.png" 
+                                  Command="{Binding Data.CopyCommand, Source={StaticResource proxy}}" 
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                     <RibbonButton Label="Delete" LargeImageSource="/OpenRPA;component/Resources/Buttons/Delete.png" 
                                   Command="{Binding Data.DeleteCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />

@@ -125,6 +125,7 @@ namespace OpenRPA
         public ICommand DetectorsCommand { get { return new RelayCommand<object>(onDetectors, canDetectors); } }
         public ICommand SaveCommand { get { return new RelayCommand<object>(onSave, canSave); } }
         public ICommand NewCommand { get { return new RelayCommand<object>(onNew, canNew); } }
+        public ICommand CopyCommand { get { return new RelayCommand<object>(onCopy, canCopy); } }
         public ICommand DeleteCommand { get { return new RelayCommand<object>(onDelete, canDelete); } }
         public ICommand PlayCommand { get { return new RelayCommand<object>(onPlay, canPlay); } }
         public ICommand StopCommand { get { return new RelayCommand<object>(onStop, canStop); } }
@@ -521,6 +522,21 @@ namespace OpenRPA
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private bool canCopy(object item)
+        {
+            return (item is Views.WFDesigner);
+        }
+        private async void onCopy(object item)
+        {
+            var designer = (Views.WFDesigner)item;
+            await designer.Save();
+            Workflow workflow = Workflow.Create(designer.Project, "Copy of " + designer.Workflow.name);
+            workflow.Xaml = designer.Workflow.Xaml;
+            workflow.name = "Copy of " + designer.Workflow.name;
+            onOpenWorkflow(workflow);
+        }
+
         private bool canDelete(object item)
         {
             var view = item as Views.OpenProject;

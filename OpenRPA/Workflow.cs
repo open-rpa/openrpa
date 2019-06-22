@@ -107,7 +107,14 @@ namespace OpenRPA
         public async Task Save()
         {
             //parseparameters();
-            SaveFile();
+            try
+            {
+                SaveFile();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
             projectid = Project._id;
             if (!global.isConnected) return;
             if (string.IsNullOrEmpty(_id))

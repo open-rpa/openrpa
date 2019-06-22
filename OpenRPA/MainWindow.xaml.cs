@@ -29,6 +29,7 @@ namespace OpenRPA
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        public static MainWindow instance = null;
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propertyName)
         {
@@ -43,6 +44,7 @@ namespace OpenRPA
         public MainWindow()
         {
             InitializeComponent();
+            instance = this;
             DataContext = this;
             GenericTools.mainWindow = this;
             System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Critical;
@@ -129,7 +131,6 @@ namespace OpenRPA
         public ICommand RecordCommand { get { return new RelayCommand<object>(onRecord, canRecord); } }
         public ICommand ImportCommand { get { return new RelayCommand<object>(onImport, canImport); } }
         public ICommand ExportCommand { get { return new RelayCommand<object>(onExport, canExport); } }
-
         private bool canImport(object item) { if (!isConnected) return false; return (item is Views.WFDesigner || item is Views.OpenProject || item == null); }
         private void onImport(object item)
         {
@@ -170,14 +171,12 @@ namespace OpenRPA
                 MessageBox.Show(ex.Message);
             }
         }
-
         private bool canExport(object item) { if (!isConnected) return false; return (item is Views.WFDesigner || item is Views.OpenProject || item == null); }
         private void onExport(object item)
         {
             if (!(item is Views.WFDesigner)) return;
             var designer = (Views.WFDesigner)item;
         }
-
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
             Log.Error(e.Exception, "");
@@ -929,7 +928,7 @@ namespace OpenRPA
             _ = global.webSocketClient.QueueMessage(Entity._id, command, null);
 
         }
-        private Workflow GetWorkflowById(string id)
+        public Workflow GetWorkflowById(string id)
         {
             foreach (var p in Projects)
             {
@@ -940,7 +939,7 @@ namespace OpenRPA
             }
             return null;
         }
-        private Views.WFDesigner GetDesignerById(string workflowid)
+        public Views.WFDesigner GetDesignerById(string workflowid)
         {
             foreach (TabItem tab in mainTabControl.Items)
             {
@@ -1056,7 +1055,7 @@ namespace OpenRPA
                 await global.webSocketClient.QueueMessage(message.replyto, command, message.correlationId);
             }
         }
-        private void idleOrComplete(WorkflowInstance instance, EventArgs e)
+        public void idleOrComplete(WorkflowInstance instance, EventArgs e)
         {
             if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
             {
@@ -1071,6 +1070,33 @@ namespace OpenRPA
                 }
                 _ = global.webSocketClient.QueueMessage(instance.queuename, command, instance.correlationId);
             }
+            if (instance.hasError || instance.isCompleted)
+            {
+                string message = "";
+                if (instance.runWatch != null)
+                {
+                    message += (instance.Workflow.name + " " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
+                }
+                else
+                {
+                    message += (instance.Workflow.name + " " + instance.state);
+                }
+                if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
+                Log.Information(message);
+                System.Threading.Thread.Sleep(200);
+                foreach (var wi in WorkflowInstance.Instances)
+                {
+                    if (wi.isCompleted) continue;
+                    if (wi.Bookmarks == null) continue;
+                    foreach (var b in wi.Bookmarks)
+                    {
+                        if (b.Key == instance._id)
+                        {
+                            wi.ResumeBookmark(b.Key, instance);
+                        }
+                    }
+                }
+            }
         }
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -1083,9 +1109,6 @@ namespace OpenRPA
             if (mainTabControl.SelectedContent == null) return;
             NotifyPropertyChanged("VisualTracking");
             NotifyPropertyChanged("SlowMotion");
-            //Console.WriteLine("*************************");
-            //Console.WriteLine(mainTabControl.SelectedContent.ToString() + " " + mainTabControl.SelectedContent.GetType().FullName);
-            //Console.WriteLine("*************************");
         }
         private void WebSocketClient_OnOpen()
         {

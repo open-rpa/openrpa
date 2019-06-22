@@ -102,7 +102,6 @@ namespace OpenRPA.NM
         {
             if (message.uiy > 0 && message.uix > 0 && message.uiwidth > 0 && message.uiheight > 0)
             {
-                // Console.WriteLine("{0} {1},{2} {3},{4} - {5} ", message.functionName, message.uix, message.uiy, message.uiwidth, message.uiheight,  message.xPath);
                 if (!string.IsNullOrEmpty(message.data))
                 {
                     lastElement = new NMElement(message);

@@ -235,19 +235,13 @@ namespace OpenRPA.Views
         }
         public WFDesigner(ClosableTab tab, Workflow workflow, Type[] extratypes)
         {
-            Input.InputDriver.Instance.OnKeyUp += OnKeyUp;
             this.tab = tab;
             InitializeComponent();
-            ;
             WfToolboxBorder.Child = InitializeActivitiesToolbox();
             Workflow = workflow;
             wfDesigner = new WorkflowDesigner();
-
             // Register the runtime metadata for the designer.
             new DesignerMetadata().Register();
-
-
-
             DesignerConfigurationService configService = wfDesigner.Context.Services.GetRequiredService<DesignerConfigurationService>();
             configService.TargetFrameworkName = new System.Runtime.Versioning.FrameworkName(".NETFramework", new Version(4, 5));
             configService.AnnotationEnabled = true;
@@ -466,7 +460,6 @@ namespace OpenRPA.Views
                                 {
                                     //string baseTypeName = v.ItemType.GenericTypeArguments[0].BaseType.FullName;
                                     string baseTypeName = v.ItemType.GenericTypeArguments[0].FullName;
-                                    Console.WriteLine(baseTypeName);
                                     if (!v.ItemType.GenericTypeArguments[0].IsSerializable2())
                                     {
                                         var _v = v.GetCurrentValue();
@@ -628,6 +621,12 @@ namespace OpenRPA.Views
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             DataContext = this;
+            Input.InputDriver.Instance.OnKeyUp += OnKeyUp;
+        }
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+
+            Input.InputDriver.Instance.OnKeyUp -= OnKeyUp;
         }
         public Argument GetArgument(string Name, bool add, Type type)
         {
@@ -996,14 +995,24 @@ namespace OpenRPA.Views
                 {
                     GenericTools.restore(GenericTools.mainWindow);
                 }
-                string message = "#*****************************#" + Environment.NewLine;
+                //string message = "#*****************************#" + Environment.NewLine;
+                //if (instance.runWatch != null)
+                //{
+                //    message += ("# " + instance.Workflow.name + " " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
+                //}
+                //else
+                //{
+                //    message += ("# " + instance.Workflow.name + " " + instance.state);
+                //}
+                //if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
+                string message = "";
                 if (instance.runWatch != null)
                 {
-                    message += ("# " + instance.Workflow.name + " " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
+                    message += (instance.Workflow.name + " " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
                 }
                 else
                 {
-                    message += ("# " + instance.Workflow.name + " " + instance.state);
+                    message += (instance.Workflow.name + " " + instance.state);
                 }
                 if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
                 Log.Output(message);
@@ -1014,6 +1023,21 @@ namespace OpenRPA.Views
                 });
 
                 onChanged?.Invoke(this);
+            }
+            if (instance.hasError || instance.isCompleted)
+            {
+                foreach (var wi in WorkflowInstance.Instances)
+                {
+                    if (wi.isCompleted) continue;
+                    if (wi.Bookmarks == null) continue;
+                    foreach (var b in wi.Bookmarks)
+                    {
+                        if (b.Key == instance._id)
+                        {
+                            wi.ResumeBookmark(b.Key, instance);
+                        }
+                    }
+                }
             }
         }
         public async Task Run(bool VisualTracking, bool SlowMotion, WorkflowInstance instance)
@@ -1069,10 +1093,6 @@ namespace OpenRPA.Views
                 });
                 WfPropertyBorder.Child = form;
             });
-        }
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
-        {
-            Input.InputDriver.Instance.OnKeyUp -= OnKeyUp;
         }
 
     }

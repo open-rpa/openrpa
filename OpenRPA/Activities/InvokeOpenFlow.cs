@@ -15,7 +15,7 @@ namespace OpenRPA.Activities
     [System.ComponentModel.Designer(typeof(InvokeOpenFlowDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.invokezeniverseworkflow.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
-    public class InvokeOpenFlows : NativeActivity
+    public class InvokeOpenFlow : NativeActivity
     {
         [RequiredArgument]
         public string workflow { get; set; }

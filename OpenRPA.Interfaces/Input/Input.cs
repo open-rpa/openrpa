@@ -67,14 +67,26 @@ namespace OpenRPA.Input
             InputDriver.Instance.Element = null;
             mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
         }
-
-        public void Click(MouseButton button)
+        public static void Click(MouseButton button)
         {
-            MouseDown(button);
-            System.Threading.Thread.Sleep(100);
-            MouseUp(button);
-            System.Threading.Thread.Sleep(100);
+            InputDriver.Instance.Element = null;
+            if (button == MouseButton.Left)
+            {
+                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+            }
+            else if (button == MouseButton.Right)
+            {
+                mouse_event(MOUSEEVENTF_RIGHTDOWN | MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
+            }
         }
+
+        //public void Click(MouseButton button)
+        //{
+        //    MouseDown(button);
+        //    System.Threading.Thread.Sleep(100);
+        //    MouseUp(button);
+        //    System.Threading.Thread.Sleep(100);
+        //}
 
         public void Press(params KeyboardKey[] keys)
         {

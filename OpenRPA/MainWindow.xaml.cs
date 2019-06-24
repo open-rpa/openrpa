@@ -101,6 +101,19 @@ namespace OpenRPA
                 NotifyPropertyChanged("SlowMotion");
             }
         }
+        private bool _Minimize = true;
+        public bool Minimize
+        {
+            get
+            {
+                return _Minimize;
+            }
+            set
+            {
+                _Minimize = value;
+                NotifyPropertyChanged("Minimize");
+            }
+        }
         public bool usingOpenFlow
         {
             get
@@ -118,6 +131,7 @@ namespace OpenRPA
             }
         }
         public ICommand SettingsCommand { get { return new RelayCommand<object>(onSettings, canSettings); } }
+        public ICommand MinimizeCommand { get { return new RelayCommand<object>(onMinimize, canMinimize); } }
         public ICommand VisualTrackingCommand { get { return new RelayCommand<object>(onVisualTracking, canVisualTracking); } }
         public ICommand SlowMotionCommand { get { return new RelayCommand<object>(onSlowMotion, canSlowMotion); } }
         public ICommand SignoutCommand { get { return new RelayCommand<object>(onSignout, canSignout); } }
@@ -216,6 +230,13 @@ namespace OpenRPA
         private void onDelete(object sender, ExecutedRoutedEventArgs e)
         {
             DeleteCommand.Execute(mainTabControl.SelectedContent);
+        }
+        private bool canMinimize(object item)
+        {
+            return true;
+        }
+        private void onMinimize(object item)
+        {
         }
         private bool canVisualTracking(object item)
         {
@@ -813,24 +834,19 @@ namespace OpenRPA
                     {
                         InputDriver.Instance.CallNext = true;
                         Log.Debug("MouseMove to " + e.X + "," + e.Y + " and click " + e.Button + " button");
+                        //var point = new FlaUI.Core.Shapes.Point(e.X , e.Y);
+                        //FlaUI.Core.Input.Mouse.MoveTo(e.X , e.Y);
+                        //FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
+                        //if (e.Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
+                        //if (e.Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
+                        //FlaUI.Core.Input.Mouse.Click(flabuttun, point);
 
-                        //var point = new FlaUI.Core.Shapes.Point(e.X + e.OffsetX, e.Y + e.OffsetY);
-                        //FlaUI.Core.Input.Mouse.MoveTo(e.X + e.OffsetX, e.Y + e.OffsetY);
-
-                        var point = new FlaUI.Core.Shapes.Point(e.X , e.Y);
-                        FlaUI.Core.Input.Mouse.MoveTo(e.X , e.Y);
-
-                        FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
-                        if (e.Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
-                        if (e.Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-                        FlaUI.Core.Input.Mouse.Click(flabuttun, point);
-
-                        //InputDriver.Instance.MouseMove(e.X, e.Y);
+                        InputDriver.Instance.MouseMove(e.X, e.Y);
                         // InputDriver.Instance.Click(lastInputEventArgs.Button);
-                        // InputDriver.DoMouseClick();
+                        InputDriver.Click(e.Button);
                         Log.Debug("Click done");
                     }
-                    System.Threading.Thread.Sleep(200);
+                    System.Threading.Thread.Sleep(500);
                 }
                 InputDriver.Instance.CallNext = false;
                 StartRecordPlugins();
@@ -847,7 +863,7 @@ namespace OpenRPA
             InputDriver.Instance.OnKeyUp += OnKeyUp;
             StartRecordPlugins();
             InputDriver.Instance.CallNext = false;
-            GenericTools.minimize(GenericTools.mainWindow);
+            if(this.Minimize) GenericTools.minimize(GenericTools.mainWindow);
         }
         private async void WebSocketClient_OnClose(string reason)
         {

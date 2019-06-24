@@ -279,9 +279,19 @@ namespace OpenRPA.Net
                         break;
                     case "queuemessage":
                         msg.reply();
+                        QueueMessage qm = null;
                         try
                         {
-                            var qm = JsonConvert.DeserializeObject<QueueMessage>(msg.data);
+                            qm = JsonConvert.DeserializeObject<QueueMessage>(msg.data);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                            msg.SendMessage(this);
+                            break;
+                        }
+                        try
+                        {
                             var e = new QueueMessageEventArgs();
                             OnQueueMessage?.Invoke(qm, e);
                             msg.data = JsonConvert.SerializeObject(qm);

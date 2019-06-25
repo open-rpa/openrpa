@@ -193,6 +193,8 @@ namespace OpenRPA.NM
             e.a = new GetElementResult(a);
             e.SupportInput = lastElement.SupportInput;
             e.ClickHandled = true;
+            e.OffsetX = e.X - lastElement.Rectangle.X;
+            e.OffsetY = e.Y - lastElement.Rectangle.Y;
             lastElement.Click(true, e.Button, e.X, e.Y);
             return true;
         }

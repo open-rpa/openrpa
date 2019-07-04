@@ -15,10 +15,10 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <TextBox x:Name="searchWorkflows" Grid.Column="0" Grid.Row="0" Height="20" BorderThickness="0"
@@ -36,6 +36,28 @@
                 </HierarchicalDataTemplate>
             </TreeView.Resources>
         </TreeView>
+        <StackPanel Grid.Column="1" Grid.Row="0">
+            <StackPanel>
+                <TextBlock>Name</TextBlock>
+                <TextBox Text="{Binding ElementName=listWorkflows, Path=SelectedValue.name}" ></TextBox>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock>Created by</TextBlock>
+                <TextBox Text="{Binding ElementName=listWorkflows, Path=SelectedValue._createdby}" ></TextBox>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock>Created</TextBlock>
+                <TextBox Text="{Binding ElementName=listWorkflows, Path=SelectedValue._created}" ></TextBox>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock>Modified by</TextBlock>
+                <TextBox Text="{Binding ElementName=listWorkflows, Path=SelectedValue._modifiedby}" ></TextBox>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock>Modified</TextBlock>
+                <TextBox Text="{Binding ElementName=listWorkflows, Path=SelectedValue._modified}" ></TextBox>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 
 

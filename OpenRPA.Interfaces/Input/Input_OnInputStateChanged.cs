@@ -284,22 +284,31 @@ namespace OpenRPA.Input
         {
             if (e.Button == MouseButton.None)
             {
-                try
-                {
-                    e.Element = AutomationHelper.GetFromPoint(e.X, e.Y);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "");
-                }
-                Element = e.Element;
+                //try
+                //{
+                //    e.Element = AutomationHelper.GetFromPoint(e.X, e.Y);
+                //}
+                //catch (Exception ex)
+                //{
+                //    Log.Error(ex, "");
+                //}
+                //Element = e.Element;
             }
             OnMouseMove(e);
         }
         private void RaiseOnMouseDown(InputEventArgs e)
         {
+            try
+            {
+                Element = AutomationHelper.GetFromPoint(e.X, e.Y);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+            }
             e.Element = Element;
-            if (e.Element != null && e.Element.ProcessId == currentprocessid) return;
+            // if (e.Element != null && e.Element.ProcessId == currentprocessid) return;
+            OnMouseDown(e);
         }
         private void RaiseOnMouseUp(InputEventArgs e)
         {
@@ -321,7 +330,7 @@ namespace OpenRPA.Input
                 {
                     e.Element.Refresh();
                 }
-                if (e.Element != null && e.Element.ProcessId == currentprocessid) return;
+                // if (e.Element != null && e.Element.ProcessId == currentprocessid) return;
                 OnMouseUp(e);
             }
             catch (Exception ex)

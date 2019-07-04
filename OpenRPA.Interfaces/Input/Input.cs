@@ -62,6 +62,10 @@ namespace OpenRPA.Input
         private const int MOUSEEVENTF_RIGHTDOWN = 0x08;
         private const int MOUSEEVENTF_RIGHTUP = 0x10;
 
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetCursorPos(int x, int y);
+
         public static void DoMouseClick()
         {
             InputDriver.Instance.Element = null;

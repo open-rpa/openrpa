@@ -26,7 +26,14 @@ namespace OpenRPA.Interfaces.Overlay
             tmr.Interval = (int)closeAfter.TotalMilliseconds;
             tmr.Start();
         }
-
+        public void setLocation(System.Drawing.Rectangle rect)
+        {
+            GenericTools.RunUI(this, () => {
+                this.Bounds = rect;
+                this.TopMost = true;
+                // this.SetBounds(rect.X, rect.Y, rect.Width, rect.Height);
+            });
+        }
         private void Tmr_Tick(object sender, EventArgs e)
         {
             try

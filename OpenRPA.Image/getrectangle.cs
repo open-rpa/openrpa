@@ -156,7 +156,7 @@ namespace OpenRPA.Image
         private static void onMouseUp(InputEventArgs e)
         {
             if (rect.Width < 3 || rect.Height < 3) return;
-            _overlayWindow.Dispose();
+            if(_overlayWindow!=null) _overlayWindow.Dispose();
             _overlayWindow = null;
             OpenRPA.Input.InputDriver.Instance.OnMouseDown -= onMouseDown;
             OpenRPA.Input.InputDriver.Instance.OnMouseUp -= onMouseUp;

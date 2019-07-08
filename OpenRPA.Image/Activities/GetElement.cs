@@ -19,13 +19,20 @@ namespace OpenRPA.Image
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class GetElement : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {
+        // I want this !!!!
+        // https://stackoverflow.com/questions/50669794/alternative-to-taking-rapid-screenshots-of-a-window
         public GetElement()
         {
             CompareGray = true;
             Threshold = 0.8;
             MaxResults = 10;
             MinResults = 1;
+            Timeout = new InArgument<TimeSpan>()
+            {
+                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(3000)")
+            };
         }
+        public InArgument<TimeSpan> Timeout { get; set; }
         public InArgument<string> Processname { get; set; }
         public InArgument<bool> CompareGray { get; set; }
         public InArgument<double> Threshold { get; set; }
@@ -35,11 +42,12 @@ namespace OpenRPA.Image
         public InArgument<int> MinResults { get; set; }
         public InArgument<ImageElement> From { get; set; }
         public OutArgument<ImageElement[]> Elements { get; set; }
+        public InArgument<Rectangle> Limit { get; set; }
         [Browsable(false)]
         public String Image { get; set; }
         private Variable<IEnumerator<ImageElement>> _elements = new Variable<IEnumerator<ImageElement>>("_elements");
         public Activity LoopAction { get; set; }
-        private List<ImageElement> getBatch(long maxresults, Double Threshold, string Processname, TimeSpan Timeout, bool CompareGray, Rectangle limit)
+        private List<ImageElement> getBatch(int maxresults, Double Threshold, string Processname, TimeSpan Timeout, bool CompareGray, Rectangle limit)
         {
             var result = new List<ImageElement>();
             Bitmap b = null;
@@ -54,10 +62,11 @@ namespace OpenRPA.Image
                 b = new Bitmap(stream);
             }
 
+            var matches = ImageEvent.waitFor(b, Threshold, Processname, Timeout, CompareGray, limit);
+            if (matches.Count() > maxresults) matches = matches.Take(maxresults).ToArray();
             if (Timeout.TotalMilliseconds > 100)
             {
-                var match = ImageEvent.waitFor(b, Threshold, Processname, Timeout, CompareGray, limit);
-                if (match == Rectangle.Empty)
+                if (matches.Length == 0)
                 {
                     if (stream != null) stream.Dispose();
                     b.Dispose();
@@ -65,39 +74,10 @@ namespace OpenRPA.Image
                     return result;
                 }
             }
-            //var template = new Image<Gray, Byte>(b);
-
-            var bitmap = Interfaces.Image.Util.Screenshot();
-            //var graphics = Graphics.FromImage(bitmap as Image);
-            //graphics.CopyFromScreen(0, 0, 0, 0, bitmap.Size);
-            //var imageFrame = new Image<Gray, Byte>(bitmap);
-
-
-            var _list = Matches.FindMatches(bitmap, b, Threshold, (int)maxresults, CompareGray);
             if (stream != null) stream.Dispose();
-            stream = null;
             b.Dispose();
             b = null;
-
-            var _listcleaned = new List<Rectangle>();
-            foreach (var _match in _list.ToList())
-            {
-                bool addit = true;
-                foreach (var submatch in _listcleaned)
-                {
-                    if (submatch.IntersectsWith(_match)) addit = false;
-                }
-                //if(addit && !string.IsNullOrEmpty(Processname))
-                //{
-                //    var element = automationutil.getElementAt(_match.X, _match.Y);
-                //    var p = Process.GetProcessById(element.Properties.ProcessId.Value);
-                //    if(p.ProcessName!= Processname) addit = false;
-                //}
-                if (addit) _listcleaned.Add(_match);
-            }
-
-
-            foreach (var r in _listcleaned)
+            foreach (var r in matches)
             {
                 result.Add(new ImageElement(r));
             }
@@ -109,13 +89,15 @@ namespace OpenRPA.Image
 
         protected override void Execute(NativeActivityContext context)
         {
-            var timeout = TimeSpan.FromSeconds(3);
+            //var timeout = TimeSpan.FromSeconds(3);
+            var timeout = Timeout.Get(context);
             var maxresults = MaxResults.Get(context);
             var processname = Processname.Get(context);
             var comparegray = CompareGray.Get(context);
             var threshold = Threshold.Get(context);
             var minresults = MinResults.Get(context);
             var from = From.Get(context);
+            var limit = Limit.Get(context);
             if (maxresults < 1) maxresults = 1;
             if (threshold < 0.1) threshold = 0.1;
             if (threshold > 1) threshold = 1;
@@ -125,7 +107,7 @@ namespace OpenRPA.Image
             sw.Start();
             do
             {
-                elements = getBatch(maxresults, threshold, processname, timeout, comparegray, Rectangle.Empty).ToArray();
+                elements = getBatch(maxresults, threshold, processname, timeout, comparegray, limit).ToArray();
             } while (elements.Count() == 0 && sw.Elapsed < timeout);
             // Log.Debug(string.Format("OpenRPA.Image::GetElement::found {1} elements in {0:mm\\:ss\\.fff}", sw.Elapsed, elements.Count()));
             context.SetValue(Elements, elements);
@@ -167,6 +149,12 @@ namespace OpenRPA.Image
             Interfaces.Extensions.AddCacheArgument(metadata, "From", From);
             Interfaces.Extensions.AddCacheArgument(metadata, "Elements", Elements);
             Interfaces.Extensions.AddCacheArgument(metadata, "MaxResults", MaxResults);
+            Interfaces.Extensions.AddCacheArgument(metadata, "MinResults", MinResults);
+            Interfaces.Extensions.AddCacheArgument(metadata, "Processname", Processname);
+            Interfaces.Extensions.AddCacheArgument(metadata, "CompareGray", CompareGray);
+            Interfaces.Extensions.AddCacheArgument(metadata, "Timeout", Timeout);
+            Interfaces.Extensions.AddCacheArgument(metadata, "Limit", Limit);
+
             metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
         }

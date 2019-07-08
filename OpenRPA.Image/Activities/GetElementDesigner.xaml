@@ -39,7 +39,7 @@
                         <TextBlock>Highlight</TextBlock>
                     </StackPanel>
                 </Button>
-
+                <Button Content="Process Limit" Click="ProcessLimit_Click" />
                 <Image Source="{Binding Image}"></Image>
                 <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
                                     HintText="Drop activity" AllowedItemType="sa:Activity"

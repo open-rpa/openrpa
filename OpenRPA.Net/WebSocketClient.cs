@@ -65,6 +65,13 @@ namespace OpenRPA.Net
                 }
                 if(ws == null) { ws = new ClientWebSocket();  src = new CancellationTokenSource(); }
                 if (ws.State == WebSocketState.Connecting || ws.State == WebSocketState.Open) return;
+                if(ws.State == WebSocketState.CloseReceived)
+                {
+                    OnClose?.Invoke("Socket closing");
+                    ws.Dispose();
+                    ws = null;
+                    return;
+                }
                 await ws.ConnectAsync(new Uri(url), src.Token);
                 Log.Information("Connected to " + url);
                 Task receiveTask = Task.Run(async () => await receiveLoop(), src.Token);
@@ -242,7 +249,7 @@ namespace OpenRPA.Net
                 if (msg.command != "pong") { Log.Verbose(msg.command + " / replyto: " + msg.replyto); }
                     else { Log.Verbose(msg.command + " / replyto: " + msg.replyto);  }
 
-                foreach (var qm in _messageQueue)
+                foreach (var qm in _messageQueue.ToList())
                 {
                     if (qm != null && qm.msg.id == msg.replyto)
                     {

@@ -32,30 +32,37 @@
                     <TextBlock Text="{Binding name}" />
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type projectbase:Workflow}" ItemsSource="{Binding Workflows}">
-                    <TextBlock Text="{Binding name}" />
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding StateImage}" Width="16" Height="16" />
+                        <TextBlock Text="{Binding name}" />
+                    </StackPanel>
                 </HierarchicalDataTemplate>
             </TreeView.Resources>
         </TreeView>
         <StackPanel Grid.Column="1" Grid.Row="0">
             <StackPanel>
-                <TextBlock>Name</TextBlock>
-                <TextBox Text="{Binding ElementName=listWorkflows, Path=SelectedValue.name}" ></TextBox>
+                <TextBlock><Bold>Name</Bold></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue.name}" ></TextBlock>
             </StackPanel>
             <StackPanel>
-                <TextBlock>Created by</TextBlock>
-                <TextBox Text="{Binding ElementName=listWorkflows, Path=SelectedValue._createdby}" ></TextBox>
+                <TextBlock><Bold>State</Bold></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue.State}" ></TextBlock>
             </StackPanel>
             <StackPanel>
-                <TextBlock>Created</TextBlock>
-                <TextBox Text="{Binding ElementName=listWorkflows, Path=SelectedValue._created}" ></TextBox>
+                <TextBlock><Bold>Created by</Bold></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue._createdby}" ></TextBlock>
             </StackPanel>
             <StackPanel>
-                <TextBlock>Modified by</TextBlock>
-                <TextBox Text="{Binding ElementName=listWorkflows, Path=SelectedValue._modifiedby}" ></TextBox>
+                <TextBlock><Bold>Created</Bold></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue._created}" ></TextBlock>
             </StackPanel>
             <StackPanel>
-                <TextBlock>Modified</TextBlock>
-                <TextBox Text="{Binding ElementName=listWorkflows, Path=SelectedValue._modified}" ></TextBox>
+                <TextBlock><Bold>Modified by</Bold></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue._modifiedby}" ></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock><Bold>Modified</Bold></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue._modified}" ></TextBlock>
             </StackPanel>
         </StackPanel>
     </Grid>

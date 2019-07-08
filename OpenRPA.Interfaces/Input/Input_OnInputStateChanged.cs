@@ -148,11 +148,12 @@ namespace OpenRPA.Input
         {
             get
             {
-                if (_Instance == null) _Instance = new InputDriver() { CallNext = true };
+                if (_Instance == null) _Instance = new InputDriver() { CallNext = true, SkipEvent = false };
                 return _Instance;
             }
         }
         public bool CallNext { get; set; }
+        public bool SkipEvent { get; set; }
         private int currentprocessid = 0;
         private IntPtr LowLevelKeyboardProc(Int32 nCode, IntPtr wParam, IntPtr lParam)
         {
@@ -203,6 +204,11 @@ namespace OpenRPA.Input
 
         private IntPtr LowLevelMouseProc(Int32 nCode, IntPtr wParam, IntPtr lParam)
         {
+            if (SkipEvent)
+            {
+                if(CallNext) return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+                return (IntPtr)1;
+            }
             if (currentprocessid == 0) currentprocessid = System.Diagnostics.Process.GetCurrentProcess().Id;
             if (nCode >= HC_ACTION)
             {

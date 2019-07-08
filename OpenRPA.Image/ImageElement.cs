@@ -34,25 +34,29 @@ namespace OpenRPA.Image
         }
         public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY)
         {
-            //Task.Run(() =>
-            //{
-            //});
+            //Log.Information("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
             //Log.Debug("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
             //Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
             //Input.InputDriver.DoMouseClick();
-            // var point = new FlaUI.Core.Shapes.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+            var point = new FlaUI.Core.Shapes.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
             //FlaUI.Core.Input.Mouse.MoveTo(point);
 
-            OpenRPA.Input.InputDriver.SetCursorPos(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-            //FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
-            //if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
-            //if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
+            //Input.InputDriver.SetCursorPos(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+            //Input.InputDriver.Click(Button);
+            // Input.MouseSimulator.MouseButton(Button);
+            //Task.Run(() =>
+            //{
+            //});
+            FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
+            if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
+            if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
+            // System.Threading.Thread.Sleep(100);
+            // Interfaces.Input2.MouseSimulator.ClickLeftMouseButton();
 
-            OpenRPA.Input.InputDriver.Click(Button);
             // FlaUI.Core.Input.Mouse.Click(flabuttun);
-            // FlaUI.Core.Input.Mouse.Click(flabuttun, point);
-            //Log.Debug("Click done");
-            return;
+            Input.InputDriver.Instance.SkipEvent = true;
+            FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+            Input.InputDriver.Instance.SkipEvent = false;
         }
         public void Focus()
         {
@@ -71,6 +75,7 @@ namespace OpenRPA.Image
         {
             using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow())
             {
+                _overlayWindow.BackColor = Color;
                 _overlayWindow.Visible = true;
                 _overlayWindow.SetTimeout(Duration);
                 _overlayWindow.Bounds = Rectangle;

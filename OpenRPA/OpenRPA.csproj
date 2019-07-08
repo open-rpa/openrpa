@@ -500,6 +500,14 @@
     <Resource Include="Resources\close.png" />
     <Resource Include="Resources\open.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\state\Abort.png" />
+    <Resource Include="Resources\state\Completed.png" />
+    <Resource Include="Resources\state\failed.png" />
+    <Resource Include="Resources\state\Running.png" />
+    <Resource Include="Resources\state\Running_green.png" />
+    <Resource Include="Resources\state\unloaded.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>taskkill /f /fi "pid gt 0" /im OpenRPA.JavaBridge.exe</PreBuildEvent>

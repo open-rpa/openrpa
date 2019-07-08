@@ -41,6 +41,8 @@ namespace OpenRPA.Views
         public bool BreakPointhit { get; set; }
         public bool Singlestep { get; set; }
         public bool SlowMotion { get; set; }
+        public bool Minimize { get; set; } = true;
+        
         public bool VisualTracking { get; set; }
         public bool isRunnning {
             get
@@ -162,38 +164,40 @@ namespace OpenRPA.Views
         }
         private void OnKeyUp(Input.InputEventArgs e)
         {
-            if (!tab.IsSelected) return;
-            if (e.Key == Input.KeyboardKey.F10 || e.Key == Input.KeyboardKey.F11)
-            {
-                if (!isRunnning)
+            GenericTools.RunUI(() => { 
+                if (!tab.IsSelected) return;
+                if (e.Key == Input.KeyboardKey.F10 || e.Key == Input.KeyboardKey.F11)
                 {
-                    if (currentprocessid == 0) currentprocessid = System.Diagnostics.Process.GetCurrentProcess().Id;
-                    var element = AutomationHelper.GetFromFocusedElement();
-                    if (element.ProcessId != currentprocessid) return;
-                }
-                Singlestep = true;
-                // if (e.Key == Input.KeyboardKey.F11) { StepInto = true; }
-                if (BreakPointhit)
-                {
-                    if (resumeRuntimeFromHost != null) resumeRuntimeFromHost.Set();
-                    return;
-                }
-                else
-                {
-                    _ = Run(VisualTracking, SlowMotion, null);
-                }
-            }
-            if(e.Key == Input.KeyboardKey.ESCAPE || e.Key == Input.KeyboardKey.ESC)
-            {
-                foreach (var i in WorkflowInstance.Instances)
-                {
-                    if(i.WorkflowId==Workflow._id && !i.isCompleted)
+                    if (!isRunnning)
                     {
-                        i.Abort("User canceled workflow with cancel key");
+                        if (currentprocessid == 0) currentprocessid = System.Diagnostics.Process.GetCurrentProcess().Id;
+                        var element = AutomationHelper.GetFromFocusedElement();
+                        if (element.ProcessId != currentprocessid) return;
+                    }
+                    Singlestep = true;
+                    // if (e.Key == Input.KeyboardKey.F11) { StepInto = true; }
+                    if (BreakPointhit)
+                    {
+                        if (resumeRuntimeFromHost != null) resumeRuntimeFromHost.Set();
+                        return;
+                    }
+                    else
+                    {
+                        _ = Run(VisualTracking, SlowMotion, null);
                     }
                 }
-                if (resumeRuntimeFromHost != null) resumeRuntimeFromHost.Set();
-            }
+                if(e.Key == Input.KeyboardKey.ESCAPE || e.Key == Input.KeyboardKey.ESC)
+                {
+                    foreach (var i in WorkflowInstance.Instances)
+                    {
+                        if(i.WorkflowId==Workflow._id && !i.isCompleted)
+                        {
+                            i.Abort("User canceled workflow with cancel key");
+                        }
+                    }
+                    if (resumeRuntimeFromHost != null) resumeRuntimeFromHost.Set();
+                }
+            });
         }
         private int currentprocessid = 0;
         private async void UserControl_KeyUp(object sender, KeyEventArgs e)
@@ -931,7 +935,7 @@ namespace OpenRPA.Views
             if (_activityIdMapping == null || ActivityId == "1") return;
             if (!_activityIdMapping.ContainsKey(ActivityId))
             {
-                Log.Debug("Failed locating ActivityId : " + ActivityId);
+                // Log.Debug("Failed locating ActivityId : " + ActivityId);
                 return;
             }
             if (!_sourceLocationMapping.ContainsKey(ActivityId)) return;
@@ -1053,7 +1057,7 @@ namespace OpenRPA.Views
             {
                 Singlestep = false;
                 BreakPointhit = false;
-                if (!VisualTracking) GenericTools.minimize(GenericTools.mainWindow);
+                if (!VisualTracking && Minimize) GenericTools.minimize(GenericTools.mainWindow);
                 resumeRuntimeFromHost.Set();
                 return;
             }
@@ -1084,7 +1088,7 @@ namespace OpenRPA.Views
                 var param = new Dictionary<string, object>();
                 instance = Workflow.CreateInstance(param, null, null, onIdle, onVisualTracking);
             }
-            if (!VisualTracking) GenericTools.minimize(GenericTools.mainWindow);
+            if (!VisualTracking && Minimize) GenericTools.minimize(GenericTools.mainWindow);
             await instance.Run();
         }
         private void showVariables(IDictionary<string, ValueType> Variables)

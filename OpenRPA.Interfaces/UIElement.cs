@@ -176,6 +176,7 @@ namespace OpenRPA
         {
             using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow())
             {
+                _overlayWindow.BackColor = Color;
                 _overlayWindow.Visible = true;
                 _overlayWindow.SetTimeout(Duration);
                 _overlayWindow.Bounds = Rectangle;

@@ -88,6 +88,7 @@
     <Compile Include="IDetectorPlugin.cs" />
     <Compile Include="IElement.cs" />
     <Compile Include="Image\Util.cs" />
+    <Compile Include="Input\MouseSimulator.cs" />
     <Compile Include="KeyboardDetectorPlugin.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="NativeMessagingMessage.cs" />

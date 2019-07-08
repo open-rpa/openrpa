@@ -101,16 +101,17 @@ namespace OpenRPA
                 NotifyPropertyChanged("SlowMotion");
             }
         }
-        private bool _Minimize = true;
         public bool Minimize
         {
             get
             {
-                return _Minimize;
+                if (designer == null) return false;
+                return designer.Minimize;
             }
             set
             {
-                _Minimize = value;
+                if (designer == null) return;
+                designer.Minimize = value;
                 NotifyPropertyChanged("Minimize");
             }
         }
@@ -606,6 +607,17 @@ namespace OpenRPA
         }
         private bool canPlay(object item)
         {
+            var view = item as Views.OpenProject;
+            if (view != null)
+            {
+                var val = view.listWorkflows.SelectedValue;
+                if (val == null) return false;
+                var wf = view.listWorkflows.SelectedValue as Workflow;
+                if(wf == null) return false;
+                if(wf.State == "running") return false;
+                return true;
+            }
+
             if (!isConnected) return false;
             if (isRecording) return false;
             if (!(item is Views.WFDesigner)) return false;
@@ -622,6 +634,30 @@ namespace OpenRPA
         }
         private async void onPlay(object item)
         {
+            var view = item as Views.OpenProject;
+            if (view != null)
+            {
+                var val = view.listWorkflows.SelectedValue;
+                if (val == null) return;
+                var workflow = view.listWorkflows.SelectedValue as Workflow;
+                if (workflow == null) return;
+
+                var designer = GetDesignerById(workflow._id);
+                var param = new Dictionary<string, object>();
+                if (designer != null)
+                {
+                    var instance = workflow.CreateInstance(param, null, null, designer.onIdle, designer.onVisualTracking);
+                    designer.Minimize = false;
+                    _ = designer.Run(VisualTracking, SlowMotion, instance);
+                }
+                else
+                {
+                    var instance = workflow.CreateInstance(param, null, null, idleOrComplete, null);
+                    _ = instance.Run();
+                }
+                return;
+            }
+
             try
             {
                 if (!(item is Views.WFDesigner)) return;
@@ -636,6 +672,16 @@ namespace OpenRPA
         }
         private bool canStop(object item)
         {
+            var view = item as Views.OpenProject;
+            if (view != null)
+            {
+                var val = view.listWorkflows.SelectedValue;
+                if (val == null) return false;
+                var wf = view.listWorkflows.SelectedValue as Workflow;
+                if (wf == null) return false;
+                if (wf.State == "running") return true;
+                return false;
+            }
             if (!isConnected) return false;
             if (isRecording) return true;
             if (!(item is Views.WFDesigner)) return false;
@@ -651,6 +697,23 @@ namespace OpenRPA
         }
         private void onStop(object item)
         {
+            var view = item as Views.OpenProject;
+            if (view != null)
+            {
+                var val = view.listWorkflows.SelectedValue;
+                if (val == null) return;
+                var wf = view.listWorkflows.SelectedValue as Workflow;
+                if (wf == null) return;
+                foreach (var i in wf.Instances)
+                {
+                    if (i.isCompleted == false)
+                    {
+                        i.Abort("User clicked stop");
+                    }
+                }
+                return;
+            }
+
             if (!(item is Views.WFDesigner)) return;
             var designer = (Views.WFDesigner)item;
             foreach (var i in designer.Workflow.Instances)
@@ -1141,6 +1204,7 @@ namespace OpenRPA
             if (mainTabControl.SelectedContent == null) return;
             NotifyPropertyChanged("VisualTracking");
             NotifyPropertyChanged("SlowMotion");
+            NotifyPropertyChanged("Minimize");
         }
         private void WebSocketClient_OnOpen()
         {

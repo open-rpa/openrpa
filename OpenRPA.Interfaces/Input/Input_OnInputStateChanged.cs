@@ -148,11 +148,12 @@ namespace OpenRPA.Input
         {
             get
             {
-                if (_Instance == null) _Instance = new InputDriver() { CallNext = true };
+                if (_Instance == null) _Instance = new InputDriver() { CallNext = true, SkipEvent = false };
                 return _Instance;
             }
         }
         public bool CallNext { get; set; }
+        public bool SkipEvent { get; set; }
         private int currentprocessid = 0;
         private IntPtr LowLevelKeyboardProc(Int32 nCode, IntPtr wParam, IntPtr lParam)
         {
@@ -203,6 +204,11 @@ namespace OpenRPA.Input
 
         private IntPtr LowLevelMouseProc(Int32 nCode, IntPtr wParam, IntPtr lParam)
         {
+            if (SkipEvent)
+            {
+                if(CallNext) return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+                return (IntPtr)1;
+            }
             if (currentprocessid == 0) currentprocessid = System.Diagnostics.Process.GetCurrentProcess().Id;
             if (nCode >= HC_ACTION)
             {
@@ -284,22 +290,31 @@ namespace OpenRPA.Input
         {
             if (e.Button == MouseButton.None)
             {
-                try
-                {
-                    e.Element = AutomationHelper.GetFromPoint(e.X, e.Y);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "");
-                }
-                Element = e.Element;
+                //try
+                //{
+                //    e.Element = AutomationHelper.GetFromPoint(e.X, e.Y);
+                //}
+                //catch (Exception ex)
+                //{
+                //    Log.Error(ex, "");
+                //}
+                //Element = e.Element;
             }
             OnMouseMove(e);
         }
         private void RaiseOnMouseDown(InputEventArgs e)
         {
+            try
+            {
+                Element = AutomationHelper.GetFromPoint(e.X, e.Y);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+            }
             e.Element = Element;
-            if (e.Element != null && e.Element.ProcessId == currentprocessid) return;
+            // if (e.Element != null && e.Element.ProcessId == currentprocessid) return;
+            OnMouseDown(e);
         }
         private void RaiseOnMouseUp(InputEventArgs e)
         {
@@ -321,7 +336,7 @@ namespace OpenRPA.Input
                 {
                     e.Element.Refresh();
                 }
-                if (e.Element != null && e.Element.ProcessId == currentprocessid) return;
+                // if (e.Element != null && e.Element.ProcessId == currentprocessid) return;
                 OnMouseUp(e);
             }
             catch (Exception ex)

@@ -15,7 +15,10 @@ namespace OpenRPA
         {
             _type = "workflowinstance";
             _id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
+            // LastUpdated = DateTime.Now;
         }
+        [JsonIgnore]
+        // public DateTime LastUpdated { get { return GetProperty<DateTime>(); } set { SetProperty(value); } } 
         public static List<WorkflowInstance> Instances = new List<WorkflowInstance>();
 
         public delegate void VisualTrackingHandler(WorkflowInstance Instance, string ActivityId, string ChildActivityId, string State);
@@ -359,34 +362,49 @@ namespace OpenRPA
                 Log.Debug(ex.ToString());
             }
         }
+        private Task SaveTask = null;
         public async Task Save()
         {
             SaveFile();
-            try
+            if(SaveTask==null)
             {
-                if (!global.isConnected) return;
-                var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, this);
-                _id = result._id;
-                _acl = result._acl;
-                Log.Debug("Saved with id: " + _id);
-                    
-                
-                // Catch up if others havent been saved
-                foreach (var i in Instances.ToList())
+                //SaveTask = new Task.Delay(1000).ContinueWith(async () =>
+                SaveTask = Task.Run(async () =>
                 {
-                    //if (string.IsNullOrEmpty(_id)) await i.Save();
-                    if (string.IsNullOrEmpty(_id)) await i.Save();
-                }
+                    System.Threading.Thread.Sleep(1000);
+                    try
+                    {
+                        if (!global.isConnected) return;
+                        //if ((DateTime.Now - LastUpdated).TotalMilliseconds < 2000) return;
+                        //LastUpdated = DateTime.Now;
+                        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, this);
+                        _id = result._id;
+                        _acl = result._acl;
+                        //Log.Debug("Saved with id: " + _id);
 
-                if (isCompleted || hasError)
-                {
-                    DeleteFile();
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-                // throw;
+
+                        // Catch up if others havent been saved
+                        foreach (var i in Instances.ToList())
+                        {
+                            //if (string.IsNullOrEmpty(_id)) await i.Save();
+                            if (string.IsNullOrEmpty(_id)) await i.Save();
+                        }
+
+                        if (isCompleted || hasError)
+                        {
+                            DeleteFile();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                        // throw;
+                    }
+                    finally
+                    {
+                        SaveTask = null;
+                    }
+                });
             }
         }
     }

@@ -459,6 +459,10 @@
       <Project>{ce483c6b-ebef-47ba-b3d5-5c7582dafd1d}</Project>
       <Name>OpenRPA.IE</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OpenRPA.Image\OpenRPA.Image.csproj">
+      <Project>{6c18190f-98b1-4e2e-b54c-66bd86e2701a}</Project>
+      <Name>OpenRPA.Image</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj">
       <Project>{481bd5a1-5e8d-42a9-bd31-78becfaf15f3}</Project>
       <Name>OpenRPA.Interfaces</Name>
@@ -495,6 +499,14 @@
   <ItemGroup>
     <Resource Include="Resources\close.png" />
     <Resource Include="Resources\open.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\state\Abort.png" />
+    <Resource Include="Resources\state\Completed.png" />
+    <Resource Include="Resources\state\failed.png" />
+    <Resource Include="Resources\state\Running.png" />
+    <Resource Include="Resources\state\Running_green.png" />
+    <Resource Include="Resources\state\unloaded.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

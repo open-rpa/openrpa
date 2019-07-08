@@ -3,14 +3,29 @@ using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace OpenRPA
 {
     public class Workflow : apibase
     {
+        [JsonIgnore]
+        public DispatcherTimer _timer;
+        public Workflow()
+        {
+            _timer = new DispatcherTimer(DispatcherPriority.Render);
+            _timer.Interval = TimeSpan.FromSeconds(1);
+            _timer.Tick += (sender, args) =>
+            {
+                NotifyPropertyChanged("State");
+                NotifyPropertyChanged("StateImage");
+            };
+            _timer.Start();
+        }
         public string queue { get { return GetProperty<string>(); } set { SetProperty(value); } }        
         public string Xaml { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public List<workflowparameter> Parameters { get { return GetProperty<List<workflowparameter>>(); } set { SetProperty(value); } }
@@ -24,6 +39,45 @@ namespace OpenRPA
             }
         }   
         public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        [JsonIgnore]
+        public string State
+        {
+            get
+            {
+                string state = "unloaded";
+                var instace = Instances;
+                if (instace.Count() > 0)
+                {
+                    var running = instace.Where(x => x.isCompleted == false);
+                    if (running.Count() > 0)
+                    {
+                        state = "running";
+                    }
+                    else
+                    {
+                        state = instace.First().state;
+                    }
+                }
+                return state;
+            }
+        }
+        [JsonIgnore]
+        public string StateImage
+        {
+            get
+            {
+                switch (State)
+                {
+                    case "unloaded": return "/OpenRPA;component/Resources/state/unloaded.png";
+                    case "running": return "/OpenRPA;component/Resources/state/Running_green.png";
+                    case "aborted": return "/OpenRPA;component/Resources/state/Abort.png";
+                    case "failed": return "/OpenRPA;component/Resources/state/failed.png";
+                    case "completed": return "/OpenRPA;component/Resources/state/Completed.png";
+                    default: return "/OpenRPA;component/Resources/state/unloaded.png";
+                }
+            }
+        }
+
         [JsonIgnore]
         public List<WorkflowInstance> Instances
         {

@@ -62,6 +62,10 @@ namespace OpenRPA.Input
         private const int MOUSEEVENTF_RIGHTDOWN = 0x08;
         private const int MOUSEEVENTF_RIGHTUP = 0x10;
 
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetCursorPos(int x, int y);
+
         public static void DoMouseClick()
         {
             InputDriver.Instance.Element = null;
@@ -69,6 +73,7 @@ namespace OpenRPA.Input
         }
         public static void Click(MouseButton button)
         {
+            InputDriver.Instance.SkipEvent = true;
             InputDriver.Instance.Element = null;
             if (button == MouseButton.Left)
             {
@@ -78,6 +83,7 @@ namespace OpenRPA.Input
             {
                 mouse_event(MOUSEEVENTF_RIGHTDOWN | MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
             }
+            InputDriver.Instance.SkipEvent = false;
         }
 
         //public void Click(MouseButton button)

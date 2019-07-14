@@ -5,6 +5,7 @@ using OpenRPA.Interfaces.entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+// using System.Net.WebSockets.Managed;
 using System.Net.WebSockets;
 using System.Security;
 using System.Text;
@@ -23,7 +24,8 @@ namespace OpenRPA.Net
     }
     public class WebSocketClient
     {
-        private ClientWebSocket ws = new ClientWebSocket(); // WebSocket
+        // private ClientWebSocket ws = (ClientWebSocket)SystemClientWebSocket.CreateClientWebSocket();  // new ClientWebSocket(); // WebSocket
+        private System.Net.WebSockets.Managed.ClientWebSocket ws = new System.Net.WebSockets.Managed.ClientWebSocket();  // new ClientWebSocket(); // WebSocket
         private string url = "";
         private CancellationTokenSource src = new CancellationTokenSource();
         private List<SocketMessage> _receiveQueue = new List<SocketMessage>();
@@ -43,7 +45,7 @@ namespace OpenRPA.Net
             get
             {
                 if (ws == null) return false;
-                if(ws.State != WebSocketState.Open) return false;
+                if(ws.State != System.Net.WebSockets.WebSocketState.Open) return false;
                 return true;
             }
         }
@@ -56,16 +58,23 @@ namespace OpenRPA.Net
             try
             {
                 Log.Debug("Connecting to " + url);
-                if (ws != null && (ws.State == WebSocketState.Aborted || ws.State == WebSocketState.Closed))
+                if (ws != null && (ws.State == System.Net.WebSockets.WebSocketState.Aborted || ws.State == System.Net.WebSockets.WebSocketState.Closed))
                 {
                     ws.Dispose();
                     ws = null;
-                    ws = new ClientWebSocket();
+                    // ws = new ClientWebSocket();
+                    // ws = (ClientWebSocket)SystemClientWebSocket.CreateClientWebSocket();
+                    ws = new System.Net.WebSockets.Managed.ClientWebSocket();
                     src = new CancellationTokenSource();
                 }
-                if(ws == null) { ws = new ClientWebSocket();  src = new CancellationTokenSource(); }
-                if (ws.State == WebSocketState.Connecting || ws.State == WebSocketState.Open) return;
-                if(ws.State == WebSocketState.CloseReceived)
+                if(ws == null) {
+                    // ws = new ClientWebSocket();
+                    // ws = (ClientWebSocket)SystemClientWebSocket.CreateClientWebSocket();
+                    ws = new System.Net.WebSockets.Managed.ClientWebSocket();
+                    src = new CancellationTokenSource();
+                }
+                if (ws.State == System.Net.WebSockets.WebSocketState.Connecting || ws.State == System.Net.WebSockets.WebSocketState.Open) return;
+                if(ws.State == System.Net.WebSockets.WebSocketState.CloseReceived)
                 {
                     OnClose?.Invoke("Socket closing");
                     ws.Dispose();
@@ -90,7 +99,7 @@ namespace OpenRPA.Net
             {
                 try
                 {
-                    await ws.CloseAsync(WebSocketCloseStatus.Empty, "", src.Token);
+                    await ws.CloseAsync(System.Net.WebSockets.WebSocketCloseStatus.Empty, "", src.Token);
                 }
                 catch (Exception)
                 {
@@ -109,11 +118,11 @@ namespace OpenRPA.Net
                 try
                 {
                     if (ws == null) { return; }
-                    if (ws.State != WebSocketState.Open) {
+                    if (ws.State != System.Net.WebSockets.WebSocketState.Open) {
                         OnClose?.Invoke("");
                         return;
                     }
-                    WebSocketReceiveResult result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), src.Token);
+                    System.Net.WebSockets.WebSocketReceiveResult result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), src.Token);
                     json = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
                     var message = JsonConvert.DeserializeObject<SocketMessage>(json);
                     if (message != null) _receiveQueue.Add(message);
@@ -121,7 +130,7 @@ namespace OpenRPA.Net
                 }
                 catch (Exception ex)
                 {
-                    if (ws.State != WebSocketState.Open)
+                    if (ws.State != System.Net.WebSockets.WebSocketState.Open)
                     {
                         OnClose?.Invoke(ex.Message);
                     }
@@ -215,14 +224,14 @@ namespace OpenRPA.Net
         private async Task<bool> SendString(string data, CancellationToken cancellation)
         {
             if (ws == null) { return false; }
-            if (ws.State != WebSocketState.Open) { return false; }
+            if (ws.State != System.Net.WebSockets.WebSocketState.Open) { return false; }
             var encoded = Encoding.UTF8.GetBytes(data);
             var buffer = new ArraySegment<Byte>(encoded, 0, encoded.Length);
             try
             {
                 await SendStringSemaphore.WaitAsync();
                 //await ws.SendAsync(buffer, WebSocketMessageType.Text, true, cancellation);
-                await ws.SendAsync(buffer, WebSocketMessageType.Text, true, cancellation);
+                await ws.SendAsync(buffer, System.Net.WebSockets.WebSocketMessageType.Text, true, cancellation);
                 return true;
             }
             catch (Exception ex)

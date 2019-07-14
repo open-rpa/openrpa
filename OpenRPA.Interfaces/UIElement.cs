@@ -141,11 +141,21 @@ namespace OpenRPA
             try
             {
                 if (Button != Input.MouseButton.Left) { VirtualClick = false; }
-                if (VirtualClick && RawElement.Patterns.Invoke.IsSupported)
+                if (VirtualClick && !RawElement.Patterns.Invoke.IsSupported) VirtualClick = false;
+                if (VirtualClick)
                 {
-                    var invokePattern = RawElement.Patterns.Invoke.Pattern;
-                    invokePattern.Invoke();
-                } else
+                    try
+                    {
+                        var invokePattern = RawElement.Patterns.Invoke.Pattern;
+                        invokePattern.Invoke();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Debug("UIElement VirtualClick failed: " + ex.Message);
+                        VirtualClick = false;
+                    }
+                }
+                if (!VirtualClick)
                 {
                     //Log.Debug("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
                     //Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);

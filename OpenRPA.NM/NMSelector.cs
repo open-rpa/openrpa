@@ -123,24 +123,25 @@ namespace OpenRPA.NM
                 getelement.cssPath = cssselector;
                 subresult = NMHook.sendMessageResult(getelement, false, TimeSpan.FromSeconds(2));
                 if(subresult != null)
-                    foreach (var b in subresult.results)
-                    {
-                        if (b.cssPath == "true" || b.xPath == "true")
+                    if(subresult.results != null)
+                        foreach (var b in subresult.results)
                         {
-                            var data = b.result;
-                            var arr = JArray.Parse(data);
-                            foreach(var _e in arr)
+                            if (b.cssPath == "true" || b.xPath == "true")
                             {
-                                var json = _e.ToString();
-                                var subsubresult = Newtonsoft.Json.JsonConvert.DeserializeObject<NativeMessagingMessage>(json);
-                                subsubresult.browser = browser;
-                                subsubresult.result = json;
-                                subsubresult.tabid = b.tabid;
-                                subsubresult.tab = b.tab;
-                                results.Add(new NMElement(subsubresult));
+                                var data = b.result;
+                                var arr = JArray.Parse(data);
+                                foreach(var _e in arr)
+                                {
+                                    var json = _e.ToString();
+                                    var subsubresult = Newtonsoft.Json.JsonConvert.DeserializeObject<NativeMessagingMessage>(json);
+                                    subsubresult.browser = browser;
+                                    subsubresult.result = json;
+                                    subsubresult.tabid = b.tabid;
+                                    subsubresult.tab = b.tab;
+                                    results.Add(new NMElement(subsubresult));
+                                }
                             }
                         }
-                    }
             }
             return results.ToArray();
             //NMHook.Instance.refreshJvms();

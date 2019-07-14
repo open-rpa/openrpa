@@ -43,7 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="IO\PipeStreamReader.cs" />
     <Compile Include="IO\PipeStreamWrapper.cs" />
     <Compile Include="IO\PipeStreamWriter.cs" />

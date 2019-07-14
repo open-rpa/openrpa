@@ -87,6 +87,7 @@ namespace OpenRPA.Windows
                 //item.canDisable = false;
                 Items.Add(item);
             }
+            bool isStartmenu = false;
             for (var i = 0; i < pathToRoot.Count(); i++)
             {
                 var o = pathToRoot[i];
@@ -101,11 +102,30 @@ namespace OpenRPA.Windows
                         if (idx2 > idx) p.Value = p.Value.Substring(0, idx2 + 1) + "*";
                     }
                     //if (p.Name == "ClassName" && p.Value.StartsWith("WindowsForms10")) p.Value = "WindowsForms10*";
-                    if(p.Name == "ClassName" && p.Value.ToLower() == "shelldll_defview")
+                    if (p.Name == "ClassName" && p.Value.ToLower() == "shelldll_defview")
                     {
                         item.Enabled = false;
                     }
+                    if (p.Name == "ClassName" && (p.Value.ToLower() == "dv2vontrolhost" || p.Value.ToLower() == "desktopprogramsmfu"))
+                    {
+                        isStartmenu = true;
+                    }
+                    if (p.Name == "ClassName" && p.Value == "#32770")
+                    {
+                        item.Enabled = false;
+                    }
+                    if (p.Name == "ControlType" && p.Value == "ListItem" && isStartmenu)
+                    {
+                        p.Enabled = false;
+                    }
                 }
+                var hassyslistview32 = item.Properties.Where(p => p.Name == "ClassName" && p.Value.ToLower() == "syslistview32").ToList();
+                if (hassyslistview32.Count > 0)
+                {
+                    var hasControlType = item.Properties.Where(p => p.Name == "ControlType").ToList();
+                    if(hasControlType.Count> 0) { hasControlType[0].Enabled = false; }
+                }
+
                 if (doEnum) item.EnumNeededProperties(o, o.Parent);
                 Items.Add(item);
             }

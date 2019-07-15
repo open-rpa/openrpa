@@ -32,6 +32,14 @@ namespace OpenRPA.Image
             Width = Rectangle.Width;
             Height = Rectangle.Height;
         }
+        public ImageElement(System.Drawing.Rectangle Rectangle, System.Drawing.Bitmap Element)
+        {
+            X = Rectangle.X;
+            Y = Rectangle.Y;
+            Width = Rectangle.Width;
+            Height = Rectangle.Height;
+            this.element = Element;
+        }
         public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY)
         {
             //Log.Information("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");

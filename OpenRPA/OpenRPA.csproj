@@ -87,6 +87,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Activities\AsyncHelper.cs" />
+    <Compile Include="Activities\InsertClipboard.cs" />
+    <Compile Include="Activities\CopyClipboard.cs" />
+    <Compile Include="Activities\InsertClipboardDesigner.xaml.cs">
+      <DependentUpon>InsertClipboardDesigner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Activities\CopyClipboardDesigner.xaml.cs">
+      <DependentUpon>CopyClipboardDesigner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\InvokeOpenFlow.cs" />
     <Compile Include="Activities\InvokeOpenRPA.cs" />
     <Compile Include="Activities\InvokeOpenRPADesigner.xaml.cs">
@@ -166,6 +174,14 @@
     <Compile Include="Workflow.cs" />
     <Compile Include="WorkflowInstance.cs" />
     <Compile Include="WorkflowTrackingParticipant.cs" />
+    <Page Include="Activities\InsertClipboardDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\CopyClipboardDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Activities\InvokeOpenRPADesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

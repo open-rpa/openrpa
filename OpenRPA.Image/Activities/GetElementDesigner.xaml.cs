@@ -19,7 +19,7 @@ namespace OpenRPA.Image
         public GetElementDesigner()
         {
             InitializeComponent();
-            // HighlightImage = Extensions.GetImageSourceFromResource("search.png");
+            HighlightImage = Extensions.GetImageSourceFromResource("search.png");
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)

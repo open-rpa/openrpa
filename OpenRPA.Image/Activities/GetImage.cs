@@ -73,7 +73,7 @@ namespace OpenRPA.Image
                 }
             }
             var b = Interfaces.Image.Util.Screenshot(match);
-            Interfaces.Image.Util.SaveImageStamped(b, "c:\\temp", "GetImage-result");
+            //Interfaces.Image.Util.SaveImageStamped(b, "c:\\temp", "GetImage-result");
             var v = new ImageElement(match, b);
             context.SetValue(Result, v);
 

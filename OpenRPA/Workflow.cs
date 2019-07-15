@@ -111,7 +111,7 @@ namespace OpenRPA
         }
         public static Workflow Create(Project Project, string Name)
         {
-            Workflow workflow = new Workflow { Project = Project, name = Name };
+            Workflow workflow = new Workflow { Project = Project, name = Name, _acl = Project._acl };
             bool isUnique = false; int counter = 1;
             while (!isUnique)
             {

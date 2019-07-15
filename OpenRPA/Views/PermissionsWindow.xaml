@@ -1,0 +1,92 @@
+﻿<Window x:Class="OpenRPA.Views.PermissionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenRPA.Views"
+        mc:Ignorable="d"
+        Title="PermissionsWindow" Height="450" Width="800">
+    <Window.Resources>
+        <CollectionViewSource Source="{Binding Source}" x:Key="Permissions">
+        </CollectionViewSource>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.New" Executed="cmdNew"/>
+        <CommandBinding Command="ApplicationCommands.Delete" Executed="cmdDelete"/>
+    </Window.CommandBindings>
+
+    <Grid x:Name="wfGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="133" />
+            <RowDefinition Height="4*" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Ribbon x:Name="Ribbon" Grid.ColumnSpan="3">
+            <RibbonTab x:Name="DetectorTab" Header="Detector">
+                <RibbonGroup x:Name="GroupDetectorFile" Header="File">
+                    <RibbonButton x:Name="ButtonNew" Command="ApplicationCommands.New" Label="New"  LargeImageSource="/OpenRPA;component/Resources/Buttons/New.png" />
+                    <RibbonButton x:Name="ButtonDelete" Command="ApplicationCommands.Delete" Label="Delete" LargeImageSource="/OpenRPA;component/Resources/Buttons/Delete.png" />
+                    <!--RibbonButton x:Name="ButtonDetectorSave" Command="ApplicationCommands.Save" Label="Save"  LargeImageSource="/rpa;component/Resources/Buttons/Save.png" / -->
+                </RibbonGroup>
+            </RibbonTab>
+        </Ribbon>
+
+
+
+        <ListView x:Name="listDetectors" ItemsSource="{Binding Source={StaticResource Permissions}}" Grid.Column="0" Grid.Row="1" Margin="10" 
+                  SelectionMode="Extended" SelectionChanged="listDetectors_SelectionChanged"
+                  SelectedItem="{Binding SelectedItem}">
+            <ListView.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="TextTrimming" Value="CharacterEllipsis"></Setter>
+                </Style>
+                <Style TargetType="GridViewColumnHeader">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.Resources>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding name}">
+                        <!-- Width="110" -->
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="name" >
+                                <TextBlock Name="name" Text="name" />
+                            </GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <StackPanel Margin="5,5,5,5" Grid.Column="1" Grid.Row="1">
+            <StackPanel Margin="5,5,5,5" Orientation="Horizontal">
+                <CheckBox IsThreeState="False" Margin="0,4,0,10" 
+                          IsChecked="{Binding SelectedItem.Read, Mode=TwoWay}" />
+                <TextBlock Margin="0,0,0,10" Text="Read" Padding="3,3,3,3" />
+            </StackPanel>
+
+            <StackPanel Margin="5,5,5,5" Orientation="Horizontal" VerticalAlignment="Top">
+                <CheckBox IsThreeState="False" Margin="0,4,0,10" 
+                          IsChecked="{Binding SelectedItem.Update, Mode=TwoWay}" />
+                <TextBlock Margin="0,0,0,10" Text="Update" Padding="3,3,3,3" />
+            </StackPanel>
+
+            <StackPanel Margin="5,5,5,5" Orientation="Horizontal">
+                <CheckBox IsThreeState="False" Margin="0,4,0,10" 
+                          IsChecked="{Binding SelectedItem.Delete, Mode=TwoWay}" />
+                <TextBlock Margin="0,0,0,10" Text="Delete" Padding="3,3,3,3" />
+            </StackPanel>
+
+            <StackPanel Margin="5,5,5,5" Orientation="Horizontal">
+                <CheckBox IsThreeState="False" Margin="0,4,0,10" 
+                          IsChecked="{Binding SelectedItem.Invoke, Mode=TwoWay}" />
+                <TextBlock Margin="0,0,0,10" Text="Invoke" Padding="3,3,3,3" />
+            </StackPanel>
+
+        </StackPanel>
+    </Grid>
+</Window>

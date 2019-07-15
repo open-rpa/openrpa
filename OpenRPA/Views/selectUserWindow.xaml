@@ -1,0 +1,40 @@
+﻿<Window x:Class="OpenRPA.Views.selectUserWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:input="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
+             xmlns:local="clr-namespace:OpenRPA.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="600" Height="100" Width="600" Loaded="Window_Loaded">
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="451*" />
+            <ColumnDefinition Width="141*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <input:AutoCompleteBox  Grid.Row="0" Grid.Column="0" 
+                x:Name="search" 
+                FilterMode="None"
+                IsTextCompletionEnabled="False"
+                Tag="Value2"
+                SelectionChanged="OnSelectionChanged"
+                Populating="OnPopulatingAsynchronous"
+                MinimumPopulateDelay="200"
+                ValueMemberPath="name" Grid.ColumnSpan="2"
+            >
+            <input:AutoCompleteBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Name="textBlock" Text="{Binding name}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </input:AutoCompleteBox.ItemTemplate>
+        </input:AutoCompleteBox>
+        <Button x:Name="okButton" Grid.Row="1" Width="40" HorizontalAlignment="Left"  Margin="5,5,0,5" Click="Button_Click">OK</Button>
+    </Grid>
+</Window>

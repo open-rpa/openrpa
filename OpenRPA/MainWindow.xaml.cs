@@ -147,6 +147,84 @@ namespace OpenRPA
         public ICommand RecordCommand { get { return new RelayCommand<object>(onRecord, canRecord); } }
         public ICommand ImportCommand { get { return new RelayCommand<object>(onImport, canImport); } }
         public ICommand ExportCommand { get { return new RelayCommand<object>(onExport, canExport); } }
+        public ICommand PermissionsCommand { get { return new RelayCommand<object>(onPermissions, canPermissions); } }
+        private bool canPermissions(object item)
+        {
+            if (!isConnected) return false;
+            if (isRecording) return false;
+            var view = item as Views.OpenProject;
+            if (view != null)
+            {
+                var val = view.listWorkflows.SelectedValue;
+                if (val == null) return false;
+                var wf = view.listWorkflows.SelectedValue as Workflow;
+                return true;
+            }
+            var designer = item as Views.WFDesigner;
+            if (designer != null)
+            {
+                return true;
+            }
+            var DetectorsView = item as Views.DetectorsView;
+            if (DetectorsView != null)
+            {
+                var detector = DetectorsView.lidtDetectors.SelectedItem as IDetectorPlugin;
+                if (detector == null) return false;
+                return true;
+            }
+            return false;
+        }
+        private async void onPermissions(object item)
+        {
+            apibase result = null;
+            if (!isConnected) return;
+            if (isRecording) return;
+            var view = item as Views.OpenProject;
+            if (view != null)
+            {
+                var val = view.listWorkflows.SelectedValue;
+                if (val == null) return;
+                var wf = val as Workflow;
+                var p = val as Project;
+                if (wf != null) { result = wf; }
+                if (p != null) { result = p; }
+            }
+            var designer = item as Views.WFDesigner;
+            if (designer != null)
+            {
+                result = designer.Workflow;
+            }
+            var DetectorsView = item as Views.DetectorsView;
+            if (DetectorsView != null)
+            {
+                var detector = DetectorsView.lidtDetectors.SelectedItem as IDetectorPlugin;
+                if (detector == null) return;
+                result = detector.Entity;
+            }
+
+            try
+            {
+                var pw = new Views.PermissionsWindow(result);
+                Hide();
+                pw.ShowDialog();
+                if (result is Project) await ((Project)result).Save();
+                if (result is Workflow) await ((Workflow)result).Save();
+                if (result is Detector)
+                {
+                    await global.webSocketClient.UpdateOne("openrpa", 0, false, result);
+                }
+                // result.Save();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                System.Windows.MessageBox.Show("CmdTest: " + ex.Message);
+            }
+            finally
+            {
+                Show();
+            }
+        }
         private bool canImport(object item) { if (!isConnected) return false; return (item is Views.WFDesigner || item is Views.OpenProject || item == null); }
         private void onImport(object item)
         {
@@ -544,7 +622,6 @@ namespace OpenRPA
                 MessageBox.Show(ex.Message);
             }
         }
-
         private bool canCopy(object item)
         {
             return (item is Views.WFDesigner);
@@ -558,7 +635,6 @@ namespace OpenRPA
             workflow.name = "Copy of " + designer.Workflow.name;
             onOpenWorkflow(workflow);
         }
-
         private bool canDelete(object item)
         {
             var view = item as Views.OpenProject;

@@ -73,7 +73,10 @@
                     <RibbonButton Label="Delete" LargeImageSource="/OpenRPA;component/Resources/Buttons/Delete.png" 
                                   Command="{Binding Data.DeleteCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
-<!--                     <RibbonButton Label="Import" LargeImageSource="/OpenRPA;component/Resources/Buttons/Import.png" 
+                    <RibbonButton Label="Permissions" LargeImageSource="/OpenRPA;component/Resources/Buttons/Manage.png" 
+                                  Command="{Binding Data.PermissionsCommand, Source={StaticResource proxy}}" 
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
+                    <!--                     <RibbonButton Label="Import" LargeImageSource="/OpenRPA;component/Resources/Buttons/Import.png" 
                                   Command="{Binding Data.ImportCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                     <RibbonButton Label="Export" LargeImageSource="/OpenRPA;component/Resources/Buttons/Export.png" 

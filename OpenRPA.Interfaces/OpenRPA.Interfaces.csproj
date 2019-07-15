@@ -57,6 +57,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Security" />
     <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Controls.Ribbon" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -76,6 +77,7 @@
     <Compile Include="Config.cs" />
     <Compile Include="entity\ace.cs" />
     <Compile Include="entity\apibase.cs" />
+    <Compile Include="entity\apiuser.cs" />
     <Compile Include="entity\Detector.cs" />
     <Compile Include="entity\Rolemember.cs" />
     <Compile Include="entity\TokenUser.cs" />

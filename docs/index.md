@@ -46,7 +46,15 @@ Chrome/Firefox
 
 ![1558724619238](img/SelectorNative.png)
 
-Images and OCR coming soon
+Images and OCR
+
+![1563285580562](img/1563285580562.png)
+
+World class security using Access Control Lists and on the fly encryption for **all** objects in OpenFlow
+
+![1563285742425](img/1563285742425.png)
+
+![1563285778264](img/1563285778264.png)
 
 Join slack for for help or giving feedback [#openrpa](https://join.slack.com/t/openrpa/shared_invite/enQtNjI2ODE5NDIzNDg5LTFhMzRmMzJiNTYzMDU5OTAxOTA3ZTRiZjA1ZWQ4ZDViMzY5NmVmYTgyZDExNzhiOThkZjE0ZmY2OTMyZjVhNTQ)
 

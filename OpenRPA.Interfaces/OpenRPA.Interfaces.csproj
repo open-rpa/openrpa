@@ -102,6 +102,12 @@
       <DependentUpon>OverlayWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Overlay\ScreenUtils.cs" />
+    <Compile Include="Overlay\TooltipWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Overlay\TooltipWindow.Designer.cs">
+      <DependentUpon>TooltipWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Plugins.cs" />
     <Compile Include="Selector\BindingProxy.cs" />
     <Compile Include="Selector\SelectorModel.cs" />
@@ -274,6 +280,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Overlay\TooltipWindow.resx">
+      <DependentUpon>TooltipWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\check.png" />
     <EmbeddedResource Include="Resources\search.png" />
     <EmbeddedResource Include="Resources\x.png" />

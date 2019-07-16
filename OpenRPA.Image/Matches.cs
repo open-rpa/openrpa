@@ -54,6 +54,8 @@ namespace OpenRPA.Image
                 {
                     using (var template = new Image<Gray, byte>(Template))
                     {
+                        //Interfaces.Image.Util.SaveImageStamped(source.Bitmap, "c:\\temp", "FindMatches-source");
+                        //Interfaces.Image.Util.SaveImageStamped(template.Bitmap, "c:\\temp", "FindMatches-template");
                         //rpaactivities.image.util.saveImage(source, "FindMatches-source");
                         //rpaactivities.image.util.saveImage(template, "FindMatches-template");
                         var result = FindMatches(source, template, Threshold, maxResults);
@@ -69,6 +71,8 @@ namespace OpenRPA.Image
                 {
                     using (var template = new Image<Bgr, byte>(Template))
                     {
+                        //Interfaces.Image.Util.SaveImageStamped(source.Bitmap, "c:\\temp", "FindMatches-source");
+                        //Interfaces.Image.Util.SaveImageStamped(template.Bitmap, "c:\\temp", "FindMatches-template");
                         //rpaactivities.image.util.saveImage(source, "FindMatches-source");
                         //rpaactivities.image.util.saveImage(template, "FindMatches-template");
                         var result = FindMatches(source, template, Threshold, maxResults);

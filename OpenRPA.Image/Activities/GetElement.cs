@@ -89,6 +89,7 @@ namespace OpenRPA.Image
 
         protected override void Execute(NativeActivityContext context)
         {
+            if(Image==null) new ArgumentException("Image is null");
             //var timeout = TimeSpan.FromSeconds(3);
             var timeout = Timeout.Get(context);
             var maxresults = MaxResults.Get(context);

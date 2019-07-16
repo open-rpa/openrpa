@@ -49,19 +49,36 @@ namespace OpenRPA.Image
 
             var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
             var Processname = p.ProcessName;
+            FlaUI.Core.Shapes.Point point = new FlaUI.Core.Shapes.Point(e.X - 80, e.Y - 80);
+            if (point.X < 0) { point.X = e.X + 80; }
+            if (point.Y < 0) { point.Y = e.Y + 80; }
+            FlaUI.Core.Input.Mouse.MoveTo(point);
 
+            var a = new GetElement();
+            a.Threshold = 0.9;
+            a.Processname = Processname;
+            e.SupportInput = false;
             int newOffsetX; int newOffsetY; System.Drawing.Rectangle resultrect;
             var image = getrectangle.GuessContour(element, e.OffsetX, e.OffsetY, out newOffsetX, out newOffsetY, out resultrect);
+            if(image == null)
+            {
+                var tip = new Interfaces.Overlay.TooltipWindow("Failed Guessing Contour, please select manually");
+                tip.SetTimeout(TimeSpan.FromSeconds(2));
+                e.OffsetX = 10;
+                e.OffsetY = 10;
+                e.a = new GetElementResult(a);
+                return true;
+
+            }
             e.OffsetX = newOffsetX;
             e.OffsetY = newOffsetY;
             e.Element = new ImageElement(resultrect, image);
 
-            var a = new GetElement();
-            a.Threshold = 0.9;
             a.Image = Interfaces.Image.Util.Bitmap2Base64(image);
-            a.Processname = Processname;
-            e.SupportInput = false;
             e.a = new GetElementResult(a);
+
+            point.X = e.X; point.Y = e.Y;
+            FlaUI.Core.Input.Mouse.MoveTo(point);
 
             return true;
         }

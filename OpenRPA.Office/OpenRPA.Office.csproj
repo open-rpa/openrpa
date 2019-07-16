@@ -39,6 +39,10 @@
       <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Outlook.15.0.4797.1003\lib\net20\Microsoft.Office.Interop.Outlook.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -62,7 +66,16 @@
     <Compile Include="Activities\CloseWorkbookDesigner.xaml.cs">
       <DependentUpon>CloseWorkbookDesigner.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Activities\email.cs" />
     <Compile Include="Activities\ExcelActivity.cs" />
+    <Compile Include="Activities\GetMails.cs" />
+    <Compile Include="Activities\GetMailsDesigner.xaml.cs">
+      <DependentUpon>GetMailsDesigner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Activities\NewMailItem.cs" />
+    <Compile Include="Activities\NewMailItemDesigner.xaml.cs">
+      <DependentUpon>NewMailItemDesigner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\ReadCell.cs" />
     <Compile Include="Activities\ReadCellDesigner.xaml.cs">
       <DependentUpon>ReadCellDesigner.xaml</DependentUpon>
@@ -75,6 +88,8 @@
     <Compile Include="Activities\WriteCellDesigner.xaml.cs">
       <DependentUpon>WriteCellDesigner.xaml</DependentUpon>
     </Compile>
+    <Compile Include="converters.cs" />
+    <Compile Include="CustomSelectEditor.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GenericArgumentTypeUpdater.cs" />
     <Compile Include="Plugin.cs" />
@@ -92,6 +107,14 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\CloseWorkbookDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\GetMailsDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\NewMailItemDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -125,6 +148,14 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\designer\closeworkbook.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\designer\outlook.png" />
+    <EmbeddedResource Include="Resources\toolbox\outlook.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\designer\newemail.png" />
+    <EmbeddedResource Include="Resources\toolbox\newemail.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

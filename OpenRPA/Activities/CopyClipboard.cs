@@ -16,6 +16,7 @@ namespace OpenRPA.Activities
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class CopyClipboard : CodeActivity
     {
+        public InArgument<bool> SendCtrlC { get; set; } = false;
         public OutArgument<string> StringResult { get; set; }
         public OutArgument<System.Windows.Media.Imaging.BitmapSource> ImageResult { get; set; }
         protected override void Execute(CodeActivityContext context)
@@ -28,7 +29,11 @@ namespace OpenRPA.Activities
                 counter++;
                 try
                 {
-
+                    if(SendCtrlC.Get(context))
+                    {
+                        var keys = FlaUI.Core.Input.Keyboard.Pressing(FlaUI.Core.WindowsAPI.VirtualKeyShort.LCONTROL, FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_C);
+                        keys.Dispose();
+                    }
                     System.Windows.IDataObject idat = null;
                     Exception threadEx = null;
                     System.Threading.Thread staThread = new System.Threading.Thread(() =>

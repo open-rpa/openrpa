@@ -98,6 +98,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Activities\addEntity.cs" />
+    <Compile Include="Activities\addEntityDesigner.xaml.cs">
+      <DependentUpon>addEntityDesigner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\AsyncHelper.cs" />
     <Compile Include="Activities\CommentOut.cs" />
     <Compile Include="Activities\CommentOutDesigner.xaml.cs">
@@ -196,6 +200,10 @@
     <Compile Include="Workflow.cs" />
     <Compile Include="WorkflowInstance.cs" />
     <Compile Include="WorkflowTrackingParticipant.cs" />
+    <Page Include="Activities\addEntityDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Activities\CommentOutDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

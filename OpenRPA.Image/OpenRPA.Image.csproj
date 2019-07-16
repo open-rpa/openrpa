@@ -79,7 +79,10 @@
     <Compile Include="ImageEvent.cs" />
     <Compile Include="ImageElement.cs" />
     <Compile Include="Matches.cs" />
+    <Compile Include="MyEnumWindows.cs" />
+    <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WindowHandleInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\GetImageDesigner.xaml">

@@ -67,6 +67,18 @@ Setting MinResults to 0, effectively means your only checking if an object exist
 
 **Why:** Without elements, it's not really RPA 
 
+# GetImage
+
+![1563281185707](activities/1563281185707.png)
+
+![1563281220892](activities/1563281220892.png)
+
+**What:** Get an image relative to another element.
+
+**How:** Place GetImage inside an GetElement, and select a placement to grab, relative to the objects found.
+
+**Why:** Image you want to ready the assembly name, using images, you open properties on the project find the label for the field, and then in GetImage select the field with the value. Now you can easily grab the value using OCR ( .Value will use OpenCV OCR)
+
 # Detector
 
 ![1558723009540](..\img\1558723009540.png)
@@ -136,9 +148,35 @@ Why: More complex workflows is easier to manage if split up to smaller "chucks" 
 
 **Why:** Classical RPA technologies can have a hard time working with application that does a lot of UI manipulation doing run time, such as Microsoft Excel, so using Office COM interfaces is more convenient. It also offers more options, like reading the formula or the value etc.
 
+# CommentOut
 
+![1563280195202](activities/1563280195202.png)
 
+**What: **Comment out, lets you easily remove parts of a workflow. Anything you place inside CommentOut will not be executed.
 
+**How:** Simply drag'n'drop or copy'n'paste activities into this activity. A right click option will soon be implemented for even faster adding and removing out commented code.
+
+**Why:** While debugging it can be handy to remove small parts of an workflow, sometimes people also use it for template's.
+
+# CopyClipboard
+
+![1563280773451](activities/1563280773451.png)
+
+**What:** Copy what ever is in the clipboard, set SendCtrlC to true, to grab what ever is selected right now
+
+**How:** After copying or marking text or an image, insert this activity and you get the result in StringResult or ImageResult
+
+**Why:** Sometimes its just more convenient to use copy'n'paste, other times is the best way for instance when automating using Remote Desktop or Citrix, using OCR is not always reliable, so using copy'n'paste is better
+
+# InsertClipboard
+
+![1563280813755](activities/1563280813755.png)
+
+**What:** Adds text to the clipboard, ready to be pasted.
+
+**How:** Just assign text to the Text Property.
+
+**Why:** I don't know why, it just felt right, after creating CopyClipboard. Maybe you want to add a text, the user can then decide where to insert. 
 
 # OpenURL
 

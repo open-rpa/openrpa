@@ -1,4 +1,5 @@
 ﻿using Microsoft.Office.Interop.Outlook;
+using OpenRPA.Interfaces;
 using System;
 using System.Activities;
 using System.Collections.Generic;
@@ -32,20 +33,39 @@ namespace OpenRPA.Office.Activities
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<email> Body { get; set; }
         private Variable<IEnumerator<email>> _elements = new Variable<IEnumerator<email>>("_elements");
+        private Microsoft.Office.Interop.Outlook.Application CreateOutlookInstance()
+        {
+            var outlookApplication = new Microsoft.Office.Interop.Outlook.Application();
+            if (outlookApplication.ActiveExplorer() == null)
+            {
+                // mOutlookExplorer = mOutlookApplication.Session.GetDefaultFolder(OlDefaultFolders.olFolderCalendar).GetExplorer();
+                var mOutlookExplorer = outlookApplication.Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox).GetExplorer();
+                mOutlookExplorer.Activate();
+            }
+            return outlookApplication;
+        }
 
         protected override void Execute(NativeActivityContext context)
         {
             var folder = Folder.Get(context);
             if (string.IsNullOrEmpty(folder)) return;
-            Application outlookApplication = new Microsoft.Office.Interop.Outlook.Application();
+            var outlookApplication = CreateOutlookInstance();
+            if (outlookApplication.ActiveExplorer() == null) {
+                Log.Warning("Outlook not running!");
+                return;
+            }
             MAPIFolder inBox = (MAPIFolder)outlookApplication.ActiveExplorer().Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox);
             MAPIFolder folderbase = inBox.Store.GetRootFolder();
             MAPIFolder mfolder = GetFolder(folderbase, folder);
 
             Items Items = mfolder.Items;
-            if(UnreadOnly.Get(context))
+            var unreadonly = UnreadOnly.Get(context);
+            if (unreadonly)
             {
-                Items.Restrict("[Unread]=true");
+                var Filter = "[Unread]=true";
+                // var Filter = "@SQL=" + (char)34 + "urn:schemas:httpmail:hasattachment" + (char)34 + "=1 AND " +
+                // var Filter = "@SQL=" + (char)34 + "urn:schemas:httpmail:read" + (char)34 + "=0";
+                Items.Restrict(Filter);
             }
             var result = new List<email>();
             foreach(var folderItem in Items)
@@ -54,7 +74,17 @@ namespace OpenRPA.Office.Activities
                 Microsoft.Office.Interop.Outlook.MailItem mailItem = folderItem as Microsoft.Office.Interop.Outlook.MailItem;
                 if (mailItem != null)
                 {
-                    result.Add(new email(mailItem));
+                    var _e = new email(mailItem);
+                    if(unreadonly)
+                    {
+                        if (_e.UnRead) result.Add(_e);
+                    }
+                    else
+                    {
+                        result.Add(_e);
+                    }
+                    
+                    
                 }
             }
             Emails.Set(context, result);

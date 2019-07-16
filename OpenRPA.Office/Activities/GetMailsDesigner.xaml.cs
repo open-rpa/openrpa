@@ -1,4 +1,5 @@
 ﻿using Microsoft.Office.Interop.Outlook;
+using OpenRPA.Interfaces;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -23,10 +24,21 @@ namespace OpenRPA.Office.Activities
             folders.Add(new outlookfolder() { name = "", _id = "" });
             InitializeComponent();
         }
-
+        // private Microsoft.Office.Interop.Outlook.Explorer mOutlookExplorer;
+        private Microsoft.Office.Interop.Outlook.Application CreateOutlookInstance()
+        {
+            var outlookApplication = new Microsoft.Office.Interop.Outlook.Application();
+            if (outlookApplication.ActiveExplorer() == null)
+            {
+                // mOutlookExplorer = mOutlookApplication.Session.GetDefaultFolder(OlDefaultFolders.olFolderCalendar).GetExplorer();
+                var mOutlookExplorer = outlookApplication.Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox).GetExplorer();
+                mOutlookExplorer.Activate();
+            }
+            return outlookApplication;
+        }
         private void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
         {
-            Microsoft.Office.Interop.Outlook.Application outlookApplication = new Microsoft.Office.Interop.Outlook.Application();
+            var outlookApplication = CreateOutlookInstance();
             MAPIFolder inBox = (MAPIFolder)outlookApplication.ActiveExplorer().Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox);
             MAPIFolder folderbase = inBox.Store.GetRootFolder();
             foreach (MAPIFolder folder in folderbase.Folders)

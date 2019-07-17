@@ -80,7 +80,8 @@ namespace OpenRPA.Views
                             "CancellationScope", "CompensableActivity", "Compensate", "Confirm", "GetChildSubtree", "GetParentChain", "GetWorkflowTree", "Add`3",  "And`3", "As`2", "Cast`2",
                         "Cast`2", "ArgumentValue`1", "ArrayItemReference`1", "ArrayItemValue`1", "Assign`1", "Constraint`1","CSharpReference`1", "CSharpValue`1", "DelegateArgumentReference`1",
                             "DelegateArgumentValue`1", "Divide`3", "DynamicActivity`1", "Equal`3", "FieldReference`2", "FieldValue`2", "ForEach`1", "InvokeAction", "InvokeDelegate",
-                        "ArgumentReference`1", "VariableReference`1", "VariableValue`1", "VisualBasicReference`1", "VisualBasicValue`1", "InvokeMethod`1" };
+                        "ArgumentReference`1", "VariableReference`1", "VariableValue`1", "VisualBasicReference`1", "VisualBasicValue`1", "InvokeMethod`1",
+                        "StateMachineWithInitialStateFactory", "ParallelForEach", "ParallelForEachWithBodyFactory", "ForEachWithBodyFactory" };
 
                         var wfToolboxCategory = new ToolboxCategory(activityLibrary.GetName().Name);
                         var actvities = from
@@ -92,6 +93,9 @@ namespace OpenRPA.Views
                                             || activityType.IsSubclassOf(typeof(ActivityWithResult))
                                             || activityType.IsSubclassOf(typeof(AsyncCodeActivity))
                                             || activityType.IsSubclassOf(typeof(CodeActivity))
+                                            || activityType.IsSubclassOf(typeof(FlowNode))
+                                            || activityType == typeof(State)
+                                            || activityType == typeof(FinalState)
                                             || activityType.GetInterfaces().Contains(typeof(IActivityTemplateFactory))
                                             )
                                             && activityType.IsVisible

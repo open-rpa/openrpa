@@ -107,6 +107,10 @@
     <Compile Include="Activities\CommentOutDesigner.xaml.cs">
       <DependentUpon>CommentOutDesigner.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Activities\Savefile.cs" />
+    <Compile Include="Activities\SavefileDesigner.xaml.cs">
+      <DependentUpon>SavefileDesigner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\InsertClipboard.cs" />
     <Compile Include="Activities\CopyClipboard.cs" />
     <Compile Include="Activities\InsertClipboardDesigner.xaml.cs">
@@ -205,6 +209,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Activities\CommentOutDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\SavefileDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

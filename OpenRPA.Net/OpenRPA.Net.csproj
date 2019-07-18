@@ -61,11 +61,13 @@
     <Compile Include="InsertOrUpdateOneMessage.cs" />
     <Compile Include="InsertOneMessage.cs" />
     <Compile Include="Message.cs" />
+    <Compile Include="MimeTypeHelper.cs" />
     <Compile Include="QueryMessage.cs" />
     <Compile Include="QueuedMessage.cs" />
     <Compile Include="QueueMessage.cs" />
     <Compile Include="RegisterUserMessage.cs" />
     <Compile Include="RegisterQueueMessage.cs" />
+    <Compile Include="SaveFileMessage.cs" />
     <Compile Include="SigninMessage.cs" />
     <Compile Include="SocketCommand.cs" />
     <Compile Include="SocketMessage.cs" />

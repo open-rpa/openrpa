@@ -138,6 +138,8 @@ namespace OpenRPA.Net
                     {
                         Log.Error(json);
                         Log.Error(ex, "");
+                        await Task.Delay(1000);
+                        await this.Close();
                     }
                 }
             }
@@ -386,8 +388,6 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
             return q.result;
         }
-
-        
         public async Task<T> InsertOrUpdateOne<T>(string collectionname, int w, bool j, T item)
         {
             InsertOrUpdateOneMessage<T> q = new InsertOrUpdateOneMessage<T>();
@@ -420,6 +420,17 @@ namespace OpenRPA.Net
             DeleteOneMessage q = new DeleteOneMessage();
             q.collectionname = collectionname; q._id = Id;
             q = await q.SendMessage<DeleteOneMessage>(this);
+            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+        }
+        public async Task SaveFile(string filename)
+        {
+            byte[] bytes = System.IO.File.ReadAllBytes(filename);
+            string base64 = Convert.ToBase64String(bytes);
+            SaveFileMessage q = new SaveFileMessage();
+            q.filename = filename;
+            q.mimeType = MimeTypeHelper.GetMimeType(System.IO.Path.GetExtension(filename));
+            q.file = base64;
+            q = await q.SendMessage<SaveFileMessage>(this);
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
         }
 

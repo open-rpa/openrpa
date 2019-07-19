@@ -380,7 +380,7 @@ namespace OpenRPA
                         if (!global.isConnected) return;
                         //if ((DateTime.Now - LastUpdated).TotalMilliseconds < 2000) return;
                         //LastUpdated = DateTime.Now;
-                        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, this);
+                        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, null, this);
                         _id = result._id;
                         _acl = result._acl;
                         //Log.Debug("Saved with id: " + _id);

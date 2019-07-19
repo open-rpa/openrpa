@@ -98,7 +98,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Activities\DeleteOne.cs" />
+    <Compile Include="Activities\DeleteOneDesigner.xaml.cs">
+      <DependentUpon>DeleteOneDesigner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Activities\InsertOrUpdateOne.cs" />
     <Compile Include="Activities\InsertOne.cs" />
+    <Compile Include="Activities\InsertOrUpdateOneDesigner.xaml.cs">
+      <DependentUpon>InsertOrUpdateOneDesigner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\InsertOneDesigner.xaml.cs">
       <DependentUpon>InsertOneDesigner.xaml</DependentUpon>
     </Compile>
@@ -208,6 +216,14 @@
     <Compile Include="Workflow.cs" />
     <Compile Include="WorkflowInstance.cs" />
     <Compile Include="WorkflowTrackingParticipant.cs" />
+    <Page Include="Activities\DeleteOneDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\InsertOrUpdateOneDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Activities\InsertOneDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

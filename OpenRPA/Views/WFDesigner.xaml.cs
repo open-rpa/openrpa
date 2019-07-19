@@ -187,7 +187,7 @@ namespace OpenRPA.Views
                     }
                     else
                     {
-                        _ = Run(VisualTracking, SlowMotion, null);
+                        Run(VisualTracking, SlowMotion, null);
                     }
                 }
                 if(e.Key == Input.KeyboardKey.ESCAPE || e.Key == Input.KeyboardKey.ESC)
@@ -204,7 +204,7 @@ namespace OpenRPA.Views
             });
         }
         private int currentprocessid = 0;
-        private async void UserControl_KeyUp(object sender, KeyEventArgs e)
+        private void UserControl_KeyUp(object sender, KeyEventArgs e)
         {
             if(!isRunnning)
             {
@@ -223,7 +223,7 @@ namespace OpenRPA.Views
                 }
                 try
                 {
-                    await Run(VisualTracking, SlowMotion, null);
+                    Run(VisualTracking, SlowMotion, null);
                 }
                 catch (Exception ex)
                 {
@@ -300,7 +300,16 @@ namespace OpenRPA.Views
             HasChanged = false;
             wfDesigner.ModelChanged += (sender, e) =>
             {
+                if(!HasChanged)
+                {
+                    _modelLocationMapping.Clear();
+                    _sourceLocationMapping.Clear();
+                    _activityIdMapping.Clear();
+                    _activitysourceLocationMapping.Clear();
+                    _activityIdModelItemMapping.Clear();
+                }
                 HasChanged = true;
+
                 onChanged?.Invoke(this);
             };
 
@@ -1008,6 +1017,15 @@ namespace OpenRPA.Views
                 if (string.IsNullOrEmpty(instance.queuename) && string.IsNullOrEmpty(instance.correlationId))
                 {
                     GenericTools.restore(GenericTools.mainWindow);
+                    if(instance.state != "completed")
+                    {
+                        System.Activities.Debugger.SourceLocation location;
+                        if(instance.errorsource!=null && _sourceLocationMapping.ContainsKey(instance.errorsource))
+                        {
+                            location = _sourceLocationMapping[instance.errorsource];
+                            SetDebugLocation(location);
+                        }
+                    }
                 }
                 //string message = "#*****************************#" + Environment.NewLine;
                 //if (instance.runWatch != null)
@@ -1054,7 +1072,7 @@ namespace OpenRPA.Views
                 }
             }
         }
-        public async Task Run(bool VisualTracking, bool SlowMotion, WorkflowInstance instance)
+        public void Run(bool VisualTracking, bool SlowMotion, WorkflowInstance instance)
         {
             this.VisualTracking = VisualTracking; this.SlowMotion = SlowMotion;
             if (BreakPointhit)
@@ -1093,7 +1111,7 @@ namespace OpenRPA.Views
                 instance = Workflow.CreateInstance(param, null, null, onIdle, onVisualTracking);
             }
             if (!VisualTracking && Minimize) GenericTools.minimize(GenericTools.mainWindow);
-            await instance.Run();
+            instance.Run();
         }
         private void showVariables(IDictionary<string, ValueType> Variables)
         {

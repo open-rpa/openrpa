@@ -13,9 +13,9 @@ using System.Windows.Media.Imaging;
 
 namespace OpenRPA.Activities
 {
-    public partial class SavefileDesigner : INotifyPropertyChanged
+    public partial class UploadFileDesigner : INotifyPropertyChanged
     {
-        public SavefileDesigner()
+        public UploadFileDesigner()
         {
             InitializeComponent();
         }

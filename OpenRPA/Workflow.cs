@@ -93,10 +93,10 @@ namespace OpenRPA
         //}
         //[JsonIgnore]
         // public Action<Workflow, WorkflowInstance> idleOrComplete { get; set; }
-        public event WorkflowInstance.idleOrComplete OnIdleOrComplete;
+        //public event WorkflowInstance.idleOrComplete OnIdleOrComplete;
         [JsonIgnore]
         public Project Project { get; set; }
-        private System.Collections.ObjectModel.ObservableCollection<WorkflowInstance> _Instances;
+        //private System.Collections.ObjectModel.ObservableCollection<WorkflowInstance> _Instances;
         public static Workflow FromFile(Project project, string Filename)
         {
             var result = new Workflow();
@@ -215,7 +215,7 @@ namespace OpenRPA
                             if (i.state != "failed" && i.state != "aborted" && i.state != "completed")
                             {
                                 i.createApp();
-                                await i.Run();
+                                i.Run();
                             }
                         }
                         catch (Exception ex)
@@ -238,21 +238,21 @@ namespace OpenRPA
                         Log.Error("Refuse to load instance " + i.InstanceId + " it contains no state!");
                         i.state = "aborted";
                         i.errormessage = "Refuse to load instance " + i.InstanceId + " it contains no state!";
-                        await i.Save();
+                        i.Save();
                         continue;
                     }
                     //if (idleOrComplete != null) i.OnIdleOrComplete += idleOrComplete;
                     //if (VisualTracking != null) i.OnVisualTracking += VisualTracking;
                     WorkflowInstance.Instances.Add(i);
                     i.createApp();
-                    await i.Run();
+                    i.Run();
                 }
                 catch (Exception ex)
                 {
                     i.state = "failed";
                     i.Exception = ex;
                     i.errormessage = ex.Message;
-                    await i.Save();
+                    i.Save();
                     Log.Error("RunPendingInstances: " + ex.ToString());
                 }
             }

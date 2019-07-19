@@ -98,18 +98,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Activities\addEntity.cs" />
-    <Compile Include="Activities\addEntityDesigner.xaml.cs">
-      <DependentUpon>addEntityDesigner.xaml</DependentUpon>
+    <Compile Include="Activities\InsertOne.cs" />
+    <Compile Include="Activities\InsertOneDesigner.xaml.cs">
+      <DependentUpon>InsertOneDesigner.xaml</DependentUpon>
     </Compile>
     <Compile Include="Activities\AsyncHelper.cs" />
     <Compile Include="Activities\CommentOut.cs" />
     <Compile Include="Activities\CommentOutDesigner.xaml.cs">
       <DependentUpon>CommentOutDesigner.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Activities\Savefile.cs" />
-    <Compile Include="Activities\SavefileDesigner.xaml.cs">
-      <DependentUpon>SavefileDesigner.xaml</DependentUpon>
+    <Compile Include="Activities\DownloadFile.cs" />
+    <Compile Include="Activities\UploadFile.cs" />
+    <Compile Include="Activities\DownloadFileDesigner.xaml.cs">
+      <DependentUpon>DownloadFileDesigner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Activities\UploadFileDesigner.xaml.cs">
+      <DependentUpon>UploadFileDesigner.xaml</DependentUpon>
     </Compile>
     <Compile Include="Activities\InsertClipboard.cs" />
     <Compile Include="Activities\CopyClipboard.cs" />
@@ -204,7 +208,7 @@
     <Compile Include="Workflow.cs" />
     <Compile Include="WorkflowInstance.cs" />
     <Compile Include="WorkflowTrackingParticipant.cs" />
-    <Page Include="Activities\addEntityDesigner.xaml">
+    <Page Include="Activities\InsertOneDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -212,7 +216,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Activities\SavefileDesigner.xaml">
+    <Page Include="Activities\DownloadFileDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\UploadFileDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

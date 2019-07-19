@@ -109,6 +109,7 @@ namespace OpenRPA.Net
             }
             src.Cancel();
         }
+        private int errorcounter = 0;
         private async Task receiveLoop()
         {
             byte[] buffer = new byte[2048];
@@ -127,6 +128,7 @@ namespace OpenRPA.Net
                     var message = JsonConvert.DeserializeObject<SocketMessage>(json);
                     if (message != null) _receiveQueue.Add(message);
                     await ProcessQueue();
+                    errorcounter = 0;
                 }
                 catch (Exception ex)
                 {
@@ -136,10 +138,16 @@ namespace OpenRPA.Net
                     }
                     else
                     {
+                        errorcounter++;
                         Log.Error(json);
                         Log.Error(ex, "");
-                        await Task.Delay(1000);
+                        await Task.Delay(3000);
                         await this.Close();
+                        //if(errorcounter > 10)
+                        //{
+                        //    errorcounter = 0;
+                        //    await this.Close();
+                        //}
                     }
                 }
             }
@@ -422,16 +430,43 @@ namespace OpenRPA.Net
             q = await q.SendMessage<DeleteOneMessage>(this);
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
         }
-        public async Task SaveFile(string filename)
+        public async Task UploadFile(string filepath, string path)
         {
-            byte[] bytes = System.IO.File.ReadAllBytes(filename);
+            if (string.IsNullOrEmpty(path)) path = "";
+            byte[] bytes = System.IO.File.ReadAllBytes(filepath);
             string base64 = Convert.ToBase64String(bytes);
             SaveFileMessage q = new SaveFileMessage();
-            q.filename = filename;
-            q.mimeType = MimeTypeHelper.GetMimeType(System.IO.Path.GetExtension(filename));
+            q.filename = System.IO.Path.Combine(path, System.IO.Path.GetFileName(filepath));
+            q.mimeType = MimeTypeHelper.GetMimeType(System.IO.Path.GetExtension(filepath));
             q.file = base64;
+            q.metadata = new metadata();
+            q.metadata.name = System.IO.Path.GetFileName(filepath);
+            q.metadata.filename = q.filename;
+            q.metadata.path = path;
             q = await q.SendMessage<SaveFileMessage>(this);
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+        }
+        public async Task<GetFileMessage> DownloadFile(string filename, string id)
+        {
+            if (string.IsNullOrEmpty(filename) && string.IsNullOrEmpty(id)) throw new ArgumentException("path or id is mandatory");
+            GetFileMessage q = new GetFileMessage();
+            q.filename = filename;
+            q.id = id;
+            q = await q.SendMessage<GetFileMessage>(this);
+            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            return q;
+        }
+        public async Task DownloadFileAndSave(string filename, string id, string filepath, bool ignorepath)
+        {
+            var res = await DownloadFile(filename, id);
+            var path = System.IO.Path.GetFullPath(filepath);
+            if(!ignorepath)
+            {
+                path = System.IO.Path.Combine(filepath, res.metadata.path);
+            }
+            if (!System.IO.Directory.Exists(path)) System.IO.Directory.CreateDirectory(path);
+            filepath = System.IO.Path.Combine(filepath, res.metadata.filename);
+            System.IO.File.WriteAllBytes(filepath, Convert.FromBase64String(res.file));
         }
 
 

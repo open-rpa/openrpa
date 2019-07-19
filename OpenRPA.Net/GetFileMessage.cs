@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Net
 {
-    class SaveFileMessage : SocketCommand
+    public class GetFileMessage : SocketCommand
     {
-        public SaveFileMessage() : base()
+        public GetFileMessage() : base()
         {
-            msg.command = "savefile";
-            metadata = new Interfaces.entity.metadata();
+            msg.command = "getfile";
         }
         public string filename { get; set; }
         public string file { get; set; }

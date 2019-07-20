@@ -148,6 +148,8 @@ namespace OpenRPA
         public ICommand ImportCommand { get { return new RelayCommand<object>(onImport, canImport); } }
         public ICommand ExportCommand { get { return new RelayCommand<object>(onExport, canExport); } }
         public ICommand PermissionsCommand { get { return new RelayCommand<object>(onPermissions, canPermissions); } }
+        public ICommand linkOpenFlowCommand { get { return new RelayCommand<object>(onlinkOpenFlow, canlinkOpenFlow); } }
+        public ICommand linkNodeREDCommand { get { return new RelayCommand<object>(onlinkNodeRED, canlinkNodeRED); } }
         private bool canPermissions(object item)
         {
             if (!isConnected) return false;
@@ -462,6 +464,37 @@ namespace OpenRPA
                 newTabItem.IsSelected = true;
             }, null);
         }
+        private bool canlinkOpenFlow(object item)
+        {
+            if (string.IsNullOrEmpty(Config.local.wsurl)) return false;
+            return true;
+        }
+        private void onlinkOpenFlow(object item)
+        {
+            if (string.IsNullOrEmpty(Config.local.wsurl)) return;
+            if (global.openflowconfig == null) return;
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(global.openflowconfig.baseurl));
+        }
+        private bool canlinkNodeRED(object item)
+        {
+            if (!isConnected) return false;
+            if (string.IsNullOrEmpty(Config.local.wsurl)) return false;
+            if (global.openflowconfig == null) return false;
+            if(global.openflowconfig.allow_personal_nodered) return true;
+
+            return true;
+        }
+        private void onlinkNodeRED(object item)
+        {
+            if (global.openflowconfig == null) return;
+            var baseurl = new Uri(Config.local.wsurl);
+            var username = global.webSocketClient.user.username.Replace("@", "").Replace(".", "");
+            var url = global.openflowconfig.nodered_domain_schema.Replace("$nodered_id$", username);
+            if (baseurl.Scheme == "wss") { url = "https://" + url; } else { url = "http://" + url; }
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url));
+        }
+
+
         private async void NewTabItem_OnClose(object sender, RoutedEventArgs e)
         {
             Views.ClosableTab tab = sender as Views.ClosableTab;

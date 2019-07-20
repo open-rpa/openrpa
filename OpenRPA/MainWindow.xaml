@@ -19,6 +19,28 @@
                                                Command="{Binding Data.SettingsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                     <RibbonApplicationMenuItem Header="Signout" ImageSource="/OpenRPA;component/Resources/Buttons/Signout.png" 
                                                Command="{Binding Data.SignoutCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+
+
+                    <RibbonApplicationMenu.AuxiliaryPaneContent>
+                        <RibbonGallery ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <RibbonGalleryCategory MaxColumnCount="1">
+                                <RibbonGalleryItem x:Name="GalleryItem1" Content="Application menu content" 
+                                MouseOverBackground="Transparent"
+                                MouseOverBorderBrush="Transparent"
+                                CheckedBackground="Transparent"
+                                CheckedBorderBrush="Transparent"
+                                               />
+                                <RibbonGalleryItem>
+                                    <Hyperlink x:Name="linkOpenFlow" Command="{Binding Data.linkOpenFlowCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" >OpenFlow</Hyperlink>
+                                </RibbonGalleryItem>
+                                <RibbonGalleryItem>
+                                    <Hyperlink x:Name="linkNodeRED" Command="{Binding Data.linkNodeREDCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" >NodeRED</Hyperlink>
+                                </RibbonGalleryItem>
+                            </RibbonGalleryCategory>
+                        </RibbonGallery>
+                    </RibbonApplicationMenu.AuxiliaryPaneContent>
+
+                    
                 </RibbonApplicationMenu>
             </Ribbon.ApplicationMenu>
             

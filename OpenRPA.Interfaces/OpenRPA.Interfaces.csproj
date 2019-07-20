@@ -69,12 +69,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppSettings.cs" />
     <Compile Include="AsyncNativeActivity.cs" />
     <Compile Include="AsyncTaskCodeActivity.cs" />
     <Compile Include="AutomationHelper.cs" />
     <Compile Include="AutomationUtil.cs" />
-    <Compile Include="Config.cs" />
     <Compile Include="entity\ace.cs" />
     <Compile Include="entity\apibase.cs" />
     <Compile Include="entity\apiuser.cs" />

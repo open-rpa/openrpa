@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenRPA.Interfaces
+namespace OpenRPA
 {
     public class AppSettings<T> where T : new()
     {
@@ -36,7 +36,7 @@ namespace OpenRPA.Interfaces
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "");
+                    System.Diagnostics.Trace.WriteLine(ex.ToString(), "Error");
                 }
             }
             return t;

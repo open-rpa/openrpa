@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenRPA.Interfaces
+namespace OpenRPA
 {
     public class Config : AppSettings<Config>
     {

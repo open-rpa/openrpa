@@ -28,7 +28,7 @@ namespace OpenRPA.Store
                     if(i!=null)
                     {
                         i.xml = Base64Encode(doc);
-                            _ = i.Save();
+                            i.Save();
                     }
                 }
                 catch (Exception ex)

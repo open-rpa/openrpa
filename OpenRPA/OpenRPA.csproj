@@ -98,14 +98,43 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Activities\addEntity.cs" />
-    <Compile Include="Activities\addEntityDesigner.xaml.cs">
-      <DependentUpon>addEntityDesigner.xaml</DependentUpon>
+    <Compile Include="Activities\RemovePermission.cs" />
+    <Compile Include="Activities\GrantPermission.cs" />
+    <Compile Include="Activities\RemovePermissionDesigner.xaml.cs">
+      <DependentUpon>RemovePermissionDesigner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Activities\GrantPermissionDesigner.xaml.cs">
+      <DependentUpon>GrantPermissionDesigner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Activities\InArgumentBoolConverter.cs" />
+    <Compile Include="Activities\Query.cs" />
+    <Compile Include="Activities\DeleteOne.cs" />
+    <Compile Include="Activities\QueryDesigner.xaml.cs">
+      <DependentUpon>QueryDesigner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Activities\DeleteOneDesigner.xaml.cs">
+      <DependentUpon>DeleteOneDesigner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Activities\InsertOrUpdateOne.cs" />
+    <Compile Include="Activities\InsertOne.cs" />
+    <Compile Include="Activities\InsertOrUpdateOneDesigner.xaml.cs">
+      <DependentUpon>InsertOrUpdateOneDesigner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Activities\InsertOneDesigner.xaml.cs">
+      <DependentUpon>InsertOneDesigner.xaml</DependentUpon>
     </Compile>
     <Compile Include="Activities\AsyncHelper.cs" />
     <Compile Include="Activities\CommentOut.cs" />
     <Compile Include="Activities\CommentOutDesigner.xaml.cs">
       <DependentUpon>CommentOutDesigner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Activities\DownloadFile.cs" />
+    <Compile Include="Activities\UploadFile.cs" />
+    <Compile Include="Activities\DownloadFileDesigner.xaml.cs">
+      <DependentUpon>DownloadFileDesigner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Activities\UploadFileDesigner.xaml.cs">
+      <DependentUpon>UploadFileDesigner.xaml</DependentUpon>
     </Compile>
     <Compile Include="Activities\InsertClipboard.cs" />
     <Compile Include="Activities\CopyClipboard.cs" />
@@ -200,11 +229,39 @@
     <Compile Include="Workflow.cs" />
     <Compile Include="WorkflowInstance.cs" />
     <Compile Include="WorkflowTrackingParticipant.cs" />
-    <Page Include="Activities\addEntityDesigner.xaml">
+    <Page Include="Activities\RemovePermissionDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\GrantPermissionDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\QueryDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\DeleteOneDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\InsertOrUpdateOneDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\InsertOneDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Activities\CommentOutDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\DownloadFileDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\UploadFileDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

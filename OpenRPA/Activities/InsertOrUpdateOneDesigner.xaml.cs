@@ -3,9 +3,9 @@ using System.Windows.Media;
 
 namespace OpenRPA.Activities
 {
-    public partial class addEntityDesigner
+    public partial class InsertOrUpdateOneDesigner
     {
-        public addEntityDesigner()
+        public InsertOrUpdateOneDesigner()
         {
             InitializeComponent();
         }

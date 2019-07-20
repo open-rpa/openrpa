@@ -58,7 +58,8 @@ namespace OpenRPA.Net
             try
             {
                 Log.Debug("Connecting to " + url);
-                if (ws != null && (ws.State == System.Net.WebSockets.WebSocketState.Aborted || ws.State == System.Net.WebSockets.WebSocketState.Closed))
+                //if (ws != null && (ws.State == System.Net.WebSockets.WebSocketState.Aborted || ws.State == System.Net.WebSockets.WebSocketState.Closed))
+                if (ws != null && (ws.State != WebSocketState.Connecting))
                 {
                     ws.Dispose();
                     ws = null;
@@ -109,6 +110,7 @@ namespace OpenRPA.Net
             }
             src.Cancel();
         }
+        private int errorcounter = 0;
         private async Task receiveLoop()
         {
             byte[] buffer = new byte[2048];
@@ -127,6 +129,7 @@ namespace OpenRPA.Net
                     var message = JsonConvert.DeserializeObject<SocketMessage>(json);
                     if (message != null) _receiveQueue.Add(message);
                     await ProcessQueue();
+                    errorcounter = 0;
                 }
                 catch (Exception ex)
                 {
@@ -136,8 +139,16 @@ namespace OpenRPA.Net
                     }
                     else
                     {
+                        errorcounter++;
                         Log.Error(json);
                         Log.Error(ex, "");
+                        await Task.Delay(3000);
+                        await this.Close();
+                        //if(errorcounter > 10)
+                        //{
+                        //    errorcounter = 0;
+                        //    await this.Close();
+                        //}
                     }
                 }
             }
@@ -386,12 +397,10 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
             return q.result;
         }
-
-        
-        public async Task<T> InsertOrUpdateOne<T>(string collectionname, int w, bool j, T item)
+        public async Task<T> InsertOrUpdateOne<T>(string collectionname, int w, bool j, string uniqeness, T item)
         {
             InsertOrUpdateOneMessage<T> q = new InsertOrUpdateOneMessage<T>();
-            q.w = w; q.j = j;
+            q.w = w; q.j = j; q.uniqeness = uniqeness;
             q.collectionname = collectionname; q.item = item;
             q = await q.SendMessage<InsertOrUpdateOneMessage<T>>(this);
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
@@ -421,6 +430,44 @@ namespace OpenRPA.Net
             q.collectionname = collectionname; q._id = Id;
             q = await q.SendMessage<DeleteOneMessage>(this);
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+        }
+        public async Task UploadFile(string filepath, string path)
+        {
+            if (string.IsNullOrEmpty(path)) path = "";
+            byte[] bytes = System.IO.File.ReadAllBytes(filepath);
+            string base64 = Convert.ToBase64String(bytes);
+            SaveFileMessage q = new SaveFileMessage();
+            q.filename = System.IO.Path.Combine(path, System.IO.Path.GetFileName(filepath));
+            q.mimeType = MimeTypeHelper.GetMimeType(System.IO.Path.GetExtension(filepath));
+            q.file = base64;
+            q.metadata = new metadata();
+            q.metadata.name = System.IO.Path.GetFileName(filepath);
+            q.metadata.filename = q.filename;
+            q.metadata.path = path;
+            q = await q.SendMessage<SaveFileMessage>(this);
+            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+        }
+        public async Task<GetFileMessage> DownloadFile(string filename, string id)
+        {
+            if (string.IsNullOrEmpty(filename) && string.IsNullOrEmpty(id)) throw new ArgumentException("path or id is mandatory");
+            GetFileMessage q = new GetFileMessage();
+            q.filename = filename;
+            q.id = id;
+            q = await q.SendMessage<GetFileMessage>(this);
+            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            return q;
+        }
+        public async Task DownloadFileAndSave(string filename, string id, string filepath, bool ignorepath)
+        {
+            var res = await DownloadFile(filename, id);
+            var path = System.IO.Path.GetFullPath(filepath);
+            if(!ignorepath)
+            {
+                path = System.IO.Path.Combine(filepath, res.metadata.path);
+            }
+            if (!System.IO.Directory.Exists(path)) System.IO.Directory.CreateDirectory(path);
+            filepath = System.IO.Path.Combine(filepath, res.metadata.filename);
+            System.IO.File.WriteAllBytes(filepath, Convert.FromBase64String(res.file));
         }
 
 

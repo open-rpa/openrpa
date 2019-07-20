@@ -63,8 +63,12 @@ namespace OpenRPA.Interfaces
         {
             local.Save("settings.json");
         }
+        public static void Reload()
+        {
+            _local = Load("settings.json");
+        }
 
-        
+
 
     }
 }

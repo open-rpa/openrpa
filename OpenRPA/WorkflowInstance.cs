@@ -43,6 +43,8 @@ namespace OpenRPA
         public string host { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string fqdn { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string errormessage { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string errorsource { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        
         [JsonIgnore]
         public Exception Exception { get { return GetProperty<Exception>(); } set { SetProperty(value); } }
         public bool isCompleted { get { return GetProperty<bool>(); } set { SetProperty(value); } }
@@ -165,7 +167,7 @@ namespace OpenRPA
             state = "aborted";
             Exception = new Exception(Reason);
             errormessage = Reason;
-            _ = Save();
+            Save();
             if (runWatch != null) runWatch.Stop();
             OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
         }
@@ -193,7 +195,7 @@ namespace OpenRPA
                 });
                 state = "running";
                 // Log.Debug(String.Format("Workflow {0} resumed bookmark '{1}' value '{2}'", wfApp.Id.ToString(), bookmarkName, value));
-                _ = Save();
+                Save();
             }
             catch (Exception)
             {
@@ -201,7 +203,7 @@ namespace OpenRPA
             }
         }
         public System.Diagnostics.Stopwatch runWatch { get; private set; }
-        public async Task Run()
+        public void Run()
         {
             try
             {
@@ -212,7 +214,7 @@ namespace OpenRPA
                     wfApp.Run();
                     InstanceId = wfApp.Id.ToString();
                     state = "running";
-                    await Save();
+                    Save();
                 }
                 else
                 {
@@ -225,7 +227,7 @@ namespace OpenRPA
                         wfApp.Run();
                     }
                     state = "running";
-                    await Save();
+                    Save();
                 }
             }
             catch (Exception ex)
@@ -237,7 +239,7 @@ namespace OpenRPA
                 state = "failed";
                 Exception = ex;
                 errormessage = ex.Message;
-                await Save();
+                Save();
                 if (runWatch != null) runWatch.Stop();
                 OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
             }
@@ -276,7 +278,7 @@ namespace OpenRPA
                 state = "aborted";
                 Exception =  e.Reason;
                 errormessage = e.Reason.Message;
-                _ = Save();
+                Save();
                 if(runWatch!=null) runWatch.Stop();
                 OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
             };
@@ -290,7 +292,7 @@ namespace OpenRPA
                 }
                 Bookmarks = bookmarks;
                 state = "idle";
-                _ = Save();
+                Save();
                 if (state != "completed")
                 {
                     OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
@@ -300,7 +302,7 @@ namespace OpenRPA
             wfApp.PersistableIdle = delegate (System.Activities.WorkflowApplicationIdleEventArgs e)
             {
                 //return PersistableIdleAction.Unload;
-                _ = Save();
+                Save();
                 return System.Activities.PersistableIdleAction.Persist;
             };
 
@@ -317,7 +319,7 @@ namespace OpenRPA
                 //isUnloaded = true;
                 if(global.isConnected)
                 {
-                    _ = Save();
+                    Save();
                 }
             };
 
@@ -328,6 +330,7 @@ namespace OpenRPA
                 state = "failed";
                 Exception = e.UnhandledException;
                 errormessage = e.UnhandledException.ToString();
+                if(e.ExceptionSource!=null) errorsource = e.ExceptionSource.Id;
                 //exceptionsource = e.ExceptionSource.Id;
                 if (runWatch != null) runWatch.Stop();
                 OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
@@ -363,7 +366,7 @@ namespace OpenRPA
             }
         }
         private Task SaveTask = null;
-        public async Task Save()
+        public void Save()
         {
             SaveFile();
             if(SaveTask==null)
@@ -377,7 +380,7 @@ namespace OpenRPA
                         if (!global.isConnected) return;
                         //if ((DateTime.Now - LastUpdated).TotalMilliseconds < 2000) return;
                         //LastUpdated = DateTime.Now;
-                        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, this);
+                        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, null, this);
                         _id = result._id;
                         _acl = result._acl;
                         //Log.Debug("Saved with id: " + _id);
@@ -387,7 +390,7 @@ namespace OpenRPA
                         foreach (var i in Instances.ToList())
                         {
                             //if (string.IsNullOrEmpty(_id)) await i.Save();
-                            if (string.IsNullOrEmpty(_id)) await i.Save();
+                            if (string.IsNullOrEmpty(_id)) i.Save();
                         }
 
                         if (isCompleted || hasError)

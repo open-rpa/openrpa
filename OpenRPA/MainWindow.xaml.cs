@@ -385,6 +385,7 @@ namespace OpenRPA
             autoReconnect = true;
             Projects.Clear();
             Config.local.password = Config.local.ProtectString("BadPassword");
+            Config.Reload();
             _ = global.webSocketClient.Close();
         }
         private bool canOpen(object item)
@@ -724,12 +725,12 @@ namespace OpenRPA
                 {
                     var instance = workflow.CreateInstance(param, null, null, designer.onIdle, designer.onVisualTracking);
                     designer.Minimize = false;
-                    _ = designer.Run(VisualTracking, SlowMotion, instance);
+                    designer.Run(VisualTracking, SlowMotion, instance);
                 }
                 else
                 {
                     var instance = workflow.CreateInstance(param, null, null, idleOrComplete, null);
-                    _ = instance.Run();
+                    instance.Run();
                 }
                 return;
             }
@@ -739,7 +740,7 @@ namespace OpenRPA
                 if (!(item is Views.WFDesigner)) return;
                 var designer = (Views.WFDesigner)item;
                 if (designer.HasChanged) { await designer.Save(); }
-                await designer.Run(VisualTracking, SlowMotion, null);
+                designer.Run(VisualTracking, SlowMotion, null);
             }
             catch (Exception ex)
             {
@@ -1202,12 +1203,12 @@ namespace OpenRPA
                             if (designer != null)
                             {
                                 instance = workflow.CreateInstance(param, message.replyto, message.correlationId, designer.onIdle, designer.onVisualTracking);
-                                _ = designer.Run(VisualTracking, SlowMotion, instance);
+                                designer.Run(VisualTracking, SlowMotion, instance);
                             }
                             else
                             {
                                 instance = workflow.CreateInstance(param, message.replyto, message.correlationId, idleOrComplete, null);
-                                _ = instance.Run();
+                                instance.Run();
                             }
                         });
                         command.command = "invokesuccess";

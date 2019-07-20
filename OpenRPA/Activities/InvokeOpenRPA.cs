@@ -74,11 +74,11 @@ namespace OpenRPA.Activities
                 {
                     if (designer != null)
                     {
-                        _ = designer.Run(MainWindow.instance.VisualTracking, MainWindow.instance.SlowMotion, instance);
+                        designer.Run(MainWindow.instance.VisualTracking, MainWindow.instance.SlowMotion, instance);
                     }
                     else
                     {
-                        _ = instance.Run();
+                        instance.Run();
                     }
                 });
             }

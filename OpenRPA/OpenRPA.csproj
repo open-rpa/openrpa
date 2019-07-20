@@ -98,7 +98,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Activities\RemovePermission.cs" />
+    <Compile Include="Activities\GrantPermission.cs" />
+    <Compile Include="Activities\RemovePermissionDesigner.xaml.cs">
+      <DependentUpon>RemovePermissionDesigner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Activities\GrantPermissionDesigner.xaml.cs">
+      <DependentUpon>GrantPermissionDesigner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Activities\InArgumentBoolConverter.cs" />
+    <Compile Include="Activities\Query.cs" />
     <Compile Include="Activities\DeleteOne.cs" />
+    <Compile Include="Activities\QueryDesigner.xaml.cs">
+      <DependentUpon>QueryDesigner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\DeleteOneDesigner.xaml.cs">
       <DependentUpon>DeleteOneDesigner.xaml</DependentUpon>
     </Compile>
@@ -216,6 +229,18 @@
     <Compile Include="Workflow.cs" />
     <Compile Include="WorkflowInstance.cs" />
     <Compile Include="WorkflowTrackingParticipant.cs" />
+    <Page Include="Activities\RemovePermissionDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\GrantPermissionDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\QueryDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Activities\DeleteOneDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

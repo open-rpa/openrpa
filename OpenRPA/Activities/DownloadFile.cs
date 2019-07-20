@@ -13,7 +13,7 @@ using System.Threading;
 namespace OpenRPA.Activities
 {
     [System.ComponentModel.Designer(typeof(DownloadFileDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.highlight.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.downloadfile.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class DownloadFile : AsyncTaskCodeActivity<int>
     {

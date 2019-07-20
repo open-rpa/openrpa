@@ -47,8 +47,16 @@ namespace OpenRPA.Image
             if(e.UIElement.Type != "Pane") return false;
             var element = e.UIElement.RawElement;
 
-            var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-            var Processname = p.ProcessName;
+            string Processname = "";
+            if (e.UIElement.ProcessId > 0 )
+            {
+                var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
+                if (p.ProcessName == "iexplore" || p.ProcessName == "iexplore.exe") return false;
+                if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "firefox") return false;
+                Processname = p.ProcessName;
+            }
+
+
             FlaUI.Core.Shapes.Point point = new FlaUI.Core.Shapes.Point(e.X - 80, e.Y - 80);
             if (point.X < 0) { point.X = e.X + 80; }
             if (point.Y < 0) { point.Y = e.Y + 80; }

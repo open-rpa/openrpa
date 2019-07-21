@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenRPA.Activities
+namespace OpenRPA.Interfaces.Input
 {
     public class vKey
     {

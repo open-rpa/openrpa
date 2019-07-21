@@ -137,6 +137,16 @@
                                   Command="{Binding Data.DetectorsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                 </RibbonGroup>
             </RibbonTab>
+            <RibbonTab Header="Settings">
+                <RibbonGroup Header="General">
+                    
+                </RibbonGroup>
+                <RibbonGroup Header="Cancel key">
+                    <StackPanel>
+                        <TextBox x:Name="cancelkey" GotKeyboardFocus="Cancelkey_GotKeyboardFocus" Width="80" Height="25" />
+                    </StackPanel>
+                </RibbonGroup>
+            </RibbonTab>
             <!-- 
             <RibbonTab x:Name="rbnTab2" Header="Tab2">
                 <RibbonGroup x:Name="rbnGr3" Header="Other Group">

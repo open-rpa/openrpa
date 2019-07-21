@@ -40,45 +40,44 @@ namespace OpenRPA.Views
             textbox.Focus();
             Topmost = true;
             typeText = new Activities.TypeText();
+            InputDriver.Instance.OnKeyDown += OnKeyDown;
+            InputDriver.Instance.OnKeyUp += OnKeyUp;
         }
         private Activities.TypeText typeText = null;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //rpaactivities.Generichook.enablecancel = false;
             var window = e.Source as Window;
             System.Threading.Thread.Sleep(100);
             window.Dispatcher.Invoke(
             new Action(() =>
             {
-                //window.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
                 textbox.Focus();
             }));
         }
-        private void Window_KeyDown(object sender, KeyEventArgs e)
+        private void OnKeyDown(Input.InputEventArgs e)
         {
-            typeText.AddKey(new Activities.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, false), null);
+            // if (downkeys == 0) typeText._keys.Clear();
+            typeText.AddKey(new Interfaces.Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, false), null);
             Text = typeText.result;
             NotifyPropertyChanged("Text");
         }
-        private void Window_KeyUp(object sender, KeyEventArgs e)
+        private void OnKeyUp(Input.InputEventArgs e)
         {
-            typeText.AddKey(new Activities.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, true), null);
+            typeText.AddKey(new Interfaces.Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, true), null);
             Text = typeText.result;
             NotifyPropertyChanged("Text");
-        }
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            //rpaactivities.Generichook.enablecancel = true;
+            if (typeText.keysdown == 0 && typeText._keys.Count > 0)
+            {
+                InputDriver.Instance.OnKeyDown -= OnKeyDown;
+                InputDriver.Instance.OnKeyUp -= OnKeyUp;
+                DialogResult = true;
+            }
         }
 
-        private void Window_LostFocus(object sender, RoutedEventArgs e)
+        private void Window_Unloaded(object sender, RoutedEventArgs e)
         {
-            Activate();
-            Focus();
-            Topmost = true;
-            Topmost = false;
-            Focus();
-            textbox.Focus();
+            InputDriver.Instance.OnKeyDown -= OnKeyDown;
+            InputDriver.Instance.OnKeyUp -= OnKeyUp;
         }
     }
 }

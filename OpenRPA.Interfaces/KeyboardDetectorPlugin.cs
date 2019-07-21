@@ -85,6 +85,7 @@ namespace OpenRPA.Interfaces
         }
         public void Stop()
         {
+            InputDriver.Instance.OnKeyDown -= OnKeyDown;
             InputDriver.Instance.OnKeyUp -= OnKeyUp;
         }
         private void RaiseDetector()

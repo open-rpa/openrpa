@@ -90,6 +90,7 @@
     <Compile Include="IElement.cs" />
     <Compile Include="Image\Util.cs" />
     <Compile Include="Input\MouseSimulator.cs" />
+    <Compile Include="Input\vKey.cs" />
     <Compile Include="KeyboardDetectorPlugin.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="NativeMessagingMessage.cs" />
@@ -144,7 +145,6 @@
     <Compile Include="Views\KeyboardSeqWindow.xaml.cs">
       <DependentUpon>KeyboardSeqWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\vKey.cs" />
     <Compile Include="win32\Zone.cs" />
   </ItemGroup>
   <ItemGroup>

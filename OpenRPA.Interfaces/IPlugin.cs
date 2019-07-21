@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Activities;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ using OpenRPA.Interfaces.Selector;
 
 namespace OpenRPA.Interfaces
 {
-    public interface IPlugin
+    public interface IPlugin : INotifyPropertyChanged
     {
         string Name { get; }
         string Status { get; }

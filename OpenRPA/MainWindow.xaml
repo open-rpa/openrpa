@@ -162,6 +162,42 @@
             </TabControl>
 
             <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="1" Height="25" Grid.ColumnSpan="3" Background="Gray">
+                <StatusBar FocusManager.IsFocusScope="True" x:Name="StatusBar">
+                    <StatusBarItem x:Name="LabelStatusBar" Content="Disconnected" />
+                    <StatusBarItem VerticalAlignment="Top" HorizontalContentAlignment="Center">
+                        <ItemsControl x:Name="lvDataBinding">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Margin="10,0,10,0">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} : {1}">
+                                                <Binding Path="Name" />
+                                                <Binding Path="Status" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StatusBarItem>
+                </StatusBar>
+            </StatusBar>
+            <!-- 
+            <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="1" Height="25" Grid.ColumnSpan="3" Background="Gray">
                 <StackPanel Orientation="Horizontal">
                     <StatusBarItem x:Name="LabelStatusBar" Foreground="White" FontSize="12">
                     </StatusBarItem>
@@ -179,6 +215,8 @@
                     </ListView>
                 </StackPanel>
             </StatusBar>
+                        -->
+
         </Grid>
     </DockPanel>
 

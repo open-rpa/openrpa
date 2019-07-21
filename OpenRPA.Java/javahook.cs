@@ -11,6 +11,9 @@ namespace OpenRPA.Java
 {
     public  class Javahook
     {
+        public delegate void OnInitilizedDelegate(AccessBridge accessBridge);
+        public event OnInitilizedDelegate OnInitilized;
+
         public delegate void JavaShutDownDelegate(int vmID);
         public event JavaShutDownDelegate OnJavaShutDown;
         public delegate void MouseClickedDelegate(int vmID, AccessibleContextNode ac);
@@ -64,6 +67,7 @@ namespace OpenRPA.Java
                 {
                     Initilized = true;
                     Log.Information("javahook._accessBridge.Initilized");
+                    OnInitilized?.Invoke(accessBridge);
                 };
                 accessBridge.Initialize();
                 refreshJvms(200);

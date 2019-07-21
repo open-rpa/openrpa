@@ -1367,7 +1367,8 @@ namespace OpenRPA
                     }
                 }
                 this.Show();
-                lvDataBinding.ItemsSource = Plugins.recordPlugins;
+                var test = lvDataBinding.ItemsSource;
+                //lvDataBinding.ItemsSource = Plugins.recordPlugins;
                 try
                 {
                     if (Projects.Count == 0)

@@ -165,6 +165,10 @@ namespace OpenRPA.NM
                 }
             }
         }
+        public void Click(bool VirtualClick, int OffsetX, int OffsetY)
+        {
+            Click(VirtualClick, Input.MouseButton.Left, OffsetX, OffsetY);
+        }
         public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY)
         {
             if (Button != Input.MouseButton.Left) { VirtualClick = false; }
@@ -292,5 +296,6 @@ namespace OpenRPA.NM
                 return Interfaces.Image.Util.Bitmap2Base64(image);
             }
         }
+
     }
 }

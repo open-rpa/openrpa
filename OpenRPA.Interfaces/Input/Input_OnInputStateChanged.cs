@@ -144,17 +144,45 @@ namespace OpenRPA.Input
         #endregion
 
         private static InputDriver _Instance = null;
+        private KeyboardDetectorPlugin cancelDetector;
+        public void initCancelKey(string keys)
+        {
+            if (_Instance.cancelDetector == null)
+            {
+                _Instance.cancelDetector = new KeyboardDetectorPlugin();
+                _Instance.cancelDetector.Entity = new Interfaces.entity.Detector();
+                _Instance.cancelDetector.OnDetector += (IDetectorPlugin plugin, IDetectorEvent detector, EventArgs e) =>
+                {
+                    try
+                    {
+                        onCancel?.Invoke();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                };
+            }
+            _Instance.cancelDetector.Stop();
+            _Instance.cancelDetector.Keys = keys;
+            _Instance.cancelDetector.Start();
+
+        }
         public static InputDriver Instance
         {
             get
             {
-                if (_Instance == null) _Instance = new InputDriver() { CallNext = true, SkipEvent = false };
+                if (_Instance == null) {
+                    _Instance = new InputDriver() { CallNext = true, SkipEvent = false };
+                }
                 return _Instance;
             }
         }
         public bool CallNext { get; set; }
         public bool SkipEvent { get; set; }
         private int currentprocessid = 0;
+        // public var test = Activities.TypeText.parseText(cancelkey.Text);
+
         private IntPtr LowLevelKeyboardProc(Int32 nCode, IntPtr wParam, IntPtr lParam)
         {
             if (nCode >= HC_ACTION)

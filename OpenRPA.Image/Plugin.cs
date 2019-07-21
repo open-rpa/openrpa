@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Image
 {
-    class Plugin : IPlugin
+    class Plugin : ObservableObject, IPlugin
     {
         public string Name => "Image";
-        public string Status => "Online";
+        public string Status => "";
         public event Action<IPlugin, IRecordEvent> OnUserAction;
         public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)
         {

@@ -15,7 +15,7 @@ using OpenRPA.Interfaces.Selector;
 
 namespace OpenRPA.Windows
 {
-    public class Plugin : IPlugin
+    public class Plugin : ObservableObject, IPlugin
     {
         public static Interfaces.Selector.treeelement[] _GetRootElements(Selector anchor)
         {
@@ -80,7 +80,7 @@ namespace OpenRPA.Windows
         }
         public string Name { get => "Windows"; }
         public string Status => _status;
-        private string _status = "offline";
+        private string _status = "";
 
         public event Action<IPlugin, IRecordEvent> OnUserAction;
         public void Start()

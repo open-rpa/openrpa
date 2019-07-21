@@ -41,7 +41,9 @@ namespace OpenRPA.Input
 
         public event InputEventHandler OnMouseMove = delegate { };
 
-        //public event InputEventHandler OnInput = delegate { };
+        public event CancelEventHandler onCancel = delegate { };
+
+        public delegate void CancelEventHandler();
 
         public void KeyUp(KeyboardKey key) => SetInputState(new InputEventArgs() { Type = InputEventType.KeyUp, Key = key });
 

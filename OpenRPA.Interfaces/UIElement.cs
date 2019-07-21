@@ -126,6 +126,10 @@ namespace OpenRPA
             var process = System.Diagnostics.Process.GetProcessById(ProcessId);
             while (!process.Responding) { }
         }
+        public void Click(bool VirtualClick, int OffsetX, int OffsetY)
+        {
+            Click(VirtualClick, Input.MouseButton.Left, OffsetX, OffsetY);
+        }
         public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY)
         {
             try

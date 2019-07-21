@@ -14,6 +14,7 @@ namespace OpenRPA
         public string username = "";
         public byte[] password;
         public byte[] entropy;
+        public string cancelkey = "{ESCAPE}";
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)

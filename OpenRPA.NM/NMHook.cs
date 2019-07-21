@@ -51,7 +51,7 @@ namespace OpenRPA.NM
                 chromepipe = new NamedPipeClientAsync<NativeMessagingMessage>(PIPE_NAME + "_chrome");
                 chromepipe.ServerMessage += Client_OnReceivedMessage;
                 chromepipe.Disconnected += () => { onDisconnected?.Invoke("chrome"); };
-                chromepipe.Connected += () => { Connected?.Invoke("chrome"); Task.Run(()=> reloadtabs());  };
+                chromepipe.Connected += () => {  Connected?.Invoke("chrome"); Task.Run(()=> reloadtabs());  };
                 chromepipe.Error += (e) => { Log.Debug(e.ToString()); };
                 chromepipe.Start();
             }

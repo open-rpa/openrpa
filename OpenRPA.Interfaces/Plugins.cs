@@ -1,6 +1,7 @@
 ﻿using OpenRPA.Interfaces.Selector;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -10,7 +11,7 @@ namespace OpenRPA.Interfaces
 {
     public class Plugins
     {
-        public static ICollection<IPlugin> recordPlugins = new List<IPlugin>();
+        public static ObservableCollection<IPlugin> recordPlugins = new ObservableCollection<IPlugin>();
         public static ExtendedObservableCollection<IDetectorPlugin> detectorPlugins = new ExtendedObservableCollection<IDetectorPlugin>();
         public static Dictionary<string, Type> detectorPluginTypes = new Dictionary<string, Type>();
 

@@ -137,6 +137,16 @@
                                   Command="{Binding Data.DetectorsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                 </RibbonGroup>
             </RibbonTab>
+            <RibbonTab Header="Settings">
+                <RibbonGroup Header="General">
+                    
+                </RibbonGroup>
+                <RibbonGroup Header="Cancel key">
+                    <StackPanel>
+                        <TextBox x:Name="cancelkey" GotKeyboardFocus="Cancelkey_GotKeyboardFocus" Width="80" Height="25" />
+                    </StackPanel>
+                </RibbonGroup>
+            </RibbonTab>
             <!-- 
             <RibbonTab x:Name="rbnTab2" Header="Tab2">
                 <RibbonGroup x:Name="rbnGr3" Header="Other Group">
@@ -162,6 +172,42 @@
             </TabControl>
 
             <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="1" Height="25" Grid.ColumnSpan="3" Background="Gray">
+                <StatusBar FocusManager.IsFocusScope="True" x:Name="StatusBar">
+                    <StatusBarItem x:Name="LabelStatusBar" Content="Disconnected" />
+                    <StatusBarItem VerticalAlignment="Top" HorizontalContentAlignment="Center">
+                        <ItemsControl x:Name="lvDataBinding">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Margin="10,0,10,0">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} : {1}">
+                                                <Binding Path="Name" />
+                                                <Binding Path="Status" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StatusBarItem>
+                </StatusBar>
+            </StatusBar>
+            <!-- 
+            <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="1" Height="25" Grid.ColumnSpan="3" Background="Gray">
                 <StackPanel Orientation="Horizontal">
                     <StatusBarItem x:Name="LabelStatusBar" Foreground="White" FontSize="12">
                     </StatusBarItem>
@@ -179,6 +225,8 @@
                     </ListView>
                 </StackPanel>
             </StatusBar>
+                        -->
+
         </Grid>
     </DockPanel>
 

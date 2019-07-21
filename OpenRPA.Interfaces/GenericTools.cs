@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenRPA.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,35 +25,6 @@ namespace OpenRPA.Interfaces
         public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         public static extern int SetForegroundWindow(IntPtr hWnd);
-        public delegate void CancelHandler(EventArgs e);
-        private static event CancelHandler _OnCancel;
-        public static event CancelHandler OnCancel
-        {
-            add
-            {
-                if(_OnCancel== null)
-                {
-                    Input.InputDriver.Instance.OnKeyUp += Instance_OnKeyUp;
-                }
-                _OnCancel += value;
-            }
-            remove
-            {
-                _OnCancel -= value;
-                if (_OnCancel == null)
-                {
-                    Input.InputDriver.Instance.OnKeyUp -= Instance_OnKeyUp;
-                }
-            }
-        }
-        private static void Instance_OnKeyUp(Input.InputEventArgs e)
-        {
-            if(e.Key == Input.KeyboardKey.ESC)
-            {
-                _OnCancel?.Invoke(EventArgs.Empty);
-            }
-        }
-
         public static void minimize(System.Windows.Window window)
         {
             RunUI(window, () =>

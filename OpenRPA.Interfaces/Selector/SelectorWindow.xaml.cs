@@ -95,20 +95,20 @@ namespace OpenRPA.Interfaces.Selector
             vm.Plugin.Start();
             GenericTools.minimize(GenericTools.mainWindow);
             GenericTools.minimize(this);
-            GenericTools.OnCancel += OnCancel;
+            OpenRPA.Input.InputDriver.Instance.onCancel += OnCancel;
         }
 
-        private void OnCancel(EventArgs e)
+        private void OnCancel()
         {
             vm.Plugin.Stop();
-            GenericTools.OnCancel -= OnCancel;
+            OpenRPA.Input.InputDriver.Instance.onCancel -= OnCancel;
             GenericTools.restore(this);
         }
 
         private void Plugin_OnUserAction(IPlugin sender, IRecordEvent e)
         {
             vm.Plugin.Stop();
-            GenericTools.OnCancel -= OnCancel;
+            OpenRPA.Input.InputDriver.Instance.onCancel -= OnCancel;
             e.ClickHandled = true;
             // GenericTools.restore(GenericTools.mainWindow);
             GenericTools.restore(this);

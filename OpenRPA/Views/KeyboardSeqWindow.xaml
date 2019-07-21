@@ -5,9 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenRPA.Views"
         mc:Ignorable="d"
-        Title="InsertText" Height="61" Width="524"
-         Loaded="Window_Loaded" Closed="Window_Closed" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp"
-        LostFocus="Window_LostFocus">
+        Title="Press Keyboard Sequence" Height="61" Width="524"
+        Loaded="Window_Loaded" Unloaded="Window_Unloaded" >
     <Grid>
         <TextBlock x:Name="textbox" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
     </Grid>

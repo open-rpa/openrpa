@@ -55,6 +55,9 @@ namespace OpenRPA
             System.Diagnostics.Trace.Listeners.Add(tracing);
             Console.SetOut(new DebugTextWriter());
             lvDataBinding.ItemsSource = Plugins.recordPlugins;
+            cancelkey.Text = Config.local.cancelkey;
+            OpenRPA.Input.InputDriver.Instance.initCancelKey(cancelkey.Text);
+            InputDriver.Instance.onCancel += onCancel;
         }
         public Views.WFDesigner designer
         {
@@ -858,19 +861,21 @@ namespace OpenRPA
             }
             return !isRecording;
         }
+        private void onCancel()
+        {
+            if (!isRecording) return;
+            StartDetectorPlugins();
+            StopRecordPlugins();
+
+            
+            InputDriver.Instance.CallNext = true;
+            InputDriver.Instance.OnKeyDown -= OnKeyDown;
+            InputDriver.Instance.OnKeyUp -= OnKeyUp;
+            GenericTools.restore(GenericTools.mainWindow);
+        }
         private void OnKeyDown(Input.InputEventArgs e)
         {
             if (!isRecording) return;
-            if (e.Key == KeyboardKey.ESCAPE)
-            {
-                StartDetectorPlugins();
-                StopRecordPlugins();
-                InputDriver.Instance.CallNext = true;
-                InputDriver.Instance.OnKeyDown -= OnKeyDown;
-                InputDriver.Instance.OnKeyUp -= OnKeyUp;
-                GenericTools.restore(GenericTools.mainWindow);
-                return;
-            }
             // if (e.Key == KeyboardKey. 255) return;
             try
             {
@@ -880,14 +885,14 @@ namespace OpenRPA
                     {
                         Log.Debug("re-use existing TypeText");
                         var item = (Activities.TypeText)view.lastinserted;
-                        item.AddKey(new Activities.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, false), view.lastinsertedmodel);
+                        item.AddKey(new Interfaces.Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, false), view.lastinsertedmodel);
                     }
                     else
                     {
                         Log.Debug("Add new TypeText");
                         var rme = new Activities.TypeText();
                         view.lastinsertedmodel = view.addActivity(rme);
-                        rme.AddKey(new Activities.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, false), view.lastinsertedmodel);
+                        rme.AddKey(new Interfaces.Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, false), view.lastinsertedmodel);
                         view.lastinserted = rme;
                     }
                 }
@@ -910,7 +915,7 @@ namespace OpenRPA
                     {
                         Log.Debug("re-use existing TypeText");
                         var item = (Activities.TypeText)view.lastinserted;
-                        item.AddKey(new Activities.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, true), view.lastinsertedmodel);
+                        item.AddKey(new Interfaces.Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, true), view.lastinsertedmodel);
                     }
                 }
 
@@ -1367,7 +1372,8 @@ namespace OpenRPA
                     }
                 }
                 this.Show();
-                lvDataBinding.ItemsSource = Plugins.recordPlugins;
+                var test = lvDataBinding.ItemsSource;
+                //lvDataBinding.ItemsSource = Plugins.recordPlugins;
                 try
                 {
                     if (Projects.Count == 0)
@@ -1458,6 +1464,38 @@ namespace OpenRPA
                     }                    
                 }
             }, null);
+        }
+
+        private Views.KeyboardSeqWindow view = null;
+        private void Cancelkey_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (view != null) return;
+            try
+            {
+                view = new Views.KeyboardSeqWindow();
+                //Hide();
+                if (view.ShowDialog() == true)
+                {
+                    cancelkey.Text = view.Text;
+                    Config.local.cancelkey = view.Text;
+                    Config.Save();
+                    OpenRPA.Input.InputDriver.Instance.initCancelKey(cancelkey.Text);
+                } else
+                {
+                    Console.WriteLine("done");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                MessageBox.Show("cancelkey_GotKeyboardFocus: " + ex.ToString());
+            }
+            finally
+            {
+                Keyboard.ClearFocus();
+                view = null;
+            }
+
         }
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.NM
 {
-    public class Plugin : IPlugin
+    public class Plugin : ObservableObject, IPlugin
     {
         public NMElement lastElement { get; set; }
         public string Name => "NM";
@@ -90,13 +90,16 @@ namespace OpenRPA.NM
             NMHook.registreffNativeMessagingHost(false);
             NMHook.checkForPipes(true, true);
             NMHook.onMessage += onMessage;
-            NMHook.Connected += omConnected;        }
+            NMHook.Connected += omConnected;
+            NMHook.onDisconnected += onDisconnected;
+        }
         private void omConnected(string obj)
         {
-            //Task.Run(() =>
-            //{
-            //    var test = _GetRootElements(null);
-            //});
+            NotifyPropertyChanged("Status");
+        }
+        private void onDisconnected(string obj)
+        {
+            NotifyPropertyChanged("Status");
         }
         private void onMessage(NativeMessagingMessage message)
         {

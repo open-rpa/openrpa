@@ -166,6 +166,22 @@ namespace OpenRPA.Views
                 return Workflow.Project;
             }
         }
+        private void onCancel()
+        {
+            GenericTools.RunUI(() =>
+            {
+                if (!tab.IsSelected) return;
+                foreach (var i in WorkflowInstance.Instances)
+                {
+                    if (i.WorkflowId == Workflow._id && !i.isCompleted)
+                    {
+                        i.Abort("User canceled workflow with cancel key");
+                    }
+                }
+                if (resumeRuntimeFromHost != null) resumeRuntimeFromHost.Set();
+
+            });
+        }
         private void OnKeyUp(Input.InputEventArgs e)
         {
             GenericTools.RunUI(() => { 
@@ -189,17 +205,6 @@ namespace OpenRPA.Views
                     {
                         Run(VisualTracking, SlowMotion, null);
                     }
-                }
-                if(e.Key == Input.KeyboardKey.ESCAPE || e.Key == Input.KeyboardKey.ESC)
-                {
-                    foreach (var i in WorkflowInstance.Instances)
-                    {
-                        if(i.WorkflowId==Workflow._id && !i.isCompleted)
-                        {
-                            i.Abort("User canceled workflow with cancel key");
-                        }
-                    }
-                    if (resumeRuntimeFromHost != null) resumeRuntimeFromHost.Set();
                 }
             });
         }
@@ -248,6 +253,7 @@ namespace OpenRPA.Views
             WfToolboxBorder.Child = InitializeActivitiesToolbox();
             Workflow = workflow;
             wfDesigner = new WorkflowDesigner();
+            Input.InputDriver.Instance.onCancel += onCancel;
             // Register the runtime metadata for the designer.
             new DesignerMetadata().Register();
             DesignerConfigurationService configService = wfDesigner.Context.Services.GetRequiredService<DesignerConfigurationService>();

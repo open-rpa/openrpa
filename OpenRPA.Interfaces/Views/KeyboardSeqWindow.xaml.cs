@@ -26,7 +26,7 @@ namespace OpenRPA.Interfaces.Views
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
         public string Text { get; set; }
-        internal List<vKey> _keys;
+        internal List<Input.vKey> _keys;
         public KeyboardSeqWindow()
         {
             InitializeComponent();
@@ -43,14 +43,14 @@ namespace OpenRPA.Interfaces.Views
             InputDriver.Instance.OnKeyDown += _OnKeyDown;
             InputDriver.Instance.OnKeyUp += _OnKeyUp;
         }
-        private void _OnKeyDown(Input.InputEventArgs e)
+        private void _OnKeyDown(OpenRPA.Input.InputEventArgs e)
         {
-            AddKey(new vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, false));
+            AddKey(new Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, false));
             NotifyPropertyChanged("Text");
         }
-        private void _OnKeyUp(Input.InputEventArgs e)
+        private void _OnKeyUp(OpenRPA.Input.InputEventArgs e)
         {
-            AddKey(new vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, true));
+            AddKey(new Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, true));
             NotifyPropertyChanged("Text");
         }
 
@@ -81,9 +81,9 @@ namespace OpenRPA.Interfaces.Views
             Focus();
             textbox.Focus();
         }
-        public void AddKey(vKey _key)
+        public void AddKey(Input.vKey _key)
         {
-            if (_keys == null) _keys = new List<vKey>();
+            if (_keys == null) _keys = new List<Input.vKey>();
             _keys.Add(_key);
             Text = "";
             for (var i = 0; i < _keys.Count; i++)

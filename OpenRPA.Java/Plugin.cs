@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Java
 {
-    public class Plugin : IPlugin
+    public class Plugin : ObservableObject, IPlugin
     {
         public static treeelement[] _GetRootElements(Selector anchor)
         {
@@ -55,7 +55,8 @@ namespace OpenRPA.Java
         }
         public event Action<IPlugin, IRecordEvent> OnUserAction;
         public string Name { get => "Java"; }
-        public string Status => (hook!=null && hook.jvms.Count>0 ? "online":"offline");
+        // public string Status => (hook!=null && hook.jvms.Count>0 ? "online":"offline");
+        public string Status { get => ""; }
         public Javahook hook { get; set; } = new Javahook();
         public void Start()
         {
@@ -68,6 +69,7 @@ namespace OpenRPA.Java
         private void Hook_OnJavaShutDown(int vmID)
         {
             Log.Information("JavaShutDown: " + vmID);
+            NotifyPropertyChanged("Status");
         }
         public JavaElement lastElement { get; set; }
         private void Hook_OnMouseClicked(int vmID, WindowsAccessBridgeInterop.AccessibleContextNode ac)
@@ -144,6 +146,7 @@ namespace OpenRPA.Java
             try
             {
                 hook.init();
+                hook.OnInitilized += Hook_OnInitilized;
                 hook.OnJavaShutDown += Hook_OnJavaShutDown;
                 hook.OnMouseEntered += Hook_OnMouseEntered;
             }
@@ -153,6 +156,12 @@ namespace OpenRPA.Java
             }
 
         }
+
+        private void Hook_OnInitilized(WindowsAccessBridgeInterop.AccessBridge accessBridge)
+        {
+            NotifyPropertyChanged("Status");
+        }
+
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
             var result = JavaSelector.GetElementsWithuiSelector(selector as JavaSelector, fromElement, maxresults );

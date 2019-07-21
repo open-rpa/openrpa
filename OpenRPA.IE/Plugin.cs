@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.IE
 {
-    class Plugin : IPlugin
+    class Plugin : ObservableObject, IPlugin
     {
         public static treeelement[] _GetRootElements(Selector anchor)
         {
@@ -61,8 +61,7 @@ namespace OpenRPA.IE
 
         public event Action<IPlugin, IRecordEvent> OnUserAction;
         public string Name { get => "IE"; }
-        public string Status => _status;
-        private string _status = "offline";
+        public string Status => "";
         public void Start()
         {
             InputDriver.Instance.OnMouseUp += OnMouseUp;

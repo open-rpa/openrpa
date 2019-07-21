@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Office
 {
-    public class Plugin : IPlugin
+    public class Plugin : ObservableObject, IPlugin
     {
         public string Name => "Office";
-        public string Status => "online";
+        public string Status => "";
         public event Action<IPlugin, IRecordEvent> OnUserAction;
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {

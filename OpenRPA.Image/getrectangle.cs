@@ -68,25 +68,22 @@ namespace OpenRPA.Image
         //    waitHandle.WaitOne();
         //    return point;
         //}
-        private static void OnKeyUp(Input.InputEventArgs e)
+        private static void onCancel()
         {
-            if (e.Key == Input.KeyboardKey.ESCAPE || e.Key == Input.KeyboardKey.ESC)
-            {
-                OpenRPA.Input.InputDriver.Instance.OnMouseDown -= onMouseDown;
-                OpenRPA.Input.InputDriver.Instance.OnMouseUp -= onMouseUp2;
-                OpenRPA.Input.InputDriver.Instance.OnKeyUp -= OnKeyUp;
-                OpenRPA.Input.InputDriver.Instance.OnMouseMove -= onMouseMove;
-                point = System.Drawing.Point.Empty;
-                removeform();
-                waitHandle.Set();
-            }
+            OpenRPA.Input.InputDriver.Instance.OnMouseDown -= onMouseDown;
+            OpenRPA.Input.InputDriver.Instance.OnMouseUp -= onMouseUp2;
+            OpenRPA.Input.InputDriver.Instance.OnMouseMove -= onMouseMove;
+            OpenRPA.Input.InputDriver.Instance.onCancel -= onCancel;
+            point = System.Drawing.Point.Empty;
+            removeform();
+            waitHandle.Set();
         }
         private static void onMouseUp2(InputEventArgs e)
         {
             OpenRPA.Input.InputDriver.Instance.OnMouseDown -= onMouseDown;
             OpenRPA.Input.InputDriver.Instance.OnMouseUp -= onMouseUp2;
-            OpenRPA.Input.InputDriver.Instance.OnKeyUp -= OnKeyUp;
             OpenRPA.Input.InputDriver.Instance.OnMouseMove -= onMouseMove;
+            OpenRPA.Input.InputDriver.Instance.onCancel -= onCancel;
             point = new System.Drawing.Point(e.X, e.Y);
             removeform();
             waitHandle.Set();
@@ -106,8 +103,8 @@ namespace OpenRPA.Image
 
             OpenRPA.Input.InputDriver.Instance.OnMouseDown += onMouseDown;
             OpenRPA.Input.InputDriver.Instance.OnMouseUp += onMouseUp;
-            OpenRPA.Input.InputDriver.Instance.OnKeyUp += OnKeyUp;
             OpenRPA.Input.InputDriver.Instance.OnMouseMove += onMouseMove;
+            OpenRPA.Input.InputDriver.Instance.onCancel += onCancel;
 
             waitHandle = new System.Threading.AutoResetEvent(false);
             await waitHandle.WaitOneAsync();
@@ -161,8 +158,8 @@ namespace OpenRPA.Image
             _overlayWindow = null;
             OpenRPA.Input.InputDriver.Instance.OnMouseDown -= onMouseDown;
             OpenRPA.Input.InputDriver.Instance.OnMouseUp -= onMouseUp;
-            OpenRPA.Input.InputDriver.Instance.OnKeyUp -= OnKeyUp;
             OpenRPA.Input.InputDriver.Instance.OnMouseMove -= onMouseMove;
+            OpenRPA.Input.InputDriver.Instance.onCancel -= onCancel;
 
             removeform();
             waitHandle.Set();

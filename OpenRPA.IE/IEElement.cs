@@ -254,5 +254,30 @@ namespace OpenRPA.IE
             }
         }
 
+        public string href
+        {
+            get
+            {
+                if (RawElement.getAttribute("href") is System.DBNull) return null;
+                return RawElement.getAttribute("href");
+            }
+        }
+        public string src
+        {
+            get
+            {
+                if (RawElement.getAttribute("src") is System.DBNull) return null;
+                return RawElement.getAttribute("src");
+            }
+        }
+        public string alt
+        {
+            get
+            {
+                if (RawElement.getAttribute("alt") is System.DBNull) return null;
+                return RawElement.getAttribute("alt");
+            }
+        }
+
     }
 }

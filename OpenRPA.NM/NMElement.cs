@@ -297,5 +297,46 @@ namespace OpenRPA.NM
             }
         }
 
+
+        [Newtonsoft.Json.JsonIgnore]
+        public string href
+        {
+            get
+            {
+                if (chromeelement != null)
+                {
+                    if (chromeelement.ContainsKey("href")) return chromeelement["href"].ToString();
+                    return null;
+                }
+                return null;
+            }
+        }
+        [Newtonsoft.Json.JsonIgnore]
+        public string src
+        {
+            get
+            {
+                if (chromeelement != null)
+                {
+                    if (chromeelement.ContainsKey("src")) return chromeelement["src"].ToString();
+                    return null;
+                }
+                return null;
+            }
+        }
+        [Newtonsoft.Json.JsonIgnore]
+        public string alt
+        {
+            get
+            {
+                if (chromeelement != null)
+                {
+                    if (chromeelement.ContainsKey("alt")) return (string)chromeelement["alt"];
+                    return null;
+                }
+                return null;
+            }
+        }
+
     }
 }

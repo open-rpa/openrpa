@@ -350,6 +350,11 @@ namespace OpenRPA.Views
 
             WeakEventManager<System.ComponentModel.INotifyPropertyChanged, System.ComponentModel.PropertyChangedEventArgs>.
                 AddHandler(MainWindow.tracing, "PropertyChanged", traceOnPropertyChanged);
+
+            if(isRunnning)
+            {
+                ReadOnly = true;
+            }
         }
         private void traceOnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {

@@ -40,6 +40,10 @@ namespace OpenRPA
         }   
         public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [JsonIgnore]
+        public bool IsExpanded { get { return GetProperty<bool>(); } set { SetProperty(value); } }
+        [JsonIgnore]
+        public bool IsSelected { get { return GetProperty<bool>(); } set { SetProperty(value); } }
+        [JsonIgnore]
         public string State
         {
             get

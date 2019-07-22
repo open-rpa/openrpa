@@ -138,6 +138,7 @@ namespace OpenRPA.Windows.Views
                 Selector = e.Selector.ToString();
                 EntityName = e.UIElement.ToString();
                 NotifyPropertyChanged("EntityName");
+                NotifyPropertyChanged("Selector");
             }, null);
         }
     }

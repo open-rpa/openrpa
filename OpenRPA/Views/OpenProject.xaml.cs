@@ -43,7 +43,7 @@ namespace OpenRPA.Views
         }
         private void ListWorkflows_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if(listWorkflows.SelectedItem is Workflow)
+            if (listWorkflows.SelectedItem is Workflow)
             {
                 var f = (Workflow)listWorkflows.SelectedItem;
                 onOpenWorkflow?.Invoke(f);
@@ -52,7 +52,6 @@ namespace OpenRPA.Views
             var p = (Project)listWorkflows.SelectedItem;
             if (p == null) return;
             onOpenProject?.Invoke(p);
-
         }
 
     }

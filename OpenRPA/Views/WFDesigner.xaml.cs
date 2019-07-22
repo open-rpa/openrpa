@@ -1074,6 +1074,14 @@ namespace OpenRPA.Views
                 GenericTools.RunUI(() =>
                 {
                     WfPropertyBorder.Child = wfDesigner.PropertyInspectorView;
+                    if (global.isConnected)
+                    {
+                        ReadOnly = !Workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.update);
+                    }
+                    else
+                    {
+                        ReadOnly = false;
+                    }
                 });
 
                 onChanged?.Invoke(this);
@@ -1107,7 +1115,14 @@ namespace OpenRPA.Views
             }
             wfDesigner.Flush();
             // InitializeStateEnvironment();
-
+            if (global.isConnected)
+            {
+                if (!Workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.invoke))
+                {
+                    Log.Error("Access denied, " + global.webSocketClient.user.username + " does not have invoke permission");
+                    return;
+                }
+            }
             GenericTools.RunUI(() =>
             {
                 if (_activityIdMapping.Count == 0)
@@ -1132,6 +1147,7 @@ namespace OpenRPA.Views
                 var param = new Dictionary<string, object>();
                 instance = Workflow.CreateInstance(param, null, null, onIdle, onVisualTracking);
             }
+            ReadOnly = true;
             if (!VisualTracking && Minimize) GenericTools.minimize(GenericTools.mainWindow);
             instance.Run();
         }

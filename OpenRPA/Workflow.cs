@@ -178,7 +178,8 @@ namespace OpenRPA
                 _acl = result._acl;
             } else
             {
-                await global.webSocketClient.UpdateOne("openrpa", 0, false, this);
+                var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, this);
+                _acl = result._acl;
             }
         }
         public async Task Delete()

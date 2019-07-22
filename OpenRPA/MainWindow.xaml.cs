@@ -590,6 +590,18 @@ namespace OpenRPA
                     newTabItem.Content = view;
                     mainTabControl.Items.Add(newTabItem);
                     newTabItem.IsSelected = true;
+
+                    var workflows = new List<string>();
+                    foreach (TabItem tab in mainTabControl.Items)
+                    {
+                        if (tab.Content is Views.WFDesigner)
+                        {
+                            designer = (Views.WFDesigner)tab.Content;
+                            workflows.Add(designer.Workflow._id);
+                        }
+                    }
+                    Config.local.openworkflows = workflows.ToArray();
+                    Config.Save();
                 }
                 catch (Exception ex)
                 {
@@ -1136,10 +1148,17 @@ namespace OpenRPA
                 AutomationHelper.init();
                 new DesignerMetadata().Register();
                 onOpen(null);
-                if (Projects.Count > 0)
+                foreach(var p in Projects)
                 {
-                    onOpenWorkflow(Projects[0].Workflows.First());
+                    foreach(var wf in p.Workflows)
+                    {
+                        if(Config.local.openworkflows.Contains(wf._id))
+                        {
+                            onOpenWorkflow(wf);
+                        }
+                    }
                 }
+
                 AddHotKeys();
             });
         }
@@ -1491,13 +1510,43 @@ namespace OpenRPA
                 LabelStatusBar.Content = "Connected to " + Config.local.wsurl + " as " + user.name;
                 if (Projects.Count > 0)
                 {
-                    Log.Debug("Opening first project");
-                    //onOpenProject(Projects[0]);
-                    var wf = Projects[0].Workflows.FirstOrDefault();
-                    if(wf!=null)
+                    Projects[0].IsExpanded = true;
+                    // foreach (TabItem tab in mainTabControl.Items)
+                    //    var tab = mainTabControl.SelectedContent as Views.OpenProject;
+                    //if(tab != null)
+                    //{
+                    //    if(tab.listWorkflows.Items.Count > 0)
+                    //    {
+                    //        Console.WriteLine(tab.listWorkflows.SelectedValuePath);
+                    //        // = 
+                    //        //foreach (var childItem in tab.listWorkflows.Items.OfType<TreeViewItem>())
+                    //        //{
+                    //        //    childItem.IsExpanded = true;
+                    //        //}
+                    //        //var stack = new Stack<TreeViewItem>(tab.listWorkflows.Items.Cast<TreeViewItem>());
+                    //        //TreeViewItem item = stack.Pop();
+                    //        //item.IsExpanded = true;
+                    //    }
+                    //}
+
+                    foreach (var p in Projects)
                     {
-                        onOpenWorkflow(wf);
-                    }                    
+                        foreach (var wf in p.Workflows)
+                        {
+                            if (Config.local.openworkflows.Contains(wf._id))
+                            {
+                                onOpenWorkflow(wf);
+                            }
+                        }
+                    }
+
+                    //Log.Debug("Opening first project");
+                    ////onOpenProject(Projects[0]);
+                    //var wf = Projects[0].Workflows.FirstOrDefault();
+                    //if(wf!=null)
+                    //{
+                    //    onOpenWorkflow(wf);
+                    //}                    
                 }
             }, null);
         }

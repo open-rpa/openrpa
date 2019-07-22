@@ -40,6 +40,11 @@ namespace OpenRPA
             project.Init();
             return project;
         }
+        [JsonIgnore]
+        public bool IsExpanded { get { return GetProperty<bool>(); } set { SetProperty(value); } }
+        [JsonIgnore]
+        public bool IsSelected { get { return GetProperty<bool>(); } set { SetProperty(value); } }
+
         public static async Task<Project> Create(string Path, string Name)
         {
             var basePath = System.IO.Path.Combine(Path, Name);

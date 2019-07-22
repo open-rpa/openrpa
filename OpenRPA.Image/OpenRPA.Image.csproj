@@ -66,8 +66,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\GetText.cs" />
     <Compile Include="Activities\GetImage.cs" />
     <Compile Include="Activities\GetElement.cs" />
+    <Compile Include="Activities\GetTextDesigner.xaml.cs">
+      <DependentUpon>GetTextDesigner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\GetImageDesigner.xaml.cs">
       <DependentUpon>GetImageDesigner.xaml</DependentUpon>
     </Compile>
@@ -86,6 +90,10 @@
     <Compile Include="WindowHandleInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\GetTextDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Activities\GetImageDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -73,13 +74,13 @@
     <Compile Include="Activities\GetElementDesigner.xaml.cs">
       <DependentUpon>GetElementDesigner.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Class1.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="getrectangle.cs" />
     <Compile Include="ImageEvent.cs" />
     <Compile Include="ImageElement.cs" />
     <Compile Include="Matches.cs" />
     <Compile Include="MyEnumWindows.cs" />
+    <Compile Include="ocr.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WindowHandleInfo.cs" />
@@ -98,6 +99,10 @@
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj">
       <Project>{481bd5a1-5e8d-42a9-bd31-78becfaf15f3}</Project>
       <Name>OpenRPA.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj">
+      <Project>{84971661-e141-410f-8e9e-ade610d1961a}</Project>
+      <Name>OpenRPA.Net</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

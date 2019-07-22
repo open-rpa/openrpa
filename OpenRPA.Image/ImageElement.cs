@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Image
 {
-    public class ImageElement : IElement
+    public class ImageElement : IElement, IDisposable
     {
         public string Name { get; set; }
         public string Processname { get; set; }
@@ -15,8 +15,21 @@ namespace OpenRPA.Image
         public int Y { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-        public System.Drawing.Bitmap element { get; set; }
-        public string Value { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        private System.Drawing.Bitmap _element = null;
+        public System.Drawing.Bitmap element {
+            get
+            {
+                if(_element==null)
+                {
+                    _element = Interfaces.Image.Util.Screenshot(Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
+                }
+                return _element;
+            }
+            set
+            {
+                _element = value;
+            }
+        }
         object IElement.RawElement { get => element; set => element = value as System.Drawing.Bitmap; }
         public System.Drawing.Rectangle Rectangle
         {
@@ -99,17 +112,63 @@ namespace OpenRPA.Image
         }
         public string ImageString()
         {
-            var AddedWidth = 10;
-            var AddedHeight = 10;
-            var ScreenImageWidth = Rectangle.Width + AddedWidth;
-            var ScreenImageHeight = Rectangle.Height + AddedHeight;
-            var ScreenImagex = Rectangle.X - (AddedWidth / 2);
-            var ScreenImagey = Rectangle.Y - (AddedHeight / 2);
-            if (ScreenImagex < 0) ScreenImagex = 0; if (ScreenImagey < 0) ScreenImagey = 0;
-            using (var image = Interfaces.Image.Util.Screenshot(ScreenImagex, ScreenImagey, ScreenImageWidth, ScreenImageHeight, Interfaces.Image.Util.ActivityPreviewImageWidth, Interfaces.Image.Util.ActivityPreviewImageHeight))
+            if (element == null)
             {
-                // Interfaces.Image.Util.SaveImageStamped(image, System.IO.Directory.GetCurrentDirectory(), "ImageElement");
-                return Interfaces.Image.Util.Bitmap2Base64(image);
+                var AddedWidth = 10;
+                var AddedHeight = 10;
+                var ScreenImageWidth = Rectangle.Width + AddedWidth;
+                var ScreenImageHeight = Rectangle.Height + AddedHeight;
+                var ScreenImagex = Rectangle.X - (AddedWidth / 2);
+                var ScreenImagey = Rectangle.Y - (AddedHeight / 2);
+                if (ScreenImagex < 0) ScreenImagex = 0; if (ScreenImagey < 0) ScreenImagey = 0;
+                using (var image = Interfaces.Image.Util.Screenshot(ScreenImagex, ScreenImagey, ScreenImageWidth, ScreenImageHeight, Interfaces.Image.Util.ActivityPreviewImageWidth, Interfaces.Image.Util.ActivityPreviewImageHeight))
+                {
+                    // Interfaces.Image.Util.SaveImageStamped(image, System.IO.Directory.GetCurrentDirectory(), "ImageElement");
+                    return Interfaces.Image.Util.Bitmap2Base64(image);
+                }
+            }
+            else
+            {
+                return Interfaces.Image.Util.Bitmap2Base64(element);
+            }
+        }
+
+        public void Dispose()
+        {
+            if(_element!=null) _element.Dispose();
+        }
+
+        private Emgu.CV.OCR.Tesseract _ocr;
+        public string Value
+        {
+            get
+            {
+                try
+                {
+                    var lang = Config.local.ocrlanguage;
+                    string basepath = System.IO.Directory.GetCurrentDirectory();
+                    string path = System.IO.Path.Combine(basepath, "tessdata");
+                    ocr.TesseractDownloadLangFile(path, Config.local.ocrlanguage);
+                    ocr.TesseractDownloadLangFile(path, "osd");
+                    _ocr = new Emgu.CV.OCR.Tesseract(path, lang.ToString(), Emgu.CV.OCR.OcrEngineMode.TesseractLstmCombined);
+                    _ocr.Init(path, lang.ToString(), Emgu.CV.OCR.OcrEngineMode.TesseractLstmCombined);
+                    _ocr.PageSegMode = Emgu.CV.OCR.PageSegMode.SparseText;
+
+                    OpenRPA.Interfaces.Image.Util.SaveImageStamped(element, "OCR");
+                    using (var img = new Emgu.CV.Image<Emgu.CV.Structure.Bgr, byte>(element))
+                    {
+                        return ocr.OcrImage(_ocr, img.Mat);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                    return null;
+                }
+            }
+            set
+            {
+
             }
         }
 

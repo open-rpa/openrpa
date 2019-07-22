@@ -21,6 +21,29 @@ namespace OpenRPA.Interfaces.entity
         public string _createdbyid { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public ace[] _acl  { get { return GetProperty<ace[]>(); } set { SetProperty(value); } }
 
+        public bool hasRight(apiuser user, ace_right bit)
+        {
+            var ace = _acl.Where(x => x._id == user._id).FirstOrDefault();
+            if (ace != null) { if (ace.getBit((decimal)bit)) return true; }
+            foreach (var role in user.roles)
+            {
+                ace = _acl.Where(x => x._id == role._id).FirstOrDefault();
+                if (ace != null) { if (ace.getBit((decimal)bit)) return true; }
+            }
+            return false;
+        }
+        public bool hasRight(TokenUser user, ace_right bit)
+        {
+            var ace = _acl.Where(x => x._id == user._id).FirstOrDefault();
+            if (ace != null) { if (ace.getBit((decimal)bit)) return true; }
+            foreach (var role in user.roles)
+            {
+                ace = _acl.Where(x => x._id == role._id).FirstOrDefault();
+                if (ace != null) { if (ace.getBit((decimal)bit)) return true; }
+            }
+            return false;
+        }
+
         //public void delete()
         //{
         //    rpaactivities.socketService.instance.DELETE(_id, "workflows");

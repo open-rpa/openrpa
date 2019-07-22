@@ -20,6 +20,15 @@ namespace OpenRPA.Interfaces.entity
         {
             rights = "//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8=";
         }
+
+        public ace(ace a)
+        {
+            deny = a.deny;
+            rights = a.rights;
+            _id = a._id;
+            name = a.name;
+        }
+
         public bool deny { get; set; }
         public string rights { get; set; }
         public string _id { get; set; }

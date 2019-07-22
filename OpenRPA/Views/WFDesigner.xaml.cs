@@ -242,6 +242,18 @@ namespace OpenRPA.Views
         }
 
         public readonly ClosableTab tab;
+        public bool ReadOnly
+        {
+            get
+            {
+                return wfDesigner.Context.Items.GetValue<System.Activities.Presentation.Hosting.ReadOnlyState>().IsReadOnly;
+            }
+            set
+            {
+                wfDesigner.Context.Items.GetValue<System.Activities.Presentation.Hosting.ReadOnlyState>().IsReadOnly = value;
+            }
+        }
+
         private WFDesigner()
         {
             InitializeComponent();
@@ -279,7 +291,6 @@ namespace OpenRPA.Views
             {
                 wfDesigner.Text = workflow.Xaml;
                 wfDesigner.Load();
-                //wfDesigner.Load(workflow.Filename);
             }
             else
             {
@@ -303,6 +314,11 @@ namespace OpenRPA.Views
                 //}
                 wfDesigner.Load(ab);
             }
+            if (global.isConnected)
+            {
+                ReadOnly = !workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.update);
+            }
+
             HasChanged = false;
             wfDesigner.ModelChanged += (sender, e) =>
             {

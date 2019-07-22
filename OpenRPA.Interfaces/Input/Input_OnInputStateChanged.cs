@@ -26,6 +26,7 @@
 
 using OpenRPA.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -143,6 +144,7 @@ namespace OpenRPA.Input
 
         #endregion
 
+        public List<Interfaces.Input.vKey> cancelKeys = new List<Interfaces.Input.vKey>();
         private static InputDriver _Instance = null;
         private KeyboardDetectorPlugin cancelDetector;
         public void initCancelKey(string keys)
@@ -165,6 +167,7 @@ namespace OpenRPA.Input
             }
             _Instance.cancelDetector.Stop();
             _Instance.cancelDetector.Keys = keys;
+            cancelKeys = Interfaces.Input.vKey.parseText(keys);
             _Instance.cancelDetector.Start();
 
         }

@@ -206,9 +206,11 @@ namespace OpenRPA
                 if (detector == null) return;
                 result = detector.Entity;
             }
-
+            List<ace> orgAcl = new List<ace>();
             try
             {
+                result._acl.ForEach((a) => { orgAcl.Add(new ace(a)); });
+
                 var pw = new Views.PermissionsWindow(result);
                 Hide();
                 pw.ShowDialog();
@@ -216,12 +218,14 @@ namespace OpenRPA
                 if (result is Workflow) await ((Workflow)result).Save();
                 if (result is Detector)
                 {
-                    await global.webSocketClient.UpdateOne("openrpa", 0, false, result);
+                    var _result = await global.webSocketClient.UpdateOne("openrpa", 0, false, result);
+                    result._acl = _result._acl;
                 }
                 // result.Save();
             }
             catch (Exception ex)
             {
+                result._acl = orgAcl.ToArray();
                 Log.Error(ex.ToString());
                 System.Windows.MessageBox.Show("CmdTest: " + ex.Message);
             }
@@ -678,6 +682,20 @@ namespace OpenRPA
             if (view == null) return false;
             var val = view.listWorkflows.SelectedValue;
             if (val == null) return false;
+            if (global.isConnected)
+            {
+                var wf = val as Workflow;
+                var p = val as Project;
+                if (wf != null)
+                {
+                    return wf.hasRight(global.webSocketClient.user, ace_right.delete);
+                }
+                if (p != null)
+                {
+                    return p.hasRight(global.webSocketClient.user, ace_right.delete);
+                }
+            }
+            // don't know what your deleteing, lets just assume yes then
             return true;
         }
         private async void onDelete(object item)
@@ -728,6 +746,10 @@ namespace OpenRPA
                 var wf = view.listWorkflows.SelectedValue as Workflow;
                 if(wf == null) return false;
                 if(wf.State == "running") return false;
+                if(global.isConnected)
+                {
+                    return wf.hasRight(global.webSocketClient.user, ace_right.invoke);
+                }
                 return true;
             }
 
@@ -743,7 +765,8 @@ namespace OpenRPA
                     return false;
                 }
             }
-            return true;
+            return designer.Workflow.hasRight(global.webSocketClient.user, ace_right.invoke);
+            // return true;
         }
         private async void onPlay(object item)
         {
@@ -879,6 +902,8 @@ namespace OpenRPA
             // if (e.Key == KeyboardKey. 255) return;
             try
             {
+                var cancelkey = InputDriver.Instance.cancelKeys.Where(x => x.KeyValue == e.KeyValue).ToList();
+                if (cancelkey.Count > 0) return;
                 if (mainTabControl.SelectedContent is Views.WFDesigner view)
                 {
                     if (view.lastinserted != null && view.lastinserted is Activities.TypeText)

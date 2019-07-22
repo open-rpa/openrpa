@@ -41,6 +41,17 @@ namespace OpenRPA
         private bool loginInProgress = false;
         public static Tracing tracing = new Tracing();
         private static object statelock = new object();
+        public List<string> ocrlangs { get; set; }  = new List<string>() { "afr", "amh", "ara", "asm", "aze", "aze_cyrl", "bel", "ben", "bod", "bos", "bre", "bul", "cat", "ceb", "ces", "chi_sim", "chi_sim_vert", "chi_tra", "chi_tra_vert", "chr", "cos", "cym", "dan", "dan_frak", "deu", "deu_frak", "div", "dzo", "ell", "eng", "enm", "epo", "equ", "est", "eus", "fao", "fas", "fil", "fin", "fra", "frk", "frm", "fry", "gla", "gle", "glg", "grc", "guj", "hat", "heb", "hin", "hrv", "hun", "hye", "iku", "ind", "isl", "ita", "ita_old", "jav", "jpn", "jpn_vert", "kan", "kat", "kat_old", "kaz", "khm", "kir", "kmr", "kor", "kor_vert", "lao", "lat", "lav", "lit", "ltz", "mal", "mar", "mkd", "mlt", "mon", "mri", "msa", "mya", "nep", "nld", "nor", "oci", "ori", "osd", "pan", "pol", "por", "pus", "que", "ron", "rus", "san", "sin", "slk", "slk_frak", "slv", "snd", "spa", "spa_old", "sqi", "srp", "srp_latn", "sun", "swa", "swe", "syr", "tam", "tat", "tel", "tgk", "tgl", "tha", "tir", "ton", "tur", "uig", "ukr", "urd", "uzb", "uzb_cyrl", "vie", "yid", "yor" };
+        public string defaultocrlangs {
+            get
+            {
+                return Config.local.ocrlanguage;
+            }
+            set {
+                Config.local.ocrlanguage = value;
+                Config.Save();
+            }
+        }
         public MainWindow()
         {
             InitializeComponent();
@@ -1522,5 +1533,30 @@ namespace OpenRPA
             }
 
         }
+
+        private void TesseractLang_Click(object sender, RoutedEventArgs e)
+        {
+            string path = System.IO.Path.Combine(Extensions.projectsDirectory, "tessdata");
+            TesseractDownloadLangFile(path, Config.local.ocrlanguage);
+            System.Windows.MessageBox.Show("Download complete");
+        }
+        private void TesseractDownloadLangFile(string folder, string lang)
+        {
+            if (!System.IO.Directory.Exists(folder))
+            {
+                System.IO.Directory.CreateDirectory(folder);
+            }
+            string dest = System.IO.Path.Combine(folder, string.Format("{0}.traineddata", lang));
+            if (!System.IO.File.Exists(dest))
+                using (System.Net.WebClient webclient = new System.Net.WebClient())
+                {
+                    // string source = string.Format("https://github.com/tesseract-ocr/tessdata/blob/4592b8d453889181e01982d22328b5846765eaad/{0}.traineddata?raw=true", lang);
+                    string source = string.Format("https://github.com/tesseract-ocr/tessdata/blob/master/{0}.traineddata?raw=true", lang);
+                    System.Diagnostics.Trace.WriteLine(String.Format("Downloading file from '{0}' to '{1}'", source, dest));
+                    webclient.DownloadFile(source, dest);
+                    System.Diagnostics.Trace.WriteLine(String.Format("Download completed"));
+                }
+        }
+
     }
 }

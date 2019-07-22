@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenRPA"
+        xmlns:ribbon="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         mc:Ignorable="d"
         Loaded="Window_Loaded" Closed="Window_Closed"
         Title="OpenRPA" Height="750" Width="1200">
@@ -138,13 +139,21 @@
                 </RibbonGroup>
             </RibbonTab>
             <RibbonTab Header="Settings">
-                <RibbonGroup Header="General">
-                    
-                </RibbonGroup>
                 <RibbonGroup Header="Cancel key">
                     <StackPanel>
                         <TextBox x:Name="cancelkey" GotKeyboardFocus="Cancelkey_GotKeyboardFocus" Width="80" Height="25" />
                     </StackPanel>
+                </RibbonGroup>
+                <RibbonGroup Header="Tesseract">
+                    <StackPanel>
+                        <ribbon:RibbonComboBox>
+                            <ribbon:RibbonGallery SelectedItem="{Binding Path=defaultocrlangs}">
+                                <ribbon:RibbonGalleryCategory ItemsSource="{Binding ocrlangs}" />
+                            </ribbon:RibbonGallery>
+                        </ribbon:RibbonComboBox>
+                        <RibbonButton Content="Download" Click="TesseractLang_Click"></RibbonButton>
+                    </StackPanel>
+
                 </RibbonGroup>
             </RibbonTab>
             <!-- 

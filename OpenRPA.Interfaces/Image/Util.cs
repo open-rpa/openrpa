@@ -11,6 +11,10 @@ namespace OpenRPA.Interfaces.Image
     {
         public const int ActivityPreviewImageWidth = 300;
         public const int ActivityPreviewImageHeight = 100;
+        public static void SaveImageStamped(Bitmap img, string message)
+        {
+            SaveImageStamped(img, System.IO.Directory.GetCurrentDirectory(), message);
+        }
         public static void SaveImageStamped(Bitmap img, string path, string message)
         {
             SaveImage(img, path, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-") + "-" + message + ".png");

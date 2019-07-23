@@ -15,6 +15,10 @@ namespace OpenRPA.Image
         public int Y { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+
+        public string Text { get; set; }
+        public float Confidence { get; set; }
+
         private System.Drawing.Bitmap _element = null;
         public System.Drawing.Bitmap element {
             get
@@ -36,6 +40,13 @@ namespace OpenRPA.Image
             get
             {
                 return new System.Drawing.Rectangle(X, Y, Width, Height);
+            }
+            set
+            {
+                X = value.X;
+                Y = value.Y;
+                Width = value.Width;
+                Height = value.Height;
             }
         }
         public ImageElement(System.Drawing.Rectangle Rectangle)
@@ -145,6 +156,10 @@ namespace OpenRPA.Image
             {
                 try
                 {
+                    if(!string.IsNullOrEmpty(Text))
+                    {
+                        return Text;
+                    }
                     var lang = Config.local.ocrlanguage;
                     string basepath = System.IO.Directory.GetCurrentDirectory();
                     string path = System.IO.Path.Combine(basepath, "tessdata");
@@ -168,7 +183,7 @@ namespace OpenRPA.Image
             }
             set
             {
-
+                Text = value;
             }
         }
 

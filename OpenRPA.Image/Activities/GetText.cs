@@ -1,110 +1,110 @@
-﻿//using OpenRPA.Interfaces;
-//using System;
-//using System.Activities;
-//using System.Activities.Presentation.PropertyEditing;
-//using System.Collections.Generic;
-//using System.ComponentModel;
-//using System.Diagnostics;
-//using System.Drawing;
-//using System.IO;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using OpenRPA.Interfaces;
+using System;
+using System.Activities;
+using System.Activities.Presentation.PropertyEditing;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-//namespace OpenRPA.Image
-//{
-//    [System.ComponentModel.Designer(typeof(GetTextDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-//    [System.Drawing.ToolboxBitmap(typeof(GetText), "Resources.toolbox.getimage.png")]
-//    [System.Windows.Markup.ContentProperty("Body")]
-//    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
-//    public class GetText : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
-//    {
-//        // I want this !!!!
-//        // https://stackoverflow.com/questions/50669794/alternative-to-taking-rapid-screenshots-of-a-window
-//        public GetText()
-//        {
-//            Element = new InArgument<ImageElement>()
-//            {
-//                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<ImageElement>("item")
-//            };
-//        }
-//        [RequiredArgument]
-//        public InArgument<ImageElement> Element { get; set; }
-//        public OutArgument<Character[]> Result { get; set; }
-//        [System.ComponentModel.Browsable(false)]
-//        public ActivityAction<Character[]> Body { get; set; }
-//        private Variable<Character[]> elements = new Variable<Character[]>("elements");
-//        protected override void Execute(NativeActivityContext context)
-//        {
-//            var match = Element.Get(context);
+namespace OpenRPA.Image
+{
+    [System.ComponentModel.Designer(typeof(GetTextDesigner), typeof(System.ComponentModel.Design.IDesigner))]
+    [System.Drawing.ToolboxBitmap(typeof(GetText), "Resources.toolbox.getimage.png")]
+    [System.Windows.Markup.ContentProperty("Body")]
+    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    public class GetText : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    {
+        public GetText()
+        {
+            Element = new InArgument<ImageElement>()
+            {
+                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<ImageElement>("item")
+            };
+        }
+        [RequiredArgument]
+        public InArgument<ImageElement> Element { get; set; }
+        public OutArgument<ImageElement[]> Result { get; set; }
+        [System.ComponentModel.Browsable(false)]
+        public ActivityAction<ImageElement> Body { get; set; }
+        private Variable<ImageElement[]> elements = new Variable<ImageElement[]>("elements");
+        private Variable<IEnumerator<ImageElement>> _elements = new Variable<IEnumerator<ImageElement>>("_elements");
+        protected override void Execute(NativeActivityContext context)
+        {
+            var match = Element.Get(context);
+            var lang = Config.local.ocrlanguage;
+            string basepath = System.IO.Directory.GetCurrentDirectory();
+            string path = System.IO.Path.Combine(basepath, "tessdata");
+            ocr.TesseractDownloadLangFile(path, Config.local.ocrlanguage);
+            ocr.TesseractDownloadLangFile(path, "osd");
+            var ele = Element.Get(context);
+            ele.element.Save(@"c:\temp\dump.png", System.Drawing.Imaging.ImageFormat.Png);
 
-//            var lang = Config.local.ocrlanguage;
-//            string basepath = System.IO.Directory.GetCurrentDirectory();
-//            string path = System.IO.Path.Combine(basepath, "tessdata");
-//            ocr.TesseractDownloadLangFile(path, Config.local.ocrlanguage);
-//            ocr.TesseractDownloadLangFile(path, "osd");
-//            var _ocr = new Emgu.CV.OCR.Tesseract();
-//            _ocr.Init(path, lang.ToString(), Emgu.CV.OCR.OcrEngineMode.TesseractLstmCombined);
-//            // _ocr.SetVariable("tessedit_char_whitelist", "abcd0123456789.");
-//            // _ocr.PageSegMode = Emgu.CV.OCR.PageSegMode.;
+            // var result = ocr.GetTextcomponents(path, Config.local.ocrlanguage, ele.element);
+            // var result = ocr.GetTextcomponents(path, Config.local.ocrlanguage, @"c:\temp\dump.png");
 
-//            Emgu.CV.OCR.Tesseract.Character[] tempresult = null;
-//            var result = new List<Character>();
-//            OpenRPA.Interfaces.Image.Util.SaveImageStamped(match.element, "OCRGetText");
-//            var stringres = string.Empty;
-//            using (var img = new Emgu.CV.Image<Emgu.CV.Structure.Bgr, byte>(match.element))
-//            {
-//                tempresult = ocr.OcrImageCharacters(_ocr, img.Mat);
-//                tempresult.ForEach(x => result.Add(new Character() { Text = x.Text, Cost = x.Cost, Region = x.Region }));
-//                tempresult.ForEach(x => stringres = stringres + x.Text); 
-//            }
-//            Console.WriteLine(stringres);
-//            context.SetValue(Result, result.ToArray());
+            ImageElement[] result;
+            var _ocr = new Emgu.CV.OCR.Tesseract(path, lang.ToString(), Emgu.CV.OCR.OcrEngineMode.TesseractLstmCombined);
+            _ocr.Init(path, lang.ToString(), Emgu.CV.OCR.OcrEngineMode.TesseractLstmCombined);
+            _ocr.PageSegMode = Emgu.CV.OCR.PageSegMode.SparseText;
 
-//            context.ScheduleAction(Body, result.ToArray(), OnBodyComplete);
+            OpenRPA.Interfaces.Image.Util.SaveImageStamped(ele.element, "OCR");
+            using (var img = new Emgu.CV.Image<Emgu.CV.Structure.Bgr, byte>(ele.element))
+            {
+                result = ocr.OcrImage2(_ocr, img.Mat);
+            }
+            foreach(var R in result)
+            {
+                var rect = new System.Drawing.Rectangle(R.Rectangle.X + ele.Rectangle.X, R.Rectangle.Y + ele.Rectangle.Y, R.Rectangle.Width, R.Rectangle.Height);
+                R.Rectangle = rect;
+            }
 
-//        }
-//        private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
-//        {
-//        }
-//        private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
-//        {
-//            Execute(context);
-//        }
-//        protected override void CacheMetadata(NativeActivityMetadata metadata)
-//        {
-//            metadata.AddDelegate(Body);
+            context.SetValue(Result, result);
 
-//            Interfaces.Extensions.AddCacheArgument(metadata, "Element", Element);
+            IEnumerator<ImageElement> _enum = result.ToList().GetEnumerator();
+            context.SetValue(_elements, _enum);
+            bool more = _enum.MoveNext();
+            if (more)
+            {
+                context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
+            }
+        }
+        private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
+        {
+            IEnumerator<ImageElement> _enum = _elements.Get(context);
+            bool more = _enum.MoveNext();
+            if (more)
+            {
+                context.ScheduleAction<ImageElement>(Body, _enum.Current, OnBodyComplete);
+            }
+        }
+        private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
+        {
+            Execute(context);
+        }
+        protected override void CacheMetadata(NativeActivityMetadata metadata)
+        {
+            metadata.AddDelegate(Body);
 
-//            Interfaces.Extensions.AddCacheArgument(metadata, "Result", Result);
+            Interfaces.Extensions.AddCacheArgument(metadata, "Element", Element);
+            Interfaces.Extensions.AddCacheArgument(metadata, "Result", Result);
 
-//            metadata.AddImplementationVariable(elements);
-//            base.CacheMetadata(metadata);
-//        }
-//        public Activity Create(System.Windows.DependencyObject target)
-//        {
-//            var fef = new GetText();
-//            var aa = new ActivityAction<Character[]>();
-//            var da = new DelegateInArgument<Character[]>();
-//            da.Name = "item";
-//            fef.Body = aa;
-//            aa.Argument = da;
-//            return fef;
-//        }
-//    }
-//    public class Character
-//    {
-//        public string Text { get; set; }
-//        public float Cost { get; set; }
-//        public Rectangle Region { get; set; }
-//        public Character()
-//        {
-
-//        }
-//        public override string ToString()
-//        {
-//            return Text + " " + Region.ToString() + " (" + Cost.ToString() + ")";
-//        }
-//    }
-//}
+            metadata.AddImplementationVariable(_elements);
+            base.CacheMetadata(metadata);
+        }
+        public Activity Create(System.Windows.DependencyObject target)
+        {
+            var fef = new GetText();
+            var aa = new ActivityAction<ImageElement>();
+            var da = new DelegateInArgument<ImageElement>();
+            da.Name = "item";
+            fef.Body = aa;
+            aa.Argument = da;
+            return fef;
+        }
+    }
+}

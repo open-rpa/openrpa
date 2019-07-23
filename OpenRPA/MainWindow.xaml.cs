@@ -715,7 +715,8 @@ namespace OpenRPA
                 var p = val as Project;
                 if (wf != null)
                 {
-                    return wf.hasRight(global.webSocketClient.user, ace_right.delete);
+                    if (!wf.hasRight(global.webSocketClient.user, ace_right.delete)) return false;
+                    return !wf.isRunnning;
                 }
                 if (p != null)
                 {

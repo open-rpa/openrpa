@@ -639,7 +639,11 @@ namespace OpenRPA
                 onOpenWorkflow(wf);
             }
         }
-        private bool canSave(object item) { return (item is Views.WFDesigner); }
+        private bool canSave(object item) {
+            var wf = item as Views.WFDesigner;
+            if (wf == null) return false;
+            return !wf.isRunnning;
+        }
         private async void onSave(object item)
         {
             if (item is Views.WFDesigner)

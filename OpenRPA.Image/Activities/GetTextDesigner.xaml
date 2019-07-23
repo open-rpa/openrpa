@@ -27,26 +27,14 @@
     <sap:ActivityDesigner.Resources>
         <DataTemplate x:Key="Expanded">
             <StackPanel>
-                <Button Content="Select" Click="btn_Select"  />
-                <!-- 
-                <Button Click="Highlight_Click" >
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding HighlightImage}" Height="16" Width="16" />
-                        <TextBlock>Highlight</TextBlock>
-                    </StackPanel>
-                </Button>
-                <Image Source="{Binding Image}"></Image>
                 <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
                                     HintText="Drop activity" AllowedItemType="sa:Activity"
                                       Grid.Row="1" />
-                -->
+
             </StackPanel>
         </DataTemplate>
 
         <DataTemplate x:Key="Collapsed">
-            <StackPanel>
-                <Image Source="{Binding Image}"></Image>
-            </StackPanel>
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
             <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>

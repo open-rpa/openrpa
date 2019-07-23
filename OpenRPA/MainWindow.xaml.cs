@@ -404,8 +404,9 @@ namespace OpenRPA
         {
             autoReconnect = true;
             Projects.Clear();
-            Config.local.password = Config.local.ProtectString("BadPassword");
             Config.Reload();
+            Config.local.password = Config.local.ProtectString("BadPassword");
+            global.webSocketClient.url = Config.local.wsurl;
             _ = global.webSocketClient.Close();
         }
         private bool canOpen(object item)
@@ -917,8 +918,10 @@ namespace OpenRPA
             if (!isRecording) return;
             StartDetectorPlugins();
             StopRecordPlugins();
-
-            
+            if (mainTabControl.SelectedContent is Views.WFDesigner view)
+            {
+                view.ReadOnly = false;
+            }
             InputDriver.Instance.CallNext = true;
             InputDriver.Instance.OnKeyDown -= OnKeyDown;
             InputDriver.Instance.OnKeyUp -= OnKeyUp;
@@ -934,6 +937,7 @@ namespace OpenRPA
                 if (cancelkey.Count > 0) return;
                 if (mainTabControl.SelectedContent is Views.WFDesigner view)
                 {
+                    view.ReadOnly = false;
                     if (view.lastinserted != null && view.lastinserted is Activities.TypeText)
                     {
                         Log.Debug("re-use existing TypeText");
@@ -948,6 +952,7 @@ namespace OpenRPA
                         rme.AddKey(new Interfaces.Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, false), view.lastinsertedmodel);
                         view.lastinserted = rme;
                     }
+                    view.ReadOnly = true;
                 }
             }
             catch (Exception ex)
@@ -967,8 +972,10 @@ namespace OpenRPA
                     if (view.lastinserted != null && view.lastinserted is Activities.TypeText)
                     {
                         Log.Debug("re-use existing TypeText");
+                        view.ReadOnly = false;
                         var item = (Activities.TypeText)view.lastinserted;
                         item.AddKey(new Interfaces.Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, true), view.lastinsertedmodel);
+                        view.ReadOnly = true;
                     }
                 }
 
@@ -1005,6 +1012,7 @@ namespace OpenRPA
             StopRecordPlugins();
             AutomationHelper.syncContext.Post(o =>
             {
+                // TODO: Add priotrity, we could create an ordered list in config ?
                 foreach (var p in Plugins.recordPlugins)
                 {
                     if (p.Name != sender.Name)
@@ -1034,6 +1042,7 @@ namespace OpenRPA
                 InputDriver.Instance.CallNext = true;
                 if (mainTabControl.SelectedContent is Views.WFDesigner view)
                 {
+
                     var VirtualClick = true;
                     if (!e.SupportVirtualClick) VirtualClick = false;
                     e.a.AddActivity(new Activities.ClickElement
@@ -1059,8 +1068,10 @@ namespace OpenRPA
                         else { e.SupportInput = false; }
                         isRecording = true;
                     }
+                    view.ReadOnly = false;
                     view.lastinserted = e.a.Activity;
                     view.lastinsertedmodel = view.addActivity(e.a.Activity);
+                    view.ReadOnly = true;
                     if (e.ClickHandled == false && e.SupportInput == false)
                     {
                         InputDriver.Instance.CallNext = true;
@@ -1087,6 +1098,7 @@ namespace OpenRPA
         {
             if (!(item is Views.WFDesigner)) return;
             var designer = (Views.WFDesigner)item;
+            designer.ReadOnly = true;
             designer.lastinserted = null;
             designer.lastinsertedmodel = null;
             StopDetectorPlugins();
@@ -1552,6 +1564,22 @@ namespace OpenRPA
                     //{
                     //    onOpenWorkflow(wf);
                     //}                    
+                } else
+                {
+                    onOpen(null);
+                    string Name = "New Project";
+                    try
+                    {
+                        Project project = await Project.Create(Extensions.projectsDirectory, Name);
+                        Workflow workflow = project.Workflows.First();
+                        workflow.Project = project;
+                        Projects.Add(project);
+                        onOpenWorkflow(workflow);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
                 }
             }, null);
         }
@@ -1563,7 +1591,9 @@ namespace OpenRPA
             try
             {
                 view = new Views.KeyboardSeqWindow();
-                //Hide();
+                view.oneKeyOnly = true;
+                view.Title = "Press New Cancel Key";
+                Hide();
                 if (view.ShowDialog() == true)
                 {
                     cancelkey.Text = view.Text;
@@ -1582,6 +1612,7 @@ namespace OpenRPA
             }
             finally
             {
+                Show();
                 Keyboard.ClearFocus();
                 view = null;
             }

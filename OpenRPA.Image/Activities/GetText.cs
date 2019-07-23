@@ -42,7 +42,7 @@ namespace OpenRPA.Image
             ocr.TesseractDownloadLangFile(path, Config.local.ocrlanguage);
             ocr.TesseractDownloadLangFile(path, "osd");
             var ele = Element.Get(context);
-            ele.element.Save(@"c:\temp\dump.png", System.Drawing.Imaging.ImageFormat.Png);
+            // ele.element.Save(@"c:\temp\dump.png", System.Drawing.Imaging.ImageFormat.Png);
 
             // var result = ocr.GetTextcomponents(path, Config.local.ocrlanguage, ele.element);
             // var result = ocr.GetTextcomponents(path, Config.local.ocrlanguage, @"c:\temp\dump.png");

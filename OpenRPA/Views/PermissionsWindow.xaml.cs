@@ -54,19 +54,21 @@ namespace OpenRPA.Views
                 var view = new selectUserWindow();
                 // Hide();
                 view.ShowDialog();
-
-                var acl = vm.item._acl.ToList();
-                acl.Add(new ace()
+                if(view.result!=null)
                 {
-                    _id = view.result._id,
-                    name = view.result.name,
-                    deny = false,
-                    Delete = true,
-                    Read = true,
-                    Invoke = true,
-                    Update = true
-                });
-                vm.item._acl = acl.ToArray();
+                    var acl = vm.item._acl.ToList();
+                    acl.Add(new ace()
+                    {
+                        _id = view.result._id,
+                        name = view.result.name,
+                        deny = false,
+                        Delete = true,
+                        Read = true,
+                        Invoke = true,
+                        Update = true
+                    });
+                    vm.item._acl = acl.ToArray();
+                }
                 reload();
             }
             catch (Exception ex)

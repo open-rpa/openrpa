@@ -25,6 +25,7 @@ namespace OpenRPA.Views
         {
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
+        public bool oneKeyOnly { get; set; }
         public string Text { get; set; }
         public KeyboardSeqWindow()
         {
@@ -42,6 +43,7 @@ namespace OpenRPA.Views
             typeText = new Activities.TypeText();
             InputDriver.Instance.OnKeyDown += OnKeyDown;
             InputDriver.Instance.OnKeyUp += OnKeyUp;
+            InputDriver.Instance.CallNext = false;
         }
         private Activities.TypeText typeText = null;
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -60,6 +62,15 @@ namespace OpenRPA.Views
             typeText.AddKey(new Interfaces.Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, false), null);
             Text = typeText.result;
             NotifyPropertyChanged("Text");
+            if(oneKeyOnly)
+            {
+                typeText.AddKey(new Interfaces.Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, true), null);
+                InputDriver.Instance.OnKeyDown -= OnKeyDown;
+                InputDriver.Instance.OnKeyUp -= OnKeyUp;
+                Text = typeText.result;
+                InputDriver.Instance.CallNext = true;
+                DialogResult = true;
+            }
         }
         private void OnKeyUp(Input.InputEventArgs e)
         {
@@ -70,6 +81,7 @@ namespace OpenRPA.Views
             {
                 InputDriver.Instance.OnKeyDown -= OnKeyDown;
                 InputDriver.Instance.OnKeyUp -= OnKeyUp;
+                InputDriver.Instance.CallNext = true;
                 DialogResult = true;
             }
         }

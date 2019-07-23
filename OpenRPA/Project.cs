@@ -48,6 +48,25 @@ namespace OpenRPA
         public static async Task<Project> Create(string Path, string Name)
         {
             var basePath = System.IO.Path.Combine(Path, Name);
+            if (System.IO.Directory.GetFiles(basePath).Count() > 0)
+            {
+                var originalname = Name;
+                bool isUnique = false; int counter = 1;
+                while (!isUnique)
+                {
+                    if (counter == 1)
+                    {
+                        basePath = System.IO.Path.Combine(Path, Name);
+                    }
+                    else
+                    {
+                        Name = originalname + counter.ToString();
+                        basePath = System.IO.Path.Combine(Path, Name);
+                    }
+                    if (!System.IO.Directory.Exists(basePath)) isUnique = true;
+                    counter++;
+                }
+            }
             var Filepath = System.IO.Path.Combine(Path, Name, Name.Replace(" ", "_").Replace(".", "") + ".rpaproj");
 
             if (string.IsNullOrEmpty(Filepath))

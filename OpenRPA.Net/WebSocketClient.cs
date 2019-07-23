@@ -26,7 +26,7 @@ namespace OpenRPA.Net
     {
         // private ClientWebSocket ws = (ClientWebSocket)SystemClientWebSocket.CreateClientWebSocket();  // new ClientWebSocket(); // WebSocket
         private System.Net.WebSockets.Managed.ClientWebSocket ws = new System.Net.WebSockets.Managed.ClientWebSocket();  // new ClientWebSocket(); // WebSocket
-        private string url = "";
+        public string url { get; set; }
         private CancellationTokenSource src = new CancellationTokenSource();
         private List<SocketMessage> _receiveQueue = new List<SocketMessage>();
         private List<SocketMessage> _sendQueue = new List<SocketMessage>();

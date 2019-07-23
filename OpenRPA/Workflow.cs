@@ -90,6 +90,25 @@ namespace OpenRPA
                 return WorkflowInstance.Instances.Where(x => x.WorkflowId == _id).ToList();
             }
         }
+        [JsonIgnore]
+        public bool isRunnning
+        {
+            get
+            {
+                foreach (var i in WorkflowInstance.Instances)
+                {
+                    if (!string.IsNullOrEmpty(_id) && i.WorkflowId == _id)
+                    {
+                        if (i.state != "completed" && i.state != "aborted" && i.state != "failed")
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        }
+
         //[JsonIgnore]
         //public System.Collections.ObjectModel.ObservableCollection<WorkflowInstance> Instances {
         //    get { if (_Instances == null) _Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>(); return _Instances; }

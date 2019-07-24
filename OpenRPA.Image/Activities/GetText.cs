@@ -29,6 +29,8 @@ namespace OpenRPA.Image
         public InArgument<string> WordLimit { get; set; }
         [RequiredArgument]
         public InArgument<IElement> Element { get; set; }
+        [RequiredArgument]
+        public InArgument<bool> CaseSensitive { get; set; } = false;
         public OutArgument<ImageElement[]> Result { get; set; }
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<ImageElement> Body { get; set; }
@@ -39,6 +41,7 @@ namespace OpenRPA.Image
             var match = Element.Get(context);
             var wordlimit = WordLimit.Get(context);
             var lang = Config.local.ocrlanguage;
+            var casesensitive = CaseSensitive.Get(context);
             string basepath = System.IO.Directory.GetCurrentDirectory();
             string path = System.IO.Path.Combine(basepath, "tessdata");
             ocr.TesseractDownloadLangFile(path, Config.local.ocrlanguage);
@@ -65,7 +68,7 @@ namespace OpenRPA.Image
             }
             using (var img = new Emgu.CV.Image<Emgu.CV.Structure.Bgr, byte>(sourceimg))
             {
-                result = ocr.OcrImage2(_ocr, img.Mat, wordlimit);
+                result = ocr.OcrImage2(_ocr, img.Mat, wordlimit, casesensitive);
             }
             foreach(var R in result)
             {

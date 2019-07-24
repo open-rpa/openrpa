@@ -74,7 +74,7 @@ namespace OpenRPA.Image
             }
             return _ocr.GetUTF8Text();
         }
-        public static ImageElement[] OcrImage2(Emgu.CV.OCR.Tesseract _ocr, Emgu.CV.Mat image, string wordlimit)
+        public static ImageElement[] OcrImage2(Emgu.CV.OCR.Tesseract _ocr, Emgu.CV.Mat image, string wordlimit, bool casesensitive)
         {
             //Bgr drawCharColor = new Bgr(Color.Red);
             var imageColor = new Mat();
@@ -97,7 +97,8 @@ namespace OpenRPA.Image
             {
                 if(!string.IsNullOrEmpty(wordlimit))
                 {
-                    if(characters[index].Text == wordlimit[wordlimitindex].ToString())
+                    if((characters[index].Text == wordlimit[wordlimitindex].ToString()) ||
+                        (!casesensitive && characters[index].Text.ToLower() == wordlimit[wordlimitindex].ToString().ToLower()) )
                     {
                         wordchars.Add(characters[index]);
                         wordlimitindex++;

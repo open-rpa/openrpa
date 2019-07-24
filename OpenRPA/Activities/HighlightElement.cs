@@ -27,9 +27,8 @@ namespace OpenRPA.Activities
             //Duration = TimeSpan.FromMilliseconds(250);
             Duration = new InArgument<TimeSpan>()
             {
-                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(1000)")
+                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(2000)")
             };
-
         }
         [RequiredArgument]
         public InArgument<IElement> Element { get; set; }

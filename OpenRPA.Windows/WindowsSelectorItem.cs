@@ -96,6 +96,18 @@ namespace OpenRPA.Windows
                 if (element.Properties.AutomationId.IsSupported && !string.IsNullOrEmpty(element.Properties.AutomationId)) Properties.Add(new SelectorItemProperty("AutomationId", element.Properties.AutomationId.Value));
                 //Enabled = (Properties.Count > 1);
                 //canDisable = true;
+                if(Properties.Count == 0)
+                {
+                    try
+                    {
+                        var c = element.Properties.ControlType.ValueOrDefault;
+                        Properties.Add(new SelectorItemProperty("ControlType", c.ToString()));
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                }
                 foreach (var p in Properties)
                 {
                     p.Enabled = true;
@@ -128,7 +140,8 @@ namespace OpenRPA.Windows
             string name = null;
             if (element.Properties.Name.IsSupported) name = element.Properties.Name.Value;
             var props = GetProperties();
-            int i = props.Length - 1;
+            // int i = props.Length - 1;
+            int i = props.Length ;
             int matchcounter = 0;
             var automation = AutomationUtil.getAutomation();
             var cacheRequest = new CacheRequest();
@@ -247,9 +260,17 @@ namespace OpenRPA.Windows
             {
                 if (p.Name == "ControlType")
                 {
-                    if (m.Properties.ControlType.IsSupported)
+                    string v = null;
+                    try
                     {
-                        var v = m.Properties.ControlType.Value.ToString();
+                        v = m.Properties.ControlType.ValueOrDefault.ToString();
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    if (!string.IsNullOrEmpty(v))
+                    {
+                        // var v = m.Properties.ControlType.Value.ToString();
                         if (!PatternMatcher.FitsMask(v, p.Value))
                         {
                             Log.Selector(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
@@ -319,7 +340,7 @@ namespace OpenRPA.Windows
         }
         public override string ToString()
         {
-            return "AutomationId:" + AutomationId + " Name:" + Name + " ClassName: " + ClassName;
+            return "AutomationId:" + AutomationId + " Name:" + Name + " ClassName: " + ClassName + " ControlType: " + ControlType;
         }
 
     }

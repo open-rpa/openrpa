@@ -28,14 +28,20 @@
         <DataTemplate x:Key="Collapsed">
             <StackPanel>
                 <Image Source="{Binding Image}"></Image>
-                <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
-                                    HintText="Drop activity" AllowedItemType="sa:Activity"
-                                      Grid.Row="1" />
-s            </StackPanel>
+            </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="Expanded">
             <StackPanel>
                 <Button Content="Select" Click="btn_Select"  />
+                <Button Click="Highlight_Click" >
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding HighlightImage}" Height="16" Width="16" />
+                        <TextBlock>Highlight</TextBlock>
+                    </StackPanel>
+                </Button>
+                <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
+                                    HintText="Drop activity" AllowedItemType="sa:Activity"
+                                      Grid.Row="1" />
                 <!-- 
                 <Button Click="Highlight_Click" >
                     <StackPanel Orientation="Horizontal">

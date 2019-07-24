@@ -34,6 +34,22 @@ namespace OpenRPA.Windows
             if (element.Properties.Name.IsSupported) name = element.Properties.Name.Value;
             if (element.Properties.AutomationId.IsSupported) automationid = element.Properties.AutomationId.Value;
             Name = (controltype + " " + name + " " + automationid).Trim();
+            if (string.IsNullOrEmpty(Name))
+            {
+                try
+                {
+                    var c = element.Properties.ControlType.ValueOrDefault;
+                    controltype = c.ToString();
+                    Name = (controltype + " " + name + " " + automationid).Trim();
+
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                var b = true;
+            }
+
         }
         public override void AddSubElements()
         {

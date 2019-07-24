@@ -169,7 +169,7 @@ namespace OpenRPA.Image
                     _ocr.Init(path, lang.ToString(), Emgu.CV.OCR.OcrEngineMode.TesseractLstmCombined);
                     _ocr.PageSegMode = Emgu.CV.OCR.PageSegMode.SparseText;
 
-                    OpenRPA.Interfaces.Image.Util.SaveImageStamped(element, "OCR");
+                    // OpenRPA.Interfaces.Image.Util.SaveImageStamped(element, "OCR");
                     using (var img = new Emgu.CV.Image<Emgu.CV.Structure.Bgr, byte>(element))
                     {
                         return ocr.OcrImage(_ocr, img.Mat);

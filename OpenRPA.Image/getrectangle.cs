@@ -81,8 +81,14 @@ namespace OpenRPA.Image
         }
         async public static Task<System.Drawing.Rectangle> GetitAsync()
         {
+            if(VersionHelper.IsWindows8OrGreater())
+            {
+                _overlayWindow = new Interfaces.Overlay.OverlayWindow(true);
+            } else
+            {
+                _overlayWindow = new Interfaces.Overlay.OverlayWindow(false);
 
-            _overlayWindow = new Interfaces.Overlay.OverlayWindow(false);
+            }
             _overlayWindow.Visible = true;
             _overlayWindow.Bounds = new System.Drawing.Rectangle(0, 0, 10, 10);
             createform();

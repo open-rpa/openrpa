@@ -139,6 +139,7 @@
     <Compile Include="Selector\SelectorItemProperty.cs" />
     <Compile Include="TaskWithTimeoutWrapper.cs" />
     <Compile Include="UIElement.cs" />
+    <Compile Include="VersionHelper.cs" />
     <Compile Include="Views\KeyboardDetectorView.xaml.cs">
       <DependentUpon>KeyboardDetectorView.xaml</DependentUpon>
     </Compile>

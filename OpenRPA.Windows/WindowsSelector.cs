@@ -29,7 +29,7 @@ namespace OpenRPA.Windows
             {
                 // Break on circular relationship (should not happen?)
                 //if (pathToRoot.Contains(element) || element.Equals(_rootElement)) { break; }
-                if (pathToRoot.Contains(element)) { break; }
+                // if (pathToRoot.Contains(element)) { break; }
                 try
                 {
                     if (element.Parent != null) pathToRoot.Add(element);

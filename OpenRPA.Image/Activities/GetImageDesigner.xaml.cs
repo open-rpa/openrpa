@@ -31,6 +31,7 @@ namespace OpenRPA.Image
         {
             ModelItem loadFrom = ModelItem.Parent;
             string loadFromSelectorString = "";
+            ModelItem gettext = null;
             while (loadFrom.Parent != null)
             {
                 var p = loadFrom.Properties.Where(x => x.Name == "Image").FirstOrDefault();
@@ -41,17 +42,40 @@ namespace OpenRPA.Image
                 }
                 if (loadFrom.ItemType == typeof(GetText))
                 {
-                    break;
+                    gettext = loadFrom;
                 }
                 loadFrom = loadFrom.Parent;
             }
+            Interfaces.IElement element = null;
             Rectangle match = Rectangle.Empty;
-            if (loadFrom.ItemType == typeof(GetText))
+            if (!string.IsNullOrEmpty(loadFromSelectorString))
             {
-                var tip = new Interfaces.Overlay.TooltipWindow("Mark a found item");
-                match = await getrectangle.GetitAsync();
-                tip.Close();
-                tip = null;
+                var selector = new Interfaces.Selector.Selector(loadFromSelectorString);
+                var pluginname = selector.First().Selector;
+                var Plugin = Interfaces.Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
+                var elements = Plugin.GetElementsWithSelector(selector, null, 1);
+                if(elements.Length > 0)
+                {
+                    element = elements[0];
+                }
+                
+
+            }
+            if (gettext!=null && element!=null)
+            {
+
+                var matches = GetText.Execute(element, gettext);
+                if(matches.Length > 0)
+                {
+                    match = matches[0].Rectangle;
+                }
+                else
+                {
+                    var tip = new Interfaces.Overlay.TooltipWindow("Mark a found item");
+                    match = await getrectangle.GetitAsync();
+                    tip.Close();
+                    tip = null;
+                }
             }
             else
             {
@@ -99,6 +123,87 @@ namespace OpenRPA.Image
         }
         private void Highlight_Click(object sender, RoutedEventArgs e)
         {
+            var OffsetX = ModelItem.GetValue<int>("OffsetX");
+            var OffsetY = ModelItem.GetValue<int>("OffsetY");
+            var Width = ModelItem.GetValue<int>("Width");
+            var Height = ModelItem.GetValue<int>("Height");
+
+            ModelItem loadFrom = ModelItem.Parent;
+            string loadFromSelectorString = "";
+            ModelItem gettext = null;
+            while (loadFrom.Parent != null)
+            {
+                var p = loadFrom.Properties.Where(x => x.Name == "Image").FirstOrDefault();
+                if (p != null)
+                {
+                    loadFromSelectorString = loadFrom.GetValue<string>("Selector");
+                    break;
+                }
+                if (loadFrom.ItemType == typeof(GetText))
+                {
+                    gettext = loadFrom;
+                }
+                loadFrom = loadFrom.Parent;
+            }
+            Interfaces.IElement element = null;
+            Rectangle match = Rectangle.Empty;
+            if (!string.IsNullOrEmpty(loadFromSelectorString))
+            {
+                var selector = new Interfaces.Selector.Selector(loadFromSelectorString);
+                var pluginname = selector.First().Selector;
+                var Plugin = Interfaces.Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
+                var elements = Plugin.GetElementsWithSelector(selector, null, 1);
+                if (elements.Length > 0)
+                {
+                    element = elements[0];
+                }
+
+
+            }
+            if (gettext != null && element != null)
+            {
+
+                var matches = GetText.Execute(element, gettext);
+                if (matches.Length > 0)
+                {
+                    match = matches[0].Rectangle;
+                }
+                else
+                {
+                    return;
+                    //var tip = new Interfaces.Overlay.TooltipWindow("Mark a found item");
+                    //match = await getrectangle.GetitAsync();
+                    //tip.Close();
+                    //tip = null;
+                }
+            }
+            else
+            {
+                var Image = loadFrom.GetValue<string>("Image");
+                var stream = new System.IO.MemoryStream(Convert.FromBase64String(Image));
+                var b = new System.Drawing.Bitmap(stream);
+                var Threshold = loadFrom.GetValue<double>("Threshold");
+                var CompareGray = loadFrom.GetValue<bool>("CompareGray");
+                var Processname = loadFrom.GetValue<string>("Processname");
+                var limit = loadFrom.GetValue<Rectangle>("Limit");
+                if (Threshold < 0.5) Threshold = 0.8;
+
+                // Interfaces.GenericTools.minimize(Interfaces.GenericTools.mainWindow);
+                System.Threading.Thread.Sleep(100);
+                var matches = ImageEvent.waitFor(b, Threshold, Processname, TimeSpan.FromMilliseconds(100), CompareGray, limit);
+                if (matches.Count() == 0)
+                {
+                    Interfaces.GenericTools.restore();
+                    return;
+                }
+                match = matches[0];
+            }
+
+            var _hi = new ImageElement(match);
+            _hi.Highlight(false, System.Drawing.Color.Blue, TimeSpan.FromSeconds(1));
+
+            var rect = new ImageElement(new Rectangle(_hi.X + OffsetX, _hi.Y + OffsetY, Width, Height));
+            rect.Highlight(false, System.Drawing.Color.PaleGreen, TimeSpan.FromSeconds(1));
         }
         public string ImageString
         {

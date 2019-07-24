@@ -16,6 +16,13 @@ namespace OpenRPA.Activities
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class ClickElement : CodeActivity
     {
+        public ClickElement()
+        {
+            Element = new InArgument<IElement>()
+            {
+                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<IElement>("item")
+            };
+        }
         [RequiredArgument]
         public InArgument<bool> AnimateMouse { get; set; } = false;
         [RequiredArgument]

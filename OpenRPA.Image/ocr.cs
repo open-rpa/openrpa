@@ -32,131 +32,184 @@ namespace OpenRPA.Image
                 }
         }
 
+        //public static string OcrImage(Emgu.CV.OCR.Tesseract _ocr, Emgu.CV.Mat image)
+        //{
+        //    //Bgr drawCharColor = new Bgr(Color.Red);
+        //    var imageColor = new Mat();
+        //    if (image.NumberOfChannels == 1)
+        //        CvInvoke.CvtColor(image, imageColor, ColorConversion.Gray2Bgr);
+        //    else
+        //        image.CopyTo(imageColor);
+        //    _ocr.SetImage(imageColor);
+        //    _ocr.AnalyseLayout();
+
+        //    if (_ocr.Recognize() != 0) throw new Exception("Failed to recognizer image");
+        //    Emgu.CV.OCR.Tesseract.Character[] characters = _ocr.GetCharacters();
+        //    if (characters.Length == 0)
+        //    {
+        //        try
+        //        {
+        //            Mat imgGrey = new Mat();
+        //            CvInvoke.CvtColor(image, imgGrey, ColorConversion.Bgr2Gray);
+        //            Mat imgThresholded = new Mat();
+        //            CvInvoke.Threshold(imgGrey, imgThresholded, 65, 255, ThresholdType.Binary);
+        //            _ocr.SetImage(imgThresholded);
+        //            characters = _ocr.GetCharacters();
+        //            imageColor = imgThresholded;
+        //            if (characters.Length == 0)
+        //            {
+        //                CvInvoke.Threshold(image, imgThresholded, 190, 255, ThresholdType.Binary);
+        //                _ocr.SetImage(imgThresholded);
+        //                characters = _ocr.GetCharacters();
+        //                imageColor = imgThresholded;
+        //            }
+        //            imgGrey.Dispose();
+        //            imgThresholded.Dispose();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Log.Error(ex.ToString());
+        //            return null;
+        //        }
+        //    }
+        //    return _ocr.GetUTF8Text();
+        //}
         public static string OcrImage(Emgu.CV.OCR.Tesseract _ocr, Emgu.CV.Mat image)
         {
-            //Bgr drawCharColor = new Bgr(Color.Red);
-            var imageColor = new Mat();
-            if (image.NumberOfChannels == 1)
-                CvInvoke.CvtColor(image, imageColor, ColorConversion.Gray2Bgr);
-            else
-                image.CopyTo(imageColor);
-            _ocr.SetImage(imageColor);
-            _ocr.AnalyseLayout();
-
-            if (_ocr.Recognize() != 0) throw new Exception("Failed to recognizer image");
-            Emgu.CV.OCR.Tesseract.Character[] characters = _ocr.GetCharacters();
-            if (characters.Length == 0)
+            using (var imageColor = new Mat())
+            using (Mat imgGrey = new Mat())
+            using (Mat imgThresholded = new Mat())
             {
-                try
+                if (image.NumberOfChannels == 1)
+                    CvInvoke.CvtColor(image, imageColor, ColorConversion.Gray2Bgr);
+                else
+                    image.CopyTo(imageColor);
+                OpenRPA.Interfaces.Image.Util.SaveImageStamped(imageColor.Bitmap, "OcrImage-Color");
+                _ocr.SetImage(imageColor);
+                _ocr.AnalyseLayout();
+                if (_ocr.Recognize() != 0) throw new Exception("Failed to recognizer image");
+                Emgu.CV.OCR.Tesseract.Character[] characters = _ocr.GetCharacters();
+                Log.Debug("GetCharacters found " + characters.Length + " with colors");
+                if (characters.Length == 0)
                 {
-                    Mat imgGrey = new Mat();
                     CvInvoke.CvtColor(image, imgGrey, ColorConversion.Bgr2Gray);
-                    Mat imgThresholded = new Mat();
-                    CvInvoke.Threshold(imgGrey, imgThresholded, 65, 255, ThresholdType.Binary);
-                    _ocr.SetImage(imgThresholded);
+                    OpenRPA.Interfaces.Image.Util.SaveImageStamped(imgGrey.Bitmap, "OcrImage-Gray");
+                    _ocr.SetImage(imgGrey);
+                    _ocr.AnalyseLayout();
+                    if (_ocr.Recognize() != 0) throw new Exception("Failed to recognizer image");
                     characters = _ocr.GetCharacters();
-                    imageColor = imgThresholded;
+                    Log.Debug("GetCharacters found " + characters.Length + " with grey scaled");
                     if (characters.Length == 0)
                     {
-                        CvInvoke.Threshold(image, imgThresholded, 190, 255, ThresholdType.Binary);
+                        CvInvoke.Threshold(imgGrey, imgThresholded, 65, 255, ThresholdType.Binary);
+                        OpenRPA.Interfaces.Image.Util.SaveImageStamped(imgThresholded.Bitmap, "OcrImage-Thresholded");
                         _ocr.SetImage(imgThresholded);
+                        _ocr.AnalyseLayout();
+                        if (_ocr.Recognize() != 0) throw new Exception("Failed to recognizer image");
                         characters = _ocr.GetCharacters();
-                        imageColor = imgThresholded;
-                    }
-                    imgGrey.Dispose();
-                    imgThresholded.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                    return null;
-                }
-            }
-            return _ocr.GetUTF8Text();
-        }
-        public static ImageElement[] OcrImage2(Emgu.CV.OCR.Tesseract _ocr, Emgu.CV.Mat image, string wordlimit)
-        {
-            //Bgr drawCharColor = new Bgr(Color.Red);
-            var imageColor = new Mat();
-            if (image.NumberOfChannels == 1)
-                CvInvoke.CvtColor(image, imageColor, ColorConversion.Gray2Bgr);
-            else
-                image.CopyTo(imageColor);
-            _ocr.SetImage(imageColor);
-            _ocr.AnalyseLayout();
+                        Log.Debug("GetCharacters found " + characters.Length + " thresholded");
 
-            if (_ocr.Recognize() != 0) throw new Exception("Failed to recognizer image");
-            Emgu.CV.OCR.Tesseract.Character[] characters = _ocr.GetCharacters();
-            var index = 0;
-            var wordlimitindex = 0;
-            var chars = new List<Emgu.CV.OCR.Tesseract.Character>();
-            var result = new List<ImageElement>();
-            var wordresult = new List<ImageElement>();
-            var wordchars = new List<Emgu.CV.OCR.Tesseract.Character>();
-            while (index < characters.Length)
+                    }
+                }
+                return _ocr.GetUTF8Text().TrimEnd(Environment.NewLine.ToCharArray());
+            }
+        }
+        public static ImageElement[] OcrImage2(Emgu.CV.OCR.Tesseract _ocr, Emgu.CV.Mat image, string wordlimit, bool casesensitive)
+        {
+            using (var imageColor = new Mat())
             {
-                if(!string.IsNullOrEmpty(wordlimit))
+                if (image.NumberOfChannels == 1)
+                    CvInvoke.CvtColor(image, imageColor, ColorConversion.Gray2Bgr);
+                else
+                    image.CopyTo(imageColor);
+                _ocr.SetImage(imageColor);
+                _ocr.AnalyseLayout();
+                if (_ocr.Recognize() != 0) throw new Exception("Failed to recognizer image");
+                Emgu.CV.OCR.Tesseract.Character[] characters = _ocr.GetCharacters();
+                var index = 0;
+                var wordlimitindex = 0;
+                var chars = new List<Emgu.CV.OCR.Tesseract.Character>();
+                var result = new List<ImageElement>();
+                var wordresult = new List<ImageElement>();
+                var wordchars = new List<Emgu.CV.OCR.Tesseract.Character>();
+                Rectangle desktop = new Rectangle(0, 0, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
+                Rectangle imagerect = new Rectangle(0, 0, image.Width, image.Height);
+                while (index < characters.Length)
                 {
-                    if(characters[index].Text == wordlimit[wordlimitindex].ToString())
+                    if (!string.IsNullOrEmpty(wordlimit))
                     {
-                        wordchars.Add(characters[index]);
-                        wordlimitindex++;
-                        if (wordchars.Count == wordlimit.Length)
+                        if ((characters[index].Text == wordlimit[wordlimitindex].ToString()) ||
+                            (!casesensitive && characters[index].Text.ToLower() == wordlimit[wordlimitindex].ToString().ToLower()))
                         {
-                            var res = new ImageElement(Rectangle.Empty);
-                            wordchars.ForEach(x => res.Text += x.Text);
-                            res.Confidence = wordchars[0].Cost;
-                            Rectangle rect = new Rectangle(wordchars[0].Region.X, wordchars[0].Region.Y, wordchars[0].Region.Width, wordchars[0].Region.Height);
-                            rect.Width = (wordchars[wordchars.Count - 1].Region.X - wordchars[0].Region.X) + wordchars[wordchars.Count - 1].Region.Width;
-                            rect.Height = (wordchars[wordchars.Count - 1].Region.Y - wordchars[0].Region.Y) + wordchars[wordchars.Count - 1].Region.Height;
-                            res.Rectangle = rect;
-                            wordresult.Add(res);
+                            wordchars.Add(characters[index]);
+                            wordlimitindex++;
+                            if (wordchars.Count == wordlimit.Length)
+                            {
+                                var res = new ImageElement(Rectangle.Empty);
+                                wordchars.ForEach(x => res.Text += x.Text);
+                                res.Confidence = wordchars[0].Cost;
+                                Rectangle rect = new Rectangle(wordchars[0].Region.X, wordchars[0].Region.Y, wordchars[0].Region.Width, wordchars[0].Region.Height);
+                                rect.Width = (wordchars[wordchars.Count - 1].Region.X - wordchars[0].Region.X) + wordchars[wordchars.Count - 1].Region.Width;
+                                rect.Height = (wordchars[wordchars.Count - 1].Region.Y - wordchars[0].Region.Y) + wordchars[wordchars.Count - 1].Region.Height;
+                                res.Rectangle = rect;
+                                wordresult.Add(res);
+                                wordchars.Clear();
+                                wordlimitindex = 0;
+                                if (!desktop.Contains(rect))
+                                {
+                                    Log.Error("Found element outside desktop !!!!!");
+                                }
+                                if (!imagerect.Contains(rect))
+                                {
+                                    Log.Error("Found element outside desktop !!!!!");
+                                }
+                                Log.Debug("Found: " + res.Text + " at " + res.Rectangle.ToString());
+                            }
+                        }
+                        else
+                        {
                             wordchars.Clear();
                             wordlimitindex = 0;
                         }
-                    } else
-                    {
-                        wordchars.Clear();
-                        wordlimitindex = 0;
-                    }
-
-                }
-                if (characters[index].Text == " " || characters[index].Text == "\r" || characters[index].Text == "\n")
-                {
-                    if(chars.Count > 0 )
-                    {
-                        var res = new ImageElement(Rectangle.Empty);
-                        chars.ForEach(x => res.Text += x.Text);
-                        res.Confidence = chars[0].Cost;
-                        Rectangle rect = new Rectangle(chars[0].Region.X, chars[0].Region.Y, chars[0].Region.Width, chars[0].Region.Height);
-                        rect.Width = (chars[chars.Count - 1].Region.X - chars[0].Region.X) + chars[chars.Count - 1].Region.Width;
-                        rect.Height = (chars[chars.Count - 1].Region.Y - chars[0].Region.Y) + chars[chars.Count - 1].Region.Height;
-                        res.Rectangle = rect;
-                        result.Add(res);
 
                     }
+                    if (characters[index].Text == " " || characters[index].Text == "\r" || characters[index].Text == "\n")
+                    {
+                        if (chars.Count > 0)
+                        {
+                            var res = new ImageElement(Rectangle.Empty);
+                            chars.ForEach(x => res.Text += x.Text);
+                            res.Confidence = chars[0].Cost;
+                            Rectangle rect = new Rectangle(chars[0].Region.X, chars[0].Region.Y, chars[0].Region.Width, chars[0].Region.Height);
+                            rect.Width = (chars[chars.Count - 1].Region.X - chars[0].Region.X) + chars[chars.Count - 1].Region.Width;
+                            rect.Height = (chars[chars.Count - 1].Region.Y - chars[0].Region.Y) + chars[chars.Count - 1].Region.Height;
+                            res.Rectangle = rect;
+                            result.Add(res);
+
+                        }
+                        index++;
+                        chars.Clear();
+                        continue;
+                    }
+                    chars.Add(characters[index]);
                     index++;
-                    chars.Clear();
-                    continue;
                 }
-                chars.Add(characters[index]);
-                index++;
-            }
-            if (chars.Count > 0)
-            {
-                var res = new ImageElement(Rectangle.Empty);
-                chars.ForEach(x => res.Text += x.Text);
-                res.Confidence = chars[0].Cost;
-                Rectangle rect = new Rectangle(chars[0].Region.X, chars[0].Region.Y, chars[0].Region.Width, chars[0].Region.Height);
-                rect.Width = (chars[chars.Count - 1].Region.X - chars[0].Region.X) + chars[chars.Count - 1].Region.Width;
-                rect.Height = (chars[chars.Count - 1].Region.Y - chars[0].Region.Y) + chars[chars.Count - 1].Region.Height;
+                if (chars.Count > 0)
+                {
+                    var res = new ImageElement(Rectangle.Empty);
+                    chars.ForEach(x => res.Text += x.Text);
+                    res.Confidence = chars[0].Cost;
+                    Rectangle rect = new Rectangle(chars[0].Region.X, chars[0].Region.Y, chars[0].Region.Width, chars[0].Region.Height);
+                    rect.Width = (chars[chars.Count - 1].Region.X - chars[0].Region.X) + chars[chars.Count - 1].Region.Width;
+                    rect.Height = (chars[chars.Count - 1].Region.Y - chars[0].Region.Y) + chars[chars.Count - 1].Region.Height;
 
-                res.Rectangle = rect;
-                result.Add(res);
+                    res.Rectangle = rect;
+                    result.Add(res);
 
+                }
+                if (!string.IsNullOrEmpty(wordlimit)) return wordresult.ToArray();
+                return result.ToArray();
             }
-            if (!string.IsNullOrEmpty(wordlimit)) return wordresult.ToArray();
-            return result.ToArray();
         }
 
 

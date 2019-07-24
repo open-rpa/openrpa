@@ -299,14 +299,14 @@ namespace OpenRPA.Input
                 }
                 if (CallNext || (Int32)wParam == WM_MOUSEMOVE)
                 {
-                    if((Int32)wParam != WM_MOUSEMOVE) Log.Debug("CallNextHookEx: " + CallNext);
+                    // if((Int32)wParam != WM_MOUSEMOVE) Log.Debug("CallNextHookEx: " + CallNext);
                     return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
                 }
                 try
                 {
                     if (e.Element != null && e.Element.ProcessId == currentprocessid)
                     {
-                        if ((Int32)wParam != WM_MOUSEMOVE) Log.Debug("CallNextHookEx: " + CallNext);
+                        // if ((Int32)wParam != WM_MOUSEMOVE) Log.Debug("CallNextHookEx: " + CallNext);
                         return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
                     }
                 }
@@ -315,7 +315,7 @@ namespace OpenRPA.Input
                     Log.Error(ex, "");
                     return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
                 }
-                if ((Int32)wParam != WM_MOUSEMOVE) Log.Debug("Skip CallNextHookEx: " + CallNext);
+                // if ((Int32)wParam != WM_MOUSEMOVE) Log.Debug("Skip CallNextHookEx: " + CallNext);
                 return (IntPtr)1;
             }
             else

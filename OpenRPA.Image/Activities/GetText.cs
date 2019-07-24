@@ -36,9 +36,49 @@ namespace OpenRPA.Image
         public ActivityAction<ImageElement> Body { get; set; }
         private Variable<ImageElement[]> elements = new Variable<ImageElement[]>("elements");
         private Variable<IEnumerator<ImageElement>> _elements = new Variable<IEnumerator<ImageElement>>("_elements");
+
+        public static ImageElement[]  Execute(IElement ele, System.Activities.Presentation.Model.ModelItem model)
+        {
+            var wordlimit = model.GetValue<string>("WordLimit");
+            var casesensitive = model.GetValue<bool>("CaseSensitive");
+            var lang = Config.local.ocrlanguage;
+
+            string basepath = System.IO.Directory.GetCurrentDirectory();
+            string path = System.IO.Path.Combine(basepath, "tessdata");
+            ocr.TesseractDownloadLangFile(path, Config.local.ocrlanguage);
+            ocr.TesseractDownloadLangFile(path, "osd");
+
+            ImageElement[] result;
+            var _ocr = new Emgu.CV.OCR.Tesseract(path, lang.ToString(), Emgu.CV.OCR.OcrEngineMode.TesseractLstmCombined);
+            _ocr.Init(path, lang.ToString(), Emgu.CV.OCR.OcrEngineMode.TesseractLstmCombined);
+            _ocr.PageSegMode = Emgu.CV.OCR.PageSegMode.SparseText;
+
+            // OpenRPA.Interfaces.Image.Util.SaveImageStamped(ele.element, "OCR");
+            Bitmap sourceimg = null;
+            if (ele is ImageElement)
+            {
+                sourceimg = ((ImageElement)ele).element;
+            }
+            else
+            {
+                sourceimg = Interfaces.Image.Util.Screenshot(ele.Rectangle.X, ele.Rectangle.Y, ele.Rectangle.Width, ele.Rectangle.Height);
+            }
+            using (var img = new Emgu.CV.Image<Emgu.CV.Structure.Bgr, byte>(sourceimg))
+            {
+                result = ocr.OcrImage2(_ocr, img.Mat, wordlimit, casesensitive);
+            }
+            Log.Debug("adding element cords to results: " + ele.Rectangle.ToString());
+            foreach (var R in result)
+            {
+                var rect = new System.Drawing.Rectangle(R.Rectangle.X + ele.Rectangle.X, R.Rectangle.Y + ele.Rectangle.Y, R.Rectangle.Width, R.Rectangle.Height);
+                R.Rectangle = rect;
+                Log.Debug("Found: '" + R.Text + "' at " + R.Rectangle.ToString());
+            }
+            return result;
+        }
         protected override void Execute(NativeActivityContext context)
         {
-            var match = Element.Get(context);
+            // var match = Element.Get(context);
             var wordlimit = WordLimit.Get(context);
             var lang = Config.local.ocrlanguage;
             var casesensitive = CaseSensitive.Get(context);
@@ -70,10 +110,12 @@ namespace OpenRPA.Image
             {
                 result = ocr.OcrImage2(_ocr, img.Mat, wordlimit, casesensitive);
             }
-            foreach(var R in result)
+            Log.Debug("adding element cords to results: " + ele.Rectangle.ToString());
+            foreach (var R in result)
             {
                 var rect = new System.Drawing.Rectangle(R.Rectangle.X + ele.Rectangle.X, R.Rectangle.Y + ele.Rectangle.Y, R.Rectangle.Width, R.Rectangle.Height);
                 R.Rectangle = rect;
+                Log.Debug("Found: '" + R.Text + "' at " + R.Rectangle.ToString());
             }
             context.SetValue(Result, result);
 

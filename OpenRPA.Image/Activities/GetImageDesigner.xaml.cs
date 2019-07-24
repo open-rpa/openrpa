@@ -31,6 +31,7 @@ namespace OpenRPA.Image
         {
             ModelItem loadFrom = ModelItem.Parent;
             string loadFromSelectorString = "";
+            ModelItem gettext = null;
             while (loadFrom.Parent != null)
             {
                 var p = loadFrom.Properties.Where(x => x.Name == "Image").FirstOrDefault();
@@ -41,17 +42,40 @@ namespace OpenRPA.Image
                 }
                 if (loadFrom.ItemType == typeof(GetText))
                 {
-                    break;
+                    gettext = loadFrom;
                 }
                 loadFrom = loadFrom.Parent;
             }
+            Interfaces.IElement element = null;
             Rectangle match = Rectangle.Empty;
-            if (loadFrom.ItemType == typeof(GetText))
+            if (!string.IsNullOrEmpty(loadFromSelectorString))
             {
-                var tip = new Interfaces.Overlay.TooltipWindow("Mark a found item");
-                match = await getrectangle.GetitAsync();
-                tip.Close();
-                tip = null;
+                var selector = new Interfaces.Selector.Selector(loadFromSelectorString);
+                var pluginname = selector.First().Selector;
+                var Plugin = Interfaces.Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
+                var elements = Plugin.GetElementsWithSelector(selector, null, 1);
+                if(elements.Length > 0)
+                {
+                    element = elements[0];
+                }
+                
+
+            }
+            if (gettext!=null && element!=null)
+            {
+
+                var matches = GetText.Execute(element, gettext);
+                if(matches.Length > 0)
+                {
+                    match = matches[0].Rectangle;
+                }
+                else
+                {
+                    var tip = new Interfaces.Overlay.TooltipWindow("Mark a found item");
+                    match = await getrectangle.GetitAsync();
+                    tip.Close();
+                    tip = null;
+                }
             }
             else
             {

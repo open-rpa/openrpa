@@ -25,7 +25,9 @@ namespace OpenRPA.Net
     public class WebSocketClient
     {
         // private ClientWebSocket ws = (ClientWebSocket)SystemClientWebSocket.CreateClientWebSocket();  // new ClientWebSocket(); // WebSocket
-        private System.Net.WebSockets.Managed.ClientWebSocket ws = new System.Net.WebSockets.Managed.ClientWebSocket();  // new ClientWebSocket(); // WebSocket
+        // private System.Net.WebSockets.Managed.ClientWebSocket ws = new System.Net.WebSockets.Managed.ClientWebSocket();  // new ClientWebSocket(); // WebSocket
+        // private System.Net.WebSockets.Managed.ClientWebSocket ws = null;  // new ClientWebSocket(); // WebSocket
+        private WebSocket ws = null;  // new ClientWebSocket(); // WebSocket
         public string url { get; set; }
         private CancellationTokenSource src = new CancellationTokenSource();
         private List<SocketMessage> _receiveQueue = new List<SocketMessage>();
@@ -63,15 +65,18 @@ namespace OpenRPA.Net
                 {
                     ws.Dispose();
                     ws = null;
-                    // ws = new ClientWebSocket();
-                    // ws = (ClientWebSocket)SystemClientWebSocket.CreateClientWebSocket();
-                    ws = new System.Net.WebSockets.Managed.ClientWebSocket();
-                    src = new CancellationTokenSource();
                 }
                 if(ws == null) {
                     // ws = new ClientWebSocket();
                     // ws = (ClientWebSocket)SystemClientWebSocket.CreateClientWebSocket();
-                    ws = new System.Net.WebSockets.Managed.ClientWebSocket();
+                    if (VersionHelper.IsWindows8OrGreater())
+                    {
+                        ws = new ClientWebSocket();
+                    }
+                    else
+                    {
+                        ws = new System.Net.WebSockets.Managed.ClientWebSocket();
+                    }
                     src = new CancellationTokenSource();
                 }
                 if (ws.State == System.Net.WebSockets.WebSocketState.Connecting || ws.State == System.Net.WebSockets.WebSocketState.Open) return;

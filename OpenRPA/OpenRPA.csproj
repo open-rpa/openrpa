@@ -15,6 +15,21 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -183,6 +198,7 @@
     <Compile Include="BindingProxy.cs" />
     <Compile Include="Resources\ResFinder.cs" />
     <Compile Include="robotCommand.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Store\AsyncResult.cs" />
     <Compile Include="Store\CompletedAsyncResult.cs" />
     <Compile Include="Store\JsonInstanceStoreBase.cs" />
@@ -573,6 +589,10 @@
       <Project>{ce483c6b-ebef-47ba-b3d5-5c7582dafd1d}</Project>
       <Name>OpenRPA.IE</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OpenRPA.Image\OpenRPA.Image.csproj">
+      <Project>{6c18190f-98b1-4e2e-b54c-66bd86e2701a}</Project>
+      <Name>OpenRPA.Image</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj">
       <Project>{481bd5a1-5e8d-42a9-bd31-78becfaf15f3}</Project>
       <Name>OpenRPA.Interfaces</Name>
@@ -617,6 +637,18 @@
     <Resource Include="Resources\state\Running.png" />
     <Resource Include="Resources\state\Running_green.png" />
     <Resource Include="Resources\state\unloaded.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

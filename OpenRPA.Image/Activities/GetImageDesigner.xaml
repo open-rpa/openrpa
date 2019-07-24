@@ -28,7 +28,10 @@
         <DataTemplate x:Key="Collapsed">
             <StackPanel>
                 <Image Source="{Binding Image}"></Image>
-            </StackPanel>
+                <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
+                                    HintText="Drop activity" AllowedItemType="sa:Activity"
+                                      Grid.Row="1" />
+s            </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="Expanded">
             <StackPanel>

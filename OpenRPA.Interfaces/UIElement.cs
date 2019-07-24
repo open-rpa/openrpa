@@ -58,6 +58,7 @@ namespace OpenRPA
                     (int)RawElement.Properties.BoundingRectangle.Value.Y, (int)RawElement.Properties.BoundingRectangle.Value.Width,
                     (int)RawElement.Properties.BoundingRectangle.Value.Height);
             }
+            set { }
         }
         public int ProcessId { get; set; }
         // public string Id { get; set; }
@@ -188,7 +189,7 @@ namespace OpenRPA
         }
         public Task _Highlight(System.Drawing.Color Color, TimeSpan Duration)
         {
-            using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow())
+            using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow(true))
             {
                 _overlayWindow.BackColor = Color;
                 _overlayWindow.Visible = true;

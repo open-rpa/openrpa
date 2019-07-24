@@ -61,7 +61,7 @@ namespace OpenRPA.Image
             var match = matches[0];
 
             Rectangle rect = Rectangle.Empty;
-            using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow())
+            using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow(true))
             {
                 _overlayWindow.BackColor = System.Drawing.Color.Blue;
                 _overlayWindow.Visible = true;

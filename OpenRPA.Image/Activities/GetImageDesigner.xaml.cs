@@ -39,35 +39,54 @@ namespace OpenRPA.Image
                     loadFromSelectorString = loadFrom.GetValue<string>("Selector");
                     break;
                 }
+                if (loadFrom.ItemType == typeof(GetText))
+                {
+                    break;
+                }
                 loadFrom = loadFrom.Parent;
             }
-            var Image = loadFrom.GetValue<string>("Image");
-            var stream = new System.IO.MemoryStream(Convert.FromBase64String(Image));
-            var b = new System.Drawing.Bitmap(stream);
-            var Threshold = loadFrom.GetValue<double>("Threshold");
-            var CompareGray = loadFrom.GetValue<bool>("CompareGray");
-            var Processname = loadFrom.GetValue<string>("Processname");
-            var limit = loadFrom.GetValue<Rectangle>("Limit");
-            if (Threshold < 0.5) Threshold = 0.8;
-
-            Interfaces.GenericTools.minimize(Interfaces.GenericTools.mainWindow);
-            System.Threading.Thread.Sleep(100);
-            var matches = ImageEvent.waitFor(b, Threshold, Processname, TimeSpan.FromMilliseconds(100), CompareGray, limit);
-            if (matches.Count() == 0)
+            Rectangle match = Rectangle.Empty;
+            if (loadFrom.ItemType == typeof(GetText))
             {
-                Interfaces.GenericTools.restore();
-                return;
+                var tip = new Interfaces.Overlay.TooltipWindow("Mark a found item");
+                match = await getrectangle.GetitAsync();
+                tip.Close();
+                tip = null;
             }
-            var match = matches[0];
+            else
+            {
+                var Image = loadFrom.GetValue<string>("Image");
+                var stream = new System.IO.MemoryStream(Convert.FromBase64String(Image));
+                var b = new System.Drawing.Bitmap(stream);
+                var Threshold = loadFrom.GetValue<double>("Threshold");
+                var CompareGray = loadFrom.GetValue<bool>("CompareGray");
+                var Processname = loadFrom.GetValue<string>("Processname");
+                var limit = loadFrom.GetValue<Rectangle>("Limit");
+                if (Threshold < 0.5) Threshold = 0.8;
+
+                Interfaces.GenericTools.minimize(Interfaces.GenericTools.mainWindow);
+                System.Threading.Thread.Sleep(100);
+                var matches = ImageEvent.waitFor(b, Threshold, Processname, TimeSpan.FromMilliseconds(100), CompareGray, limit);
+                if (matches.Count() == 0)
+                {
+                    Interfaces.GenericTools.restore();
+                    return;
+                }
+                match = matches[0];
+            }
 
             Rectangle rect = Rectangle.Empty;
-            using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow())
+            using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow(true))
             {
                 _overlayWindow.BackColor = System.Drawing.Color.Blue;
                 _overlayWindow.Visible = true;
                 _overlayWindow.Bounds = match;
                 _overlayWindow.TopMost = true;
+
+                var tip = new Interfaces.Overlay.TooltipWindow("Select relative area to capture");
                 rect = await getrectangle.GetitAsync();
+                tip.Close();
+                tip = null;
             }
 
             ModelItem.Properties["OffsetX"].SetValue(new System.Activities.InArgument<int>(rect.X - match.X));

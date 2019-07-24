@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic.Activities;
+using OpenRPA.Interfaces;
 using System;
 using System.Activities;
 using System.Activities.Expressions;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -30,7 +32,36 @@ namespace OpenRPA.Image
         private async void btn_Select(object sender, RoutedEventArgs e)
         {
             Interfaces.GenericTools.minimize(Interfaces.GenericTools.mainWindow);
-            var rect = await getrectangle.GetitAsync();
+
+            var limit = ModelItem.GetValue<Rectangle>("Limit");
+            Rectangle rect = Rectangle.Empty;
+            Log.Information(limit.ToString());
+            using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow(true))
+            {
+                _overlayWindow.BackColor = System.Drawing.Color.Blue;
+                var tip = new Interfaces.Overlay.TooltipWindow("Select area to look for");
+                if (limit != Rectangle.Empty)
+                {
+                    _overlayWindow.Visible = true;
+                    _overlayWindow.Bounds = limit;
+                    _overlayWindow.TopMost = true;
+                    _overlayWindow.Opacity = 0.3;
+                    tip.setText("Select area to look for within the blue area");
+                }
+                rect = await getrectangle.GetitAsync();
+                tip.Close();
+                tip = null;
+            }
+
+            if (limit != Rectangle.Empty)
+            {
+                if(!limit.Contains(rect))
+                {
+                    Log.Error(rect.ToString() + " is not within process limit of " + limit.ToString());
+                    Interfaces.GenericTools.restore();
+                    return;
+                }
+            }
 
             var _image = new System.Drawing.Bitmap(rect.Width, rect.Height);
             var graphics = System.Drawing.Graphics.FromImage(_image as System.Drawing.Image);
@@ -38,7 +69,6 @@ namespace OpenRPA.Image
             ModelItem.Properties["Image"].SetValue(Interfaces.Image.Util.Bitmap2Base64(_image));
             NotifyPropertyChanged("Image");
             var element = AutomationHelper.GetFromPoint(rect.X, rect.Y);
-
             if (element != null)
             {
                 var p = System.Diagnostics.Process.GetProcessById(element.ProcessId);
@@ -79,21 +109,36 @@ namespace OpenRPA.Image
             var Processname = ModelItem.GetValue<string>("Processname");
             var p = System.Diagnostics.Process.GetProcessesByName(Processname).FirstOrDefault();
             if (p == null) return;
-            FlaUI.Core.AutomationElements.Window window = null;
-            using (var app = Interfaces.AutomationUtil.getAutomation())
+
+            var allChildWindows = new WindowHandleInfo(p.MainWindowHandle).GetAllChildHandles();
+            allChildWindows.Add(p.MainWindowHandle);
+            var template = new Rectangle(0, 0, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
+            Rectangle windowrect = Rectangle.Empty;
+            foreach (var window in allChildWindows)
             {
-                var _app = FlaUI.Core.Application.Attach(p.Id);
-                window = _app.GetAllTopLevelWindows(app).FirstOrDefault();
+                WindowHandleInfo.RECT rct;
+                if (!WindowHandleInfo.GetWindowRect(new HandleRef(this, window), out rct))
+                {
+                    continue;
+                }
+                var _rect = new Rectangle(rct.Left, rct.Top, rct.Right - rct.Left + 1, rct.Bottom - rct.Top + 1);
+                if (_rect.Width < template.Width && _rect.Height < template.Height)
+                {
+                    continue;
+                }
+                if ((_rect.X > 0 || (_rect.X + _rect.Width) > 0) &&
+                        (_rect.Y > 0 || (_rect.Y + _rect.Height) > 0))
+                {
+                    windowrect = _rect;
+                    continue;
+                }
             }
-            if (window == null) return;
 
             Interfaces.GenericTools.minimize(Interfaces.GenericTools.mainWindow);
             var rect = await getrectangle.GetitAsync();
-            if (window.BoundingRectangle.Contains(rect))
-            {
-                var limit = new System.Drawing.Rectangle(rect.X - (int)window.BoundingRectangle.X, rect.Y - (int)window.BoundingRectangle.Y, rect.Width, rect.Height);
-                ModelItem.Properties["Limit"].SetValue(new System.Activities.InArgument<System.Drawing.Rectangle>(limit));
-            }
+
+            var limit = new System.Drawing.Rectangle(rect.X - (int)windowrect.X, rect.Y - (int)windowrect.Y, rect.Width, rect.Height);
+            ModelItem.Properties["Limit"].SetValue(new System.Activities.InArgument<System.Drawing.Rectangle>(limit));
             Interfaces.GenericTools.restore();
             NotifyPropertyChanged("Limit");
 

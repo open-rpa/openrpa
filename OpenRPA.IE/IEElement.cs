@@ -108,6 +108,7 @@ namespace OpenRPA.IE
                 }
                 return _Rectangle.Value;
             }
+            set { }
         }
         public Browser Browser { get; set; }
         public string className { get; set; }
@@ -166,7 +167,7 @@ namespace OpenRPA.IE
         }
         public Task _Highlight(System.Drawing.Color Color, TimeSpan Duration)
         {
-            using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow())
+            using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow(true))
             {
                 _overlayWindow.BackColor = Color;
                 _overlayWindow.Visible = true;

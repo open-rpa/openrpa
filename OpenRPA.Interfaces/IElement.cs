@@ -9,6 +9,7 @@ namespace OpenRPA.Interfaces
     public interface IElement
     {
         Object RawElement { get; set; }
+        System.Drawing.Rectangle Rectangle { get; set; }
         string Value { get; set; }
         void Focus();
         void Click(bool VirtualClick, OpenRPA.Input.MouseButton Button, int OffsetX, int OffsetY);

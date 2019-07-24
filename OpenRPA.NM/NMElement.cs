@@ -48,6 +48,7 @@ namespace OpenRPA.NM
             {
                 return new System.Drawing.Rectangle(X, Y, Width, Height);
             }
+            set { }
         }
         public NMElement Parent { get; set; }
         public bool SupportInput {

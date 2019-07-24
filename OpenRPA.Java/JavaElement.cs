@@ -42,6 +42,7 @@ namespace OpenRPA.Java
             {
                 return new System.Drawing.Rectangle(X, Y, Width, Height);
             }
+            set { }
         }
 
         public string Name { get; set; }
@@ -366,7 +367,7 @@ namespace OpenRPA.Java
         }
         public Task _Highlight(System.Drawing.Color Color, TimeSpan Duration)
         {
-            using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow())
+            using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow(true))
             {
                 _overlayWindow.BackColor = Color;
                 _overlayWindow.Visible = true;

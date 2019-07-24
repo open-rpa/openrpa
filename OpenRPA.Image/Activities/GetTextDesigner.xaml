@@ -4,8 +4,9 @@
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
+    xmlns:s="clr-namespace:System;assembly=mscorlib"
+    xmlns:Converters="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
     >
-
 
     <sap:ActivityDesigner.Icon>
         <DrawingBrush>
@@ -25,8 +26,17 @@
 
     
     <sap:ActivityDesigner.Resources>
+        <Converters:ArgumentToExpressionConverter x:Key="ArgumentToExpressionConverter" />
         <DataTemplate x:Key="Expanded">
             <StackPanel>
+                <DockPanel Height="Auto" Name="stackPanel1" Width="Auto" LastChildFill="True">
+                    <TextBlock Text="Limit" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" />
+                    <sapv:ExpressionTextBox HintText="Hint" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="5"
+                                OwnerActivity="{Binding Path=ModelItem}"
+                                Expression="{Binding Path=ModelItem.WordLimit, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
+                                ExpressionType="s:String" HorizontalAlignment="Stretch" />
+                </DockPanel>
+
                 <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
                                     HintText="Drop activity" AllowedItemType="sa:Activity"
                                       Grid.Row="1" />
@@ -35,6 +45,9 @@
         </DataTemplate>
 
         <DataTemplate x:Key="Collapsed">
+            <StackPanel>
+            </StackPanel>
+
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
             <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>

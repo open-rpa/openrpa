@@ -13,8 +13,10 @@ namespace OpenRPA.Interfaces.Overlay
 {
     public partial class OverlayWindow : Form
     {
-        public OverlayWindow()
+        private bool ClickThrough = true;
+        public OverlayWindow(bool ClickThrough)
         {
+            this.ClickThrough = ClickThrough;
             InitializeComponent();
             AllowTransparency = true;
             Opacity = 0.5;
@@ -50,7 +52,8 @@ namespace OpenRPA.Interfaces.Overlay
             get
             {
                 var result = base.CreateParams;
-                result.ExStyle |= (int)WindowStylesEx.WS_EX_TOOLWINDOW;
+                if (!ClickThrough) return result;
+                 result.ExStyle |= (int)WindowStylesEx.WS_EX_TOOLWINDOW;
                 result.ExStyle |= (int)WindowStylesEx.WS_EX_TRANSPARENT;
                 result.ExStyle |= (int)WindowStylesEx.WS_EX_NOACTIVATE;
                 result.ExStyle |= (int)WindowStylesEx.WS_EX_LAYERED;

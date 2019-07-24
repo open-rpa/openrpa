@@ -21,13 +21,14 @@ namespace OpenRPA.Image
     {
         public GetText()
         {
-            Element = new InArgument<ImageElement>()
+            Element = new InArgument<IElement>()
             {
-                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<ImageElement>("item")
+                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<IElement>("item")
             };
         }
+        public InArgument<string> WordLimit { get; set; }
         [RequiredArgument]
-        public InArgument<ImageElement> Element { get; set; }
+        public InArgument<IElement> Element { get; set; }
         public OutArgument<ImageElement[]> Result { get; set; }
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<ImageElement> Body { get; set; }
@@ -36,6 +37,7 @@ namespace OpenRPA.Image
         protected override void Execute(NativeActivityContext context)
         {
             var match = Element.Get(context);
+            var wordlimit = WordLimit.Get(context);
             var lang = Config.local.ocrlanguage;
             string basepath = System.IO.Directory.GetCurrentDirectory();
             string path = System.IO.Path.Combine(basepath, "tessdata");
@@ -52,17 +54,24 @@ namespace OpenRPA.Image
             _ocr.Init(path, lang.ToString(), Emgu.CV.OCR.OcrEngineMode.TesseractLstmCombined);
             _ocr.PageSegMode = Emgu.CV.OCR.PageSegMode.SparseText;
 
-            OpenRPA.Interfaces.Image.Util.SaveImageStamped(ele.element, "OCR");
-            using (var img = new Emgu.CV.Image<Emgu.CV.Structure.Bgr, byte>(ele.element))
+            // OpenRPA.Interfaces.Image.Util.SaveImageStamped(ele.element, "OCR");
+            Bitmap sourceimg = null;
+            if(ele is ImageElement)
             {
-                result = ocr.OcrImage2(_ocr, img.Mat);
+                sourceimg = ((ImageElement)ele).element;
+            } else
+            {
+                sourceimg = Interfaces.Image.Util.Screenshot(ele.Rectangle.X, ele.Rectangle.Y, ele.Rectangle.Width, ele.Rectangle.Height);
+            }
+            using (var img = new Emgu.CV.Image<Emgu.CV.Structure.Bgr, byte>(sourceimg))
+            {
+                result = ocr.OcrImage2(_ocr, img.Mat, wordlimit);
             }
             foreach(var R in result)
             {
                 var rect = new System.Drawing.Rectangle(R.Rectangle.X + ele.Rectangle.X, R.Rectangle.Y + ele.Rectangle.Y, R.Rectangle.Width, R.Rectangle.Height);
                 R.Rectangle = rect;
             }
-
             context.SetValue(Result, result);
 
             IEnumerator<ImageElement> _enum = result.ToList().GetEnumerator();

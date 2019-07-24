@@ -297,17 +297,25 @@ namespace OpenRPA.Input
                         //OnInput(e);
                         break;
                 }
-                if (CallNext || (Int32)wParam == WM_MOUSEMOVE) return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+                if (CallNext || (Int32)wParam == WM_MOUSEMOVE)
+                {
+                    if((Int32)wParam != WM_MOUSEMOVE) Log.Debug("CallNextHookEx: " + CallNext);
+                    return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+                }
                 try
                 {
-                    if (e.Element != null && e.Element.ProcessId == currentprocessid) return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+                    if (e.Element != null && e.Element.ProcessId == currentprocessid)
+                    {
+                        if ((Int32)wParam != WM_MOUSEMOVE) Log.Debug("CallNextHookEx: " + CallNext);
+                        return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+                    }
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex, "");
                     return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
                 }
-                Log.Debug("Skip CallNextHookEx");
+                if ((Int32)wParam != WM_MOUSEMOVE) Log.Debug("Skip CallNextHookEx: " + CallNext);
                 return (IntPtr)1;
             }
             else

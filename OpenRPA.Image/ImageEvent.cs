@@ -120,7 +120,7 @@ namespace OpenRPA.Image
                             {
                                 rect = new Rectangle(rect.X + limit.X, rect.Y + limit.Y, limit.Width, limit.Height);
                             }
-                            if (rect.Width < template.Width && rect.Height < template.Height)
+                            if (rect.Width < template.Width || rect.Height < template.Height)
                             {
                                 continue;
                             }
@@ -142,7 +142,7 @@ namespace OpenRPA.Image
                         }
                         foreach (var rect in rects)
                         {
-                            //System.Diagnostics.Trace.WriteLine("**** Match within window at " + rect.ToString());
+                            System.Diagnostics.Trace.WriteLine("**** Match within window at " + rect.ToString());
                             var desktop = Interfaces.Image.Util.Screenshot(rect);
                             try
                             {

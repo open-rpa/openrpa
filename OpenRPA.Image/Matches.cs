@@ -48,6 +48,8 @@ namespace OpenRPA.Image
 
         public static Rectangle[] FindMatches(Bitmap Source, Bitmap Template, double Threshold, int maxResults, bool asGray)
         {
+            if (Template.Width > Source.Width) throw new ArgumentException("Template is wider than the source");
+            if (Template.Height > Source.Height) throw new ArgumentException("Template is higher than the source");
             if (asGray)
             {
                 using (var source = new Image<Gray, byte>(Source))

@@ -31,49 +31,6 @@ namespace OpenRPA.Image
                     System.Diagnostics.Trace.WriteLine(String.Format("Download completed"));
                 }
         }
-
-        //public static string OcrImage(Emgu.CV.OCR.Tesseract _ocr, Emgu.CV.Mat image)
-        //{
-        //    //Bgr drawCharColor = new Bgr(Color.Red);
-        //    var imageColor = new Mat();
-        //    if (image.NumberOfChannels == 1)
-        //        CvInvoke.CvtColor(image, imageColor, ColorConversion.Gray2Bgr);
-        //    else
-        //        image.CopyTo(imageColor);
-        //    _ocr.SetImage(imageColor);
-        //    _ocr.AnalyseLayout();
-
-        //    if (_ocr.Recognize() != 0) throw new Exception("Failed to recognizer image");
-        //    Emgu.CV.OCR.Tesseract.Character[] characters = _ocr.GetCharacters();
-        //    if (characters.Length == 0)
-        //    {
-        //        try
-        //        {
-        //            Mat imgGrey = new Mat();
-        //            CvInvoke.CvtColor(image, imgGrey, ColorConversion.Bgr2Gray);
-        //            Mat imgThresholded = new Mat();
-        //            CvInvoke.Threshold(imgGrey, imgThresholded, 65, 255, ThresholdType.Binary);
-        //            _ocr.SetImage(imgThresholded);
-        //            characters = _ocr.GetCharacters();
-        //            imageColor = imgThresholded;
-        //            if (characters.Length == 0)
-        //            {
-        //                CvInvoke.Threshold(image, imgThresholded, 190, 255, ThresholdType.Binary);
-        //                _ocr.SetImage(imgThresholded);
-        //                characters = _ocr.GetCharacters();
-        //                imageColor = imgThresholded;
-        //            }
-        //            imgGrey.Dispose();
-        //            imgThresholded.Dispose();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Log.Error(ex.ToString());
-        //            return null;
-        //        }
-        //    }
-        //    return _ocr.GetUTF8Text();
-        //}
         public static string OcrImage(Emgu.CV.OCR.Tesseract _ocr, Emgu.CV.Mat image)
         {
             using (var imageColor = new Mat())
@@ -117,12 +74,15 @@ namespace OpenRPA.Image
         public static ImageElement[] OcrImage2(Emgu.CV.OCR.Tesseract _ocr, Emgu.CV.Mat image, string wordlimit, bool casesensitive)
         {
             using (var imageColor = new Mat())
+            using (Mat imgGrey = new Mat())
             {
                 if (image.NumberOfChannels == 1)
                     CvInvoke.CvtColor(image, imageColor, ColorConversion.Gray2Bgr);
                 else
                     image.CopyTo(imageColor);
-                _ocr.SetImage(imageColor);
+                // _ocr.SetImage(imageColor);
+                CvInvoke.CvtColor(image, imgGrey, ColorConversion.Bgr2Gray);
+                _ocr.SetImage(imgGrey);
                 _ocr.AnalyseLayout();
                 if (_ocr.Recognize() != 0) throw new Exception("Failed to recognizer image");
                 Emgu.CV.OCR.Tesseract.Character[] characters = _ocr.GetCharacters();

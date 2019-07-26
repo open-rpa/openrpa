@@ -49,10 +49,15 @@ namespace OpenRPA.Interfaces.entity
             detector._type = "detector";
             return detector;
         }
+        public string ReplaceInvalidChars(string filename)
+        {
+            if (filename == null) return null;
+            return string.Join("_", filename.Split(System.IO.Path.GetInvalidFileNameChars()));
+        }
         public void SaveFile()
         {
-
-            if(string.IsNullOrEmpty(Filename))
+            Filename = ReplaceInvalidChars(Filename);
+            if (string.IsNullOrEmpty(Filename))
             {
                 Filename = UniqueFilename();
             }
@@ -72,12 +77,12 @@ namespace OpenRPA.Interfaces.entity
             {
                 if (counter == 1)
                 {
-                    Filename = System.Text.RegularExpressions.Regex.Replace(name, @"[^0-9a-zA-Z]+", "") + ".rpadetector";
+                    Filename = System.Text.RegularExpressions.Regex.Replace(ReplaceInvalidChars(name), @"[^0-9a-zA-Z]+", "") + ".rpadetector";
                     FilePath = System.IO.Path.Combine(Path, Filename);
                 }
                 else
                 {
-                    Filename = name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".rpadetector";
+                    Filename = ReplaceInvalidChars(name).Replace(" ", "_").Replace(".", "") + counter.ToString() + ".rpadetector";
                     FilePath = System.IO.Path.Combine(Path, Filename);
                 }
                 if (!System.IO.File.Exists(FilePath)) isUnique = true;

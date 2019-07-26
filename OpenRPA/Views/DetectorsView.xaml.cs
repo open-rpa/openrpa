@@ -56,11 +56,11 @@ namespace OpenRPA.Views
             try
             {
                 if (isSaving) return;
+                isSaving = true;
                 var list = (ExtendedObservableCollection<OpenRPA.Interfaces.IDetectorPlugin>)sender;
                 foreach(var p in list.ToList())
                 {
                     var Entity = (p.Entity as Interfaces.entity.Detector);
-                    isSaving = true;
                     if (global.isConnected)
                     {
                         try
@@ -73,7 +73,8 @@ namespace OpenRPA.Views
                             }
                             else
                             {
-                                await global.webSocketClient.UpdateOne("openrpa", 0, false, p.Entity);
+                                var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, p.Entity);
+                                Entity._acl = result._acl;
                             }
                         }
                         catch (Exception ex)
@@ -85,12 +86,15 @@ namespace OpenRPA.Views
                         if (string.IsNullOrEmpty(Entity._id)) Entity._id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", ""); 
                     }
                     Entity.SaveFile();
-                    isSaving = false;
                 }
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
+            }
+            finally
+            {
+                isSaving = false;
             }
         }
         private void Button_Click(object sender, RoutedEventArgs e)

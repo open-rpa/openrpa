@@ -136,6 +136,8 @@ namespace OpenRPA
             get
             {
                 if (designer != null) _LastDesigner = designer;
+                if (SelectedContent is Views.OpenProject) _LastDesigner = null;
+                if (SelectedContent is Views.DetectorsView) _LastDesigner = null;
                 return _LastDesigner;
             }
         }

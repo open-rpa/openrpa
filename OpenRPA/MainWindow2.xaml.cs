@@ -21,16 +21,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Xceed.Wpf.AvalonDock.Layout;
 
 namespace OpenRPA
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow2 : Window, INotifyPropertyChanged
     {
-        public static MainWindow instance = null;
+        public static MainWindow2 instance = null;
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propertyName)
         {
@@ -40,10 +39,9 @@ namespace OpenRPA
         private bool isRecording = false;
         private bool autoReconnect = true;
         private bool loginInProgress = false;
-        // public static Tracing tracing = new Tracing();
-        public Tracing tracing { get; set; }  = new Tracing();
+        public static Tracing tracing = new Tracing();
         private static object statelock = new object();
-        public List<string> ocrlangs { get; set; } = new List<string>() { "afr", "amh", "ara", "asm", "aze", "aze_cyrl", "bel", "ben", "bod", "bos", "bre", "bul", "cat", "ceb", "ces", "chi_sim", "chi_sim_vert", "chi_tra", "chi_tra_vert", "chr", "cos", "cym", "dan", "dan_frak", "deu", "deu_frak", "div", "dzo", "ell", "eng", "enm", "epo", "equ", "est", "eus", "fao", "fas", "fil", "fin", "fra", "frk", "frm", "fry", "gla", "gle", "glg", "grc", "guj", "hat", "heb", "hin", "hrv", "hun", "hye", "iku", "ind", "isl", "ita", "ita_old", "jav", "jpn", "jpn_vert", "kan", "kat", "kat_old", "kaz", "khm", "kir", "kmr", "kor", "kor_vert", "lao", "lat", "lav", "lit", "ltz", "mal", "mar", "mkd", "mlt", "mon", "mri", "msa", "mya", "nep", "nld", "nor", "oci", "ori", "osd", "pan", "pol", "por", "pus", "que", "ron", "rus", "san", "sin", "slk", "slk_frak", "slv", "snd", "spa", "spa_old", "sqi", "srp", "srp_latn", "sun", "swa", "swe", "syr", "tam", "tat", "tel", "tgk", "tgl", "tha", "tir", "ton", "tur", "uig", "ukr", "urd", "uzb", "uzb_cyrl", "vie", "yid", "yor" };
+        public List<string> ocrlangs { get; set; }  = new List<string>() { "afr", "amh", "ara", "asm", "aze", "aze_cyrl", "bel", "ben", "bod", "bos", "bre", "bul", "cat", "ceb", "ces", "chi_sim", "chi_sim_vert", "chi_tra", "chi_tra_vert", "chr", "cos", "cym", "dan", "dan_frak", "deu", "deu_frak", "div", "dzo", "ell", "eng", "enm", "epo", "equ", "est", "eus", "fao", "fas", "fil", "fin", "fra", "frk", "frm", "fry", "gla", "gle", "glg", "grc", "guj", "hat", "heb", "hin", "hrv", "hun", "hye", "iku", "ind", "isl", "ita", "ita_old", "jav", "jpn", "jpn_vert", "kan", "kat", "kat_old", "kaz", "khm", "kir", "kmr", "kor", "kor_vert", "lao", "lat", "lav", "lit", "ltz", "mal", "mar", "mkd", "mlt", "mon", "mri", "msa", "mya", "nep", "nld", "nor", "oci", "ori", "osd", "pan", "pol", "por", "pus", "que", "ron", "rus", "san", "sin", "slk", "slk_frak", "slv", "snd", "spa", "spa_old", "sqi", "srp", "srp_latn", "sun", "swa", "swe", "syr", "tam", "tat", "tel", "tgk", "tgl", "tha", "tir", "ton", "tur", "uig", "ukr", "urd", "uzb", "uzb_cyrl", "vie", "yid", "yor" };
         public string defaultocrlangs {
             get
             {
@@ -54,11 +52,9 @@ namespace OpenRPA
                 Config.Save();
             }
         }
-        public Views.WFToolbox Toolbox { get; set; }
-        public MainWindow()
+        public MainWindow2()
         {
             InitializeComponent();
-            new DesignerMetadata().Register();
             instance = this;
             DataContext = this;
             GenericTools.mainWindow = this;
@@ -73,94 +69,20 @@ namespace OpenRPA
             cancelkey.Text = Config.local.cancelkey;
             OpenRPA.Input.InputDriver.Instance.initCancelKey(cancelkey.Text);
             InputDriver.Instance.onCancel += onCancel;
-            Toolbox = new Views.WFToolbox();
-            NotifyPropertyChanged("Toolbox");
-        }
-        private void DManager_ActiveContentChanged(object sender, EventArgs e)
-        {
-            NotifyPropertyChanged("VisualTracking");
-            NotifyPropertyChanged("SlowMotion");
-            NotifyPropertyChanged("Minimize");
-            if(SelectedContent is Views.WFDesigner view) {
-                var las = DManager.Layout.Descendents().OfType<LayoutAnchorable>().ToList();
-                foreach (var dp in las)
-                {
-                    //if (dp.Title == "Toolbox")
-                    //{
-                    //    dp.Content = designer.toolbox;
-                    //    if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
-                    //}
-                    //if (dp.Title == "Properties")
-                    //{
-                    //    dp.Content = designer.Properties;
-                    //    if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
-                    //}
-
-                }
-            }
-            else
-            {
-                var las = DManager.Layout.Descendents().OfType<LayoutAnchorable>().ToList();
-                foreach (var dp in las)
-                {
-                    if (dp.Title == "Toolbox")
-                    {
-                        // dp.Content = null;
-                    }
-
-                }
-
-            }
-            NotifyPropertyChanged("SelectedContent");
-        }
-        public object SelectedContent
-        {
-            get
-            {
-                var b = DManager.ActiveContent;
-                return b;
-            }
-        }
-        public LayoutDocumentPane mainTabControl
-        {
-            get
-            {
-                var documentPane = DManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
-                return documentPane;
-            }
         }
         public Views.WFDesigner designer
         {
             get
             {
-                if(SelectedContent is Views.WFDesigner view)
+                foreach (TabItem tab in mainTabControl.Items)
                 {
-                    return view;
+                    if (tab.Content is Views.WFDesigner)
+                    {
+                        Views.WFDesigner _designer = tab.Content as Views.WFDesigner;
+                        if (tab.IsSelected) return _designer;
+                    }
                 }
                 return null;
-            }
-            set
-            {
-
-            }
-        }
-        public Views.WFDesigner[] designers
-        {
-            get
-            {
-                var result = new List<Views.WFDesigner>();
-                var las = DManager.Layout.Descendents().OfType<LayoutAnchorable>().ToList();
-                foreach (var dp in las)
-                {
-                    if (dp.Content is Views.WFDesigner view) result.Add(view);
-
-                }
-                var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
-                foreach (var document in ld)
-                {
-                    if (document.Content is Views.WFDesigner view) result.Add(view);
-                }
-                return result.ToArray();
             }
         }
         public bool VisualTracking
@@ -168,11 +90,13 @@ namespace OpenRPA
             get
             {
                 if (designer == null) return false;
+                Log.Debug(designer.Workflow.name);
                 return designer.VisualTracking;
             }
             set
             {
                 if (designer == null) return;
+                Log.Debug(designer.Workflow.name);
                 designer.VisualTracking = value;
                 NotifyPropertyChanged("VisualTracking");
             }
@@ -240,11 +164,11 @@ namespace OpenRPA
         public ICommand PermissionsCommand { get { return new RelayCommand<object>(onPermissions, canPermissions); } }
         public ICommand linkOpenFlowCommand { get { return new RelayCommand<object>(onlinkOpenFlow, canlinkOpenFlow); } }
         public ICommand linkNodeREDCommand { get { return new RelayCommand<object>(onlinkNodeRED, canlinkNodeRED); } }
-        private bool canPermissions(object _item)
+        private bool canPermissions(object item)
         {
             if (!isConnected) return false;
             if (isRecording) return false;
-            var view = SelectedContent as Views.OpenProject;
+            var view = item as Views.OpenProject;
             if (view != null)
             {
                 var val = view.listWorkflows.SelectedValue;
@@ -252,12 +176,12 @@ namespace OpenRPA
                 var wf = view.listWorkflows.SelectedValue as Workflow;
                 return true;
             }
-            var designer = SelectedContent as Views.WFDesigner;
+            var designer = item as Views.WFDesigner;
             if (designer != null)
             {
                 return true;
             }
-            var DetectorsView = SelectedContent as Views.DetectorsView;
+            var DetectorsView = item as Views.DetectorsView;
             if (DetectorsView != null)
             {
                 var detector = DetectorsView.lidtDetectors.SelectedItem as IDetectorPlugin;
@@ -266,12 +190,12 @@ namespace OpenRPA
             }
             return false;
         }
-        private async void onPermissions(object _item)
+        private async void onPermissions(object item)
         {
             apibase result = null;
             if (!isConnected) return;
             if (isRecording) return;
-            var view = SelectedContent as Views.OpenProject;
+            var view = item as Views.OpenProject;
             if (view != null)
             {
                 var val = view.listWorkflows.SelectedValue;
@@ -281,12 +205,12 @@ namespace OpenRPA
                 if (wf != null) { result = wf; }
                 if (p != null) { result = p; }
             }
-            var designer = SelectedContent as Views.WFDesigner;
+            var designer = item as Views.WFDesigner;
             if (designer != null)
             {
                 result = designer.Workflow;
             }
-            var DetectorsView = SelectedContent as Views.DetectorsView;
+            var DetectorsView = item as Views.DetectorsView;
             if (DetectorsView != null)
             {
                 var detector = DetectorsView.lidtDetectors.SelectedItem as IDetectorPlugin;
@@ -301,15 +225,7 @@ namespace OpenRPA
                 var pw = new Views.PermissionsWindow(result);
                 Hide();
                 pw.ShowDialog();
-                if (result is Project)
-                {
-                    var p = result as Project;
-                    foreach(var wf in p.Workflows)
-                    {
-                        wf._acl = p._acl;
-                    }
-                    await ((Project)result).Save();
-                }
+                if (result is Project) await ((Project)result).Save();
                 if (result is Workflow) await ((Workflow)result).Save();
                 if (result is Detector)
                 {
@@ -329,16 +245,14 @@ namespace OpenRPA
                 Show();
             }
         }
-        private bool canImport(object _item)
-        {
-            if (!isConnected) return false; return (SelectedContent is Views.WFDesigner || SelectedContent is Views.OpenProject || SelectedContent == null); }
-        private void onImport(object _item)
+        private bool canImport(object item) { if (!isConnected) return false; return (item is Views.WFDesigner || item is Views.OpenProject || item == null); }
+        private void onImport(object item)
         {
             try
             {
-                if (SelectedContent is Views.WFDesigner)
+                if (item is Views.WFDesigner)
                 {
-                    var designer = (Views.WFDesigner)SelectedContent;
+                    var designer = (Views.WFDesigner)item;
                     Workflow workflow = Workflow.Create(designer.Project, "New Workflow");
                     onOpenWorkflow(workflow);
                     return;
@@ -371,13 +285,11 @@ namespace OpenRPA
                 MessageBox.Show(ex.Message);
             }
         }
-        private bool canExport(object _item)
+        private bool canExport(object item) { if (!isConnected) return false; return (item is Views.WFDesigner || item is Views.OpenProject || item == null); }
+        private void onExport(object item)
         {
-            if (!isConnected) return false; return (SelectedContent is Views.WFDesigner || SelectedContent is Views.OpenProject || SelectedContent == null); }
-        private void onExport(object _item)
-        {
-            if (!(SelectedContent is Views.WFDesigner)) return;
-            var designer = (Views.WFDesigner)SelectedContent;
+            if (!(item is Views.WFDesigner)) return;
+            var designer = (Views.WFDesigner)item;
         }
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
@@ -412,50 +324,58 @@ namespace OpenRPA
         }
         private void onSave(object sender, ExecutedRoutedEventArgs e)
         {
-            SaveCommand.Execute(SelectedContent);
+            SaveCommand.Execute(mainTabControl.SelectedContent);
         }
         private void onDelete(object sender, ExecutedRoutedEventArgs e)
         {
-            DeleteCommand.Execute(SelectedContent);
+            DeleteCommand.Execute(mainTabControl.SelectedContent);
         }
-        private bool canMinimize(object _item)
+        private bool canMinimize(object item)
         {
             return true;
         }
-        private void onMinimize(object _item)
+        private void onMinimize(object item)
         {
         }
-        private bool canVisualTracking(object _item)
-        {
-            return true;
-        }
-        private void onVisualTracking(object _item)
-        {
-            var b = (bool)_item;
-            if(SelectedContent is Views.WFDesigner)
-            {
-                var designer = SelectedContent as Views.WFDesigner;
-                designer.VisualTracking = b;
-            }
-        }
-        private bool canSlowMotion(object _item)
+        private bool canVisualTracking(object item)
         {
             return true;
         }
-        private void onSlowMotion(object _item)
+        private void onVisualTracking(object item)
         {
-            var b = (bool)_item;
-            if (SelectedContent is Views.WFDesigner)
-            {
-                var designer = SelectedContent as Views.WFDesigner;
-                designer.SlowMotion = b;
-            }
+            //var b = (bool)item;
+            //model.VisualTracking = b;
+            //foreach (TabItem tab in mainTabControl.Items)
+            //{
+            //    if (tab.Content is Views.WFDesigner && tab.IsSelected)
+            //    {
+            //        var designer = tab.Content as Views.WFDesigner;
+            //        designer.VisualTracking = b;
+            //    }
+            //}
         }
-        private bool canSettings(object _item)
+        private bool canSlowMotion(object item)
         {
             return true;
         }
-        private void onSettings(object _item)
+        private void onSlowMotion(object item)
+        {
+            //var b = (bool)item;
+            //model.SlowMotion = b;
+            //foreach (TabItem tab in mainTabControl.Items)
+            //{
+            //    if (tab.Content is Views.WFDesigner && tab.IsSelected)
+            //    {
+            //        var designer = tab.Content as Views.WFDesigner;
+            //        designer.SlowMotion = b;
+            //    }
+            //}
+        }
+        private bool canSettings(object item)
+        {
+            return true;
+        }
+        private void onSettings(object item)
         {
             try
             {
@@ -475,12 +395,12 @@ namespace OpenRPA
                 Log.Error("onSettings: " + ex.Message);
             }
         }
-        private bool canSignout(object _item)
+        private bool canSignout(object item)
         {
             if (!global.isConnected) return false;
             return true;
         }
-        private void onSignout(object _item)
+        private void onSignout(object item)
         {
             autoReconnect = true;
             Projects.Clear();
@@ -489,75 +409,92 @@ namespace OpenRPA
             global.webSocketClient.url = Config.local.wsurl;
             _ = global.webSocketClient.Close();
         }
-        private bool canOpen(object _item)
+        private bool canOpen(object item)
         {
-            var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
-            foreach (var document in ld)
+            if (!isConnected) return false;
+            foreach (TabItem tab in mainTabControl.Items)
             {
-                if (document.Content is Views.OpenProject op) return false;
+                if (tab.Content is Views.OpenProject)
+                {
+                    return false;
+                }
             }
             return true;
         }
-        private bool canDetectors(object _item)
+        private bool canDetectors(object item)
         {
-            var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
-            foreach (var document in ld)
+            if (!isConnected) return false;
+            foreach (TabItem tab in mainTabControl.Items)
             {
-                if (document.Content is Views.DetectorsView op) return false;
+                if (tab.Content is Views.DetectorsView)
+                {
+                    return false;
+                }
             }
             return true;
         }
-        private void onOpen(object _item)
+        private void onOpen(object item)
         {
             AutomationHelper.syncContext.Post(o =>
             {
-                var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
-                foreach (var document in ld)
+                foreach (TabItem tab in mainTabControl.Items)
                 {
-                    if (document.Content is Views.OpenProject op) { document.IsSelected = true; return; }
+                    if (tab.Content is Views.OpenProject)
+                    {
+                        tab.IsSelected = true;
+                        return;
+                    }
                 }
-                var view = new Views.OpenProject(this);
-                view.onOpenProject += onOpenProject;
-                view.onOpenWorkflow += onOpenWorkflow;
-
-                LayoutDocument layoutDocument = new LayoutDocument { Title = "Open project" };
-                layoutDocument.ContentId = "openproject";
-                layoutDocument.CanClose = false;
-                layoutDocument.Content = view;
-                mainTabControl.Children.Add(layoutDocument);
-                layoutDocument.IsSelected = true;
-                layoutDocument.Closing += LayoutDocument_Closing;
+                //var view = new Views.OpenProject(this);
+                //view.onOpenProject += onOpenProject;
+                //view.onOpenWorkflow += onOpenWorkflow;
+                //Views.ClosableTab newTabItem = new Views.ClosableTab
+                //{
+                //    Title = "Open project",
+                //    Name = "openproject",
+                //    Content = view
+                //};
+                //newTabItem.OnClose += NewTabItem_OnClose;
+                //mainTabControl.Items.Add(newTabItem);
+                //newTabItem.IsSelected = true;
             }, null);
         }
-        private void onDetectors(object _item)
+        private void onDetectors(object item)
         {
             AutomationHelper.syncContext.Post(o =>
             {
-                var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
-                foreach (var document in ld)
+                foreach (TabItem tab in mainTabControl.Items)
                 {
-                    if (document.Content is Views.DetectorsView op) { document.IsSelected = true; return; }
+                    if (tab.Content is Views.DetectorsView)
+                    {
+                        tab.IsSelected = true;
+                        return;
+                    }
                 }
-                var view = new Views.DetectorsView(this);
-                LayoutDocument layoutDocument = new LayoutDocument { Title = "Detectors" };
-                layoutDocument.ContentId = "detectors";
-                layoutDocument.Content = view;
-                mainTabControl.Children.Add(layoutDocument);
-                layoutDocument.IsSelected = true;
+                //var view = new Views.DetectorsView(this);
+                //Views.ClosableTab newTabItem = new Views.ClosableTab
+                //{
+                //    Title = "Detectors",
+                //    Name = "detectors",
+                //    Content = view
+                //};
+                //newTabItem.OnClose += NewTabItem_OnClose;
+                //mainTabControl.Items.Add(newTabItem);
+                //newTabItem.IsSelected = true;
             }, null);
         }
-        private bool canlinkOpenFlow(object _item)
+        private bool canlinkOpenFlow(object item)
         {
             if (string.IsNullOrEmpty(Config.local.wsurl)) return false;
             return true;
         }
-        private void onlinkOpenFlow(object _item)
+        private void onlinkOpenFlow(object item)
         {
             if (string.IsNullOrEmpty(Config.local.wsurl)) return;
             if (global.openflowconfig == null) return;
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(global.openflowconfig.baseurl));
         }
-        private bool canlinkNodeRED(object _item)
+        private bool canlinkNodeRED(object item)
         {
             if (!isConnected) return false;
             if (string.IsNullOrEmpty(Config.local.wsurl)) return false;
@@ -566,7 +503,7 @@ namespace OpenRPA
 
             return true;
         }
-        private void onlinkNodeRED(object _item)
+        private void onlinkNodeRED(object item)
         {
             if (global.openflowconfig == null) return;
             var baseurl = new Uri(Config.local.wsurl);
@@ -575,105 +512,56 @@ namespace OpenRPA
             if (baseurl.Scheme == "wss") { url = "https://" + url; } else { url = "http://" + url; }
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url));
         }
-        private void LayoutDocument_Closing(object sender, CancelEventArgs e)
+
+
+        private async void NewTabItem_OnClose(object sender, RoutedEventArgs e)
         {
-            var tab = sender as LayoutDocument;
+            Views.ClosableTab tab = sender as Views.ClosableTab;
             Views.WFDesigner designer = tab.Content as Views.WFDesigner;
             if (designer == null) return;
             if (!designer.HasChanged) return;
-
-            if (designer.HasChanged && (global.isConnected ? designer.Workflow.hasRight(global.webSocketClient.user, ace_right.update) : true))
+            if (designer.HasChanged && (global.isConnected ? global.webSocketClient.user.hasRole("robot admins") : true))
             {
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Save " + designer.Workflow.name + " ?", "Workflow unsaved", MessageBoxButton.YesNoCancel);
                 if (messageBoxResult == MessageBoxResult.Yes)
                 {
-                    _ = designer.Save();
+                    await designer.Save();
                 }
                 else if (messageBoxResult != MessageBoxResult.No)
                 {
-                    e.Cancel = true;
+                    e.Handled = true;
                 }
             }
-        }
-        private void SaveLayout()
-        {
-
-            var workflows = new List<string>();
-            foreach (var designer in designers)
-            {
-                workflows.Add(designer.Workflow._id);
-            }
-            Config.local.openworkflows = workflows.ToArray();
-
-            //var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
-            //var sb = new StringBuilder();
-            //using (var stream = new System.IO.StringWriter(sb))
-            //    serializer.Serialize(stream);
-            //Config.local.designerlayout = sb.ToString();
-                var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
-                using (var stream = new System.IO.StreamWriter("layout.config"))
-                    serializer.Serialize(stream);
-            Config.Save();
-        }
-        private void LoadLayout()
-        {
-            //if (!string.IsNullOrEmpty(Config.local.designerlayout))
-            //{
-            //}
-            foreach (var p in Projects)
-            {
-                foreach (var wf in p.Workflows)
-                {
-                    
-                    if (Config.local.openworkflows.Contains(wf._id) && !string.IsNullOrEmpty(wf._id))
-                    {
-                        onOpenWorkflow(wf);
-                    }
-                }
-            }
-            GenericTools.RunUI(() =>
-            {
-                //byte[] byteArray = Encoding.Unicode.GetBytes(Config.local.designerlayout);
-                //var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
-                //using (var stream = new System.IO.MemoryStream(byteArray))
-                //    serializer.Deserialize(stream);
-                if (System.IO.File.Exists("layout.config"))
-                {
-                    var ds = DManager.Layout.Descendents();
-                    var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
-                    using (var stream = new System.IO.StreamReader("layout.config"))
-                        serializer.Deserialize(stream);
-                    ds = DManager.Layout.Descendents();
-                } else
-                {
-                    var las = DManager.Layout.Descendents().OfType<LayoutAnchorable>().ToList();
-                    foreach (var dp in las)
-                    {
-                        if (dp.Title == "Toolbox")
-                        {
-                            if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
-                        }
-                        if (dp.Title == "Properties")
-                        {
-                            if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
-                        }
-                    }
-                }
-            });
         }
         public Views.WFDesigner getWorkflowDesignerByFilename(string Filename)
         {
-            foreach(var designer in designers)
+            Views.WFDesigner designer = null;
+            foreach (TabItem tab in mainTabControl.Items)
             {
-                if (designer.Workflow.FilePath == Filename) return designer;
+                if (tab.Content is Views.WFDesigner)
+                {
+                    designer = (Views.WFDesigner)tab.Content;
+                    if (designer.Workflow.FilePath == Filename)
+                    {
+                        return designer;
+                    }
+                }
             }
             return null;
         }
         public Views.WFDesigner getWorkflowDesignerById(string Id)
         {
-            foreach (var designer in designers)
+            Views.WFDesigner designer = null;
+            foreach (TabItem tab in mainTabControl.Items)
             {
-                if (designer.Workflow._id == Id) return designer;
+                if (tab.Content is Views.WFDesigner)
+                {
+                    designer = (Views.WFDesigner)tab.Content;
+                    if (designer.Workflow._id == Id)
+                    {
+                        return designer;
+                    }
+                }
             }
             return null;
         }
@@ -690,17 +578,31 @@ namespace OpenRPA
                 }
                 try
                 {
+                    Views.ClosableTab newTabItem = new Views.ClosableTab
+                    {
+                        Title = "Open project",
+                        Name = "openproject"
+                    };
+                    newTabItem.OnClose += NewTabItem_OnClose;
                     var types = new List<Type>();
                     foreach (var p in Plugins.recordPlugins) { types.Add(p.GetType()); }
-                    LayoutDocument layoutDocument = new LayoutDocument { Title = workflow.name };
-                    layoutDocument.ContentId = workflow._id;
+                    var view = new Views.WFDesigner((Views.ClosableTab)newTabItem, workflow, types.ToArray());
+                    view.onChanged += WFDesigneronChanged;
+                    newTabItem.Content = view;
+                    mainTabControl.Items.Add(newTabItem);
+                    newTabItem.IsSelected = true;
 
-                    var view = new Views.WFDesigner(layoutDocument, workflow, types.ToArray());
-                    view.onChanged = WFDesigneronChanged;
-                    layoutDocument.Content = view;
-                    mainTabControl.Children.Add(layoutDocument);
-                    layoutDocument.IsSelected = true;
-                    layoutDocument.Closing += LayoutDocument_Closing;
+                    var workflows = new List<string>();
+                    foreach (TabItem tab in mainTabControl.Items)
+                    {
+                        if (tab.Content is Views.WFDesigner)
+                        {
+                            designer = (Views.WFDesigner)tab.Content;
+                            workflows.Add(designer.Workflow._id);
+                        }
+                    }
+                    Config.local.openworkflows = workflows.ToArray();
+                    Config.Save();
                 }
                 catch (Exception ex)
                 {
@@ -709,12 +611,25 @@ namespace OpenRPA
                 }
             }, null);
         }
-        private void WFDesigneronChanged(Views.WFDesigner designer)
+        private void WFDesigneronChanged(Views.WFDesigner view)
         {
             AutomationHelper.syncContext.Post(o =>
             {
-                designer.tab.Title = (designer.HasChanged ? designer.Workflow.name + "*" : designer.Workflow.name);
-                CommandManager.InvalidateRequerySuggested();
+                Views.WFDesigner designer = null;
+                foreach (TabItem tab in mainTabControl.Items)
+                {
+                    if (tab.Content is Views.WFDesigner)
+                    {
+                        designer = (Views.WFDesigner)tab.Content;
+                        if (designer.Workflow.FilePath == view.Workflow.FilePath)
+                        {
+                            var t = (Views.ClosableTab)tab;
+                            t.Title = (designer.HasChanged ? designer.Workflow.name + "*" : designer.Workflow.name);
+                            CommandManager.InvalidateRequerySuggested();
+                            return;
+                        }
+                    }
+                }
             }, null);
             //_syncContext.Post(o => CommandManager.InvalidateRequerySuggested(), null);
         }
@@ -725,22 +640,21 @@ namespace OpenRPA
                 onOpenWorkflow(wf);
             }
         }
-        private bool canSave(object _item) {
-            var wf = SelectedContent as Views.WFDesigner;
+        private bool canSave(object item) {
+            var wf = item as Views.WFDesigner;
             if (wf == null) return false;
-            if (wf.isRunnning == true) return false;
-            return wf.HasChanged;
+            return !wf.isRunnning;
         }
-        private async void onSave(object _item)
+        private async void onSave(object item)
         {
-            if (SelectedContent is Views.WFDesigner)
+            if (item is Views.WFDesigner)
             {
-                var designer = (Views.WFDesigner)SelectedContent;
+                var designer = (Views.WFDesigner)item;
                 await designer.Save();
             }
-            if (SelectedContent is Views.OpenProject)
+            if (item is Views.OpenProject)
             {
-                var view = (Views.OpenProject)SelectedContent;
+                var view = (Views.OpenProject)item;
                 var Project = view.listWorkflows.SelectedItem as Project;
                 if (Project != null)
                 {
@@ -748,15 +662,14 @@ namespace OpenRPA
                 }
             }
         }
-        private bool canNew(object _item) {
-            if (!isConnected) return false; return (SelectedContent is Views.WFDesigner || SelectedContent is Views.OpenProject || SelectedContent == null); }
-        private async void onNew(object _item)
+        private bool canNew(object item) { if (!isConnected) return false; return (item is Views.WFDesigner || item is Views.OpenProject || item == null); }
+        private async void onNew(object item)
         {
             try
             {
-                if (SelectedContent is Views.WFDesigner)
+                if (item is Views.WFDesigner)
                 {
-                    var designer = (Views.WFDesigner)SelectedContent;
+                    var designer = (Views.WFDesigner)item;
                     Workflow workflow = Workflow.Create(designer.Project, "New Workflow");
                     onOpenWorkflow(workflow);
                     return;
@@ -778,22 +691,22 @@ namespace OpenRPA
                 MessageBox.Show(ex.Message);
             }
         }
-        private bool canCopy(object _item)
+        private bool canCopy(object item)
         {
-            return (SelectedContent is Views.WFDesigner);
+            return (item is Views.WFDesigner);
         }
-        private async void onCopy(object _item)
+        private async void onCopy(object item)
         {
-            var designer = (Views.WFDesigner)SelectedContent;
+            var designer = (Views.WFDesigner)item;
             await designer.Save();
             Workflow workflow = Workflow.Create(designer.Project, "Copy of " + designer.Workflow.name);
             workflow.Xaml = designer.Workflow.Xaml;
             workflow.name = "Copy of " + designer.Workflow.name;
             onOpenWorkflow(workflow);
         }
-        private bool canDelete(object _item)
+        private bool canDelete(object item)
         {
-            var view = SelectedContent as Views.OpenProject;
+            var view = item as Views.OpenProject;
             if (view == null) return false;
             var val = view.listWorkflows.SelectedValue;
             if (val == null) return false;
@@ -814,9 +727,9 @@ namespace OpenRPA
             // don't know what your deleteing, lets just assume yes then
             return true;
         }
-        private async void onDelete(object _item)
+        private async void onDelete(object item)
         {
-            var view = SelectedContent as Views.OpenProject;
+            var view = item as Views.OpenProject;
             if (view == null) return;
             var val = view.listWorkflows.SelectedValue;
             var wf = val as Workflow;
@@ -852,9 +765,9 @@ namespace OpenRPA
                 Projects.Remove(p);
             }
         }
-        private bool canPlay(object _item)
+        private bool canPlay(object item)
         {
-            var view = SelectedContent as Views.OpenProject;
+            var view = item as Views.OpenProject;
             if (view != null)
             {
                 var val = view.listWorkflows.SelectedValue;
@@ -871,8 +784,8 @@ namespace OpenRPA
 
             if (!isConnected) return false;
             if (isRecording) return false;
-            if (!(SelectedContent is Views.WFDesigner)) return false;
-            var designer = (Views.WFDesigner)SelectedContent;
+            if (!(item is Views.WFDesigner)) return false;
+            var designer = (Views.WFDesigner)item;
             if (designer.BreakPointhit) return true;
             foreach (var i in designer.Workflow.Instances)
             {
@@ -881,13 +794,12 @@ namespace OpenRPA
                     return false;
                 }
             }
-            if (global.webSocketClient == null) return true;
             return designer.Workflow.hasRight(global.webSocketClient.user, ace_right.invoke);
             // return true;
         }
-        private async void onPlay(object _item)
+        private async void onPlay(object item)
         {
-            var view = SelectedContent as Views.OpenProject;
+            var view = item as Views.OpenProject;
             if (view != null)
             {
                 var val = view.listWorkflows.SelectedValue;
@@ -913,8 +825,8 @@ namespace OpenRPA
 
             try
             {
-                if (!(SelectedContent is Views.WFDesigner)) return;
-                var designer = (Views.WFDesigner)SelectedContent;
+                if (!(item is Views.WFDesigner)) return;
+                var designer = (Views.WFDesigner)item;
                 if (designer.HasChanged) { await designer.Save(); }
                 designer.Run(VisualTracking, SlowMotion, null);
             }
@@ -923,9 +835,9 @@ namespace OpenRPA
                 MessageBox.Show("onPlay " + ex.Message);
             }
         }
-        private bool canStop(object _item)
+        private bool canStop(object item)
         {
-            var view = SelectedContent as Views.OpenProject;
+            var view = item as Views.OpenProject;
             if (view != null)
             {
                 var val = view.listWorkflows.SelectedValue;
@@ -937,8 +849,8 @@ namespace OpenRPA
             }
             if (!isConnected) return false;
             if (isRecording) return true;
-            if (!(SelectedContent is Views.WFDesigner)) return false;
-            var designer = (Views.WFDesigner)SelectedContent;
+            if (!(item is Views.WFDesigner)) return false;
+            var designer = (Views.WFDesigner)item;
             foreach (var i in designer.Workflow.Instances)
             {
                 if (i.isCompleted != true && i.state != "loaded")
@@ -948,9 +860,9 @@ namespace OpenRPA
             }
             return false;
         }
-        private void onStop(object _item)
+        private void onStop(object item)
         {
-            var view = SelectedContent as Views.OpenProject;
+            var view = item as Views.OpenProject;
             if (view != null)
             {
                 var val = view.listWorkflows.SelectedValue;
@@ -967,8 +879,8 @@ namespace OpenRPA
                 return;
             }
 
-            if (!(SelectedContent is Views.WFDesigner)) return;
-            var designer = (Views.WFDesigner)SelectedContent;
+            if (!(item is Views.WFDesigner)) return;
+            var designer = (Views.WFDesigner)item;
             foreach (var i in designer.Workflow.Instances)
             {
                 if (i.isCompleted == false)
@@ -987,11 +899,11 @@ namespace OpenRPA
                 GenericTools.restore(GenericTools.mainWindow);
             }
         }
-        private bool canRecord(object _item)
+        private bool canRecord(object item)
         {
             if (!isConnected) return false;
-            if (!(SelectedContent is Views.WFDesigner)) return false;
-            var designer = (Views.WFDesigner)SelectedContent;
+            if (!(item is Views.WFDesigner)) return false;
+            var designer = (Views.WFDesigner)item;
             foreach (var i in designer.Workflow.Instances)
             {
                 if (i.isCompleted == false)
@@ -1006,7 +918,7 @@ namespace OpenRPA
             if (!isRecording) return;
             StartDetectorPlugins();
             StopRecordPlugins();
-            if (SelectedContent is Views.WFDesigner view)
+            if (mainTabControl.SelectedContent is Views.WFDesigner view)
             {
                 view.ReadOnly = false;
             }
@@ -1023,7 +935,7 @@ namespace OpenRPA
             {
                 var cancelkey = InputDriver.Instance.cancelKeys.Where(x => x.KeyValue == e.KeyValue).ToList();
                 if (cancelkey.Count > 0) return;
-                if (SelectedContent is Views.WFDesigner view)
+                if (mainTabControl.SelectedContent is Views.WFDesigner view)
                 {
                     view.ReadOnly = false;
                     if (view.lastinserted != null && view.lastinserted is Activities.TypeText)
@@ -1055,7 +967,7 @@ namespace OpenRPA
             // if (e.KeyValue == 255) return;
             try
             {
-                if (SelectedContent is Views.WFDesigner view)
+                if (mainTabControl.SelectedContent is Views.WFDesigner view)
                 {
                     if (view.lastinserted != null && view.lastinserted is Activities.TypeText)
                     {
@@ -1128,7 +1040,7 @@ namespace OpenRPA
                     return;
                 }
                 InputDriver.Instance.CallNext = true;
-                if (SelectedContent is Views.WFDesigner view)
+                if (mainTabControl.SelectedContent is Views.WFDesigner view)
                 {
 
                     var VirtualClick = true;
@@ -1182,10 +1094,10 @@ namespace OpenRPA
                 StartRecordPlugins();
             }, null);
         }
-        private void onRecord(object _item)
+        private void onRecord(object item)
         {
-            if (!(SelectedContent is Views.WFDesigner)) return;
-            var designer = (Views.WFDesigner)SelectedContent;
+            if (!(item is Views.WFDesigner)) return;
+            var designer = (Views.WFDesigner)item;
             designer.ReadOnly = true;
             designer.lastinserted = null;
             designer.lastinsertedmodel = null;
@@ -1231,7 +1143,7 @@ namespace OpenRPA
             Task.Run(() =>
             {
                 ExpressionEditor.EditorUtil.init();
-                LoadLayout();
+
                 if (!string.IsNullOrEmpty(Config.local.wsurl))
                 {
                     global.webSocketClient = new WebSocketClient(Config.local.wsurl);
@@ -1251,7 +1163,19 @@ namespace OpenRPA
                     }
                 }
                 AutomationHelper.init();
+                new DesignerMetadata().Register();
                 onOpen(null);
+                foreach(var p in Projects)
+                {
+                    foreach(var wf in p.Workflows)
+                    {
+                        if(Config.local.openworkflows.Contains(wf._id))
+                        {
+                            onOpenWorkflow(wf);
+                        }
+                    }
+                }
+
                 AddHotKeys();
             });
         }
@@ -1299,9 +1223,13 @@ namespace OpenRPA
         }
         public Views.WFDesigner GetDesignerById(string workflowid)
         {
-            foreach(var designer in designers)
+            foreach (TabItem tab in mainTabControl.Items)
             {
-                if (designer.Workflow._id == workflowid) return designer;
+                if (tab.Content is Views.WFDesigner)
+                {
+                    Views.WFDesigner _designer = tab.Content as Views.WFDesigner;
+                    if (_designer.Workflow._id == workflowid) return _designer;
+                }
             }
             return null;
         }
@@ -1454,14 +1382,16 @@ namespace OpenRPA
         }
         private void Window_Closed(object sender, EventArgs e)
         {
-            InputDriver.Instance.CallNext = true;
-            InputDriver.Instance.OnKeyDown -= OnKeyDown;
-            InputDriver.Instance.OnKeyUp -= OnKeyUp;
-            InputDriver.Instance.Dispose();
-            SaveLayout();
             // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds
             Environment.Exit(Environment.ExitCode);
 
+        }
+        private void MainTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (mainTabControl.SelectedContent == null) return;
+            NotifyPropertyChanged("VisualTracking");
+            NotifyPropertyChanged("SlowMotion");
+            NotifyPropertyChanged("Minimize");
         }
         private void WebSocketClient_OnOpen()
         {
@@ -1598,7 +1528,42 @@ namespace OpenRPA
                 if (Projects.Count > 0)
                 {
                     Projects[0].IsExpanded = true;
-                    LoadLayout();
+                    // foreach (TabItem tab in mainTabControl.Items)
+                    //    var tab = mainTabControl.SelectedContent as Views.OpenProject;
+                    //if(tab != null)
+                    //{
+                    //    if(tab.listWorkflows.Items.Count > 0)
+                    //    {
+                    //        Console.WriteLine(tab.listWorkflows.SelectedValuePath);
+                    //        // = 
+                    //        //foreach (var childItem in tab.listWorkflows.Items.OfType<TreeViewItem>())
+                    //        //{
+                    //        //    childItem.IsExpanded = true;
+                    //        //}
+                    //        //var stack = new Stack<TreeViewItem>(tab.listWorkflows.Items.Cast<TreeViewItem>());
+                    //        //TreeViewItem item = stack.Pop();
+                    //        //item.IsExpanded = true;
+                    //    }
+                    //}
+
+                    foreach (var p in Projects)
+                    {
+                        foreach (var wf in p.Workflows)
+                        {
+                            if (Config.local.openworkflows.Contains(wf._id))
+                            {
+                                onOpenWorkflow(wf);
+                            }
+                        }
+                    }
+
+                    //Log.Debug("Opening first project");
+                    ////onOpenProject(Projects[0]);
+                    //var wf = Projects[0].Workflows.FirstOrDefault();
+                    //if(wf!=null)
+                    //{
+                    //    onOpenWorkflow(wf);
+                    //}                    
                 } else
                 {
                     onOpen(null);
@@ -1635,6 +1600,9 @@ namespace OpenRPA
                     Config.local.cancelkey = view.Text;
                     Config.Save();
                     OpenRPA.Input.InputDriver.Instance.initCancelKey(cancelkey.Text);
+                } else
+                {
+                    Console.WriteLine("done");
                 }
             }
             catch (Exception ex)
@@ -1650,6 +1618,7 @@ namespace OpenRPA
             }
 
         }
+
         private void TesseractLang_Click(object sender, RoutedEventArgs e)
         {
             string path = System.IO.Path.Combine(Extensions.projectsDirectory, "tessdata");

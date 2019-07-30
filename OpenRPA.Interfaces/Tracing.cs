@@ -60,8 +60,12 @@ namespace OpenRPA.Interfaces
                 }
                 return result;
             }
+            set {
+                _TraceMessages = value;
+            }
             //get { return String.Join(Environment.NewLine, _result.ToArray()); }
         }
+
         //private StringBuilder Outputbuilder = new StringBuilder();
         private string _OutputMessages = "";
         public string OutputMessages
@@ -88,6 +92,9 @@ namespace OpenRPA.Interfaces
                     //Outputbuilder.Insert(0, result);
                 }
                 return result;
+            }
+            set {
+                _OutputMessages = value;
             }
             //get { return String.Join(Environment.NewLine, _result.ToArray()); }
         }

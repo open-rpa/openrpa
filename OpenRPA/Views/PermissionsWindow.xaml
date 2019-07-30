@@ -26,6 +26,10 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <Ribbon x:Name="Ribbon" Grid.ColumnSpan="3">
+            <Ribbon.ApplicationMenu>
+                <RibbonApplicationMenu Visibility="Collapsed" >
+                </RibbonApplicationMenu>
+            </Ribbon.ApplicationMenu>
             <RibbonTab x:Name="DetectorTab" Header="Detector">
                 <RibbonGroup x:Name="GroupDetectorFile" Header="File">
                     <RibbonButton x:Name="ButtonNew" Command="ApplicationCommands.New" Label="New"  LargeImageSource="/OpenRPA;component/Resources/Buttons/New.png" />

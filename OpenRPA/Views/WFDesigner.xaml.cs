@@ -33,6 +33,11 @@ namespace OpenRPA.Views
     /// </summary>
     public partial class WFDesigner : UserControl, System.ComponentModel.INotifyPropertyChanged, IDesigner
     {
+        public DelegateCommand DockAsDocumentCommand = new DelegateCommand((e) => { }, (e) => false);
+        public DelegateCommand AutoHideCommand { get; set; }= new DelegateCommand((e) => { }, (e) => false);
+        public bool CanClose{ get; set; } = true;
+        public bool CanHide { get; set; } = false;
+
         public Dictionary<ModelItem, System.Activities.Debugger.SourceLocation> _modelLocationMapping = new Dictionary<ModelItem, System.Activities.Debugger.SourceLocation>();
         public Dictionary<string, System.Activities.Debugger.SourceLocation> _sourceLocationMapping = new Dictionary<string, System.Activities.Debugger.SourceLocation>();
         public Dictionary<string, Activity> _activityIdMapping = new Dictionary<string, Activity>();
@@ -42,7 +47,6 @@ namespace OpenRPA.Views
         public bool Singlestep { get; set; }
         public bool SlowMotion { get; set; }
         public bool Minimize { get; set; } = true;
-        
         public bool VisualTracking { get; set; }
         public bool isRunnning {
             get
@@ -60,98 +64,25 @@ namespace OpenRPA.Views
                 return false;
             }
         }
-        public System.Threading.AutoResetEvent resumeRuntimeFromHost { get; set; }
-        public ToolboxControl InitializeActivitiesToolbox()
+        private object _Properties;
+        public object Properties
         {
-            try
+            get
             {
-                var Toolbox = new ToolboxControl();
-                // get all loaded assemblies
-                IEnumerable<System.Reflection.Assembly> appAssemblies = AppDomain.CurrentDomain.GetAssemblies().OrderBy(a => a.GetName().Name)
-                    .Where(a => a.GetName().Name != "System.ServiceModel.Activities");
-
-                // check if assemblies contain activities
-                int activitiesCount = 0;
-                foreach (System.Reflection.Assembly activityLibrary in appAssemblies)
-                {
-                    try
-                    {
-                        string[] excludeActivities = { "AddValidationError", "AndAlso", "AssertValidation", "CreateBookmarkScope", "DeleteBookmarkScope", "DynamicActivity",
-                            "CancellationScope", "CompensableActivity", "Compensate", "Confirm", "GetChildSubtree", "GetParentChain", "GetWorkflowTree", "Add`3",  "And`3", "As`2", "Cast`2",
-                        "Cast`2", "ArgumentValue`1", "ArrayItemReference`1", "ArrayItemValue`1", "Assign`1", "Constraint`1","CSharpReference`1", "CSharpValue`1", "DelegateArgumentReference`1",
-                            "DelegateArgumentValue`1", "Divide`3", "DynamicActivity`1", "Equal`3", "FieldReference`2", "FieldValue`2", "ForEach`1", "InvokeAction", "InvokeDelegate",
-                        "ArgumentReference`1", "VariableReference`1", "VariableValue`1", "VisualBasicReference`1", "VisualBasicValue`1", "InvokeMethod`1",
-                        "StateMachineWithInitialStateFactory", "ParallelForEach", "ParallelForEachWithBodyFactory", "ForEachWithBodyFactory" };
-
-                        var wfToolboxCategory = new ToolboxCategory(activityLibrary.GetName().Name);
-                        var actvities = from
-                                            activityType in activityLibrary.GetExportedTypes()
-                                        where
-                                            (activityType.IsSubclassOf(typeof(Activity))
-                                            || activityType.IsSubclassOf(typeof(NativeActivity))
-                                            || activityType.IsSubclassOf(typeof(DynamicActivity))
-                                            || activityType.IsSubclassOf(typeof(ActivityWithResult))
-                                            || activityType.IsSubclassOf(typeof(AsyncCodeActivity))
-                                            || activityType.IsSubclassOf(typeof(CodeActivity))
-                                            || activityType.IsSubclassOf(typeof(FlowNode))
-                                            || activityType == typeof(State)
-                                            || activityType == typeof(FinalState)
-                                            || activityType.GetInterfaces().Contains(typeof(IActivityTemplateFactory))
-                                            )
-                                            && activityType.IsVisible
-                                            && activityType.IsPublic
-                                            && !activityType.IsNested
-                                            && !activityType.IsAbstract
-                                            && (activityType.GetConstructor(Type.EmptyTypes) != null)
-                                            && !excludeActivities.Contains(activityType.Name)
-                                            && !activityType.Name.StartsWith("InvokeAction`")
-                                            && !activityType.Name.StartsWith("InvokeFunc`")
-                                            && !activityType.Name.StartsWith("Subtract`")
-                                            && !activityType.Name.StartsWith("GreaterThan`")
-                                            && !activityType.Name.StartsWith("GreaterThanOrEqual`")
-                                            && !activityType.Name.StartsWith("LessThan`")
-                                            && !activityType.Name.StartsWith("LessThanOrEqual`")
-                                            && !activityType.Name.StartsWith("Literal`")
-                                            && !activityType.Name.StartsWith("MultidimensionalArrayItemReference`")
-                                            && !activityType.Name.StartsWith("Multiply`")
-                                            && !activityType.Name.StartsWith("New`")
-                                            && !activityType.Name.StartsWith("NewArray`")
-                                            && !activityType.Name.StartsWith("Or`")
-                                            && !activityType.Name.StartsWith("OrElse")
-                                            && !activityType.Name.EndsWith("`2")
-                                            && !activityType.Name.EndsWith("`3")
-                                            && activityType.Name != "ExcelActivity"
-                                            && activityType.Name != "ExcelActivityOf`1"
-                                        orderby
-                                            activityType.Name
-                                        select
-                                            new ToolboxItemWrapper(activityType, activityType.Name.Replace("`1", ""));
-                        actvities.ToList().ForEach(wfToolboxCategory.Add);
-
-                        if (wfToolboxCategory.Tools.Count > 0)
-                        {
-                            Toolbox.Categories.Add(wfToolboxCategory);
-                            activitiesCount += wfToolboxCategory.Tools.Count;
-                            //if(wfToolboxCategory.CategoryName == "System.Activities")
-                            //{
-                            //    wfToolboxCategory.Tools.Add(new ToolboxItemWrapper(typeof(System.Activities.Core.Presentation.Factories.ForEachWithBodyFactory<>), "ForEach"));
-                            //    wfToolboxCategory.Tools.Add(new ToolboxItemWrapper(typeof(System.Activities.Core.Presentation.Factories.ParallelForEachWithBodyFactory<>), "ParallelForEach"));
-                            //}
-                        }
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-                return Toolbox;
+                return _Properties;
             }
-            catch (Exception ex)
+            set
             {
-                Log.Error(ex, "");
-                MessageBox.Show("InitializeActivitiesToolbox: " + ex.Message);
-                return null;
+                _Properties = value;
+                NotifyPropertyChanged("Properties");
             }
         }
+        private void NotifyPropertyChanged(String propertyName)
+        {
+            PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+        public System.Threading.AutoResetEvent resumeRuntimeFromHost { get; set; }
+
         public System.Activities.Activity lastinserted { get; set; }
         public System.Activities.Presentation.Model.ModelItem lastinsertedmodel { get; set; }
         public Action<WFDesigner> onChanged { get; set; }
@@ -170,6 +101,7 @@ namespace OpenRPA.Views
         {
             GenericTools.RunUI(() =>
             {
+                if (tab == null) return;
                 if (!tab.IsSelected) return;
                 foreach (var i in WorkflowInstance.Instances)
                 {
@@ -184,7 +116,8 @@ namespace OpenRPA.Views
         }
         private void OnKeyUp(Input.InputEventArgs e)
         {
-            GenericTools.RunUI(() => { 
+            GenericTools.RunUI(() => {
+                if (tab == null) return;
                 if (!tab.IsSelected) return;
                 if (e.Key == Input.KeyboardKey.F10 || e.Key == Input.KeyboardKey.F11)
                 {
@@ -240,8 +173,7 @@ namespace OpenRPA.Views
                 ToggleBreakpoint();
             }
         }
-
-        public readonly ClosableTab tab;
+        public readonly Xceed.Wpf.AvalonDock.Layout.LayoutDocument tab;
         public bool ReadOnly
         {
             get
@@ -253,21 +185,17 @@ namespace OpenRPA.Views
                 wfDesigner.Context.Items.GetValue<System.Activities.Presentation.Hosting.ReadOnlyState>().IsReadOnly = value;
             }
         }
-
         private WFDesigner()
         {
             InitializeComponent();
         }
-        public WFDesigner(ClosableTab tab, Workflow workflow, Type[] extratypes)
+        public void ReloadDesigner()
         {
-            this.tab = tab;
-            InitializeComponent();
-            WfToolboxBorder.Child = InitializeActivitiesToolbox();
-            Workflow = workflow;
+            LoadDesigner();
+        }
+        public void LoadDesigner()
+        {
             wfDesigner = new WorkflowDesigner();
-            Input.InputDriver.Instance.onCancel += onCancel;
-            // Register the runtime metadata for the designer.
-            new DesignerMetadata().Register();
             DesignerConfigurationService configService = wfDesigner.Context.Services.GetRequiredService<DesignerConfigurationService>();
             configService.TargetFrameworkName = new System.Runtime.Versioning.FrameworkName(".NETFramework", new Version(4, 5));
             configService.AnnotationEnabled = true;
@@ -287,16 +215,33 @@ namespace OpenRPA.Views
 
             wfDesigner.Context.Services.Publish<IExpressionEditorService>(new EditorService(this));
 
-            if (!string.IsNullOrEmpty(workflow.Xaml))
+
+            //DesignerView designerView = wfDesigner.Context.Services.GetService<DesignerView>();
+            //if (designerView != null)
+            //{
+            //    var modelService = wfDesigner.Context.Services.GetService<ModelService>();
+            //    if (modelService != null)
+            //    {
+            //        designerView.MakeRootDesigner(modelService.Root);
+            //        //designerView.MakeRootDesigner(null);
+            //        Flowchart flowchart = modelService.Root.GetCurrentValue() as Flowchart;
+            //    }
+            //    // Clean up the old workflow, this prevents an error when the old designer had a flowchart in it.
+            //    if (modelService != null)
+            //    {
+            //        modelService.Root.Content.ClearValue();
+            //    }
+            //}
+            if (!string.IsNullOrEmpty(Workflow.Xaml))
             {
-                wfDesigner.Text = workflow.Xaml;
+                wfDesigner.Text = Workflow.Xaml;
                 wfDesigner.Load();
             }
             else
             {
                 Activity wf = new System.Activities.Statements.Sequence { };
                 var ab = new ActivityBuilder();
-                ab.Name = workflow.name;
+                ab.Name = Workflow.name;
                 ab.Implementation = wf;
                 AddVBNamespaceSettings(ab, typeof(Action),
                     typeof(Microsoft.VisualBasic.Collection),
@@ -316,13 +261,13 @@ namespace OpenRPA.Views
             }
             if (global.isConnected)
             {
-                ReadOnly = !workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.update);
+                ReadOnly = !Workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.update);
             }
 
             HasChanged = false;
             wfDesigner.ModelChanged += (sender, e) =>
             {
-                if(!HasChanged)
+                if (!HasChanged)
                 {
                     _modelLocationMapping.Clear();
                     _sourceLocationMapping.Clear();
@@ -334,55 +279,56 @@ namespace OpenRPA.Views
 
                 onChanged?.Invoke(this);
             };
-
-            WfDesignerBorder.Child = wfDesigner.View;
-            WfPropertyBorder.Child = wfDesigner.PropertyInspectorView;
-
-            OutputMessages = MainWindow.tracing.OutputMessages;
-            TraceMessages = MainWindow.tracing.TraceMessages;
-
-
-            var modelItem = wfDesigner.Context.Services.GetService<ModelService>().Root;
-            workflow.name = modelItem.GetValue<string>("Name");
-            tab.Title = workflow.name;
-
             wfDesigner.Context.Items.Subscribe<Selection>(new SubscribeContextCallback<Selection>(SelectionChanged));
 
-            WeakEventManager<System.ComponentModel.INotifyPropertyChanged, System.ComponentModel.PropertyChangedEventArgs>.
-                AddHandler(MainWindow.tracing, "PropertyChanged", traceOnPropertyChanged);
+            try
+            {
+                var ms = wfDesigner.Context.Services.GetService<ModelService>();
+                if (ms != null)
+                {
+                    var modelItem = ms.Root;
+                    Workflow.name = modelItem.GetValue<string>("Name");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Debug(ex.ToString());
+            }
 
+            // WfDesignerBorder.Child = wfDesigner.View;
+            Properties = wfDesigner.PropertyInspectorView;
+
+        }
+        private Type[] extratypes = null;
+        public WFDesigner(Xceed.Wpf.AvalonDock.Layout.LayoutDocument tab, Workflow workflow, Type[] extratypes)
+        {
+            InitializeComponent();
+            this.extratypes = extratypes;
+            DataContext = this;
+            this.tab = tab;
+            //toolbox = InitializeActivitiesToolbox();
+            //// WfToolboxBorder.Child = toolbox;
+            Workflow = workflow;
+            Input.InputDriver.Instance.onCancel += onCancel;
+            if (tab != null)
+            {
+                tab.Title = workflow.name;
+            }
+            //WeakEventManager<System.ComponentModel.INotifyPropertyChanged, System.ComponentModel.PropertyChangedEventArgs>.
+            //    AddHandler(MainWindow.tracing, "PropertyChanged", traceOnPropertyChanged);
             if(isRunnning)
             {
                 ReadOnly = true;
             }
+            LoadDesigner();
         }
-        private void traceOnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "OutputMessages")
-                OutputMessages = MainWindow.tracing.OutputMessages;
-            if (e.PropertyName == "TraceMessages")
-                TraceMessages = MainWindow.tracing.TraceMessages;
-        }
-        private string _OutputMessages = "";
-        public string OutputMessages
-        {
-            get { return _OutputMessages; }
-            set
-            {
-                _OutputMessages = value;
-                OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("OutputMessages"));
-            }
-        }
-        private string _TraceMessages = "";
-        public string TraceMessages
-        {
-            get { return _TraceMessages; }
-            set
-            {
-                _TraceMessages = value;
-                OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("TraceMessages"));
-            }
-        }
+        //private void traceOnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        //{
+        //    if (e.PropertyName == "OutputMessages")
+        //        OutputMessages = MainWindow.tracing.OutputMessages;
+        //    if (e.PropertyName == "TraceMessages")
+        //        TraceMessages = MainWindow.tracing.TraceMessages;
+        //}
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
         {
@@ -1030,12 +976,21 @@ namespace OpenRPA.Views
                 _ = global.webSocketClient.QueueMessage(instance.queuename, command, instance.correlationId);
                 onChanged?.Invoke(this);
             }
+            if (instance.state == "idle" && Singlestep == true)
+            {
+                GenericTools.minimize(GenericTools.mainWindow);
+                //GenericTools.RunUI(() =>
+                //{
+                //    SetDebugLocation(null);
+                //    Properties = wfDesigner.PropertyInspectorView;
+                //});
+            }
             if (instance.state == "completed")
             {
                 GenericTools.RunUI(() =>
                 {
                     SetDebugLocation(null);
-                    WfPropertyBorder.Child = wfDesigner.PropertyInspectorView;
+                    Properties = wfDesigner.PropertyInspectorView;
                 });
             }
             if (instance.state != "idle")
@@ -1078,7 +1033,7 @@ namespace OpenRPA.Views
 
                 GenericTools.RunUI(() =>
                 {
-                    WfPropertyBorder.Child = wfDesigner.PropertyInspectorView;
+                    Properties = wfDesigner.PropertyInspectorView;
                     if (global.isConnected)
                     {
                         ReadOnly = !Workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.update);
@@ -1115,7 +1070,7 @@ namespace OpenRPA.Views
                 Singlestep = false;
                 BreakPointhit = false;
                 if (!VisualTracking && Minimize) GenericTools.minimize(GenericTools.mainWindow);
-                resumeRuntimeFromHost.Set();
+                if(resumeRuntimeFromHost!=null) resumeRuntimeFromHost.Set();
                 return;
             }
             wfDesigner.Flush();
@@ -1141,6 +1096,22 @@ namespace OpenRPA.Views
                         failCounter++;
                     }
                 }
+                if (_activityIdMapping.Count == 0)
+                {
+                    ReloadDesigner();
+                }
+                if (_activityIdMapping.Count == 0)
+                {
+                    int failCounter = 0;
+                    while (_activityIdMapping.Count == 0 && failCounter < 3)
+                    {
+                        System.Windows.Forms.Application.DoEvents();
+                        InitializeStateEnvironment(true);
+                        System.Threading.Thread.Sleep(500);
+                        failCounter++;
+                    }
+                }
+
             });
             if (_activityIdMapping.Count == 0)
             {
@@ -1166,9 +1137,12 @@ namespace OpenRPA.Views
                 {
                     form.addVariable(x.Key, x.Value.value, x.Value.type);
                 });
-                WfPropertyBorder.Child = form;
+                Properties = form;
             });
         }
-
+        public override string ToString()
+        {
+            return Workflow.name;
+        }
     }
 }

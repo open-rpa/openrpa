@@ -20,6 +20,11 @@ namespace OpenRPA.Views
     /// </summary>
     public partial class OpenProject : UserControl
     {
+        public DelegateCommand DockAsDocumentCommand = new DelegateCommand((e) => { }, (e) => false);
+        public DelegateCommand AutoHideCommand { get; set; } = new DelegateCommand((e) => { }, (e) => false);
+        public bool CanClose { get; set; } = false;
+        public bool CanHide { get; set; } = false;
+
         public event Action<Workflow> onOpenWorkflow;
         public event Action<Project> onOpenProject;
         //public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; }

@@ -1,26 +1,19 @@
-﻿<Window x:Class="OpenRPA.MainWindow"
+﻿<Window x:Class="OpenRPA.MainWindow2"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenRPA"
-        
         xmlns:ribbon="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
-        xmlns:dockctrl="clr-namespace:Xceed.Wpf.AvalonDock.Controls;assembly=Xceed.Wpf.AvalonDock"
         mc:Ignorable="d"
         Loaded="Window_Loaded" Closed="Window_Closed"
         Title="OpenRPA" Height="750" Width="1200">
     <Window.Resources>
         <local:BindingProxy x:Key="proxy" Data="{Binding}" />
     </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition  Height="120" />
-            <RowDefinition />
-            <RowDefinition Height="25"/>
-        </Grid.RowDefinitions>
-        <Ribbon DockPanel.Dock="Top" Margin="0,-22,0,0" Grid.Row="0">
+    <DockPanel>
+        <Ribbon DockPanel.Dock="Top" Margin="0,-22,0,0">
+
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu SmallImageSource="/OpenRPA;component/Resources/Buttons/Export.png">
                     <RibbonApplicationMenuItem Header="Settings" ImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
@@ -48,10 +41,10 @@
                         </RibbonGallery>
                     </RibbonApplicationMenu.AuxiliaryPaneContent>
 
-
+                    
                 </RibbonApplicationMenu>
             </Ribbon.ApplicationMenu>
-
+            
             <!-- 
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu Visibility="Collapsed">
@@ -127,7 +120,7 @@
                         <RibbonCheckBox IsChecked="{Binding VisualTracking}" Command="{Binding Data.VisualTrackingCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="VisualTracking"></TextBlock>
-
+                        
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding SlowMotion}" Command="{Binding Data.SlowMotionCommand, Source={StaticResource proxy}}" 
@@ -163,13 +156,6 @@
 
                 </RibbonGroup>
             </RibbonTab>
-            <!--<RibbonTab Header="Windows">
-                <RibbonGroup Header="Windows">
-                    <StackPanel>
-                        <ribbon:RibbonCheckBox Label="Toolbox" IsChecked="{Binding ElementName=Toolbox, Path=IsHidden}"></ribbon:RibbonCheckBox>
-                    </StackPanel>
-                </RibbonGroup>
-            </RibbonTab>-->
             <!-- 
             <RibbonTab x:Name="rbnTab2" Header="Tab2">
                 <RibbonGroup x:Name="rbnGr3" Header="Other Group">
@@ -184,142 +170,73 @@
             -->
         </Ribbon>
 
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
 
-        <avalonDock:DockingManager Grid.Row="1" x:Name="DManager" ActiveContentChanged="DManager_ActiveContentChanged">
-            <avalonDock:DockingManager.Theme>
-                <!--<avalonDock:AeroTheme/>-->
-                <avalonDock:VS2010Theme/>
-                <!--<avalonDock:ExpressionDarkTheme/>-->
-                <!--<avalonDock:ExpressionLightTheme/>-->
-                <!--<avalonDock:GenericTheme/>-->
-                <!--<avalonDock:MetroTheme/>-->
-            </avalonDock:DockingManager.Theme>
-            <avalonDock:DockingManager.LayoutItemContainerStyle>
-                <Style TargetType="{x:Type dockctrl:LayoutItem}" >
-                    <Setter Property="Title" Value="{Binding Model.Title}" />
-                    <Setter Property="CloseCommand" Value="{Binding Model.CloseCommand}" />
-                    <Setter Property="CanClose"  Value="{Binding Model.CanClose}" />
-                    <Setter Property="dockctrl:LayoutAnchorableItem.CanHide" Value="{Binding Model.CanHide}" />
-                </Style>
-            </avalonDock:DockingManager.LayoutItemContainerStyle>
-            <!--<avalonDock:DockingManager.AnchorablePaneControlStyle>
-                <Style TargetType="{x:Type dockctrl:LayoutAnchorableItem}" >
-                    <Setter Property="dockctrl:LayoutAnchorableItem.CanHide"  Value="False" />
-                </Style>
-            </avalonDock:DockingManager.AnchorablePaneControlStyle>-->
-            <avalonDock:LayoutRoot>
-                <avalonDock:LayoutRoot.LeftSide>
-                    <avalonDock:LayoutAnchorSide>
-                        <avalonDock:LayoutAnchorGroup >
-                            <avalonDock:LayoutAnchorable  
-                                CanClose="False" CanAutoHide="True" CanHide="False" Title="Toolbox" ContentId="Toolbox" AutoHideWidth="250"
-                                >
-                                <ContentControl Content="{Binding Toolbox}" Padding="0" Margin="0,0,0,0" />
-                            </avalonDock:LayoutAnchorable>
+            <TabControl x:Name="mainTabControl" SelectionChanged="MainTabControl_SelectionChanged">
 
-                        </avalonDock:LayoutAnchorGroup>
-                    </avalonDock:LayoutAnchorSide>
-                </avalonDock:LayoutRoot.LeftSide>
+            </TabControl>
 
-                <avalonDock:LayoutPanel>
-                    <avalonDock:LayoutDocumentPane x:Name="dockpane">
-                    </avalonDock:LayoutDocumentPane>
-                </avalonDock:LayoutPanel>
-
-                <avalonDock:LayoutRoot.BottomSide>
-                    <avalonDock:LayoutAnchorSide>
-                        <avalonDock:LayoutAnchorGroup >
-                            <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="False"  x:Name="Logging" Title="Logging" ContentId="Logging" >
-                                <TextBox Text="{Binding tracing.TraceMessages}" TextWrapping="Wrap" IsReadOnly="False" Margin="0,0,0,0" />
-                            </avalonDock:LayoutAnchorable>
-                            <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="False"  x:Name="Output" Title="Output" ContentId="Output" >
-                                <TextBox Text="{Binding tracing.OutputMessages}" TextWrapping="Wrap" IsReadOnly="False" Margin="0,0,0,0" />
-                            </avalonDock:LayoutAnchorable>
-
-                        </avalonDock:LayoutAnchorGroup>
-                    </avalonDock:LayoutAnchorSide>
-                </avalonDock:LayoutRoot.BottomSide>
-
-                
-                <avalonDock:LayoutRoot.RightSide>
-                    <avalonDock:LayoutAnchorSide>
-                        <avalonDock:LayoutAnchorGroup >
-                            <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="False" Title="Properties" ContentId="Properties" AutoHideWidth="250"
-                                                         >
-                                <ContentControl Content="{Binding Path=SelectedContent.Properties}" Padding="0" Margin="0,0,0,0" />
-                            </avalonDock:LayoutAnchorable>
-
-                        </avalonDock:LayoutAnchorGroup>
-                    </avalonDock:LayoutAnchorSide>
-                </avalonDock:LayoutRoot.RightSide>
-                <!-- 
-                <avalonDock:LayoutPanel>
-                    <avalonDock:LayoutAnchorablePaneGroup DockWidth="100">
-                        <avalonDock:LayoutAnchorablePane>
-                            <avalonDock:LayoutAnchorable Title="text1" ContentId="text1">
-                                <TextBox  TextWrapping="Wrap" AcceptsReturn="True"></TextBox>
-                            </avalonDock:LayoutAnchorable>
-
-                            <avalonDock:LayoutAnchorable Title="text2" ContentId="text2">
-                                <TextBox  TextWrapping="Wrap" AcceptsReturn="True"></TextBox>
-                            </avalonDock:LayoutAnchorable>
-                        </avalonDock:LayoutAnchorablePane>
-                    </avalonDock:LayoutAnchorablePaneGroup>
-                    <avalonDock:LayoutDocumentPane x:Name="dockpane">
-                        <avalonDock:LayoutDocument Title="document1" ContentId="doc1">
-                            <TextBox AcceptsReturn="True" TextWrapping="Wrap"></TextBox>
-                        </avalonDock:LayoutDocument>
-
-                        <avalonDock:LayoutAnchorable Title="document2" ContentId="doc1">
-                            <TextBox AcceptsReturn="True" TextWrapping="Wrap"></TextBox>
-                        </avalonDock:LayoutAnchorable>
-                    </avalonDock:LayoutDocumentPane>
-
-                </avalonDock:LayoutPanel>
-                            -->
-
-            </avalonDock:LayoutRoot>
-
-        </avalonDock:DockingManager>
-
-
-        <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="2" Height="25" Background="Gray">
-            <StatusBar FocusManager.IsFocusScope="True" x:Name="StatusBar">
-                <StatusBarItem x:Name="LabelStatusBar" Content="Disconnected" />
-                <StatusBarItem VerticalAlignment="Top" HorizontalContentAlignment="Center">
-                    <ItemsControl x:Name="lvDataBinding">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Margin="10,0,10,0">
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Status}" Value="">
-                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                    <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}{0} : {1}">
-                                            <Binding Path="Name" />
-                                            <Binding Path="Status" />
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StatusBarItem>
+            <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="1" Height="25" Grid.ColumnSpan="3" Background="Gray">
+                <StatusBar FocusManager.IsFocusScope="True" x:Name="StatusBar">
+                    <StatusBarItem x:Name="LabelStatusBar" Content="Disconnected" />
+                    <StatusBarItem VerticalAlignment="Top" HorizontalContentAlignment="Center">
+                        <ItemsControl x:Name="lvDataBinding">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Margin="10,0,10,0">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} : {1}">
+                                                <Binding Path="Name" />
+                                                <Binding Path="Status" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StatusBarItem>
+                </StatusBar>
             </StatusBar>
-        </StatusBar>
+            <!-- 
+            <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="1" Height="25" Grid.ColumnSpan="3" Background="Gray">
+                <StackPanel Orientation="Horizontal">
+                    <StatusBarItem x:Name="LabelStatusBar" Foreground="White" FontSize="12">
+                    </StatusBarItem>
+                    <ListView Margin="10" Name="lvDataBinding">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"></StackPanel>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Status}" FontWeight="Bold" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+            </StatusBar>
+                        -->
 
-    </Grid>
-
+        </Grid>
+    </DockPanel>
 
 </Window>

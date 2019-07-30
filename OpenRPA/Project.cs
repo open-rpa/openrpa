@@ -130,7 +130,14 @@ namespace OpenRPA
             SaveFile();
             foreach (var workflow in Workflows)
             {
-                await workflow.Save();
+                try
+                {
+                    await workflow.Save();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error saving " + workflow.name, ex);
+                }
             }
             if (!global.isConnected) return;
             if (string.IsNullOrEmpty(_id))

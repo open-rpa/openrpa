@@ -48,6 +48,9 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Notifications.Wpf, Version=0.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Notifications.Wpf.Updated.0.1.1\lib\net461\Notifications.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -73,6 +76,7 @@
     <Compile Include="AsyncTaskCodeActivity.cs" />
     <Compile Include="AutomationHelper.cs" />
     <Compile Include="AutomationUtil.cs" />
+    <Compile Include="CustomSelectEditor.cs" />
     <Compile Include="entity\ace.cs" />
     <Compile Include="entity\apibase.cs" />
     <Compile Include="entity\apiuser.cs" />

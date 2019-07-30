@@ -9,7 +9,7 @@
         xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
         xmlns:dockctrl="clr-namespace:Xceed.Wpf.AvalonDock.Controls;assembly=Xceed.Wpf.AvalonDock"
         mc:Ignorable="d"
-        Loaded="Window_Loaded" Closed="Window_Closed" Closing="Window_Closing"
+        Loaded="Window_Loaded" Closed="Window_Closed" Closing="Window_Closing" StateChanged="Window_StateChanged"
         Title="OpenRPA" Height="750" Width="1200">
     <Window.Resources>
         <local:BindingProxy x:Key="proxy" Data="{Binding}" />

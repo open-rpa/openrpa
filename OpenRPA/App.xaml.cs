@@ -27,8 +27,9 @@ namespace OpenRPA
         {
             //events comes here
             MainWindow.Visibility = Visibility.Visible;
-            MainWindow.WindowState = WindowState.Normal;
+            //MainWindow.WindowState = WindowState.Normal;
             notifyIcon.Visible = false;
+            Interfaces.GenericTools.restore(Interfaces.GenericTools.mainWindow);
         }
     }
 }

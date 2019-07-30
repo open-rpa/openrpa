@@ -81,6 +81,9 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Notifications.Wpf, Version=0.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Notifications.Wpf.Updated.0.1.1\lib\net461\Notifications.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Activities" />
     <Reference Include="System.Activities.Core.Presentation" />
@@ -128,6 +131,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Activities\ShowNotification.cs" />
+    <Compile Include="Activities\ShowNotificationDesigner.xaml.cs">
+      <DependentUpon>ShowNotificationDesigner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\RemovePermission.cs" />
     <Compile Include="Activities\GrantPermission.cs" />
     <Compile Include="Activities\RemovePermissionDesigner.xaml.cs">
@@ -263,6 +270,10 @@
     <Compile Include="Workflow.cs" />
     <Compile Include="WorkflowInstance.cs" />
     <Compile Include="WorkflowTrackingParticipant.cs" />
+    <Page Include="Activities\ShowNotificationDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Activities\RemovePermissionDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

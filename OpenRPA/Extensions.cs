@@ -1,4 +1,5 @@
-﻿using OpenRPA.Net;
+﻿using OpenRPA.Interfaces;
+using OpenRPA.Net;
 using System;
 using System.Activities;
 using System.Collections.Generic;
@@ -11,6 +12,35 @@ namespace OpenRPA
 {
     public static class Extensions
     {
+        public static object PropertyValue(this object obj, string propertyName)
+        {
+            try
+            {
+                if (obj != null)
+                {
+                    PropertyInfo prop = obj.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public);
+                    if (prop != null)
+                    {
+                        object val = prop.GetValue(obj, null);
+                        return val;
+                        //string sVal = Convert.ToString(val);
+                        //if (sVal == propertyValue)
+                        //{
+                        //    Log.Debug(obj.GetType().FullName + "Has the Value" + propertyValue);
+                        //    return true;
+                        //}
+                    }
+                }
+
+                Log.Debug("No property with this value");
+                return null;
+            }
+            catch
+            {
+                Log.Debug("An error occurred.");
+                return false;
+            }
+        }
         public static string replaceEnvironmentVariable(this string filename)
         {
             var USERPROFILE = Environment.GetEnvironmentVariable("USERPROFILE");

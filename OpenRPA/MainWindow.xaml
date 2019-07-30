@@ -248,7 +248,7 @@
                         <avalonDock:LayoutAnchorGroup >
                             <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="False" Title="Properties" ContentId="Properties" AutoHideWidth="250"
                                                          >
-                                <ContentControl Content="{Binding Path=SelectedContent.Properties}" Padding="0" Margin="0,0,0,0" />
+                                <ContentControl Content="{Binding Path=LastDesigner.Properties}" Padding="0" Margin="0,0,0,0" />
                             </avalonDock:LayoutAnchorable>
 
                         </avalonDock:LayoutAnchorGroup>

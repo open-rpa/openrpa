@@ -120,6 +120,7 @@ namespace OpenRPA
 
             }
             NotifyPropertyChanged("SelectedContent");
+            NotifyPropertyChanged("LastDesigner");
         }
         public object SelectedContent
         {
@@ -127,6 +128,15 @@ namespace OpenRPA
             {
                 var b = DManager.ActiveContent;
                 return b;
+            }
+        }
+        private Views.WFDesigner _LastDesigner;
+        public Views.WFDesigner LastDesigner
+        {
+            get
+            {
+                if (designer != null) _LastDesigner = designer;
+                return _LastDesigner;
             }
         }
         public LayoutDocumentPane mainTabControl

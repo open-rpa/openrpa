@@ -9,7 +9,7 @@
         xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
         xmlns:dockctrl="clr-namespace:Xceed.Wpf.AvalonDock.Controls;assembly=Xceed.Wpf.AvalonDock"
         mc:Ignorable="d"
-        Loaded="Window_Loaded" Closed="Window_Closed"
+        Loaded="Window_Loaded" Closed="Window_Closed" Closing="Window_Closing"
         Title="OpenRPA" Height="750" Width="1200">
     <Window.Resources>
         <local:BindingProxy x:Key="proxy" Data="{Binding}" />
@@ -25,8 +25,10 @@
                 <RibbonApplicationMenu SmallImageSource="/OpenRPA;component/Resources/Buttons/Export.png">
                     <RibbonApplicationMenuItem Header="Settings" ImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
                                                Command="{Binding Data.SettingsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
-                    <RibbonApplicationMenuItem Header="Signout" ImageSource="/OpenRPA;component/Resources/Buttons/Signout.png" 
+                    <RibbonApplicationMenuItem Header="Signout" ImageSource="/OpenRPA;component/Resources/Buttons/Revert.png" 
                                                Command="{Binding Data.SignoutCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                    <RibbonApplicationMenuItem Header="Exit Application" ImageSource="/OpenRPA;component/Resources/Buttons/Signout.png" 
+                                               Command="{Binding Data.ExitAppCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
 
 
                     <RibbonApplicationMenu.AuxiliaryPaneContent>

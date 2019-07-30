@@ -37,7 +37,7 @@ namespace OpenRPA
         /// </summary>
         /// <param name="execute">Delegate to execute when Execute is called on the command.  This can be null to just hook up a CanExecute delegate.</param>
         /// <remarks><seealso cref="CanExecute"/> will always return true.</remarks>
-        public RelayCommand(Action<T> execute)
+        public RelayCommand(Action<T> execute, object p)
             : this(execute, null)
         {
         }

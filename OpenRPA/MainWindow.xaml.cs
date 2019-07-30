@@ -55,6 +55,15 @@ namespace OpenRPA
             }
         }
         public Views.WFToolbox Toolbox { get; set; }
+        public bool allowQuite { get; set; } = false;
+        
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (allowQuite) return;
+            App.notifyIcon.Visible = true;
+            e.Cancel = true;
+            this.Visibility = Visibility.Hidden;
+        }
         public MainWindow()
         {
             InitializeComponent();
@@ -73,7 +82,6 @@ namespace OpenRPA
             cancelkey.Text = Config.local.cancelkey;
             OpenRPA.Input.InputDriver.Instance.initCancelKey(cancelkey.Text);
             InputDriver.Instance.onCancel += onCancel;
-            Toolbox = new Views.WFToolbox();
             NotifyPropertyChanged("Toolbox");
         }
         private void DManager_ActiveContentChanged(object sender, EventArgs e)
@@ -221,6 +229,7 @@ namespace OpenRPA
                 return global.webSocketClient.isConnected;
             }
         }
+        public ICommand ExitAppCommand { get { return new RelayCommand<object>(onExitApp, (e)=> true ); } }
         public ICommand SettingsCommand { get { return new RelayCommand<object>(onSettings, canSettings); } }
         public ICommand MinimizeCommand { get { return new RelayCommand<object>(onMinimize, canMinimize); } }
         public ICommand VisualTrackingCommand { get { return new RelayCommand<object>(onVisualTracking, canVisualTracking); } }
@@ -409,6 +418,11 @@ namespace OpenRPA
                     MessageBox.Show(ex.Message);
                 }
             }, null);
+        }
+        private void onExitApp(object _item)
+        {
+            allowQuite = true;
+            Close();
         }
         private void onSave(object sender, ExecutedRoutedEventArgs e)
         {
@@ -1228,6 +1242,16 @@ namespace OpenRPA
                     if (dp != null) dp.OnDetector += OnDetector;
                 }
             }
+            try
+            {
+                Toolbox = new Views.WFToolbox();
+                NotifyPropertyChanged("Toolbox");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                throw;
+            }
             Task.Run(() =>
             {
                 ExpressionEditor.EditorUtil.init();
@@ -1467,6 +1491,7 @@ namespace OpenRPA
         {
             AutomationHelper.syncContext.Post(async o =>
             {
+                // App.notifyIcon.ShowBalloonTip(5000, "tooltiptitle", "tipMessage", System.Windows.Forms.ToolTipIcon.Info);
                 var sw = new System.Diagnostics.Stopwatch();
                 sw.Start();
                 Log.Debug("WebSocketClient_OnOpen::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));

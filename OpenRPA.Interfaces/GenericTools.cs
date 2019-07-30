@@ -50,8 +50,11 @@ namespace OpenRPA.Interfaces
         {
             RunUI(window, () =>
             {
-                IntPtr hWnd = new System.Windows.Interop.WindowInteropHelper(window).Handle;
-                restore(hWnd);
+                if (window.WindowState == System.Windows.WindowState.Minimized)
+                {
+                    IntPtr hWnd = new System.Windows.Interop.WindowInteropHelper(window).Handle;
+                    restore(hWnd);
+                }
             });
         }
         public static void restore(IntPtr hWnd)

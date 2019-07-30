@@ -55,14 +55,21 @@ namespace OpenRPA
             }
         }
         public Views.WFToolbox Toolbox { get; set; }
-        public bool allowQuite { get; set; } = false;
-        
+        public bool allowQuite { get; set; } = true;
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (allowQuite) return;
             App.notifyIcon.Visible = true;
             e.Cancel = true;
             this.Visibility = Visibility.Hidden;
+        }
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if(WindowState== WindowState.Minimized)
+            {
+                this.Visibility = Visibility.Hidden;
+                App.notifyIcon.Visible = true;
+            }
         }
         public MainWindow()
         {

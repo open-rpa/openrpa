@@ -89,7 +89,6 @@
       <DependentUpon>WriteCellDesigner.xaml</DependentUpon>
     </Compile>
     <Compile Include="converters.cs" />
-    <Compile Include="CustomSelectEditor.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GenericArgumentTypeUpdater.cs" />
     <Compile Include="Plugin.cs" />

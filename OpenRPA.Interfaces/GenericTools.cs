@@ -52,6 +52,7 @@ namespace OpenRPA.Interfaces
             {
                 if (window.WindowState == System.Windows.WindowState.Minimized)
                 {
+                    window.Visibility = System.Windows.Visibility.Visible;
                     IntPtr hWnd = new System.Windows.Interop.WindowInteropHelper(window).Handle;
                     restore(hWnd);
                 }
@@ -108,5 +109,7 @@ namespace OpenRPA.Interfaces
             }
         }
 
+
+        public static Notifications.Wpf.NotificationManager notificationManager { get; set; } = new Notifications.Wpf.NotificationManager();
     }
 }

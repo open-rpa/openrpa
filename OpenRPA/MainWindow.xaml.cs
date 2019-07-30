@@ -55,6 +55,7 @@ namespace OpenRPA
             }
         }
         public Views.WFToolbox Toolbox { get; set; }
+        
         public bool allowQuite { get; set; } = true;
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {

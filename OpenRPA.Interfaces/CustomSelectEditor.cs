@@ -5,13 +5,16 @@ using System.Activities.Expressions;
 using System.Activities.Presentation.PropertyEditing;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace OpenRPA.Office
+namespace OpenRPA.Interfaces
 {
-    class CustomSelectEditor : PropertyValueEditor
+    public class CustomSelectEditor : PropertyValueEditor
     {
 
         public CustomSelectEditor()
@@ -104,5 +107,4 @@ namespace OpenRPA.Office
             return inArgument;
         }
     }
-
 }

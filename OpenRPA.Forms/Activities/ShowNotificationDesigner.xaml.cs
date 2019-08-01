@@ -11,7 +11,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace OpenRPA.Activities
+namespace OpenRPA.Forms.Activities
 {
     public partial class ShowNotificationDesigner : INotifyPropertyChanged
     {

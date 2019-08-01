@@ -113,7 +113,7 @@ namespace OpenRPA.Windows
                     element = pathToRoot[i];
                     WindowsSelectorItem s = new WindowsSelectorItem(selector[(i + 1)]);
                     if (!s.Match(element)) {
-                        Log.Debug("Element " + i + " does not match with selector");
+                        Log.Verbose("WindowsClickDetectorPlugin: Element " + i + " does not match with selector");
                         return;
                     }
                 }

@@ -107,7 +107,6 @@ namespace OpenRPA.Activities
                     }
                     else
                     {
-                        //rpaExtension.Current.debugWriteLine("Recived property " + prop.Key + " but no variable exists to save the value in " + prop.Value);
                         Log.Debug("Recived property " + prop.Key + " but no variable exists to save the value in " + prop.Value);
                     }
                 }

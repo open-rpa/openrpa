@@ -1,0 +1,35 @@
+﻿<Window x:Class="OpenRPA.Forms.Activities.Form"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenRPA.Forms.Activities"
+        xmlns:f="clr-namespace:OpenRPA.Forms"
+        mc:Ignorable="d"
+        xmlns:forms="clr-namespace:Forge.Forms.Controls;assembly=Forge.Forms"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Form Designer" Height="450" Width="800" Icon="/OpenRPA.Forms;component/Resources/designer/form30.png">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <materialDesign:Card
+            Grid.Column="0"
+            MaxWidth="540"
+            Margin="8"
+            VerticalAlignment="Center">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                <ScrollViewer.Resources>
+                    <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FFFFFFFF" />
+                </ScrollViewer.Resources>
+                <forms:DynamicForm Margin="12,12,12,8" x:Name="df" Model="{Binding CompiledDefinition}" Loaded="Df_Loaded" Context="Context" OnAction="DynamicForm_OnAction">
+                    <f:PushBindingManager.PushBindings>
+                        <f:PushBinding Path="CurrentModel" TargetProperty="Value" />
+                    </f:PushBindingManager.PushBindings>
+                </forms:DynamicForm>
+            </ScrollViewer>
+        </materialDesign:Card>
+    </Grid>
+    </Window>

@@ -1,0 +1,73 @@
+﻿<Window x:Class="OpenRPA.Forms.Activities.FormDesigner"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenRPA.Forms.Activities"
+        xmlns:f="clr-namespace:OpenRPA.Forms"
+        mc:Ignorable="d"
+        xmlns:forms="clr-namespace:Forge.Forms.Controls;assembly=Forge.Forms"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Form Designer" Height="450" Width="800" Icon="/OpenRPA.Forms;component/Resources/designer/form30.png">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <materialDesign:Card
+            Grid.Column="0"
+            MaxWidth="540"
+            Margin="8"
+            VerticalAlignment="Center">
+            <ScrollViewer VerticalScrollBarVisibility="Auto"  PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                <ScrollViewer.Resources>
+                    <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FFFFFFFF" />
+                </ScrollViewer.Resources>
+                <!--<forms:DynamicForm Margin="12,12,12,8" Model="{Binding CompiledDefinition}" >
+                    <local:PushBindingManager.PushBindings>
+                        <local:PushBinding Path="CurrentModel" TargetProperty="Value" />
+                        <local:PushBinding Path="Form"  TargetProperty="" />
+                    </local:PushBindingManager.PushBindings>
+                </forms:DynamicForm>-->
+
+                <forms:DynamicForm Margin="12,12,12,8" Model="{Binding CompiledDefinition}">
+                    <!--<f:PushBindingManager.PushBindings>
+                        <f:PushBinding Path="CurrentModel" TargetProperty="Value" />
+                    </f:PushBindingManager.PushBindings>-->
+                </forms:DynamicForm>
+                <!--<forms:DynamicForm Margin="12,12,12,8" Model="{Binding CompiledDefinition}" Context="{Binding CurrentModel}">
+                    <local:PushBindingManager.PushBindings>
+                        <local:PushBinding Path="CurrentModel" TargetProperty="Value" />
+                        <local:PushBinding Path="Form"  TargetProperty="" />
+                    </local:PushBindingManager.PushBindings>
+                </forms:DynamicForm>-->
+            </ScrollViewer>
+        </materialDesign:Card>
+        <materialDesign:Card
+            Grid.Column="1"
+            VerticalAlignment="Stretch">
+            <Grid Margin="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBox
+                    Height="Auto"
+                    VerticalAlignment="Stretch"
+                    VerticalContentAlignment="Top"
+                    materialDesign:HintAssist.Hint="XML Definition"
+                    AcceptsReturn="True"
+                    FontFamily="Consolas"
+                    Text="{Binding XmlString}"
+                    TextWrapping="Wrap"
+                    VerticalScrollBarVisibility="Auto" />
+                <Button
+                    Grid.Row="1"
+                    Margin="0,8,0,0" Click="BuildDefinition"
+                    Content="BUILD FORM" />
+            </Grid>
+        </materialDesign:Card>
+    </Grid>
+    </Window>

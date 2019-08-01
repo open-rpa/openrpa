@@ -943,6 +943,7 @@ namespace OpenRPA.Views
             {
                 GenericTools.RunUI(() =>
                 {
+                    GenericTools.restore();
                     NavigateTo(model);
                     SetDebugLocation(location);
 

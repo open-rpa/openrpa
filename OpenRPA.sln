@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.Image", "OpenRPA.Im
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.AHK", "OpenRPA.AHK\OpenRPA.AHK.csproj", "{69ADD5F8-9036-4FE3-BBDC-175E49560C2C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.Forms", "OpenRPA.Forms\OpenRPA.Forms.csproj", "{073DC318-CEF7-469C-9FEF-91F3314976CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,10 @@ Global
 		{69ADD5F8-9036-4FE3-BBDC-175E49560C2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69ADD5F8-9036-4FE3-BBDC-175E49560C2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69ADD5F8-9036-4FE3-BBDC-175E49560C2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{073DC318-CEF7-469C-9FEF-91F3314976CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{073DC318-CEF7-469C-9FEF-91F3314976CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{073DC318-CEF7-469C-9FEF-91F3314976CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{073DC318-CEF7-469C-9FEF-91F3314976CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

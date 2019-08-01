@@ -25,6 +25,10 @@ namespace OpenRPA.Interfaces
         public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         public static extern int SetForegroundWindow(IntPtr hWnd);
+        public static void minimize()
+        {
+            minimize(mainWindow);
+        }
         public static void minimize(System.Windows.Window window)
         {
             RunUI(window, () =>
@@ -42,6 +46,7 @@ namespace OpenRPA.Interfaces
             {
                 if (mainWindow.WindowState == System.Windows.WindowState.Minimized)
                 {
+                    mainWindow.Visibility = System.Windows.Visibility.Visible;
                     restore(handle);
                 }
             });
@@ -76,6 +81,7 @@ namespace OpenRPA.Interfaces
             }
         }
         public static System.Windows.Window mainWindow { get; set; }
+        public static IDesigner designer { get => ((iMainWindow)mainWindow).designer; }
 
         public static void RunUI(Action action)
         {
@@ -109,7 +115,5 @@ namespace OpenRPA.Interfaces
             }
         }
 
-
-        public static Notifications.Wpf.NotificationManager notificationManager { get; set; } = new Notifications.Wpf.NotificationManager();
     }
 }

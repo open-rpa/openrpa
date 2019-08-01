@@ -8,13 +8,17 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Notifications.Wpf;
 using System.Data;
 
-namespace OpenRPA.Activities
+namespace OpenRPA.Forms.Activities
 {
+    using ToastNotifications.Messages;
+    using ToastNotifications;
+    using ToastNotifications.Lifetime;
+    using ToastNotifications.Position;
+
     [System.ComponentModel.Designer(typeof(ShowNotificationDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.prompt.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.prompt.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class ShowNotification : CodeActivity
     {
@@ -36,20 +40,43 @@ namespace OpenRPA.Activities
         [Editor(typeof(SelectNotificationTypeEditor), typeof(System.Activities.Presentation.PropertyEditing.ExtendedPropertyValueEditor))]
         public InArgument<string> NotificationType { get; set; }
 
+        public static Notifier notifier;
         protected override void Execute(CodeActivityContext context)
         {
             var title = Title.Get(context);
             var message = Message.Get(context);
             var duration = Duration.Get(context);
             var notificationType = NotificationType.Get(context);
-            Notifications.Wpf.NotificationType nt = Notifications.Wpf.NotificationType.Information;
-            nt = (Notifications.Wpf.NotificationType)Enum.Parse(typeof(Notifications.Wpf.NotificationType), notificationType);
-            GenericTools.notificationManager.Show(new NotificationContent
+            if(notifier==null)
             {
-                Title = title,
-                Message = message,
-                Type = nt
-            }, expirationTime: duration);
+                notifier = new Notifier(cfg =>
+                {
+                    //cfg.PositionProvider = new WindowPositionProvider(
+                    //    parentWindow: GenericTools.mainWindow,
+                    //    corner: Corner.TopRight,
+                    //    offsetX: 10,
+                    //    offsetY: 10);
+                    cfg.PositionProvider = new PrimaryScreenPositionProvider(
+           corner: Corner.BottomRight,
+           offsetX: 10,
+           offsetY: 10);
+                    cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                        notificationLifetime: TimeSpan.FromSeconds(3),
+                        maximumNotificationCount: MaximumNotificationCount.FromCount(5));
+
+                    cfg.Dispatcher = System.Windows.Application.Current.Dispatcher;
+                });
+            }
+            notifier.ShowInformation(message);
+            
+            //Notifications.Wpf.NotificationType nt = Notifications.Wpf.NotificationType.Information;
+            //nt = (Notifications.Wpf.NotificationType)Enum.Parse(typeof(Notifications.Wpf.NotificationType), notificationType);
+            //GenericTools.notificationManager.Show(new NotificationContent
+            //{
+            //    Title = title,
+            //    Message = message,
+            //    Type = nt
+            //}, expirationTime: duration);
         }
 
         class SelectNotificationTypeEditor : CustomSelectEditor

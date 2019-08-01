@@ -61,7 +61,6 @@ namespace OpenRPA.Image
                         //rpaactivities.image.util.saveImage(source, "FindMatches-source");
                         //rpaactivities.image.util.saveImage(template, "FindMatches-template");
                         var result = FindMatches(source, template, Threshold, maxResults);
-                        //System.Diagnostics.Trace.WriteLine("FindMatches using gray images gave " + result.Count() + " resulsts");
                         //image.util.showImage(template);
                         return result;
                     }
@@ -78,7 +77,6 @@ namespace OpenRPA.Image
                         //rpaactivities.image.util.saveImage(source, "FindMatches-source");
                         //rpaactivities.image.util.saveImage(template, "FindMatches-template");
                         var result = FindMatches(source, template, Threshold, maxResults);
-                        //System.Diagnostics.Trace.WriteLine("FindMatches using color images gave " + result.Count() + " resulsts");
                         return result;
                     }
                 }
@@ -111,7 +109,6 @@ namespace OpenRPA.Image
                                 //Image2 found within Image1
 
                                 //var _rect = new Rectangle(new Point(x, y), new Size(Template.Width, Template.Height));
-                                //System.Diagnostics.Trace.WriteLine(_rect.ToString() + " -> " + Matches.Data[y, x, 0]);
 
                                 //foreach (var r in result)
                                 //{
@@ -151,12 +148,10 @@ namespace OpenRPA.Image
                 //}
             }
 
-            //System.Diagnostics.Trace.WriteLine("* found " + result.Count);
             if (result.Count == 0 && inverted == false)
             {
                 //using (var invertedimage = Template.Not())
                 //{
-                //    System.Diagnostics.Trace.WriteLine("FindMatches using inverted color images");
                 //    return FindMatches(Source, invertedimage, Threshold, maxResults, true);
                 //}
             }

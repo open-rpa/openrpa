@@ -81,9 +81,6 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Notifications.Wpf, Version=0.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Notifications.Wpf.Updated.0.1.1\lib\net461\Notifications.Wpf.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Activities" />
     <Reference Include="System.Activities.Core.Presentation" />
@@ -106,6 +103,12 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="ToastNotifications, Version=2.5.1.0, Culture=neutral, PublicKeyToken=e89d9d7314a7c797, processorArchitecture=MSIL">
+      <HintPath>..\packages\ToastNotifications.2.5.1\lib\net40\ToastNotifications.dll</HintPath>
+    </Reference>
+    <Reference Include="ToastNotifications.Messages, Version=2.5.1.0, Culture=neutral, PublicKeyToken=e89d9d7314a7c797, processorArchitecture=MSIL">
+      <HintPath>..\packages\ToastNotifications.Messages.2.5.1\lib\net40\ToastNotifications.Messages.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -131,10 +134,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Activities\ShowNotification.cs" />
-    <Compile Include="Activities\ShowNotificationDesigner.xaml.cs">
-      <DependentUpon>ShowNotificationDesigner.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Activities\RemovePermission.cs" />
     <Compile Include="Activities\GrantPermission.cs" />
     <Compile Include="Activities\RemovePermissionDesigner.xaml.cs">
@@ -270,10 +269,6 @@
     <Compile Include="Workflow.cs" />
     <Compile Include="WorkflowInstance.cs" />
     <Compile Include="WorkflowTrackingParticipant.cs" />
-    <Page Include="Activities\ShowNotificationDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Activities\RemovePermissionDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -622,6 +617,10 @@
     <ProjectReference Include="..\OpenRPA.FileWatcher\OpenRPA.FileWatcher.csproj">
       <Project>{d33652d0-ce28-4226-9a9f-0fc1c2b81cbd}</Project>
       <Name>OpenRPA.FileWatcher</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenRPA.Forms\OpenRPA.Forms.csproj">
+      <Project>{073dc318-cef7-469c-9fef-91f3314976cb}</Project>
+      <Name>OpenRPA.Forms</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenRPA.IE\OpenRPA.IE.csproj">
       <Project>{ce483c6b-ebef-47ba-b3d5-5c7582dafd1d}</Project>

@@ -8,7 +8,9 @@
         mc:Ignorable="d"
         xmlns:forms="clr-namespace:Forge.Forms.Controls;assembly=Forge.Forms"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="Form Designer" Height="450" Width="800" Icon="/OpenRPA.Forms;component/Resources/designer/form30.png">
+        Title="Form Designer" Height="450" Width="800" Icon="/OpenRPA.Forms;component/Resources/designer/form30.png"
+        SizeToContent="WidthAndHeight"
+        >
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -17,7 +19,6 @@
 
         <materialDesign:Card
             Grid.Column="0"
-            MaxWidth="540"
             Margin="8"
             VerticalAlignment="Center">
             <ScrollViewer VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">

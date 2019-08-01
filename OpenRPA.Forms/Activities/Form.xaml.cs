@@ -124,14 +124,36 @@ namespace OpenRPA.Forms.Activities
             actionContext = e.ActionContext;
             DialogResult = true;
         }
+        public void setTimeOut(EventHandler doWork, int time)
 
+        {
+            System.Windows.Threading.DispatcherTimer myDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+
+            myDispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, time); myDispatcherTimer.Tick += delegate (object s, EventArgs args) { myDispatcherTimer.Stop(); };
+            myDispatcherTimer.Tick += doWork;
+
+            myDispatcherTimer.Start();
+
+        }
         private void Df_Loaded(object sender, RoutedEventArgs e)
         {
-            foreach (var p in defaults)
+            if (defaults == null) return;
+            if (CurrentModel == null)
             {
-                //CompiledDefinition.UpdateDefaultValue(p.Key, p.Value);
-                CurrentModel[p.Key] = p.Value;
+                setTimeOut(delegate (object s, EventArgs args)
+                {
+                    Df_Loaded(null, null);
+                }, 1000);
+                return;
             }
+            GenericTools.RunUI(this, () =>
+            {
+                foreach (var p in defaults)
+                {
+                    //CompiledDefinition.UpdateDefaultValue(p.Key, p.Value);
+                    CurrentModel[p.Key] = p.Value;
+                }
+            });
         }
     }
 }

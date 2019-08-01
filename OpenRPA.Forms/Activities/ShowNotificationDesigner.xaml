@@ -33,13 +33,6 @@
         <DataTemplate x:Key="Expanded">
             <StackPanel>
                 <DockPanel Height="Auto" Width="Auto" LastChildFill="True">
-                    <TextBlock Text="Title" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" />
-                    <sapv:ExpressionTextBox HintText="Hint" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="5"
-                                OwnerActivity="{Binding Path=ModelItem}"
-                                Expression="{Binding Path=ModelItem.Title, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
-                                ExpressionType="s:String" HorizontalAlignment="Stretch" />
-                </DockPanel>
-                <DockPanel Height="Auto" Width="Auto" LastChildFill="True">
                     <TextBlock Text="Message" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" />
                     <sapv:ExpressionTextBox HintText="Hint" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="5"
                                 OwnerActivity="{Binding Path=ModelItem}"

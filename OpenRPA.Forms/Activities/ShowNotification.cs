@@ -22,31 +22,32 @@ namespace OpenRPA.Forms.Activities
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class ShowNotification : CodeActivity
     {
-        public ShowNotification()
-        {
-            Duration = new InArgument<TimeSpan>()
-            {
-                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(5000)")
-            };
+        //public ShowNotification()
+        //{
+        //    Duration = new InArgument<TimeSpan>()
+        //    {
+        //        Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(5000)")
+        //    };
 
-        }
+        //}
+        //[RequiredArgument]
+        //public InArgument<TimeSpan> Duration { get; set; }
+        //[RequiredArgument]
+        //public InArgument<string> Title { get; set; }
         [RequiredArgument]
-        public InArgument<TimeSpan> Duration { get; set; }
-        [RequiredArgument]
-        public InArgument<string> Title { get; set; }
         public InArgument<string> Message { get; set; }
-        [RequiredArgument]
-        [System.ComponentModel.Category("Misc")]
-        [Editor(typeof(SelectNotificationTypeEditor), typeof(System.Activities.Presentation.PropertyEditing.ExtendedPropertyValueEditor))]
-        public InArgument<string> NotificationType { get; set; }
+        //[RequiredArgument]
+        //[System.ComponentModel.Category("Misc")]
+        //[Editor(typeof(SelectNotificationTypeEditor), typeof(System.Activities.Presentation.PropertyEditing.ExtendedPropertyValueEditor))]
+        //public InArgument<string> NotificationType { get; set; }
 
         public static Notifier notifier;
         protected override void Execute(CodeActivityContext context)
         {
-            var title = Title.Get(context);
             var message = Message.Get(context);
-            var duration = Duration.Get(context);
-            var notificationType = NotificationType.Get(context);
+            //var title = Title.Get(context);
+            //var duration = Duration.Get(context);
+            //var notificationType = NotificationType.Get(context);
             if(notifier==null)
             {
                 notifier = new Notifier(cfg =>
@@ -79,24 +80,24 @@ namespace OpenRPA.Forms.Activities
             //}, expirationTime: duration);
         }
 
-        class SelectNotificationTypeEditor : CustomSelectEditor
-        {
-            public override DataTable options
-            {
-                get
-                {
-                    DataTable lst = new DataTable();
-                    lst.Columns.Add("ID", typeof(string));
-                    lst.Columns.Add("TEXT", typeof(string));
-                    lst.Rows.Add("Information", "Information");
-                    lst.Rows.Add("Success", "Success");
-                    lst.Rows.Add("Warning", "Warning");
-                    lst.Rows.Add("Error", "Error");
-                    return lst;
-                }
-            }
+        //class SelectNotificationTypeEditor : CustomSelectEditor
+        //{
+        //    public override DataTable options
+        //    {
+        //        get
+        //        {
+        //            DataTable lst = new DataTable();
+        //            lst.Columns.Add("ID", typeof(string));
+        //            lst.Columns.Add("TEXT", typeof(string));
+        //            lst.Rows.Add("Information", "Information");
+        //            lst.Rows.Add("Success", "Success");
+        //            lst.Rows.Add("Warning", "Warning");
+        //            lst.Rows.Add("Error", "Error");
+        //            return lst;
+        //        }
+        //    }
 
-        }
+        //}
 
     }
 }

@@ -21,7 +21,10 @@ namespace OpenRPA.Forms.Activities
             string form = ModelItem.GetValue<string>("Form");
             var f = new FormDesigner(form);
             f.ShowDialog();
-            ModelItem.Properties["Form"].SetValue(new InArgument<string>() { Expression = new Literal<string>(f.XmlString) });
+            if(form != f.XmlString)
+            {
+                ModelItem.Properties["Form"].SetValue(new InArgument<string>() { Expression = new Literal<string>(f.XmlString) });
+            }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)

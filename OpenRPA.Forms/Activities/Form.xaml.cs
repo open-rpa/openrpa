@@ -49,7 +49,6 @@ namespace OpenRPA.Forms.Activities
             InitializeComponent();
             xmlString = form;
             DataContext = this;
-            BuildDefinition(null, null);
         }
         private IFormDefinition compiledDefinition;
         public IFormDefinition CompiledDefinition
@@ -99,10 +98,12 @@ namespace OpenRPA.Forms.Activities
                 return json;                
             }
         }
+        public Exception LastError { get; set; }
         private void BuildDefinition(object sender, RoutedEventArgs e)
         {
             try
             {
+                LastError = null;
                 CompiledDefinition = FormBuilder.Default.GetDefinition(xmlString);
                 var t = CompiledDefinition.GetElements().Where(x => x is TitleElement).FirstOrDefault();
                 if(t != null && t.Resources.ContainsKey("Content"))
@@ -119,7 +120,9 @@ namespace OpenRPA.Forms.Activities
             }
             catch (Exception ex)
             {
+                LastError = ex;
                 Log.Error(ex.ToString());
+                DialogResult = false;
             }
         }
 

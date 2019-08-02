@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenRPA.Forms.Activities"
         xmlns:f="clr-namespace:OpenRPA.Forms"
-        mc:Ignorable="d"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         xmlns:forms="clr-namespace:Forge.Forms.Controls;assembly=Forge.Forms"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Form Designer" Height="450" Width="800" Icon="/OpenRPA.Forms;component/Resources/designer/form30.png">
@@ -15,6 +15,10 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+        </Grid.RowDefinitions>
 
         <materialDesign:Card
             Grid.Column="0"
@@ -69,5 +73,10 @@
                     Content="BUILD FORM" />
             </Grid>
         </materialDesign:Card>
+        <TextBlock 
+        x:Name="ErrorDisplay" Visibility="Hidden"
+        Background="AntiqueWhite"
+        Foreground="Red"
+        HorizontalAlignment="Left" Margin="0,353,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="2.218,-4.577" Width="386" Height="66" Grid.RowSpan="2"/>
     </Grid>
-    </Window>
+</Window>

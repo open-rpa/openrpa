@@ -996,6 +996,19 @@ namespace OpenRPA.Views
             }
             if (instance.state != "idle")
             {
+                GenericTools.RunUI(() =>
+                {
+                    Properties = wfDesigner.PropertyInspectorView;
+                    if (global.isConnected)
+                    {
+                        ReadOnly = !Workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.update);
+                    }
+                    else
+                    {
+                        ReadOnly = false;
+                    }
+                });
+
                 BreakPointhit = false; Singlestep = false;
                 if (string.IsNullOrEmpty(instance.queuename) && string.IsNullOrEmpty(instance.correlationId))
                 {
@@ -1005,8 +1018,16 @@ namespace OpenRPA.Views
                         System.Activities.Debugger.SourceLocation location;
                         if(instance.errorsource!=null && _sourceLocationMapping.ContainsKey(instance.errorsource))
                         {
-                            location = _sourceLocationMapping[instance.errorsource];
-                            SetDebugLocation(location);
+                            GenericTools.RunUI(() =>
+                            {
+                                location = _sourceLocationMapping[instance.errorsource];
+                                SetDebugLocation(location);
+                                if(_activityIdModelItemMapping.ContainsKey(instance.errorsource))
+                                {
+                                    ModelItem model = _activityIdModelItemMapping[instance.errorsource];
+                                    NavigateTo(model);
+                                }
+                            });
                         }
                     }
                 }
@@ -1032,18 +1053,6 @@ namespace OpenRPA.Views
                 if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
                 Log.Output(message);
 
-                GenericTools.RunUI(() =>
-                {
-                    Properties = wfDesigner.PropertyInspectorView;
-                    if (global.isConnected)
-                    {
-                        ReadOnly = !Workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.update);
-                    }
-                    else
-                    {
-                        ReadOnly = false;
-                    }
-                });
 
                 onChanged?.Invoke(this);
             }

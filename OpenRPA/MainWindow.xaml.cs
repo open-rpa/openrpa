@@ -55,7 +55,6 @@ namespace OpenRPA
             }
         }
         public Views.WFToolbox Toolbox { get; set; }
-        
         public bool allowQuite { get; set; } = true;
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -1404,7 +1403,7 @@ namespace OpenRPA
                         {
                             switch (k.Value.Type)
                             {
-                                case JTokenType.Integer: param.Add(k.Key, k.Value.Value<int>()); break;
+                                case JTokenType.Integer: param.Add(k.Key, k.Value.Value<long>()); break;
                                 case JTokenType.Float: param.Add(k.Key, k.Value.Value<float>()); break;
                                 case JTokenType.Boolean: param.Add(k.Key, k.Value.Value<bool>()); break;
                                 case JTokenType.Date: param.Add(k.Key, k.Value.Value<DateTime>()); break;

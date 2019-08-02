@@ -101,10 +101,13 @@ namespace OpenRPA.Forms.Activities
         {
             try
             {
+                ErrorDisplay.Visibility = Visibility.Hidden;
                 CompiledDefinition = FormBuilder.Default.GetDefinition(xmlString);
             }
             catch (Exception ex)
             {
+                ErrorDisplay.Visibility = Visibility.Visible;
+                ErrorDisplay.Text = ex.Message;
                 Log.Error(ex.ToString());
             }
         }

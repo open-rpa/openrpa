@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenRPA.Forms.Activities"
         xmlns:f="clr-namespace:OpenRPA.Forms"
-        mc:Ignorable="d"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         xmlns:forms="clr-namespace:Forge.Forms.Controls;assembly=Forge.Forms"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Form Designer" Height="450" Width="800" Icon="/OpenRPA.Forms;component/Resources/designer/form30.png"
-        SizeToContent="WidthAndHeight"
+        SizeToContent="WidthAndHeight" Loaded="BuildDefinition"
         >
 
     <Grid>

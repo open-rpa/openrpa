@@ -33,7 +33,11 @@ namespace OpenRPA.Interfaces
         {
             RunUI(window, () =>
             {
-                GenericTools.ShowWindow(new System.Windows.Interop.WindowInteropHelper(window).Handle, GenericTools.SW_MINIMIZE);
+                if (window.WindowState != System.Windows.WindowState.Minimized)
+                {
+                    GenericTools.ShowWindow(new System.Windows.Interop.WindowInteropHelper(window).Handle, GenericTools.SW_MINIMIZE);
+
+                }
             });
         }
         public static void minimize(IntPtr hWnd)

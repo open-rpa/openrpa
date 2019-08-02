@@ -55,20 +55,23 @@ namespace OpenRPA.Forms.Activities
                 }
             }
 
-
+            Exception LastError = null;
             // var res = await GenericTools.mainWindow.Dispatcher.InvokeAsync<FormResult>(() =>
             var res = GenericTools.mainWindow.Dispatcher.Invoke<FormResult>(() =>
             {
                 var f = new Form(xmlString);
                 f.defaults = param;
                 f.Topmost = true;
-                f.ShowDialog();
+                if(f.ShowDialog() == false)
+                {
+                    if (f.LastError != null) LastError = f.LastError;
+                }
                 var _res = new FormResult();
                 if(f.actionContext != null && f.actionContext.Action!=null) _res.Action = f.actionContext.Action.ToString();
                 _res.Model = f.CurrentModel;
                 return _res;
             });
-
+            if (LastError != null) throw LastError;
             //var t = await GenericTools.mainWindow.Dispatcher.InvokeAsync(() =>
             //{
             //    //var min = true;
@@ -85,26 +88,27 @@ namespace OpenRPA.Forms.Activities
             //});
             json = JsonConvert.SerializeObject(res, Formatting.Indented);
             result = JsonConvert.DeserializeObject<FormResult>(json);
-            foreach (var prop in result.Model)
-            {
-                var myVar = context.DataContext.GetProperties().Find(prop.Key, true);
-                if (myVar != null)
+            if(result.Model!=null)
+                foreach (var prop in result.Model)
                 {
-                    if(myVar.PropertyType == typeof(int))
+                    var myVar = context.DataContext.GetProperties().Find(prop.Key, true);
+                    if (myVar != null)
                     {
-                        myVar.SetValue(context.DataContext, int.Parse(prop.Value.ToString()));
-                    } else
-                    {
-                        myVar.SetValue(context.DataContext, prop.Value);
-                    }
-                    //var myValue = myVar.GetValue(context.DataContext);
+                        if(myVar.PropertyType == typeof(int))
+                        {
+                            myVar.SetValue(context.DataContext, int.Parse(prop.Value.ToString()));
+                        } else
+                        {
+                            myVar.SetValue(context.DataContext, prop.Value);
+                        }
+                        //var myValue = myVar.GetValue(context.DataContext);
                     
+                    }
+                    else
+                    {
+                        Log.Debug("Recived property " + prop.Key + " but no variable exists to save the value in " + prop.Value);
+                    }
                 }
-                else
-                {
-                    Log.Debug("Recived property " + prop.Key + " but no variable exists to save the value in " + prop.Value);
-                }
-            }
 
             return result;
         }

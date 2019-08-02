@@ -1,4 +1,5 @@
 ﻿using Forge.Forms.FormBuilding;
+using Forge.Forms.FormBuilding.Defaults;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenRPA.Interfaces;
@@ -103,6 +104,18 @@ namespace OpenRPA.Forms.Activities
             try
             {
                 CompiledDefinition = FormBuilder.Default.GetDefinition(xmlString);
+                var t = CompiledDefinition.GetElements().Where(x => x is TitleElement).FirstOrDefault();
+                if(t != null && t.Resources.ContainsKey("Content"))
+                {
+                    this.Title = t.Resources["Content"].GetStringValue(null).Value;
+                } else
+                {
+                    var h = CompiledDefinition.GetElements().Where(x => x is HeadingElement).FirstOrDefault();
+                    if (h != null && h.Resources.ContainsKey("Content"))
+                    {
+                        this.Title = h.Resources["Content"].GetStringValue(null).Value;
+                    }
+                }
             }
             catch (Exception ex)
             {

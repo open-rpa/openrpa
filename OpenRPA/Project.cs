@@ -45,10 +45,10 @@ namespace OpenRPA
         [JsonIgnore]
         public bool IsSelected { get { return GetProperty<bool>(); } set { SetProperty(value); } }
 
-        public static async Task<Project> Create(string Path, string Name)
+        public static async Task<Project> Create(string Path, string Name, bool addDefault)
         {
             var basePath = System.IO.Path.Combine(Path, Name);
-            if (System.IO.Directory.GetFiles(basePath).Count() > 0)
+            if (System.IO.Directory.Exists(basePath) && System.IO.Directory.GetFiles(basePath).Count() > 0)
             {
                 var originalname = Name;
                 bool isUnique = false; int counter = 1;
@@ -95,9 +95,12 @@ namespace OpenRPA
             p.Filename = System.IO.Path.GetFileName(Filepath);
             p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
             await p.Save();
-            var w = Workflow.Create(p, "New Workflow");
-            p.Workflows.Add(w);
-            await w.Save();
+            if(addDefault)
+            {
+                var w = Workflow.Create(p, "New Workflow");
+                p.Workflows.Add(w);
+                await w.Save();
+            }
             return p;
         }
         public void Init()

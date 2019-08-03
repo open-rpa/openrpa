@@ -41,13 +41,11 @@ namespace OpenRPA.Windows
                     var c = element.Properties.ControlType.ValueOrDefault;
                     controltype = c.ToString();
                     Name = (controltype + " " + name + " " + automationid).Trim();
-
                 }
                 catch (Exception)
                 {
                     throw;
                 }
-                var b = true;
             }
 
         }

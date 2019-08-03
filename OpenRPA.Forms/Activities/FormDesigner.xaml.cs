@@ -102,6 +102,7 @@ namespace OpenRPA.Forms.Activities
             try
             {
                 ErrorDisplay.Visibility = Visibility.Hidden;
+                if (string.IsNullOrEmpty(xmlString)) return;
                 CompiledDefinition = FormBuilder.Default.GetDefinition(xmlString);
             }
             catch (Exception ex)

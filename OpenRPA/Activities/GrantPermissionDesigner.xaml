@@ -66,41 +66,16 @@
                 </DataTemplate>
             </input:AutoCompleteBox.ItemTemplate>
         </input:AutoCompleteBox>
-        <!--        <TextBlock Grid.Row="1" Grid.Column="0">Name</TextBlock>
-        <TextBlock Grid.Row="1" Grid.Column="1" Name="txtname"></TextBlock>
-        -->
         <TextBlock Grid.Row="1" Grid.Column="0">Read</TextBlock>
         <CheckBox Grid.Row="1" Grid.Column="1" IsThreeState="True"
-                IsChecked="{Binding Path=ModelItem.Read, Mode=TwoWay}"
+                IsChecked="{Binding Path=ModelItem.Read, Mode=TwoWay, Converter={StaticResource InArgumentBoolConverter}}"
                 />
         <TextBlock Grid.Row="2" Grid.Column="0">Update</TextBlock>
         <CheckBox Grid.Row="2" Grid.Column="1" IsThreeState="True"
-                  IsChecked="{Binding Path=ModelItem.Update, Mode=TwoWay}"/>
+                  IsChecked="{Binding Path=ModelItem.Update, Mode=TwoWay, Converter={StaticResource InArgumentBoolConverter}}"/>
         <TextBlock Grid.Row="3" Grid.Column="0">Delete</TextBlock>
         <CheckBox Grid.Row="3" Grid.Column="1" IsThreeState="True"
                   IsChecked="{Binding Path=ModelItem.Delete, Mode=TwoWay, Converter={StaticResource InArgumentBoolConverter}}" />
-
-        <!-- 
-        <sapv:ExpressionTextBox HintText="Hint" Grid.Row="1" Grid.Column="0" MaxWidth="180" Margin="5"
-                                OwnerActivity="{Binding Path=ModelItem}"
-                                Expression="{Binding Path=ModelItem.Query, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
-                                ExpressionType="s:String" HorizontalAlignment="Stretch" />
-        -->
-
-        <!--
-        <TextBlock Text="Result" VerticalAlignment="Center" />
-        
-        Converter={StaticResource DebugBinding},
-        Converter={StaticResource ArgumentToExpressionConverter}, 
-        <sapv:ExpressionTextBox 
-            Expression="{Binding Path=ModelItem.StringResult, Mode=TwoWay, 
-            Converter={StaticResource ArgumentToExpressionConverter}, 
-            ConverterParameter=Out}"
-            
-            OwnerActivity="{Binding Path=ModelItem}"
-            Grid.Column="1"
-            Margin="3,0,0,0" />
-        -->
     </Grid>
 
 </sap:ActivityDesigner>

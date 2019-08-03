@@ -1116,7 +1116,7 @@ namespace OpenRPA.Views
                 }
                 if (_activityIdMapping.Count == 0)
                 {
-                    Save();
+                    _ = Save();
                     // ReloadDesigner();
                 }
                 if (_activityIdMapping.Count == 0)

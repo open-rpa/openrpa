@@ -79,6 +79,44 @@ Setting MinResults to 0, effectively means your only checking if an object exist
 
 **Why:** Image you want to ready the assembly name, using images, you open properties on the project find the label for the field, and then in GetImage select the field with the value. Now you can easily grab the value using OCR ( .Value will use OpenCV OCR)
 
+GetText
+
+![1564854374331](activities/GetText.png)
+
+**What:** Get all text from an image using [OpenCV](https://opencv.org/).
+
+**How:** Place GetText inside **any** GetElement or GetImage and gettext will get the text from the image using OCR, using the language selected under the Settings. To filter the results to a specefic word or sentence you can set WordLimit. Each result has coordinates and and a image, to be used by other activities, like elementclick, highlight etc.
+
+**Why:** Instead of searching for a specific picture you can use GetText to find elements in a picture, useful for automating in RDP/Citric/Teamviewer or games/paints etc.
+
+# CommentOut
+
+![1564846526696](activities/commentout.png)
+
+**What:** Comment out parts of a workflow, so it will no longer be executed
+
+**How:** Either drag'n'drop or copy'n'paste activities inside, or use the right click menu for commenting out parts of a workflow. ( only works inside sequences )
+
+**Why:** Useful when you want to save parts of a workflow but don't want it to run.
+
+# CopyClipboard
+
+![1564846854564](activities/CopyClipboard.png)
+
+**What:** Copy the content of the users clipboard, either an image or string content
+
+**How:** Just drop it in, and it will copy the content. Set "SendCtrlC" to copy what is marked right now
+
+**Why:** Sometimes it's more handy to copy using clipboard than reading directly from an element, for instance when automating though RDP/Citrix/Teamviewer 
+
+# InsertClipboard
+
+![1564846922254](activities/InsertClipboard.png)
+
+**What:** Insert a text string into the users clipboard
+
+**How:** Just drop it in and set the text in Text
+
 # Detector
 
 ![1558723009540](..\img\1558723009540.png)
@@ -114,7 +152,88 @@ You can use OpenFlow to trigger other robots based on a trigger ( or interact wi
 
 **How:** Drag in InvokeOpenRPA and select the workflow you would like to call. Any arguments in the targeted workflow will be mapped to local variables of the same name, to support transferring parameters between the two workflows. Click "Add variable" to have all the in and out arguments in the targeted workflow created locally in the current scope/sequence.
 
-Why: More complex workflows is easier to manage if split up to smaller "chucks" that call each other. Having multiple smaller workflows also give easy access to run statistics on each part of the workflow using OpenFlow.
+**Why:** More complex workflows is easier to manage if split up to smaller "chucks" that call each other. Having multiple smaller workflows also give easy access to run statistics on each part of the workflow using OpenFlow.
+
+# InsertOne
+
+![1564847314516](activities/InsertOne.png)
+
+**What:** Take any object and convert it to a Json document and saves it in the database if connected to an OpenFlow instance.
+
+**How:** Set object to save in Item, override document type using the Type field, use Encrypt Fields to define what elements of the document to encrypt with EAS 256bit encryption. Result contains the result of the insert.
+
+**Why:** Easy way to save and work with data across domains/multiple robots or use it as a convenient database.
+
+# InsertOrUpdateOne
+
+![1564847604412](activities/InsertOrUpdateOne.png)
+
+**What:** Take any object and convert it to a Json document and saves it in the database if connected to an OpenFlow instance. 
+
+**How:** Works just like InsertOne. 
+Using Uniqueness you can define a custom unique constraint when inserting or updating. Say you have an object with an property "department" and you know all departments have an unique name. instead of manually testing if the object already exists you can use InsertOrUpdate and set type to "department" and Uniqueness to "department,_type" ( type is saved as _type in the database). If Uniqueness is not supplied the default constrain of using _id is used.
+
+**Why:** Easy way to save and work with data across domains/multiple robots or use it as a convenient database.
+
+# DeleteOne
+
+![1564847997708](activities/DeleteOne.png)
+
+**What:** Delete an document from the database in OpenFlow
+
+**How:** Either supply the object in item or the ID in _id
+
+**Why:** Easy way to save and work with data across domains/multiple robots or use it as a convenient database.
+
+# Query
+
+![1564848147347](activities/query.png)
+
+**What:** Search the database in OpenFlow.
+
+**How:** Supply an [MongoDB query](https://docs.mongodb.com/manual/tutorial/query-documents/) in QueryString and get result as a array of [JObjects](https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_Linq_JObject.htm) in result
+
+**Why:** Easy way to save and work with data across domains/multiple robots or use it as a convenient database.
+
+# GrantPermission
+
+![1564853644468](activities/GranPermission.png)
+
+**What:** Grant permissions for a user or group to an object.
+
+**How:** Using the resulting JObject from one of the other activities, you can update the _acl property ensuring a specific user or group a specific set of permission ( either set, ignore or remove read, update and delete for the user/group). After this, you must save the changes using InsertOrUpdateOne
+
+**Why:** Easy way to save and work with data across domains/multiple robots or use it as a convenient database.
+
+# RemovePermission
+
+![1564853910540](activities/RemovePermissions.png)
+
+**What:** Remove permissions for a user or group to an object.
+
+**How:** Completely remove the permissions for a specific user or group on the given JObject.
+
+**Why:** Easy way to save and work with data across domains/multiple robots or use it as a convenient database.
+
+# UploadFile
+
+![1564853991010](activities/UploadFile.png)
+
+**What:** Upload a file to [GridFS](https://docs.mongodb.com/manual/core/gridfs/) in the database in OpenFlow.
+
+**How:** Uploads a file to OpenFlow, can be downloaded again using DownloadFile, updated using InsertOrUpdateOne and  deleted using RemoveOne 
+
+**Why:** Easy way to save and work with data across domains/multiple robots or use it as a convenient database.
+
+# DownloadFile
+
+![1564854178523](activities/DownloadFile.png)
+
+**What:** Download a file from [GridFS](https://docs.mongodb.com/manual/core/gridfs/) stored in the database in OpenFlow.
+
+**How:** Download a file again using either _id or get the latest version based on the filename, if user has access.
+
+**Why:** Easy way to save and work with data across domains/multiple robots or use it as a convenient database.
 
 # ReadCell
 
@@ -145,6 +264,36 @@ Why: More complex workflows is easier to manage if split up to smaller "chucks" 
 **What:** Read several cell or a whole sheet into a DataTable. Can also be used to easily find next empty cell using LastUsedColumn and LastUsedRow
 
 **How:** Drag a ReadRange in and select the spreadsheet to open. To force a specific sheet, fill in Worksheet property. Set the range to read in Cells property and the receiving property in "DataTable" property
+
+**Why:** Classical RPA technologies can have a hard time working with application that does a lot of UI manipulation doing run time, such as Microsoft Excel, so using Office COM interfaces is more convenient. It also offers more options, like reading the formula or the value etc.
+
+# CloseWorkbook
+
+![1564855343090](activities/CloseWorkbook.png)
+
+**What:** Close a workbook if open in excel.
+
+**How:** Select a file, and if that file is currently open it will be closed, will saving any changes to the workbook if the workbook is not readonly.
+
+**Why:** Classical RPA technologies can have a hard time working with application that does a lot of UI manipulation doing run time, such as Microsoft Excel, so using Office COM interfaces is more convenient. It also offers more options, like reading the formula or the value etc.
+
+# GetEmails
+
+![1564855506148](activities/GetEmails.png)
+
+**What:** Get all emails from a folder in a running outlook.
+
+**How:** Select a folder in the dropdown menu, set UnreadOnly if you only need to process new emails.
+
+**Why:** Classical RPA technologies can have a hard time working with application that does a lot of UI manipulation doing run time, such as Microsoft Excel, so using Office COM interfaces is more convenient. It also offers more options, like reading the formula or the value etc.
+
+# NewEmailItem
+
+![1564855645249](C:\code\openrpa\docs\pages\activities\NewEmailItem.png)
+
+**What:** Open and send a new email using Outlook.
+
+**How:** Opens a new email using the currently running outlook session and sends it, if UIAction set to "Send" r wait for user to send/cancel or save the email when UIAction is set to "Show and wait".
 
 **Why:** Classical RPA technologies can have a hard time working with application that does a lot of UI manipulation doing run time, such as Microsoft Excel, so using Office COM interfaces is more convenient. It also offers more options, like reading the formula or the value etc.
 
@@ -188,3 +337,24 @@ Why: More complex workflows is easier to manage if split up to smaller "chucks" 
 
 **Why:** Not sure, OpenApplication should be good enough for now.
 
+# ShowNotification
+
+![1564854760145](activities/ShowNotification.png)
+
+**What:** Show a small message in the notification area of the right bottom of the screen.
+
+**How:** Set Message and select an notification type.
+
+**Why:** Handy for giving the user feedback on status of the workflow
+
+# InvokeForm
+
+![1564854886034](activities/InvokeForm.png)
+
+![1564855142974](activities/InvokeFormDesigner.png)
+
+**What:** Display a form to the user, requesting user feedback
+
+**How:** Click Open designer to design a workflow, you can find more information on the syntax on [Forge Forms](https://wpf-forge.github.io/Forge.Forms/) . Any variables matching a name in the form will be bound to that field, so if the variable has a value it will be show in the form, and once the user closes the form, the inserted values will be mapped to the variables. For easy creating the variable of the correct type, click "Create variables" once the form has been designed in the designer. Result.Action will contain the name of the button the user pressed and null/Nothing if canceled.
+
+**Why:** Handy for creating user interaction in the workflow

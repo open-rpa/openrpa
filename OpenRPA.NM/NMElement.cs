@@ -20,7 +20,8 @@ namespace OpenRPA.NM
                 var result = new List<NMElement>();
                 if (chromeelement.ContainsKey("content"))
                 {
-                    var content = (JArray)chromeelement["content"];
+                    var content = chromeelement["content"] as JArray;
+                    if(content==null) return result.ToArray();
                     foreach (var c in content)
                     {
                         try

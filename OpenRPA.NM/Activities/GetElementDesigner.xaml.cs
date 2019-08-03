@@ -74,10 +74,43 @@ namespace OpenRPA.NM
         }
         private async void Highlight_Click(object sender, RoutedEventArgs e)
         {
+            ModelItem loadFrom = ModelItem.Parent;
+            string loadFromSelectorString = "";
+            NMSelector anchor = null;
+            while (loadFrom.Parent != null)
+            {
+                var p = loadFrom.Properties.Where(x => x.Name == "Selector").FirstOrDefault();
+                if (p != null)
+                {
+                    loadFromSelectorString = loadFrom.GetValue<string>("Selector");
+                    anchor = new NMSelector(loadFromSelectorString);
+                    break;
+                }
+                loadFrom = loadFrom.Parent;
+            }
+
+
             string SelectorString = ModelItem.GetValue<string>("Selector");
             int maxresults = ModelItem.GetValue<int>("MaxResults");
             var selector = new NMSelector(SelectorString);
-            var elements = NMSelector.GetElementsWithuiSelector(selector, null, maxresults);
+            // var elements = NMSelector.GetElementsWithuiSelector(selector, anchor, maxresults);
+            var elements = new List<NMElement>();
+            if (anchor != null)
+            {
+                var _base = NMSelector.GetElementsWithuiSelector(anchor, null, 10);
+                foreach (var _e in _base)
+                {
+                    var res = NMSelector.GetElementsWithuiSelector(selector, _e, maxresults);
+                    elements.AddRange(res);
+                }
+
+            }
+            else
+            {
+                var res = NMSelector.GetElementsWithuiSelector(selector, null, maxresults);
+                elements.AddRange(res);
+            }
+
             foreach (var ele in elements) await ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
 
         }

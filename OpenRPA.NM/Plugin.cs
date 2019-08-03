@@ -28,7 +28,6 @@ namespace OpenRPA.NM
         public static treeelement[] _GetRootElements(Selector anchor)
         {
             var rootelements = new List<treeelement>();
-
             NMHook.reloadtabs();
             // var tab = NMHook.tabs.Where(x => x.highlighted == true && x.browser == "chrome").FirstOrDefault();
             var tab = NMHook.tabs.Where(x => x.highlighted == true).FirstOrDefault();
@@ -42,7 +41,15 @@ namespace OpenRPA.NM
             var getelement = new NativeMessagingMessage("getelement");
             getelement.browser = tab.browser;
             getelement.tabid = tab.id;
+
             getelement.xPath = "/html";
+            if (anchor!=null && anchor.Count > 1)
+            {
+                var s = anchor[1];
+                var p = s.Properties.Where(x => x.Name == "xpath").FirstOrDefault();
+                if (p != null) getelement.xPath = p.Value;
+            }
+
             NativeMessagingMessage result = null;
             try
             {
@@ -82,7 +89,13 @@ namespace OpenRPA.NM
             {
                 nmanchor = new NMSelector(anchor.ToString());
             }
-            return new NMSelector(nmitem.NMElement, nmanchor, true);
+            if(nmanchor != null)
+            {
+                var element = GetElementsWithSelector(nmanchor);
+                return new NMSelector(nmitem.NMElement, nmanchor, true, (NMElement)element.FirstOrDefault());
+
+            }
+            return new NMSelector(nmitem.NMElement, nmanchor, true, null);
         }
         public void Initialize()
         {
@@ -123,7 +136,7 @@ namespace OpenRPA.NM
                     var re = new RecordEvent(); re.Button = Input.MouseButton.Left;
                     var a = new GetElement { DisplayName = lastElement.ToString() };
 
-                    var selector = new NMSelector(lastElement, null, true);
+                    var selector = new NMSelector(lastElement, null, true, null);
                     a.Selector = selector.ToString();
                     a.Image = lastElement.ImageString();
                     a.MaxResults = 1;
@@ -185,7 +198,7 @@ namespace OpenRPA.NM
             var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
             if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox") return false;
 
-            var selector = new NMSelector(lastElement, null, true);
+            var selector = new NMSelector(lastElement, null, true, null);
             var a = new GetElement { DisplayName = lastElement.id + " " + lastElement.type + " " + lastElement.Name };
             a.Selector = selector.ToString();
             a.Image = lastElement.ImageString();

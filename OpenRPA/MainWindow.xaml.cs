@@ -799,7 +799,7 @@ namespace OpenRPA
                 {
                     string Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "Name project", "New project");
                     if (string.IsNullOrEmpty(Name)) return;
-                    Project project = await Project.Create(Extensions.projectsDirectory, Name);
+                    Project project = await Project.Create(Extensions.projectsDirectory, Name, true);
                     Workflow workflow = project.Workflows.First();
                     workflow.Project = project;
                     Projects.Add(project);
@@ -1015,6 +1015,7 @@ namespace OpenRPA
             {
                 StartDetectorPlugins();
                 StopRecordPlugins();
+                designer.ReadOnly = false;
                 InputDriver.Instance.CallNext = true;
                 InputDriver.Instance.OnKeyDown -= OnKeyDown;
                 InputDriver.Instance.OnKeyUp -= OnKeyUp;
@@ -1606,6 +1607,17 @@ namespace OpenRPA
                             p.SaveFile();
                             Projects.Add(p);
                         }
+                        Project up = null;
+                        foreach (var wf in workflows)
+                        {
+                            var hasProject = Projects.Where(x => x._id == wf.projectid && !string.IsNullOrEmpty(wf.projectid)).FirstOrDefault();
+                            if (hasProject == null)
+                            {
+                                if (up == null) up = await Project.Create(Extensions.projectsDirectory, "Unknown", false);
+                                up.Workflows.Add(wf);
+                            }
+                        }
+                        if (up != null) Projects.Add(up);
                         Log.Debug("RunPendingInstances::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         foreach (var workflow in workflows)
                         {
@@ -1650,7 +1662,7 @@ namespace OpenRPA
                     string Name = "New Project";
                     try
                     {
-                        Project project = await Project.Create(Extensions.projectsDirectory, Name);
+                        Project project = await Project.Create(Extensions.projectsDirectory, Name, true);
                         Workflow workflow = project.Workflows.First();
                         workflow.Project = project;
                         Projects.Add(project);

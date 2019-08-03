@@ -14,7 +14,7 @@ namespace OpenRPA.NM
     {
         NMElement element { get; set; }
         public NMSelector(string json) : base(json) { }
-        public NMSelector(NMElement element, NMSelector anchor, bool doEnum)
+        public NMSelector(NMElement element, NMSelector anchor, bool doEnum, NMElement anchorelement)
         {
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
@@ -24,12 +24,20 @@ namespace OpenRPA.NM
             NMSelectorItem item;
             if (anchor == null)
             {
-                item = new NMSelectorItem(element, true);
+                item = new NMSelectorItem(element, true, false);
                 item.Enabled = true;
                 item.canDisable = false;
                 Items.Add(item);
             }
-            item = new NMSelectorItem(element, false);
+            else
+            {
+                var anchorarray = anchorelement.cssselector.Split('>');
+                var elementarray = element.cssselector.Split('>');
+                elementarray = elementarray.Skip(anchorarray.Length).ToArray();
+                element.cssselector = string.Join(">", elementarray);
+                // element.cssselector = element.cssselector.Substring(anchorelement.cssselector.Length);
+            }
+            item = new NMSelectorItem(element, false, (anchor != null));
             item.Enabled = true;
             item.canDisable = false;
             Items.Add(item);
@@ -97,17 +105,41 @@ namespace OpenRPA.NM
         public static NMElement[] GetElementsWithuiSelector(NMSelector selector, IElement fromElement = null, int maxresults = 1)
         {
             var results = new List<NMElement>();
-            var first = selector[0];
-            var second = selector[1];
-            var p = first.Properties.Where(x => x.Name == "browser").FirstOrDefault();
+            SelectorItem first = null;
+            SelectorItem second = null;
             string browser = "";
-            if (p != null) { browser = p.Value; }
+            SelectorItemProperty p = null;
+            if (selector.Count > 1)
+            {
+                first = selector[0];
+                second = selector[1];
+                p = first.Properties.Where(x => x.Name == "browser").FirstOrDefault();
+                if (p != null) { browser = p.Value; }
+            }
+            else if (fromElement == null)
+            {
+                throw new ArgumentException("Invalid select with onlu 1 child and no anchor");
+            } else
+            {
+                second = selector[0];
+            }
             p = second.Properties.Where(x => x.Name == "xpath").FirstOrDefault();
             string xpath = "";
             if (p != null) { xpath = p.Value; }
             p = second.Properties.Where(x => x.Name == "cssselector").FirstOrDefault();
             string cssselector = "";
             if (p != null) { cssselector = p.Value; }
+            NMElement fromNMElement = fromElement as NMElement;
+            if (fromElement != null)
+            {
+                browser = fromNMElement.browser;
+                //if (browser != fromNMElement.browser) throw new ArgumentException("browser mismatch " + browser + "/" + fromNMElement.browser);
+                p = second.Properties.Where(x => x.Name == "cssselector").FirstOrDefault();
+                if (p == null) throw new ArgumentException("fromElement missing cssselector");
+                // xpath += p.Value.Substring(1);
+                xpath = "";
+                cssselector = fromNMElement.cssselector + " > " + p.Value;
+            }
 
             NMHook.checkForPipes(true, true);
             NMHook.reloadtabs();
@@ -132,6 +164,7 @@ namespace OpenRPA.NM
                                 var arr = JArray.Parse(data);
                                 foreach(var _e in arr)
                                 {
+                                    if (results.Count > maxresults) continue;
                                     var json = _e.ToString();
                                     var subsubresult = Newtonsoft.Json.JsonConvert.DeserializeObject<NativeMessagingMessage>(json);
                                     subsubresult.browser = browser;

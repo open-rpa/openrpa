@@ -42,9 +42,10 @@ namespace OpenRPA.NM
             Name = element.Name;
             Name = element.ToString();
         }
-
+        private bool NeedsReload { get; set; } = true;
         public override void AddSubElements()
         {
+            if (!NeedsReload) return;
             foreach (var e in NMElement.Children)
             {
                 var ele = NMHook.getElement(NMElement.message.tabid, NMElement.message.browser, "//*[@zn_id=\"" + e.zn_id + "\"]", TimeSpan.FromSeconds(2));
@@ -53,7 +54,7 @@ namespace OpenRPA.NM
                     Children.Add(new NMTreeElement(this, false, ele[0]));
                 }
             }
-
+            NeedsReload = false;
         }
     }
 

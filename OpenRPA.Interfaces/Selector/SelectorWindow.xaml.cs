@@ -117,48 +117,90 @@ namespace OpenRPA.Interfaces.Selector
             vm.NotifyPropertyChanged("json");
             // e.Element
         }
+        private treeelement SearchTree(ExtendedObservableCollection<treeelement> item, SelectorItem s)
+        {
+            foreach (var treenode in item)
+            {
+                if (vm.Plugin.Match(s, treenode.Element))
+                {
+                    return treenode;
+                }
+                var currentNode = new ExtendedObservableCollection<treeelement>();
+                foreach (var subc in treenode.Children) { currentNode.Add(subc); if (subc.Children.Count() == 0) subc.AddSubElements(); }
+                var res = SearchTree(currentNode, s);
+                if (res != null) return res;
+            }
+            return null;
+        }
+        private void ExpandToRoot(treeelement treenode)
+        {
+            treenode.IsExpanded = true;
+            treenode.IsSelected = true;
+            if (treenode.Parent != null) ExpandToRoot(treenode.Parent);
+        }
         private void BtnSyncTree_Click(object sender, RoutedEventArgs e)
         {
             var currentNode = vm.Directories;
             vm.Highlight = false;
-            for (var i = 1; i < vm.Selector.Count; i++)
+            var found = false;
+            if (vm.Selector.Count>1)
             {
-                var s = vm.Selector[i]; var found = false;
-                foreach (var treenode in currentNode)
+                var s = vm.Selector[1];
+                var p = s.Properties.Where(x => x.Name == "xpath").FirstOrDefault();
+                if (p!=null)
                 {
-                    if (vm.Plugin.Match(s, treenode.Element))
+                    var treenode = SearchTree(vm.Directories, s);
+                    if(treenode!=null)
                     {
+                        ExpandToRoot(treenode);
                         found = true;
                         treenode.IsExpanded = true;
                         treenode.IsSelected = true;
                         currentNode = new ExtendedObservableCollection<treeelement>();
                         foreach (var subc in treenode.Children) currentNode.Add(subc);
                         //currentNode = c.Children;
-                        continue;
                     }
                 }
-                if(!found)
+            }
+            if (!found)
+                for (var i = 1; i < vm.Selector.Count; i++)
                 {
+                    var s = vm.Selector[i]; 
                     foreach (var treenode in currentNode)
                     {
-                        foreach (var subtreenode in treenode.Children)
+                        if (vm.Plugin.Match(s, treenode.Element))
                         {
-                            if (vm.Plugin.Match(s, subtreenode.Element))
+                            found = true;
+                            treenode.IsExpanded = true;
+                            treenode.IsSelected = true;
+                            currentNode = new ExtendedObservableCollection<treeelement>();
+                            foreach (var subc in treenode.Children) currentNode.Add(subc);
+                            //currentNode = c.Children;
+                            continue;
+                        }
+                    }
+                    if(!found)
+                    {
+                        foreach (var treenode in currentNode)
+                        {
+                            foreach (var subtreenode in treenode.Children)
                             {
-                                found = true;
-                                subtreenode.IsExpanded = true;
+                                if (vm.Plugin.Match(s, subtreenode.Element))
+                                {
+                                    found = true;
+                                    subtreenode.IsExpanded = true;
                                 
-                                subtreenode.IsSelected = true;
-                                currentNode = new ExtendedObservableCollection<treeelement>();
-                                foreach (var subc in subtreenode.Children) currentNode.Add(subc);
-                                //currentNode = c.Children;
-                                continue;
+                                    subtreenode.IsSelected = true;
+                                    currentNode = new ExtendedObservableCollection<treeelement>();
+                                    foreach (var subc in subtreenode.Children) currentNode.Add(subc);
+                                    //currentNode = c.Children;
+                                    continue;
+                                }
                             }
                         }
                     }
+                    if (!found) break;
                 }
-                if (!found) break;
-            }
             vm.Highlight = true;
         }
         private void BtnHighlight_Click(object sender, RoutedEventArgs e)

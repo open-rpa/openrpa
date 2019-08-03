@@ -808,87 +808,95 @@ namespace OpenRPA.Views
         {
             GenericTools.RunUI(() =>
             {
-                Log.Debug("****** Create activity Map");
-                var modelService = wfDesigner.Context.Services.GetService<ModelService>();
                 try
                 {
-                    wfDesigner.Flush();
-                    using (var ms = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(wfDesigner.Text)))
+                    Log.Debug("****** Create activity Map");
+                    var modelService = wfDesigner.Context.Services.GetService<ModelService>();
+                    try
                     {
-                        var _workflowToRun = System.Activities.XamlIntegration.ActivityXamlServices.Load(ms) as DynamicActivity;
-                        WorkflowInspectionServices.CacheMetadata(_workflowToRun);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Debug("InitializeStateEnvironment: " + ex.Message);
-                }
-                _sourceLocationMapping.Clear();
-                _activitysourceLocationMapping.Clear();
-                _modelLocationMapping.Clear();
-                IEnumerable<ModelItem> wfElements = modelService.Find(modelService.Root, typeof(Activity)).Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.State)));
-                ModelItem lastItem = null;
-                var map = CreateSourceLocationMapping(modelService);
-                foreach (var modelItem in wfElements)
-                {
-                    NavigateTo(modelItem);
-                    // optimize, should we just use GetSourceLocationFromModelItem or continue using "select and get location" ?
-                    var loc = GetSourceLocationFromModelItem(modelItem);
-
-                    //if (modelItem.ItemType.BaseType == typeof(Literal)) continue;
-                    if (modelItem.ItemType.Name.StartsWith("Literal")) continue;
-                    if (modelItem.ItemType.Name.StartsWith("VisualBasicValue")) continue;
-                    if (modelItem.ItemType.Name.StartsWith("VisualBasicReference")) continue;
-
-
-
-                    var activity = modelItem.GetCurrentValue() as Activity;
-                    if (activity == null || activity.Id == null)
-                    {
-                        var state = modelItem.GetCurrentValue() as System.Activities.Debugger.State;
-                        var property = typeof(System.Activities.Debugger.State).GetProperty("InternalState", BindingFlags.Instance | BindingFlags.NonPublic);
-                        if (state!=null && property != null) {
-                            activity = property.GetValue(state) as Activity;
+                        wfDesigner.Flush();
+                        using (var ms = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(wfDesigner.Text)))
+                        {
+                            var _workflowToRun = System.Activities.XamlIntegration.ActivityXamlServices.Load(ms) as DynamicActivity;
+                            WorkflowInspectionServices.CacheMetadata(_workflowToRun);
                         }
                     }
-                    if (activity == null || activity.Id == null)
+                    catch (Exception ex)
                     {
-                        Log.Verbose("Debug!");
+                        Log.Debug("InitializeStateEnvironment: " + ex.Message);
                     }
-                    if (activity != null && activity.Id != null && !_sourceLocationMapping.ContainsKey(activity.Id))
+                    _sourceLocationMapping.Clear();
+                    _activitysourceLocationMapping.Clear();
+                    _modelLocationMapping.Clear();
+                    IEnumerable<ModelItem> wfElements = modelService.Find(modelService.Root, typeof(Activity)).Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.State)));
+                    ModelItem lastItem = null;
+                    var map = CreateSourceLocationMapping(modelService);
+                    foreach (var modelItem in wfElements)
                     {
-                        Selection.SelectOnly(wfDesigner.Context, modelItem);
+                        NavigateTo(modelItem);
+                        // optimize, should we just use GetSourceLocationFromModelItem or continue using "select and get location" ?
+                        var loc = GetSourceLocationFromModelItem(modelItem);
 
-                        if (wfDesigner.DebugManagerView.SelectedLocation != null)
+                        //if (modelItem.ItemType.BaseType == typeof(Literal)) continue;
+                        if (modelItem.ItemType.Name.StartsWith("Literal")) continue;
+                        if (modelItem.ItemType.Name.StartsWith("VisualBasicValue")) continue;
+                        if (modelItem.ItemType.Name.StartsWith("VisualBasicReference")) continue;
+
+
+
+                        var activity = modelItem.GetCurrentValue() as Activity;
+                        if (activity == null || activity.Id == null)
                         {
-                            _modelLocationMapping[modelItem] = wfDesigner.DebugManagerView.SelectedLocation;
-                            _activitysourceLocationMapping[activity] = wfDesigner.DebugManagerView.SelectedLocation;
-                            _sourceLocationMapping[activity.Id] = wfDesigner.DebugManagerView.SelectedLocation;
-                            _activityIdMapping[activity.Id] = activity;
-                            _activityIdModelItemMapping[activity.Id] = modelItem;
-                        }
-                        else
-                        {
-                            var t = wfDesigner.DebugManagerView.SelectedLocation;
-                            if (map.ContainsKey(activity))
+                            var state = modelItem.GetCurrentValue() as System.Activities.Debugger.State;
+                            var property = typeof(System.Activities.Debugger.State).GetProperty("InternalState", BindingFlags.Instance | BindingFlags.NonPublic);
+                            if (state != null && property != null)
                             {
-                                _modelLocationMapping[modelItem] = map[activity];
-                                _activitysourceLocationMapping[activity] = map[activity];
-                                _sourceLocationMapping[activity.Id] = map[activity];
-                                _activityIdMapping[activity.Id] = activity;
+                                activity = property.GetValue(state) as Activity;
+                            }
+                        }
+                        if (activity == null || activity.Id == null)
+                        {
+                            Log.Verbose("Debug!");
+                        }
+                        if (activity != null && activity.Id != null && !_sourceLocationMapping.ContainsKey(activity.Id))
+                        {
+                            Selection.SelectOnly(wfDesigner.Context, modelItem);
 
-                                Log.Debug(string.Format("Failed mapping '{0}' / '{1}' ", activity.Id, activity.DisplayName));
+                            if (wfDesigner.DebugManagerView.SelectedLocation != null)
+                            {
+                                _modelLocationMapping[modelItem] = wfDesigner.DebugManagerView.SelectedLocation;
+                                _activitysourceLocationMapping[activity] = wfDesigner.DebugManagerView.SelectedLocation;
+                                _sourceLocationMapping[activity.Id] = wfDesigner.DebugManagerView.SelectedLocation;
+                                _activityIdMapping[activity.Id] = activity;
+                                _activityIdModelItemMapping[activity.Id] = modelItem;
                             }
                             else
                             {
-                                Log.Debug(string.Format("Failed mapping '{0}' / '{1}' ", activity.Id, activity.DisplayName));
+                                var t = wfDesigner.DebugManagerView.SelectedLocation;
+                                if (map.ContainsKey(activity))
+                                {
+                                    _modelLocationMapping[modelItem] = map[activity];
+                                    _activitysourceLocationMapping[activity] = map[activity];
+                                    _sourceLocationMapping[activity.Id] = map[activity];
+                                    _activityIdMapping[activity.Id] = activity;
+
+                                    Log.Debug(string.Format("Failed mapping '{0}' / '{1}' ", activity.Id, activity.DisplayName));
+                                }
+                                else
+                                {
+                                    Log.Debug(string.Format("Failed mapping '{0}' / '{1}' ", activity.Id, activity.DisplayName));
+                                }
                             }
                         }
+                        lastItem = modelItem;
                     }
-                    lastItem = modelItem;
+                    if (lastItem != null && Toggle == true) Selection.Toggle(wfDesigner.Context, lastItem);
+                    Log.Debug("****** Activity Map completed");
                 }
-                if (lastItem != null && Toggle == true) Selection.Toggle(wfDesigner.Context, lastItem);
-                Log.Debug("****** Activity Map completed");
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
             });
         }
         public void ToggleBreakpoint()
@@ -1072,7 +1080,7 @@ namespace OpenRPA.Views
                 }
             }
         }
-        public void Run(bool VisualTracking, bool SlowMotion, WorkflowInstance instance)
+        public  void Run(bool VisualTracking, bool SlowMotion, WorkflowInstance instance)
         {
             this.VisualTracking = VisualTracking; this.SlowMotion = SlowMotion;
             if (BreakPointhit)
@@ -1108,7 +1116,8 @@ namespace OpenRPA.Views
                 }
                 if (_activityIdMapping.Count == 0)
                 {
-                    ReloadDesigner();
+                    Save();
+                    // ReloadDesigner();
                 }
                 if (_activityIdMapping.Count == 0)
                 {

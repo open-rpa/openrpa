@@ -17,7 +17,7 @@ namespace OpenRPA.NM
             SetBackingFieldValues(item._backingFieldValues);
             Properties = item.Properties;
         }
-        public NMSelectorItem(NMElement element, bool isRoot)
+        public NMSelectorItem(NMElement element, bool isRoot, bool hasAnchor )
         {
             this.Element = element;
             string n = null;
@@ -33,8 +33,8 @@ namespace OpenRPA.NM
                 canDisable = false;
                 return;
             }
-            if (!string.IsNullOrEmpty(element.xpath)) Properties.Add(new SelectorItemProperty("xpath", element.xpath));
-            if (!string.IsNullOrEmpty(element.cssselector)) Properties.Add(new SelectorItemProperty("cssselector", element.cssselector) { Enabled = false });
+            if (!string.IsNullOrEmpty(element.xpath)) Properties.Add(new SelectorItemProperty("xpath", element.xpath) { Enabled = !hasAnchor });
+            if (!string.IsNullOrEmpty(element.cssselector)) Properties.Add(new SelectorItemProperty("cssselector", element.cssselector) { Enabled = hasAnchor });
 
             if (!string.IsNullOrEmpty(element.id)) Properties.Add(new SelectorItemProperty("id", element.id) { Enabled = false });
             if (!string.IsNullOrEmpty(element.Name)) Properties.Add(new SelectorItemProperty("Name", element.Name) { Enabled = false });

@@ -20,7 +20,8 @@ namespace OpenRPA.NM
                 var result = new List<NMElement>();
                 if (chromeelement.ContainsKey("content"))
                 {
-                    var content = (JArray)chromeelement["content"];
+                    var content = chromeelement["content"] as JArray;
+                    if(content==null) return result.ToArray();
                     foreach (var c in content)
                     {
                         try
@@ -114,12 +115,15 @@ namespace OpenRPA.NM
                 if (chromeelement.ContainsKey("type")) type = chromeelement["type"].ToString();
                 if (chromeelement.ContainsKey("xpath")) xpath = chromeelement["xpath"].ToString();
                 if (chromeelement.ContainsKey("cssselector")) cssselector = chromeelement["cssselector"].ToString();
+                if (chromeelement.ContainsKey("cssPath")) cssselector = chromeelement["cssPath"].ToString();
+                if (chromeelement.ContainsKey("csspath")) cssselector = chromeelement["csspath"].ToString();
                 if (chromeelement.ContainsKey("zn_id")) zn_id = int.Parse(chromeelement["zn_id"].ToString());
             }
         }
         public NMElement(NativeMessagingMessage message)
         {
             parseChromeString(message.result);
+            _browser = message.browser;
             zn_id = message.zn_id;
             this.message = message;
             if(string.IsNullOrEmpty(xpath)) xpath = message.xPath;
@@ -132,8 +136,17 @@ namespace OpenRPA.NM
         public NMElement(NativeMessagingMessage message, string _chromeelement)
         {
             this.message = message;
+            _browser = message.browser;
             parseChromeString(_chromeelement);
         }
+        [Newtonsoft.Json.JsonIgnore]
+        private string _browser = null;
+        public string browser {
+            get {
+                return _browser;
+            }
+        }
+
         object IElement.RawElement { get => message; set => message = value as NativeMessagingMessage; }
         public string Value
         {
@@ -338,6 +351,5 @@ namespace OpenRPA.NM
                 return null;
             }
         }
-
     }
 }

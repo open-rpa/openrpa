@@ -22,6 +22,7 @@ namespace OpenRPA.NM
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<NMElement> Body { get; set; }
         public InArgument<int> MaxResults { get; set; }
+        public InArgument<int> MinResults { get; set; }
         public InArgument<TimeSpan> Timeout { get; set; }
         [RequiredArgument]
         public InArgument<string> Selector { get; set; }
@@ -34,6 +35,7 @@ namespace OpenRPA.NM
         public GetElement()
         {
             MaxResults = 1;
+            MinResults = 1;
             Timeout = new InArgument<TimeSpan>()
             {
                 Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromSeconds(3)")
@@ -46,6 +48,7 @@ namespace OpenRPA.NM
             var timeout = Timeout.Get(context);
             var from = From.Get(context);
             var maxresults = MaxResults.Get(context);
+            var minresults = MinResults.Get(context); 
             if (maxresults < 1) maxresults = 1;
             NMElement[] elements = { };
             var sw = new Stopwatch();
@@ -63,9 +66,9 @@ namespace OpenRPA.NM
             {
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
-            else
+            else if (elements.Length < minresults)
             {
-                throw new Interfaces.ElementNotFoundException("Failed locating item");
+                throw new Interfaces.ElementNotFoundException("Failed locating " + minresults + " item");
             }
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)

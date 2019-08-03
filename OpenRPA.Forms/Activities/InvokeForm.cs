@@ -23,10 +23,11 @@ namespace OpenRPA.Forms.Activities
         public InArgument<string> Form { get; set; }
         protected async override Task<FormResult> ExecuteAsync(AsyncCodeActivityContext context)
         {
+            await Task.Delay(1);
             var xmlString = Form.Get(context);
             FormResult result = null;
             string json = "";
-
+            
             var param = new Dictionary<string, object>();
             var vars = context.DataContext.GetProperties();
             foreach (dynamic v in vars)

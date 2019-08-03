@@ -22,6 +22,10 @@ namespace OpenRPA.Forms.Activities
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class ShowNotification : CodeActivity
     {
+        public ShowNotification()
+        {
+            NotificationType = "Information";
+        }
         //public ShowNotification()
         //{
         //    Duration = new InArgument<TimeSpan>()
@@ -29,17 +33,17 @@ namespace OpenRPA.Forms.Activities
         //        Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(5000)")
         //    };
 
-        //}
-        //[RequiredArgument]
-        //public InArgument<TimeSpan> Duration { get; set; }
-        //[RequiredArgument]
-        //public InArgument<string> Title { get; set; }
+            //}
+            //[RequiredArgument]
+            //public InArgument<TimeSpan> Duration { get; set; }
+            //[RequiredArgument]
+            //public InArgument<string> Title { get; set; }
         [RequiredArgument]
         public InArgument<string> Message { get; set; }
-        //[RequiredArgument]
-        //[System.ComponentModel.Category("Misc")]
-        //[Editor(typeof(SelectNotificationTypeEditor), typeof(System.Activities.Presentation.PropertyEditing.ExtendedPropertyValueEditor))]
-        //public InArgument<string> NotificationType { get; set; }
+        [RequiredArgument]
+        [System.ComponentModel.Category("Misc")]
+        [Editor(typeof(SelectNotificationTypeEditor), typeof(System.Activities.Presentation.PropertyEditing.ExtendedPropertyValueEditor))]
+        public InArgument<string> NotificationType { get; set; }
 
         public static Notifier notifier;
         protected override void Execute(CodeActivityContext context)
@@ -47,7 +51,7 @@ namespace OpenRPA.Forms.Activities
             var message = Message.Get(context);
             //var title = Title.Get(context);
             //var duration = Duration.Get(context);
-            //var notificationType = NotificationType.Get(context);
+            var notificationType = NotificationType.Get(context);
             if(notifier==null)
             {
                 notifier = new Notifier(cfg =>
@@ -68,8 +72,11 @@ namespace OpenRPA.Forms.Activities
                     cfg.Dispatcher = System.Windows.Application.Current.Dispatcher;
                 });
             }
-            notifier.ShowInformation(message);
-            
+            if (notificationType == "Information") notifier.ShowInformation(message);
+            if (notificationType == "Success") notifier.ShowSuccess(message);
+            if (notificationType == "Warning") notifier.ShowWarning(message);
+            if (notificationType == "Error") notifier.ShowError(message);
+
             //Notifications.Wpf.NotificationType nt = Notifications.Wpf.NotificationType.Information;
             //nt = (Notifications.Wpf.NotificationType)Enum.Parse(typeof(Notifications.Wpf.NotificationType), notificationType);
             //GenericTools.notificationManager.Show(new NotificationContent
@@ -80,24 +87,24 @@ namespace OpenRPA.Forms.Activities
             //}, expirationTime: duration);
         }
 
-        //class SelectNotificationTypeEditor : CustomSelectEditor
-        //{
-        //    public override DataTable options
-        //    {
-        //        get
-        //        {
-        //            DataTable lst = new DataTable();
-        //            lst.Columns.Add("ID", typeof(string));
-        //            lst.Columns.Add("TEXT", typeof(string));
-        //            lst.Rows.Add("Information", "Information");
-        //            lst.Rows.Add("Success", "Success");
-        //            lst.Rows.Add("Warning", "Warning");
-        //            lst.Rows.Add("Error", "Error");
-        //            return lst;
-        //        }
-        //    }
+        class SelectNotificationTypeEditor : CustomSelectEditor
+        {
+            public override DataTable options
+            {
+                get
+                {
+                    DataTable lst = new DataTable();
+                    lst.Columns.Add("ID", typeof(string));
+                    lst.Columns.Add("TEXT", typeof(string));
+                    lst.Rows.Add("Information", "Information");
+                    lst.Rows.Add("Success", "Success");
+                    lst.Rows.Add("Warning", "Warning");
+                    lst.Rows.Add("Error", "Error");
+                    return lst;
+                }
+            }
 
-        //}
+        }
 
     }
 }

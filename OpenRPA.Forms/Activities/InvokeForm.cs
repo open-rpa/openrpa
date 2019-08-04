@@ -23,7 +23,6 @@ namespace OpenRPA.Forms.Activities
         public InArgument<string> Form { get; set; }
         protected async override Task<FormResult> ExecuteAsync(AsyncCodeActivityContext context)
         {
-            await Task.Delay(1);
             var xmlString = Form.Get(context);
             FormResult result = null;
             string json = "";
@@ -97,10 +96,10 @@ namespace OpenRPA.Forms.Activities
                     {
                         if(myVar.PropertyType == typeof(int))
                         {
-                            myVar.SetValue(context.DataContext, int.Parse(prop.Value.ToString()));
+                            if(prop.Value != null) myVar.SetValue(context.DataContext, int.Parse(prop.Value.ToString()));
                         } else
                         {
-                            myVar.SetValue(context.DataContext, prop.Value);
+                            if (prop.Value != null) myVar.SetValue(context.DataContext, prop.Value);
                         }
                         //var myValue = myVar.GetValue(context.DataContext);
                     
@@ -110,6 +109,7 @@ namespace OpenRPA.Forms.Activities
                         Log.Debug("Recived property " + prop.Key + " but no variable exists to save the value in " + prop.Value);
                     }
                 }
+            await Task.Delay(1);
 
             return result;
         }

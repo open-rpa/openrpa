@@ -93,7 +93,11 @@
     <Compile Include="Activities\InvokeFormDesigner.xaml.cs">
       <DependentUpon>InvokeFormDesigner.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Activities\Alert.cs" />
     <Compile Include="Activities\ShowNotification.cs" />
+    <Compile Include="Activities\AlertDesigner.xaml.cs">
+      <DependentUpon>AlertDesigner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\ShowNotificationDesigner.xaml.cs">
       <DependentUpon>ShowNotificationDesigner.xaml</DependentUpon>
     </Compile>
@@ -113,6 +117,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\InvokeFormDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\AlertDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

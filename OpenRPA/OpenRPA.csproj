@@ -266,6 +266,7 @@
     <Compile Include="Views\WFToolbox.xaml.cs">
       <DependentUpon>WFToolbox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\WorkflowHelper.cs" />
     <Compile Include="Workflow.cs" />
     <Compile Include="WorkflowInstance.cs" />
     <Compile Include="WorkflowTrackingParticipant.cs" />

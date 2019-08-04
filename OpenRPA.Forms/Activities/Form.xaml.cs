@@ -43,7 +43,6 @@ namespace OpenRPA.Forms.Activities
                 PropertyChanged -= value;
             }
         }
-
         public Form(string form)
         {
             InitializeComponent();
@@ -125,7 +124,6 @@ namespace OpenRPA.Forms.Activities
                 DialogResult = false;
             }
         }
-
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             ScrollViewer scv = (ScrollViewer)sender;
@@ -134,11 +132,15 @@ namespace OpenRPA.Forms.Activities
         }
         public Forge.Forms.IActionContext actionContext { get; set; }
         public Dictionary<string, object> defaults { get; internal set; }
-
         private void DynamicForm_OnAction(object sender, Forge.Forms.ActionEventArgs e)
         {
             actionContext = e.ActionContext;
-            DialogResult = true;
+            var fields = CompiledDefinition.GetElements();
+            var firstNameElement = (DataFormField)CompiledDefinition.GetElements().FirstOrDefault(x => x is DataFormField d && d.Key == "FirstName");
+            if(actionContext.Action != null && actionContext.Action.ToString()!="reset")
+            {
+                DialogResult = true;
+            }
         }
         public void setTimeOut(EventHandler doWork, int time)
 

@@ -4,6 +4,7 @@ using OpenRPA.Interfaces;
 using System;
 using System.Activities;
 using System.Activities.Core.Presentation;
+using System.Activities.Debugger;
 using System.Activities.Presentation;
 using System.Activities.Presentation.Model;
 using System.Activities.Presentation.Services;
@@ -189,9 +190,13 @@ namespace OpenRPA.Views
         {
             InitializeComponent();
         }
+        private static object _lock = new object();
         public void ReloadDesigner()
         {
+            lock(_lock)
+            { 
             LoadDesigner();
+            }
         }
         public void LoadDesigner()
         {
@@ -269,11 +274,11 @@ namespace OpenRPA.Views
             {
                 if (!HasChanged)
                 {
-                    _modelLocationMapping.Clear();
-                    _sourceLocationMapping.Clear();
-                    _activityIdMapping.Clear();
-                    _activitysourceLocationMapping.Clear();
-                    _activityIdModelItemMapping.Clear();
+                    // _modelLocationMapping.Clear();
+                    //_sourceLocationMapping.Clear();
+                    //_activityIdMapping.Clear();
+                    //_activitysourceLocationMapping.Clear();
+                    //_activityIdModelItemMapping.Clear();
                 }
                 HasChanged = true;
 
@@ -345,16 +350,16 @@ namespace OpenRPA.Views
                 Log.Error(ex.ToString());
             }
             wfDesigner.Flush();
-            if (_activityIdMapping.Count == 0)
-            {
-                int failCounter = 0;
-                while (_activityIdMapping.Count == 0 && failCounter < 1)
-                {
-                    InitializeStateEnvironment(true);
-                    System.Threading.Thread.Sleep(500);
-                    failCounter++;
-                }
-            }
+            //if (_activityIdMapping.Count == 0)
+            //{
+            //    int failCounter = 0;
+            //    while (_activityIdMapping.Count == 0 && failCounter < 1)
+            //    {
+            //        InitializeStateEnvironment(true);
+            //        System.Threading.Thread.Sleep(500);
+            //        failCounter++;
+            //    }
+            //}
 
             var modelItem = wfDesigner.Context.Services.GetService<ModelService>().Root;
             Workflow.name = modelItem.GetValue<string>("Name");
@@ -804,94 +809,213 @@ namespace OpenRPA.Views
             }
 
         }
-        public void InitializeStateEnvironment(bool Toggle)
+        public void InitializeStateEnvironment22222(bool Toggle)
         {
             GenericTools.RunUI(() =>
             {
                 try
                 {
-                    Log.Debug("****** Create activity Map");
+
+
+                    //object rootInstance = WorkflowHelper.GetRootInstance(wfDesigner);
+                    //Dictionary<object, SourceLocation> sourceLocationMapping = new Dictionary<object, SourceLocation>();
+                    //Dictionary<object, SourceLocation> designerSourceLocationMapping = new Dictionary<object, SourceLocation>();
+
+                    //if (rootInstance != null)
+                    //{
+                    //    Activity documentRootElement = WorkflowHelper.GetRootWorkflowElement(rootInstance);
+
+                    //    //SourceLocationProvider.CollectMapping(
+                    //    //    WorkflowHelper.GetRootRuntimeWorkflowElement(this.WorkflowActivity),
+                    //    //    documentRootElement, sourceLocationMapping,
+                    //    //    wfDesigner.Context.Items.GetValue<WorkflowFileItem>().LoadedFile);
+                    //    SourceLocationProvider.CollectMapping(
+                    //        WorkflowHelper.GetRootRuntimeWorkflowElement(documentRootElement),
+                    //        documentRootElement, sourceLocationMapping,
+                    //        wfDesigner.Context.Items.GetValue<WorkflowFileItem>().LoadedFile);
+
+                    //    SourceLocationProvider.CollectMapping(
+                    //        documentRootElement,
+                    //        documentRootElement,
+                    //        designerSourceLocationMapping,
+                    //       wfDesigner.Context.Items.GetValue<WorkflowFileItem>().LoadedFile);
+
+                    //}
                     var modelService = wfDesigner.Context.Services.GetService<ModelService>();
-                    try
-                    {
-                        wfDesigner.Flush();
-                        using (var ms = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(wfDesigner.Text)))
-                        {
-                            var _workflowToRun = System.Activities.XamlIntegration.ActivityXamlServices.Load(ms) as DynamicActivity;
-                            WorkflowInspectionServices.CacheMetadata(_workflowToRun);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Debug("InitializeStateEnvironment: " + ex.Message);
-                    }
-                    _sourceLocationMapping.Clear();
-                    _activitysourceLocationMapping.Clear();
-                    _modelLocationMapping.Clear();
                     IEnumerable<ModelItem> wfElements = modelService.Find(modelService.Root, typeof(Activity)).Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.State)));
-                    ModelItem lastItem = null;
                     var map = CreateSourceLocationMapping(modelService);
+                    //_sourceLocationMapping.Clear();
+                    //_activitysourceLocationMapping.Clear();
+                    //_activityIdModelItemMapping.Clear();
+                    // _modelLocationMapping.Clear();
+
                     foreach (var modelItem in wfElements)
                     {
-                        NavigateTo(modelItem);
-                        // optimize, should we just use GetSourceLocationFromModelItem or continue using "select and get location" ?
                         var loc = GetSourceLocationFromModelItem(modelItem);
-
-                        //if (modelItem.ItemType.BaseType == typeof(Literal)) continue;
-                        if (modelItem.ItemType.Name.StartsWith("Literal")) continue;
-                        if (modelItem.ItemType.Name.StartsWith("VisualBasicValue")) continue;
-                        if (modelItem.ItemType.Name.StartsWith("VisualBasicReference")) continue;
-
-
-
                         var activity = modelItem.GetCurrentValue() as Activity;
-                        if (activity == null || activity.Id == null)
+                        var id = activity.Id;
+                        if(string.IsNullOrEmpty(id))
                         {
-                            var state = modelItem.GetCurrentValue() as System.Activities.Debugger.State;
-                            var property = typeof(System.Activities.Debugger.State).GetProperty("InternalState", BindingFlags.Instance | BindingFlags.NonPublic);
-                            if (state != null && property != null)
-                            {
-                                activity = property.GetValue(state) as Activity;
-                            }
+                            //Selection.SelectOnly(wfDesigner.Context, modelItem);
+                            //        if (wfDesigner.DebugManagerView.SelectedLocation != null)
+                            //        {
+                            //            _modelLocationMapping[modelItem] = wfDesigner.DebugManagerView.SelectedLocation;
+                            //            _activitysourceLocationMapping[activity] = wfDesigner.DebugManagerView.SelectedLocation;
+                            //            _sourceLocationMapping[activity.Id] = wfDesigner.DebugManagerView.SelectedLocation;
+                            //            _activityIdMapping[activity.Id] = activity;
+                            //            _activityIdModelItemMapping[activity.Id] = modelItem;
+                            var b = true;
                         }
-                        if (activity == null || activity.Id == null)
-                        {
-                            Log.Verbose("Debug!");
-                        }
-                        if (activity != null && activity.Id != null && !_sourceLocationMapping.ContainsKey(activity.Id))
-                        {
-                            Selection.SelectOnly(wfDesigner.Context, modelItem);
-
-                            if (wfDesigner.DebugManagerView.SelectedLocation != null)
-                            {
-                                _modelLocationMapping[modelItem] = wfDesigner.DebugManagerView.SelectedLocation;
-                                _activitysourceLocationMapping[activity] = wfDesigner.DebugManagerView.SelectedLocation;
-                                _sourceLocationMapping[activity.Id] = wfDesigner.DebugManagerView.SelectedLocation;
-                                _activityIdMapping[activity.Id] = activity;
-                                _activityIdModelItemMapping[activity.Id] = modelItem;
-                            }
-                            else
-                            {
-                                var t = wfDesigner.DebugManagerView.SelectedLocation;
-                                if (map.ContainsKey(activity))
-                                {
-                                    _modelLocationMapping[modelItem] = map[activity];
-                                    _activitysourceLocationMapping[activity] = map[activity];
-                                    _sourceLocationMapping[activity.Id] = map[activity];
-                                    _activityIdMapping[activity.Id] = activity;
-
-                                    Log.Debug(string.Format("Failed mapping '{0}' / '{1}' ", activity.Id, activity.DisplayName));
-                                }
-                                else
-                                {
-                                    Log.Debug(string.Format("Failed mapping '{0}' / '{1}' ", activity.Id, activity.DisplayName));
-                                }
-                            }
-                        }
-                        lastItem = modelItem;
+                        if (string.IsNullOrEmpty(id)) continue;
+                        //_activitysourceLocationMapping.Add(activity, loc);
+                        //_sourceLocationMapping.Add(id, loc);
+                        //_activityIdMapping.Add(id, activity);
+                        //_activityIdModelItemMapping.Add(id, modelItem);
                     }
-                    if (lastItem != null && Toggle == true) Selection.Toggle(wfDesigner.Context, lastItem);
-                    Log.Debug("****** Activity Map completed");
+
+                    //foreach (var kp in designerSourceLocationMapping)
+                    //{
+                    //    var activity = kp.Key as Activity;
+                    //    _activitysourceLocationMapping.Add(activity, kp.Value);
+                    //    if (map.ContainsKey(activity))
+                    //    {
+                    //        // _modelLocationMapping[modelItem] = map[activity];
+                    //        _activitysourceLocationMapping[activity] = map[activity];
+                    //        _sourceLocationMapping[activity.Id] = map[activity];
+                    //        _activityIdMapping[activity.Id] = activity;
+
+                    //        Log.Debug(string.Format("Failed mapping '{0}' / '{1}' ", activity.Id, activity.DisplayName));
+                    //    }
+                    //}
+                    //if (wfDesigner.DebugManagerView != null)
+                    //{
+                    //    ((System.Activities.Presentation.Debug.DebuggerService)wfDesigner.DebugManagerView).UpdateSourceLocations(designerSourceLocationMapping);
+                    //}
+                    //                    public Dictionary<ModelItem, System.Activities.Debugger.SourceLocation> _modelLocationMapping = new Dictionary<ModelItem, System.Activities.Debugger.SourceLocation>();
+                    //public Dictionary<string, System.Activities.Debugger.SourceLocation> _sourceLocationMapping = new Dictionary<string, System.Activities.Debugger.SourceLocation>();
+                    //public Dictionary<string, Activity> _activityIdMapping = new Dictionary<string, Activity>();
+                    //public Dictionary<Activity, System.Activities.Debugger.SourceLocation> _activitysourceLocationMapping = new Dictionary<Activity, System.Activities.Debugger.SourceLocation>();
+                    //public Dictionary<string, ModelItem> _activityIdModelItemMapping = new Dictionary<string, ModelItem>();
+
+
+                    //Log.Debug("****** Create activity Map");
+                    //var modelService = wfDesigner.Context.Services.GetService<ModelService>();
+                    //try
+                    //{
+                    //    wfDesigner.Flush();
+                    //    using (var ms = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(wfDesigner.Text)))
+                    //    {
+                    //        var _workflowToRun = System.Activities.XamlIntegration.ActivityXamlServices.Load(ms) as DynamicActivity;
+                    //        WorkflowInspectionServices.CacheMetadata(_workflowToRun);
+                    //    }
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    Log.Debug("InitializeStateEnvironment: " + ex.Message);
+                    //}
+                    //_sourceLocationMapping.Clear();
+                    //_activitysourceLocationMapping.Clear();
+                    //_modelLocationMapping.Clear();
+                    //IEnumerable<ModelItem> wfElements = modelService.Find(modelService.Root, typeof(Activity)).Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.State)));
+                    //ModelItem lastItem = null;
+                    //var map = CreateSourceLocationMapping(modelService);
+
+
+
+                    //foreach (var modelItem in wfElements)
+                    //{
+                    //    NavigateTo(modelItem);
+                    //    // optimize, should we just use GetSourceLocationFromModelItem or continue using "select and get location" ?
+                    //    var loc = GetSourceLocationFromModelItem(modelItem);
+
+                    //    //if (modelItem.ItemType.BaseType == typeof(Literal)) continue;
+                    //    if (modelItem.ItemType.Name.StartsWith("Literal")) continue;
+                    //    if (modelItem.ItemType.Name.StartsWith("VisualBasicValue")) continue;
+                    //    if (modelItem.ItemType.Name.StartsWith("VisualBasicReference")) continue;
+
+
+
+                    //    var activity = modelItem.GetCurrentValue() as Activity;
+                    //    if (activity == null || activity.Id == null)
+                    //    {
+                    //        var state = modelItem.GetCurrentValue() as System.Activities.Debugger.State;
+                    //        var property = typeof(System.Activities.Debugger.State).GetProperty("InternalState", BindingFlags.Instance | BindingFlags.NonPublic);
+                    //        if (state != null && property != null)
+                    //        {
+                    //            activity = property.GetValue(state) as Activity;
+                    //        }
+                    //    }
+                    //    if (activity == null || activity.Id == null)
+                    //    {
+                    //        Log.Verbose("Debug!");
+                    //    }
+                    //    if (activity != null && activity.Id != null && !_sourceLocationMapping.ContainsKey(activity.Id))
+                    //    {
+                    //        Selection.SelectOnly(wfDesigner.Context, modelItem);
+
+                    //        if (wfDesigner.DebugManagerView.SelectedLocation != null)
+                    //        {
+                    //            _modelLocationMapping[modelItem] = wfDesigner.DebugManagerView.SelectedLocation;
+                    //            _activitysourceLocationMapping[activity] = wfDesigner.DebugManagerView.SelectedLocation;
+                    //            _sourceLocationMapping[activity.Id] = wfDesigner.DebugManagerView.SelectedLocation;
+                    //            _activityIdMapping[activity.Id] = activity;
+                    //            _activityIdModelItemMapping[activity.Id] = modelItem;
+                    //        }
+                    //        else
+                    //        {
+                    //            var t = wfDesigner.DebugManagerView.SelectedLocation;
+                    //            if (map.ContainsKey(activity))
+                    //            {
+                    //                _modelLocationMapping[modelItem] = map[activity];
+                    //                _activitysourceLocationMapping[activity] = map[activity];
+                    //                _sourceLocationMapping[activity.Id] = map[activity];
+                    //                _activityIdMapping[activity.Id] = activity;
+
+                    //                Log.Debug(string.Format("Failed mapping '{0}' / '{1}' ", activity.Id, activity.DisplayName));
+                    //            }
+                    //            else
+                    //            {
+                    //                Log.Debug(string.Format("Failed mapping '{0}' / '{1}' ", activity.Id, activity.DisplayName));
+                    //            }
+                    //        }
+                    //    }
+                    //    lastItem = modelItem;
+                    //}
+                    //if (lastItem != null && Toggle == true) Selection.Toggle(wfDesigner.Context, lastItem);
+                    //Log.Debug("****** Activity Map completed");
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+            });
+        }
+        public void InitializeStateEnvironment()
+        {
+            GenericTools.RunUI(() =>
+            {
+                try
+                {
+                    var modelService = wfDesigner.Context.Services.GetService<ModelService>();
+                    IEnumerable<ModelItem> wfElements = modelService.Find(modelService.Root, typeof(Activity)).Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.State)));
+                    var map = CreateSourceLocationMapping(modelService);
+                    _sourceLocationMapping.Clear();
+                    _activityIdMapping.Clear();
+                    _activitysourceLocationMapping.Clear();
+                    _activityIdModelItemMapping.Clear();
+                    _modelLocationMapping.Clear();
+
+                    foreach (var modelItem in wfElements)
+                    {
+                        var loc = GetSourceLocationFromModelItem(modelItem);
+                        var activity = modelItem.GetCurrentValue() as Activity;
+                        var id = activity.Id;
+                        if (string.IsNullOrEmpty(id)) continue;
+                        _activitysourceLocationMapping.Add(activity, loc);
+                        _sourceLocationMapping.Add(id, loc);
+                        _activityIdMapping.Add(id, activity);
+                        _activityIdModelItemMapping.Add(id, modelItem);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -926,20 +1050,22 @@ namespace OpenRPA.Views
         {
             if (SlowMotion) System.Threading.Thread.Sleep(500);
 
-            if (_activityIdMapping == null || ActivityId == "1") return;
-            if (!_activityIdMapping.ContainsKey(ActivityId))
-            {
-                // Log.Debug("Failed locating ActivityId : " + ActivityId);
-                return;
-            }
-            if (!_sourceLocationMapping.ContainsKey(ActivityId)) return;
-            if (!_sourceLocationMapping.ContainsKey(ChildActivityId)) return;
+            //if (_activityIdMapping == null || ActivityId == "1") return;
+            //if (!_activityIdMapping.ContainsKey(ActivityId))
+            //{
+            //    // Log.Debug("Failed locating ActivityId : " + ActivityId);
+            //    return;
+            //}
+            //if (!_sourceLocationMapping.ContainsKey(ActivityId)) return;
+            //if (!_sourceLocationMapping.ContainsKey(ChildActivityId)) return;
 
 
             System.Activities.Debugger.SourceLocation location;
 
             //location = _sourceLocationMapping[ActivityId];
             //BreakPointhit = wfDesigner.DebugManagerView.GetBreakpointLocations().ContainsKey(location);
+
+            InitializeStateEnvironment();
 
             location = _sourceLocationMapping[ChildActivityId];
             if(!BreakPointhit)
@@ -1101,42 +1227,42 @@ namespace OpenRPA.Views
                     return;
                 }
             }
-            GenericTools.RunUI(() =>
-            {
-                if (_activityIdMapping.Count == 0)
-                {
-                    int failCounter = 0;
-                    while (_activityIdMapping.Count == 0 && failCounter < 3)
-                    {
-                        System.Windows.Forms.Application.DoEvents();
-                        InitializeStateEnvironment(true);
-                        System.Threading.Thread.Sleep(500);
-                        failCounter++;
-                    }
-                }
-                if (_activityIdMapping.Count == 0)
-                {
-                    _ = Save();
-                    // ReloadDesigner();
-                }
-                if (_activityIdMapping.Count == 0)
-                {
-                    int failCounter = 0;
-                    while (_activityIdMapping.Count == 0 && failCounter < 3)
-                    {
-                        System.Windows.Forms.Application.DoEvents();
-                        InitializeStateEnvironment(true);
-                        System.Threading.Thread.Sleep(500);
-                        failCounter++;
-                    }
-                }
+            //GenericTools.RunUI(() =>
+            //{
+            //    if (_activityIdMapping.Count == 0)
+            //    {
+            //        int failCounter = 0;
+            //        while (_activityIdMapping.Count == 0 && failCounter < 3)
+            //        {
+            //            System.Windows.Forms.Application.DoEvents();
+            //            InitializeStateEnvironment(true);
+            //            System.Threading.Thread.Sleep(500);
+            //            failCounter++;
+            //        }
+            //    }
+            //    if (_activityIdMapping.Count == 0)
+            //    {
+            //        _ = Save();
+            //        // ReloadDesigner();
+            //    }
+            //    if (_activityIdMapping.Count == 0)
+            //    {
+            //        int failCounter = 0;
+            //        while (_activityIdMapping.Count == 0 && failCounter < 3)
+            //        {
+            //            System.Windows.Forms.Application.DoEvents();
+            //            InitializeStateEnvironment(true);
+            //            System.Threading.Thread.Sleep(500);
+            //            failCounter++;
+            //        }
+            //    }
 
-            });
-            if (_activityIdMapping.Count == 0)
-            {
-                Log.Error("Failed mapping activites!!!!!");
-                throw new Exception("Failed mapping activites!!!!!");
-            }
+            //});
+            //if (_activityIdMapping.Count == 0)
+            //{
+            //    Log.Error("Failed mapping activites!!!!!");
+            //    throw new Exception("Failed mapping activites!!!!!");
+            //}
             if(instance == null)
             {
                 var param = new Dictionary<string, object>();

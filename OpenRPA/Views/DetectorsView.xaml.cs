@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -50,13 +51,12 @@ namespace OpenRPA.Views
             DataContext = this;
             detectorPlugins.ItemPropertyChanged += DetectorPlugins_ItemPropertyChanged;
         }
-        private bool isSaving = false;
+        static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
         private async void DetectorPlugins_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             try
             {
-                if (isSaving) return;
-                isSaving = true;
+                await semaphoreSlim.WaitAsync();
                 var list = (ExtendedObservableCollection<OpenRPA.Interfaces.IDetectorPlugin>)sender;
                 foreach(var p in list.ToList())
                 {
@@ -94,7 +94,7 @@ namespace OpenRPA.Views
             }
             finally
             {
-                isSaving = false;
+                semaphoreSlim.Release();
             }
         }
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -107,9 +107,6 @@ namespace OpenRPA.Views
             dp = Plugins.AddDetector(d);
             dp.OnDetector += main.OnDetector;
             NotifyPropertyChanged("detectorPlugins");
-        }
-        private void ContentPresenter_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
         }
         private async void LidtDetectors_KeyUp(object sender, KeyEventArgs e)
         {

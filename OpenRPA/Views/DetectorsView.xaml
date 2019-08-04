@@ -42,7 +42,7 @@
                 </TreeView.ItemTemplate>
             </TreeView>
             <GridSplitter Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Stretch" ResizeDirection="Columns" Margin="0" Padding="0" Background = "Gray" Width = "2" />
-            <ContentPresenter Content="{Binding ElementName=lidtDetectors, Path=SelectedValue.editor}" DataContextChanged="ContentPresenter_DataContextChanged" Grid.Column="1" Margin="0,4,0,4" />
+            <ContentPresenter Content="{Binding ElementName=lidtDetectors, Path=SelectedValue.editor}" Grid.Column="1" Margin="0,4,0,4" />
         </Grid>
 
     </DockPanel>

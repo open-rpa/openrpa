@@ -81,7 +81,6 @@ namespace OpenRPA
                 }
             }
         }
-
         [JsonIgnore]
         public List<WorkflowInstance> Instances
         {
@@ -108,18 +107,8 @@ namespace OpenRPA
                 return false;
             }
         }
-
-        //[JsonIgnore]
-        //public System.Collections.ObjectModel.ObservableCollection<WorkflowInstance> Instances {
-        //    get { if (_Instances == null) _Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>(); return _Instances; }
-        //    set { _Instances = value; }
-        //}
-        //[JsonIgnore]
-        // public Action<Workflow, WorkflowInstance> idleOrComplete { get; set; }
-        //public event WorkflowInstance.idleOrComplete OnIdleOrComplete;
         [JsonIgnore]
         public Project Project { get; set; }
-        //private System.Collections.ObjectModel.ObservableCollection<WorkflowInstance> _Instances;
         public static Workflow FromFile(Project project, string Filename)
         {
             var result = new Workflow();
@@ -319,7 +308,6 @@ namespace OpenRPA
                 return wf;
             }
         }
-        // public WorkflowInstance CreateInstance() { return CreateInstance(new Dictionary<string, object>(), null, null, null, null); }
         public WorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, 
             WorkflowInstance.idleOrComplete idleOrComplete, WorkflowInstance.VisualTrackingHandler VisualTracking)
         {
@@ -331,27 +319,6 @@ namespace OpenRPA
             //instance.Run();
             return instance;
         }
-        //public WorkflowInstance Run() { return Run(new Dictionary<string, object>(), null, null, null); }
-        //public WorkflowInstance Run(Dictionary<string, object> Parameters, string queuename, string correlationId, WorkflowInstance.idleOrComplete idleOrComplete)
-        //{
-        //    var instance = WorkflowInstance.Create(this, Parameters);
-        //    instance.queuename = queuename; instance.correlationId = correlationId;
-        //    if (idleOrComplete != null) instance.OnIdleOrComplete += idleOrComplete;
-        //    Instances.Add(instance);
-        //    instance.Run();
-        //    return instance;
-        //}
-        //public void onIdleOrComplete(WorkflowInstance instance)
-        //{
-        //    Log.Debug("onIdleOrComplete state: " + instance.state);
-        //    if (!string.IsNullOrEmpty(instance.errormessage)) Log.Error(instance.errormessage);
-        //    if(instance.state != "idle")
-        //    {
-        //        Log.Output("Workflow " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
-        //        GenericTools.restore(GenericTools.mainWindow);
-        //    }
-        //    OnIdleOrComplete?.Invoke(instance, EventArgs.Empty);
-        //}
     }
     public enum workflowparameterdirection
     {

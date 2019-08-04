@@ -79,7 +79,6 @@ namespace OpenRPA.Interfaces.Views
                 NotifyPropertyChanged("Entity");
             }
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var view = new KeyboardSeqWindow();

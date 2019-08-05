@@ -67,8 +67,12 @@ namespace OpenRPA
         {
             if(WindowState== WindowState.Minimized)
             {
-                this.Visibility = Visibility.Hidden;
+                Visibility = Visibility.Hidden;
                 App.notifyIcon.Visible = true;
+            } else
+            {
+                Visibility = Visibility.Visible;
+                App.notifyIcon.Visible = false;
             }
         }
         public MainWindow()

@@ -16,7 +16,7 @@
             </TextBlock>  
             here first. 
         </TextBlock>
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="66,120,0,0" Text="Username" VerticalAlignment="Top" Width="67" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="56,120,0,0" Text="Username" VerticalAlignment="Top" Width="67" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="58,168,0,0" Text="Password" VerticalAlignment="Top" Width="77" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="118,115,0,0" Name="TxtUsername" VerticalAlignment="Top" Width="247" KeyUp="TxtUsername_KeyUp" />
         <PasswordBox Height="23" HorizontalAlignment="Left" Margin="118,168,0,0" Name="txtPassword" VerticalAlignment="Top" Width="247" KeyUp="TxtPassword_KeyUp" />

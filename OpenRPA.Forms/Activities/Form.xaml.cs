@@ -46,9 +46,28 @@ namespace OpenRPA.Forms.Activities
         public Form(string form)
         {
             InitializeComponent();
+            var dict = new ResourceDictionary();
+            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml") });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml") });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml") });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml") });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/Forge.Forms;component/Themes/Material.xaml") });
+
             xmlString = form;
             DataContext = this;
         }
+        private void Window_Unloaded(object sender, RoutedEventArgs e)
+        {
+            foreach(var rec in Application.Current.Resources.MergedDictionaries.ToList())
+            {
+                if (rec.Source == null) continue;
+                if (rec.Source.AbsolutePath.Contains("Forge.Forms")) Application.Current.Resources.MergedDictionaries.Remove(rec);
+                if (rec.Source.AbsolutePath.Contains("MahApps.Metro")) Application.Current.Resources.MergedDictionaries.Remove(rec);
+                if (rec.Source.AbsolutePath.Contains("MaterialDesignThemes.Wpf")) Application.Current.Resources.MergedDictionaries.Remove(rec);
+            }
+        }
+
         private IFormDefinition compiledDefinition;
         public IFormDefinition CompiledDefinition
         {

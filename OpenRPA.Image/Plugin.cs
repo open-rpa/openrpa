@@ -15,6 +15,7 @@ namespace OpenRPA.Image
         public event Action<IPlugin, IRecordEvent> OnUserAction;
         public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)
         {
+            if (timeout == TimeSpan.Zero) OnUserAction?.Invoke(null, null); // dummy use of OnUserAction to get rid of warning
             throw new NotImplementedException();
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)

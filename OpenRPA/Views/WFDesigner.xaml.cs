@@ -864,7 +864,6 @@ namespace OpenRPA.Views
                             //            _sourceLocationMapping[activity.Id] = wfDesigner.DebugManagerView.SelectedLocation;
                             //            _activityIdMapping[activity.Id] = activity;
                             //            _activityIdModelItemMapping[activity.Id] = modelItem;
-                            var b = true;
                         }
                         if (string.IsNullOrEmpty(id)) continue;
                         //_activitysourceLocationMapping.Add(activity, loc);

@@ -67,7 +67,13 @@ namespace OpenRPA.Forms.Activities
                 if (rec.Source.AbsolutePath.Contains("MaterialDesignThemes.Wpf")) Application.Current.Resources.MergedDictionaries.Remove(rec);
             }
         }
-
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (e.HeightChanged)
+                Top += (e.PreviousSize.Height - e.NewSize.Height) / 2;
+            if (e.WidthChanged)
+                Left += (e.PreviousSize.Width - e.NewSize.Width) / 2;
+        }
         private IFormDefinition compiledDefinition;
         public IFormDefinition CompiledDefinition
         {

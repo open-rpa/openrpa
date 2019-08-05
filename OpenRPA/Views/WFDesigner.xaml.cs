@@ -1047,51 +1047,59 @@ namespace OpenRPA.Views
         }
         public void onVisualTracking(WorkflowInstance Instance, string ActivityId, string ChildActivityId, string State)
         {
-            if (SlowMotion) System.Threading.Thread.Sleep(500);
-
-            //if (_activityIdMapping == null || ActivityId == "1") return;
-            //if (!_activityIdMapping.ContainsKey(ActivityId))
-            //{
-            //    // Log.Debug("Failed locating ActivityId : " + ActivityId);
-            //    return;
-            //}
-            //if (!_sourceLocationMapping.ContainsKey(ActivityId)) return;
-            //if (!_sourceLocationMapping.ContainsKey(ChildActivityId)) return;
-
-
-            System.Activities.Debugger.SourceLocation location;
-
-            //location = _sourceLocationMapping[ActivityId];
-            //BreakPointhit = wfDesigner.DebugManagerView.GetBreakpointLocations().ContainsKey(location);
-
-            InitializeStateEnvironment();
-            if (!_sourceLocationMapping.ContainsKey(ChildActivityId)) return;
-            location = _sourceLocationMapping[ChildActivityId];
-            if(!BreakPointhit)
+            try
             {
-                BreakPointhit = wfDesigner.DebugManagerView.GetBreakpointLocations().ContainsKey(location);
-            }
-            ModelItem model = _activityIdModelItemMapping[ChildActivityId];
-            if (VisualTracking || BreakPointhit || Singlestep)
-            {
-                GenericTools.RunUI(() =>
+                if (SlowMotion) System.Threading.Thread.Sleep(500);
+
+                //if (_activityIdMapping == null || ActivityId == "1") return;
+                //if (!_activityIdMapping.ContainsKey(ActivityId))
+                //{
+                //    // Log.Debug("Failed locating ActivityId : " + ActivityId);
+                //    return;
+                //}
+                //if (!_sourceLocationMapping.ContainsKey(ActivityId)) return;
+                //if (!_sourceLocationMapping.ContainsKey(ChildActivityId)) return;
+
+
+                System.Activities.Debugger.SourceLocation location;
+
+                //location = _sourceLocationMapping[ActivityId];
+                //BreakPointhit = wfDesigner.DebugManagerView.GetBreakpointLocations().ContainsKey(location);
+
+                InitializeStateEnvironment();
+                if (!_sourceLocationMapping.ContainsKey(ChildActivityId)) return;
+                location = _sourceLocationMapping[ChildActivityId];
+                if (location == null) return;
+                if (!BreakPointhit)
                 {
-                    GenericTools.restore();
-                    NavigateTo(model);
-                    SetDebugLocation(location);
-
-                });
-            }
-            if (BreakPointhit || Singlestep)
-            {
-                using (resumeRuntimeFromHost = new System.Threading.AutoResetEvent(false))
-                {
-                    BreakPointhit = true;
-                    showVariables(Instance.Variables);
-                    GenericTools.restore();
-                    resumeRuntimeFromHost.WaitOne();
+                    BreakPointhit = wfDesigner.DebugManagerView.GetBreakpointLocations().ContainsKey(location);
                 }
-                resumeRuntimeFromHost = null;
+                ModelItem model = _activityIdModelItemMapping[ChildActivityId];
+                if (VisualTracking || BreakPointhit || Singlestep)
+                {
+                    GenericTools.RunUI(() =>
+                    {
+                        GenericTools.restore();
+                        NavigateTo(model);
+                        SetDebugLocation(location);
+
+                    });
+                }
+                if (BreakPointhit || Singlestep)
+                {
+                    using (resumeRuntimeFromHost = new System.Threading.AutoResetEvent(false))
+                    {
+                        BreakPointhit = true;
+                        showVariables(Instance.Variables);
+                        GenericTools.restore();
+                        resumeRuntimeFromHost.WaitOne();
+                    }
+                    resumeRuntimeFromHost = null;
+                }
+            }
+            catch (Exception ex) 
+            {
+                Log.Error(ex.ToString());
             }
         }
         internal void onIdle(WorkflowInstance instance, EventArgs e)

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{69ADD5F8-9036-4FE3-BBDC-175E49560C2C}</ProjectGuid>
+    <ProjectGuid>{E0736EDD-C584-43B9-B9EB-9D5625DA5D23}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpenRPA.AHK</RootNamespace>
-    <AssemblyName>OpenRPA.AHK</AssemblyName>
+    <RootNamespace>OpenRPA.Script</RootNamespace>
+    <AssemblyName>OpenRPA.Script</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -25,12 +25,15 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\dist\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.5.0.4\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="sharpAHK, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
@@ -40,7 +43,11 @@
     <Reference Include="System.Activities" />
     <Reference Include="System.Activities.Presentation" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Management.Automation.dll.10.0.10586.0\lib\net40\System.Management.Automation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -51,29 +58,64 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activities\ExecuteScript.cs" />
-    <Compile Include="Activities\ExecuteFunction.cs" />
-    <Compile Include="Activities\ExecuteScriptDesigner.xaml.cs">
-      <DependentUpon>ExecuteScriptDesigner.xaml</DependentUpon>
+    <Compile Include="Activities\ExecuteAHKFunction.cs" />
+    <Compile Include="Activities\ExecuteAHKFunctionDesigner.xaml.cs">
+      <DependentUpon>ExecuteAHKFunctionDesigner.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Activities\ExecuteFunctionDesigner.xaml.cs">
-      <DependentUpon>ExecuteFunctionDesigner.xaml</DependentUpon>
+    <Compile Include="Activities\ExecuteAHKScript.cs" />
+    <Compile Include="Activities\ExecuteAHKScriptDesigner.xaml.cs">
+      <DependentUpon>ExecuteAHKScriptDesigner.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Activities\InvokeCode.cs" />
+    <Compile Include="Activities\InvokeCodeDesigner.xaml.cs">
+      <DependentUpon>InvokeCodeDesigner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Activities\Editor.xaml.cs">
+      <DependentUpon>Editor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ResFinder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Activities\ExecuteAHKFunctionDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\ExecuteAHKScriptDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\InvokeCodeDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Activities\Editor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj">
+      <Project>{481bd5a1-5e8d-42a9-bd31-78becfaf15f3}</Project>
+      <Name>OpenRPA.Interfaces</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\designer\prompt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\toolbox\prompt.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Activities\ExecuteScriptDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Activities\ExecuteFunctionDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <Resource Include="Resources\designer\comment.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\toolbox\comment.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\designer\autohotkey.png" />

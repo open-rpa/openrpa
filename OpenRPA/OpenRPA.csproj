@@ -612,10 +612,6 @@
     <Resource Include="Resources\Selector\Window.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenRPA.AHK\OpenRPA.AHK.csproj">
-      <Project>{69add5f8-9036-4fe3-bbdc-175e49560c2c}</Project>
-      <Name>OpenRPA.AHK</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OpenRPA.ExpressionEditor\OpenRPA.ExpressionEditor.csproj">
       <Project>{0d52b2e1-1998-4238-b601-57a2d6ade2e8}</Project>
       <Name>OpenRPA.ExpressionEditor</Name>
@@ -651,6 +647,10 @@
     <ProjectReference Include="..\OpenRPA.Office\OpenRPA.Office.csproj">
       <Project>{69853616-0e24-4be4-b4a8-497183d298e0}</Project>
       <Name>OpenRPA.Office</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenRPA.Script\OpenRPA.Script.csproj">
+      <Project>{e0736edd-c584-43b9-b9eb-9d5625da5d23}</Project>
+      <Name>OpenRPA.Script</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenRPA.Windows\OpenRPA.Windows.csproj">
       <Project>{22575d87-a99d-4706-b022-c7e575314a94}</Project>

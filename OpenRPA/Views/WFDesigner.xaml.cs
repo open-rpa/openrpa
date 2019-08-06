@@ -1010,6 +1010,7 @@ namespace OpenRPA.Views
                         var activity = modelItem.GetCurrentValue() as Activity;
                         var id = activity.Id;
                         if (string.IsNullOrEmpty(id)) continue;
+                        if(_sourceLocationMapping.ContainsKey(id)) continue;
                         _activitysourceLocationMapping.Add(activity, loc);
                         _sourceLocationMapping.Add(id, loc);
                         _activityIdMapping.Add(id, activity);

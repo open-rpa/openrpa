@@ -94,9 +94,17 @@ namespace OpenRPA.Interfaces
             //ICollection<IRecording> plugins = new List<IRecording>();
             foreach (Type type in pluginTypes)
             {
-                IPlugin plugin = (IPlugin)Activator.CreateInstance(type);
-                plugin.Initialize();
-                Plugins.recordPlugins.Add(plugin);
+                try
+                {
+                    IPlugin plugin = (IPlugin)Activator.CreateInstance(type);
+                    Log.Information("Initialize plugin " + plugin.Name);
+                    plugin.Initialize();
+                    Plugins.recordPlugins.Add(plugin);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
             }
         }
 

@@ -15,6 +15,7 @@ using System.CodeDom.Compiler;
 using System.Management.Automation.Runspaces;
 using System.Collections;
 using System.Collections.ObjectModel;
+using sharpAHK;
 
 namespace OpenRPA.Script.Activities
 {
@@ -32,13 +33,22 @@ namespace OpenRPA.Script.Activities
         [RequiredArgument]
         public InArgument<string> Language { get; set; }
         public OutArgument<Collection<System.Management.Automation.PSObject>> PipelineOutput { get; set; }
+        public void New_AHKSession(bool NewInstance = false)
+        {
+            if (ahkGlobal.ahkdll == null || NewInstance == true) { ahkGlobal.ahkdll = new AutoHotkey.Interop.AutoHotkeyEngine(); }
 
+            else { ahkGlobal.ahkdll = null; }  // option to start new AHK session (resets variables and previously loaded functions)
+
+            ahkGlobal.LoadedAHK = new List<string>(); // reset loaded ahk list
+        }
         public static RunspacePool pool { get; set; } = null;
         public static Runspace runspace = null;
+        //private static ScriptEngine _engine;
+        //private static ScriptScope _scope;
         protected override void Execute(CodeActivityContext context)
         {
             var code = Code.Get(context);
-            var language = Language.Get(context); 
+            var language = Language.Get(context);
             var variables = new Dictionary<string, Type>();
             var variablevalues = new Dictionary<string, object>();
             var vars = context.DataContext.GetProperties();
@@ -54,10 +64,10 @@ namespace OpenRPA.Script.Activities
                 variablevalues.Add(v.DisplayName, value);
             }
             string sourcecode = code;
-            if(language=="VB") sourcecode = GetVBHeaderText(variables, "Expression") + code + GetVBFooterText();
+            if (language == "VB") sourcecode = GetVBHeaderText(variables, "Expression") + code + GetVBFooterText();
             if (language == "C#") sourcecode = GetCSharpHeaderText(variables, "Expression") + code + GetCSharpFooterText();
 
-            if(language == "PowerShell")
+            if (language == "PowerShell")
             {
 
                 if (runspace == null)
@@ -66,7 +76,7 @@ namespace OpenRPA.Script.Activities
                     runspace.Open();
                 }
 
-                    using (var pipeline = runspace.CreatePipeline())
+                using (var pipeline = runspace.CreatePipeline())
                 {
                     Command cmd = new Command(sourcecode, true);
                     foreach (var parameter in variablevalues)
@@ -84,7 +94,7 @@ namespace OpenRPA.Script.Activities
                     {
                         var value = runspace.SessionStateProxy.GetVariable(v.DisplayName);
                         var myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
-                        if (myVar != null)
+                        if (myVar != null && value != null && value != "")
                         {
                             //var myValue = myVar.GetValue(context.DataContext);
                             myVar.SetValue(context.DataContext, value);
@@ -96,6 +106,90 @@ namespace OpenRPA.Script.Activities
                 return;
             }
 
+            if (language == "AutoHotkey")
+            {
+                if (sharpAHK.ahkGlobal.ahkdll == null) { New_AHKSession(true); }
+                foreach (var parameter in variablevalues)
+                {
+                    if (parameter.Value == null) continue;
+                    sharpAHK.ahkGlobal.ahkdll.SetVar(parameter.Key, parameter.Value.ToString());
+                }
+                sharpAHK.ahkGlobal.ahkdll.ExecRaw(code);
+                foreach (dynamic v in vars)
+                {
+                    var value = sharpAHK.ahkGlobal.ahkdll.GetVar(v.DisplayName);
+                    PropertyDescriptor myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
+                    if (myVar != null && value != null && value != "")
+                    {
+                        if (myVar.PropertyType == typeof(string))
+                            myVar.SetValue(context.DataContext, value);
+                        else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(value.ToString()));
+                        else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(value.ToString()));
+                        else Log.Warning("Ignorering variable " + v.DisplayName + " of type " + myVar.PropertyType.FullName);
+                        //var myValue = myVar.GetValue(context.DataContext);
+
+                    }
+                }
+                return;
+            }
+            //if (language == "Python2222")
+            //{
+            //    using (Python.Runtime.Py.GIL())
+            //    {
+            //        // Python.Runtime.PythonEngine.Exec(code);
+            //        Python.Runtime.PythonEngine.RunSimpleString(code);
+            //    }
+            //    return;
+            //}
+            if (language == "Python")
+            {
+                // http://putridparrot.com/blog/hosting-ironpython-in-a-c-application/
+                // http://jonsblogat.blogspot.com/2011/06/adding-scripting-support-to-wpf.html
+                //var ipy = IronPython.Hosting.Python.CreateRuntime();
+                var engine = IronPython.Hosting.Python.CreateEngine();
+                var paths = Environment.GetEnvironmentVariable("path").Split(';');
+                var libs = new List<string>();
+                foreach (var p in paths.Where(x=> x.ToLower().Contains("python")))
+                {
+                    if(System.IO.Directory.Exists(p) && (p.ToLower().Contains("ip") || p.ToLower().Contains("ironpython")))
+                    {
+                        libs.Add(p);
+                        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "Lib"))) libs.Add(System.IO.Path.Combine(p, "Lib"));
+                        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "lib\\site-packages"))) libs.Add(System.IO.Path.Combine(p, "lib\\site-packages"));
+                        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "DLLs"))) libs.Add(System.IO.Path.Combine(p, "DLLs"));
+                    }
+                    
+                }
+                engine.SetSearchPaths(libs);
+                var scope = engine.CreateScope();
+                foreach (var parameter in variablevalues)
+                {
+                    if (parameter.Value == null) continue;
+                    scope.SetVariable(parameter.Key, parameter.Value);
+                }
+                var source = engine.CreateScriptSourceFromString(code, Microsoft.Scripting.SourceCodeKind.Statements);
+                var errors = new ErrorListener();
+                var command = source.Compile(errors);
+                if(command == null)
+                {
+                    foreach(var e in errors.errors)
+                    {
+                        Console.WriteLine(e.source.ToString() + "(" + e.span.Start + "): " + e.message);
+                    }
+                }
+                var result = source.Execute(scope);
+                foreach (dynamic v in vars)
+                {
+                    var value = scope.GetVariable(v.DisplayName);
+                    var myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
+                    if (myVar != null && value != null && value.ToString() != "")
+                    {
+                        //var myValue = myVar.GetValue(context.DataContext);
+                        myVar.SetValue(context.DataContext, value);
+                    }
+                }
+                return;
+            }
 
             var names = new List<string>();
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
@@ -111,7 +205,7 @@ namespace OpenRPA.Script.Activities
                     {
                         if (asm.Location.Contains("Microsoft.Office.Interop")) continue;
                         if (string.IsNullOrEmpty(asm.Location)) continue;
-                        if(asm.Location.Contains("System.Numerics.Vectors"))
+                        if (asm.Location.Contains("System.Numerics.Vectors"))
                         {
                             continue;
                         }
@@ -129,7 +223,6 @@ namespace OpenRPA.Script.Activities
             }
             CompileAndRun(language, sourcecode, assemblyLocations.ToArray(), variablevalues, context);
         }
-
         private static Dictionary<string, CompilerResults> cache = new Dictionary<string, CompilerResults>();
         public void CompileAndRun(string language, string code, string[] references, Dictionary<string, object> variablevalues, CodeActivityContext context)
         {
@@ -149,7 +242,7 @@ namespace OpenRPA.Script.Activities
 
                 CompilerParams.ReferencedAssemblies.AddRange(references);
                 CodeDomProvider provider = null;
-                if (language=="VB")
+                if (language == "VB")
                 {
                     provider = new Microsoft.VisualBasic.VBCodeProvider();
                 }
@@ -226,8 +319,6 @@ namespace OpenRPA.Script.Activities
                 }
             }
         }
-
-
         private List<string> Namespaces = new List<string>() { "System", "System.Collections", "System.Data" };
         public string GetCSharpHeaderText(Dictionary<string, Type> variables, string moduleName)
         {

@@ -1,0 +1,200 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="Python" extensions=".py;.pyw" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Comment" foreground="Green" exampleText="# comment" />
+  <Color name="String" foreground="Gray" exampleText="name = 'abc'"/>
+  <Color name="MethodCall" foreground="Purple" exampleText="def Hello()"/>
+  <Color name="NumberLiteral" foreground="DarkBlue" exampleText="3.1415f"/>
+  <Color name="Keywords" fontWeight="bold" foreground="Blue" exampleText="if"/>
+
+  <Property name="DocCommentMarker" value="///" />
+
+  <RuleSet name="CommentMarkerSet">
+    <Keywords fontWeight="bold" foreground="Red">
+      <Word>TODO</Word>
+      <Word>FIXME</Word>
+    </Keywords>
+    <Keywords fontWeight="bold" foreground="#E0E000">
+      <Word>HACK</Word>
+      <Word>UNDONE</Word>
+    </Keywords>
+  </RuleSet>
+
+  <RuleSet>
+    <Span color="Comment" ruleSet="CommentMarkerSet">
+      <Begin>\#</Begin>
+    </Span>
+
+    <Span color="String" multiline="true">
+      <Begin>'''</Begin>
+      <End>'''</End>
+    </Span>
+    <Span color="String" multiline="true">
+      <Begin>"""</Begin>
+      <End>"""</End>
+    </Span>
+
+    <Span color="String">
+      <Begin>"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+    <Span color="String">
+      <Begin>'</Begin>
+      <End>'</End>
+      <RuleSet>
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+
+    <Keywords color="Keywords">
+      <Word>and</Word>
+      <Word>as</Word>
+      <Word>assert</Word>
+      <Word>break</Word>
+      <Word>class</Word>
+      <Word>continue</Word>
+      <Word>def</Word>
+      <Word>del</Word>
+      <Word>elif</Word>
+      <Word>else</Word>
+      <Word>except</Word>
+      <Word>exec</Word>
+      <Word>False</Word>
+      <Word>finally</Word>
+      <Word>for</Word>
+      <Word>from</Word>
+      <Word>global</Word>
+      <Word>if</Word>
+      <Word>import</Word>
+      <Word>in</Word>
+      <Word>is</Word>
+      <Word>lambda</Word>
+      <Word>None</Word>
+      <Word>nonlocal</Word>
+      <Word>not</Word>
+      <Word>or</Word>
+      <Word>pass</Word>
+      <Word>print</Word>
+      <Word>raise</Word>
+      <Word>return</Word>
+      <Word>True</Word>
+      <Word>try</Word>
+      <Word>while</Word>
+      <Word>with</Word>
+      <Word>yield</Word>
+      <Word>async</Word>
+      <Word>await</Word>
+    </Keywords>
+
+    <Rule color="MethodCall">
+      \b
+      [\d\w_]+  # an identifier
+      (?=\s*\() # followed by (
+    </Rule>
+    <Rule color="NumberLiteral">
+      \b0[xX][0-9a-fA-F]+  # hex number
+      (	\b\d+(\.[0-9]+)?   #number with optional floating point
+      |	\.[0-9]+           #or just starting with floating point
+      )
+      ([eE][+-]?[0-9]+)? # optional exponent
+    </Rule>
+  </RuleSet>
+</SyntaxDefinition>
+<!--<SyntaxDefinition name="Python" extensions=".py">
+  <Environment>
+    <Custom name="TypeReference" bold="false" italic="false" color="#04ABAB" />
+    <Custom name="UnknownEntity" bold="false" italic="false" color="#AB0404" />
+    <Default bold="false" italic="false" color="White" bgcolor="#242424" />
+    <Selection bold="false" italic="false" color="#D4D0C8" bgcolor="Gray" />
+    <VRuler bold="false" italic="false" color="#6897BB" />
+    <InvalidLines bold="false" italic="false" color="#999999" />
+    <CaretMarker bold="false" italic="false" color="#999999" />
+    <LineNumbers bold="false" italic="false" color="#6897BB" bgcolor="#242424" />
+    <FoldLine bold="false" italic="false" color="Gray" bgcolor="Gray" />
+    <FoldMarker bold="false" italic="false" color="Gray" bgcolor="#242424" />
+    <SelectedFoldLine bold="false" italic="false" color="Gray" />
+    <EOLMarkers bold="false" italic="false" color="#999999" />
+    <SpaceMarkers bold="false" italic="false" color="#999999" />
+    <TabMarkers bold="false" italic="false" color="#999999" />
+  </Environment>
+  <Properties>
+    <Property name="LineComment" value="#" />
+  </Properties>
+  <Digits name="Digits" color="#AE81FF" />
+  <RuleSets>
+    <RuleSet ignorecase="false">
+      <Delimiters>()[]{}@,:.`=;+-*/% &amp;|^&gt;&lt;</Delimiters>
+      <Span name="Char" stopateol="true" color="#E6DB74" escapecharacter="\">
+        <Begin>'</Begin>
+        <End>'</End>
+      </Span>
+      <Span name="DocComment" color="#75715E">
+        <Begin>"""</Begin>
+        <End>"""</End>
+      </Span>
+      <Span name="LineComment" stopateol="true" color="#75715E">
+        <Begin>#</Begin>
+      </Span>
+      <Span name="String" stopateol="true" color="#E6DB74" escapecharacter="\">
+        <Begin>"</Begin>
+        <End>"</End>
+      </Span>
+      <MarkPrevious bold="true" color="White">(</MarkPrevious>
+      <KeyWords name="BuiltInStatements" bold="true" color="#F92672">
+        <Key word="assert" />
+        <Key word="del" />
+        <Key word="exec" />
+        <Key word="global" />
+        <Key word="lambda" />
+        <Key word="print" />
+      </KeyWords>
+      <KeyWords name="ClassStatement" color="#A6E22E" bold="true">
+        <Key word="class" />
+      </KeyWords>
+      <KeyWords name="ExceptionHandlingStatements" bold="true" color="#F92672">
+        <Key word="except" />
+        <Key word="finally" />
+        <Key word="raise" />
+        <Key word="try" />
+      </KeyWords>
+      <KeyWords name="FunctionDefinition" italic="true" color="#66D9EF">
+        <Key word="def" />
+      </KeyWords>
+      <KeyWords name="Imports" bold="true" color="#F92672">
+        <Key word="import" />
+        <Key word="from" />
+      </KeyWords>
+      <KeyWords name="IterationStatements" bold="true" color="#F92672">
+        <Key word="for" />
+        <Key word="in" />
+        <Key word="while" />
+      </KeyWords>
+      <KeyWords name="JumpStatements" color="#F92672">
+        <Key word="break" />
+        <Key word="continue" />
+        <Key word="yield" />
+        <Key word="return" />
+      </KeyWords>
+      <KeyWords name="OperatorStatements" bold="true" color="#F92672">
+        <Key word="and" />
+        <Key word="as" />
+        <Key word="is" />
+        <Key word="not" />
+        <Key word="or" />
+      </KeyWords>
+      <KeyWords name="PassStatement" color="#F92672">
+        <Key word="pass" />
+      </KeyWords>
+      <KeyWords name="SelectionStatements" bold="true" color="#F92672">
+        <Key word="elif" />
+        <Key word="else" />
+        <Key word="if" />
+      </KeyWords>
+      <KeyWords name="WithStatement" color="#F92672">
+        <Key word="with" />
+      </KeyWords>
+    </RuleSet>
+  </RuleSets>
+</SyntaxDefinition>-->

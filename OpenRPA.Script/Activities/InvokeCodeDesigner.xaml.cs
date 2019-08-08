@@ -29,11 +29,9 @@ namespace OpenRPA.Script.Activities
         {
             string code = ModelItem.GetValue<string>("Code");
             string language = ModelItem.GetValue<string>("Language");
-            var f = new Editor();
-            f.textEditor.Text = code;
-            if (!string.IsNullOrEmpty(language)) f.textEditor.SyntaxHighlighting = 
-                    
-                    ICSharpCode.AvalonEdit.Highlighting.HighlightingManager.Instance.HighlightingDefinitions.Where(x => x.Name == language).FirstOrDefault();
+            if (string.IsNullOrEmpty(language)) language = "VB";
+            var f = new Editor(code, language);
+            f.textEditor.SyntaxHighlighting = f.Languages.Where(x => x.Name == language).FirstOrDefault();
             f.ShowDialog();
             if (f.textEditor.Text != code)
             {

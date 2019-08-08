@@ -8,8 +8,8 @@
         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
         mc:Ignorable="d" 
              Height="450" Width="600">
-        <DockPanel>
-            <ToolBar DockPanel.Dock="Top">
+    <DockPanel LastChildFill="True">
+        <ToolBar DockPanel.Dock="Top">
             <!-- 
                 ItemsSource="{Binding Source={x:Static avalonEdit:HighlightingManager.Instance}, Path=HighlightingDefinitions}"
                 ItemsSource="{Binding Languages}"
@@ -19,8 +19,10 @@
 				ItemsSource="{Binding Languages}"
 				>
             </ComboBox>
+            <Button Click="Button_Click">Validate</Button>
         </ToolBar>
-            <avalonEdit:TextEditor
+        <TextBlock DockPanel.Dock="Bottom" x:Name="errors"></TextBlock>
+        <avalonEdit:TextEditor 
 				    Name="textEditor"
 				    FontFamily="Consolas"
 				    FontSize="10pt"

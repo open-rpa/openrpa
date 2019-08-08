@@ -16,10 +16,8 @@ namespace OpenRPA.Script.Activities
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             string script = ModelItem.GetValue<string>("Script");
-            var f = new Editor();
+            var f = new Editor(script, "AutoHotkey");
             f.highlightingComboBox.Visibility = Visibility.Hidden;
-            f.textEditor.Text = script;
-            f.textEditor.SyntaxHighlighting =null;
             f.ShowDialog();
             if (f.textEditor.Text != script)
             {

@@ -164,7 +164,7 @@ namespace OpenRPA.Script.Activities
                 var scope = engine.CreateScope();
                 foreach (var parameter in variablevalues)
                 {
-                    if (parameter.Value == null) continue;
+                    // if (parameter.Value == null) continue;
                     scope.SetVariable(parameter.Key, parameter.Value);
                 }
                 var source = engine.CreateScriptSourceFromString(code, Microsoft.Scripting.SourceCodeKind.Statements);
@@ -178,14 +178,19 @@ namespace OpenRPA.Script.Activities
                     }
                 }
                 var result = source.Execute(scope);
-                foreach (dynamic v in vars)
+                foreach (string name in scope.GetVariableNames())
                 {
-                    var value = scope.GetVariable(v.DisplayName);
-                    var myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
-                    if (myVar != null && value != null && value.ToString() != "")
+                    try
                     {
-                        //var myValue = myVar.GetValue(context.DataContext);
-                        myVar.SetValue(context.DataContext, value);
+                        var myVar = context.DataContext.GetProperties().Find(name, true);
+                        if(myVar!=null)
+                        {
+                            myVar.SetValue(context.DataContext, scope.GetVariable(name));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
                     }
                 }
                 return;

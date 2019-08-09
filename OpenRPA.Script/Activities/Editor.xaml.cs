@@ -1,7 +1,11 @@
 ﻿using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,17 +26,138 @@ namespace OpenRPA.Script.Activities
     /// </summary>
     public partial class Editor : Window
     {
-        public Editor()
+        public void LoadFromResource(string resourceName, Type type)
+        {
+            // string[] names = typeof(Extensions).Assembly.GetManifestResourceNames();
+            string[] names = type.Assembly.GetManifestResourceNames();
+            foreach (var name in names)
+            {
+                if (name.EndsWith(resourceName))
+                {
+                    using (Stream s = type.Assembly.GetManifestResourceStream(name))
+                    {
+                        using (System.Xml.XmlTextReader reader = new System.Xml.XmlTextReader(s))
+                        {
+                            Languages.Add(HighlightingLoader.Load(reader, HighlightingManager.Instance));
+                        }
+                    }
+                }
+            }
+        }
+
+        public Editor(string code, string language)
         {
             InitializeComponent();
             DataContext = this;
-            foreach(var hi in HighlightingManager.Instance.HighlightingDefinitions)
+            //string[] names = typeof(ICSharpCode.AvalonEdit.AvalonEditCommands).Assembly.GetManifestResourceNames();
+            foreach (var hi in HighlightingManager.Instance.HighlightingDefinitions)
             {
-                if (hi.Name == "VB" || hi.Name == "C#" || hi.Name == "PowerShell") Languages.Add(hi);
+                if (hi.Name == "VB" || hi.Name == "C#" || hi.Name == "PowerShell" || hi.Name == "Python") Languages.Add(hi);
             }
-
+            LoadFromResource("ICSharpCode.PythonBinding.Resources.Python.xshd", typeof(Editor));
+            LoadFromResource("Autohotkey.xshd", typeof(Editor));
+            textEditor.Text = code;
+            textEditor.SyntaxHighlighting = Languages.Where(x => x.Name == language).FirstOrDefault();
+            Button_Click(null, null);
         }
         public System.Collections.ObjectModel.ObservableCollection<IHighlightingDefinition> Languages { get; set; } = new System.Collections.ObjectModel.ObservableCollection<IHighlightingDefinition> ();
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.errors.Text = "";
+            textEditor.ShowLineNumbers = false;
+            var language = textEditor.SyntaxHighlighting.Name;
+            var code = textEditor.Text;
+            if (language == "VB" || language == "C#")
+            {
+                textEditor.ShowLineNumbers = false;
+                string sourcecode = code;
+                if (language == "VB") sourcecode = InvokeCode.GetVBHeaderText(null, "Expression") + code + InvokeCode.GetVBFooterText();
+                if (language == "C#") sourcecode = InvokeCode.GetCSharpHeaderText(null, "Expression") + code + InvokeCode.GetCSharpFooterText();
+                var references = InvokeCode.GetAssemblyLocations();
+                var CompilerParams = new System.CodeDom.Compiler.CompilerParameters();
+                //CompilerParams.GenerateInMemory = true;
+                CompilerParams.TreatWarningsAsErrors = false;
+                CompilerParams.GenerateExecutable = false;
+                CompilerParams.CompilerOptions = "/optimize /d:DEBUG";
+                CompilerParams.IncludeDebugInformation = true;
+                CompilerParams.GenerateInMemory = false;
+                CompilerParams.OutputAssembly = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString().Replace("-", "") + ".dll");
+
+                CompilerParams.ReferencedAssemblies.AddRange(references);
+                // CompilerParams.ReferencedAssemblies.Add(@"C:\code\openrpa\bin\Microsoft.Office.Tools.Excel.dll");
+                System.CodeDom.Compiler.CodeDomProvider provider = null;
+                if (language == "VB")
+                {
+                    provider = new Microsoft.VisualBasic.VBCodeProvider();
+                }
+                else
+                {
+                    provider = new Microsoft.CSharp.CSharpCodeProvider();
+
+                }
+                System.CodeDom.Compiler.CompilerResults compile = provider.CompileAssemblyFromSource(CompilerParams, new[] { sourcecode });
+
+                if (compile.Errors.HasErrors)
+                {
+                    string text = "Compile error: ";
+                    foreach (System.CodeDom.Compiler.CompilerError ce in compile.Errors)
+                    {
+                        text += "rn" + ce.ToString();
+                    }
+                    errors.Text = text;
+                }
+            }
+            if (language == "PowerShell")
+            {
+                textEditor.ShowLineNumbers = true;
+                Collection<System.Management.Automation.PSParseError> errors;
+                System.Management.Automation.PSParser.Tokenize(code, out errors);
+                if(errors!=null && errors.Count > 0)
+                {
+                    foreach (var _e in errors.Take(5))
+                    {
+                        this.errors.Text += "(" + _e.Token.StartLine + ":" + _e.Token.StartColumn + ") " + _e.Message  + Environment.NewLine;
+                    }
+                }
+            }
+            if (language == "AutoHotkey")
+            {
+                textEditor.ShowLineNumbers = true;
+                //if (sharpAHK.ahkGlobal.ahkdll == null) { InvokeCode.New_AHKSession(true); }
+                //sharpAHK.ahkGlobal.ahkdll.Reset();
+                //try
+                //{
+                //    //sharpAHK.ahkGlobal.ahkdll.LoadScript(code);
+                //}
+                //catch (Exception ex)
+                //{
+                //    this.errors.Text = ex.ToString();
+                //}
+            }
+            if (language=="Python")
+            {
+                textEditor.ShowLineNumbers = true;
+                var engine = IronPython.Hosting.Python.CreateEngine();
+                var source = engine.CreateScriptSourceFromString(code, Microsoft.Scripting.SourceCodeKind.Statements);
+                var errors = new ErrorListener();
+                var command = source.Compile(errors);
+                if (command == null)
+                {
+                    foreach (var _e in errors.errors.Take(5))
+                    {
+                        this.errors.Text += _e.source.ToString() + "(" + _e.span.Start + "): " + _e.message + Environment.NewLine;
+                    }
+                }
+            }
+            this.errors.Visibility = (string.IsNullOrEmpty(this.errors.Text) ? Visibility.Hidden : Visibility.Visible);
+        }
+
+        private void HighlightingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var language = textEditor.SyntaxHighlighting.Name;
+            btnValidate.Visibility = (language == "AutoHotkey" ? Visibility.Hidden : Visibility.Visible);
+            Button_Click(null, null);
+        }
     }
 }

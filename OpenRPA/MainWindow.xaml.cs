@@ -1633,21 +1633,23 @@ namespace OpenRPA
                         }
                         Log.Debug("RunPendingInstances::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                     }
-
-                    try
-                    {
-                        Log.Debug("Registering queue for robot " + global.webSocketClient.user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        await global.webSocketClient.RegisterQueue(global.webSocketClient.user._id);
-                        foreach(var role in global.webSocketClient.user.roles)
-                        {
-                            Log.Debug("Registering queue for role " + role.name + " " + role._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                            await global.webSocketClient.RegisterQueue(role._id);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error("Error RegisterQueue" + ex.ToString());
-                    }
+                    _ = Task.Run(async () =>
+                      {
+                          try
+                          {
+                              Log.Debug("Registering queue for robot " + global.webSocketClient.user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                              await global.webSocketClient.RegisterQueue(global.webSocketClient.user._id);
+                              foreach (var role in global.webSocketClient.user.roles)
+                              {
+                                  Log.Debug("Registering queue for role " + role.name + " " + role._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                  await global.webSocketClient.RegisterQueue(role._id);
+                              }
+                          }
+                          catch (Exception ex)
+                          {
+                              Log.Error("Error RegisterQueue" + ex.ToString());
+                          }
+                      });
                 }
                 catch (Exception ex)
                 {

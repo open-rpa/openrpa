@@ -4,22 +4,25 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpenRPA.Script.Activities"
+        WindowStartupLocation="CenterScreen"
         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
         mc:Ignorable="d" 
-             d:DesignHeight="350" d:DesignWidth="600">
-        <DockPanel>
-            <ToolBar DockPanel.Dock="Top">
+             Height="450" Width="600">
+    <DockPanel LastChildFill="True">
+        <ToolBar DockPanel.Dock="Top">
             <!-- 
                 ItemsSource="{Binding Source={x:Static avalonEdit:HighlightingManager.Instance}, Path=HighlightingDefinitions}"
                 ItemsSource="{Binding Languages}"
                 -->
-            <ComboBox Name="highlightingComboBox"
+            <ComboBox Name="highlightingComboBox" MinWidth="100"
 				SelectedItem="{Binding SyntaxHighlighting, ElementName=textEditor}"
-				ItemsSource="{Binding Languages}"
+				ItemsSource="{Binding Languages}" SelectionChanged="HighlightingComboBox_SelectionChanged"
 				>
             </ComboBox>
+            <Button x:Name="btnValidate" Click="Button_Click">Validate</Button>
         </ToolBar>
-            <avalonEdit:TextEditor
+        <TextBlock DockPanel.Dock="Bottom" x:Name="errors"></TextBlock>
+        <avalonEdit:TextEditor 
 				    Name="textEditor"
 				    FontFamily="Consolas"
 				    FontSize="10pt"

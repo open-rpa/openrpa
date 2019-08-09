@@ -15,6 +15,7 @@ using System.CodeDom.Compiler;
 using System.Management.Automation.Runspaces;
 using System.Collections;
 using System.Collections.ObjectModel;
+using sharpAHK;
 
 namespace OpenRPA.Script.Activities
 {
@@ -32,13 +33,22 @@ namespace OpenRPA.Script.Activities
         [RequiredArgument]
         public InArgument<string> Language { get; set; }
         public OutArgument<Collection<System.Management.Automation.PSObject>> PipelineOutput { get; set; }
+        public static void  New_AHKSession(bool NewInstance = false)
+        {
+            if (ahkGlobal.ahkdll == null || NewInstance == true) { ahkGlobal.ahkdll = new AutoHotkey.Interop.AutoHotkeyEngine(); }
 
+            else { ahkGlobal.ahkdll = null; }  // option to start new AHK session (resets variables and previously loaded functions)
+
+            ahkGlobal.LoadedAHK = new List<string>(); // reset loaded ahk list
+        }
         public static RunspacePool pool { get; set; } = null;
         public static Runspace runspace = null;
+        //private static ScriptEngine _engine;
+        //private static ScriptScope _scope;
         protected override void Execute(CodeActivityContext context)
         {
             var code = Code.Get(context);
-            var language = Language.Get(context); 
+            var language = Language.Get(context);
             var variables = new Dictionary<string, Type>();
             var variablevalues = new Dictionary<string, object>();
             var vars = context.DataContext.GetProperties();
@@ -54,10 +64,10 @@ namespace OpenRPA.Script.Activities
                 variablevalues.Add(v.DisplayName, value);
             }
             string sourcecode = code;
-            if(language=="VB") sourcecode = GetVBHeaderText(variables, "Expression") + code + GetVBFooterText();
+            if (language == "VB") sourcecode = GetVBHeaderText(variables, "Expression") + code + GetVBFooterText();
             if (language == "C#") sourcecode = GetCSharpHeaderText(variables, "Expression") + code + GetCSharpFooterText();
 
-            if(language == "PowerShell")
+            if (language == "PowerShell")
             {
 
                 if (runspace == null)
@@ -66,7 +76,7 @@ namespace OpenRPA.Script.Activities
                     runspace.Open();
                 }
 
-                    using (var pipeline = runspace.CreatePipeline())
+                using (var pipeline = runspace.CreatePipeline())
                 {
                     Command cmd = new Command(sourcecode, true);
                     foreach (var parameter in variablevalues)
@@ -84,7 +94,7 @@ namespace OpenRPA.Script.Activities
                     {
                         var value = runspace.SessionStateProxy.GetVariable(v.DisplayName);
                         var myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
-                        if (myVar != null)
+                        if (myVar != null && value != null && value != "")
                         {
                             //var myValue = myVar.GetValue(context.DataContext);
                             myVar.SetValue(context.DataContext, value);
@@ -96,7 +106,96 @@ namespace OpenRPA.Script.Activities
                 return;
             }
 
+            if (language == "AutoHotkey")
+            {
+                if (sharpAHK.ahkGlobal.ahkdll == null) { New_AHKSession(true); }
+                foreach (var parameter in variablevalues)
+                {
+                    if (parameter.Value == null) continue;
+                    sharpAHK.ahkGlobal.ahkdll.SetVar(parameter.Key, parameter.Value.ToString());
+                }
+                sharpAHK.ahkGlobal.ahkdll.ExecRaw(code);
+                foreach (dynamic v in vars)
+                {
+                    var value = sharpAHK.ahkGlobal.ahkdll.GetVar(v.DisplayName);
+                    PropertyDescriptor myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
+                    if (myVar != null && value != null && value != "")
+                    {
+                        if (myVar.PropertyType == typeof(string))
+                            myVar.SetValue(context.DataContext, value);
+                        else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(value.ToString()));
+                        else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(value.ToString()));
+                        else Log.Warning("Ignorering variable " + v.DisplayName + " of type " + myVar.PropertyType.FullName);
+                        //var myValue = myVar.GetValue(context.DataContext);
 
+                    }
+                }
+                return;
+            }
+            //if (language == "Python2222")
+            //{
+            //    using (Python.Runtime.Py.GIL())
+            //    {
+            //        // Python.Runtime.PythonEngine.Exec(code);
+            //        Python.Runtime.PythonEngine.RunSimpleString(code);
+            //    }
+            //    return;
+            //}
+            if (language == "Python")
+            {
+                // http://putridparrot.com/blog/hosting-ironpython-in-a-c-application/
+                // http://jonsblogat.blogspot.com/2011/06/adding-scripting-support-to-wpf.html
+                //var ipy = IronPython.Hosting.Python.CreateRuntime();
+                var engine = IronPython.Hosting.Python.CreateEngine();
+                var paths = Environment.GetEnvironmentVariable("path").Split(';');
+                var libs = new List<string>();
+                foreach (var p in paths.Where(x=> x.ToLower().Contains("python")))
+                {
+                    if(System.IO.Directory.Exists(p) && (p.ToLower().Contains("ip") || p.ToLower().Contains("ironpython")))
+                    {
+                        libs.Add(p);
+                        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "Lib"))) libs.Add(System.IO.Path.Combine(p, "Lib"));
+                        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "lib\\site-packages"))) libs.Add(System.IO.Path.Combine(p, "lib\\site-packages"));
+                        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "DLLs"))) libs.Add(System.IO.Path.Combine(p, "DLLs"));
+                    }
+                    
+                }
+                engine.SetSearchPaths(libs);
+                var scope = engine.CreateScope();
+                foreach (var parameter in variablevalues)
+                {
+                    if (parameter.Value == null) continue;
+                    scope.SetVariable(parameter.Key, parameter.Value);
+                }
+                var source = engine.CreateScriptSourceFromString(code, Microsoft.Scripting.SourceCodeKind.Statements);
+                var errors = new ErrorListener();
+                var command = source.Compile(errors);
+                if(command == null)
+                {
+                    foreach(var e in errors.errors)
+                    {
+                        Console.WriteLine(e.source.ToString() + "(" + e.span.Start + "): " + e.message);
+                    }
+                }
+                var result = source.Execute(scope);
+                foreach (dynamic v in vars)
+                {
+                    var value = scope.GetVariable(v.DisplayName);
+                    var myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
+                    if (myVar != null && value != null && value.ToString() != "")
+                    {
+                        //var myValue = myVar.GetValue(context.DataContext);
+                        myVar.SetValue(context.DataContext, value);
+                    }
+                }
+                return;
+            }
+
+            var assemblyLocations = GetAssemblyLocations();
+            CompileAndRun(language, sourcecode, assemblyLocations.ToArray(), variablevalues, context);
+        }
+        public static string[] GetAssemblyLocations()
+        {
             var names = new List<string>();
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
             var assemblyLocations = new List<string>();
@@ -109,9 +208,9 @@ namespace OpenRPA.Script.Activities
                     //if(!assemblyLocations.Contains(a.Location)) assemblyLocations.Add(a.Location);
                     if (!asm.IsDynamic)
                     {
-                        if (asm.Location.Contains("Microsoft.Office.Interop")) continue;
+                        // if (asm.Location.Contains("Microsoft.Office.Interop")) continue;
                         if (string.IsNullOrEmpty(asm.Location)) continue;
-                        if(asm.Location.Contains("System.Numerics.Vectors"))
+                        if (asm.Location.Contains("System.Numerics.Vectors"))
                         {
                             continue;
                         }
@@ -127,7 +226,7 @@ namespace OpenRPA.Script.Activities
                     Log.Error(ex.ToString());
                 }
             }
-            CompileAndRun(language, sourcecode, assemblyLocations.ToArray(), variablevalues, context);
+            return assemblyLocations.ToArray();
         }
 
         private static Dictionary<string, CompilerResults> cache = new Dictionary<string, CompilerResults>();
@@ -148,8 +247,9 @@ namespace OpenRPA.Script.Activities
                 CompilerParams.OutputAssembly = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString().Replace("-", "") + ".dll");
 
                 CompilerParams.ReferencedAssemblies.AddRange(references);
+                // CompilerParams.ReferencedAssemblies.Add(@"C:\code\openrpa\bin\Microsoft.Office.Tools.Excel.dll");
                 CodeDomProvider provider = null;
-                if (language=="VB")
+                if (language == "VB")
                 {
                     provider = new Microsoft.VisualBasic.VBCodeProvider();
                 }
@@ -226,10 +326,8 @@ namespace OpenRPA.Script.Activities
                 }
             }
         }
-
-
-        private List<string> Namespaces = new List<string>() { "System", "System.Collections", "System.Data" };
-        public string GetCSharpHeaderText(Dictionary<string, Type> variables, string moduleName)
+        private static List<string> Namespaces = new List<string>() { "System", "System.Collections", "System.Data" };
+        public static string GetCSharpHeaderText(Dictionary<string, Type> variables, string moduleName)
         {
             var headerText = new StringBuilder();
             foreach (var n in Namespaces)
@@ -253,7 +351,7 @@ namespace OpenRPA.Script.Activities
             headerText.AppendLine("public static void ExpressionValue() { ");
             return headerText.ToString();
         }
-        public string GetCSharpFooterText()
+        public static string GetCSharpFooterText()
         {
             return " } } }";
         }
@@ -283,7 +381,7 @@ namespace OpenRPA.Script.Activities
 
             typeName.Append(typeFullName);
         }
-        public string GetVBHeaderText(Dictionary<string, Type> variables, string moduleName)
+        public static string GetVBHeaderText(Dictionary<string, Type> variables, string moduleName)
         {
             // Inject namespace imports
             //var headerText = new StringBuilder("Imports System\r\nImports System.Collections\r\nImports System.Collections.Generic\r\nImports System.Linq\r\n");
@@ -324,7 +422,7 @@ namespace OpenRPA.Script.Activities
             headerText.AppendLine();
             return headerText.ToString();
         }
-        public string GetVBFooterText()
+        public static string GetVBFooterText()
         {
             // Close out the Sub and Class in the footer
             return "\r\nEnd Sub\r\nEnd Module";

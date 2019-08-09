@@ -70,8 +70,7 @@ namespace OpenRPA.Script.Activities
             var code = textEditor.Text;
             if (language == "VB" || language == "C#")
             {
-                textEditor.ShowLineNumbers = true;
-                textEditor.ShowLineNumbers
+                textEditor.ShowLineNumbers = false;
                 string sourcecode = code;
                 if (language == "VB") sourcecode = InvokeCode.GetVBHeaderText(null, "Expression") + code + InvokeCode.GetVBFooterText();
                 if (language == "C#") sourcecode = InvokeCode.GetCSharpHeaderText(null, "Expression") + code + InvokeCode.GetCSharpFooterText();

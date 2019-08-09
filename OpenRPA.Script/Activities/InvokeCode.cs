@@ -33,7 +33,7 @@ namespace OpenRPA.Script.Activities
         [RequiredArgument]
         public InArgument<string> Language { get; set; }
         public OutArgument<Collection<System.Management.Automation.PSObject>> PipelineOutput { get; set; }
-        public void New_AHKSession(bool NewInstance = false)
+        public static void  New_AHKSession(bool NewInstance = false)
         {
             if (ahkGlobal.ahkdll == null || NewInstance == true) { ahkGlobal.ahkdll = new AutoHotkey.Interop.AutoHotkeyEngine(); }
 
@@ -191,6 +191,11 @@ namespace OpenRPA.Script.Activities
                 return;
             }
 
+            var assemblyLocations = GetAssemblyLocations();
+            CompileAndRun(language, sourcecode, assemblyLocations.ToArray(), variablevalues, context);
+        }
+        public static string[] GetAssemblyLocations()
+        {
             var names = new List<string>();
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
             var assemblyLocations = new List<string>();
@@ -203,7 +208,7 @@ namespace OpenRPA.Script.Activities
                     //if(!assemblyLocations.Contains(a.Location)) assemblyLocations.Add(a.Location);
                     if (!asm.IsDynamic)
                     {
-                        if (asm.Location.Contains("Microsoft.Office.Interop")) continue;
+                        // if (asm.Location.Contains("Microsoft.Office.Interop")) continue;
                         if (string.IsNullOrEmpty(asm.Location)) continue;
                         if (asm.Location.Contains("System.Numerics.Vectors"))
                         {
@@ -221,8 +226,9 @@ namespace OpenRPA.Script.Activities
                     Log.Error(ex.ToString());
                 }
             }
-            CompileAndRun(language, sourcecode, assemblyLocations.ToArray(), variablevalues, context);
+            return assemblyLocations.ToArray();
         }
+
         private static Dictionary<string, CompilerResults> cache = new Dictionary<string, CompilerResults>();
         public void CompileAndRun(string language, string code, string[] references, Dictionary<string, object> variablevalues, CodeActivityContext context)
         {
@@ -241,6 +247,7 @@ namespace OpenRPA.Script.Activities
                 CompilerParams.OutputAssembly = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString().Replace("-", "") + ".dll");
 
                 CompilerParams.ReferencedAssemblies.AddRange(references);
+                // CompilerParams.ReferencedAssemblies.Add(@"C:\code\openrpa\bin\Microsoft.Office.Tools.Excel.dll");
                 CodeDomProvider provider = null;
                 if (language == "VB")
                 {
@@ -319,8 +326,8 @@ namespace OpenRPA.Script.Activities
                 }
             }
         }
-        private List<string> Namespaces = new List<string>() { "System", "System.Collections", "System.Data" };
-        public string GetCSharpHeaderText(Dictionary<string, Type> variables, string moduleName)
+        private static List<string> Namespaces = new List<string>() { "System", "System.Collections", "System.Data" };
+        public static string GetCSharpHeaderText(Dictionary<string, Type> variables, string moduleName)
         {
             var headerText = new StringBuilder();
             foreach (var n in Namespaces)
@@ -344,7 +351,7 @@ namespace OpenRPA.Script.Activities
             headerText.AppendLine("public static void ExpressionValue() { ");
             return headerText.ToString();
         }
-        public string GetCSharpFooterText()
+        public static string GetCSharpFooterText()
         {
             return " } } }";
         }
@@ -374,7 +381,7 @@ namespace OpenRPA.Script.Activities
 
             typeName.Append(typeFullName);
         }
-        public string GetVBHeaderText(Dictionary<string, Type> variables, string moduleName)
+        public static string GetVBHeaderText(Dictionary<string, Type> variables, string moduleName)
         {
             // Inject namespace imports
             //var headerText = new StringBuilder("Imports System\r\nImports System.Collections\r\nImports System.Collections.Generic\r\nImports System.Linq\r\n");
@@ -415,7 +422,7 @@ namespace OpenRPA.Script.Activities
             headerText.AppendLine();
             return headerText.ToString();
         }
-        public string GetVBFooterText()
+        public static string GetVBFooterText()
         {
             // Close out the Sub and Class in the footer
             return "\r\nEnd Sub\r\nEnd Module";

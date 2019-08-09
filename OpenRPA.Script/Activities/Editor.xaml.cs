@@ -1,8 +1,10 @@
 ﻿using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -56,8 +58,6 @@ namespace OpenRPA.Script.Activities
             LoadFromResource("Autohotkey.xshd", typeof(Editor));
             textEditor.Text = code;
             textEditor.SyntaxHighlighting = Languages.Where(x => x.Name == language).FirstOrDefault();
-            if(language == "Python") textEditor.ShowLineNumbers = true;
-
             Button_Click(null, null);
         }
         public System.Collections.ObjectModel.ObservableCollection<IHighlightingDefinition> Languages { get; set; } = new System.Collections.ObjectModel.ObservableCollection<IHighlightingDefinition> ();
@@ -65,10 +65,80 @@ namespace OpenRPA.Script.Activities
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             this.errors.Text = "";
+            textEditor.ShowLineNumbers = false;
             var language = textEditor.SyntaxHighlighting.Name;
             var code = textEditor.Text;
-            if(language=="Python")
+            if (language == "VB" || language == "C#")
             {
+                textEditor.ShowLineNumbers = true;
+                textEditor.ShowLineNumbers
+                string sourcecode = code;
+                if (language == "VB") sourcecode = InvokeCode.GetVBHeaderText(null, "Expression") + code + InvokeCode.GetVBFooterText();
+                if (language == "C#") sourcecode = InvokeCode.GetCSharpHeaderText(null, "Expression") + code + InvokeCode.GetCSharpFooterText();
+                var references = InvokeCode.GetAssemblyLocations();
+                var CompilerParams = new System.CodeDom.Compiler.CompilerParameters();
+                //CompilerParams.GenerateInMemory = true;
+                CompilerParams.TreatWarningsAsErrors = false;
+                CompilerParams.GenerateExecutable = false;
+                CompilerParams.CompilerOptions = "/optimize /d:DEBUG";
+                CompilerParams.IncludeDebugInformation = true;
+                CompilerParams.GenerateInMemory = false;
+                CompilerParams.OutputAssembly = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString().Replace("-", "") + ".dll");
+
+                CompilerParams.ReferencedAssemblies.AddRange(references);
+                // CompilerParams.ReferencedAssemblies.Add(@"C:\code\openrpa\bin\Microsoft.Office.Tools.Excel.dll");
+                System.CodeDom.Compiler.CodeDomProvider provider = null;
+                if (language == "VB")
+                {
+                    provider = new Microsoft.VisualBasic.VBCodeProvider();
+                }
+                else
+                {
+                    provider = new Microsoft.CSharp.CSharpCodeProvider();
+
+                }
+                System.CodeDom.Compiler.CompilerResults compile = provider.CompileAssemblyFromSource(CompilerParams, new[] { sourcecode });
+
+                if (compile.Errors.HasErrors)
+                {
+                    string text = "Compile error: ";
+                    foreach (System.CodeDom.Compiler.CompilerError ce in compile.Errors)
+                    {
+                        text += "rn" + ce.ToString();
+                    }
+                    errors.Text = text;
+                }
+            }
+            if (language == "PowerShell")
+            {
+                textEditor.ShowLineNumbers = true;
+                Collection<System.Management.Automation.PSParseError> errors;
+                System.Management.Automation.PSParser.Tokenize(code, out errors);
+                if(errors!=null && errors.Count > 0)
+                {
+                    foreach (var _e in errors.Take(5))
+                    {
+                        this.errors.Text += "(" + _e.Token.StartLine + ":" + _e.Token.StartColumn + ") " + _e.Message  + Environment.NewLine;
+                    }
+                }
+            }
+            if (language == "AutoHotkey")
+            {
+                textEditor.ShowLineNumbers = true;
+                //if (sharpAHK.ahkGlobal.ahkdll == null) { InvokeCode.New_AHKSession(true); }
+                //sharpAHK.ahkGlobal.ahkdll.Reset();
+                //try
+                //{
+                //    //sharpAHK.ahkGlobal.ahkdll.LoadScript(code);
+                //}
+                //catch (Exception ex)
+                //{
+                //    this.errors.Text = ex.ToString();
+                //}
+            }
+            if (language=="Python")
+            {
+                textEditor.ShowLineNumbers = true;
                 var engine = IronPython.Hosting.Python.CreateEngine();
                 var source = engine.CreateScriptSourceFromString(code, Microsoft.Scripting.SourceCodeKind.Statements);
                 var errors = new ErrorListener();
@@ -80,11 +150,15 @@ namespace OpenRPA.Script.Activities
                         this.errors.Text += _e.source.ToString() + "(" + _e.span.Start + "): " + _e.message + Environment.NewLine;
                     }
                 }
-
             }
-
             this.errors.Visibility = (string.IsNullOrEmpty(this.errors.Text) ? Visibility.Hidden : Visibility.Visible);
+        }
 
+        private void HighlightingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var language = textEditor.SyntaxHighlighting.Name;
+            btnValidate.Visibility = (language == "AutoHotkey" ? Visibility.Hidden : Visibility.Visible);
+            Button_Click(null, null);
         }
     }
 }

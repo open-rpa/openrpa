@@ -88,7 +88,7 @@ namespace OpenRPA.Script.Activities
                     var res = pipeline.Invoke();
                     foreach (var o in res)
                     {
-                        Log.Output(o.ToString());
+                        if (o != null) Log.Output(o.ToString());
                     }
                     foreach (dynamic v in vars)
                     {

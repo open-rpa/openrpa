@@ -16,6 +16,7 @@ using System.Management.Automation.Runspaces;
 using System.Collections;
 using System.Collections.ObjectModel;
 using sharpAHK;
+using Python.Runtime;
 
 namespace OpenRPA.Script.Activities
 {
@@ -33,7 +34,7 @@ namespace OpenRPA.Script.Activities
         [RequiredArgument]
         public InArgument<string> Language { get; set; }
         public OutArgument<Collection<System.Management.Automation.PSObject>> PipelineOutput { get; set; }
-        public static void  New_AHKSession(bool NewInstance = false)
+        public static void New_AHKSession(bool NewInstance = false)
         {
             if (ahkGlobal.ahkdll == null || NewInstance == true) { ahkGlobal.ahkdll = new AutoHotkey.Interop.AutoHotkeyEngine(); }
 
@@ -45,6 +46,50 @@ namespace OpenRPA.Script.Activities
         public static Runspace runspace = null;
         //private static ScriptEngine _engine;
         //private static ScriptScope _scope;
+
+        // private static AssemblyLoader assemblyLoader = new AssemblyLoader();
+        private static bool firstRun = true;
+
+        public static void ExecuteNewAppDomain(Action action)
+        {
+            AppDomain domain = null;
+
+            try
+            {
+                domain = AppDomain.CreateDomain("New App Domain: " + Guid.NewGuid());
+
+                var domainDelegate = (AppDomainDelegate)domain.CreateInstanceAndUnwrap(
+                    typeof(AppDomainDelegate).Assembly.FullName,
+                    typeof(AppDomainDelegate).FullName);
+
+                domainDelegate.Execute(action);
+            }
+            finally
+            {
+                if (domain != null)
+                    AppDomain.Unload(domain);
+            }
+        }
+        public static void ExecuteNewAppDomain(string code, Action<string> action)
+        {
+            AppDomain domain = null;
+
+            try
+            {
+                domain = AppDomain.CreateDomain("New App Domain: " + Guid.NewGuid());
+
+                var domainDelegate = (AppDomainDelegate)domain.CreateInstanceAndUnwrap(
+                    typeof(AppDomainDelegate).Assembly.FullName,
+                    typeof(AppDomainDelegate).FullName);
+
+                domainDelegate.Execute<string>(code, action);
+            }
+            finally
+            {
+                if (domain != null)
+                    AppDomain.Unload(domain);
+            }
+        }
         protected override void Execute(CodeActivityContext context)
         {
             var code = Code.Get(context);
@@ -125,23 +170,109 @@ namespace OpenRPA.Script.Activities
                             myVar.SetValue(context.DataContext, value);
                         else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(value.ToString()));
                         else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(value.ToString()));
-                        else Log.Warning("Ignorering variable " + v.DisplayName + " of type " + myVar.PropertyType.FullName);
+                        else Log.Information("Ignorering variable " + v.DisplayName + " of type " + myVar.PropertyType.FullName);
                         //var myValue = myVar.GetValue(context.DataContext);
 
                     }
                 }
+                sharpAHK.ahkGlobal.ahkdll.Terminate();
                 return;
             }
-            //if (language == "Python2222")
-            //{
-            //    using (Python.Runtime.Py.GIL())
-            //    {
-            //        // Python.Runtime.PythonEngine.Exec(code);
-            //        Python.Runtime.PythonEngine.RunSimpleString(code);
-            //    }
-            //    return;
-            //}
             if (language == "Python")
+            {
+                try
+                {
+                    GenericTools.RunUI(() =>
+                    {
+                        IntPtr lck = IntPtr.Zero;
+                        try
+                        {
+                            lck = PythonEngine.AcquireLock();
+                            using (var scope = Py.CreateScope())
+                            {
+                                foreach (var parameter in variablevalues)
+                                {
+                                    PyObject pyobj = parameter.Value.ToPython();
+                                    scope.Set(parameter.Key, pyobj);
+                                }
+                                PythonEngine.RunSimpleString(@"
+import sys
+from System import Console
+class output(object):
+    def write(self, msg):
+        Console.Out.Write(msg)
+    def writelines(self, msgs):
+        for msg in msgs:
+            Console.Out.Write(msg)
+    def flush(self):
+        pass
+    def close(self):
+        pass
+sys.stdout = sys.stderr = output()
+");
+                                scope.Exec(code);
+                                foreach (var parameter in variablevalues)
+                                {
+                                    PyObject pyobj = scope.Get(parameter.Key);
+                                    PropertyDescriptor myVar = context.DataContext.GetProperties().Find(parameter.Key, true);
+                                    if (myVar.PropertyType == typeof(string))
+                                        myVar.SetValue(context.DataContext, pyobj.ToString());
+                                    else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(pyobj.ToString()));
+                                    else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(pyobj.ToString()));
+                                    else Log.Information("Ignorering variable " + parameter.Key + " of type " + myVar.PropertyType.FullName);
+                                }
+                            }
+
+                            //lck = PythonEngine.AcquireLock();
+                            //PythonEngine.Exec(code);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.ToString());
+                        }
+                        finally
+                        {
+                            PythonEngine.ReleaseLock(lck);
+                        }
+                    });
+                    //using (Python.Runtime.Py.GIL())
+                    //{
+                    //    IntPtr lck = Python.Runtime.PythonEngine.AcquireLock();
+                    //    Python.Runtime.PythonEngine.Exec(code);
+                    //    Python.Runtime.PythonEngine.ReleaseLock(lck);
+                    //    //// create a Python scope
+                    //    //using (var scope = Python.Runtime.Py.CreateScope())
+                    //    //{
+                    //    //    //// convert the Person object to a PyObject
+                    //    //    //PyObject pyPerson = person.ToPython();
+
+                    //    //    // create a Python variable "person"
+                    //    //    // scope.Set("person", pyPerson);
+
+                    //    //    // the person object may now be used in Python
+                    //    //    // string code = "fullName = person.FirstName + ' ' + person.LastName";
+                    //    //    scope.Exec(code);
+                    //    //}
+                    //}
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    try
+                    {
+                        // Python.Runtime.PythonEngine.Shutdown();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                }
+                return;
+            }
+            if (language == "Python2")
             {
                 // http://putridparrot.com/blog/hosting-ironpython-in-a-c-application/
                 // http://jonsblogat.blogspot.com/2011/06/adding-scripting-support-to-wpf.html
@@ -149,16 +280,16 @@ namespace OpenRPA.Script.Activities
                 var engine = IronPython.Hosting.Python.CreateEngine();
                 var paths = Environment.GetEnvironmentVariable("path").Split(';');
                 var libs = new List<string>();
-                foreach (var p in paths.Where(x=> x.ToLower().Contains("python")))
+                foreach (var p in paths.Where(x => x.ToLower().Contains("python")))
                 {
-                    if(System.IO.Directory.Exists(p) && (p.ToLower().Contains("ip") || p.ToLower().Contains("ironpython")))
+                    if (System.IO.Directory.Exists(p) && p.ToLower().Contains("ironpython"))
                     {
                         libs.Add(p);
                         if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "Lib"))) libs.Add(System.IO.Path.Combine(p, "Lib"));
                         if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "lib\\site-packages"))) libs.Add(System.IO.Path.Combine(p, "lib\\site-packages"));
                         if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "DLLs"))) libs.Add(System.IO.Path.Combine(p, "DLLs"));
                     }
-                    
+
                 }
                 engine.SetSearchPaths(libs);
                 var scope = engine.CreateScope();
@@ -170,9 +301,9 @@ namespace OpenRPA.Script.Activities
                 var source = engine.CreateScriptSourceFromString(code, Microsoft.Scripting.SourceCodeKind.Statements);
                 var errors = new ErrorListener();
                 var command = source.Compile(errors);
-                if(command == null)
+                if (command == null)
                 {
-                    foreach(var e in errors.errors)
+                    foreach (var e in errors.errors)
                     {
                         Console.WriteLine(e.source.ToString() + "(" + e.span.Start + "): " + e.message);
                     }
@@ -183,7 +314,7 @@ namespace OpenRPA.Script.Activities
                     try
                     {
                         var myVar = context.DataContext.GetProperties().Find(name, true);
-                        if(myVar!=null)
+                        if (myVar != null)
                         {
                             myVar.SetValue(context.DataContext, scope.GetVariable(name));
                         }
@@ -457,6 +588,58 @@ namespace OpenRPA.Script.Activities
             }
 
             typeName.Append(typeFullName);
+        }
+    }
+
+    public class AssemblyLoader
+    {
+        private Dictionary<string, Assembly> loadedAssemblies;
+
+        public AssemblyLoader()
+        {
+            loadedAssemblies = new Dictionary<string, Assembly>();
+
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            {
+                string shortName = args.Name.Split(',')[0];
+                string resourceName = $"{shortName}.dll";
+
+                if (loadedAssemblies.ContainsKey(resourceName))
+                {
+                    return loadedAssemblies[resourceName];
+                }
+
+            // looks for the assembly from the resources and load it
+            using (System.IO.Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+                {
+                    if (stream != null)
+                    {
+                        var assemblyData = new byte[stream.Length];
+                        stream.Read(assemblyData, 0, assemblyData.Length);
+                        Assembly assembly = Assembly.Load(assemblyData);
+                        loadedAssemblies[resourceName] = assembly;
+                        return assembly;
+                    }
+                }
+                return null;
+            };
+        }
+
+    }
+    //public class AppDomainDelegate : MarshalByRefObject
+    //{
+    //    public void Execute(Action action)
+    //    {
+    //        action();
+    //    }
+    //}
+    public class AppDomainDelegate : MarshalByRefObject
+    {
+        public void Execute(Action action) { action(); }
+
+        public void Execute<T>(T parameter, Action<T> action)
+        {
+            action(parameter);
         }
     }
 }

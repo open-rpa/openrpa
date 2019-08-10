@@ -42,8 +42,11 @@ namespace OpenRPA.Java
         {
             return false;
         }
+        private static IntPtr ctx;
         public void Initialize()
         {
+            Python.Runtime.PythonEngine.Initialize();
+            IntPtr ctx = Python.Runtime.PythonEngine.BeginAllowThreads();
             //if (InvokeCode.pool == null)
             //{
             //    InvokeCode.pool = RunspaceFactory.CreateRunspacePool(1, 5);

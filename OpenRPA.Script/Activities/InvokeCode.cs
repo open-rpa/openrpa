@@ -214,6 +214,7 @@ sys.stdout = sys.stderr = output()
                                 foreach (var parameter in variablevalues)
                                 {
                                     PyObject pyobj = scope.Get(parameter.Key);
+                                    if (pyobj == null) continue;
                                     PropertyDescriptor myVar = context.DataContext.GetProperties().Find(parameter.Key, true);
                                     if (myVar.PropertyType == typeof(string))
                                         myVar.SetValue(context.DataContext, pyobj.ToString());

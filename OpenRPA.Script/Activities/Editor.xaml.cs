@@ -44,10 +44,11 @@ namespace OpenRPA.Script.Activities
                 }
             }
         }
-
-        public Editor(string code, string language)
+        private List<System.Activities.Presentation.Model.ModelItem> Variables;
+        public Editor(string code, string language, List<System.Activities.Presentation.Model.ModelItem> Variables)
         {
             InitializeComponent();
+            this.Variables = Variables;
             DataContext = this;
             //string[] names = typeof(ICSharpCode.AvalonEdit.AvalonEditCommands).Assembly.GetManifestResourceNames();
             foreach (var hi in HighlightingManager.Instance.HighlightingDefinitions)
@@ -70,10 +71,16 @@ namespace OpenRPA.Script.Activities
             var code = textEditor.Text;
             if (language == "VB" || language == "C#")
             {
+                var variables = new Dictionary<string, Type>();
+                foreach(var variableModel in Variables)
+                {
+                    var variable = variableModel.GetCurrentValue() as System.Activities.LocationReference;
+                    variables.Add(variable.Name, variable.Type);
+                }
                 textEditor.ShowLineNumbers = false;
                 string sourcecode = code;
-                if (language == "VB") sourcecode = InvokeCode.GetVBHeaderText(null, "Expression") + code + InvokeCode.GetVBFooterText();
-                if (language == "C#") sourcecode = InvokeCode.GetCSharpHeaderText(null, "Expression") + code + InvokeCode.GetCSharpFooterText();
+                if (language == "VB") sourcecode = InvokeCode.GetVBHeaderText(variables, "Expression") + code + InvokeCode.GetVBFooterText();
+                if (language == "C#") sourcecode = InvokeCode.GetCSharpHeaderText(variables, "Expression") + code + InvokeCode.GetCSharpFooterText();
                 var references = InvokeCode.GetAssemblyLocations();
                 var CompilerParams = new System.CodeDom.Compiler.CompilerParameters();
                 //CompilerParams.GenerateInMemory = true;

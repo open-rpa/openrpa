@@ -6,6 +6,7 @@ using System.Activities.Presentation.Model;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -25,12 +26,32 @@ namespace OpenRPA.Script.Activities
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public List<ModelItem> FindVariablesInScope(ModelItem ModelItem)
+        {
+            List<ModelItem> variableModels = null;
+            var assemblies = Assembly.GetEntryAssembly().GetReferencedAssemblies().ToList();
+            var sap = assemblies.Where(x => x.Name == "System.Activities.Presentation").First();
+            Assembly asm = Assembly.Load(sap.ToString());
+
+            var t = asm.GetType("System.Activities.Presentation.View.VariableHelper");
+            var ms = asm.GetType("System.Activities.Presentation.View.VariableHelper").GetMethods(BindingFlags.NonPublic | BindingFlags.Static);
+            foreach (var m in ms)
+            {
+                if (m.Name == "FindVariablesInScope" && m.GetParameters().Count() == 1)
+                {
+                    var o = m.Invoke(m, new[] { ModelItem });
+                    variableModels = o as List<ModelItem>;
+                }
+            }
+            return variableModels;
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            var vars = FindVariablesInScope(ModelItem);
             string code = ModelItem.GetValue<string>("Code");
             string language = ModelItem.GetValue<string>("Language");
             if (string.IsNullOrEmpty(language)) language = "VB";
-            var f = new Editor(code, language);
+            var f = new Editor(code, language, vars);
             f.textEditor.SyntaxHighlighting = f.Languages.Where(x => x.Name == language).FirstOrDefault();
             f.ShowDialog();
             if (f.textEditor.Text != code)

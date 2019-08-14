@@ -612,6 +612,10 @@
     <Resource Include="Resources\Selector\Window.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OpenRPA.AviRecorder\OpenRPA.AviRecorder.csproj">
+      <Project>{c0e0e1bc-ce4a-4596-b796-340c01da0b7b}</Project>
+      <Name>OpenRPA.AviRecorder</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenRPA.ExpressionEditor\OpenRPA.ExpressionEditor.csproj">
       <Project>{0d52b2e1-1998-4238-b601-57a2d6ade2e8}</Project>
       <Name>OpenRPA.ExpressionEditor</Name>

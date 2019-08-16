@@ -51,20 +51,25 @@ namespace OpenRPA.AviRecorder
         public bool IsRecording { get; set; }
         public string lastFileName { get; set; }
         private Recorder recorder;
-        public void StartRecording()
+        public void StartRecording(FourCC encoder, string outputFolder, int encodingQuality)
         {
             if (IsRecording)
                 throw new InvalidOperationException("Already recording.");
 
-            IsRecording = true;
+            this.encoder = encoder;
+            this.outputFolder = outputFolder;
+            this.encodingQuality = encodingQuality;
+            string extension = ".avi";
+            if (encoder != KnownFourCCs.Codecs.Uncompressed && encoder != KnownFourCCs.Codecs.MotionJpeg) extension = ".mpeg";
 
             GenericTools.RunUI(() =>
             {
-                lastFileName = System.IO.Path.Combine(outputFolder, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".avi");
+                lastFileName = System.IO.Path.Combine(outputFolder, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + extension);
                 var bitRate = Mp3AudioEncoderLame.SupportedBitRates.OrderBy(br => br).ElementAt(audioQuality);
                 recorder = new Recorder(lastFileName,
                     encoder, encodingQuality,
                     audioSourceIndex, audioWaveFormat, encodeAudio, bitRate);
+                IsRecording = true;
             });
         }
 

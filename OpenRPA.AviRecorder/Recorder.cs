@@ -43,13 +43,26 @@ namespace OpenRPA.AviRecorder
             screenWidth = (int)Math.Round(SystemParameters.PrimaryScreenWidth * toDevice.M11);
             screenHeight = (int)Math.Round(SystemParameters.PrimaryScreenHeight * toDevice.M22);
 
-            // Create AVI writer and specify FPS
-            writer = new AviWriter(fileName)
+            try
             {
-                FramesPerSecond = 10,
-                EmitIndex1 = true,
-            };
-
+                // Create AVI writer and specify FPS
+                writer = new AviWriter(fileName)
+                {
+                    FramesPerSecond = 10,
+                    EmitIndex1 = true,
+                };
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    writer.Close();
+                }
+                catch (Exception)
+                {
+                }
+                throw;
+            }
             // Create video stream
             videoStream = CreateVideoStream(codec, quality);
             // Set only name. Other properties were when creating stream, 

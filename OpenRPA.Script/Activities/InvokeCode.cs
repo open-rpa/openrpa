@@ -195,7 +195,9 @@ namespace OpenRPA.Script.Activities
                                     PyObject pyobj = parameter.Value.ToPython();
                                     scope.Set(parameter.Key, pyobj);
                                 }
-                                PythonEngine.RunSimpleString(@"
+                                try
+                                {
+                                    PythonEngine.RunSimpleString(@"
 import sys
 from System import Console
 class output(object):
@@ -210,6 +212,12 @@ class output(object):
         pass
 sys.stdout = sys.stderr = output()
 ");
+
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.Debug(ex.ToString());
+                                }
                                 scope.Exec(code);
                                 foreach (var parameter in variablevalues)
                                 {

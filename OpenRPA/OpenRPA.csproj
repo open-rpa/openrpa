@@ -134,10 +134,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\ForEachDataRowDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Activities\ForEachDataRow.cs" />
+    <Compile Include="Activities\ForEachDataRowDesigner.xaml.cs">
+      <DependentUpon>ForEachDataRowDesigner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\RemovePermission.cs" />
     <Compile Include="Activities\GrantPermission.cs" />
     <Compile Include="Activities\RemovePermissionDesigner.xaml.cs">
@@ -695,6 +703,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\PinDocMenu_Black.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\designer\foreach.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\toolbox\foreach.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

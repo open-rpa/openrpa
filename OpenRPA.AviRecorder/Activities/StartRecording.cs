@@ -56,7 +56,13 @@ namespace OpenRPA.AviRecorder.Activities
                 }
                 catch (Exception)
                 {
-                    System.IO.File.Delete(Record.Instance.lastFileName);
+                    try
+                    {
+                        System.IO.File.Delete(Record.Instance.lastFileName);
+                    }
+                    catch (Exception)
+                    {
+                    }
                     throw;
                 }
             }
@@ -75,11 +81,11 @@ namespace OpenRPA.AviRecorder.Activities
                 lst.Columns.Add("TEXT", typeof(string));
                 lst.Rows.Add("Uncompressed", "Uncompressed");
                 lst.Rows.Add("MotionJpeg", "MotionJpeg");
-                lst.Rows.Add("DivX", "DivX");
-                lst.Rows.Add("MicrosoftMpeg4V2", "MicrosoftMpeg4V2");
-                lst.Rows.Add("MicrosoftMpeg4V3", "MicrosoftMpeg4V3");
+                //lst.Rows.Add("DivX", "DivX");
+                //lst.Rows.Add("MicrosoftMpeg4V2", "MicrosoftMpeg4V2");
+                //lst.Rows.Add("MicrosoftMpeg4V3", "MicrosoftMpeg4V3");
                 lst.Rows.Add("X264", "X264");
-                lst.Rows.Add("Xvid", "Xvid");
+                //lst.Rows.Add("Xvid", "Xvid");
                 return lst;
             }
         }

@@ -1,4 +1,4 @@
-﻿using NamedPipeWrapper;
+﻿using OpenRPA.NamedPipeWrapper;
 using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;

@@ -104,7 +104,7 @@ namespace OpenRPA.IE
                 re.a = new GetElementResult(a);
                 if (htmlelement.tagName.ToLower() == "input" && htmlelement.tagName.ToLower() == "select")
                 {
-                    mshtml.IHTMLInputElement inputelement = (mshtml.IHTMLInputElement)htmlelement;
+                    MSHTML.IHTMLInputElement inputelement = (MSHTML.IHTMLInputElement)htmlelement;
                     re.SupportInput = (inputelement.type.ToLower() == "text" || inputelement.type.ToLower() == "password");
                 }
 
@@ -142,7 +142,7 @@ namespace OpenRPA.IE
             e.a = new GetElementResult(a);
             if (tagName == "input")
             {
-                // mshtml.IHTMLInputElement inputelement = (mshtml.IHTMLInputElement)htmlelement;
+                // MSHTML.IHTMLInputElement inputelement = (MSHTML.IHTMLInputElement)htmlelement;
                 e.SupportInput = (last.type.ToLower() == "text" || last.type.ToLower() == "password");
             }
 
@@ -187,7 +187,7 @@ namespace OpenRPA.IE
             var f = selector.First();
             var p = f.Properties.Where(x => x.Name == "url").FirstOrDefault();
             if (p != null) url = p.Value;
-            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindowsClass();
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
             foreach (SHDocVw.InternetExplorer _ie in shellWindows)
             {
                 var filename = System.IO.Path.GetFileNameWithoutExtension(_ie.FullName).ToLower();
@@ -218,7 +218,7 @@ namespace OpenRPA.IE
         }
         public bool Match(SelectorItem item, IElement m)
         {
-            return IESelectorItem.Match(item, m.RawElement as mshtml.IHTMLElement);
+            return IESelectorItem.Match(item, m.RawElement as MSHTML.IHTMLElement);
         }
     }
     public class GetElementResult : IBodyActivity

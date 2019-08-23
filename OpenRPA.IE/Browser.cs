@@ -16,7 +16,7 @@ namespace OpenRPA.IE
     {
         public string title { get; set; }
         public SHDocVw.WebBrowser wBrowser { get; set; }
-        public mshtml.HTMLDocument Document { get; set; }
+        public MSHTML.HTMLDocument Document { get; set; }
         // public SHDocVw.InternetExplorer IE { get; set; }
         
         public AutomationElement panel { get; set; }
@@ -24,12 +24,12 @@ namespace OpenRPA.IE
         {
             get
             {
-                mshtml.IHTMLElementCollection oColl;
-                mshtml.IHTMLElement oHTML;
+                MSHTML.IHTMLElementCollection oColl;
+                MSHTML.IHTMLElement oHTML;
                 oColl = Document.getElementsByTagName("HTML");
                 if (oColl != null && oColl.length > 0)
                 {
-                    oHTML = oColl.item(null, 0); // (mshtml.IHTMLElement)oColl.GetEnumerator().Current;
+                    oHTML = oColl.item(null, 0); // (MSHTML.IHTMLElement)oColl.GetEnumerator().Current;
                     return oHTML.outerHTML;
                 }
                 return string.Empty;
@@ -38,7 +38,7 @@ namespace OpenRPA.IE
         public static Browser GetBrowser(string url = null)
         {
             var result = new Browser();
-            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindowsClass();
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
             foreach (SHDocVw.InternetExplorer _ie in shellWindows)
             {
                 var filename = System.IO.Path.GetFileNameWithoutExtension(_ie.FullName).ToLower();
@@ -70,7 +70,7 @@ namespace OpenRPA.IE
                 {
                     try
                     {
-                        var doc = ie.Document as mshtml.HTMLDocument;
+                        var doc = ie.Document as MSHTML.HTMLDocument;
                         var timeout = TimeSpan.FromSeconds(5);
                         while (sw.Elapsed < timeout && doc.readyState != "complete" && doc.readyState != "interactive")
                         {
@@ -86,7 +86,7 @@ namespace OpenRPA.IE
 
             }
             if (result.wBrowser == null) return null;
-            result.Document = result.wBrowser.Document as mshtml.HTMLDocument;
+            result.Document = result.wBrowser.Document as MSHTML.HTMLDocument;
             result.title = result.Document.title;
             result.findPanel();
             return result;
@@ -114,22 +114,22 @@ namespace OpenRPA.IE
             }
             findBrowser();
             if (wBrowser.Document == null) throw new Exception("Failed initializing Internet Eexplorer");
-            Document = wBrowser.Document as mshtml.HTMLDocument;
+            Document = wBrowser.Document as MSHTML.HTMLDocument;
             title = Document.title;
         }
         private void findBrowser()
         {
-            var wbs = new SHDocVw.ShellWindowsClass().Cast<SHDocVw.WebBrowser>().ToList();
+            var wbs = new SHDocVw.ShellWindows().Cast<SHDocVw.WebBrowser>().ToList();
             foreach (var w in wbs)
             {
                 try
                 {
-                    var doc = (w.Document as mshtml.HTMLDocument);
+                    var doc = (w.Document as MSHTML.HTMLDocument);
                     if (doc != null)
                     {
                         wBrowser = w as SHDocVw.WebBrowser;
-                        var _Document = (wBrowser.Document as mshtml.HTMLDocument);
-                        var _Document2 = (wBrowser.Document as mshtml.IHTMLDocument2);
+                        var _Document = (wBrowser.Document as MSHTML.HTMLDocument);
+                        var _Document2 = (wBrowser.Document as MSHTML.IHTMLDocument2);
                         findPanel();
                     }
                 }
@@ -151,9 +151,9 @@ namespace OpenRPA.IE
                 elementy = Convert.ToInt32(panel.BoundingRectangle.Y);
             }
         }
-        public mshtml.IHTMLElement ElementFromPoint(int X, int Y)
+        public MSHTML.IHTMLElement ElementFromPoint(int X, int Y)
         {
-            mshtml.IHTMLElement htmlelement = Document.elementFromPoint(X - elementx, Y - elementy);
+            MSHTML.IHTMLElement htmlelement = Document.elementFromPoint(X - elementx, Y - elementy);
 
             return htmlelement;
         }
@@ -161,7 +161,7 @@ namespace OpenRPA.IE
         public int elementy { get; set; } = 0;
         public int frameoffsetx { get; set; } = 0;
         public int frameoffsety { get;  set; } = 0;
-        public mshtml.IHTMLElement ElementFromPoint(mshtml.IHTMLElement frame , int X, int Y)
+        public MSHTML.IHTMLElement ElementFromPoint(MSHTML.IHTMLElement frame , int X, int Y)
         {
             frame = Document.elementFromPoint(X - elementx, Y - elementy);
             frameoffsetx = 0;
@@ -177,7 +177,7 @@ namespace OpenRPA.IE
                 //int elementw = el.offsetWidth;
                 //int elementh = el.offsetHeight;
 
-                var dd = (mshtml.HTMLDocument)web.Document;
+                var dd = (MSHTML.HTMLDocument)web.Document;
                 frame = dd.elementFromPoint(X - elementx, Y - elementy);
                 if(frame==null) frame = dd.elementFromPoint(X, Y );
                 var tag = frame.tagName;
@@ -188,11 +188,11 @@ namespace OpenRPA.IE
 
                 isFrame = (frame.tagName == "FRAME");
             }
-            return frame as mshtml.IHTMLElement;
+            return frame as MSHTML.IHTMLElement;
 
-            //mshtml.IHTMLElement htmlelement;
-            //// Document = (mshtml.DispHTMLDocument)((SHDocVw.IWebBrowser2)frame).Document;
-            //Document = (mshtml.HTMLDocument)((SHDocVw.IWebBrowser2)frame).Document;
+            //MSHTML.IHTMLElement htmlelement;
+            //// Document = (MSHTML.DispHTMLDocument)((SHDocVw.IWebBrowser2)frame).Document;
+            //Document = (MSHTML.HTMLDocument)((SHDocVw.IWebBrowser2)frame).Document;
             //elementx += frame.offsetLeft;
             //elementy += frame.offsetTop;
             //frameoffsetx += frame.offsetLeft;

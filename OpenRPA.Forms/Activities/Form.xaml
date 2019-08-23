@@ -15,7 +15,6 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-    
         <materialDesign:Card
             Grid.Column="0"
             Margin="8"

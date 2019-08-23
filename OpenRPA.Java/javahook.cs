@@ -1,4 +1,4 @@
-﻿using NamedPipeWrapper;
+﻿using OpenRPA.NamedPipeWrapper;
 using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -95,7 +95,11 @@ namespace OpenRPA.Java
             }
             if (!isrunning)
             {
-                var filename = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "java\\OpenRPA.JavaBridge.exe");
+                var filename = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "OpenRPA.JavaBridge.exe");
+                if (!System.IO.File.Exists(filename))
+                {
+                    filename = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "java\\OpenRPA.JavaBridge.exe");
+                }
                 if(System.IO.File.Exists(filename))
                 {
                     try

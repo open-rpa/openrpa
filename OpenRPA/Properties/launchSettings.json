@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "OpenRPA": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -69,7 +69,7 @@ namespace OpenRPA.IE
             }
         }
         
-        public IESelectorItem(mshtml.HTMLDocument Document)
+        public IESelectorItem(MSHTML.HTMLDocument Document)
         {
             // this.element = new IEElement(element);
             Properties = new ObservableCollection<SelectorItemProperty>();
@@ -88,7 +88,7 @@ namespace OpenRPA.IE
             };
 
         }
-        public IESelectorItem(Browser browser, mshtml.IHTMLElement element)
+        public IESelectorItem(Browser browser, MSHTML.IHTMLElement element)
         {
             this.IEElement = new IEElement(browser, element);
             this.Element = this.IEElement;
@@ -98,7 +98,7 @@ namespace OpenRPA.IE
             if (!string.IsNullOrEmpty(element.tagName)) Properties.Add(new SelectorItemProperty("tagName", element.tagName));
             if(element.tagName.ToUpper() == "INPUT")
             {
-                if (!string.IsNullOrEmpty(((mshtml.IHTMLInputElement)element).type)) Properties.Add(new SelectorItemProperty("type", ((mshtml.IHTMLInputElement)element).type));
+                if (!string.IsNullOrEmpty(((MSHTML.IHTMLInputElement)element).type)) Properties.Add(new SelectorItemProperty("type", ((MSHTML.IHTMLInputElement)element).type));
             }
             
             if (!string.IsNullOrEmpty(element.className)) Properties.Add(new SelectorItemProperty("className", element.className));
@@ -131,7 +131,7 @@ namespace OpenRPA.IE
             if (Properties.Where(x => x.Name == "IndexInParent").Count() == 1) result.Add("IndexInParent");
             return result.ToArray();
         }
-        public void EnumNeededProperties(mshtml.IHTMLElement element, mshtml.IHTMLElement parent)
+        public void EnumNeededProperties(MSHTML.IHTMLElement element, MSHTML.IHTMLElement parent)
         {
             string name = null;
             if (!string.IsNullOrEmpty(element.tagName)) name = element.tagName;
@@ -148,12 +148,12 @@ namespace OpenRPA.IE
                 Log.Selector("# " + i);
                 var selectedProps = props.Take(i).ToArray();
                 foreach (var p in Properties) p.Enabled = selectedProps.Contains(p.Name);
-                mshtml.IHTMLElementCollection children = null;
+                MSHTML.IHTMLElementCollection children = null;
                 if(element.parentElement != null) { children = element.parentElement.children; }
                 matchcounter = 0;
                 if (children!=null)
                 {
-                    foreach (mshtml.IHTMLElement elementNode in children)
+                    foreach (MSHTML.IHTMLElement elementNode in children)
                     {
                         if (Match(elementNode)) matchcounter++;
                         if (matchcounter > 1) break;
@@ -174,16 +174,16 @@ namespace OpenRPA.IE
                 Properties.Where(x => x.Name == p).First().Enabled = true;
             }
         }
-        public mshtml.IHTMLElement[] matches(mshtml.IHTMLElement element)
+        public MSHTML.IHTMLElement[] matches(MSHTML.IHTMLElement element)
         {
             int counter = 0;
             do
             {
                 try
                 {
-                    var matchs = new List<mshtml.IHTMLElement>();
-                    mshtml.IHTMLElementCollection elements = element.children;
-                    foreach (mshtml.IHTMLElement elementNode in elements)
+                    var matchs = new List<MSHTML.IHTMLElement>();
+                    MSHTML.IHTMLElementCollection elements = element.children;
+                    foreach (MSHTML.IHTMLElement elementNode in elements)
                     {
                         if (Match(elementNode)) matchs.Add(elementNode);
                     }
@@ -196,17 +196,17 @@ namespace OpenRPA.IE
                     if (counter == 2) throw;
                 }
             } while (counter < 2);
-            return new mshtml.IHTMLElement[] { };
+            return new MSHTML.IHTMLElement[] { };
         }
         public override string ToString()
         {
             return tagName + " " + (!string.IsNullOrEmpty(id) ? id : className);
         }
-        public bool Match(mshtml.IHTMLElement m)
+        public bool Match(MSHTML.IHTMLElement m)
         {
             return Match(this, m);
         }
-        public static bool Match(SelectorItem item, mshtml.IHTMLElement m)
+        public static bool Match(SelectorItem item, MSHTML.IHTMLElement m)
         {
             foreach (var p in item.Properties.Where(x => x.Enabled == true && x.Value != null))
             {
@@ -260,7 +260,7 @@ namespace OpenRPA.IE
                 }
                 if (p.Name == "type" && m.tagName.ToLower() == "input")
                 {
-                    mshtml.HTMLInputElement ele = (mshtml.HTMLInputElement)m;
+                    MSHTML.HTMLInputElement ele = (MSHTML.HTMLInputElement)m;
                     if (!string.IsNullOrEmpty(ele.type))
                     {
                         var v = ele.type;
@@ -295,15 +295,15 @@ namespace OpenRPA.IE
                 }
                 if (p.Name == "IndexInParent")
                 {
-                    mshtml.IHTMLUniqueName id = m as mshtml.IHTMLUniqueName;
+                    MSHTML.IHTMLUniqueName id = m as MSHTML.IHTMLUniqueName;
                     var uniqueID = id.uniqueID;
                     var IndexInParent = -1;
                     if (m.parentElement != null && !string.IsNullOrEmpty(uniqueID))
                     {
-                        mshtml.IHTMLElementCollection children = m.parentElement.children;
+                        MSHTML.IHTMLElementCollection children = m.parentElement.children;
                         for (int i = 0; i < children.length; i++)
                         {
-                            mshtml.IHTMLUniqueName id2 = children.item(i) as mshtml.IHTMLUniqueName;
+                            MSHTML.IHTMLUniqueName id2 = children.item(i) as MSHTML.IHTMLUniqueName;
                             if (id2.uniqueID == uniqueID) { IndexInParent = i; break; }
                         }
                     }

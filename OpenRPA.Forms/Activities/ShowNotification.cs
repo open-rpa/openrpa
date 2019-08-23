@@ -22,9 +22,18 @@ namespace OpenRPA.Forms.Activities
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class ShowNotification : CodeActivity
     {
+        public static bool FirstRun = true;
         public ShowNotification()
         {
             NotificationType = "Information";
+            if(FirstRun)
+            {
+                var dict = new System.Windows.ResourceDictionary();
+                var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                System.Windows.Application.Current.Resources.MergedDictionaries.Add(
+                    new System.Windows.ResourceDictionary { Source = new Uri("pack://application:,,,/ToastNotifications.Messages;component/Themes/Default.xaml") });
+                FirstRun = false;
+            }
         }
         //public ShowNotification()
         //{

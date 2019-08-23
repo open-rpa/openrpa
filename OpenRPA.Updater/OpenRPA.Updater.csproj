@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net462</TargetFramework>
+    <ApplicationIcon>Resources\package.ico</ApplicationIcon>
+    <StartupObject />
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>OpenRPA</Authors>
+    <Product>OpenRPA</Product>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
+    <Version>1.0.1</Version>
+    <Description>OpenRPA Package Manager</Description>
+  </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
+  </Target>
+  <ItemGroup>
+    <None Remove="App.xaml" />
+    <None Remove="MainWindow.xaml" />
+    <None Remove="Resources\check.png" />
+    <None Remove="Resources\circle.png" />
+    <None Remove="Resources\CloudDownload.png" />
+    <None Remove="Resources\download.png" />
+    <None Remove="Resources\open_rpa32.png" />
+    <None Remove="Resources\package.ico" />
+    <None Remove="Resources\Package.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+    <PackageReference Include="NuGet.Core" Version="2.14.0" />
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\check.png" />
+    <Resource Include="Resources\circle.png" />
+    <Resource Include="Resources\CloudDownload.png" />
+    <Resource Include="Resources\download.png" />
+    <Resource Include="Resources\open_rpa32.png" />
+    <Resource Include="Resources\package.ico" />
+    <Resource Include="Resources\Package.png" />
+  </ItemGroup>
+</Project>

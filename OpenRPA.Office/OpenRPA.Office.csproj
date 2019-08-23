@@ -1,199 +1,87 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{69853616-0E24-4BE4-B4A8-497183D298E0}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpenRPA.Office</RootNamespace>
-    <AssemblyName>OpenRPA.Office</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <TargetFramework>net462</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <Authors>OpenRPA</Authors>
+    <Product>OpenRPA</Product>
+    <Version>1.0.3</Version>
+    <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
+    <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office</Description>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\dist\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
+  </Target>
   <ItemGroup>
-    <Reference Include="Accessibility" />
-    <Reference Include="FlaUI.Core, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FlaUI.Core.1.3.0\lib\net45\FlaUI.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Activities" />
-    <Reference Include="System.Activities.Presentation" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
+    <None Remove="Activities\CloseWorkbookDesigner.xaml" />
+    <None Remove="Activities\GetMailsDesigner.xaml" />
+    <None Remove="Activities\NewMailItemDesigner.xaml" />
+    <None Remove="Activities\ReadCellDesigner.xaml" />
+    <None Remove="Activities\ReadRangeDesigner.xaml" />
+    <None Remove="Activities\WriteCellDesigner.xaml" />
+    <None Remove="Resources\designer\closeworkbook.png" />
+    <None Remove="Resources\designer\newemail.png" />
+    <None Remove="Resources\designer\outlook.png" />
+    <None Remove="Resources\designer\readexcel.png" />
+    <None Remove="Resources\designer\writeexcel.png" />
+    <None Remove="Resources\toolbox\closeworkbook.png" />
+    <None Remove="Resources\toolbox\newemail.png" />
+    <None Remove="Resources\toolbox\outlook.png" />
+    <None Remove="Resources\toolbox\readexcel.png" />
+    <None Remove="Resources\toolbox\writeexcel.png" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activities\CloseWorkbook.cs" />
-    <Compile Include="Activities\CloseWorkbookDesigner.xaml.cs">
-      <DependentUpon>CloseWorkbookDesigner.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Activities\email.cs" />
-    <Compile Include="Activities\ExcelActivity.cs" />
-    <Compile Include="Activities\GetMails.cs" />
-    <Compile Include="Activities\GetMailsDesigner.xaml.cs">
-      <DependentUpon>GetMailsDesigner.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Activities\NewMailItem.cs" />
-    <Compile Include="Activities\NewMailItemDesigner.xaml.cs">
-      <DependentUpon>NewMailItemDesigner.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Activities\ReadCell.cs" />
-    <Compile Include="Activities\ReadCellDesigner.xaml.cs">
-      <DependentUpon>ReadCellDesigner.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Activities\ReadRange.cs" />
-    <Compile Include="Activities\ReadRangeDesigner.xaml.cs">
-      <DependentUpon>ReadRangeDesigner.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Activities\WriteCell.cs" />
-    <Compile Include="Activities\WriteCellDesigner.xaml.cs">
-      <DependentUpon>WriteCellDesigner.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="converters.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="GenericArgumentTypeUpdater.cs" />
-    <Compile Include="Plugin.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\ResFinder.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj">
-      <Project>{481bd5a1-5e8d-42a9-bd31-78becfaf15f3}</Project>
-      <Name>OpenRPA.Interfaces</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <EmbeddedResource Include="Resources\toolbox\closeworkbook.png" />
+    <EmbeddedResource Include="Resources\toolbox\newemail.png" />
+    <EmbeddedResource Include="Resources\toolbox\outlook.png" />
+    <EmbeddedResource Include="Resources\toolbox\readexcel.png" />
+    <EmbeddedResource Include="Resources\toolbox\writeexcel.png" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\CloseWorkbookDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Activities\GetMailsDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Activities\NewMailItemDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Activities\ReadCellDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Activities\ReadRangeDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Activities\WriteCellDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\designer\readexcel.png" />
+    <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\toolbox\readexcel.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\toolbox\writeexcel.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\designer\writeexcel.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\toolbox\closeworkbook.png" />
+    <Reference Include="Microsoft.Office.Interop.Excel">
+      <HintPath>..\..\..\Windows\assembly\GAC_MSIL\Microsoft.Office.Interop.Excel\15.0.0.0__71e9bce111e9429c\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Outlook">
+      <HintPath>..\..\..\Windows\assembly\GAC_MSIL\Microsoft.Office.Interop.Outlook\15.0.0.0__71e9bce111e9429c\Microsoft.Office.Interop.Outlook.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\designer\closeworkbook.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\designer\outlook.png" />
-    <EmbeddedResource Include="Resources\toolbox\outlook.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\designer\newemail.png" />
-    <EmbeddedResource Include="Resources\toolbox\newemail.png" />
+    <Resource Include="Resources\designer\outlook.png" />
+    <Resource Include="Resources\designer\readexcel.png" />
+    <Resource Include="Resources\designer\writeexcel.png" />
   </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="Microsoft.Office.Core">
-      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
-      <VersionMajor>2</VersionMajor>
-      <VersionMinor>8</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="Microsoft.Office.Interop.Excel">
-      <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>9</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="Microsoft.Office.Interop.Outlook">
-      <Guid>{00062FFF-0000-0000-C000-000000000046}</Guid>
-      <VersionMajor>9</VersionMajor>
-      <VersionMinor>6</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="stdole">
-      <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
-      <VersionMajor>2</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="VBIDE">
-      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
-      <VersionMajor>5</VersionMajor>
-      <VersionMinor>3</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

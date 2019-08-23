@@ -286,53 +286,53 @@ sys.stdout = sys.stderr = output()
                 // http://putridparrot.com/blog/hosting-ironpython-in-a-c-application/
                 // http://jonsblogat.blogspot.com/2011/06/adding-scripting-support-to-wpf.html
                 //var ipy = IronPython.Hosting.Python.CreateRuntime();
-                var engine = IronPython.Hosting.Python.CreateEngine();
-                var paths = Environment.GetEnvironmentVariable("path").Split(';');
-                var libs = new List<string>();
-                foreach (var p in paths.Where(x => x.ToLower().Contains("python")))
-                {
-                    if (System.IO.Directory.Exists(p) && p.ToLower().Contains("ironpython"))
-                    {
-                        libs.Add(p);
-                        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "Lib"))) libs.Add(System.IO.Path.Combine(p, "Lib"));
-                        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "lib\\site-packages"))) libs.Add(System.IO.Path.Combine(p, "lib\\site-packages"));
-                        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "DLLs"))) libs.Add(System.IO.Path.Combine(p, "DLLs"));
-                    }
+                //var engine = IronPython.Hosting.Python.CreateEngine();
+                //var paths = Environment.GetEnvironmentVariable("path").Split(';');
+                //var libs = new List<string>();
+                //foreach (var p in paths.Where(x => x.ToLower().Contains("python")))
+                //{
+                //    if (System.IO.Directory.Exists(p) && p.ToLower().Contains("ironpython"))
+                //    {
+                //        libs.Add(p);
+                //        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "Lib"))) libs.Add(System.IO.Path.Combine(p, "Lib"));
+                //        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "lib\\site-packages"))) libs.Add(System.IO.Path.Combine(p, "lib\\site-packages"));
+                //        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "DLLs"))) libs.Add(System.IO.Path.Combine(p, "DLLs"));
+                //    }
 
-                }
-                engine.SetSearchPaths(libs);
-                var scope = engine.CreateScope();
-                foreach (var parameter in variablevalues)
-                {
-                    // if (parameter.Value == null) continue;
-                    scope.SetVariable(parameter.Key, parameter.Value);
-                }
-                var source = engine.CreateScriptSourceFromString(code, Microsoft.Scripting.SourceCodeKind.Statements);
-                var errors = new ErrorListener();
-                var command = source.Compile(errors);
-                if (command == null)
-                {
-                    foreach (var e in errors.errors)
-                    {
-                        Console.WriteLine(e.source.ToString() + "(" + e.span.Start + "): " + e.message);
-                    }
-                }
-                var result = source.Execute(scope);
-                foreach (string name in scope.GetVariableNames())
-                {
-                    try
-                    {
-                        var myVar = context.DataContext.GetProperties().Find(name, true);
-                        if (myVar != null)
-                        {
-                            myVar.SetValue(context.DataContext, scope.GetVariable(name));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.ToString());
-                    }
-                }
+                //}
+                //engine.SetSearchPaths(libs);
+                //var scope = engine.CreateScope();
+                //foreach (var parameter in variablevalues)
+                //{
+                //    // if (parameter.Value == null) continue;
+                //    scope.SetVariable(parameter.Key, parameter.Value);
+                //}
+                //var source = engine.CreateScriptSourceFromString(code, Microsoft.Scripting.SourceCodeKind.Statements);
+                //var errors = new ErrorListener();
+                //var command = source.Compile(errors);
+                //if (command == null)
+                //{
+                //    foreach (var e in errors.errors)
+                //    {
+                //        Console.WriteLine(e.source.ToString() + "(" + e.span.Start + "): " + e.message);
+                //    }
+                //}
+                //var result = source.Execute(scope);
+                //foreach (string name in scope.GetVariableNames())
+                //{
+                //    try
+                //    {
+                //        var myVar = context.DataContext.GetProperties().Find(name, true);
+                //        if (myVar != null)
+                //        {
+                //            myVar.SetValue(context.DataContext, scope.GetVariable(name));
+                //        }
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        Log.Error(ex.ToString());
+                //    }
+                //}
                 return;
             }
 

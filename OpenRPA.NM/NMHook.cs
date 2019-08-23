@@ -1,4 +1,4 @@
-﻿using NamedPipeWrapper;
+﻿using OpenRPA.NamedPipeWrapper;
 using Newtonsoft.Json;
 using OpenRPA.Interfaces;
 using OpenRPA.NM.pipe;
@@ -430,11 +430,11 @@ namespace OpenRPA.NM
                 }
                 //if(!regKey(@"HKEY_CURRENT_USER\stuff  ...  ", "value"))
                 var basepath = System.IO.Directory.GetCurrentDirectory();
-                var filename = System.IO.Path.Combine(basepath, "nm", "chromemanifest.json");
+                var filename = System.IO.Path.Combine(basepath, "chromemanifest.json");
                 if (!System.IO.File.Exists(filename)) return;
                 string json = System.IO.File.ReadAllText(filename);
                 dynamic jsonObj = JsonConvert.DeserializeObject(json);
-                jsonObj["path"] = System.IO.Path.Combine(basepath, "nm", "OpenRPA.NativeMessagingHost.exe");
+                jsonObj["path"] = System.IO.Path.Combine(basepath, "OpenRPA.NativeMessagingHost.exe");
                 string output = JsonConvert.SerializeObject(jsonObj, Formatting.Indented);
                 System.IO.File.WriteAllText(filename, output);
 
@@ -466,11 +466,11 @@ namespace OpenRPA.NM
                 }
 
                 var basepath = System.IO.Directory.GetCurrentDirectory();
-                var filename = System.IO.Path.Combine(basepath, "nm", "ffmanifest.json");
+                var filename = System.IO.Path.Combine(basepath, "ffmanifest.json");
                 if (!System.IO.File.Exists(filename)) return;
                 string json = System.IO.File.ReadAllText(filename);
                 dynamic jsonObj = JsonConvert.DeserializeObject(json);
-                jsonObj["path"] = System.IO.Path.Combine(basepath, "nm", "OpenRPA.NativeMessagingHost.exe");
+                jsonObj["path"] = System.IO.Path.Combine(basepath, "OpenRPA.NativeMessagingHost.exe");
                 string output = JsonConvert.SerializeObject(jsonObj, Formatting.Indented);
                 System.IO.File.WriteAllText(filename, output);
 

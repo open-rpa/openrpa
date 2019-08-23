@@ -1,0 +1,78 @@
+﻿<Window x:Class="OpenRPA.Updater.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+
+        xmlns:local="clr-namespace:OpenRPA.Updater"
+        mc:Ignorable="d"
+        Title="OpenRPA Package Manager" Height="450" Width="800">
+    <Window.Resources>
+        <CollectionViewSource Source="{Binding Packages}" x:Key="Packages">
+        </CollectionViewSource>
+    </Window.Resources>
+    <DockPanel>
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+                <Button ToolTip="Select element by clicking it" Click="ButtonLaunch" Margin="5,0,5,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/OpenRPA.Updater;component/Resources/open_rpa32.png" Height="18" />
+                        <TextBlock Margin="3,0,0,0">Launch</TextBlock>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+        <DockPanel DockPanel.Dock="Left"  MinWidth="250" MaxWidth="350">
+            <TextBox x:Name="searchstring"></TextBox>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                <ListView x:Name="listPackages" ItemsSource="{Binding Source={StaticResource Packages}}" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <WrapPanel>
+                                <Image Source="{Binding Image}" Width="18"/>
+                                <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                            </WrapPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </ScrollViewer>
+        </DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+            <StackPanel>
+                <TextBlock><Bold>Id</Bold></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Id}" ></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock><Bold>Version</Bold></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Version}" ></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock><Bold>LatestVersion</Bold></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.LatestVersion}" ></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock><Bold>Authors</Bold></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Authors}" ></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock><Bold>Tags</Bold></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Tags}" ></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock><Bold>Summary</Bold></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Summary}" ></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock><Bold>Description</Bold></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Description}" ></TextBlock>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Bottom" Height="200">
+            <Button Click="ButtonInstall" Content="Install" IsEnabled="{Binding ElementName=listPackages, Path=SelectedValue.IsNotDownloaded}"></Button>
+            <Button Click="ButtonReinstall" Content="Reinstall" IsEnabled="{Binding ElementName=listPackages, Path=SelectedValue.isDownloaded}"></Button>
+            <Button Click="ButtonUpgrade" Content="Upgrade" IsEnabled="{Binding ElementName=listPackages, Path=SelectedValue.canUpgrade}"></Button>
+            <Button Click="ButtonUninstall" Content="Uninstall" IsEnabled="{Binding ElementName=listPackages, Path=SelectedValue.isDownloaded}"></Button>
+            <TextBox HorizontalAlignment="Stretch" Text="{Binding Logs}"></TextBox>
+        </StackPanel>
+    </DockPanel>
+</Window>

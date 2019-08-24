@@ -16,7 +16,7 @@ namespace OpenRPA.IE
         public static readonly string[] frameTags = { "FRAME", "IFRAME" };
         IEElement element { get; set; }
         public IESelector(string json) : base(json) { }
-        public IESelector(Browser browser, mshtml.IHTMLElement baseelement, IESelector anchor, bool doEnum, int X, int Y)
+        public IESelector(Browser browser, MSHTML.IHTMLElement baseelement, IESelector anchor, bool doEnum, int X, int Y)
         {
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
@@ -31,10 +31,10 @@ namespace OpenRPA.IE
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
             OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
         }
-        private void enumElements(Browser browser, mshtml.IHTMLElement baseelement, IESelector anchor, bool doEnum, int X, int Y) {
-            mshtml.IHTMLElement element = baseelement;
-            mshtml.HTMLDocument document = browser.Document;
-            var pathToRoot = new List<mshtml.IHTMLElement>();
+        private void enumElements(Browser browser, MSHTML.IHTMLElement baseelement, IESelector anchor, bool doEnum, int X, int Y) {
+            MSHTML.IHTMLElement element = baseelement;
+            MSHTML.HTMLDocument document = browser.Document;
+            var pathToRoot = new List<MSHTML.IHTMLElement>();
             while (element != null)
             {
                 if (pathToRoot.Contains(element)) { break; }
@@ -111,27 +111,27 @@ namespace OpenRPA.IE
             }
             if(frameTags.Contains(baseelement.tagName.ToUpper()))
             {
-                //var ele2 = baseelement as mshtml.IHTMLElement2;
+                //var ele2 = baseelement as MSHTML.IHTMLElement2;
                 //var col2 = ele2.getClientRects();
                 //var rect2 = col2.item(0);
                 //X -= rect2.left;
                 //Y -= rect2.top;
-                var frame = baseelement as mshtml.HTMLFrameElement;
+                var frame = baseelement as MSHTML.HTMLFrameElement;
 
                 var fffff = frame.contentWindow;
-                mshtml.IHTMLWindow2 window = frame.contentWindow;
-                mshtml.IHTMLElement el2 = null;
+                MSHTML.IHTMLWindow2 window = frame.contentWindow;
+                MSHTML.IHTMLElement el2 = null;
 
                 
                 foreach (string frameTag in frameTags)
                 {
-                    mshtml.IHTMLElementCollection framesCollection = document.getElementsByTagName(frameTag);
-                    foreach (mshtml.IHTMLElement _frame in framesCollection)
+                    MSHTML.IHTMLElementCollection framesCollection = document.getElementsByTagName(frameTag);
+                    foreach (MSHTML.IHTMLElement _frame in framesCollection)
                     {
-                        // var _f = _frame as mshtml.HTMLFrameElement;
+                        // var _f = _frame as MSHTML.HTMLFrameElement;
                         el2 = browser.ElementFromPoint(_frame, X, Y);
                         //var _wb = _f as SHDocVw.IWebBrowser2;
-                        //document = _wb.Document as mshtml.HTMLDocument;
+                        //document = _wb.Document as MSHTML.HTMLDocument;
                         //el2 = document.elementFromPoint(X, Y);
                         if (el2 != null)
                         {
@@ -193,7 +193,7 @@ namespace OpenRPA.IE
             }
              else
             {
-                mshtml.IHTMLElement startfrom = null;
+                MSHTML.IHTMLElement startfrom = null;
                 startfrom = browser.Document.documentElement;
                 current.Add(new IEElement(browser, startfrom));
             }
@@ -208,13 +208,13 @@ namespace OpenRPA.IE
                 {
                     foreach (var _element in elements)
                     {
-                        mshtml.IHTMLElement[] matches;
+                        MSHTML.IHTMLElement[] matches;
                         if (frameTags.Contains(_element.tagName.ToUpper()))
                         {
                             if(s.tagName.ToUpper()=="HTML") { i++; s = new IESelectorItem(selectors[i]); }
-                            var _f = _element.RawElement as mshtml.HTMLFrameElement;
-                            mshtml.DispHTMLDocument doc = (mshtml.DispHTMLDocument)((SHDocVw.IWebBrowser2)_f).Document;
-                            var _doc = doc.documentElement as mshtml.IHTMLElement;
+                            var _f = _element.RawElement as MSHTML.HTMLFrameElement;
+                            MSHTML.DispHTMLDocument doc = (MSHTML.DispHTMLDocument)((SHDocVw.IWebBrowser2)_f).Document;
+                            var _doc = doc.documentElement as MSHTML.IHTMLElement;
                             matches = ((IESelectorItem)s).matches(_doc);
 
                             browser.elementx += _f.offsetLeft;
@@ -243,8 +243,8 @@ namespace OpenRPA.IE
                         message += "lookin for \n" + s.ToString() + "\n";
                         foreach (var _element in elements)
                         {
-                            mshtml.IHTMLElementCollection children = _element.RawElement.children;
-                            foreach (mshtml.IHTMLElement elementNode in children) {
+                            MSHTML.IHTMLElementCollection children = _element.RawElement.children;
+                            foreach (MSHTML.IHTMLElement elementNode in children) {
                                 var ui = new IEElement(browser, elementNode);
                                 message += ui.ToString() + "\n";
                             }
@@ -264,8 +264,8 @@ namespace OpenRPA.IE
                     var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
                     foreach (var element in elements)
                     {
-                        mshtml.IHTMLElementCollection children = element.RawElement.children;
-                        foreach (mshtml.IHTMLElement c in children)
+                        MSHTML.IHTMLElementCollection children = element.RawElement.children;
+                        foreach (MSHTML.IHTMLElement c in children)
                         {
                             try
                             {

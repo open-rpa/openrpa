@@ -1,4 +1,4 @@
-﻿using NamedPipeWrapper;
+﻿using OpenRPA.NamedPipeWrapper;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,21 +14,29 @@ namespace OpenRPA.JavaBridge
         private static MainWindow form;
         static void Main(string[] args)
         {
-            form = new MainWindow();
-            pipe = new NamedPipeServer<JavaEvent>("openrpa_javabridge");
-            pipe.ClientMessage += Server_OnReceivedMessage;
-            pipe.Start();
+            try
+            {
+                form = new MainWindow();
+                pipe = new NamedPipeServer<JavaEvent>("openrpa_javabridge");
+                pipe.ClientMessage += Server_OnReceivedMessage;
+                pipe.Start();
 
-            hook = new JavaHook();
-            hook.OnJavaShutDown += OnJavaShutDown;
-            hook.OnMouseClicked += OnMouseClicked;
-            hook.OnMouseEntered += OnMouseEntered;
-            hook.OnMouseExited += OnMouseExited;
+                hook = new JavaHook();
+                hook.OnJavaShutDown += OnJavaShutDown;
+                hook.OnMouseClicked += OnMouseClicked;
+                hook.OnMouseEntered += OnMouseEntered;
+                hook.OnMouseExited += OnMouseExited;
 
-            hook.OnMousePressed += OnMousePressed;
-            hook.OnMouseReleased += OnMouseReleased;
+                hook.OnMousePressed += OnMousePressed;
+                hook.OnMouseReleased += OnMouseReleased;
 
-            System.Windows.Forms.Application.Run(form);
+                System.Windows.Forms.Application.Run(form);
+            }
+            catch (Exception ex)
+            {
+                System.IO.File.AppendAllText("log.txt", ex.ToString());
+                throw;
+            }
         }
         private static void OnJavaShutDown(int vmID)
         {

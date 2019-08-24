@@ -31,6 +31,7 @@ namespace OpenRPA
     public partial class MainWindow : Window, INotifyPropertyChanged, iMainWindow
     {
         public static MainWindow instance = null;
+        Updates updater = new Updates();
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propertyName)
         {
@@ -75,9 +76,47 @@ namespace OpenRPA
                 App.notifyIcon.Visible = false;
             }
         }
+        void handledlls(string basedir, string curdir)
+        {
+            if (!System.IO.Directory.Exists(curdir)) return;
+            if(basedir!=curdir)
+            {
+                List<string> dllFileNames = new List<string>();
+                foreach (var source in System.IO.Directory.GetFiles(curdir, "*.dll"))
+                {
+                    var filename = System.IO.Path.GetFileName(source);
+                    var target = System.IO.Path.Combine(basedir, filename);
+                    if (!System.IO.File.Exists(target))
+                    {
+                        Console.WriteLine("copying " + filename);
+                        System.IO.File.Copy(source, target);
+                    }
+                }
+            }
+            foreach (var dir in System.IO.Directory.GetDirectories(curdir)) handledlls(basedir, dir);
+        }
         public MainWindow()
         {
             InitializeComponent();
+            if(updater.UpdaterNeedsUpdate() == true)
+            {
+                updater.UpdateUpdater();
+            }
+            var releasenotes = updater.OpenRPANeedsUpdate();
+            if (!string.IsNullOrEmpty(releasenotes))
+            {
+                var dialogResult = MessageBox.Show(releasenotes, "Update available", MessageBoxButton.YesNo);
+                if (dialogResult == MessageBoxResult.Yes)
+                {
+                    onManagePackages(null);
+                    Application.Current.Shutdown();
+                }
+            }
+            
+
+            // handledlls(Environment.CurrentDirectory, Environment.CurrentDirectory + @"\Packages");
+
+
             new DesignerMetadata().Register();
             instance = this;
             DataContext = this;
@@ -260,6 +299,7 @@ namespace OpenRPA
         public ICommand SlowMotionCommand { get { return new RelayCommand<object>(onSlowMotion, canSlowMotion); } }
         public ICommand SignoutCommand { get { return new RelayCommand<object>(onSignout, canSignout); } }
         public ICommand OpenCommand { get { return new RelayCommand<object>(onOpen, canOpen); } }
+        public ICommand ManagePackagesCommand { get { return new RelayCommand<object>(onManagePackages, canManagePackages); } }        
         public ICommand DetectorsCommand { get { return new RelayCommand<object>(onDetectors, canDetectors); } }
         public ICommand SaveCommand { get { return new RelayCommand<object>(onSave, canSave); } }
         public ICommand NewCommand { get { return new RelayCommand<object>(onNew, canNew); } }
@@ -527,6 +567,61 @@ namespace OpenRPA
             global.webSocketClient.url = Config.local.wsurl;
             _ = global.webSocketClient.Close();
         }
+        private bool canManagePackages(object _item)
+        {
+            var hits = System.Diagnostics.Process.GetProcessesByName("OpenRPA.Updater");
+            return hits.Count() == 0;
+            //var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
+            //foreach (var document in ld)
+            //{
+            //    if (document.Content is Views.ManagePackages op) return false;
+            //}
+            //return true;
+        }
+        private void onManagePackages(object _item)
+        {
+            var di = new System.IO.DirectoryInfo(Environment.CurrentDirectory);
+            if (!System.IO.File.Exists(Environment.CurrentDirectory + @"\OpenRPA.Updater.exe") && !System.IO.File.Exists(di.Parent.FullName + @"\OpenRPA.Updater.exe"))
+            {
+                MessageBox.Show("OpenRPA.Updater.exe not found");
+                return;
+            }
+            try
+            {
+                var p = new System.Diagnostics.Process();
+                p.StartInfo.FileName = Environment.CurrentDirectory + @"\OpenRPA.Updater";
+                p.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
+                if (!System.IO.File.Exists(Environment.CurrentDirectory + @"\OpenRPA.Updater.exe"))
+                {
+                    p.StartInfo.FileName = di.Parent.FullName + @"\OpenRPA.Updater.exe";
+                    p.StartInfo.WorkingDirectory = di.Parent.FullName;
+                }
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.CreateNoWindow = true;
+                p.Start();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                MessageBox.Show(ex.Message);
+            }
+            //AutomationHelper.syncContext.Post(o =>
+            //{
+            //    var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
+            //    foreach (var document in ld)
+            //    {
+            //        if (document.Content is Views.ManagePackages op) { document.IsSelected = true; return; }
+            //    }
+            //    var view = new Views.ManagePackages();
+            //    LayoutDocument layoutDocument = new LayoutDocument { Title = "Manage Packages" };
+            //    layoutDocument.ContentId = "managepackages";
+            //    layoutDocument.CanClose = true;
+            //    layoutDocument.Content = view;
+            //    mainTabControl.Children.Add(layoutDocument);
+            //    layoutDocument.IsSelected = true;
+            //    layoutDocument.Closing += LayoutDocument_Closing;
+            //}, null);
+        }
         private bool canOpen(object _item)
         {
             var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
@@ -682,7 +777,16 @@ namespace OpenRPA
                     using (var stream = new System.IO.StreamReader("layout.config"))
                         serializer.Deserialize(stream);
                     ds = DManager.Layout.Descendents();
-                } else
+                }
+                else if (System.IO.File.Exists(@"..\layout.config"))
+                {
+                    var ds = DManager.Layout.Descendents();
+                    var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
+                    using (var stream = new System.IO.StreamReader(@"..\layout.config"))
+                        serializer.Deserialize(stream);
+                    ds = DManager.Layout.Descendents();
+                }
+                else
                 {
                     var las = DManager.Layout.Descendents().OfType<LayoutAnchorable>().ToList();
                     foreach (var dp in las)
@@ -801,8 +905,9 @@ namespace OpenRPA
                 }
                 else
                 {
-                    string Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "Name project", "New project");
-                    if (string.IsNullOrEmpty(Name)) return;
+                    // string Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "Name project", "New project");
+                    // if (string.IsNullOrEmpty(Name)) return;
+                    string Name = "New project";
                     Project project = await Project.Create(Extensions.projectsDirectory, Name, true);
                     Workflow workflow = project.Workflows.First();
                     workflow.Project = project;
@@ -1583,7 +1688,8 @@ namespace OpenRPA
                             IDetectorPlugin dp = null;
                             d.Path = Extensions.projectsDirectory;
                             dp = Plugins.AddDetector(d);
-                            dp.OnDetector += OnDetector;
+                            if(dp != null) dp.OnDetector += OnDetector;
+                            if (dp == null) Log.Error("Detector not loaded!");
                         }
                         var folders = new List<string>();
                         foreach (var p in projects)

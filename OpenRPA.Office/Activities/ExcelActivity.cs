@@ -101,7 +101,7 @@ namespace OpenRPA.Office.Activities
                     try
                     {
                         workbook = w;
-                        worksheet = workbook.ActiveSheet;
+                        worksheet = workbook.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
                         break;
                     }
                     catch (Exception)
@@ -165,7 +165,7 @@ namespace OpenRPA.Office.Activities
             string _worksheet = (Worksheet != null ? Worksheet.Get(context) : null);
             try
             {
-                worksheet = workbook.ActiveSheet;
+                worksheet = workbook.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
             }
             catch (Exception)
             {
@@ -177,7 +177,7 @@ namespace OpenRPA.Office.Activities
             {
                 officewrap.Quit();
                 doOpen(context);
-                worksheet = workbook.ActiveSheet;
+                worksheet = workbook.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
             }
             if (!string.IsNullOrEmpty(_worksheet))
             {
@@ -276,7 +276,7 @@ namespace OpenRPA.Office.Activities
             }
 
             var _worksheet = (Worksheet != null ? Worksheet.Get(context) : null);
-            worksheet = workbook.ActiveSheet;
+            worksheet = workbook.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
             if (!string.IsNullOrEmpty(_worksheet))
             {
                 foreach (Microsoft.Office.Interop.Excel.Worksheet s in workbook.Sheets)

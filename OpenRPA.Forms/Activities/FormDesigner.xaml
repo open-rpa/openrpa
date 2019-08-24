@@ -19,7 +19,6 @@
             <RowDefinition></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
         </Grid.RowDefinitions>
-
         <materialDesign:Card
             Grid.Column="0"
             MaxWidth="540"
@@ -29,24 +28,8 @@
                 <ScrollViewer.Resources>
                     <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FFFFFFFF" />
                 </ScrollViewer.Resources>
-                <!--<forms:DynamicForm Margin="12,12,12,8" Model="{Binding CompiledDefinition}" >
-                    <local:PushBindingManager.PushBindings>
-                        <local:PushBinding Path="CurrentModel" TargetProperty="Value" />
-                        <local:PushBinding Path="Form"  TargetProperty="" />
-                    </local:PushBindingManager.PushBindings>
-                </forms:DynamicForm>-->
-
                 <forms:DynamicForm Margin="12,12,12,8" Model="{Binding CompiledDefinition}">
-                    <!--<f:PushBindingManager.PushBindings>
-                        <f:PushBinding Path="CurrentModel" TargetProperty="Value" />
-                    </f:PushBindingManager.PushBindings>-->
                 </forms:DynamicForm>
-                <!--<forms:DynamicForm Margin="12,12,12,8" Model="{Binding CompiledDefinition}" Context="{Binding CurrentModel}">
-                    <local:PushBindingManager.PushBindings>
-                        <local:PushBinding Path="CurrentModel" TargetProperty="Value" />
-                        <local:PushBinding Path="Form"  TargetProperty="" />
-                    </local:PushBindingManager.PushBindings>
-                </forms:DynamicForm>-->
             </ScrollViewer>
         </materialDesign:Card>
         <materialDesign:Card

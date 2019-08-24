@@ -146,6 +146,11 @@
                     <RibbonButton Label="Detectors" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
                                   Command="{Binding Data.DetectorsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                 </RibbonGroup>
+                <RibbonGroup Header="Packages">
+                    <RibbonButton Label="Packages" LargeImageSource="/OpenRPA;component/Resources/Buttons/Package.png" 
+                                  Command="{Binding Data.ManagePackagesCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                </RibbonGroup>
+                
             </RibbonTab>
             <RibbonTab Header="Settings">
                 <RibbonGroup Header="Cancel key">

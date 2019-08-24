@@ -36,14 +36,14 @@ namespace OpenRPA.NM
                 // tab = NMHook.tabs.Where(x => x.browser == "chrome").FirstOrDefault();
                 tab = NMHook.tabs.FirstOrDefault();
             }
-            if(NMHook.tabs.Count==0) { return rootelements.ToArray(); }
+            if (NMHook.tabs.Count == 0) { return rootelements.ToArray(); }
             // getelement.data = "getdom";
             var getelement = new NativeMessagingMessage("getelement");
             getelement.browser = tab.browser;
             getelement.tabid = tab.id;
 
             getelement.xPath = "/html";
-            if (anchor!=null && anchor.Count > 1)
+            if (anchor != null && anchor.Count > 1)
             {
                 var s = anchor[1];
                 var p = s.Properties.Where(x => x.Name == "xpath").FirstOrDefault();
@@ -89,7 +89,7 @@ namespace OpenRPA.NM
             {
                 nmanchor = new NMSelector(anchor.ToString());
             }
-            if(nmanchor != null)
+            if (nmanchor != null)
             {
                 var element = GetElementsWithSelector(nmanchor);
                 return new NMSelector(nmitem.NMElement, nmanchor, true, (NMElement)element.FirstOrDefault());
@@ -116,38 +116,45 @@ namespace OpenRPA.NM
         }
         private void onMessage(NativeMessagingMessage message)
         {
-            if (message.uiy > 0 && message.uix > 0 && message.uiwidth > 0 && message.uiheight > 0)
+            try
             {
-                if (!string.IsNullOrEmpty(message.data))
+                if (message.uiy > 0 && message.uix > 0 && message.uiwidth > 0 && message.uiheight > 0)
                 {
-                    lastElement = new NMElement(message);
+                    if (!string.IsNullOrEmpty(message.data))
+                    {
+                        lastElement = new NMElement(message);
+                    }
+                    else
+                    {
+                        lastElement = new NMElement(message);
+                    }
                 }
-                else
+
+                if (message.functionName == "click")
                 {
-                    lastElement = new NMElement(message);
+                    if (recording)
+                    {
+                        if (lastElement == null) return;
+                        var re = new RecordEvent(); re.Button = Input.MouseButton.Left;
+                        var a = new GetElement { DisplayName = lastElement.ToString() };
+
+                        var selector = new NMSelector(lastElement, null, true, null);
+                        a.Selector = selector.ToString();
+                        a.Image = lastElement.ImageString();
+                        a.MaxResults = 1;
+
+                        re.Selector = selector;
+                        re.a = new GetElementResult(a);
+                        re.SupportInput = lastElement.SupportInput;
+                        re.ClickHandled = true;
+                        OnUserAction?.Invoke(this, re);
+                        return;
+                    }
                 }
             }
-
-            if (message.functionName == "click")
+            catch (Exception ex)
             {
-                if(recording)
-                {
-                    if (lastElement == null) return;
-                    var re = new RecordEvent(); re.Button = Input.MouseButton.Left;
-                    var a = new GetElement { DisplayName = lastElement.ToString() };
-
-                    var selector = new NMSelector(lastElement, null, true, null);
-                    a.Selector = selector.ToString();
-                    a.Image = lastElement.ImageString();
-                    a.MaxResults = 1;
-
-                    re.Selector = selector;
-                    re.a = new GetElementResult(a);
-                    re.SupportInput = lastElement.SupportInput;
-                    re.ClickHandled = true;
-                    OnUserAction?.Invoke(this, re);
-                    return;
-                }
+                Log.Error(ex.ToString());
             }
         }
         public void LaunchBySelector(Selector selector, TimeSpan timeout)
@@ -178,7 +185,7 @@ namespace OpenRPA.NM
             if (p != null) { url = p.Value; }
             NMHook.reloadtabs();
             var tabs = NMHook.tabs.Where(x => x.browser == browser && x.url == url).ToList();
-            if(string.IsNullOrEmpty(url)) tabs = NMHook.tabs.Where(x => x.browser == browser).ToList();
+            if (string.IsNullOrEmpty(url)) tabs = NMHook.tabs.Where(x => x.browser == browser).ToList();
             foreach (var tab in tabs)
             {
                 NMHook.CloseTab(tab);

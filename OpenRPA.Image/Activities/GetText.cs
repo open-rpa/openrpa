@@ -161,4 +161,5 @@ namespace OpenRPA.Image
             return fef;
         }
     }
+
 }

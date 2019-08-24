@@ -1,78 +1,39 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2E322CC8-173F-4806-A450-3DBE05430C5A}</ProjectGuid>
+    <TargetFramework>net462</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>OpenRPA</Authors>
+    <Product>OpenRPA</Product>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
+    <Version>1.0.3</Version>
+    <ApplicationIcon />
     <OutputType>Exe</OutputType>
-    <RootNamespace>OpenRPA.NativeMessagingHost</RootNamespace>
-    <AssemblyName>OpenRPA.NativeMessagingHost</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
+    <StartupObject />
+    <PackageReleaseNotes>1.0.3 fix resources</PackageReleaseNotes>
+    <Description>The NativeMessagingHost serves as a proxy between chrome/ff and openrpa</Description>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\bin\nm\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\dist\nm\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>Resources\OpenRPA.ico</ApplicationIcon>
-  </PropertyGroup>
+  <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
+  </Target>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <None Remove="background.js" />
+    <None Remove="chromemanifest.json" />
+    <None Remove="content.js" />
+    <None Remove="ffmanifest.json" />
+    <None Remove="Resources\OpenRPA.ico" />
+    <None Remove="Resources\OpenRPA.png" />
+    <None Remove="Resources\OpenRPA2.ico" />
+    <None Remove="Resources\OpenRPA2.png" />
+    <None Remove="zeniverse.js" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="addon\manifest.json" />
-    <None Include="addon\package.json" />
-    <None Include="App.config" />
-    <None Include="chromemanifest.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ffmanifest.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NamedPipeWrapper\NamedPipeWrapper.csproj">
-      <Project>{1d6d60c3-b42e-465e-886b-30ab2176fd37}</Project>
-      <Name>NamedPipeWrapper</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj">
-      <Project>{481bd5a1-5e8d-42a9-bd31-78becfaf15f3}</Project>
-      <Name>OpenRPA.Interfaces</Name>
-    </ProjectReference>
+    <Content Include="chromemanifest.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ffmanifest.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="background.js" />
@@ -80,20 +41,15 @@
     <EmbeddedResource Include="zeniverse.js" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Resources\OpenRPA.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\OpenRPA.png" />
+    <Resource Include="Resources\OpenRPA2.ico" />
+    <Resource Include="Resources\OpenRPA2.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="addon\background.js" />
-    <Content Include="addon\favicon.png" />
-    <Content Include="addon\OpenRPA.png" />
-    <Content Include="Resources\OpenRPA2.ico" />
-    <Content Include="Resources\OpenRPA2.png" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>taskkill /f /fi "pid gt 0" /im OpenRPA.JavaBridge.exe</PreBuildEvent>
-  </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
 </Project>

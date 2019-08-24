@@ -13,12 +13,12 @@ Check out the documentation on our [wiki pages](https://github.com/open-rpa/open
 
 Download and try it out here [here](https://github.com/open-rpa/openrpa/releases) 
 
-![1564858527749](C:\code\openrpa\docs\img\MainWindowProjects.png)
+![1564858527749](img/MainWindowProjects.png)
 
-Supports running "stand alone" with state, projects and workflows saved localy ( ideal if used on machines without internet )
+Supports running "stand alone" with state, projects and workflows saved locally ( ideal if used on machines without internet )
 
 Easy manipulation of workflows using Microsoft Workflow Foundation, implemented the right way, saving state either locally or in OpenFlow.
-![1564859078327](C:\code\openrpa\docs\img\EditWorkflow.png)
+![1564859078327](img/EditWorkflow.png)
 
 Supports remote management, and remote handling of state, projects and workflows, using OpenFlow.
 OpenFlow can initiate workflows on robots and robots can initiate workflows in OpenFlow
@@ -47,7 +47,7 @@ Chrome/Firefox
 
 Images and OCR
 
-![1564859912607](C:\code\openrpa\docs\img\1564859912607.png)
+![1564859912607](img/1564859912607.png)
 
 World class security using Access Control Lists and on-the-fly encryption for all objects in OpenFlow
 

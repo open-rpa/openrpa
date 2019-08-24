@@ -365,6 +365,7 @@ async function portOnMessage(message) {
 }
 function portOnDisconnect(message) {
     console.log("onDisconnect from native port");
+    port = null;
     //setTimeout(function () { connect(); }, 3000);
 }
 function connect() {

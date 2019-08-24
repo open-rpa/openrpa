@@ -28,6 +28,10 @@ namespace OpenRPA
             {
                 t = JsonConvert.DeserializeObject<T>(System.IO.File.ReadAllText(fileName));
             }
+            else if (System.IO.File.Exists(@"..\" + fileName))
+            {
+                t = JsonConvert.DeserializeObject<T>(System.IO.File.ReadAllText(@"..\" + fileName));
+            }
             else
             {
                 try

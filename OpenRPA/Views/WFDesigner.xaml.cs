@@ -248,8 +248,10 @@ namespace OpenRPA.Views
                 var ab = new ActivityBuilder();
                 ab.Name = Workflow.name;
                 ab.Implementation = wf;
+                
+                // typeof(Microsoft.VisualBasic.Collection),
+
                 AddVBNamespaceSettings(ab, typeof(Action),
-                    typeof(Microsoft.VisualBasic.Collection),
                     typeof(System.Xml.XmlNode),
                     typeof(OpenRPA.Workflow),
                     typeof(OpenRPA.UIElement),

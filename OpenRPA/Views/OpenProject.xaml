@@ -56,6 +56,10 @@
         </TreeView>
         <StackPanel Grid.Column="1" Grid.Row="0">
             <StackPanel>
+                <TextBlock><Bold>Edit</Bold></TextBlock>
+                <Button Click="ButtonEditXAML" Margin="20,0,0,0" Content="Edit XAML"></Button>
+            </StackPanel>
+            <StackPanel>
                 <TextBlock><Bold>Name</Bold></TextBlock>
                 <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue.name}" ></TextBlock>
             </StackPanel>

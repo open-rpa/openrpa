@@ -23,7 +23,7 @@ namespace OpenRPA.IE
             }
             return null;
         }
-        public static mshtml.IHTMLElement GetXPath(this SHDocVw.WebBrowser wb, string xpath)
+        public static MSHTML.IHTMLElement GetXPath(this SHDocVw.WebBrowser wb, string xpath)
         {
             CallScript(wb);
 
@@ -41,9 +41,9 @@ namespace OpenRPA.IE
 
             //if (wb.Document != null)
             //{
-            //    mshtml.IHTMLElement head = wb.Document.GetElementsByTagName("head")[0];
+            //    MSHTML.IHTMLElement head = wb.Document.GetElementsByTagName("head")[0];
             //    HtmlElement scriptEl = wb.Document.CreateElement("script");
-            //    mshtml.IHTMLScriptElement element = (mshtml.IHTMLScriptElement)scriptEl.DomElement;
+            //    MSHTML.IHTMLScriptElement element = (MSHTML.IHTMLScriptElement)scriptEl.DomElement;
             //    element.text = System.IO.File.ReadAllText(@"wgxpath.install.js");
             //    head.AppendChild(scriptEl);
 
@@ -75,10 +75,10 @@ namespace OpenRPA.IE
             //webBrowser1.Document.Body.AppendChild(scriptJS);
 
 
-            //mshtml.HTMLDocumentClass htmlDocument = axWebBrowser.Document;
+            //MSHTML.HTMLDocumentClass htmlDocument = axWebBrowser.Document;
 
-            //var htmlWindow = (mshtml.IHTMLWindow2) htmlDocument.parentWindow;
-            //mshtml.HTMLDocument hd = htmlDocument;
+            //var htmlWindow = (MSHTML.IHTMLWindow2) htmlDocument.parentWindow;
+            //MSHTML.HTMLDocument hd = htmlDocument;
 
             ////htmlDocument.execsc
 
@@ -127,11 +127,11 @@ namespace OpenRPA.IE
         // https://stackoverflow.com/questions/28009093/how-to-using-xpath-in-webbrowser-control
 
         // https://github.com/mradosta/thousandpass/blob/master/addons/msie/1000Pass_com/1000pass_com/XPath.cs
-        public static string getXPath(this mshtml.IHTMLElement element)
+        public static string getXPath(this MSHTML.IHTMLElement element)
         {
             if (element == null)
                 return "";
-            mshtml.IHTMLElement currentNode = element;
+            MSHTML.IHTMLElement currentNode = element;
             ArrayList path = new ArrayList();
 
             while (currentNode != null)
@@ -163,7 +163,7 @@ namespace OpenRPA.IE
             return sb.ToString();
         }
 
-        private static string getNode(mshtml.IHTMLElement node)
+        private static string getNode(MSHTML.IHTMLElement node)
         {
             string nodeExpr = node.tagName;
             if (nodeExpr == null)  // Eg. node = #text
@@ -178,9 +178,9 @@ namespace OpenRPA.IE
 
             // Find rank of node among its type in the parent
             int rank = 1;
-            mshtml.IHTMLDOMNode nodeDom = node as mshtml.IHTMLDOMNode;
-            mshtml.IHTMLDOMNode psDom = nodeDom.previousSibling;
-            mshtml.IHTMLElement ps = psDom as mshtml.IHTMLElement;
+            MSHTML.IHTMLDOMNode nodeDom = node as MSHTML.IHTMLDOMNode;
+            MSHTML.IHTMLDOMNode psDom = nodeDom.previousSibling;
+            MSHTML.IHTMLElement ps = psDom as MSHTML.IHTMLElement;
             while (ps != null)
             {
                 if (ps.tagName == node.tagName)
@@ -188,7 +188,7 @@ namespace OpenRPA.IE
                     rank++;
                 }
                 psDom = psDom.previousSibling;
-                ps = psDom as mshtml.IHTMLElement;
+                ps = psDom as MSHTML.IHTMLElement;
             }
             if (rank > 1)
             {
@@ -196,8 +196,8 @@ namespace OpenRPA.IE
             }
             else
             { // First node of its kind at this level. Are there any others?
-                mshtml.IHTMLDOMNode nsDom = nodeDom.nextSibling;
-                mshtml.IHTMLElement ns = nsDom as mshtml.IHTMLElement;
+                MSHTML.IHTMLDOMNode nsDom = nodeDom.nextSibling;
+                MSHTML.IHTMLElement ns = nsDom as MSHTML.IHTMLElement;
                 while (ns != null)
                 {
                     if (ns.tagName == node.tagName)
@@ -206,7 +206,7 @@ namespace OpenRPA.IE
                         break;
                     }
                     nsDom = nsDom.nextSibling;
-                    ns = nsDom as mshtml.IHTMLElement;
+                    ns = nsDom as MSHTML.IHTMLElement;
                 }
             }
             return nodeExpr;

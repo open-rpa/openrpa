@@ -47,8 +47,8 @@ namespace OpenRPA.Script.Activities
         //private static ScriptEngine _engine;
         //private static ScriptScope _scope;
 
-        // private static AssemblyLoader assemblyLoader = new AssemblyLoader();
-        private static bool firstRun = true;
+        //private static AssemblyLoader assemblyLoader = new AssemblyLoader();
+        //private static bool firstRun = true;
 
         public static void ExecuteNewAppDomain(Action action)
         {

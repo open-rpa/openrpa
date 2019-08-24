@@ -10,10 +10,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
   </PropertyGroup>
-  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
-    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
-  </Target>
-  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
+  <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
   </Target>
   <Target Name="SetNuspecProperties" BeforeTargets="GenerateNuspec">
@@ -24,5 +21,8 @@
       <NuspecProperties>$(NuspecProperties);description=$(Description)</NuspecProperties>
       <NuspecProperties>$(NuspecProperties);author=$(Authors)</NuspecProperties>
     </PropertyGroup>
+  </Target>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
   </Target>
 </Project>

@@ -39,10 +39,16 @@ namespace OpenRPA
         }
         public bool UpdaterNeedsUpdate()
         {
+            string OpenRPAUpdaterexe = System.IO.Path.Combine(InstallPath, "OpenRPA.Updater.exe");
+            if (!System.IO.File.Exists(OpenRPAUpdaterexe)) return false;
+            FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(OpenRPAUpdaterexe);
+            string version = fileVersionInfo.ProductVersion;
+
             var onlinepackage = repo.FindPackage("OpenRPA.Updater");
-            var localpackage = packageManager.LocalRepository.FindPackage("OpenRPA.Updater");
-            if (onlinepackage == null || localpackage == null) return true;
-            if (new Version(onlinepackage.Version.ToString()) > new Version(localpackage.Version.ToString()))
+            if (onlinepackage == null) return false;
+            // var localpackage = packageManager.LocalRepository.FindPackage("OpenRPA.Updater");
+            //if (onlinepackage == null || localpackage == null) return true;
+            if (new Version(onlinepackage.Version.ToString()) > new Version(version))
             {
                 return true;
             }
@@ -119,11 +125,10 @@ namespace OpenRPA
         }
         private void PackageInstalled(object sender, PackageOperationEventArgs eventArgs)
         {
-
-            if (eventArgs.Package.Id.ToLower().Contains("humanizer"))
-            {
-                var b = true;
-            }
+            //if (eventArgs.Package.Id.ToLower().Contains("humanizer"))
+            //{
+            //    var b = true;
+            //}
             // List<IPackageAssemblyReference> assemblyReferences = GetCompatibleItems(TargetFramework, eventArgs.Package.AssemblyReferences).ToList();
             List<IPackageAssemblyReference> assemblyReferences = GetCompatibleItems(TargetFramework, eventArgs.Package.AssemblyReferences).ToList();
             if (assemblyReferences.Count == 0)
@@ -227,16 +232,10 @@ namespace OpenRPA
                     System.Diagnostics.Debug.WriteLine("******** " + Package.Id + " " + TargetFramework.ToString());
                     foreach (var d in deps) System.Diagnostics.Debug.WriteLine(d.Id);
                 }
-
-                var b2 = true;
                 foreach (var d in deps)
                 {
                     exists = packageManager.LocalRepository.FindPackage(d.Id);
                     // d.Id.ToLower().Contains("fastmember") ||
-                    if (d.Id.ToLower().Contains("controlzex") || d.Id.ToLower().Contains("humanizer"))
-                    {
-                        var b = true;
-                    }
                     // if (exists != null) continue;
                     //if (d.Id.ToLower().Contains("controlzex") || d.Id.ToLower().Contains("humanizer"))
                     //{

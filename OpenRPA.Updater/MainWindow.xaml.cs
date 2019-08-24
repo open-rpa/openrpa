@@ -41,30 +41,28 @@ namespace OpenRPA.Updater
         }
         public IPackageRepository repo;
         public PackageManager packageManager;
+#if DEBUG
+        public IPackageRepository publicrepo;
+        public PackageManager PublicpackageManager;
+#endif
         public ProjectManager projectManager;
         public IFileSystem FileSystem;
         public DefaultPackagePathResolver resolver;
         public string RepositoryPath;
-        public string InstallPath; 
+        public string InstallPath;
         // public IPackagePathResolver resolver;
         System.Runtime.Versioning.FrameworkName TargetFramework;
         // System.Runtime.Versioning.FrameworkName TargetFramework20;
         Logger logger = new Logger();
-        
+
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
-            //packageManager = new PackageManager(repo, @"c:\temp\Packages") { Logger = logger };
-            //packageManager = new PackageManager(
-            //    repo,
-            //    new DefaultPackagePathResolver("https://packages.nuget.org/api/v2"),
-            //    new PhysicalFileSystem(@"c:\temp\Packages")
-            //);
-            // new PhysicalFileSystem(InstallPath)
 #if DEBUG
             // repo = PackageRepositoryFactory.Default.CreateRepository(@"C:\code\OpenRPA\packages");
-            repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
+            repo = PackageRepositoryFactory.Default.CreateRepository(@"C:\code\OpenRPA\packages");
+            publicrepo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
 #else
             repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
 #endif
@@ -82,11 +80,14 @@ namespace OpenRPA.Updater
         }
         private void ReloadPackageManager()
         {
-            if(packageManager != null ) packageManager.PackageUninstalled -= PackageUninstalled;
+            if (packageManager != null) packageManager.PackageUninstalled -= PackageUninstalled;
             resolver = new DefaultPackagePathResolver(RepositoryPath);
             FileSystem = new PhysicalFileSystem(RepositoryPath);
-            // packageManager = new PackageManager(repo, InstallPath) { Logger = logger };
             packageManager = new PackageManager(repo, resolver, FileSystem) { Logger = logger };
+#if DEBUG
+            PublicpackageManager = new PackageManager(publicrepo, resolver, FileSystem) { Logger = logger };
+#endif
+
             // Lets do this EVERYTIME not just when unpacking !
             // packageManager.PackageInstalled += PackageInstalled;
             packageManager.PackageUninstalled += PackageUninstalled;
@@ -105,8 +106,12 @@ namespace OpenRPA.Updater
             ReloadPackageManager();
             Task.Run(async () =>
             {
-
+#if DEBUG
+                List<IPackage> packages = repo.GetPackages().ToList();
+#else
                 List<IPackage> packages = repo.Search("OpenRPA.*", false).ToList();
+#endif
+
                 // IPackageRepository localRepository = PackageRepositoryFactory.Default.CreateRepository(RepositoryPath);
                 PackageModel m = null;
                 foreach (var p in packageManager.LocalRepository.GetPackages())
@@ -124,14 +129,14 @@ namespace OpenRPA.Updater
                             }
                             else
                             {
-                                if(new Version(p.Version.ToString()) > new Version(m.Version.ToString())) { m.Version = p.Version; m.LatestVersion = p.Version.ToString(); m.Package = p; }
+                                if (new Version(p.Version.ToString()) > new Version(m.Version.ToString())) { m.Version = p.Version; m.LatestVersion = p.Version.ToString(); m.Package = p; }
                             }
                         });
                         m.isDownloaded = true;
-                        if(!m.isInstalled) m.isInstalled = isPackageInstalled(p);
+                        if (!m.isInstalled) m.isInstalled = isPackageInstalled(p);
                     }
                 }
-                foreach(var p in Packages)
+                foreach (var p in Packages)
                 {
                     var id = p.Package.Id.ToString();
                     var exists = packages.Where(x => x.Id == p.Package.Id && new Version(x.Version.ToString()) > new Version(p.Version.ToString())).FirstOrDefault();
@@ -199,7 +204,7 @@ namespace OpenRPA.Updater
                             await InstallPackageAsync(packages.Where(x => x.Id == "OpenRPA.Java").FirstOrDefault());
                             await InstallPackageAsync(packages.Where(x => x.Id == "OpenRPA.Forms").FirstOrDefault());
                             await InstallPackageAsync(packages.Where(x => x.Id == "OpenRPA.Script").FirstOrDefault());
-                            if(IsOfficeInstalled())
+                            if (IsOfficeInstalled())
                             {
                                 await InstallPackageAsync(packages.Where(x => x.Id == "OpenRPA.Office").FirstOrDefault());
                             }
@@ -223,10 +228,6 @@ namespace OpenRPA.Updater
         {
             var PackageInstallPath = RepositoryPath + @"\" + Package.Id;
             List<IPackageAssemblyReference> assemblyReferences = GetCompatibleItems(TargetFramework, Package.AssemblyReferences).ToList();
-            if (assemblyReferences.Count == 0)
-            {
-                // assemblyReferences = GetCompatibleItems(TargetFramework20, Package.AssemblyReferences).ToList();
-            }
             foreach (var f in assemblyReferences)
             {
                 var source = System.IO.Path.Combine(PackageInstallPath, f.Path);
@@ -261,17 +262,7 @@ namespace OpenRPA.Updater
         }
         private void PackageInstalled(object sender, PackageOperationEventArgs eventArgs)
         {
-
-            if (eventArgs.Package.Id.ToLower().Contains("humanizer"))
-            {
-                var b = true;
-            }
-            // List<IPackageAssemblyReference> assemblyReferences = GetCompatibleItems(TargetFramework, eventArgs.Package.AssemblyReferences).ToList();
             List<IPackageAssemblyReference> assemblyReferences = GetCompatibleItems(TargetFramework, eventArgs.Package.AssemblyReferences).ToList();
-            if (assemblyReferences.Count == 0)
-            {
-                // assemblyReferences = GetCompatibleItems(TargetFramework20, eventArgs.Package.AssemblyReferences).ToList();
-            }
             var skipFiles = new List<string>();
             foreach (var f in assemblyReferences)
             {
@@ -317,7 +308,7 @@ namespace OpenRPA.Updater
             {
                 if (System.IO.Directory.Exists(eventArgs.InstallPath + @"\build\x64"))
                 {
-                    foreach(var f in System.IO.Directory.GetFiles(eventArgs.InstallPath + @"\build\x64"))
+                    foreach (var f in System.IO.Directory.GetFiles(eventArgs.InstallPath + @"\build\x64"))
                     {
                         var filename = System.IO.Path.GetFileName(f);
                         var target = System.IO.Path.Combine(InstallPath, filename);
@@ -360,7 +351,7 @@ namespace OpenRPA.Updater
                     }
                 }
             }
-            if(!eventArgs.Package.Id.ToLower().Contains("openrpa."))
+            if (!eventArgs.Package.Id.ToLower().Contains("openrpa."))
             {
                 this.Dispatcher.Invoke(() =>
                 {
@@ -394,13 +385,33 @@ namespace OpenRPA.Updater
             return Enumerable.Empty<T>();
         }
         public System.Collections.ObjectModel.ObservableCollection<PackageModel> Packages { get; } = new System.Collections.ObjectModel.ObservableCollection<PackageModel>();
+
+        void _InstallPackage(string packageId, SemanticVersion version)
+        {
+#if DEBUG
+            var haslocal = repo.FindPackage(packageId, version);
+            if (haslocal != null)
+            {
+                packageManager.InstallPackage(packageId, version: version, ignoreDependencies: true, allowPrereleaseVersions: false);
+            }
+            else
+            {
+                PublicpackageManager.InstallPackage(packageId, version: version, ignoreDependencies: true, allowPrereleaseVersions: false);
+            }
+
+#else
+                    packageManager.InstallPackage(packageId, version: version, ignoreDependencies: true, allowPrereleaseVersions: false);
+#endif
+
+        }
+
         void InstallPackageDependencies(System.Runtime.Versioning.FrameworkName TargetFramework, IPackage Package)
         {
             if (Package == null) throw new ArgumentNullException("Package", "Package cannot be null");
-            if(Package.Id.ToLower() == "netstandard.library") return;
-            if (Package.Id.ToLower()== "system.net.websockets.client.managed") return;
+            if (Package.Id.ToLower() == "netstandard.library") return;
+            if (Package.Id.ToLower() == "system.net.websockets.client.managed") return;
             if (Package.Id.ToLower() == "system.reflection.emit") return;
-            
+
             try
             {
                 IPackage exists = null;
@@ -409,20 +420,20 @@ namespace OpenRPA.Updater
                 var deps = Package.GetCompatiblePackageDependencies(framework);
                 if (deps.Count() == 0)
                 {
-                    var dsets = Package.DependencySets.Where(x=> x.TargetFramework.Version.Major == 4).OrderByDescending(x => x.TargetFramework.Version.Minor).ToList();
-                    if(dsets.Count() == 0 && Package.DependencySets.Count() == 1)
+                    var dsets = Package.DependencySets.Where(x => x.TargetFramework.Version.Major == 4).OrderByDescending(x => x.TargetFramework.Version.Minor).ToList();
+                    if (dsets.Count() == 0 && Package.DependencySets.Count() == 1)
                     {
                         dsets = Package.DependencySets.ToList();
                     }
-                        if (dsets.Count()> 0)
+                    if (dsets.Count() > 0)
                     {
-                        if(dsets.First().Dependencies.Count() >0 )
+                        if (dsets.First().Dependencies.Count() > 0)
                         {
                             framework = dsets.First().TargetFramework;
                             System.Diagnostics.Debug.WriteLine("******** " + Package.Id + " " + framework.ToString());
                             deps = dsets.First().Dependencies;
                         }
-                        
+
                     }
                     //// .NETFramework4.5
                     //framework = new System.Runtime.Versioning.FrameworkName(".NETStandard", new Version("2.0"));
@@ -431,32 +442,15 @@ namespace OpenRPA.Updater
                     //{
                     //    System.Diagnostics.Debug.WriteLine("******** " + Package.Id + " " + framework.ToString());
                     //}
-                } else
+                }
+                else
                 {
                     System.Diagnostics.Debug.WriteLine("******** " + Package.Id + " " + TargetFramework.ToString());
                     foreach (var d in deps) System.Diagnostics.Debug.WriteLine(d.Id);
                 }
-                
-                var b2 = true;
                 foreach (var d in deps)
                 {
-                    exists = packageManager.LocalRepository.FindPackage(d.Id);
-                    // d.Id.ToLower().Contains("fastmember") ||
-                    if ( d.Id.ToLower().Contains("controlzex") || d.Id.ToLower().Contains("humanizer"))
-                    {
-                        var b = true;
-                    }
-                    // if (exists != null) continue;
-                    //if (d.Id.ToLower().Contains("controlzex") || d.Id.ToLower().Contains("humanizer"))
-                    //{
-                    //    packageManager.InstallPackage(d.Id, version: d.VersionSpec.MinVersion, ignoreDependencies: true, allowPrereleaseVersions: false);
-                    //}
-                    //else
-                    //{
-                    //    packageManager.InstallPackage(d.Id, null, true, false);
-                    //}
-                    //packageManager.InstallPackage(d.Id, null, true, false);
-                    packageManager.InstallPackage(d.Id, version: d.VersionSpec.MinVersion, ignoreDependencies: true, allowPrereleaseVersions: false);
+                    _InstallPackage(d.Id, d.VersionSpec.MinVersion);
                     // Whats wrong with FastMember.1.5.0 ??
                     exists = packageManager.LocalRepository.FindPackage(d.Id);
                     // exists = packageManager.LocalRepository.FindPackage(d.Id, d.VersionSpec.MinVersion);
@@ -489,8 +483,10 @@ namespace OpenRPA.Updater
             {
                 if (!System.IO.Directory.Exists(InstallPath)) System.IO.Directory.CreateDirectory(InstallPath);
                 InstallPackageDependencies(TargetFramework, Package);
-                packageManager.InstallPackage(Package, true, false, true);
+                //packageManager.InstallPackage(Package, true, false, true);
                 //packageManager.InstallPackage(SelectedValue.Package, false, false, false);
+
+                _InstallPackage(Package.Id, null);
                 PackageInstalled(null, new PackageOperationEventArgs(Package, FileSystem, RepositoryPath + @"\" + Package.Id + "." + Package.Version.ToString()));
             }
             catch (Exception ex)
@@ -505,10 +501,11 @@ namespace OpenRPA.Updater
         }
         async Task InstallPackageAsync(IPackage Package)
         {
+            if (Package == null) return;
             if (Package == null) throw new ArgumentNullException("Package", "Package cannot be null");
             await Task.Factory.StartNew(() => InstallPackage(Package));
         }
-        private async  void ButtonInstall(object sender, RoutedEventArgs e)
+        private async void ButtonInstall(object sender, RoutedEventArgs e)
         {
             PackageModel SelectedValue = listPackages.SelectedValue as PackageModel;
             if (SelectedValue == null) return;
@@ -591,14 +588,15 @@ namespace OpenRPA.Updater
         }
         private void ButtonLaunch(object sender, RoutedEventArgs e)
         {
-            if(System.IO.File.Exists(InstallPath + @"\OpenRPA.exe"))
+            if (System.IO.File.Exists(InstallPath + @"\OpenRPA.exe"))
             {
                 Run(InstallPath, InstallPath + @"\OpenRPA.exe");
-            } else
+            }
+            else
             {
                 logger.Log(MessageLevel.Error, "Failed locating " + InstallPath + @"\OpenRPA.exe");
             }
-            
+
         }
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
@@ -611,7 +609,7 @@ namespace OpenRPA.Updater
             ButtonInstall(null, null);
         }
     }
-   
-   
+
+
 
 }

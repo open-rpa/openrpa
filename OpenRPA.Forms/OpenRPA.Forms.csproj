@@ -9,10 +9,7 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Version>1.0.4</Version>
   </PropertyGroup>
-  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
-    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
-  </Target>
-  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
+  <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
   </Target>
   <ItemGroup>
@@ -75,4 +72,7 @@
     <Resource Include="Resources\designer\form30.png" />
     <Resource Include="Resources\designer\prompt.png" />
   </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
 </Project>

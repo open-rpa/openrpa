@@ -9,15 +9,10 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.9</Version>
-    <PackageReleaseNotes>1.0.9 Implement update checks</PackageReleaseNotes>
+    <Version>1.0.10</Version>
+    <PackageReleaseNotes>1.0.10 Improve update check
+1.0.9 Implement update checks</PackageReleaseNotes>
   </PropertyGroup>
-  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
-    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
-  </Target>
-  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
-    <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
-  </Target>
   <Target Name="SetNuspecProperties" BeforeTargets="GenerateNuspec">
     <PropertyGroup>
       <NuspecProperties>$(NuspecProperties);id=$(AssemblyName)</NuspecProperties>
@@ -572,4 +567,16 @@
     <Resource Include="Resources\state\Running_green.png" />
     <Resource Include="Resources\state\unloaded.png" />
   </ItemGroup>
+  <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
+  </Target>
+  <!--<Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="ECHO ON&#xD;&#xA;nuget.exe push -Source &quot;nuget.org&quot; $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg" />
+  </Target>-->
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="ECHO ON&#xD;&#xA;dir" />
+  </Target>-->
 </Project>

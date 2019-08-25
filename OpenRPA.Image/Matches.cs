@@ -103,22 +103,17 @@ namespace OpenRPA.Image
                                 matchcount++;
                                 bool canadd = true;
                                 if (matchcount > maxResults) canadd = false;
-
-                                //var Location = Matches.Data[y, x, 0];
-                                //preview.Draw(new Rectangle(new Point(x, y), new Size(Image2.Width, Image2.Height)), new Bgr(0, 0, 255), 2);
-                                //Image2 found within Image1
-
-                                //var _rect = new Rectangle(new Point(x, y), new Size(Template.Width, Template.Height));
-
-                                //foreach (var r in result)
-                                //{
-                                //    if (r.IntersectsWith(rect)) canadd = false;
-                                //}
-                                //var hi = new Highlighter(rect, TimeSpan.FromSeconds(2));
                                 if (canadd)
                                 {
                                     var rect = new Rectangle(new Point(x, y), new Size(Template.Width, Template.Height));
-                                    result.Add(rect);
+                                    foreach (var _r in result.ToList())
+                                    {
+                                        if ((_r.Contains(rect) || _r.IntersectsWith(rect)) && !_r.Equals(rect))
+                                        {
+                                            canadd = false;
+                                        }
+                                    }
+                                    if (canadd) result.Add(rect);
                                 }
                             }
                         }

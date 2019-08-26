@@ -13,6 +13,9 @@
     <PackageReleaseNotes>1.0.10 Improve update check
 1.0.9 Implement update checks</PackageReleaseNotes>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\debug</OutputPath>
+  </PropertyGroup>
   <Target Name="SetNuspecProperties" BeforeTargets="GenerateNuspec">
     <PropertyGroup>
       <NuspecProperties>$(NuspecProperties);id=$(AssemblyName)</NuspecProperties>

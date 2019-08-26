@@ -7,8 +7,12 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <NuspecFile>nuget.nuspec</NuspecFile>
-    <Version>1.0.3</Version>
+    <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
+    <Version>1.0.4</Version>
+    <PackageReleaseNotes>1.0.4 add Python.Runtime.NETStandard as a lib</PackageReleaseNotes>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\debug</OutputPath>
   </PropertyGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
@@ -27,6 +31,8 @@
     <None Remove="Activities\ExecuteAHKFunctionDesigner.xaml" />
     <None Remove="Activities\ExecuteAHKScriptDesigner.xaml" />
     <None Remove="Activities\InvokeCodeDesigner.xaml" />
+    <None Remove="lib\Python.Runtime.NETStandard.dll" />
+    <None Remove="Python.Runtime.NETStandard.dll" />
     <None Remove="Resources\Autohotkey.xshd" />
     <None Remove="Resources\designer\autohotkey.png" />
     <None Remove="Resources\designer\comment.png" />
@@ -35,6 +41,11 @@
     <None Remove="Resources\toolbox\autohotkey.png" />
     <None Remove="Resources\toolbox\comment.png" />
     <None Remove="Resources\toolbox\prompt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\Python.Runtime.NETStandard.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\toolbox\autohotkey.png" />

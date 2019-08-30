@@ -385,7 +385,6 @@ namespace OpenRPA.Updater
             return Enumerable.Empty<T>();
         }
         public System.Collections.ObjectModel.ObservableCollection<PackageModel> Packages { get; } = new System.Collections.ObjectModel.ObservableCollection<PackageModel>();
-
         void _InstallPackage(string packageId, SemanticVersion version)
         {
 #if DEBUG
@@ -404,14 +403,18 @@ namespace OpenRPA.Updater
 #endif
 
         }
-
         void InstallPackageDependencies(System.Runtime.Versioning.FrameworkName TargetFramework, IPackage Package)
         {
             if (Package == null) throw new ArgumentNullException("Package", "Package cannot be null");
             if (Package.Id.ToLower() == "netstandard.library") return;
-            if (Package.Id.ToLower() == "system.net.websockets.client.managed") return;
+            // if (Package.Id.ToLower() == "system.net.websockets.client.managed") return;
+            if (Package.Id.ToLower() == "system.buffers") return;
             if (Package.Id.ToLower() == "system.reflection.emit") return;
 
+            //if (Package.Id.ToLower() == "system.net.websockets.client.managed")
+            //{
+            //    var b = true;
+            //}
             try
             {
                 IPackage exists = null;

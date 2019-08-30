@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.10</Version>
-    <PackageReleaseNotes>1.0.10 Improve update check
+    <Version>1.0.11</Version>
+    <PackageReleaseNotes>1.0.11 Make userfriendly version of activities for handling credentials
+1.0.10 Improve update check
 1.0.9 Implement update checks</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -40,6 +41,7 @@
     <None Remove="Activities\DetectorDesigner.xaml" />
     <None Remove="Activities\DownloadFileDesigner.xaml" />
     <None Remove="Activities\ForEachDataRowDesigner.xaml" />
+    <None Remove="Activities\GetCredentialsDesigner.xaml" />
     <None Remove="Activities\GetElementDesigner.xaml" />
     <None Remove="Activities\GrantPermissionDesigner.xaml" />
     <None Remove="Activities\HighlightElementDesigner.xaml" />
@@ -51,6 +53,7 @@
     <None Remove="Activities\OpenApplicationDesigner.xaml" />
     <None Remove="Activities\QueryDesigner.xaml" />
     <None Remove="Activities\RemovePermissionDesigner.xaml" />
+    <None Remove="Activities\SetCredentialsDesigner.xaml" />
     <None Remove="Activities\TypeTextDesigner.xaml" />
     <None Remove="Activities\UploadFileDesigner.xaml" />
     <None Remove="App.xaml" />
@@ -271,6 +274,10 @@
     <Page Include="Activities\ForEachDataRowDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Activities\SetCredentialsDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\GetElementDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -281,6 +288,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\InsertClipboardDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\GetCredentialsDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\InsertOneDesigner.xaml">

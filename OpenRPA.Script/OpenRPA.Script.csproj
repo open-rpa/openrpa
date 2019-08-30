@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
-    <Version>1.0.4</Version>
-    <PackageReleaseNotes>1.0.4 add Python.Runtime.NETStandard as a lib</PackageReleaseNotes>
+    <Version>1.0.5</Version>
+    <PackageReleaseNotes>1.0.5 update interfaces reference
+1.0.4 add Python.Runtime.NETStandard as a lib</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>

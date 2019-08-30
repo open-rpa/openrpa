@@ -7,7 +7,8 @@
     <Description>A couple of activities to design and show forms, and notifications</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
+    <PackageReleaseNotes>1.0.5 update interfaces reference</PackageReleaseNotes>
   </PropertyGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />

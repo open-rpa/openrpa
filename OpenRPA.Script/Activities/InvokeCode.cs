@@ -231,7 +231,6 @@ sys.stdout = sys.stderr = output()
                                     else Log.Information("Ignorering variable " + parameter.Key + " of type " + myVar.PropertyType.FullName);
                                 }
                             }
-
                             //lck = PythonEngine.AcquireLock();
                             //PythonEngine.Exec(code);
                         }

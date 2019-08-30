@@ -1,13 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net40</TargetFramework>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>OpenRPA</Authors>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
     <PackageId>OpenRPA.NamedPipeWrapper</PackageId>
+    <PackageReleaseNotes>1.0.7 update interfaces reference</PackageReleaseNotes>
+    <Description>Helper classes that makes named pipe communication easier</Description>
   </PropertyGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />

@@ -71,7 +71,8 @@ namespace OpenRPA.Net
                     // ws = (ClientWebSocket)SystemClientWebSocket.CreateClientWebSocket();
                     if (VersionHelper.IsWindows8OrGreater())
                     {
-                        ws = new ClientWebSocket();
+                        // ws = new ClientWebSocket();
+                        ws = new System.Net.WebSockets.Managed.ClientWebSocket();
                     }
                     else
                     {

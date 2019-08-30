@@ -9,6 +9,43 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Interfaces
 {
+    public abstract class AsyncTaskCodeActivity : AsyncCodeActivity
+    {
+        protected sealed override IAsyncResult BeginExecute(AsyncCodeActivityContext context, AsyncCallback callback, object state)
+        {
+            var task = ExecuteAsync(context);
+            var tcs = new TaskCompletionSource<object>(state);
+            task.ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                    tcs.TrySetException(t.Exception.InnerExceptions);
+                else if (t.IsCanceled)
+                    tcs.TrySetCanceled();
+                else
+                    tcs.TrySetResult(t.Result);
+                callback?.Invoke(tcs.Task);
+            });
+            return tcs.Task;
+        }
+
+        protected sealed override void EndExecute(AsyncCodeActivityContext context, IAsyncResult result)
+        {
+            var task = (Task<object>)result;
+            try
+            {
+                AfterExecute(context, task.Result);
+                return;
+            }
+            catch (AggregateException ex)
+            {
+                System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+                throw;
+            }
+        }
+        protected abstract Task<object> ExecuteAsync(AsyncCodeActivityContext context);
+        protected abstract void AfterExecute(AsyncCodeActivityContext context, object result);
+    }
+
     public abstract class AsyncTaskCodeActivity<T> : AsyncCodeActivity<T>
     {
         protected sealed override IAsyncResult BeginExecute(AsyncCodeActivityContext context, AsyncCallback callback, object state)

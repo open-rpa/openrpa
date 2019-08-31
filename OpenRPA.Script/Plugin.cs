@@ -42,7 +42,6 @@ namespace OpenRPA.Java
         {
             return false;
         }
-        private static IntPtr ctx;
         public void Initialize()
         {
             Python.Runtime.PythonEngine.Initialize();

@@ -50,6 +50,7 @@ namespace OpenRPA.Updater
         public DefaultPackagePathResolver resolver;
         public string RepositoryPath;
         public string InstallPath;
+        public bool FirstRun = true;
         // public IPackagePathResolver resolver;
         System.Runtime.Versioning.FrameworkName TargetFramework;
         // System.Runtime.Versioning.FrameworkName TargetFramework20;
@@ -58,6 +59,7 @@ namespace OpenRPA.Updater
         public MainWindow()
         {
             InitializeComponent();
+            ButtonUpdateAll.IsEnabled = false;
             DataContext = this;
 #if DEBUG
             // repo = PackageRepositoryFactory.Default.CreateRepository(@"C:\code\OpenRPA\packages");
@@ -185,6 +187,10 @@ namespace OpenRPA.Updater
                     m.isDownloaded = true;
                     if (!m.isInstalled) m.isInstalled = isPackageInstalled(p);
                 }
+                this.Dispatcher.Invoke(() =>
+                {
+                    ButtonUpdateAll.IsEnabled = false;
+                });
                 //if (!System.IO.Directory.Exists(RepositoryPath) && !System.IO.Directory.Exists(InstallPath))
                 if (!System.IO.Directory.Exists(InstallPath) || !System.IO.File.Exists(InstallPath + @"\OpenRPA.exe"))
                 {
@@ -221,6 +227,27 @@ namespace OpenRPA.Updater
                             ButtonLaunch(null, null);
                         });
                     }
+                } else if(FirstRun) {
+                    FirstRun = false;
+                    int UpgradeCount = Packages.Where(x => x.canUpgrade).Count();
+                    bool hasUpgrades = (UpgradeCount > 0);
+                    if (hasUpgrades)
+                    {
+                        var dialogResult = MessageBox.Show(UpgradeCount + " packages has updates, update all ?", "Upgrades available", MessageBoxButton.YesNo);
+                        if (dialogResult == MessageBoxResult.Yes)
+                        {
+                            ButtonUpdateAllClick(null, null);
+                        }
+                        else
+                        {
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                ButtonUpdateAll.IsEnabled = true;
+                            });
+
+                        }
+                    }
+
                 }
             });
         }
@@ -522,38 +549,7 @@ namespace OpenRPA.Updater
         {
             PackageModel SelectedValue = listPackages.SelectedValue as PackageModel;
             if (SelectedValue == null) return;
-            var exists = packageManager.LocalRepository.FindPackage(SelectedValue.Package.Id);
-            if (exists != null)
-            {
-                listPackages.SelectedValue = null;
-                listPackages.IsEnabled = false;
-                Task.Run(() =>
-                {
-                    try
-                    {
-                        //packageManager.UpdatePackage(exists, true, false);
-                        packageManager.UpdatePackage(exists.Id, new SemanticVersion(SelectedValue.LatestVersion), false, false);
-                        exists = packageManager.LocalRepository.FindPackage(SelectedValue.Package.Id);
-                        SelectedValue.canUpgrade = false;
-                        PackageInstalled(null, new PackageOperationEventArgs(exists, FileSystem, RepositoryPath + @"\" + exists.Id + "." + exists.Version.ToString()));
-                        InstallPackageDependencies(TargetFramework, exists);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Log(MessageLevel.Error, ex.ToString());
-                        System.Diagnostics.Debug.WriteLine(ex.ToString());
-                    }
-                    finally
-                    {
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            listPackages.IsEnabled = true;
-                            listPackages.SelectedValue = SelectedValue;
-                        });
-                        LoadPackages();
-                    }
-                });
-            }
+            _ = UpgradePackageAsync(SelectedValue);
         }
         private void ButtonUninstall(object sender, RoutedEventArgs e)
         {
@@ -610,6 +606,58 @@ namespace OpenRPA.Updater
         private void ButtonReinstall(object sender, RoutedEventArgs e)
         {
             ButtonInstall(null, null);
+        }
+        private async Task UpgradePackageAsync(PackageModel SelectedValue)
+        {
+            if (SelectedValue == null) return;
+            var exists = packageManager.LocalRepository.FindPackage(SelectedValue.Package.Id);
+            if (exists != null)
+            {
+                listPackages.SelectedValue = null;
+                listPackages.IsEnabled = false;
+                await Task.Run(() =>
+                {
+                    try
+                    {
+                        //packageManager.UpdatePackage(exists, true, false);
+                        packageManager.UpdatePackage(exists.Id, new SemanticVersion(SelectedValue.LatestVersion), false, false);
+                        exists = packageManager.LocalRepository.FindPackage(SelectedValue.Package.Id);
+                        SelectedValue.canUpgrade = false;
+                        PackageInstalled(null, new PackageOperationEventArgs(exists, FileSystem, RepositoryPath + @"\" + exists.Id + "." + exists.Version.ToString()));
+                        InstallPackageDependencies(TargetFramework, exists);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Log(MessageLevel.Error, ex.ToString());
+                        System.Diagnostics.Debug.WriteLine(ex.ToString());
+                    }
+                    finally
+                    {
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            listPackages.IsEnabled = true;
+                            listPackages.SelectedValue = SelectedValue;
+                        });
+                        LoadPackages();
+                    }
+                });
+            }
+        }
+        private async void ButtonUpdateAllClick(object sender, RoutedEventArgs e)
+        {
+            await Dispatcher.Invoke(async () =>
+            {
+                foreach (var p in Packages.ToList())
+                {
+                    if(p.canUpgrade)
+                    {
+                        await UpgradePackageAsync(p);
+                    }
+                }
+
+                listPackages.IsEnabled = true;
+                ButtonLaunch(null, null);
+            });
         }
     }
 

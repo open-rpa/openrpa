@@ -14,10 +14,16 @@
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
-                <Button ToolTip="Select element by clicking it" Click="ButtonLaunch" Margin="5,0,5,0">
+                <Button ToolTip="Launch OpenRPA" Click="ButtonLaunch" Margin="5,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/OpenRPA.Updater;component/Resources/open_rpa32.png" Height="18" />
                         <TextBlock Margin="3,0,0,0">Launch</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="ButtonUpdateAll" ToolTip="Update all" Click="ButtonUpdateAllClick" Margin="5,0,5,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/OpenRPA.Updater;component/Resources/Package.png" Height="18" />
+                        <TextBlock Margin="3,0,0,0">Upgrade all</TextBlock>
                     </StackPanel>
                 </Button>
             </ToolBar>

@@ -270,17 +270,17 @@ namespace OpenRPA.Views
             };
             wfDesigner.Context.Items.Subscribe(new SubscribeContextCallback<Selection>(SelectionChanged));
             wfDesigner.View.Dispatcher.UnhandledException += new System.Windows.Threading.DispatcherUnhandledExceptionEventHandler(UnhandledException);
+            Properties = wfDesigner.PropertyInspectorView;
             ModelService modelService = wfDesigner.Context.Services.GetService<ModelService>();
+            if (modelService == null) return;
             modelService.ModelChanged -= new EventHandler<ModelChangedEventArgs>(ModelChanged);
             modelService.ModelChanged += new EventHandler<ModelChangedEventArgs>(ModelChanged);
             wfDesigner.ContextMenu.Items.Add(comment);
-            var ms = wfDesigner.Context.Services.GetService<ModelService>();
-
             try
             {
-                if (ms != null)
+                if (modelService != null)
                 {
-                    var modelItem = ms.Root;
+                    var modelItem = modelService.Root;
                     Workflow.name = modelItem.GetValue<string>("Name");
                 }
             }
@@ -290,7 +290,6 @@ namespace OpenRPA.Views
             }
 
             // WfDesignerBorder.Child = wfDesigner.View;
-            Properties = wfDesigner.PropertyInspectorView;
 
         }
         private Type[] extratypes = null;

@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.11</Version>
-    <PackageReleaseNotes>1.0.11 Make userfriendly version of activities for handling credentials
+    <Version>1.0.12</Version>
+    <PackageReleaseNotes>1.0.12 Add context menu for comments and support for renaming variables, Allow designer to show parsing errors
+1.0.11 Make userfriendly version of activities for handling credentials
 1.0.10 Improve update check
 1.0.9 Implement update checks</PackageReleaseNotes>
   </PropertyGroup>

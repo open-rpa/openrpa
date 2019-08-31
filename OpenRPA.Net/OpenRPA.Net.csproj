@@ -9,6 +9,7 @@
     <PackageReleaseNotes>1.0.1 update interfaces reference</PackageReleaseNotes>
     <Version>1.0.1</Version>
     <Description>Network helper liberary for OpenRPA, handles network message queues and wraps OpenFlow's websocket protocol.</Description>
+    <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA/Resources/open_rpa128.png</PackageIconUrl>
   </PropertyGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />

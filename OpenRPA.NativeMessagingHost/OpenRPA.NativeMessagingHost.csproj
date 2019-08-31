@@ -13,6 +13,7 @@
     <PackageReleaseNotes>1.0.4 update interfaces reference
 1.0.3 fix resources</PackageReleaseNotes>
     <Description>The NativeMessagingHost serves as a proxy between chrome/ff and openrpa</Description>
+    <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA/Resources/open_rpa128.png</PackageIconUrl>
   </PropertyGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />

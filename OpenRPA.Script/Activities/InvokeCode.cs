@@ -15,7 +15,6 @@ using System.CodeDom.Compiler;
 using System.Management.Automation.Runspaces;
 using System.Collections;
 using System.Collections.ObjectModel;
-using sharpAHK;
 using Python.Runtime;
 
 namespace OpenRPA.Script.Activities
@@ -34,14 +33,6 @@ namespace OpenRPA.Script.Activities
         [RequiredArgument]
         public InArgument<string> Language { get; set; }
         public OutArgument<Collection<System.Management.Automation.PSObject>> PipelineOutput { get; set; }
-        public static void New_AHKSession(bool NewInstance = false)
-        {
-            if (ahkGlobal.ahkdll == null || NewInstance == true) { ahkGlobal.ahkdll = new AutoHotkey.Interop.AutoHotkeyEngine(); }
-
-            else { ahkGlobal.ahkdll = null; }  // option to start new AHK session (resets variables and previously loaded functions)
-
-            ahkGlobal.LoadedAHK = new List<string>(); // reset loaded ahk list
-        }
         public static RunspacePool pool { get; set; } = null;
         public static Runspace runspace = null;
         //private static ScriptEngine _engine;
@@ -90,6 +81,110 @@ namespace OpenRPA.Script.Activities
                     AppDomain.Unload(domain);
             }
         }
+
+        public class AHKProxy : MarshalByRefObject
+        {
+            public static void New_AHKSession(bool NewInstance = false)
+            {
+                if (sharpAHK.ahkGlobal.ahkdll == null || NewInstance == true) { sharpAHK.ahkGlobal.ahkdll = new AutoHotkey.Interop.AutoHotkeyEngine(); }
+
+                else { sharpAHK.ahkGlobal.ahkdll = null; }  // option to start new AHK session (resets variables and previously loaded functions)
+
+                sharpAHK.ahkGlobal.LoadedAHK = new List<string>(); // reset loaded ahk list
+            }
+
+            public AHKProxy()
+            {
+                New_AHKSession(false);
+            }
+            public Assembly GetAssembly(string assemblyPath)
+            {
+                try
+                {
+                    return Assembly.LoadFile(assemblyPath);
+                }
+                catch (Exception)
+                {
+                    return null;
+                    // throw new InvalidOperationException(ex);
+                }
+            }
+            //public static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+            //{
+            //    //This handler is called only when the common language runtime tries to bind to the assembly and fails.
+
+            //    //Retrieve the list of referenced assemblies in an array of AssemblyName.
+            //    Assembly MyAssembly, objExecutingAssemblies;
+            //    string strTempAssmbPath = "";
+            //    objExecutingAssemblies = args.RequestingAssembly;
+            //    AssemblyName[] arrReferencedAssmbNames = objExecutingAssemblies.GetReferencedAssemblies();
+            //    var asmBase = System.IO.Directory.GetCurrentDirectory();
+            //    //Loop through the array of referenced assembly names.
+            //    foreach (AssemblyName strAssmbName in arrReferencedAssmbNames)
+            //    {
+            //        //Check for the assembly names that have raised the "AssemblyResolve" event.
+            //        if (strAssmbName.FullName.Substring(0, strAssmbName.FullName.IndexOf(",")) == args.Name.Substring(0, args.Name.IndexOf(",")))
+            //        {
+            //            //Build the path of the assembly from where it has to be loaded.                
+            //            strTempAssmbPath = asmBase + "\\" + args.Name.Substring(0, args.Name.IndexOf(",")) + ".dll";
+            //            break;
+            //        }
+
+            //    }
+            //    //Load the assembly from the specified path.                    
+            //    MyAssembly = Assembly.LoadFrom(strTempAssmbPath);
+
+            //    //Return the loaded assembly.
+            //    return MyAssembly;
+            //}
+            public static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+            {
+                //This handler is called only when the common language runtime tries to bind to the assembly and fails.
+
+                //Retrieve the list of referenced assemblies in an array of AssemblyName.
+                Assembly MyAssembly, objExecutingAssemblies;
+                string strTempAssmbPath = "";
+
+                var asmBase = System.IO.Directory.GetCurrentDirectory();
+
+                objExecutingAssemblies = Assembly.GetExecutingAssembly();
+                AssemblyName[] arrReferencedAssmbNames = objExecutingAssemblies.GetReferencedAssemblies();
+
+                //Loop through the array of referenced assembly names.
+                foreach (AssemblyName strAssmbName in arrReferencedAssmbNames)
+                {
+                    //Check for the assembly names that have raised the "AssemblyResolve" event.
+                    if (strAssmbName.FullName.Substring(0, strAssmbName.FullName.IndexOf(",")) == args.Name.Substring(0, args.Name.IndexOf(",")))
+                    {
+                    //Build the path of the assembly from where it has to be loaded.
+                    //The following line is probably the only line of code in this method you may need to modify:
+                     strTempAssmbPath = asmBase;
+                        if (strTempAssmbPath.EndsWith("\\")) strTempAssmbPath += "\\";
+                        strTempAssmbPath += args.Name.Substring(0, args.Name.IndexOf(",")) + ".dll";
+                        break;
+                    }
+
+                }
+                //Load the assembly from the specified path.
+                MyAssembly = Assembly.LoadFrom(strTempAssmbPath);
+
+                //Return the loaded assembly.
+                return MyAssembly;
+            }
+            internal void SetVar(string key, string v)
+            {
+                sharpAHK.ahkGlobal.ahkdll.SetVar(key, v);
+            }
+            internal void ExecRaw(string code)
+            {
+                sharpAHK.ahkGlobal.ahkdll.ExecRaw(code);
+            }
+            internal string GetVar(string displayName)
+            {
+                return sharpAHK.ahkGlobal.ahkdll.GetVar(displayName);
+            }
+        }
+
         protected override void Execute(CodeActivityContext context)
         {
             var code = Code.Get(context);
@@ -153,13 +248,71 @@ namespace OpenRPA.Script.Activities
 
             if (language == "AutoHotkey")
             {
-                if (sharpAHK.ahkGlobal.ahkdll == null) { New_AHKSession(true); }
+                AppDomain Temporary = null;
+                try
+                {
+                    AppDomainSetup domaininfo = new AppDomainSetup();
+                    domaininfo.ApplicationBase = System.Environment.CurrentDirectory;
+                    System.Security.Policy.Evidence adevidence = AppDomain.CurrentDomain.Evidence;
+                    Temporary = AppDomain.CreateDomain("Temporary", adevidence, domaininfo);
+                    Temporary.AssemblyResolve += AHKProxy.CurrentDomain_AssemblyResolve;
+
+                    //var ahk = (AutoHotkey.Interop.AutoHotkeyEngine)Temporary.CreateInstanceAndUnwrap("sharpAHK, Version=1.0.0.5, Culture=neutral, PublicKeyToken=null", "AutoHotkey.Interop.AutoHotkeyEngine");
+
+                    Type type = typeof(AHKProxy);
+                    var ahk = (AHKProxy)Temporary.CreateInstanceAndUnwrap(type.Assembly.FullName, type.FullName);
+
+                    foreach (var parameter in variablevalues)
+                    {
+                        if (parameter.Value == null) continue;
+                        ahk.SetVar(parameter.Key, parameter.Value.ToString());
+                    }
+                    ahk.ExecRaw(code);
+                    foreach (dynamic v in vars)
+                    {
+                        var value = ahk.GetVar(v.DisplayName);
+                        PropertyDescriptor myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
+                        if (myVar != null && value != null && value != "")
+                        {
+                            if (myVar.PropertyType == typeof(string))
+                                myVar.SetValue(context.DataContext, value);
+                            else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(value.ToString()));
+                            else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(value.ToString()));
+                            else Log.Information("Ignorering variable " + v.DisplayName + " of type " + myVar.PropertyType.FullName);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                    throw;
+                }
+                finally
+                {
+                    if(Temporary!=null) AppDomain.Unload(Temporary);
+                }
+                return;
+            }
+            if (language == "AutoHotkey222")
+            {
+
+
+                //if (sharpAHK.ahkGlobal.ahkdll == null) { New_AHKSession(false); }
+                sharpAHK.ahkGlobal.ahkdll.Reset();
                 foreach (var parameter in variablevalues)
                 {
-                    if (parameter.Value == null) continue;
-                    sharpAHK.ahkGlobal.ahkdll.SetVar(parameter.Key, parameter.Value.ToString());
+                    // if (parameter.Value == null) continue;
+                    if (parameter.Value == null)
+                    {
+                        sharpAHK.ahkGlobal.ahkdll.SetVar(parameter.Key, "");
+                    } else
+                    {
+                        sharpAHK.ahkGlobal.ahkdll.SetVar(parameter.Key, parameter.Value.ToString());
+                    }                        
                 }
+                // ahk.Execute(code, null, true);
                 sharpAHK.ahkGlobal.ahkdll.ExecRaw(code);
+
                 foreach (dynamic v in vars)
                 {
                     var value = sharpAHK.ahkGlobal.ahkdll.GetVar(v.DisplayName);
@@ -172,10 +325,11 @@ namespace OpenRPA.Script.Activities
                         else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(value.ToString()));
                         else Log.Information("Ignorering variable " + v.DisplayName + " of type " + myVar.PropertyType.FullName);
                         //var myValue = myVar.GetValue(context.DataContext);
-
                     }
                 }
-                sharpAHK.ahkGlobal.ahkdll.Terminate();
+                // ahk.Reset();
+                // ahk.Terminate();
+                // sharpAHK.ahkGlobal.ahkdll.Terminate();
                 return;
             }
             if (language == "Python")

@@ -79,7 +79,6 @@ namespace OpenRPA
                 InstallPackage(TargetFramework, onlinepackage);
             }
         }
-
         static IEnumerable<T> GetCompatibleItems<T>(System.Runtime.Versioning.FrameworkName targetFramework, IEnumerable<T> items) where T : IFrameworkTargetable
         {
             IEnumerable<T> compatibleItems;

@@ -205,6 +205,16 @@ namespace OpenRPA.NM
             var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
             if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox") return false;
 
+            if (p.ProcessName.ToLower() == "chrome" && !NMHook.chromeconnected)
+            {
+                System.Windows.MessageBox.Show("You clicked inside Chrome, but it looks like you dont have the OpenRPA plugin installed");
+                return false;
+            }
+            if (p.ProcessName.ToLower() == "firefox" && !NMHook.ffconnected)
+            {
+                System.Windows.MessageBox.Show("You clicked inside Firefix, but it looks like you dont have the OpenRPA plugin installed");
+                return false;
+            }
             var selector = new NMSelector(lastElement, null, true, null);
             var a = new GetElement { DisplayName = lastElement.id + " " + lastElement.type + " " + lastElement.Name };
             a.Selector = selector.ToString();
@@ -249,12 +259,19 @@ namespace OpenRPA.NM
         }
         public void AddInput(string value, IElement element)
         {
-            AddActivity(new System.Activities.Statements.Assign<string>
+            try
             {
-                To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
-                Value = value
-            }, "item");
-            element.Value = value;
+                AddActivity(new System.Activities.Statements.Assign<string>
+                {
+                    To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
+                    Value = value
+                }, "item");
+                element.Value = value;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
     }
     public class RecordEvent : IRecordEvent

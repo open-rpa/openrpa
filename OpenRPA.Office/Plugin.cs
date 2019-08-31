@@ -83,12 +83,19 @@ namespace OpenRPA.Office
             }
             public void AddInput(string value, IElement element)
             {
-                var old = Activity as Activities.ReadCell<string>;
-                var a = new Activities.WriteCell<string> { DisplayName = old.DisplayName };
-                a.Cell = old.Cell;
-                a.Filename = old.Filename;
-                a.Value = value;
-                Activity = a;
+                try
+                {
+                    var old = Activity as Activities.ReadCell<string>;
+                    var a = new Activities.WriteCell<string> { DisplayName = old.DisplayName };
+                    a.Cell = old.Cell;
+                    a.Filename = old.Filename;
+                    a.Value = value;
+                    Activity = a;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
             }
         }
 

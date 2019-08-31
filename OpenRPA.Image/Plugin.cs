@@ -116,12 +116,20 @@ namespace OpenRPA.Image
         }
         public void AddInput(string value, IElement element)
         {
-            AddActivity(new System.Activities.Statements.Assign<string>
+            try
             {
-                To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
-                Value = value
-            }, "item");
-            element.Value = value;
+                AddActivity(new System.Activities.Statements.Assign<string>
+                {
+                    To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
+                    Value = value
+                }, "item");
+                element.Value = value;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+
         }
     }
 

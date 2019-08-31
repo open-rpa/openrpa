@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
-    <Version>1.0.5</Version>
-    <PackageReleaseNotes>1.0.5 update interfaces reference</PackageReleaseNotes>
+    <Version>1.0.6</Version>
+    <PackageReleaseNotes>1.0.6 Catch recording errors on input
+1.0.5 update interfaces reference</PackageReleaseNotes>
   </PropertyGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />

@@ -57,6 +57,333 @@ namespace OpenRPA
         }
         public Views.WFToolbox Toolbox { get; set; }
         public bool allowQuite { get; set; } = true;
+        public MainWindow()
+        {
+            InitializeComponent();
+            AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
+            SetStatus("Initializing events");
+            instance = this;
+            DataContext = this;
+            GenericTools.mainWindow = this;
+            System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Critical;
+            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            System.Windows.Forms.Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+            System.Diagnostics.Trace.Listeners.Add(tracing);
+            Console.SetOut(new DebugTextWriter());
+            lvDataBinding.ItemsSource = Plugins.recordPlugins;
+            cancelkey.Text = Config.local.cancelkey;
+            InputDriver.Instance.onCancel += onCancel;
+            NotifyPropertyChanged("Toolbox");
+        }
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            SetStatus("Checking for updates");
+            await CheckForUpdatesAsync();
+            SetStatus("Registering Designer Metadata");
+            new DesignerMetadata().Register();
+            SetStatus("init CancelKey and Input Driver");
+            OpenRPA.Input.InputDriver.Instance.initCancelKey(cancelkey.Text);
+            SetStatus("loading plugins");
+            await LoadPlugins(Extensions.projectsDirectory);
+            //await Task.Run(() =>
+            //{
+            //    GenericTools.RunUI(() =>
+            //    {
+            //        Plugins.loadPlugins(Extensions.projectsDirectory);
+            //    });                
+            //});
+            if (string.IsNullOrEmpty(Config.local.wsurl))
+            {
+                SetStatus("loading detectors");
+                var Detectors = Interfaces.entity.Detector.loadDetectors(Extensions.projectsDirectory);
+                foreach (var d in Detectors)
+                {
+                    IDetectorPlugin dp = null;
+                    d.Path = Extensions.projectsDirectory;
+                    dp = Plugins.AddDetector(d);
+                    if (dp != null) dp.OnDetector += OnDetector;
+                }
+            }
+            try
+            {
+                SetStatus("loading workflow toolbox");
+                Toolbox = new Views.WFToolbox();
+                NotifyPropertyChanged("Toolbox");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                throw;
+            }
+            await Task.Run(() =>
+            {
+                ExpressionEditor.EditorUtil.init();
+                LoadLayout();
+                if (!string.IsNullOrEmpty(Config.local.wsurl))
+                {
+                    global.webSocketClient = new WebSocketClient(Config.local.wsurl);
+                    global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
+                    global.webSocketClient.OnClose += WebSocketClient_OnClose;
+                    global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
+                    SetStatus("Connecting to " + Config.local.wsurl);
+                    _ = global.webSocketClient.Connect();
+                }
+                else
+                {
+                    SetStatus("loading projects and workflows");
+                    var _Projects = Project.loadProjects(Extensions.projectsDirectory);
+                    Projects = new System.Collections.ObjectModel.ObservableCollection<Project>();
+                    foreach (Project p in _Projects)
+                    {
+                        Projects.Add(p);
+                    }
+                }
+                AutomationHelper.init();
+                SetStatus("Reopening workflows");
+                onOpen(null);
+                AddHotKeys();
+            });
+        }
+        private void WebSocketClient_OnOpen()
+        {
+            AutomationHelper.syncContext.Post(async o =>
+            {
+                // App.notifyIcon.ShowBalloonTip(5000, "tooltiptitle", "tipMessage", System.Windows.Forms.ToolTipIcon.Info);
+                var sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+                Log.Debug("WebSocketClient_OnOpen::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                SetStatus("Connected to " + Config.local.wsurl);
+                TokenUser user = null;
+                while (user == null)
+                {
+                    string errormessage = string.Empty;
+                    if (!string.IsNullOrEmpty(Config.local.username))
+                    {
+                        try
+                        {
+                            SetStatus("Connected to " + Config.local.wsurl + " signing in as " + Config.local.username + " ...");
+                            Log.Debug("Signing in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                            user = await global.webSocketClient.Signin(Config.local.username, Config.local.UnprotectString(Config.local.password));
+                            Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                            SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+                        }
+                        catch (Exception ex)
+                        {
+                            this.Hide();
+                            Log.Error(ex, "");
+                            errormessage = ex.Message;
+                        }
+                    }
+                    if (user == null)
+                    {
+                        if (loginInProgress == false)
+                        {
+                            SetStatus("Connected to " + Config.local.wsurl);
+                            loginInProgress = true;
+                            var w = new Views.LoginWindow();
+                            w.username = Config.local.username;
+                            w.errormessage = errormessage;
+                            w.fqdn = new Uri(Config.local.wsurl).Host;
+                            this.Hide();
+                            if (w.ShowDialog() != true) { this.Show(); return; }
+                            Config.local.username = w.username; Config.local.password = Config.local.ProtectString(w.password);
+                            Config.Save();
+                            loginInProgress = false;
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
+                }
+                this.Show();
+                var test = lvDataBinding.ItemsSource;
+                //lvDataBinding.ItemsSource = Plugins.recordPlugins;
+                try
+                {
+                    if (Projects.Count == 0)
+                    {
+                        SetStatus("Registering queue for robot");
+                        Log.Debug("Registering queue for robot " + global.webSocketClient.user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        await global.webSocketClient.RegisterQueue(global.webSocketClient.user._id);
+                        foreach (var role in global.webSocketClient.user.roles)
+                        {
+                            SetStatus("Registering queue for robot (" + role.name + ")");
+                            Log.Debug("Registering queue for role " + role.name + " " + role._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                            await global.webSocketClient.RegisterQueue(role._id);
+                        }
+
+                        SetStatus("Loading workflows and state from " + Config.local.wsurl);
+                        Log.Debug("Get workflows from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}");
+                        Log.Debug("Get projects from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}");
+                        Log.Debug("Get detectors from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        var detectors = await global.webSocketClient.Query<Interfaces.entity.Detector>("openrpa", "{_type: 'detector'}");
+                        Log.Debug("Done getting workflows and projects " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        SetStatus("Initialize detecors");
+                        foreach (var d in detectors)
+                        {
+                            IDetectorPlugin dp = null;
+                            d.Path = Extensions.projectsDirectory;
+                            dp = Plugins.AddDetector(d);
+                            if (dp != null) dp.OnDetector += OnDetector;
+                            if (dp == null) Log.Error("Detector not loaded!");
+                        }
+                        var folders = new List<string>();
+                        foreach (var p in projects)
+                        {
+                            p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p.name);
+                            if (folders.Contains(p.Path))
+                            {
+                                p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p._id);
+                            }
+                            folders.Add(p.Path);
+                        }
+                        SetStatus("Initialize projects and workflows");
+                        foreach (var p in projects)
+                        {
+                            p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
+                            foreach (var workflow in workflows)
+                            {
+                                if (workflow.projectid == p._id)
+                                {
+                                    workflow.Project = p;
+                                    p.Workflows.Add(workflow);
+                                }
+                            }
+                            Log.Debug("Saving project " + p.name + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                            p.SaveFile();
+                            Projects.Add(p);
+                        }
+                        Project up = null;
+                        foreach (var wf in workflows)
+                        {
+                            var hasProject = Projects.Where(x => x._id == wf.projectid && !string.IsNullOrEmpty(wf.projectid)).FirstOrDefault();
+                            if (hasProject == null)
+                            {
+                                if (up == null) up = await Project.Create(Extensions.projectsDirectory, "Unknown", false);
+                                up.Workflows.Add(wf);
+                            }
+                        }
+                        if (up != null) Projects.Add(up);
+                        SetStatus("Run pending workflow instances");
+                        Log.Debug("RunPendingInstances::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        foreach (var workflow in workflows)
+                        {
+                            if (workflow.Project != null)
+                            {
+                                await workflow.RunPendingInstances();
+                            }
+
+                        }
+                        Log.Debug("RunPendingInstances::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "");
+                    MessageBox.Show("WebSocketClient_OnOpen::Sync projects " + ex.Message);
+                }
+                Log.Debug("WebSocketClient_OnOpen::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                SetStatus("Load layout and reopen workflows");
+                if (Projects.Count > 0)
+                {
+                    Projects[0].IsExpanded = true;
+                    LoadLayout();
+                }
+                else
+                {
+                    onOpen(null);
+                    string Name = "New Project";
+                    try
+                    {
+                        Project project = await Project.Create(Extensions.projectsDirectory, Name, true);
+                        Workflow workflow = project.Workflows.First();
+                        workflow.Project = project;
+                        Projects.Add(project);
+                        onOpenWorkflow(workflow);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                }
+                SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+            }, null);
+        }
+        private async Task LoadPlugins(string projectsDirectory)
+        {
+            ICollection<Type> pluginTypes = new List<Type>();
+            await Task.Run(() =>
+            {
+                List<string> dllFileNames = new List<string>();
+                foreach (var path in System.IO.Directory.GetFiles(projectsDirectory, "*.dll")) dllFileNames.Add(path);
+                ICollection<Assembly> assemblies = new List<Assembly>();
+                foreach (string dllFile in dllFileNames)
+                {
+                    try
+                    {
+                        AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
+                        Assembly assembly = Assembly.Load(an);
+                        assemblies.Add(assembly);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, "");
+                    }
+                }
+                foreach (Assembly assembly in assemblies)
+                {
+                    if (assembly != null)
+                    {
+                        try
+                        {
+                            Type[] types = assembly.GetTypes();
+                            foreach (Type type in types)
+                            {
+                                if (type.IsInterface || type.IsAbstract)
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    if (type.GetInterface(typeof(IPlugin).FullName) != null)
+                                    {
+                                        pluginTypes.Add(type);
+                                    }
+                                    if (type.GetInterface(typeof(IDetectorPlugin).FullName) != null)
+                                    {
+                                        Plugins.detectorPluginTypes.Add(type.FullName, type);
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex, "loadPlugins");
+                        }
+                    }
+                }
+            });
+            foreach (Type type in pluginTypes)
+            {
+                try
+                {
+                    IPlugin plugin = (IPlugin)Activator.CreateInstance(type);
+                    SetStatus("Initialize plugin " + plugin.Name);
+                    Log.Information("Initialize plugin " + plugin.Name);
+                    plugin.Initialize();
+                    Plugins.recordPlugins.Add(plugin);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+            }
+        }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (allowQuite) return;
@@ -76,63 +403,32 @@ namespace OpenRPA
                 App.notifyIcon.Visible = false;
             }
         }
-        void handledlls(string basedir, string curdir)
+        private async Task CheckForUpdatesAsync()
         {
-            if (!System.IO.Directory.Exists(curdir)) return;
-            if(basedir!=curdir)
+            await Task.Run(() =>
             {
-                List<string> dllFileNames = new List<string>();
-                foreach (var source in System.IO.Directory.GetFiles(curdir, "*.dll"))
+                if (updater.UpdaterNeedsUpdate() == true)
                 {
-                    var filename = System.IO.Path.GetFileName(source);
-                    var target = System.IO.Path.Combine(basedir, filename);
-                    if (!System.IO.File.Exists(target))
+                    updater.UpdateUpdater();
+                }
+                var releasenotes = updater.OpenRPANeedsUpdate();
+                if (!string.IsNullOrEmpty(releasenotes))
+                {
+                    var dialogResult = MessageBox.Show(releasenotes, "Update available", MessageBoxButton.YesNo);
+                    if (dialogResult == MessageBoxResult.Yes)
                     {
-                        Console.WriteLine("copying " + filename);
-                        System.IO.File.Copy(source, target);
+                        onManagePackages(null);
+                        Application.Current.Shutdown();
                     }
                 }
-            }
-            foreach (var dir in System.IO.Directory.GetDirectories(curdir)) handledlls(basedir, dir);
+            });
         }
-        public MainWindow()
+        private void SetStatus(string message)
         {
-            InitializeComponent();
-            if(updater.UpdaterNeedsUpdate() == true)
+            AutomationHelper.syncContext.Post(o =>
             {
-                updater.UpdateUpdater();
-            }
-            var releasenotes = updater.OpenRPANeedsUpdate();
-            if (!string.IsNullOrEmpty(releasenotes))
-            {
-                var dialogResult = MessageBox.Show(releasenotes, "Update available", MessageBoxButton.YesNo);
-                if (dialogResult == MessageBoxResult.Yes)
-                {
-                    onManagePackages(null);
-                    Application.Current.Shutdown();
-                }
-            }
-            
-
-            // handledlls(Environment.CurrentDirectory, Environment.CurrentDirectory + @"\Packages");
-
-
-            new DesignerMetadata().Register();
-            instance = this;
-            DataContext = this;
-            GenericTools.mainWindow = this;
-            System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Critical;
-            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            AppDomain currentDomain = AppDomain.CurrentDomain;
-            System.Windows.Forms.Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-            System.Diagnostics.Trace.Listeners.Add(tracing);
-            Console.SetOut(new DebugTextWriter());
-            lvDataBinding.ItemsSource = Plugins.recordPlugins;
-            cancelkey.Text = Config.local.cancelkey;
-            OpenRPA.Input.InputDriver.Instance.initCancelKey(cancelkey.Text);
-            InputDriver.Instance.onCancel += onCancel;
-            NotifyPropertyChanged("Toolbox");
+                LabelStatusBar.Content = message;
+            }, null);
         }
         private void DManager_ActiveContentChanged(object sender, EventArgs e)
         {
@@ -1244,86 +1540,95 @@ namespace OpenRPA
             StopRecordPlugins();
             AutomationHelper.syncContext.Post(o =>
             {
-                // TODO: Add priotrity, we could create an ordered list in config ?
-                foreach (var p in Plugins.recordPlugins)
+                try
                 {
-                    if (p.Name != sender.Name)
+                    // TODO: Add priotrity, we could create an ordered list in config ?
+                    foreach (var p in Plugins.recordPlugins)
                     {
-                        if (p.parseUserAction(ref e)) continue;
-                    }
-                }
-                if (e.a == null)
-                {
-                    StartRecordPlugins();
-                    if (e.ClickHandled == false)
-                    {
-                        InputDriver.Instance.CallNext = true;
-                        Log.Debug("MouseMove to " + e.X + "," + e.Y + " and click " + e.Button + " button");
-                        //var point = new FlaUI.Core.Shapes.Point(e.X + e.OffsetX, e.Y + e.OffsetY);
-                        var point = new FlaUI.Core.Shapes.Point(e.X, e.Y);
-                        FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
-                        if (e.Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
-                        if (e.Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-                        FlaUI.Core.Input.Mouse.Click(flabuttun, point);
-                        // InputDriver.Instance.Click(lastInputEventArgs.Button);
-                        //InputDriver.DoMouseClick();
-                        Log.Debug("Click done");
-                    }
-                    return;
-                }
-                InputDriver.Instance.CallNext = true;
-                if (SelectedContent is Views.WFDesigner view)
-                {
-
-                    var VirtualClick = true;
-                    if (!e.SupportVirtualClick) VirtualClick = false;
-                    e.a.AddActivity(new Activities.ClickElement
-                    {
-                        Element = new System.Activities.InArgument<IElement>()
+                        if (p.Name != sender.Name)
                         {
-                            Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<IElement>("item")
-                        },
-                        OffsetX = e.OffsetX,
-                        OffsetY = e.OffsetY,
-                        Button = (int)e.Button,
-                        VirtualClick = VirtualClick
-                    }, "item");
-                    if (e.SupportInput)
-                    {
-                        var win = new Views.InsertText();
-                        win.Topmost = true;
-                        isRecording = false;
-                        if (win.ShowDialog() == true)
-                        {
-                            e.a.AddInput(win.Text, e.Element);
+                            if (p.parseUserAction(ref e)) continue;
                         }
-                        else { e.SupportInput = false; }
-                        isRecording = true;
                     }
-                    view.ReadOnly = false;
-                    view.lastinserted = e.a.Activity;
-                    view.lastinsertedmodel = view.addActivity(e.a.Activity);
-                    view.ReadOnly = true;
-                    if (e.ClickHandled == false && e.SupportInput == false)
+                    if (e.a == null)
                     {
-                        InputDriver.Instance.CallNext = true;
-                        Log.Debug("MouseMove to " + e.X + "," + e.Y + " and click " + e.Button + " button");
-                        //var point = new FlaUI.Core.Shapes.Point(e.X , e.Y);
-                        //FlaUI.Core.Input.Mouse.MoveTo(e.X , e.Y);
-                        //FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
-                        //if (e.Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
-                        //if (e.Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-                        //FlaUI.Core.Input.Mouse.Click(flabuttun, point);
-
-                        InputDriver.Instance.MouseMove(e.X, e.Y);
-                        // InputDriver.Instance.Click(lastInputEventArgs.Button);
-                        InputDriver.Click(e.Button);
-                        Log.Debug("Click done");
+                        StartRecordPlugins();
+                        if (e.ClickHandled == false)
+                        {
+                            InputDriver.Instance.CallNext = true;
+                            Log.Debug("MouseMove to " + e.X + "," + e.Y + " and click " + e.Button + " button");
+                            //var point = new FlaUI.Core.Shapes.Point(e.X + e.OffsetX, e.Y + e.OffsetY);
+                            var point = new FlaUI.Core.Shapes.Point(e.X, e.Y);
+                            FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
+                            if (e.Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
+                            if (e.Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
+                            FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+                            // InputDriver.Instance.Click(lastInputEventArgs.Button);
+                            //InputDriver.DoMouseClick();
+                            Log.Debug("Click done");
+                        }
+                        return;
                     }
-                    System.Threading.Thread.Sleep(500);
+                    InputDriver.Instance.CallNext = true;
+                    if (SelectedContent is Views.WFDesigner view)
+                    {
+
+                        var VirtualClick = true;
+                        if (!e.SupportVirtualClick) VirtualClick = false;
+                        e.a.AddActivity(new Activities.ClickElement
+                        {
+                            Element = new System.Activities.InArgument<IElement>()
+                            {
+                                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<IElement>("item")
+                            },
+                            OffsetX = e.OffsetX,
+                            OffsetY = e.OffsetY,
+                            Button = (int)e.Button,
+                            VirtualClick = VirtualClick
+                        }, "item");
+                        if (e.SupportInput)
+                        {
+                            var win = new Views.InsertText();
+                            win.Topmost = true;
+                            isRecording = false;
+                            if (win.ShowDialog() == true)
+                            {
+                                e.a.AddInput(win.Text, e.Element);
+                            }
+                            else { e.SupportInput = false; }
+                            isRecording = true;
+                        }
+                        view.ReadOnly = false;
+                        view.lastinserted = e.a.Activity;
+                        view.lastinsertedmodel = view.addActivity(e.a.Activity);
+                        view.ReadOnly = true;
+                        if (e.ClickHandled == false && e.SupportInput == false)
+                        {
+                            InputDriver.Instance.CallNext = true;
+                            Log.Debug("MouseMove to " + e.X + "," + e.Y + " and click " + e.Button + " button");
+                            //var point = new FlaUI.Core.Shapes.Point(e.X , e.Y);
+                            //FlaUI.Core.Input.Mouse.MoveTo(e.X , e.Y);
+                            //FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
+                            //if (e.Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
+                            //if (e.Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
+                            //FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+
+                            InputDriver.Instance.MouseMove(e.X, e.Y);
+                            // InputDriver.Instance.Click(lastInputEventArgs.Button);
+                            InputDriver.Click(e.Button);
+                            Log.Debug("Click done");
+                        }
+                        System.Threading.Thread.Sleep(500);
+                    }
+                    InputDriver.Instance.CallNext = false;
+                    StartRecordPlugins();
                 }
-                InputDriver.Instance.CallNext = false;
-                StartRecordPlugins();
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    this.Show();
+                    Log.Error(ex.ToString());
+                }
             }, null);
         }
         private void onRecord(object _item)
@@ -1343,71 +1648,9 @@ namespace OpenRPA
         private async void WebSocketClient_OnClose(string reason)
         {
             Log.Information("Disconnected " + reason);
-            AutomationHelper.syncContext.Post(o =>
-            {
-                LabelStatusBar.Content = "Disconnected from " + Config.local.wsurl + " reason " + reason;
-            }, null);
+            SetStatus("Disconnected from " + Config.local.wsurl + " reason " + reason);
             await Task.Delay(1000);
             if (autoReconnect) _ = global.webSocketClient.Connect();
-        }
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
-            if (!string.IsNullOrEmpty(Config.local.wsurl))
-            {
-                LabelStatusBar.Content = "Connecting to " + Config.local.wsurl;
-            }
-            Plugins.loadPlugins(Extensions.projectsDirectory);
-
-
-
-            if (string.IsNullOrEmpty(Config.local.wsurl))
-            {
-                var Detectors = Interfaces.entity.Detector.loadDetectors(Extensions.projectsDirectory);
-                foreach (var d in Detectors)
-                {
-                    IDetectorPlugin dp = null;
-                    d.Path = Extensions.projectsDirectory;
-                    dp = Plugins.AddDetector(d);
-                    if (dp != null) dp.OnDetector += OnDetector;
-                }
-            }
-            try
-            {
-                Toolbox = new Views.WFToolbox();
-                NotifyPropertyChanged("Toolbox");
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-                throw;
-            }
-            Task.Run(() =>
-            {
-                ExpressionEditor.EditorUtil.init();
-                LoadLayout();
-                if (!string.IsNullOrEmpty(Config.local.wsurl))
-                {
-                    global.webSocketClient = new WebSocketClient(Config.local.wsurl);
-                    global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
-                    global.webSocketClient.OnClose += WebSocketClient_OnClose;
-                    global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
-
-                    _ = global.webSocketClient.Connect();
-                }
-                else
-                {
-                    var _Projects = Project.loadProjects(Extensions.projectsDirectory);
-                    Projects = new System.Collections.ObjectModel.ObservableCollection<Project>();
-                    foreach (Project p in _Projects)
-                    {
-                        Projects.Add(p);
-                    }
-                }
-                AutomationHelper.init();
-                onOpen(null);
-                AddHotKeys();
-            });
         }
         internal void OnDetector(IDetectorPlugin plugin, IDetectorEvent detector, EventArgs e)
         {
@@ -1617,177 +1860,6 @@ namespace OpenRPA
             Environment.Exit(Environment.ExitCode);
 
         }
-        private void WebSocketClient_OnOpen()
-        {
-            AutomationHelper.syncContext.Post(async o =>
-            {
-                // App.notifyIcon.ShowBalloonTip(5000, "tooltiptitle", "tipMessage", System.Windows.Forms.ToolTipIcon.Info);
-                var sw = new System.Diagnostics.Stopwatch();
-                sw.Start();
-                Log.Debug("WebSocketClient_OnOpen::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                LabelStatusBar.Content = "Connected to " + Config.local.wsurl;
-                TokenUser user = null;
-                while (user == null)
-                {
-                    string errormessage = string.Empty;
-                    if (!string.IsNullOrEmpty(Config.local.username))
-                    {
-                        try
-                        {
-                            LabelStatusBar.Content = "Connected to " + Config.local.wsurl + " signing in as " + Config.local.username + " ...";
-                            Log.Debug("Signing in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                            user = await global.webSocketClient.Signin(Config.local.username, Config.local.UnprotectString(Config.local.password));
-                            Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                            LabelStatusBar.Content = "Connected to " + Config.local.wsurl + " as " + user.name;
-                        }
-                        catch (Exception ex)
-                        {
-                            this.Hide();
-                            Log.Error(ex, "");
-                            errormessage = ex.Message;
-                        }
-                    }
-                    if (user == null)
-                    {
-                        if (loginInProgress == false)
-                        {
-                            loginInProgress = true;
-                            var w = new Views.LoginWindow();
-                            w.username = Config.local.username;
-                            w.errormessage = errormessage;
-                            w.fqdn = new Uri(Config.local.wsurl).Host;
-                            this.Hide();
-                            if (w.ShowDialog() != true) { this.Show(); return; }
-                            Config.local.username = w.username; Config.local.password = Config.local.ProtectString(w.password);
-                            Config.Save();
-                            loginInProgress = false;
-                        }
-                        else
-                        {
-                            return;
-                        }
-                    }
-                }
-                this.Show();
-                var test = lvDataBinding.ItemsSource;
-                //lvDataBinding.ItemsSource = Plugins.recordPlugins;
-                try
-                {
-                    if (Projects.Count == 0)
-                    {
-
-                        Log.Debug("Get workflows from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}");
-                        Log.Debug("Get projects from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}");
-                        Log.Debug("Get detectors from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        var detectors = await global.webSocketClient.Query<Interfaces.entity.Detector>("openrpa", "{_type: 'detector'}");
-                        Log.Debug("Done getting workflows and projects " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        foreach (var d in detectors)
-                        {
-                            IDetectorPlugin dp = null;
-                            d.Path = Extensions.projectsDirectory;
-                            dp = Plugins.AddDetector(d);
-                            if(dp != null) dp.OnDetector += OnDetector;
-                            if (dp == null) Log.Error("Detector not loaded!");
-                        }
-                        var folders = new List<string>();
-                        foreach (var p in projects)
-                        {
-                            p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p.name);
-                            if (folders.Contains(p.Path))
-                            {
-                                p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p._id);
-                            }
-                            folders.Add(p.Path);
-                        }
-
-                        foreach (var p in projects)
-                        {
-                            p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
-                            foreach (var workflow in workflows)
-                            {
-                                if (workflow.projectid == p._id)
-                                {
-                                    workflow.Project = p;
-                                    p.Workflows.Add(workflow);
-                                }
-                            }
-                            Log.Debug("Saving project " + p.name + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                            p.SaveFile();
-                            Projects.Add(p);
-                        }
-                        Project up = null;
-                        foreach (var wf in workflows)
-                        {
-                            var hasProject = Projects.Where(x => x._id == wf.projectid && !string.IsNullOrEmpty(wf.projectid)).FirstOrDefault();
-                            if (hasProject == null)
-                            {
-                                if (up == null) up = await Project.Create(Extensions.projectsDirectory, "Unknown", false);
-                                up.Workflows.Add(wf);
-                            }
-                        }
-                        if (up != null) Projects.Add(up);
-                        Log.Debug("RunPendingInstances::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        foreach (var workflow in workflows)
-                        {
-                            if (workflow.Project != null)
-                            {
-                                await workflow.RunPendingInstances();
-                            }
-
-                        }
-                        Log.Debug("RunPendingInstances::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    }
-                    _ = Task.Run(async () =>
-                      {
-                          try
-                          {
-                              Log.Debug("Registering queue for robot " + global.webSocketClient.user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                              await global.webSocketClient.RegisterQueue(global.webSocketClient.user._id);
-                              foreach (var role in global.webSocketClient.user.roles)
-                              {
-                                  Log.Debug("Registering queue for role " + role.name + " " + role._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                                  await global.webSocketClient.RegisterQueue(role._id);
-                              }
-                          }
-                          catch (Exception ex)
-                          {
-                              Log.Error("Error RegisterQueue" + ex.ToString());
-                          }
-                      });
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "");
-                    MessageBox.Show("WebSocketClient_OnOpen::Sync projects " + ex.Message);
-                }
-                Log.Debug("WebSocketClient_OnOpen::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                LabelStatusBar.Content = "Connected to " + Config.local.wsurl + " as " + user.name;
-                if (Projects.Count > 0)
-                {
-                    Projects[0].IsExpanded = true;
-                    LoadLayout();
-                } else
-                {
-                    onOpen(null);
-                    string Name = "New Project";
-                    try
-                    {
-                        Project project = await Project.Create(Extensions.projectsDirectory, Name, true);
-                        Workflow workflow = project.Workflows.First();
-                        workflow.Project = project;
-                        Projects.Add(project);
-                        onOpenWorkflow(workflow);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.ToString());
-                    }
-                }
-            }, null);
-        }
-
         private Views.KeyboardSeqWindow view = null;
         private void Cancelkey_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {

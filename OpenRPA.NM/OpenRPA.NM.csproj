@@ -8,8 +8,9 @@
     <Company>OpenRPA</Company>
     <Product>OpenRPA</Product>
     <Description>Recorder plugin and Activities for interacting with Chrome/Firefox and Edge</Description>
-    <Version>1.0.7</Version>
-    <PackageReleaseNotes>1.0.7 update interfaces reference</PackageReleaseNotes>
+    <Version>1.0.8</Version>
+    <PackageReleaseNotes>1.0.8 Catch recording errors on input, show message if addon is missing while recording
+1.0.7 update interfaces reference</PackageReleaseNotes>
   </PropertyGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />

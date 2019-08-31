@@ -38,12 +38,16 @@ namespace OpenRPA.Views
         public DelegateCommand AutoHideCommand { get; set; }= new DelegateCommand((e) => { }, (e) => false);
         public bool CanClose{ get; set; } = true;
         public bool CanHide { get; set; } = false;
-
         public Dictionary<ModelItem, System.Activities.Debugger.SourceLocation> _modelLocationMapping = new Dictionary<ModelItem, System.Activities.Debugger.SourceLocation>();
         public Dictionary<string, System.Activities.Debugger.SourceLocation> _sourceLocationMapping = new Dictionary<string, System.Activities.Debugger.SourceLocation>();
         public Dictionary<string, Activity> _activityIdMapping = new Dictionary<string, Activity>();
         public Dictionary<Activity, System.Activities.Debugger.SourceLocation> _activitysourceLocationMapping = new Dictionary<Activity, System.Activities.Debugger.SourceLocation>();
         public Dictionary<string, ModelItem> _activityIdModelItemMapping = new Dictionary<string, ModelItem>();
+        private string SelectedVariableName = null;
+        private Selection selection = null;
+        private MenuItem comment;
+        private MenuItem uncomment;
+        // public static ICommand CmdOutComment = new RoutedCommand("CmdOutComment", typeof(WFDesigner));
         public bool BreakPointhit { get; set; }
         public bool Singlestep { get; set; }
         public bool SlowMotion { get; set; }
@@ -83,7 +87,6 @@ namespace OpenRPA.Views
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
         public System.Threading.AutoResetEvent resumeRuntimeFromHost { get; set; }
-
         public System.Activities.Activity lastinserted { get; set; }
         public System.Activities.Presentation.Model.ModelItem lastinsertedmodel { get; set; }
         public Action<WFDesigner> onChanged { get; set; }
@@ -215,28 +218,7 @@ namespace OpenRPA.Views
             configService.RubberBandSelectionEnabled = true;
             configService.LoadingFromUntrustedSourceEnabled = false;
 
-            //if (_expressionEditorServiceVB == null) _expressionEditorServiceVB = new EditorService();
-            //wfDesigner.Context.Services.Publish<IExpressionEditorService>(_expressionEditorServiceVB);
-
             wfDesigner.Context.Services.Publish<IExpressionEditorService>(new EditorService(this));
-
-
-            //DesignerView designerView = wfDesigner.Context.Services.GetService<DesignerView>();
-            //if (designerView != null)
-            //{
-            //    var modelService = wfDesigner.Context.Services.GetService<ModelService>();
-            //    if (modelService != null)
-            //    {
-            //        designerView.MakeRootDesigner(modelService.Root);
-            //        //designerView.MakeRootDesigner(null);
-            //        Flowchart flowchart = modelService.Root.GetCurrentValue() as Flowchart;
-            //    }
-            //    // Clean up the old workflow, this prevents an error when the old designer had a flowchart in it.
-            //    if (modelService != null)
-            //    {
-            //        modelService.Root.Content.ClearValue();
-            //    }
-            //}
             if (!string.IsNullOrEmpty(Workflow.Xaml))
             {
                 wfDesigner.Text = Workflow.Xaml;
@@ -286,14 +268,19 @@ namespace OpenRPA.Views
 
                 onChanged?.Invoke(this);
             };
-            wfDesigner.Context.Items.Subscribe<Selection>(new SubscribeContextCallback<Selection>(SelectionChanged));
-
+            wfDesigner.Context.Items.Subscribe(new SubscribeContextCallback<Selection>(SelectionChanged));
+            wfDesigner.View.Dispatcher.UnhandledException += new System.Windows.Threading.DispatcherUnhandledExceptionEventHandler(UnhandledException);
+            Properties = wfDesigner.PropertyInspectorView;
+            ModelService modelService = wfDesigner.Context.Services.GetService<ModelService>();
+            if (modelService == null) return;
+            modelService.ModelChanged -= new EventHandler<ModelChangedEventArgs>(ModelChanged);
+            modelService.ModelChanged += new EventHandler<ModelChangedEventArgs>(ModelChanged);
+            wfDesigner.ContextMenu.Items.Add(comment);
             try
             {
-                var ms = wfDesigner.Context.Services.GetService<ModelService>();
-                if (ms != null)
+                if (modelService != null)
                 {
-                    var modelItem = ms.Root;
+                    var modelItem = modelService.Root;
                     Workflow.name = modelItem.GetValue<string>("Name");
                 }
             }
@@ -303,7 +290,6 @@ namespace OpenRPA.Views
             }
 
             // WfDesignerBorder.Child = wfDesigner.View;
-            Properties = wfDesigner.PropertyInspectorView;
 
         }
         private Type[] extratypes = null;
@@ -327,7 +313,16 @@ namespace OpenRPA.Views
             {
                 ReadOnly = true;
             }
+            comment = new MenuItem() { Header = "Comment out" };
+            uncomment = new MenuItem() { Header = "Uncomment" };
+            comment.Click += onComment;
+            uncomment.Click += onUncomment;
+
             LoadDesigner();
+        }
+        private void UnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            Log.Error(e.Exception.ToString());
         }
         //private void traceOnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         //{
@@ -514,10 +509,44 @@ namespace OpenRPA.Views
         }
         private void SelectionChanged(Selection item)
         {
-            var selection = item;
+            selection = item;
             selectedActivity = selection.PrimarySelection;
             if (selectedActivity == null) return;
-            //SelectedVariableName = selectedActivity.GetCurrentValue().ToString();
+            SelectedVariableName = selectedActivity.GetCurrentValue().ToString();
+
+            try
+            {
+                if (wfDesigner.ContextMenu.Items.Contains(comment)) wfDesigner.ContextMenu.Items.Remove(comment);
+                if (wfDesigner.ContextMenu.Items.Contains(uncomment)) wfDesigner.ContextMenu.Items.Remove(uncomment);
+                var lastSequence = GetActivitiesScope(selectedActivity.Parent);
+                if (lastSequence == null) lastSequence = GetActivitiesScope(selectedActivity);
+                if (lastSequence == null) return;
+                if (selectedActivity.ItemType == typeof(Activities.CommentOut))
+                {
+                    wfDesigner.ContextMenu.Items.Add(uncomment);
+                }
+                else if (lastSequence.ItemType != typeof(Flowchart))
+                {
+                    if (selection.SelectionCount > 1)
+                    {
+                        if (lastSequence.Properties["Nodes"] == null)
+                        {
+                            wfDesigner.ContextMenu.Items.Add(comment);
+                        }
+                    }
+                    else
+                    {
+                        wfDesigner.ContextMenu.Items.Add(comment);
+                    }
+                }
+                else if (lastSequence.ItemType != typeof(Flowchart))
+                {
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         public void AddVBNamespaceSettings(object rootObject, params Type[] types)
         {
@@ -1299,5 +1328,270 @@ namespace OpenRPA.Views
         {
             return Workflow.name;
         }
+
+
+        private void ModelChanged(object sender, ModelChangedEventArgs e)
+        {
+            ModelService modelService = wfDesigner.Context.Services.GetService<ModelService>();
+
+            if (e.ModelChangeInfo != null)
+            {
+                var model = e.ModelChangeInfo.Subject;
+                if (model != null)
+                {
+                    if (model.ItemType.BaseType == typeof(Variable))
+                    {
+                        if (e.ModelChangeInfo.PropertyName != "Name") return;
+#pragma warning disable 0618
+                        ModelProperty property = e.PropertiesChanged.ElementAt<ModelProperty>(0);
+#pragma warning restore 0618
+                        string variableName = property.ComputedValue.ToString();
+                        renameVariable(SelectedVariableName, variableName);
+                        //DesignerView.ToggleVariableDesignerCommand.Execute(null);
+                        //} else if (model.ItemType.BaseType == typeof(KeyedCollection<string, DynamicActivityProperty>))
+                    }
+                    else if (model.ItemType == typeof(DynamicActivityProperty))
+                    {
+                        if (e.ModelChangeInfo.PropertyName != "Name") return;
+#pragma warning disable 0618
+                        ModelProperty property = e.PropertiesChanged.ElementAt<ModelProperty>(0);
+#pragma warning restore 0618
+                        string variableName = property.ComputedValue.ToString();
+                        renameVariable(SelectedVariableName, variableName);
+                    }
+                    //else if (e.ModelChangeInfo.ModelChangeType == ModelChangeType.CollectionItemAdded)
+                    //{
+                    //    var a = model.GetCurrentValue() as Activity;
+                    //    var map = CreateSourceLocationMapping(modelService);
+                    //    if(a != null && map.ContainsKey(a))
+                    //    {
+                    //        ShowDebug(map[a]);
+                    //    }
+                    //    else
+                    //    {
+                    //        ShowDebug(map.Last().Value);
+                    //    }
+
+                    //    Selection.SelectOnly(wfDesigner.Context, model);
+                    //    ModelItemExtensions.Focus(model);
+                    //}
+                }
+            }
+        }
+        void renameVariable(string variableName, string newName)
+        {
+            if (string.IsNullOrEmpty(variableName) || string.IsNullOrEmpty(newName)) return;
+            //if (selectedActivity == null) return;
+            foreach (ModelItem item in this.GetWorkflowActivities(null))
+            {
+                ModelProperty property = item.Properties["ExpressionText"];
+                if ((property != null) && (property.Value != null))
+                {
+                    string input = item.Properties["ExpressionText"].Value.ToString();
+                    if (input.Contains(variableName))
+                    {
+                        string str2 = string.Empty;
+                        foreach (string str3 in System.Text.RegularExpressions.Regex.Split(input, @"(\.)|(=)|(\+)|(-)|(\*)|(<)|(>)|(=)|(&)|(\s)|(\()|(\))"))
+                        {
+                            if (str3 == variableName)
+                            {
+                                str2 = str2 + newName;
+                            }
+                            else
+                            {
+                                str2 = str2 + str3;
+                            }
+                        }
+                        item.Properties["ExpressionText"].SetValue(str2);
+                    }
+                }
+            }
+        }
+
+        public void onUncomment(object sender, RoutedEventArgs e)
+        {
+            var thisselection = selection;
+            var comment = selectedActivity;
+            var currentSequence = selectedActivity.Properties["Body"].Value;
+            var newSequence = GetActivitiesScope(selectedActivity.Parent.Parent);
+            ModelItemCollection currentActivities = null;
+            if (currentSequence.Properties["Activities"] != null)
+            {
+                currentActivities = currentSequence.Properties["Activities"].Collection;
+            }
+            else if (currentSequence.Properties["Nodes"] != null)
+            {
+                currentActivities = currentSequence.Properties["Nodes"].Collection;
+            }
+            ModelItemCollection newActivities = null;
+            if (newSequence.Properties["Activities"] != null)
+            {
+                newActivities = newSequence.Properties["Activities"].Collection;
+            }
+            else if (newSequence.Properties["Nodes"] != null)
+            {
+                newActivities = newSequence.Properties["Nodes"].Collection;
+                var next = thisselection.PrimarySelection.Parent.Properties["Next"];
+
+                newActivities.Remove(thisselection.PrimarySelection.Parent);
+
+                FlowStep step = new FlowStep();
+                step.Action = new Sequence();
+                var newStep = newActivities.Add(step);
+                newStep.Properties["Action"].SetValue(comment.Properties["Body"].Value);
+                newStep.Properties["Next"].SetValue(next.Value);
+
+                if (newSequence.Properties["StartNode"].Value == thisselection.PrimarySelection.Parent)
+                {
+                    newSequence.Properties["StartNode"].SetValue(newStep);
+                }
+                foreach (var node in newActivities)
+                {
+                    if (node.Properties["Next"] != null && node.Properties["Next"].Value != null)
+                    {
+                        if (node.Properties["Next"].Value == thisselection.PrimarySelection.Parent)
+                        {
+                            node.Properties["Next"].SetValue(newStep);
+                        }
+                    }
+                }
+                return;
+            }
+
+            if (currentActivities != null && newActivities != null)
+            {
+                var index = newActivities.IndexOf(comment);
+                foreach (var sel in currentActivities.ToList())
+                {
+                    currentActivities.Remove(sel);
+                    index++;
+                    newActivities.Insert(index, sel);
+                    //newActivities.Add(sel);
+                }
+                newActivities.Remove(comment);
+            }
+            else if (currentActivities == null && newActivities != null)
+            {
+                var index = newActivities.IndexOf(comment);
+                var movethis = comment.Properties["Body"].Value;
+                newActivities.Insert(index, movethis);
+                newActivities.Remove(comment);
+            }
+            else if (currentActivities == null && newActivities == null)
+            {
+                if (newSequence.Properties["Body"] != null)
+                {
+                    var body = newSequence.Properties["Body"];
+                    var handler = body.Value.Properties["Handler"];
+                    handler.SetValue(handler.Value.Properties["Body"].Value);
+                }
+            }
+        }
+        private void onComment(object sender, RoutedEventArgs e)
+        {
+            var thisselection = selection;
+            //var movethis = selectedActivity;
+            var lastSequence = GetActivitiesScope(selectedActivity.Parent);
+            if (lastSequence == null) lastSequence = GetActivitiesScope(selectedActivity);
+            ModelItemCollection Activities = null;
+            if (lastSequence.Properties["Activities"] != null)
+            {
+                Activities = lastSequence.Properties["Activities"].Collection;
+            }
+            else
+            {
+                Activities = lastSequence.Properties["Nodes"].Collection;
+            }
+
+            if (thisselection.SelectionCount > 1)
+            {
+                if (lastSequence.Properties["Nodes"] != null) return;
+                var co = new Activities.CommentOut();
+                co.Body = new Sequence();
+                addActivity(co);
+                var newActivities = selectedActivity.Properties["Body"].Value.Properties["Activities"].Collection;
+                foreach (var sel in thisselection.SelectedObjects)
+                {
+                    Activities.Remove(sel);
+                    var index = newActivities.Count;
+                    Log.Debug("insert at " + index);
+                    newActivities.Insert(0, sel);
+                    //newActivities.Add(sel);
+                }
+            }
+            else
+            {
+                var parentparent = thisselection.PrimarySelection.Parent.Parent;
+                var parent = thisselection.PrimarySelection.Parent;
+
+                if (parentparent == lastSequence)
+                {
+                    var co = new Activities.CommentOut();
+                    addActivity(co);
+                    Activities.Remove(thisselection.PrimarySelection);
+                    selectedActivity.Properties["Body"].SetValue(thisselection.PrimarySelection);
+                }
+                else
+                {
+                    try
+                    {
+                        if (parentparent.Properties["Body"] != null)
+                        {
+                            var body = parentparent.Properties["Body"];
+                            if (body.Value == null)
+                            {
+                                var aa = (dynamic)Activator.CreateInstance(body.PropertyType);
+                                //aa.Handler = new CommentOut();
+                                selectedActivity = parentparent.Properties["Body"].SetValue(aa);
+                            }
+                            var handler = body.Value.Properties["Handler"];
+                            var comment = handler.SetValue(new Activities.CommentOut());
+                            comment.Properties["Body"].SetValue(thisselection.PrimarySelection);
+
+                            //p.Properties["Body"].Value.Properties["Handler"].Value.Properties["Body"].SetValue(thisselection.PrimarySelection);
+                        }
+                        else if (parent.Properties["Action"] != null)
+                        {
+                            var next = thisselection.PrimarySelection.Parent.Properties["Next"];
+                            var co = new Activities.CommentOut();
+                            var comment = addActivity(co);
+                            Activities.Remove(thisselection.PrimarySelection.Parent);
+
+                            if (lastSequence.Properties["StartNode"].Value == thisselection.PrimarySelection.Parent)
+                            {
+                                lastSequence.Properties["StartNode"].SetValue(comment);
+                            }
+                            foreach (var node in Activities)
+                            {
+                                if (node.Properties["Next"] != null && node.Properties["Next"].Value != null)
+                                {
+                                    if (node.Properties["Next"].Value == thisselection.PrimarySelection.Parent)
+                                    {
+                                        node.Properties["Next"].SetValue(comment);
+                                    }
+                                }
+                            }
+
+
+                            if (comment.Properties["Body"] != null)
+                            {
+                                comment.Properties["Body"].SetValue(thisselection.PrimarySelection);
+                            }
+                            else if (comment.Properties["Action"] != null)
+                            {
+                                comment.Properties["Action"].Value.Properties["Body"].SetValue(thisselection.PrimarySelection);
+                                comment.Properties["Next"].SetValue(next.Value);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                }
+            }
+        }
+
+
     }
 }

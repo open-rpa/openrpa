@@ -7,8 +7,9 @@
     <Description>Activities and record plugin for handling Internet Explorer</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.7</Version>
-    <PackageReleaseNotes>1.0.7 update interfaces reference</PackageReleaseNotes>
+    <Version>1.0.8</Version>
+    <PackageReleaseNotes>1.0.8 Catch recording errors on input
+1.0.7 update interfaces reference</PackageReleaseNotes>
   </PropertyGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />

@@ -8,6 +8,6 @@
              mc:Ignorable="d"  Title="Edit XAML"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBox Text="{Binding XAML, Mode=TwoWay}"></TextBox>
+        <TextBox Text="{Binding XAML, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True"></TextBox>
     </Grid>
 </Window>

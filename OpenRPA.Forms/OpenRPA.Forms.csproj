@@ -7,8 +7,13 @@
     <Description>A couple of activities to design and show forms, and notifications</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.5</Version>
-    <PackageReleaseNotes>1.0.5 update interfaces reference</PackageReleaseNotes>
+    <Version>1.0.6</Version>
+    <PackageReleaseNotes>1.0.6 add icon
+1.0.5 update interfaces reference</PackageReleaseNotes>
+    <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA.Forms/Resources/designer/form30.png</PackageIconUrl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\debug</OutputPath>
   </PropertyGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />

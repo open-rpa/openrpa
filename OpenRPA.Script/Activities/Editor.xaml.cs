@@ -26,6 +26,7 @@ namespace OpenRPA.Script.Activities
     /// </summary>
     public partial class Editor : Window
     {
+        public string[] namespaces;
         public void LoadFromResource(string resourceName, Type type)
         {
             // string[] names = typeof(Extensions).Assembly.GetManifestResourceNames();
@@ -45,9 +46,10 @@ namespace OpenRPA.Script.Activities
             }
         }
         private List<System.Activities.Presentation.Model.ModelItem> Variables;
-        public Editor(string code, string language, List<System.Activities.Presentation.Model.ModelItem> Variables)
+        public Editor(string code, string language, List<System.Activities.Presentation.Model.ModelItem> Variables, string[] namespaces)
         {
             InitializeComponent();
+            this.namespaces = namespaces;
             this.Variables = Variables;
             DataContext = this;
             //string[] names = typeof(ICSharpCode.AvalonEdit.AvalonEditCommands).Assembly.GetManifestResourceNames();
@@ -96,8 +98,8 @@ namespace OpenRPA.Script.Activities
                         variables.Add(variable.Name, variable.Type);
                     }
                     string sourcecode = code;
-                    if (language == "VB") sourcecode = InvokeCode.GetVBHeaderText(variables, "Expression") + code + InvokeCode.GetVBFooterText();
-                    if (language == "C#") sourcecode = InvokeCode.GetCSharpHeaderText(variables, "Expression") + code + InvokeCode.GetCSharpFooterText();
+                    if (language == "VB") sourcecode = InvokeCode.GetVBHeaderText(variables, "Expression", namespaces) + code + InvokeCode.GetVBFooterText();
+                    if (language == "C#") sourcecode = InvokeCode.GetCSharpHeaderText(variables, "Expression", namespaces) + code + InvokeCode.GetCSharpFooterText();
                     var references = InvokeCode.GetAssemblyLocations();
                     var CompilerParams = new System.CodeDom.Compiler.CompilerParameters();
                     //CompilerParams.GenerateInMemory = true;

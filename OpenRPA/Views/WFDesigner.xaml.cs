@@ -182,11 +182,26 @@ namespace OpenRPA.Views
         {
             get
             {
-                return wfDesigner.Context.Items.GetValue<System.Activities.Presentation.Hosting.ReadOnlyState>().IsReadOnly;
+                try
+                {
+                    return wfDesigner.Context.Items.GetValue<System.Activities.Presentation.Hosting.ReadOnlyState>().IsReadOnly;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("WFDesigner:ReadOnly: " + ex.ToString());
+                    return false;
+                }
             }
             set
             {
-                wfDesigner.Context.Items.GetValue<System.Activities.Presentation.Hosting.ReadOnlyState>().IsReadOnly = value;
+                try
+                {
+                    wfDesigner.Context.Items.GetValue<System.Activities.Presentation.Hosting.ReadOnlyState>().IsReadOnly = value;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("WFDesigner:Set.ReadOnly: " + ex.ToString());
+                }
             }
         }
         private WFDesigner()
@@ -217,6 +232,11 @@ namespace OpenRPA.Views
             configService.PanModeEnabled = true;
             configService.RubberBandSelectionEnabled = true;
             configService.LoadingFromUntrustedSourceEnabled = false;
+
+            if (isRunnning)
+            {
+                ReadOnly = true;
+            }
 
             wfDesigner.Context.Services.Publish<IExpressionEditorService>(new EditorService(this));
             if (!string.IsNullOrEmpty(Workflow.Xaml))
@@ -309,10 +329,6 @@ namespace OpenRPA.Views
             }
             //WeakEventManager<System.ComponentModel.INotifyPropertyChanged, System.ComponentModel.PropertyChangedEventArgs>.
             //    AddHandler(MainWindow.tracing, "PropertyChanged", traceOnPropertyChanged);
-            if(isRunnning)
-            {
-                ReadOnly = true;
-            }
             comment = new MenuItem() { Header = "Comment out" };
             uncomment = new MenuItem() { Header = "Uncomment" };
             comment.Click += onComment;

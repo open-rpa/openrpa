@@ -1,9 +1,7 @@
 {
   "profiles": {
     "OpenRPA": {
-      "commandName": "Executable",
-      "executablePath": "C:\\code\\openrpa\\OpenRPA.Updater\\bin\\Debug\\net462\\OpenRPA\\OpenRPA.exe",
-      "workingDirectory": "C:\\code\\openrpa\\OpenRPA.Updater\\bin\\Debug\\net462\\OpenRPA\\"
+      "commandName": "Project"
     }
   }
 }

@@ -15,7 +15,6 @@ using System.CodeDom.Compiler;
 using System.Management.Automation.Runspaces;
 using System.Collections;
 using System.Collections.ObjectModel;
-using sharpAHK;
 using Python.Runtime;
 
 namespace OpenRPA.Script.Activities
@@ -32,24 +31,12 @@ namespace OpenRPA.Script.Activities
         [RequiredArgument]
         public InArgument<string> Code { get; set; }
         [RequiredArgument]
-        public InArgument<string> Language { get; set; }
+        public InArgument<string> Language { get; set; } = "VB";
         public OutArgument<Collection<System.Management.Automation.PSObject>> PipelineOutput { get; set; }
-        public static void New_AHKSession(bool NewInstance = false)
-        {
-            if (ahkGlobal.ahkdll == null || NewInstance == true) { ahkGlobal.ahkdll = new AutoHotkey.Interop.AutoHotkeyEngine(); }
-
-            else { ahkGlobal.ahkdll = null; }  // option to start new AHK session (resets variables and previously loaded functions)
-
-            ahkGlobal.LoadedAHK = new List<string>(); // reset loaded ahk list
-        }
+        [Browsable(false)]
+        public string[] namespaces { get; set; }
         public static RunspacePool pool { get; set; } = null;
         public static Runspace runspace = null;
-        //private static ScriptEngine _engine;
-        //private static ScriptScope _scope;
-
-        //private static AssemblyLoader assemblyLoader = new AssemblyLoader();
-        //private static bool firstRun = true;
-
         public static void ExecuteNewAppDomain(Action action)
         {
             AppDomain domain = null;
@@ -100,7 +87,6 @@ namespace OpenRPA.Script.Activities
             foreach (dynamic v in vars)
             {
                 Type rtype = v.PropertyType as Type;
-                //var rtype = v.PropertyType.UnderlyingSystemType;
                 var value = v.GetValue(context.DataContext);
 
                 if (rtype == null && value != null) rtype = value.GetType();
@@ -109,9 +95,12 @@ namespace OpenRPA.Script.Activities
                 variablevalues.Add(v.DisplayName, value);
             }
             string sourcecode = code;
-            if (language == "VB") sourcecode = GetVBHeaderText(variables, "Expression") + code + GetVBFooterText();
-            if (language == "C#") sourcecode = GetCSharpHeaderText(variables, "Expression") + code + GetCSharpFooterText();
-
+            if(namespaces == null)
+            {
+                throw new Exception("InvokeCode is missing namespaces, please open workflow in designer and save changes");
+            }
+            if (language == "VB") sourcecode = GetVBHeaderText(variables, "Expression", namespaces) + code + GetVBFooterText();
+            if (language == "C#") sourcecode = GetCSharpHeaderText(variables, "Expression", namespaces) + code + GetCSharpFooterText();
             if (language == "PowerShell")
             {
 
@@ -150,32 +139,51 @@ namespace OpenRPA.Script.Activities
 
                 return;
             }
-
             if (language == "AutoHotkey")
             {
-                if (sharpAHK.ahkGlobal.ahkdll == null) { New_AHKSession(true); }
-                foreach (var parameter in variablevalues)
+                AppDomain Temporary = null;
+                try
                 {
-                    if (parameter.Value == null) continue;
-                    sharpAHK.ahkGlobal.ahkdll.SetVar(parameter.Key, parameter.Value.ToString());
-                }
-                sharpAHK.ahkGlobal.ahkdll.ExecRaw(code);
-                foreach (dynamic v in vars)
-                {
-                    var value = sharpAHK.ahkGlobal.ahkdll.GetVar(v.DisplayName);
-                    PropertyDescriptor myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
-                    if (myVar != null && value != null && value != "")
-                    {
-                        if (myVar.PropertyType == typeof(string))
-                            myVar.SetValue(context.DataContext, value);
-                        else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(value.ToString()));
-                        else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(value.ToString()));
-                        else Log.Information("Ignorering variable " + v.DisplayName + " of type " + myVar.PropertyType.FullName);
-                        //var myValue = myVar.GetValue(context.DataContext);
+                    AppDomainSetup domaininfo = new AppDomainSetup();
+                    domaininfo.ApplicationBase = System.Environment.CurrentDirectory;
+                    System.Security.Policy.Evidence adevidence = AppDomain.CurrentDomain.Evidence;
+                    Temporary = AppDomain.CreateDomain("Temporary", adevidence, domaininfo);
+                    Temporary.AssemblyResolve += AHKProxy.CurrentDomain_AssemblyResolve;
 
+                    //var ahk = (AutoHotkey.Interop.AutoHotkeyEngine)Temporary.CreateInstanceAndUnwrap("sharpAHK, Version=1.0.0.5, Culture=neutral, PublicKeyToken=null", "AutoHotkey.Interop.AutoHotkeyEngine");
+
+                    Type type = typeof(AHKProxy);
+                    var ahk = (AHKProxy)Temporary.CreateInstanceAndUnwrap(type.Assembly.FullName, type.FullName);
+
+                    foreach (var parameter in variablevalues)
+                    {
+                        if (parameter.Value == null) continue;
+                        ahk.SetVar(parameter.Key, parameter.Value.ToString());
+                    }
+                    ahk.ExecRaw(code);
+                    foreach (dynamic v in vars)
+                    {
+                        var value = ahk.GetVar(v.DisplayName);
+                        PropertyDescriptor myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
+                        if (myVar != null && value != null && value != "")
+                        {
+                            if (myVar.PropertyType == typeof(string))
+                                myVar.SetValue(context.DataContext, value);
+                            else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(value.ToString()));
+                            else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(value.ToString()));
+                            else Log.Information("Ignorering variable " + v.DisplayName + " of type " + myVar.PropertyType.FullName);
+                        }
                     }
                 }
-                sharpAHK.ahkGlobal.ahkdll.Terminate();
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                    throw;
+                }
+                finally
+                {
+                    if(Temporary!=null) AppDomain.Unload(Temporary);
+                }
                 return;
             }
             if (language == "Python")
@@ -280,61 +288,6 @@ sys.stdout = sys.stderr = output()
                 }
                 return;
             }
-            if (language == "Python2")
-            {
-                // http://putridparrot.com/blog/hosting-ironpython-in-a-c-application/
-                // http://jonsblogat.blogspot.com/2011/06/adding-scripting-support-to-wpf.html
-                //var ipy = IronPython.Hosting.Python.CreateRuntime();
-                //var engine = IronPython.Hosting.Python.CreateEngine();
-                //var paths = Environment.GetEnvironmentVariable("path").Split(';');
-                //var libs = new List<string>();
-                //foreach (var p in paths.Where(x => x.ToLower().Contains("python")))
-                //{
-                //    if (System.IO.Directory.Exists(p) && p.ToLower().Contains("ironpython"))
-                //    {
-                //        libs.Add(p);
-                //        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "Lib"))) libs.Add(System.IO.Path.Combine(p, "Lib"));
-                //        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "lib\\site-packages"))) libs.Add(System.IO.Path.Combine(p, "lib\\site-packages"));
-                //        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "DLLs"))) libs.Add(System.IO.Path.Combine(p, "DLLs"));
-                //    }
-
-                //}
-                //engine.SetSearchPaths(libs);
-                //var scope = engine.CreateScope();
-                //foreach (var parameter in variablevalues)
-                //{
-                //    // if (parameter.Value == null) continue;
-                //    scope.SetVariable(parameter.Key, parameter.Value);
-                //}
-                //var source = engine.CreateScriptSourceFromString(code, Microsoft.Scripting.SourceCodeKind.Statements);
-                //var errors = new ErrorListener();
-                //var command = source.Compile(errors);
-                //if (command == null)
-                //{
-                //    foreach (var e in errors.errors)
-                //    {
-                //        Console.WriteLine(e.source.ToString() + "(" + e.span.Start + "): " + e.message);
-                //    }
-                //}
-                //var result = source.Execute(scope);
-                //foreach (string name in scope.GetVariableNames())
-                //{
-                //    try
-                //    {
-                //        var myVar = context.DataContext.GetProperties().Find(name, true);
-                //        if (myVar != null)
-                //        {
-                //            myVar.SetValue(context.DataContext, scope.GetVariable(name));
-                //        }
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        Log.Error(ex.ToString());
-                //    }
-                //}
-                return;
-            }
-
             var assemblyLocations = GetAssemblyLocations();
             CompileAndRun(language, sourcecode, assemblyLocations.ToArray(), variablevalues, context);
         }
@@ -364,6 +317,10 @@ sys.stdout = sys.stderr = output()
                             assemblyLocations.Add(asm.Location);
                         }
                     }
+                    //else
+                    //{
+                    //    Console.WriteLine(asm.FullName ); // + " " + asm.Location
+                    //}
                 }
                 catch (Exception ex)
                 {
@@ -372,7 +329,6 @@ sys.stdout = sys.stderr = output()
             }
             return assemblyLocations.ToArray();
         }
-
         private static Dictionary<string, CompilerResults> cache = new Dictionary<string, CompilerResults>();
         public void CompileAndRun(string language, string code, string[] references, Dictionary<string, object> variablevalues, CodeActivityContext context)
         {
@@ -470,11 +426,10 @@ sys.stdout = sys.stderr = output()
                 }
             }
         }
-        private static List<string> Namespaces = new List<string>() { "System", "System.Collections", "System.Data" };
-        public static string GetCSharpHeaderText(Dictionary<string, Type> variables, string moduleName)
+        public static string GetCSharpHeaderText(Dictionary<string, Type> variables, string moduleName, string[] namespaces)
         {
             var headerText = new StringBuilder();
-            foreach (var n in Namespaces)
+            foreach (var n in namespaces)
             {
                 headerText.AppendLine("using " + n + ";\r\n");
             }
@@ -525,13 +480,13 @@ sys.stdout = sys.stderr = output()
 
             typeName.Append(typeFullName);
         }
-        public static string GetVBHeaderText(Dictionary<string, Type> variables, string moduleName)
+        public static string GetVBHeaderText(Dictionary<string, Type> variables, string moduleName, string[] namespaces)
         {
             // Inject namespace imports
             //var headerText = new StringBuilder("Imports System\r\nImports System.Collections\r\nImports System.Collections.Generic\r\nImports System.Linq\r\n");
             var headerText = new StringBuilder();
 
-            foreach (var n in Namespaces)
+            foreach (var n in namespaces)
             {
                 headerText.AppendLine("Imports " + n + "\r\n");
             }
@@ -598,11 +553,9 @@ sys.stdout = sys.stderr = output()
             typeName.Append(typeFullName);
         }
     }
-
     public class AssemblyLoader
     {
         private Dictionary<string, Assembly> loadedAssemblies;
-
         public AssemblyLoader()
         {
             loadedAssemblies = new Dictionary<string, Assembly>();
@@ -632,7 +585,6 @@ sys.stdout = sys.stderr = output()
                 return null;
             };
         }
-
     }
     //public class AppDomainDelegate : MarshalByRefObject
     //{
@@ -644,7 +596,6 @@ sys.stdout = sys.stderr = output()
     public class AppDomainDelegate : MarshalByRefObject
     {
         public void Execute(Action action) { action(); }
-
         public void Execute<T>(T parameter, Action<T> action)
         {
             action(parameter);

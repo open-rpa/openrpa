@@ -33,6 +33,8 @@ namespace OpenRPA.Script.Activities
         [RequiredArgument]
         public InArgument<string> Language { get; set; }
         public OutArgument<Collection<System.Management.Automation.PSObject>> PipelineOutput { get; set; }
+        [Browsable(false)]
+        public string[] namespaces { get; set; }
         public static RunspacePool pool { get; set; } = null;
         public static Runspace runspace = null;
         //private static ScriptEngine _engine;
@@ -204,8 +206,10 @@ namespace OpenRPA.Script.Activities
                 variablevalues.Add(v.DisplayName, value);
             }
             string sourcecode = code;
-            if (language == "VB") sourcecode = GetVBHeaderText(variables, "Expression") + code + GetVBFooterText();
-            if (language == "C#") sourcecode = GetCSharpHeaderText(variables, "Expression") + code + GetCSharpFooterText();
+
+            // "System", "System.Collections", "System.Data"
+            if (language == "VB") sourcecode = GetVBHeaderText(variables, "Expression", namespaces) + code + GetVBFooterText();
+            if (language == "C#") sourcecode = GetCSharpHeaderText(variables, "Expression", namespaces) + code + GetCSharpFooterText();
 
             if (language == "PowerShell")
             {
@@ -518,6 +522,10 @@ sys.stdout = sys.stderr = output()
                             assemblyLocations.Add(asm.Location);
                         }
                     }
+                    //else
+                    //{
+                    //    Console.WriteLine(asm.FullName ); // + " " + asm.Location
+                    //}
                 }
                 catch (Exception ex)
                 {
@@ -624,11 +632,11 @@ sys.stdout = sys.stderr = output()
                 }
             }
         }
-        private static List<string> Namespaces = new List<string>() { "System", "System.Collections", "System.Data" };
-        public static string GetCSharpHeaderText(Dictionary<string, Type> variables, string moduleName)
+        // private static List<string> Namespaces = new List<string>() { "System", "System.Collections", "System.Data" };
+        public static string GetCSharpHeaderText(Dictionary<string, Type> variables, string moduleName, string[] namespaces)
         {
             var headerText = new StringBuilder();
-            foreach (var n in Namespaces)
+            foreach (var n in namespaces)
             {
                 headerText.AppendLine("using " + n + ";\r\n");
             }
@@ -679,13 +687,13 @@ sys.stdout = sys.stderr = output()
 
             typeName.Append(typeFullName);
         }
-        public static string GetVBHeaderText(Dictionary<string, Type> variables, string moduleName)
+        public static string GetVBHeaderText(Dictionary<string, Type> variables, string moduleName, string[] namespaces)
         {
             // Inject namespace imports
             //var headerText = new StringBuilder("Imports System\r\nImports System.Collections\r\nImports System.Collections.Generic\r\nImports System.Linq\r\n");
             var headerText = new StringBuilder();
 
-            foreach (var n in Namespaces)
+            foreach (var n in namespaces)
             {
                 headerText.AppendLine("Imports " + n + "\r\n");
             }

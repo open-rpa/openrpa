@@ -6,7 +6,7 @@
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
                       xmlns:s="clr-namespace:System;assembly=mscorlib"
                       xmlns:Converters="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
-    >
+    Loaded="ActivityDesigner_Loaded">
 
 
     <sap:ActivityDesigner.Icon>

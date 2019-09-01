@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
-    <Version>1.0.7</Version>
-    <PackageReleaseNotes>1.0.7 quick hack, isolate AHK in new AppDomain
+    <Version>1.0.8</Version>
+    <PackageReleaseNotes>1.0.8 auto detect namespaces for invocecode
+1.0.7 quick hack, isolate AHK in new AppDomain
 1.0.6 remember to reset ahk after running
 1.0.5 update interfaces reference
 1.0.4 add Python.Runtime.NETStandard as a lib</PackageReleaseNotes>

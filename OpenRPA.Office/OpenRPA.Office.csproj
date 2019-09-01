@@ -5,10 +5,11 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <Authors>OpenRPA</Authors>
     <Product>OpenRPA</Product>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office</Description>
-    <PackageReleaseNotes>1.0.6 Catch recording errors on input
+    <PackageReleaseNotes>1.0.7 Add SaveChanges to closeworkbook
+1.0.6 Catch recording errors on input
 1.0.5 Add save email activity
 1.0.4 update interfaces reference</PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA/Resources/open_rpa128.png</PackageIconUrl>

@@ -31,18 +31,12 @@ namespace OpenRPA.Script.Activities
         [RequiredArgument]
         public InArgument<string> Code { get; set; }
         [RequiredArgument]
-        public InArgument<string> Language { get; set; }
+        public InArgument<string> Language { get; set; } = "VB";
         public OutArgument<Collection<System.Management.Automation.PSObject>> PipelineOutput { get; set; }
         [Browsable(false)]
         public string[] namespaces { get; set; }
         public static RunspacePool pool { get; set; } = null;
         public static Runspace runspace = null;
-        //private static ScriptEngine _engine;
-        //private static ScriptScope _scope;
-
-        //private static AssemblyLoader assemblyLoader = new AssemblyLoader();
-        //private static bool firstRun = true;
-
         public static void ExecuteNewAppDomain(Action action)
         {
             AppDomain domain = null;
@@ -83,110 +77,6 @@ namespace OpenRPA.Script.Activities
                     AppDomain.Unload(domain);
             }
         }
-
-        public class AHKProxy : MarshalByRefObject
-        {
-            public static void New_AHKSession(bool NewInstance = false)
-            {
-                if (sharpAHK.ahkGlobal.ahkdll == null || NewInstance == true) { sharpAHK.ahkGlobal.ahkdll = new AutoHotkey.Interop.AutoHotkeyEngine(); }
-
-                else { sharpAHK.ahkGlobal.ahkdll = null; }  // option to start new AHK session (resets variables and previously loaded functions)
-
-                sharpAHK.ahkGlobal.LoadedAHK = new List<string>(); // reset loaded ahk list
-            }
-
-            public AHKProxy()
-            {
-                New_AHKSession(false);
-            }
-            public Assembly GetAssembly(string assemblyPath)
-            {
-                try
-                {
-                    return Assembly.LoadFile(assemblyPath);
-                }
-                catch (Exception)
-                {
-                    return null;
-                    // throw new InvalidOperationException(ex);
-                }
-            }
-            //public static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-            //{
-            //    //This handler is called only when the common language runtime tries to bind to the assembly and fails.
-
-            //    //Retrieve the list of referenced assemblies in an array of AssemblyName.
-            //    Assembly MyAssembly, objExecutingAssemblies;
-            //    string strTempAssmbPath = "";
-            //    objExecutingAssemblies = args.RequestingAssembly;
-            //    AssemblyName[] arrReferencedAssmbNames = objExecutingAssemblies.GetReferencedAssemblies();
-            //    var asmBase = System.IO.Directory.GetCurrentDirectory();
-            //    //Loop through the array of referenced assembly names.
-            //    foreach (AssemblyName strAssmbName in arrReferencedAssmbNames)
-            //    {
-            //        //Check for the assembly names that have raised the "AssemblyResolve" event.
-            //        if (strAssmbName.FullName.Substring(0, strAssmbName.FullName.IndexOf(",")) == args.Name.Substring(0, args.Name.IndexOf(",")))
-            //        {
-            //            //Build the path of the assembly from where it has to be loaded.                
-            //            strTempAssmbPath = asmBase + "\\" + args.Name.Substring(0, args.Name.IndexOf(",")) + ".dll";
-            //            break;
-            //        }
-
-            //    }
-            //    //Load the assembly from the specified path.                    
-            //    MyAssembly = Assembly.LoadFrom(strTempAssmbPath);
-
-            //    //Return the loaded assembly.
-            //    return MyAssembly;
-            //}
-            public static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-            {
-                //This handler is called only when the common language runtime tries to bind to the assembly and fails.
-
-                //Retrieve the list of referenced assemblies in an array of AssemblyName.
-                Assembly MyAssembly, objExecutingAssemblies;
-                string strTempAssmbPath = "";
-
-                var asmBase = System.IO.Directory.GetCurrentDirectory();
-
-                objExecutingAssemblies = Assembly.GetExecutingAssembly();
-                AssemblyName[] arrReferencedAssmbNames = objExecutingAssemblies.GetReferencedAssemblies();
-
-                //Loop through the array of referenced assembly names.
-                foreach (AssemblyName strAssmbName in arrReferencedAssmbNames)
-                {
-                    //Check for the assembly names that have raised the "AssemblyResolve" event.
-                    if (strAssmbName.FullName.Substring(0, strAssmbName.FullName.IndexOf(",")) == args.Name.Substring(0, args.Name.IndexOf(",")))
-                    {
-                    //Build the path of the assembly from where it has to be loaded.
-                    //The following line is probably the only line of code in this method you may need to modify:
-                     strTempAssmbPath = asmBase;
-                        if (strTempAssmbPath.EndsWith("\\")) strTempAssmbPath += "\\";
-                        strTempAssmbPath += args.Name.Substring(0, args.Name.IndexOf(",")) + ".dll";
-                        break;
-                    }
-
-                }
-                //Load the assembly from the specified path.
-                MyAssembly = Assembly.LoadFrom(strTempAssmbPath);
-
-                //Return the loaded assembly.
-                return MyAssembly;
-            }
-            internal void SetVar(string key, string v)
-            {
-                sharpAHK.ahkGlobal.ahkdll.SetVar(key, v);
-            }
-            internal void ExecRaw(string code)
-            {
-                sharpAHK.ahkGlobal.ahkdll.ExecRaw(code);
-            }
-            internal string GetVar(string displayName)
-            {
-                return sharpAHK.ahkGlobal.ahkdll.GetVar(displayName);
-            }
-        }
-
         protected override void Execute(CodeActivityContext context)
         {
             var code = Code.Get(context);
@@ -197,7 +87,6 @@ namespace OpenRPA.Script.Activities
             foreach (dynamic v in vars)
             {
                 Type rtype = v.PropertyType as Type;
-                //var rtype = v.PropertyType.UnderlyingSystemType;
                 var value = v.GetValue(context.DataContext);
 
                 if (rtype == null && value != null) rtype = value.GetType();
@@ -206,11 +95,12 @@ namespace OpenRPA.Script.Activities
                 variablevalues.Add(v.DisplayName, value);
             }
             string sourcecode = code;
-
-            // "System", "System.Collections", "System.Data"
+            if(namespaces == null)
+            {
+                throw new Exception("InvokeCode is missing namespaces, please open workflow in designer and save changes");
+            }
             if (language == "VB") sourcecode = GetVBHeaderText(variables, "Expression", namespaces) + code + GetVBFooterText();
             if (language == "C#") sourcecode = GetCSharpHeaderText(variables, "Expression", namespaces) + code + GetCSharpFooterText();
-
             if (language == "PowerShell")
             {
 
@@ -249,7 +139,6 @@ namespace OpenRPA.Script.Activities
 
                 return;
             }
-
             if (language == "AutoHotkey")
             {
                 AppDomain Temporary = null;
@@ -295,45 +184,6 @@ namespace OpenRPA.Script.Activities
                 {
                     if(Temporary!=null) AppDomain.Unload(Temporary);
                 }
-                return;
-            }
-            if (language == "AutoHotkey222")
-            {
-
-
-                //if (sharpAHK.ahkGlobal.ahkdll == null) { New_AHKSession(false); }
-                sharpAHK.ahkGlobal.ahkdll.Reset();
-                foreach (var parameter in variablevalues)
-                {
-                    // if (parameter.Value == null) continue;
-                    if (parameter.Value == null)
-                    {
-                        sharpAHK.ahkGlobal.ahkdll.SetVar(parameter.Key, "");
-                    } else
-                    {
-                        sharpAHK.ahkGlobal.ahkdll.SetVar(parameter.Key, parameter.Value.ToString());
-                    }                        
-                }
-                // ahk.Execute(code, null, true);
-                sharpAHK.ahkGlobal.ahkdll.ExecRaw(code);
-
-                foreach (dynamic v in vars)
-                {
-                    var value = sharpAHK.ahkGlobal.ahkdll.GetVar(v.DisplayName);
-                    PropertyDescriptor myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
-                    if (myVar != null && value != null && value != "")
-                    {
-                        if (myVar.PropertyType == typeof(string))
-                            myVar.SetValue(context.DataContext, value);
-                        else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(value.ToString()));
-                        else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(value.ToString()));
-                        else Log.Information("Ignorering variable " + v.DisplayName + " of type " + myVar.PropertyType.FullName);
-                        //var myValue = myVar.GetValue(context.DataContext);
-                    }
-                }
-                // ahk.Reset();
-                // ahk.Terminate();
-                // sharpAHK.ahkGlobal.ahkdll.Terminate();
                 return;
             }
             if (language == "Python")
@@ -438,61 +288,6 @@ sys.stdout = sys.stderr = output()
                 }
                 return;
             }
-            if (language == "Python2")
-            {
-                // http://putridparrot.com/blog/hosting-ironpython-in-a-c-application/
-                // http://jonsblogat.blogspot.com/2011/06/adding-scripting-support-to-wpf.html
-                //var ipy = IronPython.Hosting.Python.CreateRuntime();
-                //var engine = IronPython.Hosting.Python.CreateEngine();
-                //var paths = Environment.GetEnvironmentVariable("path").Split(';');
-                //var libs = new List<string>();
-                //foreach (var p in paths.Where(x => x.ToLower().Contains("python")))
-                //{
-                //    if (System.IO.Directory.Exists(p) && p.ToLower().Contains("ironpython"))
-                //    {
-                //        libs.Add(p);
-                //        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "Lib"))) libs.Add(System.IO.Path.Combine(p, "Lib"));
-                //        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "lib\\site-packages"))) libs.Add(System.IO.Path.Combine(p, "lib\\site-packages"));
-                //        if (System.IO.Directory.Exists(System.IO.Path.Combine(p, "DLLs"))) libs.Add(System.IO.Path.Combine(p, "DLLs"));
-                //    }
-
-                //}
-                //engine.SetSearchPaths(libs);
-                //var scope = engine.CreateScope();
-                //foreach (var parameter in variablevalues)
-                //{
-                //    // if (parameter.Value == null) continue;
-                //    scope.SetVariable(parameter.Key, parameter.Value);
-                //}
-                //var source = engine.CreateScriptSourceFromString(code, Microsoft.Scripting.SourceCodeKind.Statements);
-                //var errors = new ErrorListener();
-                //var command = source.Compile(errors);
-                //if (command == null)
-                //{
-                //    foreach (var e in errors.errors)
-                //    {
-                //        Console.WriteLine(e.source.ToString() + "(" + e.span.Start + "): " + e.message);
-                //    }
-                //}
-                //var result = source.Execute(scope);
-                //foreach (string name in scope.GetVariableNames())
-                //{
-                //    try
-                //    {
-                //        var myVar = context.DataContext.GetProperties().Find(name, true);
-                //        if (myVar != null)
-                //        {
-                //            myVar.SetValue(context.DataContext, scope.GetVariable(name));
-                //        }
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        Log.Error(ex.ToString());
-                //    }
-                //}
-                return;
-            }
-
             var assemblyLocations = GetAssemblyLocations();
             CompileAndRun(language, sourcecode, assemblyLocations.ToArray(), variablevalues, context);
         }
@@ -534,7 +329,6 @@ sys.stdout = sys.stderr = output()
             }
             return assemblyLocations.ToArray();
         }
-
         private static Dictionary<string, CompilerResults> cache = new Dictionary<string, CompilerResults>();
         public void CompileAndRun(string language, string code, string[] references, Dictionary<string, object> variablevalues, CodeActivityContext context)
         {
@@ -632,7 +426,6 @@ sys.stdout = sys.stderr = output()
                 }
             }
         }
-        // private static List<string> Namespaces = new List<string>() { "System", "System.Collections", "System.Data" };
         public static string GetCSharpHeaderText(Dictionary<string, Type> variables, string moduleName, string[] namespaces)
         {
             var headerText = new StringBuilder();
@@ -760,11 +553,9 @@ sys.stdout = sys.stderr = output()
             typeName.Append(typeFullName);
         }
     }
-
     public class AssemblyLoader
     {
         private Dictionary<string, Assembly> loadedAssemblies;
-
         public AssemblyLoader()
         {
             loadedAssemblies = new Dictionary<string, Assembly>();
@@ -794,7 +585,6 @@ sys.stdout = sys.stderr = output()
                 return null;
             };
         }
-
     }
     //public class AppDomainDelegate : MarshalByRefObject
     //{
@@ -806,7 +596,6 @@ sys.stdout = sys.stderr = output()
     public class AppDomainDelegate : MarshalByRefObject
     {
         public void Execute(Action action) { action(); }
-
         public void Execute<T>(T parameter, Action<T> action)
         {
             action(parameter);

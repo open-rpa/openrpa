@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.13</Version>
-    <PackageReleaseNotes>1.0.13 Improve startup of robot and show more information in title bar while loading
+    <Version>1.0.14</Version>
+    <PackageReleaseNotes>1.0.14 Fix bug when setting designer readonly when robot is starting
+1.0.13 Improve startup of robot and show more information in title bar while loading
 1.0.12 Add context menu for comments and support for renaming variables, Allow designer to show parsing errors
 1.0.11 Make userfriendly version of activities for handling credentials
 1.0.10 Improve update check

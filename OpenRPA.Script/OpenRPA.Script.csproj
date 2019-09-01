@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
-    <Version>1.0.8</Version>
-    <PackageReleaseNotes>1.0.8 auto detect namespaces for invocecode
+    <Version>1.0.10</Version>
+    <PackageReleaseNotes>1.0.10 Fix error when using blank workflow, show error when using un-updated invokecode activities.
+1.0.8 auto detect namespaces for invocecode
 1.0.7 quick hack, isolate AHK in new AppDomain
 1.0.6 remember to reset ahk after running
 1.0.5 update interfaces reference

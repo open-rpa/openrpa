@@ -80,7 +80,7 @@ namespace OpenRPA.Script.Activities
             if (!namespaces.Contains("System.Collections")) namespaces.Add("System.Collections");
 
             string[] current = ModelItem.GetValue<string[]>("namespaces");
-            if(namespaces.Count() != current.Count())
+            if(current == null || namespaces.Count() != current.Count())
             {
                 ModelItem.Properties["namespaces"].SetValue(namespaces.ToArray());
             }           

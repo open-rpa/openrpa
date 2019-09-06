@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.15</Version>
-    <PackageReleaseNotes>1.0.15 Improve upload file
+    <Version>1.0.16</Version>
+    <PackageReleaseNotes>1.0.16 Add links to chrome and firefox addon
+1.0.15 Improve upload file
 1.0.14 Fix bug when setting designer readonly when robot is starting
 1.0.13 Improve startup of robot and show more information in title bar while loading
 1.0.12 Add context menu for comments and support for renaming variables, Allow designer to show parsing errors
@@ -63,10 +64,11 @@
     <None Remove="Activities\UploadFileDesigner.xaml" />
     <None Remove="App.xaml" />
     <None Remove="Images\PinDocMenu_Black.png" />
-    <None Remove="Main.xaml" />
     <None Remove="MainWindow.xaml" />
     <None Remove="Resources\Buttons\Bridge.png" />
     <None Remove="Resources\Buttons\CheckUpdates.png" />
+    <None Remove="Resources\Buttons\Clear.png" />
+    <None Remove="Resources\Buttons\CloseWebdriver.png" />
     <None Remove="Resources\Buttons\Copy.png" />
     <None Remove="Resources\Buttons\Copy_mono.png" />
     <None Remove="Resources\Buttons\Cut.png" />
@@ -80,10 +82,14 @@
     <None Remove="Resources\Buttons\Import.png" />
     <None Remove="Resources\Buttons\Manage.png" />
     <None Remove="Resources\Buttons\Manage_mono.png" />
+    <None Remove="Resources\Buttons\Mouse.png" />
     <None Remove="Resources\Buttons\New.png" />
     <None Remove="Resources\Buttons\OCR.png" />
     <None Remove="Resources\Buttons\Open.png" />
+    <None Remove="Resources\Buttons\OpenBrowser.png" />
     <None Remove="Resources\Buttons\OpenChrome.png" />
+    <None Remove="Resources\Buttons\OpenFirefox.png" />
+    <None Remove="Resources\Buttons\OpenIE.png" />
     <None Remove="Resources\Buttons\Open_mono.png" />
     <None Remove="Resources\Buttons\Package.png" />
     <None Remove="Resources\Buttons\Package.svg" />
@@ -98,7 +104,11 @@
     <None Remove="Resources\Buttons\Save.png" />
     <None Remove="Resources\Buttons\Signout.png" />
     <None Remove="Resources\Buttons\Stop.png" />
+    <None Remove="Resources\Buttons\TypeText_1.png" />
     <None Remove="Resources\Buttons\Undo.png" />
+    <None Remove="Resources\Buttons\URL.png" />
+    <None Remove="Resources\Buttons\Zeniverse_ikon.png" />
+    <None Remove="Resources\Buttons\zeniverse_ikon_84Z_icon.ico" />
     <None Remove="Resources\close.png" />
     <None Remove="Resources\designer\addentitypermission.png" />
     <None Remove="Resources\designer\breakpoint.png" />
@@ -330,6 +340,16 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Buttons\Clear.png" />
+    <Resource Include="Resources\Buttons\CloseWebdriver.png" />
+    <Resource Include="Resources\Buttons\Mouse.png" />
+    <Resource Include="Resources\Buttons\OpenBrowser.png" />
+    <Resource Include="Resources\Buttons\OpenFirefox.png" />
+    <Resource Include="Resources\Buttons\OpenIE.png" />
+    <Resource Include="Resources\Buttons\TypeText_1.png" />
+    <Resource Include="Resources\Buttons\URL.png" />
+    <Resource Include="Resources\Buttons\Zeniverse_ikon.png" />
+    <Resource Include="Resources\Buttons\zeniverse_ikon_84Z_icon.ico" />
     <Resource Include="Resources\close.png" />
     <Resource Include="Resources\open.png" />
     <Resource Include="Resources\open_flow.ico" />
@@ -386,9 +406,6 @@
     <EmbeddedResource Include="Resources\toolbox\writefile.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Main.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

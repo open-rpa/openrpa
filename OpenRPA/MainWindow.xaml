@@ -150,7 +150,6 @@
                     <RibbonButton Label="Packages" LargeImageSource="/OpenRPA;component/Resources/Buttons/Package.png" 
                                   Command="{Binding Data.ManagePackagesCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                 </RibbonGroup>
-                
             </RibbonTab>
             <RibbonTab Header="Settings">
                 <RibbonGroup Header="Cancel key">
@@ -167,6 +166,13 @@
                         </ribbon:RibbonComboBox>
                         <RibbonButton Content="Download" Click="TesseractLang_Click"></RibbonButton>
                     </StackPanel>
+
+                </RibbonGroup>
+                <RibbonGroup Header="Browser addons">
+                    <RibbonButton Label="Chrome" LargeImageSource="/OpenRPA;component/Resources/Buttons/OpenChrome.png" 
+                                  Command="{Binding Data.OpenChromePageCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                    <RibbonButton Label="Firefox" LargeImageSource="/OpenRPA;component/Resources/Buttons/OpenFirefox.png" 
+                                  Command="{Binding Data.OpenFirefoxPageCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
 
                 </RibbonGroup>
             </RibbonTab>

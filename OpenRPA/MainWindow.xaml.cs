@@ -609,6 +609,8 @@ namespace OpenRPA
         public ICommand PermissionsCommand { get { return new RelayCommand<object>(onPermissions, canPermissions); } }
         public ICommand linkOpenFlowCommand { get { return new RelayCommand<object>(onlinkOpenFlow, canlinkOpenFlow); } }
         public ICommand linkNodeREDCommand { get { return new RelayCommand<object>(onlinkNodeRED, canlinkNodeRED); } }
+        public ICommand OpenChromePageCommand { get { return new RelayCommand<object>(onOpenChromePage, canAllways); } }
+        public ICommand OpenFirefoxPageCommand { get { return new RelayCommand<object>(onOpenFirefoxPageCommand, canAllways); } }
         private bool canPermissions(object _item)
         {
             if (!isConnected) return false;
@@ -1454,6 +1456,18 @@ namespace OpenRPA
             InputDriver.Instance.OnKeyDown -= OnKeyDown;
             InputDriver.Instance.OnKeyUp -= OnKeyUp;
             GenericTools.restore(GenericTools.mainWindow);
+        }
+        private bool canAllways(object _item)
+        {
+            return true;
+        }
+        private void onOpenChromePage(object _item)
+        {
+            System.Diagnostics.Process.Start("chrome.exe", "https://chrome.google.com/webstore/detail/openrpa/hpnihnhlcnfejboocnckgchjdofeaphe");
+        }
+        private void onOpenFirefoxPageCommand(object _item)
+        {
+            System.Diagnostics.Process.Start("firefox.exe", "https://addons.mozilla.org/en-US/firefox/addon/openrpa/");
         }
         private void OnKeyDown(Input.InputEventArgs e)
         {

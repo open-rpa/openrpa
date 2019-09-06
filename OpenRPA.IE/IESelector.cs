@@ -59,8 +59,25 @@ namespace OpenRPA.IE
             pathToRoot.Reverse();
             if (anchor != null)
             {
+                // var hasIframe = anchor.Where(x => x.Properties.Where(y=>y.Name=="tagName" && y.Value== "IFRAME").Count()>0).Count() > 0;
+                var iframeidx = 0;
+                for (var i = 0; i < anchor.Count(); i++)
+                {
+                    if(anchor[i].Properties.Where(y => y.Name == "tagName" && y.Value == "IFRAME").Count() > 0)
+                    {
+                        iframeidx = i;
+                        break;
+                    }
+                }
                 var anchorlist = anchor.Where(x => x.Enabled && x.Selector == null).ToList();
-                for (var i = 0; i < anchorlist.Count(); i++)
+                //if (iframeidx>-1)
+                //{
+                //    for (var i = 0; i < iframeidx; i++)
+                //    {
+                //        pathToRoot.Remove(pathToRoot[0]);
+                //    }
+                //}
+                for (var i = (iframeidx ); i < anchorlist.Count(); i++)
                 {
                     //if (((IESelectorItem)anchorlist[i]).Match(pathToRoot[0]))
                     if (IESelectorItem.Match(anchorlist[i], pathToRoot[0]))
@@ -117,12 +134,9 @@ namespace OpenRPA.IE
                 //X -= rect2.left;
                 //Y -= rect2.top;
                 var frame = baseelement as MSHTML.HTMLFrameElement;
-
                 var fffff = frame.contentWindow;
                 MSHTML.IHTMLWindow2 window = frame.contentWindow;
                 MSHTML.IHTMLElement el2 = null;
-
-                
                 foreach (string frameTag in frameTags)
                 {
                     MSHTML.IHTMLElementCollection framesCollection = document.getElementsByTagName(frameTag);

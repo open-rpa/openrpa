@@ -166,7 +166,7 @@ namespace OpenRPA.IE
             frame = Document.elementFromPoint(X - elementx, Y - elementy);
             frameoffsetx = 0;
             frameoffsety = 0;
-            bool isFrame = (frame.tagName == "FRAME");
+            bool isFrame = (frame.tagName == "FRAME" || frame.tagName == "IFRAME");
             while (isFrame)
             {
                 var web = frame as SHDocVw.IWebBrowser2;
@@ -186,7 +186,7 @@ namespace OpenRPA.IE
                 Log.Debug("html: " + html);
                 Log.Debug("-----");
 
-                isFrame = (frame.tagName == "FRAME");
+                isFrame = (frame.tagName == "FRAME" || frame.tagName == "IFRAME");
             }
             return frame as MSHTML.IHTMLElement;
 

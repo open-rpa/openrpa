@@ -55,15 +55,15 @@ namespace OpenRPA.NM
             sw.Start();
             do
             {
-                elements = NMSelector.GetElementsWithuiSelector(sel, from);
+                elements = NMSelector.GetElementsWithuiSelector(sel, from, maxresults);
             } while (elements .Count() == 0 && sw.Elapsed < timeout);
             if (elements.Count() > maxresults) elements = elements.Take(maxresults).ToArray();
             context.SetValue(Elements, elements);
             IEnumerator<NMElement> _enum = elements.ToList().GetEnumerator();
-            context.SetValue(_elements, _enum);
             bool more = _enum.MoveNext();
             if (more)
             {
+                if(elements.Count() > 1) context.SetValue(_elements, _enum);
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
             else if (elements.Length < minresults)
@@ -74,6 +74,7 @@ namespace OpenRPA.NM
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
             IEnumerator<NMElement> _enum = _elements.Get(context);
+            if (_enum == null) return;
             bool more = _enum.MoveNext();
             if (more)
             {

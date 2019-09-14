@@ -7,8 +7,9 @@
     <Description>Activities and record plugin for handling Internet Explorer</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.10</Version>
-    <PackageReleaseNotes>1.0.10 iframe support fixed
+    <Version>1.0.11</Version>
+    <PackageReleaseNotes>1.0.11 update interfaces reference
+1.0.10 iframe support fixed
 1.0.9 fix iframe issue part 1, selecting/recording now works, but modifying selectors still have issues
 1.0.8 Catch recording errors on input
 1.0.7 update interfaces reference</PackageReleaseNotes>

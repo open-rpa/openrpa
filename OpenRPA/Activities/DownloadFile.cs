@@ -15,24 +15,36 @@ namespace OpenRPA.Activities
     [System.ComponentModel.Designer(typeof(DownloadFileDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.downloadfile.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
-    public class DownloadFile : AsyncTaskCodeActivity<int>
+    public class DownloadFile : AsyncTaskCodeActivity
     {
-        [RequiredArgument,OverloadGroupAttribute("Filename")]
-        public InArgument<string> Filename { get; set; }
-        [RequiredArgument,OverloadGroupAttribute("Id")]
-        public InArgument<string> _id { get; set; }
+        [RequiredArgument]
+        public InArgument<string> URL { get; set; }
         [RequiredArgument]
         public InArgument<string> LocalPath { get; set; }
-        [RequiredArgument]
-        public InArgument<bool> IgnorePath { get; set; } = false;
-        protected async override Task<int> ExecuteAsync(AsyncCodeActivityContext context)
+        public InArgument<bool> Overwrite { get; set; } = false;
+        protected override void AfterExecute(AsyncCodeActivityContext context, object result)
         {
-            var filename = Filename.Get(context);
-            var id = _id.Get(context);
+        }
+        //static string GetFileNameFromUrl(string url)
+        //{
+        //    Uri uri;
+        //    if (!Uri.TryCreate(url, UriKind.Absolute, out uri))
+        //        uri = new Uri(url);
+        //    return System.IO.Path.GetFileName(uri.LocalPath);
+        //}
+        protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
+        {
+            var url = URL.Get(context);
             var filepath = LocalPath.Get(context);
-            var ignorepath = IgnorePath.Get(context);
-            await global.webSocketClient.DownloadFileAndSave(filename, id, filepath, ignorepath);
-            return 13;
+            var overwrite = Overwrite.Get(context);
+            filepath = Environment.ExpandEnvironmentVariables(filepath);
+            // if(string.IsNullOrEmpty(filename)) filename = "temp."
+            if(System.IO.File.Exists(filepath) && ! overwrite ) return 42;
+            using (var client = new System.Net.WebClient())
+            {
+                await client.DownloadFileTaskAsync(new Uri(url), filepath);
+            }
+            return 42;
         }
     }
 }

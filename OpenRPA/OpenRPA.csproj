@@ -9,8 +9,11 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.16</Version>
-    <PackageReleaseNotes>1.0.16 Add links to chrome and firefox addon
+    <Version>1.0.19</Version>
+    <PackageReleaseNotes>1.0.19 DownloadFile/UploadeFile renamed GetFile/Save file. Added DownloadFole, Added a Snippets liberary with examples
+1.0.18 Remove "bad" ParallelForEach, use ParallelForEachWithBody
+1.0.17 Allow naming projects again
+1.0.16 Add links to chrome and firefox addon
 1.0.15 Improve upload file
 1.0.14 Fix bug when setting designer readonly when robot is starting
 1.0.13 Improve startup of robot and show more information in title bar while loading
@@ -49,6 +52,7 @@
     <None Remove="Activities\ForEachDataRowDesigner.xaml" />
     <None Remove="Activities\GetCredentialsDesigner.xaml" />
     <None Remove="Activities\GetElementDesigner.xaml" />
+    <None Remove="Activities\GetFileDesigner.xaml" />
     <None Remove="Activities\GrantPermissionDesigner.xaml" />
     <None Remove="Activities\HighlightElementDesigner.xaml" />
     <None Remove="Activities\InsertClipboardDesigner.xaml" />
@@ -59,9 +63,9 @@
     <None Remove="Activities\OpenApplicationDesigner.xaml" />
     <None Remove="Activities\QueryDesigner.xaml" />
     <None Remove="Activities\RemovePermissionDesigner.xaml" />
+    <None Remove="Activities\SaveFileDesigner.xaml" />
     <None Remove="Activities\SetCredentialsDesigner.xaml" />
     <None Remove="Activities\TypeTextDesigner.xaml" />
-    <None Remove="Activities\UploadFileDesigner.xaml" />
     <None Remove="App.xaml" />
     <None Remove="Images\PinDocMenu_Black.png" />
     <None Remove="MainWindow.xaml" />
@@ -246,6 +250,7 @@
     <None Remove="Resources\toolbox\typetext.png" />
     <None Remove="Resources\toolbox\uiscraping.png" />
     <None Remove="Resources\toolbox\webscraping.png" />
+    <None Remove="Resources\toolbox\workflow.png" />
     <None Remove="Resources\toolbox\writeexcel.png" />
     <None Remove="Resources\toolbox\writefile.png" />
     <None Remove="Views\AvalonDockView.xaml" />
@@ -261,6 +266,7 @@
     <None Remove="Views\SampleDockWindowView.xaml" />
     <None Remove="Views\selectUserWindow.xaml" />
     <None Remove="Views\showVariables.xaml" />
+    <None Remove="Views\Snippets.xaml" />
     <None Remove="Views\WFDesigner.xaml" />
     <None Remove="Views\wfToolbox.xaml" />
   </ItemGroup>
@@ -284,6 +290,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\DownloadFileDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\GetFileDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\ForEachDataRowDesigner.xaml">
@@ -332,10 +341,13 @@
     <Page Include="Activities\TypeTextDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Activities\UploadFileDesigner.xaml">
+    <Page Include="Activities\SaveFileDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Snippets.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -402,6 +414,7 @@
     <EmbeddedResource Include="Resources\toolbox\typetext.png" />
     <EmbeddedResource Include="Resources\toolbox\uiscraping.png" />
     <EmbeddedResource Include="Resources\toolbox\webscraping.png" />
+    <EmbeddedResource Include="Resources\toolbox\workflow.png" />
     <EmbeddedResource Include="Resources\toolbox\writeexcel.png" />
     <EmbeddedResource Include="Resources\toolbox\writefile.png" />
   </ItemGroup>
@@ -468,6 +481,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Activities" />

@@ -13,9 +13,9 @@ using System.Windows.Media.Imaging;
 
 namespace OpenRPA.Activities
 {
-    public partial class DownloadFileDesigner : INotifyPropertyChanged
+    public partial class GetFileDesigner : INotifyPropertyChanged
     {
-        public DownloadFileDesigner()
+        public GetFileDesigner()
         {
             InitializeComponent();
         }
@@ -27,15 +27,14 @@ namespace OpenRPA.Activities
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            // var openFileDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            var openFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            var openFileDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             //openFileDialog1.Filter = "Binary Excel files (2.0-2003 format)|*.xls|OpenXml Excel files (2007 format)|*.xlsx|Comma-separated values (csv format)|*.csv|All files (*.*)|*.*";
             // openFileDialog1.Filter = "All files (*.*)|*.*";
             if (openFileDialog1.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
             ModelItem.Properties["LocalPath"].SetValue(
                 new System.Activities.InArgument<string>()
                 {
-                    Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<string>("\"" + openFileDialog1.FileName.replaceEnvironmentVariable() + "\"")
+                    Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<string>("\"" + openFileDialog1.SelectedPath.replaceEnvironmentVariable() + "\"")
                 });
 
         }

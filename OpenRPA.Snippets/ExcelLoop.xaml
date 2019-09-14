@@ -1,0 +1,109 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="DataOfficeTest" mva:VisualBasic.Settings="{x:Null}" sap2010:WorkflowViewState.IdRef="DataTest_1"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:moie="clr-namespace:Microsoft.Office.Interop.Excel;assembly=Microsoft.Office.Interop.Excel"
+ xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:oa="clr-namespace:OpenRPA.Activities;assembly=OpenRPA"
+ xmlns:ooa="clr-namespace:OpenRPA.Office.Activities;assembly=OpenRPA.Office"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:sd="clr-namespace:System.Data;assembly=System.Data"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>OpenRPA</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>OpenRPA.Office</x:String>
+      <x:String>OpenRPA.Windows</x:String>
+      <x:String>System.Activities</x:String>
+      <x:String>Microsoft.Office.Interop.Excel</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>OpenRPA</AssemblyReference>
+      <AssemblyReference>OpenRPA.Interfaces</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>OpenRPA.NM</AssemblyReference>
+      <AssemblyReference>OpenRPA.Office</AssemblyReference>
+      <AssemblyReference>OpenRPA.Windows</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Net.WebSockets.Client.Managed</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.Office.Interop.Excel</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="Excel Loop" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="sd:DataTable" Name="dt" />
+      <Variable x:TypeArguments="x:Int32" Default="2" Name="index" />
+      <Variable x:TypeArguments="x:String" Name="sheet" />
+      <Variable x:TypeArguments="moie:Workbook" Name="book" />
+    </Sequence.Variables>
+    <oa:DownloadFile sap2010:WorkflowViewState.IdRef="DownloadFile_2" LocalPath="[&quot;%USERPROFILE%\Documents\Financial Sample.xlsx&quot;]" Overwrite="False" URL="https://go.microsoft.com/fwlink/?LinkID=521962" />
+    <ooa:ReadRange Application="{x:Null}" Cells="{x:Null}" ReadPassword="{x:Null}" WritePassword="{x:Null}" lastUsedColumn="{x:Null}" lastUsedRow="{x:Null}" ClearFormats="False" DataTable="[dt]" Filename="%USERPROFILE%\Documents\Financial Sample.xlsx" sap2010:WorkflowViewState.IdRef="ReadRange_1" UseHeaderRow="False" Visible="True" Workbook="[book]" Worksheet="[sheet]" />
+    <oa:ForEachDataRow DataView="{x:Null}" DataTable="[dt]" sap2010:WorkflowViewState.IdRef="ForEachDataRow_1">
+      <ActivityAction x:TypeArguments="sd:DataRowView">
+        <ActivityAction.Argument>
+          <DelegateInArgument x:TypeArguments="sd:DataRowView" Name="item" />
+        </ActivityAction.Argument>
+        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_2">
+          <ooa:WriteCell x:TypeArguments="x:String" Application="{x:Null}" Formula="{x:Null}" Cell="[&quot;B&quot; + index.ToString()]" Filename="%USERPROFILE%\Documents\Financial Sample.xlsx" sap2010:WorkflowViewState.IdRef="WriteCell`1_1" Value="[index.tostring()]" Visible="True" Workbook="[book]" Worksheet="[sheet]" />
+          <Assign sap2010:WorkflowViewState.IdRef="Assign_1">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:Int32">[index]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:Int32">[index + 1]</InArgument>
+            </Assign.Value>
+          </Assign>
+        </Sequence>
+      </ActivityAction>
+    </oa:ForEachDataRow>
+    <sads:DebugSymbol.Symbol>dw1DOlxFbXB0eS54YW1sAA==</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="DownloadFile_2" sap:VirtualizedContainerService.HintSize="288,85">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ReadRange_1" sap:VirtualizedContainerService.HintSize="288,70" />
+      <sap2010:ViewStateData Id="WriteCell`1_1" sap:VirtualizedContainerService.HintSize="252,89" />
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="252,60" />
+      <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="274,313">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEachDataRow_1" sap:VirtualizedContainerService.HintSize="288,389" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="310,748">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="DataTest_1" sap:VirtualizedContainerService.HintSize="350,868" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

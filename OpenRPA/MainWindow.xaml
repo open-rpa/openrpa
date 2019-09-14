@@ -53,42 +53,6 @@
 
                 </RibbonApplicationMenu>
             </Ribbon.ApplicationMenu>
-
-            <!-- 
-            <Ribbon.ApplicationMenu>
-                <RibbonApplicationMenu Visibility="Collapsed">
-                </RibbonApplicationMenu>
-            </Ribbon.ApplicationMenu>
-            -->
-            <!-- 
-
-            <Ribbon.ApplicationMenu>
-                <RibbonApplicationMenu SmallImageSource="/OpenRPA;component/Resources/Buttons/Export.png">
-
-                    <RibbonApplicationMenu.AuxiliaryPaneContent>
-                        <RibbonGallery ScrollViewer.VerticalScrollBarVisibility="Auto">
-                            <RibbonGalleryCategory MaxColumnCount="1">
-                                <RibbonGalleryItem x:Name="GalleryItem1" Content="Application menu content" 
-                                MouseOverBackground="Transparent"
-                                MouseOverBorderBrush="Transparent"
-                                CheckedBackground="Transparent"
-                                CheckedBorderBrush="Transparent"
-                                               />
-                                <RibbonGalleryItem>
-                                    <Hyperlink x:Name="hl1" >
-                                        <Run Text="http://www.bing.com"/>
-                                    </Hyperlink>
-                                </RibbonGalleryItem>
-                            </RibbonGalleryCategory>
-                        </RibbonGallery>
-                    </RibbonApplicationMenu.AuxiliaryPaneContent>
-                    <RibbonApplicationMenuItem x:Name="menuItem1" Header="Add" ImageSource="/OpenRPA;component/Resources/Buttons/Export.png" />
-                    <RibbonApplicationMenuItem x:Name="menuItem2" Header="Settings" ImageSource="/OpenRPA;component/Resources/Buttons/Export.png"/>
-
-                </RibbonApplicationMenu>
-            </Ribbon.ApplicationMenu>
-                        -->
-
             <RibbonTab Header="General">
                 <RibbonGroup Header="Files">
                     <RibbonButton Label="New" LargeImageSource="/OpenRPA;component/Resources/Buttons/New.png" 
@@ -183,18 +147,6 @@
                     </StackPanel>
                 </RibbonGroup>
             </RibbonTab>-->
-            <!-- 
-            <RibbonTab x:Name="rbnTab2" Header="Tab2">
-                <RibbonGroup x:Name="rbnGr3" Header="Other Group">
-                    <RibbonButton x:Name="btnRibbon5" Label="Play" LargeImageSource="/OpenRPA;component/Resources/Buttons/Export.png" />
-                    <RibbonButton x:Name="btnRibbon6" Label="List" LargeImageSource="/OpenRPA;component/Resources/Buttons/Export.png" />
-                </RibbonGroup>
-                <RibbonGroup x:Name="rbnGr4" Header="What a group">
-                    <RibbonButton x:Name="btnRibbon7" Label="Sleep" LargeImageSource="/OpenRPA;component/Resources/Buttons/Export.png" />
-                    <RibbonButton x:Name="btnRibbon8" Label="Add" LargeImageSource="/OpenRPA;component/Resources/Buttons/Export.png" />
-                </RibbonGroup>
-            </RibbonTab>
-            -->
         </Ribbon>
 
 
@@ -224,7 +176,12 @@
                 <avalonDock:LayoutRoot.LeftSide>
                     <avalonDock:LayoutAnchorSide>
                         <avalonDock:LayoutAnchorGroup >
-                            <avalonDock:LayoutAnchorable  
+                            <avalonDock:LayoutAnchorable x:Name="dockSnippets" 
+                                CanClose="False" CanAutoHide="True" CanHide="False" Title="Snippets" ContentId="Snippets" AutoHideWidth="250"
+                                >
+                                <ContentControl Content="{Binding Snippets}" Padding="0" Margin="0,0,0,0" />
+                            </avalonDock:LayoutAnchorable>
+                            <avalonDock:LayoutAnchorable x:Name="dockToolbox"  
                                 CanClose="False" CanAutoHide="True" CanHide="False" Title="Toolbox" ContentId="Toolbox" AutoHideWidth="250"
                                 >
                                 <ContentControl Content="{Binding Toolbox}" Padding="0" Margin="0,0,0,0" />
@@ -265,34 +222,7 @@
                         </avalonDock:LayoutAnchorGroup>
                     </avalonDock:LayoutAnchorSide>
                 </avalonDock:LayoutRoot.RightSide>
-                <!-- 
-                <avalonDock:LayoutPanel>
-                    <avalonDock:LayoutAnchorablePaneGroup DockWidth="100">
-                        <avalonDock:LayoutAnchorablePane>
-                            <avalonDock:LayoutAnchorable Title="text1" ContentId="text1">
-                                <TextBox  TextWrapping="Wrap" AcceptsReturn="True"></TextBox>
-                            </avalonDock:LayoutAnchorable>
-
-                            <avalonDock:LayoutAnchorable Title="text2" ContentId="text2">
-                                <TextBox  TextWrapping="Wrap" AcceptsReturn="True"></TextBox>
-                            </avalonDock:LayoutAnchorable>
-                        </avalonDock:LayoutAnchorablePane>
-                    </avalonDock:LayoutAnchorablePaneGroup>
-                    <avalonDock:LayoutDocumentPane x:Name="dockpane">
-                        <avalonDock:LayoutDocument Title="document1" ContentId="doc1">
-                            <TextBox AcceptsReturn="True" TextWrapping="Wrap"></TextBox>
-                        </avalonDock:LayoutDocument>
-
-                        <avalonDock:LayoutAnchorable Title="document2" ContentId="doc1">
-                            <TextBox AcceptsReturn="True" TextWrapping="Wrap"></TextBox>
-                        </avalonDock:LayoutAnchorable>
-                    </avalonDock:LayoutDocumentPane>
-
-                </avalonDock:LayoutPanel>
-                            -->
-
             </avalonDock:LayoutRoot>
-
         </avalonDock:DockingManager>
 
 

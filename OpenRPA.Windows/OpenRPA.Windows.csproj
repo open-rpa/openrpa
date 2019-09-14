@@ -7,8 +7,9 @@
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
-    <Version>1.0.3</Version>
-    <PackageReleaseNotes>1.0.3 Catch recording errors on input
+    <Version>1.0.4</Version>
+    <PackageReleaseNotes>1.0.4 update interfaces reference
+1.0.3 Catch recording errors on input
 1.0.2 update interfaces reference</PackageReleaseNotes>
     <Description>Recorder plugin and Activities for interacting with Windows Elements</Description>
     <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA/Resources/open_rpa128.png</PackageIconUrl>

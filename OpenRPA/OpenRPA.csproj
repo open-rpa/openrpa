@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.19</Version>
-    <PackageReleaseNotes>1.0.19 DownloadFile/UploadeFile renamed GetFile/Save file. Added DownloadFole, Added a Snippets liberary with examples
+    <Version>1.0.20</Version>
+    <PackageReleaseNotes>1.0.20 hitfixing "missing snippets" error
+1.0.19 DownloadFile/UploadeFile renamed GetFile/Save file. Added DownloadFole, Added a Snippets liberary with examples
 1.0.18 Remove "bad" ParallelForEach, use ParallelForEachWithBody
 1.0.17 Allow naming projects again
 1.0.16 Add links to chrome and firefox addon

@@ -391,7 +391,7 @@ namespace OpenRPA.Updater
         {
             var p = new System.Diagnostics.Process();
             p.StartInfo.FileName = "cmd.exe";
-            p.StartInfo.Arguments = "/c " + command;
+            p.StartInfo.Arguments = "/c \"" + command + "\"";
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.WorkingDirectory = WorkingDirectory;
             p.StartInfo.CreateNoWindow = true;

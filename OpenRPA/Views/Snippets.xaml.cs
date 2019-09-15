@@ -29,10 +29,9 @@ namespace OpenRPA.Views
             toolborder.Child = InitializeSnippets();
         }
 
+        public   static DynamicActivityGenerator dag = new DynamicActivityGenerator("Snippets");
         public ToolboxControl InitializeSnippets()
         {
-
-            var g = new DynamicActivityGenerator("Snippets");
             try
             {
                 var Toolbox = new ToolboxControl();
@@ -43,7 +42,7 @@ namespace OpenRPA.Views
                     {
                         if (!cs.ContainsKey(s.Category)) cs.Add(s.Category, new ToolboxCategory(s.Category));
                         ToolboxCategory cat = cs[s.Category];
-                        var t = g.AppendSubWorkflowTemplate(s.Name, s.Xaml);
+                        var t = dag.AppendSubWorkflowTemplate(s.Name, s.Xaml);
                         cat.Add(new ToolboxItemWrapper(t, s.Name));
                     }
                     catch (Exception ex)
@@ -51,7 +50,17 @@ namespace OpenRPA.Views
                         Log.Error(ex.ToString());
                     }
                 }
-                foreach(var c in cs) Toolbox.Categories.Add(c.Value);
+                foreach (var c in cs)
+                {
+                    try
+                    {
+                        Toolbox.Categories.Add(c.Value);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                }
 
                 return Toolbox;
             }

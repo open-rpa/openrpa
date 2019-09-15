@@ -33,6 +33,16 @@
     <None Remove="Resources\toolbox\form16.png" />
     <None Remove="Resources\toolbox\form30.png" />
     <None Remove="Resources\toolbox\prompt.png" />
+    <None Remove="Snippets\ImageForm.xaml" />
+    <None Remove="Snippets\SimpleForm.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Snippets\ImageForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
+    <Resource Include="Snippets\SimpleForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\toolbox\closeworkbook.png" />

@@ -7,20 +7,15 @@
     <Product>OpenRPA</Product>
     <Authors>OpenRPA</Authors>
     <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA/Resources/open_rpa128.png</PackageIconUrl>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="ExcelLoop.xaml" />
-    <None Remove="GoogleSearch.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="GoogleSearch.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Resource>
     <Resource Include="ExcelLoop.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Resource>

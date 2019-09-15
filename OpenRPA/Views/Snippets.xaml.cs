@@ -39,11 +39,17 @@ namespace OpenRPA.Views
                 var cs = new Dictionary<string, ToolboxCategory>();
                 foreach(var s in Plugins.Snippets)
                 {
-
-                    if (!cs.ContainsKey(s.Category)) cs.Add(s.Category, new ToolboxCategory(s.Category));
-                    ToolboxCategory cat = cs[s.Category];
-                    var t = g.AppendSubWorkflowTemplate(s.Name, s.Xaml);
-                    cat.Add(new ToolboxItemWrapper(t, s.Name));
+                    try
+                    {
+                        if (!cs.ContainsKey(s.Category)) cs.Add(s.Category, new ToolboxCategory(s.Category));
+                        ToolboxCategory cat = cs[s.Category];
+                        var t = g.AppendSubWorkflowTemplate(s.Name, s.Xaml);
+                        cat.Add(new ToolboxItemWrapper(t, s.Name));
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
                 }
                 foreach(var c in cs) Toolbox.Categories.Add(c.Value);
 

@@ -18,7 +18,7 @@ namespace OpenRPA.IE
         public GetElementDesigner()
         {
             InitializeComponent();
-            HighlightImage = Extensions.GetImageSourceFromResource("search.png");
+            HighlightImage = IEExtensions.GetImageSourceFromResource("search.png");
         }
         public event PropertyChangedEventHandler PropertyChanged;
         public BitmapFrame HighlightImage { get; set; }
@@ -91,7 +91,7 @@ namespace OpenRPA.IE
                 loadFrom = loadFrom.Parent;
             }
 
-            HighlightImage = Extensions.GetImageSourceFromResource(".x.png");
+            HighlightImage = IEExtensions.GetImageSourceFromResource(".x.png");
             NotifyPropertyChanged("HighlightImage");
 
             string SelectorString = ModelItem.GetValue<string>("Selector");
@@ -116,7 +116,7 @@ namespace OpenRPA.IE
 
             if (elements.Count() > 0)
             {
-                HighlightImage = Extensions.GetImageSourceFromResource("check.png");
+                HighlightImage = IEExtensions.GetImageSourceFromResource("check.png");
                 NotifyPropertyChanged("HighlightImage");
             }
             foreach (var ele in elements) ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));

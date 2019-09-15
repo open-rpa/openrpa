@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Interfaces
 {
-    public interface ISnippet : System.Activities.Presentation.IActivityTemplateFactory
+    public interface ISnippet
     {
         string Name { get; }
         string Category { get; }

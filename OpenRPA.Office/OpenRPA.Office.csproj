@@ -41,6 +41,8 @@
     <None Remove="Resources\toolbox\outlook.png" />
     <None Remove="Resources\toolbox\readexcel.png" />
     <None Remove="Resources\toolbox\writeexcel.png" />
+    <None Remove="Snippets\ExcelLoop.xaml" />
+    <None Remove="Snippets\ExcelPowerLoop.xaml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\toolbox\closeworkbook.png" />
@@ -97,6 +99,14 @@
     <Resource Include="Resources\designer\outlook.png" />
     <Resource Include="Resources\designer\readexcel.png" />
     <Resource Include="Resources\designer\writeexcel.png" />
+    <Resource Include="Snippets\ExcelLoop.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
+    <Resource Include="Snippets\ExcelPowerLoop.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
     <EmbeddedResource Include="Resources\toolbox\commentout.png" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">

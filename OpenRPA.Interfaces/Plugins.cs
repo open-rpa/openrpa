@@ -104,8 +104,8 @@ namespace OpenRPA.Interfaces
                 try
                 {
                     IPlugin plugin = (IPlugin)Activator.CreateInstance(type);
-                    // SetStatus("Initialize plugin " + plugin.Name);
                     Log.Information("Initialize plugin " + plugin.Name);
+                    // SetStatus("Initialize plugin " + plugin.Name);
                     plugin.Initialize();
                     recordPlugins.Add(plugin);
                 }

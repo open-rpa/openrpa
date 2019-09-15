@@ -39,9 +39,14 @@
     <None Remove="Resources\search.png" />
     <None Remove="Resources\toolbox\gethtmlelement.png" />
     <None Remove="Resources\x.png" />
+    <None Remove="Snippets\GoogleSearch.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\designer\gethtmlelement.png" />
+    <Resource Include="Snippets\GoogleSearch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\check.png" />

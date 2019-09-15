@@ -1,0 +1,73 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="PowerExcelLoop" mva:VisualBasic.Settings="{x:Null}" sap2010:WorkflowViewState.IdRef="New Workflow12_1"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:ooa="clr-namespace:OpenRPA.Office.Activities;assembly=OpenRPA.Office"
+ xmlns:osa="clr-namespace:OpenRPA.Script.Activities;assembly=OpenRPA.Script"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <TextExpression.NamespacesForImplementation>
+        <sco:Collection x:TypeArguments="x:String">
+            <x:String>System</x:String>
+            <x:String>Microsoft.VisualBasic</x:String>
+            <x:String>System.Xml</x:String>
+            <x:String>OpenRPA</x:String>
+            <x:String>System.Data</x:String>
+            <x:String>System.Linq</x:String>
+            <x:String>OpenRPA.Office</x:String>
+            <x:String>OpenRPA.Windows</x:String>
+        </sco:Collection>
+    </TextExpression.NamespacesForImplementation>
+    <TextExpression.ReferencesForImplementation>
+        <sco:Collection x:TypeArguments="AssemblyReference">
+            <AssemblyReference>mscorlib</AssemblyReference>
+            <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+            <AssemblyReference>System.Xml</AssemblyReference>
+            <AssemblyReference>OpenRPA</AssemblyReference>
+            <AssemblyReference>OpenRPA.Interfaces</AssemblyReference>
+            <AssemblyReference>System.Data</AssemblyReference>
+            <AssemblyReference>System.Core</AssemblyReference>
+            <AssemblyReference>OpenRPA.Office</AssemblyReference>
+            <AssemblyReference>OpenRPA.Script</AssemblyReference>
+            <AssemblyReference>OpenRPA.Windows</AssemblyReference>
+        </sco:Collection>
+    </TextExpression.ReferencesForImplementation>
+    <Sequence DisplayName="PowerExcelLoop" sap2010:WorkflowViewState.IdRef="Sequence_1">
+        <osa:InvokeCode PipelineOutput="{x:Null}" Code="var filename = @&quot;C:\temp\test.xlsx&quot;;&#xA;&#xA;Microsoft.Office.Interop.Excel.Application excelApp = null;&#xA;try&#xA;{&#xA;   excelApp = (Microsoft.Office.Interop.Excel.Application)System.Runtime.InteropServices.Marshal.GetActiveObject(&quot;Excel.Application&quot;);&#xA;}&#xA;catch (System.Runtime.InteropServices.COMException ex)&#xA;{&#xA;   excelApp =  new Microsoft.Office.Interop.Excel.Application();&#xA;}&#xA;&#xA;excelApp.Visible = true;&#xA;dynamic workbook = null;&#xA;foreach (Microsoft.Office.Interop.Excel.Workbook w in excelApp.Workbooks)&#xA;{&#xA; Console.WriteLine(w.FullName);&#xA;    if (w.FullName == filename)&#xA;    {&#xA;        workbook = w;&#xA;        break;&#xA;    }&#xA;}&#xA;if (workbook == null) workbook = excelApp.Workbooks.Open(filename);&#xA;var worksheet = workbook.ActiveSheet;&#xA;&#xA;Console.WriteLine(&quot;Get last used&quot;);&#xA;var last = worksheet.Cells.SpecialCells(Microsoft.Office.Interop.Excel.XlCellType.xlCellTypeLastCell, Type.Missing);&#xA;var range = worksheet.Range(&quot;A1&quot;, last);&#xA;&#xA;int lastUsedRow = last.Row;&#xA;int lastUsedColumn = last.Column;&#xA;Console.WriteLine(&quot;lastUsedRow: &quot; + lastUsedRow);&#xA;Console.WriteLine(&quot;lastUsedColumn: &quot; + lastUsedColumn);&#xA;&#xA;var files = System.IO.Directory.GetFiles(@&quot;C:\Windows\Microsoft.NET\Framework\v4.0.30319&quot;);&#xA;int i = lastUsedRow ;&#xA;Console.WriteLine(&quot;Start adding&quot;);&#xA;foreach(var f in files) {&#xA; i++;&#xA; var range2 = worksheet.Range(&quot;a&quot; + i);&#xA; range2.Value2 = f;&#xA;}&#xA;" sap2010:WorkflowViewState.IdRef="InvokeCode_3" Language="C#">
+            <osa:InvokeCode.namespaces>
+                <x:Array Type="x:String">
+                    <x:String>System</x:String>
+                    <x:String>Microsoft.VisualBasic</x:String>
+                    <x:String>System.Xml</x:String>
+                    <x:String>OpenRPA</x:String>
+                    <x:String>System.Data</x:String>
+                    <x:String>System.Linq</x:String>
+                    <x:String>OpenRPA.Java</x:String>
+                    <x:String>OpenRPA.Office</x:String>
+                    <x:String>OpenRPA.Windows</x:String>
+                    <x:String>System.Collections</x:String>
+                </x:Array>
+            </osa:InvokeCode.namespaces>
+        </osa:InvokeCode>
+        <ooa:CloseWorkbook Workbook="{x:Null}" Filename="C:\temp\test.xlsx" sap2010:WorkflowViewState.IdRef="CloseWorkbook_1" SaveChanges="True" />
+        <sads:DebugSymbol.Symbol>dw1DOlxFbXB0eS54YW1sAA==</sads:DebugSymbol.Symbol>
+    </Sequence>
+    <sap2010:WorkflowViewState.ViewStateManager>
+        <sap2010:ViewStateManager>
+            <sap2010:ViewStateData Id="InvokeCode_3" sap:VirtualizedContainerService.HintSize="200,55" />
+            <sap2010:ViewStateData Id="CloseWorkbook_1" sap:VirtualizedContainerService.HintSize="200,89" />
+            <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="222,308">
+                <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+            </sap2010:ViewStateData>
+            <sap2010:ViewStateData Id="New Workflow12_1" sap:VirtualizedContainerService.HintSize="262,388" />
+        </sap2010:ViewStateManager>
+    </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

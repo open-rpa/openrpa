@@ -62,6 +62,13 @@ namespace OpenRPA
         public MainWindow()
         {
             InitializeComponent();
+            try
+            {
+                if (System.IO.File.Exists("Snippets.dll")) System.IO.File.Delete("Snippets.dll");
+            }
+            catch (Exception)
+            {
+            }
             AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
             SetStatus("Initializing events");
             instance = this;

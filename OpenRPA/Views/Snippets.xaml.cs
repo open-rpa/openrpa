@@ -50,6 +50,13 @@ namespace OpenRPA.Views
                         Log.Error(ex.ToString());
                     }
                 }
+                try
+                {
+                    dag.Save();
+                }
+                catch (Exception)
+                {
+                }
                 foreach (var c in cs)
                 {
                     try

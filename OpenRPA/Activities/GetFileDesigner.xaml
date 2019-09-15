@@ -1,4 +1,4 @@
-﻿<sap:ActivityDesigner x:Class="OpenRPA.Activities.UploadFileDesigner"
+﻿<sap:ActivityDesigner x:Class="OpenRPA.Activities.GetFileDesigner"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
@@ -32,11 +32,11 @@
         </DataTemplate>
         <DataTemplate x:Key="Expanded">
             <StackPanel>
-                <TextBlock Text="Filename" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" />
+                <TextBlock Text="LocalPath" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" />
                 <StackPanel Orientation="Horizontal">
                     <sapv:ExpressionTextBox HintText="Hint" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="5"
                                 OwnerActivity="{Binding Path=ModelItem}"
-                                Expression="{Binding Path=ModelItem.Filename, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
+                                Expression="{Binding Path=ModelItem.LocalPath, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
                                 ExpressionType="s:String" HorizontalAlignment="Stretch" />
                     <Button Content="..." Click="Button_Click" Width="40"  />
                 </StackPanel>

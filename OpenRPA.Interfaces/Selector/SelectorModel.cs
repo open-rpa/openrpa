@@ -14,7 +14,6 @@ namespace OpenRPA.Interfaces.Selector
     {
         public string PluginName { get; set; }
         public IPlugin Plugin { get; set; }
-
         private string _json = null;
         public string json
         {
@@ -41,12 +40,9 @@ namespace OpenRPA.Interfaces.Selector
                 OnPropertyChanged("json");
             }
         }
-
         public int maxresult { get; set; }
-
         public bool Highlight { get; set; }
         public BitmapFrame HighlightImage { get; set; }
-
         public void init(treeelement[] treeelements)
         {
             HighlightImage = Extensions.GetImageSourceFromResource("search.png");
@@ -187,7 +183,6 @@ namespace OpenRPA.Interfaces.Selector
             // return (results.Count() > 0);
             return true;
         }
-
         public System.Windows.Input.ICommand SelectCommand { get { return new RelayCommand<treeelement>(onSelect); } }
         private void onSelect(treeelement item)
         {
@@ -201,6 +196,5 @@ namespace OpenRPA.Interfaces.Selector
             });
             // FocusElement(selector);
         }
-
     }
 }

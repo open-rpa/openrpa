@@ -7,8 +7,9 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.8</Version>
-    <PackageReleaseNotes>1.0.8 Catch recording errors on input
+    <Version>1.0.9</Version>
+    <PackageReleaseNotes>1.0.9 update interfaces reference
+1.0.8 Catch recording errors on input
 1.0.7 update interfaces reference
 1.0.6 Remove image duming
 1.0.5 Remove overlaps in result</PackageReleaseNotes>

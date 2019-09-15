@@ -5,10 +5,11 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <Authors>OpenRPA</Authors>
     <Product>OpenRPA</Product>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office</Description>
-    <PackageReleaseNotes>1.0.7 Add SaveChanges to closeworkbook
+    <PackageReleaseNotes>1.0.8 Improved performance in excel activities abit
+1.0.7 Add SaveChanges to closeworkbook
 1.0.6 Catch recording errors on input
 1.0.5 Add save email activity
 1.0.4 update interfaces reference</PackageReleaseNotes>
@@ -40,6 +41,8 @@
     <None Remove="Resources\toolbox\outlook.png" />
     <None Remove="Resources\toolbox\readexcel.png" />
     <None Remove="Resources\toolbox\writeexcel.png" />
+    <None Remove="Snippets\ExcelLoop.xaml" />
+    <None Remove="Snippets\ExcelPowerLoop.xaml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\toolbox\closeworkbook.png" />
@@ -96,6 +99,14 @@
     <Resource Include="Resources\designer\outlook.png" />
     <Resource Include="Resources\designer\readexcel.png" />
     <Resource Include="Resources\designer\writeexcel.png" />
+    <Resource Include="Snippets\ExcelLoop.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
+    <Resource Include="Snippets\ExcelPowerLoop.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
     <EmbeddedResource Include="Resources\toolbox\commentout.png" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">

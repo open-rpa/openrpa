@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
-    <Version>1.0.8</Version>
+    <Version>1.0.9</Version>
     <Authors>OpenRPA</Authors>
     <Product>OpenRPA</Product>
     <Copyright></Copyright>
@@ -9,7 +9,8 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes>1.0.8 Add generic version of AsyncTaskCodeActivity</PackageReleaseNotes>
+    <PackageReleaseNotes>1.0.9 Added a Snippet interface, for addons to offers example snippets.
+1.0.8 Add generic version of AsyncTaskCodeActivity</PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA/Resources/open_rpa128.png</PackageIconUrl>
   </PropertyGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
@@ -79,6 +80,7 @@
     <Reference Include="System.Activities" />
     <Reference Include="System.Activities.Presentation" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Security" />
     <Reference Include="System.Windows.Controls.Ribbon" />

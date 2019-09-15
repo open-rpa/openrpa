@@ -258,7 +258,8 @@ namespace OpenRPA.Views
                     typeof(OpenRPA.Workflow),
                     typeof(OpenRPA.UIElement),
                     typeof(System.Data.DataSet),
-                    typeof(System.Linq.Enumerable)
+                    typeof(System.Linq.Enumerable),
+                    typeof(Microsoft.VisualBasic.Collection)
                     );
                 AddVBNamespaceSettings(ab, extratypes);
 

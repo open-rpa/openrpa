@@ -97,14 +97,12 @@ namespace OpenRPA.Interfaces.Selector
             GenericTools.minimize(this);
             OpenRPA.Input.InputDriver.Instance.onCancel += OnCancel;
         }
-
         private void OnCancel()
         {
             vm.Plugin.Stop();
             OpenRPA.Input.InputDriver.Instance.onCancel -= OnCancel;
             GenericTools.restore(this);
         }
-
         private void Plugin_OnUserAction(IPlugin sender, IRecordEvent e)
         {
             vm.Plugin.Stop();

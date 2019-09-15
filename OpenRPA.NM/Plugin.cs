@@ -198,7 +198,6 @@ namespace OpenRPA.NM
         }
         public bool parseUserAction(ref IRecordEvent e)
         {
-            if (lastElement == null) return false;
             if (e.UIElement == null) return false;
 
             if (e.UIElement.ProcessId < 1) return false;
@@ -215,6 +214,7 @@ namespace OpenRPA.NM
                 System.Windows.MessageBox.Show("You clicked inside Firefix, but it looks like you dont have the OpenRPA plugin installed");
                 return false;
             }
+            if (lastElement == null) return false;
             var selector = new NMSelector(lastElement, null, true, null);
             var a = new GetElement { DisplayName = lastElement.id + " " + lastElement.type + " " + lastElement.Name };
             a.Selector = selector.ToString();

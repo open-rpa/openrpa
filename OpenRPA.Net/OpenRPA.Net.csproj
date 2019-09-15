@@ -6,8 +6,10 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <PackageReleaseNotes>1.0.1 update interfaces reference</PackageReleaseNotes>
-    <Version>1.0.1</Version>
+    <PackageReleaseNotes>1.0.3 update interfaces reference
+1.0.2 Improve upload file
+1.0.1 update interfaces reference</PackageReleaseNotes>
+    <Version>1.0.3</Version>
     <Description>Network helper liberary for OpenRPA, handles network message queues and wraps OpenFlow's websocket protocol.</Description>
     <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA/Resources/open_rpa128.png</PackageIconUrl>
   </PropertyGroup>

@@ -23,11 +23,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Interfaces", "OpenR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Java", "OpenRPA.Java\OpenRPA.Java.csproj", "{89445C63-61F7-4664-A19E-E83488C9C28A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.JavaBridge", "OpenRPA.JavaBridge\OpenRPA.JavaBridge.csproj", "{5EE14A60-E944-4A66-BC06-20EF6C6AF704}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.JavaBridge", "OpenRPA.JavaBridge\OpenRPA.JavaBridge.csproj", "{5EE14A60-E944-4A66-BC06-20EF6C6AF704}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.NamedPipeWrapper", "OpenRPA.NamedPipeWrapper\OpenRPA.NamedPipeWrapper.csproj", "{9CBA778A-7C02-46E5-9317-BDCA2B8D1EB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.NativeMessagingHost", "OpenRPA.NativeMessagingHost\OpenRPA.NativeMessagingHost.csproj", "{2E322CC8-173F-4806-A450-3DBE05430C5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.NativeMessagingHost", "OpenRPA.NativeMessagingHost\OpenRPA.NativeMessagingHost.csproj", "{2E322CC8-173F-4806-A450-3DBE05430C5A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.NM", "OpenRPA.NM\OpenRPA.NM.csproj", "{6ACBA332-838A-4BAD-ABAE-B50BCB069879}"
 EndProject
@@ -37,9 +37,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Script", "OpenRPA.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Updater", "OpenRPA.Updater\OpenRPA.Updater.csproj", "{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsAccessBridgeInterop", "WindowsAccessBridgeInterop\WindowsAccessBridgeInterop.csproj", "{4B5DE0E1-2F0A-426D-BB12-BECB0F6F8B51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindowsAccessBridgeInterop", "WindowsAccessBridgeInterop\WindowsAccessBridgeInterop.csproj", "{4B5DE0E1-2F0A-426D-BB12-BECB0F6F8B51}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA", "OpenRPA\OpenRPA.csproj", "{E6F0AB4D-6926-41AE-AD25-2DDA26D9642E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.Snippets", "OpenRPA.Snippets\OpenRPA.Snippets.csproj", "{6DEA39AB-6737-4197-BD76-02AC4AFEE1C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -123,6 +125,10 @@ Global
 		{E6F0AB4D-6926-41AE-AD25-2DDA26D9642E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6F0AB4D-6926-41AE-AD25-2DDA26D9642E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6F0AB4D-6926-41AE-AD25-2DDA26D9642E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DEA39AB-6737-4197-BD76-02AC4AFEE1C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DEA39AB-6737-4197-BD76-02AC4AFEE1C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DEA39AB-6737-4197-BD76-02AC4AFEE1C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DEA39AB-6737-4197-BD76-02AC4AFEE1C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

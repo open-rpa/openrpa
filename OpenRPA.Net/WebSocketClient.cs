@@ -437,7 +437,7 @@ namespace OpenRPA.Net
             q = await q.SendMessage<DeleteOneMessage>(this);
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
         }
-        public async Task UploadFile(string filepath, string path)
+        public async Task<string> UploadFile(string filepath, string path)
         {
             if (string.IsNullOrEmpty(path)) path = "";
             byte[] bytes = System.IO.File.ReadAllBytes(filepath);
@@ -452,6 +452,7 @@ namespace OpenRPA.Net
             q.metadata.path = path;
             q = await q.SendMessage<SaveFileMessage>(this);
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            return q.id;
         }
         public async Task<GetFileMessage> DownloadFile(string filename, string id)
         {

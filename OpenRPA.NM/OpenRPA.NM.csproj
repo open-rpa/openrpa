@@ -8,8 +8,10 @@
     <Company>OpenRPA</Company>
     <Product>OpenRPA</Product>
     <Description>Recorder plugin and Activities for interacting with Chrome/Firefox and Edge</Description>
-    <Version>1.0.8</Version>
-    <PackageReleaseNotes>1.0.8 Catch recording errors on input, show message if addon is missing while recording
+    <Version>1.0.10</Version>
+    <PackageReleaseNotes>1.0.10 Fixed a bug where getelement sometimes would only find 2 elements.
+1.0.9 Catch recording errors on input, show message if addon is missing while recording
+1.0.8 Catch recording errors on input, show message if addon is missing while recording
 1.0.7 update interfaces reference</PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA/Resources/open_rpa128.png</PackageIconUrl>
   </PropertyGroup>
@@ -24,6 +26,7 @@
     <None Remove="Activities\OpenURLDesigner.xaml" />
     <None Remove="Resources\designer\gethtmlelement.png" />
     <None Remove="Resources\toolbox\gethtmlelement.png" />
+    <None Remove="Snippets\GoogleSearch.xaml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\toolbox\gethtmlelement.png" />
@@ -51,6 +54,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\designer\gethtmlelement.png" />
+    <Resource Include="Snippets\GoogleSearch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
     <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />

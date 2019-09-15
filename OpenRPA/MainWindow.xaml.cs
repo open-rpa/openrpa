@@ -56,6 +56,8 @@ namespace OpenRPA
             }
         }
         public Views.WFToolbox Toolbox { get; set; }
+        public Views.Snippets Snippets { get; set; }
+       
         public bool allowQuite { get; set; } = true;
         public MainWindow()
         {
@@ -86,7 +88,7 @@ namespace OpenRPA
             SetStatus("init CancelKey and Input Driver");
             OpenRPA.Input.InputDriver.Instance.initCancelKey(cancelkey.Text);
             SetStatus("loading plugins");
-            await LoadPlugins(Extensions.projectsDirectory);
+            await Plugins.LoadPlugins(Extensions.projectsDirectory);
             //await Task.Run(() =>
             //{
             //    GenericTools.RunUI(() =>
@@ -110,6 +112,7 @@ namespace OpenRPA
             {
                 SetStatus("loading workflow toolbox");
                 Toolbox = new Views.WFToolbox();
+                Snippets = new Views.Snippets();
                 NotifyPropertyChanged("Toolbox");
             }
             catch (Exception ex)
@@ -313,76 +316,6 @@ namespace OpenRPA
                 }
                 SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
             }, null);
-        }
-        private async Task LoadPlugins(string projectsDirectory)
-        {
-            ICollection<Type> pluginTypes = new List<Type>();
-            await Task.Run(() =>
-            {
-                List<string> dllFileNames = new List<string>();
-                foreach (var path in System.IO.Directory.GetFiles(projectsDirectory, "*.dll")) dllFileNames.Add(path);
-                ICollection<Assembly> assemblies = new List<Assembly>();
-                foreach (string dllFile in dllFileNames)
-                {
-                    try
-                    {
-                        AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
-                        Assembly assembly = Assembly.Load(an);
-                        assemblies.Add(assembly);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex, "");
-                    }
-                }
-                foreach (Assembly assembly in assemblies)
-                {
-                    if (assembly != null)
-                    {
-                        try
-                        {
-                            Type[] types = assembly.GetTypes();
-                            foreach (Type type in types)
-                            {
-                                if (type.IsInterface || type.IsAbstract)
-                                {
-                                    continue;
-                                }
-                                else
-                                {
-                                    if (type.GetInterface(typeof(IPlugin).FullName) != null)
-                                    {
-                                        pluginTypes.Add(type);
-                                    }
-                                    if (type.GetInterface(typeof(IDetectorPlugin).FullName) != null)
-                                    {
-                                        Plugins.detectorPluginTypes.Add(type.FullName, type);
-                                    }
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error(ex, "loadPlugins");
-                        }
-                    }
-                }
-            });
-            foreach (Type type in pluginTypes)
-            {
-                try
-                {
-                    IPlugin plugin = (IPlugin)Activator.CreateInstance(type);
-                    SetStatus("Initialize plugin " + plugin.Name);
-                    Log.Information("Initialize plugin " + plugin.Name);
-                    plugin.Initialize();
-                    Plugins.recordPlugins.Add(plugin);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-            }
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -609,6 +542,8 @@ namespace OpenRPA
         public ICommand PermissionsCommand { get { return new RelayCommand<object>(onPermissions, canPermissions); } }
         public ICommand linkOpenFlowCommand { get { return new RelayCommand<object>(onlinkOpenFlow, canlinkOpenFlow); } }
         public ICommand linkNodeREDCommand { get { return new RelayCommand<object>(onlinkNodeRED, canlinkNodeRED); } }
+        public ICommand OpenChromePageCommand { get { return new RelayCommand<object>(onOpenChromePage, canAllways); } }
+        public ICommand OpenFirefoxPageCommand { get { return new RelayCommand<object>(onOpenFirefoxPageCommand, canAllways); } }
         private bool canPermissions(object _item)
         {
             if (!isConnected) return false;
@@ -1095,6 +1030,10 @@ namespace OpenRPA
                         {
                             if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
                         }
+                        if (dp.Title == "Snippets")
+                        {
+                            if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
+                        }
                     }
                 }
             });
@@ -1201,9 +1140,9 @@ namespace OpenRPA
                 }
                 else
                 {
-                    // string Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "Name project", "New project");
-                    // if (string.IsNullOrEmpty(Name)) return;
-                    string Name = "New project";
+                    string Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "Name project", "New project");
+                    if (string.IsNullOrEmpty(Name)) return;
+                    //string Name = "New project";
                     Project project = await Project.Create(Extensions.projectsDirectory, Name, true);
                     Workflow workflow = project.Workflows.First();
                     workflow.Project = project;
@@ -1454,6 +1393,18 @@ namespace OpenRPA
             InputDriver.Instance.OnKeyDown -= OnKeyDown;
             InputDriver.Instance.OnKeyUp -= OnKeyUp;
             GenericTools.restore(GenericTools.mainWindow);
+        }
+        private bool canAllways(object _item)
+        {
+            return true;
+        }
+        private void onOpenChromePage(object _item)
+        {
+            System.Diagnostics.Process.Start("chrome.exe", "https://chrome.google.com/webstore/detail/openrpa/hpnihnhlcnfejboocnckgchjdofeaphe");
+        }
+        private void onOpenFirefoxPageCommand(object _item)
+        {
+            System.Diagnostics.Process.Start("firefox.exe", "https://addons.mozilla.org/en-US/firefox/addon/openrpa/");
         }
         private void OnKeyDown(Input.InputEventArgs e)
         {

@@ -502,6 +502,7 @@ if (typeof document.zeniverse === 'undefined') {
                         if (wasDisabled === true) {
                             if (ident === 0) {
                                 //element.disabled == true;
+                                element.setAttribute("disabled", "true");
                             }
                         }
                     }

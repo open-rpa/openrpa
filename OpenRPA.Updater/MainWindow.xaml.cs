@@ -194,6 +194,7 @@ namespace OpenRPA.Updater
                 //if (!System.IO.Directory.Exists(RepositoryPath) && !System.IO.Directory.Exists(InstallPath))
                 if (!System.IO.Directory.Exists(InstallPath) || !System.IO.File.Exists(InstallPath + @"\OpenRPA.exe"))
                 {
+                    FirstRun = false;
                     var dialogResult = MessageBox.Show("Install OpenRPA and most common packages?", "First run", MessageBoxButton.YesNo);
                     if (dialogResult == MessageBoxResult.Yes)
                     {

@@ -11,7 +11,8 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Version>1.0.5</Version>
     <Description>OpenRPA Package Manager</Description>
-    <PackageReleaseNotes>1.0.5 Add update all button
+    <PackageReleaseNotes>1.0.6 Add update all button
+1.0.5 Add update all button
 1.0.4 update interfaces reference
 1.0.2 improve dependency handling</PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA.Updater/Resources/Package.png</PackageIconUrl>

@@ -7,8 +7,9 @@
     <Description>A couple of activities to design and show forms, and notifications</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.7</Version>
-    <PackageReleaseNotes>1.0.7 update interfaces reference
+    <Version>1.0.8</Version>
+    <PackageReleaseNotes>1.0.8 Add snippets
+1.0.7 update interfaces reference
 1.0.6 add icon
 1.0.5 update interfaces reference</PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA.Forms/Resources/designer/form30.png</PackageIconUrl>
@@ -33,10 +34,14 @@
     <None Remove="Resources\toolbox\form16.png" />
     <None Remove="Resources\toolbox\form30.png" />
     <None Remove="Resources\toolbox\prompt.png" />
+    <None Remove="Snippets\DialogStorm.xaml" />
     <None Remove="Snippets\ImageForm.xaml" />
     <None Remove="Snippets\SimpleForm.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Snippets\DialogStorm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
     <Resource Include="Snippets\ImageForm.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Resource>

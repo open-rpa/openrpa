@@ -89,7 +89,7 @@ namespace OpenRPA
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             SetStatus("Checking for updates");
-            await CheckForUpdatesAsync();
+            CheckForUpdatesAsync();
             SetStatus("Registering Designer Metadata");
             new DesignerMetadata().Register();
             SetStatus("init CancelKey and Input Driver");
@@ -347,19 +347,26 @@ namespace OpenRPA
         {
             await Task.Run(() =>
             {
-                if (updater.UpdaterNeedsUpdate() == true)
+                try
                 {
-                    updater.UpdateUpdater();
-                }
-                var releasenotes = updater.OpenRPANeedsUpdate();
-                if (!string.IsNullOrEmpty(releasenotes))
-                {
-                    var dialogResult = MessageBox.Show(releasenotes, "Update available", MessageBoxButton.YesNo);
-                    if (dialogResult == MessageBoxResult.Yes)
+                    if (updater.UpdaterNeedsUpdate() == true)
                     {
-                        onManagePackages(null);
-                        Application.Current.Shutdown();
+                        updater.UpdateUpdater();
                     }
+                    var releasenotes = updater.OpenRPANeedsUpdate();
+                    if (!string.IsNullOrEmpty(releasenotes))
+                    {
+                        var dialogResult = MessageBox.Show(releasenotes, "Update available", MessageBoxButton.YesNo);
+                        if (dialogResult == MessageBoxResult.Yes)
+                        {
+                            onManagePackages(null);
+                            Application.Current.Shutdown();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug(ex.ToString());
                 }
             });
         }

@@ -374,6 +374,24 @@ namespace OpenRPA.Net
             jwt = signin.jwt;
             return signin.user;
         }
+        public async Task<TokenUser> Signin(string jwt)
+        {
+            SigninMessage signin = new SigninMessage(jwt);
+            signin = await signin.SendMessage<SigninMessage>(this);
+            if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
+            user = signin.user;
+            this.jwt = signin.jwt;
+            return signin.user;
+        }
+        public async Task<TokenUser> Signin(SecureString jwt)
+        {
+            SigninMessage signin = new SigninMessage(jwt);
+            signin = await signin.SendMessage<SigninMessage>(this);
+            if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
+            user = signin.user;
+            this.jwt = signin.jwt;
+            return signin.user;
+        }
         public async Task RegisterUser(string name, string username, string password)
         {
             RegisterUserMessage RegisterQueue = new RegisterUserMessage(name, username, password);

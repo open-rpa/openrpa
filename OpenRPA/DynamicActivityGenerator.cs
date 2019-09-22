@@ -44,6 +44,10 @@ namespace OpenRPA
 
             return name;
         }
+        public void Save()
+        {
+            _ab.Save(_fileName);
+        }
         public Type AppendSubWorkflowTemplateFromFile(string workflowName, string path)
         {
             return AppendSubWorkflowTemplate(workflowName, LoadXamlFromFile(path));

@@ -55,9 +55,15 @@
             </Ribbon.ApplicationMenu>
             <RibbonTab Header="General">
                 <RibbonGroup Header="Files">
-                    <RibbonButton Label="New" LargeImageSource="/OpenRPA;component/Resources/Buttons/New.png" 
-                                  Command="{Binding Data.NewCommand, Source={StaticResource proxy}}" 
-                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" KeyTip="N" />
+                    <RibbonMenuButton x:Name="ButtonNew" Label="New" LargeImageSource="/OpenRPA;component/Resources/Buttons/New.png">
+                        <RibbonMenuItem Header="New Workflow"
+                                Command="{Binding Data.NewWorkflowCommand, Source={StaticResource proxy}}" 
+                                CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" KeyTip="N" />
+                        <RibbonMenuItem Header="New Project"
+                                Command="{Binding Data.NewProjectCommand, Source={StaticResource proxy}}" 
+                                CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
+                    </RibbonMenuButton>
+
                     <RibbonButton Label="Save" LargeImageSource="/OpenRPA;component/Resources/Buttons/Save.png" 
                                   Command="{Binding Data.SaveCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" KeyTip="S" />

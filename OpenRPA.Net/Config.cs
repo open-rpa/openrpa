@@ -12,6 +12,7 @@ namespace OpenRPA
     {
         public string wsurl = "wss://demo1.openrpa.dk/";
         public string username = "";
+        public byte[] jwt;
         public byte[] password;
         public byte[] entropy;
         public string cancelkey = "{ESCAPE}";

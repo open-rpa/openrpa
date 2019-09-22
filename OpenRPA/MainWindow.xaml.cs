@@ -89,7 +89,7 @@ namespace OpenRPA
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             SetStatus("Checking for updates");
-            CheckForUpdatesAsync();
+            _ = CheckForUpdatesAsync();
             SetStatus("Registering Designer Metadata");
             new DesignerMetadata().Register();
             SetStatus("init CancelKey and Input Driver");
@@ -160,6 +160,11 @@ namespace OpenRPA
         {
             AutomationHelper.syncContext.Post(async o =>
             {
+                string url = "http";
+                var u = new Uri(Config.local.wsurl);
+                if (u.Scheme == "wss" || u.Scheme == "https") url = "https";
+                url = url + "://" + u.Host;
+                if (!u.IsDefaultPort) url = url + ":" + u.Port.ToString();
                 // App.notifyIcon.ShowBalloonTip(5000, "tooltiptitle", "tipMessage", System.Windows.Forms.ToolTipIcon.Info);
                 var sw = new System.Diagnostics.Stopwatch();
                 sw.Start();
@@ -169,7 +174,7 @@ namespace OpenRPA
                 while (user == null)
                 {
                     string errormessage = string.Empty;
-                    if (!string.IsNullOrEmpty(Config.local.username))
+                    if (!string.IsNullOrEmpty(Config.local.username) && Config.local.password != null && Config.local.password.Length > 0)
                     {
                         try
                         {
@@ -186,21 +191,80 @@ namespace OpenRPA
                             errormessage = ex.Message;
                         }
                     }
+                    if (Config.local.jwt != null && Config.local.jwt.Length > 0)
+                    {
+                        try
+                        {
+                            SetStatus("Connected to " + Config.local.wsurl + " signing ...");
+                            Log.Debug("Signing in with token " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                            user = await global.webSocketClient.Signin(Config.local.UnprotectString(Config.local.jwt));
+                            if (user != null)
+                            {
+                                Config.local.username = user.username;
+                                Config.local.password = new byte[] { };
+                                Config.Save();
+                                Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            this.Hide();
+                            Log.Error(ex, "");
+                            errormessage = ex.Message;
+                        }
+                    }
                     if (user == null)
                     {
                         if (loginInProgress == false)
                         {
-                            SetStatus("Connected to " + Config.local.wsurl);
                             loginInProgress = true;
-                            var w = new Views.LoginWindow();
-                            w.username = Config.local.username;
-                            w.errormessage = errormessage;
-                            w.fqdn = new Uri(Config.local.wsurl).Host;
-                            this.Hide();
-                            if (w.ShowDialog() != true) { this.Show(); return; }
-                            Config.local.username = w.username; Config.local.password = Config.local.ProtectString(w.password);
-                            Config.Save();
-                            loginInProgress = false;
+                            string jwt = null;
+                            try
+                            {
+                                Hide();
+                                var signinWindow = new Views.SigninWindow(url, true);
+                                signinWindow.ShowDialog();
+                                jwt = signinWindow.jwt;
+                                if (!string.IsNullOrEmpty(jwt))
+                                {
+                                    Config.local.jwt = Config.local.ProtectString(jwt);
+                                    user = await global.webSocketClient.Signin(Config.local.UnprotectString(Config.local.jwt));
+                                    if (user != null)
+                                    {
+                                        Config.local.username = user.username;
+                                        Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                        SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+                                    }
+                                }
+                                else
+                                {
+                                    Close();
+                                    Application.Current.Shutdown();
+                                }
+                                
+                            }
+                            catch (Exception)
+                            {
+                                throw;
+                            }
+                            finally
+                            {
+                                Show();
+                                loginInProgress = false;
+                            }
+                            //SetStatus("Connected to " + Config.local.wsurl);
+                            //loginInProgress = true;
+                            //var w = new Views.LoginWindow();
+                            //w.username = Config.local.username;
+                            //w.errormessage = errormessage;
+                            //w.fqdn = new Uri(Config.local.wsurl).Host;
+                            //this.Hide();
+                            //if (w.ShowDialog() != true) { this.Show(); return; }
+                            //Config.local.username = w.username; Config.local.password = Config.local.ProtectString(w.password);
+                            //Config.Save();
+                            //loginInProgress = false;
+
                         }
                         else
                         {
@@ -545,7 +609,8 @@ namespace OpenRPA
         public ICommand ManagePackagesCommand { get { return new RelayCommand<object>(onManagePackages, canManagePackages); } }        
         public ICommand DetectorsCommand { get { return new RelayCommand<object>(onDetectors, canDetectors); } }
         public ICommand SaveCommand { get { return new RelayCommand<object>(onSave, canSave); } }
-        public ICommand NewCommand { get { return new RelayCommand<object>(onNew, canNew); } }
+        public ICommand NewWorkflowCommand { get { return new RelayCommand<object>(onNewWorkflow, canNewWorkflow); } }
+        public ICommand NewProjectCommand { get { return new RelayCommand<object>(onNewProject, canNewProject); } }
         public ICommand CopyCommand { get { return new RelayCommand<object>(onCopy, canCopy); } }
         public ICommand DeleteCommand { get { return new RelayCommand<object>(onDelete, canDelete); } }
         public ICommand PlayCommand { get { return new RelayCommand<object>(onPlay, canPlay); } }
@@ -560,29 +625,37 @@ namespace OpenRPA
         public ICommand OpenFirefoxPageCommand { get { return new RelayCommand<object>(onOpenFirefoxPageCommand, canAllways); } }
         private bool canPermissions(object _item)
         {
-            if (!isConnected) return false;
-            if (isRecording) return false;
-            var view = SelectedContent as Views.OpenProject;
-            if (view != null)
+            try
             {
-                var val = view.listWorkflows.SelectedValue;
-                if (val == null) return false;
-                var wf = view.listWorkflows.SelectedValue as Workflow;
-                return true;
+                if (!isConnected) return false;
+                if (isRecording) return false;
+                var view = SelectedContent as Views.OpenProject;
+                if (view != null)
+                {
+                    var val = view.listWorkflows.SelectedValue;
+                    if (val == null) return false;
+                    var wf = view.listWorkflows.SelectedValue as Workflow;
+                    return true;
+                }
+                var designer = SelectedContent as Views.WFDesigner;
+                if (designer != null)
+                {
+                    return true;
+                }
+                var DetectorsView = SelectedContent as Views.DetectorsView;
+                if (DetectorsView != null)
+                {
+                    var detector = DetectorsView.lidtDetectors.SelectedItem as IDetectorPlugin;
+                    if (detector == null) return false;
+                    return true;
+                }
+                return false;
             }
-            var designer = SelectedContent as Views.WFDesigner;
-            if (designer != null)
+            catch (Exception ex)
             {
-                return true;
+                Log.Error(ex.ToString());
+                return false;
             }
-            var DetectorsView = SelectedContent as Views.DetectorsView;
-            if (DetectorsView != null)
-            {
-                var detector = DetectorsView.lidtDetectors.SelectedItem as IDetectorPlugin;
-                if (detector == null) return false;
-                return true;
-            }
-            return false;
         }
         private async void onPermissions(object _item)
         {
@@ -649,7 +722,16 @@ namespace OpenRPA
         }
         private bool canImport(object _item)
         {
-            if (!isConnected) return false; return (SelectedContent is Views.WFDesigner || SelectedContent is Views.OpenProject || SelectedContent == null); }
+            try
+            {
+            if (!isConnected) return false; return (SelectedContent is Views.WFDesigner || SelectedContent is Views.OpenProject || SelectedContent == null);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
         private void onImport(object _item)
         {
             try
@@ -691,7 +773,17 @@ namespace OpenRPA
         }
         private bool canExport(object _item)
         {
-            if (!isConnected) return false; return (SelectedContent is Views.WFDesigner || SelectedContent is Views.OpenProject || SelectedContent == null); }
+            try
+            {
+
+            if (!isConnected) return false; return (SelectedContent is Views.WFDesigner || SelectedContent is Views.OpenProject || SelectedContent == null);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
         private void onExport(object _item)
         {
             if (!(SelectedContent is Views.WFDesigner)) return;
@@ -800,22 +892,48 @@ namespace OpenRPA
         }
         private bool canSignout(object _item)
         {
+            try
+            {
+
             if (!global.isConnected) return false;
             return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+
         }
         private void onSignout(object _item)
         {
             autoReconnect = true;
             Projects.Clear();
+            var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
+            foreach (var document in ld)
+            {
+                if (document.Content is Views.WFDesigner view) document.Close();
+            }
+
             Config.Reload();
-            Config.local.password = Config.local.ProtectString("BadPassword");
+            Config.local.password = new byte[] { };
+            Config.local.jwt = new byte[] { };
             global.webSocketClient.url = Config.local.wsurl;
             _ = global.webSocketClient.Close();
         }
         private bool canManagePackages(object _item)
         {
+            try
+            {
+
             var hits = System.Diagnostics.Process.GetProcessesByName("OpenRPA.Updater");
             return hits.Count() == 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
             //var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
             //foreach (var document in ld)
             //{
@@ -869,21 +987,37 @@ namespace OpenRPA
         }
         private bool canOpen(object _item)
         {
+            try
+            {
             var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
             foreach (var document in ld)
             {
                 if (document.Content is Views.OpenProject op) return false;
             }
             return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
         }
         private bool canDetectors(object _item)
         {
+            try
+            {
             var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
             foreach (var document in ld)
             {
                 if (document.Content is Views.DetectorsView op) return false;
             }
             return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
         }
         private void onOpen(object _item)
         {
@@ -926,8 +1060,17 @@ namespace OpenRPA
         }
         private bool canlinkOpenFlow(object _item)
         {
+            try
+            {
+
             if (string.IsNullOrEmpty(Config.local.wsurl)) return false;
             return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
         }
         private void onlinkOpenFlow(object _item)
         {
@@ -937,12 +1080,20 @@ namespace OpenRPA
         }
         private bool canlinkNodeRED(object _item)
         {
+            try
+            {
             if (!isConnected) return false;
             if (string.IsNullOrEmpty(Config.local.wsurl)) return false;
             if (global.openflowconfig == null) return false;
             if(global.openflowconfig.allow_personal_nodered) return true;
 
             return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
         }
         private void onlinkNodeRED(object _item)
         {
@@ -1117,10 +1268,19 @@ namespace OpenRPA
             }
         }
         private bool canSave(object _item) {
+            try
+            {
+
             var wf = SelectedContent as Views.WFDesigner;
             if (wf == null) return false;
             if (wf.isRunnning == true) return false;
             return wf.HasChanged;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
         }
         private async void onSave(object _item)
         {
@@ -1139,9 +1299,27 @@ namespace OpenRPA
                 }
             }
         }
-        private bool canNew(object _item) {
-            if (!isConnected) return false; return (SelectedContent is Views.WFDesigner || SelectedContent is Views.OpenProject || SelectedContent == null); }
-        private async void onNew(object _item)
+        private bool canNewWorkflow(object _item)
+        {
+            try
+            {
+            if (SelectedContent is Views.WFDesigner) return true;
+            if (SelectedContent is Views.OpenProject view)
+            {
+                var val = view.listWorkflows.SelectedValue;
+                var wf = val as Workflow;
+                var p = val as Project;
+                if (wf != null || p != null) return true;
+            }
+            return false;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
+        private void onNewWorkflow(object _item)
         {
             try
             {
@@ -1152,17 +1330,55 @@ namespace OpenRPA
                     onOpenWorkflow(workflow);
                     return;
                 }
-                else
+                var view = SelectedContent as Views.OpenProject;
+                if (view == null) return;
+                var val = view.listWorkflows.SelectedValue;
+                var wf = val as Workflow;
+                var p = val as Project;
+                if(wf!=null)
                 {
-                    string Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "Name project", "New project");
-                    if (string.IsNullOrEmpty(Name)) return;
-                    //string Name = "New project";
-                    Project project = await Project.Create(Extensions.projectsDirectory, Name, true);
-                    Workflow workflow = project.Workflows.First();
-                    workflow.Project = project;
-                    Projects.Add(project);
+                    Workflow workflow = Workflow.Create(wf.Project, "New Workflow");
                     onOpenWorkflow(workflow);
+                    return;
                 }
+                if(p !=null)
+                {
+                    Workflow workflow = Workflow.Create(p, "New Workflow");
+                    onOpenWorkflow(workflow);
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private bool canNewProject(object _item)
+        {
+            try
+            {
+
+            if (!isConnected) return false; return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
+        private async void onNewProject(object _item)
+        {
+            try
+            {
+                string Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "Name project", "New project");
+                if (string.IsNullOrEmpty(Name)) return;
+                //string Name = "New project";
+                Project project = await Project.Create(Extensions.projectsDirectory, Name, true);
+                Workflow workflow = project.Workflows.First();
+                workflow.Project = project;
+                Projects.Add(project);
+                onOpenWorkflow(workflow);
             }
             catch (Exception ex)
             {
@@ -1172,7 +1388,15 @@ namespace OpenRPA
         }
         private bool canCopy(object _item)
         {
+            try
+            {
             return (SelectedContent is Views.WFDesigner);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
         }
         private async void onCopy(object _item)
         {
@@ -1185,6 +1409,8 @@ namespace OpenRPA
         }
         private bool canDelete(object _item)
         {
+            try
+            {
             var view = SelectedContent as Views.OpenProject;
             if (view == null) return false;
             var val = view.listWorkflows.SelectedValue;
@@ -1205,6 +1431,13 @@ namespace OpenRPA
             }
             // don't know what your deleteing, lets just assume yes then
             return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+
         }
         private async void onDelete(object _item)
         {
@@ -1246,36 +1479,43 @@ namespace OpenRPA
         }
         private bool canPlay(object _item)
         {
-            var view = SelectedContent as Views.OpenProject;
-            if (view != null)
+            try
             {
-                var val = view.listWorkflows.SelectedValue;
-                if (val == null) return false;
-                var wf = view.listWorkflows.SelectedValue as Workflow;
-                if(wf == null) return false;
-                if(wf.State == "running") return false;
-                if(global.isConnected)
+                var view = SelectedContent as Views.OpenProject;
+                if (view != null)
                 {
-                    return wf.hasRight(global.webSocketClient.user, ace_right.invoke);
+                    var val = view.listWorkflows.SelectedValue;
+                    if (val == null) return false;
+                    var wf = view.listWorkflows.SelectedValue as Workflow;
+                    if(wf == null) return false;
+                    if(wf.State == "running") return false;
+                    if(global.isConnected)
+                    {
+                        return wf.hasRight(global.webSocketClient.user, ace_right.invoke);
+                    }
+                    return true;
                 }
-                return true;
-            }
 
-            if (!isConnected) return false;
-            if (isRecording) return false;
-            if (!(SelectedContent is Views.WFDesigner)) return false;
-            var designer = (Views.WFDesigner)SelectedContent;
-            if (designer.BreakPointhit) return true;
-            foreach (var i in designer.Workflow.Instances)
-            {
-                if (i.isCompleted == false)
+                if (!isConnected) return false;
+                if (isRecording) return false;
+                if (!(SelectedContent is Views.WFDesigner)) return false;
+                var designer = (Views.WFDesigner)SelectedContent;
+                if (designer.BreakPointhit) return true;
+                foreach (var i in designer.Workflow.Instances)
                 {
-                    return false;
+                    if (i.isCompleted == false)
+                    {
+                        return false;
+                    }
                 }
+                if (global.webSocketClient == null) return true;
+                return designer.Workflow.hasRight(global.webSocketClient.user, ace_right.invoke);
             }
-            if (global.webSocketClient == null) return true;
-            return designer.Workflow.hasRight(global.webSocketClient.user, ace_right.invoke);
-            // return true;
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
         }
         private async void onPlay(object _item)
         {
@@ -1317,6 +1557,9 @@ namespace OpenRPA
         }
         private bool canStop(object _item)
         {
+            try
+            {
+
             var view = SelectedContent as Views.OpenProject;
             if (view != null)
             {
@@ -1339,6 +1582,13 @@ namespace OpenRPA
                 }
             }
             return false;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+
         }
         private void onStop(object _item)
         {
@@ -1382,6 +1632,8 @@ namespace OpenRPA
         }
         private bool canRecord(object _item)
         {
+            try
+            {
             if (!isConnected) return false;
             if (!(SelectedContent is Views.WFDesigner)) return false;
             var designer = (Views.WFDesigner)SelectedContent;
@@ -1393,6 +1645,12 @@ namespace OpenRPA
                 }
             }
             return !isRecording;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
         }
         private void onCancel()
         {
@@ -1615,7 +1873,23 @@ namespace OpenRPA
             Log.Information("Disconnected " + reason);
             SetStatus("Disconnected from " + Config.local.wsurl + " reason " + reason);
             await Task.Delay(1000);
-            if (autoReconnect) _ = global.webSocketClient.Connect();
+            if (autoReconnect)
+            {
+                autoReconnect = false;
+                global.webSocketClient.OnOpen -= WebSocketClient_OnOpen;
+                global.webSocketClient.OnClose -= WebSocketClient_OnClose;
+                global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
+                global.webSocketClient = null;
+
+                global.webSocketClient = new WebSocketClient(Config.local.wsurl);
+                global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
+                global.webSocketClient.OnClose += WebSocketClient_OnClose;
+                global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
+                SetStatus("Connecting to " + Config.local.wsurl);
+
+                await global.webSocketClient.Connect();
+                autoReconnect = true;
+            }
         }
         internal void OnDetector(IDetectorPlugin plugin, IDetectorEvent detector, EventArgs e)
         {

@@ -233,6 +233,7 @@ namespace OpenRPA
                                     if (user != null)
                                     {
                                         Config.local.username = user.username;
+                                        Config.Save();
                                         Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                                         SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
                                     }
@@ -309,6 +310,10 @@ namespace OpenRPA
                         var folders = new List<string>();
                         foreach (var p in projects)
                         {
+                            string regexSearch = new string(System.IO.Path.GetInvalidFileNameChars()) + new string(System.IO.Path.GetInvalidPathChars());
+                            var r = new System.Text.RegularExpressions.Regex(string.Format("[{0}]", System.Text.RegularExpressions.Regex.Escape(regexSearch)));
+                            p.name = r.Replace(p.name, "");
+
                             p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p.name);
                             if (folders.Contains(p.Path))
                             {
@@ -319,6 +324,7 @@ namespace OpenRPA
                         SetStatus("Initialize projects and workflows");
                         foreach (var p in projects)
                         {
+                            p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p.name);
                             p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
                             foreach (var workflow in workflows)
                             {

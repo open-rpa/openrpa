@@ -61,10 +61,15 @@ namespace OpenRPA.Updater
             InitializeComponent();
             ButtonUpdateAll.IsEnabled = false;
             DataContext = this;
+            // https://api.nuget.org/v3/index.json
+            // https://www.nuget.org/api/v2/
+            // https://packages.nuget.org/api/v2
+            // https://nuget.pkg.github.com/open-rpa/index.json
 #if DEBUG
             // repo = PackageRepositoryFactory.Default.CreateRepository(@"C:\code\OpenRPA\packages");
             repo = PackageRepositoryFactory.Default.CreateRepository(@"C:\code\OpenRPA\packages");
-            publicrepo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
+            publicrepo = PackageRepositoryFactory.Default.CreateRepository("https://www.nuget.org/api/v2/");
+            repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
 #else
             repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
 #endif
@@ -108,10 +113,56 @@ namespace OpenRPA.Updater
             ReloadPackageManager();
             Task.Run(async () =>
             {
+                List<IPackage> packages;
+                IPackage ip;
 #if DEBUG
-                List<IPackage> packages = repo.GetPackages().ToList();
+                // packages = repo.GetPackages().ToList();
+                // packages = repo.Search("OpenRPA", false).ToList();
+
+                packages = new List<IPackage>();
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA"); if(ip!=null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.AviRecorder"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.ExpressionEditor"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.FileWatcher"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.Forms"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.IE"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.Image"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.Interfaces"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.Java"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.JavaBridge"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.NamedPipeWrapper"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.NativeMessagingHost"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.Net"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.NM"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.Office"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.Script"); if (ip != null) packages.Add(ip);
+                // ip = packageManager.SourceRepository.FindPackage("OpenRPA.Updater"); if(ip!=null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.Windows"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.WindowsAccessBridgeInterop"); if (ip != null) packages.Add(ip);
+
 #else
-                List<IPackage> packages = repo.Search("OpenRPA.*", false).ToList();
+                // packages = repo.Search("OpenRPA.*", false).ToList();
+
+                packages = new List<IPackage>();
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.AviRecorder"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.ExpressionEditor"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.FileWatcher"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.Forms"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.IE"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.Image"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.Interfaces"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.Java"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.JavaBridge"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.NamedPipeWrapper"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.NativeMessagingHost"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.Net"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.NM"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.Office"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.Script"); if (ip != null) packages.Add(ip);
+                // ip = packageManager.SourceRepository.FindPackage("OpenRPA.Updater"); if(ip!=null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.Windows"); if (ip != null) packages.Add(ip);
+                ip = packageManager.SourceRepository.FindPackage("OpenRPA.WindowsAccessBridgeInterop"); if (ip != null) packages.Add(ip);
 #endif
 
                 // IPackageRepository localRepository = PackageRepositoryFactory.Default.CreateRepository(RepositoryPath);

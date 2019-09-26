@@ -113,6 +113,10 @@ namespace OpenRPA
         }
         public void SaveFile()
         {
+            string regexSearch = new string(System.IO.Path.GetInvalidFileNameChars()) + new string(System.IO.Path.GetInvalidPathChars());
+            var r = new System.Text.RegularExpressions.Regex(string.Format("[{0}]", System.Text.RegularExpressions.Regex.Escape(regexSearch)));
+            name = r.Replace(name, "");
+
             var basePath = System.IO.Path.GetDirectoryName(Filepath);
             if (!System.IO.Directory.Exists(basePath)) System.IO.Directory.CreateDirectory(basePath);
             System.IO.File.WriteAllText(Filepath, JsonConvert.SerializeObject(this));
@@ -165,6 +169,10 @@ namespace OpenRPA
             {
                 await global.webSocketClient.DeleteOne("openrpa", this._id);
             }
+        }
+        public override string ToString()
+        {
+            return name;
         }
     }
 }

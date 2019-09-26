@@ -61,10 +61,14 @@ namespace OpenRPA.Updater
             InitializeComponent();
             ButtonUpdateAll.IsEnabled = false;
             DataContext = this;
+            // https://api.nuget.org/v3/index.json
+            // https://www.nuget.org/api/v2/
+            // https://packages.nuget.org/api/v2
 #if DEBUG
             // repo = PackageRepositoryFactory.Default.CreateRepository(@"C:\code\OpenRPA\packages");
             repo = PackageRepositoryFactory.Default.CreateRepository(@"C:\code\OpenRPA\packages");
-            publicrepo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
+            publicrepo = PackageRepositoryFactory.Default.CreateRepository("https://www.nuget.org/api/v2/");
+            repo = PackageRepositoryFactory.Default.CreateRepository("https://www.nuget.org/api/v2/");
 #else
             repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
 #endif
@@ -108,10 +112,12 @@ namespace OpenRPA.Updater
             ReloadPackageManager();
             Task.Run(async () =>
             {
+                List<IPackage> packages;
 #if DEBUG
-                List<IPackage> packages = repo.GetPackages().ToList();
+                // packages = repo.GetPackages().ToList();
+                packages = repo.Search("OpenRPA", false).ToList();
 #else
-                List<IPackage> packages = repo.Search("OpenRPA.*", false).ToList();
+                packages = repo.Search("OpenRPA.*", false).ToList();
 #endif
 
                 // IPackageRepository localRepository = PackageRepositoryFactory.Default.CreateRepository(RepositoryPath);

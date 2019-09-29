@@ -185,6 +185,47 @@ namespace OpenRPA.Windows
                         }
                         if (current.Count == 0)
                         {
+                            if((i+1) < selectors.Count && i > 0) {
+                                i++;
+                                s = new WindowsSelectorItem(selectors[i]);
+                                foreach (var _element in elements)
+                                {
+                                    var matches = ((WindowsSelectorItem)s).matches(automation, _element.RawElement, _treeWalker, (i == 0 ? 1 : maxresults));
+                                    var uimatches = new List<UIElement>();
+                                    foreach (var m in matches)
+                                    {
+                                        var ui = new UIElement(m);
+                                        var list = selectors.Take(i).ToList();
+                                        list.Add(new WindowsSelectorItem(m, false));
+                                        uimatches.Add(ui);
+                                    }
+                                    current.AddRange(uimatches.ToArray());
+                                }
+                                Console.WriteLine(current.Count());
+                            }
+                            //foreach (var element in elements)
+                            //{
+                            //    var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
+                            //    var children = element.RawElement.FindAllChildren();
+                            //    foreach (var _element in children)
+                            //    {
+                            //        message += new UIElement(_element).ToString() + Environment.NewLine;
+                            //        var matches = ((WindowsSelectorItem)s).matches(automation, _element, _treeWalker, (i == 0 ? 1 : maxresults));
+                            //        var uimatches = new List<UIElement>();
+                            //        foreach (var m in matches)
+                            //        {
+                            //            var ui = new UIElement(m);
+                            //            var list = selectors.Take(i).ToList();
+                            //            list.Add(new WindowsSelectorItem(m, false));
+                            //            uimatches.Add(ui);
+                            //        }
+                            //        current.AddRange(uimatches.ToArray());
+                            //    }
+                            //    Log.Selector(message);
+                            //}
+                        }
+                        if (current.Count == 0)
+                        {
                             ++failcounter;
                             foreach (var element in elements)
                             {

@@ -22,7 +22,7 @@ namespace OpenRPA.Interfaces
         }
         public static void Selector(string message)
         {
-            System.Diagnostics.Trace.WriteLine(message, "Selector");
+            // System.Diagnostics.Trace.WriteLine(message, "Selector");
         }
         public static void Information(string message)
         {

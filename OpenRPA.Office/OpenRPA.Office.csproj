@@ -7,8 +7,9 @@
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office</Description>
-    <Version>1.0.9</Version>
-    <PackageReleaseNotes>1.0.9 update interfaces reference</PackageReleaseNotes>
+    <Version>1.0.10</Version>
+    <PackageReleaseNotes>1.0.10 Update power excel snippet to auto create file
+1.0.9 update interfaces reference</PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA/Resources/open_rpa128.png</PackageIconUrl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

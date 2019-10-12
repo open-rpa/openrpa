@@ -57,10 +57,12 @@ namespace OpenRPA
         }
         public Views.WFToolbox Toolbox { get; set; }
         public Views.Snippets Snippets { get; set; }
-       
         public bool allowQuite { get; set; } = true;
         public MainWindow()
         {
+            System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = false;
+            System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.BelowNormal;
+            System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.BelowNormal;
             InitializeComponent();
             try
             {
@@ -149,6 +151,10 @@ namespace OpenRPA
                     {
                         Projects.Add(p);
                     }
+                    System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = true;
+                    System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.Normal;
+                    System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Normal;
+
                 }
                 AutomationHelper.init();
                 SetStatus("Reopening workflows");
@@ -391,6 +397,9 @@ namespace OpenRPA
                         Log.Error(ex.ToString());
                     }
                 }
+                System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = true;
+                System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.Normal;
+                System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Normal;
                 SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
             }, null);
         }

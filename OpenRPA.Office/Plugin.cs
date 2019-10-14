@@ -58,10 +58,8 @@ namespace OpenRPA.Office
             {
                 var app = Activities.officewrap.application;
                 var workbook = app.ActiveWorkbook;
-                // if (workbook == null) workbook = app.ThisWorkbook;
                 if (workbook == null) return false;
 
-                // var a = new Activities.WriteCell<string>{ DisplayName = e.UIElement.Name.Replace("\"", "").Replace(" ", "") };
                 var a = new Activities.ReadCell<string> { DisplayName = e.UIElement.Name.Replace("\"", "").Replace(" ", "") };
                 a.Cell = e.UIElement.Name.Replace("\"", "").Replace(" ", "");
                 a.Filename = workbook.FullName.replaceEnvironmentVariable();
@@ -111,13 +109,37 @@ namespace OpenRPA.Office
                 try
                 {
                     var old = Activity as Activities.ReadCell<string>;
-                    var a = new Activities.WriteCell<string> { DisplayName = old.DisplayName };
-                    a.Cell = old.Cell;
-                    a.Filename = old.Filename;
-                    a.Value = value;
-                    Activity = a;
-                    var app = Activities.officewrap.application;
 
+                    double d;
+                    var isDouble = double.TryParse(value, out d);
+                    int i;
+                    var isInt = int.TryParse(value, out i);
+                    if (isInt)
+                    {
+                        var a = new Activities.WriteCell<int> { DisplayName = old.DisplayName };
+                        a.Cell = old.Cell;
+                        a.Filename = old.Filename;
+                        a.Value = i;
+                        Activity = a;
+                    }
+                    else if (isDouble)
+                    {
+                        var a = new Activities.WriteCell<double> { DisplayName = old.DisplayName };
+                        a.Cell = old.Cell;
+                        a.Filename = old.Filename;
+                        a.Value = d;
+                        Activity = a;
+                    }
+                    else
+                    {
+                        var a = new Activities.WriteCell<string> { DisplayName = old.DisplayName };
+                        a.Cell = old.Cell;
+                        a.Filename = old.Filename;
+                        a.Value = value;
+                        Activity = a;
+                    }
+
+                    var app = Activities.officewrap.application;
                     var workbook = app.ActiveWorkbook;
                     // if (workbook == null) workbook = app.ThisWorkbook;
                     if (workbook == null) return;

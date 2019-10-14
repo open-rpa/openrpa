@@ -1871,13 +1871,25 @@ namespace OpenRPA
             {
                 
                 GenericTools.RunUI(_overlayWindow, () => {
-                    _overlayWindow.Visible = true;
-                    _overlayWindow.Bounds = e.Element.Rectangle;
+                    try
+                    {
+                        _overlayWindow.Visible = true;
+                        _overlayWindow.Bounds = e.Element.Rectangle;
+                    }
+                    catch (Exception)
+                    {
+                    }
                 });                
             } else if(_overlayWindow != null)
             {
                 GenericTools.RunUI(_overlayWindow, () => {
-                    _overlayWindow.Visible = false;
+                    try
+                    {
+                        _overlayWindow.Visible = false;
+                    }
+                    catch (Exception)
+                    {
+                    }
                 });
             }
         }

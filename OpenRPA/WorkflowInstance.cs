@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA
 {
-    public class WorkflowInstance : apibase
+    public class WorkflowInstance : apibase, IWorkflowInstance
     {
         public WorkflowInstance()
         {
@@ -20,12 +20,9 @@ namespace OpenRPA
         [JsonIgnore]
         // public DateTime LastUpdated { get { return GetProperty<DateTime>(); } set { SetProperty(value); } } 
         public static List<WorkflowInstance> Instances = new List<WorkflowInstance>();
-
         public delegate void VisualTrackingHandler(WorkflowInstance Instance, string ActivityId, string ChildActivityId, string State);
         public event VisualTrackingHandler OnVisualTracking;
-
         public delegate void idleOrComplete(WorkflowInstance sender, EventArgs e);
-
         public event idleOrComplete OnIdleOrComplete;
         public Dictionary<string, object> Parameters { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
         public Dictionary<string, object> Bookmarks { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
@@ -44,7 +41,6 @@ namespace OpenRPA
         public string fqdn { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string errormessage { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string errorsource { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        
         [JsonIgnore]
         public Exception Exception { get { return GetProperty<Exception>(); } set { SetProperty(value); } }
         public bool isCompleted { get { return GetProperty<bool>(); } set { SetProperty(value); } }
@@ -54,9 +50,38 @@ namespace OpenRPA
         public Workflow Workflow { get { return GetProperty<Workflow>(); } set { SetProperty(value); } }
         [JsonIgnore]
         public System.Activities.WorkflowApplication wfApp { get; set; }
+        private void NotifyCompleted()
+        {
+            var _ref = (this as IWorkflowInstance);
+            foreach (var runner in Plugins.runPlugins)
+            {
+                runner.onWorkflowCompleted(ref _ref);
+            }
+        }
+        private void NotifyIdle()
+        {
+            var _ref = (this as IWorkflowInstance);
+            foreach (var runner in Plugins.runPlugins)
+            {
+                runner.onWorkflowIdle(ref _ref);
+            }
+        }
+        private void NotifyAborted()
+        {
+            var _ref = (this as IWorkflowInstance);
+            foreach (var runner in Plugins.runPlugins)
+            {
+                runner.onWorkflowAborted(ref _ref);
+            }
+        }
         public static WorkflowInstance Create(Workflow Workflow, Dictionary<string, object> Parameters)
         {
             var result = new WorkflowInstance() { Workflow = Workflow, WorkflowId = Workflow._id, Parameters = Parameters, name = Workflow.name, Path = Workflow.Project.Path };
+            var _ref = (result as IWorkflowInstance);
+            foreach (var runner in Plugins.runPlugins)
+            {
+                if (!runner.onWorkflowStarting(ref _ref, false)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
+            }
             Instances.Add(result);
             if (global.isConnected)
             {
@@ -147,12 +172,10 @@ namespace OpenRPA
             }
             state = "loaded";
         }
-
         private void Participant_OnVisualTracking(WorkflowInstance Instance, string ActivityId, string ChildActivityId, string State)
         {
             OnVisualTracking?.Invoke(Instance, ActivityId, ChildActivityId, State);
         }
-
         public void Abort(string Reason)
         {
             if (wfApp == null) return;
@@ -180,6 +203,11 @@ namespace OpenRPA
                 {
                     throw new ArgumentException("cannot resume bookmark on completed workflow!");
                 }
+                var _ref = (this as IWorkflowInstance);
+                foreach (var runner in Plugins.runPlugins)
+                {
+                    if (!runner.onWorkflowResumeBookmark(ref _ref, bookmarkName, value)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
+                }
                 // Log.Debug(String.Format("Workflow {0} resuming at bookmark '{1}' value '{2}'", wfApp.Id.ToString(), bookmarkName, value));
                 Task.Run(() =>
                 {
@@ -203,6 +231,7 @@ namespace OpenRPA
             }
         }
         public System.Diagnostics.Stopwatch runWatch { get; private set; }
+        apibase IWorkflowInstance.Workflow { get => this.Workflow; set => this.Workflow = value as Workflow; }
         public void Run()
         {
             try
@@ -260,6 +289,7 @@ namespace OpenRPA
                     state = "completed";
                     foreach (var o in e.Outputs) Parameters[o.Key] = o.Value;
                     if (runWatch != null) runWatch.Stop();
+                    NotifyCompleted();
                     OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
                 }
                 else if (e.CompletionState == System.Activities.ActivityInstanceState.Executing)
@@ -280,6 +310,7 @@ namespace OpenRPA
                 errormessage = e.Reason.Message;
                 Save();
                 if(runWatch!=null) runWatch.Stop();
+                NotifyAborted();
                 OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
             };
 
@@ -295,6 +326,7 @@ namespace OpenRPA
                 Save();
                 if (state != "completed")
                 {
+                    NotifyIdle();
                     OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
                 }
             };
@@ -333,6 +365,7 @@ namespace OpenRPA
                 if(e.ExceptionSource!=null) errorsource = e.ExceptionSource.Id;
                 //exceptionsource = e.ExceptionSource.Id;
                 if (runWatch != null) runWatch.Stop();
+                NotifyAborted();
                 OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
                 return System.Activities.UnhandledExceptionAction.Terminate;
             };

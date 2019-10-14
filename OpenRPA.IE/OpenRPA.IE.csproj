@@ -7,10 +7,10 @@
     <Description>Activities and record plugin for handling Internet Explorer</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.12</Version>
-    <PackageReleaseNotes>1.0.12 update interfaces reference
+    <Version>1.0.13</Version>
+    <PackageReleaseNotes>1.0.13 update interfaces reference
 </PackageReleaseNotes>
-    <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA/Resources/open_rpa128.png</PackageIconUrl>
+    <PackageIcon>open_rpa128.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
@@ -18,6 +18,9 @@
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
   </Target>
+  <ItemGroup>
+    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\"/>
+  </ItemGroup>
   <Target Name="SetNuspecProperties" BeforeTargets="GenerateNuspec">
     <PropertyGroup>
       <NuspecProperties>$(NuspecProperties);id=$(AssemblyName)</NuspecProperties>

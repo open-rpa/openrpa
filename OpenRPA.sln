@@ -41,8 +41,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindowsAccessBridgeInterop"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA", "OpenRPA\OpenRPA.csproj", "{E6F0AB4D-6926-41AE-AD25-2DDA26D9642E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Snippets", "OpenRPA.Snippets\OpenRPA.Snippets.csproj", "{6DEA39AB-6737-4197-BD76-02AC4AFEE1C7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,16 +123,12 @@ Global
 		{E6F0AB4D-6926-41AE-AD25-2DDA26D9642E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6F0AB4D-6926-41AE-AD25-2DDA26D9642E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6F0AB4D-6926-41AE-AD25-2DDA26D9642E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6DEA39AB-6737-4197-BD76-02AC4AFEE1C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6DEA39AB-6737-4197-BD76-02AC4AFEE1C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6DEA39AB-6737-4197-BD76-02AC4AFEE1C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6DEA39AB-6737-4197-BD76-02AC4AFEE1C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
+		BuildVersion_StartDate = 2000/1/1
 	EndGlobalSection
 EndGlobal

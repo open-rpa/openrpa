@@ -6,13 +6,13 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
     <StartupObject />
-    <PackageReleaseNotes>1.0.6 update interfaces reference</PackageReleaseNotes>
+    <PackageReleaseNotes>1.0.7 update interfaces reference</PackageReleaseNotes>
     <Description>The NativeMessagingHost serves as a proxy between chrome/ff and openrpa</Description>
-    <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA/Resources/open_rpa128.png</PackageIconUrl>
+    <PackageIcon>open_rpa128.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
@@ -20,6 +20,9 @@
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
   </Target>
+  <ItemGroup>
+    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\"/>
+  </ItemGroup>
   <ItemGroup>
     <None Remove="background.js" />
     <None Remove="chromemanifest.json" />

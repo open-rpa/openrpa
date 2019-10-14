@@ -11,7 +11,7 @@ using System.Windows.Threading;
 
 namespace OpenRPA
 {
-    public class Workflow : apibase
+    public class Workflow : apibase, IWorkflow
     {
         [JsonIgnore]
         public DispatcherTimer _timer;
@@ -224,9 +224,14 @@ namespace OpenRPA
                             //if (VisualTracking != null) i.OnVisualTracking += VisualTracking;
                             var exists = WorkflowInstance.Instances.Where(x => x.InstanceId == i.InstanceId).FirstOrDefault();
                             if (exists != null) continue;
-                            WorkflowInstance.Instances.Add(i);
                             if (i.state != "failed" && i.state != "aborted" && i.state != "completed")
                             {
+                                var _ref = (i as IWorkflowInstance);
+                                foreach (var runner in Plugins.runPlugins)
+                                {
+                                    if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
+                                }
+                                WorkflowInstance.Instances.Add(i);
                                 i.createApp();
                                 i.Run();
                             }
@@ -257,6 +262,11 @@ namespace OpenRPA
                     //if (idleOrComplete != null) i.OnIdleOrComplete += idleOrComplete;
                     //if (VisualTracking != null) i.OnVisualTracking += VisualTracking;
                     WorkflowInstance.Instances.Add(i);
+                    var _ref = (i as IWorkflowInstance);
+                    foreach (var runner in Plugins.runPlugins)
+                    {
+                        if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
+                    }
                     i.createApp();
                     i.Run();
                 }

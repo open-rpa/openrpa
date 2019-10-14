@@ -54,6 +54,8 @@ namespace OpenRPA.Java
             return new JavaSelector(javaitem.JavaElement, javaanchor, true);
         }
         public event Action<IPlugin, IRecordEvent> OnUserAction;
+        public event Action<IPlugin, IRecordEvent> OnMouseMove;
+
         public string Name { get => "Java"; }
         // public string Status => (hook!=null && hook.jvms.Count>0 ? "online":"offline");
         public string Status { get => ""; }
@@ -179,6 +181,22 @@ namespace OpenRPA.Java
         {
             var el = new JavaElement(m.RawElement as WindowsAccessBridgeInterop.AccessibleNode);
             return JavaSelectorItem.Match(item, el);
+        }
+
+        public bool parseMouseMoveAction(ref IRecordEvent e)
+        {
+            if (lastElement == null) return false;
+            if (e.UIElement == null) return false;
+
+            if (e.UIElement.ClassName == null || !e.UIElement.ClassName.StartsWith("SunAwt"))
+            {
+                if (e.UIElement.ProcessId < 1) return false;
+                var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
+                if (p.ProcessName.ToLower() != "java") return false;
+            }
+
+            e.Element = lastElement;
+            return true;
         }
     }
     public class GetElementResult : IBodyActivity

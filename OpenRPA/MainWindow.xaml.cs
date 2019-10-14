@@ -31,7 +31,7 @@ namespace OpenRPA
     public partial class MainWindow : Window, INotifyPropertyChanged, iMainWindow
     {
         public static MainWindow instance = null;
-        Updates updater = new Updates();
+        readonly Updates updater = new Updates();
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propertyName)
         {
@@ -43,7 +43,7 @@ namespace OpenRPA
         private bool loginInProgress = false;
         // public static Tracing tracing = new Tracing();
         public Tracing tracing { get; set; }  = new Tracing();
-        private static object statelock = new object();
+        private static readonly object statelock = new object();
         public List<string> ocrlangs { get; set; } = new List<string>() { "afr", "amh", "ara", "asm", "aze", "aze_cyrl", "bel", "ben", "bod", "bos", "bre", "bul", "cat", "ceb", "ces", "chi_sim", "chi_sim_vert", "chi_tra", "chi_tra_vert", "chr", "cos", "cym", "dan", "dan_frak", "deu", "deu_frak", "div", "dzo", "ell", "eng", "enm", "epo", "equ", "est", "eus", "fao", "fas", "fil", "fin", "fra", "frk", "frm", "fry", "gla", "gle", "glg", "grc", "guj", "hat", "heb", "hin", "hrv", "hun", "hye", "iku", "ind", "isl", "ita", "ita_old", "jav", "jpn", "jpn_vert", "kan", "kat", "kat_old", "kaz", "khm", "kir", "kmr", "kor", "kor_vert", "lao", "lat", "lav", "lit", "ltz", "mal", "mar", "mkd", "mlt", "mon", "mri", "msa", "mya", "nep", "nld", "nor", "oci", "ori", "osd", "pan", "pol", "por", "pus", "que", "ron", "rus", "san", "sin", "slk", "slk_frak", "slv", "snd", "spa", "spa_old", "sqi", "srp", "srp_latn", "sun", "swa", "swe", "syr", "tam", "tat", "tel", "tgk", "tgl", "tha", "tir", "ton", "tur", "uig", "ukr", "urd", "uzb", "uzb_cyrl", "vie", "yid", "yor" };
         public string defaultocrlangs {
             get
@@ -154,6 +154,22 @@ namespace OpenRPA
                     System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = true;
                     System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.Normal;
                     System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Normal;
+
+                    SetStatus("Run pending workflow instances");
+                    Log.Debug("RunPendingInstances::begin ");
+                    foreach (Project p in _Projects)
+                    {
+                        foreach (var workflow in p.Workflows)
+                        {
+                            if (workflow.Project != null)
+                            {
+                                _ = workflow.RunPendingInstances();
+                            }
+
+                        }
+                    }
+                    Log.Debug("RunPendingInstances::end ");
+
 
                 }
                 AutomationHelper.init();
@@ -461,7 +477,7 @@ namespace OpenRPA
             NotifyPropertyChanged("VisualTracking");
             NotifyPropertyChanged("SlowMotion");
             NotifyPropertyChanged("Minimize");
-            if(SelectedContent is Views.WFDesigner view) {
+            if(SelectedContent is Views.WFDesigner) {
                 var las = DManager.Layout.Descendents().OfType<LayoutAnchorable>().ToList();
                 foreach (var dp in las)
                 {
@@ -623,6 +639,7 @@ namespace OpenRPA
         public ICommand OpenCommand { get { return new RelayCommand<object>(onOpen, canOpen); } }
         public ICommand ManagePackagesCommand { get { return new RelayCommand<object>(onManagePackages, canManagePackages); } }        
         public ICommand DetectorsCommand { get { return new RelayCommand<object>(onDetectors, canDetectors); } }
+        public ICommand RunPluginsCommand { get { return new RelayCommand<object>(onRunPlugins, canRunPlugins); } }
         public ICommand SaveCommand { get { return new RelayCommand<object>(onSave, canSave); } }
         public ICommand NewWorkflowCommand { get { return new RelayCommand<object>(onNewWorkflow, canNewWorkflow); } }
         public ICommand NewProjectCommand { get { return new RelayCommand<object>(onNewProject, canNewProject); } }
@@ -1021,12 +1038,29 @@ namespace OpenRPA
         {
             try
             {
-            var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
-            foreach (var document in ld)
-            {
-                if (document.Content is Views.DetectorsView op) return false;
+                var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
+                foreach (var document in ld)
+                {
+                    if (document.Content is Views.DetectorsView op) return false;
+                }
+                return true;
             }
-            return true;
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
+        private bool canRunPlugins(object _item)
+        {
+            try
+            {
+                var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
+                foreach (var document in ld)
+                {
+                    if (document.Content is Views.RunPlugins op) return false;
+                }
+                return true;
             }
             catch (Exception ex)
             {
@@ -1073,6 +1107,23 @@ namespace OpenRPA
                 layoutDocument.IsSelected = true;
             }, null);
         }
+        private void onRunPlugins(object _item)
+        {
+            AutomationHelper.syncContext.Post(o =>
+            {
+                var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
+                foreach (var document in ld)
+                {
+                    if (document.Content is Views.RunPlugins op) { document.IsSelected = true; return; }
+                }
+                var view = new Views.RunPlugins();
+                LayoutDocument layoutDocument = new LayoutDocument { Title = "Run Plugins" };
+                layoutDocument.ContentId = "detectors";
+                layoutDocument.Content = view;
+                mainTabControl.Children.Add(layoutDocument);
+                layoutDocument.IsSelected = true;
+            }, null);
+        }        
         private bool canlinkOpenFlow(object _item)
         {
             try
@@ -1759,19 +1810,62 @@ namespace OpenRPA
         {
             foreach (var detector in Plugins.detectorPlugins) detector.Stop();
         }
+        Interfaces.Overlay.OverlayWindow _overlayWindow = null;
         private void StartRecordPlugins()
         {
             isRecording = true;
             var p = Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
             p.OnUserAction += OnUserAction;
+            p.OnMouseMove += OnMouseMove;
             p.Start();
+            if(_overlayWindow==null)
+            {
+                _overlayWindow = new Interfaces.Overlay.OverlayWindow(true);
+                _overlayWindow.BackColor = System.Drawing.Color.PaleGreen;
+                _overlayWindow.Visible = true;
+                _overlayWindow.TopMost = true;
+            }
         }
         private void StopRecordPlugins()
         {
             isRecording = false;
             var p = Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
             p.OnUserAction -= OnUserAction;
+            p.OnMouseMove -= OnMouseMove;
             p.Stop();
+            if (_overlayWindow != null)
+            {
+                GenericTools.RunUI(_overlayWindow, () => {
+                    _overlayWindow.Visible = true;
+                    _overlayWindow.Dispose();
+                });
+            }
+            _overlayWindow = null;
+        }
+        public void OnMouseMove(IPlugin sender, IRecordEvent e)
+        {
+            foreach (var p in Plugins.recordPlugins)
+            {
+                if (p.Name != sender.Name)
+                {
+                    if (p.parseMouseMoveAction(ref e)) continue;
+                }
+            }
+            
+            // e.Element.Highlight(false, System.Drawing.Color.PaleGreen, TimeSpan.FromSeconds(1));
+            if(e.Element!=null && _overlayWindow != null)
+            {
+                
+                GenericTools.RunUI(_overlayWindow, () => {
+                    _overlayWindow.Visible = true;
+                    _overlayWindow.Bounds = e.Element.Rectangle;
+                });                
+            } else if(_overlayWindow != null)
+            {
+                GenericTools.RunUI(_overlayWindow, () => {
+                    _overlayWindow.Visible = false;
+                });
+            }
         }
         public void OnUserAction(IPlugin sender, IRecordEvent e)
         {

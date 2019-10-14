@@ -7,11 +7,10 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.8</Version>
-    <PackageReleaseNotes>
-      1.0.8 update interfaces reference
-    </PackageReleaseNotes>
-    <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA/Resources/open_rpa128.png</PackageIconUrl>
+    <Version>1.0.9</Version>
+    <PackageReleaseNotes>1.0.9 Add runner plugin for auto recording workflows
+1.0.8 update interfaces reference</PackageReleaseNotes>
+    <PackageIcon>open_rpa128.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
@@ -20,12 +19,17 @@
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
   </Target>
   <ItemGroup>
+    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Activities\Playback.xaml" />
     <None Remove="Activities\PlayRecordingDesigner.xaml" />
     <None Remove="Activities\StartRecordingDesigner.xaml" />
     <None Remove="Activities\StopRecordingDesigner.xaml" />
     <None Remove="Resources\designer\gethtmlelement.png" />
+    <None Remove="Resources\open_rpa512.png" />
     <None Remove="Resources\toolbox\gethtmlelement.png" />
+    <None Remove="Views\RunPluginView.xaml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\toolbox\gethtmlelement.png" />
@@ -42,6 +46,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\StopRecordingDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RunPluginView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -61,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\designer\gethtmlelement.png" />
+    <Resource Include="Resources\open_rpa512.png" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
     <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />

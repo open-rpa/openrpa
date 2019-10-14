@@ -13,6 +13,8 @@ namespace OpenRPA.Image
         public string Name => "Image";
         public string Status => "";
         public event Action<IPlugin, IRecordEvent> OnUserAction;
+        public event Action<IPlugin, IRecordEvent> OnMouseMove;
+
         public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)
         {
             if (timeout == TimeSpan.Zero) OnUserAction?.Invoke(null, null); // dummy use of OnUserAction to get rid of warning
@@ -41,6 +43,64 @@ namespace OpenRPA.Image
         {
             throw new NotImplementedException();
         }
+        private static object _lock = new object();
+        private static bool _processing = false;
+        private ImageElement lastelement = null;
+        public bool parseMouseMoveAction(ref IRecordEvent e)
+        {
+            if (e.UIElement == null) { return false; }
+
+            if (e.UIElement.Type != "Pane") { return false; }
+            var element = e.UIElement.RawElement;
+
+            string Processname = "";
+            if (e.UIElement.ProcessId > 0)
+            {
+                var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
+                if (p.ProcessName == "iexplore" || p.ProcessName == "iexplore.exe") { return false; }
+                if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "firefox") { return false; }
+                Processname = p.ProcessName;
+            }
+
+            e.Element = lastelement;
+            lock (_lock)
+            {
+                if (_processing) { return true; }
+                _processing = true;
+            }
+
+            var elementx = (int)element.BoundingRectangle.X;
+            var elementy = (int)element.BoundingRectangle.Y;
+            var elementw = (int)element.BoundingRectangle.Width;
+            var elementh = (int)element.BoundingRectangle.Height;
+
+
+            int newOffsetX; int newOffsetY; System.Drawing.Rectangle resultrect;
+            Log.Debug(string.Format("Search near {0}, {1} in  ({2}, {3},{4},{5})",
+elementx, elementy, elementw, elementh, e.OffsetX, e.OffsetY));
+
+            var image = getrectangle.GuessContour(element, e.OffsetX, e.OffsetY, out newOffsetX, out newOffsetY, out resultrect);
+            lock (_lock)
+            {
+                _processing = false;
+            }
+            if (image == null)
+            {
+                lastelement = null;
+                // Log.Debug("Found null");
+                e.Element = null;
+                return true;
+            }
+            e.OffsetX = newOffsetX;
+            e.OffsetY = newOffsetY;
+            Log.Debug(string.Format("Found element at ({0}, {1},{2},{3})",
+    resultrect.X, resultrect.Y, resultrect.Width, resultrect.Height));
+            lastelement = new ImageElement(resultrect, image);
+            e.Element = lastelement;
+
+            return true;
+        }
+
         public bool parseUserAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) return false;

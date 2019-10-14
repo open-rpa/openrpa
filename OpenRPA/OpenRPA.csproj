@@ -9,14 +9,16 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.24</Version>
-    <PackageReleaseNotes>1.0.24 Workaround for WPF double elements
+    <Version>1.0.25</Version>
+    <PackageReleaseNotes>
+      1.0.25 Add support for runner plugins
+      1.0.24 Workaround for WPF double elements
       1.0.23 Implement webbased signin, to support federation
       1.0.22 check for updates async, to make robot load faster when no internet
       1.0.21 hitfixing "missing snippets" error
       1.0.19 DownloadFile/UploadeFile renamed GetFile/Save file. Added DownloadFole, Added a Snippets liberary with examples
-</PackageReleaseNotes>
-    <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA/Resources/open_rpa128.png</PackageIconUrl>
+    </PackageReleaseNotes>
+    <PackageIcon>open_rpa128.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
@@ -31,6 +33,9 @@
       <NuspecProperties>$(NuspecProperties);configurationname=$(ConfigurationName)</NuspecProperties>
     </PropertyGroup>
   </Target>
+  <ItemGroup>
+    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.5.0" />
@@ -65,6 +70,7 @@
     <None Remove="Images\PinDocMenu_Black.png" />
     <None Remove="MainWindow.xaml" />
     <None Remove="Resources\Buttons\Bridge.png" />
+    <None Remove="Resources\Buttons\Button.png" />
     <None Remove="Resources\Buttons\CheckUpdates.png" />
     <None Remove="Resources\Buttons\Clear.png" />
     <None Remove="Resources\Buttons\CloseWebdriver.png" />
@@ -159,7 +165,6 @@
     <None Remove="Resources\open_flow.ico" />
     <None Remove="Resources\open_flow_org.ico" />
     <None Remove="Resources\open_rpa.ico" />
-    <None Remove="Resources\open_rpa128.png" />
     <None Remove="Resources\open_rpa512.png" />
     <None Remove="Resources\Selector\Button.png" />
     <None Remove="Resources\Selector\Calendar.png" />
@@ -258,6 +263,7 @@
     <None Remove="Views\OpenProject.xaml" />
     <None Remove="Views\PermissionsWindow.xaml" />
     <None Remove="Views\RegistrationWindow.xaml" />
+    <None Remove="Views\RunPlugins.xaml" />
     <None Remove="Views\SampleDockWindowView.xaml" />
     <None Remove="Views\selectUserWindow.xaml" />
     <None Remove="Views\showVariables.xaml" />
@@ -343,6 +349,9 @@
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\RunPlugins.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SigninWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -351,6 +360,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Buttons\Button.png" />
     <Resource Include="Resources\Buttons\Clear.png" />
     <Resource Include="Resources\Buttons\CloseWebdriver.png" />
     <Resource Include="Resources\Buttons\Mouse.png" />
@@ -624,7 +634,11 @@
   <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
     <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
   </Target>
-  <ProjectExtensions><VisualStudio><UserProperties BuildVersion_BuildVersioningStyle="None.None.Increment.None" BuildVersion_StartDate="2000/1/1" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.Increment.None" BuildVersion_StartDate="2000/1/1" />
+    </VisualStudio>
+  </ProjectExtensions>
   <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="ECHO ON&#xD;&#xA;dir" />
   </Target>-->

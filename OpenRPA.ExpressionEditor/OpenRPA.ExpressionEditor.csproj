@@ -6,13 +6,16 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.3</Version>
-    <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA/Resources/open_rpa128.png</PackageIconUrl>
-    <PackageReleaseNotes>1.0.3 update interfaces reference</PackageReleaseNotes>
+    <Version>1.0.4</Version>
+    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageReleaseNotes>1.0.4 update interfaces reference</PackageReleaseNotes>
   </PropertyGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
   </Target>
+  <ItemGroup>
+    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\"/>
+  </ItemGroup>
   <ItemGroup>
     <None Remove="AutoCompletionPopup.xaml" />
     <None Remove="Images\class.png" />

@@ -29,6 +29,8 @@ namespace OpenRPA.Java
             return null;
         }
         public event Action<IPlugin, IRecordEvent> OnUserAction;
+        public event Action<IPlugin, IRecordEvent> OnMouseMove;
+
         public string Name { get => "Script"; }
         // public string Status => (hook!=null && hook.jvms.Count>0 ? "online":"offline");
         public string Status { get => ""; }
@@ -67,6 +69,11 @@ namespace OpenRPA.Java
             throw new NotImplementedException();
         }
         public bool Match(SelectorItem item, IElement m)
+        {
+            return false;
+        }
+
+        public bool parseMouseMoveAction(ref IRecordEvent e)
         {
             return false;
         }

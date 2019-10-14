@@ -9,10 +9,10 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.3</Version>
-    <PackageReleaseNotes>1.0.3 update interfaces reference</PackageReleaseNotes>
+    <Version>1.0.4</Version>
+    <PackageReleaseNotes>1.0.4 update interfaces reference</PackageReleaseNotes>
     <Description>Small proxy application that handles communication between Java and OpenRPA doing recording</Description>
-    <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA/Resources/open_rpa128.png</PackageIconUrl>
+    <PackageIcon>open_rpa128.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
@@ -20,6 +20,9 @@
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
   </Target>
+  <ItemGroup>
+    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\"/>
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenRPA.NamedPipeWrapper\OpenRPA.NamedPipeWrapper.csproj" />
   </ItemGroup>

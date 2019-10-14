@@ -7,9 +7,9 @@
     <Description>A couple of activities to design and show forms, and notifications</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.9</Version>
-    <PackageReleaseNotes>1.0.9 update interfaces reference</PackageReleaseNotes>
-    <PackageIconUrl>https://raw.githubusercontent.com/open-rpa/openrpa/master/OpenRPA.Forms/Resources/designer/form30.png</PackageIconUrl>
+    <Version>1.0.10</Version>
+    <PackageReleaseNotes>1.0.10 update interfaces reference</PackageReleaseNotes>
+    <PackageIcon>open_rpa128.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
@@ -17,6 +17,9 @@
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
   </Target>
+  <ItemGroup>
+    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\"/>
+  </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\AlertDesigner.xaml" />
     <None Remove="Activities\Form.xaml" />

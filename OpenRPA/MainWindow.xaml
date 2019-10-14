@@ -112,14 +112,6 @@
                         <TextBlock Text="Minimize"></TextBlock>
                     </StackPanel>
                 </RibbonGroup>
-                <RibbonGroup Header="Detectors">
-                    <RibbonButton Label="Detectors" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
-                                  Command="{Binding Data.DetectorsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
-                </RibbonGroup>
-                <RibbonGroup Header="Packages">
-                    <RibbonButton Label="Packages" LargeImageSource="/OpenRPA;component/Resources/Buttons/Package.png" 
-                                  Command="{Binding Data.ManagePackagesCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
-                </RibbonGroup>
             </RibbonTab>
             <RibbonTab Header="Settings">
                 <RibbonGroup Header="Cancel key">
@@ -145,6 +137,19 @@
                                   Command="{Binding Data.OpenFirefoxPageCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
 
                 </RibbonGroup>
+                <RibbonGroup Header="Detectors">
+                    <RibbonButton Label="Detectors" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
+                                  Command="{Binding Data.DetectorsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                </RibbonGroup>
+                <RibbonGroup Header="RunPlugins">
+                    <RibbonButton Label="RunPlugins" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
+                                  Command="{Binding Data.RunPluginsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                </RibbonGroup>
+                <RibbonGroup Header="Packages">
+                    <RibbonButton Label="Packages" LargeImageSource="/OpenRPA;component/Resources/Buttons/Package.png" 
+                                  Command="{Binding Data.ManagePackagesCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                </RibbonGroup>
+
             </RibbonTab>
             <!--<RibbonTab Header="Windows">
                 <RibbonGroup Header="Windows">

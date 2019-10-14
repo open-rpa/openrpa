@@ -10,15 +10,19 @@
     <Version>1.0.10</Version>
     <PackageReleaseNotes>1.0.10 update interfaces reference</PackageReleaseNotes>
     <PackageIcon>open_rpa128.png</PackageIcon>
+    <Configurations>Debug;Release;ReleaseNuget</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
   </PropertyGroup>
-  <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\dist</OutputPath>
+  </PropertyGroup>
+  <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
   </Target>
   <ItemGroup>
-    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\"/>
+    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\AlertDesigner.xaml" />

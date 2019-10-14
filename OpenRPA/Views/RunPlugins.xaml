@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="OpenRPA.Views.RunPlugins"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:OpenRPA.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <CollectionViewSource Source="{Binding runPlugins}" x:Key="runPlugins" />
+    </UserControl.Resources>
+
+    <DockPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <TreeView x:Name="lidtDetectors" ItemsSource="{Binding runPlugins}" BorderThickness="0" Grid.Column="0" Margin="0,4,0,4"  >
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate DataType="{x:Type TreeViewItem}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Path=Name}"></TextBlock>
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+            <GridSplitter Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Stretch" ResizeDirection="Columns" Margin="0" Padding="0" Background = "Gray" Width = "2" />
+            <ContentPresenter Content="{Binding ElementName=lidtDetectors, Path=SelectedValue.editor}" Grid.Column="1" Margin="0,4,0,4" />
+        </Grid>
+
+    </DockPanel>
+</UserControl>

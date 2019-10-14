@@ -14,7 +14,7 @@ namespace OpenRPA.Interfaces
         public static ObservableCollection<IPlugin> recordPlugins = new ObservableCollection<IPlugin>();
         public static ExtendedObservableCollection<IDetectorPlugin> detectorPlugins = new ExtendedObservableCollection<IDetectorPlugin>();
         public static Dictionary<string, Type> detectorPluginTypes = new Dictionary<string, Type>();
-
+        public static ObservableCollection<IRunPlugin> runPlugins = new ObservableCollection<IRunPlugin>();
         public static ObservableCollection<ISnippet> Snippets = new ObservableCollection<ISnippet>();
         public static IDetectorPlugin AddDetector(entity.Detector entity)
         {
@@ -38,12 +38,12 @@ namespace OpenRPA.Interfaces
             }
             return null;
         }
-
         public async static Task LoadPlugins(string projectsDirectory)
         {
             ICollection<Type> pluginTypes = new List<Type>();
             ICollection<Type> snippetTypes = new List<Type>();
-           
+            ICollection<Type> runPluginTypes = new List<Type>();
+
             await Task.Run(() =>
             {
                 List<string> dllFileNames = new List<string>();
@@ -89,6 +89,10 @@ namespace OpenRPA.Interfaces
                                     {
                                         snippetTypes.Add(type);
                                     }
+                                    if (type.GetInterface(typeof(IRunPlugin).FullName) != null)
+                                    {
+                                        runPluginTypes.Add(type);
+                                    }                                    
                                 }
                             }
                         }
@@ -121,6 +125,19 @@ namespace OpenRPA.Interfaces
                     ISnippet plugin = (ISnippet)Activator.CreateInstance(type);
                     Log.Information("Initialize snippet " + plugin.Name);
                     Snippets.Add(plugin);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+            }
+            foreach (Type type in runPluginTypes)
+            {
+                try
+                {
+                    IRunPlugin plugin = (IRunPlugin)Activator.CreateInstance(type);
+                    Log.Information("Initialize RunPlugin " + plugin.Name);
+                    runPlugins.Add(plugin);
                 }
                 catch (Exception ex)
                 {

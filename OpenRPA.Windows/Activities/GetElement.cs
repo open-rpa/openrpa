@@ -51,6 +51,12 @@ namespace OpenRPA.Windows
             var sw = new Stopwatch();
             var from = From.Get(context);
             sw.Start();
+
+            double _timeout = 250;
+#if DEBUG
+            _timeout = _timeout * 8;
+#endif
+
             do
             {
                 elements = OpenRPA.AutomationHelper.RunSTAThread<UIElement[]>(() =>
@@ -67,7 +73,7 @@ namespace OpenRPA.Windows
                         Log.Error(ex, "");
                     }
                     return new UIElement[] { };
-                }, TimeSpan.FromMilliseconds(250)).Result;
+                }, TimeSpan.FromMilliseconds(_timeout)).Result;
                 if (elements == null)
                 {
                     elements = new UIElement[] { };

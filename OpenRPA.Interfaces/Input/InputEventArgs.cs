@@ -31,6 +31,10 @@ namespace OpenRPA.Input
     public sealed class InputEventArgs : EventArgs
     {
         //public bool Handled { get; set; }
+        public void SetElement(UIElement Element)
+        {
+            this.Element = Element;
+        }
         public UIElement Element { get; internal set; }
         public InputEventType Type { get; internal set; }
 

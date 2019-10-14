@@ -16,12 +16,18 @@ namespace OpenRPA
     {
         public UIElement(AutomationElement Element)
         {
-            RawElement = Element;
-            ProcessId = Element.Properties.ProcessId.ValueOrDefault;
-            // if(Element.Properties.AutomationId.IsSupported) Id = Element.Properties.AutomationId.ValueOrDefault;
-            Name = Element.Properties.Name.ValueOrDefault;
-            ClassName = Element.Properties.ClassName.ValueOrDefault;
-            Type = Element.Properties.ControlType.ValueOrDefault.ToString();
+            try
+            {
+                RawElement = Element;
+                ProcessId = Element.Properties.ProcessId.ValueOrDefault;
+                // if(Element.Properties.AutomationId.IsSupported) Id = Element.Properties.AutomationId.ValueOrDefault;
+                Name = Element.Properties.Name.ValueOrDefault;
+                ClassName = Element.Properties.ClassName.ValueOrDefault;
+                Type = Element.Properties.ControlType.ValueOrDefault.ToString();
+            }
+            catch (Exception)
+            {
+            }
         }
         public void Refresh()
         {
@@ -52,11 +58,18 @@ namespace OpenRPA
         {
             get
             {
-                if (RawElement == null) return System.Drawing.Rectangle.Empty;
-                if (!RawElement.Properties.BoundingRectangle.IsSupported) return System.Drawing.Rectangle.Empty;
-                return new System.Drawing.Rectangle((int)RawElement.Properties.BoundingRectangle.Value.X,
-                    (int)RawElement.Properties.BoundingRectangle.Value.Y, (int)RawElement.Properties.BoundingRectangle.Value.Width,
-                    (int)RawElement.Properties.BoundingRectangle.Value.Height);
+                try
+                {
+                    if (RawElement == null) return System.Drawing.Rectangle.Empty;
+                    if (!RawElement.Properties.BoundingRectangle.IsSupported) return System.Drawing.Rectangle.Empty;
+                    return new System.Drawing.Rectangle((int)RawElement.Properties.BoundingRectangle.Value.X,
+                        (int)RawElement.Properties.BoundingRectangle.Value.Y, (int)RawElement.Properties.BoundingRectangle.Value.Width,
+                        (int)RawElement.Properties.BoundingRectangle.Value.Height);
+                }
+                catch (Exception)
+                {
+                    return System.Drawing.Rectangle.Empty;
+                }
             }
             set { }
         }

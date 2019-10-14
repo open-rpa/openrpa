@@ -90,10 +90,16 @@ namespace OpenRPA.Windows
             }
             else
             {
-                if (element.Properties.Name.IsSupported && !string.IsNullOrEmpty(element.Properties.Name.Value)) Properties.Add(new SelectorItemProperty("Name", element.Properties.Name.Value));
-                if (element.Properties.ClassName.IsSupported && !string.IsNullOrEmpty(element.Properties.ClassName)) Properties.Add(new SelectorItemProperty("ClassName", element.Properties.ClassName.Value));
-                if (element.Properties.ControlType.IsSupported && !string.IsNullOrEmpty(element.Properties.ControlType.Value.ToString())) Properties.Add(new SelectorItemProperty("ControlType", element.Properties.ControlType.Value.ToString()));
-                if (element.Properties.AutomationId.IsSupported && !string.IsNullOrEmpty(element.Properties.AutomationId)) Properties.Add(new SelectorItemProperty("AutomationId", element.Properties.AutomationId.Value));
+                try
+                {
+                    if (element.Properties.Name.IsSupported && !string.IsNullOrEmpty(element.Properties.Name.Value)) Properties.Add(new SelectorItemProperty("Name", element.Properties.Name.Value));
+                    if (element.Properties.ClassName.IsSupported && !string.IsNullOrEmpty(element.Properties.ClassName)) Properties.Add(new SelectorItemProperty("ClassName", element.Properties.ClassName.Value));
+                    if (element.Properties.ControlType.IsSupported && !string.IsNullOrEmpty(element.Properties.ControlType.Value.ToString())) Properties.Add(new SelectorItemProperty("ControlType", element.Properties.ControlType.Value.ToString()));
+                    if (element.Properties.AutomationId.IsSupported && !string.IsNullOrEmpty(element.Properties.AutomationId)) Properties.Add(new SelectorItemProperty("AutomationId", element.Properties.AutomationId.Value));
+                }
+                catch (Exception)
+                {
+                }
                 //Enabled = (Properties.Count > 1);
                 //canDisable = true;
                 if(Properties.Count == 0)

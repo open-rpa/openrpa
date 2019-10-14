@@ -19,9 +19,10 @@ namespace OpenRPA.AviRecorder
         private SupportedWaveFormat audioWaveFormat;
         private bool encodeAudio;
         private int audioQuality;
-
-        private Record()
+        public string owner;
+        public Record(string owner)
         {
+            this.owner = owner;
             InitDefaultSettings();
         }
         private static Record _Instance = null;
@@ -29,7 +30,7 @@ namespace OpenRPA.AviRecorder
         {
             get
             {
-                if (_Instance == null) _Instance = new Record();
+                if (_Instance == null) _Instance = new Record(null);
                 return _Instance;
             }
         }
@@ -51,7 +52,7 @@ namespace OpenRPA.AviRecorder
         public bool IsRecording { get; set; }
         public string lastFileName { get; set; }
         private Recorder recorder;
-        public void StartRecording(FourCC encoder, string outputFolder, int encodingQuality)
+        public void StartRecording(FourCC encoder, string outputFolder, int encodingQuality, string filename = null)
         {
             if (IsRecording)
                 throw new InvalidOperationException("Already recording.");
@@ -64,7 +65,8 @@ namespace OpenRPA.AviRecorder
 
             GenericTools.RunUI(() =>
             {
-                lastFileName = System.IO.Path.Combine(outputFolder, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + extension);
+                if (string.IsNullOrEmpty(filename)) filename = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+                lastFileName = System.IO.Path.Combine(outputFolder, filename + extension);
                 var bitRate = Mp3AudioEncoderLame.SupportedBitRates.OrderBy(br => br).ElementAt(audioQuality);
                 recorder = new Recorder(lastFileName,
                     encoder, encodingQuality,

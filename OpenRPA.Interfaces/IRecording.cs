@@ -15,7 +15,6 @@ namespace OpenRPA.Interfaces
         void Stop();
         event Action<IRecording, IRecordEvent> OnUserAction;
         bool parseUserAction(ref IRecordEvent e);
-
         Selector.treeelement[] GetRootEelements();
     }
 }

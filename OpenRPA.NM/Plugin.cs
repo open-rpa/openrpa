@@ -15,6 +15,8 @@ namespace OpenRPA.NM
         public string Name => "NM";
         public string Status => (NMHook.connected ? "online" : "offline");
         public event Action<IPlugin, IRecordEvent> OnUserAction;
+        public event Action<IPlugin, IRecordEvent> OnMouseMove;
+
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
             NMSelector nmselector = selector as NMSelector;
@@ -239,6 +241,20 @@ namespace OpenRPA.NM
         public void Stop()
         {
             recording = false;
+        }
+
+        public bool parseMouseMoveAction(ref IRecordEvent e)
+        {
+            if (e.UIElement == null) return false;
+
+            if (e.UIElement.ProcessId < 1) return false;
+            var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
+            if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox") return false;
+            e.Element = lastElement;
+            e.OffsetX = e.X - lastElement.Rectangle.X;
+            e.OffsetY = e.Y - lastElement.Rectangle.Y;
+
+            return true;
         }
     }
     public class GetElementResult : IBodyActivity

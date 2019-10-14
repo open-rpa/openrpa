@@ -1,6 +1,8 @@
-﻿using System;
+﻿using OpenRPA.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
@@ -19,7 +21,8 @@ namespace OpenRPA
         public string ocrlanguage = "eng";
         public string[] openworkflows = new string[] { };
         public string designerlayout = "";
-
+        public Dictionary<string, object> properties = new Dictionary<string, object>();
+        public bool record_overlay = false;
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)
@@ -41,7 +44,6 @@ namespace OpenRPA
             byte[] ciphertext = ProtectedData.Protect(plaintext, entropy, DataProtectionScope.CurrentUser);
             return ciphertext;
         }
-
         public SecureString UnprotectString(byte[] data)
         {
             loadEntropy();
@@ -73,7 +75,61 @@ namespace OpenRPA
         {
             _local = Load("settings.json");
         }
-
+        public T GetProperty<T>(string pluginname, T mydefault, [System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            try
+            {
+                if (propertyName == null)
+                {
+                    throw new ArgumentNullException(nameof(propertyName));
+                }
+                object value;
+                if (properties.TryGetValue(pluginname + "_" + propertyName, out value))
+                {
+                    return (T)value;
+                }
+                return mydefault;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                throw;
+            }
+        }
+        public bool SetProperty<T>(string pluginname, T newValue, [System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            try
+            {
+                if (propertyName == null)
+                {
+                    throw new ArgumentNullException(nameof(propertyName));
+                }
+                if (IsEqual(GetProperty<T>(pluginname + "_" + propertyName, default(T)), newValue)) return false;
+                properties[pluginname + "_" + propertyName] = newValue;
+                Type typeParameterType = typeof(T);
+                if (typeParameterType.Name.ToLower().Contains("readonly"))
+                {
+                    return true;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                throw;
+            }
+        }
+        private bool IsEqual<T>(T field, T newValue)
+        {
+            // Alternative: EqualityComparer<T>.Default.Equals(field, newValue);
+            return Equals(field, newValue);
+        }
+        private string GetNameFromExpression<T>(Expression<Func<T>> selectorExpression)
+        {
+            var body = (MemberExpression)selectorExpression.Body;
+            var propertyName = body.Member.Name;
+            return propertyName;
+        }
 
 
     }

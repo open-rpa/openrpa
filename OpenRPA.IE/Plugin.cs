@@ -58,8 +58,8 @@ namespace OpenRPA.IE
             }
             return new IESelector(ieitem.IEElement.Browser, ieitem.IEElement.RawElement, ieanchor, true, 0, 0);
         }
-
         public event Action<IPlugin, IRecordEvent> OnUserAction;
+        public event Action<IPlugin, IRecordEvent> OnMouseMove;
         public string Name { get => "IE"; }
         public string Status => "";
         public void Start()
@@ -219,6 +219,16 @@ namespace OpenRPA.IE
         public bool Match(SelectorItem item, IElement m)
         {
             return IESelectorItem.Match(item, m.RawElement as MSHTML.IHTMLElement);
+        }
+        public bool parseMouseMoveAction(ref IRecordEvent e)
+        {
+            if (e.UIElement == null) return false;
+            if (e.UIElement.ProcessId < 1) return false;
+            var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
+            if (p.ProcessName != "iexplore" && p.ProcessName != "iexplore.exe") return false;
+            e.UIElement = null;
+            e.Element = null;
+            return true;
         }
     }
     public class GetElementResult : IBodyActivity

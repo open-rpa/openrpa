@@ -72,7 +72,7 @@ namespace OpenRPA.Views
             Topmost = true;
             Topmost = false;
             Focus();
-            textbox.Focus();
+            // textbox.Focus();
         }
     }
 }

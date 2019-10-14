@@ -17,7 +17,9 @@ namespace OpenRPA.Interfaces
         void Start();
         void Stop();
         event Action<IPlugin, IRecordEvent> OnUserAction;
+        event Action<IPlugin, IRecordEvent> OnMouseMove;
         bool parseUserAction(ref IRecordEvent e);
+        bool parseMouseMoveAction(ref IRecordEvent e);
         Selector.treeelement[] GetRootElements(Selector.Selector anchor);
         Selector.Selector GetSelector(Selector.Selector anchor, Selector.treeelement item);
         IElement[] GetElementsWithSelector(Selector.Selector selector, IElement fromElement = null, int maxresults = 1);

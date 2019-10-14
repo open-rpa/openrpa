@@ -149,6 +149,13 @@
                     <RibbonButton Label="Packages" LargeImageSource="/OpenRPA;component/Resources/Buttons/Package.png" 
                                   Command="{Binding Data.ManagePackagesCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                 </RibbonGroup>
+                <RibbonGroup Header="Runtime">
+                    <StackPanel Orientation="Horizontal">
+                        <RibbonCheckBox IsChecked="{Binding record_overlay}" Command="{Binding Data.VisualTrackingCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
+                        <TextBlock Text="Recording Overlay"></TextBlock>
+                    </StackPanel>
+                </RibbonGroup>
 
             </RibbonTab>
             <!--<RibbonTab Header="Windows">

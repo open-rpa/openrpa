@@ -572,6 +572,19 @@ namespace OpenRPA
                 return result.ToArray();
             }
         }
+        public bool record_overlay
+        {
+            get
+            {
+                return Config.local.record_overlay;
+            }
+            set
+            {
+                Config.local.record_overlay = value;
+                NotifyPropertyChanged("record_overlay");
+            }
+        }
+
         public bool VisualTracking
         {
             get
@@ -1844,6 +1857,7 @@ namespace OpenRPA
         }
         public void OnMouseMove(IPlugin sender, IRecordEvent e)
         {
+            if (!Config.local.record_overlay) return;
             foreach (var p in Plugins.recordPlugins)
             {
                 if (p.Name != sender.Name)

@@ -53,15 +53,12 @@ namespace OpenRPA.Image
             if (e.UIElement.Type != "Pane") { return false; }
             var element = e.UIElement.RawElement;
 
-            string Processname = "";
             if (e.UIElement.ProcessId > 0)
             {
                 var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
                 if (p.ProcessName == "iexplore" || p.ProcessName == "iexplore.exe") { return false; }
                 if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "firefox") { return false; }
-                Processname = p.ProcessName;
             }
-
             e.Element = lastelement;
             lock (_lock)
             {
@@ -69,16 +66,13 @@ namespace OpenRPA.Image
                 _processing = true;
             }
 
-            var elementx = (int)element.BoundingRectangle.X;
-            var elementy = (int)element.BoundingRectangle.Y;
-            var elementw = (int)element.BoundingRectangle.Width;
-            var elementh = (int)element.BoundingRectangle.Height;
-
+            //var elementx = (int)element.BoundingRectangle.X;
+            //var elementy = (int)element.BoundingRectangle.Y;
+            //var elementw = (int)element.BoundingRectangle.Width;
+            //var elementh = (int)element.BoundingRectangle.Height;
+            // Log.Debug(string.Format("Search near {0}, {1} in  ({2}, {3},{4},{5})", elementx, elementy, elementw, elementh, e.OffsetX, e.OffsetY));
 
             int newOffsetX; int newOffsetY; System.Drawing.Rectangle resultrect;
-            Log.Debug(string.Format("Search near {0}, {1} in  ({2}, {3},{4},{5})",
-elementx, elementy, elementw, elementh, e.OffsetX, e.OffsetY));
-
             var image = getrectangle.GuessContour(element, e.OffsetX, e.OffsetY, out newOffsetX, out newOffsetY, out resultrect);
             lock (_lock)
             {
@@ -93,8 +87,7 @@ elementx, elementy, elementw, elementh, e.OffsetX, e.OffsetY));
             }
             e.OffsetX = newOffsetX;
             e.OffsetY = newOffsetY;
-            Log.Debug(string.Format("Found element at ({0}, {1},{2},{3})",
-    resultrect.X, resultrect.Y, resultrect.Width, resultrect.Height));
+            // Log.Debug(string.Format("Found element at ({0}, {1},{2},{3})", resultrect.X, resultrect.Y, resultrect.Width, resultrect.Height));
             lastelement = new ImageElement(resultrect, image);
             e.Element = lastelement;
 

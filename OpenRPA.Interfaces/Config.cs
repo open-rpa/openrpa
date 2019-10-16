@@ -104,7 +104,7 @@ namespace OpenRPA
                 {
                     throw new ArgumentNullException(nameof(propertyName));
                 }
-                if (IsEqual(GetProperty<T>(pluginname + "_" + propertyName, default(T)), newValue)) return false;
+                // if (IsEqual(GetProperty<T>(pluginname + "_" + propertyName, default(T)), newValue)) return false;
                 properties[pluginname + "_" + propertyName] = newValue;
                 Type typeParameterType = typeof(T);
                 if (typeParameterType.Name.ToLower().Contains("readonly"))

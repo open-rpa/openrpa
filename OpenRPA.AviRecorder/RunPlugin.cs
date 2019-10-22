@@ -66,13 +66,13 @@ namespace OpenRPA.AviRecorder
         }
         public bool onWorkflowResumeBookmark(ref IWorkflowInstance e, string bookmarkName, object value)
         {
-            if (!PluginConfig.enabled) return false;
+            if (!PluginConfig.enabled) return true;
             startRecording(e);
             return true;
         }
         public bool onWorkflowStarting(ref IWorkflowInstance e, bool resumed)
         {
-            if (!PluginConfig.enabled) return false;
+            if (!PluginConfig.enabled) return true;
             startRecording(e);
             return true;
         }

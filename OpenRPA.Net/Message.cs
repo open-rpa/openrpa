@@ -36,7 +36,7 @@ namespace OpenRPA.Net
                 message.Send(ws);
                 return;
             }
-            var messages = data.Split(1024).ToArray();
+            var messages = data.Split(4096).ToArray();
             Log.Verbose("Send (" + messages.Length.ToString() + ") " + command + " / " + data);
             for (var i = 0; i < messages.Length; i++)
             {

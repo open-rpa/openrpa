@@ -9,15 +9,16 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.25</Version>
-    <PackageReleaseNotes>
+    <Version>1.0.27</Version>
+    <PackageReleaseNotes>1.0.27 Use HTTP instead of sockets for getting files
+1.0.26 Fix issue with checkboxes
       1.0.25 Add support for runner plugins
       1.0.24 Workaround for WPF double elements
       1.0.23 Implement webbased signin, to support federation
       1.0.22 check for updates async, to make robot load faster when no internet
       1.0.21 hitfixing "missing snippets" error
       1.0.19 DownloadFile/UploadeFile renamed GetFile/Save file. Added DownloadFole, Added a Snippets liberary with examples
-    </PackageReleaseNotes>
+</PackageReleaseNotes>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget</Configurations>
   </PropertyGroup>
@@ -628,6 +629,11 @@
     <Resource Include="Resources\state\Running.png" />
     <Resource Include="Resources\state\Running_green.png" />
     <Resource Include="Resources\state\unloaded.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="RunOpenRPA.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />

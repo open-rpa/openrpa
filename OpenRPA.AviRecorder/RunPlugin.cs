@@ -28,9 +28,7 @@ namespace OpenRPA.AviRecorder
                 return view;
             }
         }
-
         public string Name => "AviRecorder";
-
         private Dictionary<string, Record> Records = new Dictionary<string, Record>();
         public void onWorkflowAborted(ref IWorkflowInstance e)
         {
@@ -38,6 +36,7 @@ namespace OpenRPA.AviRecorder
         }
         public void onWorkflowCompleted(ref IWorkflowInstance e)
         {
+            if (!PluginConfig.enabled) return;
             stopRecording(e);
             if(!PluginConfig.keepsuccessful)
             {
@@ -62,15 +61,18 @@ namespace OpenRPA.AviRecorder
         }
         public void onWorkflowIdle(ref IWorkflowInstance e)
         {
-            if(PluginConfig.stoponidle) stopRecording(e);
+            if (!PluginConfig.enabled) return;
+            if (PluginConfig.stoponidle) stopRecording(e);
         }
         public bool onWorkflowResumeBookmark(ref IWorkflowInstance e, string bookmarkName, object value)
         {
+            if (!PluginConfig.enabled) return false;
             startRecording(e);
             return true;
         }
         public bool onWorkflowStarting(ref IWorkflowInstance e, bool resumed)
         {
+            if (!PluginConfig.enabled) return false;
             startRecording(e);
             return true;
         }

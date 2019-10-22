@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.26</Version>
-    <PackageReleaseNotes>1.0.26 Fix issue with checkboxes
+    <Version>1.0.27</Version>
+    <PackageReleaseNotes>1.0.27 Use HTTP instead of sockets for getting files
+1.0.26 Fix issue with checkboxes
       1.0.25 Add support for runner plugins
       1.0.24 Workaround for WPF double elements
       1.0.23 Implement webbased signin, to support federation

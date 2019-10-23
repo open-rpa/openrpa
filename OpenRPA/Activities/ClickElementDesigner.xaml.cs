@@ -13,16 +13,11 @@ using System.Windows.Media.Imaging;
 
 namespace OpenRPA.Activities
 {
-    public partial class ClickElementDesigner : INotifyPropertyChanged
+    public partial class ClickElementDesigner
     {
         public ClickElementDesigner()
         {
             InitializeComponent();
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged(String propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

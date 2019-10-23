@@ -13,7 +13,7 @@ using Newtonsoft.Json.Linq;
 
 namespace OpenRPA.Activities
 {
-    [System.ComponentModel.Designer(typeof(DeleteOneDesigner), typeof(System.ComponentModel.Design.IDesigner))]
+    [Designer(typeof(DeleteOneDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.deleteentity.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class DeleteOne : AsyncTaskCodeActivity<bool>
@@ -22,9 +22,9 @@ namespace OpenRPA.Activities
         public InArgument<bool> IgnoreErrors { get; set; } = false;
         [RequiredArgument]
         public InArgument<string> Collection { get; set; } = "entities";
-        [RequiredArgument, OverloadGroupAttribute("Item")]
-        public InArgument<Object> Item { get; set; }
-        [RequiredArgument, OverloadGroupAttribute("Id")]
+        [RequiredArgument, OverloadGroup("Item")]
+        public InArgument<object> Item { get; set; }
+        [RequiredArgument, OverloadGroup("Id")]
         public InArgument<string> _id { get; set; }
         protected async override Task<bool> ExecuteAsync(AsyncCodeActivityContext context)
         {

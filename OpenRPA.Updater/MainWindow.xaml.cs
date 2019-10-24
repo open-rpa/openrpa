@@ -42,31 +42,18 @@ namespace OpenRPA.Updater
         public string RepositoryPath;
         public string InstallPath;
         public bool FirstRun = true;
-        readonly System.Runtime.Versioning.FrameworkName TargetFramework;
+        // readonly System.Runtime.Versioning.FrameworkName TargetFramework;
         public MainWindow()
         {
             InitializeComponent();
             ButtonUpdateAll.IsEnabled = false;
             DataContext = this;
-            // https://api.nuget.org/v3/index.json
-            // https://www.nuget.org/api/v2/
-            // https://packages.nuget.org/api/v2
-            // https://nuget.pkg.github.com/open-rpa/index.json
-#if DEBUG
-            // repo = PackageRepositoryFactory.Default.CreateRepository(@"C:\code\OpenRPA\packages");
-            // repo = PackageRepositoryFactory.Default.CreateRepository(@"C:\code\OpenRPA\packages");
-#else
-#endif
             OpenRPAPackageManagerLogger.Instance.Updated += () =>
             {
                 Logs = OpenRPAPackageManagerLogger.Instance.Logs;
             };
             RepositoryPath = Environment.CurrentDirectory + @"\Packages";
             InstallPath = Environment.CurrentDirectory + @"\OpenRPA";
-            // TargetFramework = new System.Runtime.Versioning.FrameworkName(".NETFramework, Version=4.0");
-            TargetFramework = new System.Runtime.Versioning.FrameworkName(".NETFramework", new Version("4.6.2"));
-            // TargetFramework20 = new System.Runtime.Versioning.FrameworkName(".NETStandard", new Version("2.0"));
-
             LoadPackages();
         }
         private static bool IsOfficeInstalled()
@@ -80,21 +67,76 @@ namespace OpenRPA.Updater
         }
         public void LoadPackages()
         {
+            var result = new List<PackageModel>();
+            foreach (var m in Packages) result.Add(m);
             Task.Run(async () =>
             {
-
-                var packages = await OpenRPAPackageManager.Instance.Search("OpenRPA");
-                foreach (var p in packages)
+                var packagesearch = await OpenRPAPackageManager.Instance.Search("OpenRPA");
+                foreach (var p in packagesearch)
                 {
-                    PackageModel m = new PackageModel() { Package = p, canUpgrade = false, isDownloaded = false, Version = p.Identity.Version };
-                    m.LocalPackage = OpenRPAPackageManager.Instance.getLocal(p.Identity.Id);
-                    if(m.LocalPackage != null) { 
-                        m.InstalledVersion = m.LocalPackage.Identity.Version;
-                        m.isDownloaded = true;
+                    var exists = result.Where(x => x.Package.Identity.Id == p.Identity.Id).FirstOrDefault();
+                    if (exists == null)
+                    {
+                        PackageModel m = new PackageModel() { Package = p, canUpgrade = false, isDownloaded = false };
+                        m.LocalPackage = OpenRPAPackageManager.Instance.getLocal(p.Identity.Id);
+                        result.Add(m);
+                    } else
+                    {
+                        exists.LocalPackage = OpenRPAPackageManager.Instance.getLocal(p.Identity.Id);
                     }
-
                 }
+                foreach(var m in result)
+                    if (m.LocalPackage != null)
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            m.isDownloaded = true;
+                            m.isInstalled = OpenRPAPackageManager.Instance.IsPackageInstalled(m.LocalPackage);
+                            m.canUpgrade = m.Version > m.LocalPackage.Identity.Version;
+                        });
+                    }
+                Dispatcher.Invoke(() =>
+                {
+                    foreach (var p in result)
+                    {
+                        var exists = Packages.Where(x => x.Package.Identity.Id == p.Package.Identity.Id).FirstOrDefault();
+                        if (exists == null) Packages.Add(p);
+                        if (exists != null)
+                        {
+                            p.NotifyPropertyChanged("Image");
+                            p.NotifyPropertyChanged("Name");
+                            p.NotifyPropertyChanged("IsNotDownloaded");
+                            p.NotifyPropertyChanged("isDownloaded");
+                            p.NotifyPropertyChanged("canUpgrade");
+                            p.NotifyPropertyChanged("isDownloaded");
+                            p.NotifyPropertyChanged("Name");
+                            p.NotifyPropertyChanged("InstalledVersionString");
+                            p.NotifyPropertyChanged("LatestVersion");
+                            p.NotifyPropertyChanged("LatestVersion");
+                        }
+                    }
+                    ButtonUpdateAll.IsEnabled = result.Where(x => x.canUpgrade == true).Count() > 0;
+                });
 
+                if (!System.IO.Directory.Exists(InstallPath) || !System.IO.File.Exists(InstallPath + @"\OpenRPA.exe"))
+                {
+                    FirstRun = false;
+                    var dialogResult = MessageBox.Show("Install OpenRPA and most common packages?", "First run", MessageBoxButton.YesNo);
+                    if (dialogResult == MessageBoxResult.Yes)
+                    {
+                        await OpenRPAPackageManager.Instance.DownloadAndInstall(result.Where(x => x.Package.Identity.Id == "OpenRPA").First().Package.Identity);
+                        await OpenRPAPackageManager.Instance.DownloadAndInstall(result.Where(x => x.Package.Identity.Id == "OpenRPA.IE").First().Package.Identity);
+                        await OpenRPAPackageManager.Instance.DownloadAndInstall(result.Where(x => x.Package.Identity.Id == "OpenRPA.NM").First().Package.Identity);
+                        await OpenRPAPackageManager.Instance.DownloadAndInstall(result.Where(x => x.Package.Identity.Id == "OpenRPA.Forms").First().Package.Identity);
+                        await OpenRPAPackageManager.Instance.DownloadAndInstall(result.Where(x => x.Package.Identity.Id == "OpenRPA.Script").First().Package.Identity);
+                        if (IsOfficeInstalled())
+                        {
+                            await OpenRPAPackageManager.Instance.DownloadAndInstall(result.Where(x => x.Package.Identity.Id == "OpenRPA.Office").First().Package.Identity);
+                        }
+                        await OpenRPAPackageManager.Instance.DownloadAndInstall(result.Where(x => x.Package.Identity.Id == "OpenRPA.AviRecorder").First().Package.Identity);
+                        await OpenRPAPackageManager.Instance.DownloadAndInstall(result.Where(x => x.Package.Identity.Id == "OpenRPA.FileWatcher").First().Package.Identity);
+                    }
+                }
 
 
                 //                // IPackageRepository localRepository = PackageRepositoryFactory.Default.CreateRepository(RepositoryPath);
@@ -234,28 +276,7 @@ namespace OpenRPA.Updater
 
                 //                }
             });
-            }
-        private void CopyIfNewer(string source, string target)
-        {
-            var infoOld = new System.IO.FileInfo(source);
-            var infoNew = new System.IO.FileInfo(target);
-            //if (infoNew.LastWriteTime > infoOld.LastWriteTime)
-            if (infoNew.LastWriteTime != infoOld.LastWriteTime)
-            {
-                try
-                {
-                    System.IO.File.Copy(source, target, true);
-                    return;
-                }
-                catch (Exception)
-                {
-                    KillOpenRPA();
-                    System.Threading.Thread.Sleep(1000);
-                }
-                System.IO.File.Copy(source, target, true);
-            }
         }
-
         public void Run(string WorkingDirectory, string command)
         {
             using (System.Diagnostics.Process p = new System.Diagnostics.Process())
@@ -268,32 +289,55 @@ namespace OpenRPA.Updater
                 p.Start();
             }
         }
-        public void KillOpenRPA()
-        {
-            Run("", "taskkill /f /fi \"pid gt 0\" /im OpenRPA.JavaBridge.exe");
-            Run("", "taskkill /f /fi \"pid gt 0\" /im OpenRPA.exe");
-            Run("", "taskkill /f /fi \"pid gt 0\" /im OpenRPA.NativeMessagingHost.exe");
-        }
         public System.Collections.ObjectModel.ObservableCollection<PackageModel> Packages { get; } = new System.Collections.ObjectModel.ObservableCollection<PackageModel>();
         private async void ButtonInstall(object sender, RoutedEventArgs e)
         {
             PackageModel SelectedValue = listPackages.SelectedValue as PackageModel;
             if (SelectedValue == null) return;
+            BtnInstall.IsEnabled = false;
+            BtnReinstall.IsEnabled = false;
+            BtnUpgrade.IsEnabled = false;
+            BtnUninstall.IsEnabled = false;
+
             listPackages.SelectedValue = null;
             listPackages.IsEnabled = false;
             listPackages.IsEnabled = true;
             listPackages.SelectedValue = SelectedValue;
+            await OpenRPAPackageManager.Instance.DownloadAndInstall(SelectedValue.Package.Identity);
+            LoadPackages();
+            BtnInstall.IsEnabled = SelectedValue.IsNotDownloaded;
+            BtnReinstall.IsEnabled = SelectedValue.isDownloaded;
+            BtnUpgrade.IsEnabled = SelectedValue.canUpgrade;
+            BtnUninstall.IsEnabled = SelectedValue.isDownloaded;
         }
         private void ButtonUpgrade(object sender, RoutedEventArgs e)
         {
-            PackageModel SelectedValue = listPackages.SelectedValue as PackageModel;
-            if (SelectedValue == null) return;
-            _ = UpgradePackageAsync(SelectedValue);
+            //PackageModel SelectedValue = listPackages.SelectedValue as PackageModel;
+            //if (SelectedValue == null) return;
+            //_ = UpgradePackageAsync(SelectedValue);
+            ButtonInstall(null, null);
         }
         private void ButtonUninstall(object sender, RoutedEventArgs e)
         {
             PackageModel SelectedValue = listPackages.SelectedValue as PackageModel;
             if (SelectedValue == null) return;
+            BtnInstall.IsEnabled = false;
+            BtnReinstall.IsEnabled = false;
+            BtnUpgrade.IsEnabled = false;
+            BtnUninstall.IsEnabled = false;
+
+            listPackages.SelectedValue = null;
+            listPackages.IsEnabled = false;
+            listPackages.IsEnabled = true;
+            listPackages.SelectedValue = SelectedValue;
+            OpenRPAPackageManager.Instance.UninstallPackage(SelectedValue.Package.Identity);
+            LoadPackages();
+            BtnInstall.IsEnabled = SelectedValue.IsNotDownloaded;
+            BtnReinstall.IsEnabled = SelectedValue.isDownloaded;
+            BtnUpgrade.IsEnabled = SelectedValue.canUpgrade;
+            BtnUninstall.IsEnabled = SelectedValue.isDownloaded;
+
+
             //var exists = packageManager.LocalRepository.FindPackage(SelectedValue.Package.Id);
             //if (exists != null)
             //{
@@ -346,56 +390,21 @@ namespace OpenRPA.Updater
         {
             ButtonInstall(null, null);
         }
-        private async Task UpgradePackageAsync(PackageModel SelectedValue)
-        {
-            //if (SelectedValue == null) return;
-            //var exists = packageManager.LocalRepository.FindPackage(SelectedValue.Package.Id);
-            //if (exists != null)
-            //{
-            //    listPackages.SelectedValue = null;
-            //    listPackages.IsEnabled = false;
-            //    await Task.Run(() =>
-            //    {
-            //        try
-            //        {
-            //            //packageManager.UpdatePackage(exists, true, false);
-            //            packageManager.UpdatePackage(exists.Id, new SemanticVersion(SelectedValue.LatestVersion), false, false);
-            //            exists = packageManager.LocalRepository.FindPackage(SelectedValue.Package.Id);
-            //            SelectedValue.canUpgrade = false;
-            //            PackageInstalled(null, new PackageOperationEventArgs(exists, FileSystem, RepositoryPath + @"\" + exists.Id + "." + exists.Version.ToString()));
-            //            InstallPackageDependencies(TargetFramework, exists);
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            OpenRPAPackageManagerLogger.Instance.Log(NuGet.Common.LogLevel.Error, ex.ToString());
-            //            System.Diagnostics.Debug.WriteLine(ex.ToString());
-            //        }
-            //        finally
-            //        {
-            //            this.Dispatcher.Invoke(() =>
-            //            {
-            //                listPackages.IsEnabled = true;
-            //                listPackages.SelectedValue = SelectedValue;
-            //            });
-            //            LoadPackages();
-            //        }
-            //    });
-            //}
-        }
         private async void ButtonUpdateAllClick(object sender, RoutedEventArgs e)
         {
             await Dispatcher.Invoke(async () =>
             {
                 foreach (var p in Packages.ToList())
                 {
-                    if(p.canUpgrade)
+                    if (p.canUpgrade)
                     {
-                        await UpgradePackageAsync(p);
+                        await OpenRPAPackageManager.Instance.DownloadAndInstall(p.Package.Identity);
+                        // await UpgradePackageAsync(p);
                     }
                 }
-
                 listPackages.IsEnabled = true;
                 ButtonLaunch(null, null);
+                LoadPackages();
             });
         }
     }

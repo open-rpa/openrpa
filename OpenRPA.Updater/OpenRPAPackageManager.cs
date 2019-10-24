@@ -103,7 +103,11 @@ namespace OpenRPA.Updater
                             .SearchAsync(searchstring, searchFilter, 0, 50, OpenRPAPackageManagerLogger.Instance, CancellationToken.None);
                 foreach (var p in jsonNugetPackages.Where(x => x.Identity.Id.Contains(searchstring)))
                 {
-                    var exists = result.Where(x => x.Identity == p.Identity).FirstOrDefault();
+                    var exists = result.Where(x => x.Identity.Id == p.Identity.Id).FirstOrDefault();
+                    if (p.Identity.Id.ToLower().Contains("openrpa.interfaces") || p.Identity.Id.ToLower().Contains("openrpa.namedpipewrapper")
+                        || p.Identity.Id.ToLower().Contains("openrpa.expressioneditor") || p.Identity.Id.ToLower().Contains("openrpa.net")
+                        || p.Identity.Id.ToLower().Contains("openrpa.windows") || p.Identity.Id.ToLower().Contains("openrpa.updater")
+                        || p.Identity.Id.ToLower().Contains("openrpa.nativemessaginghost") || p.Identity.Id.ToLower().Contains("openrpa.javabridge")) continue;
                     if (exists == null) result.Add(p);
                 }
             }
@@ -131,7 +135,7 @@ namespace OpenRPA.Updater
         }
 
         // https://github.com/NuGet/Home/issues/5674
-        public async Task<List<IPackageSearchMetadata>> DownloadAndInstall(PackageIdentity package)
+        public async Task<List<IPackageSearchMetadata>> DownloadAndInstall(PackageIdentity identity)
         {
             var result = new List<IPackageSearchMetadata>();
 
@@ -139,11 +143,11 @@ namespace OpenRPA.Updater
             {
                 var repositories = SourceRepositoryProvider.GetRepositories();
                 var availablePackages = new HashSet<SourcePackageDependencyInfo>(PackageIdentityComparer.Default);
-                await GetPackageDependencies(package, cacheContext, availablePackages);
+                await GetPackageDependencies(identity, cacheContext, availablePackages);
 
                 var resolverContext = new PackageResolverContext(
                     DependencyBehavior.Lowest,
-                    new[] { package.Id },
+                    new[] { identity.Id },
                     Enumerable.Empty<string>(),
                     Enumerable.Empty<NuGet.Packaging.PackageReference>(),
                     Enumerable.Empty<PackageIdentity>(),
@@ -161,7 +165,7 @@ namespace OpenRPA.Updater
 
                 foreach (var packageToInstall in packagesToInstall)
                 {
-                    PackageReaderBase packageReader;
+                    // PackageReaderBase packageReader;
                     var installedPath = packagePathResolver.GetInstalledPath(packageToInstall);
                     if (installedPath == null)
                     {
@@ -179,60 +183,14 @@ namespace OpenRPA.Updater
                             packageExtractionContext,
                             CancellationToken.None);
 
-                        packageReader = downloadResult.PackageReader;
+                        // packageReader = downloadResult.PackageReader;
                     }
-                    else
-                    {
-#pragma warning disable IDE0067 // Dispose objects before losing scope
-                        packageReader = new PackageFolderReader(installedPath);
-#pragma warning restore IDE0067 // Dispose objects before losing scope
-                    }
+                    //else
+                    //{
+                    //    packageReader = new PackageFolderReader(installedPath);
+                    //}
 
-                    var libItems = packageReader.GetLibItems();
-                    var nearest = frameworkReducer.GetNearest(NuGetFramework, libItems.Select(x => x.TargetFramework));
-                    //Console.WriteLine(string.Join("\n", libItems
-                    //    .Where(x => x.TargetFramework.Equals(nearest))
-                    //    .SelectMany(x => x.Items)));
-                    var files = libItems
-                        .Where(x => x.TargetFramework.Equals(nearest))
-                        .SelectMany(x => x.Items).ToList();
-
-                    var frameworkItems = packageReader.GetFrameworkItems();
-                    var nearest2 = frameworkReducer.GetNearest(NuGetFramework, frameworkItems.Select(x => x.TargetFramework));
-
-
-                    var refs = packageReader.GetReferenceItems();
-                    var libs = packageReader.GetLibItems();
-                    var contents = packageReader.GetContentItems();
-
-                    foreach (var f in files)
-                    {
-                        string source = "";
-                        string f2 = "";
-                        string filename = "";
-                        string dir = "";
-                        string target = "";
-                        try
-                        {
-                            source = System.IO.Path.Combine(installedPath, f);
-                            f2 = f.Substring(f.IndexOf("/", 4) + 1);
-                            filename = System.IO.Path.GetFileName(f2);
-                            dir = System.IO.Path.GetDirectoryName(f2);
-                            target = System.IO.Path.Combine(Destinationfolder, dir, filename);
-                            if (!System.IO.Directory.Exists(System.IO.Path.Combine(Destinationfolder, dir)))
-                            {
-                                System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Destinationfolder, dir));
-                            }
-                            // if (!System.IO.File.Exists(target)) System.IO.File.Copy(source, target);
-                            if (System.IO.File.Exists(target)) System.IO.File.Delete(target);
-                            System.IO.File.Copy(source, target);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.ToString());
-                        }
-                    }
-                    // packageReader.CopyFiles(destinationfolder, files, ExtractFile, logger, CancellationToken.None);
+                    InstallPackage(packageToInstall);
                 }
             }
             return result;
@@ -245,10 +203,15 @@ namespace OpenRPA.Updater
         //    }
         //    return targetPath;
         //}
+        public List<Lazy<INuGetResourceProvider>> CreateResourceProviders()
+        {
+            var result = new List<Lazy<INuGetResourceProvider>>();
+            Repository.Provider.GetCoreV3();
+            return result;
+        }
         public LocalPackageInfo getLocal(string identity)
         {
-            List<Lazy<INuGetResourceProvider>> providers = new List<Lazy<INuGetResourceProvider>>();
-            providers.AddRange(Repository.Provider.GetCoreV3());
+            List<Lazy<INuGetResourceProvider>> providers = CreateResourceProviders();
 
             FindLocalPackagesResourceV2 findLocalPackagev2 = new FindLocalPackagesResourceV2(Packagesfolder);
             var packages = findLocalPackagev2.GetPackages(Logger, CancellationToken.None).ToList();
@@ -278,13 +241,209 @@ namespace OpenRPA.Updater
             //// found but missing the assemblies property
         }
 
-        public bool IsPackageInstalled(string identity)
+        private void InstallFile(string installedPath, string f)
         {
-            var p = getLocal(identity);
+            string source = "";
+            string f2 = "";
+            string filename = "";
+            string dir = "";
+            string target = "";
+            try
+            {
+                source = System.IO.Path.Combine(installedPath, f);
+                f2 = f.Substring(f.IndexOf("/", 4) + 1);
+                filename = System.IO.Path.GetFileName(f2);
+                dir = System.IO.Path.GetDirectoryName(f2);
+                target = System.IO.Path.Combine(Destinationfolder, dir, filename);
+                if (!System.IO.Directory.Exists(System.IO.Path.Combine(Destinationfolder, dir)))
+                {
+                    System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Destinationfolder, dir));
+                }
+                CopyIfNewer(source, target);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+        public bool InstallPackage(PackageIdentity identity)
+        {
+            var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
+            var installedPath = packagePathResolver.GetInstalledPath(identity);
+
+            PackageReaderBase packageReader;
+            packageReader = new PackageFolderReader(installedPath);
+            var libItems = packageReader.GetLibItems();
+            var frameworkReducer = new FrameworkReducer();
+            var nearest = frameworkReducer.GetNearest(NuGetFramework, libItems.Select(x => x.TargetFramework));
+            var files = libItems
+                .Where(x => x.TargetFramework.Equals(nearest))
+                .SelectMany(x => x.Items).ToList();
+            foreach (var f in files)
+            {
+                InstallFile(installedPath, f);
+            }
+
+            var cont = packageReader.GetContentItems();
+            nearest = frameworkReducer.GetNearest(NuGetFramework, cont.Select(x => x.TargetFramework));
+            files = cont
+                .Where(x => x.TargetFramework.Equals(nearest))
+                .SelectMany(x => x.Items).ToList();
+            foreach (var f in files)
+            {
+                InstallFile(installedPath, f);
+            }
+
+            var dependencies = packageReader.GetPackageDependencies();
+            var nearest2 = frameworkReducer.GetNearest(NuGetFramework, dependencies.Select(x => x.TargetFramework));
+            foreach (var dep in dependencies.Where(x => x.TargetFramework.Equals(nearest2) ))
+            {
+                foreach(var p in dep.Packages)
+                {
+                    var local = getLocal(p.Id);
+                    InstallPackage(local.Identity);
+                }                
+            }
+            return true;
+        }
+        public void UninstallPackage(PackageIdentity identity)
+        {
+            var package = getLocal(identity.Id);
+            var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
+            var installedPath = packagePathResolver.GetInstalledPath(package.Identity);
+
+            PackageReaderBase packageReader;
+            packageReader = new PackageFolderReader(installedPath);
+            var libItems = packageReader.GetLibItems();
+            var frameworkReducer = new FrameworkReducer();
+            var nearest = frameworkReducer.GetNearest(NuGetFramework, libItems.Select(x => x.TargetFramework));
+            var files = libItems
+                .Where(x => x.TargetFramework.Equals(nearest))
+                .SelectMany(x => x.Items).ToList();
+            foreach (var f in files)
+            {
+                string source = "";
+                string f2 = "";
+                string filename = "";
+                string dir = "";
+                string target = "";
+                try
+                {
+                    source = System.IO.Path.Combine(installedPath, f);
+                    f2 = f.Substring(f.IndexOf("/", 4) + 1);
+                    filename = System.IO.Path.GetFileName(f2);
+                    dir = System.IO.Path.GetDirectoryName(f2);
+                    target = System.IO.Path.Combine(Destinationfolder, dir, filename);
+                    if (!System.IO.Directory.Exists(System.IO.Path.Combine(Destinationfolder, dir)))
+                    {
+                        System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Destinationfolder, dir));
+                    }
+                    if (!System.IO.File.Exists(source)) continue;
+                    if (!System.IO.File.Exists(target)) continue;
+                    var infoOld = new System.IO.FileInfo(source);
+                    var infoNew = new System.IO.FileInfo(target);
+                    try
+                    {
+                        System.IO.File.Delete(target);
+                    }
+                    catch (Exception)
+                    {
+                        KillOpenRPA();
+                    }
+                    finally
+                    {
+                        if (System.IO.File.Exists(target)) System.IO.File.Delete(target); 
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+        }
+        public bool IsPackageInstalled(LocalPackageInfo package)
+        {
+            var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
+            var installedPath = packagePathResolver.GetInstalledPath(package.Identity);
+
+            PackageReaderBase packageReader;
+            packageReader = new PackageFolderReader(installedPath);
+            var libItems = packageReader.GetLibItems();
+            var frameworkReducer = new FrameworkReducer();
+            var nearest = frameworkReducer.GetNearest(NuGetFramework, libItems.Select(x => x.TargetFramework));
+            var files = libItems
+                .Where(x => x.TargetFramework.Equals(nearest))
+                .SelectMany(x => x.Items).ToList();
 
 
+            foreach (var f in files)
+            {
+                string source = "";
+                string f2 = "";
+                string filename = "";
+                string dir = "";
+                string target = "";
+                try
+                {
+                    source = System.IO.Path.Combine(installedPath, f);
+                    f2 = f.Substring(f.IndexOf("/", 4) + 1);
+                    filename = System.IO.Path.GetFileName(f2);
+                    dir = System.IO.Path.GetDirectoryName(f2);
+                    target = System.IO.Path.Combine(Destinationfolder, dir, filename);
+                    if (!System.IO.Directory.Exists(System.IO.Path.Combine(Destinationfolder, dir)))
+                    {
+                        System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Destinationfolder, dir));
+                    }
+                    if (!System.IO.File.Exists(source)) return false;
+                    if (!System.IO.File.Exists(target)) return false;
+                    var infoOld = new System.IO.FileInfo(source);
+                    var infoNew = new System.IO.FileInfo(target);
+                    if (infoNew.LastWriteTime != infoOld.LastWriteTime) return false;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
 
-            return false;
+            return true;
+        }
+        private void CopyIfNewer(string source, string target)
+        {
+            var infoOld = new System.IO.FileInfo(source);
+            var infoNew = new System.IO.FileInfo(target);
+            if (infoNew.LastWriteTime != infoOld.LastWriteTime)
+            {
+                try
+                {
+                    System.IO.File.Copy(source, target, true);
+                    return;
+                }
+                catch (Exception)
+                {
+                    KillOpenRPA();
+                    Thread.Sleep(1000);
+                }
+                System.IO.File.Copy(source, target, true);
+            }
+        }
+        public void KillOpenRPA()
+        {
+            Run("", "taskkill /f /fi \"pid gt 0\" /im OpenRPA.JavaBridge.exe");
+            Run("", "taskkill /f /fi \"pid gt 0\" /im OpenRPA.exe");
+            Run("", "taskkill /f /fi \"pid gt 0\" /im OpenRPA.NativeMessagingHost.exe");
+        }
+        public void Run(string WorkingDirectory, string command)
+        {
+            using (System.Diagnostics.Process p = new System.Diagnostics.Process())
+            {
+                p.StartInfo.FileName = "cmd.exe";
+                p.StartInfo.Arguments = "/c \"" + command + "\"";
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.WorkingDirectory = WorkingDirectory;
+                p.StartInfo.CreateNoWindow = true;
+                p.Start();
+            }
         }
     }
 }

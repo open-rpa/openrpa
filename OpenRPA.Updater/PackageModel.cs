@@ -19,16 +19,28 @@ namespace OpenRPA.Updater
         public IPackageSearchMetadata Package { get; set; }
         public NuGet.Protocol.LocalPackageInfo LocalPackage { get; set; }
         public bool canUpgrade { get; set; }
-        public NuGetVersion Version { get; set; }
-        public NuGetVersion InstalledVersion { get; set; }
+        public NuGetVersion Version
+        {
+            get
+            {
+                return Package.Identity.Version;
+            }
+        }
+        public NuGetVersion InstalledVersion
+        {
+            get
+            {
+                if (LocalPackage == null) return null;
+                return LocalPackage.Identity.Version;
+            }
+        }
         public string Name
         {
             get
             {
-                return "unknown";
-                //if (Package == null) return "unknown";
-                //if (!string.IsNullOrEmpty(Package.Title)) return Package.Title;
-                //return Package.Id;
+                if (Package == null) return "unknown";
+                if (!string.IsNullOrEmpty(Package.Title)) return Package.Title;
+                return Package.Identity.Id;
             }
             set
             {
@@ -89,20 +101,14 @@ namespace OpenRPA.Updater
                 NotifyPropertyChanged("Image");
             }
         }
-        //public string _LatestVersion = "";
-        //public string LatestVersion
-        //{
-        //    get
-        //    {
-
-        //        return _LatestVersion;
-        //    }
-        //    set
-        //    {
-        //        _LatestVersion = value;
-        //        NotifyPropertyChanged("LatestVersion");
-        //    }
-        //}
+        public string InstalledVersionString
+        {
+            get
+            {
+                if (LocalPackage == null) return "";
+                return LocalPackage.Identity.Version.ToString();
+            }
+        }
         public string LatestVersion
         {
             get
@@ -112,10 +118,9 @@ namespace OpenRPA.Updater
         }
         public override string ToString()
         {
-            return "unknown";
-            //if (Package == null) return "unknown";
-            //if (!string.IsNullOrEmpty(Package.Title)) return Package.Title;
-            //return Package.Id;
+            if (Package == null) return "unknown";
+            if (!string.IsNullOrEmpty(Package.Title)) return Package.Title;
+            return Package.Identity.Id;
         }
 
     }

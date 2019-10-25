@@ -440,15 +440,15 @@ namespace OpenRPA
         }
         private async Task CheckForUpdatesAsync()
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 try
                 {
-                    if (updater.UpdaterNeedsUpdate() == true)
+                    if (await updater.UpdaterNeedsUpdate() == true)
                     {
-                        updater.UpdateUpdater();
+                        await updater.UpdateUpdater();
                     }
-                    var releasenotes = updater.OpenRPANeedsUpdate();
+                    var releasenotes = await updater.OpenRPANeedsUpdate();
                     if (!string.IsNullOrEmpty(releasenotes))
                     {
                         var dialogResult = MessageBox.Show(releasenotes, "Update available", MessageBoxButton.YesNo);

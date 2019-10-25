@@ -82,6 +82,10 @@ namespace OpenRPA.Updater
                 if (string.IsNullOrEmpty(_destinationfolder)) _destinationfolder = System.IO.Path.GetFullPath("openrpa");
                 return _destinationfolder;
             }
+            set
+            {
+                _destinationfolder = value;
+            }
         }
         public async Task<List<IPackageSearchMetadata>> Search(string searchstring)
         {
@@ -112,7 +116,7 @@ namespace OpenRPA.Updater
             }
             return result;
         }
-        public async Task GetPackageDependencies(PackageIdentity package, SourceCacheContext cacheContext,ISet<SourcePackageDependencyInfo> availablePackages)
+        public async Task GetPackageDependencies(PackageIdentity package, SourceCacheContext cacheContext, ISet<SourcePackageDependencyInfo> availablePackages)
         {
             if (availablePackages.Contains(package)) return;
             var repositories = SourceRepositoryProvider.GetRepositories();
@@ -130,6 +134,66 @@ namespace OpenRPA.Updater
                         cacheContext, availablePackages);
                 }
             }
+        }
+        public async Task<List<IPackageSearchMetadata>> GetPackage(PackageIdentity identity)
+        {
+            var result = new List<IPackageSearchMetadata>();
+
+            using (var cacheContext = new SourceCacheContext())
+            {
+                var repositories = SourceRepositoryProvider.GetRepositories();
+                var availablePackages = new HashSet<SourcePackageDependencyInfo>(PackageIdentityComparer.Default);
+                await GetPackageDependencies(identity, cacheContext, availablePackages);
+
+                var resolverContext = new PackageResolverContext(
+                    DependencyBehavior.Lowest,
+                    new[] { identity.Id },
+                    Enumerable.Empty<string>(),
+                    Enumerable.Empty<NuGet.Packaging.PackageReference>(),
+                    Enumerable.Empty<PackageIdentity>(),
+                    availablePackages,
+                    SourceRepositoryProvider.GetRepositories().Select(s => s.PackageSource),
+                    NullLogger.Instance);
+
+                var resolver = new PackageResolver();
+                var packagesToInstall = resolver.Resolve(resolverContext, CancellationToken.None)
+                    .Select(p => availablePackages.Single(x => PackageIdentityComparer.Default.Equals(x, p)));
+                var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
+                var clientPolicyContext = NuGet.Packaging.Signing.ClientPolicyContext.GetClientPolicy(Settings, OpenRPAPackageManagerLogger.Instance);
+                var packageExtractionContext = new PackageExtractionContext(PackageSaveMode.Defaultv3, XmlDocFileSaveMode.None, clientPolicyContext, OpenRPAPackageManagerLogger.Instance);
+                var frameworkReducer = new FrameworkReducer();
+
+                foreach (var packageToInstall in packagesToInstall)
+                {
+                    // PackageReaderBase packageReader;
+                    var installedPath = packagePathResolver.GetInstalledPath(packageToInstall);
+                    if (installedPath == null)
+                    {
+                        var downloadResource = await packageToInstall.Source.GetResourceAsync<DownloadResource>(CancellationToken.None);
+                        var downloadResult = await downloadResource.GetDownloadResourceResultAsync(
+                            packageToInstall,
+                            new PackageDownloadContext(cacheContext),
+                            NuGet.Configuration.SettingsUtility.GetGlobalPackagesFolder(Settings),
+                            NullLogger.Instance, CancellationToken.None);
+
+                        await PackageExtractor.ExtractPackageAsync(
+                            downloadResult.PackageSource,
+                            downloadResult.PackageStream,
+                            packagePathResolver,
+                            packageExtractionContext,
+                            CancellationToken.None);
+
+                        // packageReader = downloadResult.PackageReader;
+                    }
+                    //else
+                    //{
+                    //    packageReader = new PackageFolderReader(installedPath);
+                    //}
+
+                    InstallPackage(packageToInstall);
+                }
+            }
+            return result;
         }
         public async Task<List<IPackageSearchMetadata>> DownloadAndInstall(PackageIdentity identity)
         {
@@ -391,7 +455,7 @@ namespace OpenRPA.Updater
                     {
                         var filename = System.IO.Path.GetFileName(f);
                         var target = System.IO.Path.Combine(Destinationfolder, filename);
-                        if(System.IO.File.Exists(target))
+                        if (System.IO.File.Exists(target))
                         {
                             try
                             {

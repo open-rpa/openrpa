@@ -1605,23 +1605,28 @@ namespace OpenRPA
                 if (val == null) return;
                 var workflow = view.listWorkflows.SelectedValue as Workflow;
                 if (workflow == null) return;
-
-                var designer = GetDesignerById(workflow._id);
-                var param = new Dictionary<string, object>();
-                if (designer != null)
+                try
                 {
-                    var instance = workflow.CreateInstance(param, null, null, designer.OnIdle, designer.OnVisualTracking);
-                    designer.Minimize = false;
-                    designer.Run(VisualTracking, SlowMotion, instance);
+                    var designer = GetDesignerById(workflow._id);
+                    var param = new Dictionary<string, object>();
+                    if (designer != null)
+                    {
+                        var instance = workflow.CreateInstance(param, null, null, designer.OnIdle, designer.OnVisualTracking);
+                        designer.Minimize = false;
+                        designer.Run(VisualTracking, SlowMotion, instance);
+                    }
+                    else
+                    {
+                        var instance = workflow.CreateInstance(param, null, null, idleOrComplete, null);
+                        instance.Run();
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    var instance = workflow.CreateInstance(param, null, null, idleOrComplete, null);
-                    instance.Run();
+                    Log.Error(ex.ToString());
                 }
                 return;
             }
-
             try
             {
                 if (!(SelectedContent is Views.WFDesigner)) return;

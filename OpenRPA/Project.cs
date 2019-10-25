@@ -23,7 +23,7 @@ namespace OpenRPA
                 return System.IO.Path.Combine(Path, Filename);
             }
         }
-        public static Project[] loadProjects(string Path)
+        public static Project[] LoadProjects(string Path)
         {
             var ProjectFiles = System.IO.Directory.EnumerateFiles(Path, "*.rpaproj", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
             var Projects = new List<Project>();
@@ -88,12 +88,14 @@ namespace OpenRPA
             }
             if (!System.IO.Directory.Exists(basePath)) System.IO.Directory.CreateDirectory(basePath);
             if (System.IO.Directory.GetFiles(basePath).Count() > 0) throw new Exception(basePath + " is not empty");
-            Project p = new Project();
-            p._type = "project";
-            p.name = Name;
-            p.Path = System.IO.Path.GetDirectoryName(Filepath);
-            p.Filename = System.IO.Path.GetFileName(Filepath);
-            p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
+            Project p = new Project
+            {
+                _type = "project",
+                name = Name,
+                Path = System.IO.Path.GetDirectoryName(Filepath),
+                Filename = System.IO.Path.GetFileName(Filepath),
+                Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>()
+            };
             await p.Save();
             if(addDefault)
             {

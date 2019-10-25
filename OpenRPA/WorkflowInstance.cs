@@ -82,7 +82,6 @@ namespace OpenRPA
             {
                 if (!runner.onWorkflowStarting(ref _ref, false)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
             }
-            Instances.Add(result);
             if (global.isConnected)
             {
                 result.owner = global.webSocketClient.user.name;
@@ -91,7 +90,8 @@ namespace OpenRPA
             result.host = Environment.MachineName.ToLower();
             result.fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
             result.createApp();
-            foreach(var i in Instances.ToList())
+            Instances.Add(result);
+            foreach (var i in Instances.ToList())
             {
                 if (i.isCompleted) Instances.Remove(i);
             }

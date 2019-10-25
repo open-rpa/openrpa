@@ -10,7 +10,6 @@ namespace OpenRPA.ExpressionEditor
     public class EditorUtil
     {
         public static ExpressionNode autoCompletionTree;
-
         public static void init()
         {
             autoCompletionTree = CreateDefaultAutoCompletionTree();
@@ -19,27 +18,22 @@ namespace OpenRPA.ExpressionEditor
         /// assemblies.</summary>
         public static ExpressionNode CreateDefaultAutoCompletionTree()
         {
+            ExpressionNode rootNode = new ExpressionNode();
             Assembly target = Assembly.GetExecutingAssembly();
             List<Assembly> references = (from assemblyName in target.GetReferencedAssemblies()
                                          select Assembly.Load(assemblyName)).ToList();
 
             List<Type> types = new List<Type>(references.SelectMany(
                 (assembly) => (from childType in assembly.GetTypes()
-                               where
-(childType.IsPublic && childType.IsVisible && childType.Namespace != null)
+                               where (childType.IsPublic && childType.IsVisible && childType.Namespace != null)
                                select childType).ToList()));
-
-            ExpressionNode rootNode = new ExpressionNode();
-
             foreach (Type child in types)
             {
                 AddTypeToExpressionTree(rootNode, child);
             }
-
             rootNode.Sort();
             return rootNode;
         }
-
         /// <summary>Adds details about a type to the supplied expression tree.</summary>
         /// <param name="target">The root node of the expression tree.</param>
         /// <param name="child">The type to add.</param>
@@ -68,7 +62,6 @@ namespace OpenRPA.ExpressionEditor
                 AddValueTypeDetails(rootNode, child);
             }
         }
-
         public static void AddGenericTypeDetails(ExpressionNode rootNode, Type child)
         {
             ExpressionNode entityNode = new ExpressionNode
@@ -85,7 +78,6 @@ namespace OpenRPA.ExpressionEditor
             AddPropertyNodes(entityNode, child);
             AddMethodNodes(entityNode, child);
         }
-
         public static void AddClassDetails(ExpressionNode rootNode, Type child)
         {
             ExpressionNode entityNode = new ExpressionNode
@@ -102,7 +94,6 @@ namespace OpenRPA.ExpressionEditor
             AddPropertyNodes(entityNode, child);
             AddMethodNodes(entityNode, child);
         }
-
         public static void AddEnumeratedTypeDetails(ExpressionNode rootNode, Type child)
         {
             ExpressionNode enumNode = new ExpressionNode
@@ -129,12 +120,32 @@ namespace OpenRPA.ExpressionEditor
                 });
             }
         }
-
         public static void AddValueTypeDetails(ExpressionNode rootNode, Type child)
         {
-            // TODO: This!
-        }
+            // TODO: Need more validation
+            try
+            {
+                ExpressionNode entityNode = new ExpressionNode
+                {
+                    Description = "Class: " + child.Name,
+                    Name = child.Name,
+                    ItemType = "class",
+                    Parent = rootNode
+                };
 
+                rootNode.Add(entityNode);
+
+                AddFieldNodes(entityNode, child);
+                AddPropertyNodes(entityNode, child);
+                AddMethodNodes(entityNode, child);
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         public static void AddFieldNodes(ExpressionNode target, Type child)
         {
             foreach (FieldInfo field in child.GetFields(
@@ -151,7 +162,6 @@ namespace OpenRPA.ExpressionEditor
                 target.Add(fieldNode);
             }
         }
-
         public static string GetFieldDescription(FieldInfo target)
         {
             StringBuilder description = new StringBuilder(128);
@@ -167,7 +177,6 @@ namespace OpenRPA.ExpressionEditor
 
             return description.ToString();
         }
-
         public static string GetParameters(Type target)
         {
             StringBuilder parameter = new StringBuilder(128);
@@ -192,7 +201,6 @@ namespace OpenRPA.ExpressionEditor
 
             return parameter.ToString();
         }
-
         public static string GetParameters(MethodInfo target)
         {
             StringBuilder parameter = new StringBuilder(128);
@@ -217,7 +225,6 @@ namespace OpenRPA.ExpressionEditor
 
             return parameter.ToString();
         }
-
         public static void AddMethodNodes(ExpressionNode target, Type child)
         {
             // Protect against the properties being identified as methods with a 'get_' or 'set_' 
@@ -247,7 +254,6 @@ namespace OpenRPA.ExpressionEditor
                 target.Add(methodNode);
             }
         }
-
         public static string GetMethodDescription(MethodInfo target)
         {
             StringBuilder description = new StringBuilder(128);
@@ -299,7 +305,6 @@ namespace OpenRPA.ExpressionEditor
 
             return description.ToString();
         }
-
         public static void AddPropertyNodes(ExpressionNode target, Type child)
         {
             foreach (PropertyInfo property in child.GetProperties(
@@ -316,7 +321,6 @@ namespace OpenRPA.ExpressionEditor
                 target.Add(propertyNode);
             }
         }
-
         public static string GetPropertyDescription(PropertyInfo target)
         {
             StringBuilder description = new StringBuilder(128);
@@ -329,7 +333,5 @@ namespace OpenRPA.ExpressionEditor
 
             return description.ToString();
         }
-
-
     }
 }

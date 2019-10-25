@@ -1,4 +1,6 @@
 ﻿using NuGet;
+using NuGet.Protocol.Core.Types;
+using NuGet.Versioning;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,17 +16,31 @@ namespace OpenRPA.Updater
         {
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
-        public IPackage Package { get; set; }
+        public IPackageSearchMetadata Package { get; set; }
+        public NuGet.Protocol.LocalPackageInfo LocalPackage { get; set; }
         public bool canUpgrade { get; set; }
-        public SemanticVersion Version { get; set; }
-        public SemanticVersion InstalledVersion { get; set; }
+        public NuGetVersion Version
+        {
+            get
+            {
+                return Package.Identity.Version;
+            }
+        }
+        public NuGetVersion InstalledVersion
+        {
+            get
+            {
+                if (LocalPackage == null) return null;
+                return LocalPackage.Identity.Version;
+            }
+        }
         public string Name
         {
             get
             {
                 if (Package == null) return "unknown";
                 if (!string.IsNullOrEmpty(Package.Title)) return Package.Title;
-                return Package.Id;
+                return Package.Identity.Id;
             }
             set
             {
@@ -85,25 +101,26 @@ namespace OpenRPA.Updater
                 NotifyPropertyChanged("Image");
             }
         }
-        public string _LatestVersion = "";
+        public string InstalledVersionString
+        {
+            get
+            {
+                if (LocalPackage == null) return "";
+                return LocalPackage.Identity.Version.ToString();
+            }
+        }
         public string LatestVersion
         {
             get
             {
-
-                return _LatestVersion;
-            }
-            set
-            {
-                _LatestVersion = value;
-                NotifyPropertyChanged("LatestVersion");
+                return Version.ToString();
             }
         }
         public override string ToString()
         {
             if (Package == null) return "unknown";
             if (!string.IsNullOrEmpty(Package.Title)) return Package.Title;
-            return Package.Id;
+            return Package.Identity.Id;
         }
 
     }

@@ -14,6 +14,8 @@ namespace OpenRPA.Updater
     using NuGet.Protocol;
     using NuGet.Protocol.Core.Types;
     using NuGet.Resolver;
+    using OpenRPA.Interfaces;
+
     public class OpenRPAPackageManager
     {
         private static ILogger _logger = null;
@@ -104,12 +106,14 @@ namespace OpenRPA.Updater
 
                 var jsonNugetPackages = await searchResource
                             .SearchAsync(searchstring, searchFilter, 0, 50, OpenRPAPackageManagerLogger.Instance, CancellationToken.None);
+                //foreach (var p in jsonNugetPackages.Where(x => x.Identity.Id.Contains(searchstring))) Log.Debug(p.Identity.Id);
+                //foreach (var p in jsonNugetPackages.Where(x => !x.Identity.Id.Contains(searchstring))) Log.Debug(p.Identity.Id);
                 foreach (var p in jsonNugetPackages.Where(x => x.Identity.Id.Contains(searchstring)))
                 {
                     var exists = result.Where(x => x.Identity.Id == p.Identity.Id).FirstOrDefault();
                     if (p.Identity.Id.ToLower().Contains("openrpa.interfaces") || p.Identity.Id.ToLower().Contains("openrpa.namedpipewrapper")
                         || p.Identity.Id.ToLower().Contains("openrpa.expressioneditor") || p.Identity.Id.ToLower().Contains("openrpa.net")
-                        || p.Identity.Id.ToLower().Contains("openrpa.windows") || p.Identity.Id.ToLower().Contains("openrpa.updater")
+                        || p.Identity.Id.ToLower().Contains("openrpa.windows") 
                         || p.Identity.Id.ToLower().Contains("openrpa.nativemessaginghost") || p.Identity.Id.ToLower().Contains("openrpa.javabridge")) continue;
                     if (exists == null) result.Add(p);
                 }
@@ -129,9 +133,9 @@ namespace OpenRPA.Updater
                 availablePackages.Add(dependencyInfo);
                 foreach (var dependency in dependencyInfo.Dependencies)
                 {
-                    await GetPackageDependencies(
-                        new PackageIdentity(dependency.Id, dependency.VersionRange.MinVersion),
-                        cacheContext, availablePackages);
+                    var identity = new PackageIdentity(dependency.Id, dependency.VersionRange.MinVersion);
+                    await GetPackage(identity);
+                    await GetPackageDependencies(identity,cacheContext, availablePackages);
                 }
             }
         }

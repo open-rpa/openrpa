@@ -31,7 +31,9 @@ namespace OpenRPA
             FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(OpenRPAUpdaterexe);
             string version = fileVersionInfo.ProductVersion;
 
-            var package = (await Updater.OpenRPAPackageManager.Instance.Search("OpenRPA.Updater")).Where(x=> x.Identity.Id == "OpenRPA.Updater").FirstOrDefault();
+            var list = await Updater.OpenRPAPackageManager.Instance.Search("OpenRPA");
+            var package = list.Where(x => x.Identity.Id == "OpenRPA.Updater").FirstOrDefault();
+            // var package = (await Updater.OpenRPAPackageManager.Instance.Search("OpenRPA.Updater")).Where(x=> x.Identity.Id == "OpenRPA.Updater").FirstOrDefault();
             if (package == null) return false;
             if (new Version(package.Identity.Version.ToString()) > new Version(version))
             {
@@ -59,7 +61,7 @@ namespace OpenRPA
         {
             var package = (await Updater.OpenRPAPackageManager.Instance.Search("OpenRPA.Updater")).Where(x => x.Identity.Id == "OpenRPA.Updater").FirstOrDefault();
             if (package == null) return;
-            Updater.OpenRPAPackageManager.Instance.InstallPackage(package.Identity);
+            await Updater.OpenRPAPackageManager.Instance.DownloadAndInstall(package.Identity);
         }
         private void CopyIfNewer(string source, string target)
         {

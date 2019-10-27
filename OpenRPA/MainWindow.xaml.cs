@@ -145,7 +145,7 @@ namespace OpenRPA
                 else
                 {
                     SetStatus("loading projects and workflows");
-                    var _Projects = Project.loadProjects(Extensions.projectsDirectory);
+                    var _Projects = Project.LoadProjects(Extensions.projectsDirectory);
                     Projects = new System.Collections.ObjectModel.ObservableCollection<Project>();
                     foreach (Project p in _Projects)
                     {
@@ -440,15 +440,15 @@ namespace OpenRPA
         }
         private async Task CheckForUpdatesAsync()
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 try
                 {
-                    if (updater.UpdaterNeedsUpdate() == true)
+                    if (await updater.UpdaterNeedsUpdate() == true)
                     {
-                        updater.UpdateUpdater();
+                        await updater.UpdateUpdater();
                     }
-                    var releasenotes = updater.OpenRPANeedsUpdate();
+                    var releasenotes = await updater.OpenRPANeedsUpdate();
                     if (!string.IsNullOrEmpty(releasenotes))
                     {
                         var dialogResult = MessageBox.Show(releasenotes, "Update available", MessageBoxButton.YesNo);
@@ -1317,7 +1317,7 @@ namespace OpenRPA
                     layoutDocument.ContentId = workflow._id;
 
                     var view = new Views.WFDesigner(layoutDocument, workflow, types.ToArray());
-                    view.onChanged = WFDesigneronChanged;
+                    view.OnChanged = WFDesigneronChanged;
                     layoutDocument.Content = view;
                     mainTabControl.Children.Add(layoutDocument);
                     layoutDocument.IsSelected = true;
@@ -1352,7 +1352,7 @@ namespace OpenRPA
 
             var wf = SelectedContent as Views.WFDesigner;
             if (wf == null) return false;
-            if (wf.isRunnning == true) return false;
+            if (wf.IsRunnning == true) return false;
             return wf.HasChanged;
             }
             catch (Exception ex)
@@ -1605,23 +1605,28 @@ namespace OpenRPA
                 if (val == null) return;
                 var workflow = view.listWorkflows.SelectedValue as Workflow;
                 if (workflow == null) return;
-
-                var designer = GetDesignerById(workflow._id);
-                var param = new Dictionary<string, object>();
-                if (designer != null)
+                try
                 {
-                    var instance = workflow.CreateInstance(param, null, null, designer.onIdle, designer.onVisualTracking);
-                    designer.Minimize = false;
-                    designer.Run(VisualTracking, SlowMotion, instance);
+                    var designer = GetDesignerById(workflow._id);
+                    var param = new Dictionary<string, object>();
+                    if (designer != null)
+                    {
+                        var instance = workflow.CreateInstance(param, null, null, designer.OnIdle, designer.OnVisualTracking);
+                        designer.Minimize = false;
+                        designer.Run(VisualTracking, SlowMotion, instance);
+                    }
+                    else
+                    {
+                        var instance = workflow.CreateInstance(param, null, null, idleOrComplete, null);
+                        instance.Run();
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    var instance = workflow.CreateInstance(param, null, null, idleOrComplete, null);
-                    instance.Run();
+                    Log.Error(ex.ToString());
                 }
                 return;
             }
-
             try
             {
                 if (!(SelectedContent is Views.WFDesigner)) return;
@@ -1697,7 +1702,7 @@ namespace OpenRPA
                     i.Abort("User clicked stop");
                 }
             }
-            if (designer.resumeRuntimeFromHost != null) designer.resumeRuntimeFromHost.Set();
+            if (designer.ResumeRuntimeFromHost != null) designer.ResumeRuntimeFromHost.Set();
             if (isRecording)
             {
                 StartDetectorPlugins();
@@ -1768,19 +1773,19 @@ namespace OpenRPA
                 if (SelectedContent is Views.WFDesigner view)
                 {
                     view.ReadOnly = false;
-                    if (view.lastinserted != null && view.lastinserted is Activities.TypeText)
+                    if (view.Lastinserted != null && view.Lastinserted is Activities.TypeText)
                     {
                         Log.Debug("re-use existing TypeText");
-                        var item = (Activities.TypeText)view.lastinserted;
-                        item.AddKey(new Interfaces.Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, false), view.lastinsertedmodel);
+                        var item = (Activities.TypeText)view.Lastinserted;
+                        item.AddKey(new Interfaces.Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, false), view.Lastinsertedmodel);
                     }
                     else
                     {
                         Log.Debug("Add new TypeText");
                         var rme = new Activities.TypeText();
-                        view.lastinsertedmodel = view.addActivity(rme);
-                        rme.AddKey(new Interfaces.Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, false), view.lastinsertedmodel);
-                        view.lastinserted = rme;
+                        view.Lastinsertedmodel = view.AddActivity(rme);
+                        rme.AddKey(new Interfaces.Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, false), view.Lastinsertedmodel);
+                        view.Lastinserted = rme;
                     }
                     view.ReadOnly = true;
                 }
@@ -1799,12 +1804,12 @@ namespace OpenRPA
             {
                 if (SelectedContent is Views.WFDesigner view)
                 {
-                    if (view.lastinserted != null && view.lastinserted is Activities.TypeText)
+                    if (view.Lastinserted != null && view.Lastinserted is Activities.TypeText)
                     {
                         Log.Debug("re-use existing TypeText");
                         view.ReadOnly = false;
-                        var item = (Activities.TypeText)view.lastinserted;
-                        item.AddKey(new Interfaces.Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, true), view.lastinsertedmodel);
+                        var item = (Activities.TypeText)view.Lastinserted;
+                        item.AddKey(new Interfaces.Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, true), view.Lastinsertedmodel);
                         view.ReadOnly = true;
                     }
                 }
@@ -1957,8 +1962,8 @@ namespace OpenRPA
                             isRecording = true;
                         }
                         view.ReadOnly = false;
-                        view.lastinserted = e.a.Activity;
-                        view.lastinsertedmodel = view.addActivity(e.a.Activity);
+                        view.Lastinserted = e.a.Activity;
+                        view.Lastinsertedmodel = view.AddActivity(e.a.Activity);
                         view.ReadOnly = true;
                         if (e.ClickHandled == false && e.SupportInput == false)
                         {
@@ -1994,8 +1999,8 @@ namespace OpenRPA
             if (!(SelectedContent is Views.WFDesigner)) return;
             var designer = (Views.WFDesigner)SelectedContent;
             designer.ReadOnly = true;
-            designer.lastinserted = null;
-            designer.lastinsertedmodel = null;
+            designer.Lastinserted = null;
+            designer.Lastinsertedmodel = null;
             StopDetectorPlugins();
             InputDriver.Instance.OnKeyDown += OnKeyDown;
             InputDriver.Instance.OnKeyUp += OnKeyUp;
@@ -2155,7 +2160,7 @@ namespace OpenRPA
                             var designer = GetDesignerById(command.workflowid);
                             if (designer != null)
                             {
-                                instance = workflow.CreateInstance(param, message.replyto, message.correlationId, designer.onIdle, designer.onVisualTracking);
+                                instance = workflow.CreateInstance(param, message.replyto, message.correlationId, designer.OnIdle, designer.OnVisualTracking);
                                 designer.Run(VisualTracking, SlowMotion, instance);
                             }
                             else

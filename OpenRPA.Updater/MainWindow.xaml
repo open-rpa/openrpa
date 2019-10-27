@@ -44,10 +44,10 @@
             </ScrollViewer>
         </DockPanel>
         <StackPanel DockPanel.Dock="Bottom" Height="200">
-            <Button Click="ButtonInstall" Content="Install" IsEnabled="{Binding ElementName=listPackages, Path=SelectedValue.IsNotDownloaded}"></Button>
-            <Button Click="ButtonReinstall" Content="Reinstall" IsEnabled="{Binding ElementName=listPackages, Path=SelectedValue.isDownloaded}"></Button>
-            <Button Click="ButtonUpgrade" Content="Upgrade" IsEnabled="{Binding ElementName=listPackages, Path=SelectedValue.canUpgrade}"></Button>
-            <Button Click="ButtonUninstall" Content="Uninstall" IsEnabled="{Binding ElementName=listPackages, Path=SelectedValue.isDownloaded}"></Button>
+            <Button x:Name="BtnInstall" Click="ButtonInstall" Content="Install" IsEnabled="{Binding ElementName=listPackages, Path=SelectedValue.IsNotDownloaded}"></Button>
+            <Button x:Name="BtnReinstall" Click="ButtonReinstall" Content="Reinstall" IsEnabled="{Binding ElementName=listPackages, Path=SelectedValue.isDownloaded}"></Button>
+            <Button x:Name="BtnUpgrade" Click="ButtonUpgrade" Content="Upgrade" IsEnabled="{Binding ElementName=listPackages, Path=SelectedValue.canUpgrade}"></Button>
+            <Button x:Name="BtnUninstall" Click="ButtonUninstall" Content="Uninstall" IsEnabled="{Binding ElementName=listPackages, Path=SelectedValue.isDownloaded}"></Button>
             <TextBox HorizontalAlignment="Stretch" Text="{Binding Logs}" Height="120"></TextBox>
         </StackPanel>
         <!--  CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" -->
@@ -55,11 +55,11 @@
                 <StackPanel>
                     <StackPanel>
                         <TextBlock><Bold>Id</Bold></TextBlock>
-                        <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Id}" ></TextBlock>
+                        <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Name}" ></TextBlock>
                     </StackPanel>
                     <StackPanel>
                         <TextBlock><Bold>Version</Bold></TextBlock>
-                        <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Version}" ></TextBlock>
+                    <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.InstalledVersionString}" ></TextBlock>
                     </StackPanel>
                     <StackPanel>
                         <TextBlock><Bold>LatestVersion</Bold></TextBlock>

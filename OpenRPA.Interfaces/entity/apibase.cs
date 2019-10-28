@@ -11,16 +11,13 @@ namespace OpenRPA.Interfaces.entity
         public string _id { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string _type { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string name { get { return GetProperty<string>(); } set { SetProperty(value); } }
-
         public DateTime _modified { get { return GetProperty<DateTime>(); } set { SetProperty(value); } }
         public string _modifiedby { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string _modifiedbyid { get { return GetProperty<string>(); } set { SetProperty(value); } }
-
         public DateTime _created { get { return GetProperty<DateTime>(); } set { SetProperty(value); } }
         public string _createdby { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string _createdbyid { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public ace[] _acl  { get { return GetProperty<ace[]>(); } set { SetProperty(value); } }
-
         public bool hasRight(apiuser user, ace_right bit)
         {
             var ace = _acl.Where(x => x._id == user._id).FirstOrDefault();
@@ -43,7 +40,17 @@ namespace OpenRPA.Interfaces.entity
             }
             return false;
         }
-
+        public void AddRight(TokenUser user, ace_right[] rights) 
+        {
+            if (_acl == null) _acl = new ace[] { };
+            var ace = _acl.Where(x => x._id == user._id).FirstOrDefault();
+            if (ace == null) { ace = new ace(); _acl = _acl.Concat(new ace[] { ace}).ToArray(); }
+            if(rights != null && rights.Length > 0)
+            {
+                for (var bit = 0; bit < 10; bit++) ace.unsetBit(bit);
+                foreach (ace_right bit in rights) ace.setBit((decimal)bit);
+            }
+        }
         //public void delete()
         //{
         //    rpaactivities.socketService.instance.DELETE(_id, "workflows");

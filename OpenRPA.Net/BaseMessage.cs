@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Net
 {
-    public class BaseMessage
+    public class BaseMessage : Interfaces.IBaseMessage
     {
         public string id { get; set; }
         public string replyto { get; set; }

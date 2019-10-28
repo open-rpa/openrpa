@@ -14,15 +14,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Net
 {
-    public class QueueMessageEventArgs : EventArgs
-    {
-        public bool isBusy { get; set; }
-        public QueueMessageEventArgs()
-        {
-            this.isBusy = false;
-        }
-    }
-    public class WebSocketClient
+    public class WebSocketClient : IWebSocketClient
     {
         // private ClientWebSocket ws = (ClientWebSocket)SystemClientWebSocket.CreateClientWebSocket();  // new ClientWebSocket(); // WebSocket
         // private System.Net.WebSockets.Managed.ClientWebSocket ws = new System.Net.WebSockets.Managed.ClientWebSocket();  // new ClientWebSocket(); // WebSocket
@@ -34,12 +26,10 @@ namespace OpenRPA.Net
         private List<SocketMessage> _sendQueue = new List<SocketMessage>();
         private List<QueuedMessage> _messageQueue = new List<QueuedMessage>();
 
-        public delegate void QueueMessageDelegate(QueueMessage message, QueueMessageEventArgs e);
+        // public delegate void QueueMessageDelegate(IQueueMessage message, QueueMessageEventArgs e);
         public event Action OnOpen;
         public event Action<string> OnClose;
         public event QueueMessageDelegate OnQueueMessage;
-        // public event Action OnMessage;
-
         public TokenUser user { get; private set; }
         public string jwt { get; private set; }
         public bool isConnected
@@ -116,7 +106,6 @@ namespace OpenRPA.Net
             }
             src.Cancel();
         }
-        private int errorcounter = 0;
         private async Task receiveLoop()
         {
             byte[] buffer = new byte[2048];
@@ -135,7 +124,6 @@ namespace OpenRPA.Net
                     var message = JsonConvert.DeserializeObject<SocketMessage>(json);
                     if (message != null) _receiveQueue.Add(message);
                     await ProcessQueue();
-                    errorcounter = 0;
                 }
                 catch (Exception ex)
                 {
@@ -145,16 +133,10 @@ namespace OpenRPA.Net
                     }
                     else
                     {
-                        errorcounter++;
                         Log.Error(json);
                         Log.Error(ex, "");
                         await Task.Delay(3000);
                         await this.Close();
-                        //if(errorcounter > 10)
-                        //{
-                        //    errorcounter = 0;
-                        //    await this.Close();
-                        //}
                     }
                 }
             }
@@ -169,8 +151,6 @@ namespace OpenRPA.Net
                 msg.SendMessage(this);
             }
         }
-        //static SemaphoreSlim ReceiveSemaphore = new SemaphoreSlim(1, 1);
-        //static SemaphoreSlim SendSemaphore = new SemaphoreSlim(1, 1);
         static SemaphoreSlim ProcessingSemaphore = new SemaphoreSlim(1, 1);
         public async Task ProcessQueue()
         {
@@ -363,7 +343,7 @@ namespace OpenRPA.Net
                 msg.SendMessage(this);
                 await qm.autoReset.WaitOneAsync();
             }
-            return qm.reply;
+            return qm.reply as Message;
         }
         public async Task<TokenUser> Signin(string username, SecureString password)
         {
@@ -455,7 +435,7 @@ namespace OpenRPA.Net
             q = await q.SendMessage<DeleteOneMessage>(this);
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
         }
-        public async Task<string> UploadFile(string filepath, string path)
+        public async Task<string> UploadFile(string filepath, string path, metadata metadata)
         {
             if (string.IsNullOrEmpty(path)) path = "";
             byte[] bytes = System.IO.File.ReadAllBytes(filepath);
@@ -464,7 +444,8 @@ namespace OpenRPA.Net
             q.filename = System.IO.Path.Combine(path, System.IO.Path.GetFileName(filepath));
             q.mimeType = MimeTypeHelper.GetMimeType(System.IO.Path.GetExtension(filepath));
             q.file = base64;
-            q.metadata = new metadata();
+            q.metadata = metadata;
+            if(q.metadata == null) q.metadata = new metadata();
             q.metadata.name = System.IO.Path.GetFileName(filepath);
             q.metadata.filename = q.filename;
             q.metadata.path = path;
@@ -486,7 +467,7 @@ namespace OpenRPA.Net
         {
             var res = await DownloadFile(filename, id);
             var path = System.IO.Path.GetFullPath(filepath);
-            if(!ignorepath)
+            if (!ignorepath)
             {
                 path = System.IO.Path.Combine(filepath, res.metadata.path);
             }
@@ -494,7 +475,17 @@ namespace OpenRPA.Net
             filepath = System.IO.Path.Combine(filepath, res.metadata.filename);
             System.IO.File.WriteAllBytes(filepath, Convert.FromBase64String(res.file));
         }
-
-
+        public async Task DownloadFileAndSaveAs(string filename, string id, string filepath, bool ignorepath)
+        {
+            var res = await DownloadFile(filename, id);
+            var path = System.IO.Path.GetFullPath(filepath);
+            if (!ignorepath)
+            {
+                path = System.IO.Path.Combine(filepath, res.metadata.path);
+            }
+            if (!System.IO.Directory.Exists(path)) System.IO.Directory.CreateDirectory(path);
+            filepath = System.IO.Path.Combine(filepath, filename);
+            System.IO.File.WriteAllBytes(filepath, Convert.FromBase64String(res.file));
+        }
     }
 }

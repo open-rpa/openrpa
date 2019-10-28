@@ -2081,7 +2081,7 @@ namespace OpenRPA
             }
             return null;
         }
-        private async void WebSocketClient_OnQueueMessage(QueueMessage message, QueueMessageEventArgs e)
+        private async void WebSocketClient_OnQueueMessage(IQueueMessage message, QueueMessageEventArgs e)
         {
             RobotCommand command = null;
             try

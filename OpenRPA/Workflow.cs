@@ -172,7 +172,6 @@ namespace OpenRPA
         }
         public async Task Save()
         {
-            //parseparameters();
             try
             {
                 SaveFile();
@@ -192,6 +191,16 @@ namespace OpenRPA
             {
                 var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, this);
                 _acl = result._acl;
+                var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
+                foreach (var f in files)
+                {
+                    bool equal = f.metadata._acl.SequenceEqual(_acl);
+                    if (!equal)
+                    {
+                        f.metadata._acl = _acl;
+                        await global.webSocketClient.UpdateOne("files", 0, false, f);
+                    }
+                }
             }
         }
         public async Task Delete()
@@ -202,6 +211,15 @@ namespace OpenRPA
             if (!global.isConnected) return;
             if (!string.IsNullOrEmpty(_id))
             {
+                var basepath = System.IO.Directory.GetCurrentDirectory();
+                var imagepath = System.IO.Path.Combine(basepath, "images");
+                var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
+                foreach (var f in files)
+                {
+                    await global.webSocketClient.DeleteOne("files", f._id);
+                    var imagefilepath = System.IO.Path.Combine(imagepath, f._id + ".png");
+                    if (System.IO.File.Exists(imagefilepath)) System.IO.File.Delete(imagefilepath);
+                }
                 await global.webSocketClient.DeleteOne("openrpa", this._id);
             }
         }

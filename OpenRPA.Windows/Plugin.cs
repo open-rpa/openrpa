@@ -186,11 +186,9 @@ namespace OpenRPA.Windows
                         if (p1.Value.StartsWith("Windows.UI") && p2.Value == "SplitViewFrameXAMLWindow") re.SupportVirtualClick = false;
                     }
                 }
-
                 re.a = new GetElementResult(a);
                 re.SupportInput = e.Element.SupportInput;
                 Log.Debug(string.Format("Windows.Recording::OnMouseUp::end {0:mm\\:ss\\.fff}", sw.Elapsed));
-
                 OnUserAction?.Invoke(this, re);
             }));
             thread.IsBackground = true;

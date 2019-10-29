@@ -351,52 +351,88 @@ namespace OpenRPA.Views
         }
         public async Task Save()
         {
-            var basepath = Project.Path;
+            // var basepath = Project.Path;
+            var basepath = System.IO.Directory.GetCurrentDirectory();
+            var imagepath = System.IO.Path.Combine(basepath, "images");
+
             WorkflowDesigner.Flush();
-            var modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
-            var usedimages = new List<string>();
-            using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
+            if(global.webSocketClient.isConnected)
             {
-                foreach (ModelItem item in GetWorkflowActivities())
+                var modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
+                var usedimages = new List<string>();
+                using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
                 {
-                    ModelProperty property = item.Properties["Image"];
-                    if ((property != null) && (property.Value != null))
+                    foreach (ModelItem item in GetWorkflowActivities())
                     {
-                        string image = item.Properties["Image"].Value.ToString();
-                        if (!System.Text.RegularExpressions.Regex.Match(image, "[a-f0-9]{24}").Success)
+                        ModelProperty property = item.Properties["Image"];
+                        if ((property != null) && (property.Value != null) && !string.IsNullOrEmpty(Workflow._id))
                         {
-                            var metadata = new OpenRPA.Interfaces.entity.metadata();
-                            metadata.AddRight(global.webSocketClient.user, null);
-                            var imageid = Guid.NewGuid();
-                            var filename = System.IO.Path.Combine(basepath, imageid.ToString() + ".png");
-                            using (var ms = new System.IO.MemoryStream(Convert.FromBase64String(image)))
+                            string image = item.Properties["Image"].Value.ToString();
+                            if (!System.Text.RegularExpressions.Regex.Match(image, "[a-f0-9]{24}").Success)
                             {
-                                using (var b = new System.Drawing.Bitmap(ms))
+                                var metadata = new OpenRPA.Interfaces.entity.metadata();
+                                // metadata.AddRight(global.webSocketClient.user, null);
+                                metadata._acl = Workflow._acl;
+                                metadata.workflow = Workflow._id;
+                                var imageid = GenericTools.YoutubeLikeId();
+                                var tempfilename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), imageid + ".png");
+                                using (var ms = new System.IO.MemoryStream(Convert.FromBase64String(image)))
                                 {
-                                    try
+                                    using (var b = new System.Drawing.Bitmap(ms))
                                     {
-                                        b.Save(filename, System.Drawing.Imaging.ImageFormat.Png);
-                                    }
-                                    catch (Exception)
-                                    {
-                                        throw;
+                                        try
+                                        {
+                                            b.Save(tempfilename, System.Drawing.Imaging.ImageFormat.Png);
+                                        }
+                                        catch (Exception)
+                                        {
+                                            throw;
+                                        }
                                     }
                                 }
+                                string id = await global.webSocketClient.UploadFile(tempfilename, "", metadata);
+                                var filename = System.IO.Path.Combine(imagepath, id + ".png");
+                                System.IO.File.Copy(tempfilename, filename);
+                                System.IO.File.Delete(tempfilename);
+
+                                item.Properties["Image"].SetValue(id);
+                                usedimages.Add(id);
                             }
-                            string id = await global.webSocketClient.UploadFile(filename, "", metadata);
-                            item.Properties["Image"].SetValue(id);
-                            usedimages.Add(id);
+                            else
+                            {
+                                usedimages.Add(image);
+                            }
+                        }
+                    }
+                    editingScope.Complete();
+                }
+                WorkflowDesigner.Flush();
+                if (!string.IsNullOrEmpty(Workflow._id))
+                {
+                    var files = await global.webSocketClient.Query<Interfaces.entity.metadata>("files", "{\"metadata.workflow\": \"" + Workflow._id + "\"}");
+                    var unusedfiles = files.Where(x => !usedimages.Contains(x._id)).ToList();
+                    //Console.WriteLine("usedimages: " + usedimages.Count);
+                    //Console.WriteLine("files: " + files.Length);
+                    //Console.WriteLine("unusedfiles: " + unusedfiles.Count);
+                    //Console.WriteLine("*****");
+                    foreach (var f in unusedfiles)
+                    {
+                        await global.webSocketClient.DeleteOne("files", f._id);
+                        var imagefilepath = System.IO.Path.Combine(imagepath, f._id + ".png");
+                        // if (System.IO.File.Exists(imagefilepath)) System.IO.File.Delete(imagefilepath);
+                        if (System.IO.File.Exists(imagefilepath))
+                        {
+                            System.IO.File.Delete(imagefilepath);
                         } else
                         {
-                            usedimages.Add(id);
+                            Log.Error("Failed locating " + f._id + ".png");
                         }
                     }
                 }
-                editingScope.Complete();
             }
-            WorkflowDesigner.Flush();
             try
             {
+                Workflow.Xaml = WorkflowDesigner.Text;
                 Parseparameters();
             }
             catch (Exception ex)
@@ -404,17 +440,6 @@ namespace OpenRPA.Views
                 Log.Error(ex.ToString());
             }
             WorkflowDesigner.Flush();
-            //if (_activityIdMapping.Count == 0)
-            //{
-            //    int failCounter = 0;
-            //    while (_activityIdMapping.Count == 0 && failCounter < 1)
-            //    {
-            //        InitializeStateEnvironment(true);
-            //        System.Threading.Thread.Sleep(500);
-            //        failCounter++;
-            //    }
-            //}
-
             var modelItem = WorkflowDesigner.Context.Services.GetService<ModelService>().Root;
             Workflow.name = modelItem.GetValue<string>("Name");
             Workflow.Xaml = WorkflowDesigner.Text;

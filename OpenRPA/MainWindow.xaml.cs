@@ -108,7 +108,7 @@ namespace OpenRPA
             if (string.IsNullOrEmpty(Config.local.wsurl))
             {
                 SetStatus("loading detectors");
-                var Detectors = Interfaces.entity.Detector.loadDetectors(Extensions.projectsDirectory);
+                var Detectors = Detector.loadDetectors(Extensions.projectsDirectory);
                 foreach (var d in Detectors)
                 {
                     IDetectorPlugin dp = null;
@@ -318,7 +318,7 @@ namespace OpenRPA
                         Log.Debug("Get projects from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}");
                         Log.Debug("Get detectors from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        var detectors = await global.webSocketClient.Query<Interfaces.entity.Detector>("openrpa", "{_type: 'detector'}");
+                        var detectors = await global.webSocketClient.Query<Detector>("openrpa", "{_type: 'detector'}");
                         Log.Debug("Done getting workflows and projects " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         SetStatus("Initialize detecors");
                         foreach (var d in detectors)
@@ -2054,7 +2054,7 @@ namespace OpenRPA
             RobotCommand command = new RobotCommand();
             detector.user = global.webSocketClient.user;
             var data = JObject.FromObject(detector);
-            var Entity = (plugin.Entity as Interfaces.entity.Detector);
+            var Entity = (plugin.Entity as Detector);
             command.command = "detector";
             command.detectorid = Entity._id;
             if (string.IsNullOrEmpty(Entity._id)) return;

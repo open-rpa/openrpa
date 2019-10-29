@@ -44,7 +44,7 @@ namespace OpenRPA.Interfaces.entity
         {
             if (_acl == null) _acl = new ace[] { };
             var ace = _acl.Where(x => x._id == user._id).FirstOrDefault();
-            if (ace == null) { ace = new ace(); _acl = _acl.Concat(new ace[] { ace}).ToArray(); }
+            if (ace == null) { ace = new ace(); _acl = _acl.Concat(new ace[] { ace}).ToArray(); ace._id = user._id; ace.name = user.name; }
             if(rights != null && rights.Length > 0)
             {
                 for (var bit = 0; bit < 10; bit++) ace.unsetBit(bit);

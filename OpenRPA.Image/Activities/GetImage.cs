@@ -35,12 +35,9 @@ namespace OpenRPA.Image
         }
         [RequiredArgument]
         public InArgument<bool> FailOnNotFound { get; set; }
-
         [RequiredArgument]
         public InArgument<ImageElement> Element { get; set; }
         public OutArgument<ImageElement> Result { get; set; }
-
-
         [RequiredArgument]
         public InArgument<int> OffsetX { get; set; }
         [RequiredArgument]
@@ -49,8 +46,7 @@ namespace OpenRPA.Image
         public InArgument<int> Width { get; set; }
         [RequiredArgument]
         public InArgument<int> Height { get; set; }
-
-        [System.ComponentModel.Browsable(false)]
+        [Browsable(false)]
         public ActivityAction<ImageElement> Body { get; set; }
         private Variable<ImageElement> elements = new Variable<ImageElement>("elements");
         protected override void Execute(NativeActivityContext context)

@@ -235,16 +235,11 @@ namespace OpenRPA.Interfaces.Image
         {
             try
             {
+                if (string.IsNullOrEmpty(basepath)) { basepath = System.IO.Directory.GetCurrentDirectory(); }
                 var imagepath = System.IO.Path.Combine(basepath, "images");
                 var imagefilepath = System.IO.Path.Combine(imagepath, id + ".png");
-                if (!System.IO.File.Exists(imagefilepath))
-                {
-                    await global.webSocketClient.DownloadFileAndSaveAs(id + ".png", id, imagepath, true);
-                }
-                if (System.IO.File.Exists(imagefilepath))
-                {
-                    return new Bitmap(imagefilepath);
-                }
+                if (!System.IO.File.Exists(imagefilepath)) { await global.webSocketClient.DownloadFileAndSaveAs(id + ".png", id, imagepath, true); }
+                if (System.IO.File.Exists(imagefilepath)) { return new Bitmap(imagefilepath); }
                 return null;
             }
             catch (Exception ex)
@@ -253,6 +248,7 @@ namespace OpenRPA.Interfaces.Image
                 return null;
             }
         }
+        public static async Task<Bitmap> LoadBitmap(string ImageString) => await LoadBitmap(null, ImageString);
         public static async Task<Bitmap> LoadBitmap(string basepath, string ImageString)
         {
             Bitmap b;

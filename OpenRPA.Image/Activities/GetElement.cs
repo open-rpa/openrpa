@@ -44,7 +44,7 @@ namespace OpenRPA.Image
         public OutArgument<ImageElement[]> Elements { get; set; }
         public InArgument<Rectangle> Limit { get; set; }
         [Browsable(false)]
-        public String Image { get; set; }
+        public string Image { get; set; }
         private Variable<IEnumerator<ImageElement>> _elements = new Variable<IEnumerator<ImageElement>>("_elements");
         public Activity LoopAction { get; set; }
         private List<ImageElement> getBatch(int maxresults, Double Threshold, string Processname, TimeSpan Timeout, bool CompareGray, Rectangle limit)
@@ -54,7 +54,9 @@ namespace OpenRPA.Image
             MemoryStream stream = null;
             if (System.Text.RegularExpressions.Regex.Match(Image, "[a-f0-9]{24}").Success)
             {
-                // b = image.util.loadWorkflowImage(Image);
+                b = Task.Run(() => {
+                    return Interfaces.Image.Util.LoadBitmap(Image);
+                }).Result;
             }
             else
             {
@@ -81,12 +83,8 @@ namespace OpenRPA.Image
             {
                 result.Add(new ImageElement(r));
             }
-
-            // Log.Debug("getBatch,count: " + result.Count());
-            // _Results.AddRange(result);
             return result;
         }
-
         protected override void Execute(NativeActivityContext context)
         {
             if(Image==null) new ArgumentException("Image is null");

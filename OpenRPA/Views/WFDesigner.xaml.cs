@@ -354,7 +354,7 @@ namespace OpenRPA.Views
             // var basepath = Project.Path;
             var basepath = System.IO.Directory.GetCurrentDirectory();
             var imagepath = System.IO.Path.Combine(basepath, "images");
-
+            if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
             WorkflowDesigner.Flush();
             if(global.webSocketClient.isConnected)
             {
@@ -392,9 +392,8 @@ namespace OpenRPA.Views
                                 }
                                 string id = await global.webSocketClient.UploadFile(tempfilename, "", metadata);
                                 var filename = System.IO.Path.Combine(imagepath, id + ".png");
-                                System.IO.File.Copy(tempfilename, filename);
+                                System.IO.File.Copy( tempfilename, filename, true);
                                 System.IO.File.Delete(tempfilename);
-
                                 item.Properties["Image"].SetValue(id);
                                 usedimages.Add(id);
                             }
@@ -1492,5 +1491,39 @@ namespace OpenRPA.Views
                 }
             }
         }
+        public static async Task<string> LoadImages(string xaml)
+        {
+            WorkflowDesigner wfDesigner;
+            wfDesigner = new WorkflowDesigner();
+            wfDesigner.Context.Services.GetService<DesignerConfigurationService>().TargetFrameworkName = new System.Runtime.Versioning.FrameworkName(".NETFramework", new Version(4, 5));
+            wfDesigner.Context.Services.GetService<DesignerConfigurationService>().LoadingFromUntrustedSourceEnabled = true;
+            new DesignerMetadata().Register();
+            wfDesigner.Text = xaml;
+            wfDesigner.Load();
+            ModelService modelService = wfDesigner.Context.Services.GetService<ModelService>();
+            using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
+            {
+                foreach (ModelItem item in GetWorkflowActivities(wfDesigner))
+                {
+                    ModelProperty property = item.Properties["Image"];
+                    if ((property != null) && (property.Value != null))
+                    {
+                        string image = item.Properties["Image"].Value.ToString();
+                        if (System.Text.RegularExpressions.Regex.Match(image, "[a-f0-9]{24}").Success)
+                        {
+                            using (var b = await Interfaces.Image.Util.LoadBitmap(image))
+                            {
+                                image = Interfaces.Image.Util.Bitmap2Base64(b);
+                            }                                
+                            item.Properties["Image"].SetValue(image);
+                        }
+                    }
+                }
+                editingScope.Complete();
+            }
+            wfDesigner.Flush();
+            return wfDesigner.Text;
+        }
+
     }
 }

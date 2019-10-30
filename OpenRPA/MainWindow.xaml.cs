@@ -781,34 +781,80 @@ namespace OpenRPA
         {
             try
             {
-                if (SelectedContent is Views.WFDesigner)
+                if (SelectedContent is Views.WFDesigner designer)
                 {
-                    var designer = (Views.WFDesigner)SelectedContent;
-                    Workflow workflow = Workflow.Create(designer.Project, "New Workflow");
-                    onOpenWorkflow(workflow);
-                    return;
-                }
-                else
-                {
-                    using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+                    var dialogOpen = new Microsoft.Win32.OpenFileDialog();
+                    dialogOpen.Title = "Open Workflow";
+                    dialogOpen.Filter = "Workflows (.xaml)|*.xaml";
+                    if (dialogOpen.ShowDialog() == true)
                     {
-                        System.Windows.Forms.DialogResult result = dialog.ShowDialog();
-                        if(result == System.Windows.Forms.DialogResult.OK)
+                        var name = System.IO.Path.GetFileNameWithoutExtension(dialogOpen.FileName);
+                        Workflow workflow = Workflow.Create(designer.Project, name);
+                        workflow.Xaml = System.IO.File.ReadAllText(dialogOpen.FileName);
+                        onOpenWorkflow(workflow);
+                        return;
+                    }
+                }
+                if (SelectedContent is Views.OpenProject op)
+                {
+                    if (op.listWorkflows.SelectedItem is Project p)
+                    {
+                        var dialogOpen = new Microsoft.Win32.OpenFileDialog();
+                        dialogOpen.Title = "Open Workflow";
+                        dialogOpen.Filter = "Workflows (.xaml)|*.xaml";
+                        if (dialogOpen.ShowDialog() == true)
                         {
-                            //var _Projects = Project.loadProjects(Extensions.projectsDirectory);
-                            //if (_Projects.Count() > 0)
-                            //{
-                            //    var ProjectFiles = System.IO.Directory.EnumerateFiles(dialog.SelectedPath, "*.rpaproj", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
-                            //    foreach(var file in ProjectFiles)
-                            //    {
-                            //        if()
-                            //    }
-
-                            //}
-
+                            var name = System.IO.Path.GetFileNameWithoutExtension(dialogOpen.FileName);
+                            Workflow workflow = Workflow.Create(p, name);
+                            workflow.Xaml = System.IO.File.ReadAllText(dialogOpen.FileName);
+                            onOpenWorkflow(workflow);
+                            return;
+                        }
+                    }
+                    if (op.listWorkflows.SelectedItem is Workflow wf)
+                    {
+                        var dialogOpen = new Microsoft.Win32.OpenFileDialog();
+                        dialogOpen.Title = "Open Workflow";
+                        dialogOpen.Filter = "Workflows (.xaml)|*.xaml";
+                        if (dialogOpen.ShowDialog() == true)
+                        {
+                            var name = System.IO.Path.GetFileNameWithoutExtension(dialogOpen.FileName);
+                            Workflow workflow = Workflow.Create(wf.Project, name);
+                            workflow.Xaml = System.IO.File.ReadAllText(dialogOpen.FileName);
+                            onOpenWorkflow(workflow);
+                            return;
                         }
                     }
                 }
+
+                //if (SelectedContent is Views.WFDesigner)
+                //{
+                //    var designer = (Views.WFDesigner)SelectedContent;
+                //    Workflow workflow = Workflow.Create(designer.Project, "New Workflow");
+                //    onOpenWorkflow(workflow);
+                //    return;
+                //}
+                //else
+                //{
+                //    using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+                //    {
+                //        System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                //        if(result == System.Windows.Forms.DialogResult.OK)
+                //        {
+                //            //var _Projects = Project.loadProjects(Extensions.projectsDirectory);
+                //            //if (_Projects.Count() > 0)
+                //            //{
+                //            //    var ProjectFiles = System.IO.Directory.EnumerateFiles(dialog.SelectedPath, "*.rpaproj", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
+                //            //    foreach(var file in ProjectFiles)
+                //            //    {
+                //            //        if()
+                //            //    }
+
+                //            //}
+
+                //        }
+                //    }
+                //}
             }
             catch (Exception ex)
             {
@@ -820,8 +866,8 @@ namespace OpenRPA
         {
             try
             {
-
-            if (!isConnected) return false; return (SelectedContent is Views.WFDesigner || SelectedContent is Views.OpenProject || SelectedContent == null);
+                if (!isConnected) return false; 
+                return (SelectedContent is Views.WFDesigner || SelectedContent is Views.OpenProject || SelectedContent == null);
             }
             catch (Exception ex)
             {
@@ -829,10 +875,46 @@ namespace OpenRPA
                 return false;
             }
         }
-        private void onExport(object _item)
+        private async void onExport(object _item)
         {
-            if (!(SelectedContent is Views.WFDesigner)) return;
-            var designer = (Views.WFDesigner)SelectedContent;
+            if (SelectedContent is Views.WFDesigner designer)
+            {
+                designer.WorkflowDesigner.Flush();
+                string beforexaml = designer.WorkflowDesigner.Text;
+                string xaml = await Views.WFDesigner.LoadImages(beforexaml);
+                var dialogSave = new Microsoft.Win32.SaveFileDialog();
+                dialogSave.Title = "Save Workflow";
+                dialogSave.Filter = "Workflows (.xaml)|*.xaml";
+                dialogSave.FileName = designer.Workflow.name + ".xaml";
+                if (dialogSave.ShowDialog() == true)
+                {
+                    System.IO.File.WriteAllText(dialogSave.FileName, xaml);
+                }
+                return;
+            }
+            if (SelectedContent is Views.OpenProject op)
+            {
+                if (op.listWorkflows.SelectedItem is Project p)
+                {
+                    //var openFileDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+                    //if (openFileDialog1.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+                    //var path = openFileDialog1.SelectedPath;
+                }
+                if (op.listWorkflows.SelectedItem is Workflow wf)
+                {
+                    string beforexaml = wf.Xaml;
+                    string xaml = await Views.WFDesigner.LoadImages(beforexaml);
+                    var dialogSave = new Microsoft.Win32.SaveFileDialog();
+                    dialogSave.Title = "Save Workflow";
+                    dialogSave.Filter = "Workflows (.xaml)|*.xaml";
+                    dialogSave.FileName = wf.name + ".xaml";
+                    if (dialogSave.ShowDialog() == true)
+                    {
+                        System.IO.File.WriteAllText(dialogSave.FileName, xaml);
+                    }
+                }
+                return;
+            }
         }
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {

@@ -237,6 +237,7 @@ namespace OpenRPA.Interfaces.Image
             {
                 if (string.IsNullOrEmpty(basepath)) { basepath = System.IO.Directory.GetCurrentDirectory(); }
                 var imagepath = System.IO.Path.Combine(basepath, "images");
+                if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
                 var imagefilepath = System.IO.Path.Combine(imagepath, id + ".png");
                 if (!System.IO.File.Exists(imagefilepath)) { await global.webSocketClient.DownloadFileAndSaveAs(id + ".png", id, imagepath, true); }
                 if (System.IO.File.Exists(imagefilepath)) { return new Bitmap(imagefilepath); }
@@ -252,6 +253,7 @@ namespace OpenRPA.Interfaces.Image
         public static async Task<Bitmap> LoadBitmap(string basepath, string ImageString)
         {
             Bitmap b;
+            if (string.IsNullOrEmpty(ImageString)) return null;
             if (System.Text.RegularExpressions.Regex.Match(ImageString, "[a-f0-9]{24}").Success)
             {
                 b = await LoadWorkflowImage(basepath, ImageString);

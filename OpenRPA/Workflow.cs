@@ -213,6 +213,7 @@ namespace OpenRPA
             {
                 var basepath = System.IO.Directory.GetCurrentDirectory();
                 var imagepath = System.IO.Path.Combine(basepath, "images");
+                if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
                 var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
                 foreach (var f in files)
                 {

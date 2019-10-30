@@ -78,12 +78,12 @@
                     <RibbonButton Label="Permissions" LargeImageSource="/OpenRPA;component/Resources/Buttons/Manage.png" 
                                   Command="{Binding Data.PermissionsCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
-                    <!--                     <RibbonButton Label="Import" LargeImageSource="/OpenRPA;component/Resources/Buttons/Import.png" 
+                    <RibbonButton Label="Import" LargeImageSource="/OpenRPA;component/Resources/Buttons/Import.png" 
                                   Command="{Binding Data.ImportCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                     <RibbonButton Label="Export" LargeImageSource="/OpenRPA;component/Resources/Buttons/Export.png" 
                                   Command="{Binding Data.ExportCommand, Source={StaticResource proxy}}" 
-                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />-->
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                 </RibbonGroup>
                 <RibbonGroup Header="Runtime">
                     <RibbonButton Label="Play" LargeImageSource="/OpenRPA;component/Resources/Buttons/Play.png" 

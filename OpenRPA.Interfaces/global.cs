@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using OpenRPA.Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +9,7 @@ namespace OpenRPA
 {
     public class global
     {
-        public static WebSocketClient webSocketClient = null;
+        public static Interfaces.IWebSocketClient webSocketClient = null;
         public static bool isConnected
         {
             get

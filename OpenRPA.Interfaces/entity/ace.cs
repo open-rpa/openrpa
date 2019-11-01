@@ -14,13 +14,12 @@ namespace OpenRPA.Interfaces.entity
         delete = 4,
         invoke = 5
     }
-    public class ace
+    public class ace : IEquatable<ace>
     {
         public ace()
         {
             rights = "//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8=";
         }
-
         public ace(ace a)
         {
             deny = a.deny;
@@ -28,7 +27,6 @@ namespace OpenRPA.Interfaces.entity
             _id = a._id;
             name = a.name;
         }
-
         public bool deny { get; set; }
         public string rights { get; set; }
         public string _id { get; set; }
@@ -102,7 +100,6 @@ namespace OpenRPA.Interfaces.entity
                 unsetBit((decimal)ace_right.invoke);
             }
         }
-
         double getMask(double bit)
         {
             return Math.Pow(2, bit);
@@ -141,6 +138,19 @@ namespace OpenRPA.Interfaces.entity
             var bitValue = Math.Pow(2, (double)_bit);
             return (currentValue & (byte)bitValue) != 0;
         }
-
+        public bool Equals(ace other)
+        {
+            if (other is null)
+                return false;
+            return _id == other._id && rights == other.rights;
+        }
+        public override bool Equals(object obj) => Equals(obj as ace);
+        public override int GetHashCode()
+        {
+            int hash = 13;
+            hash = (hash * 7) + _id.GetHashCode();
+            hash = (hash * 7) + rights.GetHashCode();
+            return hash;
+        }
     }
 }

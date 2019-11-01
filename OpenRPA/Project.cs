@@ -15,14 +15,6 @@ namespace OpenRPA
         public System.Collections.ObjectModel.ObservableCollection<Workflow> Workflows { get; set; }
         [JsonIgnore]
         public string Path { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        [JsonIgnore]
-        public string Filepath
-        {
-            get
-            {
-                return System.IO.Path.Combine(Path, Filename);
-            }
-        }
         public static Project[] LoadProjects(string Path)
         {
             var ProjectFiles = System.IO.Directory.EnumerateFiles(Path, "*.rpaproj", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
@@ -44,7 +36,6 @@ namespace OpenRPA
         public bool IsExpanded { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         [JsonIgnore]
         public bool IsSelected { get { return GetProperty<bool>(); } set { SetProperty(value); } }
-
         public static async Task<Project> Create(string Path, string Name, bool addDefault)
         {
             var basePath = System.IO.Path.Combine(Path, Name);
@@ -107,21 +98,24 @@ namespace OpenRPA
         }
         public void Init()
         {
-            var Path = System.IO.Path.GetDirectoryName(Filepath);
+            var Path = System.IO.Path.GetDirectoryName(System.IO.Path.Combine(this.Path, Filename));
             var ProjectFiles = System.IO.Directory.EnumerateFiles(Path, "*.xaml", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
             Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
             foreach (string file in ProjectFiles) Workflows.Add(Workflow.FromFile(this, file));
             //return Workflows.ToArray();
         }
-        public void SaveFile()
+        public void SaveFile(string rootpath = null, bool exportImages = false)
         {
             string regexSearch = new string(System.IO.Path.GetInvalidFileNameChars()) + new string(System.IO.Path.GetInvalidPathChars());
             var r = new System.Text.RegularExpressions.Regex(string.Format("[{0}]", System.Text.RegularExpressions.Regex.Escape(regexSearch)));
             name = r.Replace(name, "");
+            var projectpath = Path;
 
-            var basePath = System.IO.Path.GetDirectoryName(Filepath);
-            if (!System.IO.Directory.Exists(basePath)) System.IO.Directory.CreateDirectory(basePath);
-            System.IO.File.WriteAllText(Filepath, JsonConvert.SerializeObject(this));
+            if (!string.IsNullOrEmpty(rootpath)) projectpath = System.IO.Path.Combine(rootpath, name);
+            if (!System.IO.Directory.Exists(projectpath)) System.IO.Directory.CreateDirectory(projectpath);
+
+            var projectfilepath = System.IO.Path.Combine(projectpath, Filename);
+            System.IO.File.WriteAllText(projectfilepath, JsonConvert.SerializeObject(this));
             var filenames = new List<string>();
             foreach (var workflow in Workflows)
             {
@@ -131,12 +125,26 @@ namespace OpenRPA
                     _ = workflow.Save();
                 }
                 filenames.Add(workflow.Filename);
-                workflow.SaveFile();
+                workflow.SaveFile(projectpath, exportImages);
             }
         }
         public async Task Save()
         {
             SaveFile();
+            if (global.isConnected)
+            {
+                if (string.IsNullOrEmpty(_id))
+                {
+                    var result = await global.webSocketClient.InsertOne("openrpa", 0, false, this);
+                    _id = result._id;
+                    _acl = result._acl;
+                }
+                else
+                {
+                    var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, this);
+                    _acl = result._acl;
+                }
+            }
             foreach (var workflow in Workflows)
             {
                 try
@@ -147,18 +155,6 @@ namespace OpenRPA
                 {
                     throw new Exception("Error saving " + workflow.name, ex);
                 }
-            }
-            if (!global.isConnected) return;
-            if (string.IsNullOrEmpty(_id))
-            {
-                var result = await global.webSocketClient.InsertOne("openrpa", 0, false, this);
-                _id = result._id;
-                _acl = result._acl;
-            }
-            else
-            {
-                var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, this);
-                _acl = result._acl;
             }
         }
         public async Task Delete()
@@ -171,6 +167,7 @@ namespace OpenRPA
             {
                 await global.webSocketClient.DeleteOne("openrpa", this._id);
             }
+            System.IO.Directory.Delete(Path);
         }
         public override string ToString()
         {

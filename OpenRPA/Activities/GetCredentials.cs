@@ -34,7 +34,7 @@ namespace OpenRPA.Activities
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
             var name = Name.Get(context);
-            var result = await global.webSocketClient.Query<JObject>("openrpa", "{name: \"" + name + "\", _type: \"credential\"}");
+            var result = await global.webSocketClient.Query<JObject>("openrpa", "{name: \"" + name + "\", _type: \"credential\"}", top:2);
             if (result.Length != 1) throw new Exception("Failed locating credentials " + name);
             return result[0];
         }

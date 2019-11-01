@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.29</Version>
-    <PackageReleaseNotes>1.0.29 Fix Newtonsoft binding issue
+    <Version>1.0.30</Version>
+    <PackageReleaseNotes>1.0.30 Add import/export, improve query for big results
+1.0.29 Fix Newtonsoft binding issue
 1.0.28 Make openrpa use v3 nuget apis
 1.0.27 Use HTTP instead of sockets for getting files
 1.0.26 Fix issue with checkboxes

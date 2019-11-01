@@ -7,8 +7,9 @@
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
-    <Version>1.0.7</Version>
-    <PackageReleaseNotes>1.0.7 Workaround for WPF double elements
+    <Version>1.0.8</Version>
+    <PackageReleaseNotes>1.0.8 support for seperate images 
+1.0.7 Workaround for WPF double elements
 1.0.5 update interfaces reference</PackageReleaseNotes>
     <Description>Recorder plugin and Activities for interacting with Windows Elements</Description>
     <PackageIcon>open_rpa128.png</PackageIcon>

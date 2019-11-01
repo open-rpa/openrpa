@@ -103,7 +103,6 @@ namespace OpenRPA.Image
 
             }
         }
-
         private async void ProcessLimit_Click(object sender, RoutedEventArgs e)
         {
             var Processname = ModelItem.GetValue<string>("Processname");
@@ -156,16 +155,13 @@ namespace OpenRPA.Image
         {
             get
             {
-                var base64 = ImageString;
-                if (string.IsNullOrEmpty(base64)) return null;
-                //if (System.Text.RegularExpressions.Regex.Match(base64, "[a-f0-9]{24}").Success)
-                //{
-                //    return image.Screenutil.BitmapToImageSource(image.util.loadWorkflowImage(base64), image.Screenutil.ActivityPreviewImageWidth, image.Screenutil.ActivityPreviewImageHeight);
-                //}
-
-                // return OpenRPA.Interfaces.Image.Util.BitmapToImageSource
-                using (var b = Interfaces.Image.Util.Base642Bitmap(base64))
+                var image = ImageString;
+                System.Drawing.Bitmap b = Task.Run(() => {
+                    return Interfaces.Image.Util.LoadBitmap(image);
+                }).Result;
+                using (b)
                 {
+                    if (b == null) return null;
                     return Interfaces.Image.Util.BitmapToImageSource(b, Interfaces.Image.Util.ActivityPreviewImageWidth, Interfaces.Image.Util.ActivityPreviewImageHeight);
                 }
             }

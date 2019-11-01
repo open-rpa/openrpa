@@ -8,11 +8,15 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.11</Version>
-    <PackageReleaseNotes>1.0.11 Extend interfaces with workflow runners
-      1.0.10 update references
-      1.0.9 Added a Snippet interface, for addons to offers example snippets.
-      1.0.8 Add generic version of AsyncTaskCodeActivity</PackageReleaseNotes>
+    <Version>1.0.12</Version>
+    <PackageReleaseNotes>1.0.12 rewrite with interfaces
+1.0.11 Extend interfaces with workflow runners
+
+1.0.10 update references
+
+1.0.9 Added a Snippet interface, for addons to offers example snippets.
+
+1.0.8 Add generic version of AsyncTaskCodeActivity</PackageReleaseNotes>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget</Configurations>
   </PropertyGroup>

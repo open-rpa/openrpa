@@ -19,7 +19,7 @@ namespace OpenRPA.IE
         //[RequiredArgument]
         //public InArgument<string> XPath { get; set; }
 
-        [System.ComponentModel.Browsable(false)]
+        [Browsable(false)]
         public ActivityAction<IEElement> Body { get; set; }
         public InArgument<TimeSpan> Timeout { get; set; }
         public InArgument<int> MaxResults { get; set; }
@@ -28,7 +28,7 @@ namespace OpenRPA.IE
         public InArgument<IEElement> From { get; set; }
         public OutArgument<IEElement[]> Elements { get; set; }
         [Browsable(false)]
-        public String Image { get; set; }
+        public string Image { get; set; }
         private Variable<IEnumerator<IEElement>> _elements = new Variable<IEnumerator<IEElement>>("_elements");
         public Activity LoopAction { get; set; }
         public GetElement()

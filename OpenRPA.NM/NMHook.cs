@@ -274,6 +274,7 @@ namespace OpenRPA.NM
                     return;
                 }
                 result = ffpipe.Message(message, true, TimeSpan.FromSeconds(2));
+                if (result == null) throw new Exception("Failed loading url " + url + " in ff");
                 WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
                 return;
             }
@@ -306,6 +307,7 @@ namespace OpenRPA.NM
                     return;
                 }
                 result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
+                if (result == null) throw new Exception("Failed loading url " + url + " in chrome");
                 WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
                 return;
             }

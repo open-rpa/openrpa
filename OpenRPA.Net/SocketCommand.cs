@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Net
 {
-    public class SocketCommand
+    public class SocketCommand : Interfaces.ISocketCommand
     {
         public SocketCommand()
         {
@@ -17,6 +18,7 @@ namespace OpenRPA.Net
         public string jwt { get; set; }
         [JsonIgnore]
         public Message msg { get; set; }
+        IMessage ISocketCommand.msg { get => msg; set => msg = value as Message; }
 
         public async Task<T> SendMessage<T>(WebSocketClient ws)
         {

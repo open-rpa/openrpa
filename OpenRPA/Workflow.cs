@@ -147,13 +147,16 @@ namespace OpenRPA
             workflow.projectid = Project._id;
             return workflow;
         }
-        public void SaveFile()
+        public void SaveFile(string overridepath = null, bool exportImages = false)
         {
             if (string.IsNullOrEmpty(name)) return;
             if (string.IsNullOrEmpty(Xaml)) return;
             if (!Project.Workflows.Contains(this)) Project.Workflows.Add(this);
 
-            if (string.IsNullOrEmpty(FilePath))
+            var workflowpath = Project.Path;
+            if (!string.IsNullOrEmpty(overridepath)) workflowpath = overridepath;
+            var workflowfilepath = System.IO.Path.Combine(workflowpath, Filename);
+            if (string.IsNullOrEmpty(workflowfilepath))
             {
                 Filename = UniqueFilename();
             }
@@ -163,16 +166,29 @@ namespace OpenRPA
                 var newName = UniqueFilename();
                 if (guess == newName && Filename != guess)
                 {
-                    System.IO.File.WriteAllText(System.IO.Path.Combine(Project.Path, guess), Xaml);
-                    System.IO.File.Delete(FilePath);
+                    System.IO.File.WriteAllText(System.IO.Path.Combine(workflowpath, guess), Xaml);
+                    System.IO.File.Delete(workflowfilepath);
                     Filename = guess;
+                    return;
                 }
             }
-            System.IO.File.WriteAllText(FilePath, Xaml);
+            if(exportImages)
+            {
+                GenericTools.RunUI(async () => {
+                    string beforexaml = Xaml;
+                    string xaml = await Views.WFDesigner.LoadImages(beforexaml);
+                    //string xaml = Task.Run(() =>
+                    //{
+                    //    return Views.WFDesigner.LoadImages(beforexaml);
+                    //}).Result;
+                    System.IO.File.WriteAllText(workflowfilepath, xaml);
+                });
+                return;
+            }
+            System.IO.File.WriteAllText(workflowfilepath, Xaml);
         }
         public async Task Save()
         {
-            //parseparameters();
             try
             {
                 SaveFile();
@@ -192,6 +208,16 @@ namespace OpenRPA
             {
                 var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, this);
                 _acl = result._acl;
+                var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
+                foreach (var f in files)
+                {
+                    bool equal = f.metadata._acl.SequenceEqual(_acl);
+                    if (!equal)
+                    {
+                        f.metadata._acl = _acl;
+                        await global.webSocketClient.UpdateOne("files", 0, false, f);
+                    }
+                }
             }
         }
         public async Task Delete()
@@ -202,6 +228,16 @@ namespace OpenRPA
             if (!global.isConnected) return;
             if (!string.IsNullOrEmpty(_id))
             {
+                var basepath = System.IO.Directory.GetCurrentDirectory();
+                var imagepath = System.IO.Path.Combine(basepath, "images");
+                if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
+                var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
+                foreach (var f in files)
+                {
+                    await global.webSocketClient.DeleteOne("files", f._id);
+                    var imagefilepath = System.IO.Path.Combine(imagepath, f._id + ".png");
+                    if (System.IO.File.Exists(imagefilepath)) System.IO.File.Delete(imagefilepath);
+                }
                 await global.webSocketClient.DeleteOne("openrpa", this._id);
             }
         }

@@ -27,7 +27,6 @@
     <sap:ActivityDesigner.Resources>
         <DataTemplate x:Key="Collapsed">
             <StackPanel>
-                <Image Source="{Binding Image}"></Image>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="Expanded">

@@ -27,7 +27,7 @@ namespace OpenRPA.Activities
             var path = Path.Get(context);
             if (!System.IO.File.Exists(filename)) throw new System.IO.FileNotFoundException("File not found " + filename);
 
-            string id = await global.webSocketClient.UploadFile(filename, path);
+            string id = await global.webSocketClient.UploadFile(filename, path, null);
             return id;
         }
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Net
 {
-    public class Message : BaseMessage
+    public class Message : BaseMessage, IMessage
     {
         public Message(string command)
         {

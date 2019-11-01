@@ -33,7 +33,6 @@ namespace OpenRPA.Views
             DataContext = this;
             toolborder.Child = InitializeActivitiesToolbox();
         }
-
         public ToolboxControl InitializeActivitiesToolbox()
         {
             try

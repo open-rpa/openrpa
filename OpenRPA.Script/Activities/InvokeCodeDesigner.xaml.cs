@@ -53,6 +53,8 @@ namespace OpenRPA.Script.Activities
             ModelItemCollection importsModelItem = modelService.Root.Properties["Imports"].Collection;
             var namespaces = new List<string>();
             foreach (ModelItem import in importsModelItem) namespaces.Add(import.Properties["Namespace"].ComputedValue as string);
+            if (!namespaces.Contains("System.Collections")) namespaces.Add("System.Collections");
+            if (!namespaces.Contains("System.Collections.Generic")) namespaces.Add("System.Collections.Generic");
 
             var vars = FindVariablesInScope(ModelItem);
             string code = ModelItem.GetValue<string>("Code");
@@ -79,6 +81,7 @@ namespace OpenRPA.Script.Activities
             var namespaces = new List<string>();
             foreach (ModelItem import in importsModelItem) namespaces.Add(import.Properties["Namespace"].ComputedValue as string);
             if (!namespaces.Contains("System.Collections")) namespaces.Add("System.Collections");
+            if (!namespaces.Contains("System.Collections.Generic")) namespaces.Add("System.Collections.Generic");            
 
             string[] current = ModelItem.GetValue<string[]>("namespaces");
             if(current == null || namespaces.Count() != current.Count())

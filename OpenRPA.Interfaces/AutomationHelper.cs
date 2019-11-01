@@ -62,7 +62,6 @@ namespace OpenRPA
             }
             return tcs.Task;
         }
-
         public static UIElement GetFromPoint(int X, int Y)
         {
             try
@@ -118,7 +117,6 @@ namespace OpenRPA
             }
             return null;
         }
-
         public static void init()
         {
             AutomationElement[] elements = { };

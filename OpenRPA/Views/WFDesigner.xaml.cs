@@ -288,9 +288,7 @@ namespace OpenRPA.Views
                     //_activitysourceLocationMapping.Clear();
                     //_activityIdModelItemMapping.Clear();
                 }
-                HasChanged = true;
-
-                OnChanged?.Invoke(this);
+                SetHasChanged();
             };
             WorkflowDesigner.Context.Items.Subscribe(new SubscribeContextCallback<Selection>(SelectionChanged));
             WorkflowDesigner.View.Dispatcher.UnhandledException += new System.Windows.Threading.DispatcherUnhandledExceptionEventHandler(UnhandledException);
@@ -315,6 +313,12 @@ namespace OpenRPA.Views
 
             // WfDesignerBorder.Child = wfDesigner.View;
 
+        }
+        public void SetHasChanged()
+        {
+            if (HasChanged) return;
+            HasChanged = true;
+            OnChanged?.Invoke(this);
         }
         private readonly Type[] extratypes = null;
         public WFDesigner(Xceed.Wpf.AvalonDock.Layout.LayoutDocument tab, Workflow workflow, Type[] extratypes)
@@ -1519,6 +1523,25 @@ namespace OpenRPA.Views
                         }
                     }
                 }
+                editingScope.Complete();
+            }
+            wfDesigner.Flush();
+            return wfDesigner.Text;
+        }
+        public static string SetWorkflowName(string xaml, string name)
+        {
+            WorkflowDesigner wfDesigner;
+            wfDesigner = new WorkflowDesigner();
+            wfDesigner.Context.Services.GetService<DesignerConfigurationService>().TargetFrameworkName = new System.Runtime.Versioning.FrameworkName(".NETFramework", new Version(4, 5));
+            wfDesigner.Context.Services.GetService<DesignerConfigurationService>().LoadingFromUntrustedSourceEnabled = true;
+            new DesignerMetadata().Register();
+            wfDesigner.Text = xaml;
+            wfDesigner.Load();
+            ModelService modelService = wfDesigner.Context.Services.GetService<ModelService>();
+            using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
+            {
+                var modelItem = wfDesigner.Context.Services.GetService<ModelService>().Root;
+                modelItem.Properties["Name"].SetValue(name);
                 editingScope.Complete();
             }
             wfDesigner.Flush();

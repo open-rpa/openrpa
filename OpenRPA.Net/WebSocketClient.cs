@@ -393,13 +393,39 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(qm.error)) throw new Exception(qm.error);
             return qm.data;
         }
-        public async Task<T[]> Query<T>(string collectionname, string query)
+        private async Task<T[]> _Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby)
         {
-            QueryMessage<T> q = new QueryMessage<T>();
-            q.collectionname = collectionname; q.query = JObject.Parse(query);
-            q = await q.SendMessage<QueryMessage<T>>(this);
-            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
-            return q.result;
+            var result = new List<T>();
+            bool cont = false;
+            int _top = top;
+            int _skip = skip;
+            if (_top > 100) _top = 100;
+            do
+            {
+                cont = false;
+                QueryMessage<T> q = new QueryMessage<T>(); q.top = _top; q.skip = _skip;
+                q.projection = projection; q.orderby = orderby;
+                q.collectionname = collectionname; q.query = JObject.Parse(query);
+                q = await q.SendMessage<QueryMessage<T>>(this);
+                if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+                result.AddRange(q.result);
+                if (q.result.Count() == _top && result.Count < top)
+                {
+                    cont = true;
+                    _skip += _top;
+                }
+            } while (cont);
+            return result.ToArray();
+        }
+        public async Task<T[]> Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby)
+        {
+            return await _Query<T>(collectionname, query, projection, top, skip, orderby);
+            //QueryMessage<T> q = new QueryMessage<T>(); q.top = top; q.skip = skip;
+            //q.projection = projection; q.orderby = orderby;
+            //q.collectionname = collectionname; q.query = JObject.Parse(query);
+            //q = await q.SendMessage<QueryMessage<T>>(this);
+            //if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            //return q.result;
         }
         public async Task<T> InsertOrUpdateOne<T>(string collectionname, int w, bool j, string uniqeness, T item)
         {

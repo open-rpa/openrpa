@@ -147,13 +147,16 @@ namespace OpenRPA
             workflow.projectid = Project._id;
             return workflow;
         }
-        public void SaveFile()
+        public void SaveFile(string overridepath = null, bool exportImages = false)
         {
             if (string.IsNullOrEmpty(name)) return;
             if (string.IsNullOrEmpty(Xaml)) return;
             if (!Project.Workflows.Contains(this)) Project.Workflows.Add(this);
 
-            if (string.IsNullOrEmpty(FilePath))
+            var workflowpath = Project.Path;
+            if (!string.IsNullOrEmpty(overridepath)) workflowpath = overridepath;
+            var workflowfilepath = System.IO.Path.Combine(workflowpath, Filename);
+            if (string.IsNullOrEmpty(workflowfilepath))
             {
                 Filename = UniqueFilename();
             }
@@ -163,12 +166,26 @@ namespace OpenRPA
                 var newName = UniqueFilename();
                 if (guess == newName && Filename != guess)
                 {
-                    System.IO.File.WriteAllText(System.IO.Path.Combine(Project.Path, guess), Xaml);
-                    System.IO.File.Delete(FilePath);
+                    System.IO.File.WriteAllText(System.IO.Path.Combine(workflowpath, guess), Xaml);
+                    System.IO.File.Delete(workflowfilepath);
                     Filename = guess;
+                    return;
                 }
             }
-            System.IO.File.WriteAllText(FilePath, Xaml);
+            if(exportImages)
+            {
+                GenericTools.RunUI(async () => {
+                    string beforexaml = Xaml;
+                    string xaml = await Views.WFDesigner.LoadImages(beforexaml);
+                    //string xaml = Task.Run(() =>
+                    //{
+                    //    return Views.WFDesigner.LoadImages(beforexaml);
+                    //}).Result;
+                    System.IO.File.WriteAllText(workflowfilepath, xaml);
+                });
+                return;
+            }
+            System.IO.File.WriteAllText(workflowfilepath, Xaml);
         }
         public async Task Save()
         {

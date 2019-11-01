@@ -16,5 +16,10 @@ namespace OpenRPA.Net
         {
             this.msg = msg;
         }
+        public override string ToString()
+        {
+            if (msg != null) return msg.id + "/" + msg.command;
+            return base.ToString();
+        }
     }
 }

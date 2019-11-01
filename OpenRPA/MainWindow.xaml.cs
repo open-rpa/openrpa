@@ -367,6 +367,7 @@ namespace OpenRPA
                             if (hasProject == null)
                             {
                                 if (up == null) up = await Project.Create(Extensions.projectsDirectory, "Unknown", false);
+                                wf.Project = up;
                                 up.Workflows.Add(wf);
                             }
                         }
@@ -584,7 +585,6 @@ namespace OpenRPA
                 NotifyPropertyChanged("record_overlay");
             }
         }
-
         public bool VisualTracking
         {
             get
@@ -767,65 +767,83 @@ namespace OpenRPA
         }
         private bool canImport(object _item)
         {
-            try
-            {
-            if (!isConnected) return false; return (SelectedContent is Views.WFDesigner || SelectedContent is Views.OpenProject || SelectedContent == null);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-                return false;
-            }
+            return true;
+            //try
+            //{
+            //if (!isConnected) return false; return (SelectedContent is Views.WFDesigner || SelectedContent is Views.OpenProject || SelectedContent == null);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex.ToString());
+            //    return false;
+            //}
         }
-        private void onImport(object _item)
+        private async void onImport(object _item)
         {
             try
             {
-                if (SelectedContent is Views.WFDesigner designer)
+                Views.WFDesigner designer = SelectedContent as Views.WFDesigner;
+                Views.OpenProject op = SelectedContent as Views.OpenProject;
+                Workflow wf = null;
+                Project p = null;
+                string filename = null;
+                if (SelectedContent is Views.OpenProject)
                 {
-                    var dialogOpen = new Microsoft.Win32.OpenFileDialog();
-                    dialogOpen.Title = "Open Workflow";
-                    dialogOpen.Filter = "Workflows (.xaml)|*.xaml";
-                    if (dialogOpen.ShowDialog() == true)
+                    wf = op.listWorkflows.SelectedItem as Workflow;
+                    p = op.listWorkflows.SelectedItem as Project;
+                } 
+                else if (SelectedContent is Views.WFDesigner)
+                {
+                    wf = designer.Workflow;
+                    p = wf.Project;
+                }
+                var dialogOpen = new Microsoft.Win32.OpenFileDialog();
+                dialogOpen.Title = "Open Workflow";
+                dialogOpen.Filter = "OpenRPA Project (.rpaproj)|*.rpaproj";
+                if (wf != null || p != null) dialogOpen.Filter = "Workflows (.xaml)|*.xaml|OpenRPA Project (.rpaproj)|*.rpaproj";
+                if (dialogOpen.ShowDialog() == true) filename = dialogOpen.FileName;
+                if (string.IsNullOrEmpty(filename)) return;
+                if (System.IO.Path.GetExtension(filename) == ".xaml")
+                {
+                    var name = System.IO.Path.GetFileNameWithoutExtension(dialogOpen.FileName);
+                    Workflow workflow = Workflow.Create(designer.Project, name);
+                    workflow.Xaml = System.IO.File.ReadAllText(dialogOpen.FileName);
+                    _onOpenWorkflow(workflow, true);
+                    return;
+                }
+                if (System.IO.Path.GetExtension(filename) == ".rpaproj")
+                {
+                    Project project = Newtonsoft.Json.JsonConvert.DeserializeObject<Project>(System.IO.File.ReadAllText(filename));
+                    var sourcepath = System.IO.Path.GetDirectoryName(filename);
+                    var projectpath = Extensions.projectsDirectory + "\\" + project.name;
+                    int index = 1;
+                    string name = project.name;
+                    while (System.IO.Directory.Exists(projectpath))
                     {
-                        var name = System.IO.Path.GetFileNameWithoutExtension(dialogOpen.FileName);
-                        Workflow workflow = Workflow.Create(designer.Project, name);
-                        workflow.Xaml = System.IO.File.ReadAllText(dialogOpen.FileName);
-                        onOpenWorkflow(workflow);
+                        index++;
+                        name = project.name + index.ToString();
+                        projectpath = Extensions.projectsDirectory + "\\" + name;
+                    }
+                    System.IO.Directory.CreateDirectory(projectpath);
+                    System.IO.File.Copy(filename, System.IO.Path.Combine(projectpath, name + ".rpaproj"));
+                    var ProjectFiles = System.IO.Directory.EnumerateFiles(sourcepath, "*.xaml", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
+                    foreach (string file in ProjectFiles) System.IO.File.Copy(file, System.IO.Path.Combine(projectpath, System.IO.Path.GetFileName(file)));
+                    if (ProjectFiles.Length == 0)
+                    {
+                        Log.Information("Loading empty projects are not supported");
                         return;
                     }
+                    project = Project.FromFile(System.IO.Path.Combine(projectpath, name + ".rpaproj"));
+                    Projects.Add(project);
+                    project.name = name;
+                    project._id = null;
+                    await project.Save();
+                    Workflow workflow = project.Workflows.First();
+                    workflow.Project = project;
+                    onOpenWorkflow(workflow);
+                    return;
                 }
-                if (SelectedContent is Views.OpenProject op)
-                {
-                    if (op.listWorkflows.SelectedItem is Project p)
-                    {
-                        var dialogOpen = new Microsoft.Win32.OpenFileDialog();
-                        dialogOpen.Title = "Open Workflow";
-                        dialogOpen.Filter = "Workflows (.xaml)|*.xaml";
-                        if (dialogOpen.ShowDialog() == true)
-                        {
-                            var name = System.IO.Path.GetFileNameWithoutExtension(dialogOpen.FileName);
-                            Workflow workflow = Workflow.Create(p, name);
-                            workflow.Xaml = System.IO.File.ReadAllText(dialogOpen.FileName);
-                            onOpenWorkflow(workflow);
-                            return;
-                        }
-                    }
-                    if (op.listWorkflows.SelectedItem is Workflow wf)
-                    {
-                        var dialogOpen = new Microsoft.Win32.OpenFileDialog();
-                        dialogOpen.Title = "Open Workflow";
-                        dialogOpen.Filter = "Workflows (.xaml)|*.xaml";
-                        if (dialogOpen.ShowDialog() == true)
-                        {
-                            var name = System.IO.Path.GetFileNameWithoutExtension(dialogOpen.FileName);
-                            Workflow workflow = Workflow.Create(wf.Project, name);
-                            workflow.Xaml = System.IO.File.ReadAllText(dialogOpen.FileName);
-                            onOpenWorkflow(workflow);
-                            return;
-                        }
-                    }
-                }
+
 
                 //if (SelectedContent is Views.WFDesigner)
                 //{
@@ -896,9 +914,10 @@ namespace OpenRPA
             {
                 if (op.listWorkflows.SelectedItem is Project p)
                 {
-                    //var openFileDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-                    //if (openFileDialog1.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
-                    //var path = openFileDialog1.SelectedPath;
+                    var openFileDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+                    if (openFileDialog1.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+                    var path = openFileDialog1.SelectedPath;
+                    p.SaveFile(path, true);
                 }
                 if (op.listWorkflows.SelectedItem is Workflow wf)
                 {
@@ -1380,36 +1399,41 @@ namespace OpenRPA
             }
             return null;
         }
+        public void _onOpenWorkflow(Workflow workflow, bool HasChanged = false)
+        {
+            Views.WFDesigner designer = getWorkflowDesignerByFilename(workflow.FilePath);
+            if (designer == null && !string.IsNullOrEmpty(workflow._id)) designer = getWorkflowDesignerById(workflow._id);
+            if (designer != null)
+            {
+                designer.tab.IsSelected = true;
+                return;
+            }
+            try
+            {
+                var types = new List<Type>();
+                foreach (var p in Plugins.recordPlugins) { types.Add(p.GetType()); }
+                LayoutDocument layoutDocument = new LayoutDocument { Title = workflow.name };
+                layoutDocument.ContentId = workflow._id;
+
+                var view = new Views.WFDesigner(layoutDocument, workflow, types.ToArray());
+                view.OnChanged = WFDesigneronChanged;
+                layoutDocument.Content = view;
+                mainTabControl.Children.Add(layoutDocument);
+                layoutDocument.IsSelected = true;
+                layoutDocument.Closing += LayoutDocument_Closing;
+                if(HasChanged) view.SetHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                MessageBox.Show(ex.Message);
+            }
+        }
         public void onOpenWorkflow(Workflow workflow)
         {
             AutomationHelper.syncContext.Post(o =>
             {
-                Views.WFDesigner designer = getWorkflowDesignerByFilename(workflow.FilePath);
-                if (designer == null && !string.IsNullOrEmpty(workflow._id)) designer = getWorkflowDesignerById(workflow._id);
-                if (designer != null)
-                {
-                    designer.tab.IsSelected = true;
-                    return;
-                }
-                try
-                {
-                    var types = new List<Type>();
-                    foreach (var p in Plugins.recordPlugins) { types.Add(p.GetType()); }
-                    LayoutDocument layoutDocument = new LayoutDocument { Title = workflow.name };
-                    layoutDocument.ContentId = workflow._id;
-
-                    var view = new Views.WFDesigner(layoutDocument, workflow, types.ToArray());
-                    view.OnChanged = WFDesigneronChanged;
-                    layoutDocument.Content = view;
-                    mainTabControl.Children.Add(layoutDocument);
-                    layoutDocument.IsSelected = true;
-                    layoutDocument.Closing += LayoutDocument_Closing;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "");
-                    MessageBox.Show(ex.Message);
-                }
+                _onOpenWorkflow(workflow);
             }, null);
         }
         private void WFDesigneronChanged(Views.WFDesigner designer)
@@ -1564,9 +1588,11 @@ namespace OpenRPA
             var designer = (Views.WFDesigner)SelectedContent;
             await designer.Save();
             Workflow workflow = Workflow.Create(designer.Project, "Copy of " + designer.Workflow.name);
-            workflow.Xaml = designer.Workflow.Xaml;
+            var xaml = designer.Workflow.Xaml;
+            xaml = Views.WFDesigner.SetWorkflowName(xaml, workflow.name);
+            workflow.Xaml = xaml;
             workflow.name = "Copy of " + designer.Workflow.name;
-            onOpenWorkflow(workflow);
+            _onOpenWorkflow(workflow, true);
         }
         private bool canDelete(object _item)
         {

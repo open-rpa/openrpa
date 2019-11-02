@@ -13,4 +13,4 @@ Also checkout the "backend" for managing multiple robots at [OpenFlow](https://g
 
 See a small video of running the robot for the first time
 
-[![First time run](https://img.youtube.com/vi/SqLHlMpQhZA/3.jpg)](https://youtu.be/SqLHlMpQhZA)
+[![First time run](https://img.youtube.com/vi/SqLHlMpQhZA/1.jpg)](https://www.youtube.com/watch?v=34-H-_EPwJg)

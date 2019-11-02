@@ -1100,7 +1100,7 @@ namespace OpenRPA
                 var p = new System.Diagnostics.Process();
                 p.StartInfo.FileName = Environment.CurrentDirectory + @"\OpenRPA.Updater";
                 p.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
-                if (!System.IO.File.Exists(Environment.CurrentDirectory + @"\OpenRPA.Updater.exe"))
+                if (System.IO.File.Exists(di.Parent.FullName + @"\OpenRPA.Updater.exe"))
                 {
                     p.StartInfo.FileName = di.Parent.FullName + @"\OpenRPA.Updater.exe";
                     p.StartInfo.WorkingDirectory = di.Parent.FullName;

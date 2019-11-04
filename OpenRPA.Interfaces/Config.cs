@@ -23,6 +23,7 @@ namespace OpenRPA
         public string designerlayout = "";
         public Dictionary<string, object> properties = new Dictionary<string, object>();
         public bool record_overlay = false;
+        public int querypagesize = 50;
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)

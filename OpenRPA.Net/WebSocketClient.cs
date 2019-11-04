@@ -108,7 +108,7 @@ namespace OpenRPA.Net
         }
         private async Task receiveLoop()
         {
-            byte[] buffer = new byte[2048];
+            byte[] buffer = new byte[2048*2];
             while (true)
             {
                 string json = string.Empty;
@@ -399,7 +399,7 @@ namespace OpenRPA.Net
             bool cont = false;
             int _top = top;
             int _skip = skip;
-            if (_top > 100) _top = 100;
+            if (_top > Config.local.querypagesize) _top = Config.local.querypagesize;
             do
             {
                 cont = false;

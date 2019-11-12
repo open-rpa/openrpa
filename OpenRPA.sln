@@ -45,7 +45,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.RDService", "OpenRP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.RDServicePlugin", "OpenRPA.RDServicePlugin\OpenRPA.RDServicePlugin.csproj", "{254ECB41-E179-4C23-A434-DF101AF83A18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.Elis.Rossum", "OpenRPA.Elis.Rossum\OpenRPA.Elis.Rossum.csproj", "{4FC52354-5012-4A44-89A0-79ECC65CC730}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Elis.Rossum", "OpenRPA.Elis.Rossum\OpenRPA.Elis.Rossum.csproj", "{4FC52354-5012-4A44-89A0-79ECC65CC730}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -184,14 +184,14 @@ Global
 		{4FC52354-5012-4A44-89A0-79ECC65CC730}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FC52354-5012-4A44-89A0-79ECC65CC730}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FC52354-5012-4A44-89A0-79ECC65CC730}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4FC52354-5012-4A44-89A0-79ECC65CC730}.ReleaseNuget|Any CPU.ActiveCfg = Release|Any CPU
-		{4FC52354-5012-4A44-89A0-79ECC65CC730}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
+		{4FC52354-5012-4A44-89A0-79ECC65CC730}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
+		{4FC52354-5012-4A44-89A0-79ECC65CC730}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
 		BuildVersion_StartDate = 2000/1/1
+		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
 	EndGlobalSection
 EndGlobal

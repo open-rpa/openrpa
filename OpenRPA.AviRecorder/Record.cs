@@ -62,6 +62,7 @@ namespace OpenRPA.AviRecorder
             this.encodingQuality = encodingQuality;
             string extension = ".avi";
             if (encoder != KnownFourCCs.Codecs.Uncompressed && encoder != KnownFourCCs.Codecs.MotionJpeg) extension = ".mpeg";
+            if (!System.IO.Directory.Exists(outputFolder)) System.IO.Directory.CreateDirectory(outputFolder);
 
             GenericTools.RunUI(() =>
             {

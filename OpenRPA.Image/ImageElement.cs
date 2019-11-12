@@ -15,10 +15,8 @@ namespace OpenRPA.Image
         public int Y { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-
         public string Text { get; set; }
         public float Confidence { get; set; }
-
         private System.Drawing.Bitmap _element = null;
         public System.Drawing.Bitmap element {
             get
@@ -143,12 +141,10 @@ namespace OpenRPA.Image
                 return Interfaces.Image.Util.Bitmap2Base64(element);
             }
         }
-
         public void Dispose()
         {
             if(_element!=null) _element.Dispose();
         }
-
         private Emgu.CV.OCR.Tesseract _ocr;
         public string Value
         {

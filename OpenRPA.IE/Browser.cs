@@ -94,8 +94,8 @@ namespace OpenRPA.IE
 
         internal void Show()
         {
-            Interfaces.GenericTools.ShowWindow(new IntPtr(wBrowser.HWND), Interfaces.GenericTools.SW_SHOWNORMAL);
-            Interfaces.GenericTools.SetForegroundWindow(new IntPtr(wBrowser.HWND));
+            NativeMethods.ShowWindow(new IntPtr(wBrowser.HWND), NativeMethods.SW_SHOWNORMAL);
+            NativeMethods.SetForegroundWindow(new IntPtr(wBrowser.HWND));
         }
 
         private Browser() { }

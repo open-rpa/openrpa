@@ -23,6 +23,7 @@ namespace OpenRPA
         public string designerlayout = "";
         public Dictionary<string, object> properties = new Dictionary<string, object>();
         public bool record_overlay = false;
+        public int querypagesize = 50;
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)
@@ -59,21 +60,30 @@ namespace OpenRPA
             return SecureData;
         }
         private static Config _local = null;
-        public static Config local {
-            get {
-                if (_local == null) {
-                    _local = Load("settings.json");
+        public static Config local
+        {
+            get
+            {
+                if (_local == null)
+                {
+                    var asm = System.Reflection.Assembly.GetEntryAssembly();
+                    var filepath = asm.CodeBase.Replace("file:///", "");
+                    var path = System.IO.Path.GetDirectoryName(filepath);
+                    _local = Load(System.IO.Path.Combine(path, "settings.json"));
                 }
                 return _local;
             }
         }
         public static void Save()
         {
-            local.Save("settings.json");
+            var asm = System.Reflection.Assembly.GetEntryAssembly();
+            var filepath = asm.CodeBase.Replace("file:///", "");
+            var path = System.IO.Path.GetDirectoryName(filepath);
+            local.Save(System.IO.Path.Combine(path, "settings.json"));
         }
         public static void Reload()
         {
-            _local = Load("settings.json");
+            _local = null;
         }
         public T GetProperty<T>(string pluginname, T mydefault, [System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
         {
@@ -130,8 +140,6 @@ namespace OpenRPA
             var propertyName = body.Member.Name;
             return propertyName;
         }
-
-
     }
 }
 

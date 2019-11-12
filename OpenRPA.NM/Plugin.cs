@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.NM
 {
-    public class Plugin : ObservableObject, IPlugin
+    public class Plugin : ObservableObject, IRecordPlugin
     {
         public NMElement lastElement { get; set; }
         public string Name => "NM";
         public string Status => (NMHook.connected ? "online" : "offline");
-        public event Action<IPlugin, IRecordEvent> OnUserAction;
-        public event Action<IPlugin, IRecordEvent> OnMouseMove;
-
+        public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
+        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove;
+        public System.Windows.Controls.UserControl editor => null;
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
             NMSelector nmselector = selector as NMSelector;
@@ -99,7 +99,7 @@ namespace OpenRPA.NM
             }
             return new NMSelector(nmitem.NMElement, nmanchor, true, null);
         }
-        public void Initialize()
+        public void Initialize(IOpenRPAClient client)
         {
             NMHook.registreChromeNativeMessagingHost(false);
             NMHook.registreffNativeMessagingHost(false);
@@ -242,7 +242,6 @@ namespace OpenRPA.NM
         {
             recording = false;
         }
-
         public bool parseMouseMoveAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) return false;

@@ -31,6 +31,7 @@ namespace WindowsAccessBridgeInterop {
       var managesDescendants = false;
       foreach (var node in path.OfType<AccessibleContextNode>()) {
         node.SetManagedDescendant(managesDescendants);
+                if (node.GetInfo() == null) continue;
         if (!managesDescendants && node.GetInfo().states.Contains("manages descendants")) {
           managesDescendants = true;
         }

@@ -25,7 +25,6 @@ namespace OpenRPA.Net
         private List<SocketMessage> _receiveQueue = new List<SocketMessage>();
         private List<SocketMessage> _sendQueue = new List<SocketMessage>();
         private List<QueuedMessage> _messageQueue = new List<QueuedMessage>();
-
         // public delegate void QueueMessageDelegate(IQueueMessage message, QueueMessageEventArgs e);
         public event Action OnOpen;
         public event Action<string> OnClose;
@@ -78,6 +77,7 @@ namespace OpenRPA.Net
                     ws = null;
                     return;
                 }
+                Log.Information("Connecting to " + url);
                 await ws.ConnectAsync(new Uri(url), src.Token);
                 Log.Information("Connected to " + url);
                 Task receiveTask = Task.Run(async () => await receiveLoop(), src.Token);
@@ -108,10 +108,11 @@ namespace OpenRPA.Net
         }
         private async Task receiveLoop()
         {
-            byte[] buffer = new byte[2048];
+            byte[] buffer = new byte[2048*2];
             while (true)
             {
                 string json = string.Empty;
+                System.Net.WebSockets.WebSocketReceiveResult result;
                 try
                 {
                     if (ws == null) { return; }
@@ -119,7 +120,7 @@ namespace OpenRPA.Net
                         OnClose?.Invoke("");
                         return;
                     }
-                    System.Net.WebSockets.WebSocketReceiveResult result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), src.Token);
+                    result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), src.Token);
                     json = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
                     var message = JsonConvert.DeserializeObject<SocketMessage>(json);
                     if (message != null) _receiveQueue.Add(message);
@@ -399,7 +400,7 @@ namespace OpenRPA.Net
             bool cont = false;
             int _top = top;
             int _skip = skip;
-            if (_top > 100) _top = 100;
+            if (_top > Config.local.querypagesize) _top = Config.local.querypagesize;
             do
             {
                 cont = false;

@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
-    <Version>1.0.11</Version>
-    <PackageReleaseNotes>1.0.11 support for seperate images 
+    <Version>1.0.12</Version>
+    <PackageReleaseNotes>1.0.12 update interfaces reference
+1.0.11 support for seperate images 
 1.0.10 update interfaces reference</PackageReleaseNotes>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget</Configurations>

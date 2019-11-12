@@ -17,7 +17,8 @@ namespace OpenRPA.Interfaces.entity
         public DateTime _created { get { return GetProperty<DateTime>(); } set { SetProperty(value); } }
         public string _createdby { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string _createdbyid { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        public ace[] _acl  { get { return GetProperty<ace[]>(); } set { SetProperty(value); } }
+        public ace[] _acl { get { return GetProperty<ace[]>(); } set { SetProperty(value); } }
+        public string[] _encrypt { get { return GetProperty<string[]>(); } set { SetProperty(value); } }        
         public bool hasRight(apiuser user, ace_right bit)
         {
             var ace = _acl.Where(x => x._id == user._id).FirstOrDefault();

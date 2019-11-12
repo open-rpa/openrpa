@@ -13,7 +13,8 @@ namespace OpenRPA.Java
     {
         public delegate void OnInitilizedDelegate(AccessBridge accessBridge);
         public event OnInitilizedDelegate OnInitilized;
-
+        public delegate void OnNewjvmDelegate(AccessBridge accessBridge, AccessibleJvm[] newjvms);
+        public event OnNewjvmDelegate OnNewjvm;
         public delegate void JavaShutDownDelegate(int vmID);
         public event JavaShutDownDelegate OnJavaShutDown;
         public delegate void MouseClickedDelegate(int vmID, AccessibleContextNode ac);
@@ -41,7 +42,6 @@ namespace OpenRPA.Java
                 return accessBridge.IsLegacy;
             }
         }
-
         private static Javahook _instance = null;
         public static Javahook Instance {
             get
@@ -54,7 +54,6 @@ namespace OpenRPA.Java
                 return _instance;
             }
         }
-
         public void init()
         {
             try
@@ -140,41 +139,57 @@ namespace OpenRPA.Java
         {
             accessBridge.Dispose();
         }
-        public  void refreshJvms()
+        public void refreshJvms()
         {
             _windowCache.Clear();
-            jvms = EnumJvms();
+            jvms.Clear();
+            refreshJvms(0);
+            // jvms = EnumJvms();
         }
-        public  void refreshJvms(int miliseconds)
+        public void refreshJvms(int miliseconds)
         {
+            if (miliseconds == 0)
+            {
+                _refreshJvms();
+                return;
+            }
             _delayedRefresh.Post(TimeSpan.FromMilliseconds(miliseconds), () =>
             {
-                try
-                {
-                    _windowCache.Clear();
-                    var _jvms = EnumJvms();
-                    Log.Debug("jvms: " + _jvms.Count);
-                    foreach (var jvm in _jvms)
-                    {
-                        if (!jvms.Contains(jvm))
-                        {
-                            jvms.Add(jvm);
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Log.Error(e.ToString());
-                }
-                finally
-                {
-                }
+                _refreshJvms();
+                refreshJvms(10000);
             });
         }
-        public List<AccessibleJvm> EnumJvms()
+        public void _refreshJvms()
+        {
+            try
+            {
+                bool added = false;
+                List<AccessibleJvm> newjvms = new List<AccessibleJvm>();
+                _windowCache.Clear();
+                var _jvms = EnumJvms();
+                foreach (var jvm in _jvms)
+                {
+                    if (!jvms.Contains(jvm))
+                    {
+                        added = true;
+                        jvms.Add(jvm);
+                        newjvms.Add(jvm);
+                    }
+                }
+                if (added)
+                {
+                    OnNewjvm?.Invoke(accessBridge, newjvms.ToArray());
+                }
+                // refreshJvms(1000);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.ToString());
+            }
+        }
+        private List<AccessibleJvm> EnumJvms()
         {
             return accessBridge.EnumJvms(hwnd => _windowCache.Get(accessBridge, hwnd));
         }
-
     }
 }

@@ -1,7 +1,9 @@
 {
   "profiles": {
     "OpenRPA.Updater": {
-      "commandName": "Project"
+      "commandName": "Executable",
+      "executablePath": "C:\\Users\\Allan\\Desktop\\openrpatest\\Updater\\OpenRPA.Updater.exe",
+      "workingDirectory": "C:\\Users\\Allan\\Desktop\\openrpatest\\Updater"
     }
   }
 }

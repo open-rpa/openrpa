@@ -73,6 +73,10 @@ namespace OpenRPA.Updater
                 if (string.IsNullOrEmpty(_packagesfolder)) _packagesfolder = System.IO.Path.GetFullPath("packages");
                 return _packagesfolder;
             }
+            set
+            {
+                _packagesfolder = value;
+            }
         }
         public string _destinationfolder = null;
         public string Destinationfolder

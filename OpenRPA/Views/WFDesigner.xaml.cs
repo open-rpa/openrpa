@@ -374,10 +374,12 @@ namespace OpenRPA.Views
                             string image = item.Properties["Image"].Value.ToString();
                             if (!System.Text.RegularExpressions.Regex.Match(image, "[a-f0-9]{24}").Success)
                             {
-                                var metadata = new OpenRPA.Interfaces.entity.metadata();
-                                // metadata.AddRight(global.webSocketClient.user, null);
-                                metadata._acl = Workflow._acl;
-                                metadata.workflow = Workflow._id;
+                                var metadata = new OpenRPA.Interfaces.entity.metadata
+                                {
+                                    // metadata.AddRight(global.webSocketClient.user, null);
+                                    _acl = Workflow._acl,
+                                    workflow = Workflow._id
+                                };
                                 var imageid = GenericTools.YoutubeLikeId();
                                 var tempfilename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), imageid + ".png");
                                 using (var ms = new System.IO.MemoryStream(Convert.FromBase64String(image)))

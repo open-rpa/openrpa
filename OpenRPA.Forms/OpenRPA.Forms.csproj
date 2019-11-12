@@ -7,8 +7,8 @@
     <Description>A couple of activities to design and show forms, and notifications</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.10</Version>
-    <PackageReleaseNotes>1.0.10 update interfaces reference</PackageReleaseNotes>
+    <Version>1.0.11</Version>
+    <PackageReleaseNotes>1.0.11 update interfaces reference</PackageReleaseNotes>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget</Configurations>
   </PropertyGroup>

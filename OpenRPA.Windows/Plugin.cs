@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using FlaUI.Core;
 using FlaUI.Core.AutomationElements.Infrastructure;
 using OpenRPA.Input;
@@ -15,7 +16,7 @@ using OpenRPA.Interfaces.Selector;
 
 namespace OpenRPA.Windows
 {
-    public class Plugin : ObservableObject, IPlugin
+    public class Plugin : ObservableObject, IRecordPlugin
     {
         private static int CurrentProcessId = 0;
 
@@ -83,9 +84,10 @@ namespace OpenRPA.Windows
         }
         public string Name { get => "Windows"; }
         public string Status => _status;
+        public UserControl editor => null;
         private string _status = "";
-        public event Action<IPlugin, IRecordEvent> OnUserAction;
-        public event Action<IPlugin, IRecordEvent> OnMouseMove;
+        public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
+        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove;
         public void Start()
         {
             InputDriver.Instance.OnMouseUp += OnMouseUp;
@@ -195,7 +197,7 @@ namespace OpenRPA.Windows
             thread.Start();
         }
         public bool parseUserAction(ref IRecordEvent e) { return false; }
-        public void Initialize()
+        public void Initialize(IOpenRPAClient client)
         {
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)

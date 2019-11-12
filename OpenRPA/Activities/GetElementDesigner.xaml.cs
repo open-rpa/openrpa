@@ -24,7 +24,6 @@ namespace OpenRPA.Activities
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
         private void Open_Selector(object sender, RoutedEventArgs e)
         {
             string SelectorString = ModelItem.GetValue<string>("Selector");
@@ -41,7 +40,6 @@ namespace OpenRPA.Activities
                 ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(selectors.vm.json) });
             }
         }
-
         private async void Highlight_Click(object sender, RoutedEventArgs e)
         {
             string SelectorString = ModelItem.GetValue<string>("Selector");
@@ -54,7 +52,6 @@ namespace OpenRPA.Activities
             var elements = Plugin.GetElementsWithSelector(selector, null, maxresults);
             foreach (var ele in elements) await ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
         }
-
         private void Select_Click(object sender, RoutedEventArgs e)
         {
             Interfaces.GenericTools.minimize(Interfaces.GenericTools.mainWindow);
@@ -72,7 +69,7 @@ namespace OpenRPA.Activities
             p.OnUserAction -= OnUserAction;
             p.Stop();
         }
-        public void OnUserAction(Interfaces.IPlugin sender, Interfaces.IRecordEvent e)
+        public void OnUserAction(Interfaces.IRecordPlugin sender, Interfaces.IRecordEvent e)
         {
             StopRecordPlugins();
             AutomationHelper.syncContext.Post(o =>

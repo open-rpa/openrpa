@@ -30,6 +30,9 @@ namespace OpenRPA.AviRecorder
         }
         public string Name => "AviRecorder";
         private Dictionary<string, Record> Records = new Dictionary<string, Record>();
+        public void Initialize(IOpenRPAClient client)
+        {
+        }
         public void onWorkflowAborted(ref IWorkflowInstance e)
         {
             stopRecording(e);

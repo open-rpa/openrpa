@@ -19,15 +19,18 @@ namespace OpenRPA
         {
             TargetFramework = new System.Runtime.Versioning.FrameworkName(".NETFramework", new Version("4.6.2"));
             var cur = new System.IO.DirectoryInfo(Environment.CurrentDirectory);
-            RepositoryPath = cur.Parent.FullName + @"\Packages";
-            // InstallPath = cur.Parent.FullName + @"\OpenRPA";
-            InstallPath = cur.Parent.FullName;
+            //RepositoryPath = cur.Parent.FullName + @"\Packages";
+            //// InstallPath = cur.Parent.FullName + @"\OpenRPA";
+            //InstallPath = cur.Parent.FullName;
+            RepositoryPath = cur + @"\Packages";
+            InstallPath = cur + @"\Updater";
+
             Updater.OpenRPAPackageManager.Instance.Destinationfolder = InstallPath;
         }
         public async Task<bool> UpdaterNeedsUpdate()
         {
             string OpenRPAUpdaterexe = System.IO.Path.Combine(InstallPath, "OpenRPA.Updater.exe");
-            if (!System.IO.File.Exists(OpenRPAUpdaterexe)) return false;
+            if (!System.IO.File.Exists(OpenRPAUpdaterexe)) return true;
             FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(OpenRPAUpdaterexe);
             string version = fileVersionInfo.ProductVersion;
 

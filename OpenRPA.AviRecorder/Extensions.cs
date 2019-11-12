@@ -62,6 +62,5 @@ namespace OpenRPA.AviRecorder
             }
             return result;
         }
-
     }
 }

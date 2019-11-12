@@ -5,16 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace OpenRPA.Image
 {
-    class Plugin : ObservableObject, IPlugin
+    class Plugin : ObservableObject, IRecordPlugin
     {
         public string Name => "Image";
         public string Status => "";
-        public event Action<IPlugin, IRecordEvent> OnUserAction;
-        public event Action<IPlugin, IRecordEvent> OnMouseMove;
-
+        public UserControl editor => null;
+        public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
+        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove;        
         public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)
         {
             if (timeout == TimeSpan.Zero) OnUserAction?.Invoke(null, null); // dummy use of OnUserAction to get rid of warning
@@ -32,7 +33,7 @@ namespace OpenRPA.Image
         {
             throw new NotImplementedException();
         }
-        public void Initialize()
+        public void Initialize(IOpenRPAClient client)
         {
         }
         public void LaunchBySelector(Selector selector, TimeSpan timeout)
@@ -93,7 +94,6 @@ namespace OpenRPA.Image
 
             return true;
         }
-
         public bool parseUserAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) return false;

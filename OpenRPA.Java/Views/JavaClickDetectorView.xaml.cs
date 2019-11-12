@@ -119,7 +119,7 @@ namespace OpenRPA.Java.Views
             p.OnUserAction -= OnUserAction;
             p.Stop();
         }
-        public void OnUserAction(Interfaces.IPlugin sender, Interfaces.IRecordEvent e)
+        public void OnUserAction(Interfaces.IRecordPlugin sender, Interfaces.IRecordEvent e)
         {
             StopRecordPlugins();
             AutomationHelper.syncContext.Post(o =>

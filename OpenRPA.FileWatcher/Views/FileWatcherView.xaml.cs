@@ -95,7 +95,7 @@ namespace OpenRPA.FileWatcher.Views
         private void StopRecordPlugins()
         {
         }
-        public void OnUserAction(Interfaces.IPlugin sender, Interfaces.IRecordEvent e)
+        public void OnUserAction(Interfaces.IRecordPlugin sender, Interfaces.IRecordEvent e)
         {
         }
     }

@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Office
 {
-    public class Plugin : ObservableObject, IPlugin
+    public class Plugin : ObservableObject, IRecordPlugin
     {
         public string Name => "Office";
         public string Status => "";
-        public event Action<IPlugin, IRecordEvent> OnUserAction;
-        public event Action<IPlugin, IRecordEvent> OnMouseMove;
-
+        public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
+        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove;
+        public System.Windows.Controls.UserControl editor => null;
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
             return new IElement[] { };
@@ -34,7 +34,7 @@ namespace OpenRPA.Office
         {
             return null;
         }
-        public void Initialize()
+        public void Initialize(IOpenRPAClient client)
         {
         }
         public void LaunchBySelector(Selector selector, TimeSpan timeout)
@@ -81,7 +81,6 @@ namespace OpenRPA.Office
         public void Stop()
         {
         }
-
         public bool parseMouseMoveAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) return false;
@@ -93,7 +92,6 @@ namespace OpenRPA.Office
             e.Element = null;
             return true;
         }
-
         public class GetElementResult : IBodyActivity
         {
             public GetElementResult(Activity activity)

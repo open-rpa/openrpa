@@ -58,6 +58,7 @@ namespace OpenRPA.NM
                 if (tagname.ToLower() != "input" && tagname.ToLower() != "select") return false;
                 if(tagname.ToLower() == "input")
                 {
+                    if(type==null) return true;
                     if (type.ToLower() == "text" || type.ToLower() == "password") return true;
                     return false;
                 } else

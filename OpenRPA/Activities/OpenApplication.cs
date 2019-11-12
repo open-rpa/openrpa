@@ -27,7 +27,6 @@ namespace OpenRPA.Activities
         public InArgument<string> Selector { get; set; }
         [RequiredArgument]
         public InArgument<TimeSpan> Timeout { get; set; }
-
         protected override void Execute(CodeActivityContext context)
         {
             var selectorstring = Selector.Get(context);

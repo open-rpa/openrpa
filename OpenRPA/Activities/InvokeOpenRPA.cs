@@ -19,7 +19,6 @@ namespace OpenRPA.Activities
     {
         [RequiredArgument]
         public string workflow { get; set; }
-
         protected override void Execute(NativeActivityContext context)
         {
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
@@ -88,7 +87,6 @@ namespace OpenRPA.Activities
                 throw;
             }
         }
-
         void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object obj)
         {
             try

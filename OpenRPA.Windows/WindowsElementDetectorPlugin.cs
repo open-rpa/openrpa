@@ -56,7 +56,7 @@ namespace OpenRPA.Windows
             }
         }
         public event DetectorDelegate OnDetector;
-        public void Initialize(Detector InEntity)
+        public void Initialize(IOpenRPAClient client, Detector InEntity)
         {
             Entity = InEntity;
             Start();
@@ -127,6 +127,9 @@ namespace OpenRPA.Windows
             {
                 Log.Error(ex.ToString());
             }
+        }
+        public void Initialize(IOpenRPAClient client)
+        {
         }
     }
 }

@@ -11,12 +11,12 @@ namespace OpenRPA.Interfaces
 {
     public class Plugins
     {
-        public static ObservableCollection<IPlugin> recordPlugins = new ObservableCollection<IPlugin>();
+        public static ObservableCollection<IRecordPlugin> recordPlugins = new ObservableCollection<IRecordPlugin>();
         public static ExtendedObservableCollection<IDetectorPlugin> detectorPlugins = new ExtendedObservableCollection<IDetectorPlugin>();
         public static Dictionary<string, Type> detectorPluginTypes = new Dictionary<string, Type>();
         public static ObservableCollection<IRunPlugin> runPlugins = new ObservableCollection<IRunPlugin>();
         public static ObservableCollection<ISnippet> Snippets = new ObservableCollection<ISnippet>();
-        public static IDetectorPlugin AddDetector(entity.Detector entity)
+        public static IDetectorPlugin AddDetector(IOpenRPAClient client, entity.Detector entity)
         {
             foreach(var d in detectorPluginTypes)
             {
@@ -26,7 +26,7 @@ namespace OpenRPA.Interfaces
                     {
                         IDetectorPlugin plugin = (IDetectorPlugin)Activator.CreateInstance(d.Value);
                         if(string.IsNullOrEmpty(entity.name)) entity.name = plugin.Name;
-                        plugin.Initialize(entity);
+                        plugin.Initialize(client, entity);
                         Plugins.detectorPlugins.Add(plugin);
                         return plugin;
                     }
@@ -38,12 +38,11 @@ namespace OpenRPA.Interfaces
             }
             return null;
         }
-        public async static Task LoadPlugins(string projectsDirectory)
+        public async static Task LoadPlugins(IOpenRPAClient client, string projectsDirectory)
         {
             ICollection<Type> pluginTypes = new List<Type>();
             ICollection<Type> snippetTypes = new List<Type>();
             ICollection<Type> runPluginTypes = new List<Type>();
-
             await Task.Run(() =>
             {
                 List<string> dllFileNames = new List<string>();
@@ -77,7 +76,7 @@ namespace OpenRPA.Interfaces
                                 }
                                 else
                                 {
-                                    if (type.GetInterface(typeof(IPlugin).FullName) != null)
+                                    if (type.GetInterface(typeof(IRecordPlugin).FullName) != null)
                                     {
                                         pluginTypes.Add(type);
                                     }
@@ -107,10 +106,10 @@ namespace OpenRPA.Interfaces
             {
                 try
                 {
-                    IPlugin plugin = (IPlugin)Activator.CreateInstance(type);
+                    IRecordPlugin plugin = (IRecordPlugin)Activator.CreateInstance(type);
                     Log.Information("Initialize plugin " + plugin.Name);
                     // SetStatus("Initialize plugin " + plugin.Name);
-                    plugin.Initialize();
+                    plugin.Initialize(client);
                     recordPlugins.Add(plugin);
                 }
                 catch (Exception ex)
@@ -137,6 +136,7 @@ namespace OpenRPA.Interfaces
                 {
                     IRunPlugin plugin = (IRunPlugin)Activator.CreateInstance(type);
                     Log.Information("Initialize RunPlugin " + plugin.Name);
+                    plugin.Initialize(client);
                     runPlugins.Add(plugin);
                 }
                 catch (Exception ex)
@@ -146,6 +146,5 @@ namespace OpenRPA.Interfaces
             }
 
         }
-
     }
 }

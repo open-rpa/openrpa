@@ -7,8 +7,9 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.12</Version>
-    <PackageReleaseNotes>1.0.12 support for seperate images 
+    <Version>1.0.13</Version>
+    <PackageReleaseNotes>1.0.13 update interfaces reference
+1.0.12 support for seperate images 
 1.0.11 update interfaces reference</PackageReleaseNotes>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget</Configurations>
@@ -29,6 +30,7 @@
     <None Remove="Activities\GetElementDesigner.xaml" />
     <None Remove="Activities\GetImageDesigner.xaml" />
     <None Remove="Activities\GetTextDesigner.xaml" />
+    <None Remove="Activities\LoadFromFileDesigner.xaml" />
     <None Remove="Resources\check.png" />
     <None Remove="Resources\designer\foreachimage.png" />
     <None Remove="Resources\designer\getimage.png" />
@@ -49,6 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\GetElementDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\LoadFromFileDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\GetImageDesigner.xaml">

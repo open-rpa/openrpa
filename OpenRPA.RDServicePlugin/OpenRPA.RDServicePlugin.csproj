@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Plugin to manage OpenRPS'a Windows Service that monitors Remote Desktop and keep sessions alive so OpenRPA can work unattended</Description>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
+    <PackageIcon>open_rpa128.png</PackageIcon>
+    <Configurations>Debug;Release;ReleaseNuget</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\debug</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\dist</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNuget|AnyCPU'">
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Views\RunPluginView.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\RunPluginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
+    <ProjectReference Include="..\OpenRPA.RDService\OpenRPA.RDService.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Views\RunPluginView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>

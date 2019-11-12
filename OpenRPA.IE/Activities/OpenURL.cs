@@ -18,12 +18,6 @@ namespace OpenRPA.IE
     {
         [RequiredArgument]
         public InArgument<string> Url { get; set; }
-
-
-        public OpenURL()
-        {
-        }
-
         protected override void Execute(NativeActivityContext context)
         {
             var url = Url.Get(context);

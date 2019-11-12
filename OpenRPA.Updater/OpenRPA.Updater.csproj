@@ -9,15 +9,17 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.10</Version>
-    <PackageReleaseNotes>1.0.10 Make updater use v3 nuget apis
+    <Version>1.0.12</Version>
+    <PackageReleaseNotes>1.0.12 Reorganize packages, refactore several interfaces
+1.0.11 Improve UI feedback, add support for using Update folder
+1.0.10 Make updater use v3 nuget apis
 1.0.9 update interfaces reference</PackageReleaseNotes>
     <Description>OpenRPA Package Manager</Description>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\dist</OutputPath>
+    <OutputPath>..\dist\updater</OutputPath>
   </PropertyGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />

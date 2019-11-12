@@ -13,23 +13,17 @@ using System.Windows.Media.Imaging;
 
 namespace OpenRPA.IE
 {
-    public partial class OpenURLDesigner : INotifyPropertyChanged
+    public partial class OpenURLDesigner
     {
         public OpenURLDesigner()
         {
             InitializeComponent();
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged(String propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var browser = Browser.GetBrowser();
             if (browser == null) return;
             ModelItem.Properties["Url"].SetValue(new InArgument<string>(browser.wBrowser.LocationURL));
-
         }
     }
 }

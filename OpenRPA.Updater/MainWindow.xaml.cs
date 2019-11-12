@@ -39,8 +39,8 @@ namespace OpenRPA.Updater
                 NotifyPropertyChanged("Logs");
             }
         }
-        public string RepositoryPath;
-        public string InstallPath;
+        //public string Packagesfolder;
+        //public string Destinationfolder;
         public bool FirstRun = true;
         // readonly System.Runtime.Versioning.FrameworkName TargetFramework;
         public MainWindow()
@@ -52,9 +52,94 @@ namespace OpenRPA.Updater
             {
                 Logs = OpenRPAPackageManagerLogger.Instance.Logs;
             };
-            RepositoryPath = Environment.CurrentDirectory + @"\Packages";
-            InstallPath = Environment.CurrentDirectory + @"\OpenRPA";
+            var cur = new System.IO.DirectoryInfo(Environment.CurrentDirectory);
+            if(System.IO.File.Exists(cur.Parent.FullName + @"\OpenRPA.exe"))
+            {
+                OpenRPAPackageManager.Instance.Packagesfolder = cur.Parent.FullName + @"\Packages";
+                OpenRPAPackageManager.Instance.Destinationfolder = cur.Parent.FullName;
+            }
+            else
+            {
+                OpenRPAPackageManager.Instance.Packagesfolder = Environment.CurrentDirectory + @"\Packages";
+                OpenRPAPackageManager.Instance.Destinationfolder = Environment.CurrentDirectory + @"\OpenRPA";
+            }
+
+            OpenRPAPackageManagerLogger.Instance.LogInformation("Parent: " + cur.Parent.FullName);
+            OpenRPAPackageManagerLogger.Instance.LogInformation("RepositoryPath: " + OpenRPAPackageManager.Instance.Packagesfolder);
+            OpenRPAPackageManagerLogger.Instance.LogInformation("InstallPath: " + OpenRPAPackageManager.Instance.Destinationfolder);
             LoadPackages();
+        }
+        public bool BtnInstallEnabled
+        {
+            get
+            {
+                if (_bussy) return false;
+                PackageModel SelectedValue = listPackages.SelectedValue as PackageModel;
+                if (SelectedValue == null) return false;
+                return SelectedValue.IsNotDownloaded;
+            }
+            set
+            {
+                NotifyPropertyChanged("BtnInstallEnabled");
+            }
+        }
+        public bool ButtonReinstallEnabled
+        {
+            get
+            {
+                if (_bussy) return false;
+                PackageModel SelectedValue = listPackages.SelectedValue as PackageModel;
+                if (SelectedValue == null) return false;
+                return SelectedValue.isDownloaded;
+            }
+            set
+            {
+                NotifyPropertyChanged("ButtonReinstallEnabled");
+            }
+        }
+        public bool ButtonUpgradeEnabled
+        {
+            get
+            {
+                if (_bussy) return false;
+                PackageModel SelectedValue = listPackages.SelectedValue as PackageModel;
+                if (SelectedValue == null) return false;
+                return SelectedValue.canUpgrade;
+            }
+            set
+            {
+                NotifyPropertyChanged("ButtonUpgradeEnabled");
+            }
+        }
+        public bool ButtonUninstallEnabled
+        {
+            get
+            {
+                if (_bussy) return false;
+                PackageModel SelectedValue = listPackages.SelectedValue as PackageModel;
+                if (SelectedValue == null) return false;
+                return SelectedValue.isDownloaded;
+            }
+            set
+            {
+                NotifyPropertyChanged("ButtonUninstallEnabled");
+            }
+        }
+        private bool _bussy = false;
+        public bool bussy
+        {
+            get
+            {
+                return _bussy;
+            }
+            set
+            {
+                _bussy = value;
+                NotifyPropertyChanged("BtnInstallEnabled");
+                NotifyPropertyChanged("ButtonReinstallEnabled");
+                NotifyPropertyChanged("ButtonUpgradeEnabled");
+                NotifyPropertyChanged("ButtonUninstallEnabled");
+            }
         }
         private static bool IsOfficeInstalled()
         {
@@ -118,7 +203,7 @@ namespace OpenRPA.Updater
                     ButtonUpdateAll.IsEnabled = result.Where(x => x.canUpgrade == true).Count() > 0;
                 });
 
-                if (!System.IO.Directory.Exists(InstallPath) || !System.IO.File.Exists(InstallPath + @"\OpenRPA.exe"))
+                if (!System.IO.Directory.Exists(OpenRPAPackageManager.Instance.Destinationfolder) || !System.IO.File.Exists(OpenRPAPackageManager.Instance.Destinationfolder + @"\OpenRPA.exe"))
                 {
                     FirstRun = false;
                     var dialogResult = MessageBox.Show("Install OpenRPA and most common packages?", "First run", MessageBoxButton.YesNo);
@@ -137,7 +222,7 @@ namespace OpenRPA.Updater
                         await OpenRPAPackageManager.Instance.DownloadAndInstall(result.Where(x => x.Package.Identity.Id == "OpenRPA.FileWatcher").First().Package.Identity);
                     }
                 }
-
+                bussy = bussy;
 
                 //                // IPackageRepository localRepository = PackageRepositoryFactory.Default.CreateRepository(RepositoryPath);
                 //                PackageModel m = null;
@@ -294,89 +379,40 @@ namespace OpenRPA.Updater
         {
             PackageModel SelectedValue = listPackages.SelectedValue as PackageModel;
             if (SelectedValue == null) return;
-            BtnInstall.IsEnabled = false;
-            BtnReinstall.IsEnabled = false;
-            BtnUpgrade.IsEnabled = false;
-            BtnUninstall.IsEnabled = false;
-
-            listPackages.SelectedValue = null;
+            bussy = true;
             listPackages.IsEnabled = false;
             listPackages.IsEnabled = true;
-            listPackages.SelectedValue = SelectedValue;
             await OpenRPAPackageManager.Instance.DownloadAndInstall(SelectedValue.Package.Identity);
             LoadPackages();
-            BtnInstall.IsEnabled = SelectedValue.IsNotDownloaded;
-            BtnReinstall.IsEnabled = SelectedValue.isDownloaded;
-            BtnUpgrade.IsEnabled = SelectedValue.canUpgrade;
-            BtnUninstall.IsEnabled = SelectedValue.isDownloaded;
+            OpenRPAPackageManagerLogger.Instance.LogInformation("Package installed");
+            bussy = false;
         }
         private void ButtonUpgrade(object sender, RoutedEventArgs e)
         {
-            //PackageModel SelectedValue = listPackages.SelectedValue as PackageModel;
-            //if (SelectedValue == null) return;
-            //_ = UpgradePackageAsync(SelectedValue);
             ButtonInstall(null, null);
         }
         private void ButtonUninstall(object sender, RoutedEventArgs e)
         {
             PackageModel SelectedValue = listPackages.SelectedValue as PackageModel;
             if (SelectedValue == null) return;
-            BtnInstall.IsEnabled = false;
-            BtnReinstall.IsEnabled = false;
-            BtnUpgrade.IsEnabled = false;
-            BtnUninstall.IsEnabled = false;
-
-            listPackages.SelectedValue = null;
+            bussy = true;
             listPackages.IsEnabled = false;
             listPackages.IsEnabled = true;
-            listPackages.SelectedValue = SelectedValue;
             OpenRPAPackageManager.Instance.UninstallPackage(SelectedValue.Package.Identity);
             LoadPackages();
-            BtnInstall.IsEnabled = SelectedValue.IsNotDownloaded;
-            BtnReinstall.IsEnabled = SelectedValue.isDownloaded;
-            BtnUpgrade.IsEnabled = SelectedValue.canUpgrade;
-            BtnUninstall.IsEnabled = SelectedValue.isDownloaded;
-
-
-            //var exists = packageManager.LocalRepository.FindPackage(SelectedValue.Package.Id);
-            //if (exists != null)
-            //{
-            //    listPackages.SelectedValue = null;
-            //    listPackages.IsEnabled = false;
-            //    Task.Run(() =>
-            //    {
-            //        try
-            //        {
-            //            packageManager.UninstallPackage(exists);
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            logger.Log(MessageLevel.Error, ex.ToString());
-            //            logger.Logs = ex.ToString() + Environment.NewLine + logger.Logs;
-            //            System.Diagnostics.Debug.WriteLine(ex.ToString());
-            //        }
-            //        finally
-            //        {
-            //            this.Dispatcher.Invoke(() =>
-            //            {
-            //                listPackages.IsEnabled = true;
-            //                listPackages.SelectedValue = SelectedValue;
-            //            });
-            //            LoadPackages();
-            //        }
-            //    });
-            //}
-
+            OpenRPAPackageManagerLogger.Instance.LogInformation("Package uninstalled");
+            bussy = false;
         }
         private void ButtonLaunch(object sender, RoutedEventArgs e)
         {
-            if (System.IO.File.Exists(InstallPath + @"\OpenRPA.exe"))
+            OpenRPAPackageManagerLogger.Instance.LogInformation("Launching OpenRPA.exe");
+            if (System.IO.File.Exists(OpenRPAPackageManager.Instance.Destinationfolder + @"\OpenRPA.exe"))
             {
-                Run(InstallPath, InstallPath + @"\OpenRPA.exe");
+                Run(OpenRPAPackageManager.Instance.Destinationfolder, OpenRPAPackageManager.Instance.Destinationfolder + @"\OpenRPA.exe");
             }
             else
             {
-                OpenRPAPackageManagerLogger.Instance.Log(NuGet.Common.LogLevel.Error, "Failed locating " + InstallPath + @"\OpenRPA.exe");
+                OpenRPAPackageManagerLogger.Instance.Log(NuGet.Common.LogLevel.Error, "Failed locating " + OpenRPAPackageManager.Instance.Destinationfolder + @"\OpenRPA.exe");
             }
 
         }
@@ -388,12 +424,15 @@ namespace OpenRPA.Updater
         }
         private void ButtonReinstall(object sender, RoutedEventArgs e)
         {
+            OpenRPAPackageManagerLogger.Instance.LogInformation("Reinstall package");
             ButtonInstall(null, null);
         }
         private async void ButtonUpdateAllClick(object sender, RoutedEventArgs e)
         {
             await Dispatcher.Invoke(async () =>
             {
+                OpenRPAPackageManagerLogger.Instance.LogInformation("Updating all packages");
+                bussy = true;
                 foreach (var p in Packages.ToList())
                 {
                     if (p.canUpgrade)
@@ -403,9 +442,15 @@ namespace OpenRPA.Updater
                     }
                 }
                 listPackages.IsEnabled = true;
+                bussy = false;
+                OpenRPAPackageManagerLogger.Instance.LogInformation("Update of all packages complete");
                 ButtonLaunch(null, null);
                 LoadPackages();
             });
+        }
+        private void listPackages_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            bussy = bussy;
         }
     }
 

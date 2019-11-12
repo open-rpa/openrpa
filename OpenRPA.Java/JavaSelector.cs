@@ -96,8 +96,6 @@ namespace OpenRPA.Java
         {
             return JavaSelector.GetElementsWithuiSelector(this, fromElement, maxresults);
         }
-
-
         private static JavaElement[] GetElementsWithuiSelector(WindowsAccessBridgeInterop.AccessibleJvm jvm, JavaSelector selector, IElement fromElement, int maxresults)
         {
             JavaElement[] result = null;
@@ -170,7 +168,5 @@ namespace OpenRPA.Java
             if (result == null) return new JavaElement[] { };
             return result;
         }
-
-
     }
 }

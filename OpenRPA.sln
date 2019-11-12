@@ -41,6 +41,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindowsAccessBridgeInterop"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA", "OpenRPA\OpenRPA.csproj", "{E6F0AB4D-6926-41AE-AD25-2DDA26D9642E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.RDService", "OpenRPA.RDService\OpenRPA.RDService.csproj", "{9A2A4A46-8483-4597-8ECB-C7E6EA91AB4A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.RDServicePlugin", "OpenRPA.RDServicePlugin\OpenRPA.RDServicePlugin.csproj", "{254ECB41-E179-4C23-A434-DF101AF83A18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.Elis.Rossum", "OpenRPA.Elis.Rossum\OpenRPA.Elis.Rossum.csproj", "{4FC52354-5012-4A44-89A0-79ECC65CC730}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -162,12 +168,30 @@ Global
 		{E6F0AB4D-6926-41AE-AD25-2DDA26D9642E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E6F0AB4D-6926-41AE-AD25-2DDA26D9642E}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
 		{E6F0AB4D-6926-41AE-AD25-2DDA26D9642E}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
+		{9A2A4A46-8483-4597-8ECB-C7E6EA91AB4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A2A4A46-8483-4597-8ECB-C7E6EA91AB4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A2A4A46-8483-4597-8ECB-C7E6EA91AB4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A2A4A46-8483-4597-8ECB-C7E6EA91AB4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A2A4A46-8483-4597-8ECB-C7E6EA91AB4A}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
+		{9A2A4A46-8483-4597-8ECB-C7E6EA91AB4A}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
+		{254ECB41-E179-4C23-A434-DF101AF83A18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{254ECB41-E179-4C23-A434-DF101AF83A18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{254ECB41-E179-4C23-A434-DF101AF83A18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{254ECB41-E179-4C23-A434-DF101AF83A18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{254ECB41-E179-4C23-A434-DF101AF83A18}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
+		{254ECB41-E179-4C23-A434-DF101AF83A18}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
+		{4FC52354-5012-4A44-89A0-79ECC65CC730}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FC52354-5012-4A44-89A0-79ECC65CC730}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FC52354-5012-4A44-89A0-79ECC65CC730}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FC52354-5012-4A44-89A0-79ECC65CC730}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FC52354-5012-4A44-89A0-79ECC65CC730}.ReleaseNuget|Any CPU.ActiveCfg = Release|Any CPU
+		{4FC52354-5012-4A44-89A0-79ECC65CC730}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
+		BuildVersion_StartDate = 2000/1/1
 	EndGlobalSection
 EndGlobal

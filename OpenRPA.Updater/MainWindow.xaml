@@ -31,7 +31,7 @@
         <DockPanel DockPanel.Dock="Left"  MinWidth="250" MaxWidth="350">
             <TextBox x:Name="searchstring"></TextBox>
             <ScrollViewer VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-                <ListView x:Name="listPackages" ItemsSource="{Binding Source={StaticResource Packages}}" >
+                <ListView x:Name="listPackages" ItemsSource="{Binding Source={StaticResource Packages}}" SelectionChanged="listPackages_SelectionChanged" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <WrapPanel>
@@ -44,10 +44,10 @@
             </ScrollViewer>
         </DockPanel>
         <StackPanel DockPanel.Dock="Bottom" Height="200">
-            <Button x:Name="BtnInstall" Click="ButtonInstall" Content="Install" IsEnabled="{Binding ElementName=listPackages, Path=SelectedValue.IsNotDownloaded}"></Button>
-            <Button x:Name="BtnReinstall" Click="ButtonReinstall" Content="Reinstall" IsEnabled="{Binding ElementName=listPackages, Path=SelectedValue.isDownloaded}"></Button>
-            <Button x:Name="BtnUpgrade" Click="ButtonUpgrade" Content="Upgrade" IsEnabled="{Binding ElementName=listPackages, Path=SelectedValue.canUpgrade}"></Button>
-            <Button x:Name="BtnUninstall" Click="ButtonUninstall" Content="Uninstall" IsEnabled="{Binding ElementName=listPackages, Path=SelectedValue.isDownloaded}"></Button>
+            <Button Click="ButtonInstall" Content="Install" IsEnabled="{Binding BtnInstallEnabled}"></Button>
+            <Button Click="ButtonReinstall" Content="Reinstall" IsEnabled="{Binding ButtonReinstallEnabled}"></Button>
+            <Button Click="ButtonUpgrade" Content="Upgrade" IsEnabled="{Binding ButtonUpgradeEnabled}"></Button>
+            <Button Click="ButtonUninstall" Content="Uninstall" IsEnabled="{Binding ButtonUninstallEnabled}"></Button>
             <TextBox HorizontalAlignment="Stretch" Text="{Binding Logs}" Height="120"></TextBox>
         </StackPanel>
         <!--  CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" -->

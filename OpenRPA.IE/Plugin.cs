@@ -11,10 +11,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace OpenRPA.IE
 {
-    class Plugin : ObservableObject, IPlugin
+    class Plugin : ObservableObject, IRecordPlugin
     {
         public static treeelement[] _GetRootElements(Selector anchor)
         {
@@ -58,10 +59,11 @@ namespace OpenRPA.IE
             }
             return new IESelector(ieitem.IEElement.Browser, ieitem.IEElement.RawElement, ieanchor, true, 0, 0);
         }
-        public event Action<IPlugin, IRecordEvent> OnUserAction;
-        public event Action<IPlugin, IRecordEvent> OnMouseMove;
+        public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
+        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove;
         public string Name { get => "IE"; }
         public string Status => "";
+        public UserControl editor => null;
         public void Start()
         {
             InputDriver.Instance.OnMouseUp += OnMouseUp;
@@ -148,7 +150,7 @@ namespace OpenRPA.IE
 
             return true;
         }
-        public void Initialize()
+        public void Initialize(IOpenRPAClient client)
         {
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)

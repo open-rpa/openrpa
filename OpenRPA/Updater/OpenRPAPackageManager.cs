@@ -265,7 +265,7 @@ namespace OpenRPA.Updater
             Repository.Provider.GetCoreV3();
             return result;
         }
-        public LocalPackageInfo getLocal(string identity)
+        public LocalPackageInfo GetLocal(string identity)
         {
             List<Lazy<INuGetResourceProvider>> providers = CreateResourceProviders();
 
@@ -298,18 +298,13 @@ namespace OpenRPA.Updater
         }
         private void InstallFile(string installedPath, string f)
         {
-            string source = "";
-            string f2 = "";
-            string filename = "";
-            string dir = "";
-            string target = "";
             try
             {
-                source = System.IO.Path.Combine(installedPath, f);
-                f2 = f.Substring(f.IndexOf("/", 4) + 1);
-                filename = System.IO.Path.GetFileName(f2);
-                dir = System.IO.Path.GetDirectoryName(f2);
-                target = System.IO.Path.Combine(Destinationfolder, dir, filename);
+                string source = System.IO.Path.Combine(installedPath, f);
+                string f2 = f.Substring(f.IndexOf("/", 4) + 1);
+                string filename = System.IO.Path.GetFileName(f2);
+                string dir = System.IO.Path.GetDirectoryName(f2);
+                string target = System.IO.Path.Combine(Destinationfolder, dir, filename);
                 if (!System.IO.Directory.Exists(System.IO.Path.Combine(Destinationfolder, dir)))
                 {
                     System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Destinationfolder, dir));
@@ -323,18 +318,13 @@ namespace OpenRPA.Updater
         }
         private void RemoveFile(string installedPath, string f)
         {
-            string source = "";
-            string f2 = "";
-            string filename = "";
-            string dir = "";
-            string target = "";
             try
             {
-                source = System.IO.Path.Combine(installedPath, f);
-                f2 = f.Substring(f.IndexOf("/", 4) + 1);
-                filename = System.IO.Path.GetFileName(f2);
-                dir = System.IO.Path.GetDirectoryName(f2);
-                target = System.IO.Path.Combine(Destinationfolder, dir, filename);
+                string source = System.IO.Path.Combine(installedPath, f);
+                string f2 = f.Substring(f.IndexOf("/", 4) + 1);
+                string filename = System.IO.Path.GetFileName(f2);
+                string dir = System.IO.Path.GetDirectoryName(f2);
+                string target = System.IO.Path.Combine(Destinationfolder, dir, filename);
                 if (!System.IO.Directory.Exists(System.IO.Path.Combine(Destinationfolder, dir)))
                 {
                     System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Destinationfolder, dir));
@@ -366,45 +356,46 @@ namespace OpenRPA.Updater
             var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
             var installedPath = packagePathResolver.GetInstalledPath(identity);
 
-            PackageReaderBase packageReader;
-            packageReader = new PackageFolderReader(installedPath);
-            var libItems = packageReader.GetLibItems();
-            var frameworkReducer = new FrameworkReducer();
-            var nearest = frameworkReducer.GetNearest(NuGetFramework, libItems.Select(x => x.TargetFramework));
-            var files = libItems
-                .Where(x => x.TargetFramework.Equals(nearest))
-                .SelectMany(x => x.Items).ToList();
-            foreach (var f in files)
+            using(var packageReader = new PackageFolderReader(installedPath))
             {
-                InstallFile(installedPath, f);
-            }
-
-            var cont = packageReader.GetContentItems();
-            nearest = frameworkReducer.GetNearest(NuGetFramework, cont.Select(x => x.TargetFramework));
-            files = cont
-                .Where(x => x.TargetFramework.Equals(nearest))
-                .SelectMany(x => x.Items).ToList();
-            foreach (var f in files)
-            {
-                InstallFile(installedPath, f);
-            }
-
-            try
-            {
-                var dependencies = packageReader.GetPackageDependencies();
-                nearest = frameworkReducer.GetNearest(NuGetFramework, dependencies.Select(x => x.TargetFramework));
-                foreach (var dep in dependencies.Where(x => x.TargetFramework.Equals(nearest)))
+                var libItems = packageReader.GetLibItems();
+                var frameworkReducer = new FrameworkReducer();
+                var nearest = frameworkReducer.GetNearest(NuGetFramework, libItems.Select(x => x.TargetFramework));
+                var files = libItems
+                    .Where(x => x.TargetFramework.Equals(nearest))
+                    .SelectMany(x => x.Items).ToList();
+                foreach (var f in files)
                 {
-                    foreach (var p in dep.Packages)
+                    InstallFile(installedPath, f);
+                }
+
+                var cont = packageReader.GetContentItems();
+                nearest = frameworkReducer.GetNearest(NuGetFramework, cont.Select(x => x.TargetFramework));
+                files = cont
+                    .Where(x => x.TargetFramework.Equals(nearest))
+                    .SelectMany(x => x.Items).ToList();
+                foreach (var f in files)
+                {
+                    InstallFile(installedPath, f);
+                }
+
+                try
+                {
+                    var dependencies = packageReader.GetPackageDependencies();
+                    nearest = frameworkReducer.GetNearest(NuGetFramework, dependencies.Select(x => x.TargetFramework));
+                    foreach (var dep in dependencies.Where(x => x.TargetFramework.Equals(nearest)))
                     {
-                        var local = getLocal(p.Id);
-                        InstallPackage(local.Identity);
+                        foreach (var p in dep.Packages)
+                        {
+                            var local = GetLocal(p.Id);
+                            InstallPackage(local.Identity);
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex.ToString());
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex.ToString());
+                }
             }
 
             if (System.IO.Directory.Exists(installedPath + @"\build"))
@@ -424,31 +415,32 @@ namespace OpenRPA.Updater
         }
         public void UninstallPackage(PackageIdentity identity)
         {
-            var package = getLocal(identity.Id);
+            var package = GetLocal(identity.Id);
             var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
             var installedPath = packagePathResolver.GetInstalledPath(package.Identity);
 
-            PackageReaderBase packageReader;
-            packageReader = new PackageFolderReader(installedPath);
-            var libItems = packageReader.GetLibItems();
-            var frameworkReducer = new FrameworkReducer();
-            var nearest = frameworkReducer.GetNearest(NuGetFramework, libItems.Select(x => x.TargetFramework));
-            var files = libItems
-                .Where(x => x.TargetFramework.Equals(nearest))
-                .SelectMany(x => x.Items).ToList();
-            foreach (var f in files)
+            using (var packageReader = new PackageFolderReader(installedPath))
             {
-                RemoveFile(installedPath, f);
-            }
+                var libItems = packageReader.GetLibItems();
+                var frameworkReducer = new FrameworkReducer();
+                var nearest = frameworkReducer.GetNearest(NuGetFramework, libItems.Select(x => x.TargetFramework));
+                var files = libItems
+                    .Where(x => x.TargetFramework.Equals(nearest))
+                    .SelectMany(x => x.Items).ToList();
+                foreach (var f in files)
+                {
+                    RemoveFile(installedPath, f);
+                }
 
-            var cont = packageReader.GetContentItems();
-            nearest = frameworkReducer.GetNearest(NuGetFramework, cont.Select(x => x.TargetFramework));
-            files = cont
-                .Where(x => x.TargetFramework.Equals(nearest))
-                .SelectMany(x => x.Items).ToList();
-            foreach (var f in files)
-            {
-                InstallFile(installedPath, f);
+                var cont = packageReader.GetContentItems();
+                nearest = frameworkReducer.GetNearest(NuGetFramework, cont.Select(x => x.TargetFramework));
+                files = cont
+                    .Where(x => x.TargetFramework.Equals(nearest))
+                    .SelectMany(x => x.Items).ToList();
+                foreach (var f in files)
+                {
+                    InstallFile(installedPath, f);
+                }
             }
 
             if (System.IO.Directory.Exists(installedPath + @"\build"))
@@ -479,45 +471,45 @@ namespace OpenRPA.Updater
             var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
             var installedPath = packagePathResolver.GetInstalledPath(package.Identity);
 
-            PackageReaderBase packageReader;
-            packageReader = new PackageFolderReader(installedPath);
-            var libItems = packageReader.GetLibItems();
-            var frameworkReducer = new FrameworkReducer();
-            var nearest = frameworkReducer.GetNearest(NuGetFramework, libItems.Select(x => x.TargetFramework));
-            var files = libItems
-                .Where(x => x.TargetFramework.Equals(nearest))
-                .SelectMany(x => x.Items).ToList();
-
-
-            foreach (var f in files)
+            using (var packageReader = new PackageFolderReader(installedPath))
             {
-                string source = "";
-                string f2 = "";
-                string filename = "";
-                string dir = "";
-                string target = "";
-                try
+                var libItems = packageReader.GetLibItems();
+                var frameworkReducer = new FrameworkReducer();
+                var nearest = frameworkReducer.GetNearest(NuGetFramework, libItems.Select(x => x.TargetFramework));
+                var files = libItems
+                    .Where(x => x.TargetFramework.Equals(nearest))
+                    .SelectMany(x => x.Items).ToList();
+                foreach (var f in files)
                 {
-                    source = System.IO.Path.Combine(installedPath, f);
-                    f2 = f.Substring(f.IndexOf("/", 4) + 1);
-                    filename = System.IO.Path.GetFileName(f2);
-                    dir = System.IO.Path.GetDirectoryName(f2);
-                    target = System.IO.Path.Combine(Destinationfolder, dir, filename);
-                    if (!System.IO.Directory.Exists(System.IO.Path.Combine(Destinationfolder, dir)))
+                    string source = "";
+                    string f2 = "";
+                    string filename = "";
+                    string dir = "";
+                    string target = "";
+                    try
                     {
-                        System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Destinationfolder, dir));
+                        source = System.IO.Path.Combine(installedPath, f);
+                        f2 = f.Substring(f.IndexOf("/", 4) + 1);
+                        filename = System.IO.Path.GetFileName(f2);
+                        dir = System.IO.Path.GetDirectoryName(f2);
+                        target = System.IO.Path.Combine(Destinationfolder, dir, filename);
+                        if (!System.IO.Directory.Exists(System.IO.Path.Combine(Destinationfolder, dir)))
+                        {
+                            System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Destinationfolder, dir));
+                        }
+                        if (!System.IO.File.Exists(source)) return false;
+                        if (!System.IO.File.Exists(target)) return false;
+                        var infoOld = new System.IO.FileInfo(source);
+                        var infoNew = new System.IO.FileInfo(target);
+                        if (infoNew.LastWriteTime != infoOld.LastWriteTime) return false;
                     }
-                    if (!System.IO.File.Exists(source)) return false;
-                    if (!System.IO.File.Exists(target)) return false;
-                    var infoOld = new System.IO.FileInfo(source);
-                    var infoNew = new System.IO.FileInfo(target);
-                    if (infoNew.LastWriteTime != infoOld.LastWriteTime) return false;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
                 }
             }
+
 
             return true;
         }

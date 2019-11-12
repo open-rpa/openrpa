@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject />
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Windows Service to monitor Remote Desktop and keep sessions alive so OpenRPA can work unattended</Description>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
+    <PackageIcon>open_rpa128.png</PackageIcon>
+    <Configurations>Debug;Release;ReleaseNuget</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\dist</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNuget|AnyCPU'">
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FreeRDP-Sharp" Version="0.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
+    <ProjectReference Include="..\OpenRPA.NamedPipeWrapper\OpenRPA.NamedPipeWrapper.csproj" />
+    <ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="AxInterop.MSTSCLib">
+      <HintPath>lib\AxInterop.MSTSCLib.dll</HintPath>
+    </Reference>
+    <Reference Include="MSTSCLib">
+      <HintPath>lib\MSTSCLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="lib\AxInterop.MSTSCLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="lib\MSTSCLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

@@ -44,7 +44,7 @@
                                     <Hyperlink x:Name="linkOpenFlow" Command="{Binding Data.linkOpenFlowCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" >OpenFlow</Hyperlink>
                                 </RibbonGalleryItem>
                                 <RibbonGalleryItem>
-                                    <Hyperlink x:Name="linkNodeRED" Command="{Binding Data.linkNodeREDCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" >NodeRED</Hyperlink>
+                                    <Hyperlink x:Name="linkNodeRED" Command="{Binding Data.LinkNodeREDCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" >NodeRED</Hyperlink>
                                 </RibbonGalleryItem>
                             </RibbonGalleryCategory>
                         </RibbonGallery>

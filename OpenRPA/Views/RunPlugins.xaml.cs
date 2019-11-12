@@ -27,11 +27,11 @@ namespace OpenRPA.Views
             InitializeComponent();
             DataContext = this;
         }
-        public ObservableCollection<IRunPlugin> runPlugins
+        public List<IRunPlugin> runPlugins
         {
             get
             {
-                return Plugins.runPlugins;
+                return Plugins.runPlugins.Where(x=> x.editor!=null).ToList();
             }
         }
 

@@ -40,7 +40,10 @@ namespace OpenRPA.Interfaces
             }
         }
         public event DetectorDelegate OnDetector;
-        public void Initialize(entity.Detector InEntity)
+        public void Initialize(IOpenRPAClient client)
+        {
+        }
+        public void Initialize(IOpenRPAClient client, entity.Detector InEntity)
         {
             Entity = InEntity;
             Start();

@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.31</Version>
-    <PackageReleaseNotes>1.0.31 Remove updater check
+    <Version>1.0.32</Version>
+    <PackageReleaseNotes>1.0.31 Reorganize packages, refactore several interfaces, add Remote Desktop Service support
+1.0.31 Remove updater check
 1.0.30 Add import/export, improve query for big results
 1.0.29 Fix Newtonsoft binding issue
 1.0.28 Make openrpa use v3 nuget apis

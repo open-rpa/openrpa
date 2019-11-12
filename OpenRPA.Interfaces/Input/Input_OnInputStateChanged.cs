@@ -385,12 +385,18 @@ namespace OpenRPA.Input
         }
         private InputDriver()
         {
+        }
+        private bool isInitialized = false;
+        public void Initialize()
+        {
+            if (isInitialized) return;
             keyboardProc = LowLevelKeyboardProc;
             keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, keyboardProc, IntPtr.Zero, 0);
             if (keyboardHook == IntPtr.Zero) throw new Win32Exception();
             mouseProc = LowLevelMouseProc;
             mouseHook = SetWindowsHookEx(WH_MOUSE_LL, mouseProc, IntPtr.Zero, 0);
             if (mouseHook == IntPtr.Zero) throw new Win32Exception();
+            isInitialized = true;
         }
         public void Dispose()
         {

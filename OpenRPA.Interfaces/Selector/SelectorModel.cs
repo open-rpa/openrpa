@@ -13,7 +13,7 @@ namespace OpenRPA.Interfaces.Selector
     public class SelectorModel : ObservableObject
     {
         public string PluginName { get; set; }
-        public IPlugin Plugin { get; set; }
+        public IRecordPlugin Plugin { get; set; }
         private string _json = null;
         public string json
         {

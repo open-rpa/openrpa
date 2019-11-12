@@ -8,8 +8,8 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.12</Version>
-    <PackageReleaseNotes>1.0.12 rewrite with interfaces
+    <Version>1.0.13</Version>
+    <PackageReleaseNotes>1.0.13 rewrite with interfaces
 1.0.11 Extend interfaces with workflow runners
 
 1.0.10 update references
@@ -92,10 +92,13 @@
     <Reference Include="PresentationCore" />
     <Reference Include="System.Activities" />
     <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Management" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Security" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Controls.Ribbon" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />

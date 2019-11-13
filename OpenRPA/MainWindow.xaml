@@ -41,7 +41,7 @@
                                 CheckedBorderBrush="Transparent"
                                                />
                                 <RibbonGalleryItem>
-                                    <Hyperlink x:Name="linkOpenFlow" Command="{Binding Data.linkOpenFlowCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" >OpenFlow</Hyperlink>
+                                    <Hyperlink x:Name="linkOpenFlow" Command="{Binding Data.LinkOpenFlowCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" >OpenFlow</Hyperlink>
                                 </RibbonGalleryItem>
                                 <RibbonGalleryItem>
                                     <Hyperlink x:Name="linkNodeRED" Command="{Binding Data.LinkNodeREDCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" >NodeRED</Hyperlink>

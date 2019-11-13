@@ -9,8 +9,10 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.33</Version>
-    <PackageReleaseNotes>1.0.33 Quick fix, fix links, and missing binding redirect file
+    <Version>1.0.35</Version>
+    <PackageReleaseNotes>1.0.35 Only log errors doing recording
+1.0.34 Add unblock script, add 3 missing references
+1.0.33 Quick fix, fix links, and missing binding redirect file
 1.0.32 Reorganize packages, refactore several interfaces, add Remote Desktop Service support
 1.0.31 Remove updater check
 1.0.30 Add import/export, improve query for big results
@@ -57,6 +59,10 @@
     <PackageReference Include="NuGet.Packaging" Version="5.3.0" />
     <PackageReference Include="NuGet.Protocol" Version="5.3.0" />
     <PackageReference Include="NuGet.Resolver" Version="5.3.0" />
+    <PackageReference Include="System.Globalization" Version="4.3.0" />
+    <PackageReference Include="System.Globalization.Calendars" Version="4.3.0" />
+    <PackageReference Include="System.Globalization.Extensions" Version="4.3.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\ClickElementDesigner.xaml" />
@@ -645,6 +651,9 @@
   <ItemGroup>
     <None Update="RunOpenRPA.bat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="unblock.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">

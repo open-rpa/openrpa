@@ -413,15 +413,7 @@ namespace OpenRPA.Updater
 
             if (System.IO.Directory.Exists(installedPath + @"\build"))
             {
-                if (System.IO.Directory.Exists(installedPath + @"\build\x64"))
-                {
-                    foreach (var f in System.IO.Directory.GetFiles(installedPath + @"\build\x64"))
-                    {
-                        var filename = System.IO.Path.GetFileName(f);
-                        var target = System.IO.Path.Combine(Destinationfolder, filename);
-                        CopyIfNewer(f, target);
-                    }
-                }
+                CopyDir.Copy(installedPath + @"\build", Destinationfolder);
             }
 
             return true;

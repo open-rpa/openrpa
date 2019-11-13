@@ -402,7 +402,7 @@ namespace OpenRPA.Updater
             listPackages.IsEnabled = false;
             listPackages.IsEnabled = true;
             // Install first, so we are sure the package exists
-            await OpenRPAPackageManager.Instance.DownloadAndInstall(SelectedValue.Package.Identity);
+            // await OpenRPAPackageManager.Instance.DownloadAndInstall(SelectedValue.Package.Identity);
             OpenRPAPackageManager.Instance.UninstallPackage(SelectedValue.Package.Identity);
             LoadPackages();
             OpenRPAPackageManagerLogger.Instance.LogInformation("Package uninstalled");

@@ -8,8 +8,9 @@
     <Company>OpenRPA</Company>
     <Product>OpenRPA</Product>
     <Description>Recorder plugin and Activities for interacting with Chrome/Firefox and Edge</Description>
-    <Version>1.0.14</Version>
-    <PackageReleaseNotes>1.0.14 support for seperate images 
+    <Version>1.0.15</Version>
+    <PackageReleaseNotes>1.0.15 update interfaces reference
+1.0.14 support for seperate images 
 1.0.13 update interfaces reference</PackageReleaseNotes>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget</Configurations>

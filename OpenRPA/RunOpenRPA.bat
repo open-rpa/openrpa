@@ -1,3 +1,3 @@
 @echo off
-cd OpenRPA
+powershell ./unblock.ps1
 start OpenRPA.exe

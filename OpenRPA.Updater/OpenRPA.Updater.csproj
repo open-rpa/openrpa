@@ -9,8 +9,11 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.12</Version>
-    <PackageReleaseNotes>1.0.12 Reorganize packages, refactore several interfaces
+    <Version>1.0.15</Version>
+    <PackageReleaseNotes>1.0.15 update reference
+1.0.14 Fix issue with build files, dont reinstall all doing uninstall
+1.0.13 Quick fix, error when uninstalling
+1.0.12 Reorganize packages, refactore several interfaces
 1.0.11 Improve UI feedback, add support for using Update folder
 1.0.10 Make updater use v3 nuget apis
 1.0.9 update interfaces reference</PackageReleaseNotes>
@@ -45,10 +48,10 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <PackageReference Include="NuGet.Common" Version="5.3.0" />
-    <PackageReference Include="NuGet.Packaging" Version="5.3.0" />
-    <PackageReference Include="NuGet.Protocol" Version="5.3.0" />
-    <PackageReference Include="NuGet.Resolver" Version="5.3.0" />
+    <PackageReference Include="NuGet.Common" Version="5.3.1" />
+    <PackageReference Include="NuGet.Packaging" Version="5.3.1" />
+    <PackageReference Include="NuGet.Protocol" Version="5.3.1" />
+    <PackageReference Include="NuGet.Resolver" Version="5.3.1" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

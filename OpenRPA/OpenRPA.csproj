@@ -9,8 +9,14 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.32</Version>
-    <PackageReleaseNotes>1.0.31 Reorganize packages, refactore several interfaces, add Remote Desktop Service support
+    <Version>1.0.38</Version>
+    <PackageReleaseNotes>1.0.38 update interfaces reference
+1.0.37 Update the 3 missing references
+1.0.36 Update the 3 missing references
+1.0.35 Only log errors doing recording
+1.0.34 Add unblock script, add 3 missing references
+1.0.33 Quick fix, fix links, and missing binding redirect file
+1.0.32 Reorganize packages, refactore several interfaces, add Remote Desktop Service support
 1.0.31 Remove updater check
 1.0.30 Add import/export, improve query for big results
 1.0.29 Fix Newtonsoft binding issue
@@ -44,16 +50,19 @@
     </PropertyGroup>
   </Target>
   <ItemGroup>
+    <!-- https://tyrrrz.me/blog/additional-nuget-files-in-new-csproj -->
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
+    <None Include="$(OutputPath)\OpenRPA.exe.config" Pack="true" PackagePath="build" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
-    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.5.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="NuGet.Common" Version="5.3.0" />
-    <PackageReference Include="NuGet.Packaging" Version="5.3.0" />
-    <PackageReference Include="NuGet.Protocol" Version="5.3.0" />
-    <PackageReference Include="NuGet.Resolver" Version="5.3.0" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.6.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="NuGet.Common" Version="5.3.1" />
+    <PackageReference Include="NuGet.Packaging" Version="5.3.1" />
+    <PackageReference Include="NuGet.Protocol" Version="5.3.1" />
+    <PackageReference Include="NuGet.Resolver" Version="5.3.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\ClickElementDesigner.xaml" />
@@ -642,6 +651,9 @@
   <ItemGroup>
     <None Update="RunOpenRPA.bat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="unblock.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">

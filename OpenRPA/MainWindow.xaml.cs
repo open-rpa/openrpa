@@ -2036,7 +2036,14 @@ namespace OpenRPA
                     {
                         if (p.Name != sender.Name)
                         {
-                            if (p.parseUserAction(ref e)) continue;
+                            try
+                            {
+                                if (p.parseUserAction(ref e)) continue;
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex.ToString());
+                            }
                         }
                     }
                     if (e.a == null)

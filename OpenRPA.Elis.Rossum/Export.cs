@@ -55,6 +55,8 @@ namespace OpenRPA.Elis.Rossum
         public DateTime date_issue { get; set; }
         public string date_due { get; set; }
         public string sender_ic { get; set; }
+        public double amount_total_base { get; set; }
+        public double amount_total_tax { get; set; }
         private List<Datapoint> getDatapoint(Datapoint data)
         {
             var result = new List<Datapoint>();
@@ -97,6 +99,18 @@ namespace OpenRPA.Elis.Rossum
             if (f != null) date_due = f.value;
             f = alldata.Where(x => x.schema_id == "sender_ic").FirstOrDefault();
             if (f != null) sender_ic = f.value;
+            f = alldata.Where(x => x.schema_id == "amount_total_base").FirstOrDefault();
+            if (f != null)
+            {
+                var o = JObject.Parse("{\"value\": \"" + f.value + "\"}");
+                amount_total_base = o["value"].Value<double>();
+            }
+            f = alldata.Where(x => x.schema_id == "amount_total_tax").FirstOrDefault();
+            if (f != null)
+            {
+                var o = JObject.Parse("{\"value\": \"" + f.value + "\"}");
+                amount_total_tax = o["value"].Value<double>();
+            }
         }
     }
     public class Pagination

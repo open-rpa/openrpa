@@ -222,6 +222,7 @@ namespace OpenRPA.Updater
                     NullLogger.Instance);
 
                 var resolver = new PackageResolver();
+                // resolverContext.IncludeUnlisted = true;
                 var packagesToInstall = resolver.Resolve(resolverContext, CancellationToken.None)
                     .Select(p => availablePackages.Single(x => PackageIdentityComparer.Default.Equals(x, p)));
                 var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
@@ -311,6 +312,7 @@ namespace OpenRPA.Updater
                 f2 = f.Substring(f.IndexOf("/", 4) + 1);
                 filename = System.IO.Path.GetFileName(f2);
                 dir = System.IO.Path.GetDirectoryName(f2);
+                if (dir == "lib") dir = "";
                 target = System.IO.Path.Combine(Destinationfolder, dir, filename);
                 if (!System.IO.Directory.Exists(System.IO.Path.Combine(Destinationfolder, dir)))
                 {
@@ -336,6 +338,7 @@ namespace OpenRPA.Updater
                 f2 = f.Substring(f.IndexOf("/", 4) + 1);
                 filename = System.IO.Path.GetFileName(f2);
                 dir = System.IO.Path.GetDirectoryName(f2);
+                if (dir == "lib") dir = "";
                 target = System.IO.Path.Combine(Destinationfolder, dir, filename);
                 if (!System.IO.Directory.Exists(System.IO.Path.Combine(Destinationfolder, dir)))
                 {
@@ -411,15 +414,7 @@ namespace OpenRPA.Updater
 
             if (System.IO.Directory.Exists(installedPath + @"\build"))
             {
-                if (System.IO.Directory.Exists(installedPath + @"\build\x64"))
-                {
-                    foreach (var f in System.IO.Directory.GetFiles(installedPath + @"\build\x64"))
-                    {
-                        var filename = System.IO.Path.GetFileName(f);
-                        var target = System.IO.Path.Combine(Destinationfolder, filename);
-                        CopyIfNewer(f, target);
-                    }
-                }
+                CopyDir.Copy(installedPath + @"\build", Destinationfolder);
             }
 
             return true;
@@ -450,7 +445,7 @@ namespace OpenRPA.Updater
                 .SelectMany(x => x.Items).ToList();
             foreach (var f in files)
             {
-                InstallFile(installedPath, f);
+                RemoveFile(installedPath, f);
             }
 
             if (System.IO.Directory.Exists(installedPath + @"\build"))

@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.32</Version>
-    <PackageReleaseNotes>1.0.31 Reorganize packages, refactore several interfaces, add Remote Desktop Service support
+    <Version>1.0.33</Version>
+    <PackageReleaseNotes>1.0.33 Quick fix, fix links, and missing binding redirect file
+1.0.32 Reorganize packages, refactore several interfaces, add Remote Desktop Service support
 1.0.31 Remove updater check
 1.0.30 Add import/export, improve query for big results
 1.0.29 Fix Newtonsoft binding issue
@@ -44,7 +45,9 @@
     </PropertyGroup>
   </Target>
   <ItemGroup>
+    <!-- https://tyrrrz.me/blog/additional-nuget-files-in-new-csproj -->
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
+    <None Include="$(OutputPath)\OpenRPA.exe.config" Pack="true" PackagePath="build" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />

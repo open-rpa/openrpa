@@ -51,7 +51,7 @@ namespace OpenRPA.Updater
         {
             get
             {
-                if (_nuGetFramework == null) _nuGetFramework = NuGetFramework.ParseFolder("net467");
+                if (_nuGetFramework == null) _nuGetFramework = NuGetFramework.ParseFolder("net462");
                 return _nuGetFramework;
             }
         }

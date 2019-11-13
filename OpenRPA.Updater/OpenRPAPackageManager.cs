@@ -49,7 +49,7 @@ namespace OpenRPA.Updater
         {
             get
             {
-                if (_nuGetFramework == null) _nuGetFramework = NuGetFramework.ParseFolder("net467");
+                if (_nuGetFramework == null) _nuGetFramework = NuGetFramework.ParseFolder("net462");
                 return _nuGetFramework;
             }
         }
@@ -311,6 +311,7 @@ namespace OpenRPA.Updater
                 f2 = f.Substring(f.IndexOf("/", 4) + 1);
                 filename = System.IO.Path.GetFileName(f2);
                 dir = System.IO.Path.GetDirectoryName(f2);
+                if (dir == "lib") dir = "";
                 target = System.IO.Path.Combine(Destinationfolder, dir, filename);
                 if (!System.IO.Directory.Exists(System.IO.Path.Combine(Destinationfolder, dir)))
                 {
@@ -336,6 +337,7 @@ namespace OpenRPA.Updater
                 f2 = f.Substring(f.IndexOf("/", 4) + 1);
                 filename = System.IO.Path.GetFileName(f2);
                 dir = System.IO.Path.GetDirectoryName(f2);
+                if (dir == "lib") dir = "";
                 target = System.IO.Path.Combine(Destinationfolder, dir, filename);
                 if (!System.IO.Directory.Exists(System.IO.Path.Combine(Destinationfolder, dir)))
                 {
@@ -450,7 +452,7 @@ namespace OpenRPA.Updater
                 .SelectMany(x => x.Items).ToList();
             foreach (var f in files)
             {
-                InstallFile(installedPath, f);
+                RemoveFile(installedPath, f);
             }
 
             if (System.IO.Directory.Exists(installedPath + @"\build"))

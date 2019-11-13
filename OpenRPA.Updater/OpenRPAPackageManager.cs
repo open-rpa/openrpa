@@ -49,7 +49,7 @@ namespace OpenRPA.Updater
         {
             get
             {
-                if (_nuGetFramework == null) _nuGetFramework = NuGetFramework.ParseFolder("net462");
+                if (_nuGetFramework == null) _nuGetFramework = NuGetFramework.ParseFolder("net467");
                 return _nuGetFramework;
             }
         }
@@ -222,6 +222,7 @@ namespace OpenRPA.Updater
                     NullLogger.Instance);
 
                 var resolver = new PackageResolver();
+                // resolverContext.IncludeUnlisted = true;
                 var packagesToInstall = resolver.Resolve(resolverContext, CancellationToken.None)
                     .Select(p => availablePackages.Single(x => PackageIdentityComparer.Default.Equals(x, p)));
                 var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);

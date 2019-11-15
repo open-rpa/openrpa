@@ -107,7 +107,7 @@ namespace OpenRPA.Updater
                 };
 
                 var jsonNugetPackages = await searchResource
-                            .SearchAsync(searchstring, searchFilter, 0, 50, OpenRPAPackageManagerLogger.Instance, CancellationToken.None);
+                            .SearchAsync(searchstring, searchFilter, 0, 50, Logger, CancellationToken.None);
                 //foreach (var p in jsonNugetPackages.Where(x => x.Identity.Id.Contains(searchstring))) Log.Debug(p.Identity.Id);
                 //foreach (var p in jsonNugetPackages.Where(x => !x.Identity.Id.Contains(searchstring))) Log.Debug(p.Identity.Id);
                 foreach (var p in jsonNugetPackages.Where(x => x.Identity.Id.Contains(searchstring)))
@@ -159,14 +159,14 @@ namespace OpenRPA.Updater
                     Enumerable.Empty<PackageIdentity>(),
                     availablePackages,
                     SourceRepositoryProvider.GetRepositories().Select(s => s.PackageSource),
-                    NullLogger.Instance);
+                    Logger);
 
                 var resolver = new PackageResolver();
                 var packagesToInstall = resolver.Resolve(resolverContext, CancellationToken.None)
                     .Select(p => availablePackages.Single(x => PackageIdentityComparer.Default.Equals(x, p)));
                 var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
-                var clientPolicyContext = NuGet.Packaging.Signing.ClientPolicyContext.GetClientPolicy(Settings, OpenRPAPackageManagerLogger.Instance);
-                var packageExtractionContext = new PackageExtractionContext(PackageSaveMode.Defaultv3, XmlDocFileSaveMode.None, clientPolicyContext, OpenRPAPackageManagerLogger.Instance);
+                var clientPolicyContext = NuGet.Packaging.Signing.ClientPolicyContext.GetClientPolicy(Settings, Logger);
+                var packageExtractionContext = new PackageExtractionContext(PackageSaveMode.Defaultv3, XmlDocFileSaveMode.None, clientPolicyContext, Logger);
                 var frameworkReducer = new FrameworkReducer();
 
                 foreach (var packageToInstall in packagesToInstall)
@@ -180,7 +180,7 @@ namespace OpenRPA.Updater
                             packageToInstall,
                             new PackageDownloadContext(cacheContext),
                             NuGet.Configuration.SettingsUtility.GetGlobalPackagesFolder(Settings),
-                            NullLogger.Instance, CancellationToken.None);
+                            Logger, CancellationToken.None);
 
                         await PackageExtractor.ExtractPackageAsync(
                             downloadResult.PackageSource,
@@ -219,15 +219,15 @@ namespace OpenRPA.Updater
                     Enumerable.Empty<PackageIdentity>(),
                     availablePackages,
                     SourceRepositoryProvider.GetRepositories().Select(s => s.PackageSource),
-                    NullLogger.Instance);
+                    Logger);
 
                 var resolver = new PackageResolver();
                 // resolverContext.IncludeUnlisted = true;
                 var packagesToInstall = resolver.Resolve(resolverContext, CancellationToken.None)
                     .Select(p => availablePackages.Single(x => PackageIdentityComparer.Default.Equals(x, p)));
                 var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
-                var clientPolicyContext = NuGet.Packaging.Signing.ClientPolicyContext.GetClientPolicy(Settings, OpenRPAPackageManagerLogger.Instance);
-                var packageExtractionContext = new PackageExtractionContext(PackageSaveMode.Defaultv3, XmlDocFileSaveMode.None, clientPolicyContext, OpenRPAPackageManagerLogger.Instance);
+                var clientPolicyContext = NuGet.Packaging.Signing.ClientPolicyContext.GetClientPolicy(Settings, Logger);
+                var packageExtractionContext = new PackageExtractionContext(PackageSaveMode.Defaultv3, XmlDocFileSaveMode.None, clientPolicyContext, Logger);
                 var frameworkReducer = new FrameworkReducer();
 
                 foreach (var packageToInstall in packagesToInstall)
@@ -241,7 +241,7 @@ namespace OpenRPA.Updater
                             packageToInstall,
                             new PackageDownloadContext(cacheContext),
                             NuGet.Configuration.SettingsUtility.GetGlobalPackagesFolder(Settings),
-                            NullLogger.Instance, CancellationToken.None);
+                            Logger, CancellationToken.None);
 
                         await PackageExtractor.ExtractPackageAsync(
                             downloadResult.PackageSource,
@@ -419,14 +419,41 @@ namespace OpenRPA.Updater
 
             return true;
         }
-        public void UninstallPackage(PackageIdentity identity)
+        public async Task UninstallPackage(PackageIdentity identity)
         {
-            var package = getLocal(identity.Id);
             var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
-            var installedPath = packagePathResolver.GetInstalledPath(package.Identity);
-
+            var installedPath = packagePathResolver.GetInstalledPath(identity);
             PackageReaderBase packageReader;
             packageReader = new PackageFolderReader(installedPath);
+            var clientPolicyContext = NuGet.Packaging.Signing.ClientPolicyContext.GetClientPolicy(Settings, Logger);
+            var packageExtractionContext = new PackageExtractionContext(PackageSaveMode.Defaultv3, XmlDocFileSaveMode.None, clientPolicyContext, Logger);
+            bool failed = true;
+            try
+            {
+                await PackageExtractor.ExtractPackageAsync(installedPath,
+                    packageReader,
+                    packagePathResolver,
+                    packageExtractionContext,
+                    CancellationToken.None);
+                failed = false;
+            }
+            catch (Exception)
+            {
+            }
+            if (failed)
+            {
+                try
+                {
+                    await Download(identity);
+                    installedPath = packagePathResolver.GetInstalledPath(identity);
+                    packageReader = new PackageFolderReader(installedPath);
+                    failed = false;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
             var libItems = packageReader.GetLibItems();
             var frameworkReducer = new FrameworkReducer();
             var nearest = frameworkReducer.GetNearest(NuGetFramework, libItems.Select(x => x.TargetFramework));
@@ -470,6 +497,64 @@ namespace OpenRPA.Updater
                 }
             }
 
+        }
+
+
+
+
+        public async Task<List<IPackageSearchMetadata>> Download(PackageIdentity identity)
+        {
+            var result = new List<IPackageSearchMetadata>();
+
+            using (var cacheContext = new SourceCacheContext())
+            {
+                var repositories = SourceRepositoryProvider.GetRepositories();
+                var availablePackages = new HashSet<SourcePackageDependencyInfo>(PackageIdentityComparer.Default);
+                await GetPackageDependencies(identity, cacheContext, availablePackages);
+                var resolverContext = new PackageResolverContext(
+                    DependencyBehavior.Lowest,
+                    new[] { identity.Id },
+                    Enumerable.Empty<string>(),
+                    Enumerable.Empty<NuGet.Packaging.PackageReference>(),
+                    Enumerable.Empty<PackageIdentity>(),
+                    availablePackages,
+                    SourceRepositoryProvider.GetRepositories().Select(s => s.PackageSource),
+                    Logger);
+
+                var packageToInstall = availablePackages.Where(p => p.Id == identity.Id).FirstOrDefault();
+
+                var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
+                var clientPolicyContext = NuGet.Packaging.Signing.ClientPolicyContext.GetClientPolicy(Settings, Logger);
+                var packageExtractionContext = new PackageExtractionContext(PackageSaveMode.Defaultv3, XmlDocFileSaveMode.None, clientPolicyContext, Logger);
+                var frameworkReducer = new FrameworkReducer();
+
+                // PackageReaderBase packageReader;
+                var installedPath = packagePathResolver.GetInstalledPath(packageToInstall);
+                //if (installedPath == null)
+                //{
+                var downloadResource = await packageToInstall.Source.GetResourceAsync<DownloadResource>(CancellationToken.None);
+                var downloadResult = await downloadResource.GetDownloadResourceResultAsync(
+                    packageToInstall,
+                    new PackageDownloadContext(cacheContext),
+                    NuGet.Configuration.SettingsUtility.GetGlobalPackagesFolder(Settings),
+                    Logger, CancellationToken.None);
+
+                await PackageExtractor.ExtractPackageAsync(
+                    downloadResult.PackageSource,
+                    downloadResult.PackageStream,
+                    packagePathResolver,
+                    packageExtractionContext,
+                    CancellationToken.None);
+
+                // packageReader = downloadResult.PackageReader;
+                // }
+                //else
+                //{
+                //    packageReader = new PackageFolderReader(installedPath);
+                //}
+
+            }
+            return result;
         }
         public bool IsPackageInstalled(LocalPackageInfo package)
         {

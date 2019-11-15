@@ -203,8 +203,13 @@ namespace OpenRPA.Net
 
             try
             {
+                List<SocketMessage> templist;
+                lock (_sendQueue)
+                {
+                    templist = _sendQueue.ToList();
+                }
                 // await SendSemaphore.WaitAsync();
-                foreach (var msg in _sendQueue.ToList())
+                foreach (var msg in templist)
                 {
                     if (await SendString(JsonConvert.SerializeObject(msg), src.Token))
                     {

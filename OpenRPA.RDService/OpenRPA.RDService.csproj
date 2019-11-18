@@ -11,8 +11,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget</Configurations>
-    <Version>1.0.1</Version>
-    <PackageReleaseNotes>1.0.0 Improve sigin process and stability</PackageReleaseNotes>
+    <Version>1.0.2</Version>
+    <PackageReleaseNotes>1.0.2 More error catching, fix freerdp login error
+1.0.1 Improve sigin process and stability</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug\</OutputPath>

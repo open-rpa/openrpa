@@ -26,6 +26,7 @@ namespace OpenRPA.RDService
         public static string jwt { get { return globallocal.GetProperty<string>(pluginname, null); } set { globallocal.SetProperty(pluginname, value); } }
         public static string entropy { get { return globallocal.GetProperty<string>(pluginname, null); } set { globallocal.SetProperty(pluginname, value); } }
         public static string tempjwt { get { return globallocal.GetProperty<string>(pluginname, null); } set { globallocal.SetProperty(pluginname, value); } }
+        public static bool usefreerdp { get { return globallocal.GetProperty<bool>(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }
         private static void loadEntropy()
         {
             if (string.IsNullOrEmpty(entropy))

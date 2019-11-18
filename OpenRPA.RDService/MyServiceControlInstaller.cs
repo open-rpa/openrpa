@@ -54,7 +54,26 @@ namespace OpenRPA.RDService
                     Log.Error(ex.ToString());
                 }
             }
+            SetInterActWithDesktop();
             base.Install(stateSaver);
+        }
+        private static bool SetInterActWithDesktop()
+        {
+            //var service = new System.Management.ManagementObject(
+            //        String.Format("WIN32_Service.Name='{0}'", "YourServiceName"));
+            //try
+            //{
+            //    var paramList = new object[11];
+            //    paramList[5] = true;
+            //    service.InvokeMethod("Change", paramList);
+            //    return true;
+            //}
+            //finally
+            //{
+            //    service.Dispose();
+            //}
+            return false;
+
         }
     }
 }

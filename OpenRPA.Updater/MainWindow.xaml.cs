@@ -223,6 +223,8 @@ namespace OpenRPA.Updater
                             await OpenRPAPackageManager.Instance.DownloadAndInstall(result.Where(x => x.Package.Identity.Id == "OpenRPA.AviRecorder").First().Package.Identity);
                             await OpenRPAPackageManager.Instance.DownloadAndInstall(result.Where(x => x.Package.Identity.Id == "OpenRPA.FileWatcher").First().Package.Identity);
                         }
+                        LoadPackages();
+                        ButtonLaunch(null, null);
                     }
                 }
                 bussy = bussy;

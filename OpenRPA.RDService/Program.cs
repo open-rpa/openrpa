@@ -13,15 +13,59 @@ namespace OpenRPA.RDService
 
     class Program
     {
-        public const int StartupWaitSeconds = 10;
+        public const int StartupWaitSeconds = 0;
         public const string ServiceName = "OpenRPA";
         // public const string ServiceName = "rdptest";
         public static bool isService = false;
         private static Tracing tracing = null;
         private static System.Threading.Thread uithread;
-        static void Main(string[] args)
 
+
+        const string SE_INCREASE_QUOTA_NAME = "SeIncreaseQuotaPrivilege";
+        static void Main(string[] args)
         {
+            //            SeServiceLogonRight
+            //SeTcbName
+            //SeSystemtimePrivilege
+            //SeDebugName
+            //var _username = NativeMethods.GetProcessUserName();
+            //long result = -1;
+            //TokPriv1Luid tp = new TokPriv1Luid();
+            //tp.Count = 1;
+            //tp.Luid = 0;
+            //if (!LookupPrivilegeValue(null, SE_INCREASE_QUOTA_NAME, ref tp.Luid))
+            //{
+            //    Console.WriteLine("LookupPrivilegeValue failed: " + System.Runtime.InteropServices.Marshal.GetLastWin32Error());
+            //}
+
+            //result = LsaUtility.SetRight(_username, "SeServiceLogonRight");
+            //result = LsaUtility.SetRight(_username, "SeTcbName");
+            //result = LsaUtility.SetRight(_username, "SeSystemtimePrivilege");
+            //result = LsaUtility.SetRight(_username, "SeDebugName");
+
+            //result = LsaUtility.SetRight(_username, "SeTcbName");
+            //Console.WriteLine("SeTcbName: " + result);
+            //result = LsaUtility.SetRight(_username, "SeIncreaseQuotaPrivilege");
+            //Console.WriteLine("SeIncreaseQuotaPrivilege: " + result);
+            //result = LsaUtility.SetRight(_username, "SeTcbPrivilege");
+            //Console.WriteLine("SeTcbPrivilege: " + result);
+
+
+
+            try
+            {
+                if(PluginConfig.usefreerdp)
+                {
+                    var rdp = new FreeRDP.Core.RDP();
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Failed initilizing FreeRDP, is Visual C++ Runtime installed ?");
+                // Console.WriteLine("https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads");
+                Console.WriteLine("https://www.microsoft.com/en-us/download/details.aspx?id=40784");
+                return;
+            }
             //uithread = new System.Threading.Thread(new System.Threading.ThreadStart(() =>
             //{
             //    var form = new System.Windows.Forms.Form();
@@ -30,43 +74,45 @@ namespace OpenRPA.RDService
             //uithread.IsBackground = true;
             //uithread.Start();
 
-            System.Threading.Thread.Sleep(1000 * StartupWaitSeconds);
             var parentProcess = NativeMethods.GetParentProcessId();
             isService = (parentProcess.ProcessName.ToLower() == "services");
             if (args.Length == 0)
             {
+                System.Threading.Thread.Sleep(1000 * StartupWaitSeconds);
+                // WindowStationAndDesktop.CreateWindowStation("LupoWinStation");
+
                 //Application.EnableVisualStyles();
                 //Application.Run(f);
                 if (!manager.IsServiceInstalled)
                 {
-                    Console.Write("Username (" + NativeMethods.GetProcessUserName() + "): ");
-                    var username = Console.ReadLine();
-                    if (string.IsNullOrEmpty(username)) username = NativeMethods.GetProcessUserName();
-                    Console.Write("Password: ");
-                    string pass = "";
-                    do
-                    {
-                        ConsoleKeyInfo key = Console.ReadKey(true);
-                        // Backspace Should Not Work
-                        if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
-                        {
-                            pass += key.KeyChar;
-                            Console.Write("*");
-                        }
-                        else
-                        {
-                            if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
-                            {
-                                pass = pass.Substring(0, (pass.Length - 1));
-                                Console.Write("\b \b");
-                            }
-                            else if (key.Key == ConsoleKey.Enter)
-                            {
-                                break;
-                            }
-                        }
-                    } while (true);
-                    manager.InstallService(typeof(Program), new string[] { "username=" + username, "password=" + pass });
+                    //Console.Write("Username (" + NativeMethods.GetProcessUserName() + "): ");
+                    //var username = Console.ReadLine();
+                    //if (string.IsNullOrEmpty(username)) username = NativeMethods.GetProcessUserName();
+                    //Console.Write("Password: ");
+                    //string pass = "";
+                    //do
+                    //{
+                    //    ConsoleKeyInfo key = Console.ReadKey(true);
+                    //    if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
+                    //    {
+                    //        pass += key.KeyChar;
+                    //        Console.Write("*");
+                    //    }
+                    //    else
+                    //    {
+                    //        if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
+                    //        {
+                    //            pass = pass.Substring(0, (pass.Length - 1));
+                    //            Console.Write("\b \b");
+                    //        }
+                    //        else if (key.Key == ConsoleKey.Enter)
+                    //        {
+                    //            break;
+                    //        }
+                    //    }
+                    //} while (true);
+                    //manager.InstallService(typeof(Program), new string[] { "username=" + username, "password=" + pass });
+                    manager.InstallService(typeof(Program), new string[] {  });
                 }
             }
 
@@ -113,6 +159,14 @@ namespace OpenRPA.RDService
         {
             Log.Information("WebSocketClient_OnClose");
         }
+        public static byte[] Base64Decode(string base64EncodedData)
+        {
+            return System.Convert.FromBase64String(base64EncodedData);
+        }
+        public static string Base64Encode(byte[] bytes)
+        {
+            return System.Convert.ToBase64String(bytes);
+        }
         private static async void WebSocketClient_OnOpen()
         {
             Log.Information("WebSocketClient_OnOpen");
@@ -125,7 +179,7 @@ namespace OpenRPA.RDService
                     {
                         if(isService)
                         {
-                            PluginConfig.jwt = System.Text.Encoding.UTF8.GetString(PluginConfig.ProtectString(PluginConfig.tempjwt));
+                            PluginConfig.jwt = Base64Encode(PluginConfig.ProtectString(PluginConfig.tempjwt));
                             PluginConfig.tempjwt = null;
                             Config.Save();
                         }
@@ -134,7 +188,7 @@ namespace OpenRPA.RDService
                 }
                 else if (PluginConfig.jwt != null && PluginConfig.jwt.Length > 0)
                 {
-                    user = await global.webSocketClient.Signin(PluginConfig.UnprotectString(System.Text.Encoding.UTF8.GetBytes(PluginConfig.jwt))); if (user != null)
+                    user = await global.webSocketClient.Signin(PluginConfig.UnprotectString(Base64Decode(PluginConfig.jwt))); if (user != null)
                     {
                         Log.Information("Signed in as " + user.username);
                     }
@@ -143,7 +197,7 @@ namespace OpenRPA.RDService
                 {
                     Log.Error("Missing jwt from config, close down");
                     _ = global.webSocketClient.Close();
-                    if (isService) manager.StopService();
+                    if (isService) await manager.StopService();
                     if (!isService) Environment.Exit(0);
                     return;
                 }
@@ -275,7 +329,7 @@ namespace OpenRPA.RDService
             {
                 while (MyServiceBase.isRunning)
                 {
-
+                    System.Threading.Thread.Sleep(100);
                 }
             }
         }

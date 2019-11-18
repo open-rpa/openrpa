@@ -41,13 +41,15 @@ namespace OpenRPA.RDService
         }
         // public RdpClient rdpClient;
         // public FreeRDP.Core.RDP rdp;
-        // public Client rdp;
-        public FreeRDP.Core.RDP rdp;
+        public Client rdp;
+        public FreeRDP.Core.RDP freerdp;
         public unattendedclient client;
         public NamedPipeWrapper.NamedPipeConnection<RPAMessage, RPAMessage> connection;
         private DateTime created = DateTime.Now;
         private DateTime lastheartbeat = DateTime.Now;
         private DateTime lastrdp = DateTime.Now - TimeSpan.FromMinutes(1);
+        private int ConnectionAttempts = 0;
+        private bool skiprdp = false;
         public void DoWork()
         {
             if (client == null) return;
@@ -64,134 +66,110 @@ namespace OpenRPA.RDService
             // Is user signed in ?
             // ownerexplorer = null;
             //if (ownerexplorer == null)
-            if (rdp==null || rdp.Connected== false)
+            var rdpip = "127.0.0.2";
+            if((ConnectionAttempts % 2) == 1) rdpip = "127.0.0.1";
+            if (PluginConfig.usefreerdp && !skiprdp)
             {
-                if (rdp == null)
+                if (freerdp == null || freerdp.Connected == false)
                 {
-                    Console.WriteLine("rdp is null");
+                    if (freerdp == null) Console.WriteLine("rdp is null");
+                    if (string.IsNullOrEmpty(client.windowspassword)) return;
+                    lastrdp = DateTime.Now;
                 }
-                else
+                if (freerdp == null) freerdp = new FreeRDP.Core.RDP();
+                if(!freerdp.Connected)
                 {
-                    //Console.WriteLine("rdp.Connected: " + rdp.Connected + " rdp.Connecting: " + rdp.Connecting);
-                    //if (rdp.Connecting) return;
+                    var hostname = NativeMethods.GetHostName().ToLower();
+                    try
+                    {
+                        Log.Information("Tesing connection to " + rdpip + " port 3389");
+                        using(var tcpClient = new System.Net.Sockets.TcpClient())
+                        {
+                            var ipAddress = System.Net.IPAddress.Parse(rdpip);
+                            var ipEndPoint = new System.Net.IPEndPoint(ipAddress, 3389);
+                            tcpClient.Connect(ipEndPoint);
+                        }
+                        Log.Information("Success");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                        return;
+                    }
+
+                    var windowsusername = client.windowsusername.Substring(client.windowsusername.IndexOf("\\") + 1);
+                    var windowsdomain = client.windowsusername.Substring(0, client.windowsusername.IndexOf("\\"));
+
+                    using (var imp = new Impersonator(windowsusername, windowsdomain, client.windowspassword))
+                    {
+                        ConnectionAttempts++;
+                        if (client.windowsusername.StartsWith(hostname + @"\"))
+                        {
+                            // var windowsusername = client.windowsusername.Substring(hostname.Length + 1);
+                            Log.Information("Connecting RDP connection to " + rdpip + " for " + windowsusername);
+                            freerdp.Connect(rdpip, "", windowsusername, client.windowspassword);
+                        }
+                        else
+                        {
+                            Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowsusername);
+                            freerdp.Connect(rdpip, "", client.windowsusername, client.windowspassword);
+                        }
+                    }
+                    created = DateTime.Now;
+                    return;
                 }
-                
-
-                // if((DateTime.Now - lastrdp) < client.autorestart) return;
-                if (string.IsNullOrEmpty(client.windowspassword)) return;
-                lastrdp = DateTime.Now;
-                if (rdp != null)
+                if (freerdp == null || freerdp.Connected == false) return;
+            } else if (!skiprdp)
+            {
+                if (rdp == null || rdp.Connected == false)
                 {
-                    //if (rdp.Connected)
-                    //{
-                    //    Log.Information("Disconnecting RDP connection for " + client.windowsusername);
-                    //    rdp.Disconnect();
-                    //    rdp.Dispose();
-                    //    rdp = null;
-                    //}
+                    if (rdp == null) Console.WriteLine("rdp is null");
+                    if (string.IsNullOrEmpty(client.windowspassword)) return;
+                    lastrdp = DateTime.Now;
                 }
-                //if (rdpClient!=null)
-                //{
-                //    if(rdpClient.isConnected) 
-                //    { 
-                //        Log.Information("Disconnecting RDP connection for " + client.windowsusername) ;
-                //        rdpClient.Disconnect();
-                //        rdpClient.Dispose();
-                //        rdpClient = null;
-                //    }
-                //}
-                // https://social.msdn.microsoft.com/Forums/vstudio/en-US/2daeecb3-778b-478e-b379-102b790777c2/c-remote-desktop-over-the-same-computer?forum=csharpgeneral
-
-                // https://github.com/terminals-Origin/Terminals
-                // https://www.codeproject.com/Articles/43705/Remote-Desktop-using-C-NET
-                // https://www.codeproject.com/Articles/16374/How-to-Write-a-Terminal-Services-Add-in-in-Pure-C
-                // https://stackoverflow.com/questions/52801093/create-windows-session-programmatically-from-console-or-windows-service
-
-                try
+                if (rdp == null) rdp = new Client();
+                if (rdp.Connecting) return;
+                if (!rdp.Connected)
                 {
-                    // https://stackoverflow.com/questions/46807645/passing-a-struct-pointer-in-c-sharp-interop-results-in-null
+                    try
+                    {
+                        Log.Information("Tesing connection to " + rdpip + " port 3389");
+                        using (var tcpClient = new System.Net.Sockets.TcpClient())
+                        {
+                            var ipAddress = System.Net.IPAddress.Parse(rdpip);
+                            var ipEndPoint = new System.Net.IPEndPoint(ipAddress, 3389);
+                            tcpClient.Connect(ipEndPoint);
+                        }
+                        Log.Information("Success");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                        return;
+                    }
 
-                    //var thread = new System.Threading.Thread(() =>
-                    //{
-                    //    Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
-                    //    {
-                    //        if(rdp==null) rdp = new Client();
-                    //        //if(NativeMethods.GetProcessUserName)
-                    //        var hostname = NativeMethods.GetHostName().ToLower();
-                    //        if (client.windowsusername.StartsWith(hostname + @"\"))
-                    //        {
-                    //            Log.Information("Connecting RDP connection for " + client.windowsusername.Substring(hostname.Length + 1));
-                    //            rdp.CreateRdpConnectionasync("127.0.0.2", "", client.windowsusername.Substring(hostname.Length + 1), client.windowspassword);
-                    //        }
-                    //        else
-                    //        {
-                    //            Log.Information("Connecting RDP connection for " + client.windowsusername);
-                    //            rdp.CreateRdpConnectionasync("127.0.0.2", "", client.windowsusername, client.windowspassword);
-                    //        }
-                    //        created = DateTime.Now;
-
-                    //    }));
-
-                    //    Dispatcher.Run();
-                    //});
-                    //thread.SetApartmentState(System.Threading.ApartmentState.STA);
-                    //thread.Start();
-                    //thread.Join();
-
-
-
-                    //var thread = new System.Threading.Thread(() =>
-                    //{
-                    //    Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
-                    //    {
-                    //        //rdpClient = new RdpClient();
-                    //        //rdpClient.Connect("127.0.0.2", "", client.windowsusername, client.windowspassword);
-                    //        rdp = new FreeRDP.Core.RDP();
-                    //        rdp.Connect("127.0.0.2", "", client.windowsusername, client.windowspassword);
-                    //    }));
-
-                    //    Dispatcher.Run();
-                    //});
-
-                    //thread.SetApartmentState(System.Threading.ApartmentState.STA);
-                    //thread.Start();
-                    //thread.Join();
-
-                    if (rdp == null) rdp = new FreeRDP.Core.RDP();
-                    //if(NativeMethods.GetProcessUserName)
+                    ConnectionAttempts++;
                     var hostname = NativeMethods.GetHostName().ToLower();
                     if (client.windowsusername.StartsWith(hostname + @"\"))
                     {
                         var windowsusername = client.windowsusername.Substring(hostname.Length + 1);
-                        Log.Information("Connecting RDP connection for " + windowsusername);
-                        // rdp.CreateRdpConnectionasync("127.0.0.2", "", client.windowsusername.Substring(hostname.Length + 1), client.windowspassword);
-                        rdp.Connect("127.0.0.2", "", windowsusername, client.windowspassword);
+                        Log.Information("Connecting RDP connection to " + rdpip + " for " + windowsusername);
+                        // Task.Run(()=>rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername.Substring(hostname.Length + 1), client.windowspassword));
+                        rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername.Substring(hostname.Length + 1), client.windowspassword);
+                        Log.Information("Connection initialized");
                     }
                     else
                     {
-                        Log.Information("Connecting RDP connection for " + client.windowsusername);
-                        // rdp.CreateRdpConnectionasync("127.0.0.2", "", client.windowsusername, client.windowspassword);
-                        rdp.Connect("127.0.0.2", "", client.windowsusername, client.windowspassword);
+                        Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowsusername);
+                        // Task.Run(() => rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername, client.windowspassword));
+                        rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername, client.windowspassword);
+                        Log.Information("Connection initialized");
                     }
                     created = DateTime.Now;
                 }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-                return;
+                if (rdp == null || rdp.Connected == false) return;
             }
-            if (rdp == null)
-            {
-                Console.WriteLine("rdp is null");
-            }
-            else
-            {
-                // Console.WriteLine("rdp.Connected: " + rdp.Connected + " rdp.Connecting: " + rdp.Connecting);
-                Console.WriteLine("rdp.Connected: " + rdp.Connected);
-            }
-            if (rdp == null || rdp.Connected == false) return;
-
+            
             try
             {
                 var procs = Process.GetProcessesByName("explorer");
@@ -252,18 +230,29 @@ namespace OpenRPA.RDService
                 if (string.IsNullOrEmpty(client.openrpapath)) return;
                 if (!System.IO.File.Exists(client.openrpapath)) return;
                 var path = System.IO.Path.GetDirectoryName(client.openrpapath);
-                if (!Program.isService)
-                {
-                    Log.Information("Not running as service, so just launching openrpa here");
-                    Log.Information(client.openrpapath);
-                    created = DateTime.Now;
-                    Process.Start(new ProcessStartInfo(client.openrpapath) { WorkingDirectory = path });
-                    return;
-                }
+                //if (!Program.isService)
+                //{
+                //    Log.Information("Not running as service, so just launching openrpa here");
+                //    Log.Information(client.openrpapath);
+                //    created = DateTime.Now;
+                //    Process.Start(new ProcessStartInfo(client.openrpapath) { WorkingDirectory = path });
+                //    return;
+                //}
                 Log.Information("Attaching to user explorer and launching robot in session");
                 Log.Information(client.openrpapath);
                 created = DateTime.Now;
-                if (!NativeMethods.Launch(ownerexplorer, path, @"c:\windows\system32\cmd.exe /C " + "\"" + client.openrpapath + "\""))
+                // IntPtr hSessionToken = IntPtr.Zero;
+                // SessionFinder sf = new SessionFinder();
+                // hSessionToken = sf.GetLocalInteractiveSession();
+                //var windowsusername = client.windowsusername.Substring(client.windowsusername.IndexOf("\\") + 1);
+                //var windowsdomain = client.windowsusername.Substring(0, client.windowsusername.IndexOf("\\") );
+                //// hSessionToken = sf.GetSessionByUser(windowsdomain, windowsusername);
+                //Impersonation.ExecuteAppAsLoggedOnUser(client.openrpapath, null, System.IO.Path.GetDirectoryName(client.openrpapath));
+                //var runner = new InteractiveProcessRunner(client.openrpapath, hSessionToken);
+                //var p = runner.Run();
+
+                //if (!NativeMethods.Launch(ownerexplorer, path, @"c:\windows\system32\cmd.exe /C " + "\"" + client.openrpapath + "\""))
+                if (!NativeMethods.Launch(ownerexplorer, path, client.openrpapath))
                 {
                     Log.Error("Failed launching robot in session");
                 }
@@ -277,7 +266,7 @@ namespace OpenRPA.RDService
         }
         public void AddConnection(NamedPipeWrapper.NamedPipeConnection<RPAMessage, RPAMessage> connection)
         {
-            if(this.connection != null)
+            if (this.connection != null)
             {
                 this.connection.ReceiveMessage -= Connection_ReceiveMessage;
             }
@@ -307,12 +296,12 @@ namespace OpenRPA.RDService
                     //    rdpClient.Dispose();
                     //}
                     //rdpClient = null;
-                    if (rdp != null)
+                    if (freerdp != null)
                     {
-                        if (rdp.Connected) rdp.Disconnect();
-                        rdp.Dispose();
+                        if (freerdp.Connected) freerdp.Disconnect();
+                        freerdp.Dispose();
                     }
-                    rdp = null;
+                    freerdp = null;
                     cancellationTokenSource.Cancel();
 
                     if (connection != null)
@@ -329,5 +318,8 @@ namespace OpenRPA.RDService
             Dispose(true);
         }
         #endregion
+
+
+
     }
 }

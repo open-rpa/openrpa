@@ -7,21 +7,28 @@
              mc:Ignorable="d" Unloaded="UserControl_Unloaded" Loaded="UserControl_Loaded"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,10,0,0" Text="Windows Username:" VerticalAlignment="Top" Width="110" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="183,10,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="lblWindowsusername" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,52,0,0" Text="Use FreeRDP:" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="139,52,0,0" VerticalAlignment="Top" Width="222" x:Name="chkUseFreeRDP" 
+                  IsEnabledChanged="chkUseFreeRDP_IsEnabledChanged" Click="chkUseFreeRDP_Click" />
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,39,0,0" Text="Windows Password:" VerticalAlignment="Top" Width="110" />
-        <PasswordBox Height="23" HorizontalAlignment="Left" Margin="183,39,0,0" VerticalAlignment="Top" Width="222" x:Name="windowspassword" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,72,0,0" Text="Executable:" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="139,72,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="lblExecutable" />
 
-        <Button Height="23" HorizontalAlignment="Left" Margin="183,67,0,0" VerticalAlignment="Top" Width="222" Content="Add current user" Click="AddcurrentuserButtonClick" x:Name="AddcurrentuserButton"></Button>
-        <Button Height="23" HorizontalAlignment="Left" Margin="183,95,0,0" VerticalAlignment="Top" Width="222" Content="Remove current user" Click="RemovecurrentuserClick" x:Name="RemovecurrentuserButton"></Button>
-        <Button Height="23" HorizontalAlignment="Left" Margin="183,123,0,0" VerticalAlignment="Top" Width="222" Content="Reauthenticate Service" Click="ReauthenticateButtonClick" x:Name="ReauthenticateButton"></Button>
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,92,0,0" Text="Windows Username:" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="139,92,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="lblWindowsusername" />
 
-        <Button Height="23" HorizontalAlignment="Left" Margin="183,151,0,0" VerticalAlignment="Top" Width="222" Content="Start Service" Click="StartServiceButtonClick" x:Name="StartServiceButton"></Button>
-        <Button Height="23" HorizontalAlignment="Left" Margin="183,179,0,0" VerticalAlignment="Top" Width="222" Content="Stop Service" Click="StopServiceButtonClick" x:Name="StopServiceButton"></Button>
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,121,0,0" Text="Windows Password:" VerticalAlignment="Top" Width="110" />
+        <PasswordBox Height="23" HorizontalAlignment="Left" Margin="139,121,0,0" VerticalAlignment="Top" Width="222" x:Name="windowspassword" />
 
-        <Button Height="23" HorizontalAlignment="Left" Margin="183,226,0,0" VerticalAlignment="Top" Width="222" Content="Install Service" Click="InstallServiceButtonClick" x:Name="InstallServiceButton"></Button>
-        <Button Height="23" HorizontalAlignment="Left" Margin="183,256,0,0" VerticalAlignment="Top" Width="222" Content="Uninstall Service" Click="UninstallServiceButtonClick" x:Name="UninstallServiceButton"></Button>
+        <Button Height="23" HorizontalAlignment="Left" Margin="139,149,0,0" VerticalAlignment="Top" Width="222" Content="Add current user" Click="AddcurrentuserButtonClick" x:Name="AddcurrentuserButton"></Button>
+        <Button Height="23" HorizontalAlignment="Left" Margin="139,177,0,0" VerticalAlignment="Top" Width="222" Content="Remove current user" Click="RemovecurrentuserClick" x:Name="RemovecurrentuserButton"></Button>
+        <Button Height="23" HorizontalAlignment="Left" Margin="139,205,0,0" VerticalAlignment="Top" Width="222" Content="Reauthenticate Service" Click="ReauthenticateButtonClick" x:Name="ReauthenticateButton"></Button>
+
+        <Button Height="23" HorizontalAlignment="Left" Margin="139,233,0,0" VerticalAlignment="Top" Width="222" Content="Start Service" Click="StartServiceButtonClick" x:Name="StartServiceButton"></Button>
+        <Button Height="23" HorizontalAlignment="Left" Margin="139,261,0,0" VerticalAlignment="Top" Width="222" Content="Stop Service" Click="StopServiceButtonClick" x:Name="StopServiceButton"></Button>
+
+        <Button Height="23" HorizontalAlignment="Left" Margin="139,308,0,0" VerticalAlignment="Top" Width="222" Content="Install Service" Click="InstallServiceButtonClick" x:Name="InstallServiceButton"></Button>
+        <Button Height="23" HorizontalAlignment="Left" Margin="139,338,0,0" VerticalAlignment="Top" Width="222" Content="Uninstall Service" Click="UninstallServiceButtonClick" x:Name="UninstallServiceButton"></Button>
 
     </Grid>
 </UserControl>

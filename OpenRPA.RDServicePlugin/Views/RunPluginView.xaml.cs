@@ -92,13 +92,14 @@ namespace OpenRPA.RDServicePlugin.Views
             {
                 if (!Plugin.manager.IsServiceInstalled)
                 {
-                    if (string.IsNullOrEmpty(windowspassword.Password)) { MessageBox.Show("Password missing"); return; }
+                    // if (string.IsNullOrEmpty(windowspassword.Password)) { MessageBox.Show("Password missing"); return; }
                     DisableButtons();
                     var asm = System.Reflection.Assembly.GetEntryAssembly();
                     var filepath = asm.CodeBase.Replace("file:///", "");
                     var path = System.IO.Path.GetDirectoryName(filepath);
                     var filename = System.IO.Path.Combine(path, "OpenRPA.RDService.exe");
-                    Plugin.manager.InstallService(filename, new string[] { "username=" + NativeMethods.GetProcessUserName(), "password="+ windowspassword.Password });
+                    // Plugin.manager.InstallService(filename, new string[] { "username=" + NativeMethods.GetProcessUserName(), "password="+ windowspassword.Password });
+                    Plugin.manager.InstallService(filename,null);
                 }
             }
             catch (Exception ex)
@@ -159,6 +160,7 @@ namespace OpenRPA.RDServicePlugin.Views
                     client = clients.First();
                     AddcurrentuserButton.Content = "Update current user";
                 }
+                chkUseFreeRDP.IsChecked = PluginConfig.usefreerdp;
                 AddcurrentuserButton.IsEnabled = false;
                 RemovecurrentuserButton.IsEnabled = false;
                 ReauthenticateButton.IsEnabled = false;
@@ -166,6 +168,10 @@ namespace OpenRPA.RDServicePlugin.Views
                 StopServiceButton.IsEnabled = false;
                 InstallServiceButton.IsEnabled = true;
                 UninstallServiceButton.IsEnabled = false;
+                if(client!=null)
+                {
+                    lblExecutable.Text = client.openrpapath;
+                }
                 if (Plugin.manager.IsServiceInstalled)
                 {
                     AddcurrentuserButton.IsEnabled = true;
@@ -199,6 +205,7 @@ namespace OpenRPA.RDServicePlugin.Views
                     client = new unattendedclient() { computername = computername, computerfqdn = computerfqdn, windowsusername = windowsusername, name = computername + " " + windowsusername, openrpapath = path };
                     client = await global.webSocketClient.InsertOne("openrpa", 1, false, client);
                 }
+                lblExecutable.Text = client.openrpapath;
                 if (!string.IsNullOrEmpty(windowspassword.Password)) client.windowspassword = windowspassword.Password;
                 client.computername = computername;
                 client.computerfqdn = computerfqdn;
@@ -238,5 +245,18 @@ namespace OpenRPA.RDServicePlugin.Views
             }
         }
 
+        private void chkUseFreeRDP_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (chkUseFreeRDP.IsChecked == null) return;
+            PluginConfig.usefreerdp = chkUseFreeRDP.IsChecked.Value;
+            Config.Save();
+        }
+
+        private void chkUseFreeRDP_Click(object sender, RoutedEventArgs e)
+        {
+            if (chkUseFreeRDP.IsChecked == null) return;
+            PluginConfig.usefreerdp = chkUseFreeRDP.IsChecked.Value;
+            Config.Save();
+        }
     }
 }

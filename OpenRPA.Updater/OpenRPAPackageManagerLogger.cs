@@ -16,9 +16,9 @@ namespace OpenRPA.Updater
             // var msg = string.Format(message, args);
             var msg = message;
             Logs = (msg + Environment.NewLine) + Logs;
-            if (level == LogLevel.Debug) System.Diagnostics.Debug.WriteLine(msg);
-            if (level == LogLevel.Verbose) System.Diagnostics.Debug.WriteLine(msg);
-            if (level == LogLevel.Information) System.Diagnostics.Debug.WriteLine(msg);
+            //if (level == LogLevel.Debug) System.Diagnostics.Debug.WriteLine(msg);
+            //if (level == LogLevel.Verbose) System.Diagnostics.Debug.WriteLine(msg);
+            // if (level == LogLevel.Information) System.Diagnostics.Debug.WriteLine(msg);
             if (level == LogLevel.Minimal) System.Diagnostics.Debug.WriteLine(msg);
             if (level == LogLevel.Warning) System.Diagnostics.Debug.WriteLine(msg);
             if (level == LogLevel.Error) System.Diagnostics.Debug.WriteLine(msg);

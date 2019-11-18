@@ -223,6 +223,8 @@ namespace OpenRPA.Updater
                             await OpenRPAPackageManager.Instance.DownloadAndInstall(result.Where(x => x.Package.Identity.Id == "OpenRPA.AviRecorder").First().Package.Identity);
                             await OpenRPAPackageManager.Instance.DownloadAndInstall(result.Where(x => x.Package.Identity.Id == "OpenRPA.FileWatcher").First().Package.Identity);
                         }
+                        LoadPackages();
+                        ButtonLaunch(null, null);
                     }
                 }
                 bussy = bussy;
@@ -418,10 +420,11 @@ namespace OpenRPA.Updater
                 listPackages.IsEnabled = true;
                 // Install first, so we are sure the package exists
                 // await OpenRPAPackageManager.Instance.DownloadAndInstall(SelectedValue.Package.Identity);
-                await Task.Run(() =>
-                {
-                    OpenRPAPackageManager.Instance.UninstallPackage(SelectedValue.Package.Identity);
-                });
+                //await Task.Run(() =>
+                //{
+                //});
+                await OpenRPAPackageManager.Instance.UninstallPackage(SelectedValue.Package.Identity);
+
 
                 LoadPackages();
                 OpenRPAPackageManagerLogger.Instance.LogInformation("Package uninstalled");

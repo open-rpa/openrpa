@@ -1365,37 +1365,59 @@ namespace OpenRPA
                 //    serializer.Deserialize(stream);
                 if (System.IO.File.Exists("layout.config"))
                 {
-                    var ds = DManager.Layout.Descendents();
-                    var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
-                    using (var stream = new System.IO.StreamReader("layout.config"))
-                        serializer.Deserialize(stream);
-                    ds = DManager.Layout.Descendents();
+                    try
+                    {
+                        var ds = DManager.Layout.Descendents();
+                        var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
+                        using (var stream = new System.IO.StreamReader("layout.config"))
+                            serializer.Deserialize(stream);
+                        ds = DManager.Layout.Descendents();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
                 }
                 else if (System.IO.File.Exists(@"..\layout.config"))
                 {
-                    var ds = DManager.Layout.Descendents();
-                    var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
-                    using (var stream = new System.IO.StreamReader(@"..\layout.config"))
-                        serializer.Deserialize(stream);
-                    ds = DManager.Layout.Descendents();
+                    try
+                    {
+                        var ds = DManager.Layout.Descendents();
+                        var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
+                        using (var stream = new System.IO.StreamReader(@"..\layout.config"))
+                            serializer.Deserialize(stream);
+                        ds = DManager.Layout.Descendents();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
                 }
                 else
                 {
-                    var las = DManager.Layout.Descendents().OfType<LayoutAnchorable>().ToList();
-                    foreach (var dp in las)
+                    try
                     {
-                        if (dp.Title == "Toolbox")
+                        var las = DManager.Layout.Descendents().OfType<LayoutAnchorable>().ToList();
+                        foreach (var dp in las)
                         {
-                            if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
+                            if (dp.Title == "Toolbox")
+                            {
+                                if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
+                            }
+                            if (dp.Title == "Properties")
+                            {
+                                if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
+                            }
+                            if (dp.Title == "Snippets")
+                            {
+                                if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
+                            }
                         }
-                        if (dp.Title == "Properties")
-                        {
-                            if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
-                        }
-                        if (dp.Title == "Snippets")
-                        {
-                            if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
-                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
                     }
                 }
             });

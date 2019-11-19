@@ -2,6 +2,11 @@
   "profiles": {
     "OpenRPA": {
       "commandName": "Project"
+    },
+    "ttttt": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Users\\Allan\\Downloads\\OpenRPA (1)\\OpenRPA.exe",
+      "workingDirectory": "C:\\Users\\Allan\\Downloads\\OpenRPA (1)"
     }
   }
 }

@@ -1330,22 +1330,21 @@ namespace OpenRPA
                 workflows.Add(designer.Workflow._id);
             }
             Config.local.openworkflows = workflows.ToArray();
-
-            //var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
-            //var sb = new StringBuilder();
-            //using (var stream = new System.IO.StringWriter(sb))
-            //    serializer.Serialize(stream);
-            //Config.local.designerlayout = sb.ToString();
+            try
+            {
                 var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
                 using (var stream = new System.IO.StreamWriter("layout.config"))
                     serializer.Serialize(stream);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
             Config.Save();
         }
         private void LoadLayout()
         {
-            //if (!string.IsNullOrEmpty(Config.local.designerlayout))
-            //{
-            //}
             foreach (var p in Projects)
             {
                 foreach (var wf in p.Workflows)
@@ -1359,10 +1358,6 @@ namespace OpenRPA
             }
             GenericTools.RunUI(() =>
             {
-                //byte[] byteArray = Encoding.Unicode.GetBytes(Config.local.designerlayout);
-                //var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
-                //using (var stream = new System.IO.MemoryStream(byteArray))
-                //    serializer.Deserialize(stream);
                 if (System.IO.File.Exists("layout.config"))
                 {
                     try

@@ -24,6 +24,9 @@ namespace OpenRPA
         public Dictionary<string, object> properties = new Dictionary<string, object>();
         public bool record_overlay = false;
         public int querypagesize = 50;
+        public DateTime lastupdatecheck = DateTime.Now;
+        public TimeSpan updatecheckinterval = TimeSpan.FromDays(1);
+        public bool doupdatecheck = true;
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)

@@ -1330,22 +1330,21 @@ namespace OpenRPA
                 workflows.Add(designer.Workflow._id);
             }
             Config.local.openworkflows = workflows.ToArray();
-
-            //var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
-            //var sb = new StringBuilder();
-            //using (var stream = new System.IO.StringWriter(sb))
-            //    serializer.Serialize(stream);
-            //Config.local.designerlayout = sb.ToString();
+            try
+            {
                 var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
                 using (var stream = new System.IO.StreamWriter("layout.config"))
                     serializer.Serialize(stream);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
             Config.Save();
         }
         private void LoadLayout()
         {
-            //if (!string.IsNullOrEmpty(Config.local.designerlayout))
-            //{
-            //}
             foreach (var p in Projects)
             {
                 foreach (var wf in p.Workflows)
@@ -1359,43 +1358,61 @@ namespace OpenRPA
             }
             GenericTools.RunUI(() =>
             {
-                //byte[] byteArray = Encoding.Unicode.GetBytes(Config.local.designerlayout);
-                //var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
-                //using (var stream = new System.IO.MemoryStream(byteArray))
-                //    serializer.Deserialize(stream);
                 if (System.IO.File.Exists("layout.config"))
                 {
-                    var ds = DManager.Layout.Descendents();
-                    var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
-                    using (var stream = new System.IO.StreamReader("layout.config"))
-                        serializer.Deserialize(stream);
-                    ds = DManager.Layout.Descendents();
+                    try
+                    {
+                        var ds = DManager.Layout.Descendents();
+                        var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
+                        using (var stream = new System.IO.StreamReader("layout.config"))
+                            serializer.Deserialize(stream);
+                        ds = DManager.Layout.Descendents();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
                 }
                 else if (System.IO.File.Exists(@"..\layout.config"))
                 {
-                    var ds = DManager.Layout.Descendents();
-                    var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
-                    using (var stream = new System.IO.StreamReader(@"..\layout.config"))
-                        serializer.Deserialize(stream);
-                    ds = DManager.Layout.Descendents();
+                    try
+                    {
+                        var ds = DManager.Layout.Descendents();
+                        var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
+                        using (var stream = new System.IO.StreamReader(@"..\layout.config"))
+                            serializer.Deserialize(stream);
+                        ds = DManager.Layout.Descendents();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
                 }
                 else
                 {
-                    var las = DManager.Layout.Descendents().OfType<LayoutAnchorable>().ToList();
-                    foreach (var dp in las)
+                    try
                     {
-                        if (dp.Title == "Toolbox")
+                        var las = DManager.Layout.Descendents().OfType<LayoutAnchorable>().ToList();
+                        foreach (var dp in las)
                         {
-                            if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
+                            if (dp.Title == "Toolbox")
+                            {
+                                if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
+                            }
+                            if (dp.Title == "Properties")
+                            {
+                                if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
+                            }
+                            if (dp.Title == "Snippets")
+                            {
+                                if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
+                            }
                         }
-                        if (dp.Title == "Properties")
-                        {
-                            if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
-                        }
-                        if (dp.Title == "Snippets")
-                        {
-                            if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
-                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
                     }
                 }
             });

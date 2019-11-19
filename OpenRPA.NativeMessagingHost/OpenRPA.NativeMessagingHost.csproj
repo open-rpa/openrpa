@@ -6,7 +6,7 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.8</Version>
+    <Version>1.0.9</Version>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
     <StartupObject />

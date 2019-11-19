@@ -7,7 +7,7 @@
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
-    <Version>1.0.9</Version>
+    <Version>1.0.10</Version>
     <PackageReleaseNotes>1.0.9 update interfaces reference
 1.0.8 support for seperate images 
 1.0.7 Workaround for WPF double elements

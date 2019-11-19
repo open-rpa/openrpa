@@ -9,7 +9,7 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.17</Version>
+    <Version>1.0.18</Version>
     <PackageReleaseNotes>1.0.17 Reload and launch after install common
 1.0.16 Fix uninstall bug, add verbose logging
 1.0.15 update reference

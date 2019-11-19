@@ -455,6 +455,8 @@ namespace OpenRPA
         }
         private async Task CheckForUpdatesAsync()
         {
+            if (!Config.local.doupdatecheck) return;
+            if ((DateTime.Now - Config.local.lastupdatecheck) < Config.local.updatecheckinterval) return;
             await Task.Run(async () =>
             {
                 try

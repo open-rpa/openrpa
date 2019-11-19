@@ -10,7 +10,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.1.2</Version>
+    <Version>1.1.3</Version>
     <Configurations>Debug;Release;ReleaseNuget</Configurations>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
   </PropertyGroup>

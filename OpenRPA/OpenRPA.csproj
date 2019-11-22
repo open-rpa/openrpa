@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.42</Version>
-    <PackageReleaseNotes>1.0.41 Catch layout file errors
+    <Version>1.0.43</Version>
+    <PackageReleaseNotes>1.0.43 Fix overlay showing when disabled, fix double click, fix recording and saving when offline
+1.0.41 Catch layout file errors
 1.0.40 limit update check to once a day, and add option to disable update check
 1.0.39 lock workaround on sendQueue
 1.0.38 update interfaces reference

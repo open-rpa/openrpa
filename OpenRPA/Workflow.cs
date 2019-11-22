@@ -272,6 +272,17 @@ namespace OpenRPA
                                 i.Run();
                             }
                         }
+                        catch (System.ArgumentNullException ex)
+                        {
+                            Log.Error("RunPendingInstances: " + ex.ToString());
+                            try
+                            {
+                                System.IO.File.Delete(f);
+                            }
+                            catch (Exception)
+                            {
+                            }
+                        }
                         catch (Exception ex)
                         {
                             Log.Error("RunPendingInstances: " + ex.ToString());
@@ -279,6 +290,7 @@ namespace OpenRPA
                     }
                 }
             }
+            if (!global.isConnected) return;
             var host = Environment.MachineName.ToLower();
             var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
             var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{WorkflowId: '" + _id + "', state: 'idle', fqdn: '" + fqdn + "'}");

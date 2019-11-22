@@ -7,8 +7,9 @@
     <Description>Activities and record plugin for handling Internet Explorer</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.16</Version>
-    <PackageReleaseNotes>1.0.15 update interfaces reference
+    <Version>1.0.17</Version>
+    <PackageReleaseNotes>1.0.17 fix double click
+1.0.15 update interfaces reference
     
 
 1.0.14 support for seperate images

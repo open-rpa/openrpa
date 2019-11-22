@@ -292,22 +292,17 @@ namespace OpenRPA.Java
                 return result.ToArray();
             }
         }
-        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY)
+        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick)
         {
             if (Button != Input.MouseButton.Left) { VirtualClick = false; }
             if (!VirtualClick)
             {
-                Log.Debug("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
-                //Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-                //Input.InputDriver.DoMouseClick();
                 var point = new FlaUI.Core.Shapes.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-                //FlaUI.Core.Input.Mouse.MoveTo(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
                 FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
                 if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
                 if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-
-                FlaUI.Core.Input.Mouse.Click(flabuttun, point);
-                Log.Debug("Click done");
+                if (!DoubleClick) FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+                if (DoubleClick) FlaUI.Core.Input.Mouse.DoubleClick(flabuttun, point);
                 return;
             } 
             AccessibleActions _actions;

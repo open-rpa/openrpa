@@ -119,26 +119,13 @@ namespace OpenRPA.IE
         public int IndexInParent { get; set; }
         public MSHTML.IHTMLElement RawElement { get; private set; }
         object IElement.RawElement { get => RawElement; set => RawElement = value as MSHTML.IHTMLElement; }
-        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY)
+        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick)
         {
             if (Button != Input.MouseButton.Left) { VirtualClick = false; }
-            //if (rawElement.tagName.ToLower() == "input")
-            //{
-            //    var ele = (MSHTML.IHTMLInputElement)rawElement;
-            //    var _ele2 = ele as MSHTML.IHTMLElement;
-            //    _ele2.click();
-            //}
-            //else if (rawElement.tagName.ToLower() == "a")
-            //{
-            //    var ele = (MSHTML.IHTMLLinkElement)rawElement;
-            //    var _ele2 = ele as MSHTML.IHTMLElement;
-            //    _ele2.click();
-            //} else
-            //{
-            //}
             if (VirtualClick)
             {
                 RawElement.click();
+                if (DoubleClick) RawElement.click();
             } else
             {
                 Log.Debug("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
@@ -149,7 +136,8 @@ namespace OpenRPA.IE
                 FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
                 if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
                 if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-                FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+                if(!DoubleClick) FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+                if (DoubleClick) FlaUI.Core.Input.Mouse.DoubleClick(flabuttun, point);
                 Log.Debug("Click done");
             }
         }

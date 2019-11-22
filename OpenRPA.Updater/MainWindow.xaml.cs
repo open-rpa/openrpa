@@ -173,12 +173,12 @@ namespace OpenRPA.Updater
                 foreach(var m in result)
                     if (m.LocalPackage != null)
                     {
-                        Dispatcher.Invoke(() =>
-                        {
-                            m.isDownloaded = true;
-                            m.isInstalled = OpenRPAPackageManager.Instance.IsPackageInstalled(m.LocalPackage);
-                            m.canUpgrade = m.Version > m.LocalPackage.Identity.Version;
-                        });
+                        await Dispatcher.Invoke(async () =>
+                         {
+                             m.isDownloaded = true;
+                             m.isInstalled = await OpenRPAPackageManager.Instance.IsPackageInstalled(m.LocalPackage);
+                             m.canUpgrade = m.Version > m.LocalPackage.Identity.Version;
+                         });
                     }
                 Dispatcher.Invoke(() =>
                 {
@@ -457,10 +457,33 @@ namespace OpenRPA.Updater
             scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
             e.Handled = true;
         }
-        private void ButtonReinstall(object sender, RoutedEventArgs e)
+        private async void ButtonReinstall(object sender, RoutedEventArgs e)
         {
             OpenRPAPackageManagerLogger.Instance.LogInformation("Reinstall package");
-            ButtonInstall(null, null);
+
+            try
+            {
+                PackageModel SelectedValue = listPackages.SelectedValue as PackageModel;
+                if (SelectedValue == null) return;
+                bussy = true;
+                listPackages.IsEnabled = false;
+                listPackages.IsEnabled = true;
+                await Task.Run(async () =>
+                {
+                    await OpenRPAPackageManager.Instance.DownloadAndInstall(SelectedValue.LocalPackage.Identity);
+                });
+                LoadPackages();
+                OpenRPAPackageManagerLogger.Instance.LogInformation("Package installed");
+            }
+            catch (Exception ex)
+            {
+                OpenRPAPackageManagerLogger.Instance.LogError(ex.ToString());
+            }
+            finally
+            {
+                bussy = false;
+            }
+
         }
         private async void ButtonUpdateAllClick(object sender, RoutedEventArgs e)
         {

@@ -159,7 +159,10 @@ namespace OpenRPA
                     System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.Normal;
                     System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Normal;
 
-                    InputDriver.Instance.Initialize();
+                    GenericTools.RunUI(() =>
+                    {
+                        InputDriver.Instance.Initialize();
+                    });
                     SetStatus("Run pending workflow instances");
                     Log.Debug("RunPendingInstances::begin ");
                     foreach (Project p in _Projects)
@@ -1979,7 +1982,7 @@ namespace OpenRPA
             p.OnUserAction += OnUserAction;
             p.OnMouseMove += OnMouseMove;
             p.Start();
-            if(_overlayWindow==null)
+            if(_overlayWindow==null && Config.local.record_overlay)
             {
                 _overlayWindow = new Interfaces.Overlay.OverlayWindow(true)
                 {

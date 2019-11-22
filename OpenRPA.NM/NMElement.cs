@@ -147,7 +147,6 @@ namespace OpenRPA.NM
                 return _browser;
             }
         }
-
         object IElement.RawElement { get => message; set => message = value as NativeMessagingMessage; }
         public string Value
         {
@@ -180,11 +179,7 @@ namespace OpenRPA.NM
                 }
             }
         }
-        public void Click(bool VirtualClick, int OffsetX, int OffsetY)
-        {
-            Click(VirtualClick, Input.MouseButton.Left, OffsetX, OffsetY);
-        }
-        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY)
+        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick)
         {
             if (Button != Input.MouseButton.Left) { VirtualClick = false; }
             if (!VirtualClick)
@@ -197,7 +192,8 @@ namespace OpenRPA.NM
                 FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
                 if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
                 if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-                FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+                if (!DoubleClick) FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+                if (DoubleClick) FlaUI.Core.Input.Mouse.DoubleClick(flabuttun, point);
                 Log.Debug("Click done");
                 return;
             }
@@ -205,7 +201,6 @@ namespace OpenRPA.NM
             //int OffsetX = 0;
             //int OffsetY = 0;
             bool AnimateMouse = false;
-            bool DoubleClick = false;
             FlaUI.Core.Input.MouseButton button = FlaUI.Core.Input.MouseButton.Left; 
             NMHook.checkForPipes(true, true);
             if (NMHook.connected)
@@ -311,8 +306,6 @@ namespace OpenRPA.NM
                 return Interfaces.Image.Util.Bitmap2Base64(image);
             }
         }
-
-
         [Newtonsoft.Json.JsonIgnore]
         public string href
         {

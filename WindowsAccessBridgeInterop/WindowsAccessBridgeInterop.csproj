@@ -8,9 +8,9 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageReleaseNotes>1.1.4 update interfaces reference</PackageReleaseNotes>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.1.3</Version>
+    <Version>1.1.4</Version>
     <Configurations>Debug;Release;ReleaseNuget</Configurations>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
   </PropertyGroup>

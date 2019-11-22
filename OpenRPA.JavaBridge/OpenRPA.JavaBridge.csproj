@@ -9,8 +9,9 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.6</Version>
-    <PackageReleaseNotes>1.0.5 update interfaces reference</PackageReleaseNotes>
+    <Version>1.0.7</Version>
+    <PackageReleaseNotes>1.0.7 update interfaces reference
+1.0.5 update interfaces reference</PackageReleaseNotes>
     <Description>Small proxy application that handles communication between Java and OpenRPA doing recording</Description>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget</Configurations>

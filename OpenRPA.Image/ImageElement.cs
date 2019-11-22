@@ -62,30 +62,15 @@ namespace OpenRPA.Image
             Height = Rectangle.Height;
             this.element = Element;
         }
-        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY)
+        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick)
         {
-            //Log.Information("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
-            //Log.Debug("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
-            //Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-            //Input.InputDriver.DoMouseClick();
             var point = new FlaUI.Core.Shapes.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-            //FlaUI.Core.Input.Mouse.MoveTo(point);
-
-            //Input.InputDriver.SetCursorPos(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-            //Input.InputDriver.Click(Button);
-            // Input.MouseSimulator.MouseButton(Button);
-            //Task.Run(() =>
-            //{
-            //});
             FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
             if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
             if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-            // System.Threading.Thread.Sleep(100);
-            // Interfaces.Input2.MouseSimulator.ClickLeftMouseButton();
-
-            // FlaUI.Core.Input.Mouse.Click(flabuttun);
             Input.InputDriver.Instance.SkipEvent = true;
-            FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+            if (!DoubleClick) FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+            if (DoubleClick) FlaUI.Core.Input.Mouse.DoubleClick(flabuttun, point);
             Input.InputDriver.Instance.SkipEvent = false;
         }
         public void Focus()

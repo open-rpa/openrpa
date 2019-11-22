@@ -9,8 +9,9 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.19</Version>
-    <PackageReleaseNotes>1.0.19 update interfaces reference, fix issue with overwriting new files with old versions
+    <Version>1.0.20</Version>
+    <PackageReleaseNotes>1.0.20 hotfix
+1.0.19 update interfaces reference, fix issue with overwriting new files with old versions
 1.0.17 Reload and launch after install common
 1.0.16 Fix uninstall bug, add verbose logging
 1.0.15 update reference

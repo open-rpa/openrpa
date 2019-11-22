@@ -590,7 +590,21 @@ namespace OpenRPA.Updater
             var infoNew = new System.IO.FileInfo(source);
             var ext = System.IO.Path.GetExtension(source).ToLower();
 
-            if (ext == ".dll" || ext == ".exe")
+            if(!infoOld.Exists)
+            {
+                try
+                {
+                    System.IO.File.Copy(source, target, true);
+                    return;
+                }
+                catch (Exception)
+                {
+                    KillOpenRPA();
+                    Thread.Sleep(1000);
+                }
+                System.IO.File.Copy(source, target, true);
+            }
+            else if (ext == ".dll" || ext == ".exe")
             {
                 var targetVersionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(target);
                 var sourceVersionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(source);

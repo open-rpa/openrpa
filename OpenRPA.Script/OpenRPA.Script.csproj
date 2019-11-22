@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
-    <Version>1.0.18</Version>
-    <PackageReleaseNotes>1.0.17 update reference
+    <Version>1.0.19</Version>
+    <PackageReleaseNotes>1.0.19 update interfaces reference
+1.0.17 update reference
 1.0.16 update reference
 1.0.15 update interfaces reference
 1.0.14 bugfixes

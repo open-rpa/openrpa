@@ -12,7 +12,7 @@ namespace OpenRPA.Interfaces
         System.Drawing.Rectangle Rectangle { get; set; }
         string Value { get; set; }
         void Focus();
-        void Click(bool VirtualClick, OpenRPA.Input.MouseButton Button, int OffsetX, int OffsetY);
+        void Click(bool VirtualClick, OpenRPA.Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick);
         Task Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration);
         string ImageString();
     }

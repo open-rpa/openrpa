@@ -230,7 +230,7 @@ namespace OpenRPA.NM
             e.ClickHandled = true;
             e.OffsetX = e.X - lastElement.Rectangle.X;
             e.OffsetY = e.Y - lastElement.Rectangle.Y;
-            lastElement.Click(true, e.Button, e.X, e.Y);
+            lastElement.Click(true, e.Button, e.X, e.Y, false);
             return true;
         }
         public bool recording { get; set; } = false;

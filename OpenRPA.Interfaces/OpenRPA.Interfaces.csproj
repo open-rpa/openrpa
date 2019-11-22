@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.15</Version>
-    <PackageReleaseNotes>1.0.15  limit update check to once a day, and add option to disable update check
+    <Version>1.0.16</Version>
+    <PackageReleaseNotes>1.0.16 fix double click
+1.0.15  limit update check to once a day, and add option to disable update check
 1.0.13 rewrite with interfaces
 1.0.11 Extend interfaces with workflow runners
 

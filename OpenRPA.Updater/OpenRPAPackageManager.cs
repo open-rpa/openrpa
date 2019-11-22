@@ -113,10 +113,11 @@ namespace OpenRPA.Updater
                 foreach (var p in jsonNugetPackages.Where(x => x.Identity.Id.Contains(searchstring)))
                 {
                     var exists = result.Where(x => x.Identity.Id == p.Identity.Id).FirstOrDefault();
-                    if (p.Identity.Id.ToLower().Contains("openrpa.interfaces") || p.Identity.Id.ToLower().Contains("openrpa.namedpipewrapper")
-                        || p.Identity.Id.ToLower().Contains("openrpa.expressioneditor") || p.Identity.Id.ToLower().Contains("openrpa.net")
-                        || p.Identity.Id.ToLower().Contains("openrpa.windows") || p.Identity.Id.ToLower().Contains("openrpa.updater")
-                        || p.Identity.Id.ToLower().Contains("openrpa.nativemessaginghost") || p.Identity.Id.ToLower().Contains("openrpa.javabridge")) continue;
+                    if (p.Identity.Id.ToLower().EndsWith("openrpa.interfaces") || p.Identity.Id.ToLower().EndsWith("openrpa.namedpipewrapper")
+                        || p.Identity.Id.ToLower().EndsWith("openrpa.expressioneditor") || p.Identity.Id.ToLower().EndsWith("openrpa.net")
+                        || p.Identity.Id.ToLower().EndsWith("openrpa.windows") || p.Identity.Id.ToLower().EndsWith("openrpa.updater")
+                        || p.Identity.Id.ToLower().EndsWith("openrpa.nativemessaginghost") || p.Identity.Id.ToLower().EndsWith("openrpa.javabridge")
+                        || p.Identity.Id.ToLower().EndsWith("openrpa.rdservice")) continue;
                     if (exists == null) result.Add(p);
                 }
             }
@@ -139,6 +140,19 @@ namespace OpenRPA.Updater
                     await GetPackage(identity);
                     await GetPackageDependencies(identity, cacheContext, availablePackages);
                 }
+            }
+        }
+        public async Task GetPackageWithoutDependencies(PackageIdentity package, SourceCacheContext cacheContext, ISet<SourcePackageDependencyInfo> availablePackages)
+        {
+            if (availablePackages.Contains(package)) return;
+            var repositories = SourceRepositoryProvider.GetRepositories();
+            foreach (var sourceRepository in repositories)
+            {
+                var dependencyInfoResource = await sourceRepository.GetResourceAsync<DependencyInfoResource>();
+                var dependencyInfo = await dependencyInfoResource.ResolvePackage(
+                    package, NuGetFramework, cacheContext, Logger, CancellationToken.None);
+                if (dependencyInfo == null) continue;
+                availablePackages.Add(dependencyInfo);
             }
         }
         public async Task<List<IPackageSearchMetadata>> GetPackage(PackageIdentity identity)
@@ -171,32 +185,8 @@ namespace OpenRPA.Updater
 
                 foreach (var packageToInstall in packagesToInstall)
                 {
-                    // PackageReaderBase packageReader;
-                    var installedPath = packagePathResolver.GetInstalledPath(packageToInstall);
-                    if (installedPath == null)
-                    {
-                        var downloadResource = await packageToInstall.Source.GetResourceAsync<DownloadResource>(CancellationToken.None);
-                        var downloadResult = await downloadResource.GetDownloadResourceResultAsync(
-                            packageToInstall,
-                            new PackageDownloadContext(cacheContext),
-                            NuGet.Configuration.SettingsUtility.GetGlobalPackagesFolder(Settings),
-                            Logger, CancellationToken.None);
-
-                        await PackageExtractor.ExtractPackageAsync(
-                            downloadResult.PackageSource,
-                            downloadResult.PackageStream,
-                            packagePathResolver,
-                            packageExtractionContext,
-                            CancellationToken.None);
-
-                        // packageReader = downloadResult.PackageReader;
-                    }
-                    //else
-                    //{
-                    //    packageReader = new PackageFolderReader(installedPath);
-                    //}
-
-                    InstallPackage(packageToInstall);
+                    await Download(packageToInstall);
+                    await InstallPackage(packageToInstall);
                 }
             }
             return result;
@@ -232,32 +222,8 @@ namespace OpenRPA.Updater
 
                 foreach (var packageToInstall in packagesToInstall)
                 {
-                    // PackageReaderBase packageReader;
-                    var installedPath = packagePathResolver.GetInstalledPath(packageToInstall);
-                    if (installedPath == null)
-                    {
-                        var downloadResource = await packageToInstall.Source.GetResourceAsync<DownloadResource>(CancellationToken.None);
-                        var downloadResult = await downloadResource.GetDownloadResourceResultAsync(
-                            packageToInstall,
-                            new PackageDownloadContext(cacheContext),
-                            NuGet.Configuration.SettingsUtility.GetGlobalPackagesFolder(Settings),
-                            Logger, CancellationToken.None);
-
-                        await PackageExtractor.ExtractPackageAsync(
-                            downloadResult.PackageSource,
-                            downloadResult.PackageStream,
-                            packagePathResolver,
-                            packageExtractionContext,
-                            CancellationToken.None);
-
-                        // packageReader = downloadResult.PackageReader;
-                    }
-                    //else
-                    //{
-                    //    packageReader = new PackageFolderReader(installedPath);
-                    //}
-
-                    InstallPackage(packageToInstall);
+                    await Download(packageToInstall);
+                    await InstallPackage(packageToInstall);
                 }
             }
             return result;
@@ -366,8 +332,9 @@ namespace OpenRPA.Updater
                 Console.WriteLine(ex.ToString());
             }
         }
-        public bool InstallPackage(PackageIdentity identity)
+        public async Task<bool> InstallPackage(PackageIdentity identity)
         {
+            await Download(identity);
             var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
             var installedPath = packagePathResolver.GetInstalledPath(identity);
 
@@ -403,7 +370,7 @@ namespace OpenRPA.Updater
                     foreach (var p in dep.Packages)
                     {
                         var local = getLocal(p.Id);
-                        InstallPackage(local.Identity);
+                        await InstallPackage(local.Identity);
                     }
                 }
             }
@@ -498,19 +465,27 @@ namespace OpenRPA.Updater
             }
 
         }
-
-
-
-
-        public async Task<List<IPackageSearchMetadata>> Download(PackageIdentity identity)
+        public async Task Download(PackageIdentity identity)
         {
+
+            var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
+            var installedPath = packagePathResolver.GetInstalledPath(identity);
+            if(identity.HasVersion && ! string.IsNullOrEmpty(installedPath))
+            {
+                var idstring = identity.Id + "." + identity.Version;
+                if (installedPath.Contains(idstring)) return;
+            }
+
+
             var result = new List<IPackageSearchMetadata>();
 
             using (var cacheContext = new SourceCacheContext())
             {
                 var repositories = SourceRepositoryProvider.GetRepositories();
                 var availablePackages = new HashSet<SourcePackageDependencyInfo>(PackageIdentityComparer.Default);
-                await GetPackageDependencies(identity, cacheContext, availablePackages);
+                
+                await GetPackageWithoutDependencies(identity, cacheContext, availablePackages);
+
                 var resolverContext = new PackageResolverContext(
                     DependencyBehavior.Lowest,
                     new[] { identity.Id },
@@ -523,13 +498,13 @@ namespace OpenRPA.Updater
 
                 var packageToInstall = availablePackages.Where(p => p.Id == identity.Id).FirstOrDefault();
 
-                var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
+                // var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
                 var clientPolicyContext = NuGet.Packaging.Signing.ClientPolicyContext.GetClientPolicy(Settings, Logger);
                 var packageExtractionContext = new PackageExtractionContext(PackageSaveMode.Defaultv3, XmlDocFileSaveMode.None, clientPolicyContext, Logger);
                 var frameworkReducer = new FrameworkReducer();
 
                 // PackageReaderBase packageReader;
-                var installedPath = packagePathResolver.GetInstalledPath(packageToInstall);
+                installedPath = packagePathResolver.GetInstalledPath(packageToInstall);
                 //if (installedPath == null)
                 //{
                 var downloadResource = await packageToInstall.Source.GetResourceAsync<DownloadResource>(CancellationToken.None);
@@ -554,16 +529,23 @@ namespace OpenRPA.Updater
                 //}
 
             }
-            return result;
+            return ;
         }
-        public bool IsPackageInstalled(LocalPackageInfo package)
+        public async Task<bool> IsPackageInstalled(LocalPackageInfo package)
         {
+            await Download(package.Identity);
+
+
             var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
             var installedPath = packagePathResolver.GetInstalledPath(package.Identity);
 
             PackageReaderBase packageReader;
             packageReader = new PackageFolderReader(installedPath);
             var libItems = packageReader.GetLibItems();
+            if(libItems.Count() == 0)
+            {
+                Console.WriteLine("Booom!");
+            }
             var frameworkReducer = new FrameworkReducer();
             var nearest = frameworkReducer.GetNearest(NuGetFramework, libItems.Select(x => x.TargetFramework));
             var files = libItems
@@ -593,7 +575,6 @@ namespace OpenRPA.Updater
                     if (!System.IO.File.Exists(target)) return false;
                     var infoOld = new System.IO.FileInfo(source);
                     var infoNew = new System.IO.FileInfo(target);
-                    if (infoNew.LastWriteTime != infoOld.LastWriteTime) return false;
                 }
                 catch (Exception ex)
                 {
@@ -605,9 +586,34 @@ namespace OpenRPA.Updater
         }
         private void CopyIfNewer(string source, string target)
         {
-            var infoOld = new System.IO.FileInfo(source);
-            var infoNew = new System.IO.FileInfo(target);
-            if (infoNew.LastWriteTime != infoOld.LastWriteTime)
+            var infoOld = new System.IO.FileInfo(target);
+            var infoNew = new System.IO.FileInfo(source);
+            var ext = System.IO.Path.GetExtension(source).ToLower();
+
+            if (ext == ".dll" || ext == ".exe")
+            {
+                var targetVersionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(target);
+                var sourceVersionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(source);
+                var targetVersion = Version.Parse(targetVersionInfo.FileVersion);
+                var sourceVersion = Version.Parse(sourceVersionInfo.FileVersion);
+                if(sourceVersion> targetVersion)
+                {
+                    try
+                    {
+                        System.IO.File.Copy(source, target, true);
+                        return;
+                    }
+                    catch (Exception)
+                    {
+                        KillOpenRPA();
+                        Thread.Sleep(1000);
+                    }
+                    System.IO.File.Copy(source, target, true);
+                }
+                return;
+            }
+
+            if (infoNew.LastWriteTime > infoOld.LastWriteTime || !infoOld.Exists)
             {
                 try
                 {

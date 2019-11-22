@@ -140,11 +140,7 @@ namespace OpenRPA
             var process = System.Diagnostics.Process.GetProcessById(ProcessId);
             while (!process.Responding) { }
         }
-        public void Click(bool VirtualClick, int OffsetX, int OffsetY)
-        {
-            Click(VirtualClick, Input.MouseButton.Left, OffsetX, OffsetY);
-        }
-        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY)
+        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick)
         {
             try
             {
@@ -166,6 +162,7 @@ namespace OpenRPA
                     {
                         var invokePattern = RawElement.Patterns.Invoke.Pattern;
                         invokePattern.Invoke();
+                        if(DoubleClick) invokePattern.Invoke();
                     }
                     catch (Exception ex)
                     {
@@ -184,7 +181,8 @@ namespace OpenRPA
                     FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
                     if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
                     if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-                    FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+                    if (!DoubleClick) FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+                    if (DoubleClick) FlaUI.Core.Input.Mouse.DoubleClick(flabuttun, point);
                 }
             }
             catch (Exception)

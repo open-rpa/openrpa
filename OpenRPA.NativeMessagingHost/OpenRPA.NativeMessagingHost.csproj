@@ -6,11 +6,12 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.9</Version>
+    <Version>1.0.10</Version>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
     <StartupObject />
-    <PackageReleaseNotes>1.0.8 update interfaces reference</PackageReleaseNotes>
+    <PackageReleaseNotes>1.0.10 update interfaces reference
+1.0.8 update interfaces reference</PackageReleaseNotes>
     <Description>The NativeMessagingHost serves as a proxy between chrome/ff and openrpa</Description>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget</Configurations>

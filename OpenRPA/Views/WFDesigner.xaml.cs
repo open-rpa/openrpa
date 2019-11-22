@@ -360,7 +360,7 @@ namespace OpenRPA.Views
             var imagepath = System.IO.Path.Combine(basepath, "images");
             if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
             WorkflowDesigner.Flush();
-            if(global.webSocketClient.isConnected)
+            if(global.isConnected)
             {
                 var modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
                 var usedimages = new List<string>();

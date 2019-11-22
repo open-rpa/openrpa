@@ -6,9 +6,10 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <PackageReleaseNotes>1.0.5 update interfaces reference</PackageReleaseNotes>
+    <PackageReleaseNotes>1.0.7 update interfaces reference
+1.0.5 update interfaces reference</PackageReleaseNotes>
     <Configurations>Debug;Release;ReleaseNuget</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

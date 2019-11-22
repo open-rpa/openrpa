@@ -2155,6 +2155,7 @@ namespace OpenRPA
         {
             if (!(SelectedContent is Views.WFDesigner)) return;
             var designer = (Views.WFDesigner)SelectedContent;
+            InputDriver.Instance.Initialize();
             designer.ReadOnly = true;
             designer.Lastinserted = null;
             designer.Lastinsertedmodel = null;

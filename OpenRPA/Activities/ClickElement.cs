@@ -30,9 +30,9 @@ namespace OpenRPA.Activities
         //[Editor(typeof(SelectButtonEditor), typeof(PropertyValueEditor))]
         public InArgument<int> Button { get; set; } = (int)Input.MouseButton.Left;
         [RequiredArgument]
-        public int OffsetX { get; set; } = 0;
+        public int OffsetX { get; set; } = 5;
         [RequiredArgument]
-        public int OffsetY { get; set; } = 0;
+        public int OffsetY { get; set; } = 5;
         [RequiredArgument]
         public InArgument<IElement> Element { get; set; }
         [RequiredArgument]

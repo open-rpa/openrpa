@@ -90,6 +90,7 @@
     <None Remove="Activities\InvokeOpenRPADesigner.xaml" />
     <None Remove="Activities\OpenApplicationDesigner.xaml" />
     <None Remove="Activities\QueryDesigner.xaml" />
+    <None Remove="Activities\ReadJSONDesigner.xaml" />
     <None Remove="Activities\RemovePermissionDesigner.xaml" />
     <None Remove="Activities\SaveFileDesigner.xaml" />
     <None Remove="Activities\SetCredentialsDesigner.xaml" />
@@ -301,6 +302,9 @@
     <None Remove="Views\wfToolbox.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\ReadJSONDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\ClickElementDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

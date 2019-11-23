@@ -136,7 +136,7 @@ namespace OpenRPA
             await Task.Run(() =>
             {
                 ExpressionEditor.EditorUtil.init();
-                LoadLayout();
+                // LoadLayout();
                 if (!string.IsNullOrEmpty(Config.local.wsurl))
                 {
                     global.webSocketClient = new WebSocketClient(Config.local.wsurl);
@@ -155,10 +155,10 @@ namespace OpenRPA
                     {
                         Projects.Add(p);
                     }
+
                     System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = true;
                     System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.Normal;
                     System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Normal;
-
                     GenericTools.RunUI(() =>
                     {
                         InputDriver.Instance.Initialize();
@@ -177,13 +177,15 @@ namespace OpenRPA
                         }
                     }
                     Log.Debug("RunPendingInstances::end ");
-
-
                 }
                 AutomationHelper.init();
                 SetStatus("Reopening workflows");
                 onOpen(null);
                 AddHotKeys();
+                if (string.IsNullOrEmpty(Config.local.wsurl))
+                {
+                    if (Projects.Count > 0) LoadLayout();
+                }
             });
         }
         private void WebSocketClient_OnOpen()
@@ -1330,7 +1332,15 @@ namespace OpenRPA
             var workflows = new List<string>();
             foreach (var designer in designers)
             {
-                workflows.Add(designer.Workflow._id);
+                if(string.IsNullOrEmpty(designer.Workflow._id) && !string.IsNullOrEmpty(designer.Workflow.Filename))
+                {
+                    workflows.Add(designer.Workflow.RelativeFilename);
+                }
+                else if (!string.IsNullOrEmpty(designer.Workflow._id))
+                {
+                    workflows.Add(designer.Workflow._id);
+
+                }
             }
             Config.local.openworkflows = workflows.ToArray();
             try
@@ -1348,17 +1358,6 @@ namespace OpenRPA
         }
         private void LoadLayout()
         {
-            foreach (var p in Projects)
-            {
-                foreach (var wf in p.Workflows)
-                {
-                    
-                    if (Config.local.openworkflows.Contains(wf._id) && !string.IsNullOrEmpty(wf._id))
-                    {
-                        onOpenWorkflow(wf);
-                    }
-                }
-            }
             GenericTools.RunUI(() =>
             {
                 if (System.IO.File.Exists("layout.config"))
@@ -1419,6 +1418,22 @@ namespace OpenRPA
                     }
                 }
             });
+            foreach (var p in Projects)
+            {
+                foreach (var wf in p.Workflows)
+                {
+
+                    if (Config.local.openworkflows.Contains(wf._id) && !string.IsNullOrEmpty(wf._id))
+                    {
+                        onOpenWorkflow(wf);
+                    }
+                    else if (Config.local.openworkflows.Contains(wf.RelativeFilename) && !string.IsNullOrEmpty(wf.RelativeFilename))
+                    {
+                        onOpenWorkflow(wf);
+                    }
+                }
+            }
+
         }
         public Views.WFDesigner GetWorkflowDesignerByFilename(string Filename)
         {
@@ -2234,16 +2249,16 @@ namespace OpenRPA
             {
                 foreach (var wf in p.Workflows)
                 {
-                    if (wf._id == id) return wf;
+                    if (wf._id == id || wf.RelativeFilename == id) return wf;
                 }
             }
             return null;
         }
         public Views.WFDesigner GetDesignerById(string workflowid)
         {
-            foreach(var designer in designers)
+            foreach (var designer in designers)
             {
-                if (designer.Workflow._id == workflowid) return designer;
+                if (designer.Workflow._id == workflowid || designer.Workflow.RelativeFilename == workflowid) return designer;
             }
             return null;
         }

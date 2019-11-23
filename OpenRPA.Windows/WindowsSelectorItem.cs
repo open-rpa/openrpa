@@ -59,7 +59,7 @@ namespace OpenRPA.Windows
                 return e.Value;
             }
         }
-        public WindowsSelectorItem(AutomationElement element, bool isRoot)
+        public WindowsSelectorItem(AutomationElement element, bool isRoot, int IndexInParent = -1)
         {
             this.Element = new UIElement(element);
             Properties = new ObservableCollection<SelectorItemProperty>();
@@ -96,6 +96,7 @@ namespace OpenRPA.Windows
                     if (element.Properties.ClassName.IsSupported && !string.IsNullOrEmpty(element.Properties.ClassName)) Properties.Add(new SelectorItemProperty("ClassName", element.Properties.ClassName.Value));
                     if (element.Properties.ControlType.IsSupported && !string.IsNullOrEmpty(element.Properties.ControlType.Value.ToString())) Properties.Add(new SelectorItemProperty("ControlType", element.Properties.ControlType.Value.ToString()));
                     if (element.Properties.AutomationId.IsSupported && !string.IsNullOrEmpty(element.Properties.AutomationId)) Properties.Add(new SelectorItemProperty("AutomationId", element.Properties.AutomationId.Value));
+                    if (IndexInParent > -1) Properties.Add(new SelectorItemProperty("IndexInParent", IndexInParent.ToString()));
                 }
                 catch (Exception)
                 {

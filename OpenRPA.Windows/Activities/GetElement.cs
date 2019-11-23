@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace OpenRPA.Windows
 {
@@ -59,27 +60,35 @@ namespace OpenRPA.Windows
 #endif
             do
             {
-                elements = OpenRPA.AutomationHelper.RunSTAThread<UIElement[]>(() =>
+
+                if(PluginConfig.get_elements_in_different_thread)
                 {
-                    try
+                    elements = OpenRPA.AutomationHelper.RunSTAThread<UIElement[]>(() =>
                     {
-                        return WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
-                    }
-                    catch (System.Threading.ThreadAbortException)
-                    {
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex, "");
-                    }
-                    return new UIElement[] { };
-                }, TimeSpan.FromMilliseconds(_timeout)).Result;
+                        try
+                        {
+                            return WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+                        }
+                        catch (System.Threading.ThreadAbortException)
+                        {
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex, "");
+                        }
+                        return new UIElement[] { };
+                    }, TimeSpan.FromMilliseconds(_timeout)).Result;
+                } 
+                else
+                {
+                    elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+                }
                 if (elements == null)
                 {
                     elements = new UIElement[] { };
                 }
             } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
-            if (elements.Length > 0)
+            if (PluginConfig.get_elements_in_different_thread && elements.Length > 0)
             {
                 // Get them again, we need the COM objects to be loaded in the UI thread
                 elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);

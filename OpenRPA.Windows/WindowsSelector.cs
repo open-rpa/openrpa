@@ -77,17 +77,19 @@ namespace OpenRPA.Windows
             using (var automation = AutomationUtil.getAutomation())
             {
                 var _treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
+                bool isDesktop = true;
                 var parent = automation.GetDesktop();
-                if (anchor != null) parent = temppathToRoot[0].Parent;
+                if (anchor != null) { parent = temppathToRoot[0].Parent; isDesktop = false; }
                 while (temppathToRoot.Count > 0)
                 {
                     var i = temppathToRoot.First();
                     temppathToRoot.Remove(i);
                     item = new WindowsSelectorItem(i, false);
-                    var m = item.matches(automation, parent, _treeWalker, 2);
+                    var m = item.matches(automation, parent, _treeWalker, 2, isDesktop);
                     if (m.Length > 0) { 
                         newpathToRoot.Add(i);
                         parent = i;
+                        isDesktop = false;
                     } 
                     if (m.Length == 0 && Config.local.log_selector)
                     {
@@ -218,7 +220,12 @@ namespace OpenRPA.Windows
                 AutomationElement startfrom = null;
                 if (_fromElement != null) startfrom = _fromElement.RawElement;
                 Log.Selector("automation.GetDesktop");
-                if (startfrom == null) startfrom = automation.GetDesktop();
+                bool isDesktop = false;
+                if (startfrom == null)
+                {
+                    startfrom = automation.GetDesktop();
+                    isDesktop = true;
+                }
 
                 current.Add(new UIElement(startfrom));
                 for (var i = 0; i < selectors.Count; i++)
@@ -236,7 +243,7 @@ namespace OpenRPA.Windows
                             if (i == 0) count = midcounter;
                             // if (i < selectors.Count) count = 500;
                             if (i < selectors.Count) count = 1;
-                            var matches = ((WindowsSelectorItem)s).matches(automation, _element.RawElement, _treeWalker, count); // (i == 0 ? 1: maxresults)
+                            var matches = ((WindowsSelectorItem)s).matches(automation, _element.RawElement, _treeWalker, count, isDesktop); // (i == 0 ? 1: maxresults)
                             var uimatches = new List<UIElement>();
                             foreach (var m in matches)
                             {
@@ -265,7 +272,7 @@ namespace OpenRPA.Windows
                                     var count = maxresults;
                                     if (i == 0) count = 1;
                                     if (i < selectors.Count) count = 500;
-                                    var matches = ((WindowsSelectorItem)s).matches(automation, _element.RawElement, _treeWalker, count); // (i == 0 ? 1 : maxresults)
+                                    var matches = ((WindowsSelectorItem)s).matches(automation, _element.RawElement, _treeWalker, count, false); // (i == 0 ? 1 : maxresults)
                                     var uimatches = new List<UIElement>();
                                     foreach (var m in matches)
                                     {
@@ -279,9 +286,9 @@ namespace OpenRPA.Windows
                                 Console.WriteLine(current.Count());
                             }
                         }
+                        if (current.Count == 0) ++failcounter;
                         if (current.Count == 0 && Config.local.log_selector)
                         {
-                            ++failcounter;
                             foreach (var element in elements)
                             {
                                 var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
@@ -305,6 +312,7 @@ namespace OpenRPA.Windows
                         }
                     } while (failcounter < 2 && current.Count == 0);
 
+
                     if (i == (selectors.Count - 1)) result = current.ToArray();
                     if (current.Count == 0 && Config.local.log_selector)
                     {
@@ -326,6 +334,7 @@ namespace OpenRPA.Windows
                         Log.Warning(message);
                         return new UIElement[] { };
                     }
+                    isDesktop = false;
                 }
             }
             if (result == null)

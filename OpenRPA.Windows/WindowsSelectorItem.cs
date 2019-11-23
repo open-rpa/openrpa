@@ -229,27 +229,43 @@ namespace OpenRPA.Windows
                 return new AndCondition(cond);
             }
         }
-        public AutomationElement[] matches(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count)
+        public AutomationElement[] matches(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count, bool isDesktop)
         {
             var matchs = new List<AutomationElement>();
             var c = GetConditionsWithoutStar();
             Log.SelectorVerbose("matches::FindAllChildren");
-            //var elements = element.FindAllChildren(c);
-            //foreach (var elementNode in elements)
-            //{
-            //    Log.SelectorVerbose("matches::match");
-            //    if (match(elementNode)) matchs.Add(elementNode);
-            //}
-            var nodes = new List<AutomationElement>();
-            var elementNode = _treeWalker.GetFirstChild(element);
-            var i = 0;
-            while (elementNode != null)
+            isDesktop = false;
+            if (isDesktop) // To slow !
             {
-                nodes.Add(elementNode);
-                i++;
-                if (Match(elementNode)) matchs.Add(elementNode);
-                if (matchs.Count >= count) break;
-                elementNode = _treeWalker.GetNextSibling(elementNode);
+                var sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+                Log.Information(string.Format("AutomationElement.matches::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
+
+                Log.SelectorVerbose("Searching desktop for " + c.ToString());
+                var elements = element.FindAllChildren(c);
+                Log.SelectorVerbose("Done Search");
+                Log.Information(string.Format("AutomationElement.matches::process elements {0:mm\\:ss\\.fff}", sw.Elapsed));
+                // var elements = element.FindAllChildren();
+                foreach (var elementNode in elements)
+                {
+                    Log.SelectorVerbose("matches::match");
+                    if (Match(elementNode)) matchs.Add(elementNode);
+                }
+                Log.Information(string.Format("AutomationElement.matches::complete {0:mm\\:ss\\.fff}", sw.Elapsed));
+            }
+            else
+            {
+                var nodes = new List<AutomationElement>();
+                var elementNode = _treeWalker.GetFirstChild(element);
+                var i = 0;
+                while (elementNode != null)
+                {
+                    nodes.Add(elementNode);
+                    i++;
+                    if (Match(elementNode)) matchs.Add(elementNode);
+                    if (matchs.Count >= count) break;
+                    elementNode = _treeWalker.GetNextSibling(elementNode);
+                }
             }
             //foreach (var _elementNode in nodes)
             //{

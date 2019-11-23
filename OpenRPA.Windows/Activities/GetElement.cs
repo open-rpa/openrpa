@@ -52,11 +52,11 @@ namespace OpenRPA.Windows
             var from = From.Get(context);
             sw.Start();
 
-            double _timeout = 250;
+            //            double _timeout = 250;
+            double _timeout = 1000;
 #if DEBUG
             _timeout = _timeout * 8;
 #endif
-
             do
             {
                 elements = OpenRPA.AutomationHelper.RunSTAThread<UIElement[]>(() =>
@@ -79,11 +79,11 @@ namespace OpenRPA.Windows
                     elements = new UIElement[] { };
                 }
             } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
-            if (elements.Length > 0)
-            {
-                // Get them again, we need the COM objects to be loaded in the UI thread
-                elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
-            }
+            //if (elements.Length > 0)
+            //{
+            //    // Get them again, we need the COM objects to be loaded in the UI thread
+            //    elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+            //}
             context.SetValue(Elements, elements);
             if(elements.Count() < minresults)
             {

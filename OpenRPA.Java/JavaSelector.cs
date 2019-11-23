@@ -129,7 +129,7 @@ namespace OpenRPA.Java
                     }
                 }
                 if (i == (selectors.Count - 1)) result = current.ToArray();
-                if (current.Count == 0)
+                if (current.Count == 0 && Config.local.log_selector)
                 {
                     var _c = new JavaSelectorItem(selectors[i]);
                     var message = "needed to find " + Environment.NewLine + _c.ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;

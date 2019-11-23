@@ -19,7 +19,6 @@ namespace OpenRPA.Windows
     public class Plugin : ObservableObject, IRecordPlugin
     {
         private static int CurrentProcessId = 0;
-
         public static Interfaces.Selector.treeelement[] _GetRootElements(Selector anchor)
         {
             if(CurrentProcessId==0) CurrentProcessId = System.Diagnostics.Process.GetCurrentProcess().Id;
@@ -223,15 +222,16 @@ namespace OpenRPA.Windows
                     {
                         return GetElementsWithSelector(selector, null, 1);
                     }
-                    catch (System.Threading.ThreadAbortException)
+                    catch (System.Threading.ThreadAbortException ex)
                     {
+                        Log.Error(ex, "");
                     }
                     catch (Exception ex)
                     {
                         Log.Error(ex, "");
                     }
                     return new UIElement[] { };
-                }, TimeSpan.FromMilliseconds(250)).Result;
+                }, TimeSpan.FromMilliseconds(1000)).Result;
                 if (elements == null)
                 {
                     elements = new IElement[] { };

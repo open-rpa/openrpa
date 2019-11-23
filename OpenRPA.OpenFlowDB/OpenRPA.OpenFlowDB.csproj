@@ -1,0 +1,270 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>OpenRPA</Authors>
+    <Company>OpenRPA</Company>
+    <Description>A Collection of activities to work the openflow database</Description>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\debug</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Activities\DeleteOneDesigner.xaml" />
+    <None Remove="Activities\GetCredentialsDesigner.xaml" />
+    <None Remove="Activities\GetFileDesigner.xaml" />
+    <None Remove="Activities\GrantPermissionDesigner.xaml" />
+    <None Remove="Activities\InsertOneDesigner.xaml" />
+    <None Remove="Activities\InsertOrUpdateOneDesigner.xaml" />
+    <None Remove="Activities\QueryDesigner.xaml" />
+    <None Remove="Activities\RemovePermissionDesigner.xaml" />
+    <None Remove="Activities\SaveFileDesigner.xaml" />
+    <None Remove="Activities\SetCredentialsDesigner.xaml" />
+    <None Remove="Resources\designer\addentitypermission.png" />
+    <None Remove="Resources\designer\breakpoint.png" />
+    <None Remove="Resources\designer\comment.png" />
+    <None Remove="Resources\designer\commentout.png" />
+    <None Remove="Resources\designer\copyclipboard.png" />
+    <None Remove="Resources\designer\deleteentity.png" />
+    <None Remove="Resources\designer\detector.png" />
+    <None Remove="Resources\designer\downloadfile.png" />
+    <None Remove="Resources\designer\elementclick.png" />
+    <None Remove="Resources\designer\elementtext.png" />
+    <None Remove="Resources\designer\entity.png" />
+    <None Remove="Resources\designer\findimage.png" />
+    <None Remove="Resources\designer\focuselement.png" />
+    <None Remove="Resources\designer\foreach.png" />
+    <None Remove="Resources\designer\foreachhtml.png" />
+    <None Remove="Resources\designer\foreachimage.png" />
+    <None Remove="Resources\designer\foreachjava.png" />
+    <None Remove="Resources\designer\foreachui.png" />
+    <None Remove="Resources\designer\getapp.png" />
+    <None Remove="Resources\designer\getentities.png" />
+    <None Remove="Resources\designer\getentity.png" />
+    <None Remove="Resources\designer\gethtmlelement.png" />
+    <None Remove="Resources\designer\getimage.png" />
+    <None Remove="Resources\designer\getjavaelement.png" />
+    <None Remove="Resources\designer\getuielement.png" />
+    <None Remove="Resources\designer\geturl.png" />
+    <None Remove="Resources\designer\highlight.png" />
+    <None Remove="Resources\designer\insertclipboard.png" />
+    <None Remove="Resources\designer\invokebrowserscript.png" />
+    <None Remove="Resources\designer\invokerpaworkflow.png" />
+    <None Remove="Resources\designer\invokezeniverseworkflow.png" />
+    <None Remove="Resources\designer\keyboard.png" />
+    <None Remove="Resources\designer\killapp.png" />
+    <None Remove="Resources\designer\log.png" />
+    <None Remove="Resources\designer\messagebox.png" />
+    <None Remove="Resources\designer\openurl.png" />
+    <None Remove="Resources\designer\prompt.png" />
+    <None Remove="Resources\designer\readexcel.png" />
+    <None Remove="Resources\designer\readfile.png" />
+    <None Remove="Resources\designer\readpdf.png" />
+    <None Remove="Resources\designer\sleep.png" />
+    <None Remove="Resources\designer\typetext.png" />
+    <None Remove="Resources\designer\uiscraping.png" />
+    <None Remove="Resources\designer\webscraping.png" />
+    <None Remove="Resources\designer\writeexcel.png" />
+    <None Remove="Resources\designer\writefile.png" />
+    <None Remove="Resources\toolbox\addentitypermission.png" />
+    <None Remove="Resources\toolbox\breakpoint.png" />
+    <None Remove="Resources\toolbox\comment.png" />
+    <None Remove="Resources\toolbox\commentout.png" />
+    <None Remove="Resources\toolbox\copyclipboard.png" />
+    <None Remove="Resources\toolbox\deleteentity.png" />
+    <None Remove="Resources\toolbox\detector.png" />
+    <None Remove="Resources\toolbox\detector2.png" />
+    <None Remove="Resources\toolbox\downloadfile.png" />
+    <None Remove="Resources\toolbox\elementclick.png" />
+    <None Remove="Resources\toolbox\elementtext.png" />
+    <None Remove="Resources\toolbox\entity.png" />
+    <None Remove="Resources\toolbox\findimage.png" />
+    <None Remove="Resources\toolbox\focuselement.png" />
+    <None Remove="Resources\toolbox\foreach.png" />
+    <None Remove="Resources\toolbox\foreachhtml.png" />
+    <None Remove="Resources\toolbox\foreachimage.png" />
+    <None Remove="Resources\toolbox\foreachjava.png" />
+    <None Remove="Resources\toolbox\foreachui.png" />
+    <None Remove="Resources\toolbox\getapp.png" />
+    <None Remove="Resources\toolbox\getentities.png" />
+    <None Remove="Resources\toolbox\getentity.png" />
+    <None Remove="Resources\toolbox\gethtmlelement.png" />
+    <None Remove="Resources\toolbox\getimage.png" />
+    <None Remove="Resources\toolbox\getjavaelement.png" />
+    <None Remove="Resources\toolbox\getuielement.png" />
+    <None Remove="Resources\toolbox\geturl.png" />
+    <None Remove="Resources\toolbox\highlight.png" />
+    <None Remove="Resources\toolbox\insertclipboard.png" />
+    <None Remove="Resources\toolbox\invokebrowserscript.png" />
+    <None Remove="Resources\toolbox\invokerpaworkflow.png" />
+    <None Remove="Resources\toolbox\invokezeniverseworkflow.png" />
+    <None Remove="Resources\toolbox\keyboard.png" />
+    <None Remove="Resources\toolbox\killapp.png" />
+    <None Remove="Resources\toolbox\log.png" />
+    <None Remove="Resources\toolbox\messagebox.png" />
+    <None Remove="Resources\toolbox\openurl.png" />
+    <None Remove="Resources\toolbox\prompt.png" />
+    <None Remove="Resources\toolbox\readexcel.png" />
+    <None Remove="Resources\toolbox\readfile.png" />
+    <None Remove="Resources\toolbox\readpdf.png" />
+    <None Remove="Resources\toolbox\sleep.png" />
+    <None Remove="Resources\toolbox\typetext.png" />
+    <None Remove="Resources\toolbox\uiscraping.png" />
+    <None Remove="Resources\toolbox\webscraping.png" />
+    <None Remove="Resources\toolbox\workflow.png" />
+    <None Remove="Resources\toolbox\writeexcel.png" />
+    <None Remove="Resources\toolbox\writefile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\toolbox\addentitypermission.png" />
+    <EmbeddedResource Include="Resources\toolbox\breakpoint.png" />
+    <EmbeddedResource Include="Resources\toolbox\comment.png" />
+    <EmbeddedResource Include="Resources\toolbox\commentout.png" />
+    <EmbeddedResource Include="Resources\toolbox\copyclipboard.png" />
+    <EmbeddedResource Include="Resources\toolbox\deleteentity.png" />
+    <EmbeddedResource Include="Resources\toolbox\detector.png" />
+    <EmbeddedResource Include="Resources\toolbox\detector2.png" />
+    <EmbeddedResource Include="Resources\toolbox\downloadfile.png" />
+    <EmbeddedResource Include="Resources\toolbox\elementclick.png" />
+    <EmbeddedResource Include="Resources\toolbox\elementtext.png" />
+    <EmbeddedResource Include="Resources\toolbox\entity.png" />
+    <EmbeddedResource Include="Resources\toolbox\findimage.png" />
+    <EmbeddedResource Include="Resources\toolbox\focuselement.png" />
+    <EmbeddedResource Include="Resources\toolbox\foreach.png" />
+    <EmbeddedResource Include="Resources\toolbox\foreachhtml.png" />
+    <EmbeddedResource Include="Resources\toolbox\foreachimage.png" />
+    <EmbeddedResource Include="Resources\toolbox\foreachjava.png" />
+    <EmbeddedResource Include="Resources\toolbox\foreachui.png" />
+    <EmbeddedResource Include="Resources\toolbox\getapp.png" />
+    <EmbeddedResource Include="Resources\toolbox\getentities.png" />
+    <EmbeddedResource Include="Resources\toolbox\getentity.png" />
+    <EmbeddedResource Include="Resources\toolbox\gethtmlelement.png" />
+    <EmbeddedResource Include="Resources\toolbox\getimage.png" />
+    <EmbeddedResource Include="Resources\toolbox\getjavaelement.png" />
+    <EmbeddedResource Include="Resources\toolbox\getuielement.png" />
+    <EmbeddedResource Include="Resources\toolbox\geturl.png" />
+    <EmbeddedResource Include="Resources\toolbox\highlight.png" />
+    <EmbeddedResource Include="Resources\toolbox\insertclipboard.png" />
+    <EmbeddedResource Include="Resources\toolbox\invokebrowserscript.png" />
+    <EmbeddedResource Include="Resources\toolbox\invokerpaworkflow.png" />
+    <EmbeddedResource Include="Resources\toolbox\invokezeniverseworkflow.png" />
+    <EmbeddedResource Include="Resources\toolbox\keyboard.png" />
+    <EmbeddedResource Include="Resources\toolbox\killapp.png" />
+    <EmbeddedResource Include="Resources\toolbox\log.png" />
+    <EmbeddedResource Include="Resources\toolbox\messagebox.png" />
+    <EmbeddedResource Include="Resources\toolbox\openurl.png" />
+    <EmbeddedResource Include="Resources\toolbox\prompt.png" />
+    <EmbeddedResource Include="Resources\toolbox\readexcel.png" />
+    <EmbeddedResource Include="Resources\toolbox\readfile.png" />
+    <EmbeddedResource Include="Resources\toolbox\readpdf.png" />
+    <EmbeddedResource Include="Resources\toolbox\sleep.png" />
+    <EmbeddedResource Include="Resources\toolbox\typetext.png" />
+    <EmbeddedResource Include="Resources\toolbox\uiscraping.png" />
+    <EmbeddedResource Include="Resources\toolbox\webscraping.png" />
+    <EmbeddedResource Include="Resources\toolbox\workflow.png" />
+    <EmbeddedResource Include="Resources\toolbox\writeexcel.png" />
+    <EmbeddedResource Include="Resources\toolbox\writefile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Core.Presentation" />
+    <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Activities\DeleteOneDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\GetCredentialsDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\GetFileDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\GrantPermissionDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\InsertOneDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\InsertOrUpdateOneDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\QueryDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\RemovePermissionDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\SaveFileDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\SetCredentialsDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\designer\addentitypermission.png" />
+    <Resource Include="Resources\designer\breakpoint.png" />
+    <Resource Include="Resources\designer\comment.png" />
+    <Resource Include="Resources\designer\commentout.png" />
+    <Resource Include="Resources\designer\copyclipboard.png" />
+    <Resource Include="Resources\designer\deleteentity.png" />
+    <Resource Include="Resources\designer\detector.png" />
+    <Resource Include="Resources\designer\downloadfile.png" />
+    <Resource Include="Resources\designer\elementclick.png" />
+    <Resource Include="Resources\designer\elementtext.png" />
+    <Resource Include="Resources\designer\entity.png" />
+    <Resource Include="Resources\designer\findimage.png" />
+    <Resource Include="Resources\designer\focuselement.png" />
+    <Resource Include="Resources\designer\foreach.png" />
+    <Resource Include="Resources\designer\foreachhtml.png" />
+    <Resource Include="Resources\designer\foreachimage.png" />
+    <Resource Include="Resources\designer\foreachjava.png" />
+    <Resource Include="Resources\designer\foreachui.png" />
+    <Resource Include="Resources\designer\getapp.png" />
+    <Resource Include="Resources\designer\getentities.png" />
+    <Resource Include="Resources\designer\getentity.png" />
+    <Resource Include="Resources\designer\gethtmlelement.png" />
+    <Resource Include="Resources\designer\getimage.png" />
+    <Resource Include="Resources\designer\getjavaelement.png" />
+    <Resource Include="Resources\designer\getuielement.png" />
+    <Resource Include="Resources\designer\geturl.png" />
+    <Resource Include="Resources\designer\highlight.png" />
+    <Resource Include="Resources\designer\insertclipboard.png" />
+    <Resource Include="Resources\designer\invokebrowserscript.png" />
+    <Resource Include="Resources\designer\invokerpaworkflow.png" />
+    <Resource Include="Resources\designer\invokezeniverseworkflow.png" />
+    <Resource Include="Resources\designer\keyboard.png" />
+    <Resource Include="Resources\designer\killapp.png" />
+    <Resource Include="Resources\designer\log.png" />
+    <Resource Include="Resources\designer\messagebox.png" />
+    <Resource Include="Resources\designer\openurl.png" />
+    <Resource Include="Resources\designer\prompt.png" />
+    <Resource Include="Resources\designer\readexcel.png" />
+    <Resource Include="Resources\designer\readfile.png" />
+    <Resource Include="Resources\designer\readpdf.png" />
+    <Resource Include="Resources\designer\sleep.png" />
+    <Resource Include="Resources\designer\typetext.png" />
+    <Resource Include="Resources\designer\uiscraping.png" />
+    <Resource Include="Resources\designer\webscraping.png" />
+    <Resource Include="Resources\designer\writeexcel.png" />
+    <Resource Include="Resources\designer\writefile.png" />
+  </ItemGroup>
+</Project>

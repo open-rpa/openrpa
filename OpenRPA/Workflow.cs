@@ -105,7 +105,7 @@ namespace OpenRPA
         {
             get
             {
-                return WorkflowInstance.Instances.Where(x => x.WorkflowId == _id).ToList();
+                return WorkflowInstance.Instances.Where(x => (x.WorkflowId == _id && !string.IsNullOrEmpty(_id)) || (x.RelativeFilename == RelativeFilename && string.IsNullOrEmpty(_id))).ToList();
             }
         }
         [JsonIgnore]

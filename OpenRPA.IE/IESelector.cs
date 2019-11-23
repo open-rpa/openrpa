@@ -273,7 +273,7 @@ namespace OpenRPA.IE
                 } while (failcounter < 2 && current.Count == 0);
 
                 if (i == (selectors.Count - 1)) result = current.ToArray();
-                if (current.Count == 0)
+                if (current.Count == 0 && Config.local.log_selector)
                 {
                     var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
                     foreach (var element in elements)

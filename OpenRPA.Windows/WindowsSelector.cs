@@ -73,6 +73,7 @@ namespace OpenRPA.Windows
             var temppathToRoot = new List<AutomationElement>();
             var newpathToRoot = new List<AutomationElement>();
             foreach (var e in pathToRoot) temppathToRoot.Add(e);
+            Log.Selector(string.Format("windowsselector::traverse back to element from root::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
             using (var automation = AutomationUtil.getAutomation())
             {
                 var _treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
@@ -88,7 +89,7 @@ namespace OpenRPA.Windows
                         newpathToRoot.Add(i);
                         parent = i;
                     } 
-                    if (m.Length == 0)
+                    if (m.Length == 0 && Config.local.log_selector)
                     {
                         var message = "needed to find " + Environment.NewLine + item.ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
                         var children = parent.FindAllChildren();
@@ -116,7 +117,8 @@ namespace OpenRPA.Windows
                     }
                 }
             }
-            if(newpathToRoot.Count != pathToRoot.Count)
+            Log.Selector(string.Format("windowsselector::traverse back to element from root::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+            if (newpathToRoot.Count != pathToRoot.Count)
             {
                 Log.Information("Selector had " + pathToRoot.Count + " items to root, but traversing children inly matched " + newpathToRoot.Count);
                 pathToRoot = newpathToRoot;
@@ -183,7 +185,7 @@ namespace OpenRPA.Windows
                 Items.Add(item);
             }
             pathToRoot.Reverse();
-            Log.Selector(string.Format("windowsselector::EnumNeededProperties::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Selector(string.Format("windowsselector::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
             OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
@@ -194,6 +196,11 @@ namespace OpenRPA.Windows
         }
         public static UIElement[] GetElementsWithuiSelector(WindowsSelector selector, IElement fromElement = null, int maxresults = 1)
         {
+            var midcounter = 1;
+            if(PluginConfig.allow_multiple_hits_mid_selector)
+            {
+                midcounter = 10;
+            }
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
             Log.Selector(string.Format("GetElementsWithuiSelector::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
@@ -226,8 +233,9 @@ namespace OpenRPA.Windows
                         foreach (var _element in elements)
                         {
                             var count = maxresults;
-                            if (i == 0) count = 1;
-                            if (i < selectors.Count) count = 500;
+                            if (i == 0) count = midcounter;
+                            // if (i < selectors.Count) count = 500;
+                            if (i < selectors.Count) count = 1;
                             var matches = ((WindowsSelectorItem)s).matches(automation, _element.RawElement, _treeWalker, count); // (i == 0 ? 1: maxresults)
                             var uimatches = new List<UIElement>();
                             foreach (var m in matches)
@@ -246,9 +254,10 @@ namespace OpenRPA.Windows
                                 Log.Warning("Selector had " + current.Count + " hits and not just one, at element " + i + " this selector will be slow!");
                             }
                         }
-                            if (current.Count == 0)
+                        if (current.Count == 0 && PluginConfig.allow_child_searching)
                         {
-                            if((i+1) < selectors.Count && i > 0) {
+                            Log.Warning("Selector found not hits at element " + i + ", Try searching children, this selector will be slow!");
+                            if ((i+1) < selectors.Count && i > 0) {
                                 i++;
                                 s = new WindowsSelectorItem(selectors[i]);
                                 foreach (var _element in elements)
@@ -270,7 +279,7 @@ namespace OpenRPA.Windows
                                 Console.WriteLine(current.Count());
                             }
                         }
-                        if (current.Count == 0)
+                        if (current.Count == 0 && Config.local.log_selector)
                         {
                             ++failcounter;
                             foreach (var element in elements)
@@ -297,7 +306,7 @@ namespace OpenRPA.Windows
                     } while (failcounter < 2 && current.Count == 0);
 
                     if (i == (selectors.Count - 1)) result = current.ToArray();
-                    if (current.Count == 0)
+                    if (current.Count == 0 && Config.local.log_selector)
                     {
                         var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
                         foreach (var element in elements)
@@ -322,9 +331,10 @@ namespace OpenRPA.Windows
             if (result == null)
             {
                 Log.Selector(string.Format("GetElementsWithuiSelector::ended with 0 results after {0:mm\\:ss\\.fff}", sw.Elapsed));
+                Log.Debug(string.Format("GetElementsWithuiSelector::ended with 0 results after {0:mm\\:ss\\.fff}", sw.Elapsed));
                 return new UIElement[] { };
             }
-            Log.Selector(string.Format("GetElementsWithuiSelector::ended with " + result.Count() + " results after {0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Debug(string.Format("GetElementsWithuiSelector::ended with " + result.Count() + " results after {0:mm\\:ss\\.fff}", sw.Elapsed));
             return result;
         }
 

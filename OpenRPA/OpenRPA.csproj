@@ -74,26 +74,15 @@
     <None Remove="Activities\CloseApplicationDesigner.xaml" />
     <None Remove="Activities\CommentOutDesigner.xaml" />
     <None Remove="Activities\CopyClipboardDesigner.xaml" />
-    <None Remove="Activities\DeleteOneDesigner.xaml" />
     <None Remove="Activities\DetectorDesigner.xaml" />
     <None Remove="Activities\DownloadFileDesigner.xaml" />
     <None Remove="Activities\ForEachDataRowDesigner.xaml" />
-    <None Remove="Activities\GetCredentialsDesigner.xaml" />
-    <None Remove="Activities\GetElementDesigner.xaml" />
-    <None Remove="Activities\GetFileDesigner.xaml" />
-    <None Remove="Activities\GrantPermissionDesigner.xaml" />
     <None Remove="Activities\HighlightElementDesigner.xaml" />
     <None Remove="Activities\InsertClipboardDesigner.xaml" />
-    <None Remove="Activities\InsertOneDesigner.xaml" />
-    <None Remove="Activities\InsertOrUpdateOneDesigner.xaml" />
     <None Remove="Activities\InvokeOpenFlowDesigner.xaml" />
     <None Remove="Activities\InvokeOpenRPADesigner.xaml" />
     <None Remove="Activities\OpenApplicationDesigner.xaml" />
-    <None Remove="Activities\QueryDesigner.xaml" />
     <None Remove="Activities\ReadJSONDesigner.xaml" />
-    <None Remove="Activities\RemovePermissionDesigner.xaml" />
-    <None Remove="Activities\SaveFileDesigner.xaml" />
-    <None Remove="Activities\SetCredentialsDesigner.xaml" />
     <None Remove="Activities\TypeTextDesigner.xaml" />
     <None Remove="App.xaml" />
     <None Remove="Images\PinDocMenu_Black.png" />
@@ -317,44 +306,19 @@
     <Page Include="Activities\CopyClipboardDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Activities\DeleteOneDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Activities\DetectorDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\DownloadFileDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Activities\GetFileDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Activities\ForEachDataRowDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Activities\SetCredentialsDesigner.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Activities\GetElementDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Activities\GrantPermissionDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\HighlightElementDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\InsertClipboardDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Activities\GetCredentialsDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Activities\InsertOneDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Activities\InsertOrUpdateOneDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\InvokeOpenFlowDesigner.xaml">
@@ -366,16 +330,7 @@
     <Page Include="Activities\OpenApplicationDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Activities\QueryDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Activities\RemovePermissionDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Activities\TypeTextDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Activities\SaveFileDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="App.xaml">

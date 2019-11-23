@@ -138,11 +138,17 @@ namespace OpenRPA
                     var result = await global.webSocketClient.InsertOne("openrpa", 0, false, this);
                     _id = result._id;
                     _acl = result._acl;
+                    _modified = result._modified;
+                    _modifiedby = result._modifiedby;
+                    _modifiedbyid = result._modifiedbyid;
                 }
                 else
                 {
                     var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, this);
                     _acl = result._acl;
+                    _modified = result._modified;
+                    _modifiedby = result._modifiedby;
+                    _modifiedbyid = result._modifiedbyid;
                 }
             }
             foreach (var workflow in Workflows)

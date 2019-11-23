@@ -79,11 +79,11 @@ namespace OpenRPA.Windows
                     elements = new UIElement[] { };
                 }
             } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
-            //if (elements.Length > 0)
-            //{
-            //    // Get them again, we need the COM objects to be loaded in the UI thread
-            //    elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
-            //}
+            if (elements.Length > 0)
+            {
+                // Get them again, we need the COM objects to be loaded in the UI thread
+                elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+            }
             context.SetValue(Elements, elements);
             if(elements.Count() < minresults)
             {

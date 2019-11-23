@@ -96,30 +96,34 @@ namespace OpenRPA.Windows
             int maxresults = ModelItem.GetValue<int>("MaxResults");
             var selector = new WindowsSelector(SelectorString);
 
-
-            var elements = new List<UIElement>();
-            if (anchor != null)
+            Task.Run(() =>
             {
-                var _base = WindowsSelector.GetElementsWithuiSelector(anchor, null, 10);
-                foreach (var _e in _base)
+                var elements = new List<UIElement>();
+                if (anchor != null)
                 {
-                    var res = WindowsSelector.GetElementsWithuiSelector(selector, _e, maxresults);
+                    var _base = WindowsSelector.GetElementsWithuiSelector(anchor, null, 10);
+                    foreach (var _e in _base)
+                    {
+                        var res = WindowsSelector.GetElementsWithuiSelector(selector, _e, maxresults);
+                        elements.AddRange(res);
+                    }
+
+                }
+                else
+                {
+                    var res = WindowsSelector.GetElementsWithuiSelector(selector, null, maxresults);
                     elements.AddRange(res);
                 }
 
-            }
-            else
-            {
-                var res = WindowsSelector.GetElementsWithuiSelector(selector, null, maxresults);
-                elements.AddRange(res);
-            }
+                if (elements.Count() > 0)
+                {
+                    HighlightImage = Extensions.GetImageSourceFromResource("check.png");
+                    NotifyPropertyChanged("HighlightImage");
+                }
+                foreach (var ele in elements) ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
 
-            if(elements.Count()>0)
-            {
-                HighlightImage = Extensions.GetImageSourceFromResource("check.png");
-                NotifyPropertyChanged("HighlightImage");
-            }
-            foreach (var ele in elements) ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
+            });
+
         }
         public string ImageString
         {

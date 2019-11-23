@@ -47,6 +47,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.RDServicePlugin", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Elis.Rossum", "OpenRPA.Elis.Rossum\OpenRPA.Elis.Rossum.csproj", "{4FC52354-5012-4A44-89A0-79ECC65CC730}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.OpenFlowDB", "OpenRPA.OpenFlowDB\OpenRPA.OpenFlowDB.csproj", "{15F71CA0-8EB5-4A51-8A7F-F0414F774854}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -186,12 +188,18 @@ Global
 		{4FC52354-5012-4A44-89A0-79ECC65CC730}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4FC52354-5012-4A44-89A0-79ECC65CC730}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
 		{4FC52354-5012-4A44-89A0-79ECC65CC730}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
+		{15F71CA0-8EB5-4A51-8A7F-F0414F774854}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15F71CA0-8EB5-4A51-8A7F-F0414F774854}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15F71CA0-8EB5-4A51-8A7F-F0414F774854}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15F71CA0-8EB5-4A51-8A7F-F0414F774854}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15F71CA0-8EB5-4A51-8A7F-F0414F774854}.ReleaseNuget|Any CPU.ActiveCfg = Release|Any CPU
+		{15F71CA0-8EB5-4A51-8A7F-F0414F774854}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
+		BuildVersion_StartDate = 2000/1/1
 	EndGlobalSection
 EndGlobal

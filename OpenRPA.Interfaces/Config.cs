@@ -27,6 +27,15 @@ namespace OpenRPA
         public DateTime lastupdatecheck = DateTime.Now;
         public TimeSpan updatecheckinterval = TimeSpan.FromDays(1);
         public bool doupdatecheck = true;
+        public bool log_verbose = false;
+        public bool log_activity = false;
+        public bool log_debug = false;
+        public bool log_selector = false;
+        public bool log_selector_verbose = false;
+        public bool log_information = true;
+        public bool log_output = true;
+        public bool log_warning = true;
+        public bool log_error = true;
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)
@@ -101,6 +110,7 @@ namespace OpenRPA
                 {
                     return (T)value;
                 }
+                SetProperty(pluginname, mydefault, propertyName);
                 return mydefault;
             }
             catch (Exception ex)

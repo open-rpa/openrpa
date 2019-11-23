@@ -34,6 +34,7 @@ namespace OpenRPA
         public Dictionary<string, ValueType> Variables { get { return GetProperty<Dictionary<string, ValueType>>(); } set { SetProperty(value); } }
         public string InstanceId { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string WorkflowId { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string RelativeFilename { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string xml { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string owner { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string ownerid { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -77,6 +78,7 @@ namespace OpenRPA
         public static WorkflowInstance Create(Workflow Workflow, Dictionary<string, object> Parameters)
         {
             var result = new WorkflowInstance() { Workflow = Workflow, WorkflowId = Workflow._id, Parameters = Parameters, name = Workflow.name, Path = Workflow.Project.Path };
+            result.RelativeFilename = Workflow.RelativeFilename;
             var _ref = (result as IWorkflowInstance);
             foreach (var runner in Plugins.runPlugins)
             {

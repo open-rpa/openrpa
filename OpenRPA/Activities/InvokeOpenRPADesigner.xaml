@@ -33,7 +33,7 @@
                 <ComboBox 
                 ItemsSource="{Binding workflows}"
                 DisplayMemberPath="name"
-                SelectedValuePath="_id"
+                SelectedValuePath="IDOrRelativeFilename"
                 SelectedValue="{Binding Path=ModelItem.workflow, Mode=TwoWay}"
                 >
                 </ComboBox>

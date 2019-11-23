@@ -31,6 +31,25 @@ namespace OpenRPA
         public List<workflowparameter> Parameters { get { return GetProperty<List<workflowparameter>>(); } set { SetProperty(value); } }
         public bool Serializable { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        [JsonIgnore]
+        public string RelativeFilename
+        {
+            get
+            {
+                string lastFolderName = System.IO.Path.GetFileName(Project.Path);
+                return System.IO.Path.Combine(lastFolderName, Filename);
+            }
+        }
+        [JsonIgnore]
+        public string IDOrRelativeFilename
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_id)) return RelativeFilename;
+                return _id;
+            }
+        }
+
         public string FilePath
         {
             get
@@ -86,7 +105,7 @@ namespace OpenRPA
         {
             get
             {
-                return WorkflowInstance.Instances.Where(x => x.WorkflowId == _id).ToList();
+                return WorkflowInstance.Instances.Where(x => (x.WorkflowId == _id && !string.IsNullOrEmpty(_id)) || (x.RelativeFilename == RelativeFilename && string.IsNullOrEmpty(_id))).ToList();
             }
         }
         [JsonIgnore]
@@ -272,7 +291,7 @@ namespace OpenRPA
                                 i.Run();
                             }
                         }
-                        catch (System.ArgumentNullException ex)
+                        catch (System.Runtime.DurableInstancing.InstancePersistenceException ex)
                         {
                             Log.Error("RunPendingInstances: " + ex.ToString());
                             try
@@ -369,6 +388,11 @@ namespace OpenRPA
         public WorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, 
             WorkflowInstance.idleOrComplete idleOrComplete, WorkflowInstance.VisualTrackingHandler VisualTracking)
         {
+            if (this.Parameters == null) this.Parameters = new List<workflowparameter>();
+            if (this.Parameters.Count == 0)
+            {
+                ParseParameters();
+            }
             var instance = WorkflowInstance.Create(this, Parameters);
             instance.queuename = queuename; instance.correlationId = correlationId;
             if (idleOrComplete != null) instance.OnIdleOrComplete += idleOrComplete;
@@ -377,6 +401,45 @@ namespace OpenRPA
             //instance.Run();
             return instance;
         }
+        public System.Collections.ObjectModel.KeyedCollection<string, System.Activities.DynamicActivityProperty> GetParameters()
+        {
+            System.Activities.ActivityBuilder ab2;
+            using (var stream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(Xaml)))
+            {
+                ab2 = System.Xaml.XamlServices.Load(
+                    System.Activities.XamlIntegration.ActivityXamlServices.CreateBuilderReader(
+                    new System.Xaml.XamlXmlReader(stream))) as System.Activities.ActivityBuilder;
+            }
+            return ab2.Properties;
+        }
+        public void ParseParameters()
+        {
+            Parameters.Clear();
+            if (!string.IsNullOrEmpty(Xaml))
+            {
+                var parameters = GetParameters();
+                foreach (var prop in parameters)
+                {
+                    var par = new workflowparameter() { name = prop.Name };
+                    par.type = prop.Type.GenericTypeArguments[0].FullName;
+                    string baseTypeName = prop.Type.BaseType.FullName;
+                    if (baseTypeName == "System.Activities.InArgument")
+                    {
+                        par.direction = workflowparameterdirection.@in;
+                    }
+                    if (baseTypeName == "System.Activities.InOutArgument")
+                    {
+                        par.direction = workflowparameterdirection.inout;
+                    }
+                    if (baseTypeName == "System.Activities.OutArgument")
+                    {
+                        par.direction = workflowparameterdirection.@out;
+                    }
+                    Parameters.Add(par);
+                }
+            }
+        }
+
     }
     public enum workflowparameterdirection
     {

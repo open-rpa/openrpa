@@ -982,6 +982,7 @@ namespace OpenRPA.Views
                 Log.Error(ex.ToString());
             }
         }
+        public IDictionary<SourceLocation, System.Activities.Presentation.Debug.BreakpointTypes> BreakpointLocations = null;
         public void OnVisualTracking(WorkflowInstance Instance, string ActivityId, string ChildActivityId, string State)
         {
             try
@@ -1009,7 +1010,8 @@ namespace OpenRPA.Views
                 if (location == null) return;
                 if (!BreakPointhit)
                 {
-                    BreakPointhit = WorkflowDesigner.DebugManagerView.GetBreakpointLocations().ContainsKey(location);
+                    if (BreakpointLocations == null) BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
+                    BreakPointhit = BreakpointLocations.ContainsKey(location);
                 }
                 ModelItem model = _activityIdModelItemMapping[ChildActivityId];
                 if (VisualTracking || BreakPointhit || Singlestep)
@@ -1210,6 +1212,7 @@ namespace OpenRPA.Views
             if (instance == null)
             {
                 var param = new Dictionary<string, object>();
+                BreakpointLocations = null;
                 instance = Workflow.CreateInstance(param, null, null, OnIdle, OnVisualTracking);
             }
             ReadOnly = true;

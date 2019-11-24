@@ -125,8 +125,18 @@ namespace OpenRPA
             {
                 SetStatus("loading workflow toolbox");
                 Toolbox = new Views.WFToolbox();
-                Snippets = new Views.Snippets();
                 NotifyPropertyChanged("Toolbox");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                throw;
+            }
+            try
+            {
+                SetStatus("loading Snippets toolbox");
+                Snippets = new Views.Snippets();
+                NotifyPropertyChanged("Snippets");
             }
             catch (Exception ex)
             {
@@ -1328,7 +1338,6 @@ namespace OpenRPA
         }
         private void SaveLayout()
         {
-
             var workflows = new List<string>();
             foreach (var designer in designers)
             {
@@ -1360,6 +1369,9 @@ namespace OpenRPA
         {
             GenericTools.RunUI(() =>
             {
+                var fi = new System.IO.FileInfo("layout.config");
+                var di = fi.Directory;
+
                 if (System.IO.File.Exists("layout.config"))
                 {
                     try
@@ -1375,13 +1387,13 @@ namespace OpenRPA
                         Log.Error(ex.ToString());
                     }
                 }
-                else if (System.IO.File.Exists(@"..\layout.config"))
+                else if (System.IO.File.Exists(System.IO.Path.Combine(di.Parent.FullName, "layout.config")))
                 {
                     try
                     {
                         var ds = DManager.Layout.Descendents();
                         var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
-                        using (var stream = new System.IO.StreamReader(@"..\layout.config"))
+                        using (var stream = new System.IO.StreamReader(System.IO.Path.Combine(di.Parent.FullName, "layout.config")))
                             serializer.Deserialize(stream);
                         ds = DManager.Layout.Descendents();
                     }
@@ -1433,7 +1445,7 @@ namespace OpenRPA
                     }
                 }
             }
-
+            Snippets.Reload();
         }
         public Views.WFDesigner GetWorkflowDesignerByFilename(string Filename)
         {
@@ -1772,6 +1784,7 @@ namespace OpenRPA
                     var param = new Dictionary<string, object>();
                     if (designer != null)
                     {
+                        designer.BreakpointLocations = null;
                         var instance = workflow.CreateInstance(param, null, null, designer.OnIdle, designer.OnVisualTracking);
                         designer.Minimize = false;
                         designer.Run(VisualTracking, SlowMotion, instance);
@@ -2341,6 +2354,7 @@ namespace OpenRPA
                             var designer = GetDesignerById(command.workflowid);
                             if (designer != null)
                             {
+                                designer.BreakpointLocations = null;
                                 instance = workflow.CreateInstance(param, message.replyto, message.correlationId, designer.OnIdle, designer.OnVisualTracking);
                                 designer.Run(VisualTracking, SlowMotion, instance);
                             }

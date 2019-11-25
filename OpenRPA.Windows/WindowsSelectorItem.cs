@@ -358,6 +358,25 @@ namespace OpenRPA.Windows
                         return false;
                     }
                 }
+                if (p.Name == "IndexInParent")
+                {
+                    int IndexInParent = -1;
+                    int.TryParse(p.Value, out IndexInParent);
+                    if (IndexInParent > -1)
+                    {
+                        var c = m.Parent.FindAllChildren();
+                        if (c.Count() <= IndexInParent)
+                        {
+                            Log.SelectorVerbose(p.Name + " is " + IndexInParent + " but found only " + c.Count() + " elements in parent");
+                            return false;
+                        }
+                        if (!m.Equals(c[IndexInParent]))
+                        {
+                            Log.SelectorVerbose(p.Name + " mismatch, element is not equal to element " + IndexInParent + " in parent");
+                            return false;
+                        }
+                    }
+                }
             }
             return true;
         }

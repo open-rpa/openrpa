@@ -101,7 +101,7 @@ namespace OpenRPA
             SetStatus("init CancelKey and Input Driver");
             OpenRPA.Input.InputDriver.Instance.initCancelKey(cancelkey.Text);
             SetStatus("loading plugins");
-            await Plugins.LoadPlugins(this, Extensions.projectsDirectory);
+            await Plugins.LoadPlugins(this, Interfaces.Extensions.ProjectsDirectory);
             //await Task.Run(() =>
             //{
             //    GenericTools.RunUI(() =>
@@ -112,11 +112,11 @@ namespace OpenRPA
             if (string.IsNullOrEmpty(Config.local.wsurl))
             {
                 SetStatus("loading detectors");
-                var Detectors = Detector.loadDetectors(Extensions.projectsDirectory);
+                var Detectors = Detector.loadDetectors(Interfaces.Extensions.ProjectsDirectory);
                 foreach (var d in Detectors)
                 {
                     IDetectorPlugin dp = null;
-                    d.Path = Extensions.projectsDirectory;
+                    d.Path = Interfaces.Extensions.ProjectsDirectory;
                     dp = Plugins.AddDetector(this, d);
                     if (dp != null) dp.OnDetector += OnDetector;
                 }
@@ -159,7 +159,7 @@ namespace OpenRPA
                 else
                 {
                     SetStatus("loading projects and workflows");
-                    var _Projects = Project.LoadProjects(Extensions.projectsDirectory);
+                    var _Projects = Project.LoadProjects(Interfaces.Extensions.ProjectsDirectory);
                     Projects = new System.Collections.ObjectModel.ObservableCollection<Project>();
                     foreach (Project p in _Projects)
                     {
@@ -344,7 +344,7 @@ namespace OpenRPA
                         foreach (var d in detectors)
                         {
                             IDetectorPlugin dp = null;
-                            d.Path = Extensions.projectsDirectory;
+                            d.Path = Interfaces.Extensions.ProjectsDirectory;
                             dp = Plugins.AddDetector(this, d);
                             if (dp != null) dp.OnDetector += OnDetector;
                             if (dp == null) Log.Error("Detector not loaded!");
@@ -356,17 +356,17 @@ namespace OpenRPA
                             var r = new System.Text.RegularExpressions.Regex(string.Format("[{0}]", System.Text.RegularExpressions.Regex.Escape(regexSearch)));
                             p.name = r.Replace(p.name, "");
 
-                            p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p.name);
+                            p.Path = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, p.name);
                             if (folders.Contains(p.Path))
                             {
-                                p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p._id);
+                                p.Path = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, p._id);
                             }
                             folders.Add(p.Path);
                         }
                         SetStatus("Initialize projects and workflows");
                         foreach (var p in projects)
                         {
-                            p.Path = System.IO.Path.Combine(Extensions.projectsDirectory, p.name);
+                            p.Path = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, p.name);
                             p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
                             foreach (var workflow in workflows)
                             {
@@ -386,7 +386,7 @@ namespace OpenRPA
                             var hasProject = Projects.Where(x => x._id == wf.projectid && !string.IsNullOrEmpty(wf.projectid)).FirstOrDefault();
                             if (hasProject == null)
                             {
-                                if (up == null) up = await Project.Create(Extensions.projectsDirectory, "Unknown", false);
+                                if (up == null) up = await Project.Create(Interfaces.Extensions.ProjectsDirectory, "Unknown", false);
                                 wf.Project = up;
                                 up.Workflows.Add(wf);
                             }
@@ -424,7 +424,7 @@ namespace OpenRPA
                     string Name = "New Project";
                     try
                     {
-                        Project project = await Project.Create(Extensions.projectsDirectory, Name, true);
+                        Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name, true);
                         Workflow workflow = project.Workflows.First();
                         workflow.Project = project;
                         Projects.Add(project);
@@ -843,14 +843,14 @@ namespace OpenRPA
                 {
                     Project project = Newtonsoft.Json.JsonConvert.DeserializeObject<Project>(System.IO.File.ReadAllText(filename));
                     var sourcepath = System.IO.Path.GetDirectoryName(filename);
-                    var projectpath = Extensions.projectsDirectory + "\\" + project.name;
+                    var projectpath = Interfaces.Extensions.ProjectsDirectory + "\\" + project.name;
                     int index = 1;
                     string name = project.name;
                     while (System.IO.Directory.Exists(projectpath))
                     {
                         index++;
                         name = project.name + index.ToString();
-                        projectpath = Extensions.projectsDirectory + "\\" + name;
+                        projectpath = Interfaces.Extensions.ProjectsDirectory + "\\" + name;
                     }
                     System.IO.Directory.CreateDirectory(projectpath);
                     System.IO.File.Copy(filename, System.IO.Path.Combine(projectpath, name + ".rpaproj"));
@@ -1624,7 +1624,7 @@ namespace OpenRPA
                 string Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "Name project", "New project");
                 if (string.IsNullOrEmpty(Name)) return;
                 //string Name = "New project";
-                Project project = await Project.Create(Extensions.projectsDirectory, Name, true);
+                Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name, true);
                 Workflow workflow = project.Workflows.First();
                 workflow.Project = project;
                 Projects.Add(project);
@@ -2471,7 +2471,7 @@ namespace OpenRPA
         }
         private void TesseractLang_Click(object sender, RoutedEventArgs e)
         {
-            string path = System.IO.Path.Combine(Extensions.projectsDirectory, "tessdata");
+            string path = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "tessdata");
             TesseractDownloadLangFile(path, Config.local.ocrlanguage);
             System.Windows.MessageBox.Show("Download complete");
         }

@@ -7,7 +7,7 @@
     <Description>Simple wrapper activites around https://elis.rossum.ai api</Description>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Configurations>Debug;Release;ReleaseNuget</Configurations>
+    <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <Version>1.0.3</Version>
     <PackageReleaseNotes>1.0.3 update interfaces reference
 1.0.1 added a few more fields</PackageReleaseNotes>

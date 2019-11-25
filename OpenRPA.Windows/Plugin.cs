@@ -165,7 +165,7 @@ namespace OpenRPA.Windows
                 sw.Start();
                 WindowsSelector sel = null;
                 // sel = new WindowsSelector(e.Element.rawElement, null, true);
-                sel = new WindowsSelector(e.Element.RawElement, null, false);
+                sel = new WindowsSelector(e.Element.RawElement, null, PluginConfig.enum_selector_properties);
                 if (sel.Count < 2) return;
                 if (sel == null) return;
                 a.Selector = sel.ToString();

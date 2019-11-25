@@ -96,7 +96,8 @@ namespace OpenRPA.Windows
             context.SetValue(Elements, elements);
             if(elements.Count() < minresults)
             {
-                throw new ElementNotFoundException("Failed locating " + minresults + " item(s)");
+                // throw new ElementNotFoundException("Failed locating " + minresults + " item(s)");
+                throw new Exception("Failed locating " + minresults + " item(s)");
             }
             IEnumerator<UIElement> _enum = elements.ToList().GetEnumerator();
             context.SetValue(_elements, _enum);

@@ -6,7 +6,7 @@
     <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Configurations>Debug;Release;ReleaseNuget</Configurations>
+    <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <PackageReleaseNotes>1.0.3 update interfaces reference
 1.0.1 Improve UI and service installation</PackageReleaseNotes>
     <Version>1.0.3</Version>
@@ -16,6 +16,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\dist</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">
+    <OutputPath></OutputPath>
   </PropertyGroup>
   <Target Name="SetNuspecProperties" BeforeTargets="GenerateNuspec">
     <PropertyGroup>

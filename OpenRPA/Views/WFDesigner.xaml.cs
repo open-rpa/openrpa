@@ -685,6 +685,7 @@ namespace OpenRPA.Views
                     }
                     if (lastSequence.Properties["Activities"] != null)
                     {
+                        if (string.IsNullOrEmpty(a.DisplayName)) a.DisplayName = "Activity";
                         newItem = Activities.Insert(insertAt, a);
                     }
                     else

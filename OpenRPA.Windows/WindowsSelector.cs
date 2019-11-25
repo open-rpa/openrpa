@@ -70,64 +70,56 @@ namespace OpenRPA.Windows
                 }
             }
             WindowsSelectorItem item;
-            var temppathToRoot = new List<AutomationElement>();
-            var newpathToRoot = new List<AutomationElement>();
-            foreach (var e in pathToRoot) temppathToRoot.Add(e);
-            Log.Selector(string.Format("windowsselector::traverse back to element from root::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
-            using (var automation = AutomationUtil.getAutomation())
-            {
-                var _treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
-                bool isDesktop = true;
-                var parent = automation.GetDesktop();
-                if (anchor != null) { parent = temppathToRoot[0].Parent; isDesktop = false; }
-                while (temppathToRoot.Count > 0)
-                {
-                    var i = temppathToRoot.First();
-                    temppathToRoot.Remove(i);
-                    item = new WindowsSelectorItem(i, false);
-                    var m = item.matches(automation, parent, _treeWalker, 2, isDesktop);
-                    if (m.Length > 0) { 
-                        newpathToRoot.Add(i);
-                        parent = i;
-                        isDesktop = false;
-                    } 
-                    if (m.Length == 0 && Config.local.log_selector)
-                    {
-                        var message = "needed to find " + Environment.NewLine + item.ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
-                        var children = parent.FindAllChildren();
-                        foreach (var c in children)
-                        {
-                            try
-                            {
-                                message += new UIElement(c).ToString() + Environment.NewLine;
-                            }
-                            catch (Exception)
-                            {
-                            }
-                        }
-                        Log.Debug(message);
-                        //if (i.Parent != null)
-                        //{
-                        //    var c = i.Parent.FindAllChildren();
-                        //    var IndexInParent = -1;
-                        //    for (var x = 0; x < c.Count(); x++)
-                        //    {
-                        //        if (i == c[x]) IndexInParent = x;
-                        //    }
-                        //}
 
+            if(PluginConfig.traverse_selector_both_ways)
+            {
+                var temppathToRoot = new List<AutomationElement>();
+                var newpathToRoot = new List<AutomationElement>();
+                foreach (var e in pathToRoot) temppathToRoot.Add(e);
+                Log.Selector(string.Format("windowsselector::traverse back to element from root::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
+                using (var automation = AutomationUtil.getAutomation())
+                {
+                    var _treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
+                    bool isDesktop = true;
+                    var parent = automation.GetDesktop();
+                    if (anchor != null) { parent = temppathToRoot[0].Parent; isDesktop = false; }
+                    while (temppathToRoot.Count > 0)
+                    {
+                        var i = temppathToRoot.First();
+                        temppathToRoot.Remove(i);
+                        item = new WindowsSelectorItem(i, false);
+                        var m = item.matches(automation, parent, _treeWalker, 2, isDesktop);
+                        if (m.Length > 0)
+                        {
+                            newpathToRoot.Add(i);
+                            parent = i;
+                            isDesktop = false;
+                        }
+                        if (m.Length == 0 && Config.local.log_selector)
+                        {
+                            var message = "needed to find " + Environment.NewLine + item.ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
+                            var children = parent.FindAllChildren();
+                            foreach (var c in children)
+                            {
+                                try
+                                {
+                                    message += new UIElement(c).ToString() + Environment.NewLine;
+                                }
+                                catch (Exception)
+                                {
+                                }
+                            }
+                            Log.Debug(message);
+                        }
                     }
                 }
+                Log.Selector(string.Format("windowsselector::traverse back to element from root::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+                if (newpathToRoot.Count != pathToRoot.Count)
+                {
+                    Log.Information("Selector had " + pathToRoot.Count + " items to root, but traversing children inly matched " + newpathToRoot.Count);
+                    pathToRoot = newpathToRoot;
+                }
             }
-            Log.Selector(string.Format("windowsselector::traverse back to element from root::end {0:mm\\:ss\\.fff}", sw.Elapsed));
-            if (newpathToRoot.Count != pathToRoot.Count)
-            {
-                Log.Information("Selector had " + pathToRoot.Count + " items to root, but traversing children inly matched " + newpathToRoot.Count);
-                pathToRoot = newpathToRoot;
-            }
-
-
-
             if (pathToRoot.Count == 0)
             {
                 Log.Error("Element has not parent, or is same as annchor");
@@ -148,7 +140,17 @@ namespace OpenRPA.Windows
             for (var i = 0; i < pathToRoot.Count(); i++)
             {
                 var o = pathToRoot[i];
-                item = new WindowsSelectorItem(o, false);
+                int IndexInParent = -1;
+                if (o.Parent != null && i > 1)
+                {
+                    var c = o.Parent.FindAllChildren();
+                    for (var x = 0; x < c.Count(); x++)
+                    {
+                        if (o.Equals(c[x])) IndexInParent = x;
+                    }
+                }
+
+                item = new WindowsSelectorItem(o, false, IndexInParent);
                 if (i == 0 || i == (pathToRoot.Count() - 1)) item.canDisable = false;
                 foreach (var p in item.Properties) // TODO: Ugly, ugly inzuBiz hack !!!!
                 {

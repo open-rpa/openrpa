@@ -10,6 +10,38 @@ namespace OpenRPA.Interfaces
 {
     public static class Extensions
     {
+        public static string UserDirectory
+        {
+            get
+            {
+                var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OpenRPA");
+                if (!System.IO.Directory.Exists(System.IO.Path.Combine(dir)))
+                    System.IO.Directory.CreateDirectory(dir);
+                return dir;
+            }
+        }
+        public static string ProjectsDirectory
+        {
+            get
+            {
+                var asm = System.Reflection.Assembly.GetEntryAssembly();
+                var filepath = asm.CodeBase.Replace("file:///", "");
+                var path = System.IO.Path.GetDirectoryName(filepath);
+                // var dir = System.IO.Directory.GetCurrentDirectory();
+                if (path.ToLower().Contains("program")) path = UserDirectory;
+                return path;
+            }
+        }
+        public static string PluginsDirectory
+        {
+            get
+            {
+                var asm = System.Reflection.Assembly.GetEntryAssembly();
+                var filepath = asm.CodeBase.Replace("file:///", "");
+                var path = System.IO.Path.GetDirectoryName(filepath);
+                return path;
+            }
+        }
         static public string ResourceAsString(this Type type, string resourceName)
         {
             // string[] names = typeof(Extensions).Assembly.GetManifestResourceNames();

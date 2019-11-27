@@ -175,9 +175,16 @@ namespace OpenRPA.Updater
                     {
                         await Dispatcher.Invoke(async () =>
                          {
-                             m.isDownloaded = true;
-                             m.isInstalled = await OpenRPAPackageManager.Instance.IsPackageInstalled(m.LocalPackage);
-                             m.canUpgrade = m.Version > m.LocalPackage.Identity.Version;
+                             try
+                             {
+                                 m.isDownloaded = true;
+                                 m.isInstalled = await OpenRPAPackageManager.Instance.IsPackageInstalled(m.LocalPackage);
+                                 m.canUpgrade = m.Version > m.LocalPackage.Identity.Version;
+                             }
+                             catch (Exception ex) 
+                             {
+                                 OpenRPAPackageManagerLogger.Instance.LogError(ex.ToString());
+                             }
                          });
                     }
                 Dispatcher.Invoke(() =>
@@ -522,7 +529,4 @@ namespace OpenRPA.Updater
             bussy = bussy;
         }
     }
-
-
-
 }

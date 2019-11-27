@@ -1,7 +1,9 @@
 {
   "profiles": {
     "OpenRPA.Updater": {
-      "commandName": "Project"
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\OpenRPA\\Updater\\OpenRPA.Updater.exe",
+      "workingDirectory": "C:\\Program Files\\OpenRPA\\Updater"
     },
     "distupdater": {
       "commandName": "Executable",

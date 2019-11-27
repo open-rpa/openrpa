@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using OpenRPA.Input;
 using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
@@ -60,14 +61,32 @@ namespace OpenRPA
         public Views.WFToolbox Toolbox { get; set; }
         public Views.Snippets Snippets { get; set; }
         public bool AllowQuite { get; set; } = true;
+        static Assembly LoadFromSameFolder(object sender, ResolveEventArgs args)
+        {
+            string folderPath = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string assemblyPath = System.IO.Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
+            if (System.IO.File.Exists(assemblyPath)) return Assembly.LoadFrom(assemblyPath);
+
+            folderPath = Interfaces.Extensions.PluginsDirectory;
+            assemblyPath = System.IO.Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
+            if (System.IO.File.Exists(assemblyPath)) return Assembly.LoadFrom(assemblyPath);
+
+            folderPath = Interfaces.Extensions.ProjectsDirectory;
+            assemblyPath = System.IO.Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
+            if (System.IO.File.Exists(assemblyPath)) return Assembly.LoadFrom(assemblyPath);
+
+            return null;
+        }
         public MainWindow()
         {
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LoadFromSameFolder);
             System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = false;
             System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.BelowNormal;
             System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.BelowNormal;
             InitializeComponent();
             try
             {
+                if (System.IO.File.Exists(System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "Snippets.dll"))) System.IO.File.Delete(System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "Snippets.dll"));
                 if (System.IO.File.Exists("Snippets.dll")) System.IO.File.Delete("Snippets.dll");
             }
             catch (Exception)
@@ -101,7 +120,7 @@ namespace OpenRPA
             SetStatus("init CancelKey and Input Driver");
             OpenRPA.Input.InputDriver.Instance.initCancelKey(cancelkey.Text);
             SetStatus("loading plugins");
-            await Plugins.LoadPlugins(this, Interfaces.Extensions.ProjectsDirectory);
+            await Plugins.LoadPlugins(this, Interfaces.Extensions.PluginsDirectory);
             //await Task.Run(() =>
             //{
             //    GenericTools.RunUI(() =>
@@ -476,9 +495,12 @@ namespace OpenRPA
             {
                 try
                 {
-                    if (await updater.UpdaterNeedsUpdate() == true)
+                    if(Config.local.autoupdateupdater)
                     {
-                        await updater.UpdateUpdater();
+                        if (await updater.UpdaterNeedsUpdate() == true)
+                        {
+                            await updater.UpdateUpdater();
+                        }
                     }
                     var releasenotes = await updater.OpenRPANeedsUpdate();
                     if (!string.IsNullOrEmpty(releasenotes))
@@ -674,6 +696,67 @@ namespace OpenRPA
                 return global.webSocketClient.isConnected;
             }
         }
+        public bool log_debug
+        {
+            get
+            {
+                return Config.local.log_debug;
+            }
+            set
+            {
+                Config.local.log_debug = value;
+                NotifyPropertyChanged("log_debug");
+            }
+        }
+        public bool log_warning
+        {
+            get
+            {
+                return Config.local.log_warning;
+            }
+            set
+            {
+                Config.local.log_warning = value;
+                NotifyPropertyChanged("log_warning");
+            }
+        }
+        public bool log_verbose
+        {
+            get
+            {
+                return Config.local.log_verbose;
+            }
+            set
+            {
+                Config.local.log_verbose = value;
+                NotifyPropertyChanged("log_verbose");
+            }
+        }
+        public bool log_selector
+        {
+            get
+            {
+                return Config.local.log_selector;
+            }
+            set
+            {
+                Config.local.log_selector = value;
+                NotifyPropertyChanged("log_selector");
+            }
+        }
+        public bool log_selector_verbose
+        {
+            get
+            {
+                return Config.local.log_selector_verbose;
+            }
+            set
+            {
+                Config.local.log_selector_verbose = value;
+                NotifyPropertyChanged("log_selector_verbose");
+            }
+        }
+        public ICommand LoggingOptionCommand { get { return new RelayCommand<object>(onLoggingOptionCommand, CanAllways); } }
         public ICommand ExitAppCommand { get { return new RelayCommand<object>(onExitApp, (e)=> true ); } }
         public ICommand SettingsCommand { get { return new RelayCommand<object>(onSettings, CanSettings); } }
         public ICommand MinimizeCommand { get { return new RelayCommand<object>(onMinimize, CanMinimize); } }
@@ -684,6 +767,7 @@ namespace OpenRPA
         public ICommand ManagePackagesCommand { get { return new RelayCommand<object>(onManagePackages, CanManagePackages); } }        
         public ICommand DetectorsCommand { get { return new RelayCommand<object>(onDetectors, CanDetectors); } }
         public ICommand RunPluginsCommand { get { return new RelayCommand<object>(onRunPlugins, CanRunPlugins); } }
+        public ICommand RecorderPluginsCommand { get { return new RelayCommand<object>(onRecorderPluginsCommand, CanRecorderPluginsCommand); } }
         public ICommand SaveCommand { get { return new RelayCommand<object>(onSave, CanSave); } }
         public ICommand NewWorkflowCommand { get { return new RelayCommand<object>(onNewWorkflow, CanNewWorkflow); } }
         public ICommand NewProjectCommand { get { return new RelayCommand<object>(onNewProject, CanNewProject); } }
@@ -699,6 +783,10 @@ namespace OpenRPA
         public ICommand LinkNodeREDCommand { get { return new RelayCommand<object>(onlinkNodeRED, CanlinkNodeRED); } }
         public ICommand OpenChromePageCommand { get { return new RelayCommand<object>(onOpenChromePage, CanAllways); } }
         public ICommand OpenFirefoxPageCommand { get { return new RelayCommand<object>(onOpenFirefoxPageCommand, CanAllways); } }
+        private void onLoggingOptionCommand(object _item)
+        {
+            Config.Save();
+        }
         private bool CanPermissions(object _item)
         {
             try
@@ -1055,7 +1143,7 @@ namespace OpenRPA
             try
             {
                 var filename = "settings.json";
-                var path = System.IO.Directory.GetCurrentDirectory();
+                var path = Interfaces.Extensions.ProjectsDirectory;
                 string settingsFile = System.IO.Path.Combine(path, filename);
                 var process = new System.Diagnostics.Process
                 {
@@ -1155,6 +1243,8 @@ namespace OpenRPA
                 p.StartInfo.WorkingDirectory = path;
                 p.StartInfo.UseShellExecute = false;
                 p.StartInfo.CreateNoWindow = true;
+                p.StartInfo.Verb = "runas";
+                p.StartInfo.UseShellExecute = true;
                 p.Start();
             }
             catch (Exception ex)
@@ -1205,6 +1295,23 @@ namespace OpenRPA
                 foreach (var document in ld)
                 {
                     if (document.Content is Views.RunPlugins op) return false;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
+        private bool CanRecorderPluginsCommand(object _item)
+        {
+            try
+            {
+                var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
+                foreach (var document in ld)
+                {
+                    if (document.Content is Views.RecorderPlugins op) return false;
                 }
                 return true;
             }
@@ -1269,7 +1376,24 @@ namespace OpenRPA
                 MainTabControl.Children.Add(layoutDocument);
                 layoutDocument.IsSelected = true;
             }, null);
-        }        
+        }
+        private void onRecorderPluginsCommand(object _item)
+        {
+            AutomationHelper.syncContext.Post(o =>
+            {
+                var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
+                foreach (var document in ld)
+                {
+                    if (document.Content is Views.RecorderPlugins op) { document.IsSelected = true; return; }
+                }
+                var view = new Views.RecorderPlugins();
+                LayoutDocument layoutDocument = new LayoutDocument { Title = "Recorder Plugins" };
+                layoutDocument.ContentId = "detectors";
+                layoutDocument.Content = view;
+                MainTabControl.Children.Add(layoutDocument);
+                layoutDocument.IsSelected = true;
+            }, null);
+        }
         private bool CanlinkOpenFlow(object _item)
         {
             try
@@ -1355,7 +1479,7 @@ namespace OpenRPA
             try
             {
                 var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
-                using (var stream = new System.IO.StreamWriter("layout.config"))
+                using (var stream = new System.IO.StreamWriter(System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "layout.config")))
                     serializer.Serialize(stream);
             }
             catch (Exception)
@@ -1372,7 +1496,22 @@ namespace OpenRPA
                 var fi = new System.IO.FileInfo("layout.config");
                 var di = fi.Directory;
 
-                if (System.IO.File.Exists("layout.config"))
+                if(System.IO.File.Exists(System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "layout.config")))
+                {
+                    try
+                    {
+                        var ds = DManager.Layout.Descendents();
+                        var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
+                        using (var stream = new System.IO.StreamReader(System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "layout.config")))
+                            serializer.Deserialize(stream);
+                        ds = DManager.Layout.Descendents();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                }
+                else if (System.IO.File.Exists("layout.config"))
                 {
                     try
                     {
@@ -2384,6 +2523,10 @@ namespace OpenRPA
         }
         public void idleOrComplete(WorkflowInstance instance, EventArgs e)
         {
+            GenericTools.RunUI(() =>
+            {
+                CommandManager.InvalidateRequerySuggested();
+            });
             if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
             {
                 RobotCommand command = new RobotCommand();

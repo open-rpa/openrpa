@@ -30,8 +30,7 @@ namespace OpenRPA.AviRecorder.Activities
             var quality = Quality.Get(context);
             if (string.IsNullOrEmpty(folder))
             {
-                var exePath = new Uri(System.Reflection.Assembly.GetEntryAssembly().Location).LocalPath;
-                folder = System.IO.Path.GetDirectoryName(exePath);
+                folder = Interfaces.Extensions.MyVideos;
             }
             if (quality < 10) quality = 10;
             if (quality > 100) quality = 100;

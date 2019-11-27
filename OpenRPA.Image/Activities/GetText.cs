@@ -43,7 +43,7 @@ namespace OpenRPA.Image
             var casesensitive = model.GetValue<bool>("CaseSensitive");
             var lang = Config.local.ocrlanguage;
 
-            string basepath = System.IO.Directory.GetCurrentDirectory();
+            string basepath = Interfaces.Extensions.DataDirectory;
             string path = System.IO.Path.Combine(basepath, "tessdata");
             ocr.TesseractDownloadLangFile(path, Config.local.ocrlanguage);
             ocr.TesseractDownloadLangFile(path, "osd");
@@ -82,7 +82,7 @@ namespace OpenRPA.Image
             var wordlimit = WordLimit.Get(context);
             var lang = Config.local.ocrlanguage;
             var casesensitive = CaseSensitive.Get(context);
-            string basepath = System.IO.Directory.GetCurrentDirectory();
+            string basepath = Interfaces.Extensions.DataDirectory;
             string path = System.IO.Path.Combine(basepath, "tessdata");
             ocr.TesseractDownloadLangFile(path, Config.local.ocrlanguage);
             ocr.TesseractDownloadLangFile(path, "osd");

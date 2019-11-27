@@ -83,7 +83,18 @@ namespace OpenRPA.Windows
         }
         public string Name { get => "Windows"; }
         public string Status => _status;
-        public UserControl editor => null;
+        private Views.RecordPluginView view;
+        public UserControl editor
+        {
+            get
+            {
+                if (view == null)
+                {
+                    view = new Views.RecordPluginView();
+                }
+                return view;
+            }
+        }
         private string _status = "";
         public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
         public event Action<IRecordPlugin, IRecordEvent> OnMouseMove;
@@ -198,6 +209,11 @@ namespace OpenRPA.Windows
         public bool parseUserAction(ref IRecordEvent e) { return false; }
         public void Initialize(IOpenRPAClient client)
         {
+            var dummy = PluginConfig.allow_child_searching;
+            dummy = PluginConfig.allow_multiple_hits_mid_selector;
+            dummy = PluginConfig.enum_selector_properties;
+            dummy = PluginConfig.get_elements_in_different_thread;
+            dummy = PluginConfig.traverse_selector_both_ways;
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
@@ -216,22 +232,32 @@ namespace OpenRPA.Windows
             sw.Start();
             do
             {
-                elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
+                if (PluginConfig.get_elements_in_different_thread)
                 {
-                    try
+                    elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
                     {
-                        return GetElementsWithSelector(selector, null, 1);
-                    }
-                    catch (System.Threading.ThreadAbortException ex)
-                    {
-                        Log.Error(ex, "");
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex, "");
-                    }
-                    return new UIElement[] { };
-                }, TimeSpan.FromMilliseconds(1000)).Result;
+                        try
+                        {
+                            Log.Selector("LaunchBySelector in non UI thread");
+                            return GetElementsWithSelector(selector, null, 1);
+                        }
+                        catch (System.Threading.ThreadAbortException ex)
+                        {
+                            Log.Error(ex, "");
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex, "");
+                        }
+                        return new UIElement[] { };
+                    }, TimeSpan.FromMilliseconds(1000)).Result;
+
+                }
+                else
+                {
+                    Log.Selector("LaunchBySelector using UI thread");
+                    elements = GetElementsWithSelector(selector, null, 1);
+                }
                 if (elements == null)
                 {
                     elements = new IElement[] { };

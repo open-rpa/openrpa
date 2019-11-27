@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.44</Version>
-    <PackageReleaseNotes>1.0.44 hotfix
+    <Version>1.0.45</Version>
+    <PackageReleaseNotes>1.0.45 add recorder plugin ui, add more updater options
+1.0.44 hotfix
 1.0.43 Fix overlay showing when disabled, fix double click, fix recording and saving when offline
 1.0.41 Catch layout file errors
 1.0.40 limit update check to once a day, and add option to disable update check
@@ -283,6 +284,7 @@
     <None Remove="Views\LoginWindow.xaml" />
     <None Remove="Views\OpenProject.xaml" />
     <None Remove="Views\PermissionsWindow.xaml" />
+    <None Remove="Views\RecorderPlugins.xaml" />
     <None Remove="Views\RegistrationWindow.xaml" />
     <None Remove="Views\RunPlugins.xaml" />
     <None Remove="Views\SampleDockWindowView.xaml" />
@@ -337,6 +339,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RecorderPlugins.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RunPlugins.xaml">
@@ -616,6 +622,11 @@
     <Resource Include="Resources\state\unloaded.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Views\RecorderPlugins.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <None Update="RunOpenRPA.bat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -630,6 +641,9 @@
     <Exec Command="ECHO ON&#xD;&#xA;nuget.exe push -Source &quot;nuget.org&quot; $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg" />
   </Target>-->
   <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'PrepInstaller'">
     <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
   </Target>
   <ProjectExtensions>

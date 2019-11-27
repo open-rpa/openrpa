@@ -6,9 +6,9 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <PackageReleaseNotes>1.0.7 update interfaces reference
+    <PackageReleaseNotes>1.0.8 update interfaces reference
 1.0.5 update interfaces reference</PackageReleaseNotes>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
   </PropertyGroup>
@@ -66,6 +66,9 @@
     <Resource Include="Images\valuetype.png" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'PrepInstaller'">
     <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
   </Target>
   <ProjectExtensions><VisualStudio><UserProperties BuildVersion_StartDate="2000/1/1" /></VisualStudio></ProjectExtensions>

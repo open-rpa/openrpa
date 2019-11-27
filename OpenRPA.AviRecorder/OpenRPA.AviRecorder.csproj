@@ -7,10 +7,8 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.15</Version>
-    <PackageReleaseNotes>1.0.15 update interfaces reference
-1.0.13 update interfaces reference
-1.0.12 update interfaces reference
+    <Version>1.0.16</Version>
+    <PackageReleaseNotes>1.0.16 update interfaces reference
 1.0.11 Make runner respect enabled setting in config
 1.0.9 Add runner plugin for auto recording workflows
 1.0.8 update interfaces reference</PackageReleaseNotes>
@@ -82,6 +80,9 @@
     <Resource Include="Resources\open_rpa512.png" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'PrepInstaller'">
     <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
   </Target>
   <ProjectExtensions><VisualStudio><UserProperties BuildVersion_StartDate="2000/1/1" /></VisualStudio></ProjectExtensions>

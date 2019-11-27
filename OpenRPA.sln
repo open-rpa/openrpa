@@ -52,6 +52,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nsis", "nsis", "{00A8B562-FC2E-4D12-A778-462F0292611E}"
 	ProjectSection(SolutionItems) = preProject
 		openrpa.nsi = openrpa.nsi
+		ReplaceInFile.nsh = ReplaceInFile.nsh
+		StrRep.nsh = StrRep.nsh
+		test.nsi = test.nsi
 	EndProjectSection
 EndProject
 Global

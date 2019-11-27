@@ -356,8 +356,8 @@ namespace OpenRPA.Views
         public async Task Save()
         {
             // var basepath = Project.Path;
-            var basepath = System.IO.Directory.GetCurrentDirectory();
-            var imagepath = System.IO.Path.Combine(basepath, "images");
+            var imagepath = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "images");
+
             if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
             WorkflowDesigner.Flush();
             if(global.isConnected)

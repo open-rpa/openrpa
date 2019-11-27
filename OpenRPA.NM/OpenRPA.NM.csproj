@@ -8,8 +8,9 @@
     <Company>OpenRPA</Company>
     <Product>OpenRPA</Product>
     <Description>Recorder plugin and Activities for interacting with Chrome/Firefox and Edge</Description>
-    <Version>1.0.17</Version>
-    <PackageReleaseNotes>1.0.17 fix double click
+    <Version>1.0.18</Version>
+    <PackageReleaseNotes>1.0.18 update reference
+1.0.17 fix double click
 1.0.15 update interfaces reference
 1.0.14 support for seperate images 
 1.0.13 update interfaces reference</PackageReleaseNotes>
@@ -75,6 +76,9 @@
     </Resource>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'PrepInstaller'">
     <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
   </Target>
   <ProjectExtensions><VisualStudio><UserProperties BuildVersion_StartDate="2000/1/1" /></VisualStudio></ProjectExtensions>

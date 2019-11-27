@@ -94,10 +94,10 @@ namespace OpenRPA.Java
             }
             if (!isrunning)
             {
-                var filename = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "OpenRPA.JavaBridge.exe");
+                var filename = System.IO.Path.Combine(Interfaces.Extensions.PluginsDirectory, "OpenRPA.JavaBridge.exe");
                 if (!System.IO.File.Exists(filename))
                 {
-                    filename = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "java\\OpenRPA.JavaBridge.exe");
+                    filename = System.IO.Path.Combine(Interfaces.Extensions.PluginsDirectory, "java\\OpenRPA.JavaBridge.exe");
                 }
                 if(System.IO.File.Exists(filename))
                 {

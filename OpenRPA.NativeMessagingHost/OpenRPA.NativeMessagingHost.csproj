@@ -6,11 +6,11 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.10</Version>
+    <Version>1.0.11</Version>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
     <StartupObject />
-    <PackageReleaseNotes>1.0.10 update interfaces reference
+    <PackageReleaseNotes>1.0.11 update interfaces reference
 1.0.8 update interfaces reference</PackageReleaseNotes>
     <Description>The NativeMessagingHost serves as a proxy between chrome/ff and openrpa</Description>
     <PackageIcon>open_rpa128.png</PackageIcon>
@@ -65,6 +65,9 @@
     <Resource Include="Resources\OpenRPA2.png" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'PrepInstaller'">
     <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
   </Target>
   <ProjectExtensions><VisualStudio><UserProperties BuildVersion_StartDate="2000/1/1" /></VisualStudio></ProjectExtensions>

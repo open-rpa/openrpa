@@ -7,8 +7,11 @@
     <Description>Activities and record plugin for handling Internet Explorer</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.17</Version>
-    <PackageReleaseNotes>1.0.17 fix double click
+    <Version>1.0.18</Version>
+    <PackageReleaseNotes>1.0.18 update interfaces reference
+    
+
+1.0.17 fix double click
 1.0.15 update interfaces reference
     
 
@@ -108,4 +111,7 @@
       <UserProperties BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'PrepInstaller'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
 </Project>

@@ -13,7 +13,7 @@ namespace OpenRPA.Interfaces.Image
         public const int ActivityPreviewImageHeight = 100;
         public static void SaveImageStamped(Bitmap img, string message)
         {
-            SaveImageStamped(img, System.IO.Directory.GetCurrentDirectory(), message);
+            SaveImageStamped(img, Interfaces.Extensions.MyPictures, message);
         }
         public static void SaveImageStamped(Bitmap img, string path, string message)
         {
@@ -235,7 +235,7 @@ namespace OpenRPA.Interfaces.Image
         {
             try
             {
-                if (string.IsNullOrEmpty(basepath)) { basepath = System.IO.Directory.GetCurrentDirectory(); }
+                if (string.IsNullOrEmpty(basepath)) { basepath = Interfaces.Extensions.ProjectsDirectory; }
                 var imagepath = System.IO.Path.Combine(basepath, "images");
                 if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
                 var imagefilepath = System.IO.Path.Combine(imagepath, id + ".png");

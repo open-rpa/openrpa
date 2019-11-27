@@ -23,6 +23,10 @@ namespace OpenRPA.Activities
             {
                 Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<IElement>("item")
             };
+            //PostWait = new InArgument<TimeSpan>()
+            //{
+            //    Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(150)")
+            //};
         }
         [RequiredArgument]
         public InArgument<bool> AnimateMouse { get; set; } = false;
@@ -38,6 +42,8 @@ namespace OpenRPA.Activities
         [RequiredArgument]
         public InArgument<bool> DoubleClick { get; set; } = false;
         public InArgument<bool> VirtualClick { get; set; } = true;
+        public InArgument<TimeSpan> PostWait { get; set; }
+
         [DllImport("user32.dll", SetLastError = true)]
         public static extern uint GetDoubleClickTime();
         protected override void Execute(CodeActivityContext context)
@@ -51,6 +57,13 @@ namespace OpenRPA.Activities
             if (VirtualClick != null) virtualClick = VirtualClick.Get(context);
             var _button = (Input.MouseButton)button;
             el.Click(virtualClick, _button, OffsetX, OffsetY, doubleclick);
+            TimeSpan postwait = TimeSpan.Zero;
+            if (PostWait!=null) { postwait = PostWait.Get(context); }
+            if(postwait != TimeSpan.Zero)
+            {
+                System.Threading.Thread.Sleep(postwait);
+            }
+            
         }
     }
 }

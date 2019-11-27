@@ -33,12 +33,17 @@ namespace OpenRPA.Views
             InitializeSnippets();
         }
         public ToolboxControl toolbox = new ToolboxControl();
-        public static DynamicActivityGenerator dag = new DynamicActivityGenerator("Snippets");
+        // public static DynamicActivityGenerator dag = new DynamicActivityGenerator("Snippets");
+        public static DynamicActivityGenerator dag;
         public void InitializeSnippets()
         {
-            toolbox.Categories.Clear();
+            if (toolbox.Categories.Count > 0) return;
             try
             {
+                if(dag == null)
+                {
+                    dag = new DynamicActivityGenerator("Snippets", Interfaces.Extensions.ProjectsDirectory);
+                }
                 var cs = new Dictionary<string, ToolboxCategory>();
                 foreach(var s in Plugins.Snippets)
                 {
@@ -56,10 +61,11 @@ namespace OpenRPA.Views
                 }
                 try
                 {
-                    // dag.Save();
+                    dag.Save();
                 }
                 catch (Exception ex)
                 {
+                    Log.Error(ex.ToString());
                 }
                 if(cs == null || cs.Count == 0)
                 {

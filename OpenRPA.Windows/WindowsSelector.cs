@@ -97,19 +97,19 @@ namespace OpenRPA.Windows
                         }
                         if (m.Length == 0 && Config.local.log_selector)
                         {
-                            var message = "needed to find " + Environment.NewLine + item.ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
-                            var children = parent.FindAllChildren();
-                            foreach (var c in children)
-                            {
-                                try
-                                {
-                                    message += new UIElement(c).ToString() + Environment.NewLine;
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                            Log.Debug(message);
+                            //var message = "needed to find " + Environment.NewLine + item.ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
+                            //var children = parent.FindAllChildren();
+                            //foreach (var c in children)
+                            //{
+                            //    try
+                            //    {
+                            //        message += new UIElement(c).ToString() + Environment.NewLine;
+                            //    }
+                            //    catch (Exception)
+                            //    {
+                            //    }
+                            //}
+                            //Log.Debug(message);
                         }
                     }
                 }
@@ -221,7 +221,7 @@ namespace OpenRPA.Windows
                 var _treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
                 AutomationElement startfrom = null;
                 if (_fromElement != null) startfrom = _fromElement.RawElement;
-                Log.Selector("automation.GetDesktop");
+                Log.SelectorVerbose("automation.GetDesktop");
                 bool isDesktop = false;
                 if (startfrom == null)
                 {
@@ -244,7 +244,7 @@ namespace OpenRPA.Windows
                             var count = maxresults;
                             if (i == 0) count = midcounter;
                             // if (i < selectors.Count) count = 500;
-                            if (i < selectors.Count) count = 1;
+                            if ((i+1) < selectors.Count) count = 1;
                             var matches = ((WindowsSelectorItem)s).matches(automation, _element.RawElement, _treeWalker, count, isDesktop); // (i == 0 ? 1: maxresults)
                             var uimatches = new List<UIElement>();
                             foreach (var m in matches)
@@ -291,9 +291,75 @@ namespace OpenRPA.Windows
                         if (current.Count == 0) ++failcounter;
                         if (current.Count == 0 && Config.local.log_selector)
                         {
-                            foreach (var element in elements)
+                            if(isDesktop)
                             {
                                 var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
+                                var windows = Win32WindowUtils.GetTopLevelWindows(automation);
+                                foreach (var c in windows)
+                                {
+                                    try
+                                    {
+                                        message += new UIElement(c).ToString() + Environment.NewLine;
+                                    }
+                                    catch (Exception)
+                                    {
+                                    }
+                                }
+                                // Log.Selector(message);
+                                Log.Warning(message);
+                            }
+                            else
+                            {
+                                foreach (var element in elements)
+                                {
+                                    var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
+                                    var children = element.RawElement.FindAllChildren();
+                                    foreach (var c in children)
+                                    {
+                                        try
+                                        {
+                                            message += new UIElement(c).ToString() + Environment.NewLine;
+                                        }
+                                        catch (Exception)
+                                        {
+                                        }
+                                    }
+                                    // Log.Selector(message);
+                                    Log.Warning(message);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Log.SelectorVerbose(string.Format("Found " + current.Count + " hits for selector # " + i + " {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        }
+                    } while (failcounter < 2 && current.Count == 0);
+
+
+                    if (i == (selectors.Count - 1)) result = current.ToArray();
+                    if (current.Count == 0 && Config.local.log_selector)
+                    {
+                        if (isDesktop)
+                        {
+                            var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
+                            var windows = Win32WindowUtils.GetTopLevelWindows(automation);
+                            foreach (var c in windows)
+                            {
+                                try
+                                {
+                                    message += new UIElement(c).ToString() + Environment.NewLine;
+                                }
+                                catch (Exception)
+                                {
+                                }
+                            }
+                            Log.Warning(message);
+                        }
+                        else
+                        {
+                            var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
+                            foreach (var element in elements)
+                            {
                                 var children = element.RawElement.FindAllChildren();
                                 foreach (var c in children)
                                 {
@@ -305,35 +371,9 @@ namespace OpenRPA.Windows
                                     {
                                     }
                                 }
-                                Log.Selector(message);
                             }
+                            Log.Warning(message);
                         }
-                        else
-                        {
-                            Log.Selector(string.Format("Found " + current.Count + " hits for selector # " + i + " {0:mm\\:ss\\.fff}", sw.Elapsed));
-                        }
-                    } while (failcounter < 2 && current.Count == 0);
-
-
-                    if (i == (selectors.Count - 1)) result = current.ToArray();
-                    if (current.Count == 0 && Config.local.log_selector)
-                    {
-                        var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
-                        foreach (var element in elements)
-                        {
-                            var children = element.RawElement.FindAllChildren();
-                            foreach (var c in children)
-                            {
-                                try
-                                {
-                                    message += new UIElement(c).ToString() + Environment.NewLine;
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                        Log.Warning(message);
                         return new UIElement[] { };
                     }
                     isDesktop = false;
@@ -342,10 +382,8 @@ namespace OpenRPA.Windows
             if (result == null)
             {
                 Log.Selector(string.Format("GetElementsWithuiSelector::ended with 0 results after {0:mm\\:ss\\.fff}", sw.Elapsed));
-                Log.Debug(string.Format("GetElementsWithuiSelector::ended with 0 results after {0:mm\\:ss\\.fff}", sw.Elapsed));
                 return new UIElement[] { };
             }
-            Log.Debug(string.Format("GetElementsWithuiSelector::ended with " + result.Count() + " results after {0:mm\\:ss\\.fff}", sw.Elapsed));
             return result;
         }
 

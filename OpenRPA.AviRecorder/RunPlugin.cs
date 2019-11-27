@@ -83,13 +83,12 @@ namespace OpenRPA.AviRecorder
         {
             var strcodec = PluginConfig.codec;
             var folder = PluginConfig.folder;
-            if(string.IsNullOrEmpty(folder)) folder = System.IO.Directory.GetCurrentDirectory();
+            if(string.IsNullOrEmpty(folder)) folder = Interfaces.Extensions.MyVideos;
             var quality = PluginConfig.quality;
 
             if (string.IsNullOrEmpty(folder))
             {
-                var exePath = new Uri(System.Reflection.Assembly.GetEntryAssembly().Location).LocalPath;
-                folder = System.IO.Path.GetDirectoryName(exePath);
+                folder = Interfaces.Extensions.MyVideos;
             }
             if (quality < 10) quality = 10;
             if (quality > 100) quality = 100;

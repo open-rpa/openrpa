@@ -19,16 +19,24 @@ namespace OpenRPA
         private ModuleBuilder _mb;
         private readonly string _fileName;
         private readonly string _moduleName;
+        private readonly string _path;
         private Dictionary<string, Type> _types;
-        public DynamicActivityGenerator(string name)
+        public DynamicActivityGenerator(string name, string path)
         {
+            _path = path;
             _types = new Dictionary<string, Type>();
             _fileName = String.Format("{0}.dll", name);
             _moduleName = name;
 
-            _ab = AppDomain.CurrentDomain.DefineDynamicAssembly(
-                new AssemblyName(_moduleName), AssemblyBuilderAccess.RunAndSave);
+            // _ab = AppDomain.CurrentDomain.DefineDynamicAssembly( new AssemblyName(_moduleName), AssemblyBuilderAccess.RunAndSave);
+            //_ab = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName(_moduleName), AssemblyBuilderAccess.Run, path);
+            //_mb = _ab.DefineDynamicModule(_moduleName, _fileName);
+            AssemblyName aname = new AssemblyName(_moduleName);
+            AppDomain currentDomain = AppDomain.CurrentDomain; // Thread.GetDomain();
+            _ab = currentDomain.DefineDynamicAssembly(aname,
+                                       AssemblyBuilderAccess.RunAndSave, path);
             _mb = _ab.DefineDynamicModule(_moduleName, _fileName);
+
         }
         private string GetTypeName(string prefix, string workflowName)
         {
@@ -65,13 +73,20 @@ namespace OpenRPA
             msil.Emit(OpCodes.Ldstr, xaml);
             msil.Emit(OpCodes.Ret);
             var t = tb.CreateType();
+            var instance = Activator.CreateInstance(t);
             _types.Add(name, t);
             return t;
         }
         public void Load()
         {
-            _ab.Save(_fileName);
-            Assembly.Load(new AssemblyName(_moduleName));
+            //_ab.Save(_fileName);
+            //Byte[] dll = System.IO.File.ReadAllBytes(System.IO.Path.Combine(_path, _fileName));
+            //AppDomain.CurrentDomain.Load(dll);
+            // Assembly.Load(dll);
+
+            // Assembly.Load(new AssemblyName(_moduleName));
+            //var type = _mb.CreateType();
+            //var instance = Activator.CreateInstance(type);
         }
         public DynamicActivityDescriptor[] Activities
         {

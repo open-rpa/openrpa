@@ -10,6 +10,36 @@ namespace OpenRPA.Interfaces
 {
     public static class Extensions
     {
+        public static string MyVideos
+        {
+            get
+            {
+                var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
+                if (!System.IO.Directory.Exists(System.IO.Path.Combine(dir)))
+                    System.IO.Directory.CreateDirectory(dir);
+                return dir;
+            }
+        }
+        public static string MyDocuments
+        {
+            get
+            {
+                var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                if (!System.IO.Directory.Exists(System.IO.Path.Combine(dir)))
+                    System.IO.Directory.CreateDirectory(dir);
+                return dir;
+            }
+        }
+        public static string MyPictures
+        {
+            get
+            {
+                var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+                if (!System.IO.Directory.Exists(System.IO.Path.Combine(dir)))
+                    System.IO.Directory.CreateDirectory(dir);
+                return dir;
+            }
+        }
         public static string UserDirectory
         {
             get
@@ -27,8 +57,9 @@ namespace OpenRPA.Interfaces
                 var asm = System.Reflection.Assembly.GetEntryAssembly();
                 var filepath = asm.CodeBase.Replace("file:///", "");
                 var path = System.IO.Path.GetDirectoryName(filepath);
-                // var dir = System.IO.Directory.GetCurrentDirectory();
-                if (path.ToLower().Contains("program")) path = UserDirectory;
+                // if (path.ToLower().Contains("program")) path = System.IO.Path.Combine(MyDocuments, "OpenRPA");
+                path = System.IO.Path.Combine(MyDocuments, "OpenRPA");
+                if (!System.IO.Directory.Exists(System.IO.Path.Combine(path))) System.IO.Directory.CreateDirectory(path);
                 return path;
             }
         }
@@ -42,6 +73,20 @@ namespace OpenRPA.Interfaces
                 return path;
             }
         }
+
+        public static string DataDirectory
+        {
+            get
+            {
+                var asm = System.Reflection.Assembly.GetEntryAssembly();
+                var filepath = asm.CodeBase.Replace("file:///", "");
+                var path = System.IO.Path.GetDirectoryName(filepath);
+                // if (path.ToLower().Contains("program")) path = UserDirectory;
+                path = UserDirectory;
+                return path;
+            }
+        }
+
         static public string ResourceAsString(this Type type, string resourceName)
         {
             // string[] names = typeof(Extensions).Assembly.GetManifestResourceNames();
@@ -88,7 +133,6 @@ namespace OpenRPA.Interfaces
         {
             return ResourceAsString(typeof(Extensions), resourceName);
         }
-
         public static System.Windows.Media.Imaging.BitmapFrame GetImageSourceFromResource(string resourceName)
         {
             string[] names = typeof(Extensions).Assembly.GetManifestResourceNames();
@@ -160,7 +204,6 @@ namespace OpenRPA.Interfaces
 
             return filename;
         }
-
         public static Task WaitOneAsync(this System.Threading.WaitHandle waitHandle)
         {
             if (waitHandle == null) throw new ArgumentNullException("waitHandle");
@@ -170,7 +213,6 @@ namespace OpenRPA.Interfaces
             t.ContinueWith((antecedent) => rwh.Unregister(null));
             return t;
         }
-
         public static bool TryCast<T>(this object obj, out T result)
         {
             if (obj is T)
@@ -210,10 +252,6 @@ namespace OpenRPA.Interfaces
             }
             return result;
         }
-
-
-
-
         public static ProcessInfo GetProcessInfo(this FlaUI.Core.AutomationElements.Infrastructure.AutomationElement element)
         {
             if (!element.Properties.ProcessId.IsSupported) return null;
@@ -305,7 +343,6 @@ namespace OpenRPA.Interfaces
             result.isImmersiveProcess = _isImmersiveProcess;
             return result;
         }
-
         public static string GetCommandLine(int processId)
         {
             string result = null;
@@ -386,12 +423,7 @@ namespace OpenRPA.Interfaces
             IntPtr hProcess,
             ref UInt32 AppModelIDLength,
             [MarshalAs(UnmanagedType.LPWStr)] StringBuilder sbAppUserModelID);
-
-
-
-
     }
-
     public class ProcessInfo
     {
         public string filename { get; set; }

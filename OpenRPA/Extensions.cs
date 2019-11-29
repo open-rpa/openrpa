@@ -128,13 +128,6 @@ namespace OpenRPA
             }
             return null;
         }
-        public static string projectsDirectory
-        {
-            get
-            {
-                return System.IO.Directory.GetCurrentDirectory();
-            }
-        }
         public static bool TryCast<T>(this object obj, out T result)
         {
             if (obj is T)

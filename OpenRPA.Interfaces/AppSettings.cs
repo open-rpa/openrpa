@@ -24,23 +24,31 @@ namespace OpenRPA
         public static T Load(string fileName)
         {
             T t = new T();
-            if (System.IO.File.Exists(fileName))
+            var fi = new System.IO.FileInfo(fileName);
+            var _fileName = System.IO.Path.GetFileName(fileName);
+            var di = fi.Directory;
+
+            if (System.IO.File.Exists(System.IO.Path.Combine( Interfaces.Extensions.ProjectsDirectory , _fileName)))
+            {
+                t = JsonConvert.DeserializeObject<T>(System.IO.File.ReadAllText(System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, _fileName)));
+            }
+            else if (System.IO.File.Exists(fileName))
             {
                 t = JsonConvert.DeserializeObject<T>(System.IO.File.ReadAllText(fileName));
             }
-            else if (System.IO.File.Exists(@"..\" + fileName))
+            else if (System.IO.File.Exists(System.IO.Path.Combine(di.Parent.FullName, _fileName)))
             {
-                t = JsonConvert.DeserializeObject<T>(System.IO.File.ReadAllText(@"..\" + fileName));
+                t = JsonConvert.DeserializeObject<T>(System.IO.File.ReadAllText(System.IO.Path.Combine(di.Parent.FullName, _fileName)));
             }
             else
             {
                 try
                 {
-                    Save(t, fileName);
+                    Save(t, System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, _fileName));
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Trace.WriteLine(ex.ToString(), "Error");
+                    System.Diagnostics.Trace.WriteLine(ex.ToString(), "Error");                    
                 }
             }
             return t;

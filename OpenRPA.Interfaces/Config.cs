@@ -27,6 +27,7 @@ namespace OpenRPA
         public DateTime lastupdatecheck = DateTime.Now;
         public TimeSpan updatecheckinterval = TimeSpan.FromDays(1);
         public bool doupdatecheck = true;
+        public bool autoupdateupdater = true;
         public bool log_verbose = false;
         public bool log_activity = false;
         public bool log_debug = false;
@@ -78,20 +79,14 @@ namespace OpenRPA
             {
                 if (_local == null)
                 {
-                    var asm = System.Reflection.Assembly.GetEntryAssembly();
-                    var filepath = asm.CodeBase.Replace("file:///", "");
-                    var path = System.IO.Path.GetDirectoryName(filepath);
-                    _local = Load(System.IO.Path.Combine(path, "settings.json"));
+                    _local = Load(System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json"));
                 }
                 return _local;
             }
         }
         public static void Save()
         {
-            var asm = System.Reflection.Assembly.GetEntryAssembly();
-            var filepath = asm.CodeBase.Replace("file:///", "");
-            var path = System.IO.Path.GetDirectoryName(filepath);
-            local.Save(System.IO.Path.Combine(path, "settings.json"));
+            local.Save(System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json"));
         }
         public static void Reload()
         {
@@ -108,6 +103,7 @@ namespace OpenRPA
                 object value;
                 if (properties.TryGetValue(pluginname + "_" + propertyName, out value))
                 {
+                    if (typeof(T) == typeof(int) && value is long) value = int.Parse(value.ToString());
                     return (T)value;
                 }
                 SetProperty(pluginname, mydefault, propertyName);

@@ -210,15 +210,37 @@ namespace OpenRPA.Views
             InitializeComponent();
         }
         private static readonly object _lock = new object();
-        public void ReloadDesigner()
+        public void SetHasChanged()
         {
-            lock (_lock)
-            {
-                LoadDesigner();
-            }
+            if (HasChanged) return;
+            HasChanged = true;
+            OnChanged?.Invoke(this);
         }
-        public void LoadDesigner()
+        private readonly Type[] extratypes = null;
+        public WFDesigner(Xceed.Wpf.AvalonDock.Layout.LayoutDocument tab, Workflow workflow, Type[] extratypes)
         {
+            InitializeComponent();
+            this.extratypes = extratypes;
+            DataContext = this;
+            this.tab = tab;
+            //toolbox = InitializeActivitiesToolbox();
+            //// WfToolboxBorder.Child = toolbox;
+            Workflow = workflow;
+            Input.InputDriver.Instance.onCancel += OnCancel;
+            if (tab != null)
+            {
+                tab.Title = workflow.name;
+            }
+            //WeakEventManager<System.ComponentModel.INotifyPropertyChanged, System.ComponentModel.PropertyChangedEventArgs>.
+            //    AddHandler(MainWindow.tracing, "PropertyChanged", traceOnPropertyChanged);
+            comment = new MenuItem() { Header = "Comment out" };
+            uncomment = new MenuItem() { Header = "Uncomment" };
+            comment.Click += OnComment;
+            uncomment.Click += OnUncomment;
+
+
+
+
             WorkflowDesigner = new WorkflowDesigner();
             DesignerConfigurationService configService = WorkflowDesigner.Context.Services.GetRequiredService<DesignerConfigurationService>();
             configService.TargetFrameworkName = new System.Runtime.Versioning.FrameworkName(".NETFramework", new Version(4, 5));
@@ -310,39 +332,9 @@ namespace OpenRPA.Views
             {
                 Log.Debug(ex.ToString());
             }
-
+            NotifyPropertyChanged("View");
             // WfDesignerBorder.Child = wfDesigner.View;
 
-        }
-        public void SetHasChanged()
-        {
-            if (HasChanged) return;
-            HasChanged = true;
-            OnChanged?.Invoke(this);
-        }
-        private readonly Type[] extratypes = null;
-        public WFDesigner(Xceed.Wpf.AvalonDock.Layout.LayoutDocument tab, Workflow workflow, Type[] extratypes)
-        {
-            InitializeComponent();
-            this.extratypes = extratypes;
-            DataContext = this;
-            this.tab = tab;
-            //toolbox = InitializeActivitiesToolbox();
-            //// WfToolboxBorder.Child = toolbox;
-            Workflow = workflow;
-            Input.InputDriver.Instance.onCancel += OnCancel;
-            if (tab != null)
-            {
-                tab.Title = workflow.name;
-            }
-            //WeakEventManager<System.ComponentModel.INotifyPropertyChanged, System.ComponentModel.PropertyChangedEventArgs>.
-            //    AddHandler(MainWindow.tracing, "PropertyChanged", traceOnPropertyChanged);
-            comment = new MenuItem() { Header = "Comment out" };
-            uncomment = new MenuItem() { Header = "Uncomment" };
-            comment.Click += OnComment;
-            uncomment.Click += OnUncomment;
-
-            LoadDesigner();
         }
         private void UnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
@@ -356,8 +348,8 @@ namespace OpenRPA.Views
         public async Task Save()
         {
             // var basepath = Project.Path;
-            var basepath = System.IO.Directory.GetCurrentDirectory();
-            var imagepath = System.IO.Path.Combine(basepath, "images");
+            var imagepath = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "images");
+
             if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
             WorkflowDesigner.Flush();
             if(global.isConnected)
@@ -685,6 +677,7 @@ namespace OpenRPA.Views
                     }
                     if (lastSequence.Properties["Activities"] != null)
                     {
+                        if (string.IsNullOrEmpty(a.DisplayName)) a.DisplayName = "Activity";
                         newItem = Activities.Insert(insertAt, a);
                     }
                     else
@@ -982,7 +975,8 @@ namespace OpenRPA.Views
                 Log.Error(ex.ToString());
             }
         }
-        public void OnVisualTracking(WorkflowInstance Instance, string ActivityId, string ChildActivityId, string State)
+        public IDictionary<SourceLocation, System.Activities.Presentation.Debug.BreakpointTypes> BreakpointLocations = null;
+        public void OnVisualTracking(IWorkflowInstance Instance, string ActivityId, string ChildActivityId, string State)
         {
             try
             {
@@ -1009,7 +1003,8 @@ namespace OpenRPA.Views
                 if (location == null) return;
                 if (!BreakPointhit)
                 {
-                    BreakPointhit = WorkflowDesigner.DebugManagerView.GetBreakpointLocations().ContainsKey(location);
+                    if (BreakpointLocations == null) BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
+                    BreakPointhit = BreakpointLocations.ContainsKey(location);
                 }
                 ModelItem model = _activityIdModelItemMapping[ChildActivityId];
                 if (VisualTracking || BreakPointhit || Singlestep)
@@ -1039,7 +1034,7 @@ namespace OpenRPA.Views
                 Log.Error(ex.ToString());
             }
         }
-        internal void OnIdle(WorkflowInstance instance, EventArgs e)
+        internal void OnIdle(IWorkflowInstance instance, EventArgs e)
         {
             if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
             {
@@ -1150,7 +1145,7 @@ namespace OpenRPA.Views
                 }
             }
         }
-        public void Run(bool VisualTracking, bool SlowMotion, WorkflowInstance instance)
+        public void Run(bool VisualTracking, bool SlowMotion, IWorkflowInstance instance)
         {
             this.VisualTracking = VisualTracking; this.SlowMotion = SlowMotion;
             if (BreakPointhit)
@@ -1210,13 +1205,14 @@ namespace OpenRPA.Views
             if (instance == null)
             {
                 var param = new Dictionary<string, object>();
+                BreakpointLocations = null;
                 instance = Workflow.CreateInstance(param, null, null, OnIdle, OnVisualTracking);
             }
             ReadOnly = true;
             if (!VisualTracking && Minimize) GenericTools.minimize(GenericTools.mainWindow);
             instance.Run();
         }
-        private void ShowVariables(IDictionary<string, ValueType> Variables)
+        private void ShowVariables(IDictionary<string, WorkflowInstanceValueType> Variables)
         {
             GenericTools.RunUI(() =>
             {

@@ -259,7 +259,7 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(msg.replyto))
             {
                 if (msg.command != "pong") { Log.Verbose(msg.command + " / replyto: " + msg.replyto); }
-                    else { Log.Verbose(msg.command + " / replyto: " + msg.replyto);  }
+                    // else { Log.Verbose(msg.command + " / replyto: " + msg.replyto);  }
 
                 foreach (var qm in _messageQueue.ToList())
                 {
@@ -282,7 +282,7 @@ namespace OpenRPA.Net
             else
             {
                 if (msg.command != "ping" && msg.command != "refreshtoken") { Log.Verbose(msg.command + " / " + msg.id); }
-                    else { Log.Verbose(msg.command + " / replyto: " + msg.replyto); }
+                    // else { Log.Verbose(msg.command + " / replyto: " + msg.replyto); }
                 switch (msg.command)
                 {
                     case "ping":

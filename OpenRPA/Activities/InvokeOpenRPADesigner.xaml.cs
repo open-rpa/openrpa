@@ -45,7 +45,7 @@ namespace OpenRPA.Activities
             try
             {
                 string workflowid = (string)ModelItem.Properties["workflow"].Value.GetCurrentValue();
-                var workflow = MainWindow.instance.GetWorkflowById(workflowid);
+                var workflow = MainWindow.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
                 var designer = MainWindow.instance.designer;
                 foreach(var p in workflow.Parameters)
                 {

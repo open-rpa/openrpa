@@ -245,7 +245,7 @@ namespace OpenRPA.RDServicePlugin.Views
             }
         }
 
-        private void chkUseFreeRDP_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void chkUseFreeRDP_IsEnabledChanged(object sender, RoutedEventArgs e)
         {
             if (chkUseFreeRDP.IsChecked == null) return;
             PluginConfig.usefreerdp = chkUseFreeRDP.IsChecked.Value;
@@ -258,5 +258,6 @@ namespace OpenRPA.RDServicePlugin.Views
             PluginConfig.usefreerdp = chkUseFreeRDP.IsChecked.Value;
             Config.Save();
         }
+
     }
 }

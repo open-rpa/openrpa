@@ -91,6 +91,11 @@ namespace OpenRPA.Updater
                 _destinationfolder = value;
             }
         }
+        public string identitystring(PackageIdentity id)
+        {
+            if (id.HasVersion) return id.Id + "." + id.Version.ToString();
+            return id.Id;
+        }
         public async Task<List<IPackageSearchMetadata>> Search(string searchstring)
         {
             var result = new List<IPackageSearchMetadata>();
@@ -467,7 +472,6 @@ namespace OpenRPA.Updater
         }
         public async Task Download(PackageIdentity identity)
         {
-
             var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
             var installedPath = packagePathResolver.GetInstalledPath(identity);
             if(identity.HasVersion && ! string.IsNullOrEmpty(installedPath))
@@ -475,10 +479,7 @@ namespace OpenRPA.Updater
                 var idstring = identity.Id + "." + identity.Version;
                 if (installedPath.Contains(idstring)) return;
             }
-
-
             var result = new List<IPackageSearchMetadata>();
-
             using (var cacheContext = new SourceCacheContext())
             {
                 var repositories = SourceRepositoryProvider.GetRepositories();
@@ -497,6 +498,7 @@ namespace OpenRPA.Updater
                     Logger);
 
                 var packageToInstall = availablePackages.Where(p => p.Id == identity.Id).FirstOrDefault();
+                if(packageToInstall==null) throw new Exception("Failed finding package " + identitystring(identity));
 
                 // var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
                 var clientPolicyContext = NuGet.Packaging.Signing.ClientPolicyContext.GetClientPolicy(Settings, Logger);
@@ -533,56 +535,68 @@ namespace OpenRPA.Updater
         }
         public async Task<bool> IsPackageInstalled(LocalPackageInfo package)
         {
-            await Download(package.Identity);
-
-
-            var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
-            var installedPath = packagePathResolver.GetInstalledPath(package.Identity);
-
-            PackageReaderBase packageReader;
-            packageReader = new PackageFolderReader(installedPath);
-            var libItems = packageReader.GetLibItems();
-            if(libItems.Count() == 0)
+            try
             {
-                Console.WriteLine("Booom!");
+                await Download(package.Identity);
             }
-            var frameworkReducer = new FrameworkReducer();
-            var nearest = frameworkReducer.GetNearest(NuGetFramework, libItems.Select(x => x.TargetFramework));
-            var files = libItems
-                .Where(x => x.TargetFramework.Equals(nearest))
-                .SelectMany(x => x.Items).ToList();
-
-
-            foreach (var f in files)
+            catch (Exception ex)
             {
-                string source = "";
-                string f2 = "";
-                string filename = "";
-                string dir = "";
-                string target = "";
-                try
+                OpenRPAPackageManagerLogger.Instance.LogError(ex.ToString());
+            }
+            try
+            {
+                var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
+                var installedPath = packagePathResolver.GetInstalledPath(package.Identity);
+
+                PackageReaderBase packageReader;
+                packageReader = new PackageFolderReader(installedPath);
+                var libItems = packageReader.GetLibItems();
+                if (libItems.Count() == 0)
                 {
-                    source = System.IO.Path.Combine(installedPath, f);
-                    f2 = f.Substring(f.IndexOf("/", 4) + 1);
-                    filename = System.IO.Path.GetFileName(f2);
-                    dir = System.IO.Path.GetDirectoryName(f2);
-                    target = System.IO.Path.Combine(Destinationfolder, dir, filename);
-                    if (!System.IO.Directory.Exists(System.IO.Path.Combine(Destinationfolder, dir)))
+                    Console.WriteLine("Booom!");
+                }
+                var frameworkReducer = new FrameworkReducer();
+                var nearest = frameworkReducer.GetNearest(NuGetFramework, libItems.Select(x => x.TargetFramework));
+                var files = libItems
+                    .Where(x => x.TargetFramework.Equals(nearest))
+                    .SelectMany(x => x.Items).ToList();
+
+
+                foreach (var f in files)
+                {
+                    string source = "";
+                    string f2 = "";
+                    string filename = "";
+                    string dir = "";
+                    string target = "";
+                    try
                     {
-                        System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Destinationfolder, dir));
+                        source = System.IO.Path.Combine(installedPath, f);
+                        f2 = f.Substring(f.IndexOf("/", 4) + 1);
+                        filename = System.IO.Path.GetFileName(f2);
+                        dir = System.IO.Path.GetDirectoryName(f2);
+                        target = System.IO.Path.Combine(Destinationfolder, dir, filename);
+                        if (!System.IO.Directory.Exists(System.IO.Path.Combine(Destinationfolder, dir)))
+                        {
+                            System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Destinationfolder, dir));
+                        }
+                        if (!System.IO.File.Exists(source)) return false;
+                        if (!System.IO.File.Exists(target)) return false;
+                        var infoOld = new System.IO.FileInfo(source);
+                        var infoNew = new System.IO.FileInfo(target);
                     }
-                    if (!System.IO.File.Exists(source)) return false;
-                    if (!System.IO.File.Exists(target)) return false;
-                    var infoOld = new System.IO.FileInfo(source);
-                    var infoNew = new System.IO.FileInfo(target);
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
+                return true;
             }
-
-            return true;
+            catch (Exception ex)
+            {
+                return false;
+                OpenRPAPackageManagerLogger.Instance.LogError(ex.ToString());
+            }
         }
         private void CopyIfNewer(string source, string target)
         {

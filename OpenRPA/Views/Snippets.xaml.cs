@@ -26,15 +26,24 @@ namespace OpenRPA.Views
         {
             InitializeComponent();
             DataContext = this;
-            toolborder.Child = InitializeSnippets();
+            toolborder.Child = toolbox;
         }
-
-        public   static DynamicActivityGenerator dag = new DynamicActivityGenerator("Snippets");
-        public ToolboxControl InitializeSnippets()
+        public void Reload()
         {
+            InitializeSnippets();
+        }
+        public ToolboxControl toolbox = new ToolboxControl();
+        // public static DynamicActivityGenerator dag = new DynamicActivityGenerator("Snippets");
+        public static DynamicActivityGenerator dag;
+        public void InitializeSnippets()
+        {
+            if (toolbox.Categories.Count > 0) return;
             try
             {
-                var Toolbox = new ToolboxControl();
+                if(dag == null)
+                {
+                    dag = new DynamicActivityGenerator("Snippets", Interfaces.Extensions.ProjectsDirectory);
+                }
                 var cs = new Dictionary<string, ToolboxCategory>();
                 foreach(var s in Plugins.Snippets)
                 {
@@ -54,31 +63,35 @@ namespace OpenRPA.Views
                 {
                     dag.Save();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Log.Error(ex.ToString());
+                }
+                if(cs == null || cs.Count == 0)
+                {
+                    Console.WriteLine("No snippets!");
                 }
                 foreach (var c in cs)
                 {
                     try
                     {
-                        Toolbox.Categories.Add(c.Value);
+                        toolbox.Categories.Add(c.Value);
                     }
                     catch (Exception ex)
                     {
                         Log.Error(ex.ToString());
                     }
                 }
-
-                return Toolbox;
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "");
                 MessageBox.Show("InitializeSnippets: " + ex.Message);
-                return null;
             }
         }
-
-
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            Reload();
+        }
     }
 }

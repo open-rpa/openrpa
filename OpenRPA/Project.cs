@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
 using System;
 using System.Collections.Generic;
@@ -173,7 +174,14 @@ namespace OpenRPA
             {
                 await global.webSocketClient.DeleteOne("openrpa", this._id);
             }
-            System.IO.Directory.Delete(Path);
+            try
+            {
+                System.IO.Directory.Delete(Path);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         public override string ToString()
         {

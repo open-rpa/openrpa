@@ -27,5 +27,16 @@ namespace OpenRPA.Interfaces
         bool isCompleted { get; set; }
         bool hasError { get; set; }
         string state { get; set; }
+        Exception Exception { get; set; }
+        System.Diagnostics.Stopwatch runWatch { get; set; }
+        Dictionary<string, WorkflowInstanceValueType> Variables { get; set; }
+        void Run();
     }
+    public class WorkflowInstanceValueType
+    {
+        public WorkflowInstanceValueType(Type type, object value) { this.type = type; this.value = value; }
+        public Type type { get; set; }
+        public object value { get; set; }
+    }
+
 }

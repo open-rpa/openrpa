@@ -44,8 +44,8 @@ namespace OpenRPA.NM
         }
         public static void checkForPipes(bool chrome, bool ff)
         {
-            registreChromeNativeMessagingHost(false);
-            registreffNativeMessagingHost(false);
+            //registreChromeNativeMessagingHost(false);
+            //registreffNativeMessagingHost(false);
             if (chromepipe == null && chrome)
             {
                 chromepipe = new NamedPipeClientAsync<NativeMessagingMessage>(PIPE_NAME + "_chrome");
@@ -431,14 +431,20 @@ namespace OpenRPA.NM
                     if (!hkcuExists(@"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.zenamic.msg")) hkcuCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.zenamic.msg");
                 }
                 //if(!regKey(@"HKEY_CURRENT_USER\stuff  ...  ", "value"))
-                var basepath = System.IO.Directory.GetCurrentDirectory();
+                var basepath = Interfaces.Extensions.PluginsDirectory;
                 var filename = System.IO.Path.Combine(basepath, "chromemanifest.json");
                 if (!System.IO.File.Exists(filename)) return;
                 string json = System.IO.File.ReadAllText(filename);
                 dynamic jsonObj = JsonConvert.DeserializeObject(json);
                 jsonObj["path"] = System.IO.Path.Combine(basepath, "OpenRPA.NativeMessagingHost.exe");
                 string output = JsonConvert.SerializeObject(jsonObj, Formatting.Indented);
-                System.IO.File.WriteAllText(filename, output);
+                try
+                {
+                    System.IO.File.WriteAllText(filename, output);
+                }
+                catch (Exception)
+                {
+                }
 
                 Microsoft.Win32.RegistryKey Chrome = null;
                 if (localMachine) Chrome = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Google\\Chrome\\NativeMessagingHosts\\com.zenamic.msg", true);
@@ -467,14 +473,20 @@ namespace OpenRPA.NM
                     if (!hkcuExists(@"SOFTWARE\Mozilla\NativeMessagingHosts\com.zenamic.msg")) hkcuCreate(@"SOFTWARE\Mozilla\NativeMessagingHosts\com.zenamic.msg");
                 }
 
-                var basepath = System.IO.Directory.GetCurrentDirectory();
+                var basepath = Interfaces.Extensions.PluginsDirectory;
                 var filename = System.IO.Path.Combine(basepath, "ffmanifest.json");
                 if (!System.IO.File.Exists(filename)) return;
                 string json = System.IO.File.ReadAllText(filename);
                 dynamic jsonObj = JsonConvert.DeserializeObject(json);
                 jsonObj["path"] = System.IO.Path.Combine(basepath, "OpenRPA.NativeMessagingHost.exe");
                 string output = JsonConvert.SerializeObject(jsonObj, Formatting.Indented);
-                System.IO.File.WriteAllText(filename, output);
+                try
+                {
+                    System.IO.File.WriteAllText(filename, output);
+                }
+                catch (Exception)
+                {
+                }
 
                 Microsoft.Win32.RegistryKey Chrome = null;
                 if (localMachine) Chrome = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Mozilla\\NativeMessagingHosts\\com.zenamic.msg", true);

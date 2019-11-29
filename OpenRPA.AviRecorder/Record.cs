@@ -37,8 +37,7 @@ namespace OpenRPA.AviRecorder
 
         private void InitDefaultSettings()
         {
-            var exePath = new Uri(System.Reflection.Assembly.GetEntryAssembly().Location).LocalPath;
-            outputFolder = System.IO.Path.GetDirectoryName(exePath);
+            outputFolder = Interfaces.Extensions.MyVideos;
 
             encoder = KnownFourCCs.Codecs.MotionJpeg;
             encodingQuality = 70;

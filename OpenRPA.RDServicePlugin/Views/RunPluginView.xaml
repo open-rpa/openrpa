@@ -9,7 +9,7 @@
     <Grid>
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,52,0,0" Text="Use FreeRDP:" VerticalAlignment="Top" Width="110" />
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="139,52,0,0" VerticalAlignment="Top" Width="222" x:Name="chkUseFreeRDP" 
-                  IsEnabledChanged="chkUseFreeRDP_IsEnabledChanged" Click="chkUseFreeRDP_Click" />
+                  Checked="chkUseFreeRDP_IsEnabledChanged" Unchecked="chkUseFreeRDP_IsEnabledChanged" Click="chkUseFreeRDP_Click" />
 
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,72,0,0" Text="Executable:" VerticalAlignment="Top" Width="110" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="139,72,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="lblExecutable" />

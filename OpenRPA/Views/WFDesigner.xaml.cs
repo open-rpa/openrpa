@@ -1206,7 +1206,14 @@ namespace OpenRPA.Views
             {
                 var param = new Dictionary<string, object>();
                 BreakpointLocations = null;
-                instance = Workflow.CreateInstance(param, null, null, OnIdle, OnVisualTracking);
+                if (SlowMotion || VisualTracking)
+                {
+                    instance = Workflow.CreateInstance(param, null, null, OnIdle, OnVisualTracking);
+                }
+                else
+                {
+                    instance = Workflow.CreateInstance(param, null, null, OnIdle, null);
+                }
             }
             ReadOnly = true;
             if (!VisualTracking && Minimize) GenericTools.minimize(GenericTools.mainWindow);

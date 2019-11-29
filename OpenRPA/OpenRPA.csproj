@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.45</Version>
-    <PackageReleaseNotes>1.0.45 add recorder plugin ui, add more updater options
+    <Version>1.0.46</Version>
+    <PackageReleaseNotes>1.0.46 Tweak input handling doing recording
+1.0.45 add recorder plugin ui, add more updater options
 1.0.44 hotfix
 1.0.43 Fix overlay showing when disabled, fix double click, fix recording and saving when offline
 1.0.41 Catch layout file errors

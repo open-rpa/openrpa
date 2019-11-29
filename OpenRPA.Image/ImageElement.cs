@@ -68,10 +68,9 @@ namespace OpenRPA.Image
             FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
             if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
             if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-            Input.InputDriver.Instance.SkipEvent = true;
+            Input.InputDriver.Instance.AllowOneClick = true;
             if (!DoubleClick) FlaUI.Core.Input.Mouse.Click(flabuttun, point);
             if (DoubleClick) FlaUI.Core.Input.Mouse.DoubleClick(flabuttun, point);
-            Input.InputDriver.Instance.SkipEvent = false;
         }
         public void Focus()
         {

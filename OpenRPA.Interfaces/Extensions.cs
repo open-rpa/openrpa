@@ -317,28 +317,35 @@ namespace OpenRPA.Interfaces
 
 
             }
-            var arguments = GetCommandLine(processId);
-            var arr = parseCommandLine(arguments);
+            try
+            {
+                var arguments = GetCommandLine(processId);
+                var arr = parseCommandLine(arguments);
 
-            if (arr.Length == 0)
-            {
+                if (arr.Length == 0)
+                {
+
+                }
+                else if (arguments.Contains("\"" + arr[0] + "\""))
+                {
+                    result.arguments = arguments.Replace("\"" + arr[0] + "\"", "");
+                }
+                else
+                {
+                    result.arguments = arguments.Replace(arr[0], "");
+                }
+                if (result.arguments != null) { result.arguments = result.arguments.replaceEnvironmentVariable(); }
+                //if (arr.Length > 0)
+                //{
+                //    var resultarr = new string[arr.Length - 1];
+                //    Array.Copy(arr, 1, resultarr, 0, arr.Length - 1);
+                //    result.arguments = string.Join(" ", resultarr).replaceEnvironmentVariable();
+                //}
 
             }
-            else if (arguments.Contains("\"" + arr[0] + "\""))
+            catch (Exception)
             {
-                result.arguments = arguments.Replace("\"" + arr[0] + "\"", "");
             }
-            else
-            {
-                result.arguments = arguments.Replace(arr[0], "");
-            }
-            if (result.arguments != null) { result.arguments = result.arguments.replaceEnvironmentVariable(); }
-            //if (arr.Length > 0)
-            //{
-            //    var resultarr = new string[arr.Length - 1];
-            //    Array.Copy(arr, 1, resultarr, 0, arr.Length - 1);
-            //    result.arguments = string.Join(" ", resultarr).replaceEnvironmentVariable();
-            //}
             result.applicationUserModelId = ApplicationUserModelId;
             result.isImmersiveProcess = _isImmersiveProcess;
             return result;

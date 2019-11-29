@@ -28,10 +28,13 @@ namespace OpenRPA.AviRecorder
                 return view;
             }
         }
-        public string Name => "AviRecorder";
+        public static string PluginName => "AviRecorder";
+        public string Name => PluginName;
         private Dictionary<string, Record> Records = new Dictionary<string, Record>();
+        public IOpenRPAClient client;
         public void Initialize(IOpenRPAClient client)
         {
+            this.client = client;
         }
         public void onWorkflowAborted(ref IWorkflowInstance e)
         {
@@ -79,7 +82,7 @@ namespace OpenRPA.AviRecorder
             startRecording(e);
             return true;
         }
-        private void startRecording(IWorkflowInstance e)
+        public Record startRecording(IWorkflowInstance e)
         {
             var strcodec = PluginConfig.codec;
             var folder = PluginConfig.folder;
@@ -108,14 +111,16 @@ namespace OpenRPA.AviRecorder
             Record r;
             if (!Records.ContainsKey(e._id)) { r = new Record(e._id); Records.Add(e._id, r); } else { r = Records[e._id]; }
             if(!r.IsRecording) r.StartRecording(codec, folder, quality, e.Workflow.name + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+            return r;
             
         }
-        private void stopRecording(IWorkflowInstance e)
+        public Record stopRecording(IWorkflowInstance e)
         {
-            Record r;
-            if (!Records.ContainsKey(e._id)) return;
+            Record r = null;
+            if (!Records.ContainsKey(e._id)) return r;
             r = Records[e._id];
             if (r.IsRecording) r.StopRecording();
+            return r;
         }
     }
 }

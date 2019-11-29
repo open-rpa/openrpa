@@ -73,7 +73,7 @@ namespace OpenRPA
                         {
                             if (v.Value != null)
                             {
-                                Instance.Variables.Add(v.Key, new ValueType(v.Value.GetType(), v.Value));
+                                Instance.Variables.Add(v.Key, new WorkflowInstanceValueType(v.Value.GetType(), v.Value));
                             }
 
                         }
@@ -101,7 +101,7 @@ namespace OpenRPA
                     var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
                     if (Instance == null || Instance.wfApp == null) return;
                     var wfApp = Instance.wfApp;
-                    if (Instance.Variables == null) Instance.Variables = new Dictionary<string, ValueType>();
+                    if (Instance.Variables == null) Instance.Variables = new Dictionary<string, WorkflowInstanceValueType>();
                     if (activityStateRecord != null)
                     {
                         foreach (var v in Instance.Variables.ToList())
@@ -157,11 +157,11 @@ namespace OpenRPA
                                 var value = v.GetValue(context);
                                 if (Instance.Variables.ContainsKey(v.DisplayName))
                                 {
-                                    Instance.Variables[v.DisplayName] = new ValueType(v.PropertyType, value);
+                                    Instance.Variables[v.DisplayName] = new WorkflowInstanceValueType(v.PropertyType, value);
                                 }
                                 else
                                 {
-                                    Instance.Variables.Add(v.DisplayName, new ValueType(v.PropertyType, value));
+                                    Instance.Variables.Add(v.DisplayName, new WorkflowInstanceValueType(v.PropertyType, value));
                                 }
                             }
                         }

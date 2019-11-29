@@ -79,6 +79,14 @@ namespace OpenRPA
         }
         public MainWindow()
         {
+            var config = new NLog.Config.LoggingConfiguration();
+            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "logfile.txt" };
+            var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
+            // config.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
+            // config.AddRule(NLog.LogLevel.Trace, NLog.LogLevel.Fatal, logfile);
+            config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, logfile);
+            NLog.LogManager.Configuration = config;
+
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LoadFromSameFolder);
             System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = false;
             System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.BelowNormal;
@@ -341,15 +349,6 @@ namespace OpenRPA
                 {
                     if (Projects.Count == 0)
                     {
-                        SetStatus("Registering queue for robot");
-                        Log.Debug("Registering queue for robot " + global.webSocketClient.user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        await global.webSocketClient.RegisterQueue(global.webSocketClient.user._id);
-                        foreach (var role in global.webSocketClient.user.roles)
-                        {
-                            SetStatus("Registering queue for robot (" + role.name + ")");
-                            Log.Debug("Registering queue for role " + role.name + " " + role._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                            await global.webSocketClient.RegisterQueue(role._id);
-                        }
 
                         SetStatus("Loading workflows and state from " + Config.local.wsurl);
                         Log.Debug("Get workflows from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
@@ -465,7 +464,30 @@ namespace OpenRPA
                 catch (Exception ex)
                 {
                     Log.Error(ex.ToString());
-                }                
+                }
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        SetStatus("Registering queue for robot");
+                        Log.Debug("Registering queue for robot " + global.webSocketClient.user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        await global.webSocketClient.RegisterQueue(global.webSocketClient.user._id);
+                        foreach (var role in global.webSocketClient.user.roles)
+                        {
+                            SetStatus("Registering queue for robot (" + role.name + ")");
+                            Log.Debug("Registering queue for role " + role.name + " " + role._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                            await global.webSocketClient.RegisterQueue(role._id);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                    finally
+                    {
+                        SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+                    }
+                });
             }, null);
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1586,26 +1608,9 @@ namespace OpenRPA
             }
             Snippets.Reload();
         }
-        public Views.WFDesigner GetWorkflowDesignerByFilename(string Filename)
-        {
-            foreach(var designer in designers)
-            {
-                if (designer.Workflow.FilePath == Filename) return designer;
-            }
-            return null;
-        }
-        public Views.WFDesigner GetWorkflowDesignerById(string Id)
-        {
-            foreach (var designer in designers)
-            {
-                if (designer.Workflow._id == Id) return designer;
-            }
-            return null;
-        }
         public void _onOpenWorkflow(Workflow workflow, bool HasChanged = false)
         {
-            Views.WFDesigner designer = GetWorkflowDesignerByFilename(workflow.FilePath);
-            if (designer == null && !string.IsNullOrEmpty(workflow._id)) designer = GetWorkflowDesignerById(workflow._id);
+            Views.WFDesigner designer = GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) as Views.WFDesigner;
             if (designer != null)
             {
                 designer.tab.IsSelected = true;
@@ -1635,10 +1640,14 @@ namespace OpenRPA
         }
         public void onOpenWorkflow(Workflow workflow)
         {
-            AutomationHelper.syncContext.Post(o =>
+            GenericTools.RunUI(() =>
             {
                 _onOpenWorkflow(workflow);
-            }, null);
+            });
+            //AutomationHelper.syncContext.Post(o =>
+            //{
+            //    _onOpenWorkflow(workflow);
+            //}, null);
         }
         private void WFDesigneronChanged(Views.WFDesigner designer)
         {
@@ -1841,8 +1850,7 @@ namespace OpenRPA
 
             if (wf != null)
             {
-                Views.WFDesigner designer = GetWorkflowDesignerByFilename(wf.FilePath);
-                if (designer == null && !string.IsNullOrEmpty(wf._id)) { designer = GetWorkflowDesignerById(wf._id); }
+                Views.WFDesigner designer = GetWorkflowDesignerByIDOrRelativeFilename(wf.IDOrRelativeFilename) as Views.WFDesigner;
                 if (designer != null) { designer.tab.Close(); }
 
                 var messageBoxResult = MessageBox.Show("Delete " + wf.name + " ?", "Delete Confirmation", MessageBoxButton.YesNo);
@@ -1858,8 +1866,8 @@ namespace OpenRPA
                     if (messageBoxResult != MessageBoxResult.Yes) return;
                     foreach (var _wf in p.Workflows.ToList())
                     {
-                        Views.WFDesigner designer = GetWorkflowDesignerByFilename(_wf.FilePath);
-                        if (designer == null && !string.IsNullOrEmpty(_wf._id)) { designer = GetWorkflowDesignerById(_wf._id); }
+                        var designer = GetWorkflowDesignerByIDOrRelativeFilename(_wf.IDOrRelativeFilename) as Views.WFDesigner;
+                        if (designer == null && !string.IsNullOrEmpty(_wf._id)) {  }
                         if (designer != null) { designer.tab.Close(); }
                         await _wf.Delete();
                     }
@@ -1919,12 +1927,12 @@ namespace OpenRPA
                 if (workflow == null) return;
                 try
                 {
-                    var designer = GetDesignerById(workflow._id);
+                    Views.WFDesigner designer = GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) as Views.WFDesigner;
                     var param = new Dictionary<string, object>();
                     if (designer != null)
                     {
                         designer.BreakpointLocations = null;
-                        var instance = workflow.CreateInstance(param, null, null, designer.OnIdle, designer.OnVisualTracking);
+                        var instance = workflow.CreateInstance(param, null, null, new idleOrComplete(designer.OnIdle) , designer.OnVisualTracking);
                         designer.Minimize = false;
                         designer.Run(VisualTracking, SlowMotion, instance);
                     }
@@ -2395,25 +2403,6 @@ namespace OpenRPA
             _ = global.webSocketClient.QueueMessage(Entity._id, command, null);
 
         }
-        public Workflow GetWorkflowById(string id)
-        {
-            foreach (var p in Projects)
-            {
-                foreach (var wf in p.Workflows)
-                {
-                    if (wf._id == id || wf.RelativeFilename == id) return wf;
-                }
-            }
-            return null;
-        }
-        public Views.WFDesigner GetDesignerById(string workflowid)
-        {
-            foreach (var designer in designers)
-            {
-                if (designer.Workflow._id == workflowid || designer.Workflow.RelativeFilename == workflowid) return designer;
-            }
-            return null;
-        }
         private async void WebSocketClient_OnQueueMessage(IQueueMessage message, QueueMessageEventArgs e)
         {
             RobotCommand command = null;
@@ -2450,8 +2439,8 @@ namespace OpenRPA
                 if (command.command == null) return;
                 if (command.command == "invoke" && !string.IsNullOrEmpty(command.workflowid))
                 {
-                    WorkflowInstance instance = null;
-                    var workflow = GetWorkflowById(command.workflowid);
+                    IWorkflowInstance instance = null;
+                    var workflow = GetWorkflowByIDOrRelativeFilename(command.workflowid);
                     if (workflow == null) throw new ArgumentException("Unknown workflow " + command.workflowid);
                     lock (statelock)
                     {
@@ -2490,7 +2479,7 @@ namespace OpenRPA
                         Log.Information("Create instance of " + workflow.name);
                         GenericTools.RunUI(() =>
                         {
-                            var designer = GetDesignerById(command.workflowid);
+                            var designer = GetWorkflowDesignerByIDOrRelativeFilename(command.workflowid) as Views.WFDesigner;
                             if (designer != null)
                             {
                                 designer.BreakpointLocations = null;
@@ -2521,7 +2510,7 @@ namespace OpenRPA
                 await global.webSocketClient.QueueMessage(message.replyto, command, message.correlationId);
             }
         }
-        public void idleOrComplete(WorkflowInstance instance, EventArgs e)
+        public void idleOrComplete(IWorkflowInstance instance, EventArgs e)
         {
             GenericTools.RunUI(() =>
             {
@@ -2635,6 +2624,29 @@ namespace OpenRPA
                     Log.Information(String.Format("Download completed"));
                 }
         }
-
+        public IDesigner GetWorkflowDesignerByIDOrRelativeFilename(string IDOrRelativeFilename)
+        {
+            foreach (var designer in designers)
+            {
+                if (designer.Workflow.IDOrRelativeFilename == IDOrRelativeFilename) return designer;
+            }
+            return null;
+        }
+        public IWorkflow GetWorkflowByIDOrRelativeFilename(string IDOrRelativeFilename)
+        {
+            foreach (var p in Projects)
+            {
+                foreach (var wf in p.Workflows)
+                {
+                    if (wf.IDOrRelativeFilename == IDOrRelativeFilename) return wf;
+                }
+            }
+            return null;
+        }
+        public IWorkflowInstance GetWorkflowInstanceByInstanceId(string InstanceId)
+        {
+            var result = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId).FirstOrDefault();
+            return result;
+        }
     }
 }

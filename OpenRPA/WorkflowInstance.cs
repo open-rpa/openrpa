@@ -20,9 +20,7 @@ namespace OpenRPA
         [JsonIgnore]
         // public DateTime LastUpdated { get { return GetProperty<DateTime>(); } set { SetProperty(value); } } 
         public static List<WorkflowInstance> Instances = new List<WorkflowInstance>();
-        public delegate void VisualTrackingHandler(WorkflowInstance Instance, string ActivityId, string ChildActivityId, string State);
         public event VisualTrackingHandler OnVisualTracking;
-        public delegate void idleOrComplete(WorkflowInstance sender, EventArgs e);
         public event idleOrComplete OnIdleOrComplete;
         public Dictionary<string, object> Parameters { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
         public Dictionary<string, object> Bookmarks { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
@@ -31,7 +29,7 @@ namespace OpenRPA
         public string correlationId { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string queuename { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [JsonIgnore]
-        public Dictionary<string, ValueType> Variables { get { return GetProperty<Dictionary<string, ValueType>>(); } set { SetProperty(value); } }
+        public Dictionary<string, WorkflowInstanceValueType> Variables { get { return GetProperty<Dictionary<string, WorkflowInstanceValueType>>(); } set { SetProperty(value); } }
         public string InstanceId { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string WorkflowId { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string RelativeFilename { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -232,7 +230,7 @@ namespace OpenRPA
                 throw;
             }
         }
-        public System.Diagnostics.Stopwatch runWatch { get; private set; }
+        public System.Diagnostics.Stopwatch runWatch { get; set; }
         apibase IWorkflowInstance.Workflow { get => this.Workflow; set => this.Workflow = value as Workflow; }
         public void Run()
         {
@@ -447,10 +445,4 @@ namespace OpenRPA
         }
     }
 
-    public class ValueType
-    {
-        public ValueType(Type type, object value) { this.type = type; this.value = value; }
-        public Type type { get; set; }
-        public object value { get; set; }
-    }
 }

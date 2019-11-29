@@ -88,7 +88,7 @@ namespace OpenRPA.Windows
                         var i = temppathToRoot.First();
                         temppathToRoot.Remove(i);
                         item = new WindowsSelectorItem(i, false);
-                        var m = item.matches(automation, parent, _treeWalker, 2, isDesktop);
+                        var m = item.matches(automation, parent, _treeWalker, 2, isDesktop, TimeSpan.FromSeconds(250));
                         if (m.Length > 0)
                         {
                             newpathToRoot.Add(i);
@@ -245,7 +245,7 @@ namespace OpenRPA.Windows
                             if (i == 0) count = midcounter;
                             // if (i < selectors.Count) count = 500;
                             if ((i+1) < selectors.Count) count = 1;
-                            var matches = ((WindowsSelectorItem)s).matches(automation, _element.RawElement, _treeWalker, count, isDesktop); // (i == 0 ? 1: maxresults)
+                            var matches = ((WindowsSelectorItem)s).matches(automation, _element.RawElement, _treeWalker, count, isDesktop, TimeSpan.FromSeconds(250)); // (i == 0 ? 1: maxresults)
                             var uimatches = new List<UIElement>();
                             foreach (var m in matches)
                             {
@@ -274,7 +274,7 @@ namespace OpenRPA.Windows
                                     var count = maxresults;
                                     if (i == 0) count = 1;
                                     if (i < selectors.Count) count = 500;
-                                    var matches = ((WindowsSelectorItem)s).matches(automation, _element.RawElement, _treeWalker, count, false); // (i == 0 ? 1 : maxresults)
+                                    var matches = ((WindowsSelectorItem)s).matches(automation, _element.RawElement, _treeWalker, count, false, TimeSpan.FromSeconds(250)); // (i == 0 ? 1 : maxresults)
                                     var uimatches = new List<UIElement>();
                                     foreach (var m in matches)
                                     {
@@ -386,7 +386,5 @@ namespace OpenRPA.Windows
             }
             return result;
         }
-
-
     }
 }

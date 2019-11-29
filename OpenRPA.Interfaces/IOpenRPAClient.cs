@@ -12,5 +12,8 @@ namespace OpenRPA.Interfaces
     {
         event SignedinEventHandler Signedin;
         event DisconnectedEventHandler Disconnected;
+        IDesigner GetWorkflowDesignerByIDOrRelativeFilename(string IDOrRelativeFilename);
+        IWorkflow GetWorkflowByIDOrRelativeFilename(string IDOrRelativeFilename);
+        IWorkflowInstance GetWorkflowInstanceByInstanceId(string InstanceId);
     }
 }

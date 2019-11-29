@@ -391,8 +391,8 @@ namespace OpenRPA
                 return wf;
             }
         }
-        public WorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, 
-            WorkflowInstance.idleOrComplete idleOrComplete, WorkflowInstance.VisualTrackingHandler VisualTracking)
+        public IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId,
+            OpenRPA.Interfaces.idleOrComplete idleOrComplete, OpenRPA.Interfaces.VisualTrackingHandler VisualTracking)
         {
             if (this.Parameters == null) this.Parameters = new List<workflowparameter>();
             if (this.Parameters.Count == 0)
@@ -446,19 +446,6 @@ namespace OpenRPA
             }
         }
 
-    }
-    public enum workflowparameterdirection
-    {
-        @in = 0,
-        @out = 1,
-        inout = 2,
-    }
-    public class workflowparameter
-    {
-        public string name { get; set; }
-        public string type { get; set; }
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public workflowparameterdirection direction { get; set; }
     }
 
 }

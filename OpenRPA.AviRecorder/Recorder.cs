@@ -88,7 +88,6 @@ namespace OpenRPA.AviRecorder
                 };
                 audioSource.DataAvailable += audioSource_DataAvailable;
             }
-
             screenThread = new Thread(RecordScreen)
             {
                 Name = typeof(Recorder).Name + ".RecordScreen",
@@ -185,7 +184,7 @@ namespace OpenRPA.AviRecorder
             var timeTillNextFrame = TimeSpan.Zero;
             stopwatch.Start();
 
-            while (!stopThread.WaitOne(timeTillNextFrame))
+            while (!stopThread.WaitOne(timeTillNextFrame, true))
             {
                 GetScreenshot(buffer);
                 shotsTaken++;
@@ -222,7 +221,18 @@ namespace OpenRPA.AviRecorder
                 videoWriteTask.Wait();
             }
         }
-
+        [DllImport("user32.dll", SetLastError = false)]
+        static extern IntPtr GetDesktopWindow();
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern bool GetWindowRect(IntPtr hwnd, ref RECT lpRect);
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RECT
+        {
+            public int Left;        // x position of upper-left corner
+            public int Top;         // y position of upper-left corner
+            public int Right;       // x position of lower-right corner
+            public int Bottom;      // y position of lower-right corner
+        }
         private void GetScreenshot(byte[] buffer)
         {
             using (var bitmap = new Bitmap(screenWidth, screenHeight))
@@ -232,9 +242,9 @@ namespace OpenRPA.AviRecorder
                 var bits = bitmap.LockBits(new Rectangle(0, 0, screenWidth, screenHeight), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb);
                 Marshal.Copy(bits.Scan0, buffer, 0, buffer.Length);
                 bitmap.UnlockBits(bits);
-
                 // Should also capture the mouse cursor here, but skipping for simplicity
                 // For those who are interested, look at http://www.codeproject.com/Articles/12850/Capturing-the-Desktop-Screen-with-the-Mouse-Cursor
+                // or https://www.red-gate.com/simple-talk/dotnet/net-framework/capturing-screenshots-for-automated-error-reporting/
             }
         }
 

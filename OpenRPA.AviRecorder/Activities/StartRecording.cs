@@ -47,24 +47,29 @@ namespace OpenRPA.AviRecorder.Activities
                 case "x264": codec = SharpAvi.KnownFourCCs.Codecs.X264; break;
                 default: codec = SharpAvi.KnownFourCCs.Codecs.MotionJpeg; break;
             }
-            if (!Record.Instance.IsRecording)
-            {
-                try
-                {
-                    Record.Instance.StartRecording(codec, folder, quality);
-                }
-                catch (Exception)
-                {
-                    try
-                    {
-                        System.IO.File.Delete(Record.Instance.lastFileName);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                    throw;
-                }
-            }
+            var p = Plugins.runPlugins.Where(x => x.Name == RunPlugin.PluginName).FirstOrDefault() as RunPlugin;
+            if (p == null) return;
+            var instance = p.client.GetWorkflowInstanceByInstanceId(context.WorkflowInstanceId.ToString());
+            if (instance == null) return;
+            p.startRecording(instance);
+            //if (!Record.Instance.IsRecording)
+            //{
+            //    try
+            //    {
+            //        Record.Instance.StartRecording(codec, folder, quality);
+            //    }
+            //    catch (Exception)
+            //    {
+            //        try
+            //        {
+            //            System.IO.File.Delete(Record.Instance.lastFileName);
+            //        }
+            //        catch (Exception)
+            //        {
+            //        }
+            //        throw;
+            //    }
+            //}
         }
 
     }

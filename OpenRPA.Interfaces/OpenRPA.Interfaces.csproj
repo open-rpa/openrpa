@@ -78,6 +78,7 @@
       <IncludeAssets></IncludeAssets>
       <ExcludeAssets></ExcludeAssets>
     </PackageReference>
+    <PackageReference Include="NLog" Version="4.6.8" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Selector\SelectorWindow.xaml">

@@ -229,7 +229,7 @@ namespace OpenRPA.Windows
                 return new AndCondition(cond);
             }
         }
-        public AutomationElement[] matches(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count, bool isDesktop)
+        public AutomationElement[] matches(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count, bool isDesktop, TimeSpan timeout)
         {
             var matchs = new List<AutomationElement>();
             var c = GetConditionsWithoutStar();
@@ -290,10 +290,16 @@ namespace OpenRPA.Windows
                     syncEvent.Set();
                 }
             };
-            if (isDesktop && PluginConfig.get_elements_in_different_thread)
+            // if (isDesktop && PluginConfig.get_elements_in_different_thread)
+            if (PluginConfig.get_elements_in_different_thread)
             {
-                Task.Run(action);
-                syncEvent.WaitOne();
+                //Task.Run(action);
+                //syncEvent.WaitOne(timeout, true);
+                //if(matchs.Count > 0)
+                //{
+                //    matchs.Clear();
+                    action();
+                //}
             }
             else
             {
@@ -443,6 +449,5 @@ namespace OpenRPA.Windows
         {
             return "AutomationId:" + AutomationId + " Name:" + Name + " ClassName: " + ClassName + " ControlType: " + ControlType;
         }
-
     }
 }

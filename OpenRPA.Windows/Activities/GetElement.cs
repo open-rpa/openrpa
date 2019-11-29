@@ -61,42 +61,42 @@ namespace OpenRPA.Windows
             do
             {
 
-                //if(PluginConfig.get_elements_in_different_thread)
-                //{
-                //    elements = OpenRPA.AutomationHelper.RunSTAThread<UIElement[]>(() =>
-                //    {
-                //        try
-                //        {
-                //            Log.Selector("GetElementsWithuiSelector in non UI thread");
-                //            return WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
-                //        }
-                //        catch (System.Threading.ThreadAbortException)
-                //        {
-                //        }
-                //        catch (Exception ex)
-                //        {
-                //            Log.Error(ex, "");
-                //        }
-                //        return new UIElement[] { };
-                //    }, TimeSpan.FromMilliseconds(_timeout)).Result;
-                //} 
-                //else
-                //{
-                //    Log.Selector("GetElementsWithuiSelector using UI thread");
-                //    elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
-                //}
-                elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+                if (PluginConfig.get_elements_in_different_thread)
+                {
+                    elements = OpenRPA.AutomationHelper.RunSTAThread<UIElement[]>(() =>
+                    {
+                        try
+                        {
+                            Log.Selector("GetElementsWithuiSelector in non UI thread");
+                            return WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+                        }
+                        catch (System.Threading.ThreadAbortException)
+                        {
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex, "");
+                        }
+                        return new UIElement[] { };
+                    }, TimeSpan.FromMilliseconds(_timeout)).Result;
+                }
+                else
+                {
+                    Log.Selector("GetElementsWithuiSelector using UI thread");
+                    elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+                }
+                //elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
                 if (elements == null)
                 {
                     elements = new UIElement[] { };
                 }
                 if(elements.Length == 0) Log.Selector("GetElementsWithuiSelector found no elements");
             } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
-            if (PluginConfig.get_elements_in_different_thread && elements.Length > 0)
-            {
-                // Get them again, we need the COM objects to be loaded in the UI thread
-                elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
-            }
+            //if (PluginConfig.get_elements_in_different_thread && elements.Length > 0)
+            //{
+            //    // Get them again, we need the COM objects to be loaded in the UI thread
+            //    elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+            //}
             context.SetValue(Elements, elements);
             if(elements.Count() < minresults)
             {

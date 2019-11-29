@@ -1928,17 +1928,25 @@ namespace OpenRPA
                 try
                 {
                     Views.WFDesigner designer = GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) as Views.WFDesigner;
+                    IWorkflowInstance instance;
                     var param = new Dictionary<string, object>();
                     if (designer != null)
                     {
                         designer.BreakpointLocations = null;
-                        var instance = workflow.CreateInstance(param, null, null, new idleOrComplete(designer.OnIdle) , designer.OnVisualTracking);
-                        designer.Minimize = false;
+                        if(designer.Minimize)
+                        {
+                            instance = workflow.CreateInstance(param, null, null, new idleOrComplete(designer.OnIdle), null);
+                        }
+                        else
+                        {
+                            instance = workflow.CreateInstance(param, null, null, new idleOrComplete(designer.OnIdle), designer.OnVisualTracking);
+                        }                        
+                        // designer.Minimize = false;
                         designer.Run(VisualTracking, SlowMotion, instance);
                     }
                     else
                     {
-                        var instance = workflow.CreateInstance(param, null, null, idleOrComplete, null);
+                        instance = workflow.CreateInstance(param, null, null, idleOrComplete, null);
                         instance.Run();
                     }
                 }
@@ -2248,7 +2256,7 @@ namespace OpenRPA
                         StartRecordPlugins();
                         if (e.ClickHandled == false)
                         {
-                            InputDriver.Instance.CallNext = true;
+                            InputDriver.Instance.AllowOneClick = true;
                             Log.Debug("MouseMove to " + e.X + "," + e.Y + " and click " + e.Button + " button");
                             //var point = new FlaUI.Core.Shapes.Point(e.X + e.OffsetX, e.Y + e.OffsetY);
                             var point = new FlaUI.Core.Shapes.Point(e.X, e.Y);
@@ -2262,7 +2270,6 @@ namespace OpenRPA
                         }
                         return;
                     }
-                    InputDriver.Instance.CallNext = true;
                     if (SelectedContent is Views.WFDesigner view)
                     {
 
@@ -2299,7 +2306,7 @@ namespace OpenRPA
                         view.ReadOnly = true;
                         if (e.ClickHandled == false && e.SupportInput == false)
                         {
-                            InputDriver.Instance.CallNext = true;
+                            InputDriver.Instance.AllowOneClick = true;
                             Log.Debug("MouseMove to " + e.X + "," + e.Y + " and click " + e.Button + " button");
                             //var point = new FlaUI.Core.Shapes.Point(e.X , e.Y);
                             //FlaUI.Core.Input.Mouse.MoveTo(e.X , e.Y);
@@ -2315,7 +2322,6 @@ namespace OpenRPA
                         }
                         System.Threading.Thread.Sleep(500);
                     }
-                    InputDriver.Instance.CallNext = false;
                     StartRecordPlugins();
                 }
                 catch (Exception ex)

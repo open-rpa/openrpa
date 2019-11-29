@@ -1205,8 +1205,8 @@ namespace OpenRPA.Views
             if (instance == null)
             {
                 var param = new Dictionary<string, object>();
-                BreakpointLocations = null;
-                if (SlowMotion || VisualTracking)
+                BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
+                if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0)
                 {
                     instance = Workflow.CreateInstance(param, null, null, OnIdle, OnVisualTracking);
                 }

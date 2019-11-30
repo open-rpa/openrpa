@@ -187,7 +187,13 @@
                         <TextBlock Text="selector verbose"></TextBlock>
                     </StackPanel>
                 </RibbonGroup>
-
+                <RibbonGroup Header="Extra">
+                    <StackPanel Orientation="Horizontal">
+                        <RibbonCheckBox IsChecked="{Binding use_sendkeys}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
+                        <TextBlock Text="use sendkeys"></TextBlock>
+                    </StackPanel>
+                </RibbonGroup>
             </RibbonTab>
             <!--<RibbonTab Header="Windows">
                 <RibbonGroup Header="Windows">

@@ -34,5 +34,10 @@
             Checked="traverse_selector_both_ways_IsEnabledChanged"  Unchecked="traverse_selector_both_ways_IsEnabledChanged" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,90,0,0" Text="Traverse UI tree both ways to filter out ghost selector elements" VerticalAlignment="Top" />
 
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,120,0,0" Text="search descendants:" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,120,0,0" VerticalAlignment="Top" Width="222" x:Name="search_descendants" 
+            Checked="search_descendants_Checked"  Unchecked="search_descendants_Checked" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,120,0,0" Text="Search all descendants, use for more simple selectors" VerticalAlignment="Top" />
+
     </Grid>
 </UserControl>

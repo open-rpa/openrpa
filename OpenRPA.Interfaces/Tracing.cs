@@ -108,40 +108,44 @@ namespace OpenRPA.Interfaces
         private Task pending = null;
         protected virtual void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (DateTime.Now - lastEvent < TimeSpan.FromSeconds(1))
-            {
-                try
-                {
-                    if (pending != null)
-                    {
-                        if (pending.IsCompleted) pending = null;
-                    }
-                    if (pending == null)
-                    {
-                        pending = Task.Run(async () =>
-                        {
-                            try
-                            {
-                                await Task.Delay(500);
-                                OnPropertyChanged(e);
-                            }
-                            catch (Exception)
-                            {
-                                pending = null;
-                            }
-                        });
-                    }
-                    return;
-                }
-                catch (Exception)
-                {
-                    pending = null;
-                }
-            }
             if (PropertyChanged != null)
             {
-                Task.Run(() => { PropertyChanged?.Invoke(this, e); lastEvent = DateTime.Now; });
+                Task.Run(() => { PropertyChanged?.Invoke(this, e); });
             }
+            //if (DateTime.Now - lastEvent < TimeSpan.FromSeconds(1))
+            //{
+            //    try
+            //    {
+            //        if (pending != null)
+            //        {
+            //            if (pending.IsCompleted) pending = null;
+            //        }
+            //        if (pending == null)
+            //        {
+            //            pending = Task.Run(async () =>
+            //            {
+            //                try
+            //                {
+            //                    await Task.Delay(500);
+            //                    OnPropertyChanged(e);
+            //                }
+            //                catch (Exception)
+            //                {
+            //                    pending = null;
+            //                }
+            //            });
+            //        }
+            //        return;
+            //    }
+            //    catch (Exception)
+            //    {
+            //        pending = null;
+            //    }
+            //}
+            //if (PropertyChanged != null)
+            //{
+            //    Task.Run(() => { PropertyChanged?.Invoke(this, e); lastEvent = DateTime.Now; });
+            //}
         }
         public IFormatProvider formatProvider { get; set; }
     }

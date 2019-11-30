@@ -37,6 +37,7 @@ namespace OpenRPA
         public bool log_output = true;
         public bool log_warning = true;
         public bool log_error = true;
+        public bool use_sendkeys = false;
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)

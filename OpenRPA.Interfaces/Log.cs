@@ -13,7 +13,17 @@ namespace OpenRPA.Interfaces
         private static NLog.Logger nlog = null;
         public static void LogLine(string message, string category)
         {
-            if(nlog == null) nlog = NLog.LogManager.GetCurrentClassLogger();
+            if (nlog == null)
+            {
+                var config = new NLog.Config.LoggingConfiguration();
+                var logfile = new NLog.Targets.FileTarget("logfile") { FileName = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "logfile.txt") };
+                var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
+                // config.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
+                // config.AddRule(NLog.LogLevel.Trace, NLog.LogLevel.Fatal, logfile);
+                config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, logfile);
+                NLog.LogManager.Configuration = config;
+                nlog = NLog.LogManager.GetCurrentClassLogger();
+            }
             switch(category)
             {
                 case "Error": nlog.Error(message); break;

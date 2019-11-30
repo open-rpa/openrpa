@@ -7,7 +7,7 @@
     <Description>Activities and record plugin for handling Internet Explorer</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.18</Version>
+    <Version>1.0.19</Version>
     <PackageReleaseNotes>1.0.18 update interfaces reference
     
 

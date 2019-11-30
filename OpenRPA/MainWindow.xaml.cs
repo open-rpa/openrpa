@@ -79,14 +79,6 @@ namespace OpenRPA
         }
         public MainWindow()
         {
-            var config = new NLog.Config.LoggingConfiguration();
-            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "logfile.txt" };
-            var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
-            // config.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
-            // config.AddRule(NLog.LogLevel.Trace, NLog.LogLevel.Fatal, logfile);
-            config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, logfile);
-            NLog.LogManager.Configuration = config;
-
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LoadFromSameFolder);
             System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = false;
             System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.BelowNormal;
@@ -775,6 +767,18 @@ namespace OpenRPA
             set
             {
                 Config.local.log_selector_verbose = value;
+                NotifyPropertyChanged("log_selector_verbose");
+            }
+        }
+        public bool use_sendkeys
+        {
+            get
+            {
+                return Config.local.use_sendkeys;
+            }
+            set
+            {
+                Config.local.use_sendkeys = value;
                 NotifyPropertyChanged("log_selector_verbose");
             }
         }

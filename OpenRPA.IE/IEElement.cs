@@ -119,7 +119,7 @@ namespace OpenRPA.IE
         public int IndexInParent { get; set; }
         public MSHTML.IHTMLElement RawElement { get; private set; }
         object IElement.RawElement { get => RawElement; set => RawElement = value as MSHTML.IHTMLElement; }
-        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick)
+        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse)
         {
             if (Button != Input.MouseButton.Left) { VirtualClick = false; }
             if (VirtualClick)
@@ -132,7 +132,7 @@ namespace OpenRPA.IE
                 //Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
                 //Input.InputDriver.DoMouseClick();
                 var point = new FlaUI.Core.Shapes.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-                //FlaUI.Core.Input.Mouse.MoveTo(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+                if (AnimateMouse) FlaUI.Core.Input.Mouse.MoveTo(point);
                 FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
                 if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
                 if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;

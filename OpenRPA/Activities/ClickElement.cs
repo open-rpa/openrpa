@@ -55,8 +55,11 @@ namespace OpenRPA.Activities
             var button = Button.Get(context);
             var virtualClick = false;
             if (VirtualClick != null) virtualClick = VirtualClick.Get(context);
+            var animatemouse = false;
+            if (AnimateMouse != null) animatemouse = AnimateMouse.Get(context);
+            
             var _button = (Input.MouseButton)button;
-            el.Click(virtualClick, _button, OffsetX, OffsetY, doubleclick);
+            el.Click(virtualClick, _button, OffsetX, OffsetY, doubleclick, animatemouse);
             TimeSpan postwait = TimeSpan.Zero;
             if (PostWait!=null) { postwait = PostWait.Get(context); }
             if(postwait != TimeSpan.Zero)

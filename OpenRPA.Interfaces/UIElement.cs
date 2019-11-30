@@ -140,7 +140,7 @@ namespace OpenRPA
             var process = System.Diagnostics.Process.GetProcessById(ProcessId);
             while (!process.Responding) { }
         }
-        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick)
+        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse)
         {
             try
             {
@@ -177,7 +177,7 @@ namespace OpenRPA
                     //Input.InputDriver.DoMouseClick();
                     //Log.Debug("Click done");
                     var point = new FlaUI.Core.Shapes.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-                    //FlaUI.Core.Input.Mouse.MoveTo(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+                    if(AnimateMouse) FlaUI.Core.Input.Mouse.MoveTo(point);
                     FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
                     if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
                     if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
@@ -262,7 +262,7 @@ namespace OpenRPA
             }
             set
             {
-                Click(false, Input.MouseButton.Left, Rectangle.Width / 2, Rectangle.Y / 2, false);
+                Click(false, Input.MouseButton.Left, Rectangle.Width / 2, Rectangle.Y / 2, false, false);
                 TypeText(value);
             }
         }

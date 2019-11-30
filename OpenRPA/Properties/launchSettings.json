@@ -1,7 +1,8 @@
 {
   "profiles": {
     "OpenRPA": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "nativeDebugging": false
     },
     "ttttt": {
       "commandName": "Executable",

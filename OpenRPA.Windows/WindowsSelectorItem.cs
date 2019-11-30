@@ -270,42 +270,9 @@ namespace OpenRPA.Windows
             //    }
             //}
 
-            System.Threading.ManualResetEvent syncEvent = new System.Threading.ManualResetEvent(false);
-            Action action = () =>
-            {
-                var nodes = new List<AutomationElement>();
-                Log.Selector(string.Format("AutomationElement.matches.isDesktop(" + isDesktop + ")::GetFirstChild {0:mm\\:ss\\.fff}", sw.Elapsed));
-                var elementNode = _treeWalker.GetFirstChild(element);
-                var i = 0;
-                while (elementNode != null)
-                {
-                    nodes.Add(elementNode);
-                    i++;
-                    if (Match(elementNode)) matchs.Add(elementNode);
-                    if (matchs.Count >= count) break;
-                    Log.Selector(string.Format("AutomationElement.matches.isDesktop(" + isDesktop + ")::GetNextSibling {0:mm\\:ss\\.fff}", sw.Elapsed));
-                    elementNode = _treeWalker.GetNextSibling(elementNode);
-                }
-                if (syncEvent != null)
-                {
-                    syncEvent.Set();
-                }
-            };
-            // if (isDesktop && PluginConfig.get_elements_in_different_thread)
-            if (PluginConfig.get_elements_in_different_thread)
-            {
-                //Task.Run(action);
-                //syncEvent.WaitOne(timeout, true);
-                //if(matchs.Count > 0)
-                //{
-                //    matchs.Clear();
-                    action();
-                //}
-            }
-            else
-            {
-                action();
-            }
+
+
+
 
             //if (isDesktop) // To slow !
             //{
@@ -336,6 +303,68 @@ namespace OpenRPA.Windows
             //    }
             //}
 
+
+            if(PluginConfig.search_descendants)
+            {
+                Log.SelectorVerbose("Searching for " + c.ToString());
+                AutomationElement[] elements = null;
+                if (isDesktop)
+                {
+                    elements = element.FindAllChildren(c);
+                }
+                else
+                {
+                    elements = element.FindAllDescendants(c);
+                }
+                Log.SelectorVerbose("Done Search");
+                Log.Selector(string.Format("AutomationElement.matches.isDesktop::process elements {0:mm\\:ss\\.fff}", sw.Elapsed));
+                // var elements = element.FindAllChildren();
+                foreach (var elementNode in elements)
+                {
+                    Log.SelectorVerbose("matches::match");
+                    if (Match(elementNode)) matchs.Add(elementNode);
+                }
+                Log.Selector(string.Format("AutomationElement.matches.isDesktop::complete {0:mm\\:ss\\.fff}", sw.Elapsed));
+            }
+            else
+            {
+                System.Threading.ManualResetEvent syncEvent = new System.Threading.ManualResetEvent(false);
+                Action action = () =>
+                {
+                    var nodes = new List<AutomationElement>();
+                    Log.Selector(string.Format("AutomationElement.matches.isDesktop(" + isDesktop + ")::GetFirstChild {0:mm\\:ss\\.fff}", sw.Elapsed));
+                    var elementNode = _treeWalker.GetFirstChild(element);
+                    var i = 0;
+                    while (elementNode != null)
+                    {
+                        nodes.Add(elementNode);
+                        i++;
+                        if (Match(elementNode)) matchs.Add(elementNode);
+                        if (matchs.Count >= count) break;
+                        Log.Selector(string.Format("AutomationElement.matches.isDesktop(" + isDesktop + ")::GetNextSibling {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        elementNode = _treeWalker.GetNextSibling(elementNode);
+                    }
+                    if (syncEvent != null)
+                    {
+                        syncEvent.Set();
+                    }
+                };
+                // if (isDesktop && PluginConfig.get_elements_in_different_thread)
+                if (PluginConfig.get_elements_in_different_thread)
+                {
+                    //Task.Run(action);
+                    //syncEvent.WaitOne(timeout, true);
+                    //if(matchs.Count > 0)
+                    //{
+                    //    matchs.Clear();
+                    action();
+                    //}
+                }
+                else
+                {
+                    action();
+                }
+            }
             Log.SelectorVerbose(string.Format("matches::FindAllChildren.isDesktop(" + isDesktop + ")::complete {0:mm\\:ss\\.fff}", sw.Elapsed));
             return matchs.ToArray();
         }

@@ -136,66 +136,110 @@ namespace OpenRPA.Windows
                 //item.canDisable = false;
                 Items.Add(item);
             }
-            bool isStartmenu = false;
-            for (var i = 0; i < pathToRoot.Count(); i++)
+
+            if (PluginConfig.search_descendants)
             {
-                var o = pathToRoot[i];
-                int IndexInParent = -1;
-                if (o.Parent != null && i > 0)
+                if (anchor == null)
                 {
-                    var c = o.Parent.FindAllChildren();
-                    for (var x = 0; x < c.Count(); x++)
+                    // Add window, we NEED to search from a window
+                    item = new WindowsSelectorItem(pathToRoot[0], false, -1);
+                    if (doEnum) item.EnumNeededProperties(pathToRoot[pathToRoot.Count - 1], pathToRoot[pathToRoot.Count - 1].Parent);
+                    item.canDisable = false;
+                    Items.Add(item);
+
+
+                    var FrameworkId = item.Properties.Where(x => x.Name == "FrameworkId").FirstOrDefault();
+                    if (FrameworkId != null && (FrameworkId.Value == "XAML" || FrameworkId.Value == "WinForm"))
                     {
-                        if (o.Equals(c[x])) IndexInParent = x;
+                        var itemname = item.Properties.Where(x => x.Name == "Name").FirstOrDefault();
+                        if (itemname != null) itemname.Enabled = false;
                     }
                 }
-
-                item = new WindowsSelectorItem(o, false, IndexInParent);
-                var _IndexInParent = item.Properties.Where(x => x.Name == "IndexInParent").FirstOrDefault();
-                if(_IndexInParent!=null) _IndexInParent.Enabled = false;
-                if (i == 0 || i == (pathToRoot.Count() - 1)) item.canDisable = false;
-                foreach (var p in item.Properties) // TODO: Ugly, ugly inzuBiz hack !!!!
+                if (pathToRoot.Count > 2)
                 {
-                    int idx = p.Value.IndexOf(".");
-                    if (p.Name == "ClassName" && idx > -1)
+                    item = new WindowsSelectorItem(pathToRoot[pathToRoot.Count - 2], false, -1);
+                    if (doEnum) item.EnumNeededProperties(pathToRoot[pathToRoot.Count - 2], pathToRoot[pathToRoot.Count - 2].Parent);
+                    Items.Add(item);
+                }
+                if (pathToRoot.Count > 1)
+                {
+                    int IndexInParent = -1;
+                    if (pathToRoot[pathToRoot.Count - 1].Parent != null)
                     {
-                        var FrameworkId = item.Properties.Where(x => x.Name == "FrameworkId").FirstOrDefault();
-                        if (FrameworkId!=null && (FrameworkId.Value == "XAML" || FrameworkId.Value == "WinForm") && _IndexInParent != null)
+                        var c = pathToRoot[pathToRoot.Count - 1].Parent.FindAllChildren();
+                        for (var x = 0; x < c.Count(); x++)
                         {
-                            item.Properties.ForEach(x => x.Enabled = false);
-                            _IndexInParent.Enabled = true;
-                            p.Enabled = true;
+                            if (pathToRoot[pathToRoot.Count - 1].Equals(c[x])) IndexInParent = x;
                         }
-                        int idx2 = p.Value.IndexOf(".", idx + 1);
-                        if (idx2 > idx) p.Value = p.Value.Substring(0, idx2 + 1) + "*";
                     }
-                    //if (p.Name == "ClassName" && p.Value.StartsWith("WindowsForms10")) p.Value = "WindowsForms10*";
-                    if (p.Name == "ClassName" && p.Value.ToLower() == "shelldll_defview")
-                    {
-                        item.Enabled = false;
-                    }
-                    if (p.Name == "ClassName" && (p.Value.ToLower() == "dv2vontrolhost" || p.Value.ToLower() == "desktopprogramsmfu"))
-                    {
-                        isStartmenu = true;
-                    }
-                    if (p.Name == "ClassName" && p.Value == "#32770")
-                    {
-                        item.Enabled = false;
-                    }
-                    if (p.Name == "ControlType" && p.Value == "ListItem" && isStartmenu)
-                    {
-                        p.Enabled = false;
-                    }
+                    item = new WindowsSelectorItem(pathToRoot[pathToRoot.Count - 1], false, IndexInParent);
+                    if (doEnum) item.EnumNeededProperties(pathToRoot[pathToRoot.Count - 1], pathToRoot[pathToRoot.Count - 1].Parent);
+                    Items.Add(item);
                 }
-                var hassyslistview32 = item.Properties.Where(p => p.Name == "ClassName" && p.Value.ToLower() == "syslistview32").ToList();
-                if (hassyslistview32.Count > 0)
+            }
+            else
+            {
+                bool isStartmenu = false;
+                for (var i = 0; i < pathToRoot.Count(); i++)
                 {
-                    var hasControlType = item.Properties.Where(p => p.Name == "ControlType").ToList();
-                    if(hasControlType.Count> 0) { hasControlType[0].Enabled = false; }
-                }
+                    var o = pathToRoot[i];
+                    int IndexInParent = -1;
+                    if (o.Parent != null && i > 0)
+                    {
+                        var c = o.Parent.FindAllChildren();
+                        for (var x = 0; x < c.Count(); x++)
+                        {
+                            if (o.Equals(c[x])) IndexInParent = x;
+                        }
+                    }
 
-                if (doEnum) item.EnumNeededProperties(o, o.Parent);
-                Items.Add(item);
+                    item = new WindowsSelectorItem(o, false, IndexInParent);
+                    var _IndexInParent = item.Properties.Where(x => x.Name == "IndexInParent").FirstOrDefault();
+                    if (_IndexInParent != null) _IndexInParent.Enabled = false;
+                    if (i == 0 || i == (pathToRoot.Count() - 1)) item.canDisable = false;
+                    foreach (var p in item.Properties) // TODO: Ugly, ugly inzuBiz hack !!!!
+                    {
+                        int idx = p.Value.IndexOf(".");
+                        if (p.Name == "ClassName" && idx > -1)
+                        {
+                            var FrameworkId = item.Properties.Where(x => x.Name == "FrameworkId").FirstOrDefault();
+                            //if (FrameworkId!=null && (FrameworkId.Value == "XAML" || FrameworkId.Value == "WinForm") && _IndexInParent != null)
+                            //{
+                            //    item.Properties.ForEach(x => x.Enabled = false);
+                            //    _IndexInParent.Enabled = true;
+                            //    p.Enabled = true;
+                            //}
+                            int idx2 = p.Value.IndexOf(".", idx + 1);
+                            if (idx2 > idx) p.Value = p.Value.Substring(0, idx2 + 1) + "*";
+                        }
+                        //if (p.Name == "ClassName" && p.Value.StartsWith("WindowsForms10")) p.Value = "WindowsForms10*";
+                        if (p.Name == "ClassName" && p.Value.ToLower() == "shelldll_defview")
+                        {
+                            item.Enabled = false;
+                        }
+                        if (p.Name == "ClassName" && (p.Value.ToLower() == "dv2vontrolhost" || p.Value.ToLower() == "desktopprogramsmfu"))
+                        {
+                            isStartmenu = true;
+                        }
+                        if (p.Name == "ClassName" && p.Value == "#32770")
+                        {
+                            item.Enabled = false;
+                        }
+                        if (p.Name == "ControlType" && p.Value == "ListItem" && isStartmenu)
+                        {
+                            p.Enabled = false;
+                        }
+                    }
+                    var hassyslistview32 = item.Properties.Where(p => p.Name == "ClassName" && p.Value.ToLower() == "syslistview32").ToList();
+                    if (hassyslistview32.Count > 0)
+                    {
+                        var hasControlType = item.Properties.Where(p => p.Name == "ControlType").ToList();
+                        if (hasControlType.Count > 0) { hasControlType[0].Enabled = false; }
+                    }
+
+                    if (doEnum) item.EnumNeededProperties(o, o.Parent);
+                    Items.Add(item);
+                }
             }
             pathToRoot.Reverse();
             Log.Selector(string.Format("windowsselector::end {0:mm\\:ss\\.fff}", sw.Elapsed));
@@ -237,8 +281,8 @@ namespace OpenRPA.Windows
                     startfrom = automation.GetDesktop();
                     isDesktop = true;
                 }
-
                 current.Add(new UIElement(startfrom));
+
                 for (var i = 0; i < selectors.Count; i++)
                 {
                     var s = new WindowsSelectorItem(selectors[i]);
@@ -387,6 +431,7 @@ namespace OpenRPA.Windows
                     }
                     isDesktop = false;
                 }
+
             }
             if (result == null)
             {

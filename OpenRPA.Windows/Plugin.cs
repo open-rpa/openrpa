@@ -399,12 +399,26 @@ namespace OpenRPA.Windows
         {
             try
             {
-                AddActivity(new System.Activities.Statements.Assign<string>
+                if(Config.local.use_sendkeys)
                 {
-                    To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
-                    Value = value
-                }, "item");
-                element.Value = value;
+                    AddActivity(new System.Activities.Statements.Assign<string>
+                    {
+                        To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.SendKeys"),
+                        Value = value
+                    }, "item");
+                    (element as UIElement).SendKeys = value;
+
+                }
+                else
+                {
+                    AddActivity(new System.Activities.Statements.Assign<string>
+                    {
+                        To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.Value"),
+                        Value = value
+                    }, "item");
+                    element.Value = value;
+
+                }
             }
             catch (Exception ex)
             {

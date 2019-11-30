@@ -96,6 +96,7 @@ namespace OpenRPA.Windows
                     if (element.Properties.ClassName.IsSupported && !string.IsNullOrEmpty(element.Properties.ClassName)) Properties.Add(new SelectorItemProperty("ClassName", element.Properties.ClassName.Value));
                     if (element.Properties.ControlType.IsSupported && !string.IsNullOrEmpty(element.Properties.ControlType.Value.ToString())) Properties.Add(new SelectorItemProperty("ControlType", element.Properties.ControlType.Value.ToString()));
                     if (element.Properties.AutomationId.IsSupported && !string.IsNullOrEmpty(element.Properties.AutomationId)) Properties.Add(new SelectorItemProperty("AutomationId", element.Properties.AutomationId.Value));
+                    if (element.Properties.FrameworkId.IsSupported && !string.IsNullOrEmpty(element.Properties.FrameworkId)) Properties.Add(new SelectorItemProperty("FrameworkId", element.Properties.FrameworkId.Value));
                     if (IndexInParent > -1) Properties.Add(new SelectorItemProperty("IndexInParent", IndexInParent.ToString()));
                 }
                 catch (Exception)
@@ -412,6 +413,23 @@ namespace OpenRPA.Windows
                     {
                         var v = m.Properties.AutomationId.Value;
                         if (!PatternMatcher.FitsMask(m.Properties.AutomationId.Value, p.Value))
+                        {
+                            Log.SelectorVerbose(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        Log.SelectorVerbose(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        return false;
+                    }
+                }
+                if (p.Name == "FrameworkId")
+                {
+                    if (m.Properties.FrameworkId.IsSupported)
+                    {
+                        var v = m.Properties.FrameworkId.Value;
+                        if (!PatternMatcher.FitsMask(m.Properties.FrameworkId.Value, p.Value))
                         {
                             Log.SelectorVerbose(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
                             return false;

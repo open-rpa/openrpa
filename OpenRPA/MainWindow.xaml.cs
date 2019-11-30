@@ -80,7 +80,7 @@ namespace OpenRPA
         public MainWindow()
         {
             var config = new NLog.Config.LoggingConfiguration();
-            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "logfile.txt" };
+            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory,"logfile.txt") };
             var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
             // config.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
             // config.AddRule(NLog.LogLevel.Trace, NLog.LogLevel.Fatal, logfile);

@@ -141,7 +141,7 @@ namespace OpenRPA.Windows
             {
                 var o = pathToRoot[i];
                 int IndexInParent = -1;
-                if (o.Parent != null && i > 1)
+                if (o.Parent != null && i > 0)
                 {
                     var c = o.Parent.FindAllChildren();
                     for (var x = 0; x < c.Count(); x++)
@@ -151,12 +151,21 @@ namespace OpenRPA.Windows
                 }
 
                 item = new WindowsSelectorItem(o, false, IndexInParent);
+                var _IndexInParent = item.Properties.Where(x => x.Name == "IndexInParent").FirstOrDefault();
+                if(_IndexInParent!=null) _IndexInParent.Enabled = false;
                 if (i == 0 || i == (pathToRoot.Count() - 1)) item.canDisable = false;
                 foreach (var p in item.Properties) // TODO: Ugly, ugly inzuBiz hack !!!!
                 {
                     int idx = p.Value.IndexOf(".");
                     if (p.Name == "ClassName" && idx > -1)
                     {
+                        var FrameworkId = item.Properties.Where(x => x.Name == "FrameworkId").FirstOrDefault();
+                        if (FrameworkId!=null && (FrameworkId.Value == "XAML" || FrameworkId.Value == "WinForm") && _IndexInParent != null)
+                        {
+                            item.Properties.ForEach(x => x.Enabled = false);
+                            _IndexInParent.Enabled = true;
+                            p.Enabled = true;
+                        }
                         int idx2 = p.Value.IndexOf(".", idx + 1);
                         if (idx2 > idx) p.Value = p.Value.Substring(0, idx2 + 1) + "*";
                     }

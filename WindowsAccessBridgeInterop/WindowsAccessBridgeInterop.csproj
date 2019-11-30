@@ -10,7 +10,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes>1.1.5 update interfaces reference</PackageReleaseNotes>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.1.5</Version>
+    <Version>1.1.6</Version>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
   </PropertyGroup>

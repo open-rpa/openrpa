@@ -80,6 +80,7 @@ namespace OpenRPA.Windows
                         Properties.Add(new SelectorItemProperty("arguments", info.arguments));
                     }
                     Properties.Add(new SelectorItemProperty("Selector", "Windows"));
+                    Properties.Add(new SelectorItemProperty("SearchDescendants", PluginConfig.search_descendants.ToString()));
                     //Properties.Add(new SelectorItemProperty("", info.));
                 }
                 foreach (var p in Properties)
@@ -230,10 +231,34 @@ namespace OpenRPA.Windows
                 return new AndCondition(cond);
             }
         }
-        public AutomationElement[] matches(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count, bool isDesktop, TimeSpan timeout)
+        private static Dictionary<string, AutomationElement> AppWindowCache = new Dictionary<string, AutomationElement>();
+        public AutomationElement[] matches(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count, bool isDesktop, TimeSpan timeout, bool search_descendants)
         {
             var matchs = new List<AutomationElement>();
             var c = GetConditionsWithoutStar();
+            if(isDesktop)
+            {
+                if(AppWindowCache.ContainsKey(c.ToString()))
+                {
+                    var _element = AppWindowCache[c.ToString()];
+                    try
+                    {
+                        if (!_element.IsOffscreen)
+                        {
+                            if (Match(_element))
+                            {
+                                Log.Selector("matches::FindAllChildren: found in AppWindowCache");
+                                return new AutomationElement[] { _element };
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        Log.SelectorVerbose("matches::FindAllChildren: Removing from AppWindowCache " + c.ToString());
+                        AppWindowCache.Remove(c.ToString());
+                    }
+                }
+            }
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
             Log.SelectorVerbose("matches::FindAllChildren.isDesktop(" + isDesktop + ")::begin");
@@ -304,7 +329,7 @@ namespace OpenRPA.Windows
             //}
 
 
-            if(PluginConfig.search_descendants)
+            if(search_descendants)
             {
                 Log.Selector("AutomationElement.matches: Searching for " + c.ToString());
                 AutomationElement[] elements = null;
@@ -365,6 +390,10 @@ namespace OpenRPA.Windows
                 }
             }
             Log.SelectorVerbose(string.Format("matches::FindAllChildren.isDesktop(" + isDesktop + ")::complete {0:mm\\:ss\\.fff}", sw.Elapsed));
+            if(isDesktop && matchs.Count == 1)
+            {
+                AppWindowCache.Add(c.ToString(), matchs[0]);
+            }
             return matchs.ToArray();
         }
         public bool Match(AutomationElement m)

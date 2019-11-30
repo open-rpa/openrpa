@@ -54,20 +54,31 @@ namespace OpenRPA.Windows
             pathToRoot.Reverse();
             if (anchor != null)
             {
-                var anchorlist = anchor.Where(x => x.Enabled && x.Selector == null).ToList();
-                for (var i = 0; i < anchorlist.Count(); i++)
+                //var anchorlist = anchor.Where(x => x.Enabled && x.Selector == null).ToList();
+                //for (var i = 0; i < anchorlist.Count(); i++)
+                //{
+                //    if(WindowsSelectorItem.Match(anchorlist[i], pathToRoot[0]))
+                //    //if (((WindowsSelectorItem)anchorlist[i]).Match(pathToRoot[0]))
+                //    {
+                //        pathToRoot.Remove(pathToRoot[0]);
+                //    }
+                //    else
+                //    {
+                //        Log.Selector("Element does not match the anchor path");
+                //        return;
+                //    }
+                //}
+                var a = anchor.Last();
+                var idx = -1;
+                for (var i = 0; i < pathToRoot.Count(); i++)
                 {
-                    if(WindowsSelectorItem.Match(anchorlist[i], pathToRoot[0]))
-                    //if (((WindowsSelectorItem)anchorlist[i]).Match(pathToRoot[0]))
+                    if (WindowsSelectorItem.Match(a, pathToRoot[i]))
                     {
-                        pathToRoot.Remove(pathToRoot[0]);
-                    }
-                    else
-                    {
-                        Log.Selector("Element does not match the anchor path");
-                        return;
+                        idx = i;
+                        break;
                     }
                 }
+                pathToRoot.RemoveRange(0, idx);
             }
             WindowsSelectorItem item;
 
@@ -88,7 +99,7 @@ namespace OpenRPA.Windows
                         var i = temppathToRoot.First();
                         temppathToRoot.Remove(i);
                         item = new WindowsSelectorItem(i, false);
-                        var m = item.matches(automation, parent, _treeWalker, 2, isDesktop, TimeSpan.FromSeconds(250));
+                        var m = item.matches(automation, parent, _treeWalker, 2, isDesktop, TimeSpan.FromSeconds(250), false);
                         if (m.Length > 0)
                         {
                             newpathToRoot.Add(i);
@@ -242,6 +253,14 @@ namespace OpenRPA.Windows
                 }
             }
             pathToRoot.Reverse();
+            if(anchor!=null)
+            {
+                var p = Items[0].Properties.Where(x => x.Name == "SearchDescendants").FirstOrDefault();
+                if(p==null)
+                {
+                    Items[0].Properties.Add(new SelectorItemProperty("SearchDescendants", PluginConfig.search_descendants.ToString()));
+                }                
+            }
             Log.Selector(string.Format("windowsselector::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
@@ -267,6 +286,12 @@ namespace OpenRPA.Windows
 
             var current = new List<UIElement>();
             var automation = AutomationUtil.getAutomation();
+
+            // var search_descendants = PluginConfig.search_descendants;
+            var search_descendants = false;
+            var p = selector[0].Properties.Where(x=> x.Name == "SearchDescendants").FirstOrDefault();
+            if(p!=null) search_descendants = bool.Parse(p.Value);
+
 
             UIElement[] result = null;
             using (automation)
@@ -298,7 +323,7 @@ namespace OpenRPA.Windows
                             if (i == 0) count = midcounter;
                             // if (i < selectors.Count) count = 500;
                             if ((i+1) < selectors.Count) count = 1;
-                            var matches = ((WindowsSelectorItem)s).matches(automation, _element.RawElement, _treeWalker, count, isDesktop, TimeSpan.FromSeconds(250)); // (i == 0 ? 1: maxresults)
+                            var matches = ((WindowsSelectorItem)s).matches(automation, _element.RawElement, _treeWalker, count, isDesktop, TimeSpan.FromSeconds(250), search_descendants); // (i == 0 ? 1: maxresults)
                             var uimatches = new List<UIElement>();
                             foreach (var m in matches)
                             {
@@ -327,7 +352,7 @@ namespace OpenRPA.Windows
                                     var count = maxresults;
                                     if (i == 0) count = 1;
                                     if (i < selectors.Count) count = 500;
-                                    var matches = ((WindowsSelectorItem)s).matches(automation, _element.RawElement, _treeWalker, count, false, TimeSpan.FromSeconds(250)); // (i == 0 ? 1 : maxresults)
+                                    var matches = ((WindowsSelectorItem)s).matches(automation, _element.RawElement, _treeWalker, count, false, TimeSpan.FromSeconds(250), search_descendants); // (i == 0 ? 1 : maxresults)
                                     var uimatches = new List<UIElement>();
                                     foreach (var m in matches)
                                     {

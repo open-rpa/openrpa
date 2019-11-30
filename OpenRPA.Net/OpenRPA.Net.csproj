@@ -6,7 +6,7 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.11</Version>
+    <Version>1.0.12</Version>
     <PackageReleaseNotes>1.0.11 update interfaces reference
 1.0.8 make more resilient
 1.0.7 rewrite with interfaces

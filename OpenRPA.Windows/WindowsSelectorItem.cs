@@ -306,7 +306,7 @@ namespace OpenRPA.Windows
 
             if(PluginConfig.search_descendants)
             {
-                Log.SelectorVerbose("Searching for " + c.ToString());
+                Log.Selector("AutomationElement.matches: Searching for " + c.ToString());
                 AutomationElement[] elements = null;
                 if (isDesktop)
                 {
@@ -316,15 +316,14 @@ namespace OpenRPA.Windows
                 {
                     elements = element.FindAllDescendants(c);
                 }
-                Log.SelectorVerbose("Done Search");
-                Log.Selector(string.Format("AutomationElement.matches.isDesktop::process elements {0:mm\\:ss\\.fff}", sw.Elapsed));
+                Log.Selector(string.Format("AutomationElement.matches::found " + elements.Count() + " elements {0:mm\\:ss\\.fff}", sw.Elapsed));
                 // var elements = element.FindAllChildren();
                 foreach (var elementNode in elements)
                 {
                     Log.SelectorVerbose("matches::match");
                     if (Match(elementNode)) matchs.Add(elementNode);
                 }
-                Log.Selector(string.Format("AutomationElement.matches.isDesktop::complete {0:mm\\:ss\\.fff}", sw.Elapsed));
+                Log.Selector(string.Format("AutomationElement.matches::complete, with " + elements.Count() + " elements {0:mm\\:ss\\.fff}", sw.Elapsed));
             }
             else
             {

@@ -127,7 +127,19 @@ namespace OpenRPA
             try
             {
                 RawElement.SetForeground();
+            }
+            catch
+            {
+            }
+            try
+            {
                 RawElement.FocusNative();
+            }
+            catch
+            {
+            }
+            try
+            {
                 RawElement.Focus();
             }
             catch
@@ -262,8 +274,12 @@ namespace OpenRPA
             }
             set
             {
-                Click(false, Input.MouseButton.Left, Rectangle.Width / 2, Rectangle.Y / 2, false, false);
+                Focus();
+                // Click(false, Input.MouseButton.Left, 5, 5 , false, true);
+                // UntilResponsive();
+                // System.Threading.Thread.Sleep(250);
                 TypeText(value);
+                UntilResponsive();
             }
         }
         public void TypeText(string text)
@@ -413,6 +429,5 @@ namespace OpenRPA
                 return Interfaces.Image.Util.Bitmap2Base64(image);
             }
         }
-
     }
 }

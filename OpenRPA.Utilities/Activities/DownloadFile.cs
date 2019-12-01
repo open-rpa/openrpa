@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace OpenRPA.Activities
+namespace OpenRPA.Utilities
 {
     [System.ComponentModel.Designer(typeof(DownloadFileDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.downloadfile.png")]

@@ -57,6 +57,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nsis", "nsis", "{00A8B562-F
 		test.nsi = test.nsi
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.Utilities", "OpenRPA.Utilities\OpenRPA.Utilities.csproj", "{A81145BC-37F1-42E4-B3CB-5221E08BB222}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -247,14 +249,22 @@ Global
 		{15F71CA0-8EB5-4A51-8A7F-F0414F774854}.PrepInstaller|Any CPU.Build.0 = PrepInstaller|Any CPU
 		{15F71CA0-8EB5-4A51-8A7F-F0414F774854}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15F71CA0-8EB5-4A51-8A7F-F0414F774854}.Release|Any CPU.Build.0 = Release|Any CPU
-		{15F71CA0-8EB5-4A51-8A7F-F0414F774854}.ReleaseNuget|Any CPU.ActiveCfg = Release|Any CPU
-		{15F71CA0-8EB5-4A51-8A7F-F0414F774854}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
+		{15F71CA0-8EB5-4A51-8A7F-F0414F774854}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
+		{15F71CA0-8EB5-4A51-8A7F-F0414F774854}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
+		{A81145BC-37F1-42E4-B3CB-5221E08BB222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A81145BC-37F1-42E4-B3CB-5221E08BB222}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A81145BC-37F1-42E4-B3CB-5221E08BB222}.PrepInstaller|Any CPU.ActiveCfg = PrepInstaller|Any CPU
+		{A81145BC-37F1-42E4-B3CB-5221E08BB222}.PrepInstaller|Any CPU.Build.0 = PrepInstaller|Any CPU
+		{A81145BC-37F1-42E4-B3CB-5221E08BB222}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A81145BC-37F1-42E4-B3CB-5221E08BB222}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A81145BC-37F1-42E4-B3CB-5221E08BB222}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
+		{A81145BC-37F1-42E4-B3CB-5221E08BB222}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
+		BuildVersion_StartDate = 2000/1/1
 	EndGlobalSection
 EndGlobal

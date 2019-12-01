@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.47</Version>
-    <PackageReleaseNotes>1.0.47 Add experimental support for simple selectors
+    <Version>1.0.48</Version>
+    <PackageReleaseNotes>1.0.48 Add OpenRPA.Utilities
+1.0.47 Add experimental support for simple selectors
 1.0.46 Tweak input handling doing recording
 1.0.45 add recorder plugin ui, add more updater options
 1.0.44 hotfix
@@ -81,14 +82,12 @@
     <None Remove="Activities\CommentOutDesigner.xaml" />
     <None Remove="Activities\CopyClipboardDesigner.xaml" />
     <None Remove="Activities\DetectorDesigner.xaml" />
-    <None Remove="Activities\DownloadFileDesigner.xaml" />
     <None Remove="Activities\ForEachDataRowDesigner.xaml" />
     <None Remove="Activities\HighlightElementDesigner.xaml" />
     <None Remove="Activities\InsertClipboardDesigner.xaml" />
     <None Remove="Activities\InvokeOpenFlowDesigner.xaml" />
     <None Remove="Activities\InvokeOpenRPADesigner.xaml" />
     <None Remove="Activities\OpenApplicationDesigner.xaml" />
-    <None Remove="Activities\ReadJSONDesigner.xaml" />
     <None Remove="Activities\TypeTextDesigner.xaml" />
     <None Remove="App.xaml" />
     <None Remove="Images\PinDocMenu_Black.png" />
@@ -298,9 +297,6 @@
     <None Remove="Views\wfToolbox.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Activities\ReadJSONDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Activities\ClickElementDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -314,9 +310,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\DetectorDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Activities\DownloadFileDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\ForEachDataRowDesigner.xaml">

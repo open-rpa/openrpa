@@ -11,16 +11,13 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
-namespace OpenRPA.Activities
+namespace OpenRPA.Utilities
 {
     [Designer(typeof(ReadJSONDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.elementclick.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.readjson.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class ReadJSON : CodeActivity
     {
-        public ReadJSON()
-        {
-        }
         [RequiredArgument]
         public InArgument<string> Filename { get; set; }
         [RequiredArgument]

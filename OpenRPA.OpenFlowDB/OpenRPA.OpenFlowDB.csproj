@@ -7,15 +7,18 @@
     <Description>A Collection of activities to work the openflow database</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Configurations>Debug;Release;PrepInstaller</Configurations>
+    <Configurations>Debug;Release;PrepInstaller;ReleaseNuget</Configurations>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.0.2</Version>
-    <PackageReleaseNotes>1.0.1 update reference</PackageReleaseNotes>
+    <Version>1.0.3</Version>
+    <PackageReleaseNotes>1.0.3 update reference</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\dist</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNuget|AnyCPU'">
     <OutputPath>..\dist</OutputPath>
   </PropertyGroup>
   <ItemGroup>

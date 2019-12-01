@@ -10,20 +10,20 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using OpenRPA.Interfaces;
 
-namespace OpenRPA.Activities
+namespace OpenRPA.Utilities
 {
-    public partial class ReadJSONDesigner
+    public partial class ReadExcelDesigner
     {
-        public ReadJSONDesigner()
+        public ReadExcelDesigner()
         {
             InitializeComponent();
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            //openFileDialog1.Filter = "Binary Excel files (2.0-2003 format)|*.xls|OpenXml Excel files (2007 format)|*.xlsx|Comma-separated values (csv format)|*.csv|All files (*.*)|*.*";
-            openFileDialog1.Filter = "JSON files|*.json;";
+            openFileDialog1.Filter = "OpenXml Excel files (2007 format)|*.xlsx|Binary Excel files (2.0-2003 format)|*.xls|Comma-separated values (csv format)|*.csv|All files (*.*)|*.*";
             if (openFileDialog1.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
             ModelItem.Properties["Filename"].SetValue(
                 new System.Activities.InArgument<string>()

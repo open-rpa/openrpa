@@ -7,8 +7,9 @@
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office</Description>
-    <Version>1.0.16</Version>
-    <PackageReleaseNotes>1.0.15 update interfaces reference
+    <Version>1.0.17</Version>
+    <PackageReleaseNotes>1.0.17 Fix excel loop snippet after moving download to OpenRPA.Utilities
+1.0.15 update interfaces reference
 1.0.12 update interfaces reference
 1.0.11 Update power excel snippet to auto create file
 1.0.9 update interfaces reference</PackageReleaseNotes>

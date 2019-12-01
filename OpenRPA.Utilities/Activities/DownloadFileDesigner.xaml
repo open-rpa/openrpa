@@ -1,4 +1,4 @@
-﻿<sap:ActivityDesigner x:Class="OpenRPA.Activities.DownloadFileDesigner"
+﻿<sap:ActivityDesigner x:Class="OpenRPA.Utilities.DownloadFileDesigner"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
@@ -17,7 +17,7 @@
                         <Rect Location="0,0" Size="16,16" ></Rect>
                     </ImageDrawing.Rect>
                     <ImageDrawing.ImageSource>
-                        <BitmapImage UriSource="/OpenRPA;component/Resources/designer/downloadfile.png" ></BitmapImage>
+                        <BitmapImage UriSource="/OpenRPA.Utilities;component/Resources/designer/downloadfile.png" ></BitmapImage>
                     </ImageDrawing.ImageSource>
                 </ImageDrawing>
             </DrawingBrush.Drawing>

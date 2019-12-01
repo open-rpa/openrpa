@@ -11,6 +11,18 @@ Download and try it out here [here](https://github.com/open-rpa/openrpa/releases
 
 Also checkout the "backend" for managing multiple robots at [OpenFlow](https://github.com/open-rpa/OpenFlow)
 
+Excel and browser interaction, used for vat number lookup
+
+![ChromeCVRLoogup](docs/img/ChromeCVRLoogup.gif)
+
+Automate creating contacts in CRM app from excel list
+
+![FillCRMApp](docs/img/FillCRMApp.gif)
+
+Support for high density robots, running multiple robots in each own remote desktop session
+
+![high-densityrobot](docs/img/high-densityrobot.gif)
+
 See a small video of running the robot for the first time
 
 [![First time run](https://img.youtube.com/vi/SqLHlMpQhZA/1.jpg)](https://www.youtube.com/watch?v=34-H-_EPwJg)

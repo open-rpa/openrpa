@@ -23,6 +23,10 @@ Support for high density robots, running multiple robots in each own remote desk
 
 ![high-densityrobot](docs/img/high-densityrobot.gif)
 
+Easy Object detection in images using robot, OpenFlow and google vision API
+
+![EasyObjectDetection](docs/img/EasyObjectDetection.gif)
+
 See a small video of running the robot for the first time
 
 [![First time run](https://img.youtube.com/vi/SqLHlMpQhZA/1.jpg)](https://www.youtube.com/watch?v=34-H-_EPwJg)

@@ -9,8 +9,9 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.22</Version>
-    <PackageReleaseNotes>1.0.21 force running as administrator, to handle updates 
+    <Version>1.0.23</Version>
+    <PackageReleaseNotes>1.0.23 add searching
+1.0.21 force running as administrator, to handle updates 
 1.0.20 hotfix
 1.0.19 update interfaces reference, fix issue with overwriting new files with old versions
 1.0.17 Reload and launch after install common

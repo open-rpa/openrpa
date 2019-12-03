@@ -16,8 +16,51 @@ namespace OpenRPA.RDService
         public const string ServiceName = "OpenRPA";
         public static bool isService = false;
         private static Tracing tracing = null;
+        private static System.Threading.Timer reloadTimer = null;
+        private void GetSessions()
+        {
+            IntPtr server = IntPtr.Zero;
+            List<string> ret = new List<string>();
+            try
+            {
+                server = NativeMethods.WTSOpenServer(".");
+                IntPtr ppSessionInfo = IntPtr.Zero;
+                int count = 0;
+                int retval = NativeMethods.WTSEnumerateSessions(server, 0, 1, ref ppSessionInfo, ref count);
+                int dataSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(NativeMethods.WTS_SESSION_INFO));
+                long current = (int)ppSessionInfo;
+                if (retval != 0)
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        NativeMethods.WTS_SESSION_INFO si = (NativeMethods.WTS_SESSION_INFO)System.Runtime.InteropServices.Marshal.PtrToStructure((System.IntPtr)current, typeof(NativeMethods.WTS_SESSION_INFO));
+                        current += dataSize;
+                        ret.Add(si.SessionID + " " + si.State + " " + si.pWinStationName);
+                    }
+                    NativeMethods.WTSFreeMemory(ppSessionInfo);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            finally
+            {
+                try
+                {
+                    NativeMethods.WTSCloseServer(server);
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
         static void Main(string[] args)
         {
+            var asm = System.Reflection.Assembly.GetEntryAssembly();
+            var filepath = asm.CodeBase.Replace("file:///", "");
+            var path = System.IO.Path.GetDirectoryName(filepath);
+            Interfaces.Extensions.ProjectsDirectory = path;
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             try
             {
@@ -177,9 +220,9 @@ namespace OpenRPA.RDService
                     server = new unattendedserver() { computername = computername, computerfqdn = computerfqdn, name = computerfqdn };
                     server = await global.webSocketClient.InsertOne("openrpa", 1, false, server);
                 }
-                var clients = await global.webSocketClient.Query<unattendedclient>("openrpa", "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
-                foreach (var c in clients) sessions.Add(new RobotUserSession(c));
-                Log.Information("Loaded " + sessions.Count + " sessions");
+                //var clients = await global.webSocketClient.Query<unattendedclient>("openrpa", "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
+                //foreach (var c in clients) sessions.Add(new RobotUserSession(c));
+                // Log.Information("Loaded " + sessions.Count + " sessions");
                 // Create listener for robots to connect too
                 PipeSecurity ps = new PipeSecurity();
                 ps.AddAccessRule(new PipeAccessRule("Users", PipeAccessRights.ReadWrite | PipeAccessRights.CreateNewInstance, System.Security.AccessControl.AccessControlType.Allow));
@@ -189,6 +232,21 @@ namespace OpenRPA.RDService
                 pipe.ClientConnected += Pipe_ClientConnected;
                 pipe.ClientMessage += Pipe_ClientMessage;
                 pipe.Start();
+
+                if(reloadTimer==null)
+                {
+                    reloadTimer = new System.Threading.Timer(o =>
+                    {
+                        try
+                        {
+                            _ = ReloadConfig();
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                        }
+                    }, null, (int)PluginConfig.reloadinterval.TotalMilliseconds, (int)PluginConfig.reloadinterval.TotalMilliseconds);
+                }
             }
             catch (Exception ex)
             {
@@ -201,25 +259,47 @@ namespace OpenRPA.RDService
             {
                 string computername = NativeMethods.GetHostName().ToLower();
                 string computerfqdn = NativeMethods.GetFQDN().ToLower();
-                var clients = await global.webSocketClient.Query<unattendedclient>("openrpa", "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
+
+                var servers = await global.webSocketClient.Query<unattendedserver>("openrpa", "{'_type':'unattendedserver', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
+                unattendedserver server = servers.FirstOrDefault();
+
+                unattendedclient[] clients = new unattendedclient[] { };
+                if(server != null && server.enabled)
+                {
+                    clients = await global.webSocketClient.Query<unattendedclient>("openrpa", "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
+                }
+                var sessioncount = sessions.Count();
                 foreach (var c in clients)
                 {
                     var session = sessions.Where(x => x.client.windowsusername == c.windowsusername).FirstOrDefault();
                     if (session == null)
                     {
-                        Log.Information("Adding session for " + c.windowsusername);
-                        sessions.Add(new RobotUserSession(c));
+                        if(c.enabled)
+                        {
+                            Log.Information("Adding session for " + c.windowsusername);
+                            sessions.Add(new RobotUserSession(c));
+                        }
                     }
                     else
                     {
                         if (c._modified != session.client._modified)
                         {
-                            Log.Information("Removing session for " + session.client.windowsusername);
-                            sessions.Remove(session);
-                            session.Dispose();
-                            session = null;
-                            Log.Information("Adding session for " + c.windowsusername);
-                            sessions.Add(new RobotUserSession(c));
+                            Log.Information("Removing:1 session for " + session.client.windowsusername);
+                            if (c.enabled)
+                            {
+                                sessions.Remove(session);
+                                session.Dispose();
+                                session = null;
+                                Log.Information("Adding session for " + c.windowsusername);
+                                sessions.Add(new RobotUserSession(c));
+                            } else
+                            {
+                                if(session.rdp!=null || session.freerdp !=null)
+                                {
+                                    session.disconnectrdp();
+                                }
+                                session.client = c;
+                            }
                         }
                     }
                 }
@@ -228,12 +308,20 @@ namespace OpenRPA.RDService
                     var c = clients.Where(x => x.windowsusername == session.client.windowsusername).FirstOrDefault();
                     if (c == null)
                     {
-                        Log.Information("Removing session for " + session.client.windowsusername);
-                        sessions.Remove(session);
-                        session.Dispose();
+                        if(session.connection == null)
+                        {
+                            Log.Information("Removing:2 session for " + session.client.windowsusername);
+                            sessions.Remove(session);
+                            session.Dispose();
+                        }
                     }
                 }
-                Log.Information("Loaded " + sessions.Count + " sessions");
+                if (sessioncount != sessions.Count())
+                {
+                    Log.Information("Currently have " + sessions.Count() + " sessions");
+                }
+
+                // Log.Information("Loaded " + sessions.Count + " sessions");
             }
             catch (Exception ex)
             {

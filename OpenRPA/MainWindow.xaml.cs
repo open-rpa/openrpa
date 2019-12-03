@@ -344,7 +344,7 @@ namespace OpenRPA
 
                         SetStatus("Loading workflows and state from " + Config.local.wsurl);
                         Log.Debug("Get workflows from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}");
+                        var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", top: 5000);
                         Log.Debug("Get projects from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}");
                         Log.Debug("Get detectors from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));

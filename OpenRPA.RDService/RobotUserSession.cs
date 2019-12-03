@@ -66,7 +66,7 @@ namespace OpenRPA.RDService
                 }
                 if (string.IsNullOrEmpty(client._id))
                 {
-                    Log.Information("client._id is null, Dummy client, ignore");
+                    // Log.Information("client._id is null, Dummy client, ignore");
                     return; // Dummy client, ignore
                 }
                 if (connection != null && connection.IsConnected == false) { connection = null; created = DateTime.Now; }
@@ -82,7 +82,7 @@ namespace OpenRPA.RDService
                 // ownerexplorer = null;
                 //if (ownerexplorer == null)
                 var rdpip = "127.0.0.2";
-                if ((ConnectionAttempts % 2) == 1) rdpip = "127.0.0.1";
+                // if ((ConnectionAttempts % 2) == 1) rdpip = "127.0.0.1";
                 if (PluginConfig.usefreerdp && !skiprdp)
                 {
                     if (freerdp == null || freerdp.Connected == false)
@@ -320,31 +320,46 @@ namespace OpenRPA.RDService
         }
         #region IDisposable Support
         private bool disposedValue = false;
+        public void disconnectrdp()
+        {
+            if(connection!=null)
+            {
+                if(connection.IsConnected)
+                {
+                    connection.PushMessage(new RPAMessage("signout"));
+                }
+            }
+            if (freerdp != null)
+            {
+                if (freerdp.Connected) freerdp.Disconnect();
+                freerdp.Dispose();
+            }
+            freerdp = null;
+            if (rdp != null)
+            {
+                if (rdp.Connected) rdp.Disconnect();
+                rdp.Dispose();
+            }
+            rdp = null;
+            cancellationTokenSource.Cancel();
+        }
+        public void disconnect()
+        {
+            disconnectrdp();
+            if (connection != null)
+            {
+                if (connection.IsConnected) connection.Close();
+                connection = null;
+            }
+
+        }
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
                 if (disposing)
                 {
-                    if (freerdp != null)
-                    {
-                        if (freerdp.Connected) freerdp.Disconnect();
-                        freerdp.Dispose();
-                    }
-                    freerdp = null;
-                    if (rdp != null)
-                    {
-                        if (rdp.Connected) rdp.Disconnect();
-                        rdp.Dispose();
-                    }
-                    rdp = null;
-                    cancellationTokenSource.Cancel();
-
-                    if (connection != null)
-                    {
-                        if (connection.IsConnected) connection.Close();
-                        connection = null;
-                    }
+                    disconnect();
                 }
                 disposedValue = true;
             }

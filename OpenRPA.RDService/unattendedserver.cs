@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.RDService
 {
-    class unattendedserver : apibase
+    public class unattendedserver : apibase
     {
         public unattendedserver() { _type = "unattendedserver"; }
         public string computername { get; set; }
         public string computerfqdn { get; set; }
+        public bool enabled { get; set; }
     }
 }

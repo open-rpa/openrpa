@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.RDService
 {
-    class PluginConfig
+    public class PluginConfig
     {
         private static string pluginname => "rdservice";
         private static Config _globallocal = null;
@@ -18,11 +18,16 @@ namespace OpenRPA.RDService
             {
                 if (_globallocal == null)
                 {
-                    _globallocal = Config.local;
+                    var asm = System.Reflection.Assembly.GetEntryAssembly();
+                    var filepath = asm.CodeBase.Replace("file:///", "");
+                    var path = System.IO.Path.GetDirectoryName(filepath);
+
+                    _globallocal = AppSettings<Config>.Load(System.IO.Path.Combine(path, "settings.json")); ;
                 }
                 return _globallocal;
             }
         }
+        public static TimeSpan reloadinterval  { get { return globallocal.GetProperty<TimeSpan>(pluginname, TimeSpan.FromSeconds(1)); } set { globallocal.SetProperty(pluginname, value); } }
         public static string jwt { get { return globallocal.GetProperty<string>(pluginname, null); } set { globallocal.SetProperty(pluginname, value); } }
         public static string entropy { get { return globallocal.GetProperty<string>(pluginname, null); } set { globallocal.SetProperty(pluginname, value); } }
         public static string tempjwt { get { return globallocal.GetProperty<string>(pluginname, null); } set { globallocal.SetProperty(pluginname, value); } }
@@ -65,5 +70,14 @@ namespace OpenRPA.RDService
             }
             return SecureData;
         }
+        public static void Save()
+        {
+            var asm = System.Reflection.Assembly.GetEntryAssembly();
+            var filepath = asm.CodeBase.Replace("file:///", "");
+            var path = System.IO.Path.GetDirectoryName(filepath);
+            _globallocal.Save(System.IO.Path.Combine(path, "settings.json"));
+
+        }
+
     }
 }

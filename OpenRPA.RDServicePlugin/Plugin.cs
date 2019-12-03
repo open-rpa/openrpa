@@ -64,6 +64,10 @@ namespace OpenRPA.RDServicePlugin
                 connection.PushMessage(new RPAMessage("pong"));
                 return;
             }
+            if(message.command == "signout")
+            {
+                NativeMethods.ExitWindowsEx((uint)NativeMethods.ExitWindows.LogOff, (uint)(NativeMethods.ShutdownReason.MajorOther | NativeMethods.ShutdownReason.MinorOther));
+            }
             Console.WriteLine("OpenRPA Windows Service: " + message.command);
         }
         private void Pipe_Error(Exception ex)

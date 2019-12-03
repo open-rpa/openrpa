@@ -53,7 +53,7 @@ namespace OpenRPA.Updater
                 Logs = OpenRPAPackageManagerLogger.Instance.Logs;
             };
             var cur = new System.IO.DirectoryInfo(Environment.CurrentDirectory);
-            if(System.IO.File.Exists(cur.Parent.FullName + @"\OpenRPA.exe"))
+            if (System.IO.File.Exists(cur.Parent.FullName + @"\OpenRPA.exe"))
             {
                 OpenRPAPackageManager.Instance.Packagesfolder = cur.Parent.FullName + @"\Packages";
                 OpenRPAPackageManager.Instance.Destinationfolder = cur.Parent.FullName;
@@ -150,13 +150,13 @@ namespace OpenRPA.Updater
             }
             return key != null;
         }
-        public void LoadPackages()
+        public void LoadPackages(string searchString = "OpenRPA")
         {
             var result = new List<PackageModel>();
             foreach (var m in Packages) result.Add(m);
             Task.Run(async () =>
             {
-                var packagesearch = await OpenRPAPackageManager.Instance.Search("OpenRPA");
+                var packagesearch = await OpenRPAPackageManager.Instance.Search(searchString);
                 foreach (var p in packagesearch)
                 {
                     var exists = result.Where(x => x.Package.Identity.Id == p.Identity.Id).FirstOrDefault();
@@ -165,27 +165,28 @@ namespace OpenRPA.Updater
                         PackageModel m = new PackageModel() { Package = p, canUpgrade = false, isDownloaded = false };
                         m.LocalPackage = OpenRPAPackageManager.Instance.getLocal(p.Identity.Id);
                         result.Add(m);
-                    } else
+                    }
+                    else
                     {
                         exists.LocalPackage = OpenRPAPackageManager.Instance.getLocal(p.Identity.Id);
                     }
                 }
-                foreach(var m in result)
+                foreach (var m in result)
                     if (m.LocalPackage != null)
                     {
                         await Dispatcher.Invoke(async () =>
-                         {
-                             try
-                             {
-                                 m.isDownloaded = true;
-                                 m.isInstalled = await OpenRPAPackageManager.Instance.IsPackageInstalled(m.LocalPackage);
-                                 m.canUpgrade = m.Version > m.LocalPackage.Identity.Version;
-                             }
-                             catch (Exception ex) 
-                             {
-                                 OpenRPAPackageManagerLogger.Instance.LogError(ex.ToString());
-                             }
-                         });
+                        {
+                            try
+                            {
+                                m.isDownloaded = true;
+                                m.isInstalled = await OpenRPAPackageManager.Instance.IsPackageInstalled(m.LocalPackage);
+                                m.canUpgrade = m.Version > m.LocalPackage.Identity.Version;
+                            }
+                            catch (Exception ex)
+                            {
+                                OpenRPAPackageManagerLogger.Instance.LogError(ex.ToString());
+                            }
+                        });
                     }
                 Dispatcher.Invoke(() =>
                 {
@@ -212,7 +213,7 @@ namespace OpenRPA.Updater
 
                 if (!System.IO.Directory.Exists(OpenRPAPackageManager.Instance.Destinationfolder) || !System.IO.File.Exists(OpenRPAPackageManager.Instance.Destinationfolder + @"\OpenRPA.exe"))
                 {
-                    if(FirstRun)
+                    if (FirstRun)
                     {
                         FirstRun = false;
                         var dialogResult = MessageBox.Show("Install OpenRPA and most common packages?", "First run", MessageBoxButton.YesNo);
@@ -524,6 +525,39 @@ namespace OpenRPA.Updater
                 }
             });
         }
+
+        public void TextSearchField_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+            tb.Text = string.Empty;
+            tb.GotFocus -= TextSearchField_GotFocus;
+        }
+
+        private void ButtonSearchClick(object sender, RoutedEventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                try
+                {
+                    OpenRPAPackageManagerLogger.Instance.LogInformation("Searching for packages");
+                    bussy = true;
+                    listPackages.IsEnabled = true;
+                    bussy = false;
+                    OpenRPAPackageManagerLogger.Instance.LogInformation("Packages found");
+                    Packages.Clear();
+                    LoadPackages(TextSearchField.Text);
+                }
+                catch (Exception ex)
+                {
+                    OpenRPAPackageManagerLogger.Instance.LogError(ex.ToString());
+                }
+                finally
+                {
+                    bussy = false;
+                }
+            });
+        }
+
         private void listPackages_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             bussy = bussy;

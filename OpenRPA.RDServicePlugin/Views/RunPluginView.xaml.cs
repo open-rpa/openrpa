@@ -23,6 +23,8 @@ namespace OpenRPA.RDServicePlugin.Views
     public partial class RunPluginView : UserControl, INotifyPropertyChanged
     {
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        private RDService.unattendedserver server = null;
+        private RDService.unattendedclient client = null;
         public void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
@@ -37,15 +39,18 @@ namespace OpenRPA.RDServicePlugin.Views
         }
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Config.Save();
+            var asm = System.Reflection.Assembly.GetEntryAssembly();
+            var filepath = asm.CodeBase.Replace("file:///", "");
+            var path = System.IO.Path.GetDirectoryName(filepath);
+            RDService.PluginConfig.Save();
         }
         private void ReauthenticateButtonClick(object sender, RoutedEventArgs e)
         {
             if (Config.local.jwt != null && Config.local.jwt.Length > 0)
             {
                 Log.Information("Saving temporart jwt token, from local settings.json");
-                PluginConfig.tempjwt = new System.Net.NetworkCredential(string.Empty, Config.local.UnprotectString(Config.local.jwt)).Password;
-                Config.Save();
+                RDService.PluginConfig.tempjwt = new System.Net.NetworkCredential(string.Empty, Config.local.UnprotectString(Config.local.jwt)).Password;
+                RDService.PluginConfig.Save();
             }
             else
             {
@@ -134,7 +139,6 @@ namespace OpenRPA.RDServicePlugin.Views
                 UserControl_Loaded(null, null);
             }
         }
-        private unattendedclient client = null;
         public void DisableButtons()
         {
             AddcurrentuserButton.IsEnabled = false;
@@ -153,14 +157,19 @@ namespace OpenRPA.RDServicePlugin.Views
                 string computername = NativeMethods.GetHostName().ToLower();
                 string computerfqdn = NativeMethods.GetFQDN().ToLower();
                 string windowsusername = NativeMethods.GetProcessUserName().ToLower();
-                var clients = await global.webSocketClient.Query<unattendedclient>("openrpa", "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "', 'windowsusername':'" + windowsusername.Replace(@"\", @"\\") + "'}");
+
+                var servers = await global.webSocketClient.Query<RDService.unattendedserver>("openrpa", "{'_type':'unattendedserver', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
+                server = servers.FirstOrDefault();
+
+                var clients = await global.webSocketClient.Query<RDService.unattendedclient>("openrpa", "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "', 'windowsusername':'" + windowsusername.Replace(@"\", @"\\") + "'}");
                 AddcurrentuserButton.Content = "Add current user";
                 if (clients.Length == 1)
                 {
                     client = clients.First();
                     AddcurrentuserButton.Content = "Update current user";
                 }
-                chkUseFreeRDP.IsChecked = PluginConfig.usefreerdp;
+                txtreloadinterval.Text = RDService.PluginConfig.reloadinterval.ToString();
+                chkUseFreeRDP.IsChecked = RDService.PluginConfig.usefreerdp;
                 AddcurrentuserButton.IsEnabled = false;
                 RemovecurrentuserButton.IsEnabled = false;
                 ReauthenticateButton.IsEnabled = false;
@@ -202,7 +211,8 @@ namespace OpenRPA.RDServicePlugin.Views
                 var path = asm.CodeBase.Replace("file:///", "");
                 if (client == null)
                 {
-                    client = new unattendedclient() { computername = computername, computerfqdn = computerfqdn, windowsusername = windowsusername, name = computername + " " + windowsusername, openrpapath = path };
+                    client = new RDService.unattendedclient() { computername = computername, computerfqdn = computerfqdn, windowsusername = windowsusername, name = computername + " " + windowsusername, openrpapath = path };
+                    client._acl = server._acl;
                     client = await global.webSocketClient.InsertOne("openrpa", 1, false, client);
                 }
                 lblExecutable.Text = client.openrpapath;
@@ -244,20 +254,26 @@ namespace OpenRPA.RDServicePlugin.Views
                 UserControl_Loaded(null, null);
             }
         }
-
         private void chkUseFreeRDP_IsEnabledChanged(object sender, RoutedEventArgs e)
         {
             if (chkUseFreeRDP.IsChecked == null) return;
-            PluginConfig.usefreerdp = chkUseFreeRDP.IsChecked.Value;
-            Config.Save();
+            RDService.PluginConfig.usefreerdp = chkUseFreeRDP.IsChecked.Value;
+            RDService.PluginConfig.Save();
         }
-
         private void chkUseFreeRDP_Click(object sender, RoutedEventArgs e)
         {
             if (chkUseFreeRDP.IsChecked == null) return;
-            PluginConfig.usefreerdp = chkUseFreeRDP.IsChecked.Value;
-            Config.Save();
+            RDService.PluginConfig.usefreerdp = chkUseFreeRDP.IsChecked.Value;
+            RDService.PluginConfig.Save();
         }
-
+        private void txtreloadinterval_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TimeSpan ts = TimeSpan.Zero;
+            if(TimeSpan.TryParse(txtreloadinterval.Text, out ts))
+            {
+                RDService.PluginConfig.reloadinterval = ts;
+                RDService.PluginConfig.Save();
+            }
+        }
     }
 }

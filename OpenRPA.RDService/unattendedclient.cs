@@ -17,5 +17,7 @@ namespace OpenRPA.RDService
         public string openrpapath { get; set; } = @"%windir%\system32\notepad.exe";
         public TimeSpan autorestart { get; set; } = TimeSpan.FromMinutes(1);
         public TimeSpan rdpretry { get; set; } = TimeSpan.FromMinutes(30);
+        public bool enabled { get; set; }
+
     }
 }

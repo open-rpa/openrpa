@@ -26,6 +26,12 @@
                         <TextBlock Margin="3,0,0,0">Upgrade all</TextBlock>
                     </StackPanel>
                 </Button>
+                <TextBox x:Name="TextSearchField" GotFocus="TextSearchField_GotFocus" ToolTip="Search for activities" Height="23" TextWrapping="Wrap" Text="Search..." Width="120"/>
+                <Button x:Name="ButtonSearch" ToolTip="Press to search" Click="ButtonSearchClick" Margin="5,0,5,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="3,0,0,0">Search</TextBlock>
+                    </StackPanel>
+                </Button>
             </ToolBar>
         </ToolBarTray>
         <DockPanel DockPanel.Dock="Left"  MinWidth="250" MaxWidth="350">
@@ -52,36 +58,36 @@
         </StackPanel>
         <!--  CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" -->
         <ScrollViewer IsTabStop="True"  DockPanel.Dock="Top" >
+            <StackPanel>
                 <StackPanel>
-                    <StackPanel>
-                        <TextBlock><Bold>Id</Bold></TextBlock>
-                        <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Name}" ></TextBlock>
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock><Bold>Version</Bold></TextBlock>
-                    <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.InstalledVersionString}" ></TextBlock>
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock><Bold>LatestVersion</Bold></TextBlock>
-                        <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.LatestVersion}" ></TextBlock>
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock><Bold>Authors</Bold></TextBlock>
-                        <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Authors}" ></TextBlock>
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock><Bold>Tags</Bold></TextBlock>
-                        <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Tags}" ></TextBlock>
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock><Bold>Summary</Bold></TextBlock>
-                        <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Summary}" ></TextBlock>
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock><Bold>Description</Bold></TextBlock>
-                        <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Description}" ></TextBlock>
-                    </StackPanel>
+                    <TextBlock><Bold>Id</Bold></TextBlock>
+                    <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Name}" ></TextBlock>
                 </StackPanel>
+                <StackPanel>
+                    <TextBlock><Bold>Version</Bold></TextBlock>
+                    <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.InstalledVersionString}" ></TextBlock>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock><Bold>LatestVersion</Bold></TextBlock>
+                    <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.LatestVersion}" ></TextBlock>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock><Bold>Authors</Bold></TextBlock>
+                    <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Authors}" ></TextBlock>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock><Bold>Tags</Bold></TextBlock>
+                    <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Tags}" ></TextBlock>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock><Bold>Summary</Bold></TextBlock>
+                    <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Summary}" ></TextBlock>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock><Bold>Description</Bold></TextBlock>
+                    <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Description}" ></TextBlock>
+                </StackPanel>
+            </StackPanel>
         </ScrollViewer>
     </DockPanel>
 </Window>

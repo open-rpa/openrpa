@@ -104,7 +104,7 @@ Section "Base robot files" ; section 0
   SetOutPath $INSTDIR
   
   File /r "C:\code\openrpa\OpenRPA\bin\PrepInstaller\net462\*"
-  
+  File /r "C:\code\openrpa\OpenRPA.Utilities\bin\PrepInstaller\net462\*"  
   
   WriteRegStr HKLM SOFTWARE\OpenRPA "Install_Dir" "$INSTDIR"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenRPA" "DisplayName" "OpenRPA"

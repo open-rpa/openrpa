@@ -50,17 +50,27 @@ namespace OpenRPA.Interfaces
                 return dir;
             }
         }
+        private static string _ProjectsDirectory = null;
         public static string ProjectsDirectory
         {
             get
             {
-                var asm = System.Reflection.Assembly.GetEntryAssembly();
-                var filepath = asm.CodeBase.Replace("file:///", "");
-                var path = System.IO.Path.GetDirectoryName(filepath);
-                // if (path.ToLower().Contains("program")) path = System.IO.Path.Combine(MyDocuments, "OpenRPA");
-                path = System.IO.Path.Combine(MyDocuments, "OpenRPA");
-                if (!System.IO.Directory.Exists(System.IO.Path.Combine(path))) System.IO.Directory.CreateDirectory(path);
-                return path;
+                if(string.IsNullOrEmpty(_ProjectsDirectory))
+                {
+                    var asm = System.Reflection.Assembly.GetEntryAssembly();
+                    var filepath = asm.CodeBase.Replace("file:///", "");
+                    var path = System.IO.Path.GetDirectoryName(filepath);
+                    // if (path.ToLower().Contains("program")) path = System.IO.Path.Combine(MyDocuments, "OpenRPA");
+                    path = System.IO.Path.Combine(MyDocuments, "OpenRPA");
+                    if (!System.IO.Directory.Exists(System.IO.Path.Combine(path))) System.IO.Directory.CreateDirectory(path);
+                    _ProjectsDirectory = path;
+
+                }
+                return _ProjectsDirectory;
+            }
+            set
+            {
+                _ProjectsDirectory = value;
             }
         }
         public static string PluginsDirectory

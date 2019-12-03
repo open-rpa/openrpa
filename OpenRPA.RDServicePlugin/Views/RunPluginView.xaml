@@ -30,5 +30,8 @@
         <Button Height="23" HorizontalAlignment="Left" Margin="139,308,0,0" VerticalAlignment="Top" Width="222" Content="Install Service" Click="InstallServiceButtonClick" x:Name="InstallServiceButton"></Button>
         <Button Height="23" HorizontalAlignment="Left" Margin="139,338,0,0" VerticalAlignment="Top" Width="222" Content="Uninstall Service" Click="UninstallServiceButtonClick" x:Name="UninstallServiceButton"></Button>
 
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,368,0,0" Text="Reload interval:" VerticalAlignment="Top" Width="110" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="139,368,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="txtreloadinterval" TextChanged="txtreloadinterval_TextChanged" />
+
     </Grid>
 </UserControl>

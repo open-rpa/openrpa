@@ -80,7 +80,27 @@ namespace OpenRPA
             {
                 if (_local == null)
                 {
-                    _local = Load(System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json"));
+                    string filename = "settings.json";
+                    var fi = new System.IO.FileInfo(filename);
+                    var _fileName = System.IO.Path.GetFileName(filename);
+                    var di = fi.Directory;
+                    if (System.IO.File.Exists(System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json")))
+                    {
+                            filename = System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json");
+                    }
+                    else if (System.IO.File.Exists(filename))
+                    {
+                    }
+                    else if (System.IO.File.Exists(System.IO.Path.Combine(di.Parent.FullName, "settings.json")))
+                    {
+                        filename = System.IO.Path.Combine(di.Parent.FullName, "settings.json");
+                    }
+                    else
+                    {
+                        // Will create a new file in ProjectsDirectory
+                        filename = System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json");
+                    }
+                    _local = Load(filename);
                 }
                 return _local;
             }
@@ -105,6 +125,15 @@ namespace OpenRPA
                 if (properties.TryGetValue(pluginname + "_" + propertyName, out value))
                 {
                     if (typeof(T) == typeof(int) && value is long) value = int.Parse(value.ToString());
+                    if (typeof(T) == typeof(TimeSpan) && value != null)
+                    {
+                        TimeSpan ts = TimeSpan.Zero;
+                        if (TimeSpan.TryParse(value.ToString(), out ts))
+                        {
+                            return (T)(object)ts;
+                        }
+
+                    }
                     return (T)value;
                 }
                 SetProperty(pluginname, mydefault, propertyName);

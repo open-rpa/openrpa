@@ -12,7 +12,8 @@
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <Version>1.0.6</Version>
-    <PackageReleaseNotes>1.0.6 update interfaces reference
+    <PackageReleaseNotes>1.0.7 Improve high density robots
+1.0.6 update interfaces reference
 1.0.2 More error catching, fix freerdp login error
 1.0.1 Improve sigin process and stability</PackageReleaseNotes>
   </PropertyGroup>

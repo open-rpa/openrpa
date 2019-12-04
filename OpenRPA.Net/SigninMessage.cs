@@ -20,6 +20,16 @@ namespace OpenRPA.Net
             this.username = username;
             this.password = new System.Net.NetworkCredential(string.Empty, password).Password;
         }
+        public SigninMessage(string jwt) : base()
+        {
+            msg.command = "signin";
+            this.jwt = jwt;
+        }
+        public SigninMessage(SecureString jwt) : base()
+        {
+            msg.command = "signin";
+            this.jwt = new System.Net.NetworkCredential(string.Empty, jwt).Password; 
+        }
         public bool validate_only { get; set; }
         public string username { get; set; }
         public string password { get; set; }

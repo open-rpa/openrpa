@@ -15,10 +15,8 @@ namespace OpenRPA.Image
         public int Y { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-
         public string Text { get; set; }
         public float Confidence { get; set; }
-
         private System.Drawing.Bitmap _element = null;
         public System.Drawing.Bitmap element {
             get
@@ -64,31 +62,16 @@ namespace OpenRPA.Image
             Height = Rectangle.Height;
             this.element = Element;
         }
-        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY)
+        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse)
         {
-            //Log.Information("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
-            //Log.Debug("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
-            //Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-            //Input.InputDriver.DoMouseClick();
             var point = new FlaUI.Core.Shapes.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-            //FlaUI.Core.Input.Mouse.MoveTo(point);
-
-            //Input.InputDriver.SetCursorPos(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-            //Input.InputDriver.Click(Button);
-            // Input.MouseSimulator.MouseButton(Button);
-            //Task.Run(() =>
-            //{
-            //});
+            if (AnimateMouse) FlaUI.Core.Input.Mouse.MoveTo(point);
             FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
             if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
             if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-            // System.Threading.Thread.Sleep(100);
-            // Interfaces.Input2.MouseSimulator.ClickLeftMouseButton();
-
-            // FlaUI.Core.Input.Mouse.Click(flabuttun);
-            Input.InputDriver.Instance.SkipEvent = true;
-            FlaUI.Core.Input.Mouse.Click(flabuttun, point);
-            Input.InputDriver.Instance.SkipEvent = false;
+            Input.InputDriver.Instance.AllowOneClick = true;
+            if (!DoubleClick) FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+            if (DoubleClick) FlaUI.Core.Input.Mouse.DoubleClick(flabuttun, point);
         }
         public void Focus()
         {
@@ -134,7 +117,6 @@ namespace OpenRPA.Image
                 if (ScreenImagex < 0) ScreenImagex = 0; if (ScreenImagey < 0) ScreenImagey = 0;
                 using (var image = Interfaces.Image.Util.Screenshot(ScreenImagex, ScreenImagey, ScreenImageWidth, ScreenImageHeight, Interfaces.Image.Util.ActivityPreviewImageWidth, Interfaces.Image.Util.ActivityPreviewImageHeight))
                 {
-                    // Interfaces.Image.Util.SaveImageStamped(image, System.IO.Directory.GetCurrentDirectory(), "ImageElement");
                     return Interfaces.Image.Util.Bitmap2Base64(image);
                 }
             }
@@ -143,12 +125,10 @@ namespace OpenRPA.Image
                 return Interfaces.Image.Util.Bitmap2Base64(element);
             }
         }
-
         public void Dispose()
         {
             if(_element!=null) _element.Dispose();
         }
-
         private Emgu.CV.OCR.Tesseract _ocr;
         public string Value
         {
@@ -161,7 +141,7 @@ namespace OpenRPA.Image
                         return Text;
                     }
                     var lang = Config.local.ocrlanguage;
-                    string basepath = System.IO.Directory.GetCurrentDirectory();
+                    string basepath = Interfaces.Extensions.DataDirectory;
                     string path = System.IO.Path.Combine(basepath, "tessdata");
                     ocr.TesseractDownloadLangFile(path, Config.local.ocrlanguage);
                     ocr.TesseractDownloadLangFile(path, "osd");

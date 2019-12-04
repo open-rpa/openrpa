@@ -26,6 +26,7 @@ namespace OpenRPA.Script.Activities
     /// </summary>
     public partial class Editor : Window
     {
+        public string[] namespaces;
         public void LoadFromResource(string resourceName, Type type)
         {
             // string[] names = typeof(Extensions).Assembly.GetManifestResourceNames();
@@ -45,9 +46,10 @@ namespace OpenRPA.Script.Activities
             }
         }
         private List<System.Activities.Presentation.Model.ModelItem> Variables;
-        public Editor(string code, string language, List<System.Activities.Presentation.Model.ModelItem> Variables)
+        public Editor(string code, string language, List<System.Activities.Presentation.Model.ModelItem> Variables, string[] namespaces)
         {
             InitializeComponent();
+            this.namespaces = namespaces;
             this.Variables = Variables;
             DataContext = this;
             //string[] names = typeof(ICSharpCode.AvalonEdit.AvalonEditCommands).Assembly.GetManifestResourceNames();
@@ -65,99 +67,119 @@ namespace OpenRPA.Script.Activities
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (textEditor == null)
+            {
+                Log.Error("textEditor is null?");
+                return;
+            }
             this.errors.Text = "";
-            textEditor.ShowLineNumbers = false;
             var language = textEditor.SyntaxHighlighting.Name;
             var code = textEditor.Text;
-            if (language == "VB" || language == "C#")
-            {
-                var variables = new Dictionary<string, Type>();
-                foreach(var variableModel in Variables)
-                {
-                    var variable = variableModel.GetCurrentValue() as System.Activities.LocationReference;
-                    variables.Add(variable.Name, variable.Type);
-                }
-                textEditor.ShowLineNumbers = false;
-                string sourcecode = code;
-                if (language == "VB") sourcecode = InvokeCode.GetVBHeaderText(variables, "Expression") + code + InvokeCode.GetVBFooterText();
-                if (language == "C#") sourcecode = InvokeCode.GetCSharpHeaderText(variables, "Expression") + code + InvokeCode.GetCSharpFooterText();
-                var references = InvokeCode.GetAssemblyLocations();
-                var CompilerParams = new System.CodeDom.Compiler.CompilerParameters();
-                //CompilerParams.GenerateInMemory = true;
-                CompilerParams.TreatWarningsAsErrors = false;
-                CompilerParams.GenerateExecutable = false;
-                CompilerParams.CompilerOptions = "/optimize /d:DEBUG";
-                CompilerParams.IncludeDebugInformation = true;
-                CompilerParams.GenerateInMemory = false;
-                CompilerParams.OutputAssembly = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString().Replace("-", "") + ".dll");
-
-                CompilerParams.ReferencedAssemblies.AddRange(references);
-                // CompilerParams.ReferencedAssemblies.Add(@"C:\code\openrpa\bin\Microsoft.Office.Tools.Excel.dll");
-                System.CodeDom.Compiler.CodeDomProvider provider = null;
-                if (language == "VB")
-                {
-                    provider = new Microsoft.VisualBasic.VBCodeProvider();
-                }
-                else
-                {
-                    provider = new Microsoft.CSharp.CSharpCodeProvider();
-
-                }
-                System.CodeDom.Compiler.CompilerResults compile = provider.CompileAssemblyFromSource(CompilerParams, new[] { sourcecode });
-
-                if (compile.Errors.HasErrors)
-                {
-                    string text = "Compile error: ";
-                    foreach (System.CodeDom.Compiler.CompilerError ce in compile.Errors)
-                    {
-                        text += "rn" + ce.ToString();
-                    }
-                    errors.Text = text;
-                }
-            }
-            if (language == "PowerShell")
+            string error = "";
+            try
             {
                 textEditor.ShowLineNumbers = true;
-                Collection<System.Management.Automation.PSParseError> errors;
-                System.Management.Automation.PSParser.Tokenize(code, out errors);
-                if(errors!=null && errors.Count > 0)
+                if (language == "VB" || language == "C#")
                 {
-                    foreach (var _e in errors.Take(5))
-                    {
-                        this.errors.Text += "(" + _e.Token.StartLine + ":" + _e.Token.StartColumn + ") " + _e.Message  + Environment.NewLine;
-                    }
+                    textEditor.ShowLineNumbers = false;
                 }
             }
-            if (language == "AutoHotkey")
+            catch (Exception ex)
             {
-                textEditor.ShowLineNumbers = true;
-                //if (sharpAHK.ahkGlobal.ahkdll == null) { InvokeCode.New_AHKSession(true); }
-                //sharpAHK.ahkGlobal.ahkdll.Reset();
-                //try
-                //{
-                //    //sharpAHK.ahkGlobal.ahkdll.LoadScript(code);
-                //}
-                //catch (Exception ex)
-                //{
-                //    this.errors.Text = ex.ToString();
-                //}
+                Log.Error("set ShowLineNumbers: " + ex.ToString());
             }
-            if (language=="Python")
-            {
-                textEditor.ShowLineNumbers = true;
-                var engine = IronPython.Hosting.Python.CreateEngine();
-                var source = engine.CreateScriptSourceFromString(code, Microsoft.Scripting.SourceCodeKind.Statements);
-                var errors = new ErrorListener();
-                var command = source.Compile(errors);
-                if (command == null)
+            Task.Run(() => {
+                if (language == "VB" || language == "C#")
                 {
-                    foreach (var _e in errors.errors.Take(5))
+                    var variables = new Dictionary<string, Type>();
+                    foreach (var variableModel in Variables)
                     {
-                        this.errors.Text += _e.source.ToString() + "(" + _e.span.Start + "): " + _e.message + Environment.NewLine;
+                        var variable = variableModel.GetCurrentValue() as System.Activities.LocationReference;
+                        variables.Add(variable.Name, variable.Type);
+                    }
+                    string sourcecode = code;
+                    if (language == "VB") sourcecode = InvokeCode.GetVBHeaderText(variables, "Expression", namespaces) + code + InvokeCode.GetVBFooterText();
+                    if (language == "C#") sourcecode = InvokeCode.GetCSharpHeaderText(variables, "Expression", namespaces) + code + InvokeCode.GetCSharpFooterText();
+                    var references = InvokeCode.GetAssemblyLocations();
+                    var CompilerParams = new System.CodeDom.Compiler.CompilerParameters();
+                    //CompilerParams.GenerateInMemory = true;
+                    CompilerParams.TreatWarningsAsErrors = false;
+                    CompilerParams.GenerateExecutable = false;
+                    CompilerParams.CompilerOptions = "/optimize /d:DEBUG";
+                    CompilerParams.IncludeDebugInformation = true;
+                    CompilerParams.GenerateInMemory = false;
+                    CompilerParams.OutputAssembly = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString().Replace("-", "") + ".dll");
+
+                    CompilerParams.ReferencedAssemblies.AddRange(references);
+                    // CompilerParams.ReferencedAssemblies.Add(@"C:\code\openrpa\bin\Microsoft.Office.Tools.Excel.dll");
+                    System.CodeDom.Compiler.CodeDomProvider provider = null;
+                    if (language == "VB")
+                    {
+                        provider = new Microsoft.VisualBasic.VBCodeProvider();
+                    }
+                    else
+                    {
+                        provider = new Microsoft.CSharp.CSharpCodeProvider();
+
+                    }
+                    System.CodeDom.Compiler.CompilerResults compile = provider.CompileAssemblyFromSource(CompilerParams, new[] { sourcecode });
+
+                    if (compile.Errors.HasErrors)
+                    {
+                        string text = "Compile error: ";
+                        foreach (System.CodeDom.Compiler.CompilerError ce in compile.Errors)
+                        {
+                            text += "rn" + ce.ToString();
+                        }
+                        error = text;
                     }
                 }
-            }
-            this.errors.Visibility = (string.IsNullOrEmpty(this.errors.Text) ? Visibility.Hidden : Visibility.Visible);
+                if (language == "PowerShell")
+                {
+                    Collection<System.Management.Automation.PSParseError> errors;
+                    System.Management.Automation.PSParser.Tokenize(code, out errors);
+                    if (errors != null && errors.Count > 0)
+                    {
+                        foreach (var _e in errors.Take(5))
+                        {
+                            error += "(" + _e.Token.StartLine + ":" + _e.Token.StartColumn + ") " + _e.Message + Environment.NewLine;
+                        }
+                    }
+                }
+                if (language == "AutoHotkey")
+                {
+                    //if (sharpAHK.ahkGlobal.ahkdll == null) { InvokeCode.New_AHKSession(true); }
+                    //sharpAHK.ahkGlobal.ahkdll.Reset();
+                    //try
+                    //{
+                    //    //sharpAHK.ahkGlobal.ahkdll.LoadScript(code);
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    error = ex.ToString();
+                    //}
+                }
+                if (language == "Python")
+                {
+                    //var engine = IronPython.Hosting.Python.CreateEngine();
+                    //var source = engine.CreateScriptSourceFromString(code, Microsoft.Scripting.SourceCodeKind.Statements);
+                    //var errors = new ErrorListener();
+                    //var command = source.Compile(errors);
+                    //if (command == null)
+                    //{
+                    //    foreach (var _e in errors.errors.Take(5))
+                    //    {
+                    //        error += _e.source.ToString() + "(" + _e.span.Start + "): " + _e.message + Environment.NewLine;
+                    //    }
+                    //}
+                }
+                GenericTools.RunUI(this, () =>
+                {
+                    this.errors.Text = error;
+                    this.errors.Visibility = (string.IsNullOrEmpty(this.errors.Text) ? Visibility.Hidden : Visibility.Visible);
+                });
+            });
+
         }
 
         private void HighlightingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

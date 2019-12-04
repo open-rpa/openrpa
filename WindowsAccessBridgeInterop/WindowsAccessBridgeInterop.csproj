@@ -1,79 +1,45 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4B5DE0E1-2F0A-426D-BB12-BECB0F6F8B51}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WindowsAccessBridgeInterop</RootNamespace>
-    <AssemblyName>WindowsAccessBridgeInterop</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFramework>net4</TargetFramework>
+    <PackageId>OpenRPA.WindowsAccessBridgeInterop</PackageId>
+    <Authors>Google</Authors>
+    <Product>access-bridge-explorer</Product>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReleaseNotes>1.1.5 update interfaces reference</PackageReleaseNotes>
+    <PackageIcon>open_rpa128.png</PackageIcon>
+    <Version>1.1.6</Version>
+    <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
+    <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\bin\java\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath></OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\dist\java\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">
+    <OutputPath />
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Drawing" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AccessBridge.cs" />
-    <Compile Include="AccessBridgeNativeEvents.cs" />
-    <Compile Include="AccessBridgeNativeEventsLegacy.cs" />
-    <Compile Include="AccessBridgeNativeFunctions.cs" />
-    <Compile Include="AccessBridgeNativeFunctionsLegacy.cs" />
-    <Compile Include="AccessibleContextNode.cs" />
-    <Compile Include="AccessibleNodeExtensions.cs" />
-    <Compile Include="AccessibleRectInfo.cs" />
-    <Compile Include="AccessibleJvm.cs" />
-    <Compile Include="AccessibleNode.cs" />
-    <Compile Include="AccessibleTextReader.cs" />
-    <Compile Include="AccessibleWindow.cs" />
-    <Compile Include="EnumerableExtensions.cs" />
-    <Compile Include="Generated.cs" />
-    <Compile Include="Generated.Internal.cs" />
-    <Compile Include="Generated.Internal.Legacy.cs" />
-    <Compile Include="JavaObjectHandle.cs" />
-    <Compile Include="JOBJECT32.cs" />
-    <Compile Include="JOBJECT64.cs" />
-    <Compile Include="Path.cs" />
-    <Compile Include="PathCursor.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PropertyGroup.cs" />
-    <Compile Include="PropertyList.cs" />
-    <Compile Include="PropertyNode.cs" />
-    <Compile Include="PropertyOptions.cs" />
-    <Compile Include="TextReaderExtensions.cs" />
-    <Compile Include="VersionNumber.cs" />
-    <Compile Include="Win32\NativeMethods.cs" />
-    <Compile Include="Win32\UnmanagedLibrary.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
+    <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
   </Target>
-  <Target Name="AfterBuild">
+  <Target Name="SetNuspecProperties" BeforeTargets="GenerateNuspec">
+    <PropertyGroup>
+      <NuspecProperties>$(NuspecProperties);id=$(AssemblyName)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);config=$(Configuration)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);version=$(PackageVersion)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);description=$(Description)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);author=$(Authors)</NuspecProperties>
+    </PropertyGroup>
   </Target>
-  -->
+  <ItemGroup>
+    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'PrepInstaller'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <ProjectExtensions><VisualStudio><UserProperties BuildVersion_StartDate="2000/1/1" /></VisualStudio></ProjectExtensions>
 </Project>

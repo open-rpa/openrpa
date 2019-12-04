@@ -18,7 +18,7 @@
                     <DataTemplate>
                         <Button ToolTip="{Binding Key}" Click="Button_Click" Margin="5,0,5,0">
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="/OpenRPA.Interfaces;component/Resources/Selector/Button.png" />
+                                <Image Source="/OpenRPA;component/Resources/Buttons/Button.png" />
                                 <TextBlock Margin="3,0,0,0" Text="Add " /><TextBlock Margin="3,0,0,0" Text="{Binding Value.Name}" />
                             </StackPanel>
                         </Button>

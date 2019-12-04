@@ -292,22 +292,18 @@ namespace OpenRPA.Java
                 return result.ToArray();
             }
         }
-        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY)
+        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse)
         {
             if (Button != Input.MouseButton.Left) { VirtualClick = false; }
             if (!VirtualClick)
             {
-                Log.Debug("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
-                //Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-                //Input.InputDriver.DoMouseClick();
                 var point = new FlaUI.Core.Shapes.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-                //FlaUI.Core.Input.Mouse.MoveTo(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+                if (AnimateMouse) FlaUI.Core.Input.Mouse.MoveTo(point);
                 FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
                 if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
                 if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-
-                FlaUI.Core.Input.Mouse.Click(flabuttun, point);
-                Log.Debug("Click done");
+                if (!DoubleClick) FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+                if (DoubleClick) FlaUI.Core.Input.Mouse.DoubleClick(flabuttun, point);
                 return;
             } 
             AccessibleActions _actions;
@@ -428,7 +424,6 @@ namespace OpenRPA.Java
             if (ScreenImagex < 0) ScreenImagex = 0; if (ScreenImagey < 0) ScreenImagey = 0;
             using (var image = Interfaces.Image.Util.Screenshot(ScreenImagex, ScreenImagey, ScreenImageWidth, ScreenImageHeight, Interfaces.Image.Util.ActivityPreviewImageWidth, Interfaces.Image.Util.ActivityPreviewImageHeight))
             {
-                // Interfaces.Image.Util.SaveImageStamped(image, System.IO.Directory.GetCurrentDirectory(), "JavaElement");
                 return Interfaces.Image.Util.Bitmap2Base64(image);
             }
         }

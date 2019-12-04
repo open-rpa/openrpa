@@ -13,16 +13,11 @@ using System.Windows.Media.Imaging;
 
 namespace OpenRPA.Activities
 {
-    public partial class CloseApplicationDesigner : INotifyPropertyChanged
+    public partial class CloseApplicationDesigner
     {
         public CloseApplicationDesigner()
         {
             InitializeComponent();
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged(String propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         private void Open_Selector(object sender, RoutedEventArgs e)
         {
@@ -69,7 +64,7 @@ namespace OpenRPA.Activities
             p.OnUserAction -= OnUserAction;
             p.Stop();
         }
-        public void OnUserAction(Interfaces.IPlugin sender, Interfaces.IRecordEvent e)
+        public void OnUserAction(Interfaces.IRecordPlugin sender, Interfaces.IRecordEvent e)
         {
             StopRecordPlugins();
             AutomationHelper.syncContext.Post(o =>

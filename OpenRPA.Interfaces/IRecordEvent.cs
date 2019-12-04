@@ -22,6 +22,5 @@ namespace OpenRPA.Interfaces
         int Y { get; set; }
         int OffsetX { get; set; }
         int OffsetY { get; set; }
-        
     }
 }

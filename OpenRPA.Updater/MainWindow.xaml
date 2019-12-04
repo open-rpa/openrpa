@@ -1,0 +1,93 @@
+﻿<Window x:Class="OpenRPA.Updater.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+
+        xmlns:local="clr-namespace:OpenRPA.Updater"
+        mc:Ignorable="d"
+        Title="OpenRPA Package Manager" Height="450" Width="800">
+    <Window.Resources>
+        <CollectionViewSource Source="{Binding Packages}" x:Key="Packages">
+        </CollectionViewSource>
+    </Window.Resources>
+    <DockPanel>
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+                <Button ToolTip="Launch OpenRPA" Click="ButtonLaunch" Margin="5,0,5,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/OpenRPA.Updater;component/Resources/open_rpa32.png" Height="18" />
+                        <TextBlock Margin="3,0,0,0">Launch</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="ButtonUpdateAll" ToolTip="Update all" Click="ButtonUpdateAllClick" Margin="5,0,5,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/OpenRPA.Updater;component/Resources/Package.png" Height="18" />
+                        <TextBlock Margin="3,0,0,0">Upgrade all</TextBlock>
+                    </StackPanel>
+                </Button>
+                <TextBox x:Name="TextSearchField" GotFocus="TextSearchField_GotFocus" ToolTip="Search for activities" Height="23" TextWrapping="Wrap" Text="Search..." Width="120"/>
+                <Button x:Name="ButtonSearch" ToolTip="Press to search" Click="ButtonSearchClick" Margin="5,0,5,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="3,0,0,0">Search</TextBlock>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+        <DockPanel DockPanel.Dock="Left"  MinWidth="250" MaxWidth="350">
+            <TextBox x:Name="searchstring"></TextBox>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                <ListView x:Name="listPackages" ItemsSource="{Binding Source={StaticResource Packages}}" SelectionChanged="listPackages_SelectionChanged" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <WrapPanel>
+                                <Image Source="{Binding Image}" Width="18"/>
+                                <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                            </WrapPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </ScrollViewer>
+        </DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Height="200">
+            <Button Click="ButtonInstall" Content="Install" IsEnabled="{Binding BtnInstallEnabled}"></Button>
+            <Button Click="ButtonReinstall" Content="Reinstall" IsEnabled="{Binding ButtonReinstallEnabled}"></Button>
+            <Button Click="ButtonUpgrade" Content="Upgrade" IsEnabled="{Binding ButtonUpgradeEnabled}"></Button>
+            <Button Click="ButtonUninstall" Content="Uninstall" IsEnabled="{Binding ButtonUninstallEnabled}"></Button>
+            <TextBox HorizontalAlignment="Stretch" Text="{Binding Logs}" Height="120"></TextBox>
+        </StackPanel>
+        <!--  CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" -->
+        <ScrollViewer IsTabStop="True"  DockPanel.Dock="Top" >
+            <StackPanel>
+                <StackPanel>
+                    <TextBlock><Bold>Id</Bold></TextBlock>
+                    <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Name}" ></TextBlock>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock><Bold>Version</Bold></TextBlock>
+                    <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.InstalledVersionString}" ></TextBlock>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock><Bold>LatestVersion</Bold></TextBlock>
+                    <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.LatestVersion}" ></TextBlock>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock><Bold>Authors</Bold></TextBlock>
+                    <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Authors}" ></TextBlock>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock><Bold>Tags</Bold></TextBlock>
+                    <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Tags}" ></TextBlock>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock><Bold>Summary</Bold></TextBlock>
+                    <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Summary}" ></TextBlock>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock><Bold>Description</Bold></TextBlock>
+                    <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Description}" ></TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

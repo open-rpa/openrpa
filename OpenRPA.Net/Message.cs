@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Net
 {
-    public class Message : BaseMessage
+    public class Message : BaseMessage, IMessage
     {
         public Message(string command)
         {
@@ -36,8 +36,8 @@ namespace OpenRPA.Net
                 message.Send(ws);
                 return;
             }
-            var messages = data.Split(1024).ToArray();
-            Log.Verbose("Send (" + messages.Length.ToString() + ") " + command + " / " + data);
+            var messages = data.Split(4096).ToArray();
+            if(command != "pong") Log.Verbose("Send (" + messages.Length.ToString() + ") " + command + " / " + data);
             for (var i = 0; i < messages.Length; i++)
             {
                 var message = new SocketMessage(this, messages[i], messages.Length, i);

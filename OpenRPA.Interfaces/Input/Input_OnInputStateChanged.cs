@@ -118,6 +118,7 @@ namespace OpenRPA.Input
         private const Int32 WM_RBUTTONDOWN = 0x0204;
 
         private const Int32 LLKHF_EXTENDED = 0x01;
+        private const Int32 WM_MouseWheel = 522;
 
         private struct KBDLLHOOKSTRUCT
         {
@@ -176,13 +177,14 @@ namespace OpenRPA.Input
             get
             {
                 if (_Instance == null) {
-                    _Instance = new InputDriver() { CallNext = true, SkipEvent = false };
+                    _Instance = new InputDriver() { CallNext = true, AllowOneClick = false };
                 }
                 return _Instance;
             }
         }
         public bool CallNext { get; set; }
-        public bool SkipEvent { get; set; }
+        public bool AllowOneClick { get; set; }
+        // public bool SkipEvent { get; set; }
         private int currentprocessid = 0;
         // public var test = Activities.TypeText.parseText(cancelkey.Text);
 
@@ -232,13 +234,46 @@ namespace OpenRPA.Input
             }
             return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
         }
-
-        private IntPtr LowLevelMouseProc(Int32 nCode, IntPtr wParam, IntPtr lParam)
+        private string tostring(int wParam)
         {
-            if (SkipEvent)
+            switch (wParam)
             {
-                if(CallNext) return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
-                return (IntPtr)1;
+                case WM_LBUTTONUP:
+                    return "MouseUp Left";
+                case WM_RBUTTONUP:
+                    return "MouseUp Right";
+                case WM_MBUTTONUP:
+                    return "MouseUp Middle";
+                case WM_LBUTTONDOWN:
+                    return "MouseDown Left";
+                case WM_RBUTTONDOWN:
+                    return "MouseDown Right";
+                case WM_MBUTTONDOWN:
+                    return "MouseDown Middle";
+                case WM_MOUSEMOVE:
+                    return "MouseMove";
+                case WM_MouseWheel:
+                    return "WM_MouseWheel";                    
+            }
+            return "Unknown (" + wParam + ")";
+        }
+        private IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam)
+        {
+            if((int)wParam != WM_MOUSEMOVE || AllowOneClick)
+            {
+                // Console.WriteLine(tostring((int)wParam) + $" CallNext: {CallNext} AllowOneClick: {AllowOneClick}");
+            }
+            if (AllowOneClick)
+            {
+                if ((int)wParam == WM_LBUTTONDOWN || (int)wParam == WM_RBUTTONDOWN || (int)wParam == WM_MBUTTONDOWN)
+                {
+                    return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+                }
+                if ((int)wParam == WM_LBUTTONUP || (int)wParam == WM_RBUTTONUP || (int)wParam == WM_MBUTTONUP)
+                {
+                    AllowOneClick = false;
+                    return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+                }
             }
             if (currentprocessid == 0) currentprocessid = System.Diagnostics.Process.GetCurrentProcess().Id;
             if (nCode >= HC_ACTION)
@@ -253,60 +288,60 @@ namespace OpenRPA.Input
                 e.ShiftKey = HIBYTE(GetKeyState(VK_LSHIFT) | GetKeyState(VK_RSHIFT)) != 0;
                 e.WinKey = HIBYTE(GetKeyState(VK_LWIN) | GetKeyState(VK_RWIN)) != 0;
 
-                switch ((Int32)wParam)
+                switch ((int)wParam)
                 {
                     case WM_LBUTTONUP:
                         e.Type = InputEventType.MouseUp;
                         e.Button = MouseButton.Left;
-                        RaiseOnMouseUp(e);
+                        if(!AllowOneClick) RaiseOnMouseUp(e);
                         //OnInput(e);
                         break;
                     case WM_RBUTTONUP:
                         e.Type = InputEventType.MouseUp;
                         e.Button = MouseButton.Right;
-                        RaiseOnMouseUp(e);
+                        if (!AllowOneClick) RaiseOnMouseUp(e);
                         //OnInput(e);
                         break;
                     case WM_MBUTTONUP:
                         e.Type = InputEventType.MouseUp;
                         e.Button = MouseButton.Middle;
-                        RaiseOnMouseUp(e);
+                        if (!AllowOneClick) RaiseOnMouseUp(e);
                         //OnInput(e);
                         break;
                     case WM_LBUTTONDOWN:
                         e.Type = InputEventType.MouseDown;
                         e.Button = MouseButton.Left;
-                        RaiseOnMouseDown(e);
+                        if (!AllowOneClick) RaiseOnMouseDown(e);
                         //OnInput(e);
                         break;
                     case WM_RBUTTONDOWN:
                         e.Type = InputEventType.MouseDown;
                         e.Button = MouseButton.Right;
-                        RaiseOnMouseDown(e);
+                        if (!AllowOneClick) RaiseOnMouseDown(e);
                         //OnInput(e);
                         break;
                     case WM_MBUTTONDOWN:
                         e.Type = InputEventType.MouseDown;
                         e.Button = MouseButton.Middle;
-                        RaiseOnMouseDown(e);
+                        if (!AllowOneClick) RaiseOnMouseDown(e);
                         //OnInput(e);
                         break;
                     case WM_MOUSEMOVE:
                         e.Type = InputEventType.MouseMove;
-                        RaiseOnMouseMove(e);
+                        if (!AllowOneClick) RaiseOnMouseMove(e);
                         //OnInput(e);
                         break;
                 }
-                if (CallNext || (Int32)wParam == WM_MOUSEMOVE)
+                if (CallNext || (int)wParam == WM_MOUSEMOVE || (int)wParam == WM_MouseWheel)
                 {
-                    // if((Int32)wParam != WM_MOUSEMOVE) Log.Debug("CallNextHookEx: " + CallNext);
+                    // if((int)wParam != WM_MOUSEMOVE) Log.Debug("CallNextHookEx: " + CallNext);
                     return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
                 }
                 try
                 {
                     if (e.Element != null && e.Element.ProcessId == currentprocessid)
                     {
-                        // if ((Int32)wParam != WM_MOUSEMOVE) Log.Debug("CallNextHookEx: " + CallNext);
+                        // if ((int)wParam != WM_MOUSEMOVE) Log.Debug("CallNextHookEx: " + CallNext);
                         return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
                     }
                 }
@@ -315,7 +350,7 @@ namespace OpenRPA.Input
                     Log.Error(ex, "");
                     return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
                 }
-                // if ((Int32)wParam != WM_MOUSEMOVE) Log.Debug("Skip CallNextHookEx: " + CallNext);
+                // if ((int)wParam != WM_MOUSEMOVE) Log.Debug("Skip CallNextHookEx: " + CallNext);
                 return (IntPtr)1;
             }
             else
@@ -385,12 +420,18 @@ namespace OpenRPA.Input
         }
         private InputDriver()
         {
+        }
+        private bool isInitialized = false;
+        public void Initialize()
+        {
+            if (isInitialized) return;
             keyboardProc = LowLevelKeyboardProc;
             keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, keyboardProc, IntPtr.Zero, 0);
             if (keyboardHook == IntPtr.Zero) throw new Win32Exception();
             mouseProc = LowLevelMouseProc;
             mouseHook = SetWindowsHookEx(WH_MOUSE_LL, mouseProc, IntPtr.Zero, 0);
             if (mouseHook == IntPtr.Zero) throw new Win32Exception();
+            isInitialized = true;
         }
         public void Dispose()
         {

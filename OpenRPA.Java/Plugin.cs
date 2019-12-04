@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Java
 {
-    public class Plugin : ObservableObject, IPlugin
+    public class Plugin : ObservableObject, IRecordPlugin
     {
         public static treeelement[] _GetRootElements(Selector anchor)
         {
@@ -53,18 +53,21 @@ namespace OpenRPA.Java
             }
             return new JavaSelector(javaitem.JavaElement, javaanchor, true);
         }
-        public event Action<IPlugin, IRecordEvent> OnUserAction;
+        public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
+        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove;
         public string Name { get => "Java"; }
         // public string Status => (hook!=null && hook.jvms.Count>0 ? "online":"offline");
-        public string Status { get => ""; }
-        public Javahook hook { get; set; } = new Javahook();
+        private string _Status = "";
+        public string Status { get => _Status; }
+        // public Javahook hook { get; set; } = new Javahook();
+        public System.Windows.Controls.UserControl editor => null;
         public void Start()
         {
-            hook.OnMouseClicked += Hook_OnMouseClicked;
+            Javahook.Instance.OnMouseClicked += Hook_OnMouseClicked;
         }
         public void Stop()
         {
-            hook.OnMouseClicked -= Hook_OnMouseClicked;
+            Javahook.Instance.OnMouseClicked -= Hook_OnMouseClicked;
         }
         private void Hook_OnJavaShutDown(int vmID)
         {
@@ -129,12 +132,12 @@ namespace OpenRPA.Java
             e.ClickHandled = true;
             e.Selector = selector;
             e.Element = lastElement;
-            lastElement.Click(true, e.Button, 0,0);
+            lastElement.Click(true, e.Button, 0,0, false, false);
             return true;
         }
-        public void Initialize()
+        public void Initialize(IOpenRPAClient client)
         {
-            Javahook.Instance.init();
+            // Javahook.Instance.init();
             //try
             //{
             //    Javahook.Instance.init();
@@ -145,10 +148,20 @@ namespace OpenRPA.Java
             //}
             try
             {
-                hook.init();
-                hook.OnInitilized += Hook_OnInitilized;
-                hook.OnJavaShutDown += Hook_OnJavaShutDown;
-                hook.OnMouseEntered += Hook_OnMouseEntered;
+                Javahook.Instance.OnInitilized += Hook_OnInitilized;
+                Javahook.Instance.OnJavaShutDown += Hook_OnJavaShutDown;
+                Javahook.Instance.OnMouseEntered += Hook_OnMouseEntered;
+                Javahook.Instance.OnNewjvm += Hook_OnNewjvm;
+                Javahook.Instance.init();
+                //Task.Run(() =>
+                //{
+                //});
+                
+
+                //GenericTools.RunUI(() =>
+                //{
+                //});
+
             }
             catch (Exception ex)
             {
@@ -156,12 +169,16 @@ namespace OpenRPA.Java
             }
 
         }
-
-        private void Hook_OnInitilized(WindowsAccessBridgeInterop.AccessBridge accessBridge)
+        private void Hook_OnNewjvm(WindowsAccessBridgeInterop.AccessBridge accessBridge, WindowsAccessBridgeInterop.AccessibleJvm[] newjvms)
         {
+            _Status = "Online(" + Javahook.Instance.jvms.Count + ")";
             NotifyPropertyChanged("Status");
         }
-
+        private void Hook_OnInitilized(WindowsAccessBridgeInterop.AccessBridge accessBridge)
+        {
+            _Status = "Online(" + Javahook.Instance.jvms.Count + ")";
+            NotifyPropertyChanged("Status");
+        }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
             var result = JavaSelector.GetElementsWithuiSelector(selector as JavaSelector, fromElement, maxresults );
@@ -179,6 +196,21 @@ namespace OpenRPA.Java
         {
             var el = new JavaElement(m.RawElement as WindowsAccessBridgeInterop.AccessibleNode);
             return JavaSelectorItem.Match(item, el);
+        }
+        public bool parseMouseMoveAction(ref IRecordEvent e)
+        {
+            if (lastElement == null) return false;
+            if (e.UIElement == null) return false;
+
+            if (e.UIElement.ClassName == null || !e.UIElement.ClassName.StartsWith("SunAwt"))
+            {
+                if (e.UIElement.ProcessId < 1) return false;
+                var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
+                if (p.ProcessName.ToLower() != "java") return false;
+            }
+
+            e.Element = lastElement;
+            return true;
         }
     }
     public class GetElementResult : IBodyActivity
@@ -199,12 +231,19 @@ namespace OpenRPA.Java
         }
         public void AddInput(string value, IElement element)
         {
-            AddActivity(new System.Activities.Statements.Assign<string>
+            try
             {
-                To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
-                Value = value
-            }, "item");
-            element.Value = value;
+                AddActivity(new System.Activities.Statements.Assign<string>
+                {
+                    To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
+                    Value = value
+                }, "item");
+                element.Value = value;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
     }
     public class RecordEvent : IRecordEvent

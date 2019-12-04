@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace OpenRPA.Windows
 {
@@ -35,7 +36,7 @@ namespace OpenRPA.Windows
         public InArgument<UIElement> From { get; set; }
         public OutArgument<UIElement[]> Elements { get; set; }
         [Browsable(false)]
-        public String Image { get; set; }
+        public string Image { get; set; }
         private Variable<IEnumerator<UIElement>> _elements = new Variable<IEnumerator<UIElement>>("_elements");
         [System.ComponentModel.Browsable(false)]
         public Activity LoopAction { get; set; }
@@ -51,33 +52,55 @@ namespace OpenRPA.Windows
             var sw = new Stopwatch();
             var from = From.Get(context);
             sw.Start();
+
+            //            double _timeout = 250;
+            double _timeout = 1000;
+            if (PluginConfig.search_descendants)
+            {
+                _timeout = 5000;
+            }            
+#if DEBUG
+            _timeout = _timeout * 8;
+#endif
             do
             {
-                elements = OpenRPA.AutomationHelper.RunSTAThread<UIElement[]>(() =>
+
+                if (PluginConfig.get_elements_in_different_thread)
                 {
-                    try
+                    elements = OpenRPA.AutomationHelper.RunSTAThread<UIElement[]>(() =>
                     {
-                        return WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
-                    }
-                    catch (System.Threading.ThreadAbortException)
-                    {
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex, "");
-                    }
-                    return new UIElement[] { };
-                }, TimeSpan.FromMilliseconds(250)).Result;
+                        try
+                        {
+                            Log.Selector("GetElementsWithuiSelector in non UI thread");
+                            return WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+                        }
+                        catch (System.Threading.ThreadAbortException)
+                        {
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex, "");
+                        }
+                        return new UIElement[] { };
+                    }, TimeSpan.FromMilliseconds(_timeout)).Result;
+                }
+                else
+                {
+                    Log.Selector("GetElementsWithuiSelector using UI thread");
+                    elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+                }
+                //elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
                 if (elements == null)
                 {
                     elements = new UIElement[] { };
                 }
+                if(elements.Length == 0) Log.Selector("GetElementsWithuiSelector found no elements");
             } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
-            if (elements.Length > 0)
-            {
-                // Get them again, we need the COM objects to be loaded in the UI thread
-                elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
-            }
+            //if (PluginConfig.get_elements_in_different_thread && elements.Length > 0)
+            //{
+            //    // Get them again, we need the COM objects to be loaded in the UI thread
+            //    elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+            //}
             context.SetValue(Elements, elements);
             if(elements.Count() < minresults)
             {

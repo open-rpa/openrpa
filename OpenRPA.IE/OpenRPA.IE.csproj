@@ -1,126 +1,118 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CE483C6B-EBEF-47BA-B3D5-5C7582DAFD1D}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpenRPA.IE</RootNamespace>
-    <AssemblyName>OpenRPA.IE</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
+    <TargetFramework>net462</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>OpenRPA</Authors>
+    <Product>OpenRPA</Product>
+    <Description>Activities and record plugin for handling Internet Explorer</Description>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
+    <Version>1.0.20</Version>
+    <PackageReleaseNotes>1.0.20 Fix IE google Search Snippet
+1.0.18 update interfaces reference
+    
+
+1.0.17 fix double click
+1.0.15 update interfaces reference
+    
+
+1.0.14 support for seperate images
+      
+1.0.13 update interfaces reference
+</PackageReleaseNotes>
+    <PackageIcon>open_rpa128.png</PackageIcon>
+    <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\debug</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\dist\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\dist</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+  <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
+    <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
+  </Target>
   <ItemGroup>
-    <Reference Include="Accessibility" />
-    <Reference Include="FlaUI.Core, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FlaUI.Core.1.3.0\lib\net45\FlaUI.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\..\..\Windows\assembly\GAC\Microsoft.mshtml\7.0.3300.0__b03f5f7f11d50a3a\Microsoft.mshtml.dll</HintPath>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Activities" />
-    <Reference Include="System.Activities.Presentation" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
+    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
   </ItemGroup>
+  <Target Name="SetNuspecProperties" BeforeTargets="GenerateNuspec">
+    <PropertyGroup>
+      <NuspecProperties>$(NuspecProperties);id=$(AssemblyName)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);config=$(Configuration)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);version=$(PackageVersion)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);description=$(Description)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);author=$(Authors)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);configurationname=$(ConfigurationName)</NuspecProperties>
+    </PropertyGroup>
+  </Target>
   <ItemGroup>
-    <Compile Include="Activities\OpenURL.cs" />
-    <Compile Include="Activities\GetElement.cs" />
-    <Compile Include="Activities\OpenURLDesigner.xaml.cs">
-      <DependentUpon>OpenURLDesigner.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Activities\GetElementDesigner.xaml.cs">
-      <DependentUpon>GetElementDesigner.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Browser.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="IEElement.cs" />
-    <Compile Include="IETreeElement.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Plugin.cs" />
-    <Compile Include="IESelector.cs" />
-    <Compile Include="IESelectorItem.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Activities\OpenURLDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Activities\GetElementDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj">
-      <Project>{481bd5a1-5e8d-42a9-bd31-78becfaf15f3}</Project>
-      <Name>OpenRPA.Interfaces</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="SHDocVw">
-      <Guid>{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>1</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <None Remove="Activities\GetElementDesigner.xaml" />
+    <None Remove="Activities\OpenURLDesigner.xaml" />
+    <None Remove="Resources\check.png" />
+    <None Remove="Resources\designer\gethtmlelement.png" />
+    <None Remove="Resources\search.png" />
+    <None Remove="Resources\toolbox\gethtmlelement.png" />
+    <None Remove="Resources\x.png" />
+    <None Remove="Snippets\GoogleSearch.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\designer\gethtmlelement.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\toolbox\gethtmlelement.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\x.png" />
+    <Resource Include="Snippets\GoogleSearch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\check.png" />
+    <EmbeddedResource Include="Resources\search.png" />
+    <EmbeddedResource Include="Resources\toolbox\gethtmlelement.png" />
+    <EmbeddedResource Include="Resources\x.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\search.png" />
+    <Reference Include="Interop.MSHTML">
+      <HintPath>lib\Interop.MSHTML.dll</HintPath>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.SHDocVw">
+      <HintPath>lib\Interop.SHDocVw.dll</HintPath>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Page Include="Activities\GetElementDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\OpenURLDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="lib\Interop.SHDocVw.dll">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties BuildVersion_StartDate="2000/1/1" />
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'PrepInstaller'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
 </Project>

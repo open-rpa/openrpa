@@ -35,28 +35,32 @@ namespace OpenRPA.Views
     public partial class WFDesigner : UserControl, System.ComponentModel.INotifyPropertyChanged, IDesigner
     {
         public DelegateCommand DockAsDocumentCommand = new DelegateCommand((e) => { }, (e) => false);
-        public DelegateCommand AutoHideCommand { get; set; }= new DelegateCommand((e) => { }, (e) => false);
-        public bool CanClose{ get; set; } = true;
+        public DelegateCommand AutoHideCommand { get; set; } = new DelegateCommand((e) => { }, (e) => false);
+        public bool CanClose { get; set; } = true;
         public bool CanHide { get; set; } = false;
-
-        public Dictionary<ModelItem, System.Activities.Debugger.SourceLocation> _modelLocationMapping = new Dictionary<ModelItem, System.Activities.Debugger.SourceLocation>();
-        public Dictionary<string, System.Activities.Debugger.SourceLocation> _sourceLocationMapping = new Dictionary<string, System.Activities.Debugger.SourceLocation>();
+        public Dictionary<ModelItem, SourceLocation> _modelLocationMapping = new Dictionary<ModelItem, SourceLocation>();
+        public Dictionary<string, SourceLocation> _sourceLocationMapping = new Dictionary<string, SourceLocation>();
         public Dictionary<string, Activity> _activityIdMapping = new Dictionary<string, Activity>();
-        public Dictionary<Activity, System.Activities.Debugger.SourceLocation> _activitysourceLocationMapping = new Dictionary<Activity, System.Activities.Debugger.SourceLocation>();
+        public Dictionary<Activity, SourceLocation> _activitysourceLocationMapping = new Dictionary<Activity, SourceLocation>();
         public Dictionary<string, ModelItem> _activityIdModelItemMapping = new Dictionary<string, ModelItem>();
+        private string SelectedVariableName = null;
+        private Selection selection = null;
+        private readonly MenuItem comment;
+        private readonly MenuItem uncomment;
         public bool BreakPointhit { get; set; }
         public bool Singlestep { get; set; }
         public bool SlowMotion { get; set; }
         public bool Minimize { get; set; } = true;
         public bool VisualTracking { get; set; }
-        public bool isRunnning {
+        public bool IsRunnning
+        {
             get
             {
-                foreach(var i in WorkflowInstance.Instances)
+                foreach (var i in WorkflowInstance.Instances)
                 {
-                    if(!string.IsNullOrEmpty(Workflow._id) && i.WorkflowId == Workflow._id)
+                    if (!string.IsNullOrEmpty(Workflow._id) && i.WorkflowId == Workflow._id)
                     {
-                        if(i.state != "completed" && i.state != "aborted" && i.state != "failed")
+                        if (i.state != "completed" && i.state != "aborted" && i.state != "failed")
                         {
                             return true;
                         }
@@ -78,19 +82,18 @@ namespace OpenRPA.Views
                 NotifyPropertyChanged("Properties");
             }
         }
-        private void NotifyPropertyChanged(String propertyName)
+        private void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
-        public System.Threading.AutoResetEvent resumeRuntimeFromHost { get; set; }
-
-        public System.Activities.Activity lastinserted { get; set; }
-        public System.Activities.Presentation.Model.ModelItem lastinsertedmodel { get; set; }
-        public Action<WFDesigner> onChanged { get; set; }
-        public WorkflowDesigner wfDesigner { get; private set; }
+        public System.Threading.AutoResetEvent ResumeRuntimeFromHost { get; set; }
+        public Activity Lastinserted { get; set; }
+        public ModelItem Lastinsertedmodel { get; set; }
+        public Action<WFDesigner> OnChanged { get; set; }
+        public WorkflowDesigner WorkflowDesigner { get; private set; }
         public Workflow Workflow { get; private set; }
         public bool HasChanged { get; private set; }
-        public ModelItem selectedActivity { get; private set; }
+        public ModelItem SelectedActivity { get; private set; }
         public Project Project
         {
             get
@@ -98,7 +101,7 @@ namespace OpenRPA.Views
                 return Workflow.Project;
             }
         }
-        private void onCancel()
+        private void OnCancel()
         {
             GenericTools.RunUI(() =>
             {
@@ -111,18 +114,19 @@ namespace OpenRPA.Views
                         i.Abort("User canceled workflow with cancel key");
                     }
                 }
-                if (resumeRuntimeFromHost != null) resumeRuntimeFromHost.Set();
+                if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
 
             });
         }
         private void OnKeyUp(Input.InputEventArgs e)
         {
-            GenericTools.RunUI(() => {
+            GenericTools.RunUI(() =>
+            {
                 if (tab == null) return;
                 if (!tab.IsSelected) return;
                 if (e.Key == Input.KeyboardKey.F10 || e.Key == Input.KeyboardKey.F11)
                 {
-                    if (!isRunnning)
+                    if (!IsRunnning)
                     {
                         if (currentprocessid == 0) currentprocessid = System.Diagnostics.Process.GetCurrentProcess().Id;
                         var element = AutomationHelper.GetFromFocusedElement();
@@ -132,7 +136,7 @@ namespace OpenRPA.Views
                     // if (e.Key == Input.KeyboardKey.F11) { StepInto = true; }
                     if (BreakPointhit)
                     {
-                        if (resumeRuntimeFromHost != null) resumeRuntimeFromHost.Set();
+                        if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
                         return;
                     }
                     else
@@ -145,7 +149,7 @@ namespace OpenRPA.Views
         private int currentprocessid = 0;
         private void UserControl_KeyUp(object sender, KeyEventArgs e)
         {
-            if(!isRunnning)
+            if (!IsRunnning)
             {
                 if (currentprocessid == 0) currentprocessid = System.Diagnostics.Process.GetCurrentProcess().Id;
                 var element = AutomationHelper.GetFromFocusedElement();
@@ -157,7 +161,7 @@ namespace OpenRPA.Views
                 {
                     Singlestep = false;
                     BreakPointhit = false;
-                    resumeRuntimeFromHost.Set();
+                    ResumeRuntimeFromHost.Set();
                     return;
                 }
                 try
@@ -179,29 +183,66 @@ namespace OpenRPA.Views
         {
             get
             {
-                return wfDesigner.Context.Items.GetValue<System.Activities.Presentation.Hosting.ReadOnlyState>().IsReadOnly;
+                try
+                {
+                    return WorkflowDesigner.Context.Items.GetValue<System.Activities.Presentation.Hosting.ReadOnlyState>().IsReadOnly;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("WFDesigner:ReadOnly: " + ex.ToString());
+                    return false;
+                }
             }
             set
             {
-                wfDesigner.Context.Items.GetValue<System.Activities.Presentation.Hosting.ReadOnlyState>().IsReadOnly = value;
+                try
+                {
+                    WorkflowDesigner.Context.Items.GetValue<System.Activities.Presentation.Hosting.ReadOnlyState>().IsReadOnly = value;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("WFDesigner:Set.ReadOnly: " + ex.ToString());
+                }
             }
         }
         private WFDesigner()
         {
             InitializeComponent();
         }
-        private static object _lock = new object();
-        public void ReloadDesigner()
+        private static readonly object _lock = new object();
+        public void SetHasChanged()
         {
-            lock(_lock)
-            { 
-            LoadDesigner();
-            }
+            if (HasChanged) return;
+            HasChanged = true;
+            OnChanged?.Invoke(this);
         }
-        public void LoadDesigner()
+        private readonly Type[] extratypes = null;
+        public WFDesigner(Xceed.Wpf.AvalonDock.Layout.LayoutDocument tab, Workflow workflow, Type[] extratypes)
         {
-            wfDesigner = new WorkflowDesigner();
-            DesignerConfigurationService configService = wfDesigner.Context.Services.GetRequiredService<DesignerConfigurationService>();
+            InitializeComponent();
+            this.extratypes = extratypes;
+            DataContext = this;
+            this.tab = tab;
+            //toolbox = InitializeActivitiesToolbox();
+            //// WfToolboxBorder.Child = toolbox;
+            Workflow = workflow;
+            Input.InputDriver.Instance.onCancel += OnCancel;
+            if (tab != null)
+            {
+                tab.Title = workflow.name;
+            }
+            //WeakEventManager<System.ComponentModel.INotifyPropertyChanged, System.ComponentModel.PropertyChangedEventArgs>.
+            //    AddHandler(MainWindow.tracing, "PropertyChanged", traceOnPropertyChanged);
+            comment = new MenuItem() { Header = "Comment out" };
+            uncomment = new MenuItem() { Header = "Uncomment" };
+            comment.Click += OnComment;
+            uncomment.Click += OnUncomment;
+
+
+
+
+            WorkflowDesigner = new WorkflowDesigner();
+            DesignerConfigurationService configService = WorkflowDesigner.Context.Services.GetRequiredService<DesignerConfigurationService>();
             configService.TargetFrameworkName = new System.Runtime.Versioning.FrameworkName(".NETFramework", new Version(4, 5));
             configService.AnnotationEnabled = true;
             configService.AutoConnectEnabled = true;
@@ -215,46 +256,35 @@ namespace OpenRPA.Views
             configService.RubberBandSelectionEnabled = true;
             configService.LoadingFromUntrustedSourceEnabled = false;
 
-            //if (_expressionEditorServiceVB == null) _expressionEditorServiceVB = new EditorService();
-            //wfDesigner.Context.Services.Publish<IExpressionEditorService>(_expressionEditorServiceVB);
+            if (IsRunnning)
+            {
+                ReadOnly = true;
+            }
 
-            wfDesigner.Context.Services.Publish<IExpressionEditorService>(new EditorService(this));
-
-
-            //DesignerView designerView = wfDesigner.Context.Services.GetService<DesignerView>();
-            //if (designerView != null)
-            //{
-            //    var modelService = wfDesigner.Context.Services.GetService<ModelService>();
-            //    if (modelService != null)
-            //    {
-            //        designerView.MakeRootDesigner(modelService.Root);
-            //        //designerView.MakeRootDesigner(null);
-            //        Flowchart flowchart = modelService.Root.GetCurrentValue() as Flowchart;
-            //    }
-            //    // Clean up the old workflow, this prevents an error when the old designer had a flowchart in it.
-            //    if (modelService != null)
-            //    {
-            //        modelService.Root.Content.ClearValue();
-            //    }
-            //}
+            WorkflowDesigner.Context.Services.Publish<IExpressionEditorService>(new EditorService(this));
             if (!string.IsNullOrEmpty(Workflow.Xaml))
             {
-                wfDesigner.Text = Workflow.Xaml;
-                wfDesigner.Load();
+                WorkflowDesigner.Text = Workflow.Xaml;
+                WorkflowDesigner.Load();
             }
             else
             {
                 Activity wf = new System.Activities.Statements.Sequence { };
-                var ab = new ActivityBuilder();
-                ab.Name = Workflow.name;
-                ab.Implementation = wf;
+                var ab = new ActivityBuilder
+                {
+                    Name = Workflow.name,
+                    Implementation = wf
+                };
+
+                // typeof(Microsoft.VisualBasic.Collection),
+
                 AddVBNamespaceSettings(ab, typeof(Action),
-                    typeof(Microsoft.VisualBasic.Collection),
                     typeof(System.Xml.XmlNode),
                     typeof(OpenRPA.Workflow),
                     typeof(OpenRPA.UIElement),
                     typeof(System.Data.DataSet),
-                    typeof(System.Linq.Enumerable)
+                    typeof(System.Linq.Enumerable),
+                    typeof(Microsoft.VisualBasic.Collection)
                     );
                 AddVBNamespaceSettings(ab, extratypes);
 
@@ -262,7 +292,7 @@ namespace OpenRPA.Views
                 //{
                 //    System.Activities.Presentation.Expressions.ExpressionActivityEditor.SetExpressionActivityEditor(ab, "C#");
                 //}
-                wfDesigner.Load(ab);
+                WorkflowDesigner.Load(ab);
             }
             if (global.isConnected)
             {
@@ -270,7 +300,7 @@ namespace OpenRPA.Views
             }
 
             HasChanged = false;
-            wfDesigner.ModelChanged += (sender, e) =>
+            WorkflowDesigner.ModelChanged += (sender, e) =>
             {
                 if (!HasChanged)
                 {
@@ -280,18 +310,21 @@ namespace OpenRPA.Views
                     //_activitysourceLocationMapping.Clear();
                     //_activityIdModelItemMapping.Clear();
                 }
-                HasChanged = true;
-
-                onChanged?.Invoke(this);
+                SetHasChanged();
             };
-            wfDesigner.Context.Items.Subscribe<Selection>(new SubscribeContextCallback<Selection>(SelectionChanged));
-
+            WorkflowDesigner.Context.Items.Subscribe(new SubscribeContextCallback<Selection>(SelectionChanged));
+            WorkflowDesigner.View.Dispatcher.UnhandledException += new System.Windows.Threading.DispatcherUnhandledExceptionEventHandler(UnhandledException);
+            Properties = WorkflowDesigner.PropertyInspectorView;
+            ModelService modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
+            if (modelService == null) return;
+            modelService.ModelChanged -= new EventHandler<ModelChangedEventArgs>(ModelChanged);
+            modelService.ModelChanged += new EventHandler<ModelChangedEventArgs>(ModelChanged);
+            WorkflowDesigner.ContextMenu.Items.Add(comment);
             try
             {
-                var ms = wfDesigner.Context.Services.GetService<ModelService>();
-                if (ms != null)
+                if (modelService != null)
                 {
-                    var modelItem = ms.Root;
+                    var modelItem = modelService.Root;
                     Workflow.name = modelItem.GetValue<string>("Name");
                 }
             }
@@ -299,41 +332,14 @@ namespace OpenRPA.Views
             {
                 Log.Debug(ex.ToString());
             }
-
+            NotifyPropertyChanged("View");
             // WfDesignerBorder.Child = wfDesigner.View;
-            Properties = wfDesigner.PropertyInspectorView;
 
         }
-        private Type[] extratypes = null;
-        public WFDesigner(Xceed.Wpf.AvalonDock.Layout.LayoutDocument tab, Workflow workflow, Type[] extratypes)
+        private void UnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            InitializeComponent();
-            this.extratypes = extratypes;
-            DataContext = this;
-            this.tab = tab;
-            //toolbox = InitializeActivitiesToolbox();
-            //// WfToolboxBorder.Child = toolbox;
-            Workflow = workflow;
-            Input.InputDriver.Instance.onCancel += onCancel;
-            if (tab != null)
-            {
-                tab.Title = workflow.name;
-            }
-            //WeakEventManager<System.ComponentModel.INotifyPropertyChanged, System.ComponentModel.PropertyChangedEventArgs>.
-            //    AddHandler(MainWindow.tracing, "PropertyChanged", traceOnPropertyChanged);
-            if(isRunnning)
-            {
-                ReadOnly = true;
-            }
-            LoadDesigner();
+            Log.Error(e.Exception.ToString());
         }
-        //private void traceOnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        //{
-        //    if (e.PropertyName == "OutputMessages")
-        //        OutputMessages = MainWindow.tracing.OutputMessages;
-        //    if (e.PropertyName == "TraceMessages")
-        //        TraceMessages = MainWindow.tracing.TraceMessages;
-        //}
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
         {
@@ -341,34 +347,104 @@ namespace OpenRPA.Views
         }
         public async Task Save()
         {
+            // var basepath = Project.Path;
+            var imagepath = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "images");
+
+            if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
+            WorkflowDesigner.Flush();
+            if(global.isConnected)
+            {
+                var modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
+                var usedimages = new List<string>();
+                using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
+                {
+                    foreach (ModelItem item in GetWorkflowActivities())
+                    {
+                        ModelProperty property = item.Properties["Image"];
+                        if ((property != null) && (property.Value != null) && !string.IsNullOrEmpty(Workflow._id))
+                        {
+                            string image = item.Properties["Image"].Value.ToString();
+                            if (!System.Text.RegularExpressions.Regex.Match(image, "[a-f0-9]{24}").Success)
+                            {
+                                var metadata = new OpenRPA.Interfaces.entity.metadata
+                                {
+                                    // metadata.AddRight(global.webSocketClient.user, null);
+                                    _acl = Workflow._acl,
+                                    workflow = Workflow._id
+                                };
+                                var imageid = GenericTools.YoutubeLikeId();
+                                var tempfilename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), imageid + ".png");
+                                using (var ms = new System.IO.MemoryStream(Convert.FromBase64String(image)))
+                                {
+                                    using (var b = new System.Drawing.Bitmap(ms))
+                                    {
+                                        try
+                                        {
+                                            b.Save(tempfilename, System.Drawing.Imaging.ImageFormat.Png);
+                                        }
+                                        catch (Exception)
+                                        {
+                                            throw;
+                                        }
+                                    }
+                                }
+                                string id = await global.webSocketClient.UploadFile(tempfilename, "", metadata);
+                                var filename = System.IO.Path.Combine(imagepath, id + ".png");
+                                System.IO.File.Copy( tempfilename, filename, true);
+                                System.IO.File.Delete(tempfilename);
+                                item.Properties["Image"].SetValue(id);
+                                usedimages.Add(id);
+                            }
+                            else
+                            {
+                                usedimages.Add(image);
+                            }
+                        }
+                    }
+                    editingScope.Complete();
+                }
+                WorkflowDesigner.Flush();
+                if (!string.IsNullOrEmpty(Workflow._id))
+                {
+                    var files = await global.webSocketClient.Query<Interfaces.entity.metadata>("files", "{\"metadata.workflow\": \"" + Workflow._id + "\"}");
+                    var unusedfiles = files.Where(x => !usedimages.Contains(x._id)).ToList();
+                    //Console.WriteLine("usedimages: " + usedimages.Count);
+                    //Console.WriteLine("files: " + files.Length);
+                    //Console.WriteLine("unusedfiles: " + unusedfiles.Count);
+                    //Console.WriteLine("*****");
+                    foreach (var f in unusedfiles)
+                    {
+                        await global.webSocketClient.DeleteOne("files", f._id);
+                        var imagefilepath = System.IO.Path.Combine(imagepath, f._id + ".png");
+                        // if (System.IO.File.Exists(imagefilepath)) System.IO.File.Delete(imagefilepath);
+                        if (System.IO.File.Exists(imagefilepath))
+                        {
+                            System.IO.File.Delete(imagefilepath);
+                        } else
+                        {
+                            Log.Error("Failed locating " + f._id + ".png");
+                        }
+                    }
+                }
+            }
             try
             {
-                parseparameters();
+                Workflow.Xaml = WorkflowDesigner.Text;
+                Parseparameters();
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
             }
-            wfDesigner.Flush();
-            //if (_activityIdMapping.Count == 0)
-            //{
-            //    int failCounter = 0;
-            //    while (_activityIdMapping.Count == 0 && failCounter < 1)
-            //    {
-            //        InitializeStateEnvironment(true);
-            //        System.Threading.Thread.Sleep(500);
-            //        failCounter++;
-            //    }
-            //}
-
-            var modelItem = wfDesigner.Context.Services.GetService<ModelService>().Root;
+            WorkflowDesigner.Flush();
+            var modelItem = WorkflowDesigner.Context.Services.GetService<ModelService>().Root;
             Workflow.name = modelItem.GetValue<string>("Name");
-            Workflow.Xaml = wfDesigner.Text;
+            Workflow.Xaml = WorkflowDesigner.Text;
             await Workflow.Save();
             if (HasChanged)
             {
                 HasChanged = false;
-                onChanged?.Invoke(this);
+                OnChanged?.Invoke(this);
             }
         }
         public KeyedCollection<string, DynamicActivityProperty> GetParameters()
@@ -383,11 +459,11 @@ namespace OpenRPA.Views
             }
             return ab2.Properties;
         }
-        public void parseparameters()
+        public void Parseparameters()
         {
             Workflow.Serializable = true;
             Workflow.Parameters.Clear();
-            if(!string.IsNullOrEmpty(Workflow.Xaml))
+            if (!string.IsNullOrEmpty(Workflow.Xaml))
             {
                 var parameters = GetParameters();
                 foreach (var prop in parameters)
@@ -418,9 +494,8 @@ namespace OpenRPA.Views
             }
             if (Workflow.Serializable == true)
             {
-                ModelTreeManager mtm = wfDesigner.Context.Services.GetService<ModelTreeManager>();
                 bool canIdle = false;
-                foreach (ModelItem item in this.GetWorkflowActivities(null))
+                foreach (ModelItem item in this.GetWorkflowActivities())
                 {
                     try
                     {
@@ -450,7 +525,7 @@ namespace OpenRPA.Views
                 }
                 if (canIdle == true)
                 {
-                    foreach (ModelItem item in this.GetWorkflowActivities(null))
+                    foreach (ModelItem item in this.GetWorkflowActivities())
                     {
                         var vars = item.Properties["Variables"];
                         if (vars != null && vars.Collection != null)
@@ -488,18 +563,18 @@ namespace OpenRPA.Views
                 }
             }
         }
-        public List<ModelItem> GetWorkflowActivities(ModelItem startingPoint = null)
+        public List<ModelItem> GetWorkflowActivities()
         {
             List<ModelItem> list = new List<ModelItem>();
 
-            ModelService modelService = wfDesigner.Context.Services.GetService<ModelService>();
+            ModelService modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
             list = modelService.Find(modelService.Root, typeof(Activity)).ToList<ModelItem>();
 
             list.AddRange(modelService.Find(modelService.Root, (Predicate<Type>)(type => (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(FlowSwitch<>))))));
             list.AddRange(modelService.Find(modelService.Root, typeof(FlowDecision)));
             return list;
         }
-        private static List<ModelItem> GetWorkflowActivities(WorkflowDesigner wfDesigner, ModelItem startingPoint = null)
+        private static List<ModelItem> GetWorkflowActivities(WorkflowDesigner wfDesigner)
         {
             List<ModelItem> list = new List<ModelItem>();
 
@@ -512,10 +587,44 @@ namespace OpenRPA.Views
         }
         private void SelectionChanged(Selection item)
         {
-            var selection = item;
-            selectedActivity = selection.PrimarySelection;
-            if (selectedActivity == null) return;
-            //SelectedVariableName = selectedActivity.GetCurrentValue().ToString();
+            selection = item;
+            SelectedActivity = selection.PrimarySelection;
+            if (SelectedActivity == null) return;
+            SelectedVariableName = SelectedActivity.GetCurrentValue().ToString();
+
+            try
+            {
+                if (WorkflowDesigner.ContextMenu.Items.Contains(comment)) WorkflowDesigner.ContextMenu.Items.Remove(comment);
+                if (WorkflowDesigner.ContextMenu.Items.Contains(uncomment)) WorkflowDesigner.ContextMenu.Items.Remove(uncomment);
+                var lastSequence = GetActivitiesScope(SelectedActivity.Parent);
+                if (lastSequence == null) lastSequence = GetActivitiesScope(SelectedActivity);
+                if (lastSequence == null) return;
+                if (SelectedActivity.ItemType == typeof(Activities.CommentOut))
+                {
+                    WorkflowDesigner.ContextMenu.Items.Add(uncomment);
+                }
+                else if (lastSequence.ItemType != typeof(Flowchart))
+                {
+                    if (selection.SelectionCount > 1)
+                    {
+                        if (lastSequence.Properties["Nodes"] == null)
+                        {
+                            WorkflowDesigner.ContextMenu.Items.Add(comment);
+                        }
+                    }
+                    else
+                    {
+                        WorkflowDesigner.ContextMenu.Items.Add(comment);
+                    }
+                }
+                else if (lastSequence.ItemType != typeof(Flowchart))
+                {
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         public void AddVBNamespaceSettings(object rootObject, params Type[] types)
         {
@@ -538,14 +647,14 @@ namespace OpenRPA.Views
 
             Microsoft.VisualBasic.Activities.VisualBasic.SetSettings(rootObject, vbsettings);
         }
-        public ModelItem addActivity(Activity a)
+        public ModelItem AddActivity(Activity a)
         {
             ModelItem newItem = null;
-            ModelService modelService = wfDesigner.Context.Services.GetService<ModelService>();
+            ModelService modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
             using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
             {
-                var lastSequence = GetSequence(selectedActivity);
-                if (lastSequence == null && selectedActivity != null) lastSequence = GetActivitiesScope(selectedActivity.Parent);
+                var lastSequence = GetSequence(SelectedActivity);
+                if (lastSequence == null && SelectedActivity != null) lastSequence = GetActivitiesScope(SelectedActivity.Parent);
                 if (lastSequence != null)
                 {
                     ModelItemCollection Activities = null;
@@ -561,19 +670,22 @@ namespace OpenRPA.Views
                     var insertAt = Activities.Count;
                     for (var i = 0; i < Activities.Count; i++)
                     {
-                        if (Activities[i].Equals(selectedActivity))
+                        if (Activities[i].Equals(SelectedActivity))
                         {
                             insertAt = (i + 1);
                         }
                     }
                     if (lastSequence.Properties["Activities"] != null)
                     {
+                        if (string.IsNullOrEmpty(a.DisplayName)) a.DisplayName = "Activity";
                         newItem = Activities.Insert(insertAt, a);
                     }
                     else
                     {
-                        FlowStep step = new FlowStep();
-                        step.Action = a;
+                        FlowStep step = new FlowStep
+                        {
+                            Action = a
+                        };
                         newItem = Activities.Insert(insertAt, step);
                     }
                     //Selection.Select(wfDesigner.Context, selectedActivity);
@@ -584,9 +696,9 @@ namespace OpenRPA.Views
             }
             if (newItem != null)
             {
-                selectedActivity = newItem;
+                SelectedActivity = newItem;
                 newItem.Focus(20);
-                Selection.SelectOnly(wfDesigner.Context, newItem);
+                Selection.SelectOnly(WorkflowDesigner.Context, newItem);
             }
             return newItem;
         }
@@ -631,7 +743,7 @@ namespace OpenRPA.Views
         }
         public Argument GetArgument(string Name, bool add, Type type)
         {
-            ModelService modelService = wfDesigner.Context.Services.GetService<ModelService>();
+            ModelService modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
             ModelItemCollection args = modelService.Root.Properties["Properties"].Collection;
 
             foreach (var _v in args)
@@ -649,7 +761,7 @@ namespace OpenRPA.Views
         }
         public DynamicActivityProperty GetArgumentOf<T>(string Name, bool add)
         {
-            ModelService modelService = wfDesigner.Context.Services.GetService<ModelService>();
+            ModelService modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
             ModelItemCollection args = modelService.Root.Properties["Properties"].Collection;
 
             foreach (var _v in args)
@@ -685,14 +797,13 @@ namespace OpenRPA.Views
         }
         public Variable<T> GetVariableOf<T>(string Name)
         {
-            if (selectedActivity == null) throw new Exception("Cannot get variable when no activity has been selected");
-            var seq = GetVariableScope(selectedActivity);
+            if (SelectedActivity == null) throw new Exception("Cannot get variable when no activity has been selected");
+            var seq = GetVariableScope(SelectedActivity);
             if (seq == null) throw new Exception("Cannot add variables to root activity!");
-            Variable<T> result = null;
-            result = GetVariableModel<T>(Name, selectedActivity);
+            Variable<T> result = GetVariableModel<T>(Name, SelectedActivity);
             if (result == null)
             {
-                ModelService modelService = wfDesigner.Context.Services.GetService<ModelService>();
+                ModelService modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
                 using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
                 {
                     var Variables = seq.Properties["Variables"].Collection;
@@ -724,17 +835,17 @@ namespace OpenRPA.Views
         }
         private void EnsureSourceLocationUpdated()
         {
-            var debugView = wfDesigner.DebugManagerView;
+            var debugView = WorkflowDesigner.DebugManagerView;
 
             var nonPublicInstance = BindingFlags.Instance | BindingFlags.NonPublic;
             var debuggerServiceType = typeof(System.Activities.Presentation.Debug.DebuggerService);
             var ensureMappingMethodName = "EnsureSourceLocationUpdated";
             var ensureMappingMethod = debuggerServiceType.GetMethod(ensureMappingMethodName, nonPublicInstance);
-            var res = ensureMappingMethod.Invoke(debugView, new object[0]);
+            _ = ensureMappingMethod.Invoke(debugView, new object[0]);
         }
-        private Dictionary<Activity, System.Activities.Debugger.SourceLocation> CreateSourceLocationMapping(ModelService modelService)
+        private Dictionary<Activity, SourceLocation> CreateSourceLocationMapping(ModelService modelService)
         {
-            var debugView = wfDesigner.DebugManagerView;
+            var debugView = WorkflowDesigner.DebugManagerView;
 
             var nonPublicInstance = BindingFlags.Instance | BindingFlags.NonPublic;
             var debuggerServiceType = typeof(System.Activities.Presentation.Debug.DebuggerService);
@@ -743,16 +854,15 @@ namespace OpenRPA.Views
             if (mappingField == null)
                 throw new MissingFieldException(debuggerServiceType.FullName, mappingFieldName);
 
-            var rootActivity = modelService.Root.GetCurrentValue() as Activity;
-            if (rootActivity == null)
+            if (!(modelService.Root.GetCurrentValue() is Activity rootActivity))
             {
-                wfDesigner.Flush();
+                WorkflowDesigner.Flush();
                 System.Activities.XamlIntegration.ActivityXamlServicesSettings activitySettings = new System.Activities.XamlIntegration.ActivityXamlServicesSettings
                 {
                     CompileExpressions = true
                 };
                 var xamlReaderSettings = new System.Xaml.XamlXmlReaderSettings { LocalAssembly = typeof(WFDesigner).Assembly };
-                var xamlReader = new System.Xaml.XamlXmlReader(new System.IO.StringReader(wfDesigner.Text), xamlReaderSettings);
+                var xamlReader = new System.Xaml.XamlXmlReader(new System.IO.StringReader(WorkflowDesigner.Text), xamlReaderSettings);
                 rootActivity = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, activitySettings);
             }
             WorkflowInspectionServices.CacheMetadata(rootActivity);
@@ -764,8 +874,7 @@ namespace OpenRPA.Views
             {
                 try
                 {
-                    var a = m.Key as Activity;
-                    if (a != null) result.Add(a, m.Value);
+                    if (m.Key is Activity a) result.Add(a, m.Value);
                 }
                 catch (Exception ex)
                 {
@@ -774,9 +883,9 @@ namespace OpenRPA.Views
             }
             return result;
         }
-        private System.Activities.Debugger.SourceLocation GetSourceLocationFromModelItem(ModelItem modelItem)
+        private SourceLocation GetSourceLocationFromModelItem(ModelItem modelItem)
         {
-            var debugView = wfDesigner.DebugManagerView;
+            var debugView = WorkflowDesigner.DebugManagerView;
             var nonPublicInstance = BindingFlags.Instance | BindingFlags.NonPublic;
             var debuggerServiceType = typeof(System.Activities.Presentation.Debug.DebuggerService);
             var ensureMappingMethodName = "GetSourceLocationFromModelItem";
@@ -784,13 +893,13 @@ namespace OpenRPA.Views
             var res = ensureMappingMethod.Invoke(debugView, new object[] { modelItem });
             return res as System.Activities.Debugger.SourceLocation;
         }
-        public void SetDebugLocation(System.Activities.Debugger.SourceLocation location)
+        public void SetDebugLocation(SourceLocation location)
         {
-            wfDesigner.DebugManagerView.CurrentLocation = location;
+            WorkflowDesigner.DebugManagerView.CurrentLocation = location;
         }
         public void NavigateTo(ModelItem item)
         {
-            var validation = wfDesigner.Context.Services.GetService<System.Activities.Presentation.Validation.ValidationService>();
+            var validation = WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Validation.ValidationService>();
             //private ModelSearchServiceImpl modelSearchService;
 
             var modelSearchService = typeof(System.Activities.Presentation.Validation.ValidationService).GetField("modelSearchService", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(validation);
@@ -809,193 +918,13 @@ namespace OpenRPA.Views
             }
 
         }
-        public void InitializeStateEnvironment22222(bool Toggle)
-        {
-            GenericTools.RunUI(() =>
-            {
-                try
-                {
-
-
-                    //object rootInstance = WorkflowHelper.GetRootInstance(wfDesigner);
-                    //Dictionary<object, SourceLocation> sourceLocationMapping = new Dictionary<object, SourceLocation>();
-                    //Dictionary<object, SourceLocation> designerSourceLocationMapping = new Dictionary<object, SourceLocation>();
-
-                    //if (rootInstance != null)
-                    //{
-                    //    Activity documentRootElement = WorkflowHelper.GetRootWorkflowElement(rootInstance);
-
-                    //    //SourceLocationProvider.CollectMapping(
-                    //    //    WorkflowHelper.GetRootRuntimeWorkflowElement(this.WorkflowActivity),
-                    //    //    documentRootElement, sourceLocationMapping,
-                    //    //    wfDesigner.Context.Items.GetValue<WorkflowFileItem>().LoadedFile);
-                    //    SourceLocationProvider.CollectMapping(
-                    //        WorkflowHelper.GetRootRuntimeWorkflowElement(documentRootElement),
-                    //        documentRootElement, sourceLocationMapping,
-                    //        wfDesigner.Context.Items.GetValue<WorkflowFileItem>().LoadedFile);
-
-                    //    SourceLocationProvider.CollectMapping(
-                    //        documentRootElement,
-                    //        documentRootElement,
-                    //        designerSourceLocationMapping,
-                    //       wfDesigner.Context.Items.GetValue<WorkflowFileItem>().LoadedFile);
-
-                    //}
-                    var modelService = wfDesigner.Context.Services.GetService<ModelService>();
-                    IEnumerable<ModelItem> wfElements = modelService.Find(modelService.Root, typeof(Activity)).Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.State)));
-                    var map = CreateSourceLocationMapping(modelService);
-                    //_sourceLocationMapping.Clear();
-                    //_activitysourceLocationMapping.Clear();
-                    //_activityIdModelItemMapping.Clear();
-                    // _modelLocationMapping.Clear();
-
-                    foreach (var modelItem in wfElements)
-                    {
-                        var loc = GetSourceLocationFromModelItem(modelItem);
-                        var activity = modelItem.GetCurrentValue() as Activity;
-                        var id = activity.Id;
-                        if(string.IsNullOrEmpty(id))
-                        {
-                            //Selection.SelectOnly(wfDesigner.Context, modelItem);
-                            //        if (wfDesigner.DebugManagerView.SelectedLocation != null)
-                            //        {
-                            //            _modelLocationMapping[modelItem] = wfDesigner.DebugManagerView.SelectedLocation;
-                            //            _activitysourceLocationMapping[activity] = wfDesigner.DebugManagerView.SelectedLocation;
-                            //            _sourceLocationMapping[activity.Id] = wfDesigner.DebugManagerView.SelectedLocation;
-                            //            _activityIdMapping[activity.Id] = activity;
-                            //            _activityIdModelItemMapping[activity.Id] = modelItem;
-                        }
-                        if (string.IsNullOrEmpty(id)) continue;
-                        //_activitysourceLocationMapping.Add(activity, loc);
-                        //_sourceLocationMapping.Add(id, loc);
-                        //_activityIdMapping.Add(id, activity);
-                        //_activityIdModelItemMapping.Add(id, modelItem);
-                    }
-
-                    //foreach (var kp in designerSourceLocationMapping)
-                    //{
-                    //    var activity = kp.Key as Activity;
-                    //    _activitysourceLocationMapping.Add(activity, kp.Value);
-                    //    if (map.ContainsKey(activity))
-                    //    {
-                    //        // _modelLocationMapping[modelItem] = map[activity];
-                    //        _activitysourceLocationMapping[activity] = map[activity];
-                    //        _sourceLocationMapping[activity.Id] = map[activity];
-                    //        _activityIdMapping[activity.Id] = activity;
-
-                    //        Log.Debug(string.Format("Failed mapping '{0}' / '{1}' ", activity.Id, activity.DisplayName));
-                    //    }
-                    //}
-                    //if (wfDesigner.DebugManagerView != null)
-                    //{
-                    //    ((System.Activities.Presentation.Debug.DebuggerService)wfDesigner.DebugManagerView).UpdateSourceLocations(designerSourceLocationMapping);
-                    //}
-                    //                    public Dictionary<ModelItem, System.Activities.Debugger.SourceLocation> _modelLocationMapping = new Dictionary<ModelItem, System.Activities.Debugger.SourceLocation>();
-                    //public Dictionary<string, System.Activities.Debugger.SourceLocation> _sourceLocationMapping = new Dictionary<string, System.Activities.Debugger.SourceLocation>();
-                    //public Dictionary<string, Activity> _activityIdMapping = new Dictionary<string, Activity>();
-                    //public Dictionary<Activity, System.Activities.Debugger.SourceLocation> _activitysourceLocationMapping = new Dictionary<Activity, System.Activities.Debugger.SourceLocation>();
-                    //public Dictionary<string, ModelItem> _activityIdModelItemMapping = new Dictionary<string, ModelItem>();
-
-
-                    //Log.Debug("****** Create activity Map");
-                    //var modelService = wfDesigner.Context.Services.GetService<ModelService>();
-                    //try
-                    //{
-                    //    wfDesigner.Flush();
-                    //    using (var ms = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(wfDesigner.Text)))
-                    //    {
-                    //        var _workflowToRun = System.Activities.XamlIntegration.ActivityXamlServices.Load(ms) as DynamicActivity;
-                    //        WorkflowInspectionServices.CacheMetadata(_workflowToRun);
-                    //    }
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    Log.Debug("InitializeStateEnvironment: " + ex.Message);
-                    //}
-                    //_sourceLocationMapping.Clear();
-                    //_activitysourceLocationMapping.Clear();
-                    //_modelLocationMapping.Clear();
-                    //IEnumerable<ModelItem> wfElements = modelService.Find(modelService.Root, typeof(Activity)).Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.State)));
-                    //ModelItem lastItem = null;
-                    //var map = CreateSourceLocationMapping(modelService);
-
-
-
-                    //foreach (var modelItem in wfElements)
-                    //{
-                    //    NavigateTo(modelItem);
-                    //    // optimize, should we just use GetSourceLocationFromModelItem or continue using "select and get location" ?
-                    //    var loc = GetSourceLocationFromModelItem(modelItem);
-
-                    //    //if (modelItem.ItemType.BaseType == typeof(Literal)) continue;
-                    //    if (modelItem.ItemType.Name.StartsWith("Literal")) continue;
-                    //    if (modelItem.ItemType.Name.StartsWith("VisualBasicValue")) continue;
-                    //    if (modelItem.ItemType.Name.StartsWith("VisualBasicReference")) continue;
-
-
-
-                    //    var activity = modelItem.GetCurrentValue() as Activity;
-                    //    if (activity == null || activity.Id == null)
-                    //    {
-                    //        var state = modelItem.GetCurrentValue() as System.Activities.Debugger.State;
-                    //        var property = typeof(System.Activities.Debugger.State).GetProperty("InternalState", BindingFlags.Instance | BindingFlags.NonPublic);
-                    //        if (state != null && property != null)
-                    //        {
-                    //            activity = property.GetValue(state) as Activity;
-                    //        }
-                    //    }
-                    //    if (activity == null || activity.Id == null)
-                    //    {
-                    //        Log.Verbose("Debug!");
-                    //    }
-                    //    if (activity != null && activity.Id != null && !_sourceLocationMapping.ContainsKey(activity.Id))
-                    //    {
-                    //        Selection.SelectOnly(wfDesigner.Context, modelItem);
-
-                    //        if (wfDesigner.DebugManagerView.SelectedLocation != null)
-                    //        {
-                    //            _modelLocationMapping[modelItem] = wfDesigner.DebugManagerView.SelectedLocation;
-                    //            _activitysourceLocationMapping[activity] = wfDesigner.DebugManagerView.SelectedLocation;
-                    //            _sourceLocationMapping[activity.Id] = wfDesigner.DebugManagerView.SelectedLocation;
-                    //            _activityIdMapping[activity.Id] = activity;
-                    //            _activityIdModelItemMapping[activity.Id] = modelItem;
-                    //        }
-                    //        else
-                    //        {
-                    //            var t = wfDesigner.DebugManagerView.SelectedLocation;
-                    //            if (map.ContainsKey(activity))
-                    //            {
-                    //                _modelLocationMapping[modelItem] = map[activity];
-                    //                _activitysourceLocationMapping[activity] = map[activity];
-                    //                _sourceLocationMapping[activity.Id] = map[activity];
-                    //                _activityIdMapping[activity.Id] = activity;
-
-                    //                Log.Debug(string.Format("Failed mapping '{0}' / '{1}' ", activity.Id, activity.DisplayName));
-                    //            }
-                    //            else
-                    //            {
-                    //                Log.Debug(string.Format("Failed mapping '{0}' / '{1}' ", activity.Id, activity.DisplayName));
-                    //            }
-                    //        }
-                    //    }
-                    //    lastItem = modelItem;
-                    //}
-                    //if (lastItem != null && Toggle == true) Selection.Toggle(wfDesigner.Context, lastItem);
-                    //Log.Debug("****** Activity Map completed");
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-            });
-        }
         public void InitializeStateEnvironment()
         {
             GenericTools.RunUI(() =>
             {
                 try
                 {
-                    var modelService = wfDesigner.Context.Services.GetService<ModelService>();
+                    var modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
                     IEnumerable<ModelItem> wfElements = modelService.Find(modelService.Root, typeof(Activity)).Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.State)));
                     var map = CreateSourceLocationMapping(modelService);
                     _sourceLocationMapping.Clear();
@@ -1010,7 +939,7 @@ namespace OpenRPA.Views
                         var activity = modelItem.GetCurrentValue() as Activity;
                         var id = activity.Id;
                         if (string.IsNullOrEmpty(id)) continue;
-                        if(_sourceLocationMapping.ContainsKey(id)) continue;
+                        if (_sourceLocationMapping.ContainsKey(id)) continue;
                         _activitysourceLocationMapping.Add(activity, loc);
                         _sourceLocationMapping.Add(id, loc);
                         _activityIdMapping.Add(id, activity);
@@ -1025,7 +954,7 @@ namespace OpenRPA.Views
         }
         public void ToggleBreakpoint()
         {
-            var debugManagerView = wfDesigner.DebugManagerView;
+            var debugManagerView = WorkflowDesigner.DebugManagerView;
             var selectedLocation = debugManagerView.SelectedLocation;
             try
             {
@@ -1046,7 +975,8 @@ namespace OpenRPA.Views
                 Log.Error(ex.ToString());
             }
         }
-        public void onVisualTracking(WorkflowInstance Instance, string ActivityId, string ChildActivityId, string State)
+        public IDictionary<SourceLocation, System.Activities.Presentation.Debug.BreakpointTypes> BreakpointLocations = null;
+        public void OnVisualTracking(IWorkflowInstance Instance, string ActivityId, string ChildActivityId, string State)
         {
             try
             {
@@ -1073,7 +1003,8 @@ namespace OpenRPA.Views
                 if (location == null) return;
                 if (!BreakPointhit)
                 {
-                    BreakPointhit = wfDesigner.DebugManagerView.GetBreakpointLocations().ContainsKey(location);
+                    if (BreakpointLocations == null) BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
+                    BreakPointhit = BreakpointLocations.ContainsKey(location);
                 }
                 ModelItem model = _activityIdModelItemMapping[ChildActivityId];
                 if (VisualTracking || BreakPointhit || Singlestep)
@@ -1088,22 +1019,22 @@ namespace OpenRPA.Views
                 }
                 if (BreakPointhit || Singlestep)
                 {
-                    using (resumeRuntimeFromHost = new System.Threading.AutoResetEvent(false))
+                    using (ResumeRuntimeFromHost = new System.Threading.AutoResetEvent(false))
                     {
                         BreakPointhit = true;
-                        showVariables(Instance.Variables);
+                        ShowVariables(Instance.Variables);
                         GenericTools.restore();
-                        resumeRuntimeFromHost.WaitOne();
+                        ResumeRuntimeFromHost.WaitOne();
                     }
-                    resumeRuntimeFromHost = null;
+                    ResumeRuntimeFromHost = null;
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Log.Error(ex.ToString());
             }
         }
-        internal void onIdle(WorkflowInstance instance, EventArgs e)
+        internal void OnIdle(IWorkflowInstance instance, EventArgs e)
         {
             if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
             {
@@ -1117,7 +1048,7 @@ namespace OpenRPA.Views
                     command.data = JObject.FromObject(instance.Exception);
                 }
                 _ = global.webSocketClient.QueueMessage(instance.queuename, command, instance.correlationId);
-                onChanged?.Invoke(this);
+                OnChanged?.Invoke(this);
             }
             if (instance.state == "idle" && Singlestep == true)
             {
@@ -1133,14 +1064,14 @@ namespace OpenRPA.Views
                 GenericTools.RunUI(() =>
                 {
                     SetDebugLocation(null);
-                    Properties = wfDesigner.PropertyInspectorView;
+                    Properties = WorkflowDesigner.PropertyInspectorView;
                 });
             }
             if (instance.state != "idle")
             {
                 GenericTools.RunUI(() =>
                 {
-                    Properties = wfDesigner.PropertyInspectorView;
+                    Properties = WorkflowDesigner.PropertyInspectorView;
                     if (global.isConnected)
                     {
                         ReadOnly = !Workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.update);
@@ -1155,16 +1086,16 @@ namespace OpenRPA.Views
                 if (string.IsNullOrEmpty(instance.queuename) && string.IsNullOrEmpty(instance.correlationId))
                 {
                     GenericTools.restore(GenericTools.mainWindow);
-                    if(instance.state != "completed")
+                    if (instance.state != "completed")
                     {
                         System.Activities.Debugger.SourceLocation location;
-                        if(instance.errorsource!=null && _sourceLocationMapping.ContainsKey(instance.errorsource))
+                        if (instance.errorsource != null && _sourceLocationMapping.ContainsKey(instance.errorsource))
                         {
                             GenericTools.RunUI(() =>
                             {
                                 location = _sourceLocationMapping[instance.errorsource];
                                 SetDebugLocation(location);
-                                if(_activityIdModelItemMapping.ContainsKey(instance.errorsource))
+                                if (_activityIdModelItemMapping.ContainsKey(instance.errorsource))
                                 {
                                     ModelItem model = _activityIdModelItemMapping[instance.errorsource];
                                     NavigateTo(model);
@@ -1196,7 +1127,7 @@ namespace OpenRPA.Views
                 Log.Output(message);
 
 
-                onChanged?.Invoke(this);
+                OnChanged?.Invoke(this);
             }
             if (instance.hasError || instance.isCompleted)
             {
@@ -1214,7 +1145,7 @@ namespace OpenRPA.Views
                 }
             }
         }
-        public  void Run(bool VisualTracking, bool SlowMotion, WorkflowInstance instance)
+        public void Run(bool VisualTracking, bool SlowMotion, IWorkflowInstance instance)
         {
             this.VisualTracking = VisualTracking; this.SlowMotion = SlowMotion;
             if (BreakPointhit)
@@ -1222,10 +1153,10 @@ namespace OpenRPA.Views
                 Singlestep = false;
                 BreakPointhit = false;
                 if (!VisualTracking && Minimize) GenericTools.minimize(GenericTools.mainWindow);
-                if(resumeRuntimeFromHost!=null) resumeRuntimeFromHost.Set();
+                if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
                 return;
             }
-            wfDesigner.Flush();
+            WorkflowDesigner.Flush();
             // InitializeStateEnvironment();
             if (global.isConnected)
             {
@@ -1271,21 +1202,31 @@ namespace OpenRPA.Views
             //    Log.Error("Failed mapping activites!!!!!");
             //    throw new Exception("Failed mapping activites!!!!!");
             //}
-            if(instance == null)
+            if (instance == null)
             {
                 var param = new Dictionary<string, object>();
-                instance = Workflow.CreateInstance(param, null, null, onIdle, onVisualTracking);
+                BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
+                if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0)
+                {
+                    instance = Workflow.CreateInstance(param, null, null, OnIdle, OnVisualTracking);
+                }
+                else
+                {
+                    instance = Workflow.CreateInstance(param, null, null, OnIdle, null);
+                }
             }
             ReadOnly = true;
             if (!VisualTracking && Minimize) GenericTools.minimize(GenericTools.mainWindow);
             instance.Run();
         }
-        private void showVariables(IDictionary<string, ValueType> Variables)
+        private void ShowVariables(IDictionary<string, WorkflowInstanceValueType> Variables)
         {
             GenericTools.RunUI(() =>
             {
-                var form = new showVariables();
-                form.variables = new System.Collections.ObjectModel.ObservableCollection<variable>();
+                var form = new showVariables
+                {
+                    variables = new System.Collections.ObjectModel.ObservableCollection<variable>()
+                };
                 Variables?.ForEach(x =>
                 {
                     form.addVariable(x.Key, x.Value.value, x.Value.type);
@@ -1297,5 +1238,320 @@ namespace OpenRPA.Views
         {
             return Workflow.name;
         }
+        private void ModelChanged(object sender, ModelChangedEventArgs e)
+        {
+            if (e.ModelChangeInfo != null)
+            {
+                var model = e.ModelChangeInfo.Subject;
+                if (model != null)
+                {
+                    if (model.ItemType.BaseType == typeof(Variable))
+                    {
+                        if (e.ModelChangeInfo.PropertyName != "Name") return;
+#pragma warning disable 0618
+                        ModelProperty property = e.PropertiesChanged.ElementAt<ModelProperty>(0);
+#pragma warning restore 0618
+                        string variableName = property.ComputedValue.ToString();
+                        RenameVariable(SelectedVariableName, variableName);
+                        //DesignerView.ToggleVariableDesignerCommand.Execute(null);
+                        //} else if (model.ItemType.BaseType == typeof(KeyedCollection<string, DynamicActivityProperty>))
+                    }
+                    else if (model.ItemType == typeof(DynamicActivityProperty))
+                    {
+                        if (e.ModelChangeInfo.PropertyName != "Name") return;
+#pragma warning disable 0618
+                        ModelProperty property = e.PropertiesChanged.ElementAt<ModelProperty>(0);
+#pragma warning restore 0618
+                        string variableName = property.ComputedValue.ToString();
+                        RenameVariable(SelectedVariableName, variableName);
+                    }
+                    //else if (e.ModelChangeInfo.ModelChangeType == ModelChangeType.CollectionItemAdded)
+                    //{
+                    //    var a = model.GetCurrentValue() as Activity;
+                    //    var map = CreateSourceLocationMapping(modelService);
+                    //    if(a != null && map.ContainsKey(a))
+                    //    {
+                    //        ShowDebug(map[a]);
+                    //    }
+                    //    else
+                    //    {
+                    //        ShowDebug(map.Last().Value);
+                    //    }
+
+                    //    Selection.SelectOnly(wfDesigner.Context, model);
+                    //    ModelItemExtensions.Focus(model);
+                    //}
+                }
+            }
+        }
+        void RenameVariable(string variableName, string newName)
+        {
+            if (string.IsNullOrEmpty(variableName) || string.IsNullOrEmpty(newName)) return;
+            //if (selectedActivity == null) return;
+            foreach (ModelItem item in this.GetWorkflowActivities())
+            {
+                ModelProperty property = item.Properties["ExpressionText"];
+                if ((property != null) && (property.Value != null))
+                {
+                    string input = item.Properties["ExpressionText"].Value.ToString();
+                    if (input.Contains(variableName))
+                    {
+                        string str2 = string.Empty;
+                        foreach (string str3 in System.Text.RegularExpressions.Regex.Split(input, @"(\.)|(=)|(\+)|(-)|(\*)|(<)|(>)|(=)|(&)|(\s)|(\()|(\))"))
+                        {
+                            if (str3 == variableName)
+                            {
+                                str2 += newName;
+                            }
+                            else
+                            {
+                                str2 += str3;
+                            }
+                        }
+                        item.Properties["ExpressionText"].SetValue(str2);
+                    }
+                }
+            }
+        }
+        public void OnUncomment(object sender, RoutedEventArgs e)
+        {
+            var thisselection = selection;
+            var comment = SelectedActivity;
+            var currentSequence = SelectedActivity.Properties["Body"].Value;
+            var newSequence = GetActivitiesScope(SelectedActivity.Parent.Parent);
+            ModelItemCollection currentActivities = null;
+            if (currentSequence.Properties["Activities"] != null)
+            {
+                currentActivities = currentSequence.Properties["Activities"].Collection;
+            }
+            else if (currentSequence.Properties["Nodes"] != null)
+            {
+                currentActivities = currentSequence.Properties["Nodes"].Collection;
+            }
+            ModelItemCollection newActivities = null;
+            if (newSequence.Properties["Activities"] != null)
+            {
+                newActivities = newSequence.Properties["Activities"].Collection;
+            }
+            else if (newSequence.Properties["Nodes"] != null)
+            {
+                newActivities = newSequence.Properties["Nodes"].Collection;
+                var next = thisselection.PrimarySelection.Parent.Properties["Next"];
+
+                newActivities.Remove(thisselection.PrimarySelection.Parent);
+
+                FlowStep step = new FlowStep
+                {
+                    Action = new Sequence()
+                };
+                var newStep = newActivities.Add(step);
+                newStep.Properties["Action"].SetValue(comment.Properties["Body"].Value);
+                newStep.Properties["Next"].SetValue(next.Value);
+
+                if (newSequence.Properties["StartNode"].Value == thisselection.PrimarySelection.Parent)
+                {
+                    newSequence.Properties["StartNode"].SetValue(newStep);
+                }
+                foreach (var node in newActivities)
+                {
+                    if (node.Properties["Next"] != null && node.Properties["Next"].Value != null)
+                    {
+                        if (node.Properties["Next"].Value == thisselection.PrimarySelection.Parent)
+                        {
+                            node.Properties["Next"].SetValue(newStep);
+                        }
+                    }
+                }
+                return;
+            }
+
+            if (currentActivities != null && newActivities != null)
+            {
+                var index = newActivities.IndexOf(comment);
+                foreach (var sel in currentActivities.ToList())
+                {
+                    currentActivities.Remove(sel);
+                    index++;
+                    newActivities.Insert(index, sel);
+                    //newActivities.Add(sel);
+                }
+                newActivities.Remove(comment);
+            }
+            else if (currentActivities == null && newActivities != null)
+            {
+                var index = newActivities.IndexOf(comment);
+                var movethis = comment.Properties["Body"].Value;
+                newActivities.Insert(index, movethis);
+                newActivities.Remove(comment);
+            }
+            else if (currentActivities == null && newActivities == null)
+            {
+                if (newSequence.Properties["Body"] != null)
+                {
+                    var body = newSequence.Properties["Body"];
+                    var handler = body.Value.Properties["Handler"];
+                    handler.SetValue(handler.Value.Properties["Body"].Value);
+                }
+            }
+        }
+        private void OnComment(object sender, RoutedEventArgs e)
+        {
+            var thisselection = selection;
+            //var movethis = selectedActivity;
+            var lastSequence = GetActivitiesScope(SelectedActivity.Parent);
+            if (lastSequence == null) lastSequence = GetActivitiesScope(SelectedActivity);
+            ModelItemCollection Activities;
+            if (lastSequence.Properties["Activities"] != null)
+            {
+                Activities = lastSequence.Properties["Activities"].Collection;
+            }
+            else
+            {
+                Activities = lastSequence.Properties["Nodes"].Collection;
+            }
+
+            if (thisselection.SelectionCount > 1)
+            {
+                if (lastSequence.Properties["Nodes"] != null) return;
+                var co = new Activities.CommentOut
+                {
+                    Body = new Sequence()
+                };
+                AddActivity(co);
+                var newActivities = SelectedActivity.Properties["Body"].Value.Properties["Activities"].Collection;
+                foreach (var sel in thisselection.SelectedObjects)
+                {
+                    Activities.Remove(sel);
+                    var index = newActivities.Count;
+                    Log.Debug("insert at " + index);
+                    newActivities.Insert(0, sel);
+                    //newActivities.Add(sel);
+                }
+            }
+            else
+            {
+                var parentparent = thisselection.PrimarySelection.Parent.Parent;
+                var parent = thisselection.PrimarySelection.Parent;
+
+                if (parentparent == lastSequence)
+                {
+                    var co = new Activities.CommentOut();
+                    AddActivity(co);
+                    Activities.Remove(thisselection.PrimarySelection);
+                    SelectedActivity.Properties["Body"].SetValue(thisselection.PrimarySelection);
+                }
+                else
+                {
+                    try
+                    {
+                        if (parentparent.Properties["Body"] != null)
+                        {
+                            var body = parentparent.Properties["Body"];
+                            if (body.Value == null)
+                            {
+                                var aa = (dynamic)Activator.CreateInstance(body.PropertyType);
+                                //aa.Handler = new CommentOut();
+                                SelectedActivity = parentparent.Properties["Body"].SetValue(aa);
+                            }
+                            var handler = body.Value.Properties["Handler"];
+                            var comment = handler.SetValue(new Activities.CommentOut());
+                            comment.Properties["Body"].SetValue(thisselection.PrimarySelection);
+
+                            //p.Properties["Body"].Value.Properties["Handler"].Value.Properties["Body"].SetValue(thisselection.PrimarySelection);
+                        }
+                        else if (parent.Properties["Action"] != null)
+                        {
+                            var next = thisselection.PrimarySelection.Parent.Properties["Next"];
+                            var co = new Activities.CommentOut();
+                            var comment = AddActivity(co);
+                            Activities.Remove(thisselection.PrimarySelection.Parent);
+
+                            if (lastSequence.Properties["StartNode"].Value == thisselection.PrimarySelection.Parent)
+                            {
+                                lastSequence.Properties["StartNode"].SetValue(comment);
+                            }
+                            foreach (var node in Activities)
+                            {
+                                if (node.Properties["Next"] != null && node.Properties["Next"].Value != null)
+                                {
+                                    if (node.Properties["Next"].Value == thisselection.PrimarySelection.Parent)
+                                    {
+                                        node.Properties["Next"].SetValue(comment);
+                                    }
+                                }
+                            }
+
+
+                            if (comment.Properties["Body"] != null)
+                            {
+                                comment.Properties["Body"].SetValue(thisselection.PrimarySelection);
+                            }
+                            else if (comment.Properties["Action"] != null)
+                            {
+                                comment.Properties["Action"].Value.Properties["Body"].SetValue(thisselection.PrimarySelection);
+                                comment.Properties["Next"].SetValue(next.Value);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                }
+            }
+        }
+        public static async Task<string> LoadImages(string xaml)
+        {
+            WorkflowDesigner wfDesigner;
+            wfDesigner = new WorkflowDesigner();
+            wfDesigner.Context.Services.GetService<DesignerConfigurationService>().TargetFrameworkName = new System.Runtime.Versioning.FrameworkName(".NETFramework", new Version(4, 5));
+            wfDesigner.Context.Services.GetService<DesignerConfigurationService>().LoadingFromUntrustedSourceEnabled = true;
+            new DesignerMetadata().Register();
+            wfDesigner.Text = xaml;
+            wfDesigner.Load();
+            ModelService modelService = wfDesigner.Context.Services.GetService<ModelService>();
+            using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
+            {
+                foreach (ModelItem item in GetWorkflowActivities(wfDesigner))
+                {
+                    ModelProperty property = item.Properties["Image"];
+                    if ((property != null) && (property.Value != null))
+                    {
+                        string image = item.Properties["Image"].Value.ToString();
+                        if (System.Text.RegularExpressions.Regex.Match(image, "[a-f0-9]{24}").Success)
+                        {
+                            using (var b = await Interfaces.Image.Util.LoadBitmap(image))
+                            {
+                                image = Interfaces.Image.Util.Bitmap2Base64(b);
+                            }                                
+                            item.Properties["Image"].SetValue(image);
+                        }
+                    }
+                }
+                editingScope.Complete();
+            }
+            wfDesigner.Flush();
+            return wfDesigner.Text;
+        }
+        public static string SetWorkflowName(string xaml, string name)
+        {
+            WorkflowDesigner wfDesigner;
+            wfDesigner = new WorkflowDesigner();
+            wfDesigner.Context.Services.GetService<DesignerConfigurationService>().TargetFrameworkName = new System.Runtime.Versioning.FrameworkName(".NETFramework", new Version(4, 5));
+            wfDesigner.Context.Services.GetService<DesignerConfigurationService>().LoadingFromUntrustedSourceEnabled = true;
+            new DesignerMetadata().Register();
+            wfDesigner.Text = xaml;
+            wfDesigner.Load();
+            ModelService modelService = wfDesigner.Context.Services.GetService<ModelService>();
+            using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
+            {
+                var modelItem = wfDesigner.Context.Services.GetService<ModelService>().Root;
+                modelItem.Properties["Name"].SetValue(name);
+                editingScope.Complete();
+            }
+            wfDesigner.Flush();
+            return wfDesigner.Text;
+        }
+
     }
 }

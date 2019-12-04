@@ -41,7 +41,7 @@ namespace OpenRPA.Image
                     CvInvoke.CvtColor(image, imageColor, ColorConversion.Gray2Bgr);
                 else
                     image.CopyTo(imageColor);
-                OpenRPA.Interfaces.Image.Util.SaveImageStamped(imageColor.Bitmap, "OcrImage-Color");
+                //Interfaces.Image.Util.SaveImageStamped(imageColor.Bitmap, "OcrImage-Color");
                 _ocr.SetImage(imageColor);
                 _ocr.AnalyseLayout();
                 if (_ocr.Recognize() != 0) throw new Exception("Failed to recognizer image");
@@ -50,7 +50,7 @@ namespace OpenRPA.Image
                 if (characters.Length == 0)
                 {
                     CvInvoke.CvtColor(image, imgGrey, ColorConversion.Bgr2Gray);
-                    OpenRPA.Interfaces.Image.Util.SaveImageStamped(imgGrey.Bitmap, "OcrImage-Gray");
+                    //Interfaces.Image.Util.SaveImageStamped(imgGrey.Bitmap, "OcrImage-Gray");
                     _ocr.SetImage(imgGrey);
                     _ocr.AnalyseLayout();
                     if (_ocr.Recognize() != 0) throw new Exception("Failed to recognizer image");
@@ -59,7 +59,7 @@ namespace OpenRPA.Image
                     if (characters.Length == 0)
                     {
                         CvInvoke.Threshold(imgGrey, imgThresholded, 65, 255, ThresholdType.Binary);
-                        OpenRPA.Interfaces.Image.Util.SaveImageStamped(imgThresholded.Bitmap, "OcrImage-Thresholded");
+                        //Interfaces.Image.Util.SaveImageStamped(imgThresholded.Bitmap, "OcrImage-Thresholded");
                         _ocr.SetImage(imgThresholded);
                         _ocr.AnalyseLayout();
                         if (_ocr.Recognize() != 0) throw new Exception("Failed to recognizer image");

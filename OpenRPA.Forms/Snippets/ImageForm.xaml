@@ -1,0 +1,52 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="ImageForm" mva:VisualBasic.Settings="{x:Null}" sap2010:WorkflowViewState.IdRef="FormTest_1"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:ofa="clr-namespace:OpenRPA.Forms.Activities;assembly=OpenRPA.Forms"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <TextExpression.NamespacesForImplementation>
+        <sco:Collection x:TypeArguments="x:String">
+            <x:String>System</x:String>
+            <x:String>Microsoft.VisualBasic</x:String>
+            <x:String>System.Xml</x:String>
+            <x:String>OpenRPA</x:String>
+            <x:String>System.Data</x:String>
+            <x:String>System.Linq</x:String>
+            <x:String>OpenRPA.Windows</x:String>
+        </sco:Collection>
+    </TextExpression.NamespacesForImplementation>
+    <TextExpression.ReferencesForImplementation>
+        <sco:Collection x:TypeArguments="AssemblyReference">
+            <AssemblyReference>mscorlib</AssemblyReference>
+            <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+            <AssemblyReference>System.Xml</AssemblyReference>
+            <AssemblyReference>OpenRPA</AssemblyReference>
+            <AssemblyReference>OpenRPA.Interfaces</AssemblyReference>
+            <AssemblyReference>System.Data</AssemblyReference>
+            <AssemblyReference>System.Core</AssemblyReference>
+            <AssemblyReference>OpenRPA.Windows</AssemblyReference>
+        </sco:Collection>
+    </TextExpression.ReferencesForImplementation>
+    <Sequence DisplayName="ImageForm" sap2010:WorkflowViewState.IdRef="Sequence_1">
+        <ofa:InvokeForm DisplayName="Liver Data" Form="&lt;form&gt;&#xA;  &lt;title&gt;RENAL TRACT ULTRASOUND&lt;/title&gt;&#xA;  &lt;heading&gt;Findings&lt;/heading&gt;&#xA;  &lt;row&gt;&#xA;    &lt;col&gt;&#xA;    &#xA;            &lt;input type=&quot;datetime?&quot; name=&quot;DateOfBirth&quot; label=&quot;Date of birth&quot; icon=&quot;calendar&quot; conversionError=&quot;Invalid date string.&quot;&gt;&#xA;          &lt;validate must=&quot;NotBeEmpty&quot; /&gt;&#xA;          &lt;validate must=&quot;BeLessThan&quot; value=&quot;2020-01-01&quot;&gt;You said you are born in the year {Value:yyyy}. Are you really from the future?&lt;/validate&gt;&#xA;   &lt;/input&gt;&#xA;    &lt;/col&gt;&#xA;  &lt;/row&gt;&#xA;  &lt;row&gt;&#xA;    &lt;col&gt;&#xA;      &lt;row&gt;&#xA;        &lt;col&gt;&#xA;          &lt;text&gt;Liver:&lt;/text&gt;&#xA;        &lt;/col&gt;&#xA;        &lt;col&gt;&#xA;          &lt;input type=&quot;bool&quot; name=&quot;NAD&quot; label=&quot;NAD&quot;&gt;&lt;/input&gt;&#xA;        &lt;/col&gt;&#xA;        &lt;col&gt;&#xA;          &lt;input type=&quot;bool&quot; name=&quot;ECHOGENIC&quot; label=&quot;ECHOGENIC&quot;&gt;&lt;/input&gt;&#xA;        &lt;/col&gt;&#xA;      &lt;/row&gt;&#xA;      &lt;row&gt;&#xA;        &lt;col&gt;&#xA;          &lt;text&gt;Liver:&lt;/text&gt;&#xA;        &lt;/col&gt;&#xA;        &lt;col&gt;&#xA;          &lt;input type=&quot;bool&quot; name=&quot;Ureteric &quot; label=&quot;Ureteric &quot;&gt;&lt;/input&gt;&#xA;        &lt;/col&gt;&#xA;        &lt;col&gt;&#xA;          &lt;input type=&quot;bool&quot; name=&quot;Endromet&quot; label=&quot;Endromet&quot;&gt;&lt;/input&gt;&#xA;        &lt;/col&gt;&#xA;      &lt;/row&gt;&#xA;    &lt;/col&gt;&#xA;    &lt;col&gt;&#xA;      &lt;img src=&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/KidneyStructures_PioM.svg/590px-KidneyStructures_PioM.svg.png&quot; /&gt;&#xA;    &lt;/col&gt;&#xA;  &lt;/row&gt;&#xA;&#xA;  &lt;br /&gt;&#xA;  &lt;row&gt;&#xA;    &lt;action&#xA;      name=&quot;reset&quot;&#xA;      content=&quot;RESET&quot;&#xA;      icon=&quot;close&quot;&#xA;      resets=&quot;true&quot; /&gt;&#xA;    &lt;action&#xA;      name=&quot;submit&quot;&#xA;      content=&quot;SUBMIT&quot;&#xA;      icon=&quot;check&quot;&#xA;      validates=&quot;true&quot; /&gt;&#xA;  &lt;/row&gt;&#xA;&lt;/form&gt;" sap2010:WorkflowViewState.IdRef="InvokeForm_2" />
+        <sads:DebugSymbol.Symbol>dw1DOlxFbXB0eS54YW1sAA==</sads:DebugSymbol.Symbol>
+    </Sequence>
+    <sap2010:WorkflowViewState.ViewStateManager>
+        <sap2010:ViewStateManager>
+            <sap2010:ViewStateData Id="InvokeForm_2" sap:VirtualizedContainerService.HintSize="200,74" />
+            <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="222,198">
+                <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+            </sap2010:ViewStateData>
+            <sap2010:ViewStateData Id="FormTest_1" sap:VirtualizedContainerService.HintSize="262,278" />
+        </sap2010:ViewStateManager>
+    </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

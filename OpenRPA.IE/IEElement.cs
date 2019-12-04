@@ -9,7 +9,7 @@ namespace OpenRPA.IE
 {
     public class IEElement : IElement
     {
-        public IEElement(Browser browser, mshtml.IHTMLElement Element)
+        public IEElement(Browser browser, MSHTML.IHTMLElement Element)
         {
             Browser = browser;
             RawElement = Element;
@@ -18,12 +18,12 @@ namespace OpenRPA.IE
             tagName = Element.tagName.ToLower();
             if (tagName == "input")
             {
-                mshtml.IHTMLInputElement inputelement = Element as mshtml.IHTMLInputElement;
+                MSHTML.IHTMLInputElement inputelement = Element as MSHTML.IHTMLInputElement;
                 type = inputelement.type.ToLower();
             }
             try
             {
-                mshtml.IHTMLUniqueName id = RawElement as mshtml.IHTMLUniqueName;
+                MSHTML.IHTMLUniqueName id = RawElement as MSHTML.IHTMLUniqueName;
                 uniqueID = id.uniqueID;
             }
             catch (Exception)
@@ -32,10 +32,10 @@ namespace OpenRPA.IE
             IndexInParent = -1;
             if (Element.parentElement != null && !string.IsNullOrEmpty(uniqueID))
             {
-                mshtml.IHTMLElementCollection children = Element.parentElement.children;
+                MSHTML.IHTMLElementCollection children = Element.parentElement.children;
                 for (int i = 0; i < children.length; i++)
                 {
-                    mshtml.IHTMLUniqueName id = children.item(i) as mshtml.IHTMLUniqueName;
+                    MSHTML.IHTMLUniqueName id = children.item(i) as MSHTML.IHTMLUniqueName;
                     if (id != null && id.uniqueID == uniqueID) { IndexInParent = i; break; }
                 }
             }
@@ -46,8 +46,8 @@ namespace OpenRPA.IE
             get
             {
                 var result = new List<IEElement>();
-                mshtml.IHTMLElementCollection children = RawElement.children;
-                foreach (mshtml.IHTMLElement c in children)
+                MSHTML.IHTMLElementCollection children = RawElement.children;
+                foreach (MSHTML.IHTMLElement c in children)
                 {
                     try
                     {
@@ -73,7 +73,7 @@ namespace OpenRPA.IE
                 int elementy = 0;
                 int elementw = 0;
                 int elementh = 0;
-                mshtml.IHTMLElement2 ele = RawElement as mshtml.IHTMLElement2;
+                MSHTML.IHTMLElement2 ele = RawElement as MSHTML.IHTMLElement2;
                 if (ele == null) return _Rectangle.Value;
                 var col = ele.getClientRects();
                 if (col == null) return _Rectangle.Value;
@@ -117,39 +117,27 @@ namespace OpenRPA.IE
         public string tagName { get; set; }
         public string type { get; set; }
         public int IndexInParent { get; set; }
-        public mshtml.IHTMLElement RawElement { get; private set; }
-        object IElement.RawElement { get => RawElement; set => RawElement = value as mshtml.IHTMLElement; }
-        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY)
+        public MSHTML.IHTMLElement RawElement { get; private set; }
+        object IElement.RawElement { get => RawElement; set => RawElement = value as MSHTML.IHTMLElement; }
+        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse)
         {
             if (Button != Input.MouseButton.Left) { VirtualClick = false; }
-            //if (rawElement.tagName.ToLower() == "input")
-            //{
-            //    var ele = (mshtml.IHTMLInputElement)rawElement;
-            //    var _ele2 = ele as mshtml.IHTMLElement;
-            //    _ele2.click();
-            //}
-            //else if (rawElement.tagName.ToLower() == "a")
-            //{
-            //    var ele = (mshtml.IHTMLLinkElement)rawElement;
-            //    var _ele2 = ele as mshtml.IHTMLElement;
-            //    _ele2.click();
-            //} else
-            //{
-            //}
             if (VirtualClick)
             {
                 RawElement.click();
+                if (DoubleClick) RawElement.click();
             } else
             {
                 Log.Debug("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
                 //Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
                 //Input.InputDriver.DoMouseClick();
                 var point = new FlaUI.Core.Shapes.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-                //FlaUI.Core.Input.Mouse.MoveTo(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+                if (AnimateMouse) FlaUI.Core.Input.Mouse.MoveTo(point);
                 FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
                 if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
                 if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-                FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+                if(!DoubleClick) FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+                if (DoubleClick) FlaUI.Core.Input.Mouse.DoubleClick(flabuttun, point);
                 Log.Debug("Click done");
             }
         }
@@ -189,7 +177,7 @@ namespace OpenRPA.IE
             {
                 if (RawElement.tagName.ToLower() == "input")
                 {
-                    var ele = (mshtml.IHTMLInputElement)RawElement;
+                    var ele = (MSHTML.IHTMLInputElement)RawElement;
                     return ele.value;
                 }
                 else
@@ -202,13 +190,13 @@ namespace OpenRPA.IE
             {
                 if (RawElement.tagName.ToLower() == "input")
                 {
-                    var ele = (mshtml.IHTMLInputElement)RawElement;
+                    var ele = (MSHTML.IHTMLInputElement)RawElement;
                     ele.value = value;
                 }
                 if(RawElement.tagName.ToLower() == "select")
                 {
-                    var ele = (mshtml.IHTMLSelectElement)RawElement;
-                    foreach(mshtml.IHTMLOptionElement e in ele.options)
+                    var ele = (MSHTML.IHTMLSelectElement)RawElement;
+                    foreach(MSHTML.IHTMLOptionElement e in ele.options)
                     {
                         if(e.value == value)
                         {
@@ -250,7 +238,6 @@ namespace OpenRPA.IE
             if (ScreenImagex < 0) ScreenImagex = 0; if (ScreenImagey < 0) ScreenImagey = 0;
             using (var image = Interfaces.Image.Util.Screenshot(ScreenImagex, ScreenImagey, ScreenImageWidth, ScreenImageHeight, Interfaces.Image.Util.ActivityPreviewImageWidth, Interfaces.Image.Util.ActivityPreviewImageHeight))
             {
-                // Interfaces.Image.Util.SaveImageStamped(image, System.IO.Directory.GetCurrentDirectory(), "IEElement");
                 return Interfaces.Image.Util.Bitmap2Base64(image);
             }
         }

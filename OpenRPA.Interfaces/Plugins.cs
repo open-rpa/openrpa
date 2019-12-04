@@ -11,12 +11,12 @@ namespace OpenRPA.Interfaces
 {
     public class Plugins
     {
-        public static ObservableCollection<IPlugin> recordPlugins = new ObservableCollection<IPlugin>();
+        public static ObservableCollection<IRecordPlugin> recordPlugins = new ObservableCollection<IRecordPlugin>();
         public static ExtendedObservableCollection<IDetectorPlugin> detectorPlugins = new ExtendedObservableCollection<IDetectorPlugin>();
         public static Dictionary<string, Type> detectorPluginTypes = new Dictionary<string, Type>();
-
-
-        public static IDetectorPlugin AddDetector(entity.Detector entity)
+        public static ObservableCollection<IRunPlugin> runPlugins = new ObservableCollection<IRunPlugin>();
+        public static ObservableCollection<ISnippet> Snippets = new ObservableCollection<ISnippet>();
+        public static IDetectorPlugin AddDetector(IOpenRPAClient client, entity.Detector entity)
         {
             foreach(var d in detectorPluginTypes)
             {
@@ -26,7 +26,7 @@ namespace OpenRPA.Interfaces
                     {
                         IDetectorPlugin plugin = (IDetectorPlugin)Activator.CreateInstance(d.Value);
                         if(string.IsNullOrEmpty(entity.name)) entity.name = plugin.Name;
-                        plugin.Initialize(entity);
+                        plugin.Initialize(client, entity);
                         Plugins.detectorPlugins.Add(plugin);
                         return plugin;
                     }
@@ -38,75 +38,113 @@ namespace OpenRPA.Interfaces
             }
             return null;
         }
-        public static void loadPlugins(string projectsDirectory)
+        public async static Task LoadPlugins(IOpenRPAClient client, string projectsDirectory)
         {
-            List<string> dllFileNames = new List<string>();
-            win32.Zone.UnblockPath(projectsDirectory);
-            foreach (var path in System.IO.Directory.GetFiles(projectsDirectory, "*.dll")) dllFileNames.Add(path);
-            ICollection<Assembly> assemblies = new List<Assembly>();
-            foreach (string dllFile in dllFileNames)
-            {
-                try
-                {
-                    AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
-                    Assembly assembly = Assembly.Load(an);
-                    assemblies.Add(assembly);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "");
-                }
-            }
             ICollection<Type> pluginTypes = new List<Type>();
-            foreach (Assembly assembly in assemblies)
+            ICollection<Type> snippetTypes = new List<Type>();
+            ICollection<Type> runPluginTypes = new List<Type>();
+            await Task.Run(() =>
             {
-                if (assembly != null)
+                List<string> dllFileNames = new List<string>();
+                foreach (var path in System.IO.Directory.GetFiles(projectsDirectory, "*.dll")) dllFileNames.Add(path);
+                ICollection<Assembly> assemblies = new List<Assembly>();
+                foreach (string dllFile in dllFileNames)
                 {
                     try
                     {
-                        Type[] types = assembly.GetTypes();
-                        foreach (Type type in types)
-                        {
-                            if (type.IsInterface || type.IsAbstract)
-                            {
-                                continue;
-                            }
-                            else
-                            {
-                                if (type.GetInterface(typeof(IPlugin).FullName) != null)
-                                {
-                                    pluginTypes.Add(type);
-                                }
-                                if (type.GetInterface(typeof(IDetectorPlugin).FullName) != null)
-                                {
-                                    detectorPluginTypes.Add(type.FullName, type);
-                                }
-                            }
-                        }
+                        AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
+                        Assembly assembly = Assembly.Load(an);
+                        assemblies.Add(assembly);
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(ex, "loadPlugins");
+                        Log.Error(ex, "");
                     }
                 }
-            }
-
-            //ICollection<IRecording> plugins = new List<IRecording>();
+                foreach (Assembly assembly in assemblies)
+                {
+                    if (assembly != null)
+                    {
+                        try
+                        {
+                            Type[] types = assembly.GetTypes();
+                            foreach (Type type in types)
+                            {
+                                if (type.IsInterface || type.IsAbstract)
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    if (type.GetInterface(typeof(IRecordPlugin).FullName) != null)
+                                    {
+                                        pluginTypes.Add(type);
+                                    }
+                                    if (type.GetInterface(typeof(IDetectorPlugin).FullName) != null)
+                                    {
+                                        Plugins.detectorPluginTypes.Add(type.FullName, type);
+                                    }
+                                    if (type.GetInterface(typeof(ISnippet).FullName) != null)
+                                    {
+                                        snippetTypes.Add(type);
+                                    }
+                                    if (type.GetInterface(typeof(IRunPlugin).FullName) != null)
+                                    {
+                                        runPluginTypes.Add(type);
+                                    }                                    
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex, "loadPlugins");
+                        }
+                    }
+                }
+            });
             foreach (Type type in pluginTypes)
             {
                 try
                 {
-                    IPlugin plugin = (IPlugin)Activator.CreateInstance(type);
+                    IRecordPlugin plugin = (IRecordPlugin)Activator.CreateInstance(type);
                     Log.Information("Initialize plugin " + plugin.Name);
-                    plugin.Initialize();
-                    Plugins.recordPlugins.Add(plugin);
+                    // SetStatus("Initialize plugin " + plugin.Name);
+                    plugin.Initialize(client);
+                    recordPlugins.Add(plugin);
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex.ToString());
                 }
             }
-        }
+            foreach (Type type in snippetTypes)
+            {
+                try
+                {
+                    ISnippet plugin = (ISnippet)Activator.CreateInstance(type);
+                    Log.Information("Initialize snippet " + plugin.Name);
+                    Snippets.Add(plugin);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+            }
+            foreach (Type type in runPluginTypes)
+            {
+                try
+                {
+                    IRunPlugin plugin = (IRunPlugin)Activator.CreateInstance(type);
+                    Log.Information("Initialize RunPlugin " + plugin.Name);
+                    plugin.Initialize(client);
+                    runPlugins.Add(plugin);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+            }
 
+        }
     }
 }

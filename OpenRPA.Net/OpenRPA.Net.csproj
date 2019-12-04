@@ -1,93 +1,48 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{84971661-E141-410F-8E9E-ADE610D1961A}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpenRPA.Net</RootNamespace>
-    <AssemblyName>OpenRPA.Net</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
+    <TargetFramework>net462</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>OpenRPA</Authors>
+    <Product>OpenRPA</Product>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
+    <Version>1.0.12</Version>
+    <PackageReleaseNotes>1.0.11 update interfaces reference
+1.0.8 make more resilient
+1.0.7 rewrite with interfaces
+1.0.6 rewrite with interfaces
+1.0.5 update interfaces reference
+</PackageReleaseNotes>
+    <Description>Network helper liberary for OpenRPA, handles network message queues and wraps OpenFlow's websocket protocol.</Description>
+    <PackageIcon>open_rpa128.png</PackageIcon>
+    <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\dist</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\dist\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">
+    <OutputPath></OutputPath>
   </PropertyGroup>
+  <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
+    <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
+  </Target>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Core" />
-    <Reference Include="System.Net.WebSockets.Client.Managed, Version=1.0.22.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.WebSockets.Client.Managed.1.0.22\lib\net45\System.Net.WebSockets.Client.Managed.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
+    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Net.WebSockets.Client.Managed" Version="1.0.22" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System.Security" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AppSettings.cs" />
-    <Compile Include="BaseMessage.cs" />
-    <Compile Include="Config.cs" />
-    <Compile Include="DeleteOneMessage.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="global.cs" />
-    <Compile Include="InsertOrUpdateOneMessage.cs" />
-    <Compile Include="InsertOneMessage.cs" />
-    <Compile Include="Message.cs" />
-    <Compile Include="MimeTypeHelper.cs" />
-    <Compile Include="QueryMessage.cs" />
-    <Compile Include="QueuedMessage.cs" />
-    <Compile Include="QueueMessage.cs" />
-    <Compile Include="RegisterUserMessage.cs" />
-    <Compile Include="RegisterQueueMessage.cs" />
-    <Compile Include="GetFileMessage.cs" />
-    <Compile Include="SaveFileMessage.cs" />
-    <Compile Include="SigninMessage.cs" />
-    <Compile Include="SocketCommand.cs" />
-    <Compile Include="SocketMessage.cs" />
-    <Compile Include="UpdateOneMessage.cs" />
-    <Compile Include="WebSocketClient.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj">
-      <Project>{481bd5a1-5e8d-42a9-bd31-78becfaf15f3}</Project>
-      <Name>OpenRPA.Interfaces</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'PrepInstaller'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <ProjectExtensions><VisualStudio><UserProperties BuildVersion_StartDate="2000/1/1" /></VisualStudio></ProjectExtensions>
 </Project>

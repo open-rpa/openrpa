@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29503.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.RDService", "OpenRPA.RDService\OpenRPA.RDService.csproj", "{A947E42F-9274-40E5-B445-EDE7C3A2E0EB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.NamedPipeWrapper", "OpenRPA.NamedPipeWrapper\OpenRPA.NamedPipeWrapper.csproj", "{D9EFA348-45C2-411B-97E9-474E152E760A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Interfaces", "OpenRPA.Interfaces\OpenRPA.Interfaces.csproj", "{C50B1F3D-C4BC-4FCE-8DCE-D7930B97EA98}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Net", "OpenRPA.Net\OpenRPA.Net.csproj", "{BF4715D1-8026-4EC5-9C64-A17836F25187}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		ReleaseNuget|Any CPU = ReleaseNuget|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A947E42F-9274-40E5-B445-EDE7C3A2E0EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A947E42F-9274-40E5-B445-EDE7C3A2E0EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A947E42F-9274-40E5-B445-EDE7C3A2E0EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A947E42F-9274-40E5-B445-EDE7C3A2E0EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A947E42F-9274-40E5-B445-EDE7C3A2E0EB}.ReleaseNuget|Any CPU.ActiveCfg = Release|Any CPU
+		{A947E42F-9274-40E5-B445-EDE7C3A2E0EB}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
+		{D9EFA348-45C2-411B-97E9-474E152E760A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9EFA348-45C2-411B-97E9-474E152E760A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9EFA348-45C2-411B-97E9-474E152E760A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9EFA348-45C2-411B-97E9-474E152E760A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9EFA348-45C2-411B-97E9-474E152E760A}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
+		{D9EFA348-45C2-411B-97E9-474E152E760A}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
+		{C50B1F3D-C4BC-4FCE-8DCE-D7930B97EA98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C50B1F3D-C4BC-4FCE-8DCE-D7930B97EA98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C50B1F3D-C4BC-4FCE-8DCE-D7930B97EA98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C50B1F3D-C4BC-4FCE-8DCE-D7930B97EA98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C50B1F3D-C4BC-4FCE-8DCE-D7930B97EA98}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
+		{C50B1F3D-C4BC-4FCE-8DCE-D7930B97EA98}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
+		{BF4715D1-8026-4EC5-9C64-A17836F25187}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF4715D1-8026-4EC5-9C64-A17836F25187}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF4715D1-8026-4EC5-9C64-A17836F25187}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF4715D1-8026-4EC5-9C64-A17836F25187}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF4715D1-8026-4EC5-9C64-A17836F25187}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
+		{BF4715D1-8026-4EC5-9C64-A17836F25187}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8E1547FD-8949-4087-AF8C-38912E04722A}
+	EndGlobalSection
+EndGlobal

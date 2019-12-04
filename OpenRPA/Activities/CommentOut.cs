@@ -1,5 +1,4 @@
-﻿using FlaUI.Core.AutomationElements.Infrastructure;
-using System;
+﻿using System;
 using System.Activities;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Activities
 {
-    [System.ComponentModel.Designer(typeof(CommentOutDesigner), typeof(System.ComponentModel.Design.IDesigner))]
+    [Designer(typeof(CommentOutDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.commentout.png")]
     [System.Windows.Markup.ContentProperty("Body")]
     // [designer.ToolboxTooltip(Text = "Find an HTML element based on css/xpath selector")]

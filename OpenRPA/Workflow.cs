@@ -11,7 +11,7 @@ using System.Windows.Threading;
 
 namespace OpenRPA
 {
-    public class Workflow : apibase
+    public class Workflow : apibase, IWorkflow
     {
         [JsonIgnore]
         public DispatcherTimer _timer;
@@ -31,6 +31,25 @@ namespace OpenRPA
         public List<workflowparameter> Parameters { get { return GetProperty<List<workflowparameter>>(); } set { SetProperty(value); } }
         public bool Serializable { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        [JsonIgnore]
+        public string RelativeFilename
+        {
+            get
+            {
+                string lastFolderName = System.IO.Path.GetFileName(Project.Path);
+                return System.IO.Path.Combine(lastFolderName, Filename);
+            }
+        }
+        [JsonIgnore]
+        public string IDOrRelativeFilename
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_id)) return RelativeFilename;
+                return _id;
+            }
+        }
+
         public string FilePath
         {
             get
@@ -86,7 +105,7 @@ namespace OpenRPA
         {
             get
             {
-                return WorkflowInstance.Instances.Where(x => x.WorkflowId == _id).ToList();
+                return WorkflowInstance.Instances.Where(x => (x.WorkflowId == _id && !string.IsNullOrEmpty(_id)) || (x.RelativeFilename == RelativeFilename && string.IsNullOrEmpty(_id))).ToList();
             }
         }
         [JsonIgnore]
@@ -147,13 +166,16 @@ namespace OpenRPA
             workflow.projectid = Project._id;
             return workflow;
         }
-        public void SaveFile()
+        public void SaveFile(string overridepath = null, bool exportImages = false)
         {
             if (string.IsNullOrEmpty(name)) return;
             if (string.IsNullOrEmpty(Xaml)) return;
             if (!Project.Workflows.Contains(this)) Project.Workflows.Add(this);
 
-            if (string.IsNullOrEmpty(FilePath))
+            var workflowpath = Project.Path;
+            if (!string.IsNullOrEmpty(overridepath)) workflowpath = overridepath;
+            var workflowfilepath = System.IO.Path.Combine(workflowpath, Filename);
+            if (string.IsNullOrEmpty(workflowfilepath))
             {
                 Filename = UniqueFilename();
             }
@@ -163,16 +185,29 @@ namespace OpenRPA
                 var newName = UniqueFilename();
                 if (guess == newName && Filename != guess)
                 {
-                    System.IO.File.WriteAllText(System.IO.Path.Combine(Project.Path, guess), Xaml);
-                    System.IO.File.Delete(FilePath);
+                    System.IO.File.WriteAllText(System.IO.Path.Combine(workflowpath, guess), Xaml);
+                    System.IO.File.Delete(workflowfilepath);
                     Filename = guess;
+                    return;
                 }
             }
-            System.IO.File.WriteAllText(FilePath, Xaml);
+            if(exportImages)
+            {
+                GenericTools.RunUI(async () => {
+                    string beforexaml = Xaml;
+                    string xaml = await Views.WFDesigner.LoadImages(beforexaml);
+                    //string xaml = Task.Run(() =>
+                    //{
+                    //    return Views.WFDesigner.LoadImages(beforexaml);
+                    //}).Result;
+                    System.IO.File.WriteAllText(workflowfilepath, xaml);
+                });
+                return;
+            }
+            System.IO.File.WriteAllText(workflowfilepath, Xaml);
         }
         public async Task Save()
         {
-            //parseparameters();
             try
             {
                 SaveFile();
@@ -188,10 +223,27 @@ namespace OpenRPA
                 var result = await global.webSocketClient.InsertOne("openrpa", 0, false, this);
                 _id = result._id;
                 _acl = result._acl;
-            } else
+                _modified = result._modified;
+                _modifiedby = result._modifiedby;
+                _modifiedbyid = result._modifiedbyid;
+            }
+            else
             {
                 var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, this);
                 _acl = result._acl;
+                _modified = result._modified;
+                _modifiedby = result._modifiedby;
+                _modifiedbyid = result._modifiedbyid;
+                var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
+                foreach (var f in files)
+                {
+                    bool equal = f.metadata._acl.SequenceEqual(_acl);
+                    if (!equal)
+                    {
+                        f.metadata._acl = _acl;
+                        await global.webSocketClient.UpdateOne("files", 0, false, f);
+                    }
+                }
             }
         }
         public async Task Delete()
@@ -202,6 +254,15 @@ namespace OpenRPA
             if (!global.isConnected) return;
             if (!string.IsNullOrEmpty(_id))
             {
+                var imagepath = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "images");
+                if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
+                var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
+                foreach (var f in files)
+                {
+                    await global.webSocketClient.DeleteOne("files", f._id);
+                    var imagefilepath = System.IO.Path.Combine(imagepath, f._id + ".png");
+                    if (System.IO.File.Exists(imagefilepath)) System.IO.File.Delete(imagefilepath);
+                }
                 await global.webSocketClient.DeleteOne("openrpa", this._id);
             }
         }
@@ -224,11 +285,27 @@ namespace OpenRPA
                             //if (VisualTracking != null) i.OnVisualTracking += VisualTracking;
                             var exists = WorkflowInstance.Instances.Where(x => x.InstanceId == i.InstanceId).FirstOrDefault();
                             if (exists != null) continue;
-                            WorkflowInstance.Instances.Add(i);
                             if (i.state != "failed" && i.state != "aborted" && i.state != "completed")
                             {
+                                var _ref = (i as IWorkflowInstance);
+                                foreach (var runner in Plugins.runPlugins)
+                                {
+                                    if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
+                                }
+                                WorkflowInstance.Instances.Add(i);
                                 i.createApp();
                                 i.Run();
+                            }
+                        }
+                        catch (System.Runtime.DurableInstancing.InstancePersistenceException ex)
+                        {
+                            Log.Error("RunPendingInstances: " + ex.ToString());
+                            try
+                            {
+                                System.IO.File.Delete(f);
+                            }
+                            catch (Exception)
+                            {
                             }
                         }
                         catch (Exception ex)
@@ -238,6 +315,7 @@ namespace OpenRPA
                     }
                 }
             }
+            if (!global.isConnected) return;
             var host = Environment.MachineName.ToLower();
             var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
             var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{WorkflowId: '" + _id + "', state: 'idle', fqdn: '" + fqdn + "'}");
@@ -257,6 +335,11 @@ namespace OpenRPA
                     //if (idleOrComplete != null) i.OnIdleOrComplete += idleOrComplete;
                     //if (VisualTracking != null) i.OnVisualTracking += VisualTracking;
                     WorkflowInstance.Instances.Add(i);
+                    var _ref = (i as IWorkflowInstance);
+                    foreach (var runner in Plugins.runPlugins)
+                    {
+                        if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
+                    }
                     i.createApp();
                     i.Run();
                 }
@@ -308,9 +391,14 @@ namespace OpenRPA
                 return wf;
             }
         }
-        public WorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, 
-            WorkflowInstance.idleOrComplete idleOrComplete, WorkflowInstance.VisualTrackingHandler VisualTracking)
+        public IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId,
+            OpenRPA.Interfaces.idleOrComplete idleOrComplete, OpenRPA.Interfaces.VisualTrackingHandler VisualTracking)
         {
+            if (this.Parameters == null) this.Parameters = new List<workflowparameter>();
+            if (this.Parameters.Count == 0)
+            {
+                ParseParameters();
+            }
             var instance = WorkflowInstance.Create(this, Parameters);
             instance.queuename = queuename; instance.correlationId = correlationId;
             if (idleOrComplete != null) instance.OnIdleOrComplete += idleOrComplete;
@@ -319,19 +407,45 @@ namespace OpenRPA
             //instance.Run();
             return instance;
         }
-    }
-    public enum workflowparameterdirection
-    {
-        @in = 0,
-        @out = 1,
-        inout = 2,
-    }
-    public class workflowparameter
-    {
-        public string name { get; set; }
-        public string type { get; set; }
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public workflowparameterdirection direction { get; set; }
+        public System.Collections.ObjectModel.KeyedCollection<string, System.Activities.DynamicActivityProperty> GetParameters()
+        {
+            System.Activities.ActivityBuilder ab2;
+            using (var stream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(Xaml)))
+            {
+                ab2 = System.Xaml.XamlServices.Load(
+                    System.Activities.XamlIntegration.ActivityXamlServices.CreateBuilderReader(
+                    new System.Xaml.XamlXmlReader(stream))) as System.Activities.ActivityBuilder;
+            }
+            return ab2.Properties;
+        }
+        public void ParseParameters()
+        {
+            Parameters.Clear();
+            if (!string.IsNullOrEmpty(Xaml))
+            {
+                var parameters = GetParameters();
+                foreach (var prop in parameters)
+                {
+                    var par = new workflowparameter() { name = prop.Name };
+                    par.type = prop.Type.GenericTypeArguments[0].FullName;
+                    string baseTypeName = prop.Type.BaseType.FullName;
+                    if (baseTypeName == "System.Activities.InArgument")
+                    {
+                        par.direction = workflowparameterdirection.@in;
+                    }
+                    if (baseTypeName == "System.Activities.InOutArgument")
+                    {
+                        par.direction = workflowparameterdirection.inout;
+                    }
+                    if (baseTypeName == "System.Activities.OutArgument")
+                    {
+                        par.direction = workflowparameterdirection.@out;
+                    }
+                    Parameters.Add(par);
+                }
+            }
+        }
+
     }
 
 }

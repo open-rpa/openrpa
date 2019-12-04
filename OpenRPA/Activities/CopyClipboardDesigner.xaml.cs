@@ -13,16 +13,11 @@ using System.Windows.Media.Imaging;
 
 namespace OpenRPA.Activities
 {
-    public partial class CopyClipboardDesigner : INotifyPropertyChanged
+    public partial class CopyClipboardDesigner
     {
         public CopyClipboardDesigner()
         {
             InitializeComponent();
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged(String propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

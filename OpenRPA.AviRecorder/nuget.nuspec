@@ -1,0 +1,26 @@
+﻿<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes></releaseNotes>
+    <license type="expression">MPL-2.0</license>
+    <copyright>$copy$</copyright>
+    <tags></tags>
+    <dependencies>
+      <group targetFramework="net462" >
+        <dependency id="NAudio" version="1.9.0" />
+        <dependency id="OpenRPA.Interfaces" version="1.0.6" />
+        <dependency id="SharpAvi" version="2.1.1" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\$configurationname$\net462\OpenRPA.AviRecorder.dll" target="lib\net462" />
+    <file src="bin\$configurationname$\net462\OpenRPA.AviRecorder.pdb" target="lib\net462" />
+  </files>
+</package>

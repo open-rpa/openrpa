@@ -174,8 +174,8 @@ namespace OpenRPA.Image
             var elementy = (int)element.BoundingRectangle.Y;
             var elementw = (int)element.BoundingRectangle.Width;
             var elementh = (int)element.BoundingRectangle.Height;
-            System.Diagnostics.Trace.WriteLine(string.Format("Snap screenshot of element at ({0}, {1},{2},{3})",
-                elementx, elementy, elementx + elementw, elementy + elementh), "Debug");
+            Log.Verbose(string.Format("Snap screenshot of element at ({0}, {1},{2},{3})",
+                elementx, elementy, elementx + elementw, elementy + elementh));
             List<System.Drawing.Rectangle> con = null;
             var desktopb = Interfaces.Image.Util.Screenshot(elementx, elementy, elementw, elementh);
 
@@ -237,7 +237,7 @@ namespace OpenRPA.Image
             //    saveimage.Dispose();
             //}
 
-            System.Diagnostics.Trace.WriteLine("Found " + con.Count + " Contours with " + overlaps.Count + " overlaps");
+            Log.Verbose("Found " + con.Count + " Contours with " + overlaps.Count + " overlaps");
             var rect = System.Drawing.Rectangle.Empty;
             //bool again = false;
             foreach (var match in overlaps)

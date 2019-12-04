@@ -103,8 +103,8 @@ namespace OpenRPA.Views
             var kv = (System.Collections.Generic.KeyValuePair<string, System.Type>)btn.DataContext;
             var d = new Interfaces.entity.Detector(); d.Plugin = kv.Value.FullName;
             IDetectorPlugin dp = null;
-            d.Path = Extensions.projectsDirectory;
-            dp = Plugins.AddDetector(d);
+            d.Path = Interfaces.Extensions.ProjectsDirectory;
+            dp = Plugins.AddDetector(this.main, d);
             dp.OnDetector += main.OnDetector;
             NotifyPropertyChanged("detectorPlugins");
         }

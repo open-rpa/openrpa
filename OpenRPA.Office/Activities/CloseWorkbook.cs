@@ -33,15 +33,21 @@ namespace OpenRPA.Office.Activities
         [RequiredArgument]
         [System.ComponentModel.Category("Input")]
         [OverloadGroup("asfilename")]
+
         public InArgument<string> Filename { get; set; }
+        [RequiredArgument]
+        [System.ComponentModel.Category("Input")]
+        public InArgument<bool> SaveChanges { get; set; } = true;
+
         protected override void Execute(CodeActivityContext context)
         {
             var workbook = Workbook.Get(context);
             var filename = Filename.Get(context);
+            var saveChanges = SaveChanges.Get(context);
             if (!string.IsNullOrEmpty(filename)) filename = Environment.ExpandEnvironmentVariables(filename);
             if (string.IsNullOrEmpty(filename))
             {
-                workbook.Save();
+                workbook.Close(saveChanges);
             }
             else
             {
@@ -52,7 +58,7 @@ namespace OpenRPA.Office.Activities
                         try
                         {
                             workbook = w;
-                            w.Close(false);
+                            w.Close(saveChanges);
                             //worksheet = workbook.ActiveSheet;
                             break;
                         }
@@ -63,20 +69,6 @@ namespace OpenRPA.Office.Activities
                     }
                 }
             }
-            //    workbook.Application.DisplayAlerts = false;
-            //    if(workbook.FullName != filename)
-            //    {
-            //        foreach (Workbook w in workbook.Application.Workbooks)
-            //        {
-            //            if (w.FullName == filename)
-            //            {
-            //                w.Close(false);
-            //                break;
-            //            }
-            //        }
-            //    }
-            //}
-
         }
     }
 }

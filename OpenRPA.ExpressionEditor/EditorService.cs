@@ -33,7 +33,6 @@ namespace OpenRPA.ExpressionEditor
             return instance;
         }
         private Interfaces.IDesigner designer = null;
-
         /// <summary>
         /// Gets a collection of editing language keywords the editor should support.
         /// </summary>
@@ -44,7 +43,6 @@ namespace OpenRPA.ExpressionEditor
                 return new List<string>(new[] { "And", "AndAlso", "New", "Or", "OrElse", "Throw" });
             }
         }
-
         /// <summary>
         /// Gets or sets the root node in the expression auto-completion tree.
         /// </summary>
@@ -62,7 +60,6 @@ namespace OpenRPA.ExpressionEditor
             }
             return data;
         }
-        
         /// <summary>
         /// Returns an updated auto-completion expression tree that uses the baseline data in the 
         /// <see cref="AutoCompletionData" /> property and appends the specified variable names.
@@ -116,30 +113,23 @@ x.Name.Equals(computedName)
         {
             return CreateEditor(importedNamespaces, variables, text, expressionType);
         }
-
         public IExpressionEditorInstance CreateExpressionEditor(AssemblyContextControlItem assemblies, ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text, Type expressionType, Size initialSize)
         {
             return CreateEditor(importedNamespaces, variables, text, expressionType);
         }
-
         public IExpressionEditorInstance CreateExpressionEditor(AssemblyContextControlItem assemblies, ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text)
         {
             return CreateEditor(importedNamespaces, variables, text, null);
         }
-
         public IExpressionEditorInstance CreateExpressionEditor(AssemblyContextControlItem assemblies, ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text, Size initialSize)
         {
             return CreateEditor(importedNamespaces, variables, text, null);
         }
-
         public void CloseExpressionEditors()
         {
-            throw new NotImplementedException();
         }
-
         public void UpdateContext(AssemblyContextControlItem assemblies, ImportedNamespaceContextItem importedNamespaces)
         {
-            // throw new NotImplementedException();
         }
     }
 }

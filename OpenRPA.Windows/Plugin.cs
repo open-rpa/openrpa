@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using FlaUI.Core;
 using FlaUI.Core.AutomationElements.Infrastructure;
 using OpenRPA.Input;
@@ -15,23 +16,24 @@ using OpenRPA.Interfaces.Selector;
 
 namespace OpenRPA.Windows
 {
-    public class Plugin : ObservableObject, IPlugin
+    public class Plugin : ObservableObject, IRecordPlugin
     {
+        private static int CurrentProcessId = 0;
         public static Interfaces.Selector.treeelement[] _GetRootElements(Selector anchor)
         {
-            int CurrentProcessId = System.Diagnostics.Process.GetCurrentProcess().Id;
+            if(CurrentProcessId==0) CurrentProcessId = System.Diagnostics.Process.GetCurrentProcess().Id;
 
             var result = new List<Interfaces.Selector.treeelement>();
             Task.Run(() =>
             {
                 var automation = AutomationUtil.getAutomation();
                 var _rootElement = automation.GetDesktop();
-                if(anchor!=null)
+                if (anchor != null)
                 {
                     WindowsSelector Windowsselector = anchor as WindowsSelector;
                     if (Windowsselector == null) { Windowsselector = new WindowsSelector(anchor.ToString()); }
                     var elements = WindowsSelector.GetElementsWithuiSelector(Windowsselector, null, 5);
-                    if(elements.Count() > 0 )
+                    if (elements.Count() > 0)
                     {
                         _rootElement = elements[0].RawElement;
                     }
@@ -43,14 +45,15 @@ namespace OpenRPA.Windows
                     var elementNode = _treeWalker.GetFirstChild(_rootElement);
                     while (elementNode != null)
                     {
-                        if(!elementNode.Properties.ProcessId.IsSupported)
-                        {
-                            result.Add(new WindowsTreeElement(null, false, automation, elementNode, _treeWalker));
-                        } else if(elementNode.Properties.ProcessId.ValueOrDefault != CurrentProcessId)
+                        if (!elementNode.Properties.ProcessId.IsSupported)
                         {
                             result.Add(new WindowsTreeElement(null, false, automation, elementNode, _treeWalker));
                         }
-                        
+                        else if (elementNode.Properties.ProcessId.ValueOrDefault != CurrentProcessId)
+                        {
+                            result.Add(new WindowsTreeElement(null, false, automation, elementNode, _treeWalker));
+                        }
+
                         try
                         {
                             elementNode = _treeWalker.GetNextSibling(elementNode);
@@ -80,19 +83,90 @@ namespace OpenRPA.Windows
         }
         public string Name { get => "Windows"; }
         public string Status => _status;
+        private Views.RecordPluginView view;
+        public UserControl editor
+        {
+            get
+            {
+                if (view == null)
+                {
+                    view = new Views.RecordPluginView();
+                }
+                return view;
+            }
+        }
         private string _status = "";
-
-        public event Action<IPlugin, IRecordEvent> OnUserAction;
+        public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
+        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove;
         public void Start()
         {
             InputDriver.Instance.OnMouseUp += OnMouseUp;
+            InputDriver.Instance.OnMouseDown += OnMouseDown;
+            InputDriver.Instance.OnMouseMove += _OnMouseMove;
         }
         public void Stop()
         {
             InputDriver.Instance.OnMouseUp -= OnMouseUp;
+            InputDriver.Instance.OnMouseDown -= OnMouseDown;
+            InputDriver.Instance.OnMouseMove -= _OnMouseMove;
         }
+        private static object _lock = new object();
+        private static bool _processing = false;
+        private void OnMouseDown(InputEventArgs e)
+        {
+            isMouseDown = true;
+            var re = new RecordEvent(); re.Button = e.Button;
+            OnMouseMove?.Invoke(this, re);
+        }
+        private void _OnMouseMove(InputEventArgs e)
+        {
+            if (isMouseDown) return;
+            if (CurrentProcessId == 0) CurrentProcessId = System.Diagnostics.Process.GetCurrentProcess().Id;
+            var thread = new Thread(new ThreadStart(() =>
+            {
+                lock (_lock)
+                {
+                    if (_processing) return;
+                    _processing = true;
+                }
+                try
+                {
+                    if (e.Element == null)
+                    {
+                        var Element = AutomationHelper.GetFromPoint(e.X, e.Y);
+                        if (Element != null) e.SetElement(Element);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "");
+                }
+                lock (_lock)
+                {
+                    _processing = false;
+                }
+                if (e.Element == null) return;
+
+                if (e.Element.RawElement.Properties.ProcessId.IsSupported && e.Element.RawElement.Properties.ProcessId.ValueOrDefault == CurrentProcessId)
+                {
+                    return;
+                }
+                var re = new RecordEvent(); re.Button = e.Button;
+                re.OffsetX = e.X - e.Element.Rectangle.X;
+                re.OffsetY = e.Y - e.Element.Rectangle.Y;
+                re.Element = e.Element;
+                re.UIElement = e.Element;
+                re.X = e.X;
+                re.Y = e.Y;
+                OnMouseMove?.Invoke(this, re);
+            }));
+            thread.IsBackground = true;
+            thread.Start();
+        }
+        private bool isMouseDown = false;
         private void OnMouseUp(InputEventArgs e)
         {
+            isMouseDown = false;
             var thread = new Thread(new ThreadStart(() =>
             {
                 Log.Debug(string.Format("Windows.Recording::OnMouseUp::begin"));
@@ -102,7 +176,7 @@ namespace OpenRPA.Windows
                 sw.Start();
                 WindowsSelector sel = null;
                 // sel = new WindowsSelector(e.Element.rawElement, null, true);
-                sel = new WindowsSelector(e.Element.RawElement, null, false);
+                sel = new WindowsSelector(e.Element.RawElement, null, PluginConfig.enum_selector_properties);
                 if (sel.Count < 2) return;
                 if (sel == null) return;
                 a.Selector = sel.ToString();
@@ -115,33 +189,36 @@ namespace OpenRPA.Windows
                 re.Selector = sel;
                 re.X = e.X;
                 re.Y = e.Y;
-                if(sel.Count > 3)
+                if (sel.Count > 3)
                 {
                     var p1 = sel[1].Properties.Where(x => x.Name == "ClassName").FirstOrDefault();
                     var p2 = sel[2].Properties.Where(x => x.Name == "AutomationId").FirstOrDefault();
-                    if(p1!=null && p2 != null)
+                    if (p1 != null && p2 != null)
                     {
                         if (p1.Value.StartsWith("Windows.UI") && p2.Value == "SplitViewFrameXAMLWindow") re.SupportVirtualClick = false;
                     }
                 }
-
                 re.a = new GetElementResult(a);
                 re.SupportInput = e.Element.SupportInput;
                 Log.Debug(string.Format("Windows.Recording::OnMouseUp::end {0:mm\\:ss\\.fff}", sw.Elapsed));
-
                 OnUserAction?.Invoke(this, re);
             }));
             thread.IsBackground = true;
             thread.Start();
         }
         public bool parseUserAction(ref IRecordEvent e) { return false; }
-        public void Initialize()
+        public void Initialize(IOpenRPAClient client)
         {
+            var dummy = PluginConfig.allow_child_searching;
+            dummy = PluginConfig.allow_multiple_hits_mid_selector;
+            dummy = PluginConfig.enum_selector_properties;
+            dummy = PluginConfig.get_elements_in_different_thread;
+            dummy = PluginConfig.traverse_selector_both_ways;
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
             WindowsSelector winselector = selector as WindowsSelector;
-            if(winselector == null)
+            if (winselector == null)
             {
                 winselector = new WindowsSelector(selector.ToString());
             }
@@ -155,21 +232,32 @@ namespace OpenRPA.Windows
             sw.Start();
             do
             {
-                elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
+                if (PluginConfig.get_elements_in_different_thread)
                 {
-                    try
+                    elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
                     {
-                        return GetElementsWithSelector(selector, null, 1);
-                    }
-                    catch (System.Threading.ThreadAbortException)
-                    {
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex, "");
-                    }
-                    return new UIElement[] { };
-                }, TimeSpan.FromMilliseconds(250)).Result;
+                        try
+                        {
+                            Log.Selector("LaunchBySelector in non UI thread");
+                            return GetElementsWithSelector(selector, null, 1);
+                        }
+                        catch (System.Threading.ThreadAbortException ex)
+                        {
+                            Log.Error(ex, "");
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex, "");
+                        }
+                        return new UIElement[] { };
+                    }, TimeSpan.FromMilliseconds(1000)).Result;
+
+                }
+                else
+                {
+                    Log.Selector("LaunchBySelector using UI thread");
+                    elements = GetElementsWithSelector(selector, null, 1);
+                }
                 if (elements == null)
                 {
                     elements = new IElement[] { };
@@ -203,7 +291,7 @@ namespace OpenRPA.Windows
             p = f.Properties.Where(x => x.Name == "arguments").FirstOrDefault();
             if (p != null) arguments = p.Value;
 
-            
+
             if (isImmersiveProcess)
             {
                 process = FlaUI.Core.Tools.WindowsStoreAppLauncher.Launch(applicationUserModelId, arguments);
@@ -232,7 +320,6 @@ namespace OpenRPA.Windows
         {
             return WindowsSelectorItem.Match(item, m.RawElement as AutomationElement);
         }
-
         public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)
         {
             IElement[] elements = { };
@@ -278,7 +365,7 @@ namespace OpenRPA.Windows
                 foreach (var _ele in elements)
                 {
                     var element = _ele.RawElement as AutomationElement;
-                    if(element.Properties.ProcessId.IsSupported)
+                    if (element.Properties.ProcessId.IsSupported)
                     {
                         var processid = element.Properties.ProcessId.Value;
                         var Process = System.Diagnostics.Process.GetProcessById(processid);
@@ -286,6 +373,10 @@ namespace OpenRPA.Windows
                     }
                 }
             }
+        }
+        public bool parseMouseMoveAction(ref IRecordEvent e)
+        {
+            return true;
         }
     }
     public class GetElementResult : IBodyActivity
@@ -306,12 +397,33 @@ namespace OpenRPA.Windows
         }
         public void AddInput(string value, IElement element)
         {
-            AddActivity(new System.Activities.Statements.Assign<string>
+            try
             {
-                To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
-                Value = value
-            }, "item");
-            element.Value = value;
+                if(Config.local.use_sendkeys)
+                {
+                    AddActivity(new System.Activities.Statements.Assign<string>
+                    {
+                        To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.SendKeys"),
+                        Value = value
+                    }, "item");
+                    (element as UIElement).SendKeys = value;
+
+                }
+                else
+                {
+                    AddActivity(new System.Activities.Statements.Assign<string>
+                    {
+                        To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.Value"),
+                        Value = value
+                    }, "item");
+                    element.Value = value;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
     }
     public class RecordEvent : IRecordEvent

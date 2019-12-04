@@ -18,7 +18,7 @@ namespace OpenRPA.IE
         public GetElementDesigner()
         {
             InitializeComponent();
-            HighlightImage = Extensions.GetImageSourceFromResource("search.png");
+            HighlightImage = IEExtensions.GetImageSourceFromResource("search.png");
         }
         public event PropertyChangedEventHandler PropertyChanged;
         public BitmapFrame HighlightImage { get; set; }
@@ -91,7 +91,7 @@ namespace OpenRPA.IE
                 loadFrom = loadFrom.Parent;
             }
 
-            HighlightImage = Extensions.GetImageSourceFromResource(".x.png");
+            HighlightImage = IEExtensions.GetImageSourceFromResource(".x.png");
             NotifyPropertyChanged("HighlightImage");
 
             string SelectorString = ModelItem.GetValue<string>("Selector");
@@ -116,7 +116,7 @@ namespace OpenRPA.IE
 
             if (elements.Count() > 0)
             {
-                HighlightImage = Extensions.GetImageSourceFromResource("check.png");
+                HighlightImage = IEExtensions.GetImageSourceFromResource("check.png");
                 NotifyPropertyChanged("HighlightImage");
             }
             foreach (var ele in elements) ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
@@ -134,18 +134,14 @@ namespace OpenRPA.IE
         {
             get
             {
-                var base64 = ImageString;
-                if (string.IsNullOrEmpty(base64)) return null;
-                //if (System.Text.RegularExpressions.Regex.Match(base64, "[a-f0-9]{24}").Success)
-                //{
-                //    return image.Screenutil.BitmapToImageSource(image.util.loadWorkflowImage(base64), image.Screenutil.ActivityPreviewImageWidth, image.Screenutil.ActivityPreviewImageHeight);
-                //}
-
-                // return OpenRPA.Interfaces.Image.Util.BitmapToImageSource
-                using (var image = Interfaces.Image.Util.Base642Bitmap(base64))
+                var image = ImageString;
+                System.Drawing.Bitmap b = Task.Run(() => {
+                    return Interfaces.Image.Util.LoadBitmap(image);
+                }).Result;
+                using (b)
                 {
-                    // Interfaces.Image.Util.SaveImageStamped(image, System.IO.Directory.GetCurrentDirectory(), "WindowsGetElement");
-                    return Interfaces.Image.Util.BitmapToImageSource(image, Interfaces.Image.Util.ActivityPreviewImageWidth, Interfaces.Image.Util.ActivityPreviewImageHeight);
+                    if (b == null) return null;
+                    return Interfaces.Image.Util.BitmapToImageSource(b, Interfaces.Image.Util.ActivityPreviewImageWidth, Interfaces.Image.Util.ActivityPreviewImageHeight);
                 }
             }
         }

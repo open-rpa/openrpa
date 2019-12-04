@@ -9,12 +9,17 @@ namespace OpenRPA.Net
 {
     public class QueuedMessage
     {
-        public Message msg { get; set; }
-        public Message reply { get; set; }
+        public Interfaces.IMessage msg { get; set; }
+        public Interfaces.IMessage reply { get; set; }
         public AutoResetEvent autoReset { get; set; }
-        public QueuedMessage(Message msg)
+        public QueuedMessage(Interfaces.IMessage msg)
         {
             this.msg = msg;
+        }
+        public override string ToString()
+        {
+            if (msg != null) return msg.id + "/" + msg.command;
+            return base.ToString();
         }
     }
 }

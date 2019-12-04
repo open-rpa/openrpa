@@ -96,8 +96,6 @@ namespace OpenRPA.Java
         {
             return JavaSelector.GetElementsWithuiSelector(this, fromElement, maxresults);
         }
-
-
         private static JavaElement[] GetElementsWithuiSelector(WindowsAccessBridgeInterop.AccessibleJvm jvm, JavaSelector selector, IElement fromElement, int maxresults)
         {
             JavaElement[] result = null;
@@ -131,7 +129,7 @@ namespace OpenRPA.Java
                     }
                 }
                 if (i == (selectors.Count - 1)) result = current.ToArray();
-                if (current.Count == 0)
+                if (current.Count == 0 && Config.local.log_selector)
                 {
                     var _c = new JavaSelectorItem(selectors[i]);
                     var message = "needed to find " + Environment.NewLine + _c.ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
@@ -170,7 +168,5 @@ namespace OpenRPA.Java
             if (result == null) return new JavaElement[] { };
             return result;
         }
-
-
     }
 }

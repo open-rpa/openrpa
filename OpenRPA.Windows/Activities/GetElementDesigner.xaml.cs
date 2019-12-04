@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic.Activities;
+using OpenRPA.Interfaces;
 using System;
 using System.Activities;
 using System.Activities.Expressions;
@@ -95,30 +96,34 @@ namespace OpenRPA.Windows
             int maxresults = ModelItem.GetValue<int>("MaxResults");
             var selector = new WindowsSelector(SelectorString);
 
-
-            var elements = new List<UIElement>();
-            if (anchor != null)
+            Task.Run(() =>
             {
-                var _base = WindowsSelector.GetElementsWithuiSelector(anchor, null, 10);
-                foreach (var _e in _base)
+                var elements = new List<UIElement>();
+                if (anchor != null)
                 {
-                    var res = WindowsSelector.GetElementsWithuiSelector(selector, _e, maxresults);
+                    var _base = WindowsSelector.GetElementsWithuiSelector(anchor, null, 10);
+                    foreach (var _e in _base)
+                    {
+                        var res = WindowsSelector.GetElementsWithuiSelector(selector, _e, maxresults);
+                        elements.AddRange(res);
+                    }
+
+                }
+                else
+                {
+                    var res = WindowsSelector.GetElementsWithuiSelector(selector, null, maxresults);
                     elements.AddRange(res);
                 }
 
-            }
-            else
-            {
-                var res = WindowsSelector.GetElementsWithuiSelector(selector, null, maxresults);
-                elements.AddRange(res);
-            }
+                if (elements.Count() > 0)
+                {
+                    HighlightImage = Extensions.GetImageSourceFromResource("check.png");
+                    NotifyPropertyChanged("HighlightImage");
+                }
+                foreach (var ele in elements) ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
 
-            if(elements.Count()>0)
-            {
-                HighlightImage = Extensions.GetImageSourceFromResource("check.png");
-                NotifyPropertyChanged("HighlightImage");
-            }
-            foreach (var ele in elements) ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
+            });
+
         }
         public string ImageString
         {
@@ -133,18 +138,14 @@ namespace OpenRPA.Windows
         {
             get
             {
-                var base64 = ImageString;
-                if (string.IsNullOrEmpty(base64)) return null;
-                //if (System.Text.RegularExpressions.Regex.Match(base64, "[a-f0-9]{24}").Success)
-                //{
-                //    return image.Screenutil.BitmapToImageSource(image.util.loadWorkflowImage(base64), image.Screenutil.ActivityPreviewImageWidth, image.Screenutil.ActivityPreviewImageHeight);
-                //}
-                
-                // return OpenRPA.Interfaces.Image.Util.BitmapToImageSource
-                using (var image = Interfaces.Image.Util.Base642Bitmap(base64))
+                var image = ImageString;
+                System.Drawing.Bitmap b = Task.Run(() => {
+                    return Interfaces.Image.Util.LoadBitmap(image);
+                }).Result;
+                using (b)
                 {
-                    // Interfaces.Image.Util.SaveImageStamped(image, System.IO.Directory.GetCurrentDirectory(), "WindowsGetElement");
-                    return Interfaces.Image.Util.BitmapToImageSource(image, Interfaces.Image.Util.ActivityPreviewImageWidth, Interfaces.Image.Util.ActivityPreviewImageHeight);
+                    if (b == null) return null;
+                    return Interfaces.Image.Util.BitmapToImageSource(b, Interfaces.Image.Util.ActivityPreviewImageWidth, Interfaces.Image.Util.ActivityPreviewImageHeight);
                 }
             }
         }

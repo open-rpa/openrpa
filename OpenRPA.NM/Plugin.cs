@@ -9,12 +9,14 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.NM
 {
-    public class Plugin : ObservableObject, IPlugin
+    public class Plugin : ObservableObject, IRecordPlugin
     {
         public NMElement lastElement { get; set; }
         public string Name => "NM";
         public string Status => (NMHook.connected ? "online" : "offline");
-        public event Action<IPlugin, IRecordEvent> OnUserAction;
+        public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
+        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove;
+        public System.Windows.Controls.UserControl editor => null;
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
             NMSelector nmselector = selector as NMSelector;
@@ -36,14 +38,14 @@ namespace OpenRPA.NM
                 // tab = NMHook.tabs.Where(x => x.browser == "chrome").FirstOrDefault();
                 tab = NMHook.tabs.FirstOrDefault();
             }
-            if(NMHook.tabs.Count==0) { return rootelements.ToArray(); }
+            if (NMHook.tabs.Count == 0) { return rootelements.ToArray(); }
             // getelement.data = "getdom";
             var getelement = new NativeMessagingMessage("getelement");
             getelement.browser = tab.browser;
             getelement.tabid = tab.id;
 
             getelement.xPath = "/html";
-            if (anchor!=null && anchor.Count > 1)
+            if (anchor != null && anchor.Count > 1)
             {
                 var s = anchor[1];
                 var p = s.Properties.Where(x => x.Name == "xpath").FirstOrDefault();
@@ -89,7 +91,7 @@ namespace OpenRPA.NM
             {
                 nmanchor = new NMSelector(anchor.ToString());
             }
-            if(nmanchor != null)
+            if (nmanchor != null)
             {
                 var element = GetElementsWithSelector(nmanchor);
                 return new NMSelector(nmitem.NMElement, nmanchor, true, (NMElement)element.FirstOrDefault());
@@ -97,7 +99,7 @@ namespace OpenRPA.NM
             }
             return new NMSelector(nmitem.NMElement, nmanchor, true, null);
         }
-        public void Initialize()
+        public void Initialize(IOpenRPAClient client)
         {
             NMHook.registreChromeNativeMessagingHost(false);
             NMHook.registreffNativeMessagingHost(false);
@@ -116,38 +118,45 @@ namespace OpenRPA.NM
         }
         private void onMessage(NativeMessagingMessage message)
         {
-            if (message.uiy > 0 && message.uix > 0 && message.uiwidth > 0 && message.uiheight > 0)
+            try
             {
-                if (!string.IsNullOrEmpty(message.data))
+                if (message.uiy > 0 && message.uix > 0 && message.uiwidth > 0 && message.uiheight > 0)
                 {
-                    lastElement = new NMElement(message);
+                    if (!string.IsNullOrEmpty(message.data))
+                    {
+                        lastElement = new NMElement(message);
+                    }
+                    else
+                    {
+                        lastElement = new NMElement(message);
+                    }
                 }
-                else
+
+                if (message.functionName == "click")
                 {
-                    lastElement = new NMElement(message);
+                    if (recording)
+                    {
+                        if (lastElement == null) return;
+                        var re = new RecordEvent(); re.Button = Input.MouseButton.Left;
+                        var a = new GetElement { DisplayName = lastElement.ToString() };
+
+                        var selector = new NMSelector(lastElement, null, true, null);
+                        a.Selector = selector.ToString();
+                        a.Image = lastElement.ImageString();
+                        a.MaxResults = 1;
+
+                        re.Selector = selector;
+                        re.a = new GetElementResult(a);
+                        re.SupportInput = lastElement.SupportInput;
+                        re.ClickHandled = true;
+                        OnUserAction?.Invoke(this, re);
+                        return;
+                    }
                 }
             }
-
-            if (message.functionName == "click")
+            catch (Exception ex)
             {
-                if(recording)
-                {
-                    if (lastElement == null) return;
-                    var re = new RecordEvent(); re.Button = Input.MouseButton.Left;
-                    var a = new GetElement { DisplayName = lastElement.ToString() };
-
-                    var selector = new NMSelector(lastElement, null, true, null);
-                    a.Selector = selector.ToString();
-                    a.Image = lastElement.ImageString();
-                    a.MaxResults = 1;
-
-                    re.Selector = selector;
-                    re.a = new GetElementResult(a);
-                    re.SupportInput = lastElement.SupportInput;
-                    re.ClickHandled = true;
-                    OnUserAction?.Invoke(this, re);
-                    return;
-                }
+                Log.Error(ex.ToString());
             }
         }
         public void LaunchBySelector(Selector selector, TimeSpan timeout)
@@ -178,7 +187,7 @@ namespace OpenRPA.NM
             if (p != null) { url = p.Value; }
             NMHook.reloadtabs();
             var tabs = NMHook.tabs.Where(x => x.browser == browser && x.url == url).ToList();
-            if(string.IsNullOrEmpty(url)) tabs = NMHook.tabs.Where(x => x.browser == browser).ToList();
+            if (string.IsNullOrEmpty(url)) tabs = NMHook.tabs.Where(x => x.browser == browser).ToList();
             foreach (var tab in tabs)
             {
                 NMHook.CloseTab(tab);
@@ -191,13 +200,23 @@ namespace OpenRPA.NM
         }
         public bool parseUserAction(ref IRecordEvent e)
         {
-            if (lastElement == null) return false;
             if (e.UIElement == null) return false;
 
             if (e.UIElement.ProcessId < 1) return false;
             var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
             if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox") return false;
 
+            if (p.ProcessName.ToLower() == "chrome" && !NMHook.chromeconnected)
+            {
+                System.Windows.MessageBox.Show("You clicked inside Chrome, but it looks like you dont have the OpenRPA plugin installed");
+                return false;
+            }
+            if (p.ProcessName.ToLower() == "firefox" && !NMHook.ffconnected)
+            {
+                System.Windows.MessageBox.Show("You clicked inside Firefix, but it looks like you dont have the OpenRPA plugin installed");
+                return false;
+            }
+            if (lastElement == null) return false;
             var selector = new NMSelector(lastElement, null, true, null);
             var a = new GetElement { DisplayName = lastElement.id + " " + lastElement.type + " " + lastElement.Name };
             a.Selector = selector.ToString();
@@ -211,7 +230,7 @@ namespace OpenRPA.NM
             e.ClickHandled = true;
             e.OffsetX = e.X - lastElement.Rectangle.X;
             e.OffsetY = e.Y - lastElement.Rectangle.Y;
-            lastElement.Click(true, e.Button, e.X, e.Y);
+            lastElement.Click(true, e.Button, e.X, e.Y, false, false);
             return true;
         }
         public bool recording { get; set; } = false;
@@ -222,6 +241,19 @@ namespace OpenRPA.NM
         public void Stop()
         {
             recording = false;
+        }
+        public bool parseMouseMoveAction(ref IRecordEvent e)
+        {
+            if (e.UIElement == null) return false;
+
+            if (e.UIElement.ProcessId < 1) return false;
+            var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
+            if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox") return false;
+            e.Element = lastElement;
+            e.OffsetX = e.X - lastElement.Rectangle.X;
+            e.OffsetY = e.Y - lastElement.Rectangle.Y;
+
+            return true;
         }
     }
     public class GetElementResult : IBodyActivity
@@ -242,12 +274,19 @@ namespace OpenRPA.NM
         }
         public void AddInput(string value, IElement element)
         {
-            AddActivity(new System.Activities.Statements.Assign<string>
+            try
             {
-                To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
-                Value = value
-            }, "item");
-            element.Value = value;
+                AddActivity(new System.Activities.Statements.Assign<string>
+                {
+                    To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
+                    Value = value
+                }, "item");
+                element.Value = value;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
     }
     public class RecordEvent : IRecordEvent

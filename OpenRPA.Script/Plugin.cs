@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Java
 {
-    public class Plugin : ObservableObject, IPlugin
+    public class Plugin : ObservableObject, IRecordPlugin
     {
         public static treeelement[] _GetRootElements(Selector anchor)
         {
@@ -28,7 +28,9 @@ namespace OpenRPA.Java
         {
             return null;
         }
-        public event Action<IPlugin, IRecordEvent> OnUserAction;
+        public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
+        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove;
+        public System.Windows.Controls.UserControl editor => null;
         public string Name { get => "Script"; }
         // public string Status => (hook!=null && hook.jvms.Count>0 ? "online":"offline");
         public string Status { get => ""; }
@@ -42,8 +44,7 @@ namespace OpenRPA.Java
         {
             return false;
         }
-        private static IntPtr ctx;
-        public void Initialize()
+        public void Initialize(IOpenRPAClient client)
         {
             Python.Runtime.PythonEngine.Initialize();
             IntPtr ctx = Python.Runtime.PythonEngine.BeginAllowThreads();
@@ -68,6 +69,10 @@ namespace OpenRPA.Java
             throw new NotImplementedException();
         }
         public bool Match(SelectorItem item, IElement m)
+        {
+            return false;
+        }
+        public bool parseMouseMoveAction(ref IRecordEvent e)
         {
             return false;
         }

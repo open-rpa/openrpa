@@ -58,7 +58,7 @@ namespace OpenRPA.Java
         }
         public event DetectorDelegate OnDetector;
         public Javahook hook { get; set; } = new Javahook();
-        public void Initialize(Detector InEntity)
+        public void Initialize(IOpenRPAClient client, Detector InEntity)
         {
             Entity = InEntity;
             hook.init();
@@ -117,6 +117,9 @@ namespace OpenRPA.Java
             var _e = new DetectorEvent(element);
             OnDetector?.Invoke(this, _e, EventArgs.Empty);
 
+        }
+        public void Initialize(IOpenRPAClient client)
+        {
         }
     }
     public class DetectorEvent : IDetectorEvent

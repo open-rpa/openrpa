@@ -1,0 +1,77 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="DialogStorm" mva:VisualBasic.Settings="{x:Null}" sap2010:WorkflowViewState.IdRef="DialogStorm_1"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:njl="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json"
+ xmlns:ofa="clr-namespace:OpenRPA.Forms.Activities;assembly=OpenRPA.Forms"
+ xmlns:oi="clr-namespace:OpenRPA.Interfaces;assembly=OpenRPA.Interfaces"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <TextExpression.NamespacesForImplementation>
+        <sco:Collection x:TypeArguments="x:String">
+            <x:String>System</x:String>
+            <x:String>Microsoft.VisualBasic</x:String>
+            <x:String>System.Xml</x:String>
+            <x:String>OpenRPA</x:String>
+            <x:String>System.Data</x:String>
+            <x:String>System.Linq</x:String>
+            <x:String>OpenRPA.Windows</x:String>
+            <x:String>System.Activities</x:String>
+            <x:String>Newtonsoft.Json.Linq</x:String>
+            <x:String>Newtonsoft.Json</x:String>
+            <x:String>OpenRPA.Interfaces</x:String>
+        </sco:Collection>
+    </TextExpression.NamespacesForImplementation>
+    <TextExpression.ReferencesForImplementation>
+        <sco:Collection x:TypeArguments="AssemblyReference">
+            <AssemblyReference>mscorlib</AssemblyReference>
+            <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+            <AssemblyReference>System.Xml</AssemblyReference>
+            <AssemblyReference>OpenRPA</AssemblyReference>
+            <AssemblyReference>OpenRPA.Interfaces</AssemblyReference>
+            <AssemblyReference>System.Data</AssemblyReference>
+            <AssemblyReference>System.Core</AssemblyReference>
+            <AssemblyReference>OpenRPA.Windows</AssemblyReference>
+            <AssemblyReference>System</AssemblyReference>
+            <AssemblyReference>System.Memory</AssemblyReference>
+            <AssemblyReference>System.Net.WebSockets.Client.Managed</AssemblyReference>
+            <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+            <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
+            <AssemblyReference>System.Activities</AssemblyReference>
+            <AssemblyReference>Newtonsoft.Json</AssemblyReference>
+        </sco:Collection>
+    </TextExpression.ReferencesForImplementation>
+    <Sequence DisplayName="Dialog Storm" sap2010:WorkflowViewState.IdRef="Sequence_1">
+        <Sequence.Variables>
+            <Variable x:TypeArguments="x:String" Name="test" />
+            <Variable x:TypeArguments="njl:JObject" Name="res" />
+            <Variable x:TypeArguments="oi:IElement" Name="img" />
+            <Variable x:TypeArguments="x:String" Name="CustomerID" />
+        </Sequence.Variables>
+        <ofa:ShowNotification sap2010:WorkflowViewState.IdRef="ShowNotification_1" Message="Hi mom" NotificationType="Information" />
+        <ofa:ShowNotification sap2010:WorkflowViewState.IdRef="ShowNotification_2" Message="Hi Dad" NotificationType="Success" />
+        <ofa:ShowNotification sap2010:WorkflowViewState.IdRef="ShowNotification_3" Message="Hi Sister" NotificationType="Warning" />
+        <ofa:ShowNotification sap2010:WorkflowViewState.IdRef="ShowNotification_4" Message="Hi Brother" NotificationType="Error" />
+        <sads:DebugSymbol.Symbol>dw1DOlxFbXB0eS54YW1sAA==</sads:DebugSymbol.Symbol>
+    </Sequence>
+    <sap2010:WorkflowViewState.ViewStateManager>
+        <sap2010:ViewStateManager>
+            <sap2010:ViewStateData Id="ShowNotification_1" sap:VirtualizedContainerService.HintSize="200,70" />
+            <sap2010:ViewStateData Id="ShowNotification_2" sap:VirtualizedContainerService.HintSize="200,70" />
+            <sap2010:ViewStateData Id="ShowNotification_3" sap:VirtualizedContainerService.HintSize="200,70" />
+            <sap2010:ViewStateData Id="ShowNotification_4" sap:VirtualizedContainerService.HintSize="200,70" />
+            <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="222,524">
+                <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+            </sap2010:ViewStateData>
+            <sap2010:ViewStateData Id="DialogStorm_1" sap:VirtualizedContainerService.HintSize="262,644" />
+        </sap2010:ViewStateManager>
+    </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

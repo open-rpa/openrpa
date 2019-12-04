@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Activities;
 using OpenRPA.Interfaces;
-using System.Activities.Presentation.PropertyEditing;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Activities
 {
-    [System.ComponentModel.Designer(typeof(CopyClipboardDesigner), typeof(System.ComponentModel.Design.IDesigner))]
+    [Designer(typeof(CopyClipboardDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.copyclipboard.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class CopyClipboard : CodeActivity

@@ -56,7 +56,7 @@ namespace OpenRPA.Office.Activities
             }
             else
             {
-                context.SetValue(Result, range.Value2);
+                context.SetValue(Result, (TResult)range.Value2);
             }
             //cleanup();
         }

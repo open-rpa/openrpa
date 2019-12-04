@@ -2,12 +2,18 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:OpenRPA" Exit="Application_Exit"
-             StartupUri="MainWindow.xaml">
+             StartupUri="MainWindow.xaml"
+             >
+    <!-- 
+    StartupUri="MainWindow.xaml"
+    StartupUri="Views/SiginWindow.xaml"
+    -->
     <Application.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
+<!--             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/ToastNotifications.Messages;component/Themes/Default.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            -->
 
             <!--You have to add other style here only-->
 

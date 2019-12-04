@@ -19,7 +19,6 @@ namespace OpenRPA.Activities
     {
         [RequiredArgument]
         public string workflow { get; set; }
-
         protected override void Execute(NativeActivityContext context)
         {
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
@@ -53,15 +52,16 @@ namespace OpenRPA.Activities
             }
             try
             {
-                var workflow = MainWindow.instance.GetWorkflowById(this.workflow);
-                WorkflowInstance instance = null;
+                var workflow = MainWindow.instance.GetWorkflowByIDOrRelativeFilename(this.workflow);
+                IWorkflowInstance instance = null;
                 Views.WFDesigner designer = null;
                 GenericTools.RunUI(() =>
                 {
-                    designer = MainWindow.instance.GetDesignerById(this.workflow);
+                    designer = MainWindow.instance.GetWorkflowDesignerByIDOrRelativeFilename(this.workflow) as Views.WFDesigner;
                     if (designer != null)
                     {
-                        instance = workflow.CreateInstance(param, null, null, designer.onIdle, designer.onVisualTracking);
+                        designer.BreakpointLocations = null;
+                        instance = workflow.CreateInstance(param, null, null, designer.OnIdle, designer.OnVisualTracking);
                     }
                     else
                     {
@@ -88,7 +88,6 @@ namespace OpenRPA.Activities
                 throw;
             }
         }
-
         void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object obj)
         {
             try
@@ -96,7 +95,8 @@ namespace OpenRPA.Activities
                 context.RemoveBookmark(bookmark.Name);
                 var instance = obj as WorkflowInstance;
                 if (instance == null) throw new Exception("Bookmark returned a non WorkflowInstance");
-                if(instance.hasError) throw new Exception(instance.errormessage);
+                if (instance.Exception != null) throw instance.Exception;
+                if (instance.hasError) throw new Exception(instance.errormessage);
                 foreach (var prop in instance.Parameters)
                 {
                     var myVar = context.DataContext.GetProperties().Find(prop.Key, true);

@@ -26,9 +26,25 @@ namespace OpenRPA.NM
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //var browser = Browser.GetBrowser();
-            //if (browser == null) return;
-            //ModelItem.Properties["Url"].SetValue(new InArgument<string>(browser.wBrowser.LocationURL));
+            if(NMHook.connected)
+            {
+                if (NMHook.chromeconnected)
+                {
+                    var tab = NMHook.tabs.Where(x => x.browser == "chrome" && x.selected).FirstOrDefault();
+                    if (tab != null)
+                    {
+                        ModelItem.Properties["Url"].SetValue(new InArgument<string>(tab.url));
+                    }
+                }
+                if (NMHook.ffconnected)
+                {
+                    var tab = NMHook.tabs.Where(x => x.browser == "ff" && x.selected).FirstOrDefault();
+                    if (tab != null)
+                    {
+                        ModelItem.Properties["Url"].SetValue(new InArgument<string>(tab.url));
+                    }
+                }
+            }
 
         }
     }

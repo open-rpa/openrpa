@@ -9,12 +9,10 @@ using System.Threading.Tasks;
 namespace OpenRPA.Interfaces
 {
     public delegate void DetectorDelegate(IDetectorPlugin plugin, IDetectorEvent detector, EventArgs e);
-    public interface IDetectorPlugin : INotifyPropertyChanged
+    public interface IDetectorPlugin : INotifyPropertyChanged, IPlugin
     {
-        void Initialize(Detector Entity);
-        string Name { get; }
-        entity.Detector Entity { get; set;  }
-        System.Windows.Controls.UserControl editor { get; }
+        void Initialize(IOpenRPAClient client, Detector Entity);
+        Detector Entity { get; set;  }
         event DetectorDelegate OnDetector;
         void Start();
         void Stop();

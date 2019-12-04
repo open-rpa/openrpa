@@ -11,10 +11,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace OpenRPA.IE
 {
-    class Plugin : ObservableObject, IPlugin
+    class Plugin : ObservableObject, IRecordPlugin
     {
         public static treeelement[] _GetRootElements(Selector anchor)
         {
@@ -58,10 +59,11 @@ namespace OpenRPA.IE
             }
             return new IESelector(ieitem.IEElement.Browser, ieitem.IEElement.RawElement, ieanchor, true, 0, 0);
         }
-
-        public event Action<IPlugin, IRecordEvent> OnUserAction;
+        public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
+        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove;
         public string Name { get => "IE"; }
         public string Status => "";
+        public UserControl editor => null;
         public void Start()
         {
             InputDriver.Instance.OnMouseUp += OnMouseUp;
@@ -104,7 +106,7 @@ namespace OpenRPA.IE
                 re.a = new GetElementResult(a);
                 if (htmlelement.tagName.ToLower() == "input" && htmlelement.tagName.ToLower() == "select")
                 {
-                    mshtml.IHTMLInputElement inputelement = (mshtml.IHTMLInputElement)htmlelement;
+                    MSHTML.IHTMLInputElement inputelement = (MSHTML.IHTMLInputElement)htmlelement;
                     re.SupportInput = (inputelement.type.ToLower() == "text" || inputelement.type.ToLower() == "password");
                 }
 
@@ -142,13 +144,13 @@ namespace OpenRPA.IE
             e.a = new GetElementResult(a);
             if (tagName == "input")
             {
-                // mshtml.IHTMLInputElement inputelement = (mshtml.IHTMLInputElement)htmlelement;
+                // MSHTML.IHTMLInputElement inputelement = (MSHTML.IHTMLInputElement)htmlelement;
                 e.SupportInput = (last.type.ToLower() == "text" || last.type.ToLower() == "password");
             }
 
             return true;
         }
-        public void Initialize()
+        public void Initialize(IOpenRPAClient client)
         {
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
@@ -187,7 +189,7 @@ namespace OpenRPA.IE
             var f = selector.First();
             var p = f.Properties.Where(x => x.Name == "url").FirstOrDefault();
             if (p != null) url = p.Value;
-            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindowsClass();
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
             foreach (SHDocVw.InternetExplorer _ie in shellWindows)
             {
                 var filename = System.IO.Path.GetFileNameWithoutExtension(_ie.FullName).ToLower();
@@ -218,7 +220,17 @@ namespace OpenRPA.IE
         }
         public bool Match(SelectorItem item, IElement m)
         {
-            return IESelectorItem.Match(item, m.RawElement as mshtml.IHTMLElement);
+            return IESelectorItem.Match(item, m.RawElement as MSHTML.IHTMLElement);
+        }
+        public bool parseMouseMoveAction(ref IRecordEvent e)
+        {
+            if (e.UIElement == null) return false;
+            if (e.UIElement.ProcessId < 1) return false;
+            var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
+            if (p.ProcessName != "iexplore" && p.ProcessName != "iexplore.exe") return false;
+            e.UIElement = null;
+            e.Element = null;
+            return true;
         }
     }
     public class GetElementResult : IBodyActivity
@@ -244,12 +256,19 @@ namespace OpenRPA.IE
         }
         public void AddInput(string value, IElement element)
         {
-            AddActivity(new System.Activities.Statements.Assign<string>
+            try
             {
-                To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
-                Value = value
-            }, "item");
-            element.Value = value;
+                AddActivity(new System.Activities.Statements.Assign<string>
+                {
+                    To = new Microsoft.VisualBasic.Activities.VisualBasicReference<string>("item.value"),
+                    Value = value
+                }, "item");
+                element.Value = value;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
     }
     public class RecordEvent : IRecordEvent

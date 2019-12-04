@@ -144,7 +144,12 @@ namespace OpenRPA.NM
             NMHook.checkForPipes(true, true);
             NMHook.reloadtabs();
             var tabs = NMHook.tabs;
-            if (!string.IsNullOrEmpty(browser)) { tabs = NMHook.tabs.Where(x => x.browser == browser).ToList(); }
+            if (!string.IsNullOrEmpty(browser)) { 
+                lock(NMHook.tabs)
+                {
+                    tabs = NMHook.tabs.Where(x => x.browser == browser).ToList();
+                }
+            }
             foreach (var tab in tabs)
             {
                 NativeMessagingMessage subresult = null;

@@ -101,7 +101,7 @@ namespace OpenRPA.Office.Activities
                     try
                     {
                         workbook = w;
-                        worksheet = workbook.ActiveSheet;
+                        worksheet = workbook.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
                         break;
                     }
                     catch (Exception)
@@ -154,7 +154,6 @@ namespace OpenRPA.Office.Activities
             {
                 if (!string.IsNullOrEmpty(filename))
                 {
-                    filename = Environment.ExpandEnvironmentVariables(filename);
                     doOpen(context);
                 }
                 else
@@ -165,7 +164,7 @@ namespace OpenRPA.Office.Activities
             string _worksheet = (Worksheet != null ? Worksheet.Get(context) : null);
             try
             {
-                worksheet = workbook.ActiveSheet;
+                worksheet = workbook.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
             }
             catch (Exception)
             {
@@ -177,7 +176,7 @@ namespace OpenRPA.Office.Activities
             {
                 officewrap.Quit();
                 doOpen(context);
-                worksheet = workbook.ActiveSheet;
+                worksheet = workbook.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
             }
             if (!string.IsNullOrEmpty(_worksheet))
             {
@@ -215,20 +214,6 @@ namespace OpenRPA.Office.Activities
         internal string filename;
         internal Microsoft.Office.Interop.Excel.Workbook workbook;
         internal Microsoft.Office.Interop.Excel.Worksheet worksheet;
-        public Microsoft.Office.Interop.Excel.Application StartExcel()
-        {
-            Microsoft.Office.Interop.Excel.Application instance = null;
-            try
-            {
-                instance = (Microsoft.Office.Interop.Excel.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application");
-            }
-            catch (System.Runtime.InteropServices.COMException)
-            {
-                instance = new Microsoft.Office.Interop.Excel.Application();
-            }
-
-            return instance;
-        }
         protected override void Execute(NativeActivityContext context)
         {
             filename = Filename.Get(context);
@@ -257,7 +242,6 @@ namespace OpenRPA.Office.Activities
             {
                 if (!string.IsNullOrEmpty(filename))
                 {
-                    filename = Environment.ExpandEnvironmentVariables(filename);
                     foreach (Microsoft.Office.Interop.Excel.Workbook w in officewrap.application.Workbooks)
                     {
                         if (w.FullName == filename)
@@ -276,7 +260,7 @@ namespace OpenRPA.Office.Activities
             }
 
             var _worksheet = (Worksheet != null ? Worksheet.Get(context) : null);
-            worksheet = workbook.ActiveSheet;
+            worksheet = workbook.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
             if (!string.IsNullOrEmpty(_worksheet))
             {
                 foreach (Microsoft.Office.Interop.Excel.Worksheet s in workbook.Sheets)

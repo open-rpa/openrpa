@@ -96,7 +96,7 @@ namespace OpenRPA.Input
 
         public static void ClickLeftMouseButton()
         {
-            InputDriver.Instance.SkipEvent = true;
+            InputDriver.Instance.AllowOneClick = true;
             INPUT mouseDownInput = new INPUT();
             mouseDownInput.type = SendInputEventType.InputMouse;
             mouseDownInput.mkhi.mi.dwFlags = MouseEventFlags.MOUSEEVENTF_LEFTDOWN;
@@ -106,11 +106,10 @@ namespace OpenRPA.Input
             mouseUpInput.type = SendInputEventType.InputMouse;
             mouseUpInput.mkhi.mi.dwFlags = MouseEventFlags.MOUSEEVENTF_LEFTUP;
             SendInput(1, ref mouseUpInput, Marshal.SizeOf(new INPUT()));
-            InputDriver.Instance.SkipEvent = false;
         }
         public static void ClickRightMouseButton()
         {
-            InputDriver.Instance.SkipEvent = true;
+            InputDriver.Instance.AllowOneClick = true;
             INPUT mouseDownInput = new INPUT();
             mouseDownInput.type = SendInputEventType.InputMouse;
             mouseDownInput.mkhi.mi.dwFlags = MouseEventFlags.MOUSEEVENTF_RIGHTDOWN;
@@ -120,11 +119,10 @@ namespace OpenRPA.Input
             mouseUpInput.type = SendInputEventType.InputMouse;
             mouseUpInput.mkhi.mi.dwFlags = MouseEventFlags.MOUSEEVENTF_RIGHTUP;
             SendInput(1, ref mouseUpInput, Marshal.SizeOf(new INPUT()));
-            InputDriver.Instance.SkipEvent = false;
         }
         public static void ClickMiddelMouseButton()
         {
-            InputDriver.Instance.SkipEvent = true;
+            InputDriver.Instance.AllowOneClick = true;
             INPUT mouseDownInput = new INPUT();
             mouseDownInput.type = SendInputEventType.InputMouse;
             mouseDownInput.mkhi.mi.dwFlags = MouseEventFlags.MOUSEEVENTF_MIDDLEDOWN;
@@ -134,7 +132,6 @@ namespace OpenRPA.Input
             mouseUpInput.type = SendInputEventType.InputMouse;
             mouseUpInput.mkhi.mi.dwFlags = MouseEventFlags.MOUSEEVENTF_MIDDLEUP;
             SendInput(1, ref mouseUpInput, Marshal.SizeOf(new INPUT()));
-            InputDriver.Instance.SkipEvent = false;
         }
     }
 }

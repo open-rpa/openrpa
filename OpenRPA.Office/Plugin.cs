@@ -11,11 +11,13 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Office
 {
-    public class Plugin : ObservableObject, IPlugin
+    public class Plugin : ObservableObject, IRecordPlugin
     {
         public string Name => "Office";
         public string Status => "";
-        public event Action<IPlugin, IRecordEvent> OnUserAction;
+        public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
+        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove;
+        public System.Windows.Controls.UserControl editor => null;
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
             return new IElement[] { };
@@ -32,7 +34,7 @@ namespace OpenRPA.Office
         {
             return null;
         }
-        public void Initialize()
+        public void Initialize(IOpenRPAClient client)
         {
         }
         public void LaunchBySelector(Selector selector, TimeSpan timeout)
@@ -51,25 +53,44 @@ namespace OpenRPA.Office
             if (e.UIElement.ProcessId < 1) return false;
             var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
             if (p.ProcessName.ToLower() != "excel") return false;
-            if(e.UIElement.ControlType != "DataItem") return false;
+            if (e.UIElement.ControlType != "DataItem") return false;
+            try
+            {
+                var app = Activities.officewrap.application;
+                var workbook = app.ActiveWorkbook;
+                if (workbook == null) return false;
 
-            var app = Activities.officewrap.application;
-            var workbook = app.ActiveWorkbook;
+                var a = new Activities.ReadCell<string> { DisplayName = e.UIElement.Name.Replace("\"", "").Replace(" ", "") };
+                a.Cell = e.UIElement.Name.Replace("\"", "").Replace(" ", "");
+                a.Filename = workbook.FullName.replaceEnvironmentVariable();
+                e.a = new GetElementResult(a);
+                e.SupportInput = true;
+                e.ClickHandled = true;
+                return true;
 
-            // var a = new Activities.WriteCell<string>{ DisplayName = e.UIElement.Name.Replace("\"", "").Replace(" ", "") };
-            var a = new Activities.ReadCell<string> { DisplayName = e.UIElement.Name.Replace("\"", "").Replace(" ", "") };
-            a.Cell = e.UIElement.Name.Replace("\"", "").Replace(" ", "");
-            a.Filename = workbook.FullName.replaceEnvironmentVariable();
-            e.a = new GetElementResult(a);
-            e.SupportInput = true;
-            e.ClickHandled = true;
-            return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
         }
         public void Start()
         {
         }
         public void Stop()
         {
+        }
+        public bool parseMouseMoveAction(ref IRecordEvent e)
+        {
+            if (e.UIElement == null) return false;
+            if (e.UIElement.ProcessId < 1) return false;
+            var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
+            if (p.ProcessName.ToLower() != "excel") return false;
+            if (e.UIElement.ControlType != "DataItem") return false;
+            e.UIElement = null;
+            e.Element = null;
+            return true;
         }
         public class GetElementResult : IBodyActivity
         {
@@ -83,12 +104,53 @@ namespace OpenRPA.Office
             }
             public void AddInput(string value, IElement element)
             {
-                var old = Activity as Activities.ReadCell<string>;
-                var a = new Activities.WriteCell<string> { DisplayName = old.DisplayName };
-                a.Cell = old.Cell;
-                a.Filename = old.Filename;
-                a.Value = value;
-                Activity = a;
+                try
+                {
+                    var old = Activity as Activities.ReadCell<string>;
+
+                    double d;
+                    var isDouble = double.TryParse(value, out d);
+                    int i;
+                    var isInt = int.TryParse(value, out i);
+                    if (isInt)
+                    {
+                        var a = new Activities.WriteCell<int> { DisplayName = old.DisplayName };
+                        a.Cell = old.Cell;
+                        a.Filename = old.Filename;
+                        a.Value = i;
+                        Activity = a;
+                    }
+                    else if (isDouble)
+                    {
+                        var a = new Activities.WriteCell<double> { DisplayName = old.DisplayName };
+                        a.Cell = old.Cell;
+                        a.Filename = old.Filename;
+                        a.Value = d;
+                        Activity = a;
+                    }
+                    else
+                    {
+                        var a = new Activities.WriteCell<string> { DisplayName = old.DisplayName };
+                        a.Cell = old.Cell;
+                        a.Filename = old.Filename;
+                        a.Value = value;
+                        Activity = a;
+                    }
+
+                    var app = Activities.officewrap.application;
+                    var workbook = app.ActiveWorkbook;
+                    // if (workbook == null) workbook = app.ThisWorkbook;
+                    if (workbook == null) return;
+                    var worksheet = workbook.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
+                    var c = old.Cell.Expression.ToString();
+                    Microsoft.Office.Interop.Excel.Range range = worksheet.get_Range(c);
+                    range.Value2 = value;
+
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
             }
         }
 

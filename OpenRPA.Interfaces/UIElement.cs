@@ -16,12 +16,18 @@ namespace OpenRPA
     {
         public UIElement(AutomationElement Element)
         {
-            RawElement = Element;
-            ProcessId = Element.Properties.ProcessId.ValueOrDefault;
-            // if(Element.Properties.AutomationId.IsSupported) Id = Element.Properties.AutomationId.ValueOrDefault;
-            Name = Element.Properties.Name.ValueOrDefault;
-            ClassName = Element.Properties.ClassName.ValueOrDefault;
-            Type = Element.Properties.ControlType.ValueOrDefault.ToString();
+            try
+            {
+                RawElement = Element;
+                ProcessId = Element.Properties.ProcessId.ValueOrDefault;
+                // if(Element.Properties.AutomationId.IsSupported) Id = Element.Properties.AutomationId.ValueOrDefault;
+                Name = Element.Properties.Name.ValueOrDefault;
+                ClassName = Element.Properties.ClassName.ValueOrDefault;
+                Type = Element.Properties.ControlType.ValueOrDefault.ToString();
+            }
+            catch (Exception)
+            {
+            }
         }
         public void Refresh()
         {
@@ -52,11 +58,18 @@ namespace OpenRPA
         {
             get
             {
-                if (RawElement == null) return System.Drawing.Rectangle.Empty;
-                if (!RawElement.Properties.BoundingRectangle.IsSupported) return System.Drawing.Rectangle.Empty;
-                return new System.Drawing.Rectangle((int)RawElement.Properties.BoundingRectangle.Value.X,
-                    (int)RawElement.Properties.BoundingRectangle.Value.Y, (int)RawElement.Properties.BoundingRectangle.Value.Width,
-                    (int)RawElement.Properties.BoundingRectangle.Value.Height);
+                try
+                {
+                    if (RawElement == null) return System.Drawing.Rectangle.Empty;
+                    if (!RawElement.Properties.BoundingRectangle.IsSupported) return System.Drawing.Rectangle.Empty;
+                    return new System.Drawing.Rectangle((int)RawElement.Properties.BoundingRectangle.Value.X,
+                        (int)RawElement.Properties.BoundingRectangle.Value.Y, (int)RawElement.Properties.BoundingRectangle.Value.Width,
+                        (int)RawElement.Properties.BoundingRectangle.Value.Height);
+                }
+                catch (Exception)
+                {
+                    return System.Drawing.Rectangle.Empty;
+                }
             }
             set { }
         }
@@ -114,7 +127,19 @@ namespace OpenRPA
             try
             {
                 RawElement.SetForeground();
+            }
+            catch
+            {
+            }
+            try
+            {
                 RawElement.FocusNative();
+            }
+            catch
+            {
+            }
+            try
+            {
                 RawElement.Focus();
             }
             catch
@@ -127,11 +152,7 @@ namespace OpenRPA
             var process = System.Diagnostics.Process.GetProcessById(ProcessId);
             while (!process.Responding) { }
         }
-        public void Click(bool VirtualClick, int OffsetX, int OffsetY)
-        {
-            Click(VirtualClick, Input.MouseButton.Left, OffsetX, OffsetY);
-        }
-        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY)
+        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse)
         {
             try
             {
@@ -153,6 +174,7 @@ namespace OpenRPA
                     {
                         var invokePattern = RawElement.Patterns.Invoke.Pattern;
                         invokePattern.Invoke();
+                        if(DoubleClick) invokePattern.Invoke();
                     }
                     catch (Exception ex)
                     {
@@ -167,11 +189,12 @@ namespace OpenRPA
                     //Input.InputDriver.DoMouseClick();
                     //Log.Debug("Click done");
                     var point = new FlaUI.Core.Shapes.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-                    //FlaUI.Core.Input.Mouse.MoveTo(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+                    if(AnimateMouse) FlaUI.Core.Input.Mouse.MoveTo(point);
                     FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
                     if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
                     if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-                    FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+                    if (!DoubleClick) FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+                    if (DoubleClick) FlaUI.Core.Input.Mouse.DoubleClick(flabuttun, point);
                 }
             }
             catch (Exception)
@@ -243,6 +266,115 @@ namespace OpenRPA
                 }
             }
         }
+        public string SendKeys
+        {
+            get
+            {
+                return Value;
+            }
+            set
+            {
+                Focus();
+                // Click(false, Input.MouseButton.Left, 5, 5 , false, true);
+                // UntilResponsive();
+                // System.Threading.Thread.Sleep(250);
+                TypeText(value);
+                UntilResponsive();
+            }
+        }
+        public void TypeText(string text)
+        {
+            var disposes = new List<IDisposable>();
+            var enddisposes = new List<IDisposable>();
+            if (string.IsNullOrEmpty(text)) return;
+
+            //var clickdelay = ClickDelay.Get(context);
+            //var linedelay = LineDelay.Get(context);
+            //var predelay = PreDelay.Get(context);
+            //var postdelay = PostDelay.Get(context);
+            var clickdelay = TimeSpan.FromMilliseconds(5);
+            var linedelay = TimeSpan.FromMilliseconds(5);
+            var predelay = TimeSpan.FromMilliseconds(0);
+            var postdelay = TimeSpan.FromMilliseconds(100);
+            System.Threading.Thread.Sleep(predelay);
+
+            // string[] lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
+            for (var i = 0; i < text.Length; i++)
+            {
+                char c = text[i];
+                if (c == '{')
+                {
+                    int indexEnd = text.IndexOf('}', i + 1);
+                    int indexNextStart = text.IndexOf('{', indexEnd + 1);
+                    int indexNextEnd = text.IndexOf('}', indexEnd + 1);
+                    if (indexNextStart > indexNextEnd || (indexNextStart == -1 && indexNextEnd > -1)) indexEnd = indexNextEnd;
+                    var sub = text.Substring(i + 1, (indexEnd - i) - 1);
+                    i = indexEnd;
+                    foreach (var k in sub.Split(','))
+                    {
+                        string key = k.Trim();
+                        bool down = false;
+                        bool up = false;
+                        if (key.EndsWith("down"))
+                        {
+                            down = true;
+                            key = key.Replace(" down", "");
+                        }
+                        else if (key.EndsWith("up"))
+                        {
+                            up = true;
+                            key = key.Replace(" up", "");
+                        }
+                        //Keys specialkey;
+                        FlaUI.Core.WindowsAPI.VirtualKeyShort vk;
+                        Enum.TryParse<FlaUI.Core.WindowsAPI.VirtualKeyShort>(key, true, out vk);
+                        if (down)
+                        {
+                            if (vk > 0)
+                            {
+                                enddisposes.Add(FlaUI.Core.Input.Keyboard.Pressing(vk));
+                            }
+                            else
+                            {
+                                FlaUI.Core.Input.Keyboard.Type(key);
+                            }
+                        }
+                        else if (up)
+                        {
+                            if (vk > 0)
+                            {
+                                FlaUI.Core.Input.Keyboard.Release(vk);
+                            }
+                            else
+                            {
+                                FlaUI.Core.Input.Keyboard.Type(key);
+                            }
+                        }
+                        else
+                        {
+                            if (vk > 0)
+                            {
+                                disposes.Add(FlaUI.Core.Input.Keyboard.Pressing(vk));
+                            }
+                            else
+                            {
+                                FlaUI.Core.Input.Keyboard.Type(key);
+                            }
+                        }
+                        System.Threading.Thread.Sleep(clickdelay);
+                    }
+                    disposes.ForEach(x => { x.Dispose(); });
+                }
+                else
+                {
+                    FlaUI.Core.Input.Keyboard.Type(c);
+                    System.Threading.Thread.Sleep(clickdelay);
+                }
+            }
+            enddisposes.ForEach(x => { x.Dispose(); });
+            System.Threading.Thread.Sleep(postdelay);
+        }
         public void Enter(string value)
         {
             RawElement.Focus();
@@ -294,10 +426,8 @@ namespace OpenRPA
             if (ScreenImagex < 0) ScreenImagex = 0; if (ScreenImagey < 0) ScreenImagey = 0;
             using (var image = Interfaces.Image.Util.Screenshot(ScreenImagex, ScreenImagey, ScreenImageWidth, ScreenImageHeight, Interfaces.Image.Util.ActivityPreviewImageWidth, Interfaces.Image.Util.ActivityPreviewImageHeight))
             {
-                // Interfaces.Image.Util.SaveImageStamped(image, System.IO.Directory.GetCurrentDirectory(), "UIElement");
                 return Interfaces.Image.Util.Bitmap2Base64(image);
             }
         }
-
     }
 }

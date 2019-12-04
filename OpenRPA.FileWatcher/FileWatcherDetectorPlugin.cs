@@ -42,7 +42,7 @@ namespace OpenRPA.FileWatcher
         }
         public event DetectorDelegate OnDetector;
         FileSystemWatcher watcher = null;
-        public void Initialize(Detector InEntity)
+        public void Initialize(IOpenRPAClient client, Detector InEntity)
         {
             Entity = InEntity;
             watcher = new FileSystemWatcher();
@@ -113,6 +113,9 @@ namespace OpenRPA.FileWatcher
             {
                 Log.Error(ex.ToString());
             }
+        }
+        public void Initialize(IOpenRPAClient client)
+        {
         }
     }
     public class DetectorEvent : IDetectorEvent

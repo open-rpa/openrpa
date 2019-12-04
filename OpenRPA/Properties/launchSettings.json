@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "OpenRPA": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    },
+    "ttttt": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Users\\Allan\\Downloads\\OpenRPA (3)\\OpenRPA.exe",
+      "workingDirectory": "C:\\Users\\Allan\\Downloads\\OpenRPA (3)"
+    }
+  }
+}

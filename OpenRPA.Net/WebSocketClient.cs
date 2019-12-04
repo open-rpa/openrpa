@@ -14,15 +14,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Net
 {
-    public class QueueMessageEventArgs : EventArgs
-    {
-        public bool isBusy { get; set; }
-        public QueueMessageEventArgs()
-        {
-            this.isBusy = false;
-        }
-    }
-    public class WebSocketClient
+    public class WebSocketClient : IWebSocketClient
     {
         // private ClientWebSocket ws = (ClientWebSocket)SystemClientWebSocket.CreateClientWebSocket();  // new ClientWebSocket(); // WebSocket
         // private System.Net.WebSockets.Managed.ClientWebSocket ws = new System.Net.WebSockets.Managed.ClientWebSocket();  // new ClientWebSocket(); // WebSocket
@@ -33,13 +25,10 @@ namespace OpenRPA.Net
         private List<SocketMessage> _receiveQueue = new List<SocketMessage>();
         private List<SocketMessage> _sendQueue = new List<SocketMessage>();
         private List<QueuedMessage> _messageQueue = new List<QueuedMessage>();
-
-        public delegate void QueueMessageDelegate(QueueMessage message, QueueMessageEventArgs e);
+        // public delegate void QueueMessageDelegate(IQueueMessage message, QueueMessageEventArgs e);
         public event Action OnOpen;
         public event Action<string> OnClose;
         public event QueueMessageDelegate OnQueueMessage;
-        // public event Action OnMessage;
-
         public TokenUser user { get; private set; }
         public string jwt { get; private set; }
         public bool isConnected
@@ -71,7 +60,8 @@ namespace OpenRPA.Net
                     // ws = (ClientWebSocket)SystemClientWebSocket.CreateClientWebSocket();
                     if (VersionHelper.IsWindows8OrGreater())
                     {
-                        ws = new ClientWebSocket();
+                        // ws = new ClientWebSocket();
+                        ws = new System.Net.WebSockets.Managed.ClientWebSocket();
                     }
                     else
                     {
@@ -87,6 +77,7 @@ namespace OpenRPA.Net
                     ws = null;
                     return;
                 }
+                Log.Information("Connecting to " + url);
                 await ws.ConnectAsync(new Uri(url), src.Token);
                 Log.Information("Connected to " + url);
                 Task receiveTask = Task.Run(async () => await receiveLoop(), src.Token);
@@ -115,13 +106,13 @@ namespace OpenRPA.Net
             }
             src.Cancel();
         }
-        private int errorcounter = 0;
         private async Task receiveLoop()
         {
-            byte[] buffer = new byte[2048];
+            byte[] buffer = new byte[2048*2];
             while (true)
             {
                 string json = string.Empty;
+                System.Net.WebSockets.WebSocketReceiveResult result;
                 try
                 {
                     if (ws == null) { return; }
@@ -129,12 +120,11 @@ namespace OpenRPA.Net
                         OnClose?.Invoke("");
                         return;
                     }
-                    System.Net.WebSockets.WebSocketReceiveResult result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), src.Token);
+                    result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), src.Token);
                     json = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
                     var message = JsonConvert.DeserializeObject<SocketMessage>(json);
                     if (message != null) _receiveQueue.Add(message);
                     await ProcessQueue();
-                    errorcounter = 0;
                 }
                 catch (Exception ex)
                 {
@@ -144,16 +134,10 @@ namespace OpenRPA.Net
                     }
                     else
                     {
-                        errorcounter++;
                         Log.Error(json);
                         Log.Error(ex, "");
                         await Task.Delay(3000);
                         await this.Close();
-                        //if(errorcounter > 10)
-                        //{
-                        //    errorcounter = 0;
-                        //    await this.Close();
-                        //}
                     }
                 }
             }
@@ -168,8 +152,6 @@ namespace OpenRPA.Net
                 msg.SendMessage(this);
             }
         }
-        //static SemaphoreSlim ReceiveSemaphore = new SemaphoreSlim(1, 1);
-        //static SemaphoreSlim SendSemaphore = new SemaphoreSlim(1, 1);
         static SemaphoreSlim ProcessingSemaphore = new SemaphoreSlim(1, 1);
         public async Task ProcessQueue()
         {
@@ -221,8 +203,13 @@ namespace OpenRPA.Net
 
             try
             {
+                List<SocketMessage> templist;
+                lock (_sendQueue)
+                {
+                    templist = _sendQueue.ToList();
+                }
                 // await SendSemaphore.WaitAsync();
-                foreach (var msg in _sendQueue.ToList())
+                foreach (var msg in templist)
                 {
                     if (await SendString(JsonConvert.SerializeObject(msg), src.Token))
                     {
@@ -272,7 +259,7 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(msg.replyto))
             {
                 if (msg.command != "pong") { Log.Verbose(msg.command + " / replyto: " + msg.replyto); }
-                    else { Log.Verbose(msg.command + " / replyto: " + msg.replyto);  }
+                    // else { Log.Verbose(msg.command + " / replyto: " + msg.replyto);  }
 
                 foreach (var qm in _messageQueue.ToList())
                 {
@@ -295,7 +282,7 @@ namespace OpenRPA.Net
             else
             {
                 if (msg.command != "ping" && msg.command != "refreshtoken") { Log.Verbose(msg.command + " / " + msg.id); }
-                    else { Log.Verbose(msg.command + " / replyto: " + msg.replyto); }
+                    // else { Log.Verbose(msg.command + " / replyto: " + msg.replyto); }
                 switch (msg.command)
                 {
                     case "ping":
@@ -362,7 +349,7 @@ namespace OpenRPA.Net
                 msg.SendMessage(this);
                 await qm.autoReset.WaitOneAsync();
             }
-            return qm.reply;
+            return qm.reply as Message;
         }
         public async Task<TokenUser> Signin(string username, SecureString password)
         {
@@ -371,6 +358,24 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
             user = signin.user;
             jwt = signin.jwt;
+            return signin.user;
+        }
+        public async Task<TokenUser> Signin(string jwt)
+        {
+            SigninMessage signin = new SigninMessage(jwt);
+            signin = await signin.SendMessage<SigninMessage>(this);
+            if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
+            user = signin.user;
+            this.jwt = signin.jwt;
+            return signin.user;
+        }
+        public async Task<TokenUser> Signin(SecureString jwt)
+        {
+            SigninMessage signin = new SigninMessage(jwt);
+            signin = await signin.SendMessage<SigninMessage>(this);
+            if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
+            user = signin.user;
+            this.jwt = signin.jwt;
             return signin.user;
         }
         public async Task RegisterUser(string name, string username, string password)
@@ -394,13 +399,39 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(qm.error)) throw new Exception(qm.error);
             return qm.data;
         }
-        public async Task<T[]> Query<T>(string collectionname, string query)
+        private async Task<T[]> _Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby)
         {
-            QueryMessage<T> q = new QueryMessage<T>();
-            q.collectionname = collectionname; q.query = JObject.Parse(query);
-            q = await q.SendMessage<QueryMessage<T>>(this);
-            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
-            return q.result;
+            var result = new List<T>();
+            bool cont = false;
+            int _top = top;
+            int _skip = skip;
+            if (_top > Config.local.querypagesize) _top = Config.local.querypagesize;
+            do
+            {
+                cont = false;
+                QueryMessage<T> q = new QueryMessage<T>(); q.top = _top; q.skip = _skip;
+                q.projection = projection; q.orderby = orderby;
+                q.collectionname = collectionname; q.query = JObject.Parse(query);
+                q = await q.SendMessage<QueryMessage<T>>(this);
+                if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+                result.AddRange(q.result);
+                if (q.result.Count() == _top && result.Count < top)
+                {
+                    cont = true;
+                    _skip += _top;
+                }
+            } while (cont);
+            return result.ToArray();
+        }
+        public async Task<T[]> Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby)
+        {
+            return await _Query<T>(collectionname, query, projection, top, skip, orderby);
+            //QueryMessage<T> q = new QueryMessage<T>(); q.top = top; q.skip = skip;
+            //q.projection = projection; q.orderby = orderby;
+            //q.collectionname = collectionname; q.query = JObject.Parse(query);
+            //q = await q.SendMessage<QueryMessage<T>>(this);
+            //if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            //return q.result;
         }
         public async Task<T> InsertOrUpdateOne<T>(string collectionname, int w, bool j, string uniqeness, T item)
         {
@@ -436,7 +467,7 @@ namespace OpenRPA.Net
             q = await q.SendMessage<DeleteOneMessage>(this);
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
         }
-        public async Task UploadFile(string filepath, string path)
+        public async Task<string> UploadFile(string filepath, string path, metadata metadata)
         {
             if (string.IsNullOrEmpty(path)) path = "";
             byte[] bytes = System.IO.File.ReadAllBytes(filepath);
@@ -445,12 +476,14 @@ namespace OpenRPA.Net
             q.filename = System.IO.Path.Combine(path, System.IO.Path.GetFileName(filepath));
             q.mimeType = MimeTypeHelper.GetMimeType(System.IO.Path.GetExtension(filepath));
             q.file = base64;
-            q.metadata = new metadata();
+            q.metadata = metadata;
+            if(q.metadata == null) q.metadata = new metadata();
             q.metadata.name = System.IO.Path.GetFileName(filepath);
             q.metadata.filename = q.filename;
             q.metadata.path = path;
             q = await q.SendMessage<SaveFileMessage>(this);
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            return q.id;
         }
         public async Task<GetFileMessage> DownloadFile(string filename, string id)
         {
@@ -466,7 +499,7 @@ namespace OpenRPA.Net
         {
             var res = await DownloadFile(filename, id);
             var path = System.IO.Path.GetFullPath(filepath);
-            if(!ignorepath)
+            if (!ignorepath)
             {
                 path = System.IO.Path.Combine(filepath, res.metadata.path);
             }
@@ -474,7 +507,17 @@ namespace OpenRPA.Net
             filepath = System.IO.Path.Combine(filepath, res.metadata.filename);
             System.IO.File.WriteAllBytes(filepath, Convert.FromBase64String(res.file));
         }
-
-
+        public async Task DownloadFileAndSaveAs(string filename, string id, string filepath, bool ignorepath)
+        {
+            var res = await DownloadFile(filename, id);
+            var path = System.IO.Path.GetFullPath(filepath);
+            if (!ignorepath)
+            {
+                path = System.IO.Path.Combine(filepath, res.metadata.path);
+            }
+            if (!System.IO.Directory.Exists(path)) System.IO.Directory.CreateDirectory(path);
+            filepath = System.IO.Path.Combine(filepath, filename);
+            System.IO.File.WriteAllBytes(filepath, Convert.FromBase64String(res.file));
+        }
     }
 }

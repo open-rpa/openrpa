@@ -1,0 +1,125 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <Configurations>Debug;Release;PrepInstaller;ReleaseNuget</Configurations>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>OpenRPA</Authors>
+    <Company>OpenRPA</Company>
+    <Product>OpenRPA</Product>
+    <Description>Collection af handy activities</Description>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
+    <PackageIcon>open_rpa128.png</PackageIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\debug</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\dist</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Activities\DownloadFileDesigner.xaml" />
+    <None Remove="Activities\ReadExcelDesigner.xaml" />
+    <None Remove="Activities\ReadJSONDesigner.xaml" />
+    <None Remove="Activities\ReadPDFDesigner.xaml" />
+    <None Remove="Activities\WriteExcelDesigner.xaml" />
+    <None Remove="Resources\designer\closeworkbook.png" />
+    <None Remove="Resources\designer\commentout.png" />
+    <None Remove="Resources\designer\downloadfile.png" />
+    <None Remove="Resources\designer\newemail.png" />
+    <None Remove="Resources\designer\outlook.png" />
+    <None Remove="Resources\designer\readexcel.png" />
+    <None Remove="Resources\designer\readfile.png" />
+    <None Remove="Resources\designer\readjson.png" />
+    <None Remove="Resources\designer\readpdf.png" />
+    <None Remove="Resources\designer\writeexcel.png" />
+    <None Remove="Resources\designer\writefile.png" />
+    <None Remove="Resources\toolbox\closeworkbook.png" />
+    <None Remove="Resources\toolbox\commentout.png" />
+    <None Remove="Resources\toolbox\downloadfile.png" />
+    <None Remove="Resources\toolbox\newemail.png" />
+    <None Remove="Resources\toolbox\outlook.png" />
+    <None Remove="Resources\toolbox\readexcel.png" />
+    <None Remove="Resources\toolbox\readfile.png" />
+    <None Remove="Resources\toolbox\readjson.png" />
+    <None Remove="Resources\toolbox\readpdf.png" />
+    <None Remove="Resources\toolbox\writeexcel.png" />
+    <None Remove="Resources\toolbox\writefile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\toolbox\closeworkbook.png" />
+    <EmbeddedResource Include="Resources\toolbox\commentout.png" />
+    <EmbeddedResource Include="Resources\toolbox\readjson.png" />
+    <EmbeddedResource Include="Resources\toolbox\newemail.png" />
+    <EmbeddedResource Include="Resources\toolbox\outlook.png" />
+    <EmbeddedResource Include="Resources\toolbox\readexcel.png" />
+    <EmbeddedResource Include="Resources\toolbox\readfile.png" />
+    <EmbeddedResource Include="Resources\toolbox\readpdf.png" />
+    <EmbeddedResource Include="Resources\toolbox\writeexcel.png" />
+    <EmbeddedResource Include="Resources\toolbox\writefile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\designer\closeworkbook.png" />
+    <Resource Include="Resources\designer\commentout.png" />
+    <Resource Include="Resources\designer\downloadfile.png" />
+    <Resource Include="Resources\designer\newemail.png" />
+    <Resource Include="Resources\designer\outlook.png" />
+    <Resource Include="Resources\designer\readexcel.png" />
+    <Resource Include="Resources\designer\readfile.png" />
+    <Resource Include="Resources\designer\readjson.png" />
+    <Resource Include="Resources\designer\readpdf.png" />
+    <Resource Include="Resources\designer\writeexcel.png" />
+    <Resource Include="Resources\designer\writefile.png" />
+    <EmbeddedResource Include="Resources\toolbox\downloadfile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.94.2" />
+    <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
+    <PackageReference Include="iTextSharp" Version="5.5.13.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Activities\DownloadFileDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\ReadPDFDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\WriteExcelDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\ReadExcelDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\ReadJSONDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
+  </ItemGroup>
+  <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
+    <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'PrepInstaller'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+</Project>

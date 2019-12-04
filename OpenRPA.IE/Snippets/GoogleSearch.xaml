@@ -1,0 +1,109 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="Google Search" mva:VisualBasic.Settings="{x:Null}" sap2010:WorkflowViewState.IdRef="New Workflow3_1"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:oa="clr-namespace:OpenRPA.Activities;assembly=OpenRPA"
+ xmlns:oi="clr-namespace:OpenRPA.IE;assembly=OpenRPA.IE"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <TextExpression.NamespacesForImplementation>
+        <sco:Collection x:TypeArguments="x:String">
+            <x:String>System</x:String>
+            <x:String>System.Xml</x:String>
+            <x:String>OpenRPA</x:String>
+            <x:String>System.Data</x:String>
+            <x:String>System.Linq</x:String>
+            <x:String>Microsoft.VisualBasic</x:String>
+            <x:String>OpenRPA.IE</x:String>
+            <x:String>OpenRPA.Windows</x:String>
+        </sco:Collection>
+    </TextExpression.NamespacesForImplementation>
+    <TextExpression.ReferencesForImplementation>
+        <sco:Collection x:TypeArguments="AssemblyReference">
+            <AssemblyReference>mscorlib</AssemblyReference>
+            <AssemblyReference>System.Xml</AssemblyReference>
+            <AssemblyReference>OpenRPA</AssemblyReference>
+            <AssemblyReference>OpenRPA.Interfaces</AssemblyReference>
+            <AssemblyReference>System.Data</AssemblyReference>
+            <AssemblyReference>System.Core</AssemblyReference>
+            <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+            <AssemblyReference>OpenRPA.IE</AssemblyReference>
+            <AssemblyReference>OpenRPA.Windows</AssemblyReference>
+        </sco:Collection>
+    </TextExpression.ReferencesForImplementation>
+    <Sequence DisplayName="Google Search" sap2010:WorkflowViewState.IdRef="Sequence_2">
+        <oa:OpenApplication Selector="%[&#xA;  {&#xA;    &quot;title&quot;: &quot;Google&quot;,&#xA;    &quot;Selector&quot;: &quot;IE&quot;,&#xA;    &quot;url&quot;: &quot;https://www.google.com/#spf=1568534622990&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;HTML&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;BODY&quot;,&#xA;    &quot;id&quot;: &quot;gsr&quot;&#xA;  }&#xA;]" Timeout="[TimeSpan.FromMilliseconds(1000)]" sap2010:WorkflowViewState.IdRef="OpenApplication_2" />
+        <oi:GetElement Elements="{x:Null}" From="{x:Null}" LoopAction="{x:Null}" DisplayName="-INPUT-gLFyf gsfi" Image="5de3c9cc533a962518e8a8df" MaxResults="1" Selector="%[&#xA;  {&#xA;    &quot;title&quot;: &quot;Google&quot;,&#xA;    &quot;Selector&quot;: &quot;IE&quot;,&#xA;    &quot;url&quot;: &quot;https://www.google.com/#spf=1568534622990&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;HTML&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;BODY&quot;,&#xA;    &quot;id&quot;: &quot;gsr&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;id&quot;: &quot;viewport&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;className&quot;: &quot;jhp&quot;,&#xA;    &quot;id&quot;: &quot;searchform&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;FORM&quot;,&#xA;    &quot;id&quot;: &quot;tsf&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;IndexInParent&quot;: &quot;1&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;className&quot;: &quot;A8SBwf&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;className&quot;: &quot;RNNXgb&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;className&quot;: &quot;a4bIc&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;INPUT&quot;&#xA;  }&#xA;]" Timeout="[TimeSpan.FromSeconds(3)]">
+            <ActivityAction x:TypeArguments="oi:IEElement">
+                <ActivityAction.Argument>
+                    <DelegateInArgument x:TypeArguments="oi:IEElement" Name="item" />
+                </ActivityAction.Argument>
+                <Assign x:TypeArguments="x:String" To="[item.value]" Value="OpenRPA" sap2010:WorkflowViewState.IdRef="Assign`1_3" />
+            </ActivityAction>
+            <sap2010:WorkflowViewState.IdRef>GetElement_7</sap2010:WorkflowViewState.IdRef>
+        </oi:GetElement>
+        <oi:GetElement Elements="{x:Null}" From="{x:Null}" LoopAction="{x:Null}" DisplayName="-INPUT-gNO89b" Image="5de3c9cc533a9624d8e8a8e1" MaxResults="1" Selector="%[&#xA;  {&#xA;    &quot;title&quot;: &quot;Google&quot;,&#xA;    &quot;Selector&quot;: &quot;IE&quot;,&#xA;    &quot;url&quot;: &quot;https://www.google.com/#spf=1568534622990&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;HTML&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;BODY&quot;,&#xA;    &quot;id&quot;: &quot;gsr&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;id&quot;: &quot;viewport&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;className&quot;: &quot;jhp&quot;,&#xA;    &quot;id&quot;: &quot;searchform&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;FORM&quot;,&#xA;    &quot;id&quot;: &quot;tsf&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;IndexInParent&quot;: &quot;1&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;className&quot;: &quot;A8SBwf&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;className&quot;: &quot;FPdoLc tfB0Bf&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;CENTER&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;INPUT&quot;,&#xA;    &quot;className&quot;: &quot;gNO89b&quot;&#xA;  }&#xA;]" Timeout="[TimeSpan.FromSeconds(3)]">
+            <ActivityAction x:TypeArguments="oi:IEElement">
+                <ActivityAction.Argument>
+                    <DelegateInArgument x:TypeArguments="oi:IEElement" Name="item" />
+                </ActivityAction.Argument>
+                <oa:ClickElement PostWait="{x:Null}" AnimateMouse="False" Button="1" DoubleClick="False" Element="[item]" OffsetX="31" OffsetY="17" VirtualClick="True" sap2010:WorkflowViewState.IdRef="ClickElement_3" />
+            </ActivityAction>
+            <sap2010:WorkflowViewState.IdRef>GetElement_8</sap2010:WorkflowViewState.IdRef>
+        </oi:GetElement>
+        <oi:GetElement Elements="{x:Null}" From="{x:Null}" LoopAction="{x:Null}" DisplayName="-SPAN-st" Image="5de3c954533a96120ce8a8cf" MaxResults="10" Selector="%[&#xA;  {&#xA;    &quot;title&quot;: &quot;OpenRPA - Google Search&quot;,&#xA;    &quot;Selector&quot;: &quot;IE&quot;,&#xA;    &quot;url&quot;: &quot;https://www.google.com/search?source=hp&amp;ei=zcnjXbC5M46Ai-gPqNqL2A0&amp;q=OpenRPA&amp;oq=&amp;gs_l=psy-ab.12...0.0..1478...0.0..0.0.0.......0......gws-wiz.Hej_RgJXg1o&amp;ved=0ahUKEwjw06Sw0JTmAhUOwAIHHSjtAtsQ4dUDCAk#spf=1575209423438&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;HTML&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;BODY&quot;,&#xA;    &quot;id&quot;: &quot;gsr&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;id&quot;: &quot;main&quot;,&#xA;    &quot;IndexInParent&quot;: &quot;9&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;id&quot;: &quot;cnt&quot;,&#xA;    &quot;IndexInParent&quot;: &quot;3&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;className&quot;: &quot;mw&quot;,&#xA;    &quot;IndexInParent&quot;: &quot;12&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;id&quot;: &quot;rcnt&quot;,&#xA;    &quot;IndexInParent&quot;: &quot;0&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;className&quot;: &quot;col&quot;,&#xA;    &quot;IndexInParent&quot;: &quot;1&quot;&#xA;  },&#xA;  {&#xA;    &quot;id&quot;: &quot;center_col&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;className&quot;: &quot;med&quot;,&#xA;    &quot;id&quot;: &quot;res&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;id&quot;: &quot;search&quot;,&#xA;    &quot;IndexInParent&quot;: &quot;1&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;id&quot;: &quot;rso&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;className&quot;: &quot;bkWMgd&quot;,&#xA;    &quot;IndexInParent&quot;: &quot;0&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;className&quot;: &quot;g&quot;&#xA;  }&#xA;]" Timeout="[TimeSpan.FromSeconds(3)]">
+            <ActivityAction x:TypeArguments="oi:IEElement">
+                <ActivityAction.Argument>
+                    <DelegateInArgument x:TypeArguments="oi:IEElement" Name="item" />
+                </ActivityAction.Argument>
+                <Sequence>
+                    <oa:HighlightElement Blocking="False" Duration="[TimeSpan.FromMilliseconds(2000)]" Element="[item]" sap2010:WorkflowViewState.IdRef="HighlightElement_2" />
+                    <oi:GetElement Elements="{x:Null}" LoopAction="{x:Null}" From="[item]" Image="5de3c954533a967d4fe8a8d1" MaxResults="1" Selector="%[&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;DIV&quot;,&#xA;    &quot;className&quot;: &quot;r&quot;&#xA;  },&#xA;  {&#xA;    &quot;tagName&quot;: &quot;A&quot;,&#xA;    &quot;IndexInParent&quot;: &quot;0&quot;&#xA;  }&#xA;]" Timeout="[TimeSpan.FromSeconds(3)]">
+                        <ActivityAction x:TypeArguments="oi:IEElement">
+                            <ActivityAction.Argument>
+                                <DelegateInArgument x:TypeArguments="oi:IEElement" Name="item" />
+                            </ActivityAction.Argument>
+                            <WriteLine Text="[item.href]" sap2010:WorkflowViewState.IdRef="WriteLine_2" />
+                        </ActivityAction>
+                        <sap2010:WorkflowViewState.IdRef>GetElement_9</sap2010:WorkflowViewState.IdRef>
+                    </oi:GetElement>
+                    <sap2010:WorkflowViewState.IdRef>Sequence_3</sap2010:WorkflowViewState.IdRef>
+                </Sequence>
+            </ActivityAction>
+            <sap2010:WorkflowViewState.IdRef>GetElement_10</sap2010:WorkflowViewState.IdRef>
+        </oi:GetElement>
+        <sads:DebugSymbol.Symbol>dw1DOlxFbXB0eS54YW1sAA==</sads:DebugSymbol.Symbol>
+    </Sequence>
+    <sap2010:WorkflowViewState.ViewStateManager>
+        <sap2010:ViewStateManager>
+            <sap2010:ViewStateData Id="OpenApplication_2" sap:VirtualizedContainerService.HintSize="314,94" />
+            <sap2010:ViewStateData Id="Assign`1_3" sap:VirtualizedContainerService.HintSize="200,22" />
+            <sap2010:ViewStateData Id="GetElement_7" sap:VirtualizedContainerService.HintSize="314,237" />
+            <sap2010:ViewStateData Id="ClickElement_3" sap:VirtualizedContainerService.HintSize="200,36" />
+            <sap2010:ViewStateData Id="GetElement_8" sap:VirtualizedContainerService.HintSize="314,197" />
+            <sap2010:ViewStateData Id="HighlightElement_2" sap:VirtualizedContainerService.HintSize="224,36" />
+            <sap2010:ViewStateData Id="WriteLine_2" sap:VirtualizedContainerService.HintSize="210,61" />
+            <sap2010:ViewStateData Id="GetElement_9" sap:VirtualizedContainerService.HintSize="224,201" />
+            <sap2010:ViewStateData Id="Sequence_3" sap:VirtualizedContainerService.HintSize="246,401">
+                <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+            </sap2010:ViewStateData>
+            <sap2010:ViewStateData Id="GetElement_10" sap:VirtualizedContainerService.HintSize="314,616" />
+            <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="336,1388">
+                <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+            </sap2010:ViewStateData>
+            <sap2010:ViewStateData Id="New Workflow3_1" sap:VirtualizedContainerService.HintSize="376,1468" />
+        </sap2010:ViewStateManager>
+    </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

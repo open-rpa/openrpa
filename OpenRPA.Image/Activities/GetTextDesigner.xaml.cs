@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic.Activities;
+using OpenRPA.Interfaces;
 using System;
 using System.Activities;
 using System.Activities.Expressions;
@@ -96,12 +97,6 @@ namespace OpenRPA.Image
             {
                 var base64 = ImageString;
                 if (string.IsNullOrEmpty(base64)) return null;
-                //if (System.Text.RegularExpressions.Regex.Match(base64, "[a-f0-9]{24}").Success)
-                //{
-                //    return image.Screenutil.BitmapToImageSource(image.util.loadWorkflowImage(base64), image.Screenutil.ActivityPreviewImageWidth, image.Screenutil.ActivityPreviewImageHeight);
-                //}
-
-                // return OpenRPA.Interfaces.Image.Util.BitmapToImageSource
                 using (var b = Interfaces.Image.Util.Base642Bitmap(base64))
                 {
                     return Interfaces.Image.Util.BitmapToImageSource(b, Interfaces.Image.Util.ActivityPreviewImageWidth, Interfaces.Image.Util.ActivityPreviewImageHeight);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenRPA.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,12 +25,10 @@ namespace OpenRPA.Views
         public DelegateCommand AutoHideCommand { get; set; } = new DelegateCommand((e) => { }, (e) => false);
         public bool CanClose { get; set; } = false;
         public bool CanHide { get; set; } = false;
-
         public event Action<Workflow> onOpenWorkflow;
         public event Action<Project> onOpenProject;
         //public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; }
         private MainWindow main = null;
-
         public System.Collections.ObjectModel.ObservableCollection<Project> Projects
         {
             get
@@ -43,14 +42,10 @@ namespace OpenRPA.Views
             this.main = main;
             DataContext = this;
         }
-        private void ListWorkflows_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-        }
         private void ListWorkflows_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (listWorkflows.SelectedItem is Workflow)
+            if (listWorkflows.SelectedItem is Workflow f)
             {
-                var f = (Workflow)listWorkflows.SelectedItem;
                 onOpenWorkflow?.Invoke(f);
                 return;
             }
@@ -58,6 +53,24 @@ namespace OpenRPA.Views
             if (p == null) return;
             onOpenProject?.Invoke(p);
         }
-
+        private async void ButtonEditXAML(object sender, RoutedEventArgs e)
+        {
+            if (listWorkflows.SelectedItem is Workflow workflow)
+            {
+                try
+                {
+                    var f = new EditXAML();
+                    f.XAML = workflow.Xaml;
+                    f.ShowDialog();
+                    workflow.Xaml = f.XAML;
+                    await workflow.Save();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                    System.Windows.MessageBox.Show("ButtonEditXAML: " + ex.Message);
+                }
+            }
+        }
     }
 }

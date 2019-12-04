@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Net
 {
-    public class QueueMessage : SocketCommand
+    public class QueueMessage : SocketCommand, Interfaces.IQueueMessage
     {
         public QueueMessage() : base()
         {

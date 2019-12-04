@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic.Activities;
+using OpenRPA.Interfaces;
 using System;
 using System.Activities;
 using System.Activities.Expressions;
@@ -205,33 +206,5 @@ namespace OpenRPA.Image
             var rect = new ImageElement(new Rectangle(_hi.X + OffsetX, _hi.Y + OffsetY, Width, Height));
             rect.Highlight(false, System.Drawing.Color.PaleGreen, TimeSpan.FromSeconds(1));
         }
-        public string ImageString
-        {
-            get
-            {
-                string result = string.Empty;
-                result = ModelItem.GetValue<string>("Image");
-                return result;
-            }
-        }
-        public BitmapImage Image
-        {
-            get
-            {
-                var base64 = ImageString;
-                if (string.IsNullOrEmpty(base64)) return null;
-                //if (System.Text.RegularExpressions.Regex.Match(base64, "[a-f0-9]{24}").Success)
-                //{
-                //    return image.Screenutil.BitmapToImageSource(image.util.loadWorkflowImage(base64), image.Screenutil.ActivityPreviewImageWidth, image.Screenutil.ActivityPreviewImageHeight);
-                //}
-
-                // return OpenRPA.Interfaces.Image.Util.BitmapToImageSource
-                using (var b = Interfaces.Image.Util.Base642Bitmap(base64))
-                {
-                    return Interfaces.Image.Util.BitmapToImageSource(b, Interfaces.Image.Util.ActivityPreviewImageWidth, Interfaces.Image.Util.ActivityPreviewImageHeight);
-                }
-            }
-        }
-
     }
 }

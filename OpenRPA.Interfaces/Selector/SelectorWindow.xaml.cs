@@ -97,15 +97,13 @@ namespace OpenRPA.Interfaces.Selector
             GenericTools.minimize(this);
             OpenRPA.Input.InputDriver.Instance.onCancel += OnCancel;
         }
-
         private void OnCancel()
         {
             vm.Plugin.Stop();
             OpenRPA.Input.InputDriver.Instance.onCancel -= OnCancel;
             GenericTools.restore(this);
         }
-
-        private void Plugin_OnUserAction(IPlugin sender, IRecordEvent e)
+        private void Plugin_OnUserAction(IRecordPlugin sender, IRecordEvent e)
         {
             vm.Plugin.Stop();
             OpenRPA.Input.InputDriver.Instance.onCancel -= OnCancel;
@@ -165,6 +163,7 @@ namespace OpenRPA.Interfaces.Selector
             if (!found)
                 for (var i = 1; i < vm.Selector.Count; i++)
                 {
+                    found = false;
                     var s = vm.Selector[i]; 
                     foreach (var treenode in currentNode)
                     {
@@ -201,6 +200,22 @@ namespace OpenRPA.Interfaces.Selector
                     }
                     if (!found) break;
                 }
+            if(!found)
+            {
+                var last = vm.Selector.Last();
+                var _treenode = SearchTree(vm.Directories, last);
+                if (_treenode != null)
+                {
+                    ExpandToRoot(_treenode);
+                    found = true;
+                    _treenode.IsExpanded = true;
+                    _treenode.IsSelected = true;
+                    currentNode = new ExtendedObservableCollection<treeelement>();
+                    foreach (var subc in _treenode.Children) currentNode.Add(subc);
+
+                }
+            }
+
             vm.Highlight = true;
         }
         private void BtnHighlight_Click(object sender, RoutedEventArgs e)

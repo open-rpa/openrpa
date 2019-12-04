@@ -59,7 +59,7 @@ namespace OpenRPA.Windows
                 return e.Value;
             }
         }
-        public WindowsSelectorItem(AutomationElement element, bool isRoot)
+        public WindowsSelectorItem(AutomationElement element, bool isRoot, int IndexInParent = -1)
         {
             this.Element = new UIElement(element);
             Properties = new ObservableCollection<SelectorItemProperty>();
@@ -80,6 +80,7 @@ namespace OpenRPA.Windows
                         Properties.Add(new SelectorItemProperty("arguments", info.arguments));
                     }
                     Properties.Add(new SelectorItemProperty("Selector", "Windows"));
+                    Properties.Add(new SelectorItemProperty("SearchDescendants", PluginConfig.search_descendants.ToString()));
                     //Properties.Add(new SelectorItemProperty("", info.));
                 }
                 foreach (var p in Properties)
@@ -90,10 +91,18 @@ namespace OpenRPA.Windows
             }
             else
             {
-                if (element.Properties.Name.IsSupported && !string.IsNullOrEmpty(element.Properties.Name.Value)) Properties.Add(new SelectorItemProperty("Name", element.Properties.Name.Value));
-                if (element.Properties.ClassName.IsSupported && !string.IsNullOrEmpty(element.Properties.ClassName)) Properties.Add(new SelectorItemProperty("ClassName", element.Properties.ClassName.Value));
-                if (element.Properties.ControlType.IsSupported && !string.IsNullOrEmpty(element.Properties.ControlType.Value.ToString())) Properties.Add(new SelectorItemProperty("ControlType", element.Properties.ControlType.Value.ToString()));
-                if (element.Properties.AutomationId.IsSupported && !string.IsNullOrEmpty(element.Properties.AutomationId)) Properties.Add(new SelectorItemProperty("AutomationId", element.Properties.AutomationId.Value));
+                try
+                {
+                    if (element.Properties.Name.IsSupported && !string.IsNullOrEmpty(element.Properties.Name.Value)) Properties.Add(new SelectorItemProperty("Name", element.Properties.Name.Value));
+                    if (element.Properties.ClassName.IsSupported && !string.IsNullOrEmpty(element.Properties.ClassName)) Properties.Add(new SelectorItemProperty("ClassName", element.Properties.ClassName.Value));
+                    if (element.Properties.ControlType.IsSupported && !string.IsNullOrEmpty(element.Properties.ControlType.Value.ToString())) Properties.Add(new SelectorItemProperty("ControlType", element.Properties.ControlType.Value.ToString()));
+                    if (element.Properties.AutomationId.IsSupported && !string.IsNullOrEmpty(element.Properties.AutomationId)) Properties.Add(new SelectorItemProperty("AutomationId", element.Properties.AutomationId.Value));
+                    if (element.Properties.FrameworkId.IsSupported && !string.IsNullOrEmpty(element.Properties.FrameworkId)) Properties.Add(new SelectorItemProperty("FrameworkId", element.Properties.FrameworkId.Value));
+                    if (IndexInParent > -1) Properties.Add(new SelectorItemProperty("IndexInParent", IndexInParent.ToString()));
+                }
+                catch (Exception)
+                {
+                }
                 //Enabled = (Properties.Count > 1);
                 //canDisable = true;
                 if(Properties.Count == 0)
@@ -164,13 +173,13 @@ namespace OpenRPA.Windows
                     // if (matchcounter > 1) break;
                     if (matchcounter != 1)
                     {
-                        Log.Selector("EnumNeededProperties match with " + i + " gave more than 1 result");
+                        Log.SelectorVerbose("EnumNeededProperties match with " + i + " gave more than 1 result");
                         ++i;
                         if (i >= props.Count()) break;
                     }
                 } while (matchcounter != 1 && i < props.Count());
 
-                //Log.Selector("EnumNeededProperties match with " + i + " gave " + matchcounter + " result");
+                //Log.SelectorVerbose("EnumNeededProperties match with " + i + " gave " + matchcounter + " result");
                 Properties.ForEach((e) => e.Enabled = false);
                 foreach (var p in props.Take(i).ToArray())
                 {
@@ -222,32 +231,169 @@ namespace OpenRPA.Windows
                 return new AndCondition(cond);
             }
         }
-        public AutomationElement[] matches(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count)
+        private static Dictionary<string, AutomationElement> AppWindowCache = new Dictionary<string, AutomationElement>();
+        public AutomationElement[] matches(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count, bool isDesktop, TimeSpan timeout, bool search_descendants)
         {
             var matchs = new List<AutomationElement>();
             var c = GetConditionsWithoutStar();
-            Log.Selector("matches::FindAllChildren");
-            //var elements = element.FindAllChildren(c);
-            //foreach (var elementNode in elements)
-            //{
-            //    Log.Selector("matches::match");
-            //    if (match(elementNode)) matchs.Add(elementNode);
-            //}
-            var nodes = new List<AutomationElement>();
-            var elementNode = _treeWalker.GetFirstChild(element);
-            var i = 0;
-            while (elementNode != null)
+            if(isDesktop)
             {
-                nodes.Add(elementNode);
-                i++;
-                if (Match(elementNode)) matchs.Add(elementNode);
-                if (matchs.Count >= count) break;
-                elementNode = _treeWalker.GetNextSibling(elementNode);
+                if(AppWindowCache.ContainsKey(c.ToString()))
+                {
+                    var _element = AppWindowCache[c.ToString()];
+                    try
+                    {
+                        if (!_element.IsOffscreen)
+                        {
+                            if (Match(_element))
+                            {
+                                Log.Selector("matches::FindAllChildren: found in AppWindowCache");
+                                return new AutomationElement[] { _element };
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        Log.SelectorVerbose("matches::FindAllChildren: Removing from AppWindowCache " + c.ToString());
+                        AppWindowCache.Remove(c.ToString());
+                    }
+                }
             }
-            //foreach (var _elementNode in nodes)
+            var sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+            Log.SelectorVerbose("matches::FindAllChildren.isDesktop(" + isDesktop + ")::begin");
+            //if (isDesktop) // To slow !
             //{
-            //    if (match(_elementNode)) matchs.Add(_elementNode);
+            //    Log.Selector(string.Format("AutomationElement.matches.isDesktop::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
+
+            //    Log.SelectorVerbose("Searching desktop for " + c.ToString());
+            //    var elements = element.FindAllChildren(c);
+            //    Log.SelectorVerbose("Done Search");
+            //    Log.Selector(string.Format("AutomationElement.matches.isDesktop::process elements {0:mm\\:ss\\.fff}", sw.Elapsed));
+            //    // var elements = element.FindAllChildren();
+            //    foreach (var elementNode in elements)
+            //    {
+            //        Log.SelectorVerbose("matches::match");
+            //        if (Match(elementNode)) matchs.Add(elementNode);
+            //    }
+            //    Log.Selector(string.Format("AutomationElement.matches.isDesktop::complete {0:mm\\:ss\\.fff}", sw.Elapsed));
             //}
+            //else
+            //{
+            //    var nodes = new List<AutomationElement>();
+            //    Log.Selector(string.Format("AutomationElement.matches.isNotDesktop::GetFirstChild {0:mm\\:ss\\.fff}", sw.Elapsed));
+            //    var elementNode = _treeWalker.GetFirstChild(element);
+            //    var i = 0;
+            //    while (elementNode != null)
+            //    {
+            //        nodes.Add(elementNode);
+            //        i++;
+            //        if (Match(elementNode)) matchs.Add(elementNode);
+            //        if (matchs.Count >= count) break;
+            //        Log.Selector(string.Format("AutomationElement.matches.isNotDesktop::GetNextSibling {0:mm\\:ss\\.fff}", sw.Elapsed));
+            //        elementNode = _treeWalker.GetNextSibling(elementNode);
+            //    }
+            //}
+
+
+
+
+
+            //if (isDesktop) // To slow !
+            //{
+            //    Log.Selector(string.Format("AutomationElement.matches.isDesktop::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
+
+            //    var windows = Win32WindowUtils.GetTopLevelWindows(automation);
+            //    foreach (var elementNode in windows)
+            //    {
+            //        Log.SelectorVerbose("matches::match");
+            //        if (Match(elementNode)) matchs.Add(elementNode);
+            //    }
+            //    Log.Selector(string.Format("AutomationElement.matches.isDesktop::complete {0:mm\\:ss\\.fff}", sw.Elapsed));
+            //}
+            //else
+            //{
+            //    var nodes = new List<AutomationElement>();
+            //    Log.Selector(string.Format("AutomationElement.matches.isNotDesktop::GetFirstChild {0:mm\\:ss\\.fff}", sw.Elapsed));
+            //    var elementNode = _treeWalker.GetFirstChild(element);
+            //    var i = 0;
+            //    while (elementNode != null)
+            //    {
+            //        nodes.Add(elementNode);
+            //        i++;
+            //        if (Match(elementNode)) matchs.Add(elementNode);
+            //        if (matchs.Count >= count) break;
+            //        Log.Selector(string.Format("AutomationElement.matches.isNotDesktop::GetNextSibling {0:mm\\:ss\\.fff}", sw.Elapsed));
+            //        elementNode = _treeWalker.GetNextSibling(elementNode);
+            //    }
+            //}
+
+
+            if(search_descendants)
+            {
+                Log.Selector("AutomationElement.matches: Searching for " + c.ToString());
+                AutomationElement[] elements = null;
+                if (isDesktop)
+                {
+                    elements = element.FindAllChildren(c);
+                }
+                else
+                {
+                    elements = element.FindAllDescendants(c);
+                }
+                Log.Selector(string.Format("AutomationElement.matches::found " + elements.Count() + " elements {0:mm\\:ss\\.fff}", sw.Elapsed));
+                // var elements = element.FindAllChildren();
+                foreach (var elementNode in elements)
+                {
+                    Log.SelectorVerbose("matches::match");
+                    if (Match(elementNode)) matchs.Add(elementNode);
+                }
+                Log.Selector(string.Format("AutomationElement.matches::complete, with " + elements.Count() + " elements {0:mm\\:ss\\.fff}", sw.Elapsed));
+            }
+            else
+            {
+                System.Threading.ManualResetEvent syncEvent = new System.Threading.ManualResetEvent(false);
+                Action action = () =>
+                {
+                    var nodes = new List<AutomationElement>();
+                    Log.Selector(string.Format("AutomationElement.matches.isDesktop(" + isDesktop + ")::GetFirstChild {0:mm\\:ss\\.fff}", sw.Elapsed));
+                    var elementNode = _treeWalker.GetFirstChild(element);
+                    var i = 0;
+                    while (elementNode != null)
+                    {
+                        nodes.Add(elementNode);
+                        i++;
+                        if (Match(elementNode)) matchs.Add(elementNode);
+                        if (matchs.Count >= count) break;
+                        Log.Selector(string.Format("AutomationElement.matches.isDesktop(" + isDesktop + ")::GetNextSibling {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        elementNode = _treeWalker.GetNextSibling(elementNode);
+                    }
+                    if (syncEvent != null)
+                    {
+                        syncEvent.Set();
+                    }
+                };
+                // if (isDesktop && PluginConfig.get_elements_in_different_thread)
+                if (PluginConfig.get_elements_in_different_thread)
+                {
+                    //Task.Run(action);
+                    //syncEvent.WaitOne(timeout, true);
+                    //if(matchs.Count > 0)
+                    //{
+                    //    matchs.Clear();
+                    action();
+                    //}
+                }
+                else
+                {
+                    action();
+                }
+            }
+            Log.SelectorVerbose(string.Format("matches::FindAllChildren.isDesktop(" + isDesktop + ")::complete {0:mm\\:ss\\.fff}", sw.Elapsed));
+            if(isDesktop && matchs.Count == 1)
+            {
+                AppWindowCache.Add(c.ToString(), matchs[0]);
+            }
             return matchs.ToArray();
         }
         public bool Match(AutomationElement m)
@@ -273,13 +419,13 @@ namespace OpenRPA.Windows
                         // var v = m.Properties.ControlType.Value.ToString();
                         if (!PatternMatcher.FitsMask(v, p.Value))
                         {
-                            Log.Selector(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            Log.SelectorVerbose(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
                             return false;
                         }
                     }
                     else
                     {
-                        Log.Selector(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        Log.SelectorVerbose(p.Name + " does not exists, but needed value '" + p.Value + "'");
                         return false;
                     }
                 }
@@ -290,13 +436,13 @@ namespace OpenRPA.Windows
                         var v = m.Properties.Name.Value;
                         if (!PatternMatcher.FitsMask(m.Properties.Name.Value, p.Value))
                         {
-                            Log.Selector(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            Log.SelectorVerbose(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
                             return false;
                         }
                     }
                     else
                     {
-                        Log.Selector(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        Log.SelectorVerbose(p.Name + " does not exists, but needed value '" + p.Value + "'");
                         return false;
                     }
                 }
@@ -308,13 +454,13 @@ namespace OpenRPA.Windows
                         var v = m.Properties.ClassName.Value;
                         if (!PatternMatcher.FitsMask(m.Properties.ClassName.Value, p.Value))
                         {
-                            Log.Selector(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            Log.SelectorVerbose(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
                             return false;
                         }
                     }
                     else
                     {
-                        Log.Selector(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        Log.SelectorVerbose(p.Name + " does not exists, but needed value '" + p.Value + "'");
                         return false;
                     }
                 }
@@ -325,14 +471,50 @@ namespace OpenRPA.Windows
                         var v = m.Properties.AutomationId.Value;
                         if (!PatternMatcher.FitsMask(m.Properties.AutomationId.Value, p.Value))
                         {
-                            Log.Selector(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            Log.SelectorVerbose(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
                             return false;
                         }
                     }
                     else
                     {
-                        Log.Selector(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        Log.SelectorVerbose(p.Name + " does not exists, but needed value '" + p.Value + "'");
                         return false;
+                    }
+                }
+                if (p.Name == "FrameworkId")
+                {
+                    if (m.Properties.FrameworkId.IsSupported)
+                    {
+                        var v = m.Properties.FrameworkId.Value;
+                        if (!PatternMatcher.FitsMask(m.Properties.FrameworkId.Value, p.Value))
+                        {
+                            Log.SelectorVerbose(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        Log.SelectorVerbose(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                        return false;
+                    }
+                }
+                if (p.Name == "IndexInParent")
+                {
+                    int IndexInParent = -1;
+                    int.TryParse(p.Value, out IndexInParent);
+                    if (IndexInParent > -1)
+                    {
+                        var c = m.Parent.FindAllChildren();
+                        if (c.Count() <= IndexInParent)
+                        {
+                            Log.SelectorVerbose(p.Name + " is " + IndexInParent + " but found only " + c.Count() + " elements in parent");
+                            return false;
+                        }
+                        if (!m.Equals(c[IndexInParent]))
+                        {
+                            Log.SelectorVerbose(p.Name + " mismatch, element is not equal to element " + IndexInParent + " in parent");
+                            return false;
+                        }
                     }
                 }
             }
@@ -342,6 +524,5 @@ namespace OpenRPA.Windows
         {
             return "AutomationId:" + AutomationId + " Name:" + Name + " ClassName: " + ClassName + " ControlType: " + ControlType;
         }
-
     }
 }

@@ -75,7 +75,7 @@ namespace OpenRPA.Input
         }
         public static void Click(MouseButton button)
         {
-            InputDriver.Instance.SkipEvent = true;
+            InputDriver.Instance.AllowOneClick = true;
             InputDriver.Instance.Element = null;
             if (button == MouseButton.Left)
             {
@@ -85,7 +85,6 @@ namespace OpenRPA.Input
             {
                 mouse_event(MOUSEEVENTF_RIGHTDOWN | MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
             }
-            InputDriver.Instance.SkipEvent = false;
         }
 
         //public void Click(MouseButton button)

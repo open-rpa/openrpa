@@ -27,6 +27,9 @@ namespace OpenRPA.Activities
             //{
             //    Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(150)")
             //};
+            VirtualClick = Config.local.use_virtual_click;
+            AnimateMouse = Config.local.use_animate_mouse;
+            PostWait = Config.local.use_postwait;
         }
         [RequiredArgument]
         public InArgument<bool> AnimateMouse { get; set; } = false;

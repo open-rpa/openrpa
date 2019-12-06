@@ -20,6 +20,7 @@ namespace OpenRPA.Net
         // true, requests acknowledgment that the mongod instances have written to the on-disk journal
         public bool j { get; set; }
         public T item { get; set; }
+        public string query { get; set; }
         public string collectionname { get; set; }
         public T result { get; set; }
 

@@ -211,7 +211,7 @@ namespace OpenRPA.NM
         {
             if (browser == "chrome")
             {
-                if (!chromeconnected)
+                if (!chromeconnected || tabs.Where(x=> x.browser == "chrome").Count() == 0)
                 {
                     System.Diagnostics.Process.Start("chrome.exe", url);
                     var sw = new System.Diagnostics.Stopwatch();
@@ -228,7 +228,7 @@ namespace OpenRPA.NM
             }
             else
             {
-                if (!ffconnected)
+                if (!ffconnected || tabs.Where(x => x.browser == "ff").Count() == 0)
                 {
                     System.Diagnostics.Process.Start("firefox.exe", url);
                     var sw = new System.Diagnostics.Stopwatch();
@@ -303,7 +303,7 @@ namespace OpenRPA.NM
                     tab.highlighted = true;
                     message.tab = tab;
                     result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
-                    WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
+                    if(result!=null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
                     return;
                 }
                 result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));

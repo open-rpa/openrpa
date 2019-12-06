@@ -159,6 +159,25 @@
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="Recording Overlay"></TextBlock>
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <RibbonCheckBox IsChecked="{Binding use_sendkeys}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
+                        <TextBlock Text="use sendkeys"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <RibbonCheckBox IsChecked="{Binding use_virtual_click}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
+                        <TextBlock Text="use Virtual Clicks"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <RibbonCheckBox IsChecked="{Binding use_animate_mouse}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
+                        <TextBlock Text="use Animate Mouse"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <RibbonTextBox Text="{Binding use_postwait}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}"  />
+                        <TextBlock Text="Click Post Wait"></TextBlock>
+                    </StackPanel>
                 </RibbonGroup>
                 <RibbonGroup Header="Logging">
                     <StackPanel Orientation="Horizontal">
@@ -185,13 +204,6 @@
                         <RibbonCheckBox IsChecked="{Binding log_selector_verbose}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="selector verbose"></TextBlock>
-                    </StackPanel>
-                </RibbonGroup>
-                <RibbonGroup Header="Extra">
-                    <StackPanel Orientation="Horizontal">
-                        <RibbonCheckBox IsChecked="{Binding use_sendkeys}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
-                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="use sendkeys"></TextBlock>
                     </StackPanel>
                 </RibbonGroup>
             </RibbonTab>

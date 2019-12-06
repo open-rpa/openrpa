@@ -1,4 +1,5 @@
-﻿using OpenRPA.Interfaces;
+﻿using Newtonsoft.Json.Linq;
+using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,19 @@ namespace OpenRPA.Store
                     if(i!=null)
                     {
                         i.xml = Base64Encode(doc);
+                        if(string.IsNullOrEmpty(i._id))
+                        {
                             i.Save();
+                        } 
+                        else if (global.isConnected)
+                        {
+                            i.Save();
+                            //var v = JObject.Parse("{}");
+                            //v.Add("xml", JToken.FromObject(Base64Encode(doc)));
+                            //var set = JObject.Parse("{}");
+                            //set.Add("$set", v);
+                            //_ = global.webSocketClient.UpdateOne("openrpa_instances", "{_id: '" + i._id + "'}", 1, false, set);
+                        }   
                     }
                 }
                 catch (Exception ex)

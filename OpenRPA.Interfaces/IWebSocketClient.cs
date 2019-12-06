@@ -60,6 +60,7 @@ namespace OpenRPA.Interfaces
         Task<T> InsertOrUpdateOne<T>(string collectionname, int w, bool j, string uniqeness, T item);
         Task<T> InsertOne<T>(string collectionname, int w, bool j, T item);
         Task<T> UpdateOne<T>(string collectionname, int w, bool j, T item);
+        // Task UpdateOne(string collectionname, string query, int w, bool j, Newtonsoft.Json.Linq.JObject UpdateDoc);
         Task DeleteOne(string collectionname, string Id);
         Task<string> UploadFile(string filepath, string path, metadata metadata);
         Task DownloadFileAndSave(string filename, string id, string filepath, bool ignorepath);

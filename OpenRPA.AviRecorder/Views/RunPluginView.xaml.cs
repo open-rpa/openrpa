@@ -31,7 +31,6 @@ namespace OpenRPA.AviRecorder.Views
             InitializeComponent();
             DataContext = this;
         }
-
         public bool addonEnabled
         {
             get
@@ -98,10 +97,15 @@ namespace OpenRPA.AviRecorder.Views
                 NotifyPropertyChanged("quality");
             }
         }
-
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Config.Save();
+            try
+            {
+                Config.Save();
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

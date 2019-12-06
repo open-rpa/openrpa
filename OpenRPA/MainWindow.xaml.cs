@@ -464,11 +464,16 @@ namespace OpenRPA
                         SetStatus("Registering queue for robot");
                         Log.Debug("Registering queue for robot " + global.webSocketClient.user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         await global.webSocketClient.RegisterQueue(global.webSocketClient.user._id);
+
                         foreach (var role in global.webSocketClient.user.roles)
                         {
-                            SetStatus("Registering queue for robot (" + role.name + ")");
-                            Log.Debug("Registering queue for role " + role.name + " " + role._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                            await global.webSocketClient.RegisterQueue(role._id);
+                            var roles = await global.webSocketClient.Query<apirole>("users", "{_id: '" + role._id + "'}", top: 5000);
+                            if(roles.Length == 1 && roles[0].rparole)
+                            {
+                                SetStatus("Registering queue for robot (" + role.name + ")");
+                                Log.Debug("Registering queue for role " + role.name + " " + role._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                await global.webSocketClient.RegisterQueue(role._id);
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -779,9 +784,50 @@ namespace OpenRPA
             set
             {
                 Config.local.use_sendkeys = value;
-                NotifyPropertyChanged("log_selector_verbose");
+                NotifyPropertyChanged("use_sendkeys");
             }
         }
+        public bool use_virtual_click
+        {
+            get
+            {
+                return Config.local.use_virtual_click;
+            }
+            set
+            {
+                Config.local.use_virtual_click = value;
+                NotifyPropertyChanged("use_virtual_click");
+            }
+        }
+        public bool use_animate_mouse
+        {
+            get
+            {
+                return Config.local.use_animate_mouse;
+            }
+            set
+            {
+                Config.local.use_animate_mouse = value;
+                NotifyPropertyChanged("use_animate_mouse");
+            }
+        }
+        public string use_postwait
+        {
+            get
+            {
+                return Config.local.use_postwait.ToString();
+            }
+            set
+            {
+                TimeSpan ts;
+                if(TimeSpan.TryParse(value, out ts))
+                {
+                    Config.local.use_postwait = ts;
+                    NotifyPropertyChanged("use_postwait");
+                }
+            }
+        }
+        
         public ICommand LoggingOptionCommand { get { return new RelayCommand<object>(onLoggingOptionCommand, CanAllways); } }
         public ICommand ExitAppCommand { get { return new RelayCommand<object>(onExitApp, (e)=> true ); } }
         public ICommand SettingsCommand { get { return new RelayCommand<object>(onSettings, CanSettings); } }
@@ -811,7 +857,15 @@ namespace OpenRPA
         public ICommand OpenFirefoxPageCommand { get { return new RelayCommand<object>(onOpenFirefoxPageCommand, CanAllways); } }
         private void onLoggingOptionCommand(object _item)
         {
-            Config.Save();
+            try
+            {
+                Config.Save();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                MessageBox.Show(ex.Message);
+            }
         }
         private bool CanPermissions(object _item)
         {
@@ -1203,19 +1257,27 @@ namespace OpenRPA
         }
         private void onSignout(object _item)
         {
-            autoReconnect = true;
-            Projects.Clear();
-            var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
-            foreach (var document in ld)
+            try
             {
-                if (document.Content is Views.WFDesigner view) document.Close();
-            }
+                autoReconnect = true;
+                Projects.Clear();
+                var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
+                foreach (var document in ld)
+                {
+                    if (document.Content is Views.WFDesigner view) document.Close();
+                }
 
-            Config.Reload();
-            Config.local.password = new byte[] { };
-            Config.local.jwt = new byte[] { };
-            global.webSocketClient.url = Config.local.wsurl;
-            _ = global.webSocketClient.Close();
+                Config.Reload();
+                Config.local.password = new byte[] { };
+                Config.local.jwt = new byte[] { };
+                global.webSocketClient.url = Config.local.wsurl;
+                _ = global.webSocketClient.Close();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                MessageBox.Show(ex.Message);
+            }
         }
         private bool CanManagePackages(object _item)
         {
@@ -1351,22 +1413,30 @@ namespace OpenRPA
         {
             AutomationHelper.syncContext.Post(o =>
             {
-                var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
-                foreach (var document in ld)
+                try
                 {
-                    if (document.Content is Views.OpenProject op) { document.IsSelected = true; return; }
-                }
-                var view = new Views.OpenProject(this);
-                view.onOpenProject += onOpenProject;
-                view.onOpenWorkflow += onOpenWorkflow;
+                    var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
+                    foreach (var document in ld)
+                    {
+                        if (document.Content is Views.OpenProject op) { document.IsSelected = true; return; }
+                    }
+                    var view = new Views.OpenProject(this);
+                    view.onOpenProject += onOpenProject;
+                    view.onOpenWorkflow += onOpenWorkflow;
 
-                LayoutDocument layoutDocument = new LayoutDocument { Title = "Open project" };
-                layoutDocument.ContentId = "openproject";
-                layoutDocument.CanClose = false;
-                layoutDocument.Content = view;
-                MainTabControl.Children.Add(layoutDocument);
-                layoutDocument.IsSelected = true;
-                layoutDocument.Closing += LayoutDocument_Closing;
+                    LayoutDocument layoutDocument = new LayoutDocument { Title = "Open project" };
+                    layoutDocument.ContentId = "openproject";
+                    layoutDocument.CanClose = false;
+                    layoutDocument.Content = view;
+                    MainTabControl.Children.Add(layoutDocument);
+                    layoutDocument.IsSelected = true;
+                    layoutDocument.Closing += LayoutDocument_Closing;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "");
+                    MessageBox.Show(ex.Message);
+                }
             }, null);
         }
         private void onDetectors(object _item)
@@ -1686,19 +1756,27 @@ namespace OpenRPA
         }
         private async void onSave(object _item)
         {
-            if (SelectedContent is Views.WFDesigner)
+            try
             {
-                var designer = (Views.WFDesigner)SelectedContent;
-                await designer.Save();
-            }
-            if (SelectedContent is Views.OpenProject)
-            {
-                var view = (Views.OpenProject)SelectedContent;
-                var Project = view.listWorkflows.SelectedItem as Project;
-                if (Project != null)
+                if (SelectedContent is Views.WFDesigner)
                 {
-                    await Project.Save();
+                    var designer = (Views.WFDesigner)SelectedContent;
+                    await designer.Save();
                 }
+                if (SelectedContent is Views.OpenProject)
+                {
+                    var view = (Views.OpenProject)SelectedContent;
+                    var Project = view.listWorkflows.SelectedItem as Project;
+                    if (Project != null)
+                    {
+                        await Project.Save();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                MessageBox.Show(ex.Message);
             }
         }
         private bool CanNewWorkflow(object _item)
@@ -1802,14 +1880,22 @@ namespace OpenRPA
         }
         private async void onCopy(object _item)
         {
-            var designer = (Views.WFDesigner)SelectedContent;
-            await designer.Save();
-            Workflow workflow = Workflow.Create(designer.Project, "Copy of " + designer.Workflow.name);
-            var xaml = designer.Workflow.Xaml;
-            xaml = Views.WFDesigner.SetWorkflowName(xaml, workflow.name);
-            workflow.Xaml = xaml;
-            workflow.name = "Copy of " + designer.Workflow.name;
-            _onOpenWorkflow(workflow, true);
+            try
+            {
+                var designer = (Views.WFDesigner)SelectedContent;
+                await designer.Save();
+                Workflow workflow = Workflow.Create(designer.Project, "Copy of " + designer.Workflow.name);
+                var xaml = designer.Workflow.Xaml;
+                xaml = Views.WFDesigner.SetWorkflowName(xaml, workflow.name);
+                workflow.Xaml = xaml;
+                workflow.name = "Copy of " + designer.Workflow.name;
+                _onOpenWorkflow(workflow, true);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                MessageBox.Show(ex.Message);
+            }
         }
         private bool CanDelete(object _item)
         {
@@ -1845,39 +1931,47 @@ namespace OpenRPA
         }
         private async void onDelete(object _item)
         {
-            var view = SelectedContent as Views.OpenProject;
-            if (view == null) return;
-            var val = view.listWorkflows.SelectedValue;
-            var wf = val as Workflow;
-            var p = val as Project;
-
-
-            if (wf != null)
+            try
             {
-                Views.WFDesigner designer = GetWorkflowDesignerByIDOrRelativeFilename(wf.IDOrRelativeFilename) as Views.WFDesigner;
-                if (designer != null) { designer.tab.Close(); }
+                var view = SelectedContent as Views.OpenProject;
+                if (view == null) return;
+                var val = view.listWorkflows.SelectedValue;
+                var wf = val as Workflow;
+                var p = val as Project;
 
-                var messageBoxResult = MessageBox.Show("Delete " + wf.name + " ?", "Delete Confirmation", MessageBoxButton.YesNo);
-                if (messageBoxResult != MessageBoxResult.Yes) return;
 
-                await wf.Delete();
-            }
-            if (p != null)
-            {
-                if (p.Workflows.Count > 0)
+                if (wf != null)
                 {
-                    var messageBoxResult = MessageBox.Show("Delete project " + p.name + " containing " + p.Workflows.Count() + " workflows", "Delete Confirmation", MessageBoxButton.YesNo);
+                    Views.WFDesigner designer = GetWorkflowDesignerByIDOrRelativeFilename(wf.IDOrRelativeFilename) as Views.WFDesigner;
+                    if (designer != null) { designer.tab.Close(); }
+
+                    var messageBoxResult = MessageBox.Show("Delete " + wf.name + " ?", "Delete Confirmation", MessageBoxButton.YesNo);
                     if (messageBoxResult != MessageBoxResult.Yes) return;
-                    foreach (var _wf in p.Workflows.ToList())
-                    {
-                        var designer = GetWorkflowDesignerByIDOrRelativeFilename(_wf.IDOrRelativeFilename) as Views.WFDesigner;
-                        if (designer == null && !string.IsNullOrEmpty(_wf._id)) {  }
-                        if (designer != null) { designer.tab.Close(); }
-                        await _wf.Delete();
-                    }
+
+                    await wf.Delete();
                 }
-                await p.Delete();
-                Projects.Remove(p);
+                if (p != null)
+                {
+                    if (p.Workflows.Count > 0)
+                    {
+                        var messageBoxResult = MessageBox.Show("Delete project " + p.name + " containing " + p.Workflows.Count() + " workflows", "Delete Confirmation", MessageBoxButton.YesNo);
+                        if (messageBoxResult != MessageBoxResult.Yes) return;
+                        foreach (var _wf in p.Workflows.ToList())
+                        {
+                            var designer = GetWorkflowDesignerByIDOrRelativeFilename(_wf.IDOrRelativeFilename) as Views.WFDesigner;
+                            if (designer == null && !string.IsNullOrEmpty(_wf._id)) { }
+                            if (designer != null) { designer.tab.Close(); }
+                            await _wf.Delete();
+                        }
+                    }
+                    await p.Delete();
+                    Projects.Remove(p);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                MessageBox.Show(ex.Message);
             }
         }
         private bool CanPlay(object _item)
@@ -2009,42 +2103,50 @@ namespace OpenRPA
         }
         private void onStop(object _item)
         {
-            var view = SelectedContent as Views.OpenProject;
-            if (view != null)
+            try
             {
-                var val = view.listWorkflows.SelectedValue;
-                if (val == null) return;
-                var wf = view.listWorkflows.SelectedValue as Workflow;
-                if (wf == null) return;
-                foreach (var i in wf.Instances)
+                var view = SelectedContent as Views.OpenProject;
+                if (view != null)
+                {
+                    var val = view.listWorkflows.SelectedValue;
+                    if (val == null) return;
+                    var wf = view.listWorkflows.SelectedValue as Workflow;
+                    if (wf == null) return;
+                    foreach (var i in wf.Instances)
+                    {
+                        if (i.isCompleted == false)
+                        {
+                            i.Abort("User clicked stop");
+                        }
+                    }
+                    return;
+                }
+
+                if (!(SelectedContent is Views.WFDesigner)) return;
+                var designer = (Views.WFDesigner)SelectedContent;
+                foreach (var i in designer.Workflow.Instances)
                 {
                     if (i.isCompleted == false)
                     {
                         i.Abort("User clicked stop");
                     }
                 }
-                return;
-            }
-
-            if (!(SelectedContent is Views.WFDesigner)) return;
-            var designer = (Views.WFDesigner)SelectedContent;
-            foreach (var i in designer.Workflow.Instances)
-            {
-                if (i.isCompleted == false)
+                if (designer.ResumeRuntimeFromHost != null) designer.ResumeRuntimeFromHost.Set();
+                if (isRecording)
                 {
-                    i.Abort("User clicked stop");
+                    StartDetectorPlugins();
+                    StopRecordPlugins();
+                    designer.ReadOnly = false;
+                    InputDriver.Instance.CallNext = true;
+                    InputDriver.Instance.OnKeyDown -= OnKeyDown;
+                    InputDriver.Instance.OnKeyUp -= OnKeyUp;
+                    GenericTools.restore(GenericTools.mainWindow);
                 }
             }
-            if (designer.ResumeRuntimeFromHost != null) designer.ResumeRuntimeFromHost.Set();
-            if (isRecording)
+            catch (Exception ex)
             {
-                StartDetectorPlugins();
-                StopRecordPlugins();
-                designer.ReadOnly = false;
-                InputDriver.Instance.CallNext = true;
-                InputDriver.Instance.OnKeyDown -= OnKeyDown;
-                InputDriver.Instance.OnKeyUp -= OnKeyUp;
-                GenericTools.restore(GenericTools.mainWindow);
+                Log.Error(ex, "");
+                MessageBox.Show(ex.Message);
             }
         }
         private bool CanRecord(object _item)
@@ -2277,7 +2379,7 @@ namespace OpenRPA
                     if (SelectedContent is Views.WFDesigner view)
                     {
 
-                        var VirtualClick = true;
+                        var VirtualClick = Config.local.use_virtual_click;
                         if (!e.SupportVirtualClick) VirtualClick = false;
                         e.a.AddActivity(new Activities.ClickElement
                         {
@@ -2288,7 +2390,8 @@ namespace OpenRPA
                             OffsetX = e.OffsetX,
                             OffsetY = e.OffsetY,
                             Button = (int)e.Button,
-                            VirtualClick = VirtualClick
+                            VirtualClick = VirtualClick,
+                            AnimateMouse = Config.local.use_animate_mouse
                         }, "item");
                         if (e.SupportInput)
                         {
@@ -2384,34 +2487,41 @@ namespace OpenRPA
         }
         internal void OnDetector(IDetectorPlugin plugin, IDetectorEvent detector, EventArgs e)
         {
-            Log.Information("Detector " + plugin.Entity.name + " was triggered, with id " + plugin.Entity._id);
-            foreach (var wi in WorkflowInstance.Instances)
+            try
             {
-                if (wi.isCompleted) continue;
-                if(wi.Bookmarks != null)
+                Log.Information("Detector " + plugin.Entity.name + " was triggered, with id " + plugin.Entity._id);
+                foreach (var wi in WorkflowInstance.Instances)
                 {
-                    foreach (var b in wi.Bookmarks)
+                    if (wi.isCompleted) continue;
+                    if (wi.Bookmarks != null)
                     {
-                        var _id = (plugin.Entity as Detector)._id;
-                        Log.Debug(b.Key + " -> " + "detector_" + _id);
-                        if (b.Key == "detector_" + _id)
+                        foreach (var b in wi.Bookmarks)
                         {
-                            wi.ResumeBookmark(b.Key, detector);
+                            var _id = (plugin.Entity as Detector)._id;
+                            Log.Debug(b.Key + " -> " + "detector_" + _id);
+                            if (b.Key == "detector_" + _id)
+                            {
+                                wi.ResumeBookmark(b.Key, detector);
+                            }
                         }
                     }
                 }
+                if (!global.isConnected) return;
+                RobotCommand command = new RobotCommand();
+                detector.user = global.webSocketClient.user;
+                var data = JObject.FromObject(detector);
+                var Entity = (plugin.Entity as Detector);
+                command.command = "detector";
+                command.detectorid = Entity._id;
+                if (string.IsNullOrEmpty(Entity._id)) return;
+                command.data = data;
+                _ = global.webSocketClient.QueueMessage(Entity._id, command, null);
             }
-            if (!global.isConnected) return;
-            RobotCommand command = new RobotCommand();
-            detector.user = global.webSocketClient.user;
-            var data = JObject.FromObject(detector);
-            var Entity = (plugin.Entity as Detector);
-            command.command = "detector";
-            command.detectorid = Entity._id;
-            if (string.IsNullOrEmpty(Entity._id)) return;
-            command.data = data;
-            _ = global.webSocketClient.QueueMessage(Entity._id, command, null);
-
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                MessageBox.Show(ex.Message);
+            }
         }
         private async void WebSocketClient_OnQueueMessage(IQueueMessage message, QueueMessageEventArgs e)
         {

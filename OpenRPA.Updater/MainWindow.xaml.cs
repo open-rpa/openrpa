@@ -543,9 +543,9 @@ namespace OpenRPA.Updater
                     bussy = true;
                     listPackages.IsEnabled = true;
                     bussy = false;
-                    OpenRPAPackageManagerLogger.Instance.LogInformation("Packages found");
                     Packages.Clear();
                     LoadPackages(TextSearchField.Text);
+                    OpenRPAPackageManagerLogger.Instance.LogInformation("Package search finished");
                 }
                 catch (Exception ex)
                 {

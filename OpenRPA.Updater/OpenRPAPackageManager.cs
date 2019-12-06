@@ -115,7 +115,7 @@ namespace OpenRPA.Updater
                             .SearchAsync(searchstring, searchFilter, 0, 50, Logger, CancellationToken.None);
                 //foreach (var p in jsonNugetPackages.Where(x => x.Identity.Id.Contains(searchstring))) Log.Debug(p.Identity.Id);
                 //foreach (var p in jsonNugetPackages.Where(x => !x.Identity.Id.Contains(searchstring))) Log.Debug(p.Identity.Id);
-                foreach (var p in jsonNugetPackages.Where(x => x.Identity.Id.Contains(searchstring)))
+                foreach (var p in jsonNugetPackages.Where(x => x.Identity.Id.ToUpper().Contains(searchstring.ToUpper())))
                 {
                     var exists = result.Where(x => x.Identity.Id == p.Identity.Id).FirstOrDefault();
                     if (p.Identity.Id.ToLower().EndsWith("openrpa.interfaces") || p.Identity.Id.ToLower().EndsWith("openrpa.namedpipewrapper")

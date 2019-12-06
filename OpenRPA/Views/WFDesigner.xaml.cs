@@ -50,7 +50,6 @@ namespace OpenRPA.Views
         public bool BreakPointhit { get; set; }
         public bool Singlestep { get; set; }
         public bool SlowMotion { get; set; }
-        public bool Minimize { get; set; } = true;
         public bool VisualTracking { get; set; }
         public bool IsRunnning
         {
@@ -1089,6 +1088,11 @@ namespace OpenRPA.Views
                     if (instance.state != "completed")
                     {
                         System.Activities.Debugger.SourceLocation location;
+                        if (instance.errorsource != null && !_sourceLocationMapping.ContainsKey(instance.errorsource))
+                        {
+                            InitializeStateEnvironment();
+                        }
+
                         if (instance.errorsource != null && _sourceLocationMapping.ContainsKey(instance.errorsource))
                         {
                             GenericTools.RunUI(() =>
@@ -1101,6 +1105,13 @@ namespace OpenRPA.Views
                                     NavigateTo(model);
                                 }
                             });
+                        } else
+                        {
+                            GenericTools.RunUI(() =>
+                            {
+                                SetDebugLocation(null);
+                            });
+                            
                         }
                     }
                 }
@@ -1152,7 +1163,7 @@ namespace OpenRPA.Views
             {
                 Singlestep = false;
                 BreakPointhit = false;
-                if (!VisualTracking && Minimize) GenericTools.minimize(GenericTools.mainWindow);
+                if (!VisualTracking && Config.local.minimize) GenericTools.minimize(GenericTools.mainWindow);
                 if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
                 return;
             }
@@ -1216,7 +1227,7 @@ namespace OpenRPA.Views
                 }
             }
             ReadOnly = true;
-            if (!VisualTracking && Minimize) GenericTools.minimize(GenericTools.mainWindow);
+            if (!VisualTracking && Config.local.minimize) GenericTools.minimize(GenericTools.mainWindow);
             instance.Run();
         }
         private void ShowVariables(IDictionary<string, WorkflowInstanceValueType> Variables)

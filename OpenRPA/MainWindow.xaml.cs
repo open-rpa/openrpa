@@ -689,13 +689,11 @@ namespace OpenRPA
         {
             get
             {
-                if (designer == null) return false;
-                return designer.Minimize;
+                return Config.local.minimize;
             }
             set
             {
-                if (designer == null) return;
-                designer.Minimize = value;
+                Config.local.minimize = value;
                 NotifyPropertyChanged("Minimize");
             }
         }
@@ -2031,7 +2029,7 @@ namespace OpenRPA
                     if (designer != null)
                     {
                         designer.BreakpointLocations = null;
-                        if(designer.Minimize)
+                        if(Config.local.minimize)
                         {
                             instance = workflow.CreateInstance(param, null, null, new idleOrComplete(designer.OnIdle), null);
                         }

@@ -40,7 +40,8 @@ namespace OpenRPA
         public bool use_sendkeys = false;
         public bool use_virtual_click = true;
         public bool use_animate_mouse = false;
-        public TimeSpan use_postwait = TimeSpan.Zero; 
+        public TimeSpan use_postwait = TimeSpan.Zero;
+        public bool minimize = true;
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)

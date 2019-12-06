@@ -410,6 +410,10 @@ namespace OpenRPA
                     System.Threading.Thread.Sleep(1000);
                     try
                     {
+                        if (isCompleted || hasError)
+                        {
+                            DeleteFile();
+                        }
                         if (!global.isConnected) return;
                         //if ((DateTime.Now - LastUpdated).TotalMilliseconds < 2000) return;
                         //LastUpdated = DateTime.Now;
@@ -426,10 +430,6 @@ namespace OpenRPA
                             if (string.IsNullOrEmpty(_id)) i.Save();
                         }
 
-                        if (isCompleted || hasError)
-                        {
-                            DeleteFile();
-                        }
                     }
                     catch (Exception ex)
                     {

@@ -20,6 +20,7 @@ namespace OpenRPA.Net
         // private System.Net.WebSockets.Managed.ClientWebSocket ws = new System.Net.WebSockets.Managed.ClientWebSocket();  // new ClientWebSocket(); // WebSocket
         // private System.Net.WebSockets.Managed.ClientWebSocket ws = null;  // new ClientWebSocket(); // WebSocket
         private WebSocket ws = null;  // new ClientWebSocket(); // WebSocket
+        public int websocket_package_size = 4096;
         public string url { get; set; }
         private CancellationTokenSource src = new CancellationTokenSource();
         private List<SocketMessage> _receiveQueue = new List<SocketMessage>();
@@ -106,9 +107,35 @@ namespace OpenRPA.Net
             }
             src.Cancel();
         }
+        private static bool TryParseJSON(string json, out JObject jObject)
+        {
+            try
+            {
+                jObject = JObject.Parse(json);
+                return true;
+            }
+            catch
+            {
+                jObject = null;
+                return false;
+            }
+        }
+        private static bool TryParseJSON(string json)
+        {
+            try
+            {
+                var jObject = JObject.Parse(json);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        string tempbuffer = null;
         private async Task receiveLoop()
         {
-            byte[] buffer = new byte[2048*2];
+            byte[] buffer = new byte[websocket_package_size];
             while (true)
             {
                 string json = string.Empty;
@@ -122,8 +149,33 @@ namespace OpenRPA.Net
                     }
                     result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), src.Token);
                     json = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
-                    var message = JsonConvert.DeserializeObject<SocketMessage>(json);
-                    if (message != null) _receiveQueue.Add(message);
+                    if (TryParseJSON(json))
+                    {
+                        var message = JsonConvert.DeserializeObject<SocketMessage>(json);
+                        if (message != null) _receiveQueue.Add(message);
+                    } else
+                    {
+                        
+                        if (TryParseJSON(tempbuffer + json))
+                        {
+                            // Console.WriteLine("OK: " + tempbuffer);
+                            var message = JsonConvert.DeserializeObject<SocketMessage>(tempbuffer + json);
+                            if (message != null) _receiveQueue.Add(message);
+                            tempbuffer = null;
+                        } 
+                        else
+                        {
+                            if(!string.IsNullOrEmpty(tempbuffer))
+                            {
+                                Console.WriteLine("FAILED: " + json);
+                            }
+                            tempbuffer += json;
+                        }
+                        if(!string.IsNullOrEmpty(tempbuffer) && tempbuffer.Length > (websocket_package_size*2))
+                        {
+                            tempbuffer = null;
+                        }
+                    }
                     await ProcessQueue();
                 }
                 catch (Exception ex)
@@ -137,7 +189,7 @@ namespace OpenRPA.Net
                         Log.Error(json);
                         Log.Error(ex, "");
                         await Task.Delay(3000);
-                        await this.Close();
+                        //await this.Close();
                     }
                 }
             }
@@ -291,10 +343,14 @@ namespace OpenRPA.Net
                         break;
                     case "refreshtoken":
                         msg.reply();
-                        var singin = JsonConvert.DeserializeObject<SigninMessage>(msg.data);
-                        this.user = singin.user;
-                        this.jwt = singin.jwt;
+                        var signin = JsonConvert.DeserializeObject<SigninMessage>(msg.data);
+                        this.user = signin.user;
+                        this.jwt = signin.jwt;
                         // msg.SendMessage(this); no need to confirm
+                        if(signin.websocket_package_size > 100)
+                        {
+                            this.websocket_package_size = signin.websocket_package_size;
+                        }                        
                         break;
                     case "queuemessage":
                         msg.reply();
@@ -358,6 +414,10 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
             user = signin.user;
             jwt = signin.jwt;
+            if (signin.websocket_package_size > 100)
+            {
+                this.websocket_package_size = signin.websocket_package_size;
+            }
             return signin.user;
         }
         public async Task<TokenUser> Signin(string jwt)
@@ -367,6 +427,10 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
             user = signin.user;
             this.jwt = signin.jwt;
+            if (signin.websocket_package_size > 100)
+            {
+                this.websocket_package_size = signin.websocket_package_size;
+            }
             return signin.user;
         }
         public async Task<TokenUser> Signin(SecureString jwt)
@@ -376,6 +440,10 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
             user = signin.user;
             this.jwt = signin.jwt;
+            if (signin.websocket_package_size > 100)
+            {
+                this.websocket_package_size = signin.websocket_package_size;
+            }
             return signin.user;
         }
         public async Task RegisterUser(string name, string username, string password)
@@ -467,6 +535,15 @@ namespace OpenRPA.Net
             q = await q.SendMessage<DeleteOneMessage>(this);
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
         }
+        //public async Task UpdateOne(string collectionname, string query, int w, bool j, JObject UpdateDoc)
+        //{
+        //    UpdateOneMessage<JObject> q = new UpdateOneMessage<JObject>();
+        //    q.w = w; q.j = j; q.query = query;
+        //    q.collectionname = collectionname; q.item = UpdateDoc;
+        //    q = await q.SendMessage<UpdateOneMessage<JObject>>(this);
+        //    if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+        //    // return q.result;
+        //}
         public async Task<string> UploadFile(string filepath, string path, metadata metadata)
         {
             if (string.IsNullOrEmpty(path)) path = "";

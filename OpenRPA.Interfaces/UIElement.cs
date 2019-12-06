@@ -196,6 +196,7 @@ namespace OpenRPA
                     if (!DoubleClick) FlaUI.Core.Input.Mouse.Click(flabuttun, point);
                     if (DoubleClick) FlaUI.Core.Input.Mouse.DoubleClick(flabuttun, point);
                 }
+                FlaUI.Core.Input.Wait.UntilInputIsProcessed();
             }
             catch (Exception)
             {

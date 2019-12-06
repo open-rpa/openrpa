@@ -464,11 +464,16 @@ namespace OpenRPA
                         SetStatus("Registering queue for robot");
                         Log.Debug("Registering queue for robot " + global.webSocketClient.user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         await global.webSocketClient.RegisterQueue(global.webSocketClient.user._id);
+
                         foreach (var role in global.webSocketClient.user.roles)
                         {
-                            SetStatus("Registering queue for robot (" + role.name + ")");
-                            Log.Debug("Registering queue for role " + role.name + " " + role._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                            await global.webSocketClient.RegisterQueue(role._id);
+                            var roles = await global.webSocketClient.Query<apirole>("users", "{_id: '" + role._id + "'}", top: 5000);
+                            if(roles.Length == 1 && roles[0].rparole)
+                            {
+                                SetStatus("Registering queue for robot (" + role.name + ")");
+                                Log.Debug("Registering queue for role " + role.name + " " + role._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                await global.webSocketClient.RegisterQueue(role._id);
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -779,9 +784,50 @@ namespace OpenRPA
             set
             {
                 Config.local.use_sendkeys = value;
-                NotifyPropertyChanged("log_selector_verbose");
+                NotifyPropertyChanged("use_sendkeys");
             }
         }
+        public bool use_virtual_click
+        {
+            get
+            {
+                return Config.local.use_virtual_click;
+            }
+            set
+            {
+                Config.local.use_virtual_click = value;
+                NotifyPropertyChanged("use_virtual_click");
+            }
+        }
+        public bool use_animate_mouse
+        {
+            get
+            {
+                return Config.local.use_animate_mouse;
+            }
+            set
+            {
+                Config.local.use_animate_mouse = value;
+                NotifyPropertyChanged("use_animate_mouse");
+            }
+        }
+        public string use_postwait
+        {
+            get
+            {
+                return Config.local.use_postwait.ToString();
+            }
+            set
+            {
+                TimeSpan ts;
+                if(TimeSpan.TryParse(value, out ts))
+                {
+                    Config.local.use_postwait = ts;
+                    NotifyPropertyChanged("use_postwait");
+                }
+            }
+        }
+        
         public ICommand LoggingOptionCommand { get { return new RelayCommand<object>(onLoggingOptionCommand, CanAllways); } }
         public ICommand ExitAppCommand { get { return new RelayCommand<object>(onExitApp, (e)=> true ); } }
         public ICommand SettingsCommand { get { return new RelayCommand<object>(onSettings, CanSettings); } }
@@ -2333,7 +2379,7 @@ namespace OpenRPA
                     if (SelectedContent is Views.WFDesigner view)
                     {
 
-                        var VirtualClick = true;
+                        var VirtualClick = Config.local.use_virtual_click;
                         if (!e.SupportVirtualClick) VirtualClick = false;
                         e.a.AddActivity(new Activities.ClickElement
                         {
@@ -2344,7 +2390,8 @@ namespace OpenRPA
                             OffsetX = e.OffsetX,
                             OffsetY = e.OffsetY,
                             Button = (int)e.Button,
-                            VirtualClick = VirtualClick
+                            VirtualClick = VirtualClick,
+                            AnimateMouse = Config.local.use_animate_mouse
                         }, "item");
                         if (e.SupportInput)
                         {

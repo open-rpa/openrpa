@@ -124,6 +124,8 @@ namespace OpenRPA.Net
         {
             try
             {
+                if (!json.StartsWith("{") && !json.StartsWith("[")) return false;
+                if (!json.EndsWith("}") && !json.EndsWith("]")) return false;
                 var jObject = JObject.Parse(json);
                 return true;
             }
@@ -167,7 +169,7 @@ namespace OpenRPA.Net
                         {
                             if(!string.IsNullOrEmpty(tempbuffer))
                             {
-                                Console.WriteLine("FAILED: " + json);
+                                Log.Debug("FAILED: " + json);
                             }
                             tempbuffer += json;
                         }
@@ -288,6 +290,11 @@ namespace OpenRPA.Net
                 //await ws.SendAsync(buffer, WebSocketMessageType.Text, true, cancellation);
                 await ws.SendAsync(buffer, System.Net.WebSockets.WebSocketMessageType.Text, true, cancellation);
                 return true;
+            }
+            catch (System.Net.WebSockets.WebSocketException ex)
+            {
+                Log.Error(ex, "");
+                _ = Close();
             }
             catch (Exception ex)
             {

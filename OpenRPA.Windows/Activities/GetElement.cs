@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using System.Reflection;
 
 namespace OpenRPA.Windows
 {
@@ -145,14 +146,21 @@ namespace OpenRPA.Windows
             metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
         }
+
         public Activity Create(System.Windows.DependencyObject target)
         {
+            var da = new DelegateInArgument<UIElement>
+            {
+                Name = "item"
+            };
+            Type t = Type.GetType("OpenRPA.Activities.ClickElement, OpenRPA");
+            var instance = Activator.CreateInstance(t);
             var fef = new GetElement();
-            var aa = new ActivityAction<UIElement>();
-            var da = new DelegateInArgument<UIElement>();
-            da.Name = "item";
-            fef.Body = aa;
-            aa.Argument = da;
+            fef.Body = new ActivityAction<UIElement>
+            {
+                Argument = da,
+                Handler = (Activity)instance
+            };
             return fef;
         }
     }

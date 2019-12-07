@@ -33,5 +33,10 @@
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,368,0,0" Text="Reload interval:" VerticalAlignment="Top" Width="110" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="139,368,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="txtreloadinterval" TextChanged="txtreloadinterval_TextChanged" />
 
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,398,0,0" Text="autosignout:" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="139,398,0,0" VerticalAlignment="Top" Width="222" x:Name="chkautosignout" 
+                  Checked="chkautosignout_Checked" Unchecked="chkautosignout_Checked" Click="chkautosignout_Click" />
+        
+
     </Grid>
 </UserControl>

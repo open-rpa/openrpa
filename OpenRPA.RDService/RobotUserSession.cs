@@ -324,7 +324,7 @@ namespace OpenRPA.RDService
         {
             if(connection!=null)
             {
-                if(connection.IsConnected)
+                if(connection.IsConnected && client.autosignout)
                 {
                     connection.PushMessage(new RPAMessage("signout"));
                 }

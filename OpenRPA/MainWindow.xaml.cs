@@ -2024,6 +2024,7 @@ namespace OpenRPA
                 try
                 {
                     Views.WFDesigner designer = GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) as Views.WFDesigner;
+                    if (this.Minimize) GenericTools.minimize(GenericTools.mainWindow);
                     IWorkflowInstance instance;
                     var param = new Dictionary<string, object>();
                     if (designer != null)
@@ -2633,6 +2634,11 @@ namespace OpenRPA
             GenericTools.RunUI(() =>
             {
                 CommandManager.InvalidateRequerySuggested();
+                if(string.IsNullOrEmpty(instance.queuename) && string.IsNullOrEmpty(instance.correlationId) && string.IsNullOrEmpty(instance.caller) &&  instance.isCompleted)
+                {
+                    if (this.Minimize) GenericTools.restore(GenericTools.mainWindow);
+
+                }
             });
             if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
             {

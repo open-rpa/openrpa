@@ -1066,6 +1066,14 @@ namespace OpenRPA.Views
                     Properties = WorkflowDesigner.PropertyInspectorView;
                 });
             }
+            if ((string.IsNullOrEmpty(instance.queuename) && string.IsNullOrEmpty(instance.correlationId)) && string.IsNullOrEmpty(instance.caller) && instance.isCompleted && Config.local.minimize)
+            {
+                GenericTools.RunUI(() =>
+                {
+                    GenericTools.restore(GenericTools.mainWindow);
+                });
+            }
+
             if (instance.state != "idle")
             {
                 GenericTools.RunUI(() =>
@@ -1084,7 +1092,6 @@ namespace OpenRPA.Views
                 BreakPointhit = false; Singlestep = false;
                 if (string.IsNullOrEmpty(instance.queuename) && string.IsNullOrEmpty(instance.correlationId))
                 {
-                    GenericTools.restore(GenericTools.mainWindow);
                     if (instance.state != "completed")
                     {
                         System.Activities.Debugger.SourceLocation location;

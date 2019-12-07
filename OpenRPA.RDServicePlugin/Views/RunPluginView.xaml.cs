@@ -167,6 +167,7 @@ namespace OpenRPA.RDServicePlugin.Views
                 {
                     client = clients.First();
                     AddcurrentuserButton.Content = "Update current user";
+                    chkautosignout.IsChecked = client.autosignout;
                 }
                 txtreloadinterval.Text = RDService.PluginConfig.reloadinterval.ToString();
                 chkUseFreeRDP.IsChecked = RDService.PluginConfig.usefreerdp;
@@ -273,6 +274,32 @@ namespace OpenRPA.RDServicePlugin.Views
             {
                 RDService.PluginConfig.reloadinterval = ts;
                 RDService.PluginConfig.Save();
+            }
+        }
+        private async void chkautosignout_Checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (client == null) return;
+                client.autosignout = chkautosignout.IsChecked.Value;
+                await global.webSocketClient.UpdateOne("openrpa", 1, false, client);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+        }
+        private async void chkautosignout_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (client == null) return;
+                client.autosignout = chkautosignout.IsChecked.Value;
+                await global.webSocketClient.UpdateOne("openrpa", 1, false, client);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
             }
         }
     }

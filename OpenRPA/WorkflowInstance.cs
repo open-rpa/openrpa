@@ -32,6 +32,7 @@ namespace OpenRPA
         public Dictionary<string, WorkflowInstanceValueType> Variables { get { return GetProperty<Dictionary<string, WorkflowInstanceValueType>>(); } set { SetProperty(value); } }
         public string InstanceId { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string WorkflowId { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string caller { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string RelativeFilename { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string xml { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string owner { get { return GetProperty<string>(); } set { SetProperty(value); } }

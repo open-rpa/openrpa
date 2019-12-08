@@ -50,6 +50,15 @@ namespace OpenRPA
             }
         }
 
+        [JsonIgnore]
+        public string ProjectAndName
+        {
+            get
+            {
+                if (Project == null) return name;
+                return Project.name + "/" + name;
+            }
+        }
         public string FilePath
         {
             get

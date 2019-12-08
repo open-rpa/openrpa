@@ -17,6 +17,7 @@ namespace OpenRPA.Interfaces
         string queuename { get; set; }
         string InstanceId { get; set; }
         string WorkflowId { get; set; }
+        string caller { get; set; }
         string xml { get; set; }
         string owner { get; set; }
         string ownerid { get; set; }

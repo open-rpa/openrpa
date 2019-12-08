@@ -16,7 +16,7 @@ namespace OpenRPA.RDService
         public const string ServiceName = "OpenRPA";
         public static bool isService = false;
         private static Tracing tracing = null;
-        private static System.Threading.Timer reloadTimer = null;
+        private static System.Timers.Timer reloadTimer = null;
         private void GetSessions()
         {
             IntPtr server = IntPtr.Zero;
@@ -235,17 +235,21 @@ namespace OpenRPA.RDService
 
                 if(reloadTimer==null)
                 {
-                    reloadTimer = new System.Threading.Timer(o =>
+                    reloadTimer = new System.Timers.Timer(PluginConfig.reloadinterval.TotalMilliseconds);
+                    reloadTimer.Elapsed += async (o,e) =>
                     {
+                        reloadTimer.Stop();
                         try
                         {
-                            _ = ReloadConfig();
+                            await ReloadConfig();
                         }
                         catch (Exception ex)
                         {
                             Log.Error(ex.ToString());
                         }
-                    }, null, (int)PluginConfig.reloadinterval.TotalMilliseconds, (int)PluginConfig.reloadinterval.TotalMilliseconds);
+                        reloadTimer.Start();
+                    };
+                    reloadTimer.Start();
                 }
             }
             catch (Exception ex)

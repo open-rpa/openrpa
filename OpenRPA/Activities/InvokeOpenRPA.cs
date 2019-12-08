@@ -67,6 +67,7 @@ namespace OpenRPA.Activities
                     {
                         instance = workflow.CreateInstance(param, null, null, MainWindow.instance.idleOrComplete,  null);
                     }
+                    instance.caller = WorkflowInstanceId;
                 });
                 Log.Information("Run Instance ID " + instance._id);
                 context.CreateBookmark(instance._id, new BookmarkCallback(OnBookmarkCallback));

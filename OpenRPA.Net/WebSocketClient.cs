@@ -180,6 +180,21 @@ namespace OpenRPA.Net
                     }
                     await ProcessQueue();
                 }
+                catch (System.Net.WebSockets.WebSocketException ex)
+                {
+                    if (ws.State != System.Net.WebSockets.WebSocketState.Open)
+                    {
+                        OnClose?.Invoke(ex.Message);
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(json)) Log.Error(json);
+                        Log.Error(ex, "");
+                        await Task.Delay(3000);
+                        await this.Close();
+                    }
+
+                }
                 catch (Exception ex)
                 {
                     if (ws.State != System.Net.WebSockets.WebSocketState.Open)
@@ -188,7 +203,7 @@ namespace OpenRPA.Net
                     }
                     else
                     {
-                        Log.Error(json);
+                        if(!string.IsNullOrEmpty(json)) Log.Error(json);
                         Log.Error(ex, "");
                         await Task.Delay(3000);
                         //await this.Close();
@@ -385,6 +400,11 @@ namespace OpenRPA.Net
                                 msg.SendMessage(this);
                                 return;
                             }
+                            if(!e.sendReply)
+                            {
+                                qm.queuename = "";
+                                qm.replyto = "";
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -392,6 +412,7 @@ namespace OpenRPA.Net
                             msg.data = ex.ToString();
                         }
                         msg.SendMessage(this);
+                        // if (string.IsNullOrEmpty(qm.replyto)) msg.SendMessage(this);
                         break;
                     default:
                         Log.Error("Received unknown command '" + msg.command + "' with data: " + msg.data);

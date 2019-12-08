@@ -69,9 +69,11 @@ namespace OpenRPA.Interfaces
     public class QueueMessageEventArgs : EventArgs
     {
         public bool isBusy { get; set; }
+        public bool sendReply { get; set; }
         public QueueMessageEventArgs()
         {
-            this.isBusy = false;
+            isBusy = false;
+            sendReply = false;
         }
     }
 }

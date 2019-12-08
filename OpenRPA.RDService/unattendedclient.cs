@@ -15,9 +15,9 @@ namespace OpenRPA.RDService
         public string computername { get; set; }
         public string computerfqdn { get; set; }
         public string openrpapath { get; set; } = @"%windir%\system32\notepad.exe";
-        public TimeSpan autorestart { get; set; } = TimeSpan.FromMinutes(1);
+        // public TimeSpan autorestart { get; set; } = TimeSpan.FromMinutes(1);
         public TimeSpan rdpretry { get; set; } = TimeSpan.FromMinutes(30);
         public bool enabled { get; set; }
-
+        public bool autosignout { get; set; } = true;
     }
 }

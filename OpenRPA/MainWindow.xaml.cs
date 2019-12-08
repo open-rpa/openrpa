@@ -2024,6 +2024,7 @@ namespace OpenRPA
                 try
                 {
                     Views.WFDesigner designer = GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) as Views.WFDesigner;
+                    if (this.Minimize) GenericTools.minimize(GenericTools.mainWindow);
                     IWorkflowInstance instance;
                     var param = new Dictionary<string, object>();
                     if (designer != null)
@@ -2505,7 +2506,7 @@ namespace OpenRPA
                     }
                 }
                 if (!global.isConnected) return;
-                RobotCommand command = new RobotCommand();
+                Interfaces.mq.RobotCommand command = new Interfaces.mq.RobotCommand();
                 detector.user = global.webSocketClient.user;
                 var data = JObject.FromObject(detector);
                 var Entity = (plugin.Entity as Detector);
@@ -2523,11 +2524,11 @@ namespace OpenRPA
         }
         private async void WebSocketClient_OnQueueMessage(IQueueMessage message, QueueMessageEventArgs e)
         {
-            RobotCommand command = null;
+            Interfaces.mq.RobotCommand command = null;
             try
             {
-                command = Newtonsoft.Json.JsonConvert.DeserializeObject<RobotCommand>(message.data.ToString());
-                if (command.data == null)
+                command = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.mq.RobotCommand>(message.data.ToString());
+                if (command.command != "invoke")
                 {
                     if (!string.IsNullOrEmpty(message.correlationId))
                     {
@@ -2570,6 +2571,7 @@ namespace OpenRPA
                                 e.isBusy = true; return;
                             }
                         }
+                        e.sendReply = true;
                         var param = new Dictionary<string, object>();
                         foreach (var k in data)
                         {
@@ -2616,7 +2618,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                command = new RobotCommand
+                command = new Interfaces.mq.RobotCommand
                 {
                     command = "error",
                     data = JObject.FromObject(ex)
@@ -2633,10 +2635,15 @@ namespace OpenRPA
             GenericTools.RunUI(() =>
             {
                 CommandManager.InvalidateRequerySuggested();
+                if(string.IsNullOrEmpty(instance.queuename) && string.IsNullOrEmpty(instance.correlationId) && string.IsNullOrEmpty(instance.caller) &&  instance.isCompleted)
+                {
+                    if (this.Minimize) GenericTools.restore(GenericTools.mainWindow);
+
+                }
             });
             if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
             {
-                RobotCommand command = new RobotCommand();
+                Interfaces.mq.RobotCommand command = new Interfaces.mq.RobotCommand();
                 var data = JObject.FromObject(instance.Parameters);
                 command.command = "invoke" + instance.state;
                 command.workflowid = instance.WorkflowId;

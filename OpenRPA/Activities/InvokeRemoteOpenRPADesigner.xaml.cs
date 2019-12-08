@@ -16,12 +16,13 @@ using System.Windows.Media.Imaging;
 
 namespace OpenRPA.Activities
 {
-    public partial class InvokeOpenRPADesigner : INotifyPropertyChanged
+    public partial class InvokeRemoteOpenRPADesigner : INotifyPropertyChanged
     {
-        public InvokeOpenRPADesigner()
+        public InvokeRemoteOpenRPADesigner()
         {
             InitializeComponent();
             workflows = new ObservableCollection<Workflow>();
+            robots = new ObservableCollection<apiuser>();
             DataContext = this;
         }
         public event PropertyChangedEventHandler PropertyChanged;
@@ -30,17 +31,22 @@ namespace OpenRPA.Activities
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         public ObservableCollection<Workflow> workflows { get; set; }
-        private void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
+        public ObservableCollection<apiuser> robots { get; set; }
+        private async void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
         {
+            //var _workflows = await global.webSocketClient.Query<Workflow>("workflow", "{_type: 'workflow'}");
+            //workflows.Clear();
             var result = new List<Workflow>();
             foreach (var p in MainWindow.instance.Projects)
             {
-                foreach (var w in p.Workflows) result.Add(w);
+                foreach(var w in p.Workflows) result.Add(w);
             }
             result = result.OrderBy(x => x.name).OrderBy(x => x.Project.name).ToList();
             foreach (var w in result) workflows.Add(w);
-        }
 
+            var _users = await global.webSocketClient.Query<apiuser>("users", "{\"$or\":[ {\"_type\": \"user\"}, {\"_type\": \"role\", \"rparole\": true} ]}", top: 5000);
+            foreach (var u in _users) robots.Add(u);
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             try

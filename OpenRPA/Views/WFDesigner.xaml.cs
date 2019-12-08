@@ -1037,7 +1037,7 @@ namespace OpenRPA.Views
         {
             if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
             {
-                RobotCommand command = new RobotCommand();
+                Interfaces.mq.RobotCommand command = new Interfaces.mq.RobotCommand();
                 var data = JObject.FromObject(instance.Parameters);
                 command.command = "invoke" + instance.state;
                 command.workflowid = instance.WorkflowId;

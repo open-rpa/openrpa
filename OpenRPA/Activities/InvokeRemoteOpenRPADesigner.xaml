@@ -1,4 +1,4 @@
-﻿<sap:ActivityDesigner x:Class="OpenRPA.Activities.InvokeOpenRPADesigner"
+﻿<sap:ActivityDesigner x:Class="OpenRPA.Activities.InvokeRemoteOpenRPADesigner"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
@@ -26,10 +26,13 @@
     <sap:ActivityDesigner.Resources>
         <DataTemplate x:Key="Collapsed">
             <StackPanel>
-            </StackPanel>
-        </DataTemplate>
-        <DataTemplate x:Key="Expanded">
-            <StackPanel>
+                <ComboBox 
+                ItemsSource="{Binding robots}"
+                DisplayMemberPath="name"
+                SelectedValuePath="_id"
+                SelectedValue="{Binding Path=ModelItem.target, Mode=TwoWay}"
+                >
+                </ComboBox>
                 <ComboBox 
                 ItemsSource="{Binding workflows}"
                 DisplayMemberPath="ProjectAndName"
@@ -39,6 +42,8 @@
                 </ComboBox>
                 <Button Click="Button_Click">Add variables</Button>
             </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="Expanded">
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
             <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>

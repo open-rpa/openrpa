@@ -2528,7 +2528,7 @@ namespace OpenRPA
             try
             {
                 command = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.mq.RobotCommand>(message.data.ToString());
-                if (command.command == "invokecompleted" || command.command == "invoke" || command.command == "invokefailed" || command.command == "invokeaborted" || command.command == "error")
+                if (command.command == "invokecompleted" || command.command == "invokefailed" || command.command == "invokeaborted" || command.command == "error")
                 {
                     if (!string.IsNullOrEmpty(message.correlationId))
                     {

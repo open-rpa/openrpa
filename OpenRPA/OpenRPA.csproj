@@ -9,7 +9,7 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.52</Version>
+    <Version>1.0.53</Version>
     <PackageReleaseNotes>1.0.52 Fix InvokeRemoteOpenRPA
 1.0.51 Add InvokeRemoteOpenRPA
 1.0.50 Fix showing error location when not visual tracking

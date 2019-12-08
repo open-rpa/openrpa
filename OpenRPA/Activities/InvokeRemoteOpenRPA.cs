@@ -87,14 +87,8 @@ namespace OpenRPA.Activities
 
         void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object obj)
         {
+            context.RemoveBookmark(bookmark.Name);
             var command = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.mq.RobotCommand>(obj.ToString());
-            if (command.command == "invokesuccess") return;
-            // if (command.command == "invokesuccess" && command.command == "invokeidle") return;
-            if(command.command == "invokecompleted" || command.command == "invoke" || command.command == "invokefailed" || command.command == "invokeaborted" || command.command == "error")
-            {
-                context.RemoveBookmark(bookmark.Name);
-            }
-            
             if (command.data == null) return;
             if (string.IsNullOrEmpty(command.data.ToString())) return;
             var payload = JObject.Parse(command.data.ToString());

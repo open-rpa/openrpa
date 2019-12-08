@@ -26,6 +26,10 @@
     <sap:ActivityDesigner.Resources>
         <DataTemplate x:Key="Collapsed">
             <StackPanel>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="Expanded">
+            <StackPanel>
                 <ComboBox 
                 ItemsSource="{Binding robots}"
                 DisplayMemberPath="name"
@@ -42,8 +46,6 @@
                 </ComboBox>
                 <Button Click="Button_Click">Add variables</Button>
             </StackPanel>
-        </DataTemplate>
-        <DataTemplate x:Key="Expanded">
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
             <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>

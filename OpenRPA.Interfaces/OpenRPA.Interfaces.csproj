@@ -8,7 +8,7 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.22</Version>
+    <Version>1.0.23</Version>
     <PackageReleaseNotes>1.0.20 Add some terminal service apis
 1.0.18 Tweak input handling doing recording
 1.0.17 Add better support for multiple users and install in program files

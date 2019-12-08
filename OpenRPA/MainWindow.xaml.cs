@@ -2528,7 +2528,7 @@ namespace OpenRPA
             try
             {
                 command = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.mq.RobotCommand>(message.data.ToString());
-                if (command.command != "invoke")
+                if (command.command == "invokecompleted" || command.command == "invoke" || command.command == "invokefailed" || command.command == "invokeaborted" || command.command == "error")
                 {
                     if (!string.IsNullOrEmpty(message.correlationId))
                     {
@@ -2571,7 +2571,7 @@ namespace OpenRPA
                                 e.isBusy = true; return;
                             }
                         }
-                        e.sendReply = true;
+                        // e.sendReply = true;
                         var param = new Dictionary<string, object>();
                         foreach (var k in data)
                         {
@@ -2625,9 +2625,12 @@ namespace OpenRPA
                 };
             }
             // string data = Newtonsoft.Json.JsonConvert.SerializeObject(command);
-            if (!string.IsNullOrEmpty(message.replyto) && message.replyto != message.queuename)
+            if(command.command == "error" || (command.command == "invoke" && !string.IsNullOrEmpty(command.workflowid)))
             {
-                await global.webSocketClient.QueueMessage(message.replyto, command, message.correlationId);
+                if (!string.IsNullOrEmpty(message.replyto) && message.replyto != message.queuename)
+                {
+                    await global.webSocketClient.QueueMessage(message.replyto, command, message.correlationId);
+                }
             }
         }
         public void idleOrComplete(IWorkflowInstance instance, EventArgs e)

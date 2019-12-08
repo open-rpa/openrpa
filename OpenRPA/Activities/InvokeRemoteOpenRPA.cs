@@ -66,9 +66,11 @@ namespace OpenRPA.Activities
             {
                 if (!string.IsNullOrEmpty(bookmarkname))
                 {
-                    _payload["workflowid"] = workflow;
-                    _payload["command"] = "invoke";
-                    var result = await global.webSocketClient.QueueMessage(target, _payload, bookmarkname);
+                    IDictionary<string, object> _robotcommand = new System.Dynamic.ExpandoObject();
+                    _robotcommand["workflowid"] = workflow;
+                    _robotcommand["command"] = "invoke";
+                    _robotcommand.Add("data", _payload);
+                    var result = await global.webSocketClient.QueueMessage(target, _robotcommand, bookmarkname);
                 }
             }
             catch (Exception ex)
@@ -86,8 +88,15 @@ namespace OpenRPA.Activities
         void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object obj)
         {
             var command = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.mq.RobotCommand>(obj.ToString());
-            if (command.command == "invoke" && command.command == "invokesuccess" && command.command == "invokeidle") return;
-            context.RemoveBookmark(bookmark.Name);
+            if (command.command == "invokesuccess") return;
+            // if (command.command == "invokesuccess" && command.command == "invokeidle") return;
+            if(command.command == "invokecompleted" || command.command == "invoke" || command.command == "invokefailed" || command.command == "invokeaborted" || command.command == "error")
+            {
+                context.RemoveBookmark(bookmark.Name);
+            }
+            
+            if (command.data == null) return;
+            if (string.IsNullOrEmpty(command.data.ToString())) return;
             var payload = JObject.Parse(command.data.ToString());
             List<string> keys = payload.Properties().Select(p => p.Name).ToList();
             foreach (var key in keys)

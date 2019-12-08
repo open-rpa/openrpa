@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.51</Version>
-    <PackageReleaseNotes>1.0.51 Add InvokeRemoteOpenRPA
+    <Version>1.0.52</Version>
+    <PackageReleaseNotes>1.0.52 Fix InvokeRemoteOpenRPA
+1.0.51 Add InvokeRemoteOpenRPA
 1.0.50 Fix showing error location when not visual tracking
 1.0.49 Add ClickElement per default to Windows GetElement. Add more recording options
 1.0.48 Add OpenRPA.Utilities

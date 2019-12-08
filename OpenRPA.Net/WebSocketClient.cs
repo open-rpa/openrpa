@@ -391,19 +391,14 @@ namespace OpenRPA.Net
                         {
                             var e = new QueueMessageEventArgs();
                             OnQueueMessage?.Invoke(qm, e);
-                            msg.data = JsonConvert.SerializeObject(qm);
-                            if(e.isBusy)
+                            msg.data = JsonConvert.SerializeObject(qm);                            
+                            if (e.isBusy)
                             {
                                 msg.command = "error";
                                 msg.data = "Sorry, I'm bussy";
                                 Log.Warning("Cannot invoke, I'm busy.");
                                 msg.SendMessage(this);
                                 return;
-                            }
-                            if(!e.sendReply)
-                            {
-                                qm.queuename = "";
-                                qm.replyto = "";
                             }
                         }
                         catch (Exception ex)

@@ -39,10 +39,17 @@ namespace OpenRPA.RDServicePlugin.Views
         }
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            var asm = System.Reflection.Assembly.GetEntryAssembly();
-            var filepath = asm.CodeBase.Replace("file:///", "");
-            var path = System.IO.Path.GetDirectoryName(filepath);
-            RDService.PluginConfig.Save();
+            try
+            {
+                var asm = System.Reflection.Assembly.GetEntryAssembly();
+                var filepath = asm.CodeBase.Replace("file:///", "");
+                var path = System.IO.Path.GetDirectoryName(filepath);
+                RDService.PluginConfig.Save();
+            }
+            catch (Exception ex)
+            {
+                Log.Debug(ex.ToString());
+            }
         }
         private void ReauthenticateButtonClick(object sender, RoutedEventArgs e)
         {

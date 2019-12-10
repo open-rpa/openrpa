@@ -232,7 +232,7 @@ namespace OpenRPA.Windows
             }
         }
         private static Dictionary<string, AutomationElement> AppWindowCache = new Dictionary<string, AutomationElement>();
-        public AutomationElement[] matches(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count, bool isDesktop, TimeSpan timeout, bool search_descendants)
+        public AutomationElement[] matches_new(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count, bool isDesktop, TimeSpan timeout, bool search_descendants)
         {
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
@@ -259,7 +259,7 @@ namespace OpenRPA.Windows
 
             return matchs.ToArray();
         }
-        public AutomationElement[] matches_old(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count, bool isDesktop, TimeSpan timeout, bool search_descendants)
+        public AutomationElement[] matches(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count, bool isDesktop, TimeSpan timeout, bool search_descendants)
         {
             var matchs = new List<AutomationElement>();
             var c = GetConditionsWithoutStar();

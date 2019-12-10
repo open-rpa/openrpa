@@ -234,6 +234,33 @@ namespace OpenRPA.Windows
         private static Dictionary<string, AutomationElement> AppWindowCache = new Dictionary<string, AutomationElement>();
         public AutomationElement[] matches(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count, bool isDesktop, TimeSpan timeout, bool search_descendants)
         {
+            var sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+            var matchs = new List<AutomationElement>();
+            var c = GetConditionsWithoutStar();
+            Log.Selector("AutomationElement.matches: Searching for " + c.ToString());
+            AutomationElement[] elements = null;
+            if (isDesktop)
+            {
+                elements = element.FindAllChildren(c);
+            }
+            else
+            {
+                elements = element.FindAllDescendants(c);
+            }
+            Log.Selector(string.Format("AutomationElement.matches::found " + elements.Count() + " elements {0:mm\\:ss\\.fff}", sw.Elapsed));
+            // var elements = element.FindAllChildren();
+            foreach (var elementNode in elements)
+            {
+                Log.SelectorVerbose("matches::match");
+                if (Match(elementNode)) matchs.Add(elementNode);
+            }
+            Log.Selector(string.Format("AutomationElement.matches::complete, with " + elements.Count() + " elements {0:mm\\:ss\\.fff}", sw.Elapsed));
+
+            return matchs.ToArray();
+        }
+        public AutomationElement[] matches_old(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count, bool isDesktop, TimeSpan timeout, bool search_descendants)
+        {
             var matchs = new List<AutomationElement>();
             var c = GetConditionsWithoutStar();
             if(isDesktop)
@@ -243,7 +270,7 @@ namespace OpenRPA.Windows
                     var _element = AppWindowCache[c.ToString()];
                     try
                     {
-                        if (!_element.IsOffscreen)
+                        if (_element.Properties.IsOffscreen.IsSupported && !_element.IsOffscreen)
                         {
                             if (Match(_element))
                             {
@@ -392,7 +419,18 @@ namespace OpenRPA.Windows
             Log.SelectorVerbose(string.Format("matches::FindAllChildren.isDesktop(" + isDesktop + ")::complete {0:mm\\:ss\\.fff}", sw.Elapsed));
             if(isDesktop && matchs.Count == 1)
             {
-                AppWindowCache.Add(c.ToString(), matchs[0]);
+                if (matchs[0].Properties.IsOffscreen.IsSupported)
+                {
+                    if(!AppWindowCache.ContainsKey(c.ToString()))
+                    {
+                        AppWindowCache.Add(c.ToString(), matchs[0]);
+                    } else
+                    {
+                        AppWindowCache[c.ToString()] = matchs[0];
+                    }
+                    
+                }
+                    
             }
             return matchs.ToArray();
         }

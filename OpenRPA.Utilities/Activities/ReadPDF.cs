@@ -28,7 +28,7 @@ namespace OpenRPA.Utilities
             var filename = Filename.Get(context);
             filename = Environment.ExpandEnvironmentVariables(filename);
             iTextSharp.text.pdf.PdfReader reader = new iTextSharp.text.pdf.PdfReader(filename);
-            context.SetValue(AllText, reader);
+            context.SetValue(Result, reader);
             var result = GetTextFromAllPages(reader);
             context.SetValue(AllText, result);
         }

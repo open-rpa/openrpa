@@ -287,6 +287,7 @@
     <None Remove="Views\CloseableHeader.xaml" />
     <None Remove="Views\DetectorsView.xaml" />
     <None Remove="Views\EditXAML.xaml" />
+    <None Remove="Views\InsertSelect.xaml" />
     <None Remove="Views\InsertText.xaml" />
     <None Remove="Views\KeyboardSeqWindow.xaml" />
     <None Remove="Views\LoginWindow.xaml" />
@@ -344,6 +345,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InsertSelect.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RecorderPlugins.xaml">

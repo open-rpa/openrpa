@@ -2492,6 +2492,25 @@ namespace OpenRPA
                             }
                             else { e.SupportInput = false; }
                             isRecording = true;
+                        } 
+                        else if (e.SupportSelect)
+                        {
+                            var win = new Views.InsertSelect(e.Element)
+                            {
+                                Topmost = true
+                            };
+                            isRecording = false;
+                            InputDriver.Instance.CallNext = true;
+                            if (win.ShowDialog() == true)
+                            {
+                                e.ClickHandled = true;
+                                e.a.AddInput(win.SelectedItem.Name, e.Element);
+                            }
+                            else { 
+                                e.SupportSelect = false; 
+                            }
+                            InputDriver.Instance.CallNext = false;
+                            isRecording = true;
                         }
                         view.ReadOnly = false;
                         view.Lastinserted = e.a.Activity;

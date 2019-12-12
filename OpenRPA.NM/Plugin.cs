@@ -148,6 +148,7 @@ namespace OpenRPA.NM
                         re.Selector = selector;
                         re.a = new GetElementResult(a);
                         re.SupportInput = lastElement.SupportInput;
+                        re.SupportSelect = false;
                         re.ClickHandled = true;
                         OnUserAction?.Invoke(this, re);
                         return;
@@ -227,6 +228,7 @@ namespace OpenRPA.NM
             e.Selector = selector;
             e.a = new GetElementResult(a);
             e.SupportInput = lastElement.SupportInput;
+            e.SupportSelect = false;
             e.ClickHandled = true;
             e.OffsetX = e.X - lastElement.Rectangle.X;
             e.OffsetY = e.Y - lastElement.Rectangle.Y;
@@ -297,6 +299,7 @@ namespace OpenRPA.NM
         public Selector Selector { get; set; }
         public IBodyActivity a { get; set; }
         public bool SupportInput { get; set; }
+        public bool SupportSelect { get; set; }
         public bool ClickHandled { get; set; }
         public bool SupportVirtualClick { get; set; }
         public int X { get; set; }

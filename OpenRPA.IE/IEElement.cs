@@ -16,6 +16,11 @@ namespace OpenRPA.IE
             className = Element.className;
             id = Element.id;
             tagName = Element.tagName.ToLower();
+            Name = "";
+            if (!(RawElement.getAttribute("href") is System.DBNull) )
+            {
+                Name = RawElement.getAttribute("Name");
+            }
             if (tagName == "input")
             {
                 MSHTML.IHTMLInputElement inputelement = Element as MSHTML.IHTMLInputElement;
@@ -40,7 +45,7 @@ namespace OpenRPA.IE
                 }
             }
         }
-
+        public string Name { get; set; }
         public IEElement[] Children
         {
             get
@@ -241,7 +246,6 @@ namespace OpenRPA.IE
                 return Interfaces.Image.Util.Bitmap2Base64(image);
             }
         }
-
         public string href
         {
             get
@@ -264,6 +268,18 @@ namespace OpenRPA.IE
             {
                 if (RawElement.getAttribute("alt") is System.DBNull) return null;
                 return RawElement.getAttribute("alt");
+            }
+        }
+        public IElement[] Items
+        {
+            get
+            {
+                var result = new List<IElement>();
+                if (RawElement.tagName.ToLower() == "select")
+                {
+
+                }
+                return result.ToArray();
             }
         }
 

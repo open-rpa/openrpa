@@ -120,6 +120,7 @@ namespace OpenRPA.Image
             a.Threshold = 0.9;
             a.Processname = Processname;
             e.SupportInput = false;
+            e.SupportSelect = false;
             int newOffsetX; int newOffsetY; System.Drawing.Rectangle resultrect;
             var image = getrectangle.GuessContour(element, e.OffsetX, e.OffsetY, out newOffsetX, out newOffsetY, out resultrect);
             if(image == null)

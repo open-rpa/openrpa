@@ -109,7 +109,7 @@ namespace OpenRPA.IE
                     MSHTML.IHTMLInputElement inputelement = (MSHTML.IHTMLInputElement)htmlelement;
                     re.SupportInput = (inputelement.type.ToLower() == "text" || inputelement.type.ToLower() == "password");
                 }
-
+                re.SupportSelect = false;
                 Log.Debug(string.Format("IE.Recording::OnMouseUp::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                 OnUserAction?.Invoke(this, re);
             }));
@@ -280,6 +280,7 @@ namespace OpenRPA.IE
         public Interfaces.Selector.Selector Selector { get; set; }
         public IBodyActivity a { get; set; }
         public bool SupportInput { get; set; }
+        public bool SupportSelect { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public int OffsetX { get; set; }

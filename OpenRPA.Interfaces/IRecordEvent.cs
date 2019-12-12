@@ -15,6 +15,7 @@ namespace OpenRPA.Interfaces
         Selector.Selector Selector { get; set; }
         IBodyActivity a { get; set; }
         bool SupportInput { get; set; }
+        bool SupportSelect { get; set; }
         OpenRPA.Input.MouseButton Button { get; set; }
         bool ClickHandled { get; set; }
         bool SupportVirtualClick { get; set; }

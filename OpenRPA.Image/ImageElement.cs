@@ -166,6 +166,14 @@ namespace OpenRPA.Image
                 Text = value;
             }
         }
+        public IElement[] Items
+        {
+            get
+            {
+                return new IElement[] { };
+            }
+        }
+
 
     }
 }

@@ -200,6 +200,7 @@ namespace OpenRPA.Windows
                 }
                 re.a = new GetElementResult(a);
                 re.SupportInput = e.Element.SupportInput;
+                re.SupportSelect = e.Element.SupportSelect;
                 Log.Debug(string.Format("Windows.Recording::OnMouseUp::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                 OnUserAction?.Invoke(this, re);
             }));
@@ -395,6 +396,7 @@ namespace OpenRPA.Windows
             ((GetElement)Activity).Body = aa;
             aa.Argument = da;
         }
+
         public void AddInput(string value, IElement element)
         {
             try
@@ -435,6 +437,7 @@ namespace OpenRPA.Windows
         public IBodyActivity a { get; set; }
         public Interfaces.Selector.Selector Selector { get; set; }
         public bool SupportInput { get; set; }
+        public bool SupportSelect { get; set; }        
         public int X { get; set; }
         public int Y { get; set; }
         public int OffsetX { get; set; }

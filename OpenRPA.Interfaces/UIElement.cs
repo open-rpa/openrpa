@@ -108,6 +108,22 @@ namespace OpenRPA
                 return false;
             }
         }
+        public bool SupportSelect
+        {
+            get
+            {
+                try
+                {
+                    return RawElement.ControlType == FlaUI.Core.Definitions.ControlType.ComboBox;
+                        // || RawElement.ControlType == FlaUI.Core.Definitions.ControlType.RadioButton;
+                }
+                catch (Exception)
+                {
+                }
+                return false;
+            }
+        }
+        
         [JsonIgnore]
         public UIElement Parent
         {
@@ -429,6 +445,18 @@ namespace OpenRPA
             {
                 return Interfaces.Image.Util.Bitmap2Base64(image);
             }
+        }
+        public IElement[] Items { 
+            get 
+            {
+                var result = new List<IElement>();
+                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.ComboBox)
+                {
+                    var combo = RawElement.AsComboBox();
+                    foreach (var c in combo.Items) result.Add(new UIElement(c));
+                }
+                return result.ToArray();
+            } 
         }
     }
 }

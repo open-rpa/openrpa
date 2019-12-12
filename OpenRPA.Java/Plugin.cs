@@ -100,6 +100,7 @@ namespace OpenRPA.Java
             re.Y = lastElement.Y;
             re.a = new GetElementResult(a);
             re.SupportInput = lastElement.SupportInput;
+            re.SupportSelect = false;
 
             Log.Debug(string.Format("Java.Recording::OnMouseClicked::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             OnUserAction?.Invoke(this, re);
@@ -254,6 +255,7 @@ namespace OpenRPA.Java
         public Selector Selector { get; set; }
         public IBodyActivity a { get; set; }
         public bool SupportInput { get; set; }
+        public bool SupportSelect { get; set; }
         public bool ClickHandled { get; set; }
         public bool SupportVirtualClick { get; set; }
         public int X { get; set; }

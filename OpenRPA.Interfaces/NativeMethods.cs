@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Interfaces
 {
+    using System.ComponentModel;
     using System.Runtime.InteropServices;
     public static class NativeMethods
     {
@@ -100,11 +101,12 @@ namespace OpenRPA.Interfaces
 
             result = CreateProcessAsUser(token, null, cmdLine, ref saProcess, ref saThread, false,
                 (uint)CreateProcessFlags.CREATE_UNICODE_ENVIRONMENT, envBlock, CurrentDirectory, ref si, out pi);
-            if(result == false)
+            if (result == false)
             {
                 var hResult = Marshal.GetLastWin32Error();
                 ErrorMessage = String.Format("CreateProcessAsUser Error: {0}", hResult);
-            } else
+            }
+            else
             {
                 newProcess = System.Diagnostics.Process.GetProcessById(pi.dwProcessId);
             }
@@ -644,5 +646,252 @@ namespace OpenRPA.Interfaces
             ProcessRevokeFileHandles, // s: PROCESS_REVOKE_FILE_HANDLES_INFORMATION
             MaxProcessInfoClass
         };
+
+
+
+        public static class LsaPrivateData
+        {
+            public static void RemoveAutologin()
+            {
+                var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", true);
+                key.SetValue("AutoAdminLogon", "0");
+                SetValue("DefaultPassword", null);
+                var v = key.GetValue("AutoLogonCount");
+                if (v != null)
+                {
+                    key.DeleteValue("AutoLogonCount");
+                }
+            }
+            public static void SetAutologin(string Username, string Password, int AutoLogonCount)
+            {
+                var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", true);
+                key.SetValue("AutoAdminLogon", "1");
+                key.SetValue("DefaultUsername", Username);
+                // key.SetValue("DefaultPassword", Password);
+                SetValue("DefaultPassword", Password);
+                if (AutoLogonCount>0)
+                {
+                    key.SetValue("AutoLogonCount", AutoLogonCount);
+                } else
+                {
+                    var v = key.GetValue("AutoLogonCount");
+                    if(v != null)
+                    {
+                        key.DeleteValue("AutoLogonCount");
+                    }
+                }
+            }
+
+            [Flags]
+            private enum CryptProtectFlags
+            {
+                // for remote-access situations where ui is not an option
+                // if UI was specified on protect or unprotect operation, the call
+                // will fail and GetLastError() will indicate ERROR_PASSWORD_RESTRICTION
+                CRYPTPROTECT_UI_FORBIDDEN = 0x1,
+
+                // per machine protected data -- any user on machine where CryptProtectData
+                // took place may CryptUnprotectData
+                CRYPTPROTECT_LOCAL_MACHINE = 0x4,
+
+                // force credential synchronize during CryptProtectData()
+                // Synchronize is only operation that occurs during this operation
+                CRYPTPROTECT_CRED_SYNC = 0x8,
+
+                // Generate an Audit on protect and unprotect operations
+                CRYPTPROTECT_AUDIT = 0x10,
+
+                // Protect data with a non-recoverable key
+                CRYPTPROTECT_NO_RECOVERY = 0x20,
+
+
+                // Verify the protection of a protected blob
+                CRYPTPROTECT_VERIFY_PROTECTION = 0x40
+            }
+            [Flags]
+            private enum CryptProtectPromptFlags
+            {
+                // prompt on unprotect
+                CRYPTPROTECT_PROMPT_ON_UNPROTECT = 0x1,
+
+                // prompt on protect
+                CRYPTPROTECT_PROMPT_ON_PROTECT = 0x2
+            }
+            [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+            private struct CRYPTPROTECT_PROMPTSTRUCT
+            {
+                public int cbSize;
+                public CryptProtectPromptFlags dwPromptFlags;
+                public IntPtr hwndApp;
+                public String szPrompt;
+            }
+            [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+            private struct DATA_BLOB
+            {
+                public int cbData;
+                public IntPtr pbData;
+            }
+            [DllImport("Crypt32.dll",SetLastError = true,CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            private static extern bool CryptProtectData(ref DATA_BLOB pDataIn, String szDataDescr, ref DATA_BLOB pOptionalEntropy,
+                IntPtr pvReserved, ref CRYPTPROTECT_PROMPTSTRUCT pPromptStruct, CryptProtectFlags dwFlags, ref DATA_BLOB pDataOut);
+            [DllImport("Crypt32.dll",SetLastError = true, CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            private static extern bool CryptUnprotectData(ref DATA_BLOB pDataIn, StringBuilder szDataDescr, ref DATA_BLOB pOptionalEntropy, IntPtr pvReserved,
+                ref CRYPTPROTECT_PROMPTSTRUCT pPromptStruct, CryptProtectFlags dwFlags, ref DATA_BLOB pDataOut );
+            public static void RemoveValue(string key)
+            {
+                SetValue(key, value: null);
+            }
+
+            public static void SetValue(string key, string value = null)
+            {
+                if (key == null)
+                    throw new ArgumentNullException(nameof(key));
+
+                if (key.Length == 0)
+                    throw new ArgumentException($"{nameof(key)} must not be empty", nameof(key));
+
+                var objectAttributes = new LSA_OBJECT_ATTRIBUTES();
+                var localsystem = new LSA_UNICODE_STRING();
+                var secretName = new LSA_UNICODE_STRING(key);
+
+                var lusSecretData = !string.IsNullOrEmpty(value) ? new LSA_UNICODE_STRING(value) : default;
+
+                var lsaPolicyHandle = GetLsaPolicy(ref objectAttributes, ref localsystem);
+
+                var result = LsaStorePrivateData(lsaPolicyHandle, ref secretName, ref lusSecretData);
+                ReleaseLsaPolicy(lsaPolicyHandle);
+
+                var winErrorCode = LsaNtStatusToWinError(result);
+                if (winErrorCode != 0)
+                    throw new Win32Exception(winErrorCode, "StorePrivateData failed: " + winErrorCode);
+            }
+
+            public static string GetValue(string key)
+            {
+                if (key == null)
+                    throw new ArgumentNullException(nameof(key));
+
+                if (key.Length == 0)
+                    throw new ArgumentException($"{nameof(key)} must not be empty", nameof(key));
+
+                var objectAttributes = new LSA_OBJECT_ATTRIBUTES();
+                var localsystem = new LSA_UNICODE_STRING();
+                var secretName = new LSA_UNICODE_STRING(key);
+
+                // Get LSA policy
+                var lsaPolicyHandle = GetLsaPolicy(ref objectAttributes, ref localsystem);
+
+                var result = LsaRetrievePrivateData(lsaPolicyHandle, ref secretName, out var privateData);
+                ReleaseLsaPolicy(lsaPolicyHandle);
+
+                if (result == STATUS_OBJECT_NAME_NOT_FOUND)
+                    return null;
+
+                var winErrorCode = LsaNtStatusToWinError(result);
+                if (winErrorCode != 0)
+                    throw new Win32Exception(winErrorCode, "LsaRetrievePrivateData failed: " + winErrorCode);
+
+                if (privateData == IntPtr.Zero)
+                    return null;
+
+                var lusSecretData = Marshal.PtrToStructure<LSA_UNICODE_STRING>(privateData);
+                var value = Marshal.PtrToStringAuto(lusSecretData.Buffer)?.Substring(0, lusSecretData.Length / UnicodeEncoding.CharSize);
+
+                FreeMemory(privateData);
+
+                return value;
+            }
+
+            private static IntPtr GetLsaPolicy(ref LSA_OBJECT_ATTRIBUTES objectAttributes, ref LSA_UNICODE_STRING localsystem)
+            {
+                var ntsResult = LsaOpenPolicy(ref localsystem, ref objectAttributes, (uint)LSA_AccessPolicy.POLICY_GET_PRIVATE_INFORMATION, out var lsaPolicyHandle);
+                var winErrorCode = LsaNtStatusToWinError(ntsResult);
+                if (winErrorCode != 0)
+                    throw new Win32Exception(winErrorCode, "LsaOpenPolicy failed: " + winErrorCode);
+
+                return lsaPolicyHandle;
+            }
+
+            private static void ReleaseLsaPolicy(IntPtr lsaPolicyHandle)
+            {
+                var ntsResult = LsaClose(lsaPolicyHandle);
+                var winErrorCode = LsaNtStatusToWinError(ntsResult);
+                if (winErrorCode != 0)
+                    throw new Win32Exception(winErrorCode, "LsaClose failed: " + winErrorCode);
+            }
+
+            private static void FreeMemory(IntPtr buffer)
+            {
+                var ntsResult = LsaFreeMemory(buffer);
+                var winErrorCode = LsaNtStatusToWinError(ntsResult);
+                if (winErrorCode != 0)
+                    throw new Win32Exception(winErrorCode, "LsaFreeMemory failed: " + winErrorCode);
+            }
+
+            private const uint STATUS_OBJECT_NAME_NOT_FOUND = 0xC0000034;
+
+            [StructLayout(LayoutKind.Sequential)]
+            private struct LSA_UNICODE_STRING
+            {
+                public LSA_UNICODE_STRING(string value)
+                {
+                    Buffer = Marshal.StringToHGlobalUni(value);
+                    Length = (ushort)(value.Length * UnicodeEncoding.CharSize);
+                    MaximumLength = (ushort)((value.Length + 1) * UnicodeEncoding.CharSize);
+                }
+
+                public ushort Length;
+                public ushort MaximumLength;
+                public IntPtr Buffer;
+            }
+
+            [StructLayout(LayoutKind.Sequential)]
+            private struct LSA_OBJECT_ATTRIBUTES
+            {
+                public int Length;
+                public IntPtr RootDirectory;
+                public LSA_UNICODE_STRING ObjectName;
+                public uint Attributes;
+                public IntPtr SecurityDescriptor;
+                public IntPtr SecurityQualityOfService;
+            }
+
+            private enum LSA_AccessPolicy : long
+            {
+                POLICY_VIEW_LOCAL_INFORMATION = 0x00000001L,
+                POLICY_VIEW_AUDIT_INFORMATION = 0x00000002L,
+                POLICY_GET_PRIVATE_INFORMATION = 0x00000004L,
+                POLICY_TRUST_ADMIN = 0x00000008L,
+                POLICY_CREATE_ACCOUNT = 0x00000010L,
+                POLICY_CREATE_SECRET = 0x00000020L,
+                POLICY_CREATE_PRIVILEGE = 0x00000040L,
+                POLICY_SET_DEFAULT_QUOTA_LIMITS = 0x00000080L,
+                POLICY_SET_AUDIT_REQUIREMENTS = 0x00000100L,
+                POLICY_AUDIT_LOG_ADMIN = 0x00000200L,
+                POLICY_SERVER_ADMIN = 0x00000400L,
+                POLICY_LOOKUP_NAMES = 0x00000800L,
+                POLICY_NOTIFICATION = 0x00001000L,
+            }
+
+            [DllImport("advapi32.dll", SetLastError = true, PreserveSig = true)]
+            private static extern uint LsaRetrievePrivateData(IntPtr PolicyHandle, ref LSA_UNICODE_STRING KeyName, out IntPtr PrivateData);
+
+            [DllImport("advapi32.dll", SetLastError = true, PreserveSig = true)]
+            private static extern uint LsaStorePrivateData(IntPtr policyHandle, ref LSA_UNICODE_STRING KeyName, ref LSA_UNICODE_STRING PrivateData);
+
+            [DllImport("advapi32.dll", SetLastError = true, PreserveSig = true)]
+            private static extern uint LsaOpenPolicy(ref LSA_UNICODE_STRING SystemName, ref LSA_OBJECT_ATTRIBUTES ObjectAttributes, uint DesiredAccess, out IntPtr PolicyHandle);
+
+            [DllImport("advapi32.dll", SetLastError = true, PreserveSig = true)]
+            private static extern int LsaNtStatusToWinError(uint status);
+
+            [DllImport("advapi32.dll", SetLastError = true, PreserveSig = true)]
+            private static extern uint LsaClose(IntPtr policyHandle);
+
+            [DllImport("advapi32.dll", SetLastError = true, PreserveSig = true)]
+            private static extern uint LsaFreeMemory(IntPtr buffer);
+        }
     }
 }

@@ -118,6 +118,7 @@ namespace OpenRPA.Activities
         public static List<FlaUI.Core.WindowsAPI.VirtualKeyShort> GetKeys(string text)
         {
             var result = new List<FlaUI.Core.WindowsAPI.VirtualKeyShort>();
+            if (string.IsNullOrEmpty(text)) return result;
             for (var i = 0; i < text.Length; i++)
             {
                 char c = text[i];

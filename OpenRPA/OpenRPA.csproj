@@ -137,6 +137,8 @@
     <None Remove="Resources\Buttons\Save.png" />
     <None Remove="Resources\Buttons\Signout.png" />
     <None Remove="Resources\Buttons\Stop.png" />
+    <None Remove="Resources\Buttons\switch_216215.png" />
+    <None Remove="Resources\Buttons\switch_216215.svg" />
     <None Remove="Resources\Buttons\TypeText_1.png" />
     <None Remove="Resources\Buttons\Undo.png" />
     <None Remove="Resources\Buttons\URL.png" />
@@ -366,6 +368,8 @@
     <Resource Include="Resources\Buttons\OpenBrowser.png" />
     <Resource Include="Resources\Buttons\OpenFirefox.png" />
     <Resource Include="Resources\Buttons\OpenIE.png" />
+    <Resource Include="Resources\Buttons\switch_216215.png" />
+    <Resource Include="Resources\Buttons\switch_216215.svg" />
     <Resource Include="Resources\Buttons\TypeText_1.png" />
     <Resource Include="Resources\Buttons\URL.png" />
     <Resource Include="Resources\Buttons\Zeniverse_ikon.png" />

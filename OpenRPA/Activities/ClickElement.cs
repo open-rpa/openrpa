@@ -46,6 +46,9 @@ namespace OpenRPA.Activities
         public InArgument<bool> DoubleClick { get; set; } = false;
         public InArgument<bool> VirtualClick { get; set; } = true;
         public InArgument<TimeSpan> PostWait { get; set; }
+        [Editor(typeof(SelectNewEmailOptionsEditor), typeof(System.Activities.Presentation.PropertyEditing.ExtendedPropertyValueEditor))]
+        public InArgument<string> KeyModifiers { get; set; }
+        
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern uint GetDoubleClickTime();
@@ -60,9 +63,18 @@ namespace OpenRPA.Activities
             if (VirtualClick != null) virtualClick = VirtualClick.Get(context);
             var animatemouse = false;
             if (AnimateMouse != null) animatemouse = AnimateMouse.Get(context);
-            
+            var keymodifiers = "";
+            if (KeyModifiers != null) keymodifiers = KeyModifiers.Get(context);
+
+            var disposes = new List<IDisposable>();
+            var keys = TypeText.GetKeys(keymodifiers);
+            foreach(var vk in keys) disposes.Add(FlaUI.Core.Input.Keyboard.Pressing(vk));
+
             var _button = (Input.MouseButton)button;
             el.Click(virtualClick, _button, OffsetX, OffsetY, doubleclick, animatemouse);
+
+            disposes.ForEach(x => { x.Dispose(); });
+
             TimeSpan postwait = TimeSpan.Zero;
             if (PostWait!=null) { postwait = PostWait.Get(context); }
             if(postwait != TimeSpan.Zero)
@@ -71,5 +83,22 @@ namespace OpenRPA.Activities
             }
             
         }
+    }
+    class SelectNewEmailOptionsEditor : CustomSelectEditor
+    {
+        public override System.Data.DataTable options
+        {
+            get
+            {
+                var lst = new System.Data.DataTable();
+                lst.Columns.Add("ID", typeof(string));
+                lst.Columns.Add("TEXT", typeof(string));
+                lst.Rows.Add("{LCONTROL}", "Left Control");
+                lst.Rows.Add("{LMENU}", "Left Menu\\Alt");
+                lst.Rows.Add("{LSHIFT}", "Left Shift");
+                return lst;
+            }
+        }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using OpenRPA.Interfaces;
+﻿using Microsoft.VisualBasic.Activities;
+using OpenRPA.Interfaces;
 using OpenRPA.Net;
 using System;
 using System.Activities;
@@ -160,6 +161,16 @@ namespace OpenRPA
                 if (model.Properties[name].Value.Properties["Expression"] != null)
                 {
                     result = model.Properties[name].Value.Properties["Expression"].ComputedValue.TryCast<T>();
+                    if(result==null)
+                    {
+                        var outresult = model.Properties[name].Value.Properties["Expression"].ComputedValue.TryCast<VisualBasicReference<T>>();
+                        result = outresult.ExpressionText.TryCast<T>();
+                    }
+                    if(result==null)
+                    {
+                        var inresult = model.Properties["Value"].Value.Properties["Expression"].ComputedValue.TryCast<System.Activities.Expressions.Literal<T>>();
+                        result = inresult.Value.TryCast<T>();
+                    }
                     return result;
                 }
                 result = model.Properties[name].ComputedValue.TryCast<T>();

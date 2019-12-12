@@ -214,6 +214,13 @@
                     </StackPanel>
                 </RibbonGroup>
             </RibbonTab>-->
+            <RibbonTab Header="Tools">
+                <RibbonGroup Header="Change Type">
+                    <RibbonButton Label="Swap SendKeys" LargeImageSource="/OpenRPA;component/Resources/Buttons/switch_216215.png" 
+                                  Command="{Binding Data.SwapSendKeysCommand, Source={StaticResource proxy}}" 
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
+                </RibbonGroup>
+            </RibbonTab>
         </Ribbon>
 
 

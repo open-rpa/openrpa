@@ -232,10 +232,10 @@ namespace OpenRPA.Windows
                         {
                             isStartmenu = true;
                         }
-                        if (p.Name == "ClassName" && p.Value == "#32770")
-                        {
-                            item.Enabled = false;
-                        }
+                        //if (p.Name == "ClassName" && p.Value == "#32770")
+                        //{
+                        //    item.Enabled = false;
+                        //}
                         if (p.Name == "ControlType" && p.Value == "ListItem" && isStartmenu)
                         {
                             p.Enabled = false;

@@ -633,9 +633,23 @@
     <Resource Include="Resources\state\unloaded.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>strings.resx</DependentUpon>
+    </Compile>
     <Compile Update="Views\RecorderPlugins.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="strings.da.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Update="RunOpenRPA.bat">

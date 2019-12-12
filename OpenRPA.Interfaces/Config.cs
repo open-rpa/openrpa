@@ -18,6 +18,7 @@ namespace OpenRPA
         public byte[] password;
         public byte[] entropy;
         public string cancelkey = "{ESCAPE}";
+        public string culture = "";
         public string ocrlanguage = "eng";
         public string[] openworkflows = new string[] { };
         public string designerlayout = "";

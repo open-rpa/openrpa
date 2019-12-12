@@ -5,12 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenRPA"
         
+        xmlns:resx2="clr-namespace:OpenRPA.Properties"
+        
         xmlns:ribbon="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
         xmlns:dockctrl="clr-namespace:Xceed.Wpf.AvalonDock.Controls;assembly=Xceed.Wpf.AvalonDock"
         mc:Ignorable="d"
         Loaded="Window_Loaded" Closed="Window_Closed" Closing="Window_Closing" StateChanged="Window_StateChanged"
-        Title="OpenRPA" Height="750" Width="1200">
+        Title="OpenRPA"
+        x:Uid="title"
+         Height="750" Width="1200">
+
     <Window.Resources>
         <local:BindingProxy x:Key="proxy" Data="{Binding}" />
     </Window.Resources>
@@ -23,11 +28,11 @@
         <Ribbon DockPanel.Dock="Top" Margin="0,-22,0,0" Grid.Row="0">
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu SmallImageSource="/OpenRPA;component/Resources/Buttons/Export.png">
-                    <RibbonApplicationMenuItem Header="Settings" ImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
+                    <RibbonApplicationMenuItem Header="{x:Static local:strings.settingsfile}" ImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
                                                Command="{Binding Data.SettingsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
-                    <RibbonApplicationMenuItem Header="Signout" ImageSource="/OpenRPA;component/Resources/Buttons/Revert.png" 
+                    <RibbonApplicationMenuItem Header="{x:Static local:strings.signout}" ImageSource="/OpenRPA;component/Resources/Buttons/Revert.png" 
                                                Command="{Binding Data.SignoutCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
-                    <RibbonApplicationMenuItem Header="Exit Application" ImageSource="/OpenRPA;component/Resources/Buttons/Signout.png" 
+                    <RibbonApplicationMenuItem Header="{x:Static local:strings.exitapplication}" ImageSource="/OpenRPA;component/Resources/Buttons/Signout.png" 
                                                Command="{Binding Data.ExitAppCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
 
 
@@ -41,10 +46,14 @@
                                 CheckedBorderBrush="Transparent"
                                                />
                                 <RibbonGalleryItem>
-                                    <Hyperlink x:Name="linkOpenFlow" Command="{Binding Data.LinkOpenFlowCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" >OpenFlow</Hyperlink>
+                                    <Hyperlink x:Name="linkOpenFlow" Command="{Binding Data.LinkOpenFlowCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" >
+                                        <TextBlock Text="{x:Static local:strings.openflow}" />
+                                    </Hyperlink>
                                 </RibbonGalleryItem>
                                 <RibbonGalleryItem>
-                                    <Hyperlink x:Name="linkNodeRED" Command="{Binding Data.LinkNodeREDCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" >NodeRED</Hyperlink>
+                                    <Hyperlink x:Name="linkNodeRED" Command="{Binding Data.LinkNodeREDCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" >
+                                        <TextBlock Text="{x:Static local:strings.nodered}" />
+                                    </Hyperlink>
                                 </RibbonGalleryItem>
                             </RibbonGalleryCategory>
                         </RibbonGallery>
@@ -53,157 +62,156 @@
 
                 </RibbonApplicationMenu>
             </Ribbon.ApplicationMenu>
-            <RibbonTab Header="General">
-                <RibbonGroup Header="Files">
-                    <RibbonMenuButton x:Name="ButtonNew" Label="New" LargeImageSource="/OpenRPA;component/Resources/Buttons/New.png">
-                        <RibbonMenuItem Header="New Workflow"
+            <RibbonTab 
+                xmlns:local="clr-namespace:OpenRPA"  Header="{x:Static local:strings.general}"
+               
+                >
+                <RibbonGroup Header="{x:Static local:strings.files}">
+                    <RibbonMenuButton x:Name="ButtonNew" Label="{x:Static local:strings.mainnew}" LargeImageSource="/OpenRPA;component/Resources/Buttons/New.png">
+                        <RibbonMenuItem Header="{x:Static local:strings.newworkflow}"
                                 Command="{Binding Data.NewWorkflowCommand, Source={StaticResource proxy}}" 
                                 CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" KeyTip="N" />
-                        <RibbonMenuItem Header="New Project"
+                        <RibbonMenuItem Header="{x:Static local:strings.newproject}"
                                 Command="{Binding Data.NewProjectCommand, Source={StaticResource proxy}}" 
                                 CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                     </RibbonMenuButton>
 
-                    <RibbonButton Label="Save" LargeImageSource="/OpenRPA;component/Resources/Buttons/Save.png" 
+                    <RibbonButton Label="{x:Static local:strings.save}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Save.png" 
                                   Command="{Binding Data.SaveCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" KeyTip="S" />
-                    <RibbonButton Label="Open" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
+                    <RibbonButton Label="{x:Static local:strings.open}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
                                   Command="{Binding Data.OpenCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
-                    <RibbonButton Label="Copy" LargeImageSource="/OpenRPA;component/Resources/Buttons/Copy.png" 
+                    <RibbonButton Label="{x:Static local:strings.copy}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Copy.png" 
                                   Command="{Binding Data.CopyCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
-                    <RibbonButton Label="Delete" LargeImageSource="/OpenRPA;component/Resources/Buttons/Delete.png" 
+                    <RibbonButton Label="{x:Static local:strings.delete}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Delete.png" 
                                   Command="{Binding Data.DeleteCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
-                    <RibbonButton Label="Permissions" LargeImageSource="/OpenRPA;component/Resources/Buttons/Manage.png" 
+                    <RibbonButton Label="{x:Static local:strings.permissions}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Manage.png" 
                                   Command="{Binding Data.PermissionsCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
-                    <RibbonButton Label="Import" LargeImageSource="/OpenRPA;component/Resources/Buttons/Import.png" 
+                    <RibbonButton Label="{x:Static local:strings.import}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Import.png" 
                                   Command="{Binding Data.ImportCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
-                    <RibbonButton Label="Export" LargeImageSource="/OpenRPA;component/Resources/Buttons/Export.png" 
+                    <RibbonButton Label="{x:Static local:strings.export}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Export.png" 
                                   Command="{Binding Data.ExportCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                 </RibbonGroup>
-                <RibbonGroup Header="Runtime">
-                    <RibbonButton Label="Play" LargeImageSource="/OpenRPA;component/Resources/Buttons/Play.png" 
+                <RibbonGroup Header="{x:Static local:strings.runtime}">
+                    <RibbonButton Label="{x:Static local:strings.play}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Play.png" 
                                   Command="{Binding Data.PlayCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}"/>
-                    <RibbonButton Label="Stop" LargeImageSource="/OpenRPA;component/Resources/Buttons/Stop.png" 
+                    <RibbonButton Label="{x:Static local:strings.stop}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Stop.png" 
                                   Command="{Binding Data.StopCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
-                    <RibbonButton Label="Record" LargeImageSource="/OpenRPA;component/Resources/Buttons/Record.png"
+                    <RibbonButton Label="{x:Static local:strings.record}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Record.png"
                                   Command="{Binding Data.RecordCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding VisualTracking}" Command="{Binding Data.VisualTrackingCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="VisualTracking"></TextBlock>
+                        <TextBlock Text="{x:Static local:strings.visualtracking}"></TextBlock>
 
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding SlowMotion}" Command="{Binding Data.SlowMotionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"  />
-                        <TextBlock Text="Slow motion"></TextBlock>
+                        <TextBlock Text="{x:Static local:strings.slowmotion}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding Minimize}" Command="{Binding Data.MinimizeCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"  />
-                        <TextBlock Text="Minimize"></TextBlock>
+                        <TextBlock Text="{x:Static local:strings.minimize}"></TextBlock>
                     </StackPanel>
                 </RibbonGroup>
             </RibbonTab>
-            <RibbonTab Header="Settings">
-                <RibbonGroup Header="Cancel key">
+            <RibbonTab Header="{x:Static local:strings.settings}">
+                <RibbonGroup Header="{x:Static local:strings.cancelkey}">
                     <StackPanel>
                         <TextBox x:Name="cancelkey" GotKeyboardFocus="Cancelkey_GotKeyboardFocus" Width="80" Height="25" />
                     </StackPanel>
                 </RibbonGroup>
-                <RibbonGroup Header="Tesseract">
+                <RibbonGroup Header="{x:Static local:strings.tesseract}">
                     <StackPanel>
                         <ribbon:RibbonComboBox>
                             <ribbon:RibbonGallery SelectedItem="{Binding Path=defaultocrlangs}">
                                 <ribbon:RibbonGalleryCategory ItemsSource="{Binding ocrlangs}" />
                             </ribbon:RibbonGallery>
                         </ribbon:RibbonComboBox>
-                        <RibbonButton Content="Download" Click="TesseractLang_Click"></RibbonButton>
+                        <RibbonButton Content="{x:Static local:strings.download}" Click="TesseractLang_Click"></RibbonButton>
                     </StackPanel>
 
                 </RibbonGroup>
-                <RibbonGroup Header="Browser addons">
-                    <RibbonButton Label="Chrome" LargeImageSource="/OpenRPA;component/Resources/Buttons/OpenChrome.png" 
+                <RibbonGroup Header="{x:Static local:strings.browseraddons}">
+                    <RibbonButton Label="{x:Static local:strings.chrome}" LargeImageSource="/OpenRPA;component/Resources/Buttons/OpenChrome.png" 
                                   Command="{Binding Data.OpenChromePageCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
-                    <RibbonButton Label="Firefox" LargeImageSource="/OpenRPA;component/Resources/Buttons/OpenFirefox.png" 
+                    <RibbonButton Label="{x:Static local:strings.firefox}" LargeImageSource="/OpenRPA;component/Resources/Buttons/OpenFirefox.png" 
                                   Command="{Binding Data.OpenFirefoxPageCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
 
                 </RibbonGroup>
-                <RibbonGroup Header="Detectors">
-                    <RibbonButton Label="Detectors" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
+                <RibbonGroup Header="{x:Static local:strings.plugins}">
+                    <RibbonButton Label="{x:Static local:strings.detectors}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
                                   Command="{Binding Data.DetectorsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
-                </RibbonGroup>
-                <RibbonGroup Header="RunPlugins">
-                    <RibbonButton Label="RunPlugins" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
+                    <RibbonButton Label="{x:Static local:strings.runplugins}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
                                   Command="{Binding Data.RunPluginsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
-                </RibbonGroup>
-                <RibbonGroup Header="RecorderPlugins">
-                    <RibbonButton Label="RecorderPlugins" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
+                    <RibbonButton Label="{x:Static local:strings.recorderplugins}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
                                   Command="{Binding Data.RecorderPluginsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                 </RibbonGroup>
-                <RibbonGroup Header="Packages">
-                    <RibbonButton Label="Packages" LargeImageSource="/OpenRPA;component/Resources/Buttons/Package.png" 
+                <RibbonGroup Header="{x:Static local:strings.packages}">
+                    <RibbonButton Label="{x:Static local:strings.packages}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Package.png" 
                                   Command="{Binding Data.ManagePackagesCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                 </RibbonGroup>
-                <RibbonGroup Header="Runtime">
+                <RibbonGroup Header="{x:Static local:strings.runtime}">
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding record_overlay}" Command="{Binding Data.VisualTrackingCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="Recording Overlay"></TextBlock>
+                        <TextBlock Text="{x:Static local:strings.recordingoverlay}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding use_sendkeys}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="use sendkeys"></TextBlock>
+                        <TextBlock Text="{x:Static local:strings.usesendkeys}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding use_virtual_click}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="use Virtual Clicks"></TextBlock>
+                        <TextBlock Text="{x:Static local:strings.usevirtualclicks}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding use_animate_mouse}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="use Animate Mouse"></TextBlock>
+                        <TextBlock Text="{x:Static local:strings.animatemouse}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <RibbonTextBox Text="{Binding use_postwait}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}"  />
-                        <TextBlock Text="Click Post Wait"></TextBlock>
+                        <TextBlock Text="{x:Static local:strings.clickpostwait}"></TextBlock>
                     </StackPanel>
                 </RibbonGroup>
-                <RibbonGroup Header="Logging">
+                <RibbonGroup Header="{x:Static local:strings.logging}">
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding log_warning}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="warning"></TextBlock>
+                        <TextBlock Text="{x:Static local:strings.warning}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding log_debug}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="debug"></TextBlock>
+                        <TextBlock Text="{x:Static local:strings.debug}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding log_verbose}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="verbose"></TextBlock>
+                        <TextBlock Text="{x:Static local:strings.verbose}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding log_selector}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="selector"></TextBlock>
+                        <TextBlock Text="{x:Static local:strings.selector}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding log_selector_verbose}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="selector verbose"></TextBlock>
+                        <TextBlock Text="{x:Static local:strings.selectorverbose}"></TextBlock>
                     </StackPanel>
                 </RibbonGroup>
             </RibbonTab>
@@ -214,9 +222,9 @@
                     </StackPanel>
                 </RibbonGroup>
             </RibbonTab>-->
-            <RibbonTab Header="Tools">
-                <RibbonGroup Header="Change Type">
-                    <RibbonButton Label="Swap SendKeys" LargeImageSource="/OpenRPA;component/Resources/Buttons/switch_216215.png" 
+            <RibbonTab Header="{x:Static local:strings.tools}">
+                <RibbonGroup Header="{x:Static local:strings.tools_change_type}">
+                    <RibbonButton Label="{x:Static local:strings.tools_swap_sendkeys}" LargeImageSource="/OpenRPA;component/Resources/Buttons/switch_216215.png" 
                                   Command="{Binding Data.SwapSendKeysCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                 </RibbonGroup>
@@ -251,12 +259,12 @@
                     <avalonDock:LayoutAnchorSide>
                         <avalonDock:LayoutAnchorGroup >
                             <avalonDock:LayoutAnchorable x:Name="dockSnippets" 
-                                CanClose="False" CanAutoHide="True" CanHide="False" Title="Snippets" ContentId="Snippets" AutoHideWidth="250"
+                                CanClose="False" CanAutoHide="True" CanHide="False" Title="{x:Static local:strings.dock_snippets}" ContentId="Snippets" AutoHideWidth="250"
                                 >
                                 <ContentControl Content="{Binding Snippets}" Padding="0" Margin="0,0,0,0" />
                             </avalonDock:LayoutAnchorable>
                             <avalonDock:LayoutAnchorable x:Name="dockToolbox"  
-                                CanClose="False" CanAutoHide="True" CanHide="False" Title="Toolbox" ContentId="Toolbox" AutoHideWidth="250"
+                                CanClose="False" CanAutoHide="True" CanHide="False" Title="{x:Static local:strings.dock_toolbox}" ContentId="Toolbox" AutoHideWidth="250"
                                 >
                                 <ContentControl Content="{Binding Toolbox}" Padding="0" Margin="0,0,0,0" />
                             </avalonDock:LayoutAnchorable>
@@ -273,10 +281,10 @@
                 <avalonDock:LayoutRoot.BottomSide>
                     <avalonDock:LayoutAnchorSide>
                         <avalonDock:LayoutAnchorGroup >
-                            <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="False"  x:Name="Logging" Title="Logging" ContentId="Logging" >
+                            <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="False"  x:Name="Logging" Title="{x:Static local:strings.dock_logging}" ContentId="Logging" >
                                 <TextBox Text="{Binding tracing.TraceMessages}" TextWrapping="Wrap" IsReadOnly="False" Margin="0,0,0,0" />
                             </avalonDock:LayoutAnchorable>
-                            <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="False"  x:Name="Output" Title="Output" ContentId="Output" >
+                            <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="False"  x:Name="Output" Title="{x:Static local:strings.dock_output}" ContentId="Output" >
                                 <TextBox Text="{Binding tracing.OutputMessages}" TextWrapping="Wrap" IsReadOnly="False" Margin="0,0,0,0" />
                             </avalonDock:LayoutAnchorable>
 
@@ -288,7 +296,7 @@
                 <avalonDock:LayoutRoot.RightSide>
                     <avalonDock:LayoutAnchorSide>
                         <avalonDock:LayoutAnchorGroup >
-                            <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="False" Title="Properties" ContentId="Properties" AutoHideWidth="250"
+                            <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="False" Title="{x:Static local:strings.dock_properties}" ContentId="Properties" AutoHideWidth="250"
                                                          >
                                 <ContentControl Content="{Binding Path=LastDesigner.Properties}" Padding="0" Margin="0,0,0,0" />
                             </avalonDock:LayoutAnchorable>
@@ -302,7 +310,7 @@
 
         <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="2" Height="25" Background="Gray">
             <StatusBar FocusManager.IsFocusScope="True" x:Name="StatusBar">
-                <StatusBarItem x:Name="LabelStatusBar" Content="Disconnected" />
+                <StatusBarItem x:Name="LabelStatusBar" Content="{x:Static local:strings.status_disconnected}" />
                 <StatusBarItem VerticalAlignment="Top" HorizontalContentAlignment="Center">
                     <ItemsControl x:Name="lvDataBinding">
                         <ItemsControl.ItemsPanel>

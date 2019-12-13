@@ -1,11 +1,14 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.VisualBasic.Activities;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Linq;
 using OpenRPA.Input;
 using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
 using OpenRPA.Net;
 using System;
+using System.Activities;
 using System.Activities.Core.Presentation;
+using System.Activities.Expressions;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -81,6 +84,10 @@ namespace OpenRPA
         }
         public MainWindow()
         {
+            if (!string.IsNullOrEmpty(Config.local.culture))
+            {
+                System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo(Config.local.culture);
+            }
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LoadFromSameFolder);
             System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = false;
             System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.BelowNormal;
@@ -858,6 +865,94 @@ namespace OpenRPA
         public ICommand LinkNodeREDCommand { get { return new RelayCommand<object>(onlinkNodeRED, CanlinkNodeRED); } }
         public ICommand OpenChromePageCommand { get { return new RelayCommand<object>(onOpenChromePage, CanAllways); } }
         public ICommand OpenFirefoxPageCommand { get { return new RelayCommand<object>(onOpenFirefoxPageCommand, CanAllways); } }
+        public ICommand SwapSendKeysCommand { get { return new RelayCommand<object>(onSwapSendKeys, CanSwapSendKeys); } }
+        
+        private bool CanSwapSendKeys(object _item)
+        {
+            try
+            {
+                if (!(SelectedContent is Views.WFDesigner)) return false;
+                var designer = (Views.WFDesigner)SelectedContent;
+                if (designer.SelectedActivity == null) return false;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
+        private void SwapSendKeys(Views.WFDesigner designer, System.Activities.Presentation.Model.ModelItem model)
+        {
+            if (model.ItemType == typeof(System.Activities.Statements.Assign<string>))
+            {
+
+                var To = model.GetValue<string>("To");
+                // var Value = model.GetValue<string>("Value");
+                if(!string.IsNullOrEmpty(To) && To.ToLower() == "item.value")
+                {
+                    var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
+                    using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+                    {
+                        model.Properties["To"].ComputedValue = new OutArgument<string>(new VisualBasicReference<string>("item.SendKeys"));
+                        editingScope.Complete();
+                    }
+                }
+                else if (!string.IsNullOrEmpty(To) && To.ToLower() == "item.sendkeys")
+                {
+                    var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
+                    using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+                    {
+                        model.Properties["To"].ComputedValue = new OutArgument<string>(new VisualBasicReference<string>("item.Value"));
+                        editingScope.Complete();
+                    }
+                }
+            }
+            System.Activities.Presentation.Model.ModelItemCollection Activities = null;
+            if (model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] != null)
+            {
+                var a = model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] as System.Windows.Markup.ContentPropertyAttribute;
+                if(model.Properties[a.Name]!=null)
+                {
+                    if(model.Properties[a.Name].Collection != null)
+                    {
+                        Activities = model.Properties[a.Name].Collection;
+                    } else if (model.Properties[a.Name].Value != null)
+                    {
+                        var _a = model.Properties[a.Name].Value as System.Activities.Presentation.Model.ModelItem;
+                        if(_a!=null) SwapSendKeys(designer, _a);
+                    }
+                    
+                }
+                
+            }
+            //if (model.Properties["Activities"] != null)
+            //{
+            //    Activities = model.Properties["Activities"].Collection;
+            //}
+            //else if (model.Properties["Nodes"] != null)
+            //{
+            //    Activities = model.Properties["Nodes"].Collection;
+            //}
+            if(Activities!=null)
+            {
+                foreach(var a in Activities)
+                {
+                    SwapSendKeys(designer, a);
+                }
+            }
+
+        }
+        private void onSwapSendKeys(object _item)
+        {
+            if (!(SelectedContent is Views.WFDesigner)) return;
+            var designer = (Views.WFDesigner)SelectedContent;
+            if (designer.SelectedActivity == null) return;
+            SwapSendKeys(designer, designer.SelectedActivity);
+
+
+        }
+
         private void onLoggingOptionCommand(object _item)
         {
             try
@@ -2400,6 +2495,25 @@ namespace OpenRPA
                                 e.a.AddInput(win.Text, e.Element);
                             }
                             else { e.SupportInput = false; }
+                            isRecording = true;
+                        } 
+                        else if (e.SupportSelect)
+                        {
+                            var win = new Views.InsertSelect(e.Element)
+                            {
+                                Topmost = true
+                            };
+                            isRecording = false;
+                            InputDriver.Instance.CallNext = true;
+                            if (win.ShowDialog() == true)
+                            {
+                                e.ClickHandled = true;
+                                e.a.AddInput(win.SelectedItem.Name, e.Element);
+                            }
+                            else { 
+                                e.SupportSelect = false; 
+                            }
+                            InputDriver.Instance.CallNext = false;
                             isRecording = true;
                         }
                         view.ReadOnly = false;

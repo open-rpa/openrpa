@@ -427,6 +427,18 @@ namespace OpenRPA.Java
                 return Interfaces.Image.Util.Bitmap2Base64(image);
             }
         }
+        public IElement[] Items
+        {
+            get
+            {
+                var result = new List<IElement>();
+                if (info.accessibleSelection != 0)
+                {
+
+                }
+                return result.ToArray();
+            }
+        }
 
     }
 }

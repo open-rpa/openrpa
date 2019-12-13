@@ -8,12 +8,14 @@ namespace OpenRPA.Interfaces
 {
     public interface IElement
     {
-        Object RawElement { get; set; }
+        object RawElement { get; set; }
         System.Drawing.Rectangle Rectangle { get; set; }
         string Value { get; set; }
+        string Name { get; set; }
         void Focus();
         void Click(bool VirtualClick, OpenRPA.Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse);
         Task Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration);
         string ImageString();
+        IElement[] Items { get; }
     }
 }

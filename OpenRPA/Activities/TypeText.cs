@@ -115,6 +115,53 @@ namespace OpenRPA.Activities
 
         }
 
+        public static List<FlaUI.Core.WindowsAPI.VirtualKeyShort> GetKeys(string text)
+        {
+            var result = new List<FlaUI.Core.WindowsAPI.VirtualKeyShort>();
+            if (string.IsNullOrEmpty(text)) return result;
+            for (var i = 0; i < text.Length; i++)
+            {
+                char c = text[i];
+                if (c == '{')
+                {
+                    int indexEnd = text.IndexOf('}', i + 1);
+                    int indexNextStart = text.IndexOf('{', indexEnd + 1);
+                    int indexNextEnd = text.IndexOf('}', indexEnd + 1);
+                    if (indexNextStart > indexNextEnd || (indexNextStart == -1 && indexNextEnd > -1)) indexEnd = indexNextEnd;
+                    var sub = text.Substring(i + 1, (indexEnd - i) - 1);
+                    i = indexEnd;
+                    foreach (var k in sub.Split(','))
+                    {
+                        string key = k.Trim();
+                        bool down = false;
+                        bool up = false;
+                        if (key.EndsWith("down"))
+                        {
+                            down = true;
+                            key = key.Replace(" down", "");
+                        }
+                        else if (key.EndsWith("up"))
+                        {
+                            up = true;
+                            key = key.Replace(" up", "");
+                        }
+                        //Keys specialkey;
+                        FlaUI.Core.WindowsAPI.VirtualKeyShort vk;
+                        Enum.TryParse<FlaUI.Core.WindowsAPI.VirtualKeyShort>(key, true, out vk);
+                        if (vk > 0)
+                        {
+                            result.Add(vk);
+                        }
+                        else
+                        {
+                            result.Add(vk);
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
         internal List<vKey> _keys = new List<vKey>();
         internal string result;
 

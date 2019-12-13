@@ -23,7 +23,7 @@ namespace OpenRPA
         {
             get
             {
-                if(_openflowconfig == null)
+                if (_openflowconfig == null)
                 {
                     using (System.Net.WebClient wc = new System.Net.WebClient())
                     {
@@ -46,7 +46,6 @@ namespace OpenRPA
                 return _openflowconfig;
             }
         }
-
     }
     public class openflowconfig
     {

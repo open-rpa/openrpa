@@ -22,13 +22,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\DownloadFileDesigner.xaml" />
+    <None Remove="Activities\GetCredentialsDesigner.xaml" />
     <None Remove="Activities\ReadExcelDesigner.xaml" />
     <None Remove="Activities\ReadJSONDesigner.xaml" />
     <None Remove="Activities\ReadPDFDesigner.xaml" />
+    <None Remove="Activities\SetAutoLoginDesigner.xaml" />
+    <None Remove="Activities\SetCredentialsDesigner.xaml" />
     <None Remove="Activities\WriteExcelDesigner.xaml" />
     <None Remove="Resources\designer\closeworkbook.png" />
     <None Remove="Resources\designer\commentout.png" />
     <None Remove="Resources\designer\downloadfile.png" />
+    <None Remove="Resources\designer\entity.png" />
     <None Remove="Resources\designer\newemail.png" />
     <None Remove="Resources\designer\outlook.png" />
     <None Remove="Resources\designer\readexcel.png" />
@@ -40,6 +44,7 @@
     <None Remove="Resources\toolbox\closeworkbook.png" />
     <None Remove="Resources\toolbox\commentout.png" />
     <None Remove="Resources\toolbox\downloadfile.png" />
+    <None Remove="Resources\toolbox\entity.png" />
     <None Remove="Resources\toolbox\newemail.png" />
     <None Remove="Resources\toolbox\outlook.png" />
     <None Remove="Resources\toolbox\readexcel.png" />
@@ -73,6 +78,7 @@
     <Resource Include="Resources\designer\closeworkbook.png" />
     <Resource Include="Resources\designer\commentout.png" />
     <Resource Include="Resources\designer\downloadfile.png" />
+    <Resource Include="Resources\designer\entity.png" />
     <Resource Include="Resources\designer\newemail.png" />
     <Resource Include="Resources\designer\outlook.png" />
     <Resource Include="Resources\designer\readexcel.png" />
@@ -81,6 +87,7 @@
     <Resource Include="Resources\designer\readpdf.png" />
     <Resource Include="Resources\designer\writeexcel.png" />
     <Resource Include="Resources\designer\writefile.png" />
+    <EmbeddedResource Include="Resources\toolbox\entity.png" />
     <EmbeddedResource Include="Resources\toolbox\downloadfile.png" />
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +97,18 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\DownloadFileDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\SetAutoLoginDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\SetCredentialsDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\GetCredentialsDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

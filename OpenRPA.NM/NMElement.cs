@@ -343,5 +343,18 @@ namespace OpenRPA.NM
                 return null;
             }
         }
+        public IElement[] Items
+        {
+            get
+            {
+                var result = new List<IElement>();
+                if (tagname.ToLower() == "select")
+                {
+
+                }
+                return result.ToArray();
+            }
+        }
+
     }
 }

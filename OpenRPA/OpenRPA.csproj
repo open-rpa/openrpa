@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.54</Version>
-    <PackageReleaseNotes>1.0.52 Fix InvokeRemoteOpenRPA
+    <Version>1.0.55</Version>
+    <PackageReleaseNotes>1.0.55 Add a few more activites and begin implementering languages support
+1.0.52 Fix InvokeRemoteOpenRPA
 1.0.51 Add InvokeRemoteOpenRPA
 1.0.50 Fix showing error location when not visual tracking
 1.0.49 Add ClickElement per default to Windows GetElement. Add more recording options
@@ -137,6 +138,8 @@
     <None Remove="Resources\Buttons\Save.png" />
     <None Remove="Resources\Buttons\Signout.png" />
     <None Remove="Resources\Buttons\Stop.png" />
+    <None Remove="Resources\Buttons\switch_216215.png" />
+    <None Remove="Resources\Buttons\switch_216215.svg" />
     <None Remove="Resources\Buttons\TypeText_1.png" />
     <None Remove="Resources\Buttons\Undo.png" />
     <None Remove="Resources\Buttons\URL.png" />
@@ -285,6 +288,7 @@
     <None Remove="Views\CloseableHeader.xaml" />
     <None Remove="Views\DetectorsView.xaml" />
     <None Remove="Views\EditXAML.xaml" />
+    <None Remove="Views\InsertSelect.xaml" />
     <None Remove="Views\InsertText.xaml" />
     <None Remove="Views\KeyboardSeqWindow.xaml" />
     <None Remove="Views\LoginWindow.xaml" />
@@ -344,6 +348,9 @@
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\InsertSelect.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\RecorderPlugins.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -366,6 +373,8 @@
     <Resource Include="Resources\Buttons\OpenBrowser.png" />
     <Resource Include="Resources\Buttons\OpenFirefox.png" />
     <Resource Include="Resources\Buttons\OpenIE.png" />
+    <Resource Include="Resources\Buttons\switch_216215.png" />
+    <Resource Include="Resources\Buttons\switch_216215.svg" />
     <Resource Include="Resources\Buttons\TypeText_1.png" />
     <Resource Include="Resources\Buttons\URL.png" />
     <Resource Include="Resources\Buttons\Zeniverse_ikon.png" />
@@ -625,9 +634,23 @@
     <Resource Include="Resources\state\unloaded.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>strings.resx</DependentUpon>
+    </Compile>
     <Compile Update="Views\RecorderPlugins.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="strings.da.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Update="RunOpenRPA.bat">

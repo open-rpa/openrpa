@@ -65,6 +65,7 @@ namespace OpenRPA.Office
                 a.Filename = workbook.FullName.replaceEnvironmentVariable();
                 e.a = new GetElementResult(a);
                 e.SupportInput = true;
+                e.SupportSelect = false;
                 e.ClickHandled = true;
                 return true;
 

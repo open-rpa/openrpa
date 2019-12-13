@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpenRPA.Views"
+             xmlns:or="clr-namespace:OpenRPA"
              xmlns:projectbase="clr-namespace:OpenRPA"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -56,31 +57,31 @@
         </TreeView>
         <StackPanel Grid.Column="1" Grid.Row="0">
             <StackPanel>
-                <TextBlock><Bold>Edit</Bold></TextBlock>
-                <Button Click="ButtonEditXAML" Margin="20,0,0,0" Content="Edit XAML"></Button>
+                <TextBlock Text="{x:Static or:strings.open_edit}" FontWeight="Bold"></TextBlock>
+                <Button Click="ButtonEditXAML" Margin="20,0,0,0" Content="{x:Static or:strings.open_edit_xaml}"></Button>
             </StackPanel>
             <StackPanel>
-                <TextBlock><Bold>Name</Bold></TextBlock>
+                <TextBlock Text="{x:Static or:strings.open_name}" FontWeight="Bold"></TextBlock>
                 <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue.name}" ></TextBlock>
             </StackPanel>
             <StackPanel>
-                <TextBlock><Bold>State</Bold></TextBlock>
+                <TextBlock Text="{x:Static or:strings.open_state}" FontWeight="Bold"></TextBlock>
                 <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue.State}" ></TextBlock>
             </StackPanel>
             <StackPanel>
-                <TextBlock><Bold>Created by</Bold></TextBlock>
+                <TextBlock Text="{x:Static or:strings.open_createdby}" FontWeight="Bold"></TextBlock>
                 <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue._createdby}" ></TextBlock>
             </StackPanel>
             <StackPanel>
-                <TextBlock><Bold>Created</Bold></TextBlock>
+                <TextBlock Text="{x:Static or:strings.open_created}" FontWeight="Bold"></TextBlock>
                 <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue._created}" ></TextBlock>
             </StackPanel>
             <StackPanel>
-                <TextBlock><Bold>Modified by</Bold></TextBlock>
+                <TextBlock Text="{x:Static or:strings.open_modifiedby}" FontWeight="Bold"></TextBlock>
                 <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue._modifiedby}" ></TextBlock>
             </StackPanel>
             <StackPanel>
-                <TextBlock><Bold>Modified</Bold></TextBlock>
+                <TextBlock Text="{x:Static or:strings.open_modified}" FontWeight="Bold"></TextBlock>
                 <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue._modified}" ></TextBlock>
             </StackPanel>
         </StackPanel>

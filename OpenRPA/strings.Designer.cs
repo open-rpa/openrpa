@@ -61,6 +61,51 @@ namespace OpenRPA {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add variables.
+        /// </summary>
+        public static string activity_add_variables {
+            get {
+                return ResourceManager.GetString("activity_add_variables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drop activity.
+        /// </summary>
+        public static string activity_drop_hint {
+            get {
+                return ResourceManager.GetString("activity_drop_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Highlight.
+        /// </summary>
+        public static string activity_highlight {
+            get {
+                return ResourceManager.GetString("activity_highlight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Selector.
+        /// </summary>
+        public static string activity_open_selector {
+            get {
+                return ResourceManager.GetString("activity_open_selector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Element.
+        /// </summary>
+        public static string activity_select_element {
+            get {
+                return ResourceManager.GetString("activity_select_element", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use Animate Mouse.
         /// </summary>
         public static string animatemouse {
@@ -75,6 +120,15 @@ namespace OpenRPA {
         public static string browseraddons {
             get {
                 return ResourceManager.GetString("browseraddons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        public static string button_ok {
+            get {
+                return ResourceManager.GetString("button_ok", resourceCulture);
             }
         }
         
@@ -129,6 +183,15 @@ namespace OpenRPA {
         public static string delete {
             get {
                 return ResourceManager.GetString("delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Details.
+        /// </summary>
+        public static string details {
+            get {
+                return ResourceManager.GetString("details", resourceCulture);
             }
         }
         
@@ -286,6 +349,15 @@ namespace OpenRPA {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string name {
+            get {
+                return ResourceManager.GetString("name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New Project.
         /// </summary>
         public static string newproject {
@@ -322,6 +394,78 @@ namespace OpenRPA {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Created at.
+        /// </summary>
+        public static string open_created {
+            get {
+                return ResourceManager.GetString("open_created", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created by.
+        /// </summary>
+        public static string open_createdby {
+            get {
+                return ResourceManager.GetString("open_createdby", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        public static string open_edit {
+            get {
+                return ResourceManager.GetString("open_edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit XAML.
+        /// </summary>
+        public static string open_edit_xaml {
+            get {
+                return ResourceManager.GetString("open_edit_xaml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last modified at.
+        /// </summary>
+        public static string open_modified {
+            get {
+                return ResourceManager.GetString("open_modified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last modified by.
+        /// </summary>
+        public static string open_modifiedby {
+            get {
+                return ResourceManager.GetString("open_modifiedby", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string open_name {
+            get {
+                return ResourceManager.GetString("open_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to State.
+        /// </summary>
+        public static string open_state {
+            get {
+                return ResourceManager.GetString("open_state", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OpenFlow.
         /// </summary>
         public static string openflow {
@@ -354,6 +498,60 @@ namespace OpenRPA {
         public static string permissions {
             get {
                 return ResourceManager.GetString("permissions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string permissions_delete {
+            get {
+                return ResourceManager.GetString("permissions_delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoke.
+        /// </summary>
+        public static string permissions_invoke {
+            get {
+                return ResourceManager.GetString("permissions_invoke", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read.
+        /// </summary>
+        public static string permissions_read {
+            get {
+                return ResourceManager.GetString("permissions_read", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        public static string permissions_update {
+            get {
+                return ResourceManager.GetString("permissions_update", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string permissionswindow_delete {
+            get {
+                return ResourceManager.GetString("permissionswindow_delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New.
+        /// </summary>
+        public static string permissionswindow_new {
+            get {
+                return ResourceManager.GetString("permissionswindow_new", resourceCulture);
             }
         }
         
@@ -538,6 +736,15 @@ namespace OpenRPA {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        public static string type {
+            get {
+                return ResourceManager.GetString("type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use SendKeys.
         /// </summary>
         public static string usesendkeys {
@@ -552,6 +759,15 @@ namespace OpenRPA {
         public static string usevirtualclicks {
             get {
                 return ResourceManager.GetString("usevirtualclicks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value.
+        /// </summary>
+        public static string value {
+            get {
+                return ResourceManager.GetString("value", resourceCulture);
             }
         }
         
@@ -574,7 +790,7 @@ namespace OpenRPA {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Advarsler.
+        ///   Looks up a localized string similar to Warning.
         /// </summary>
         public static string warning {
             get {

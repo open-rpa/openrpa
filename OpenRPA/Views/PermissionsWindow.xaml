@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:or="clr-namespace:OpenRPA"
         xmlns:local="clr-namespace:OpenRPA.Views"
         mc:Ignorable="d"
         Title="PermissionsWindow" Height="450" Width="800">
@@ -30,10 +31,10 @@
                 <RibbonApplicationMenu Visibility="Collapsed" >
                 </RibbonApplicationMenu>
             </Ribbon.ApplicationMenu>
-            <RibbonTab x:Name="DetectorTab" Header="Detector">
+            <RibbonTab x:Name="DetectorTab" Header="{x:Static or:strings.permissions}">
                 <RibbonGroup x:Name="GroupDetectorFile" Header="File">
-                    <RibbonButton x:Name="ButtonNew" Command="ApplicationCommands.New" Label="New"  LargeImageSource="/OpenRPA;component/Resources/Buttons/New.png" />
-                    <RibbonButton x:Name="ButtonDelete" Command="ApplicationCommands.Delete" Label="Delete" LargeImageSource="/OpenRPA;component/Resources/Buttons/Delete.png" />
+                    <RibbonButton x:Name="ButtonNew" Command="ApplicationCommands.New" Label="{x:Static or:strings.permissionswindow_new}"  LargeImageSource="/OpenRPA;component/Resources/Buttons/New.png" />
+                    <RibbonButton x:Name="ButtonDelete" Command="ApplicationCommands.Delete" Label="{x:Static or:strings.permissionswindow_delete}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Delete.png" />
                     <!--RibbonButton x:Name="ButtonDetectorSave" Command="ApplicationCommands.Save" Label="Save"  LargeImageSource="/rpa;component/Resources/Buttons/Save.png" / -->
                 </RibbonGroup>
             </RibbonTab>
@@ -42,7 +43,7 @@
 
 
         <ListView x:Name="listDetectors" ItemsSource="{Binding Source={StaticResource Permissions}}" Grid.Column="0" Grid.Row="1" Margin="10" 
-                  SelectionMode="Extended" SelectionChanged="listDetectors_SelectionChanged"
+                  SelectionMode="Extended" 
                   SelectedItem="{Binding SelectedItem}">
             <ListView.Resources>
                 <Style TargetType="TextBlock">
@@ -70,25 +71,25 @@
             <StackPanel Margin="5,5,5,5" Orientation="Horizontal">
                 <CheckBox IsThreeState="False" Margin="0,4,0,10" 
                           IsChecked="{Binding SelectedItem.Read, Mode=TwoWay}" />
-                <TextBlock Margin="0,0,0,10" Text="Read" Padding="3,3,3,3" />
+                <TextBlock Margin="0,0,0,10" Text="{x:Static or:strings.permissions_read}" Padding="3,3,3,3" />
             </StackPanel>
 
             <StackPanel Margin="5,5,5,5" Orientation="Horizontal" VerticalAlignment="Top">
                 <CheckBox IsThreeState="False" Margin="0,4,0,10" 
                           IsChecked="{Binding SelectedItem.Update, Mode=TwoWay}" />
-                <TextBlock Margin="0,0,0,10" Text="Update" Padding="3,3,3,3" />
+                <TextBlock Margin="0,0,0,10" Text="{x:Static or:strings.permissions_update}" Padding="3,3,3,3" />
             </StackPanel>
 
             <StackPanel Margin="5,5,5,5" Orientation="Horizontal">
                 <CheckBox IsThreeState="False" Margin="0,4,0,10" 
                           IsChecked="{Binding SelectedItem.Delete, Mode=TwoWay}" />
-                <TextBlock Margin="0,0,0,10" Text="Delete" Padding="3,3,3,3" />
+                <TextBlock Margin="0,0,0,10" Text="{x:Static or:strings.permissions_delete}" Padding="3,3,3,3" />
             </StackPanel>
 
             <StackPanel Margin="5,5,5,5" Orientation="Horizontal">
                 <CheckBox IsThreeState="False" Margin="0,4,0,10" 
                           IsChecked="{Binding SelectedItem.Invoke, Mode=TwoWay}" />
-                <TextBlock Margin="0,0,0,10" Text="Invoke" Padding="3,3,3,3" />
+                <TextBlock Margin="0,0,0,10" Text="{x:Static or:strings.permissions_invoke}" Padding="3,3,3,3" />
             </StackPanel>
 
         </StackPanel>

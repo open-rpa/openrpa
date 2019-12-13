@@ -284,20 +284,16 @@
     <None Remove="Resources\toolbox\workflow.png" />
     <None Remove="Resources\toolbox\writeexcel.png" />
     <None Remove="Resources\toolbox\writefile.png" />
-    <None Remove="Views\AvalonDockView.xaml" />
     <None Remove="Views\CloseableHeader.xaml" />
     <None Remove="Views\DetectorsView.xaml" />
     <None Remove="Views\EditXAML.xaml" />
     <None Remove="Views\InsertSelect.xaml" />
     <None Remove="Views\InsertText.xaml" />
     <None Remove="Views\KeyboardSeqWindow.xaml" />
-    <None Remove="Views\LoginWindow.xaml" />
     <None Remove="Views\OpenProject.xaml" />
     <None Remove="Views\PermissionsWindow.xaml" />
     <None Remove="Views\RecorderPlugins.xaml" />
-    <None Remove="Views\RegistrationWindow.xaml" />
     <None Remove="Views\RunPlugins.xaml" />
-    <None Remove="Views\SampleDockWindowView.xaml" />
     <None Remove="Views\selectUserWindow.xaml" />
     <None Remove="Views\showVariables.xaml" />
     <None Remove="Views\SigninWindow.xaml" />
@@ -439,9 +435,6 @@
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\AvalonDockView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\CloseableHeader.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -457,19 +450,10 @@
     <Page Include="Views\KeyboardSeqWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\LoginWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\OpenProject.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PermissionsWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\RegistrationWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SampleDockWindowView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\selectUserWindow.xaml">

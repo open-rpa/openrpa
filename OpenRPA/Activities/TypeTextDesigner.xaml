@@ -4,6 +4,8 @@
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
+    xmlns:s="clr-namespace:System;assembly=mscorlib"
+    xmlns:Converters="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
     >
 
 
@@ -23,12 +25,17 @@
     </sap:ActivityDesigner.Icon>
 
     <sap:ActivityDesigner.Resources>
+        <Converters:ArgumentToExpressionConverter x:Key="ArgumentToExpressionConverter" />
         <DataTemplate x:Key="Collapsed">
             <StackPanel>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="Expanded">
             <StackPanel>
+                <sapv:ExpressionTextBox HintText="Hint" MaxWidth="180" Margin="5"
+                            OwnerActivity="{Binding Path=ModelItem}"
+                            Expression="{Binding Path=ModelItem.Text, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
+                            ExpressionType="s:String" HorizontalAlignment="Stretch" />
             </StackPanel>
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">

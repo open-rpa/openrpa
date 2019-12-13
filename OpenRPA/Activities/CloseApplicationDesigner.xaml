@@ -4,6 +4,7 @@
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
+    xmlns:or="clr-namespace:OpenRPA"
     >
 
 
@@ -30,12 +31,12 @@
         </DataTemplate>
         <DataTemplate x:Key="Expanded">
             <StackPanel>
-                <Button Content="Select element" Click="Select_Click" />
-                <Button Content="Open Selector" Click="Open_Selector"  />
+                <Button Content="{x:Static or:strings.activity_select_element}" Click="Select_Click" />
+                <Button Content="{x:Static or:strings.activity_open_selector}" Click="Open_Selector"  />
                 <Button Click="Highlight_Click" >
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{Binding HighlightImage}" Height="16" Width="16" />
-                        <TextBlock>Highlight</TextBlock>
+                        <TextBlock Text="{x:Static or:strings.activity_highlight}"></TextBlock>
                     </StackPanel>
                 </Button>
 

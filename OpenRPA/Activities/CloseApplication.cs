@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Activities
 {
-    [Designer(typeof(OpenApplicationDesigner), typeof(System.ComponentModel.Design.IDesigner))]
+    [Designer(typeof(CloseApplicationDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.killapp.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class CloseApplication : CodeActivity

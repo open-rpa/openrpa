@@ -117,11 +117,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="activity_add_variables" xml:space="preserve">
+    <value>Add variables</value>
+  </data>
+  <data name="activity_drop_hint" xml:space="preserve">
+    <value>Drop activity</value>
+  </data>
+  <data name="activity_highlight" xml:space="preserve">
+    <value>Highlight</value>
+  </data>
+  <data name="activity_open_selector" xml:space="preserve">
+    <value>Open Selector</value>
+  </data>
+  <data name="activity_select_element" xml:space="preserve">
+    <value>Select Element</value>
+  </data>
   <data name="animatemouse" xml:space="preserve">
     <value>Use Animate Mouse</value>
   </data>
   <data name="browseraddons" xml:space="preserve">
     <value>Browser addons</value>
+  </data>
+  <data name="button_ok" xml:space="preserve">
+    <value>Ok</value>
   </data>
   <data name="cancelkey" xml:space="preserve">
     <value>Cancel key</value>
@@ -140,6 +158,9 @@
   </data>
   <data name="delete" xml:space="preserve">
     <value>Delete</value>
+  </data>
+  <data name="details" xml:space="preserve">
+    <value>Details</value>
   </data>
   <data name="detectors" xml:space="preserve">
     <value>Detectors</value>
@@ -192,6 +213,9 @@
   <data name="minimize" xml:space="preserve">
     <value>Minimize</value>
   </data>
+  <data name="name" xml:space="preserve">
+    <value>Name</value>
+  </data>
   <data name="newproject" xml:space="preserve">
     <value>New Project</value>
   </data>
@@ -210,11 +234,53 @@
   <data name="openrpa" xml:space="preserve">
     <value>OpenRPA</value>
   </data>
+  <data name="open_created" xml:space="preserve">
+    <value>Created at</value>
+  </data>
+  <data name="open_createdby" xml:space="preserve">
+    <value>Created by</value>
+  </data>
+  <data name="open_edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="open_edit_xaml" xml:space="preserve">
+    <value>Edit XAML</value>
+  </data>
+  <data name="open_modified" xml:space="preserve">
+    <value>Last modified at</value>
+  </data>
+  <data name="open_modifiedby" xml:space="preserve">
+    <value>Last modified by</value>
+  </data>
+  <data name="open_name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="open_state" xml:space="preserve">
+    <value>State</value>
+  </data>
   <data name="packages" xml:space="preserve">
     <value>Packages</value>
   </data>
   <data name="permissions" xml:space="preserve">
     <value>Permissions</value>
+  </data>
+  <data name="permissionswindow_delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="permissionswindow_new" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="permissions_delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="permissions_invoke" xml:space="preserve">
+    <value>Invoke</value>
+  </data>
+  <data name="permissions_read" xml:space="preserve">
+    <value>Read</value>
+  </data>
+  <data name="permissions_update" xml:space="preserve">
+    <value>Update</value>
   </data>
   <data name="play" xml:space="preserve">
     <value>Play</value>
@@ -276,11 +342,17 @@
   <data name="tools_swap_sendkeys" xml:space="preserve">
     <value>Swap SendKeys</value>
   </data>
+  <data name="type" xml:space="preserve">
+    <value>Type</value>
+  </data>
   <data name="usesendkeys" xml:space="preserve">
     <value>Use SendKeys</value>
   </data>
   <data name="usevirtualclicks" xml:space="preserve">
     <value>Use Virtual Clicks</value>
+  </data>
+  <data name="value" xml:space="preserve">
+    <value>Value</value>
   </data>
   <data name="verbose" xml:space="preserve">
     <value>Verbose</value>
@@ -289,6 +361,6 @@
     <value>Visual Tracking</value>
   </data>
   <data name="warning" xml:space="preserve">
-    <value>Advarsler</value>
+    <value>Warning</value>
   </data>
 </root>

@@ -60,12 +60,11 @@ namespace OpenRPA.Windows
             {
                 _timeout = 5000;
             }            
-#if DEBUG
-            _timeout = _timeout * 8;
-#endif
+//#if DEBUG
+//            _timeout = _timeout * 8;
+//#endif
             do
             {
-
                 if (PluginConfig.get_elements_in_different_thread)
                 {
                     elements = OpenRPA.AutomationHelper.RunSTAThread<UIElement[]>(() =>

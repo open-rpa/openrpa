@@ -4,6 +4,7 @@
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
+    xmlns:or="clr-namespace:OpenRPA"
     >
 
 
@@ -33,7 +34,7 @@
         <DataTemplate x:Key="Expanded">
             <StackPanel>
                 <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
-                                    HintText="Drop activity" AllowedItemType="sa:Activity"
+                                    HintText="{x:Static or:strings.activity_drop_hint}" AllowedItemType="sa:Activity"
                                       Grid.Row="1" />
             </StackPanel>
         </DataTemplate>

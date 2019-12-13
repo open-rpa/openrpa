@@ -13,17 +13,12 @@ using System.Windows.Media.Imaging;
 
 namespace OpenRPA.Activities
 {
-    public partial class OpenApplicationDesigner : INotifyPropertyChanged
+    public partial class OpenApplicationDesigner
     {
         public OpenApplicationDesigner()
         {
             InitializeComponent();
             DataContext = this;
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged(String propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         private void Open_Selector(object sender, RoutedEventArgs e)
         {
@@ -83,10 +78,8 @@ namespace OpenRPA.Activities
                         if (p.parseUserAction(ref e)) continue;
                     }
                 }
-
                 e.Selector.RemoveRange(3, e.Selector.Count - 3);
                 ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(e.Selector.ToString() ) });
-
             }, null);
         }
     }

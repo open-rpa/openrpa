@@ -30,7 +30,6 @@
         <Converters:ArgumentToExpressionConverter x:Key="ArgumentToExpressionConverter" />
     </sap:ActivityDesigner.Resources>
     <Grid>
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="30" />

@@ -6,6 +6,7 @@
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
     xmlns:s="clr-namespace:System;assembly=mscorlib"
     xmlns:Converters="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
+    xmlns:or="clr-namespace:OpenRPA.Utilities.Resources"
     >
 
 
@@ -23,27 +24,35 @@
             </DrawingBrush.Drawing>
         </DrawingBrush>
     </sap:ActivityDesigner.Icon>
+
     <sap:ActivityDesigner.Resources>
         <Converters:ArgumentToExpressionConverter x:Key="ArgumentToExpressionConverter" />
-    </sap:ActivityDesigner.Resources>
-
+        <DataTemplate x:Key="Expanded">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="30" />
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-
-                <DockPanel Height="Auto" Name="stackPanel1" Width="Auto" LastChildFill="True" Grid.Column="0">
-                    <TextBlock Text="Filename" VerticalAlignment="Center" />
-                    <sapv:ExpressionTextBox HintText="Hint" MaxWidth="180" Margin="5"
+                <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_readjson_hint}" MaxWidth="180" Margin="5" Grid.Column="0"
                             OwnerActivity="{Binding Path=ModelItem}"
                             Expression="{Binding Path=ModelItem.Filename, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
                             ExpressionType="s:String" HorizontalAlignment="Stretch" />
-                </DockPanel>
-                <Button Content="..." Click="Button_Click" Grid.Column="1" Width="30" />
+                <Button Content="..." Click="Button_Click" Width="30" Grid.Column="1" />
             </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="Collapsed">
+        </DataTemplate>
+        <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
+            <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="false">
+                    <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed }"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </sap:ActivityDesigner.Resources>
+    <Grid>
+        <ContentPresenter Style="{DynamicResource ExpandOrCollapsedStyle}" Content="{Binding}" />
+    </Grid>
+
 </sap:ActivityDesigner>

@@ -73,13 +73,12 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
-    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.6.0" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="NuGet.Common" Version="5.3.1" />
-    <PackageReference Include="NuGet.Packaging" Version="5.3.1" />
-    <PackageReference Include="NuGet.Protocol" Version="5.3.1" />
-    <PackageReference Include="NuGet.Resolver" Version="5.3.1" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="NuGet.Common" Version="5.4.0" />
+    <PackageReference Include="NuGet.Packaging" Version="5.4.0" />
+    <PackageReference Include="NuGet.Protocol" Version="5.4.0" />
+    <PackageReference Include="NuGet.Resolver" Version="5.4.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\ClickElementDesigner.xaml" />
@@ -618,7 +617,7 @@
     <Resource Include="Resources\state\unloaded.png" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="strings.Designer.cs">
+    <Compile Update="Resources\strings.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>strings.resx</DependentUpon>
@@ -628,21 +627,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="strings.da.resx">
+    <EmbeddedResource Update="Resources\strings.da.resx">
       <Generator></Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="strings.resx">
+    <EmbeddedResource Update="Resources\strings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="RunOpenRPA.bat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="unblock.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />

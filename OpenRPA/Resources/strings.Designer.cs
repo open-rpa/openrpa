@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace OpenRPA {
+namespace OpenRPA.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace OpenRPA {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("OpenRPA.strings", typeof(strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("OpenRPA.Resources.strings", typeof(strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -66,6 +66,15 @@ namespace OpenRPA {
         public static string activity_add_variables {
             get {
                 return ResourceManager.GetString("activity_add_variables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Double-click to view.
+        /// </summary>
+        public static string activity_click_to_view {
+            get {
+                return ResourceManager.GetString("activity_click_to_view", resourceCulture);
             }
         }
         

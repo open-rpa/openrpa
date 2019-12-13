@@ -124,41 +124,48 @@ namespace OpenRPA.Windows
             if (CurrentProcessId == 0) CurrentProcessId = System.Diagnostics.Process.GetCurrentProcess().Id;
             var thread = new Thread(new ThreadStart(() =>
             {
-                lock (_lock)
-                {
-                    if (_processing) return;
-                    _processing = true;
-                }
                 try
                 {
-                    if (e.Element == null)
+                    lock (_lock)
                     {
-                        var Element = AutomationHelper.GetFromPoint(e.X, e.Y);
-                        if (Element != null) e.SetElement(Element);
+                        if (_processing) return;
+                        _processing = true;
                     }
+                    try
+                    {
+                        if (e.Element == null)
+                        {
+                            var Element = AutomationHelper.GetFromPoint(e.X, e.Y);
+                            if (Element != null) e.SetElement(Element);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, "");
+                    }
+                    lock (_lock)
+                    {
+                        _processing = false;
+                    }
+                    if (e.Element == null) return;
+
+                    if (e.Element.RawElement.Properties.ProcessId.IsSupported && e.Element.RawElement.Properties.ProcessId.ValueOrDefault == CurrentProcessId)
+                    {
+                        return;
+                    }
+                    var re = new RecordEvent(); re.Button = e.Button;
+                    re.OffsetX = e.X - e.Element.Rectangle.X;
+                    re.OffsetY = e.Y - e.Element.Rectangle.Y;
+                    re.Element = e.Element;
+                    re.UIElement = e.Element;
+                    re.X = e.X;
+                    re.Y = e.Y;
+                    OnMouseMove?.Invoke(this, re);
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex, "");
                 }
-                lock (_lock)
-                {
-                    _processing = false;
-                }
-                if (e.Element == null) return;
-
-                if (e.Element.RawElement.Properties.ProcessId.IsSupported && e.Element.RawElement.Properties.ProcessId.ValueOrDefault == CurrentProcessId)
-                {
-                    return;
-                }
-                var re = new RecordEvent(); re.Button = e.Button;
-                re.OffsetX = e.X - e.Element.Rectangle.X;
-                re.OffsetY = e.Y - e.Element.Rectangle.Y;
-                re.Element = e.Element;
-                re.UIElement = e.Element;
-                re.X = e.X;
-                re.Y = e.Y;
-                OnMouseMove?.Invoke(this, re);
             }));
             thread.IsBackground = true;
             thread.Start();

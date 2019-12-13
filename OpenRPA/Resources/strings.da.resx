@@ -120,6 +120,9 @@
   <data name="activity_add_variables" xml:space="preserve">
     <value>Tilføj variabler</value>
   </data>
+  <data name="activity_click_to_view" xml:space="preserve">
+    <value>Dobblet klik for a se</value>
+  </data>
   <data name="activity_drop_hint" xml:space="preserve">
     <value>Slip aktiviteter her</value>
   </data>

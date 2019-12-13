@@ -45,8 +45,6 @@
   </Target>
   <ItemGroup>
     <None Remove="Activities\Editor.xaml" />
-    <None Remove="Activities\ExecuteAHKFunctionDesigner.xaml" />
-    <None Remove="Activities\ExecuteAHKScriptDesigner.xaml" />
     <None Remove="Activities\InvokeCodeDesigner.xaml" />
     <None Remove="lib\Python.Runtime.NETStandard.dll" />
     <None Remove="Python.Runtime.NETStandard.dll" />
@@ -79,12 +77,6 @@
     <Page Include="Activities\Editor.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Activities\ExecuteAHKFunctionDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Activities\ExecuteAHKScriptDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Activities\InvokeCodeDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -108,6 +100,19 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
     <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />

@@ -94,14 +94,14 @@
     <Resource Include="Resources\designer\getuielement.png" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="strings.Designer.cs">
+    <Compile Update="Resources\strings.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>strings.resx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="strings.resx">
+    <EmbeddedResource Update="Resources\strings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>

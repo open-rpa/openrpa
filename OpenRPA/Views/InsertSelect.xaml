@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:input="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
         xmlns:local="clr-namespace:OpenRPA.Views"
-        xmlns:or="clr-namespace:OpenRPA"
+        xmlns:or="clr-namespace:OpenRPA.Resources"
         mc:Ignorable="d"
         Title="Select item" 
         d:DesignHeight="100" d:DesignWidth="600" Height="100" Width="600"

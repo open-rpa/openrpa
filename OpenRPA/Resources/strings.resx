@@ -120,6 +120,9 @@
   <data name="activity_add_variables" xml:space="preserve">
     <value>Add variables</value>
   </data>
+  <data name="activity_click_to_view" xml:space="preserve">
+    <value>Double-click to view</value>
+  </data>
   <data name="activity_drop_hint" xml:space="preserve">
     <value>Drop activity</value>
   </data>

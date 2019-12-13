@@ -117,13 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="activity_play_hint" xml:space="preserve">
-    <value>Play this video file</value>
+  <data name="activity_downloadfile_hint" xml:space="preserve">
+    <value>Save into this folder</value>
   </data>
-  <data name="activity_start_hint" xml:space="preserve">
-    <value>Save in this folder</value>
+  <data name="activity_readexcel_hint" xml:space="preserve">
+    <value>Select excel file to read</value>
   </data>
-  <data name="activity_stop_hint" xml:space="preserve">
-    <value>Save video filename</value>
+  <data name="activity_readjson_hint" xml:space="preserve">
+    <value>Select JSON file to read</value>
+  </data>
+  <data name="activity_readpdf_hint" xml:space="preserve">
+    <value>Select PDF file to read</value>
+  </data>
+  <data name="activity_writeexcel_hint" xml:space="preserve">
+    <value>Select excel file to write to</value>
   </data>
 </root>

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace OpenRPA.AviRecorder {
+namespace OpenRPA.FileWatcher.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace OpenRPA.AviRecorder {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("OpenRPA.AviRecorder.strings", typeof(strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("OpenRPA.FileWatcher.Resources.strings", typeof(strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,29 +61,29 @@ namespace OpenRPA.AviRecorder {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Play this video file.
+        ///   Looks up a localized string similar to File filter.
         /// </summary>
-        public static string activity_play_hint {
+        public static string plugin_filter {
             get {
-                return ResourceManager.GetString("activity_play_hint", resourceCulture);
+                return ResourceManager.GetString("plugin_filter", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save in this folder.
+        ///   Looks up a localized string similar to Name.
         /// </summary>
-        public static string activity_start_hint {
+        public static string plugin_name {
             get {
-                return ResourceManager.GetString("activity_start_hint", resourceCulture);
+                return ResourceManager.GetString("plugin_name", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save video filename.
+        ///   Looks up a localized string similar to Path.
         /// </summary>
-        public static string activity_stop_hint {
+        public static string plugin_path {
             get {
-                return ResourceManager.GetString("activity_stop_hint", resourceCulture);
+                return ResourceManager.GetString("plugin_path", resourceCulture);
             }
         }
     }

@@ -4,7 +4,7 @@
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
-    xmlns:or="clr-namespace:OpenRPA.Windows"
+    xmlns:or="clr-namespace:OpenRPA.Windows.Resources"
     >
 
 
@@ -48,10 +48,10 @@
             </StackPanel>
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
-            <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>
+            <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="true">
-                    <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
+                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="false">
+                    <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>

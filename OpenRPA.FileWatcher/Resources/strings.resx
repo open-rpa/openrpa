@@ -117,64 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="detector_button_highlight" xml:space="preserve">
-    <value>Fremhæv</value>
+  <data name="plugin_filter" xml:space="preserve">
+    <value>File filter</value>
   </data>
-  <data name="detector_button_open_selector" xml:space="preserve">
-    <value>Åben selektor</value>
+  <data name="plugin_name" xml:space="preserve">
+    <value>Name</value>
   </data>
-  <data name="detector_button_select" xml:space="preserve">
-    <value>Vælg element</value>
-  </data>
-  <data name="detector_name" xml:space="preserve">
-    <value>Navn</value>
-  </data>
-  <data name="detector_selector" xml:space="preserve">
-    <value>Selektor</value>
-  </data>
-  <data name="getelement_drop_hint" xml:space="preserve">
-    <value>Slip aktiviteter her</value>
-  </data>
-  <data name="getelement_highlight" xml:space="preserve">
-    <value>Fremhæv</value>
-  </data>
-  <data name="getelement_open_selector" xml:space="preserve">
-    <value>Åben selektor</value>
-  </data>
-  <data name="plugin_allow_child_searching" xml:space="preserve">
-    <value>Tillad as søge i børn</value>
-  </data>
-  <data name="plugin_allow_child_searching_help" xml:space="preserve">
-    <value>Tillad as søge i under objekter</value>
-  </data>
-  <data name="plugin_allow_multiple_hits" xml:space="preserve">
-    <value>Tillad flere hits</value>
-  </data>
-  <data name="plugin_allow_multiple_hits_help" xml:space="preserve">
-    <value>Tillad flere hits i alle selectors or ikke kun den sidste</value>
-  </data>
-  <data name="plugin_enum_properties" xml:space="preserve">
-    <value>Gennem gå egenskaber</value>
-  </data>
-  <data name="plugin_enum_properties_help" xml:space="preserve">
-    <value>Test alle egenskaber per selektor for at kun vælge de nødvendige</value>
-  </data>
-  <data name="plugin_get_elements_in_different_thread" xml:space="preserve">
-    <value>Brug anden tråd i søgninger</value>
-  </data>
-  <data name="plugin_get_elements_in_different_thread_help" xml:space="preserve">
-    <value>Brug anden tråd i søgninger for at ungå fejl applikationer som hænger</value>
-  </data>
-  <data name="plugin_search_descendants" xml:space="preserve">
-    <value>Søge i alle underobjekter</value>
-  </data>
-  <data name="plugin_search_descendants_help" xml:space="preserve">
-    <value>Tillad at finde et object i alle børn, for hver selektor, giver høj flexibilitet imod mindre performance</value>
-  </data>
-  <data name="plugin_traverse_selector_both_ways" xml:space="preserve">
-    <value>Gennem gå selektor begge veje</value>
-  </data>
-  <data name="plugin_traverse_selector_both_ways_help" xml:space="preserve">
-    <value>Test selektor begge veje for at fjerne "usynlige" selektor elementer</value>
+  <data name="plugin_path" xml:space="preserve">
+    <value>Path</value>
   </data>
 </root>

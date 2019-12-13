@@ -3,14 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:or="clr-namespace:OpenRPA.FileWatcher.Resources"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,20,0,0" Text="Name:" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,20,0,0" Text="{x:Static or:strings.plugin_name}" VerticalAlignment="Top" Width="110" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="183,20,0,0" Text="{Binding Path=EntityName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,48,0,0" Text="Path:" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,48,0,0" Text="{x:Static or:strings.plugin_path}" VerticalAlignment="Top" Width="110" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="183,48,0,0" Text="{Binding EntityPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,71,0,0" Text="Filter:" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,71,0,0" Text="{x:Static or:strings.plugin_filter}" VerticalAlignment="Top" Width="110" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="183,71,0,0" Text="{Binding EntityFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
 
     </Grid>

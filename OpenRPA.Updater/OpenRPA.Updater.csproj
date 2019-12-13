@@ -58,10 +58,10 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <PackageReference Include="NuGet.Common" Version="5.3.1" />
-    <PackageReference Include="NuGet.Packaging" Version="5.3.1" />
-    <PackageReference Include="NuGet.Protocol" Version="5.3.1" />
-    <PackageReference Include="NuGet.Resolver" Version="5.3.1" />
+    <PackageReference Include="NuGet.Common" Version="5.4.0" />
+    <PackageReference Include="NuGet.Packaging" Version="5.4.0" />
+    <PackageReference Include="NuGet.Protocol" Version="5.4.0" />
+    <PackageReference Include="NuGet.Resolver" Version="5.4.0" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

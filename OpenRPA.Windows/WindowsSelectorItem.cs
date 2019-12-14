@@ -68,16 +68,16 @@ namespace OpenRPA.Windows
                 if (element.Properties.ProcessId.IsSupported)
                 {
                     var info = element.GetProcessInfo();
-                    if (info.isImmersiveProcess)
+                    if (info.IsImmersiveProcess)
                     {
-                        Properties.Add(new SelectorItemProperty("isImmersiveProcess", info.isImmersiveProcess.ToString()));
-                        Properties.Add(new SelectorItemProperty("applicationUserModelId", info.applicationUserModelId));
+                        Properties.Add(new SelectorItemProperty("isImmersiveProcess", info.IsImmersiveProcess.ToString()));
+                        Properties.Add(new SelectorItemProperty("applicationUserModelId", info.ApplicationUserModelId));
                     }
                     else
                     {
-                        Properties.Add(new SelectorItemProperty("filename", info.filename));
-                        Properties.Add(new SelectorItemProperty("processname", info.processname));
-                        Properties.Add(new SelectorItemProperty("arguments", info.arguments));
+                        Properties.Add(new SelectorItemProperty("filename", info.Filename));
+                        Properties.Add(new SelectorItemProperty("processname", info.ProcessName));
+                        Properties.Add(new SelectorItemProperty("arguments", info.Arguments));
                     }
                     Properties.Add(new SelectorItemProperty("Selector", "Windows"));
                     Properties.Add(new SelectorItemProperty("SearchDescendants", PluginConfig.search_descendants.ToString()));

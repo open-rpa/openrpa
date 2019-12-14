@@ -211,7 +211,6 @@ namespace OpenRPA
                     Input.InputDriver.Click(Button);
                     if (DoubleClick) Input.InputDriver.Click(Button);
                 }
-                FlaUI.Core.Input.Wait.UntilInputIsProcessed();
             }
             catch (Exception)
             {

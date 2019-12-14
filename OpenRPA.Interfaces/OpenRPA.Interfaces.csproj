@@ -76,7 +76,7 @@
     <None Remove="Views\KeyboardSeqWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FlaUI.UIA3" Version="1.3.1">
+    <PackageReference Include="FlaUI.UIA3" Version="3.0.0">
       <IncludeAssets></IncludeAssets>
       <ExcludeAssets></ExcludeAssets>
     </PackageReference>

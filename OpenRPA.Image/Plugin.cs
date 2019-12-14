@@ -107,10 +107,7 @@ namespace OpenRPA.Image
             }
 
 
-            FlaUI.Core.Shapes.Point point = new FlaUI.Core.Shapes.Point(e.X - 80, e.Y - 80);
-            if (point.X < 0) { point.X = e.X + 80; }
-            if (point.Y < 0) { point.Y = e.Y + 80; }
-            FlaUI.Core.Input.Mouse.MoveTo(point);
+            NativeMethods.SetCursorPos(e.X - 80, e.Y - 80);
 
             var a = new GetElement
             {
@@ -137,8 +134,7 @@ namespace OpenRPA.Image
             a.Image = Interfaces.Image.Util.Bitmap2Base64(image);
             e.a = new GetElementResult(a);
 
-            point.X = e.X; point.Y = e.Y;
-            FlaUI.Core.Input.Mouse.MoveTo(point);
+            NativeMethods.SetCursorPos(e.X, e.Y );
 
             return true;
         }

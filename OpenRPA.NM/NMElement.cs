@@ -20,8 +20,7 @@ namespace OpenRPA.NM
                 var result = new List<NMElement>();
                 if (chromeelement.ContainsKey("content"))
                 {
-                    var content = chromeelement["content"] as JArray;
-                    if(content==null) return result.ToArray();
+                    if (!(chromeelement["content"] is JArray content)) return result.ToArray();
                     foreach (var c in content)
                     {
                         try
@@ -90,16 +89,12 @@ namespace OpenRPA.NM
                 catch (Exception)
                 {
                 }
-                if(c == null)
-                {
-                    var a = JArray.Parse(_chromeelement);
-                }
-                
                 chromeelement = new Dictionary<string, object>();
-                foreach (var kp in c )
-                {
-                    chromeelement.Add(kp.Key.ToLower(), kp.Value);
-                }
+                if(c!=null)
+                    foreach (var kp in c )
+                    {
+                        chromeelement.Add(kp.Key.ToLower(), kp.Value);
+                    }
                 //if (chromeelement.ContainsKey("attributes"))
                 //{
                 //    JObject _c = (JObject)chromeelement["attributes"];
@@ -141,7 +136,7 @@ namespace OpenRPA.NM
             parseChromeString(_chromeelement);
         }
         [Newtonsoft.Json.JsonIgnore]
-        private string _browser = null;
+        private readonly string _browser = null;
         public string browser {
             get {
                 return _browser;
@@ -164,13 +159,15 @@ namespace OpenRPA.NM
                     if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
                     NMHook.HighlightTab(tab);
 
-                    var updateelement = new NativeMessagingMessage("updateelementvalue");
-                    updateelement.browser = message.browser;
-                    updateelement.cssPath = cssselector;
-                    updateelement.xPath = xpath;
-                    updateelement.tabid = message.tabid;
-                    updateelement.frameId = message.frameId;
-                    updateelement.data = value;
+                    var updateelement = new NativeMessagingMessage("updateelementvalue")
+                    {
+                        browser = message.browser,
+                        cssPath = cssselector,
+                        xPath = xpath,
+                        tabid = message.tabid,
+                        frameId = message.frameId,
+                        data = value
+                    };
                     var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(2));
                     if (subsubresult == null) throw new Exception("Failed clicking html element");
                     System.Threading.Thread.Sleep(500);
@@ -197,56 +194,57 @@ namespace OpenRPA.NM
                 return;
             }
             bool virtualClick = true;
-            //int OffsetX = 0;
-            //int OffsetY = 0;
-            FlaUI.Core.Input.MouseButton button = FlaUI.Core.Input.MouseButton.Left; 
             NMHook.checkForPipes(true, true);
             if (NMHook.connected)
             {
                 if (virtualClick)
                 {
-                    NativeMessagingMessage subsubresult = null;
-                    var getelement2 = new NativeMessagingMessage("clickelement");
-                    getelement2.browser = message.browser;
-                    getelement2.cssPath = cssselector;
-                    getelement2.xPath = xpath;
-                    getelement2.tabid = message.tabid;
-                    getelement2.frameId = message.frameId;
-                    subsubresult = NMHook.sendMessageResult(getelement2, true, TimeSpan.FromSeconds(2));
+                    var getelement2 = new NativeMessagingMessage("clickelement")
+                    {
+                        browser = message.browser,
+                        cssPath = cssselector,
+                        xPath = xpath,
+                        tabid = message.tabid,
+                        frameId = message.frameId
+                    };
+                    NativeMessagingMessage subsubresult = NMHook.sendMessageResult(getelement2, true, TimeSpan.FromSeconds(2));
                     if (subsubresult == null) throw new Exception("Failed clicking html element");
                     System.Threading.Thread.Sleep(500);
                     NMHook.WaitForTab(getelement2.tabid, getelement2.browser, TimeSpan.FromSeconds(5));
                     return;
                 }
                 NativeMessagingMessage subresult = null;
-                var getelement = new NativeMessagingMessage("getelement");
-                getelement.browser = message.browser;
-                getelement.cssPath = cssselector;
-                getelement.xPath = xpath;
-                getelement.tabid = message.tabid;
-                getelement.frameId = message.frameId;
+                var getelement = new NativeMessagingMessage("getelement")
+                {
+                    browser = message.browser,
+                    cssPath = cssselector,
+                    xPath = xpath,
+                    tabid = message.tabid,
+                    frameId = message.frameId
+                };
                 if (NMHook.connected) subresult = NMHook.sendMessageResult(getelement, true, TimeSpan.FromSeconds(2));
                 if (subresult == null) throw new Exception("Failed clicking html element");
                 int hitx = subresult.uix;
                 int hity = subresult.uiy;
                 int width = subresult.uiwidth;
                 int height = subresult.uiheight;
-                hitx = hitx + OffsetX;
-                hity = hity + OffsetY;
+                hitx += OffsetX;
+                hity += OffsetY;
                 if ((OffsetX == 0 && OffsetY == 0) || hitx < 0 || hity < 0)
                 {
-                    hitx = hitx + (width / 2);
-                    hity = hity + (height / 2);
+                    hitx += (width / 2);
+                    hity += (height / 2);
                 }
-                if (AnimateMouse) FlaUI.Core.Input.Mouse.MoveTo(new FlaUI.Core.Shapes.Point(hitx, hity));
-                if (DoubleClick)
+                if (AnimateMouse)
                 {
-                    FlaUI.Core.Input.Mouse.DoubleClick(button, new FlaUI.Core.Shapes.Point(hitx, hity));
+                    FlaUI.Core.Input.Mouse.MoveTo(new Point(hitx, hity));
                 }
                 else
                 {
-                    FlaUI.Core.Input.Mouse.Click(button, new FlaUI.Core.Shapes.Point(hitx, hity));
+                    NativeMethods.SetCursorPos(hitx, hity);
                 }
+                Input.InputDriver.Click(Button);
+                if (DoubleClick) Input.InputDriver.Click(Button);
                 System.Threading.Thread.Sleep(500);
                 NMHook.WaitForTab(getelement.tabid, getelement.browser, TimeSpan.FromSeconds(5));
             }
@@ -254,6 +252,7 @@ namespace OpenRPA.NM
         public void Focus()
         {
         }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         public Task _Highlight(System.Drawing.Color Color, TimeSpan Duration)
         {
             using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow(true))

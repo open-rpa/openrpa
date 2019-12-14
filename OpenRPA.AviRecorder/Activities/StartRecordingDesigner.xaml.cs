@@ -27,7 +27,7 @@ namespace OpenRPA.AviRecorder.Activities
                 if (openFileDialog1.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
                 var path = openFileDialog1.SelectedPath;
                 ModelItem.Properties["Folder"].SetValue(new InArgument<string>(){
-                        Expression = new VisualBasicValue<string>("\"" + path.replaceEnvironmentVariable() + "\"")
+                        Expression = new VisualBasicValue<string>("\"" + path.ReplaceEnvironmentVariable() + "\"")
                     });
 
             }

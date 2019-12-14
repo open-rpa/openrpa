@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using FlaUI.Core;
+using FlaUI.Core.AutomationElements;
 using FlaUI.Core.AutomationElements.Infrastructure;
 using OpenRPA.Input;
 using OpenRPA.Interfaces;
@@ -19,19 +20,19 @@ namespace OpenRPA.Windows
     public class Plugin : ObservableObject, IRecordPlugin
     {
         private static int CurrentProcessId = 0;
-        public static Interfaces.Selector.treeelement[] _GetRootElements(Selector anchor)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
+        public static treeelement[] _GetRootElements(Selector anchor)
         {
-            if(CurrentProcessId==0) CurrentProcessId = System.Diagnostics.Process.GetCurrentProcess().Id;
+            if(CurrentProcessId==0) CurrentProcessId = Process.GetCurrentProcess().Id;
 
-            var result = new List<Interfaces.Selector.treeelement>();
+            var result = new List<treeelement>();
             Task.Run(() =>
             {
                 var automation = AutomationUtil.getAutomation();
                 var _rootElement = automation.GetDesktop();
                 if (anchor != null)
                 {
-                    WindowsSelector Windowsselector = anchor as WindowsSelector;
-                    if (Windowsselector == null) { Windowsselector = new WindowsSelector(anchor.ToString()); }
+                    if (!(anchor is WindowsSelector Windowsselector)) { Windowsselector = new WindowsSelector(anchor.ToString()); }
                     var elements = WindowsSelector.GetElementsWithuiSelector(Windowsselector, null, 5);
                     if (elements.Count() > 0)
                     {
@@ -67,11 +68,11 @@ namespace OpenRPA.Windows
             }).Wait(1000);
             return result.ToArray();
         }
-        public Interfaces.Selector.treeelement[] GetRootElements(Selector anchor)
+        public treeelement[] GetRootElements(Selector anchor)
         {
             return Plugin._GetRootElements(anchor);
         }
-        public Interfaces.Selector.Selector GetSelector(Selector anchor, Interfaces.Selector.treeelement item)
+        public Selector GetSelector(Selector anchor, treeelement item)
         {
             var windowsitem = item as WindowsTreeElement;
             WindowsSelector winanchor = anchor as WindowsSelector;
@@ -110,14 +111,17 @@ namespace OpenRPA.Windows
             InputDriver.Instance.OnMouseDown -= OnMouseDown;
             InputDriver.Instance.OnMouseMove -= _OnMouseMove;
         }
-        private static object _lock = new object();
+        private static readonly object _lock = new object();
         private static bool _processing = false;
         private void OnMouseDown(InputEventArgs e)
         {
             isMouseDown = true;
-            var re = new RecordEvent(); re.Button = e.Button;
-            OnMouseMove?.Invoke(this, re);
+            var re = new RecordEvent
+            {
+                Button = e.Button
+            }; OnMouseMove?.Invoke(this, re);
         }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         private void _OnMouseMove(InputEventArgs e)
         {
             if (isMouseDown) return;
@@ -153,14 +157,16 @@ namespace OpenRPA.Windows
                     {
                         return;
                     }
-                    var re = new RecordEvent(); re.Button = e.Button;
-                    re.OffsetX = e.X - e.Element.Rectangle.X;
-                    re.OffsetY = e.Y - e.Element.Rectangle.Y;
-                    re.Element = e.Element;
-                    re.UIElement = e.Element;
-                    re.X = e.X;
-                    re.Y = e.Y;
-                    OnMouseMove?.Invoke(this, re);
+                    var re = new RecordEvent
+                    {
+                        Button = e.Button,
+                        OffsetX = e.X - e.Element.Rectangle.X,
+                        OffsetY = e.Y - e.Element.Rectangle.Y,
+                        Element = e.Element,
+                        UIElement = e.Element,
+                        X = e.X,
+                        Y = e.Y
+                    }; OnMouseMove?.Invoke(this, re);
                 }
                 catch (Exception ex)
                 {
@@ -177,8 +183,10 @@ namespace OpenRPA.Windows
             var thread = new Thread(new ThreadStart(() =>
             {
                 Log.Debug(string.Format("Windows.Recording::OnMouseUp::begin"));
-                var re = new RecordEvent(); re.Button = e.Button;
-                var a = new GetElement { DisplayName = e.Element.Name };
+                var re = new RecordEvent
+                {
+                    Button = e.Button
+                }; var a = new GetElement { DisplayName = e.Element.Name };
                 var sw = new System.Diagnostics.Stopwatch();
                 sw.Start();
                 WindowsSelector sel = null;
@@ -217,16 +225,15 @@ namespace OpenRPA.Windows
         public bool ParseUserAction(ref IRecordEvent e) { return false; }
         public void Initialize(IOpenRPAClient client)
         {
-            var dummy = PluginConfig.allow_child_searching;
-            dummy = PluginConfig.allow_multiple_hits_mid_selector;
-            dummy = PluginConfig.enum_selector_properties;
-            dummy = PluginConfig.get_elements_in_different_thread;
-            dummy = PluginConfig.traverse_selector_both_ways;
+            _ = PluginConfig.allow_child_searching;
+            _ = PluginConfig.allow_multiple_hits_mid_selector;
+            _ = PluginConfig.enum_selector_properties;
+            _ = PluginConfig.get_elements_in_different_thread;
+            _ = PluginConfig.traverse_selector_both_ways;
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
-            WindowsSelector winselector = selector as WindowsSelector;
-            if (winselector == null)
+            if (!(selector is WindowsSelector winselector))
             {
                 winselector = new WindowsSelector(selector.ToString());
             }
@@ -397,8 +404,10 @@ namespace OpenRPA.Windows
         public void AddActivity(Activity a, string Name)
         {
             var aa = new ActivityAction<UIElement>();
-            var da = new DelegateInArgument<UIElement>();
-            da.Name = Name;
+            var da = new DelegateInArgument<UIElement>
+            {
+                Name = Name
+            };
             aa.Handler = a;
             ((GetElement)Activity).Body = aa;
             aa.Argument = da;

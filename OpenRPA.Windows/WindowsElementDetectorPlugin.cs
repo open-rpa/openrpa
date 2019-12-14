@@ -1,4 +1,6 @@
-﻿using FlaUI.Core.AutomationElements.Infrastructure;
+﻿using FlaUI.Core.AutomationElements;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.EventHandlers;
 using OpenRPA.Input;
 using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
@@ -66,17 +68,16 @@ namespace OpenRPA.Windows
         {
             var automation = AutomationUtil.getAutomation();
             desktop = automation.GetDesktop();
-            StructureChangedEventHandler = desktop.RegisterStructureChangedEvent(FlaUI.Core.Definitions.TreeScope.Descendants, detectorCheck);
-
+            StructureChangedEventHandler = desktop.RegisterStructureChangedEvent(FlaUI.Core.Definitions.TreeScope.Descendants, DetectorCheck);
         }
         public void Stop()
         {
-            desktop.RemoveStructureChangedEventHandler(StructureChangedEventHandler);
-
+            //desktop.RemoveStructureChangedEventHandler(StructureChangedEventHandler);
         }
-        private FlaUI.Core.EventHandlers.IAutomationStructureChangedEventHandler StructureChangedEventHandler;
+        //private FlaUI.Core.EventHandlers.IAutomationStructureChangedEventHandler StructureChangedEventHandler;
+        private StructureChangedEventHandlerBase StructureChangedEventHandler;
         private DateTime lastTriggered = DateTime.Now;
-        public void detectorCheck(AutomationElement element, FlaUI.Core.Definitions.StructureChangeType e, int[] arg3)
+        public void DetectorCheck(AutomationElement element, FlaUI.Core.Definitions.StructureChangeType e, int[] arg3)
         {
             try
             {

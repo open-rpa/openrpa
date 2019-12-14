@@ -343,7 +343,7 @@ namespace OpenRPA.Windows
                         }
                         if (current.Count > 1)
                         {
-                            if(i < selectors.Count)
+                            if(i < selectors.Count && maxresults == 1)
                             {
                                 Log.Warning("Selector had " + current.Count + " hits and not just one, at element " + i + " this selector will be slow!");
                             }

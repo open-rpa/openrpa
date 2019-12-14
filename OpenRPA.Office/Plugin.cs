@@ -72,7 +72,7 @@ namespace OpenRPA.Office
 
                 var a = new Activities.ReadCell<string> { DisplayName = e.UIElement.Name.Replace("\"", "").Replace(" ", "") };
                 a.Cell = e.UIElement.Name.Replace("\"", "").Replace(" ", "");
-                a.Filename = workbook.FullName.replaceEnvironmentVariable();
+                a.Filename = workbook.FullName.ReplaceEnvironmentVariable();
                 e.a = new GetElementResult(a);
                 e.SupportInput = true;
                 e.SupportSelect = false;

@@ -28,7 +28,7 @@ namespace OpenRPA.Utilities
             ModelItem.Properties["Filename"].SetValue(
                 new System.Activities.InArgument<string>()
                 {
-                    Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<string>("\"" + saveFileDialog1.FileName.replaceEnvironmentVariable() + "\"")
+                    Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<string>("\"" + saveFileDialog1.FileName.ReplaceEnvironmentVariable() + "\"")
                 });
         }
 

@@ -68,16 +68,15 @@ namespace OpenRPA.Activities
 
             var _button = (Input.MouseButton)button;
             el.Click(virtualClick, _button, OffsetX, OffsetY, doubleclick, animatemouse);
-
             disposes.ForEach(x => { x.Dispose(); });
-
             TimeSpan postwait = TimeSpan.Zero;
             if (PostWait!=null) { postwait = PostWait.Get(context); }
             if(postwait != TimeSpan.Zero)
             {
                 System.Threading.Thread.Sleep(postwait);
+                // FlaUI.Core.Input.Wait.UntilInputIsProcessed();
             }
-            
+
         }
     }
     class SelectNewEmailOptionsEditor : CustomSelectEditor

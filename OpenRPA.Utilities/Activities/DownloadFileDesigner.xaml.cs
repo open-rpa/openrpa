@@ -36,7 +36,7 @@ namespace OpenRPA.Utilities
             ModelItem.Properties["LocalPath"].SetValue(
                 new System.Activities.InArgument<string>()
                 {
-                    Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<string>("\"" + openFileDialog1.FileName.replaceEnvironmentVariable() + "\"")
+                    Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<string>("\"" + openFileDialog1.FileName.ReplaceEnvironmentVariable() + "\"")
                 });
 
         }

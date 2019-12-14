@@ -69,7 +69,7 @@ namespace OpenRPA.Activities
                     }
                     instance.caller = WorkflowInstanceId;
                 });
-                Log.Information("Run Instance ID " + instance._id);
+                Log.Verbose("InvokeOpenRPA: Run Instance ID " + instance._id);
                 context.CreateBookmark(instance._id, new BookmarkCallback(OnBookmarkCallback));
                 GenericTools.RunUI(() =>
                 {

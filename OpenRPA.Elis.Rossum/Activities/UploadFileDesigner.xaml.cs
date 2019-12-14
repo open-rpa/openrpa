@@ -30,7 +30,7 @@ namespace OpenRPA.Elis.Rossum
             ModelItem.Properties["Filename"].SetValue(
                 new InArgument<string>()
                 {
-                    Expression = new VisualBasicValue<string>("\"" + openFileDialog1.FileName.replaceEnvironmentVariable() + "\"")
+                    Expression = new VisualBasicValue<string>("\"" + openFileDialog1.FileName.ReplaceEnvironmentVariable() + "\"")
                 });
         }
 

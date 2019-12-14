@@ -48,10 +48,6 @@ namespace OpenRPA.Activities
         public InArgument<TimeSpan> PostWait { get; set; }
         [Editor(typeof(SelectNewEmailOptionsEditor), typeof(System.Activities.Presentation.PropertyEditing.ExtendedPropertyValueEditor))]
         public InArgument<string> KeyModifiers { get; set; }
-        
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern uint GetDoubleClickTime();
         protected override void Execute(CodeActivityContext context)
         {
             var el = Element.Get(context);

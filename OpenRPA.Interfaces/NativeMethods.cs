@@ -13,6 +13,8 @@ namespace OpenRPA.Interfaces
     [System.Security.SuppressUnmanagedCodeSecurity]
     public static class NativeMethods
     {
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern uint GetDoubleClickTime();
         [DllImport("wtsapi32.dll", SetLastError = true)]
         public static extern bool WTSDisconnectSession(IntPtr hServer, int sessionId, bool bWait);
         [DllImport("wtsapi32.dll", SetLastError = true)]
@@ -60,14 +62,12 @@ namespace OpenRPA.Interfaces
 
         public static bool Launch(System.Diagnostics.Process p, string CurrentDirectory, string appCmdLine)
         {
-            string ErrorMessage; System.Diagnostics.Process newProcess;
-            var token = GetPrimaryToken(p);
-            if (token == IntPtr.Zero) return false;
+            if (GetPrimaryToken(p) == IntPtr.Zero) return false;
             IntPtr envBlock = IntPtr.Zero;
             try
             {
-                if (!CreateEnvironmentBlock(out envBlock, token, false)) return false;
-                if (!LaunchProcessAsUser(CurrentDirectory, appCmdLine, token, envBlock, out newProcess, true, out ErrorMessage))
+                if (!CreateEnvironmentBlock(out envBlock, GetPrimaryToken(p), false)) return false;
+                if (!LaunchProcessAsUser(CurrentDirectory, appCmdLine, GetPrimaryToken(p), envBlock, out System.Diagnostics.Process newProcess, true, out string ErrorMessage))
                 {
                     Log.Error(ErrorMessage);
                     return false;
@@ -86,11 +86,12 @@ namespace OpenRPA.Interfaces
         }
         public static bool LaunchProcessAsUser(string CurrentDirectory, string cmdLine, IntPtr token, IntPtr envBlock, out System.Diagnostics.Process newProcess, bool AllowClosingProcess, out string ErrorMessage)
         {
-            bool result = false;
             newProcess = null;
             ErrorMessage = null;
 
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
             var pi = new PROCESS_INFORMATION();
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
             var saProcess = new SECURITY_ATTRIBUTES();
             var saThread = new SECURITY_ATTRIBUTES();
             saProcess.nLength = uint.Parse(Marshal.SizeOf(saProcess).ToString());
@@ -102,8 +103,8 @@ namespace OpenRPA.Interfaces
             si.dwFlags = (int)(STARTF.STARTF_USESHOWWINDOW | STARTF.STARTF_FORCEONFEEDBACK);
             si.wShowWindow = SW_SHOW;
 
-            result = CreateProcessAsUser(token, null, cmdLine, ref saProcess, ref saThread, false,
-                (uint)CreateProcessFlags.CREATE_UNICODE_ENVIRONMENT, envBlock, CurrentDirectory, ref si, out pi);
+            bool result = CreateProcessAsUser(token, null, cmdLine, ref saProcess, ref saThread, false,
+    (uint)CreateProcessFlags.CREATE_UNICODE_ENVIRONMENT, envBlock, CurrentDirectory, ref si, out pi);
             if (result == false)
             {
                 var hResult = Marshal.GetLastWin32Error();
@@ -157,11 +158,9 @@ namespace OpenRPA.Interfaces
         }
         public static IntPtr GetPrimaryToken(System.Diagnostics.Process p)
         {
-            IntPtr token = IntPtr.Zero;
             IntPtr primaryToken = IntPtr.Zero;
-            bool retVal = false;
             //Gets impersonation token 
-            retVal = OpenProcessToken(p.Handle, TOKEN_DUPLICATE, out token);
+            bool retVal = OpenProcessToken(p.Handle, TOKEN_DUPLICATE, out IntPtr token);
             if (retVal == true)
             {
                 SECURITY_ATTRIBUTES sa = new SECURITY_ATTRIBUTES();
@@ -190,7 +189,7 @@ namespace OpenRPA.Interfaces
 
             }
             //We'll Close this token after it is used. 
-            return primaryToken;
+            return IntPtr.Zero;
         }
         public static System.Diagnostics.Process GetParentProcessId(System.Diagnostics.Process p = null)
         {
@@ -202,8 +201,7 @@ namespace OpenRPA.Interfaces
 
             try
             {
-                int sizeInfoReturned;
-                int queryStatus = NativeMethods.NtQueryInformationProcess(hProc, 0, ref pbi, pbi.Size, out sizeInfoReturned);
+                int queryStatus = NativeMethods.NtQueryInformationProcess(hProc, 0, ref pbi, pbi.Size, out int sizeInfoReturned);
             }
             finally
             {
@@ -211,7 +209,6 @@ namespace OpenRPA.Interfaces
                 {
                     //Close handle and free allocated memory
                     // CloseHandle(hProc);
-                    hProc = IntPtr.Zero;
                 }
             }
             var pid = (int)pbi.InheritedFromUniqueProcessId;
@@ -231,21 +228,17 @@ namespace OpenRPA.Interfaces
         public static byte[] GetSIDByteArr(IntPtr processHandle)
         {
             int MAX_INTPTR_BYTE_ARR_SIZE = 512;
-            IntPtr tokenHandle;
             byte[] sidBytes;
 
             // Get the Process Token
-            if (!OpenProcessToken(processHandle, TOKEN_READ, out tokenHandle))
+            if (!OpenProcessToken(processHandle, TOKEN_READ, out IntPtr tokenHandle))
                 throw new ApplicationException("Could not get process token.  Win32 Error Code: " + Marshal.GetLastWin32Error());
 
-            uint tokenInfoLength = 0;
-            bool result;
-            result = GetTokenInformation(tokenHandle, TOKEN_INFORMATION_CLASS.TokenUser, IntPtr.Zero, tokenInfoLength, out tokenInfoLength);  // get the token info length
+            _ = GetTokenInformation(tokenHandle, TOKEN_INFORMATION_CLASS.TokenUser, IntPtr.Zero, 0, out uint tokenInfoLength);  // get the token info length
             IntPtr tokenInfo = Marshal.AllocHGlobal((int)tokenInfoLength);
-            result = GetTokenInformation(tokenHandle, TOKEN_INFORMATION_CLASS.TokenUser, tokenInfo, tokenInfoLength, out tokenInfoLength);  // get the token info
 
             // Get the User SID
-            if (result)
+            if (GetTokenInformation(tokenHandle, TOKEN_INFORMATION_CLASS.TokenUser, tokenInfo, 0, out _))
             {
                 TOKEN_USER tokenUser = (TOKEN_USER)Marshal.PtrToStructure(tokenInfo, typeof(TOKEN_USER));
                 sidBytes = new byte[MAX_INTPTR_BYTE_ARR_SIZE];  // Since I don't yet know how to be more precise w/ the size of the byte arr, it is being set to 512
@@ -263,7 +256,7 @@ namespace OpenRPA.Interfaces
         public static string GetProcessSID(System.Diagnostics.Process process = null)
         {
             if (process == null) process = System.Diagnostics.Process.GetCurrentProcess();
-            SafeTokenHandle hToken = null;
+            SafeTokenHandle hToken;
             try
             {
                 if (!NativeMethods.OpenProcessToken(process.Handle, NativeMethods.TOKEN_QUERY, out hToken))
@@ -275,19 +268,13 @@ namespace OpenRPA.Interfaces
             {
                 return "";
             }
-
-            uint TokenInfLength = 0;
-            bool Result;
-
             // first call gets lenght of TokenInformation
-            Result = GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, IntPtr.Zero, TokenInfLength, out TokenInfLength);
+            _ = GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, IntPtr.Zero, 0, out uint TokenInfLength);
             IntPtr TokenInformation = Marshal.AllocHGlobal(int.Parse(TokenInfLength.ToString()));
-            Result = GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, TokenInformation, TokenInfLength, out TokenInfLength);
-            if (Result)
+            if (GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, TokenInformation, TokenInfLength, out _))
             {
                 TOKEN_USER TokenUser = (TOKEN_USER)Marshal.PtrToStructure(TokenInformation, typeof(TOKEN_USER));
-                IntPtr pstr = IntPtr.Zero;
-                Boolean ok = ConvertSidToStringSid(TokenUser.User.Sid, out pstr);
+                _ = ConvertSidToStringSid(TokenUser.User.Sid, out IntPtr pstr);
                 string sidstr = Marshal.PtrToStringAuto(pstr);
                 LocalFree(pstr);
                 return sidstr;
@@ -298,7 +285,7 @@ namespace OpenRPA.Interfaces
         {
             if (process == null) process = System.Diagnostics.Process.GetCurrentProcess();
             if (process.HasExited) return "";
-            SafeTokenHandle hToken = null;
+            SafeTokenHandle hToken;
             try
             {
                 if (!NativeMethods.OpenProcessToken(process.Handle, NativeMethods.TOKEN_QUERY, out hToken))
@@ -310,15 +297,10 @@ namespace OpenRPA.Interfaces
             {
                 return "";
             }
-
-            uint TokenInfLength = 0;
-            bool Result;
-
             // first call gets lenght of TokenInformation
-            Result = GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, IntPtr.Zero, TokenInfLength, out TokenInfLength);
+            _ = GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, IntPtr.Zero, 0, out uint TokenInfLength);
             IntPtr TokenInformation = Marshal.AllocHGlobal(int.Parse(TokenInfLength.ToString()));
-            Result = GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, TokenInformation, TokenInfLength, out TokenInfLength);
-            if (Result)
+            if (GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, TokenInformation, TokenInfLength, out _))
             {
                 TOKEN_USER TokenUser = (TOKEN_USER)Marshal.PtrToStructure(TokenInformation, typeof(TOKEN_USER));
 
@@ -409,22 +391,18 @@ namespace OpenRPA.Interfaces
         }
 
         public const int PROCESSBASICINFORMATION = 0;
-        private static uint STANDARD_RIGHTS_REQUIRED = 0x000F0000;
-        private static uint STANDARD_RIGHTS_READ = 0x00020000;
-        private static uint TOKEN_ASSIGN_PRIMARY = 0x0001;
-        private static uint TOKEN_DUPLICATE = 0x0002;
-        private static uint TOKEN_IMPERSONATE = 0x0004;
-        private static uint TOKEN_QUERY = 0x0008;
-        private static uint TOKEN_QUERY_SOURCE = 0x0010;
-        private static uint TOKEN_ADJUST_PRIVILEGES = 0x0020;
-        private static uint TOKEN_ADJUST_GROUPS = 0x0040;
-        private static uint TOKEN_ADJUST_DEFAULT = 0x0080;
-        private static uint TOKEN_ADJUST_SESSIONID = 0x0100;
-        private static uint TOKEN_READ = (STANDARD_RIGHTS_READ | TOKEN_QUERY);
-        private static uint TOKEN_ALL_ACCESS = (STANDARD_RIGHTS_REQUIRED | TOKEN_ASSIGN_PRIMARY |
-            TOKEN_DUPLICATE | TOKEN_IMPERSONATE | TOKEN_QUERY | TOKEN_QUERY_SOURCE |
-            TOKEN_ADJUST_PRIVILEGES | TOKEN_ADJUST_GROUPS | TOKEN_ADJUST_DEFAULT |
-            TOKEN_ADJUST_SESSIONID);
+        private static readonly uint STANDARD_RIGHTS_READ = 0x00020000;
+        private static readonly uint TOKEN_ASSIGN_PRIMARY = 0x0001;
+        private static readonly uint TOKEN_DUPLICATE = 0x0002;
+        private static readonly uint TOKEN_QUERY = 0x0008;
+        private static readonly uint TOKEN_READ = (STANDARD_RIGHTS_READ | TOKEN_QUERY);
+        //private static readonly uint STANDARD_RIGHTS_REQUIRED = 0x000F0000;
+        //private static readonly uint TOKEN_IMPERSONATE = 0x0004;
+        //private static readonly uint TOKEN_QUERY_SOURCE = 0x0010;
+        //private static readonly uint TOKEN_ADJUST_PRIVILEGES = 0x0020;
+        //private static readonly uint TOKEN_ADJUST_GROUPS = 0x0040;
+        //private static readonly uint TOKEN_ADJUST_DEFAULT = 0x0080;
+        //private static readonly uint TOKEN_ADJUST_SESSIONID = 0x0100;
         public const int SW_HIDE = 0;
         public const int SW_SHOWNORMAL = 1;
         public const int SW_SHOWMINIMIZED = 2;
@@ -990,6 +968,7 @@ namespace OpenRPA.Interfaces
         public static Int32 HIBYTE(Int32 x) => x >> 8;
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         //public static extern void mouse_event(long dwFlags, long dx, long dy, long cButtons, long dwExtraInfo);
         public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
             public const int MOUSEEVENTF_LEFTDOWN = 0x02;
@@ -1004,17 +983,18 @@ namespace OpenRPA.Interfaces
         /// </summary>
         public delegate IntPtr MessageHandler(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled);
         [DllImport("shell32.dll", EntryPoint = "CommandLineToArgvW", CharSet = CharSet.Unicode)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         private static extern IntPtr _CommandLineToArgvW([MarshalAs(UnmanagedType.LPWStr)] string cmdLine, out int numArgs);
         [DllImport("kernel32.dll", EntryPoint = "LocalFree", SetLastError = true)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         private static extern IntPtr _LocalFree(IntPtr hMem);
         public static string[] CommandLineToArgvW(string cmdLine)
         {
             IntPtr argv = IntPtr.Zero;
             try
             {
-                int numArgs = 0;
 
-                argv = _CommandLineToArgvW(cmdLine, out numArgs);
+                argv = _CommandLineToArgvW(cmdLine, out int numArgs);
                 if (argv == IntPtr.Zero)
                 {
                     throw new Win32Exception();
@@ -1031,8 +1011,7 @@ namespace OpenRPA.Interfaces
             }
             finally
             {
-
-                IntPtr p = _LocalFree(argv);
+                _ = _LocalFree(argv);
                 // Otherwise LocalFree failed.
                 // Assert.AreEqual(IntPtr.Zero, p);
             }

@@ -233,6 +233,9 @@
                     <RibbonButton Label="{x:Static or:strings.tools_swap_sendkeys}" LargeImageSource="/OpenRPA;component/Resources/Buttons/switch_216215.png" 
                                   Command="{Binding Data.SwapSendKeysCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
+                    <RibbonButton Label="{x:Static or:strings.tools_swap_virtualclick}" LargeImageSource="/OpenRPA;component/Resources/Buttons/switch_216215.png" 
+                                  Command="{Binding Data.SwapVirtualClickCommand, Source={StaticResource proxy}}" 
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                 </RibbonGroup>
             </RibbonTab>
         </Ribbon>

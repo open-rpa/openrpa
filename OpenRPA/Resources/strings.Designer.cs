@@ -763,6 +763,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Swap Virtual Clicking.
+        /// </summary>
+        public static string tools_swap_virtualclick {
+            get {
+                return ResourceManager.GetString("tools_swap_virtualclick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Type.
         /// </summary>
         public static string type {

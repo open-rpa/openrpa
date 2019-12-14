@@ -876,7 +876,7 @@ namespace OpenRPA
 
                 var To = model.GetValue<string>("To");
                 // var Value = model.GetValue<string>("Value");
-                if(!string.IsNullOrEmpty(To) && To.ToLower() == "item.value")
+                if (!string.IsNullOrEmpty(To) && To.ToLower() == "item.value")
                 {
                     var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
                     using (var editingScope = modelService.Root.BeginEdit("Implementation"))
@@ -899,18 +899,19 @@ namespace OpenRPA
             if (model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] != null)
             {
                 var a = model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] as System.Windows.Markup.ContentPropertyAttribute;
-                if(model.Properties[a.Name]!=null)
+                if (model.Properties[a.Name] != null)
                 {
-                    if(model.Properties[a.Name].Collection != null)
+                    if (model.Properties[a.Name].Collection != null)
                     {
                         Activities = model.Properties[a.Name].Collection;
-                    } else if (model.Properties[a.Name].Value != null)
+                    }
+                    else if (model.Properties[a.Name].Value != null)
                     {
                         if (model.Properties[a.Name].Value is System.Activities.Presentation.Model.ModelItem _a) SwapSendKeys(designer, _a);
                     }
-                    
+
                 }
-                
+
             }
             //if (model.Properties["Activities"] != null)
             //{
@@ -920,9 +921,9 @@ namespace OpenRPA
             //{
             //    Activities = model.Properties["Nodes"].Collection;
             //}
-            if(Activities!=null)
+            if (Activities != null)
             {
-                foreach(var a in Activities)
+                foreach (var a in Activities)
                 {
                     SwapSendKeys(designer, a);
                 }
@@ -935,6 +936,92 @@ namespace OpenRPA
             var designer = (Views.WFDesigner)SelectedContent;
             if (designer.SelectedActivity == null) return;
             SwapSendKeys(designer, designer.SelectedActivity);
+
+
+        }
+        public ICommand SwapVirtualClickCommand { get { return new RelayCommand<object>(OnSwapVirtualClick, CanSwapVirtualClick); } }
+        private bool CanSwapVirtualClick(object _item)
+        {
+            try
+            {
+                if (!(SelectedContent is Views.WFDesigner)) return false;
+                var designer = (Views.WFDesigner)SelectedContent;
+                if (designer.SelectedActivity == null) return false;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
+        private void SwapVirtualClick(Views.WFDesigner designer, System.Activities.Presentation.Model.ModelItem model)
+        {
+            if (model.ItemType == typeof(Activities.ClickElement))
+            {
+
+                var VirtualClick = model.GetValue<bool>("VirtualClick");
+                if(VirtualClick)
+                {
+                    var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
+                    using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+                    {
+                        model.Properties["VirtualClick"].ComputedValue = new InArgument<bool>(){Expression = new VisualBasicValue<bool>("false")};
+                        editingScope.Complete();
+                    }
+                }
+                else
+                {
+                    var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
+                    using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+                    {
+                        model.Properties["VirtualClick"].ComputedValue = new InArgument<bool>() { Expression = new VisualBasicValue<bool>("true") };
+                        editingScope.Complete();
+                    }
+
+                }
+            }
+            System.Activities.Presentation.Model.ModelItemCollection Activities = null;
+            if (model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] != null)
+            {
+                var a = model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] as System.Windows.Markup.ContentPropertyAttribute;
+                if (model.Properties[a.Name] != null)
+                {
+                    if (model.Properties[a.Name].Collection != null)
+                    {
+                        Activities = model.Properties[a.Name].Collection;
+                    }
+                    else if (model.Properties[a.Name].Value != null)
+                    {
+                        if (model.Properties[a.Name].Value is System.Activities.Presentation.Model.ModelItem _a) SwapVirtualClick(designer, _a);
+                    }
+
+                }
+
+            }
+            //if (model.Properties["Activities"] != null)
+            //{
+            //    Activities = model.Properties["Activities"].Collection;
+            //}
+            //else if (model.Properties["Nodes"] != null)
+            //{
+            //    Activities = model.Properties["Nodes"].Collection;
+            //}
+            if (Activities != null)
+            {
+                foreach (var a in Activities)
+                {
+                    SwapVirtualClick(designer, a);
+                }
+            }
+
+        }
+        private void OnSwapVirtualClick(object _item)
+        {
+            if (!(SelectedContent is Views.WFDesigner)) return;
+            var designer = (Views.WFDesigner)SelectedContent;
+            if (designer.SelectedActivity == null) return;
+            SwapVirtualClick(designer, designer.SelectedActivity);
 
 
         }
@@ -2409,17 +2496,8 @@ namespace OpenRPA
                         StartRecordPlugins();
                         if (e.ClickHandled == false)
                         {
-                            InputDriver.Instance.AllowOneClick = true;
-                            Log.Debug("MouseMove to " + e.X + "," + e.Y + " and click " + e.Button + " button");
-                            //var point = new FlaUI.Core.Shapes.Point(e.X + e.OffsetX, e.Y + e.OffsetY);
-                            var point = new FlaUI.Core.Shapes.Point(e.X, e.Y);
-                            FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
-                            if (e.Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
-                            if (e.Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-                            FlaUI.Core.Input.Mouse.Click(flabuttun, point);
-                            // InputDriver.Instance.Click(lastInputEventArgs.Button);
-                            //InputDriver.DoMouseClick();
-                            Log.Debug("Click done");
+                            NativeMethods.SetCursorPos(e.X, e.Y);
+                            InputDriver.Click(e.Button);
                         }
                         return;
                     }
@@ -2479,19 +2557,8 @@ namespace OpenRPA
                         view.ReadOnly = true;
                         if (e.ClickHandled == false && e.SupportInput == false)
                         {
-                            InputDriver.Instance.AllowOneClick = true;
-                            Log.Debug("MouseMove to " + e.X + "," + e.Y + " and click " + e.Button + " button");
-                            //var point = new FlaUI.Core.Shapes.Point(e.X , e.Y);
-                            //FlaUI.Core.Input.Mouse.MoveTo(e.X , e.Y);
-                            //FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
-                            //if (e.Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
-                            //if (e.Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-                            //FlaUI.Core.Input.Mouse.Click(flabuttun, point);
-
-                            InputDriver.Instance.MouseMove(e.X, e.Y);
-                            // InputDriver.Instance.Click(lastInputEventArgs.Button);
+                            NativeMethods.SetCursorPos(e.X, e.Y);
                             InputDriver.Click(e.Button);
-                            Log.Debug("Click done");
                         }
                         System.Threading.Thread.Sleep(500);
                     }

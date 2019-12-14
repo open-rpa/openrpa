@@ -17,9 +17,15 @@ namespace OpenRPA.IE
             Id = Element.id;
             TagName = Element.tagName.ToLower();
             Name = "";
-            if (!(RawElement.getAttribute("Name") is System.DBNull) )
+            try
             {
-                Name = RawElement.getAttribute("Name");
+                if (!(RawElement.getAttribute("Name") is System.DBNull))
+                {
+                    Name = RawElement.getAttribute("Name");
+                }
+            }
+            catch (Exception)
+            {
             }
             if (TagName == "input")
             {
@@ -131,17 +137,19 @@ namespace OpenRPA.IE
                 if (DoubleClick) RawElement.click();
             } else
             {
-                Log.Debug("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
-                //Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-                //Input.InputDriver.DoMouseClick();
-                var point = new FlaUI.Core.Shapes.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-                if (AnimateMouse) FlaUI.Core.Input.Mouse.MoveTo(point);
-                FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
-                if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
-                if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-                if(!DoubleClick) FlaUI.Core.Input.Mouse.Click(flabuttun, point);
-                if (DoubleClick) FlaUI.Core.Input.Mouse.DoubleClick(flabuttun, point);
-                Log.Debug("Click done");
+                NativeMethods.SetCursorPos(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+                Input.InputDriver.Click(Button);
+                //Log.Debug("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
+                ////Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+                ////Input.InputDriver.DoMouseClick();
+                //var point = new FlaUI.Core.Shapes.Point();
+                //if (AnimateMouse) FlaUI.Core.Input.Mouse.MoveTo(point);
+                //FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
+                //if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
+                //if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
+                //if(!DoubleClick) FlaUI.Core.Input.Mouse.Click(flabuttun, point);
+                //if (DoubleClick) FlaUI.Core.Input.Mouse.DoubleClick(flabuttun, point);
+                //Log.Debug("Click done");
             }
         }
         public void Focus()

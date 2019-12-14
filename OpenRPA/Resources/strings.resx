@@ -351,6 +351,9 @@
   <data name="tools_swap_sendkeys" xml:space="preserve">
     <value>Swap SendKeys</value>
   </data>
+  <data name="tools_swap_virtualclick" xml:space="preserve">
+    <value>Swap Virtual Clicking</value>
+  </data>
   <data name="type" xml:space="preserve">
     <value>Type</value>
   </data>

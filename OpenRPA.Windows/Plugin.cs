@@ -315,7 +315,7 @@ namespace OpenRPA.Windows
             }
             try
             {
-                GenericTools.restore(process.MainWindowHandle);
+                GenericTools.Restore(process.MainWindowHandle);
             }
             catch (Exception ex)
             {

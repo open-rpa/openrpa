@@ -93,15 +93,15 @@ namespace OpenRPA.Interfaces.Selector
         private void Select_Click(object sender, RoutedEventArgs e)
         {
             vm.Plugin.Start();
-            GenericTools.minimize(GenericTools.mainWindow);
-            GenericTools.minimize(this);
+            GenericTools.Minimize(GenericTools.MainWindow);
+            GenericTools.Minimize(this);
             OpenRPA.Input.InputDriver.Instance.onCancel += OnCancel;
         }
         private void OnCancel()
         {
             vm.Plugin.Stop();
             OpenRPA.Input.InputDriver.Instance.onCancel -= OnCancel;
-            GenericTools.restore(this);
+            GenericTools.Restore(this);
         }
         private void Plugin_OnUserAction(IRecordPlugin sender, IRecordEvent e)
         {
@@ -109,7 +109,7 @@ namespace OpenRPA.Interfaces.Selector
             OpenRPA.Input.InputDriver.Instance.onCancel -= OnCancel;
             e.ClickHandled = true;
             // GenericTools.restore(GenericTools.mainWindow);
-            GenericTools.restore(this);
+            GenericTools.Restore(this);
             vm.Selector = e.Selector;
             vm.FocusElement(e.Selector);
             vm.NotifyPropertyChanged("json");
@@ -240,7 +240,7 @@ namespace OpenRPA.Interfaces.Selector
         private void Window_Closed(object sender, EventArgs e)
         {
             vm.Plugin.OnUserAction -= Plugin_OnUserAction;
-            GenericTools.restore(GenericTools.mainWindow);
+            GenericTools.Restore(GenericTools.MainWindow);
         }
         private void Ok_Click(object sender, RoutedEventArgs e)
         {

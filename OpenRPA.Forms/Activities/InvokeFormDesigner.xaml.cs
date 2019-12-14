@@ -36,7 +36,7 @@ namespace OpenRPA.Forms.Activities
                 // var definition = FormBuilder.Default.GetDefinition(xmlString, freeze: false);
 
                 // var firstNameElement = (DataFormField)definition.GetElements().FirstOrDefault(e => e is DataFormField d && d.Key == "FirstName");
-                var designer = GenericTools.designer;
+                var designer = GenericTools.Designer;
                 foreach (DataFormField f in definition.GetElements().Where(x => x is DataFormField))
                 {
                     // Type t = Type.GetType(p.type);

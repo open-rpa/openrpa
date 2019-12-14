@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Interfaces
 {
-    public interface iMainWindow
+    public interface IMainWindow
     {
-        IDesigner designer { get; }
+        IDesigner Designer { get; }
     }
 }

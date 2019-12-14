@@ -104,7 +104,7 @@ namespace OpenRPA.Java.Views
         }
         private void Select_Click(object sender, RoutedEventArgs e)
         {
-            Interfaces.GenericTools.minimize(Interfaces.GenericTools.mainWindow);
+            Interfaces.GenericTools.Minimize(Interfaces.GenericTools.MainWindow);
             StartRecordPlugins();
         }
         private void StartRecordPlugins()
@@ -124,7 +124,7 @@ namespace OpenRPA.Java.Views
             StopRecordPlugins();
             AutomationHelper.syncContext.Post(o =>
             {
-                Interfaces.GenericTools.restore(Interfaces.GenericTools.mainWindow);
+                Interfaces.GenericTools.Restore(Interfaces.GenericTools.MainWindow);
                 foreach (var p in Interfaces.Plugins.recordPlugins)
                 {
                     if (p.Name != sender.Name)

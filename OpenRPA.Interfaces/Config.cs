@@ -43,6 +43,7 @@ namespace OpenRPA
         public bool use_animate_mouse = false;
         public TimeSpan use_postwait = TimeSpan.Zero;
         public bool minimize = true;
+        public bool recording_add_to_designer = true;
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)

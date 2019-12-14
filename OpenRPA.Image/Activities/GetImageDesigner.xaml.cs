@@ -89,12 +89,12 @@ namespace OpenRPA.Image
                 var limit = loadFrom.GetValue<Rectangle>("Limit");
                 if (Threshold < 0.5) Threshold = 0.8;
 
-                Interfaces.GenericTools.minimize(Interfaces.GenericTools.mainWindow);
+                Interfaces.GenericTools.Minimize(Interfaces.GenericTools.MainWindow);
                 System.Threading.Thread.Sleep(100);
                 var matches = ImageEvent.waitFor(b, Threshold, Processname, TimeSpan.FromMilliseconds(100), CompareGray, limit);
                 if (matches.Count() == 0)
                 {
-                    Interfaces.GenericTools.restore();
+                    Interfaces.GenericTools.Restore();
                     return;
                 }
                 match = matches[0];
@@ -118,7 +118,7 @@ namespace OpenRPA.Image
             ModelItem.Properties["OffsetY"].SetValue(new System.Activities.InArgument<int>(rect.Y - match.Y));
             ModelItem.Properties["Width"].SetValue(new System.Activities.InArgument<int>(rect.Width));
             ModelItem.Properties["Height"].SetValue(new System.Activities.InArgument<int>(rect.Height));
-            Interfaces.GenericTools.restore();
+            Interfaces.GenericTools.Restore();
 
 
         }
@@ -194,7 +194,7 @@ namespace OpenRPA.Image
                 var matches = ImageEvent.waitFor(b, Threshold, Processname, TimeSpan.FromMilliseconds(100), CompareGray, limit);
                 if (matches.Count() == 0)
                 {
-                    Interfaces.GenericTools.restore();
+                    Interfaces.GenericTools.Restore();
                     return;
                 }
                 match = matches[0];

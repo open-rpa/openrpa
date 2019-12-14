@@ -31,7 +31,7 @@ namespace OpenRPA.Image
         public BitmapFrame HighlightImage { get; set; }
         private async void btn_Select(object sender, RoutedEventArgs e)
         {
-            Interfaces.GenericTools.minimize(Interfaces.GenericTools.mainWindow);
+            Interfaces.GenericTools.Minimize(Interfaces.GenericTools.MainWindow);
 
             var limit = ModelItem.GetValue<Rectangle>("Limit");
             Rectangle rect = Rectangle.Empty;
@@ -58,7 +58,7 @@ namespace OpenRPA.Image
                 if(!limit.Contains(rect))
                 {
                     Log.Error(rect.ToString() + " is not within process limit of " + limit.ToString());
-                    Interfaces.GenericTools.restore();
+                    Interfaces.GenericTools.Restore();
                     return;
                 }
             }
@@ -75,7 +75,7 @@ namespace OpenRPA.Image
                 var Processname = p.ProcessName;
                 ModelItem.Properties["Processname"].SetValue(new System.Activities.InArgument<string>(Processname));
             }
-            Interfaces.GenericTools.restore();
+            Interfaces.GenericTools.Restore();
 
         }
         private void Highlight_Click(object sender, RoutedEventArgs e)
@@ -133,12 +133,12 @@ namespace OpenRPA.Image
                 }
             }
 
-            Interfaces.GenericTools.minimize(Interfaces.GenericTools.mainWindow);
+            Interfaces.GenericTools.Minimize(Interfaces.GenericTools.MainWindow);
             var rect = await getrectangle.GetitAsync();
 
             var limit = new System.Drawing.Rectangle(rect.X - (int)windowrect.X, rect.Y - (int)windowrect.Y, rect.Width, rect.Height);
             ModelItem.Properties["Limit"].SetValue(new System.Activities.InArgument<System.Drawing.Rectangle>(limit));
-            Interfaces.GenericTools.restore();
+            Interfaces.GenericTools.Restore();
             NotifyPropertyChanged("Limit");
 
         }

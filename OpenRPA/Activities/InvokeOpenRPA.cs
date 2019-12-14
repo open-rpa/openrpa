@@ -65,7 +65,7 @@ namespace OpenRPA.Activities
                     }
                     else
                     {
-                        instance = workflow.CreateInstance(param, null, null, MainWindow.instance.idleOrComplete,  null);
+                        instance = workflow.CreateInstance(param, null, null, MainWindow.instance.IdleOrComplete,  null);
                     }
                     instance.caller = WorkflowInstanceId;
                 });

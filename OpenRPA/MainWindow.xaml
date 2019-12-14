@@ -136,7 +136,7 @@
                     <StackPanel>
                         <ribbon:RibbonComboBox>
                             <ribbon:RibbonGallery SelectedItem="{Binding Path=defaultocrlangs}">
-                                <ribbon:RibbonGalleryCategory ItemsSource="{Binding ocrlangs}" />
+                                <ribbon:RibbonGalleryCategory ItemsSource="{Binding OCRlangs}" />
                             </ribbon:RibbonGallery>
                         </ribbon:RibbonComboBox>
                         <RibbonButton Content="{x:Static or:strings.download}" Click="TesseractLang_Click"></RibbonButton>
@@ -164,53 +164,58 @@
                 </RibbonGroup>
                 <RibbonGroup Header="{x:Static or:strings.runtime}">
                     <StackPanel Orientation="Horizontal">
-                        <RibbonCheckBox IsChecked="{Binding record_overlay}" Command="{Binding Data.VisualTrackingCommand, Source={StaticResource proxy}}" 
+                        <RibbonCheckBox IsChecked="{Binding Setting_record_overlay}" Command="{Binding Data.VisualTrackingCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="{x:Static or:strings.recordingoverlay}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <RibbonCheckBox IsChecked="{Binding use_sendkeys}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                        <RibbonCheckBox IsChecked="{Binding Setting_use_sendkeys}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="{x:Static or:strings.usesendkeys}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <RibbonCheckBox IsChecked="{Binding use_virtual_click}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                        <RibbonCheckBox IsChecked="{Binding Setting_use_virtual_click}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="{x:Static or:strings.usevirtualclicks}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <RibbonCheckBox IsChecked="{Binding use_animate_mouse}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                        <RibbonCheckBox IsChecked="{Binding Setting_use_animate_mouse}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="{x:Static or:strings.animatemouse}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <RibbonTextBox Text="{Binding use_postwait}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}"  />
-                        <TextBlock Text="{x:Static or:strings.clickpostwait}"></TextBlock>
+                        <RibbonCheckBox IsChecked="{Binding Setting_recording_add_to_designer}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
+                        <TextBlock Text="{x:Static or:strings.main_settings_recording_add_to_designer}"></TextBlock>
                     </StackPanel>
+                    <!--<StackPanel Orientation="Horizontal">
+                        <RibbonTextBox Text="{Binding Setting_use_postwait}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}"  />
+                        <TextBlock Text="{x:Static or:strings.clickpostwait}"></TextBlock>
+                    </StackPanel>-->
                 </RibbonGroup>
                 <RibbonGroup Header="{x:Static or:strings.logging}">
                     <StackPanel Orientation="Horizontal">
-                        <RibbonCheckBox IsChecked="{Binding log_warning}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                        <RibbonCheckBox IsChecked="{Binding Setting_log_warning}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="{x:Static or:strings.warning}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <RibbonCheckBox IsChecked="{Binding log_debug}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                        <RibbonCheckBox IsChecked="{Binding Setting_log_debug}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="{x:Static or:strings.debug}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <RibbonCheckBox IsChecked="{Binding log_verbose}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                        <RibbonCheckBox IsChecked="{Binding Setting_log_verbose}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="{x:Static or:strings.verbose}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <RibbonCheckBox IsChecked="{Binding log_selector}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                        <RibbonCheckBox IsChecked="{Binding Setting_log_selector}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="{x:Static or:strings.selector}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <RibbonCheckBox IsChecked="{Binding log_selector_verbose}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                        <RibbonCheckBox IsChecked="{Binding Setting_log_selector_verbose}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="{x:Static or:strings.selectorverbose}"></TextBlock>
                     </StackPanel>

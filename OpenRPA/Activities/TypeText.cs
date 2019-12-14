@@ -114,7 +114,6 @@ namespace OpenRPA.Activities
             System.Threading.Thread.Sleep(postdelay);
 
         }
-
         public static List<FlaUI.Core.WindowsAPI.VirtualKeyShort> GetKeys(string text)
         {
             var result = new List<FlaUI.Core.WindowsAPI.VirtualKeyShort>();
@@ -157,11 +156,8 @@ namespace OpenRPA.Activities
             }
             return result;
         }
-
         internal List<vKey> _keys = new List<vKey>();
         internal string result;
-
-
         private List<vKey> _downkeys = new List<vKey>();
         public int keysdown
         {
@@ -170,7 +166,6 @@ namespace OpenRPA.Activities
                 return _downkeys.Count;
             }
         }
-        
         public void AddKey(vKey _key, System.Activities.Presentation.Model.ModelItem lastinsertedmodel)
         {
             if(_keys == null) _keys = new List<vKey>();
@@ -226,6 +221,47 @@ namespace OpenRPA.Activities
             //Text = result;
             if (result == null) result = "";
             if(lastinsertedmodel!=null) lastinsertedmodel.Properties["Text"].SetValue(new InArgument<string>(result));
+        }
+        public void UpdateModel(System.Activities.Presentation.Model.ModelItem lastinsertedmodel)
+        {
+            if (_keys == null) return;
+            result = "";
+            for (var i = 0; i < _keys.Count; i++)
+            {
+                string val = "";
+                var key = _keys[i];
+                if (key.up == false && (i + 1) < _keys.Count)
+                {
+                    if (key.KeyCode == _keys[i + 1].KeyCode && _keys[i + 1].up)
+                    {
+                        i++;
+                        val = "{" + key.KeyCode.ToString() + "}";
+                        if (key.KeyCode.ToString().StartsWith("KEY_"))
+                        {
+                            val = key.KeyCode.ToString().Substring(4).ToLower();
+                        }
+                        if (key.KeyCode == FlaUI.Core.WindowsAPI.VirtualKeyShort.SPACE)
+                        {
+                            val = " ";
+                        }
+                    }
+                }
+                if (string.IsNullOrEmpty(val))
+                {
+                    if (key.up == false)
+                    {
+                        val = "{" + key.KeyCode.ToString() + " down}";
+                    }
+                    else
+                    {
+                        val = "{" + key.KeyCode.ToString() + " up}";
+                    }
+
+                }
+                result += val;
+            }
+            if (result == null) result = "";
+            lastinsertedmodel.Properties["Text"].SetValue(new InArgument<string>(result));
         }
     }
 }

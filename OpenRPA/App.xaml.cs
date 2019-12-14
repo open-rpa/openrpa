@@ -59,7 +59,7 @@ namespace OpenRPA
             MainWindow.Visibility = Visibility.Visible;
             //MainWindow.WindowState = WindowState.Normal;
             notifyIcon.Visible = false;
-            Interfaces.GenericTools.restore(Interfaces.GenericTools.mainWindow);
+            Interfaces.GenericTools.Restore(Interfaces.GenericTools.MainWindow);
         }
 
         private void Application_Exit(object sender, ExitEventArgs e)

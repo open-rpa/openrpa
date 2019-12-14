@@ -331,6 +331,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Record directly into designer.
+        /// </summary>
+        public static string main_settings_recording_add_to_designer {
+            get {
+                return ResourceManager.GetString("main_settings_recording_add_to_designer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New.
         /// </summary>
         public static string mainnew {

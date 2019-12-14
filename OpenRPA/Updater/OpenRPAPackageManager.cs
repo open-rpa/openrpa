@@ -594,8 +594,8 @@ namespace OpenRPA.Updater
             }
             catch (Exception ex)
             {
-                return false;
                 OpenRPAPackageManagerLogger.Instance.LogError(ex.ToString());
+                return false;
             }
         }
         private void CopyIfNewer(string source, string target)

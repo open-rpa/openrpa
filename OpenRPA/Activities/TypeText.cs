@@ -133,16 +133,12 @@ namespace OpenRPA.Activities
                     foreach (var k in sub.Split(','))
                     {
                         string key = k.Trim();
-                        bool down = false;
-                        bool up = false;
                         if (key.EndsWith("down"))
                         {
-                            down = true;
                             key = key.Replace(" down", "");
                         }
                         else if (key.EndsWith("up"))
                         {
-                            up = true;
                             key = key.Replace(" up", "");
                         }
                         //Keys specialkey;

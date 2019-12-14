@@ -460,7 +460,7 @@ namespace OpenRPA.Views
         }
         public void Parseparameters()
         {
-            Workflow.Serializable = true;
+            // Workflow.Serializable = true;
             Workflow.Parameters.Clear();
             if (!string.IsNullOrEmpty(Workflow.Xaml))
             {

@@ -258,6 +258,9 @@
   <data name="open_name" xml:space="preserve">
     <value>Navn</value>
   </data>
+  <data name="open_serializable" xml:space="preserve">
+    <value>Seralisering mulig</value>
+  </data>
   <data name="open_state" xml:space="preserve">
     <value>Status</value>
   </data>

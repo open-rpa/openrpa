@@ -258,6 +258,9 @@
   <data name="open_name" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="open_serializable" xml:space="preserve">
+    <value>Serializable</value>
+  </data>
   <data name="open_state" xml:space="preserve">
     <value>State</value>
   </data>

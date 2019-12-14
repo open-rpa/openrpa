@@ -69,6 +69,10 @@
                 <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue.State}" ></TextBlock>
             </StackPanel>
             <StackPanel>
+                <TextBlock Text="{x:Static or:strings.open_serializable}" FontWeight="Bold"></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue.Serializable}" ></TextBlock>
+            </StackPanel>
+            <StackPanel>
                 <TextBlock Text="{x:Static or:strings.open_createdby}" FontWeight="Bold"></TextBlock>
                 <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue._createdby}" ></TextBlock>
             </StackPanel>

@@ -466,6 +466,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Serializable.
+        /// </summary>
+        public static string open_serializable {
+            get {
+                return ResourceManager.GetString("open_serializable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to State.
         /// </summary>
         public static string open_state {

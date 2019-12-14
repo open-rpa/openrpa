@@ -105,7 +105,7 @@ namespace OpenRPA.Interfaces
         }
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         public DateTime lastEvent = DateTime.Now;
-        private Task pending = null;
+        //  private Task pending = null;
         protected virtual void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (PropertyChanged != null)

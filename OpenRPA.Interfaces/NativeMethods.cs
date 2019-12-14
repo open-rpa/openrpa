@@ -8,6 +8,9 @@ namespace OpenRPA.Interfaces
 {
     using System.ComponentModel;
     using System.Runtime.InteropServices;
+    using System.Security;
+
+    [System.Security.SuppressUnmanagedCodeSecurity]
     public static class NativeMethods
     {
         [DllImport("wtsapi32.dll", SetLastError = true)]
@@ -669,13 +672,14 @@ namespace OpenRPA.Interfaces
                 key.SetValue("DefaultUsername", Username);
                 // key.SetValue("DefaultPassword", Password);
                 SetValue("DefaultPassword", Password);
-                if (AutoLogonCount>0)
+                if (AutoLogonCount > 0)
                 {
                     key.SetValue("AutoLogonCount", AutoLogonCount);
-                } else
+                }
+                else
                 {
                     var v = key.GetValue("AutoLogonCount");
-                    if(v != null)
+                    if (v != null)
                     {
                         key.DeleteValue("AutoLogonCount");
                     }
@@ -731,14 +735,14 @@ namespace OpenRPA.Interfaces
                 public int cbData;
                 public IntPtr pbData;
             }
-            [DllImport("Crypt32.dll",SetLastError = true,CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+            [DllImport("Crypt32.dll", SetLastError = true, CharSet = System.Runtime.InteropServices.CharSet.Auto)]
             [return: MarshalAs(UnmanagedType.Bool)]
             private static extern bool CryptProtectData(ref DATA_BLOB pDataIn, String szDataDescr, ref DATA_BLOB pOptionalEntropy,
                 IntPtr pvReserved, ref CRYPTPROTECT_PROMPTSTRUCT pPromptStruct, CryptProtectFlags dwFlags, ref DATA_BLOB pDataOut);
-            [DllImport("Crypt32.dll",SetLastError = true, CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+            [DllImport("Crypt32.dll", SetLastError = true, CharSet = System.Runtime.InteropServices.CharSet.Auto)]
             [return: MarshalAs(UnmanagedType.Bool)]
             private static extern bool CryptUnprotectData(ref DATA_BLOB pDataIn, StringBuilder szDataDescr, ref DATA_BLOB pOptionalEntropy, IntPtr pvReserved,
-                ref CRYPTPROTECT_PROMPTSTRUCT pPromptStruct, CryptProtectFlags dwFlags, ref DATA_BLOB pDataOut );
+                ref CRYPTPROTECT_PROMPTSTRUCT pPromptStruct, CryptProtectFlags dwFlags, ref DATA_BLOB pDataOut);
             public static void RemoveValue(string key)
             {
                 SetValue(key, value: null);
@@ -893,5 +897,344 @@ namespace OpenRPA.Interfaces
             [DllImport("advapi32.dll", SetLastError = true, PreserveSig = true)]
             private static extern uint LsaFreeMemory(IntPtr buffer);
         }
+
+
+
+        public const Int32 HC_ACTION = 0;
+        public const Int32 WH_KEYBOARD_LL = 13;
+        public const Int32 WH_MOUSE_LL = 14;
+        public delegate IntPtr LLProc(Int32 nCode, IntPtr wParam, IntPtr lParam);
+        [DllImport("user32.dll")]
+        public static extern IntPtr SetWindowsHookEx(Int32 idHook, LLProc lpfn, IntPtr hMod, UInt32 dwThreadId);
+        [DllImport("user32.dll")]
+        public static extern IntPtr CallNextHookEx(IntPtr hhk, Int32 nCode, IntPtr wParam, IntPtr lParam);
+        [DllImport("user32.dll")]
+        public static extern Boolean UnhookWindowsHookEx(IntPtr hhk);
+        [DllImport("user32.dll")]
+        public static extern Boolean GetPhysicalCursorPos(ref POINT pt);
+        [DllImport("user32.dll")]
+        public static extern Int16 GetKeyState(Int32 nVirtKey);
+        public struct POINT
+        {
+            public int x;
+            public int y;
+        }
+
+
+        public const Int32 VK_EXTENDED = 0x100;
+
+        public const Int32 VK_LSHIFT = 0xA0;
+
+        public const Int32 VK_RSHIFT = 0xA1;
+
+        public const Int32 VK_LCONTROL = 0xA2;
+
+        public const Int32 VK_RCONTROL = 0xA3;
+
+        public const Int32 VK_LMENU = 0xA4;
+
+        public const Int32 VK_RMENU = 0xA5;
+
+        public const Int32 VK_LWIN = 0x5B;
+
+        public const Int32 VK_RWIN = 0x5C;
+
+        public const Int32 VK_PACKET = 0xE7;
+
+        public const Int32 WM_KEYUP = 0x0101;
+
+        public const Int32 WM_SYSKEYUP = 0x0105;
+
+        public const Int32 WM_KEYDOWN = 0x0100;
+
+        public const Int32 WM_SYSKEYDOWN = 0x0104;
+
+        public const Int32 WM_LBUTTONUP = 0x0202;
+
+        public const Int32 WM_LBUTTONDOWN = 0x0201;
+
+        public const Int32 WM_MBUTTONUP = 0x0208;
+
+        public const Int32 WM_MBUTTONDOWN = 0x0207;
+
+        public const Int32 WM_MOUSEMOVE = 0x0200;
+
+        public const Int32 WM_RBUTTONUP = 0x0205;
+
+        public const Int32 WM_RBUTTONDOWN = 0x0204;
+
+        public const Int32 LLKHF_EXTENDED = 0x01;
+        public const Int32 WM_MouseWheel = 522;
+
+        public struct KBDLLHOOKSTRUCT
+        {
+#pragma warning disable 649
+            public UInt32 vkCode;
+            public UInt32 scanCode;
+            public LLKHF flags;
+            public UInt32 time;
+            public UIntPtr dwExtraInfo;
+        }
+
+        [Flags]
+        public enum LLKHF : UInt32
+        {
+            LLKHF_EXTENDED = 0x01,
+            LLKHF_INJECTED = 0x10,
+            LLKHF_ALTDOWN = 0x20,
+            LLKHF_UP = 0x80
+        }
+
+        public static Int32 LOBYTE(Int32 x) => x & 0xFF;
+
+        public static Int32 HIBYTE(Int32 x) => x >> 8;
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        //public static extern void mouse_event(long dwFlags, long dx, long dy, long cButtons, long dwExtraInfo);
+        public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
+            public const int MOUSEEVENTF_LEFTDOWN = 0x02;
+        public const int MOUSEEVENTF_LEFTUP = 0x04;
+        public const int MOUSEEVENTF_RIGHTDOWN = 0x08;
+        public const int MOUSEEVENTF_RIGHTUP = 0x10;
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetCursorPos(int x, int y);
+        /// <summary>
+        /// Delegate declaration that matches WndProc signatures.
+        /// </summary>
+        public delegate IntPtr MessageHandler(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled);
+        [DllImport("shell32.dll", EntryPoint = "CommandLineToArgvW", CharSet = CharSet.Unicode)]
+        private static extern IntPtr _CommandLineToArgvW([MarshalAs(UnmanagedType.LPWStr)] string cmdLine, out int numArgs);
+        [DllImport("kernel32.dll", EntryPoint = "LocalFree", SetLastError = true)]
+        private static extern IntPtr _LocalFree(IntPtr hMem);
+        public static string[] CommandLineToArgvW(string cmdLine)
+        {
+            IntPtr argv = IntPtr.Zero;
+            try
+            {
+                int numArgs = 0;
+
+                argv = _CommandLineToArgvW(cmdLine, out numArgs);
+                if (argv == IntPtr.Zero)
+                {
+                    throw new Win32Exception();
+                }
+                var result = new string[numArgs];
+
+                for (int i = 0; i < numArgs; i++)
+                {
+                    IntPtr currArg = Marshal.ReadIntPtr(argv, i * Marshal.SizeOf(typeof(IntPtr)));
+                    result[i] = Marshal.PtrToStringUni(currArg);
+                }
+
+                return result;
+            }
+            finally
+            {
+
+                IntPtr p = _LocalFree(argv);
+                // Otherwise LocalFree failed.
+                // Assert.AreEqual(IntPtr.Zero, p);
+            }
+        }
+        public enum ErrorFlags
+        {
+            ERROR_INSUFFICIENT_BUFFER = 122,
+            ERROR_INVALID_PARAMETER = 87,
+            ERROR_NO_MORE_ITEMS = 259
+        }
+        public enum InternetFlags
+        {
+            INTERNET_COOKIE_HTTPONLY = 8192, //Requires IE 8 or higher   
+            INTERNET_COOKIE_THIRD_PARTY = 131072,
+            INTERNET_FLAG_RESTRICTED_ZONE = 16
+        }
+        [SuppressUnmanagedCodeSecurity, SecurityCritical, DllImport("wininet.dll", EntryPoint = "InternetGetCookieExW", CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+        public static extern bool InternetGetCookieEx([In] string Url, [In] string cookieName, [Out] StringBuilder cookieData, [In, Out] ref uint pchCookieData, uint flags, IntPtr reserved);
+        [DllImport("user32.dll")]
+        public static extern UInt32 SendInput(UInt32 numberOfInputs, INPUT[] inputs, Int32 sizeOfInputStructure);
+        [DllImport("user32.dll")]
+        public static extern UInt16 VkKeyScanEx(Char ch, IntPtr dwhkl);
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetKeyboardLayout(UInt32 idThread);
+        [DllImport("user32.dll")]
+        public static extern Boolean SetPhysicalCursorPos(Int32 X, Int32 Y);
+        [StructLayout(LayoutKind.Explicit)]
+        public struct INPUT
+        {
+            public const UInt32 INPUT_MOUSE = 0;
+
+            public const UInt32 INPUT_KEYBOARD = 1;
+
+            [FieldOffset(0)]
+            public UInt32 type;
+
+            [FieldOffset(4)]
+            public MOUSEINPUT mi;
+
+            [FieldOffset(4)]
+            public KEYBDINPUT ki;
+        }
+        public struct MOUSEINPUT
+        {
+            public Int32 dx;
+            public Int32 dy;
+            public UInt32 mouseData;
+            public MOUSEEVENTF dwFlags;
+            public UInt32 time;
+            public UIntPtr dwExtraInfo;
+        }
+        public struct KEYBDINPUT
+        {
+            public UInt16 wVk;
+            public UInt16 wScan;
+            public KEYEVENTF dwFlags;
+            public UInt32 time;
+            public UIntPtr dwExtraInfo;
+        }
+        [Flags]
+        public enum KEYEVENTF : UInt32
+        {
+            KEYEVENTF_EXTENDEDKEY = 0x0001,
+            KEYEVENTF_KEYUP = 0x0002,
+            KEYEVENTF_UNICODE = 0x0004,
+            KEYEVENTF_SCANCODE = 0x0008,
+        }
+        [Flags]
+        public enum MOUSEEVENTF : UInt32
+        {
+            MOUSEEVENTF_ABSOLUTE = 0x8000,
+            MOUSEEVENTF_HWHEEL = 0x01000,
+            MOUSEEVENTF_MOVE = 0x0001,
+            MOUSEEVENTF_MOVE_NOCOALESCE = 0x2000,
+            MOUSEEVENTF_LEFTDOWN = 0x0002,
+            MOUSEEVENTF_LEFTUP = 0x0004,
+            MOUSEEVENTF_RIGHTDOWN = 0x0008,
+            MOUSEEVENTF_RIGHTUP = 0x0010,
+            MOUSEEVENTF_MIDDLEDOWN = 0x0020,
+            MOUSEEVENTF_MIDDLEUP = 0x0040,
+            MOUSEEVENTF_VIRTUALDESK = 0x4000,
+            MOUSEEVENTF_WHEEL = 0x0800,
+            MOUSEEVENTF_XDOWN = 0x0080,
+            MOUSEEVENTF_XUP = 0x0100
+        }
     }
+
+    public enum WM
+    {
+        NULL = 0x0000,
+        CREATE = 0x0001,
+        DESTROY = 0x0002,
+        MOVE = 0x0003,
+        SIZE = 0x0005,
+        ACTIVATE = 0x0006,
+        SETFOCUS = 0x0007,
+        KILLFOCUS = 0x0008,
+        ENABLE = 0x000A,
+        SETREDRAW = 0x000B,
+        SETTEXT = 0x000C,
+        GETTEXT = 0x000D,
+        GETTEXTLENGTH = 0x000E,
+        PAINT = 0x000F,
+        CLOSE = 0x0010,
+        QUERYENDSESSION = 0x0011,
+        QUIT = 0x0012,
+        QUERYOPEN = 0x0013,
+        ERASEBKGND = 0x0014,
+        SYSCOLORCHANGE = 0x0015,
+        SHOWWINDOW = 0x0018,
+        ACTIVATEAPP = 0x001C,
+        SETCURSOR = 0x0020,
+        MOUSEACTIVATE = 0x0021,
+        CHILDACTIVATE = 0x0022,
+        QUEUESYNC = 0x0023,
+        GETMINMAXINFO = 0x0024,
+
+        WINDOWPOSCHANGING = 0x0046,
+        WINDOWPOSCHANGED = 0x0047,
+
+        CONTEXTMENU = 0x007B,
+        STYLECHANGING = 0x007C,
+        STYLECHANGED = 0x007D,
+        DISPLAYCHANGE = 0x007E,
+        GETICON = 0x007F,
+        SETICON = 0x0080,
+        NCCREATE = 0x0081,
+        NCDESTROY = 0x0082,
+        NCCALCSIZE = 0x0083,
+        NCHITTEST = 0x0084,
+        NCPAINT = 0x0085,
+        NCACTIVATE = 0x0086,
+        GETDLGCODE = 0x0087,
+        SYNCPAINT = 0x0088,
+        NCMOUSEMOVE = 0x00A0,
+        NCLBUTTONDOWN = 0x00A1,
+        NCLBUTTONUP = 0x00A2,
+        NCLBUTTONDBLCLK = 0x00A3,
+        NCRBUTTONDOWN = 0x00A4,
+        NCRBUTTONUP = 0x00A5,
+        NCRBUTTONDBLCLK = 0x00A6,
+        NCMBUTTONDOWN = 0x00A7,
+        NCMBUTTONUP = 0x00A8,
+        NCMBUTTONDBLCLK = 0x00A9,
+
+        SYSKEYDOWN = 0x0104,
+        SYSKEYUP = 0x0105,
+        SYSCHAR = 0x0106,
+        SYSDEADCHAR = 0x0107,
+        COMMAND = 0x0111,
+        SYSCOMMAND = 0x0112,
+
+        MOUSEMOVE = 0x0200,
+        LBUTTONDOWN = 0x0201,
+        LBUTTONUP = 0x0202,
+        LBUTTONDBLCLK = 0x0203,
+        RBUTTONDOWN = 0x0204,
+        RBUTTONUP = 0x0205,
+        RBUTTONDBLCLK = 0x0206,
+        MBUTTONDOWN = 0x0207,
+        MBUTTONUP = 0x0208,
+        MBUTTONDBLCLK = 0x0209,
+        MOUSEWHEEL = 0x020A,
+        XBUTTONDOWN = 0x020B,
+        XBUTTONUP = 0x020C,
+        XBUTTONDBLCLK = 0x020D,
+        MOUSEHWHEEL = 0x020E,
+
+
+        CAPTURECHANGED = 0x0215,
+
+        ENTERSIZEMOVE = 0x0231,
+        EXITSIZEMOVE = 0x0232,
+
+        IME_SETCONTEXT = 0x0281,
+        IME_NOTIFY = 0x0282,
+        IME_CONTROL = 0x0283,
+        IME_COMPOSITIONFULL = 0x0284,
+        IME_SELECT = 0x0285,
+        IME_CHAR = 0x0286,
+        IME_REQUEST = 0x0288,
+        IME_KEYDOWN = 0x0290,
+        IME_KEYUP = 0x0291,
+
+        NCMOUSELEAVE = 0x02A2,
+
+        DWMCOMPOSITIONCHANGED = 0x031E,
+        DWMNCRENDERINGCHANGED = 0x031F,
+        DWMCOLORIZATIONCOLORCHANGED = 0x0320,
+        DWMWINDOWMAXIMIZEDCHANGE = 0x0321,
+
+        #region Windows 7
+        DWMSENDICONICTHUMBNAIL = 0x0323,
+        DWMSENDICONICLIVEPREVIEWBITMAP = 0x0326,
+        #endregion
+
+        USER = 0x0400,
+
+        // This is the hard-coded message value used by WinForms for Shell_NotifyIcon.
+        // It's relatively safe to reuse.
+        TRAYMOUSEMESSAGE = 0x800, //WM_USER + 1024
+        APP = 0x8000,
+    }
+
 }

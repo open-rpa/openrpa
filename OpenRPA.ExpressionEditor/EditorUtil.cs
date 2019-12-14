@@ -10,7 +10,7 @@ namespace OpenRPA.ExpressionEditor
     public class EditorUtil
     {
         public static ExpressionNode autoCompletionTree;
-        public static void init()
+        public static void Init()
         {
             autoCompletionTree = CreateDefaultAutoCompletionTree();
         }

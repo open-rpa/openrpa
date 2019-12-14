@@ -131,7 +131,7 @@ namespace OpenRPA.Windows.Views
                 {
                     if (p.Name != sender.Name)
                     {
-                        if (p.parseUserAction(ref e)) continue;
+                        if (p.ParseUserAction(ref e)) continue;
                     }
                 }
                 Selector = e.Selector.ToString();

@@ -13,14 +13,14 @@ namespace OpenRPA.Java
 {
     public class Plugin : ObservableObject, IRecordPlugin
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         public static treeelement[] _GetRootElements(Selector anchor)
         {
             var result = new List<treeelement>();
             Javahook.Instance.refreshJvms();
             if (anchor != null)
             {
-                JavaSelector Javaselector = anchor as JavaSelector;
-                if (Javaselector == null) { Javaselector = new JavaSelector(anchor.ToString()); }
+                if (!(anchor is JavaSelector Javaselector)) { Javaselector = new JavaSelector(anchor.ToString()); }
                 var elements = JavaSelector.GetElementsWithuiSelector(Javaselector, null, 1);
                 foreach (var _ele in elements)
                 {
@@ -54,7 +54,11 @@ namespace OpenRPA.Java
             return new JavaSelector(javaitem.JavaElement, javaanchor, true);
         }
         public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
-        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove;
+        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove
+        {
+            add { }
+            remove { }
+        }
         public string Name { get => "Java"; }
         // public string Status => (hook!=null && hook.jvms.Count>0 ? "online":"offline");
         private string _Status = "";
@@ -74,32 +78,33 @@ namespace OpenRPA.Java
             Log.Information("JavaShutDown: " + vmID);
             NotifyPropertyChanged("Status");
         }
-        public JavaElement lastElement { get; set; }
+        public JavaElement LastElement { get; set; }
         private void Hook_OnMouseClicked(int vmID, WindowsAccessBridgeInterop.AccessibleContextNode ac)
         {
-            lastElement = new JavaElement(ac);
-            lastElement.SetPath();
-            Log.Debug("OnMouseClicked: " + lastElement.id + " " + lastElement.role + " " + lastElement.Name);
-            if (lastElement == null) return;
+            LastElement = new JavaElement(ac);
+            LastElement.SetPath();
+            Log.Debug("OnMouseClicked: " + LastElement.id + " " + LastElement.role + " " + LastElement.Name);
+            if (LastElement == null) return;
 
-            var re = new RecordEvent(); re.Button = MouseButton.Left;
-            var a = new GetElement { DisplayName = lastElement.title };
+            var re = new RecordEvent
+            {
+                Button = MouseButton.Left
+            }; var a = new GetElement { DisplayName = LastElement.title };
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
-            JavaSelector sel = null;
             // sel = new JavaSelector(e.Element.rawElement, null, true);
-            sel = new JavaSelector(lastElement, null, true);
+            JavaSelector sel = new JavaSelector(LastElement, null, true);
             if (sel == null) return;
             if (sel.Count < 2) return;
             a.Selector = sel.ToString();
-            a.Image = lastElement.ImageString();
+            a.Image = LastElement.ImageString();
             a.MaxResults = 1;
-            re.Element = lastElement;
+            re.Element = LastElement;
             re.Selector = sel;
-            re.X = lastElement.X;
-            re.Y = lastElement.Y;
+            re.X = LastElement.X;
+            re.Y = LastElement.Y;
             re.a = new GetElementResult(a);
-            re.SupportInput = lastElement.SupportInput;
+            re.SupportInput = LastElement.SupportInput;
             re.SupportSelect = false;
 
             Log.Debug(string.Format("Java.Recording::OnMouseClicked::end {0:mm\\:ss\\.fff}", sw.Elapsed));
@@ -107,13 +112,13 @@ namespace OpenRPA.Java
         }
         private void Hook_OnMouseEntered(int vmID, WindowsAccessBridgeInterop.AccessibleContextNode ac)
         {
-            lastElement = new JavaElement(ac);
-            lastElement.SetPath();
-            Log.Verbose("MouseEntered: " + lastElement.id + " " + lastElement.role + " " + lastElement.Name);
+            LastElement = new JavaElement(ac);
+            LastElement.SetPath();
+            Log.Verbose("MouseEntered: " + LastElement.id + " " + LastElement.role + " " + LastElement.Name);
         }
-        public bool parseUserAction(ref IRecordEvent e)
+        public bool ParseUserAction(ref IRecordEvent e)
         {
-            if (lastElement == null) return false;
+            if (LastElement == null) return false;
             if (e.UIElement == null) return false;
 
             if(e.UIElement.ClassName == null || !e.UIElement.ClassName.StartsWith("SunAwt"))
@@ -122,18 +127,18 @@ namespace OpenRPA.Java
                 var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
                 if (p.ProcessName.ToLower() != "java") return false;
             }
-            var selector = new JavaSelector(lastElement, null, true);
-            var a = new GetElement { DisplayName = lastElement.id + " " + lastElement.role + " " + lastElement.Name };
+            var selector = new JavaSelector(LastElement, null, true);
+            var a = new GetElement { DisplayName = LastElement.id + " " + LastElement.role + " " + LastElement.Name };
             a.Selector = selector.ToString();
-            a.Image = lastElement.ImageString();
+            a.Image = LastElement.ImageString();
             a.MaxResults = 1;
 
             e.a = new GetElementResult(a);
-            e.SupportInput = lastElement.SupportInput;
+            e.SupportInput = LastElement.SupportInput;
             e.ClickHandled = true;
             e.Selector = selector;
-            e.Element = lastElement;
-            lastElement.Click(true, e.Button, 0,0, false, false);
+            e.Element = LastElement;
+            LastElement.Click(true, e.Button, 0,0, false, false);
             return true;
         }
         public void Initialize(IOpenRPAClient client)
@@ -198,9 +203,9 @@ namespace OpenRPA.Java
             var el = new JavaElement(m.RawElement as WindowsAccessBridgeInterop.AccessibleNode);
             return JavaSelectorItem.Match(item, el);
         }
-        public bool parseMouseMoveAction(ref IRecordEvent e)
+        public bool ParseMouseMoveAction(ref IRecordEvent e)
         {
-            if (lastElement == null) return false;
+            if (LastElement == null) return false;
             if (e.UIElement == null) return false;
 
             if (e.UIElement.ClassName == null || !e.UIElement.ClassName.StartsWith("SunAwt"))
@@ -210,7 +215,7 @@ namespace OpenRPA.Java
                 if (p.ProcessName.ToLower() != "java") return false;
             }
 
-            e.Element = lastElement;
+            e.Element = LastElement;
             return true;
         }
     }
@@ -224,8 +229,10 @@ namespace OpenRPA.Java
         public void AddActivity(Activity a, string Name)
         {
             var aa = new ActivityAction<JavaElement>();
-            var da = new DelegateInArgument<JavaElement>();
-            da.Name = Name;
+            var da = new DelegateInArgument<JavaElement>
+            {
+                Name = Name
+            };
             aa.Handler = a;
             ((GetElement)Activity).Body = aa;
             aa.Argument = da;

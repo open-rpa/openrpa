@@ -174,7 +174,17 @@ namespace OpenRPA
             }
             await Task.Run(() =>
             {
-                ExpressionEditor.EditorUtil.init();
+                try
+                {
+                    ExpressionEditor.EditorUtil.Init();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }                
+            });
+            await Task.Run(() =>
+            {                
                 // LoadLayout();
                 if (!string.IsNullOrEmpty(Config.local.wsurl))
                 {
@@ -433,11 +443,7 @@ namespace OpenRPA
                 }
                 Log.Debug("WebSocketClient_OnOpen::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                 SetStatus("Load layout and reopen workflows");
-                if (Projects.Count > 0)
-                {
-                    Projects[0].IsExpanded = true;
-                }
-                else
+                if (Projects.Count == 0)
                 {
                     OnOpen(null);
                     string Name = "New Project";
@@ -1776,12 +1782,12 @@ namespace OpenRPA
         {
             GenericTools.RunUI(() =>
             {
+                if (workflow.Project != null)
+                {
+                    workflow.Project.IsExpanded = true;
+                }
                 _onOpenWorkflow(workflow);
             });
-            //AutomationHelper.syncContext.Post(o =>
-            //{
-            //    _onOpenWorkflow(workflow);
-            //}, null);
         }
         private void WFDesigneronChanged(Views.WFDesigner designer)
         {
@@ -2068,15 +2074,15 @@ namespace OpenRPA
                     if (GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) is Views.WFDesigner designer)
                     {
                         designer.BreakpointLocations = null;
-                        if (Config.local.minimize)
-                        {
-                            instance = workflow.CreateInstance(param, null, null, new idleOrComplete(designer.OnIdle), null);
-                        }
-                        else
-                        {
-                            instance = workflow.CreateInstance(param, null, null, new idleOrComplete(designer.OnIdle), designer.OnVisualTracking);
-                        }
-                        // designer.Minimize = false;
+                        //if (Config.local.minimize)
+                        //{
+                        //    instance = workflow.CreateInstance(param, null, null, new idleOrComplete(designer.OnIdle), null);
+                        //}
+                        //else
+                        //{
+                        //    instance = workflow.CreateInstance(param, null, null, new idleOrComplete(designer.OnIdle), designer.OnVisualTracking);
+                        //}
+                        instance = workflow.CreateInstance(param, null, null, new idleOrComplete(designer.OnIdle), designer.OnVisualTracking);
                         designer.Run(VisualTracking, SlowMotion, instance);
                     }
                     else
@@ -2196,7 +2202,9 @@ namespace OpenRPA
                         return false;
                     }
                 }
-                return !isRecording;
+                if(designer.IsSequenceSelected) return !isRecording;
+                return false;
+
             }
             catch (Exception ex)
             {
@@ -2218,6 +2226,7 @@ namespace OpenRPA
             InputDriver.Instance.OnKeyDown -= OnKeyDown;
             InputDriver.Instance.OnKeyUp -= OnKeyUp;
             GenericTools.Restore(GenericTools.MainWindow);
+            CommandManager.InvalidateRequerySuggested();
         }
         private bool CanAllways(object _item)
         {
@@ -2303,7 +2312,7 @@ namespace OpenRPA
             isRecording = true;
             var p = Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
             p.OnUserAction += OnUserAction;
-            p.OnMouseMove += OnMouseMove;
+            if (Config.local.record_overlay) p.OnMouseMove += OnMouseMove;
             p.Start();
             if (_overlayWindow == null && Config.local.record_overlay)
             {
@@ -2320,7 +2329,7 @@ namespace OpenRPA
             isRecording = false;
             var p = Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
             p.OnUserAction -= OnUserAction;
-            p.OnMouseMove -= OnMouseMove;
+            if (Config.local.record_overlay) p.OnMouseMove -= OnMouseMove;
             p.Stop();
             if (_overlayWindow != null)
             {
@@ -2339,7 +2348,7 @@ namespace OpenRPA
             {
                 if (p.Name != sender.Name)
                 {
-                    if (p.parseMouseMoveAction(ref e)) continue;
+                    if (p.ParseMouseMoveAction(ref e)) continue;
                 }
             }
 
@@ -2387,7 +2396,7 @@ namespace OpenRPA
                         {
                             try
                             {
-                                if (p.parseUserAction(ref e)) continue;
+                                if (p.ParseUserAction(ref e)) continue;
                             }
                             catch (Exception ex)
                             {

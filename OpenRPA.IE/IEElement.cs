@@ -13,35 +13,34 @@ namespace OpenRPA.IE
         {
             Browser = browser;
             RawElement = Element;
-            className = Element.className;
-            id = Element.id;
-            tagName = Element.tagName.ToLower();
+            ClassName = Element.className;
+            Id = Element.id;
+            TagName = Element.tagName.ToLower();
             Name = "";
-            if (!(RawElement.getAttribute("href") is System.DBNull) )
+            if (!(RawElement.getAttribute("Name") is System.DBNull) )
             {
                 Name = RawElement.getAttribute("Name");
             }
-            if (tagName == "input")
+            if (TagName == "input")
             {
                 MSHTML.IHTMLInputElement inputelement = Element as MSHTML.IHTMLInputElement;
-                type = inputelement.type.ToLower();
+                Type = inputelement.type.ToLower();
             }
             try
             {
                 MSHTML.IHTMLUniqueName id = RawElement as MSHTML.IHTMLUniqueName;
-                uniqueID = id.uniqueID;
+                UniqueID = id.uniqueID;
             }
             catch (Exception)
             {
             }
             IndexInParent = -1;
-            if (Element.parentElement != null && !string.IsNullOrEmpty(uniqueID))
+            if (Element.parentElement != null && !string.IsNullOrEmpty(UniqueID))
             {
                 MSHTML.IHTMLElementCollection children = Element.parentElement.children;
                 for (int i = 0; i < children.length; i++)
                 {
-                    MSHTML.IHTMLUniqueName id = children.item(i) as MSHTML.IHTMLUniqueName;
-                    if (id != null && id.uniqueID == uniqueID) { IndexInParent = i; break; }
+                    if (children.item(i) is MSHTML.IHTMLUniqueName id && id.uniqueID == UniqueID) { IndexInParent = i; break; }
                 }
             }
         }
@@ -74,12 +73,11 @@ namespace OpenRPA.IE
                 if (_Rectangle != null) return _Rectangle.Value;
 
                 _Rectangle = System.Drawing.Rectangle.Empty;
-                int elementx = 0;
-                int elementy = 0;
-                int elementw = 0;
-                int elementh = 0;
-                MSHTML.IHTMLElement2 ele = RawElement as MSHTML.IHTMLElement2;
-                if (ele == null) return _Rectangle.Value;
+                int elementx;
+                int elementy;
+                int elementw;
+                int elementh;
+                if (!(RawElement is MSHTML.IHTMLElement2 ele)) return _Rectangle.Value;
                 var col = ele.getClientRects();
                 if (col == null) return _Rectangle.Value;
                 try
@@ -116,11 +114,11 @@ namespace OpenRPA.IE
             set { }
         }
         public Browser Browser { get; set; }
-        public string className { get; set; }
-        public string uniqueID { get; set; }
-        public string id { get; set; }
-        public string tagName { get; set; }
-        public string type { get; set; }
+        public string ClassName { get; set; }
+        public string UniqueID { get; set; }
+        public string Id { get; set; }
+        public string TagName { get; set; }
+        public string Type { get; set; }
         public int IndexInParent { get; set; }
         public MSHTML.IHTMLElement RawElement { get; private set; }
         object IElement.RawElement { get => RawElement; set => RawElement = value as MSHTML.IHTMLElement; }
@@ -158,6 +156,7 @@ namespace OpenRPA.IE
             }
             return _Highlight(Color, Duration);
         }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         public Task _Highlight(System.Drawing.Color Color, TimeSpan Duration)
         {
             using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow(true))
@@ -216,13 +215,12 @@ namespace OpenRPA.IE
         }
         public override string ToString()
         {
-            return tagName + " " + (!string.IsNullOrEmpty(id) ? id : className);
+            return TagName + " " + (!string.IsNullOrEmpty(Id) ? Id : ClassName);
         }
         public override bool Equals(object obj)
         {
-            var e = obj as IEElement;
-            if (e == null) return false;
-            if (e.uniqueID == uniqueID) return true;
+            if (!(obj is IEElement e)) return false;
+            if (e.UniqueID == UniqueID) return true;
             if (RawElement.sourceIndex == e.RawElement.sourceIndex) return true;
             if (RawElement.GetHashCode() == e.RawElement.GetHashCode()) return true;
             return false;
@@ -246,7 +244,7 @@ namespace OpenRPA.IE
                 return Interfaces.Image.Util.Bitmap2Base64(image);
             }
         }
-        public string href
+        public string Href
         {
             get
             {
@@ -254,7 +252,7 @@ namespace OpenRPA.IE
                 return RawElement.getAttribute("href");
             }
         }
-        public string src
+        public string Src
         {
             get
             {
@@ -262,7 +260,7 @@ namespace OpenRPA.IE
                 return RawElement.getAttribute("src");
             }
         }
-        public string alt
+        public string Alt
         {
             get
             {

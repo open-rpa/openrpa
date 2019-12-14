@@ -91,7 +91,7 @@ namespace OpenRPA.Updater
                 _destinationfolder = value;
             }
         }
-        public string identitystring(PackageIdentity id)
+        public string IdentityString(PackageIdentity id)
         {
             if (id.HasVersion) return id.Id + "." + id.Version.ToString();
             return id.Id;
@@ -239,7 +239,7 @@ namespace OpenRPA.Updater
             Repository.Provider.GetCoreV3();
             return result;
         }
-        public LocalPackageInfo getLocal(string identity)
+        public LocalPackageInfo GetLocal(string identity)
         {
             List<Lazy<INuGetResourceProvider>> providers = CreateResourceProviders();
 
@@ -272,11 +272,11 @@ namespace OpenRPA.Updater
         }
         private void InstallFile(string installedPath, string f)
         {
-            string source = "";
-            string f2 = "";
-            string filename = "";
-            string dir = "";
-            string target = "";
+            string source;
+            string f2;
+            string filename;
+            string dir;
+            string target;
             try
             {
                 source = System.IO.Path.Combine(installedPath, f);
@@ -298,11 +298,11 @@ namespace OpenRPA.Updater
         }
         private void RemoveFile(string installedPath, string f)
         {
-            string source = "";
-            string f2 = "";
-            string filename = "";
-            string dir = "";
-            string target = "";
+            string source;
+            string f2;
+            string filename;
+            string dir;
+            string target;
             try
             {
                 source = System.IO.Path.Combine(installedPath, f);
@@ -374,7 +374,7 @@ namespace OpenRPA.Updater
                 {
                     foreach (var p in dep.Packages)
                     {
-                        var local = getLocal(p.Id);
+                        var local = GetLocal(p.Id);
                         await InstallPackage(local.Identity);
                     }
                 }
@@ -498,7 +498,7 @@ namespace OpenRPA.Updater
                     Logger);
 
                 var packageToInstall = availablePackages.Where(p => p.Id == identity.Id).FirstOrDefault();
-                if(packageToInstall==null) throw new Exception("Failed finding package " + identitystring(identity));
+                if(packageToInstall==null) throw new Exception("Failed finding package " + IdentityString(identity));
 
                 // var packagePathResolver = new NuGet.Packaging.PackagePathResolver(Packagesfolder);
                 var clientPolicyContext = NuGet.Packaging.Signing.ClientPolicyContext.GetClientPolicy(Settings, Logger);
@@ -594,8 +594,8 @@ namespace OpenRPA.Updater
             }
             catch (Exception ex)
             {
-                return false;
                 OpenRPAPackageManagerLogger.Instance.LogError(ex.ToString());
+                return false;
             }
         }
         private void CopyIfNewer(string source, string target)

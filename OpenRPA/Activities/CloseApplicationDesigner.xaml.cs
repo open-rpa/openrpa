@@ -75,7 +75,7 @@ namespace OpenRPA.Activities
                 {
                     if (p.Name != sender.Name)
                     {
-                        if (p.parseUserAction(ref e)) continue;
+                        if (p.ParseUserAction(ref e)) continue;
                     }
                 }
                 e.Selector.RemoveRange(3, e.Selector.Count - 3);

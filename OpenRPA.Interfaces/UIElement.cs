@@ -227,6 +227,7 @@ namespace OpenRPA
             }
             return _Highlight(Color, Duration);
         }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         public Task _Highlight(System.Drawing.Color Color, TimeSpan Duration)
         {
             using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow(true))
@@ -344,8 +345,7 @@ namespace OpenRPA
                             key = key.Replace(" up", "");
                         }
                         //Keys specialkey;
-                        FlaUI.Core.WindowsAPI.VirtualKeyShort vk;
-                        Enum.TryParse<FlaUI.Core.WindowsAPI.VirtualKeyShort>(key, true, out vk);
+                        Enum.TryParse<FlaUI.Core.WindowsAPI.VirtualKeyShort>(key, true, out FlaUI.Core.WindowsAPI.VirtualKeyShort vk);
                         if (down)
                         {
                             if (vk > 0)
@@ -419,8 +419,7 @@ namespace OpenRPA
         }
         public override bool Equals(object obj)
         {
-            var e = obj as UIElement;
-            if (e == null) return false;
+            if (!(obj is UIElement e)) return false;
             if (e.ProcessId != ProcessId) return false;
             // if (e.Id != Id) return false;
             if (e.Name != Name) return false;

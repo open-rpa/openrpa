@@ -646,6 +646,15 @@ namespace OpenRPA.Views
 
             Microsoft.VisualBasic.Activities.VisualBasic.SetSettings(rootObject, vbsettings);
         }
+        public bool IsSequenceSelected
+        {
+            get
+            {
+                var lastSequence = GetSequence(SelectedActivity);
+                if (lastSequence != null) return true;
+                return false;
+            }
+        }
         List<Activity> recording = null;
         public void BeginRecording()
         {

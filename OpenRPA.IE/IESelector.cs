@@ -223,7 +223,7 @@ namespace OpenRPA.IE
                     foreach (var _element in elements)
                     {
                         MSHTML.IHTMLElement[] matches;
-                        if (frameTags.Contains(_element.tagName.ToUpper()))
+                        if (frameTags.Contains(_element.TagName.ToUpper()))
                         {
                             if(s.tagName.ToUpper()=="HTML") { i++; s = new IESelectorItem(selectors[i]); }
                             var _f = _element.RawElement as MSHTML.HTMLFrameElement;

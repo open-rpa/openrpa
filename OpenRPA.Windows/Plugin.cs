@@ -214,7 +214,7 @@ namespace OpenRPA.Windows
             thread.IsBackground = true;
             thread.Start();
         }
-        public bool parseUserAction(ref IRecordEvent e) { return false; }
+        public bool ParseUserAction(ref IRecordEvent e) { return false; }
         public void Initialize(IOpenRPAClient client)
         {
             var dummy = PluginConfig.allow_child_searching;
@@ -382,7 +382,7 @@ namespace OpenRPA.Windows
                 }
             }
         }
-        public bool parseMouseMoveAction(ref IRecordEvent e)
+        public bool ParseMouseMoveAction(ref IRecordEvent e)
         {
             return true;
         }

@@ -47,7 +47,6 @@ namespace OpenRPA.RDService
                 Task.Delay(500).GetAwaiter().GetResult();
             }
         }
-        private Impersonator imp;
         void ProcessTaskThread()
         {
             try

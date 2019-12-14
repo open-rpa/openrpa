@@ -64,14 +64,15 @@ namespace OpenRPA.Image
         }
         public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse)
         {
-            var point = new FlaUI.Core.Shapes.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-            if (AnimateMouse) FlaUI.Core.Input.Mouse.MoveTo(point);
-            FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
-            if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
-            if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-            Input.InputDriver.Instance.AllowOneClick = true;
-            if (!DoubleClick) FlaUI.Core.Input.Mouse.Click(flabuttun, point);
-            if (DoubleClick) FlaUI.Core.Input.Mouse.DoubleClick(flabuttun, point);
+            if (AnimateMouse)
+            {
+                FlaUI.Core.Input.Mouse.MoveTo(new System.Drawing.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY));
+            } else
+            {
+                NativeMethods.SetCursorPos(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+            }
+            Input.InputDriver.Click(Button);
+            if (DoubleClick) Input.InputDriver.Click(Button);
         }
         public void Focus()
         {

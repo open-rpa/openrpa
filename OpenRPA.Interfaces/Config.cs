@@ -29,6 +29,7 @@ namespace OpenRPA
         public TimeSpan updatecheckinterval = TimeSpan.FromDays(1);
         public bool doupdatecheck = true;
         public bool autoupdateupdater = true;
+        public bool log_to_file = false;
         public bool log_verbose = false;
         public bool log_activity = false;
         public bool log_debug = false;

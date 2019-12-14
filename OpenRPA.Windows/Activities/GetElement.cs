@@ -145,7 +145,6 @@ namespace OpenRPA.Windows
             metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
         }
-
         public Activity Create(System.Windows.DependencyObject target)
         {
             var da = new DelegateInArgument<UIElement>

@@ -84,6 +84,7 @@ namespace OpenRPA.Windows
 
             if(PluginConfig.traverse_selector_both_ways)
             {
+                Log.Selector(string.Format("windowsselector::create traverse_selector_both_ways::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
                 var temppathToRoot = new List<AutomationElement>();
                 var newpathToRoot = new List<AutomationElement>();
                 foreach (var e in pathToRoot) temppathToRoot.Add(e);
@@ -124,12 +125,12 @@ namespace OpenRPA.Windows
                         }
                     }
                 }
-                Log.Selector(string.Format("windowsselector::traverse back to element from root::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                 if (newpathToRoot.Count != pathToRoot.Count)
                 {
                     Log.Information("Selector had " + pathToRoot.Count + " items to root, but traversing children inly matched " + newpathToRoot.Count);
                     pathToRoot = newpathToRoot;
                 }
+                Log.Selector(string.Format("windowsselector::create traverse_selector_both_ways::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             }
             if (pathToRoot.Count == 0)
             {
@@ -142,14 +143,17 @@ namespace OpenRPA.Windows
             Log.Selector(string.Format("windowsselector::remove anchor if needed::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             if (anchor == null)
             {
+                Log.Selector(string.Format("windowsselector::create root element::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
                 item = new WindowsSelectorItem(baseElement, true);
                 item.Enabled = true;
                 //item.canDisable = false;
                 Items.Add(item);
+                Log.Selector(string.Format("windowsselector::create root element::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             }
 
             if (PluginConfig.search_descendants)
             {
+                Log.Selector(string.Format("windowsselector::search_descendants::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
                 if (anchor == null)
                 {
                     // Add window, we NEED to search from a window
@@ -187,12 +191,14 @@ namespace OpenRPA.Windows
                     if (doEnum) item.EnumNeededProperties(pathToRoot[pathToRoot.Count - 1], pathToRoot[pathToRoot.Count - 1].Parent);
                     Items.Add(item);
                 }
+                Log.Selector(string.Format("windowsselector::search_descendants::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             }
             else
             {
                 bool isStartmenu = false;
                 for (var i = 0; i < pathToRoot.Count(); i++)
                 {
+                    Log.Selector(string.Format("windowsselector::search_descendants::loop element " + i + ":begin {0:mm\\:ss\\.fff}", sw.Elapsed));
                     var o = pathToRoot[i];
                     int IndexInParent = -1;
                     if (o.Parent != null && i > 0)
@@ -250,6 +256,7 @@ namespace OpenRPA.Windows
 
                     if (doEnum) item.EnumNeededProperties(o, o.Parent);
                     Items.Add(item);
+                    Log.Selector(string.Format("windowsselector::search_descendants::loop element " + i + ":end {0:mm\\:ss\\.fff}", sw.Elapsed));
                 }
             }
             pathToRoot.Reverse();

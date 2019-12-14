@@ -274,7 +274,7 @@ namespace OpenRPA.Input
                     case NativeMethods.WM_LBUTTONUP:
                         e.Type = InputEventType.MouseUp;
                         e.Button = MouseButton.Left;
-                        if (!AllowOneClick) RaiseOnMouseUp(e);
+                        if(!AllowOneClick) RaiseOnMouseUp(e);
                         //OnInput(e);
                         break;
                     case NativeMethods.WM_RBUTTONUP:
@@ -343,22 +343,11 @@ namespace OpenRPA.Input
         // private bool mouseDownWaiting = false;
         private void RaiseOnMouseMove(InputEventArgs e)
         {
-            if (e.Button == MouseButton.None)
-            {
-                //try
-                //{
-                //    e.Element = AutomationHelper.GetFromPoint(e.X, e.Y);
-                //}
-                //catch (Exception ex)
-                //{
-                //    Log.Error(ex, "");
-                //}
-                //Element = e.Element;
-            }
-            OnMouseMove(e);
+            OnMouseMove?.Invoke(e);
         }
         private void RaiseOnMouseDown(InputEventArgs e)
         {
+            if (OnMouseDown == null) return;
             try
             {
                 Element = AutomationHelper.GetFromPoint(e.X, e.Y);
@@ -369,10 +358,11 @@ namespace OpenRPA.Input
             }
             e.Element = Element;
             // if (e.Element != null && e.Element.ProcessId == currentprocessid) return;
-            OnMouseDown(e);
+            OnMouseDown?.Invoke(e);
         }
         private void RaiseOnMouseUp(InputEventArgs e)
         {
+            if (OnMouseUp == null) return;
             try
             {
                 if (Element == null)
@@ -392,7 +382,7 @@ namespace OpenRPA.Input
                     e.Element.Refresh();
                 }
                 // if (e.Element != null && e.Element.ProcessId == currentprocessid) return;
-                OnMouseUp(e);
+                OnMouseUp?.Invoke(e);
             }
             catch (Exception ex)
             {

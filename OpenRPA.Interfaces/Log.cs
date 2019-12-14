@@ -13,6 +13,7 @@ namespace OpenRPA.Interfaces
         private static NLog.Logger nlog = null;
         public static void LogLine(string message, string category)
         {
+            if (!Config.local.log_to_file) return;
             if (nlog == null)
             {
                 var config = new NLog.Config.LoggingConfiguration();

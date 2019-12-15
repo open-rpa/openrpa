@@ -404,7 +404,7 @@ namespace OpenRPA
                 FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.RETURN);
                 FlaUI.Core.Input.Keyboard.Type(line);
             }
-            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+            // FlaUI.Core.Input.Wait.UntilInputIsProcessed();
         }
         public override string ToString()
         {

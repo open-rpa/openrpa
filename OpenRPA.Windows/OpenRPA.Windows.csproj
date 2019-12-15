@@ -7,8 +7,9 @@
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
-    <Version>1.0.15</Version>
-    <PackageReleaseNotes>1.0.15 Add langauges and bug fixes
+    <Version>1.0.16</Version>
+    <PackageReleaseNotes>1.0.16 Fast fix, to speed up wpf finding
+1.0.15 Add langauges and bug fixes
 1.0.12 add ui for new options to fine tune windows recording
 1.0.11 fix double click
 1.0.9 update interfaces reference

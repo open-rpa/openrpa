@@ -214,7 +214,7 @@ namespace OpenRPA.Windows
                     var _IndexInParent = item.Properties.Where(x => x.Name == "IndexInParent").FirstOrDefault();
                     if (_IndexInParent != null) _IndexInParent.Enabled = false;
                     if (i == 0 || i == (pathToRoot.Count() - 1)) item.canDisable = false;
-                    foreach (var p in item.Properties) // TODO: Ugly, ugly inzuBiz hack !!!!
+                    foreach (var p in item.Properties)
                     {
                         int idx = p.Value.IndexOf(".");
                         if (p.Name == "ClassName" && idx > -1)
@@ -227,7 +227,12 @@ namespace OpenRPA.Windows
                             //    p.Enabled = true;
                             //}
                             int idx2 = p.Value.IndexOf(".", idx + 1);
-                            if (idx2 > idx) p.Value = p.Value.Substring(0, idx2 + 1) + "*";
+                            // if (idx2 > idx) p.Value = p.Value.Substring(0, idx2 + 1) + "*";
+                            if (idx2 > idx && item.Properties.Count > 1)
+                            {
+                                p.Enabled = false;
+                            }
+                                
                         }
                         //if (p.Name == "ClassName" && p.Value.StartsWith("WindowsForms10")) p.Value = "WindowsForms10*";
                         if (p.Name == "ClassName" && p.Value.ToLower() == "shelldll_defview")

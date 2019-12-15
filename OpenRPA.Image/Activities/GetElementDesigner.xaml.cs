@@ -80,27 +80,24 @@ namespace OpenRPA.Image
         }
         private void Highlight_Click(object sender, RoutedEventArgs e)
         {
-            var Image = ModelItem.GetValue<string>("Image");
-            var stream = new System.IO.MemoryStream(Convert.FromBase64String(Image));
-            var b = new System.Drawing.Bitmap(stream);
-            var Threshold = ModelItem.GetValue<double>("Threshold");
-            var CompareGray = ModelItem.GetValue<bool>("CompareGray");
-            var Processname = ModelItem.GetValue<string>("Processname");
-            var limit = ModelItem.GetValue<Rectangle>("Limit");
-            if (Threshold < 0.5) Threshold = 0.8;
-
-            var matches = ImageEvent.waitFor(b, Threshold, Processname, TimeSpan.FromMilliseconds(100), CompareGray, limit);
-
-            if (stream != null) stream.Dispose();
-            stream = null;
-            b.Dispose();
-            b = null;
-
-            foreach (var r in matches)
+            var image = ImageString;
+            Bitmap b = Task.Run(() => {
+                return Interfaces.Image.Util.LoadBitmap(image);
+            }).Result;
+            using (b)
             {
-                var element = new ImageElement(r);
-                element.Highlight(false, System.Drawing.Color.PaleGreen, TimeSpan.FromSeconds(1));
+                var Threshold = ModelItem.GetValue<double>("Threshold");
+                var CompareGray = ModelItem.GetValue<bool>("CompareGray");
+                var Processname = ModelItem.GetValue<string>("Processname");
+                var limit = ModelItem.GetValue<Rectangle>("Limit");
+                if (Threshold < 0.5) Threshold = 0.8;
+                var matches = ImageEvent.waitFor(b, Threshold, Processname, TimeSpan.FromMilliseconds(100), CompareGray, limit);
+                foreach (var r in matches)
+                {
+                    var element = new ImageElement(r);
+                    element.Highlight(false, System.Drawing.Color.PaleGreen, TimeSpan.FromSeconds(1));
 
+                }
             }
         }
         private async void ProcessLimit_Click(object sender, RoutedEventArgs e)

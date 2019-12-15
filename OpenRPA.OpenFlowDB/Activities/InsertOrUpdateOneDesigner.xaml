@@ -25,38 +25,10 @@
         </DrawingBrush>
     </sap:ActivityDesigner.Icon>
 
-
-
-    <sap:ActivityDesigner.Resources>
-        <Converters:ArgumentToExpressionConverter x:Key="ArgumentToExpressionConverter" />
-    </sap:ActivityDesigner.Resources>
     <Grid>
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-
-        <!-- 
-        <sapv:ExpressionTextBox HintText="Hint" Grid.Row="1" Grid.Column="0" MaxWidth="180" Margin="5"
-                                OwnerActivity="{Binding Path=ModelItem}"
-                                Expression="{Binding Path=ModelItem.Query, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
-                                ExpressionType="s:String" HorizontalAlignment="Stretch" />
-        -->
-
-        <!--
-        <TextBlock Text="Result" VerticalAlignment="Center" />
-        
-        Converter={StaticResource DebugBinding},
-        Converter={StaticResource ArgumentToExpressionConverter}, 
-        <sapv:ExpressionTextBox 
-            Expression="{Binding Path=ModelItem.StringResult, Mode=TwoWay, 
-            Converter={StaticResource ArgumentToExpressionConverter}, 
-            ConverterParameter=Out}"
-            
-            OwnerActivity="{Binding Path=ModelItem}"
-            Grid.Column="1"
-            Margin="3,0,0,0" />
-        -->
     </Grid>
 
 </sap:ActivityDesigner>

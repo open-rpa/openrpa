@@ -6,7 +6,9 @@
 
         xmlns:local="clr-namespace:OpenRPA.Updater"
         mc:Ignorable="d"
-        Title="OpenRPA Package Manager" Height="450" Width="800">
+        Title="OpenRPA Package Manager" Height="450" Width="800"
+        xmlns:or="clr-namespace:OpenRPA.Updater.Resources"
+        >
     <Window.Resources>
         <CollectionViewSource Source="{Binding Packages}" x:Key="Packages">
         </CollectionViewSource>
@@ -14,22 +16,22 @@
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
-                <Button ToolTip="Launch OpenRPA" Click="ButtonLaunch" Margin="5,0,5,0">
+                <Button ToolTip="{x:Static or:strings.main_button_launch_hint}" Click="ButtonLaunch" Margin="5,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/OpenRPA.Updater;component/Resources/open_rpa32.png" Height="18" />
-                        <TextBlock Margin="3,0,0,0">Launch</TextBlock>
+                        <TextBlock Margin="3,0,0,0" Text="{x:Static or:strings.main_button_launch}"></TextBlock>
                     </StackPanel>
                 </Button>
-                <Button x:Name="ButtonUpdateAll" ToolTip="Update all" Click="ButtonUpdateAllClick" Margin="5,0,5,0">
+                <Button x:Name="ButtonUpdateAll" ToolTip="{x:Static or:strings.main_button_update_all_hint}" Click="ButtonUpdateAllClick" Margin="5,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/OpenRPA.Updater;component/Resources/Package.png" Height="18" />
-                        <TextBlock Margin="3,0,0,0">Upgrade all</TextBlock>
+                        <TextBlock Margin="3,0,0,0" Text="{x:Static or:strings.main_button_update_all}"></TextBlock>
                     </StackPanel>
                 </Button>
-                <TextBox x:Name="TextSearchField" GotFocus="TextSearchField_GotFocus" ToolTip="Search for activities" Height="23" TextWrapping="Wrap" Text="Search..." Width="120"/>
+                <TextBox x:Name="TextSearchField" GotFocus="TextSearchField_GotFocus" ToolTip="{x:Static or:strings.main_button_search_hint}" Height="23" TextWrapping="Wrap" Text="{x:Static or:strings.main_button_search_text}" Width="120"/>
                 <Button x:Name="ButtonSearch" ToolTip="Press to search" Click="ButtonSearchClick" Margin="5,0,5,0">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Margin="3,0,0,0">Search</TextBlock>
+                        <TextBlock Margin="3,0,0,0" Text="{x:Static or:strings.main_button_search}"></TextBlock>
                     </StackPanel>
                 </Button>
             </ToolBar>
@@ -50,41 +52,41 @@
             </ScrollViewer>
         </DockPanel>
         <StackPanel DockPanel.Dock="Bottom" Height="200">
-            <Button Click="ButtonInstall" Content="Install" IsEnabled="{Binding BtnInstallEnabled}"></Button>
-            <Button Click="ButtonReinstall" Content="Reinstall" IsEnabled="{Binding ButtonReinstallEnabled}"></Button>
-            <Button Click="ButtonUpgrade" Content="Upgrade" IsEnabled="{Binding ButtonUpgradeEnabled}"></Button>
-            <Button Click="ButtonUninstall" Content="Uninstall" IsEnabled="{Binding ButtonUninstallEnabled}"></Button>
+            <Button Click="ButtonInstall" Content="{x:Static or:strings.main_button_install}" IsEnabled="{Binding BtnInstallEnabled}"></Button>
+            <Button Click="ButtonReinstall" Content="{x:Static or:strings.main_button_reinstall}" IsEnabled="{Binding ButtonReinstallEnabled}"></Button>
+            <Button Click="ButtonUpgrade" Content="{x:Static or:strings.main_button_upgrade}" IsEnabled="{Binding ButtonUpgradeEnabled}"></Button>
+            <Button Click="ButtonUninstall" Content="{x:Static or:strings.main_button_uninstall}" IsEnabled="{Binding ButtonUninstallEnabled}"></Button>
             <TextBox HorizontalAlignment="Stretch" Text="{Binding Logs}" Height="120"></TextBox>
         </StackPanel>
         <!--  CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" -->
         <ScrollViewer IsTabStop="True"  DockPanel.Dock="Top" >
             <StackPanel>
                 <StackPanel>
-                    <TextBlock><Bold>Id</Bold></TextBlock>
+                    <TextBlock Text="{x:Static or:strings.main_label_id}" FontWeight="Bold"></TextBlock>
                     <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Name}" ></TextBlock>
                 </StackPanel>
                 <StackPanel>
-                    <TextBlock><Bold>Version</Bold></TextBlock>
+                    <TextBlock Text="{x:Static or:strings.main_label_version}" FontWeight="Bold"></TextBlock>
                     <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.InstalledVersionString}" ></TextBlock>
                 </StackPanel>
                 <StackPanel>
-                    <TextBlock><Bold>LatestVersion</Bold></TextBlock>
+                    <TextBlock Text="{x:Static or:strings.main_label_latestversion}" FontWeight="Bold"></TextBlock>
                     <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.LatestVersion}" ></TextBlock>
                 </StackPanel>
                 <StackPanel>
-                    <TextBlock><Bold>Authors</Bold></TextBlock>
+                    <TextBlock Text="{x:Static or:strings.main_label_authors}" FontWeight="Bold"></TextBlock>
                     <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Authors}" ></TextBlock>
                 </StackPanel>
                 <StackPanel>
-                    <TextBlock><Bold>Tags</Bold></TextBlock>
+                    <TextBlock Text="{x:Static or:strings.main_label_tags}" FontWeight="Bold"></TextBlock>
                     <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Tags}" ></TextBlock>
                 </StackPanel>
                 <StackPanel>
-                    <TextBlock><Bold>Summary</Bold></TextBlock>
+                    <TextBlock Text="{x:Static or:strings.main_label_summary}" FontWeight="Bold"></TextBlock>
                     <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Summary}" ></TextBlock>
                 </StackPanel>
                 <StackPanel>
-                    <TextBlock><Bold>Description</Bold></TextBlock>
+                    <TextBlock Text="{x:Static or:strings.main_label_description}" FontWeight="Bold"></TextBlock>
                     <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listPackages, Path=SelectedValue.Package.Description}" ></TextBlock>
                 </StackPanel>
             </StackPanel>

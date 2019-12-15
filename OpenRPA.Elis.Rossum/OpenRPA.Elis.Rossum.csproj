@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
-    <Version>1.0.5</Version>
-    <PackageReleaseNotes>1.0.4 update interfaces reference
+    <Version>1.0.6</Version>
+    <PackageReleaseNotes>1.0.6 Add langauges and bug fixes
+1.0.4 update interfaces reference
 1.0.1 added a few more fields</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

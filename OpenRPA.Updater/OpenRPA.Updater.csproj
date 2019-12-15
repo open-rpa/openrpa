@@ -9,8 +9,9 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.23</Version>
-    <PackageReleaseNotes>1.0.23 add searching
+    <Version>1.0.24</Version>
+    <PackageReleaseNotes>1.0.24 bug fixes
+1.0.23 add searching
 1.0.21 force running as administrator, to handle updates 
 1.0.20 hotfix
 1.0.19 update interfaces reference, fix issue with overwriting new files with old versions
@@ -80,6 +81,19 @@
     <Resource Include="Resources\open_rpa32.png" />
     <Resource Include="Resources\package.ico" />
     <Resource Include="Resources\Package.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Update="OpenRPA.Updater.exe.manifest">

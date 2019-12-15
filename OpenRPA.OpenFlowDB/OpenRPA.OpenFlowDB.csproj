@@ -9,8 +9,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Configurations>Debug;Release;PrepInstaller;ReleaseNuget</Configurations>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.0.3</Version>
-    <PackageReleaseNotes>1.0.3 update reference</PackageReleaseNotes>
+    <Version>1.0.4</Version>
+    <PackageReleaseNotes>1.0.4 Add langauges
+1.0.3 update reference</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />

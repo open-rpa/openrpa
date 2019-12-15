@@ -7,8 +7,9 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.17</Version>
-    <PackageReleaseNotes>1.0.16 update interfaces reference
+    <Version>1.0.18</Version>
+    <PackageReleaseNotes>1.0.17 Add langauges and bug fixes
+1.0.16 update interfaces reference
 1.0.11 Make runner respect enabled setting in config
 1.0.9 Add runner plugin for auto recording workflows
 1.0.8 update interfaces reference</PackageReleaseNotes>

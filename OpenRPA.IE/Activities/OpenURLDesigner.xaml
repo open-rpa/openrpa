@@ -27,14 +27,10 @@
     
     <sap:ActivityDesigner.Resources>
         <DataTemplate x:Key="Collapsed">
-            <StackPanel>
-                <Image Source="{Binding Image}"></Image>
-            </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="Expanded">
             <StackPanel>
                 <Button Content="{x:Static or:strings.activity_openurl_getcurrent}" Click="Button_Click" />
-                <Image Source="{Binding Image}"></Image>
             </StackPanel>
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">

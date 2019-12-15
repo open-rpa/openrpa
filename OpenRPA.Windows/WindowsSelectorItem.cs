@@ -289,72 +289,6 @@ namespace OpenRPA.Windows
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
             Log.SelectorVerbose("matches::FindAllChildren.isDesktop(" + isDesktop + ")::begin");
-            //if (isDesktop) // To slow !
-            //{
-            //    Log.Selector(string.Format("AutomationElement.matches.isDesktop::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
-
-            //    Log.SelectorVerbose("Searching desktop for " + c.ToString());
-            //    var elements = element.FindAllChildren(c);
-            //    Log.SelectorVerbose("Done Search");
-            //    Log.Selector(string.Format("AutomationElement.matches.isDesktop::process elements {0:mm\\:ss\\.fff}", sw.Elapsed));
-            //    // var elements = element.FindAllChildren();
-            //    foreach (var elementNode in elements)
-            //    {
-            //        Log.SelectorVerbose("matches::match");
-            //        if (Match(elementNode)) matchs.Add(elementNode);
-            //    }
-            //    Log.Selector(string.Format("AutomationElement.matches.isDesktop::complete {0:mm\\:ss\\.fff}", sw.Elapsed));
-            //}
-            //else
-            //{
-            //    var nodes = new List<AutomationElement>();
-            //    Log.Selector(string.Format("AutomationElement.matches.isNotDesktop::GetFirstChild {0:mm\\:ss\\.fff}", sw.Elapsed));
-            //    var elementNode = _treeWalker.GetFirstChild(element);
-            //    var i = 0;
-            //    while (elementNode != null)
-            //    {
-            //        nodes.Add(elementNode);
-            //        i++;
-            //        if (Match(elementNode)) matchs.Add(elementNode);
-            //        if (matchs.Count >= count) break;
-            //        Log.Selector(string.Format("AutomationElement.matches.isNotDesktop::GetNextSibling {0:mm\\:ss\\.fff}", sw.Elapsed));
-            //        elementNode = _treeWalker.GetNextSibling(elementNode);
-            //    }
-            //}
-
-
-
-
-
-            //if (isDesktop) // To slow !
-            //{
-            //    Log.Selector(string.Format("AutomationElement.matches.isDesktop::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
-
-            //    var windows = Win32WindowUtils.GetTopLevelWindows(automation);
-            //    foreach (var elementNode in windows)
-            //    {
-            //        Log.SelectorVerbose("matches::match");
-            //        if (Match(elementNode)) matchs.Add(elementNode);
-            //    }
-            //    Log.Selector(string.Format("AutomationElement.matches.isDesktop::complete {0:mm\\:ss\\.fff}", sw.Elapsed));
-            //}
-            //else
-            //{
-            //    var nodes = new List<AutomationElement>();
-            //    Log.Selector(string.Format("AutomationElement.matches.isNotDesktop::GetFirstChild {0:mm\\:ss\\.fff}", sw.Elapsed));
-            //    var elementNode = _treeWalker.GetFirstChild(element);
-            //    var i = 0;
-            //    while (elementNode != null)
-            //    {
-            //        nodes.Add(elementNode);
-            //        i++;
-            //        if (Match(elementNode)) matchs.Add(elementNode);
-            //        if (matchs.Count >= count) break;
-            //        Log.Selector(string.Format("AutomationElement.matches.isNotDesktop::GetNextSibling {0:mm\\:ss\\.fff}", sw.Elapsed));
-            //        elementNode = _treeWalker.GetNextSibling(elementNode);
-            //    }
-            //}
-
 
             if(search_descendants)
             {
@@ -401,7 +335,9 @@ namespace OpenRPA.Windows
                     } 
                     else
                     {
+                        Log.Selector(string.Format("AutomationElement.matches.isDesktop(" + isDesktop + ")::FindAllChildren::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
                         var elements = element.FindAllChildren(Conditions);
+                        Log.Selector(string.Format("AutomationElement.matches.isDesktop(" + isDesktop + ")::FindAllChildren::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                         foreach (var elementNode in elements) matchs.Add(elementNode);
                     }
                     if (syncEvent != null)

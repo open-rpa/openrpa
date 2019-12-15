@@ -4,6 +4,7 @@
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
+    xmlns:or="clr-namespace:OpenRPA.IE.Resources"
     >
 
 
@@ -32,15 +33,15 @@
         </DataTemplate>
         <DataTemplate x:Key="Expanded">
             <StackPanel>
-                <Button Content="Get current" Click="Button_Click" />
+                <Button Content="{x:Static or:strings.activity_openurl_getcurrent}" Click="Button_Click" />
                 <Image Source="{Binding Image}"></Image>
             </StackPanel>
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
-            <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>
+            <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="true">
-                    <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
+                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="false">
+                    <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>

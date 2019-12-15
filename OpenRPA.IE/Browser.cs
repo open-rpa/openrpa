@@ -29,7 +29,7 @@ namespace OpenRPA.IE
                 oColl = Document.getElementsByTagName("HTML");
                 if (oColl != null && oColl.length > 0)
                 {
-                    oHTML = oColl.item(null, 0); // (MSHTML.IHTMLElement)oColl.GetEnumerator().Current;
+                    oHTML = (MSHTML.IHTMLElement)oColl.item(null, 0); // (MSHTML.IHTMLElement)oColl.GetEnumerator().Current;
                     return oHTML.outerHTML;
                 }
                 return string.Empty;

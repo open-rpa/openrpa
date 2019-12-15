@@ -67,7 +67,7 @@ namespace OpenRPA.IE
 
         public override void AddSubElements()
         {
-            MSHTML.IHTMLElementCollection children = IEElement.RawElement.children;
+            MSHTML.IHTMLElementCollection children = (MSHTML.IHTMLElementCollection)IEElement.RawElement.children;
             foreach (MSHTML.IHTMLElement elementNode in children) {
                 var ele = new IEElement(IEElement.Browser, elementNode);
                 var exists = Children.Where(x => ((IEElement)x.Element).UniqueID == ele.UniqueID).FirstOrDefault();

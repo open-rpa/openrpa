@@ -257,7 +257,7 @@ namespace OpenRPA.IE
                         message += "lookin for \n" + s.ToString() + "\n";
                         foreach (var _element in elements)
                         {
-                            MSHTML.IHTMLElementCollection children = _element.RawElement.children;
+                            MSHTML.IHTMLElementCollection children = (MSHTML.IHTMLElementCollection)_element.RawElement.children;
                             foreach (MSHTML.IHTMLElement elementNode in children) {
                                 var ui = new IEElement(browser, elementNode);
                                 message += ui.ToString() + "\n";
@@ -278,7 +278,7 @@ namespace OpenRPA.IE
                     var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
                     foreach (var element in elements)
                     {
-                        MSHTML.IHTMLElementCollection children = element.RawElement.children;
+                        MSHTML.IHTMLElementCollection children = (MSHTML.IHTMLElementCollection)element.RawElement.children;
                         foreach (MSHTML.IHTMLElement c in children)
                         {
                             try

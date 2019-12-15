@@ -21,7 +21,7 @@ namespace OpenRPA.IE
             {
                 if (!(RawElement.getAttribute("Name") is System.DBNull))
                 {
-                    Name = RawElement.getAttribute("Name");
+                    Name = (string)RawElement.getAttribute("Name");
                 }
             }
             catch (Exception)
@@ -43,7 +43,7 @@ namespace OpenRPA.IE
             IndexInParent = -1;
             if (Element.parentElement != null && !string.IsNullOrEmpty(UniqueID))
             {
-                MSHTML.IHTMLElementCollection children = Element.parentElement.children;
+                MSHTML.IHTMLElementCollection children = (MSHTML.IHTMLElementCollection)Element.parentElement.children;
                 for (int i = 0; i < children.length; i++)
                 {
                     if (children.item(i) is MSHTML.IHTMLUniqueName id && id.uniqueID == UniqueID) { IndexInParent = i; break; }
@@ -56,7 +56,7 @@ namespace OpenRPA.IE
             get
             {
                 var result = new List<IEElement>();
-                MSHTML.IHTMLElementCollection children = RawElement.children;
+                MSHTML.IHTMLElementCollection children = (MSHTML.IHTMLElementCollection)RawElement.children;
                 foreach (MSHTML.IHTMLElement c in children)
                 {
                     try
@@ -89,10 +89,10 @@ namespace OpenRPA.IE
                 try
                 {
                     var _rect = col.item(0);
-                    var left = _rect.left;
-                    var top = _rect.top;
-                    var right = _rect.right;
-                    var bottom = _rect.bottom;
+                    var left = ((dynamic)_rect).left;
+                    var top = ((dynamic)_rect).top;
+                    var right = ((dynamic)_rect).right;
+                    var bottom = ((dynamic)_rect).bottom;
                     elementx = left;
                     elementy = top;
                     elementw = right - left;
@@ -197,7 +197,7 @@ namespace OpenRPA.IE
                 if(RawElement.tagName.ToLower() == "select")
                 {
                     var ele = (MSHTML.IHTMLSelectElement)RawElement;
-                    foreach(MSHTML.IHTMLOptionElement e in ele.options)
+                    foreach(MSHTML.IHTMLOptionElement e in (dynamic)((dynamic)ele.options))
                     {
                         if(e.value == value)
                         {
@@ -246,7 +246,7 @@ namespace OpenRPA.IE
             get
             {
                 if (RawElement.getAttribute("href") is System.DBNull) return null;
-                return RawElement.getAttribute("href");
+                return (string)RawElement.getAttribute("href");
             }
         }
         public string Src
@@ -254,7 +254,7 @@ namespace OpenRPA.IE
             get
             {
                 if (RawElement.getAttribute("src") is System.DBNull) return null;
-                return RawElement.getAttribute("src");
+                return (string)RawElement.getAttribute("src");
             }
         }
         public string Alt
@@ -262,7 +262,7 @@ namespace OpenRPA.IE
             get
             {
                 if (RawElement.getAttribute("alt") is System.DBNull) return null;
-                return RawElement.getAttribute("alt");
+                return (string)RawElement.getAttribute("alt");
             }
         }
         public IElement[] Items

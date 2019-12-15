@@ -62,6 +62,7 @@ namespace OpenRPA.Java.Views
         {
             get
             {
+                if (plugin.Selector == null) return "";
                 return plugin.Selector.Replace(Environment.NewLine, "");
             }
             set

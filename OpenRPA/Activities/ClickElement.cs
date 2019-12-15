@@ -48,10 +48,6 @@ namespace OpenRPA.Activities
         public InArgument<TimeSpan> PostWait { get; set; }
         [Editor(typeof(SelectNewEmailOptionsEditor), typeof(System.Activities.Presentation.PropertyEditing.ExtendedPropertyValueEditor))]
         public InArgument<string> KeyModifiers { get; set; }
-        
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern uint GetDoubleClickTime();
         protected override void Execute(CodeActivityContext context)
         {
             var el = Element.Get(context);
@@ -72,16 +68,15 @@ namespace OpenRPA.Activities
 
             var _button = (Input.MouseButton)button;
             el.Click(virtualClick, _button, OffsetX, OffsetY, doubleclick, animatemouse);
-
             disposes.ForEach(x => { x.Dispose(); });
-
             TimeSpan postwait = TimeSpan.Zero;
             if (PostWait!=null) { postwait = PostWait.Get(context); }
             if(postwait != TimeSpan.Zero)
             {
                 System.Threading.Thread.Sleep(postwait);
+                // FlaUI.Core.Input.Wait.UntilInputIsProcessed();
             }
-            
+
         }
     }
     class SelectNewEmailOptionsEditor : CustomSelectEditor

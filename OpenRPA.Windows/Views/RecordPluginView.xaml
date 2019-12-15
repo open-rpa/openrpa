@@ -4,40 +4,41 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpenRPA.Windows.Views"
+             xmlns:or="clr-namespace:OpenRPA.Windows.Resources"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,10,0,0" Text="Allow child searching:" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,10,0,0" Text="{x:Static or:strings.plugin_allow_child_searching}" VerticalAlignment="Top" Width="110" />
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,10,0,0" VerticalAlignment="Top" Width="222" x:Name="allow_child_searching" 
             Checked="allow_child_searching_IsEnabledChanged" Unchecked="allow_child_searching_IsEnabledChanged" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,10,0,0" Text="If an element in a selector is not found, automaticly search all children for match" VerticalAlignment="Top" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,10,0,0" Text="{x:Static or:strings.plugin_allow_child_searching_help}" VerticalAlignment="Top" />
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,30,0,0" Text="allow multiple hits:" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,30,0,0" Text="{x:Static or:strings.plugin_allow_multiple_hits}" VerticalAlignment="Top" Width="110" />
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,30,0,0" VerticalAlignment="Top" Width="222" x:Name="allow_multiple_hits_mid_selector" 
             Checked="allow_multiple_hits_mid_selector_IsEnabledChanged" Unchecked="allow_multiple_hits_mid_selector_IsEnabledChanged" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,30,0,0" Text="Allow an element selector in a selector to find more than one child" VerticalAlignment="Top" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,30,0,0" Text="{x:Static or:strings.plugin_allow_multiple_hits_help}" VerticalAlignment="Top" />
 
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,50,0,0" Text="enum properties:" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,50,0,0" Text="{x:Static or:strings.plugin_enum_properties}" VerticalAlignment="Top" Width="110" />
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,50,0,0" VerticalAlignment="Top" Width="222" x:Name="enum_properties" 
             Checked="enum_properties_IsEnabledChanged" Unchecked="enum_properties_IsEnabledChanged"  />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,50,0,0" Text="Test each selector element for the minimum required amount of properties needed" VerticalAlignment="Top" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,50,0,0" Text="{x:Static or:strings.plugin_enum_properties_help}" VerticalAlignment="Top" />
 
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,70,0,0" Text="Use different thread:" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,70,0,0" Text="{x:Static or:strings.plugin_get_elements_in_different_thread}" VerticalAlignment="Top" Width="110" />
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,70,0,0" VerticalAlignment="Top" Width="222" x:Name="get_elements_in_different_thread" 
             Checked="get_elements_in_different_thread_IsEnabledChanged"  Unchecked="get_elements_in_different_thread_IsEnabledChanged" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,70,0,0" Text="GetElement uses another thread while searching, to avoid locks if selector finds robot" VerticalAlignment="Top" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,70,0,0" Text="{x:Static or:strings.plugin_get_elements_in_different_thread_help}" VerticalAlignment="Top" />
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,90,0,0" Text="traverse selector:" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,90,0,0" Text="{x:Static or:strings.plugin_traverse_selector_both_ways}" VerticalAlignment="Top" Width="110" />
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,90,0,0" VerticalAlignment="Top" Width="222" x:Name="traverse_selector_both_ways" 
             Checked="traverse_selector_both_ways_IsEnabledChanged"  Unchecked="traverse_selector_both_ways_IsEnabledChanged" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,90,0,0" Text="Traverse UI tree both ways to filter out ghost selector elements" VerticalAlignment="Top" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,90,0,0" Text="{x:Static or:strings.plugin_traverse_selector_both_ways_help}" VerticalAlignment="Top" />
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,120,0,0" Text="search descendants:" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,120,0,0" Text="{x:Static or:strings.plugin_search_descendants}" VerticalAlignment="Top" Width="110" />
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,120,0,0" VerticalAlignment="Top" Width="222" x:Name="search_descendants" 
             Checked="search_descendants_Checked"  Unchecked="search_descendants_Checked" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,120,0,0" Text="Search all descendants, use for more simple selectors" VerticalAlignment="Top" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,120,0,0" Text="{x:Static or:strings.plugin_search_descendants_help}" VerticalAlignment="Top" />
 
     </Grid>
 </UserControl>

@@ -17,12 +17,12 @@ namespace OpenRPA.IE
             {
                 if(IEElement!=null)
                 {
-                    switch (IEElement.tagName)
+                    switch (IEElement.TagName)
                     {
                         case "input":
-                            if (IEElement.type == "hidden") return ControlType.Text;
-                            if (IEElement.type == "text" || IEElement.type == "password") return ControlType.Edit;
-                            if (IEElement.type == "button" || IEElement.type == "submit") return ControlType.Button;
+                            if (IEElement.Type == "hidden") return ControlType.Text;
+                            if (IEElement.Type == "text" || IEElement.Type == "password") return ControlType.Edit;
+                            if (IEElement.Type == "button" || IEElement.Type == "submit") return ControlType.Button;
                             break;
                         case "textarea":
                             return ControlType.Text;
@@ -67,10 +67,10 @@ namespace OpenRPA.IE
 
         public override void AddSubElements()
         {
-            MSHTML.IHTMLElementCollection children = IEElement.RawElement.children;
+            MSHTML.IHTMLElementCollection children = (MSHTML.IHTMLElementCollection)IEElement.RawElement.children;
             foreach (MSHTML.IHTMLElement elementNode in children) {
                 var ele = new IEElement(IEElement.Browser, elementNode);
-                var exists = Children.Where(x => ((IEElement)x.Element).uniqueID == ele.uniqueID).FirstOrDefault();
+                var exists = Children.Where(x => ((IEElement)x.Element).UniqueID == ele.UniqueID).FirstOrDefault();
                 if(exists==null)
                 {
                     Interfaces.Log.Debug("Adding " + ele.ToString());
@@ -79,7 +79,7 @@ namespace OpenRPA.IE
             }
             int frameoffsetx = 0;
             int frameoffsety = 0;
-            if (IESelector.frameTags.Contains(IEElement.tagName.ToUpper()))
+            if (IESelector.frameTags.Contains(IEElement.TagName.ToUpper()))
             {
                 frameoffsetx += IEElement.RawElement.offsetLeft;
                 frameoffsety += IEElement.RawElement.offsetTop;

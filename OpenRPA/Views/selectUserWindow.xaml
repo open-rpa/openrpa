@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:input="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
              xmlns:local="clr-namespace:OpenRPA.Views"
+             xmlns:or="clr-namespace:OpenRPA.Resources"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="600" Height="100" Width="600" Loaded="Window_Loaded">
     <Grid>
@@ -35,6 +36,7 @@
                 </DataTemplate>
             </input:AutoCompleteBox.ItemTemplate>
         </input:AutoCompleteBox>
-        <Button x:Name="okButton" Grid.Row="1" Width="40" HorizontalAlignment="Left"  Margin="5,5,0,5" Click="Button_Click">OK</Button>
+        <Button x:Name="okButton" Grid.Row="1" Width="40" HorizontalAlignment="Left"  Margin="5,5,0,5" Click="Button_Click">
+            <TextBlock Text="{x:Static or:strings.button_ok}"></TextBlock></Button>
     </Grid>
 </Window>

@@ -31,7 +31,7 @@ namespace OpenRPA.Image
         public BitmapFrame HighlightImage { get; set; }
         private async void btn_Select(object sender, RoutedEventArgs e)
         {
-            Interfaces.GenericTools.minimize(Interfaces.GenericTools.mainWindow);
+            Interfaces.GenericTools.Minimize(Interfaces.GenericTools.MainWindow);
 
             var limit = ModelItem.GetValue<Rectangle>("Limit");
             Rectangle rect = Rectangle.Empty;
@@ -58,7 +58,7 @@ namespace OpenRPA.Image
                 if(!limit.Contains(rect))
                 {
                     Log.Error(rect.ToString() + " is not within process limit of " + limit.ToString());
-                    Interfaces.GenericTools.restore();
+                    Interfaces.GenericTools.Restore();
                     return;
                 }
             }
@@ -75,32 +75,29 @@ namespace OpenRPA.Image
                 var Processname = p.ProcessName;
                 ModelItem.Properties["Processname"].SetValue(new System.Activities.InArgument<string>(Processname));
             }
-            Interfaces.GenericTools.restore();
+            Interfaces.GenericTools.Restore();
 
         }
         private void Highlight_Click(object sender, RoutedEventArgs e)
         {
-            var Image = ModelItem.GetValue<string>("Image");
-            var stream = new System.IO.MemoryStream(Convert.FromBase64String(Image));
-            var b = new System.Drawing.Bitmap(stream);
-            var Threshold = ModelItem.GetValue<double>("Threshold");
-            var CompareGray = ModelItem.GetValue<bool>("CompareGray");
-            var Processname = ModelItem.GetValue<string>("Processname");
-            var limit = ModelItem.GetValue<Rectangle>("Limit");
-            if (Threshold < 0.5) Threshold = 0.8;
-
-            var matches = ImageEvent.waitFor(b, Threshold, Processname, TimeSpan.FromMilliseconds(100), CompareGray, limit);
-
-            if (stream != null) stream.Dispose();
-            stream = null;
-            b.Dispose();
-            b = null;
-
-            foreach (var r in matches)
+            var image = ImageString;
+            Bitmap b = Task.Run(() => {
+                return Interfaces.Image.Util.LoadBitmap(image);
+            }).Result;
+            using (b)
             {
-                var element = new ImageElement(r);
-                element.Highlight(false, System.Drawing.Color.PaleGreen, TimeSpan.FromSeconds(1));
+                var Threshold = ModelItem.GetValue<double>("Threshold");
+                var CompareGray = ModelItem.GetValue<bool>("CompareGray");
+                var Processname = ModelItem.GetValue<string>("Processname");
+                var limit = ModelItem.GetValue<Rectangle>("Limit");
+                if (Threshold < 0.5) Threshold = 0.8;
+                var matches = ImageEvent.waitFor(b, Threshold, Processname, TimeSpan.FromMilliseconds(100), CompareGray, limit);
+                foreach (var r in matches)
+                {
+                    var element = new ImageElement(r);
+                    element.Highlight(false, System.Drawing.Color.PaleGreen, TimeSpan.FromSeconds(1));
 
+                }
             }
         }
         private async void ProcessLimit_Click(object sender, RoutedEventArgs e)
@@ -133,12 +130,12 @@ namespace OpenRPA.Image
                 }
             }
 
-            Interfaces.GenericTools.minimize(Interfaces.GenericTools.mainWindow);
+            Interfaces.GenericTools.Minimize(Interfaces.GenericTools.MainWindow);
             var rect = await getrectangle.GetitAsync();
 
             var limit = new System.Drawing.Rectangle(rect.X - (int)windowrect.X, rect.Y - (int)windowrect.Y, rect.Width, rect.Height);
             ModelItem.Properties["Limit"].SetValue(new System.Activities.InArgument<System.Drawing.Rectangle>(limit));
-            Interfaces.GenericTools.restore();
+            Interfaces.GenericTools.Restore();
             NotifyPropertyChanged("Limit");
 
         }

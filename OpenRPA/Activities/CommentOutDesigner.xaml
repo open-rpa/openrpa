@@ -5,6 +5,7 @@
     xmlns:sad="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation" 
+    xmlns:or="clr-namespace:OpenRPA.Resources"
     >
 
     <sap:ActivityDesigner.Icon>
@@ -23,35 +24,36 @@
     </sap:ActivityDesigner.Icon>
 
 
-    <sad:ActivityDesigner.Resources>
-        <ResourceDictionary x:Uid="ResourceDictionary_1">
-            <DataTemplate x:Uid="DataTemplate_1" x:Key="ExpandedCommentOutTemplate">
-                <Border x:Uid="Border_1" BorderThickness ="1">
-                    <sad:WorkflowItemPresenter
-                        x:Uid="sad:WorkflowItemPresenter_1"
-                        AutomationProperties.AutomationId="Body"
-                        Item="{Binding Path=ModelItem.Body, Mode=TwoWay}"
-                        AllowedItemType="{x:Type sa:Activity}"
-                        HintText="Drop activity here"
+
+
+    <sap:ActivityDesigner.Resources>
+        <DataTemplate x:Key="Collapsed">
+            <Label Padding="0,0,0,0" FontStyle="Italic" Foreground="{x:Static SystemColors.GrayTextBrush}" HorizontalAlignment="Center"
+                       VerticalAlignment="Center" Content="{x:Static or:strings.activity_click_to_view}"></Label>
+        </DataTemplate>
+        <DataTemplate x:Key="Expanded">
+            <StackPanel>
+                <sad:WorkflowItemPresenter AutomationProperties.AutomationId="Body" 
+                                           Item="{Binding Path=ModelItem.Body, Mode=TwoWay}"
+                                           AllowedItemType="{x:Type sa:Activity}"
+                                           HintText="{x:Static or:strings.activity_drop_hint}"
                          />
-                </Border>
-            </DataTemplate>
-            <DataTemplate x:Uid="DataTemplate_6" x:Key="CollapsedActivityViewTemplate">
-                <Label x:Uid="TextBlock_6" Padding="0,0,0,0" FontStyle="Italic"
-                       Foreground="{x:Static SystemColors.GrayTextBrush}" HorizontalAlignment="Center"
-                       VerticalAlignment="Center">Double-click to view</Label>
-            </DataTemplate>
-            <Style x:Uid="Style_1" x:Key="CommentOutStyle" TargetType="{x:Type ContentPresenter}">
-                <Setter x:Uid="Setter_1" Property="ContentTemplate" Value="{DynamicResource CollapsedActivityViewTemplate}" />
-                <Style.Triggers>
-                    <DataTrigger x:Uid="DataTrigger_1" Binding="{Binding Path=ShowExpanded}" Value="true">
-                        <Setter x:Uid="Setter_2" Property="ContentTemplate" Value="{DynamicResource ExpandedCommentOutTemplate}" />
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </ResourceDictionary>
-    </sad:ActivityDesigner.Resources>
-    <ContentPresenter x:Uid="ContentPresenter_1" Style="{DynamicResource CommentOutStyle}" Content="{Binding}" />
+            </StackPanel>
+        </DataTemplate>
+        <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
+            <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="false">
+                    <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </sap:ActivityDesigner.Resources>
+    <Grid>
+        <ContentPresenter Style="{DynamicResource ExpandOrCollapsedStyle}" Content="{Binding}" />
+    </Grid>
+    
+    
 
     
 </sap:ActivityDesigner>

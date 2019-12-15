@@ -5,6 +5,7 @@
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
     xmlns:sapc="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
+    xmlns:or="clr-namespace:OpenRPA.Resources"
     >
 
     <sap:ActivityDesigner.Icon>
@@ -24,9 +25,8 @@
 
     <sap:ActivityDesigner.Resources>
         <DataTemplate x:Key="Collapsed">
-            <StackPanel>
-                <!-- <TextBlock>This is the collapsed view</TextBlock>-->
-            </StackPanel>
+            <Label Padding="0,0,0,0" FontStyle="Italic" Foreground="{x:Static SystemColors.GrayTextBrush}" HorizontalAlignment="Center"
+                       VerticalAlignment="Center" Content="{x:Static or:strings.activity_click_to_view}"></Label>
         </DataTemplate>
         <DataTemplate x:Key="Expanded">
             <StackPanel>

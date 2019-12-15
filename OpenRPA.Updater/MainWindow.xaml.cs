@@ -163,12 +163,12 @@ namespace OpenRPA.Updater
                     if (exists == null)
                     {
                         PackageModel m = new PackageModel() { Package = p, canUpgrade = false, isDownloaded = false };
-                        m.LocalPackage = OpenRPAPackageManager.Instance.getLocal(p.Identity.Id);
+                        m.LocalPackage = OpenRPAPackageManager.Instance.GetLocal(p.Identity.Id);
                         result.Add(m);
                     }
                     else
                     {
-                        exists.LocalPackage = OpenRPAPackageManager.Instance.getLocal(p.Identity.Id);
+                        exists.LocalPackage = OpenRPAPackageManager.Instance.GetLocal(p.Identity.Id);
                     }
                 }
                 foreach (var m in result)

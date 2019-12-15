@@ -200,19 +200,17 @@ namespace OpenRPA
                 }
                 if (!VirtualClick)
                 {
-                    //Log.Debug("MouseMove to " + Rectangle.X + "," + Rectangle.Y + " and click");
-                    //Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-                    //Input.InputDriver.DoMouseClick();
-                    //Log.Debug("Click done");
-                    var point = new FlaUI.Core.Shapes.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
-                    if(AnimateMouse) FlaUI.Core.Input.Mouse.MoveTo(point);
-                    FlaUI.Core.Input.MouseButton flabuttun = FlaUI.Core.Input.MouseButton.Left;
-                    if (Button == Input.MouseButton.Middle) flabuttun = FlaUI.Core.Input.MouseButton.Middle;
-                    if (Button == Input.MouseButton.Right) flabuttun = FlaUI.Core.Input.MouseButton.Right;
-                    if (!DoubleClick) FlaUI.Core.Input.Mouse.Click(flabuttun, point);
-                    if (DoubleClick) FlaUI.Core.Input.Mouse.DoubleClick(flabuttun, point);
+                    if (AnimateMouse)
+                    {
+                        FlaUI.Core.Input.Mouse.MoveTo(new System.Drawing.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY));
+                    }
+                    else
+                    {
+                        NativeMethods.SetCursorPos(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+                    }
+                    Input.InputDriver.Click(Button);
+                    if (DoubleClick) Input.InputDriver.Click(Button);
                 }
-                FlaUI.Core.Input.Wait.UntilInputIsProcessed();
             }
             catch (Exception)
             {
@@ -227,6 +225,7 @@ namespace OpenRPA
             }
             return _Highlight(Color, Duration);
         }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         public Task _Highlight(System.Drawing.Color Color, TimeSpan Duration)
         {
             using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow(true))
@@ -344,8 +343,7 @@ namespace OpenRPA
                             key = key.Replace(" up", "");
                         }
                         //Keys specialkey;
-                        FlaUI.Core.WindowsAPI.VirtualKeyShort vk;
-                        Enum.TryParse<FlaUI.Core.WindowsAPI.VirtualKeyShort>(key, true, out vk);
+                        Enum.TryParse<FlaUI.Core.WindowsAPI.VirtualKeyShort>(key, true, out FlaUI.Core.WindowsAPI.VirtualKeyShort vk);
                         if (down)
                         {
                             if (vk > 0)
@@ -419,8 +417,7 @@ namespace OpenRPA
         }
         public override bool Equals(object obj)
         {
-            var e = obj as UIElement;
-            if (e == null) return false;
+            if (!(obj is UIElement e)) return false;
             if (e.ProcessId != ProcessId) return false;
             // if (e.Id != Id) return false;
             if (e.Name != Name) return false;

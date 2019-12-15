@@ -44,9 +44,6 @@ namespace OpenRPA.Views
                 vm.Source.Add(ace);
             }
         }
-        private void listDetectors_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-        }
         private void cmdNew(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
         {
             try

@@ -4,22 +4,23 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpenRPA.AviRecorder.Views"
+             xmlns:or="clr-namespace:OpenRPA.AviRecorder.Resources"
              mc:Ignorable="d" Unloaded="UserControl_Unloaded"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,20,0,0" Text="Enabled:" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,20,0,0" Text="{x:Static or:strings.plugin_enabled}" VerticalAlignment="Top" Width="110" />
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="183,20,0,0" IsChecked="{Binding Path=addonEnabled}" VerticalAlignment="Top" Width="222" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,48,0,0" Text="Keep successful" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,48,0,0" Text="{x:Static or:strings.plugin_keep_successful}" VerticalAlignment="Top" Width="110" />
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="183,48,0,0" IsChecked="{Binding keepsuccessful}" VerticalAlignment="Top" Width="222" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,71,0,0" Text="Save in folder:" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,71,0,0" Text="{x:Static or:strings.plugin_save_in_folder}" VerticalAlignment="Top" Width="110" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="183,71,0,0" Text="{Binding folder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,101,0,0" Text="codec:" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,101,0,0" Text="{x:Static or:strings.plugin_codec}" VerticalAlignment="Top" Width="110" />
         <ComboBox Height="23" HorizontalAlignment="Left" Margin="183,101,0,0" Text="{Binding codec, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" >
             <ComboBoxItem>uncompressed</ComboBoxItem>
             <ComboBoxItem>motionjpeg</ComboBoxItem>
         </ComboBox>
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,131,0,0" Text="quality:" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,131,0,0" Text="{x:Static or:strings.plugin_quality}" VerticalAlignment="Top" Width="110" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="183,131,0,0" Text="{Binding quality, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
 
     </Grid>

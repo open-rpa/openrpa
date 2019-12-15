@@ -4,7 +4,8 @@
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
-                      Loaded="ActivityDesigner_Loaded"
+    xmlns:or="clr-namespace:OpenRPA.Resources"
+    Loaded="ActivityDesigner_Loaded"
     >
 
 
@@ -25,8 +26,8 @@
 
     <sap:ActivityDesigner.Resources>
         <DataTemplate x:Key="Collapsed">
-            <StackPanel>
-            </StackPanel>
+            <Label Padding="0,0,0,0" FontStyle="Italic" Foreground="{x:Static SystemColors.GrayTextBrush}" HorizontalAlignment="Center"
+                       VerticalAlignment="Center" Content="{x:Static or:strings.activity_click_to_view}"></Label>
         </DataTemplate>
         <DataTemplate x:Key="Expanded">
             <StackPanel>
@@ -44,14 +45,14 @@
                 SelectedValue="{Binding Path=ModelItem.workflow, Mode=TwoWay}"
                 >
                 </ComboBox>
-                <Button Click="Button_Click">Add variables</Button>
+                <Button Click="Button_Click" Content="{x:Static or:strings.activity_add_variables}"></Button>
             </StackPanel>
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
-            <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>
+            <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="true">
-                    <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
+                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="false">
+                    <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>

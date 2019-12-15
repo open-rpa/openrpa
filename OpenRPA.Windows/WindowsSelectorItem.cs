@@ -68,16 +68,16 @@ namespace OpenRPA.Windows
                 if (element.Properties.ProcessId.IsSupported)
                 {
                     var info = element.GetProcessInfo();
-                    if (info.isImmersiveProcess)
+                    if (info.IsImmersiveProcess)
                     {
-                        Properties.Add(new SelectorItemProperty("isImmersiveProcess", info.isImmersiveProcess.ToString()));
-                        Properties.Add(new SelectorItemProperty("applicationUserModelId", info.applicationUserModelId));
+                        Properties.Add(new SelectorItemProperty("isImmersiveProcess", info.IsImmersiveProcess.ToString()));
+                        Properties.Add(new SelectorItemProperty("applicationUserModelId", info.ApplicationUserModelId));
                     }
                     else
                     {
-                        Properties.Add(new SelectorItemProperty("filename", info.filename));
-                        Properties.Add(new SelectorItemProperty("processname", info.processname));
-                        Properties.Add(new SelectorItemProperty("arguments", info.arguments));
+                        Properties.Add(new SelectorItemProperty("filename", info.Filename));
+                        Properties.Add(new SelectorItemProperty("processname", info.ProcessName));
+                        Properties.Add(new SelectorItemProperty("arguments", info.Arguments));
                     }
                     Properties.Add(new SelectorItemProperty("Selector", "Windows"));
                     Properties.Add(new SelectorItemProperty("SearchDescendants", PluginConfig.search_descendants.ToString()));
@@ -262,12 +262,12 @@ namespace OpenRPA.Windows
         public AutomationElement[] matches(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count, bool isDesktop, TimeSpan timeout, bool search_descendants)
         {
             var matchs = new List<AutomationElement>();
-            var c = GetConditionsWithoutStar();
+            var Conditions = GetConditionsWithoutStar();
             if(isDesktop)
             {
-                if(AppWindowCache.ContainsKey(c.ToString()))
+                if(AppWindowCache.ContainsKey(Conditions.ToString()))
                 {
-                    var _element = AppWindowCache[c.ToString()];
+                    var _element = AppWindowCache[Conditions.ToString()];
                     try
                     {
                         if (_element.Properties.IsOffscreen.IsSupported && !_element.IsOffscreen)
@@ -281,8 +281,8 @@ namespace OpenRPA.Windows
                     }
                     catch (Exception)
                     {
-                        Log.SelectorVerbose("matches::FindAllChildren: Removing from AppWindowCache " + c.ToString());
-                        AppWindowCache.Remove(c.ToString());
+                        Log.SelectorVerbose("matches::FindAllChildren: Removing from AppWindowCache " + Conditions.ToString());
+                        AppWindowCache.Remove(Conditions.ToString());
                     }
                 }
             }
@@ -358,15 +358,15 @@ namespace OpenRPA.Windows
 
             if(search_descendants)
             {
-                Log.Selector("AutomationElement.matches: Searching for " + c.ToString());
+                Log.Selector("AutomationElement.matches: Searching for " + Conditions.ToString());
                 AutomationElement[] elements = null;
                 if (isDesktop)
                 {
-                    elements = element.FindAllChildren(c);
+                    elements = element.FindAllChildren(Conditions);
                 }
                 else
                 {
-                    elements = element.FindAllDescendants(c);
+                    elements = element.FindAllDescendants(Conditions);
                 }
                 Log.Selector(string.Format("AutomationElement.matches::found " + elements.Count() + " elements {0:mm\\:ss\\.fff}", sw.Elapsed));
                 // var elements = element.FindAllChildren();
@@ -382,18 +382,27 @@ namespace OpenRPA.Windows
                 System.Threading.ManualResetEvent syncEvent = new System.Threading.ManualResetEvent(false);
                 Action action = () =>
                 {
-                    var nodes = new List<AutomationElement>();
-                    Log.Selector(string.Format("AutomationElement.matches.isDesktop(" + isDesktop + ")::GetFirstChild {0:mm\\:ss\\.fff}", sw.Elapsed));
-                    var elementNode = _treeWalker.GetFirstChild(element);
-                    var i = 0;
-                    while (elementNode != null)
+                    var manualcheck = Properties.Where(x => x.Enabled == true && x.Value != null && (x.Name == "IndexInParent" || x.Value.Contains("*"))).Count();
+                    if(manualcheck > 0)
                     {
-                        nodes.Add(elementNode);
-                        i++;
-                        if (Match(elementNode)) matchs.Add(elementNode);
-                        if (matchs.Count >= count) break;
-                        Log.Selector(string.Format("AutomationElement.matches.isDesktop(" + isDesktop + ")::GetNextSibling {0:mm\\:ss\\.fff}", sw.Elapsed));
-                        elementNode = _treeWalker.GetNextSibling(elementNode);
+                        var nodes = new List<AutomationElement>();
+                        Log.Selector(string.Format("AutomationElement.matches.isDesktop(" + isDesktop + ")::GetFirstChild {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        var elementNode = _treeWalker.GetFirstChild(element);
+                        var i = 0;
+                        while (elementNode != null)
+                        {
+                            nodes.Add(elementNode);
+                            i++;
+                            if (Match(elementNode)) matchs.Add(elementNode);
+                            if (matchs.Count >= count) break;
+                            Log.Selector(string.Format("AutomationElement.matches.isDesktop(" + isDesktop + ")::GetNextSibling {0:mm\\:ss\\.fff}", sw.Elapsed));
+                            elementNode = _treeWalker.GetNextSibling(elementNode);
+                        }
+                    } 
+                    else
+                    {
+                        var elements = element.FindAllChildren(Conditions);
+                        foreach (var elementNode in elements) matchs.Add(elementNode);
                     }
                     if (syncEvent != null)
                     {
@@ -421,12 +430,12 @@ namespace OpenRPA.Windows
             {
                 if (matchs[0].Properties.IsOffscreen.IsSupported)
                 {
-                    if(!AppWindowCache.ContainsKey(c.ToString()))
+                    if(!AppWindowCache.ContainsKey(Conditions.ToString()))
                     {
-                        AppWindowCache.Add(c.ToString(), matchs[0]);
+                        AppWindowCache.Add(Conditions.ToString(), matchs[0]);
                     } else
                     {
-                        AppWindowCache[c.ToString()] = matchs[0];
+                        AppWindowCache[Conditions.ToString()] = matchs[0];
                     }
                     
                 }

@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.55</Version>
-    <PackageReleaseNotes>1.0.55 Add a few more activites and begin implementering languages support
+    <Version>1.0.56</Version>
+    <PackageReleaseNotes>1.0.56 Add langauges and bug fixes
+1.0.55 Add a few more activites and begin implementering languages support
 1.0.52 Fix InvokeRemoteOpenRPA
 1.0.51 Add InvokeRemoteOpenRPA
 1.0.50 Fix showing error location when not visual tracking
@@ -73,13 +74,12 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
-    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.6.0" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="NuGet.Common" Version="5.3.1" />
-    <PackageReference Include="NuGet.Packaging" Version="5.3.1" />
-    <PackageReference Include="NuGet.Protocol" Version="5.3.1" />
-    <PackageReference Include="NuGet.Resolver" Version="5.3.1" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="NuGet.Common" Version="5.4.0" />
+    <PackageReference Include="NuGet.Packaging" Version="5.4.0" />
+    <PackageReference Include="NuGet.Protocol" Version="5.4.0" />
+    <PackageReference Include="NuGet.Resolver" Version="5.4.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\ClickElementDesigner.xaml" />
@@ -284,20 +284,16 @@
     <None Remove="Resources\toolbox\workflow.png" />
     <None Remove="Resources\toolbox\writeexcel.png" />
     <None Remove="Resources\toolbox\writefile.png" />
-    <None Remove="Views\AvalonDockView.xaml" />
     <None Remove="Views\CloseableHeader.xaml" />
     <None Remove="Views\DetectorsView.xaml" />
     <None Remove="Views\EditXAML.xaml" />
     <None Remove="Views\InsertSelect.xaml" />
     <None Remove="Views\InsertText.xaml" />
     <None Remove="Views\KeyboardSeqWindow.xaml" />
-    <None Remove="Views\LoginWindow.xaml" />
     <None Remove="Views\OpenProject.xaml" />
     <None Remove="Views\PermissionsWindow.xaml" />
     <None Remove="Views\RecorderPlugins.xaml" />
-    <None Remove="Views\RegistrationWindow.xaml" />
     <None Remove="Views\RunPlugins.xaml" />
-    <None Remove="Views\SampleDockWindowView.xaml" />
     <None Remove="Views\selectUserWindow.xaml" />
     <None Remove="Views\showVariables.xaml" />
     <None Remove="Views\SigninWindow.xaml" />
@@ -439,9 +435,6 @@
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\AvalonDockView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\CloseableHeader.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -457,19 +450,10 @@
     <Page Include="Views\KeyboardSeqWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\LoginWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\OpenProject.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PermissionsWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\RegistrationWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SampleDockWindowView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\selectUserWindow.xaml">
@@ -634,7 +618,7 @@
     <Resource Include="Resources\state\unloaded.png" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="strings.Designer.cs">
+    <Compile Update="Resources\strings.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>strings.resx</DependentUpon>
@@ -644,21 +628,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="strings.da.resx">
+    <EmbeddedResource Update="Resources\strings.da.resx">
       <Generator></Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="strings.resx">
+    <EmbeddedResource Update="Resources\strings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="RunOpenRPA.bat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="unblock.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />

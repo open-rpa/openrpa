@@ -7,6 +7,7 @@
     xmlns:sapc="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
     xmlns:s="clr-namespace:System;assembly=mscorlib"
+    xmlns:or="clr-namespace:OpenRPA.Forms.Resources"
                       >
 
 
@@ -36,8 +37,8 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <StackPanel>
-            <Button Content="Open designer" Click="Button_Click" />
-            <Button Content="Create variables" Click="Button_Click_1" />
+            <Button Content="{x:Static or:strings.activity_invokeform_open}" Click="Button_Click" />
+            <Button Content="{x:Static or:strings.activity_invokeform_create_var}" Click="Button_Click_1" />
 
         </StackPanel>
     </Grid>

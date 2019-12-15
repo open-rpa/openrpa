@@ -17,6 +17,10 @@ namespace OpenRPA.RDServicePlugin
         public string Name => "rdservice";
         // public System.Windows.Controls.UserControl editor => null;
         public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged(String propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
         private IOpenRPAClient client = null;
         private Views.RunPluginView view;
         public UserControl editor
@@ -85,9 +89,10 @@ namespace OpenRPA.RDServicePlugin
             var path = asm.CodeBase.Replace("file:///", "");
             pipe.PushMessage(new RPAMessage("hello", NativeMethods.GetProcessUserName(), global.webSocketClient.user, path));
         }
-        public void reloadConfig()
+        public void ReloadConfig()
         {
             pipe.PushMessage(new RPAMessage("reloadconfig"));
+            NotifyPropertyChanged("editor");
         }
         public void onWorkflowAborted(ref IWorkflowInstance e)
         {

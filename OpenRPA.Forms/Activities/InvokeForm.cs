@@ -57,7 +57,7 @@ namespace OpenRPA.Forms.Activities
 
             Exception LastError = null;
             // var res = await GenericTools.mainWindow.Dispatcher.InvokeAsync<FormResult>(() =>
-            var res = GenericTools.mainWindow.Dispatcher.Invoke<FormResult>(() =>
+            var res = GenericTools.MainWindow.Dispatcher.Invoke<FormResult>(() =>
             {
                 var f = new Form(xmlString);
                 f.defaults = param;

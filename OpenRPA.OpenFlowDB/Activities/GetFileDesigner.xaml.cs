@@ -34,7 +34,7 @@ namespace OpenRPA.OpenFlowDB
             ModelItem.Properties["LocalPath"].SetValue(
                 new System.Activities.InArgument<string>()
                 {
-                    Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<string>("\"" + openFileDialog1.SelectedPath.replaceEnvironmentVariable() + "\"")
+                    Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<string>("\"" + openFileDialog1.SelectedPath.ReplaceEnvironmentVariable() + "\"")
                 });
 
         }

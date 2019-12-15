@@ -15,15 +15,25 @@ namespace OpenRPA.Office
     {
         public string Name => "Office";
         public string Status => "";
-        public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
-        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove;
+        public event Action<IRecordPlugin, IRecordEvent> OnUserAction
+        {
+            add { }
+            remove { }
+        }
+        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove
+        {
+            add { }
+            remove { }
+        }
         public System.Windows.Controls.UserControl editor => null;
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
             return new IElement[] { };
         }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         public static treeelement[] _GetRootElements(Selector anchor)
         {
+            if(anchor!=null) return new treeelement[] { };
             return new treeelement[] { };
         }
         public treeelement[] GetRootElements(Selector anchor)
@@ -47,7 +57,7 @@ namespace OpenRPA.Office
         {
             return false;
         }
-        public bool parseUserAction(ref IRecordEvent e)
+        public bool ParseUserAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) return false;
             if (e.UIElement.ProcessId < 1) return false;
@@ -62,7 +72,7 @@ namespace OpenRPA.Office
 
                 var a = new Activities.ReadCell<string> { DisplayName = e.UIElement.Name.Replace("\"", "").Replace(" ", "") };
                 a.Cell = e.UIElement.Name.Replace("\"", "").Replace(" ", "");
-                a.Filename = workbook.FullName.replaceEnvironmentVariable();
+                a.Filename = workbook.FullName.ReplaceEnvironmentVariable();
                 e.a = new GetElementResult(a);
                 e.SupportInput = true;
                 e.SupportSelect = false;
@@ -82,7 +92,7 @@ namespace OpenRPA.Office
         public void Stop()
         {
         }
-        public bool parseMouseMoveAction(ref IRecordEvent e)
+        public bool ParseMouseMoveAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) return false;
             if (e.UIElement.ProcessId < 1) return false;
@@ -109,10 +119,8 @@ namespace OpenRPA.Office
                 {
                     var old = Activity as Activities.ReadCell<string>;
 
-                    double d;
-                    var isDouble = double.TryParse(value, out d);
-                    int i;
-                    var isInt = int.TryParse(value, out i);
+                    var isDouble = double.TryParse(value, out double d);
+                    var isInt = int.TryParse(value, out int i);
                     if (isInt)
                     {
                         var a = new Activities.WriteCell<int> { DisplayName = old.DisplayName };

@@ -460,7 +460,7 @@ namespace OpenRPA.Views
         }
         public void Parseparameters()
         {
-            Workflow.Serializable = true;
+            // Workflow.Serializable = true;
             Workflow.Parameters.Clear();
             if (!string.IsNullOrEmpty(Workflow.Xaml))
             {
@@ -645,6 +645,40 @@ namespace OpenRPA.Views
             }
 
             Microsoft.VisualBasic.Activities.VisualBasic.SetSettings(rootObject, vbsettings);
+        }
+        public bool IsSequenceSelected
+        {
+            get
+            {
+                var lastSequence = GetSequence(SelectedActivity);
+                if (lastSequence != null) return true;
+                return false;
+            }
+        }
+        List<Activity> recording = null;
+        public void BeginRecording()
+        {
+            recording = new List<Activity>();
+        }
+        public ModelItem AddRecordingActivity(Activity a)
+        {
+            if (Config.local.recording_add_to_designer) return AddActivity(a);
+            if (recording == null) BeginRecording();
+            recording.Add(a);
+            return null;
+        }
+        public void EndRecording()
+        {
+            if (recording == null) return;
+            foreach (var a in recording)
+            {
+                var model = AddActivity(a);
+                if (a is Activities.TypeText)
+                {
+                    ((Activities.TypeText)a).UpdateModel(model);
+                }
+            }
+            recording = null;
         }
         public ModelItem AddActivity(Activity a)
         {
@@ -919,6 +953,7 @@ namespace OpenRPA.Views
         }
         public void InitializeStateEnvironment()
         {
+            Log.Debug("InitializeStateEnvironment");
             GenericTools.RunUI(() =>
             {
                 try
@@ -996,6 +1031,11 @@ namespace OpenRPA.Views
                 //location = _sourceLocationMapping[ActivityId];
                 //BreakPointhit = wfDesigner.DebugManagerView.GetBreakpointLocations().ContainsKey(location);
 
+                if (_sourceLocationMapping.ContainsKey(ChildActivityId) || _sourceLocationMapping.ContainsKey(ActivityId))
+                {
+                    InitializeStateEnvironment();
+                }
+
                 InitializeStateEnvironment();
                 if (!_sourceLocationMapping.ContainsKey(ChildActivityId)) return;
                 location = _sourceLocationMapping[ChildActivityId];
@@ -1010,7 +1050,7 @@ namespace OpenRPA.Views
                 {
                     GenericTools.RunUI(() =>
                     {
-                        GenericTools.restore();
+                        GenericTools.Restore();
                         NavigateTo(model);
                         SetDebugLocation(location);
 
@@ -1022,7 +1062,7 @@ namespace OpenRPA.Views
                     {
                         BreakPointhit = true;
                         ShowVariables(Instance.Variables);
-                        GenericTools.restore();
+                        GenericTools.Restore();
                         ResumeRuntimeFromHost.WaitOne();
                     }
                     ResumeRuntimeFromHost = null;
@@ -1051,7 +1091,7 @@ namespace OpenRPA.Views
             }
             if (instance.state == "idle" && Singlestep == true)
             {
-                GenericTools.minimize(GenericTools.mainWindow);
+                GenericTools.Minimize(GenericTools.MainWindow);
                 //GenericTools.RunUI(() =>
                 //{
                 //    SetDebugLocation(null);
@@ -1070,7 +1110,7 @@ namespace OpenRPA.Views
             {
                 GenericTools.RunUI(() =>
                 {
-                    GenericTools.restore(GenericTools.mainWindow);
+                    GenericTools.Restore(GenericTools.MainWindow);
                 });
             }
 
@@ -1170,7 +1210,7 @@ namespace OpenRPA.Views
             {
                 Singlestep = false;
                 BreakPointhit = false;
-                if (!VisualTracking && Config.local.minimize) GenericTools.minimize(GenericTools.mainWindow);
+                if (!VisualTracking && Config.local.minimize) GenericTools.Minimize(GenericTools.MainWindow);
                 if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
                 return;
             }
@@ -1234,7 +1274,7 @@ namespace OpenRPA.Views
                 }
             }
             ReadOnly = true;
-            if (!VisualTracking && Config.local.minimize) GenericTools.minimize(GenericTools.mainWindow);
+            if (!VisualTracking && Config.local.minimize) GenericTools.Minimize(GenericTools.MainWindow);
             instance.Run();
         }
         private void ShowVariables(IDictionary<string, WorkflowInstanceValueType> Variables)

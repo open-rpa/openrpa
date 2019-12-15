@@ -17,6 +17,7 @@ namespace OpenRPA
         public DispatcherTimer _timer;
         public Workflow()
         {
+            Serializable = true;
             _timer = new DispatcherTimer(DispatcherPriority.Render);
             _timer.Interval = TimeSpan.FromSeconds(1);
             _timer.Tick += (sender, args) =>

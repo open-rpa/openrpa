@@ -4,6 +4,7 @@
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
+    xmlns:or="clr-namespace:OpenRPA.Windows.Resources"
     >
 
 
@@ -33,24 +34,24 @@
         <DataTemplate x:Key="Expanded">
             <StackPanel>
                 <!-- <Button Content="Select element" /> -->
-                <Button Content="Open Selector" Click="Open_Selector" />
+                <Button Content="{x:Static or:strings.getelement_open_selector}" Click="Open_Selector" />
                 <Button Click="Highlight_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{Binding HighlightImage}" Height="16" Width="16" />
-                        <TextBlock>Highlight</TextBlock>
+                        <TextBlock Text="{x:Static or:strings.getelement_highlight}"></TextBlock>
                     </StackPanel>
                 </Button>
                 <Image Source="{Binding Image}"></Image>
                 <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
-                                    HintText="Drop activity" AllowedItemType="sa:Activity"
+                                    HintText="{x:Static or:strings.getelement_drop_hint}" AllowedItemType="sa:Activity"
                                       Grid.Row="1" />
             </StackPanel>
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
-            <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>
+            <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="true">
-                    <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
+                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="false">
+                    <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>

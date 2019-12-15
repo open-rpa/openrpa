@@ -4,6 +4,9 @@
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
+    xmlns:s="clr-namespace:System;assembly=mscorlib"
+    xmlns:Converters="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
+    xmlns:or="clr-namespace:OpenRPA.AviRecorder.Resources"
     >
 
 
@@ -25,20 +28,24 @@
 
     
     <sap:ActivityDesigner.Resources>
+        <Converters:ArgumentToExpressionConverter x:Key="ArgumentToExpressionConverter" />
         <DataTemplate x:Key="Collapsed">
-            <StackPanel>
-                <Image Source="{Binding Image}"></Image>
-            </StackPanel>
+            <Label Padding="0,0,0,0" FontStyle="Italic" Foreground="{x:Static SystemColors.GrayTextBrush}" HorizontalAlignment="Center"
+                       VerticalAlignment="Center" Content="{x:Static or:strings.activity_click_to_view}"></Label>
         </DataTemplate>
         <DataTemplate x:Key="Expanded">
             <StackPanel>
+                <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_play_hint}" MaxWidth="180" Margin="5" Grid.Column="0"
+                            OwnerActivity="{Binding Path=ModelItem}"
+                            Expression="{Binding Path=ModelItem.Filename, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
+                            ExpressionType="s:String" HorizontalAlignment="Stretch" />
             </StackPanel>
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
-            <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>
+            <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="true">
-                    <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
+                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="false">
+                    <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed }"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>

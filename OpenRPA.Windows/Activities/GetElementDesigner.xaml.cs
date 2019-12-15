@@ -129,9 +129,7 @@ namespace OpenRPA.Windows
         {
             get
             {
-                string result = string.Empty;
-                result = ModelItem.GetValue<string>("Image");
-                return result;
+                return ModelItem.GetValue<string>("Image");
             }
         }
         public BitmapImage Image

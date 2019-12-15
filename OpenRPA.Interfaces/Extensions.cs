@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FlaUI.Core.AutomationElements;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
@@ -57,11 +58,11 @@ namespace OpenRPA.Interfaces
             {
                 if(string.IsNullOrEmpty(_ProjectsDirectory))
                 {
-                    var asm = System.Reflection.Assembly.GetEntryAssembly();
-                    var filepath = asm.CodeBase.Replace("file:///", "");
-                    var path = System.IO.Path.GetDirectoryName(filepath);
-                    // if (path.ToLower().Contains("program")) path = System.IO.Path.Combine(MyDocuments, "OpenRPA");
-                    path = System.IO.Path.Combine(MyDocuments, "OpenRPA");
+                    //var asm = System.Reflection.Assembly.GetEntryAssembly();
+                    //var filepath = asm.CodeBase.Replace("file:///", "");
+                    //var path = System.IO.Path.GetDirectoryName(filepath);
+                    //if (path.ToLower().Contains("program")) path = System.IO.Path.Combine(MyDocuments, "OpenRPA");
+                    var path = System.IO.Path.Combine(MyDocuments, "OpenRPA");
                     if (!System.IO.Directory.Exists(System.IO.Path.Combine(path))) System.IO.Directory.CreateDirectory(path);
                     _ProjectsDirectory = path;
 
@@ -88,12 +89,12 @@ namespace OpenRPA.Interfaces
         {
             get
             {
-                var asm = System.Reflection.Assembly.GetEntryAssembly();
-                var filepath = asm.CodeBase.Replace("file:///", "");
-                var path = System.IO.Path.GetDirectoryName(filepath);
+                //var asm = System.Reflection.Assembly.GetEntryAssembly();
+                //var filepath = asm.CodeBase.Replace("file:///", "");
+                //var path = System.IO.Path.GetDirectoryName(filepath);
                 // if (path.ToLower().Contains("program")) path = UserDirectory;
-                path = UserDirectory;
-                return path;
+                //return path;
+                return UserDirectory;
             }
         }
 
@@ -185,7 +186,7 @@ namespace OpenRPA.Interfaces
                 throw;
             }
         }
-        public static string replaceEnvironmentVariable(this string filename)
+        public static string ReplaceEnvironmentVariable(this string filename)
         {
             var USERPROFILE = Environment.GetEnvironmentVariable("USERPROFILE");
             var windir = Environment.GetEnvironmentVariable("windir");
@@ -232,23 +233,22 @@ namespace OpenRPA.Interfaces
             }
             if (obj is System.Activities.Expressions.Literal<T>)
             {
-                result = (T)((System.Activities.Expressions.Literal<T>)obj).Value;
+                result = ((System.Activities.Expressions.Literal<T>)obj).Value;
                 return true;
             }
 
-            result = default(T);
+            result = default;
             return false;
         }
         public static T TryCast<T>(this object obj)
         {
-            T result = default(T);
-            if (TryCast<T>(obj, out result))
+            if (TryCast<T>(obj, out T result))
                 return result;
             return result;
         }
         public static T GetValue<T>(this System.Activities.Presentation.Model.ModelItem model, string name)
         {
-            T result = default(T);
+            T result = default;
             if (model.Properties[name] != null)
             {
                 if (model.Properties[name].Value == null) return result;
@@ -262,7 +262,7 @@ namespace OpenRPA.Interfaces
             }
             return result;
         }
-        public static ProcessInfo GetProcessInfo(this FlaUI.Core.AutomationElements.Infrastructure.AutomationElement element)
+        public static ProcessInfo GetProcessInfo(this AutomationElement element)
         {
             if (!element.Properties.ProcessId.IsSupported) return null;
             ProcessInfo result = new ProcessInfo();
@@ -273,8 +273,8 @@ namespace OpenRPA.Interfaces
                 processId = element.Properties.ProcessId.Value;
                 var p = System.Diagnostics.Process.GetProcessById(processId);
                 handle = p.Handle;
-                result.processname = p.ProcessName;
-                result.filename = p.MainModule.FileName.replaceEnvironmentVariable();
+                result.ProcessName = p.ProcessName;
+                result.Filename = p.MainModule.FileName.ReplaceEnvironmentVariable();
             }
             catch (Exception)
             {
@@ -330,7 +330,7 @@ namespace OpenRPA.Interfaces
             try
             {
                 var arguments = GetCommandLine(processId);
-                var arr = parseCommandLine(arguments);
+                var arr = ParseCommandLine(arguments);
 
                 if (arr.Length == 0)
                 {
@@ -338,13 +338,13 @@ namespace OpenRPA.Interfaces
                 }
                 else if (arguments.Contains("\"" + arr[0] + "\""))
                 {
-                    result.arguments = arguments.Replace("\"" + arr[0] + "\"", "");
+                    result.Arguments = arguments.Replace("\"" + arr[0] + "\"", "");
                 }
                 else
                 {
-                    result.arguments = arguments.Replace(arr[0], "");
+                    result.Arguments = arguments.Replace(arr[0], "");
                 }
-                if (result.arguments != null) { result.arguments = result.arguments.replaceEnvironmentVariable(); }
+                if (result.Arguments != null) { result.Arguments = result.Arguments.ReplaceEnvironmentVariable(); }
                 //if (arr.Length > 0)
                 //{
                 //    var resultarr = new string[arr.Length - 1];
@@ -356,8 +356,8 @@ namespace OpenRPA.Interfaces
             catch (Exception)
             {
             }
-            result.applicationUserModelId = ApplicationUserModelId;
-            result.isImmersiveProcess = _isImmersiveProcess;
+            result.ApplicationUserModelId = ApplicationUserModelId;
+            result.IsImmersiveProcess = _isImmersiveProcess;
             return result;
         }
         public static string GetCommandLine(int processId)
@@ -391,12 +391,11 @@ namespace OpenRPA.Interfaces
         public const int ERROR_INSUFFICIENT_BUFFER = 0x7a;
         public const int ERROR_SUCCESS = 0x0;
         public const int APPMODEL_ERROR_NO_APPLICATION = 15703;
-        public static String[] parseCommandLine(String commandLine)
+        public static string[] ParseCommandLine(string commandLine)
         {
-            List<String> arguments = new List<String>();
-
-            Boolean stringIsQuoted = false;
-            String argString = "";
+            List<string> arguments = new List<string>();
+            bool stringIsQuoted = false;
+            string argString = "";
             for (int c = 0; c < commandLine.Length; c++)  //process string one character at a tie
             {
                 if (commandLine.Substring(c, 1) == "\"")
@@ -427,27 +426,25 @@ namespace OpenRPA.Interfaces
                     argString += commandLine.Substring(c, 1);  //non-blan character:  add it to the element being constructed
                 }
             }
-
             return arguments.ToArray();
-
         }
         [DllImport("kernel32.dll")]
         public static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
         [DllImport("kernel32.dll")]
         public static extern bool CloseHandle(IntPtr hHandle);
         [DllImport("kernel32.dll")]
-        public static extern Int32 GetApplicationUserModelId(
+        public static extern int GetApplicationUserModelId(
             IntPtr hProcess,
-            ref UInt32 AppModelIDLength,
+            ref uint AppModelIDLength,
             [MarshalAs(UnmanagedType.LPWStr)] StringBuilder sbAppUserModelID);
     }
     public class ProcessInfo
     {
-        public string filename { get; set; }
-        public string processname { get; set; }
-        public string arguments { get; set; }
-        public string applicationUserModelId { get; set; }
-        public bool isImmersiveProcess { get; set; }
+        public string Filename { get; set; }
+        public string ProcessName { get; set; }
+        public string Arguments { get; set; }
+        public string ApplicationUserModelId { get; set; }
+        public bool IsImmersiveProcess { get; set; }
     }
 
 }

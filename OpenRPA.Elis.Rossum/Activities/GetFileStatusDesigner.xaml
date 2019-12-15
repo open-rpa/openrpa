@@ -6,6 +6,7 @@
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
     xmlns:s="clr-namespace:System;assembly=mscorlib"
+    xmlns:or="clr-namespace:OpenRPA.Elis.Rossum.Resources"
     >
 
 
@@ -42,13 +43,13 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <TextBlock Text="Key" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" />
-        <sapv:ExpressionTextBox HintText="Hint" Grid.Row="0" Grid.Column="1" MaxWidth="180" Margin="5"
+        <TextBlock Text="{x:Static or:strings.activity_getstatus_key}" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" />
+        <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_getstatus_key_hint}" Grid.Row="0" Grid.Column="1" MaxWidth="180" Margin="5"
                                 OwnerActivity="{Binding Path=ModelItem}"
                                 Expression="{Binding Path=ModelItem.Key, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
                                 ExpressionType="s:String" HorizontalAlignment="Stretch" />
-        <TextBlock Text="Fileurl" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" />
-        <sapv:ExpressionTextBox HintText="Hint" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="5"
+        <TextBlock Text="{x:Static or:strings.activity_getstatus_file}" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" />
+        <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_getstatus_file_hint}" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="5"
                                 OwnerActivity="{Binding Path=ModelItem}"
                                 Expression="{Binding Path=ModelItem.Fileurl, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
                                 ExpressionType="s:String" HorizontalAlignment="Stretch" />

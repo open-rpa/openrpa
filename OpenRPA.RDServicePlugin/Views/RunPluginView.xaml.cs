@@ -232,7 +232,7 @@ namespace OpenRPA.RDServicePlugin.Views
                 client.openrpapath = path;
                 client = await global.webSocketClient.UpdateOne("openrpa", 1, false, client);
                 windowspassword.Clear();
-                plugin.reloadConfig();
+                plugin.ReloadConfig();
             }
             catch (Exception ex)
             {
@@ -251,7 +251,7 @@ namespace OpenRPA.RDServicePlugin.Views
                 DisableButtons();
                 await global.webSocketClient.DeleteOne("openrpa", client._id);
                 client = null;
-                plugin.reloadConfig();
+                plugin.ReloadConfig();
             }
             catch (Exception ex)
             {

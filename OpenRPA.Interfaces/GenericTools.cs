@@ -9,11 +9,11 @@ namespace OpenRPA.Interfaces
 {
     public class GenericTools
     {
-        public static void minimize()
+        public static void Minimize()
         {
-            minimize(mainWindow);
+            Minimize(MainWindow);
         }
-        public static void minimize(System.Windows.Window window)
+        public static void Minimize(System.Windows.Window window)
         {
             RunUI(window, () =>
             {
@@ -24,22 +24,22 @@ namespace OpenRPA.Interfaces
                 }
             });
         }
-        public static void minimize(IntPtr hWnd)
+        public static void Minimize(IntPtr hWnd)
         {
             NativeMethods.ShowWindow(hWnd, NativeMethods.SW_MINIMIZE);
         }
-        public static void restore()
+        public static void Restore()
         {
             RunUI(() =>
             {
-                if (mainWindow.WindowState == System.Windows.WindowState.Minimized)
+                if (MainWindow.WindowState == System.Windows.WindowState.Minimized)
                 {
-                    mainWindow.Visibility = System.Windows.Visibility.Visible;
-                    restore(handle);
+                    MainWindow.Visibility = System.Windows.Visibility.Visible;
+                    Restore(Handle);
                 }
             });
         }
-        public static void restore(System.Windows.Window window)
+        public static void Restore(System.Windows.Window window)
         {
             RunUI(window, () =>
             {
@@ -47,32 +47,32 @@ namespace OpenRPA.Interfaces
                 {
                     window.Visibility = System.Windows.Visibility.Visible;
                     IntPtr hWnd = new System.Windows.Interop.WindowInteropHelper(window).Handle;
-                    restore(hWnd);
+                    Restore(hWnd);
                 }
             });
         }
-        public static void restore(IntPtr hWnd)
+        public static void Restore(IntPtr hWnd)
         {
             NativeMethods.ShowWindow(hWnd, NativeMethods.SW_RESTORE);
             NativeMethods.SetForegroundWindow(hWnd);
         }
         private static IntPtr _handle = IntPtr.Zero;
-        public static IntPtr handle
+        public static IntPtr Handle
         {
             get
             {
                 if (_handle == IntPtr.Zero)
                 {
-                    _handle = new System.Windows.Interop.WindowInteropHelper(mainWindow).Handle;
+                    _handle = new System.Windows.Interop.WindowInteropHelper(MainWindow).Handle;
                 }
                 return _handle;
             }
         }
-        public static System.Windows.Window mainWindow { get; set; }
-        public static IDesigner designer { get => ((iMainWindow)mainWindow).designer; }
+        public static System.Windows.Window MainWindow { get; set; }
+        public static IDesigner Designer { get => ((IMainWindow)MainWindow).Designer; }
         public static void RunUI(Action action)
         {
-            RunUI(mainWindow, action);
+            RunUI(MainWindow, action);
         }
         public static void RunUI(System.Windows.Window window, Action action)
         {
@@ -129,7 +129,7 @@ namespace OpenRPA.Interfaces
             do
             {
                 buffer[--i] = baseChars[ticks % targetBase];
-                ticks = ticks / targetBase;
+                ticks /= targetBase;
             }
             while (ticks > 0);
             char[] result = new char[32 - i];

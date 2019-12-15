@@ -3,6 +3,7 @@ using System;
 using System.Activities.DurableInstancing;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.DurableInstancing;
 using System.Runtime.Serialization;
 using System.Xml;
@@ -26,7 +27,7 @@ namespace OpenRPA.Store
         {
             //serializer = new NetDataContractSerializer();
             serializer = new NetDataContractSerializer();
-            
+
             _storeId = storeId;
 
             _handle = this.CreateInstanceHandle();
@@ -46,6 +47,13 @@ namespace OpenRPA.Store
         protected override IAsyncResult BeginTryCommand(InstancePersistenceContext context, InstancePersistenceCommand command, TimeSpan timeout, AsyncCallback callback, object state)
         {
             IDictionary<XName, InstanceValue> instanceStateData = null;
+            WorkflowInstance instance = null;
+            Guid InstanceId = Guid.Empty;
+            if (context != null && context.InstanceView != null)
+            {
+                InstanceId = context.InstanceView.InstanceId;
+                instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
+            }
 
             //The CreateWorkflowOwner command instructs the instance store to create a new instance owner bound to the instanace handle
             if (command is CreateWorkflowOwnerCommand)
@@ -55,23 +63,33 @@ namespace OpenRPA.Store
             //The SaveWorkflow command instructs the instance store to modify the instance bound to the instance handle or an instance key
             else if (command is SaveWorkflowCommand)
             {
-                SaveWorkflowCommand saveCommand = (SaveWorkflowCommand)command;
-                instanceStateData = saveCommand.InstanceData;
+                if (instance != null && instance.Workflow != null && instance.Workflow.Serializable == true)
+                {
+                    SaveWorkflowCommand saveCommand = (SaveWorkflowCommand)command;
+                    try
+                    {
+                        instanceStateData = saveCommand.InstanceData;
+                        var instanceStateXml = DictionaryToXml(instanceStateData);
+                        Save(context.InstanceView.InstanceId, this._storeId, instanceStateXml);
+                    }
+                    catch (Exception)
+                    {
+                        instance.Workflow.Serializable = false;
+                    }
+                }
 
-                var instanceStateXml = DictionaryToXml(instanceStateData);
-                Save(context.InstanceView.InstanceId, this._storeId, instanceStateXml);
             }
             //The LoadWorkflow command instructs the instance store to lock and load the instance bound to the identifier in the instance handle
             else if (command is LoadWorkflowCommand)
             {
-                var xml = Load(context.InstanceView.InstanceId, this._storeId);
+                var xml = Load(InstanceId, _storeId);
                 // if (xml == null) throw new ArgumentNullException("Failed locating instance data for " + context.InstanceView.InstanceId.ToString());
                 // if (xml == null) return new CompletedAsyncResult<bool>(false, callback, state);
                 if (xml == null) return new CompletedAsyncResult<bool>(true, callback, state);
                 instanceStateData = XmlToDictionary(xml);
                 //load the data into the persistence Context
                 context.LoadedInstance(InstanceState.Initialized, instanceStateData, null, null, null);
-            } 
+            }
             return new CompletedAsyncResult<bool>(true, callback, state);
         }
         protected override bool EndTryCommand(IAsyncResult result)
@@ -119,59 +137,37 @@ namespace OpenRPA.Store
         {
             XmlDocument doc = new XmlDocument();
             doc.LoadXml("<InstanceValues/>");
-
             foreach (KeyValuePair<XName, InstanceValue> valPair in instanceData)
             {
                 XmlElement newInstance = doc.CreateElement("InstanceValue");
-
-                try
+                XmlElement newKey = SerializeObject("key", valPair.Key, doc);
+                if (newKey != null)
                 {
-                    XmlElement newKey = SerializeObject("key", valPair.Key, doc);
-                    if(newKey!=null)
+                    newInstance.AppendChild(newKey);
+                    XmlElement newValue = SerializeObject("value", valPair.Value.Value, doc);
+                    if (newValue != null)
                     {
-                        newInstance.AppendChild(newKey);
-
-                        XmlElement newValue = SerializeObject("value", valPair.Value.Value, doc);
-                        if (newValue != null)
-                        {
-                            newInstance.AppendChild(newValue);
-
-                            doc.DocumentElement.AppendChild(newInstance);
-                        }
+                        newInstance.AppendChild(newValue);
+                        doc.DocumentElement.AppendChild(newInstance);
                     }
-
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("CustomInstanceStoreBase.DictionaryToXml: " + ex.Message);
                 }
             }
-
             return doc.InnerXml;
         }
         XmlElement SerializeObject(string elementName, object o, XmlDocument doc)
         {
-            try
-            {
-                //NetDataContractSerializer s = new NetDataContractSerializer();
-                //DataContractSerializer
+            //NetDataContractSerializer s = new NetDataContractSerializer();
+            //DataContractSerializer
 
-                XmlElement newElement = doc.CreateElement(elementName);
-                MemoryStream stm = new MemoryStream();
+            XmlElement newElement = doc.CreateElement(elementName);
+            MemoryStream stm = new MemoryStream();
 
-                serializer.Serialize(stm, o);
-                stm.Position = 0;
-                StreamReader rdr = new StreamReader(stm);
-                newElement.InnerXml = rdr.ReadToEnd();
+            serializer.Serialize(stm, o);
+            stm.Position = 0;
+            StreamReader rdr = new StreamReader(stm);
+            newElement.InnerXml = rdr.ReadToEnd();
 
-                return newElement;
-            }
-            catch (Exception ex)
-            {
-                //Log.Error(ex.ToString());
-                Log.Verbose("CustomInstanceStoreBase.SerializeObject: " + ex.Message);
-                return null;
-            }
+            return newElement;
         }
         public void Dispose()
         {

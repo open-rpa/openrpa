@@ -149,7 +149,7 @@ namespace OpenRPA.IE
                 var selectedProps = props.Take(i).ToArray();
                 foreach (var p in Properties) p.Enabled = selectedProps.Contains(p.Name);
                 MSHTML.IHTMLElementCollection children = null;
-                if(element.parentElement != null) { children = element.parentElement.children; }
+                if(element.parentElement != null) { children = (MSHTML.IHTMLElementCollection)element.parentElement.children; }
                 matchcounter = 0;
                 if (children!=null)
                 {
@@ -182,7 +182,7 @@ namespace OpenRPA.IE
                 try
                 {
                     var matchs = new List<MSHTML.IHTMLElement>();
-                    MSHTML.IHTMLElementCollection elements = element.children;
+                    MSHTML.IHTMLElementCollection elements = (MSHTML.IHTMLElementCollection)element.children;
                     foreach (MSHTML.IHTMLElement elementNode in elements)
                     {
                         if (Match(elementNode)) matchs.Add(elementNode);
@@ -300,7 +300,7 @@ namespace OpenRPA.IE
                     var IndexInParent = -1;
                     if (m.parentElement != null && !string.IsNullOrEmpty(uniqueID))
                     {
-                        MSHTML.IHTMLElementCollection children = m.parentElement.children;
+                        MSHTML.IHTMLElementCollection children = (MSHTML.IHTMLElementCollection)m.parentElement.children;
                         for (int i = 0; i < children.length; i++)
                         {
                             MSHTML.IHTMLUniqueName id2 = children.item(i) as MSHTML.IHTMLUniqueName;

@@ -29,6 +29,7 @@ namespace OpenRPA
         public TimeSpan updatecheckinterval = TimeSpan.FromDays(1);
         public bool doupdatecheck = true;
         public bool autoupdateupdater = true;
+        public bool log_to_file = false;
         public bool log_verbose = false;
         public bool log_activity = false;
         public bool log_debug = false;
@@ -43,6 +44,7 @@ namespace OpenRPA
         public bool use_animate_mouse = false;
         public TimeSpan use_postwait = TimeSpan.Zero;
         public bool minimize = true;
+        public bool recording_add_to_designer = true;
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)

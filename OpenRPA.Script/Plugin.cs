@@ -15,7 +15,9 @@ namespace OpenRPA.Java
 {
     public class Plugin : ObservableObject, IRecordPlugin
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         public static treeelement[] _GetRootElements(Selector anchor)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             var result = new List<treeelement>();
             return result.ToArray();
@@ -28,8 +30,16 @@ namespace OpenRPA.Java
         {
             return null;
         }
-        public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
-        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove;
+        public event Action<IRecordPlugin, IRecordEvent> OnUserAction
+        {
+            add { }
+            remove { }
+        }
+        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove
+        {
+            add { }
+            remove { }
+        }
         public System.Windows.Controls.UserControl editor => null;
         public string Name { get => "Script"; }
         // public string Status => (hook!=null && hook.jvms.Count>0 ? "online":"offline");
@@ -40,14 +50,14 @@ namespace OpenRPA.Java
         public void Stop()
         {
         }
-        public bool parseUserAction(ref IRecordEvent e)
+        public bool ParseUserAction(ref IRecordEvent e)
         {
             return false;
         }
         public void Initialize(IOpenRPAClient client)
         {
             Python.Runtime.PythonEngine.Initialize();
-            IntPtr ctx = Python.Runtime.PythonEngine.BeginAllowThreads();
+            _ = Python.Runtime.PythonEngine.BeginAllowThreads();
             //if (InvokeCode.pool == null)
             //{
             //    InvokeCode.pool = RunspaceFactory.CreateRunspacePool(1, 5);
@@ -72,7 +82,7 @@ namespace OpenRPA.Java
         {
             return false;
         }
-        public bool parseMouseMoveAction(ref IRecordEvent e)
+        public bool ParseMouseMoveAction(ref IRecordEvent e)
         {
             return false;
         }

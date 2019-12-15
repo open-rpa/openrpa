@@ -8,7 +8,9 @@
         xmlns:local="clr-namespace:OpenRPA.Interfaces.Selector"
         xmlns:root="clr-namespace:OpenRPA"
         mc:Ignorable="d" Loaded="Window_Loaded" Closed="Window_Closed"
-        Title="Selector" Height="450" Width="800">
+        Title="Selector" Height="450" Width="800"
+        xmlns:oi="clr-namespace:OpenRPA.Interfaces.Resources"
+        >
 
     <Window.Resources>
         <local:BindingProxy x:Key="proxy" Data="{Binding}" />
@@ -17,22 +19,22 @@
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
-                <Button ToolTip="Select element by clicking it" Click="Select_Click" Margin="5,0,5,0">
+                <Button ToolTip="{x:Static oi:strings.selector_buttons_select_hint}" Click="Select_Click" Margin="5,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/OpenRPA.Interfaces;component/Resources/Selector/Button.png" />
-                        <TextBlock Margin="3,0,0,0">Select</TextBlock>
+                        <TextBlock Margin="3,0,0,0" Text="{x:Static oi:strings.selector_buttons_select}"></TextBlock>
                     </StackPanel>
                 </Button>
-                <Button ToolTip="Sync tree to current element" Click="BtnSyncTree_Click" Margin="5,0,5,0">
+                <Button ToolTip="{x:Static oi:strings.selector_buttons_sync_hint}" Click="BtnSyncTree_Click" Margin="5,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/OpenRPA.Interfaces;component/Resources/Selector/Button.png" />
-                        <TextBlock Margin="3,0,0,0">Sync tree</TextBlock>
+                        <TextBlock Margin="3,0,0,0" Text="{x:Static oi:strings.selector_buttons_sync}"></TextBlock>
                     </StackPanel>
                 </Button>
-                <Button ToolTip="Highligt element(s) effected by current selector" Click="BtnHighlight_Click" Margin="5,0,5,0">
+                <Button ToolTip="{x:Static oi:strings.selector_buttons_highlight_hint}" Click="BtnHighlight_Click" Margin="5,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{Binding HighlightImage}" Height="16" Width="16" />
-                        <TextBlock Margin="3,0,0,0">Highlight</TextBlock>
+                        <TextBlock Margin="3,0,0,0" Text="{x:Static oi:strings.selector_buttons_highlight}"></TextBlock>
                     </StackPanel>
                 </Button>
             </ToolBar>
@@ -190,7 +192,7 @@
                             <Label Content="{Binding Path= Name}" Name="NodeLabel" />
                             <StackPanel.ContextMenu >
                                 <ContextMenu>
-                                    <MenuItem Header="Select Element" 
+                                    <MenuItem Header="{x:Static oi:strings.selector_menu_select}" 
         Command="{Binding Data.SelectCommand, Source={StaticResource proxy}}"                                                    
                                                     CommandParameter="{Binding}" />
                                     <!-- 
@@ -234,16 +236,16 @@
 
             <ToolBarTray Grid.Column="0" Grid.ColumnSpan="7" Grid.Row="4" HorizontalAlignment="Right">
                 <ToolBar HorizontalContentAlignment="Right" >
-                    <Button ToolTip="Cancel" Click="Cancel_Click">
+                    <Button ToolTip="{x:Static oi:strings.selector_buttons_cancel_hint}" Click="Cancel_Click">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/OpenRPA.Interfaces;component/Resources/Selector/Button.png" />
-                            <TextBlock Margin="3,0,0,0">Cancel</TextBlock>
+                            <TextBlock Margin="3,0,0,0" Text="{x:Static oi:strings.selector_buttons_cancel}"></TextBlock>
                         </StackPanel>
                     </Button>
-                    <Button ToolTip="Ok" Click="Ok_Click">
+                    <Button ToolTip="{x:Static oi:strings.selector_buttons_ok_hint}" Click="Ok_Click">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/OpenRPA.Interfaces;component/Resources/Selector/Button.png" />
-                            <TextBlock Margin="3,0,0,0">Ok</TextBlock>
+                            <TextBlock Margin="3,0,0,0" Text="{x:Static oi:strings.selector_buttons_ok}"></TextBlock>
                         </StackPanel>
                     </Button>
                 </ToolBar>

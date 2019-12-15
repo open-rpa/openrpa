@@ -17,6 +17,7 @@ namespace OpenRPA.IE
 {
     class Plugin : ObservableObject, IRecordPlugin
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         public static treeelement[] _GetRootElements(Selector anchor)
         {
             var browser = Browser.GetBrowser();
@@ -27,8 +28,7 @@ namespace OpenRPA.IE
             }
             if(anchor != null)
             {
-                IESelector ieselector = anchor as IESelector;
-                if (ieselector == null) { ieselector = new IESelector(anchor.ToString()); }
+                if (!(anchor is IESelector ieselector)) { ieselector = new IESelector(anchor.ToString()); }
                 var elements = IESelector.GetElementsWithuiSelector(ieselector, null, 5);
                 var result = new List<treeelement>();
                 foreach (var _ele in elements)
@@ -60,7 +60,11 @@ namespace OpenRPA.IE
             return new IESelector(ieitem.IEElement.Browser, ieitem.IEElement.RawElement, ieanchor, true, 0, 0);
         }
         public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
-        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove;
+        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove
+        {
+            add { }
+            remove { }
+        }
         public string Name { get => "IE"; }
         public string Status => "";
         public UserControl editor => null;
@@ -74,11 +78,13 @@ namespace OpenRPA.IE
         }
         private void OnMouseUp(InputEventArgs e)
         {
-            var thread = new Thread(new ThreadStart(() =>
+            try
             {
                 Log.Debug(string.Format("IE.Recording::OnMouseUp::begin"));
-                var re = new RecordEvent(); re.Button = e.Button;
-                var a = new GetElement { DisplayName = (e.Element.Name).Replace(Environment.NewLine, "").Trim() };
+                var re = new RecordEvent
+                {
+                    Button = e.Button
+                }; var a = new GetElement { DisplayName = (e.Element.Name).Replace(Environment.NewLine, "").Trim() };
 
                 var browser = new Browser(e.Element.RawElement);
                 var htmlelement = browser.ElementFromPoint(e.X, e.Y);
@@ -112,11 +118,18 @@ namespace OpenRPA.IE
                 re.SupportSelect = false;
                 Log.Debug(string.Format("IE.Recording::OnMouseUp::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                 OnUserAction?.Invoke(this, re);
-            }));
-            thread.IsBackground = true;
-            thread.Start();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            //var thread = new Thread(new ThreadStart(() =>
+            //{
+            //}));
+            //thread.IsBackground = true;
+            //thread.Start();
         }
-        public bool parseUserAction(ref IRecordEvent e) {
+        public bool ParseUserAction(ref IRecordEvent e) {
             if (e.UIElement == null) return false;
             if (e.UIElement.ProcessId < 1) return false;
             var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
@@ -155,8 +168,7 @@ namespace OpenRPA.IE
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
-            IESelector ieselector = selector as IESelector;
-            if(ieselector == null) { ieselector = new IESelector(selector.ToString());  }
+            if (!(selector is IESelector ieselector)) { ieselector = new IESelector(selector.ToString()); }
             var result = IESelector.GetElementsWithuiSelector(ieselector, fromElement, maxresults);
             return result;
         }
@@ -222,7 +234,7 @@ namespace OpenRPA.IE
         {
             return IESelectorItem.Match(item, m.RawElement as MSHTML.IHTMLElement);
         }
-        public bool parseMouseMoveAction(ref IRecordEvent e)
+        public bool ParseMouseMoveAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) return false;
             if (e.UIElement.ProcessId < 1) return false;
@@ -248,8 +260,10 @@ namespace OpenRPA.IE
             //((GetElement)Activity).Body = aa;
             //aa.Argument = da;
             var aa = new ActivityAction<IEElement>();
-            var da = new DelegateInArgument<IEElement>();
-            da.Name = Name;
+            var da = new DelegateInArgument<IEElement>
+            {
+                Name = Name
+            };
             aa.Handler = a;
             ((GetElement)Activity).Body = aa;
             aa.Argument = da;

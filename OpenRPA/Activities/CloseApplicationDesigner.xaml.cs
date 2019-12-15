@@ -18,6 +18,7 @@ namespace OpenRPA.Activities
         public CloseApplicationDesigner()
         {
             InitializeComponent();
+            DataContext = this;
         }
         private void Open_Selector(object sender, RoutedEventArgs e)
         {
@@ -49,7 +50,7 @@ namespace OpenRPA.Activities
         }
         private void Select_Click(object sender, RoutedEventArgs e)
         {
-            Interfaces.GenericTools.minimize(Interfaces.GenericTools.mainWindow);
+            Interfaces.GenericTools.Minimize(Interfaces.GenericTools.MainWindow);
             StartRecordPlugins();
         }
         private void StartRecordPlugins()
@@ -69,19 +70,18 @@ namespace OpenRPA.Activities
             StopRecordPlugins();
             AutomationHelper.syncContext.Post(o =>
             {
-                Interfaces.GenericTools.restore(Interfaces.GenericTools.mainWindow);
+                Interfaces.GenericTools.Restore(Interfaces.GenericTools.MainWindow);
                 foreach (var p in Interfaces.Plugins.recordPlugins)
                 {
                     if (p.Name != sender.Name)
                     {
-                        if (p.parseUserAction(ref e)) continue;
+                        if (p.ParseUserAction(ref e)) continue;
                     }
                 }
-
                 e.Selector.RemoveRange(3, e.Selector.Count - 3);
-                ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(e.Selector.ToString() ) });
-
+                ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(e.Selector.ToString()) });
             }, null);
         }
+
     }
 }

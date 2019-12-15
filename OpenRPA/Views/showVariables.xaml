@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpenRPA.Views"
+             xmlns:or="clr-namespace:OpenRPA.Resources"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Loaded="Window_Loaded">
@@ -28,7 +29,7 @@
                   >
             <DataGrid.Columns>
                 <DataGridTemplateColumn
-					Header="Name">
+					Header="{x:Static or:strings.name}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
@@ -86,15 +87,17 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn
-					Header="Value"
+					Header="{x:Static or:strings.value}"
 					Binding="{Binding value}" />
                 <DataGridTextColumn
-					Header="Type"
+					Header="{x:Static or:strings.type}"
 					Binding="{Binding typename}" />
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Click="ShowHideDetails">Details</Button>
+                            <Button Click="ShowHideDetails">
+                                <TextBlock Text="{x:Static or:strings.details}"></TextBlock>
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

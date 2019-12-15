@@ -10,7 +10,8 @@
     xmlns:sapc="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
     xmlns:s="clr-namespace:System;assembly=mscorlib"
-                      Loaded="ActivityDesigner_Loaded"
+    Loaded="ActivityDesigner_Loaded"
+    xmlns:or="clr-namespace:OpenRPA.OpenFlowDB.Resources"
                       >
 
 
@@ -66,14 +67,14 @@
                 </DataTemplate>
             </input:AutoCompleteBox.ItemTemplate>
         </input:AutoCompleteBox>
-        <TextBlock Grid.Row="1" Grid.Column="0">Read</TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static or:strings.activity_perm_read}"></TextBlock>
         <CheckBox Grid.Row="1" Grid.Column="1" IsThreeState="True"
                 IsChecked="{Binding Path=ModelItem.Read, Mode=TwoWay, Converter={StaticResource InArgumentBoolConverter}}"
                 />
-        <TextBlock Grid.Row="2" Grid.Column="0">Update</TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static or:strings.activity_perm_update}"></TextBlock>
         <CheckBox Grid.Row="2" Grid.Column="1" IsThreeState="True"
                   IsChecked="{Binding Path=ModelItem.Update, Mode=TwoWay, Converter={StaticResource InArgumentBoolConverter}}"/>
-        <TextBlock Grid.Row="3" Grid.Column="0">Delete</TextBlock>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="{x:Static or:strings.activity_perm_delete}"></TextBlock>
         <CheckBox Grid.Row="3" Grid.Column="1" IsThreeState="True"
                   IsChecked="{Binding Path=ModelItem.Delete, Mode=TwoWay, Converter={StaticResource InArgumentBoolConverter}}" />
     </Grid>

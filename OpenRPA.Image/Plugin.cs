@@ -15,7 +15,11 @@ namespace OpenRPA.Image
         public string Status => "";
         public UserControl editor => null;
         public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
-        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove;        
+        public event Action<IRecordPlugin, IRecordEvent> OnMouseMove
+        {
+            add { }
+            remove { }
+        }
         public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)
         {
             if (timeout == TimeSpan.Zero) OnUserAction?.Invoke(null, null); // dummy use of OnUserAction to get rid of warning
@@ -44,10 +48,10 @@ namespace OpenRPA.Image
         {
             throw new NotImplementedException();
         }
-        private static object _lock = new object();
+        private static readonly object _lock = new object();
         private static bool _processing = false;
         private ImageElement lastelement = null;
-        public bool parseMouseMoveAction(ref IRecordEvent e)
+        public bool ParseMouseMoveAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) { return false; }
 
@@ -66,15 +70,7 @@ namespace OpenRPA.Image
                 if (_processing) { return true; }
                 _processing = true;
             }
-
-            //var elementx = (int)element.BoundingRectangle.X;
-            //var elementy = (int)element.BoundingRectangle.Y;
-            //var elementw = (int)element.BoundingRectangle.Width;
-            //var elementh = (int)element.BoundingRectangle.Height;
-            // Log.Debug(string.Format("Search near {0}, {1} in  ({2}, {3},{4},{5})", elementx, elementy, elementw, elementh, e.OffsetX, e.OffsetY));
-
-            int newOffsetX; int newOffsetY; System.Drawing.Rectangle resultrect;
-            var image = getrectangle.GuessContour(element, e.OffsetX, e.OffsetY, out newOffsetX, out newOffsetY, out resultrect);
+            var image = getrectangle.GuessContour(element, e.OffsetX, e.OffsetY, out int newOffsetX, out int newOffsetY, out System.Drawing.Rectangle resultrect);
             lock (_lock)
             {
                 _processing = false;
@@ -94,7 +90,7 @@ namespace OpenRPA.Image
 
             return true;
         }
-        public bool parseUserAction(ref IRecordEvent e)
+        public bool ParseUserAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) return false;
 
@@ -111,19 +107,17 @@ namespace OpenRPA.Image
             }
 
 
-            FlaUI.Core.Shapes.Point point = new FlaUI.Core.Shapes.Point(e.X - 80, e.Y - 80);
-            if (point.X < 0) { point.X = e.X + 80; }
-            if (point.Y < 0) { point.Y = e.Y + 80; }
-            FlaUI.Core.Input.Mouse.MoveTo(point);
+            NativeMethods.SetCursorPos(e.X - 80, e.Y - 80);
 
-            var a = new GetElement();
-            a.Threshold = 0.9;
-            a.Processname = Processname;
+            var a = new GetElement
+            {
+                Threshold = 0.9,
+                Processname = Processname
+            };
             e.SupportInput = false;
             e.SupportSelect = false;
-            int newOffsetX; int newOffsetY; System.Drawing.Rectangle resultrect;
-            var image = getrectangle.GuessContour(element, e.OffsetX, e.OffsetY, out newOffsetX, out newOffsetY, out resultrect);
-            if(image == null)
+            var image = getrectangle.GuessContour(element, e.OffsetX, e.OffsetY, out int newOffsetX, out int newOffsetY, out System.Drawing.Rectangle resultrect);
+            if (image == null)
             {
                 var tip = new Interfaces.Overlay.TooltipWindow("Failed Guessing Contour, please select manually");
                 tip.SetTimeout(TimeSpan.FromSeconds(2));
@@ -140,8 +134,7 @@ namespace OpenRPA.Image
             a.Image = Interfaces.Image.Util.Bitmap2Base64(image);
             e.a = new GetElementResult(a);
 
-            point.X = e.X; point.Y = e.Y;
-            FlaUI.Core.Input.Mouse.MoveTo(point);
+            NativeMethods.SetCursorPos(e.X, e.Y );
 
             return true;
         }
@@ -162,8 +155,10 @@ namespace OpenRPA.Image
         public void AddActivity(System.Activities.Activity a, string Name)
         {
             var aa = new System.Activities.ActivityAction<ImageElement>();
-            var da = new System.Activities.DelegateInArgument<ImageElement>();
-            da.Name = Name;
+            var da = new System.Activities.DelegateInArgument<ImageElement>
+            {
+                Name = Name
+            };
             aa.Handler = a;
             ((GetElement)Activity).Body = aa;
             aa.Argument = da;

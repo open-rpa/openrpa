@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic.Activities;
+using OpenRPA.Interfaces;
 using System;
 using System.Activities;
 using System.Activities.Expressions;
@@ -19,5 +20,19 @@ namespace OpenRPA.AviRecorder.Activities
         {
             InitializeComponent();
         }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            using (var openFileDialog1 = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                if (openFileDialog1.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+                var path = openFileDialog1.SelectedPath;
+                ModelItem.Properties["Folder"].SetValue(new InArgument<string>(){
+                        Expression = new VisualBasicValue<string>("\"" + path.ReplaceEnvironmentVariable() + "\"")
+                    });
+
+            }
+
+        }
+
     }
 }

@@ -5,6 +5,7 @@
     xmlns:Converters="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation" 
     xmlns:s="clr-namespace:System;assembly=mscorlib"
+    xmlns:or="clr-namespace:OpenRPA.Office.Resources"
     >
 
 
@@ -42,19 +43,9 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <!--Converter={StaticResource DebugBinding},
-        Converter={StaticResource ArgumentToExpressionConverter},-->
-
         <Button Content="..." Click="Button_Click" Grid.Row="0" Grid.Column="0" />
-
-        <TextBlock Text="Filename" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" />
-        <!-- <sapv:ExpressionTextBox 
-            Expression="{Binding Path=ModelItem.Filename, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In, Mode=TwoWay}"
-            OwnerActivity="{Binding Path=ModelItem}"
-            Grid.Column="1"
-            Margin="3,0,0,0" />-->
-
-        <sapv:ExpressionTextBox HintText="Hint" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="5"
+        <TextBlock Text="{x:Static or:strings.activity_filename}" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" />
+        <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_drop_hint}" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="5"
                                 OwnerActivity="{Binding Path=ModelItem}"
                                 Expression="{Binding Path=ModelItem.Filename, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
                                 ExpressionType="s:String" HorizontalAlignment="Stretch" />

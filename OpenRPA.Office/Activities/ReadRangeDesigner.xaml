@@ -6,6 +6,7 @@
     xmlns:sapc="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
     xmlns:s="clr-namespace:System;assembly=mscorlib"
+    xmlns:or="clr-namespace:OpenRPA.Office.Resources"
                       >
 
 
@@ -40,8 +41,8 @@
         </Grid.RowDefinitions>
 
         <DockPanel Height="Auto" Name="stackPanel1" Width="Auto" LastChildFill="True" Grid.Column="0">
-            <TextBlock Text="Filename" VerticalAlignment="Center" />
-            <sapv:ExpressionTextBox HintText="Hint" MaxWidth="180" Margin="5"
+            <TextBlock Text="{x:Static or:strings.activity_filename}" VerticalAlignment="Center" />
+            <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_drop_hint}" MaxWidth="180" Margin="5"
                             OwnerActivity="{Binding Path=ModelItem}"
                             Expression="{Binding Path=ModelItem.Filename, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
                             ExpressionType="s:String" HorizontalAlignment="Stretch" />

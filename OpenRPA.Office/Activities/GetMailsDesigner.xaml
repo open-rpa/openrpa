@@ -9,6 +9,7 @@
                       xmlns:s="clr-namespace:System;assembly=mscorlib"
                       xmlns:rpaoffice="clr-namespace:OpenRPA.Office"
                       Loaded="ActivityDesigner_Loaded"
+                      xmlns:or="clr-namespace:OpenRPA.Office.Resources"
     >
 
 
@@ -40,7 +41,7 @@
                     >
                     </ComboBox>
                     <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
-                                    HintText="Drop activity" AllowedItemType="sa:Activity"
+                                    HintText="{x:Static or:strings.activity_drop_hint}" AllowedItemType="sa:Activity"
                                       Grid.Row="1" />
 
                     </StackPanel>
@@ -49,10 +50,10 @@
             <DataTemplate x:Uid="DataTemplate_6" x:Key="CollapsedActivityViewTemplate">
             </DataTemplate>
             <Style x:Uid="Style_1" x:Key="CommentOutStyle" TargetType="{x:Type ContentPresenter}">
-                <Setter x:Uid="Setter_1" Property="ContentTemplate" Value="{DynamicResource CollapsedActivityViewTemplate}" />
+                <Setter x:Uid="Setter_1" Property="ContentTemplate" Value="{DynamicResource ExpandedCommentOutTemplate}" />
                 <Style.Triggers>
-                    <DataTrigger x:Uid="DataTrigger_1" Binding="{Binding Path=ShowExpanded}" Value="true">
-                        <Setter x:Uid="Setter_2" Property="ContentTemplate" Value="{DynamicResource ExpandedCommentOutTemplate}" />
+                    <DataTrigger x:Uid="DataTrigger_1" Binding="{Binding Path=ShowExpanded}" Value="false">
+                        <Setter x:Uid="Setter_2" Property="ContentTemplate" Value="{DynamicResource CollapsedActivityViewTemplate}" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>

@@ -117,31 +117,43 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="activity_click_to_view" xml:space="preserve">
-    <value>Dobblet klik for a se</value>
+  <data name="activity_getelement_drop_hint" xml:space="preserve">
+    <value>Slip aktiviteter her</value>
   </data>
-  <data name="activity_play_hint" xml:space="preserve">
-    <value>Afspil denne video fil</value>
+  <data name="activity_getelement_highlight" xml:space="preserve">
+    <value>Fremhæv</value>
   </data>
-  <data name="activity_start_hint" xml:space="preserve">
-    <value>Gem i denne folder</value>
+  <data name="activity_getelement_process_limit" xml:space="preserve">
+    <value>Process begrænsning</value>
   </data>
-  <data name="activity_stop_hint" xml:space="preserve">
-    <value>Gem video filenavn</value>
+  <data name="activity_getelement_select" xml:space="preserve">
+    <value>Vælg billede</value>
   </data>
-  <data name="plugin_codec" xml:space="preserve">
-    <value>Video codec</value>
+  <data name="activity_getimage_drop_hint" xml:space="preserve">
+    <value>Slip aktiviteter her</value>
   </data>
-  <data name="plugin_enabled" xml:space="preserve">
-    <value>Aktiveret</value>
+  <data name="activity_getimage_highlight" xml:space="preserve">
+    <value>Fremhæv</value>
   </data>
-  <data name="plugin_keep_successful" xml:space="preserve">
-    <value>Gem også uden fejl</value>
+  <data name="activity_getimage_select" xml:space="preserve">
+    <value>Vælg billede</value>
   </data>
-  <data name="plugin_quality" xml:space="preserve">
-    <value>Video kvalitet</value>
+  <data name="activity_gettext_drop_hint" xml:space="preserve">
+    <value>Slip aktiviteter her</value>
   </data>
-  <data name="plugin_save_in_folder" xml:space="preserve">
-    <value>Gem i folder</value>
+  <data name="activity_gettext_limit" xml:space="preserve">
+    <value>Begræns til</value>
+  </data>
+  <data name="activity_gettext_limit_hint" xml:space="preserve">
+    <value>Søg kun efter ord</value>
+  </data>
+  <data name="activity_loadfile_drop_hint" xml:space="preserve">
+    <value>Slip aktiviteter her</value>
+  </data>
+  <data name="activity_loadfile_filename" xml:space="preserve">
+    <value>Billed fil</value>
+  </data>
+  <data name="activity_loadfile_filename_hint" xml:space="preserve">
+    <value>Billed fil at indlæse</value>
   </data>
 </root>

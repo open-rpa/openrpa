@@ -117,31 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="activity_click_to_view" xml:space="preserve">
-    <value>Dobblet klik for a se</value>
+  <data name="selector_buttons_cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
-  <data name="activity_play_hint" xml:space="preserve">
-    <value>Afspil denne video fil</value>
+  <data name="selector_buttons_cancel_hint" xml:space="preserve">
+    <value>Cancel changes and close selector window</value>
   </data>
-  <data name="activity_start_hint" xml:space="preserve">
-    <value>Gem i denne folder</value>
+  <data name="selector_buttons_highlight" xml:space="preserve">
+    <value>Highlight</value>
   </data>
-  <data name="activity_stop_hint" xml:space="preserve">
-    <value>Gem video filenavn</value>
+  <data name="selector_buttons_highlight_hint" xml:space="preserve">
+    <value>Highligt element(s) effected by current selector</value>
   </data>
-  <data name="plugin_codec" xml:space="preserve">
-    <value>Video codec</value>
+  <data name="selector_buttons_ok" xml:space="preserve">
+    <value>Ok</value>
   </data>
-  <data name="plugin_enabled" xml:space="preserve">
-    <value>Aktiveret</value>
+  <data name="selector_buttons_ok_hint" xml:space="preserve">
+    <value>Accept changes and close selector window</value>
   </data>
-  <data name="plugin_keep_successful" xml:space="preserve">
-    <value>Gem også uden fejl</value>
+  <data name="selector_buttons_select" xml:space="preserve">
+    <value>Select</value>
   </data>
-  <data name="plugin_quality" xml:space="preserve">
-    <value>Video kvalitet</value>
+  <data name="selector_buttons_select_hint" xml:space="preserve">
+    <value>Select element by clicking it</value>
   </data>
-  <data name="plugin_save_in_folder" xml:space="preserve">
-    <value>Gem i folder</value>
+  <data name="selector_buttons_sync" xml:space="preserve">
+    <value>Sync tree</value>
+  </data>
+  <data name="selector_buttons_sync_hint" xml:space="preserve">
+    <value>Sync tree and go to current element</value>
+  </data>
+  <data name="selector_menu_select" xml:space="preserve">
+    <value>Select Element</value>
   </data>
 </root>

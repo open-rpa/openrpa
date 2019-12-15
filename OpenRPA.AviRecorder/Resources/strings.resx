@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="activity_click_to_view" xml:space="preserve">
+    <value>Double-click to view</value>
+  </data>
   <data name="activity_play_hint" xml:space="preserve">
     <value>Play this video file</value>
   </data>

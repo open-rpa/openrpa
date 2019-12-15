@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace OpenRPA.AviRecorder.Resources {
+namespace OpenRPA.Interfaces.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace OpenRPA.AviRecorder.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("OpenRPA.AviRecorder.Resources.strings", typeof(strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("OpenRPA.Interfaces.Resources.strings", typeof(strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,83 +61,101 @@ namespace OpenRPA.AviRecorder.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Double-click to view.
+        ///   Looks up a localized string similar to Cancel.
         /// </summary>
-        public static string activity_click_to_view {
+        public static string selector_buttons_cancel {
             get {
-                return ResourceManager.GetString("activity_click_to_view", resourceCulture);
+                return ResourceManager.GetString("selector_buttons_cancel", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Play this video file.
+        ///   Looks up a localized string similar to Cancel changes and close selector window.
         /// </summary>
-        public static string activity_play_hint {
+        public static string selector_buttons_cancel_hint {
             get {
-                return ResourceManager.GetString("activity_play_hint", resourceCulture);
+                return ResourceManager.GetString("selector_buttons_cancel_hint", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save in this folder.
+        ///   Looks up a localized string similar to Highlight.
         /// </summary>
-        public static string activity_start_hint {
+        public static string selector_buttons_highlight {
             get {
-                return ResourceManager.GetString("activity_start_hint", resourceCulture);
+                return ResourceManager.GetString("selector_buttons_highlight", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save video filename.
+        ///   Looks up a localized string similar to Highligt element(s) effected by current selector.
         /// </summary>
-        public static string activity_stop_hint {
+        public static string selector_buttons_highlight_hint {
             get {
-                return ResourceManager.GetString("activity_stop_hint", resourceCulture);
+                return ResourceManager.GetString("selector_buttons_highlight_hint", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Codec.
+        ///   Looks up a localized string similar to Ok.
         /// </summary>
-        public static string plugin_codec {
+        public static string selector_buttons_ok {
             get {
-                return ResourceManager.GetString("plugin_codec", resourceCulture);
+                return ResourceManager.GetString("selector_buttons_ok", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enabled.
+        ///   Looks up a localized string similar to Accept changes and close selector window.
         /// </summary>
-        public static string plugin_enabled {
+        public static string selector_buttons_ok_hint {
             get {
-                return ResourceManager.GetString("plugin_enabled", resourceCulture);
+                return ResourceManager.GetString("selector_buttons_ok_hint", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Keep successful.
+        ///   Looks up a localized string similar to Select.
         /// </summary>
-        public static string plugin_keep_successful {
+        public static string selector_buttons_select {
             get {
-                return ResourceManager.GetString("plugin_keep_successful", resourceCulture);
+                return ResourceManager.GetString("selector_buttons_select", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recording quality.
+        ///   Looks up a localized string similar to Select element by clicking it.
         /// </summary>
-        public static string plugin_quality {
+        public static string selector_buttons_select_hint {
             get {
-                return ResourceManager.GetString("plugin_quality", resourceCulture);
+                return ResourceManager.GetString("selector_buttons_select_hint", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save in folder.
+        ///   Looks up a localized string similar to Sync tree.
         /// </summary>
-        public static string plugin_save_in_folder {
+        public static string selector_buttons_sync {
             get {
-                return ResourceManager.GetString("plugin_save_in_folder", resourceCulture);
+                return ResourceManager.GetString("selector_buttons_sync", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sync tree and go to current element.
+        /// </summary>
+        public static string selector_buttons_sync_hint {
+            get {
+                return ResourceManager.GetString("selector_buttons_sync_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Element.
+        /// </summary>
+        public static string selector_menu_select {
+            get {
+                return ResourceManager.GetString("selector_menu_select", resourceCulture);
             }
         }
     }

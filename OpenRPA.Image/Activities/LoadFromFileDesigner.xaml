@@ -6,6 +6,7 @@
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
     xmlns:s="clr-namespace:System;assembly=mscorlib"
+    xmlns:or="clr-namespace:OpenRPA.Image.Resources"
     >
 
 
@@ -44,13 +45,13 @@
         </Grid.RowDefinitions>
         <Button Content="..." Click="Button_Click" Grid.Row="0" Grid.Column="0" />
 
-        <TextBlock Text="Filename" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" />
-        <sapv:ExpressionTextBox HintText="Hint" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="5"
+        <TextBlock Text="{x:Static or:strings.activity_loadfile_filename}" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" />
+        <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_loadfile_filename_hint}" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="5"
                                 OwnerActivity="{Binding Path=ModelItem}"
                                 Expression="{Binding Path=ModelItem.Filename, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
                                 ExpressionType="s:String" HorizontalAlignment="Stretch" />
         <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
-                                    HintText="Drop activity" AllowedItemType="sa:Activity"
+                                    HintText="{x:Static or:strings.activity_loadfile_drop_hint}" AllowedItemType="sa:Activity"
                                       Grid.Row="2" Grid.ColumnSpan="2" />
 
     </Grid>

@@ -8,7 +8,9 @@
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         xmlns:forms="clr-namespace:Forge.Forms.Controls;assembly=Forge.Forms"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="Form Designer" Height="450" Width="800" Icon="/OpenRPA.Forms;component/Resources/designer/form30.png">
+        Title="Form Designer" Height="450" Width="800" Icon="/OpenRPA.Forms;component/Resources/designer/form30.png"
+        xmlns:or="clr-namespace:OpenRPA.Forms.Resources"
+>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -53,7 +55,7 @@
                 <Button
                     Grid.Row="1"
                     Margin="0,8,0,0" Click="BuildDefinition"
-                    Content="BUILD FORM" />
+                    Content="{x:Static or:strings.activity_formdesigner_build}" />
             </Grid>
         </materialDesign:Card>
         <TextBlock 

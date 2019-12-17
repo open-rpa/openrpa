@@ -40,5 +40,10 @@
             Checked="search_descendants_Checked"  Unchecked="search_descendants_Checked" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,120,0,0" Text="{x:Static or:strings.plugin_search_descendants_help}" VerticalAlignment="Top" />
 
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,150,0,0" Text="{x:Static or:strings.plugin_enable_cache}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,150,0,0" VerticalAlignment="Top" Width="222" x:Name="enable_cache" 
+            Checked="enable_cache_Checked"  Unchecked="enable_cache_Checked" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,150,0,0" Text="{x:Static or:strings.enable_cache_help}" VerticalAlignment="Top" />
+
     </Grid>
 </UserControl>

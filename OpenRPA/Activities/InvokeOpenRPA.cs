@@ -71,17 +71,25 @@ namespace OpenRPA.Activities
                 });
                 Log.Verbose("InvokeOpenRPA: Run Instance ID " + instance._id);
                 context.CreateBookmark(instance._id, new BookmarkCallback(OnBookmarkCallback));
-                GenericTools.RunUI(() =>
+                //GenericTools.RunUI(() =>
+                //{
+                //    if (designer != null)
+                //    {
+                //        designer.Run(MainWindow.instance.VisualTracking, MainWindow.instance.SlowMotion, instance);
+                //    }
+                //    else
+                //    {
+                //        instance.Run();
+                //    }
+                //});
+                if (designer != null)
                 {
-                    if (designer != null)
-                    {
-                        designer.Run(MainWindow.instance.VisualTracking, MainWindow.instance.SlowMotion, instance);
-                    }
-                    else
-                    {
-                        instance.Run();
-                    }
-                });
+                    designer.Run(designer.VisualTracking, designer.SlowMotion, instance);
+                }
+                else
+                {
+                    instance.Run();
+                }
             }
             catch (Exception ex)
             {

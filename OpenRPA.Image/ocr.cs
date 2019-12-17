@@ -14,21 +14,21 @@ namespace OpenRPA.Image
 {
     public class ocr
     {
-        public static void TesseractDownloadLangFile(String folder, String lang)
+        public static void TesseractDownloadLangFile(string folder, string lang)
         {
-            if (!System.IO.Directory.Exists(folder))
+            if (!Directory.Exists(folder))
             {
-                System.IO.Directory.CreateDirectory(folder);
+                Directory.CreateDirectory(folder);
             }
-            string dest = System.IO.Path.Combine(folder, String.Format("{0}.traineddata", lang));
-            if (!System.IO.File.Exists(dest))
+            string dest = Path.Combine(folder, String.Format("{0}.traineddata", lang));
+            if (!File.Exists(dest))
                 using (System.Net.WebClient webclient = new System.Net.WebClient())
                 {
                     // string source = string.Format("https://github.com/tesseract-ocr/tessdata/blob/4592b8d453889181e01982d22328b5846765eaad/{0}.traineddata?raw=true", lang);
                     string source = string.Format("https://github.com/tesseract-ocr/tessdata/blob/master/{0}.traineddata?raw=true", lang);
-                    System.Diagnostics.Trace.WriteLine(String.Format("Downloading file from '{0}' to '{1}'", source, dest));
+                    System.Diagnostics.Trace.WriteLine(string.Format("Downloading file from '{0}' to '{1}'", source, dest));
                     webclient.DownloadFile(source, dest);
-                    System.Diagnostics.Trace.WriteLine(String.Format("Download completed"));
+                    System.Diagnostics.Trace.WriteLine(string.Format("Download completed"));
                 }
         }
         public static string OcrImage(Emgu.CV.OCR.Tesseract _ocr, Emgu.CV.Mat image)

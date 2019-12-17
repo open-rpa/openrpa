@@ -142,7 +142,7 @@ namespace OpenRPA.Image
                         }
                         foreach (var rect in rects)
                         {
-                            System.Diagnostics.Trace.WriteLine("**** Match within window at " + rect.ToString());
+                            // System.Diagnostics.Trace.WriteLine("**** Match within window at " + rect.ToString());
                             var desktop = Interfaces.Image.Util.Screenshot(rect);
                             try
                             {

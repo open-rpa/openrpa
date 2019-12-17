@@ -106,6 +106,15 @@ namespace OpenRPA.Windows.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable caching of elements for faster automation at the expense of ram.
+        /// </summary>
+        public static string enable_cache_help {
+            get {
+                return ResourceManager.GetString("enable_cache_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Drop activity.
         /// </summary>
         public static string getelement_drop_hint {
@@ -165,6 +174,15 @@ namespace OpenRPA.Windows.Resources {
         public static string plugin_allow_multiple_hits_help {
             get {
                 return ResourceManager.GetString("plugin_allow_multiple_hits_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable caching.
+        /// </summary>
+        public static string plugin_enable_cache {
+            get {
+                return ResourceManager.GetString("plugin_enable_cache", resourceCulture);
             }
         }
         

@@ -39,10 +39,15 @@ namespace OpenRPA.Windows
         [Browsable(false)]
         public string Image { get; set; }
         private Variable<IEnumerator<UIElement>> _elements = new Variable<IEnumerator<UIElement>>("_elements");
+        private Variable<Stopwatch> _sw = new Variable<Stopwatch>("_sw");
         [System.ComponentModel.Browsable(false)]
         public Activity LoopAction { get; set; }
         protected override void Execute(NativeActivityContext context)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+            Log.Selector(string.Format("Windows.GetElement::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
+
             UIElement[] elements = null;
             var selector = Selector.Get(context);
             var sel = new WindowsSelector(selector);
@@ -50,19 +55,18 @@ namespace OpenRPA.Windows
             var maxresults = MaxResults.Get(context);
             var minresults = MinResults.Get(context);
             if (maxresults < 1) maxresults = 1;
-            var sw = new Stopwatch();
             var from = From.Get(context);
-            sw.Start();
 
             //            double _timeout = 250;
             double _timeout = 1000;
             if (PluginConfig.search_descendants)
             {
                 _timeout = 5000;
-            }            
-//#if DEBUG
-//            _timeout = _timeout * 8;
-//#endif
+            }
+            //#if DEBUG
+            //            _timeout = _timeout * 8;
+            //#endif
+            
             do
             {
                 if (PluginConfig.get_elements_in_different_thread)
@@ -71,7 +75,7 @@ namespace OpenRPA.Windows
                     {
                         try
                         {
-                            Log.Selector("GetElementsWithuiSelector in non UI thread");
+                            Log.Selector(string.Format("Windows.GetElement::GetElementsWithuiSelector in non UI thread {0:mm\\:ss\\.fff}", sw.Elapsed));
                             return WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
                         }
                         catch (System.Threading.ThreadAbortException)
@@ -86,7 +90,7 @@ namespace OpenRPA.Windows
                 }
                 else
                 {
-                    Log.Selector("GetElementsWithuiSelector using UI thread");
+                    Log.Selector(string.Format("Windows.GetElement::GetElementsWithuiSelector using UI thread {0:mm\\:ss\\.fff}", sw.Elapsed));
                     elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
                 }
                 //elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
@@ -94,7 +98,7 @@ namespace OpenRPA.Windows
                 {
                     elements = new UIElement[] { };
                 }
-                if(elements.Length == 0) Log.Selector("GetElementsWithuiSelector found no elements");
+                if(elements.Length == 0) Log.Selector(string.Format("Windows.GetElement::Found no elements {0:mm\\:ss\\.fff}", sw.Elapsed));
             } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
             //if (PluginConfig.get_elements_in_different_thread && elements.Length > 0)
             //{
@@ -104,22 +108,31 @@ namespace OpenRPA.Windows
             context.SetValue(Elements, elements);
             if(elements.Count() < minresults)
             {
+                Log.Selector(string.Format("Windows.GetElement::Failed locating " + minresults + " item(s) {0:mm\\:ss\\.fff}", sw.Elapsed));
                 throw new ElementNotFoundException("Failed locating " + minresults + " item(s)");
             }
             IEnumerator<UIElement> _enum = elements.ToList().GetEnumerator();
-            context.SetValue(_elements, _enum);
             bool more = _enum.MoveNext();
             if (more)
             {
+                context.SetValue(_elements, _enum);
+                context.SetValue(_sw, sw);
+                Log.Selector(string.Format("Windows.GetElement::end:: call ScheduleAction: {0:mm\\:ss\\.fff}", sw.Elapsed));
                 context.ScheduleAction<UIElement>(Body, _enum.Current, OnBodyComplete);
+            } else
+            {
+                Log.Selector(string.Format("Windows.GetElement:end {0:mm\\:ss\\.fff}", sw.Elapsed));
             }
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
             IEnumerator<UIElement> _enum = _elements.Get(context);
+            Stopwatch sw = _sw.Get(context);
+            Log.Selector(string.Format("Windows.GetElement:OnBodyComplete::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
             bool more = _enum.MoveNext();
             if (more)
             {
+                Log.Selector(string.Format("Windows.GetElement:ScheduleAction {0:mm\\:ss\\.fff}", sw.Elapsed));
                 context.ScheduleAction<UIElement>(Body, _enum.Current, OnBodyComplete);
             }
             else
@@ -129,6 +142,7 @@ namespace OpenRPA.Windows
                     context.ScheduleActivity(LoopAction, LoopActionComplete);
                 }
             }
+            Log.Selector(string.Format("Windows.GetElement:end {0:mm\\:ss\\.fff}", sw.Elapsed));
         }
         private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
@@ -143,6 +157,7 @@ namespace OpenRPA.Windows
             Interfaces.Extensions.AddCacheArgument(metadata, "MaxResults", MaxResults);
 
             metadata.AddImplementationVariable(_elements);
+            metadata.AddImplementationVariable(_sw);
             base.CacheMetadata(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)

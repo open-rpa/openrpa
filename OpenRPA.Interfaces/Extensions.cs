@@ -396,6 +396,8 @@ namespace OpenRPA.Interfaces
             List<string> arguments = new List<string>();
             bool stringIsQuoted = false;
             string argString = "";
+            if(commandLine!=null)
+            {
             for (int c = 0; c < commandLine.Length; c++)  //process string one character at a tie
             {
                 if (commandLine.Substring(c, 1) == "\"")
@@ -425,6 +427,7 @@ namespace OpenRPA.Interfaces
                 {
                     argString += commandLine.Substring(c, 1);  //non-blan character:  add it to the element being constructed
                 }
+            }
             }
             return arguments.ToArray();
         }

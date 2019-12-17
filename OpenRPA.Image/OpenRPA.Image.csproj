@@ -7,8 +7,9 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.20</Version>
-    <PackageReleaseNotes>1.0.20 Add langauges and bug fixes
+    <Version>1.0.21</Version>
+    <PackageReleaseNotes>1.0.21 Remove debug info
+1.0.20 Add langauges and bug fixes
 1.0.18 Tweak input handling doing recording
 1.0.17 update reference
 1.0.16 fix double click

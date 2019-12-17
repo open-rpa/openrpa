@@ -14,6 +14,15 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Windows
 {
+    public class MatchCacheItem
+    {
+        public DateTime Created { get; set; }
+        public AutomationElement[] Result { get; set; }
+        public AutomationElement Root { get; set; }
+        public string Conditions { get; set; }
+        public int Ident { get; set; }
+        
+    }
     class WindowsSelectorItem : SelectorItem
     {
         public WindowsSelectorItem() { }
@@ -231,7 +240,6 @@ namespace OpenRPA.Windows
                 return new AndCondition(cond);
             }
         }
-        private static Dictionary<string, AutomationElement> AppWindowCache = new Dictionary<string, AutomationElement>();
         public AutomationElement[] matches_new(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count, bool isDesktop, TimeSpan timeout, bool search_descendants)
         {
             var sw = new System.Diagnostics.Stopwatch();
@@ -259,31 +267,84 @@ namespace OpenRPA.Windows
 
             return matchs.ToArray();
         }
-        public AutomationElement[] matches(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count, bool isDesktop, TimeSpan timeout, bool search_descendants)
+        private static List<MatchCacheItem> MatchCache = new List<MatchCacheItem>();
+        public AutomationElement[] GetFromCache(AutomationElement root, int ident, string Conditions)
+        {
+            if (!PluginConfig.enable_cache) return null;
+            var now = DateTime.Now;
+            var timeout = PluginConfig.cache_timeout;
+            foreach (var e in MatchCache.Where(x => (now- x.Created) > timeout).ToList())
+            {
+                RemoveFromCache(e);
+            }
+            var result = MatchCache.Where(x => x.Conditions == Conditions && x.Root.Equals(root) && x.Ident == ident).FirstOrDefault();
+            if (result != null)
+            {
+                try
+                {
+                    foreach (var e in result.Result)
+                    {
+                        if (!e.IsAvailable)
+                        {
+                            RemoveFromCache(result);
+                            return null;
+                        } 
+                        else if (!e.Properties.BoundingRectangle.IsSupported || e.Properties.BoundingRectangle.Value == System.Drawing.Rectangle.Empty)
+                        {
+                            RemoveFromCache(result);
+                            return null;
+                        }
+                        //else if ((e.ControlType == FlaUI.Core.Definitions.ControlType.Button ||
+                        //    e.ControlType == FlaUI.Core.Definitions.ControlType.CheckBox ||
+                        //    e.ControlType == FlaUI.Core.Definitions.ControlType.ComboBox ||
+                        //    e.ControlType == FlaUI.Core.Definitions.ControlType.Text ||
+                        //    e.ControlType == FlaUI.Core.Definitions.ControlType.RadioButton
+                        //    ) &&e.IsOffscreen)
+                        //{
+                        //    RemoveFromCache(result);
+                        //    Console.WriteLine("DELETE " + result.Conditions);
+                        //    return null;
+                        //}
+                    }
+                }
+                catch (Exception)
+                {
+                    RemoveFromCache(result);
+                }
+                return result.Result;
+            }
+            return null;
+        }
+        public void RemoveFromCache(MatchCacheItem item)
+        {
+            var items = MatchCache.Where(x => x.Root.Equals(item.Root) && x.Ident >= item.Ident).ToList();
+            foreach (var e in items) MatchCache.Remove(e);
+            MatchCache.Remove(item);
+        }
+        public void AddToCache(AutomationElement root, int ident, string Conditions, AutomationElement[] Result)
+        {
+            if (!PluginConfig.enable_cache) return;
+            var result = MatchCache.Where(x => x.Conditions == Conditions && x.Root.Equals(root)).FirstOrDefault();
+            if (result != null)
+            {
+                result.Result = Result;
+                result.Created = DateTime.Now;
+                return;
+            }
+            result = new MatchCacheItem() { Conditions = Conditions, Created = DateTime.Now, Root = root, Ident = ident, Result = Result };
+            MatchCache.Add(result);
+        }
+        public AutomationElement[] matches(AutomationElement root, int ident, AutomationElement element, int count, bool isDesktop, bool search_descendants)
         {
             var matchs = new List<AutomationElement>();
             var Conditions = GetConditionsWithoutStar();
-            if(isDesktop)
-            {
-                if(AppWindowCache.ContainsKey(Conditions.ToString()))
+            if(isDesktop || !isDesktop)
                 {
-                    var _element = AppWindowCache[Conditions.ToString()];
-                    try
-                    {
-                        if (_element.Properties.IsOffscreen.IsSupported && !_element.IsOffscreen)
-                        {
-                            if (Match(_element))
-                            {
-                                Log.Selector("matches::FindAllChildren: found in AppWindowCache");
-                                return new AutomationElement[] { _element };
-                            }
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        Log.SelectorVerbose("matches::FindAllChildren: Removing from AppWindowCache " + Conditions.ToString());
-                        AppWindowCache.Remove(Conditions.ToString());
-                    }
+                var cache = GetFromCache(root, ident, Conditions.ToString());
+                if(cache != null)
+                {
+                 Log.Selector("matches::FindAllChildren: found in AppWindowCache");
+                 return cache;
                 }
             }
             var sw = new System.Diagnostics.Stopwatch();
@@ -292,7 +353,7 @@ namespace OpenRPA.Windows
 
             if(search_descendants)
             {
-                Log.Selector("AutomationElement.matches: Searching for " + Conditions.ToString());
+                Log.SelectorVerbose("AutomationElement.matches: Searching for " + Conditions.ToString());
                 AutomationElement[] elements = null;
                 if (isDesktop)
                 {
@@ -302,81 +363,40 @@ namespace OpenRPA.Windows
                 {
                     elements = element.FindAllDescendants(Conditions);
                 }
-                Log.Selector(string.Format("AutomationElement.matches::found " + elements.Count() + " elements {0:mm\\:ss\\.fff}", sw.Elapsed));
+                Log.SelectorVerbose(string.Format("AutomationElement.matches::found " + elements.Count() + " elements {0:mm\\:ss\\.fff}", sw.Elapsed));
                 // var elements = element.FindAllChildren();
                 foreach (var elementNode in elements)
                 {
                     Log.SelectorVerbose("matches::match");
-                    if (Match(elementNode)) matchs.Add(elementNode);
+                    if (Match(elementNode) && matchs.Count < count) matchs.Add(elementNode);
                 }
                 Log.Selector(string.Format("AutomationElement.matches::complete, with " + elements.Count() + " elements {0:mm\\:ss\\.fff}", sw.Elapsed));
             }
             else
             {
-                System.Threading.ManualResetEvent syncEvent = new System.Threading.ManualResetEvent(false);
-                Action action = () =>
+                Log.SelectorVerbose(string.Format("AutomationElement.matches.FindAllChildren::begin"));
+                var elements = element.FindAllChildren(Conditions);
+                var manualcheck = Properties.Where(x => x.Enabled == true && x.Value != null && (x.Name == "IndexInParent" || x.Value.Contains("*"))).Count();
+                if(manualcheck > 0)
                 {
-                    var manualcheck = Properties.Where(x => x.Enabled == true && x.Value != null && (x.Name == "IndexInParent" || x.Value.Contains("*"))).Count();
-                    if(manualcheck > 0)
+                    foreach(var elementNode in elements)
                     {
-                        var nodes = new List<AutomationElement>();
-                        Log.Selector(string.Format("AutomationElement.matches.isDesktop(" + isDesktop + ")::GetFirstChild {0:mm\\:ss\\.fff}", sw.Elapsed));
-                        var elementNode = _treeWalker.GetFirstChild(element);
-                        var i = 0;
-                        while (elementNode != null)
-                        {
-                            nodes.Add(elementNode);
-                            i++;
-                            if (Match(elementNode)) matchs.Add(elementNode);
-                            if (matchs.Count >= count) break;
-                            Log.Selector(string.Format("AutomationElement.matches.isDesktop(" + isDesktop + ")::GetNextSibling {0:mm\\:ss\\.fff}", sw.Elapsed));
-                            elementNode = _treeWalker.GetNextSibling(elementNode);
-                        }
-                    } 
-                    else
-                    {
-                        Log.Selector(string.Format("AutomationElement.matches.isDesktop(" + isDesktop + ")::FindAllChildren::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
-                        var elements = element.FindAllChildren(Conditions);
-                        Log.Selector(string.Format("AutomationElement.matches.isDesktop(" + isDesktop + ")::FindAllChildren::end {0:mm\\:ss\\.fff}", sw.Elapsed));
-                        foreach (var elementNode in elements) matchs.Add(elementNode);
+                        if(Match(elementNode) && matchs.Count < count) matchs.Add(elementNode);
                     }
-                    if (syncEvent != null)
-                    {
-                        syncEvent.Set();
-                    }
-                };
-                // if (isDesktop && PluginConfig.get_elements_in_different_thread)
-                if (PluginConfig.get_elements_in_different_thread)
-                {
-                    //Task.Run(action);
-                    //syncEvent.WaitOne(timeout, true);
-                    //if(matchs.Count > 0)
-                    //{
-                    //    matchs.Clear();
-                    action();
-                    //}
+                    Log.SelectorVerbose(string.Format("AutomationElement.matches.manualcheck(" + isDesktop + ")::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                 }
                 else
                 {
-                    action();
+                    //matchs.AddRange(elements);
+                    foreach (var elementNode in elements) if(matchs.Count < count) matchs.Add(elementNode);
+                    Log.SelectorVerbose(string.Format("AutomationElement.matches.puresearch::FindAllChildren::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                 }
             }
-            Log.SelectorVerbose(string.Format("matches::FindAllChildren.isDesktop(" + isDesktop + ")::complete {0:mm\\:ss\\.fff}", sw.Elapsed));
-            if(isDesktop && matchs.Count == 1)
+            if((isDesktop || !isDesktop) && matchs.Count > 0)
             {
-                if (matchs[0].Properties.IsOffscreen.IsSupported)
-                {
-                    if(!AppWindowCache.ContainsKey(Conditions.ToString()))
-                    {
-                        AppWindowCache.Add(Conditions.ToString(), matchs[0]);
-                    } else
-                    {
-                        AppWindowCache[Conditions.ToString()] = matchs[0];
-                    }
-                    
-                }
-                    
+                AddToCache(root, ident, Conditions.ToString(), matchs.ToArray());
             }
+            Log.Selector(string.Format("matches::matches::complete {0:mm\\:ss\\.fff}", sw.Elapsed));
             return matchs.ToArray();
         }
         public bool Match(AutomationElement m)

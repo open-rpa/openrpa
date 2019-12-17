@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.57</Version>
-    <PackageReleaseNotes>1.0.57 Fast fix, to speed up wpf finding
+    <Version>1.0.58</Version>
+    <PackageReleaseNotes>1.0.58 Improve UI and speed
+1.0.57 Fast fix, to speed up wpf finding
 1.0.56 Add langauges and bug fixes
 1.0.55 Add a few more activites and begin implementering languages support
 1.0.52 Fix InvokeRemoteOpenRPA

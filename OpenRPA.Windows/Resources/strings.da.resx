@@ -132,6 +132,9 @@
   <data name="detector_selector" xml:space="preserve">
     <value>Selektor</value>
   </data>
+  <data name="enable_cache_help" xml:space="preserve">
+    <value>Tillad at cache elementer for hurtiger automatisering imod større ram forbrug</value>
+  </data>
   <data name="getelement_drop_hint" xml:space="preserve">
     <value>Slip aktiviteter her</value>
   </data>
@@ -152,6 +155,9 @@
   </data>
   <data name="plugin_allow_multiple_hits_help" xml:space="preserve">
     <value>Tillad flere hits i alle selectors or ikke kun den sidste</value>
+  </data>
+  <data name="plugin_enable_cache" xml:space="preserve">
+    <value>Tillad caching</value>
   </data>
   <data name="plugin_enum_properties" xml:space="preserve">
     <value>Gennem gå egenskaber</value>

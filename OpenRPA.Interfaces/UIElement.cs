@@ -172,34 +172,33 @@ namespace OpenRPA
         {
             try
             {
-                //var automation = AutomationUtil.getAutomation();
-                //var pc = new FlaUI.Core.Conditions.PropertyCondition(automation.PropertyLibrary.Element.ClassName, "Windows.UI.Core.CoreWindow");
-                //var _el = element.FindFirstChild(pc);
-                // RawElement.SetForeground();
-            }
-            catch (Exception)
-            {
-            }
-            try
-            {
                 if (Button != Input.MouseButton.Left) { VirtualClick = false; }
-                if (VirtualClick && !RawElement.Patterns.Invoke.IsSupported) VirtualClick = false;
                 if (VirtualClick)
                 {
-                    try
+                    if (RawElement.Patterns.Invoke.IsSupported)
+                        if(RawElement.Patterns.Invoke.TryGetPattern(out var InvokePattern))
                     {
-                        var invokePattern = RawElement.Patterns.Invoke.Pattern;
-                        invokePattern.Invoke();
-                        if(DoubleClick) invokePattern.Invoke();
+                        InvokePattern.Invoke();
+                        // Log.Selector(string.Format("UIElement.LegacyIAccessible.set::SetValue::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        return;
                     }
-                    catch (Exception ex)
-                    {
-                        Log.Debug("UIElement VirtualClick failed: " + ex.Message);
-                        VirtualClick = false;
-                    }
+                    VirtualClick = false;
                 }
                 if (!VirtualClick)
                 {
+                    //if (RawElement.Properties.IsOffscreen.IsSupported && RawElement.Properties.IsOffscreen.Value == true)
+                    //{
+                    //    try
+                    //    {
+                    //        var automation = AutomationUtil.getAutomation();
+                    //        var pc = new FlaUI.Core.Conditions.PropertyCondition(automation.PropertyLibrary.Element.ClassName, "Windows.UI.Core.CoreWindow");
+                    //        var _el = RawElement.FindFirstChild(pc);
+                    //        RawElement.SetForeground();
+                    //    }
+                    //    catch (Exception)
+                    //    {
+                    //    }
+                    //}
                     if (AnimateMouse)
                     {
                         FlaUI.Core.Input.Mouse.MoveTo(new System.Drawing.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY));
@@ -248,8 +247,11 @@ namespace OpenRPA
         {
             get
             {
+                var sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
                 try
                 {
+                    Log.Selector(string.Format("UIElement.Value.get::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
                     if (RawElement.Properties.IsPassword.TryGetValue(out var isPassword) && isPassword)
                     {
                         throw new FlaUI.Core.Exceptions.MethodNotSupportedException($"Text from element '{ToString()}' cannot be retrieved because it is set as password.");
@@ -257,28 +259,41 @@ namespace OpenRPA
                     if (RawElement.Patterns.Value.TryGetPattern(out var valuePattern) &&
                         valuePattern.Value.TryGetValue(out var value))
                     {
+                        Log.Selector(string.Format("UIElement.Value.get::valuePattern::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                         return value;
                     }
                     if (RawElement.Patterns.Text.TryGetPattern(out var textPattern))
                     {
+                        Log.Selector(string.Format("UIElement.Value.get::textPattern::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                         return textPattern.DocumentRange.GetText(Int32.MaxValue);
                     }
                 }
                 catch (Exception)
                 {
                 }
+                Log.Selector(string.Format("UIElement.Value.get::failed::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                 return null;
                 // throw new FlaUI.Core.Exceptions.MethodNotSupportedException($"AutomationElement '{ToString()}' supports neither ValuePattern or TextPattern");
             }
             set
             {
-                if (RawElement.Patterns.Value.TryGetPattern(out var valuePattern))
+                var sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+                Log.Selector(string.Format("UIElement.Value.set::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
+                if (RawElement.Patterns.LegacyIAccessible.TryGetPattern(out var LegacyPattern))
+                {
+                    LegacyPattern.SetValue(value);
+                    Log.Selector(string.Format("UIElement.LegacyIAccessible.set::SetValue::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+                }
+                else if (RawElement.Patterns.Value.TryGetPattern(out var valuePattern))
                 {
                     valuePattern.SetValue(value);
+                    Log.Selector(string.Format("UIElement.Value.set::SetValue::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                 }
                 else
                 {
                     Enter(value);
+                    Log.Selector(string.Format("UIElement.Value.set::Enter::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                 }
             }
         }

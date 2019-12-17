@@ -267,6 +267,15 @@ namespace OpenRPA
                         Log.Selector(string.Format("UIElement.Value.get::textPattern::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                         return textPattern.DocumentRange.GetText(Int32.MaxValue);
                     }
+                    if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
+                    {
+                        var combo = RawElement.AsListBox();
+                        if(combo.SelectedItem!=null)
+                        {
+                            return combo.SelectedItem.Name;
+                        }
+                    }
+
                 }
                 catch (Exception)
                 {
@@ -294,6 +303,37 @@ namespace OpenRPA
                 {
                     Enter(value);
                     Log.Selector(string.Format("UIElement.Value.set::Enter::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+                }
+                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
+                {
+                    var combo = RawElement.AsListBox();
+                    combo.Select(value);
+                }
+            }
+        }
+        public void SelectItem(UIElement element)
+        {
+            if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
+            {
+                var combo = RawElement.AsListBox();
+                for(var i=0; i < combo.Items.Length; i ++)
+                {
+                    if(combo.Items[i].Name == element.Value)
+                    {
+                        combo.AddToSelection(i);
+                    }
+                    
+                }
+            }
+        }
+        public int SelectedIndex
+        {
+            set
+            {
+                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
+                {
+                    var combo = RawElement.AsListBox();
+                    combo.Select(value);
                 }
             }
         }
@@ -461,11 +501,20 @@ namespace OpenRPA
         public IElement[] Items { 
             get 
             {
+                
                 var result = new List<IElement>();
-                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.ComboBox)
+                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.ComboBox )
                 {
                     var combo = RawElement.AsComboBox();
                     foreach (var c in combo.Items) result.Add(new UIElement(c));
+                } else if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
+                {
+                    var combo = RawElement.AsListBox();
+                    foreach (var c in combo.Items)
+                    {
+                        var tt = c.AsListBoxItem();
+                        result.Add(new UIElement(tt));
+                    }
                 }
                 return result.ToArray();
             } 

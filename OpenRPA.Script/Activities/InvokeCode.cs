@@ -205,21 +205,27 @@ namespace OpenRPA.Script.Activities
                                 }
                                 try
                                 {
-                                    PythonEngine.RunSimpleString(@"
-import sys
-from System import Console
-class output(object):
-    def write(self, msg):
-        Console.Out.Write(msg)
-    def writelines(self, msgs):
-        for msg in msgs:
-            Console.Out.Write(msg)
-    def flush(self):
-        pass
-    def close(self):
-        pass
-sys.stdout = sys.stderr = output()
-");
+
+                                    PythonOutput output = new PythonOutput();
+                                    dynamic sys = Py.Import("sys");
+                                    sys.stdout = output;
+                                    sys.stderr = output;
+
+//                                    PythonEngine.RunSimpleString(@"
+//import sys
+//from System import Console
+//class output(object):
+//    def write(self, msg):
+//        Console.Out.Write(msg)
+//    def writelines(self, msgs):
+//        for msg in msgs:
+//            Console.Out.Write(msg)
+//    def flush(self):
+//        pass
+//    def close(self):
+//        pass
+//sys.stdout = sys.stderr = output()
+//");
 
                                 }
                                 catch (Exception ex)

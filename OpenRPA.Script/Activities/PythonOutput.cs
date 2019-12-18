@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Script.Activities
 {
+    // https://mail.python.org/pipermail/pythondotnet/2016-May/001776.html
     public class PythonOutput
     {
         private TextWriter myWriter = null;

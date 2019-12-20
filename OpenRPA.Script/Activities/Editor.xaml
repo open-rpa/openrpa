@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpenRPA.Script.Activities"
+        xmlns:CodeEditor="clr-namespace:OpenRPA.Script.CodeEditor"
         WindowStartupLocation="CenterScreen"
         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
-        mc:Ignorable="d" 
+        mc:Ignorable="d" Title="Code Editor"
              Height="450" Width="600">
     <DockPanel LastChildFill="True">
         <ToolBar DockPanel.Dock="Top">
@@ -22,12 +23,28 @@
             <Button x:Name="btnValidate" Click="Button_Click">Validate</Button>
         </ToolBar>
         <TextBlock DockPanel.Dock="Bottom" x:Name="errors"></TextBlock>
-        <avalonEdit:TextEditor 
+        <!--<avalonEdit:TextEditor 
 				    Name="textEditor"
 				    FontFamily="Consolas"
 				    FontSize="10pt"
 				    SyntaxHighlighting="VB"
 			>
-        </avalonEdit:TextEditor>
+        </avalonEdit:TextEditor>-->
+        <CodeEditor:CodeEditor
+                    x:Name="textEditor"
+				    FontFamily="Consolas"
+				    FontSize="10pt"
+				    SyntaxHighlighting="VB"
+            >
+            
+        </CodeEditor:CodeEditor>
+        <!--<CodeEditor:CodeEditor
+				    Name="textEditor"
+				    FontFamily="Consolas"
+				    FontSize="10pt"
+				    SyntaxHighlighting="VB"
+			>
+        </CodeEditor:CodeEditor>-->
+
     </DockPanel>
 </Window>

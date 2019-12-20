@@ -1,0 +1,378 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="activity_add_variables" xml:space="preserve">
+    <value>Agregar variables</value>
+  </data>
+  <data name="activity_click_to_view" xml:space="preserve">
+    <value>Double-click to view</value>
+  </data>
+  <data name="activity_drop_hint" xml:space="preserve">
+    <value>Haga doble clic para ver</value>
+  </data>
+  <data name="activity_highlight" xml:space="preserve">
+    <value>Realce</value>
+  </data>
+  <data name="activity_open_selector" xml:space="preserve">
+    <value>Selector abierto</value>
+  </data>
+  <data name="activity_select_element" xml:space="preserve">
+    <value>Seleccionar elemento</value>
+  </data>
+  <data name="animatemouse" xml:space="preserve">
+    <value>Seleccionar elemento...</value>
+  </data>
+  <data name="browseraddons" xml:space="preserve">
+    <value>Complementos del navegador</value>
+  </data>
+  <data name="button_ok" xml:space="preserve">
+    <value>Okay</value>
+  </data>
+  <data name="cancelkey" xml:space="preserve">
+    <value>Cancelar clave</value>
+  </data>
+  <data name="chrome" xml:space="preserve">
+    <value>Chrome</value>
+  </data>
+  <data name="clickpostwait" xml:space="preserve">
+    <value>Establecer Click PostWait</value>
+  </data>
+  <data name="copy" xml:space="preserve">
+    <value>Dupdo</value>
+  </data>
+  <data name="debug" xml:space="preserve">
+    <value>Depurar</value>
+  </data>
+  <data name="delete" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="details" xml:space="preserve">
+    <value>Detalles</value>
+  </data>
+  <data name="detectors" xml:space="preserve">
+    <value>Detectores</value>
+  </data>
+  <data name="dock_logging" xml:space="preserve">
+    <value>Explotación florestal</value>
+  </data>
+  <data name="dock_output" xml:space="preserve">
+    <value>Salida</value>
+  </data>
+  <data name="dock_properties" xml:space="preserve">
+    <value>Propiedades</value>
+  </data>
+  <data name="dock_snippets" xml:space="preserve">
+    <value>Fragmentos</value>
+  </data>
+  <data name="dock_toolbox" xml:space="preserve">
+    <value>Caja de instrumento</value>
+  </data>
+  <data name="download" xml:space="preserve">
+    <value>Descargar</value>
+  </data>
+  <data name="exitapplication" xml:space="preserve">
+    <value>Salir de la aplicación</value>
+  </data>
+  <data name="export" xml:space="preserve">
+    <value>Exportar</value>
+  </data>
+  <data name="files" xml:space="preserve">
+    <value>Archivos</value>
+  </data>
+  <data name="firefox" xml:space="preserve">
+    <value>Firefox</value>
+  </data>
+  <data name="general" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="import" xml:space="preserve">
+    <value>Importar</value>
+  </data>
+  <data name="logging" xml:space="preserve">
+    <value>Explotación florestal</value>
+  </data>
+  <data name="mainnew" xml:space="preserve">
+    <value>Nuevo</value>
+  </data>
+  <data name="maintitle" xml:space="preserve">
+    <value>OpenRPA</value>
+  </data>
+  <data name="main_settings_recording_add_to_designer" xml:space="preserve">
+    <value>Grabar directamente en diseñador</value>
+  </data>
+  <data name="minimize" xml:space="preserve">
+    <value>Minimizar</value>
+  </data>
+  <data name="name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="newproject" xml:space="preserve">
+    <value>Nuevo proyecto</value>
+  </data>
+  <data name="newworkflow" xml:space="preserve">
+    <value>Nuevo flujo de trabajo</value>
+  </data>
+  <data name="nodered" xml:space="preserve">
+    <value>NodeRED</value>
+  </data>
+  <data name="open" xml:space="preserve">
+    <value>Abierto</value>
+  </data>
+  <data name="openflow" xml:space="preserve">
+    <value>OpenFlow</value>
+  </data>
+  <data name="openrpa" xml:space="preserve">
+    <value>OpenRPA</value>
+  </data>
+  <data name="open_created" xml:space="preserve">
+    <value>Creado en</value>
+  </data>
+  <data name="open_createdby" xml:space="preserve">
+    <value>Creado por</value>
+  </data>
+  <data name="open_edit" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="open_edit_xaml" xml:space="preserve">
+    <value>Editar XAML</value>
+  </data>
+  <data name="open_modified" xml:space="preserve">
+    <value>Última modificación a las</value>
+  </data>
+  <data name="open_modifiedby" xml:space="preserve">
+    <value>Ultima modificacion por</value>
+  </data>
+  <data name="open_name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="open_serializable" xml:space="preserve">
+    <value>Serializable</value>
+  </data>
+  <data name="open_state" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="packages" xml:space="preserve">
+    <value>Paquetes</value>
+  </data>
+  <data name="permissions" xml:space="preserve">
+    <value>Permisos</value>
+  </data>
+  <data name="permissionswindow_delete" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="permissionswindow_new" xml:space="preserve">
+    <value>Nuevo</value>
+  </data>
+  <data name="permissions_delete" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="permissions_invoke" xml:space="preserve">
+    <value>Invocar</value>
+  </data>
+  <data name="permissions_read" xml:space="preserve">
+    <value>Leer</value>
+  </data>
+  <data name="permissions_update" xml:space="preserve">
+    <value>Actualizar</value>
+  </data>
+  <data name="play" xml:space="preserve">
+    <value>Jugar</value>
+  </data>
+  <data name="plugins" xml:space="preserve">
+    <value>Complementos</value>
+  </data>
+  <data name="record" xml:space="preserve">
+    <value>Grabar</value>
+  </data>
+  <data name="recorderplugins" xml:space="preserve">
+    <value>Complementos de grabadora</value>
+  </data>
+  <data name="recordingoverlay" xml:space="preserve">
+    <value>Superposición de grabación</value>
+  </data>
+  <data name="runplugins" xml:space="preserve">
+    <value>Ejecutar complementos</value>
+  </data>
+  <data name="runtime" xml:space="preserve">
+    <value>Tiempo de ejecución</value>
+  </data>
+  <data name="save" xml:space="preserve">
+    <value>Salvar</value>
+  </data>
+  <data name="selector" xml:space="preserve">
+    <value>Selector</value>
+  </data>
+  <data name="selectorverbose" xml:space="preserve">
+    <value>Selector Verbose</value>
+  </data>
+  <data name="settings" xml:space="preserve">
+    <value>Configuraciones</value>
+  </data>
+  <data name="settingsfile" xml:space="preserve">
+    <value>Archivo de configuración</value>
+  </data>
+  <data name="signout" xml:space="preserve">
+    <value>Desconectar</value>
+  </data>
+  <data name="slowmotion" xml:space="preserve">
+    <value>Camara lenta</value>
+  </data>
+  <data name="status_disconnected" xml:space="preserve">
+    <value>Desconectado</value>
+  </data>
+  <data name="stop" xml:space="preserve">
+    <value>Detener</value>
+  </data>
+  <data name="tesseract" xml:space="preserve">
+    <value>Tesseract</value>
+  </data>
+  <data name="tools" xml:space="preserve">
+    <value>Herramientas</value>
+  </data>
+  <data name="tools_change_type" xml:space="preserve">
+    <value>Cambiar tipo</value>
+  </data>
+  <data name="tools_swap_sendkeys" xml:space="preserve">
+    <value>Intercambiar SendKeys</value>
+  </data>
+  <data name="tools_swap_virtualclick" xml:space="preserve">
+    <value>Intercambiar clics virtuales</value>
+  </data>
+  <data name="type" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="usesendkeys" xml:space="preserve">
+    <value>Use SendKeys</value>
+  </data>
+  <data name="usevirtualclicks" xml:space="preserve">
+    <value>Usar clics virtuales</value>
+  </data>
+  <data name="value" xml:space="preserve">
+    <value>Valor</value>
+  </data>
+  <data name="verbose" xml:space="preserve">
+    <value>Verboso</value>
+  </data>
+  <data name="visualtracking" xml:space="preserve">
+    <value>Seguimiento visual</value>
+  </data>
+  <data name="warning" xml:space="preserve">
+    <value>Advertencia</value>
+  </data>
+</root>

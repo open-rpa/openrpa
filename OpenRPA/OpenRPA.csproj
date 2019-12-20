@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.59</Version>
-    <PackageReleaseNotes>1.0.59 Make enable_cache default true
+    <Version>1.0.60</Version>
+    <PackageReleaseNotes>1.0.60 Begin implementing intellisense for C# and VB
+1.0.59 Make enable_cache default true
 1.0.58 Improve UI and speed
 1.0.57 Fast fix, to speed up wpf finding
 1.0.56 Add langauges and bug fixes

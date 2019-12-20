@@ -77,5 +77,41 @@ namespace OpenRPA.Script.Resources {
                 return ResourceManager.GetString("activity_open_editor", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to C# Intellisense.
+        /// </summary>
+        public static string plugin_csharp_intellisense {
+            get {
+                return ResourceManager.GetString("plugin_csharp_intellisense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable intellisense for c# scripts.
+        /// </summary>
+        public static string plugin_csharp_intellisense_help {
+            get {
+                return ResourceManager.GetString("plugin_csharp_intellisense_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VB Intellisense.
+        /// </summary>
+        public static string plugin_vb_intellisense {
+            get {
+                return ResourceManager.GetString("plugin_vb_intellisense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable intellisense for Visual Basic scripts.
+        /// </summary>
+        public static string plugin_vb_intellisense_help {
+            get {
+                return ResourceManager.GetString("plugin_vb_intellisense_help", resourceCulture);
+            }
+        }
     }
 }

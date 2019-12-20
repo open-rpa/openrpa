@@ -123,4 +123,16 @@
   <data name="activity_open_editor" xml:space="preserve">
     <value>Åben Edtior</value>
   </data>
+  <data name="plugin_csharp_intellisense" xml:space="preserve">
+    <value>C# Intellisense</value>
+  </data>
+  <data name="plugin_csharp_intellisense_help" xml:space="preserve">
+    <value>Enable intellisense for c# scripts</value>
+  </data>
+  <data name="plugin_vb_intellisense" xml:space="preserve">
+    <value>VB Intellisense</value>
+  </data>
+  <data name="plugin_vb_intellisense_help" xml:space="preserve">
+    <value>Enable intellisense for Visual Basic scripts</value>
+  </data>
 </root>

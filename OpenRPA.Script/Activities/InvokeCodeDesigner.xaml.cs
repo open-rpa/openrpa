@@ -83,11 +83,18 @@ namespace OpenRPA.Script.Activities
             if (!namespaces.Contains("System.Collections")) namespaces.Add("System.Collections");
             if (!namespaces.Contains("System.Collections.Generic")) namespaces.Add("System.Collections.Generic");            
 
+            
             string[] current = ModelItem.GetValue<string[]>("namespaces");
             if(current == null || namespaces.Count() != current.Count())
             {
                 ModelItem.Properties["namespaces"].SetValue(namespaces.ToArray());
-            }           
+            } else
+            {
+                bool changed = false;
+                for (var i = 0; i < namespaces.Count(); i++)
+                    if (namespaces[i] != current[i]) changed = true;
+                if(changed) ModelItem.Properties["namespaces"].SetValue(namespaces.ToArray());
+            }
 
         }
     }

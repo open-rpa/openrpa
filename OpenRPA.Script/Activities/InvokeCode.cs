@@ -99,8 +99,20 @@ namespace OpenRPA.Script.Activities
             {
                 throw new Exception("InvokeCode is missing namespaces, please open workflow in designer and save changes");
             }
-            if (language == "VB") sourcecode = GetVBHeaderText(variables, "Expression", namespaces) + code + GetVBFooterText();
-            if (language == "C#") sourcecode = GetCSharpHeaderText(variables, "Expression", namespaces) + code + GetCSharpFooterText();
+            if (language == "VB")
+            {
+                var header = GetVBHeaderText(variables, "Expression", namespaces);
+                sourcecode = header + code + GetVBFooterText();
+                int numLines = header.Split('\n').Length;
+                Log.Information("Header (add to line numbers): " + numLines);
+            }
+            if (language == "C#")
+            {
+                var header = GetCSharpHeaderText(variables, "Expression", namespaces);
+                sourcecode = header + code + GetCSharpFooterText();
+                int numLines = header.Split('\n').Length;
+                Log.Information("Header (add to line numbers): " + numLines);
+            }
             if (language == "PowerShell")
             {
 
@@ -432,61 +444,7 @@ namespace OpenRPA.Script.Activities
                 }
             }
         }
-        public static string GetCSharpHeaderText(Dictionary<string, Type> variables, string moduleName, string[] namespaces)
-        {
-            var headerText = new StringBuilder();
-            foreach (var n in namespaces)
-            {
-                headerText.AppendLine("using " + n + ";\r\n");
-            }
-            headerText.Append("\r\n namespace SomeNamespace { public class " + moduleName + " { \r\n");
-            if (variables != null)
-            {
-                foreach (var var in variables)
-                {
-                    // Build a VB representation of the variable's type name
-                    var variableTypeName = new StringBuilder();
-                    AppendCSharpTypeName(variableTypeName, var.Value);
-
-                    headerText.Append("public static " + variableTypeName + " " + var.Key + " = default(" + variableTypeName + ");");
-                    headerText.AppendLine();
-                }
-            }
-            headerText.AppendLine();
-            headerText.AppendLine("public static void ExpressionValue() { ");
-            return headerText.ToString();
-        }
-        public static string GetCSharpFooterText()
-        {
-            return " } } }";
-        }
-        private static void AppendCSharpTypeName(StringBuilder typeName, Type type)
-        {
-            var typeFullName = type.FullName;
-
-            if (type.IsGenericType)
-            {
-                var tickIndex = typeFullName.IndexOf('`');
-                if (tickIndex != -1)
-                {
-                    typeName.Append(typeFullName.Substring(0, tickIndex));
-                    typeName.Append("<");
-                    var genericArgumentIndex = 0;
-                    foreach (var genericArgument in type.GetGenericArguments())
-                    {
-                        if (genericArgumentIndex++ > 0)
-                            typeName.Append(", ");
-
-                        AppendCSharpTypeName(typeName, genericArgument);
-                    }
-                    typeName.Append(">");
-                    return;
-                }
-            }
-
-            typeName.Append(typeFullName);
-        }
-        public static string GetVBHeaderText(Dictionary<string, Type> variables, string moduleName, string[] namespaces)
+        private static string GetVBHeaderText(Dictionary<string, Type> variables, string moduleName, string[] namespaces)
         {
             // Inject namespace imports
             //var headerText = new StringBuilder("Imports System\r\nImports System.Collections\r\nImports System.Collections.Generic\r\nImports System.Linq\r\n");
@@ -527,7 +485,7 @@ namespace OpenRPA.Script.Activities
             headerText.AppendLine();
             return headerText.ToString();
         }
-        public static string GetVBFooterText()
+        private static string GetVBFooterText()
         {
             // Close out the Sub and Class in the footer
             return "\r\nEnd Sub\r\nEnd Module";
@@ -552,6 +510,64 @@ namespace OpenRPA.Script.Activities
                         AppendVBTypeName(typeName, genericArgument);
                     }
                     typeName.Append(")");
+                    return;
+                }
+            }
+
+            typeName.Append(typeFullName);
+        }
+
+
+        public static string GetCSharpHeaderText(Dictionary<string, Type> variables, string moduleName, string[] namespaces)
+        {
+            var headerText = new StringBuilder();
+            foreach (var n in namespaces)
+            {
+                headerText.AppendLine("using " + n + ";\r\n");
+            }
+            headerText.Append("\r\n namespace SomeNamespace { public class " + moduleName + " { \r\n");
+            headerText.AppendLine();
+            if (variables != null)
+            {
+                foreach (var var in variables)
+                {
+                    // Build a VB representation of the variable's type name
+                    var variableTypeName = new StringBuilder();
+                    AppendCSharpTypeName(variableTypeName, var.Value);
+
+                    headerText.Append("public static " + variableTypeName + " " + var.Key + " = default(" + variableTypeName + ");");
+                    headerText.AppendLine();
+                }
+            }
+            headerText.AppendLine("public static void ExpressionValue() { ");
+
+
+            return headerText.ToString();
+        }
+        public static string GetCSharpFooterText()
+        {
+            return " } } }";
+        }
+        public static void AppendCSharpTypeName(StringBuilder typeName, Type type)
+        {
+            var typeFullName = type.FullName;
+
+            if (type.IsGenericType)
+            {
+                var tickIndex = typeFullName.IndexOf('`');
+                if (tickIndex != -1)
+                {
+                    typeName.Append(typeFullName.Substring(0, tickIndex));
+                    typeName.Append("<");
+                    var genericArgumentIndex = 0;
+                    foreach (var genericArgument in type.GetGenericArguments())
+                    {
+                        if (genericArgumentIndex++ > 0)
+                            typeName.Append(", ");
+
+                        AppendCSharpTypeName(typeName, genericArgument);
+                    }
+                    typeName.Append(">");
                     return;
                 }
             }

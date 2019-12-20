@@ -184,12 +184,14 @@ Section "Image recognition and OCR" ; section 6
 SectionEnd
 Section "Generic Scripting support" ; section 7
   SetOutPath $INSTDIR
-  File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\ICSharpCode.AvalonEdit.dll"
-  File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\OpenRPA.Script.dll"
-  File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\OpenRPA.Script.pdb"
-  File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\Python.Included.dll"
-  File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\Python.Runtime.NETStandard.dll"
-  File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\sharpAHK.dll"
+  ; File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\ICSharpCode.AvalonEdit.dll"
+  ; File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\OpenRPA.Script.dll"
+  ; File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\OpenRPA.Script.pdb"
+  ; File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\Python.Included.dll"
+  ; File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\Python.Runtime.NETStandard.dll"
+  ; File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\sharpAHK.dll"
+  File /r "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\*"
+
 SectionEnd
 Section "AviRecorder" ; section 8
   SetOutPath $INSTDIR

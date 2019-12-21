@@ -176,7 +176,8 @@ namespace OpenRPA
             {
                 try
                 {
-                    ExpressionEditor.EditorUtil.Init();
+                    // ExpressionEditor.EditorUtil.Init();
+                    _ = CodeEditor.init.Initialize();
                 }
                 catch (Exception ex)
                 {

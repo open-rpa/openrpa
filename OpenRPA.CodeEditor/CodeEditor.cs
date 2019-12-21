@@ -23,7 +23,20 @@ namespace OpenRPA.CodeEditor
 {
     // https://www.strathweb.com/2018/12/using-roslyn-c-completion-service-programmatically/
     // https://github.com/microsoft/AppConsult-WinAppsModernizationWorkshop/blob/master/Samples/DotNetPad/DotNetPad.Presentation/Controls/CodeEditor.cs
-
+    public class init
+    {
+        public async static Task Initialize()
+        {
+            CodeEditor ce = null;
+            GenericTools.RunUI(() =>
+            {
+                ce = new CodeEditor();
+                ce.document = ce.Initialize();
+            });
+            var completionService = CompletionService.GetService(ce.document);
+            var completionList = await Task.Run(async () => await completionService.GetCompletionsAsync(ce.document, 0));
+        }
+    }
     public class CodeEditor : TextEditor, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -101,7 +114,7 @@ namespace OpenRPA.CodeEditor
         private bool _initialized = false;
         private ProjectInfo projectinfo;
         private Project project;
-        private Document document;
+        public Document document;
         private string currentLanguage = "";
         string header;
         string footer;
@@ -168,7 +181,7 @@ namespace OpenRPA.CodeEditor
             return project.AddDocument("TestDocument.vb", header + Text + footer);
 
         }
-        private Document Initialize()
+        public Document Initialize()
         {
             Document document = this.document;
             GenericTools.RunUI(() =>

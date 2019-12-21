@@ -24,7 +24,8 @@ namespace OpenRPA.CodeEditor
             if (!namespaces.Contains("System.Collections")) namespaces.Add("System.Collections");
             if (!namespaces.Contains("System.Collections.Generic")) namespaces.Add("System.Collections.Generic");
 
-            if(initialSize.IsEmpty || initialSize.Height < 25)
+            bool useOld = false;
+            if((initialSize.IsEmpty || initialSize.Height < 25) && useOld)
             {
                 if (service == null)
                 {

@@ -63,7 +63,7 @@ namespace OpenRPA.Interfaces
                 }
                 foreach (Assembly assembly in assemblies)
                 {
-                    if (assembly != null)
+                    if (assembly != null && !assembly.CodeBase.Contains("Microsoft.CodeAnalysis"))
                     {
                         try
                         {

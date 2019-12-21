@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace OpenRPA.CodeEditor
 {
@@ -28,6 +29,39 @@ namespace OpenRPA.CodeEditor
             GotFocus += Editor_GotFocus;
             LostFocus += Editor_LostFocus;
             Unloaded += Editor_Unloaded;
+            IsKeyboardFocusWithinChanged += EditorInstance_IsKeyboardFocusWithinChanged;
+        }
+        private void EditorInstance_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (IsKeyboardFocusWithin)
+            {
+                // Dispatch to ensure that the visual is available before trying to move focus to the view
+                Dispatcher.BeginInvoke(DispatcherPriority.Send, (DispatcherOperationCallback)delegate (object arg) {
+                    if (!TextArea.IsKeyboardFocusWithin)
+                    {
+                        try
+                        {
+                            //TextArea.Focus();
+                            //Focus();
+                            //(sender as ICSharpCode.AvalonEdit.TextEditor).TextArea.MoveFocus(new System.Windows.Input.TraversalRequest(System.Windows.Input.FocusNavigationDirection.Next));
+                            TextArea.Focus();
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Debug(ex.ToString());
+                        }
+                    }
+                    return null;
+                }, null);
+
+                // Raise an event
+                GotAggregateFocus?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                // Raise an event
+                LostAggregateFocus?.Invoke(this, EventArgs.Empty);
+            }
         }
         private void Editor_Unloaded(object sender, RoutedEventArgs e)
         {
@@ -37,7 +71,6 @@ namespace OpenRPA.CodeEditor
         {
             GotAggregateFocus?.Invoke(sender, e);
         }
-
         /// <summary>
         /// Gets the unique ID of the editor instance.
         /// </summary>
@@ -64,7 +97,9 @@ namespace OpenRPA.CodeEditor
         }
         public bool AcceptsTab
         {
-            get { return true; }
+            get { 
+                return true; 
+            }
             set { _ = value; }
         }
         private void Editor_LostFocus(object sender, RoutedEventArgs e)
@@ -144,7 +179,36 @@ namespace OpenRPA.CodeEditor
 
         void IExpressionEditorInstance.Focus()
         {
-            Focus();
+            Log.Information("IExpressionEditorInstance.Focus()");
+            try
+            {
+                // Dispatch to ensure that the visual is available before trying to move focus to the view
+                Dispatcher.BeginInvoke(DispatcherPriority.Send, (DispatcherOperationCallback)delegate (object arg) {
+                    if (!TextArea.IsKeyboardFocusWithin)
+                    {
+                        try
+                        {
+                            //TextArea.Focus();
+                            //Focus();
+                            //TextArea.MoveFocus(new System.Windows.Input.TraversalRequest(System.Windows.Input.FocusNavigationDirection.Next));
+                            TextArea.Focus();
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Debug(ex.ToString());
+                        }
+                    }
+                    return null;
+                }, null);
+
+                // Raise an event
+                GotAggregateFocus?.Invoke(this, EventArgs.Empty);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }            
         }
 
         bool IExpressionEditorInstance.Cut()

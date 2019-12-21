@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.Classification;
 using System;
 
-namespace OpenRPA.Script.CodeEditor
+namespace OpenRPA.CodeEditor
 {
     public static class ClassificationTags
     {

@@ -51,35 +51,10 @@
     <None Remove="lib\Python.Runtime.NETStandard.dll" />
     <None Remove="Python.Runtime.NETStandard.dll" />
     <None Remove="Resources\Autohotkey.xshd" />
-    <None Remove="Resources\CodeEditorResources.xaml" />
     <None Remove="Resources\designer\autohotkey.png" />
     <None Remove="Resources\designer\comment.png" />
     <None Remove="Resources\designer\prompt.png" />
     <None Remove="Resources\ICSharpCode.PythonBinding.Resources.Python.xshd" />
-    <None Remove="Resources\ImageResources.xaml" />
-    <None Remove="Resources\Images\Class16.png" />
-    <None Remove="Resources\Images\Constant16.png" />
-    <None Remove="Resources\Images\Copy16.png" />
-    <None Remove="Resources\Images\Cut16.png" />
-    <None Remove="Resources\Images\Delegate16.png" />
-    <None Remove="Resources\Images\Enum16.png" />
-    <None Remove="Resources\Images\EnumItem16.png" />
-    <None Remove="Resources\Images\Error16.png" />
-    <None Remove="Resources\Images\Event16.png" />
-    <None Remove="Resources\Images\ExtensionMethod16.png" />
-    <None Remove="Resources\Images\Field16.png" />
-    <None Remove="Resources\Images\Info16.png" />
-    <None Remove="Resources\Images\Interface16.png" />
-    <None Remove="Resources\Images\Keyword16.png" />
-    <None Remove="Resources\Images\Method16.png" />
-    <None Remove="Resources\Images\Module16.png" />
-    <None Remove="Resources\Images\Namespace16.png" />
-    <None Remove="Resources\Images\Paste16.png" />
-    <None Remove="Resources\Images\Property16.png" />
-    <None Remove="Resources\Images\Start16.png" />
-    <None Remove="Resources\Images\Stop16.png" />
-    <None Remove="Resources\Images\Structure16.png" />
-    <None Remove="Resources\Images\Warning16.png" />
     <None Remove="Resources\toolbox\autohotkey.png" />
     <None Remove="Resources\toolbox\comment.png" />
     <None Remove="Resources\toolbox\prompt.png" />
@@ -111,12 +86,6 @@
     <Page Include="Activities\InvokeCodeDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resources\CodeEditorResources.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\ImageResources.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\RecordPluginView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -137,32 +106,10 @@
     <Resource Include="Resources\designer\autohotkey.png" />
     <Resource Include="Resources\designer\comment.png" />
     <Resource Include="Resources\designer\prompt.png" />
-    <Resource Include="Resources\Images\Class16.png" />
-    <Resource Include="Resources\Images\Constant16.png" />
-    <Resource Include="Resources\Images\Copy16.png" />
-    <Resource Include="Resources\Images\Cut16.png" />
-    <Resource Include="Resources\Images\Delegate16.png" />
-    <Resource Include="Resources\Images\Enum16.png" />
-    <Resource Include="Resources\Images\EnumItem16.png" />
-    <Resource Include="Resources\Images\Error16.png" />
-    <Resource Include="Resources\Images\Event16.png" />
-    <Resource Include="Resources\Images\ExtensionMethod16.png" />
-    <Resource Include="Resources\Images\Field16.png" />
-    <Resource Include="Resources\Images\Info16.png" />
-    <Resource Include="Resources\Images\Interface16.png" />
-    <Resource Include="Resources\Images\Keyword16.png" />
-    <Resource Include="Resources\Images\Method16.png" />
-    <Resource Include="Resources\Images\Module16.png" />
-    <Resource Include="Resources\Images\Namespace16.png" />
-    <Resource Include="Resources\Images\Paste16.png" />
-    <Resource Include="Resources\Images\Property16.png" />
-    <Resource Include="Resources\Images\Start16.png" />
-    <Resource Include="Resources\Images\Stop16.png" />
-    <Resource Include="Resources\Images\Structure16.png" />
-    <Resource Include="Resources\Images\Warning16.png" />
     <EmbeddedResource Include="Resources\ICSharpCode.PythonBinding.Resources.Python.xshd" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OpenRPA.CodeEditor\OpenRPA.CodeEditor.csproj" />
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
   </ItemGroup>
   <ItemGroup>

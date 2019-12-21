@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.Classification;
 using System.Collections.Generic;
 using System.Windows.Media;
 
-namespace OpenRPA.Script.CodeEditor
+namespace OpenRPA.CodeEditor
 {
     internal static class CodeHighlightColors
     {

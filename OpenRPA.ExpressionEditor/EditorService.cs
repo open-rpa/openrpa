@@ -17,7 +17,7 @@ namespace OpenRPA.ExpressionEditor
             this.designer = designer;
             AutoCompletionData = EditorUtil.autoCompletionTree;
         }
-        private IExpressionEditorInstance CreateEditor(ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text, Type expressionType)
+        public IExpressionEditorInstance CreateEditor(ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text, Type expressionType)
         {
             ExpressionNode data = AutoCompletionData;
             data = AddVariablesToAutoCompletionList(data, variables);
@@ -104,10 +104,6 @@ x.Name.Equals(computedName)
             }
 
             return data;
-        }
-        private IExpressionEditorInstance CreateEditor(AssemblyContextControlItem assemblies, ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text, Type expressionType)
-        {
-            return CreateEditor(importedNamespaces, variables, text, expressionType);
         }
         public IExpressionEditorInstance CreateExpressionEditor(AssemblyContextControlItem assemblies, ImportedNamespaceContextItem importedNamespaces, List<ModelItem> variables, string text, Type expressionType)
         {

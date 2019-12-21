@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 
-namespace OpenRPA.Script.CodeEditor
+namespace OpenRPA.CodeEditor
 {
     public class CodeCompletionDescription : NotifyChange //: Model
     {

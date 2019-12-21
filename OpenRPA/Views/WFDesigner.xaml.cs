@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json.Linq;
-using OpenRPA.ExpressionEditor;
 using OpenRPA.Interfaces;
 using System;
 using System.Activities;
@@ -261,7 +260,8 @@ namespace OpenRPA.Views
                 ReadOnly = true;
             }
 
-            WorkflowDesigner.Context.Services.Publish<IExpressionEditorService>(new EditorService(this));
+            //WorkflowDesigner.Context.Services.Publish<IExpressionEditorService>(new EditorService(this));
+            WorkflowDesigner.Context.Services.Publish<IExpressionEditorService>(new CodeEditor.EditorService(this));
             if (!string.IsNullOrEmpty(Workflow.Xaml))
             {
                 WorkflowDesigner.Text = Workflow.Xaml;

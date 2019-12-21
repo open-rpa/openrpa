@@ -474,9 +474,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenRPA.ExpressionEditor\OpenRPA.ExpressionEditor.csproj">
-      <IncludeAssets>all</IncludeAssets>
-    </ProjectReference>
+    <ProjectReference Include="..\OpenRPA.CodeEditor\OpenRPA.CodeEditor.csproj" />
     <ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj">
       <IncludeAssets>all</IncludeAssets>
     </ProjectReference>

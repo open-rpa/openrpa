@@ -57,7 +57,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nsis", "nsis", "{00A8B562-F
 		test.nsi = test.nsi
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.Utilities", "OpenRPA.Utilities\OpenRPA.Utilities.csproj", "{A81145BC-37F1-42E4-B3CB-5221E08BB222}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Utilities", "OpenRPA.Utilities\OpenRPA.Utilities.csproj", "{A81145BC-37F1-42E4-B3CB-5221E08BB222}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.CodeEditor", "OpenRPA.CodeEditor\OpenRPA.CodeEditor.csproj", "{A71E984D-180B-4EE3-85C1-86F3937A2B0F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -259,12 +261,20 @@ Global
 		{A81145BC-37F1-42E4-B3CB-5221E08BB222}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A81145BC-37F1-42E4-B3CB-5221E08BB222}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
 		{A81145BC-37F1-42E4-B3CB-5221E08BB222}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
+		{A71E984D-180B-4EE3-85C1-86F3937A2B0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A71E984D-180B-4EE3-85C1-86F3937A2B0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A71E984D-180B-4EE3-85C1-86F3937A2B0F}.PrepInstaller|Any CPU.ActiveCfg = Release|Any CPU
+		{A71E984D-180B-4EE3-85C1-86F3937A2B0F}.PrepInstaller|Any CPU.Build.0 = Release|Any CPU
+		{A71E984D-180B-4EE3-85C1-86F3937A2B0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A71E984D-180B-4EE3-85C1-86F3937A2B0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A71E984D-180B-4EE3-85C1-86F3937A2B0F}.ReleaseNuget|Any CPU.ActiveCfg = Release|Any CPU
+		{A71E984D-180B-4EE3-85C1-86F3937A2B0F}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
 		BuildVersion_StartDate = 2000/1/1
+		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
 	EndGlobalSection
 EndGlobal

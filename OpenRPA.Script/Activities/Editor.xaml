@@ -1,14 +1,13 @@
 ﻿<Window x:Class="OpenRPA.Script.Activities.Editor"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:OpenRPA.Script.Activities"
-        xmlns:CodeEditor="clr-namespace:OpenRPA.Script.CodeEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:local="clr-namespace:OpenRPA.Script.Activities"
+        xmlns:ce1="clr-namespace:OpenRPA.CodeEditor;assembly=OpenRPA.CodeEditor"
         WindowStartupLocation="CenterScreen"
-        xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
         mc:Ignorable="d" Title="Code Editor"
-             Height="450" Width="600">
+        Height="450" Width="600">
     <DockPanel LastChildFill="True">
         <ToolBar DockPanel.Dock="Top">
             <!-- 
@@ -30,14 +29,14 @@
 				    SyntaxHighlighting="VB"
 			>
         </avalonEdit:TextEditor>-->
-        <CodeEditor:CodeEditor
+        <ce1:CodeEditor
                     x:Name="textEditor"
 				    FontFamily="Consolas"
 				    FontSize="10pt"
 				    SyntaxHighlighting="VB"
             >
             
-        </CodeEditor:CodeEditor>
+        </ce1:CodeEditor>
         <!--<CodeEditor:CodeEditor
 				    Name="textEditor"
 				    FontFamily="Consolas"

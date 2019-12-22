@@ -131,5 +131,23 @@ namespace OpenRPA.Java.Resources {
                 return ResourceManager.GetString("detector_selector", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto launch.
+        /// </summary>
+        public static string plugin_auto_launch_java_bridge {
+            get {
+                return ResourceManager.GetString("plugin_auto_launch_java_bridge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto launch java bridge application when robot is running.
+        /// </summary>
+        public static string plugin_auto_launch_java_bridge_help {
+            get {
+                return ResourceManager.GetString("plugin_auto_launch_java_bridge_help", resourceCulture);
+            }
+        }
     }
 }

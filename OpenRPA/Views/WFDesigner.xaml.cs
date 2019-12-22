@@ -81,6 +81,18 @@ namespace OpenRPA.Views
                 NotifyPropertyChanged("Properties");
             }
         }
+        public bool IsSelected
+        {
+            get
+            {
+                return tab.IsSelected;
+            }
+            set
+            {
+                if (tab.IsSelected) return;
+                tab.IsSelected = true;
+            }
+        }
         private void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
@@ -345,10 +357,6 @@ namespace OpenRPA.Views
         {
             PropertyChanged?.Invoke(this, e);
         }
-
-
-
-
         public async Task Save()
         {
             // var basepath = Project.Path;
@@ -1618,6 +1626,5 @@ namespace OpenRPA.Views
             wfDesigner.Flush();
             return wfDesigner.Text;
         }
-
     }
 }

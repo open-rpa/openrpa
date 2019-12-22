@@ -64,9 +64,24 @@ namespace OpenRPA.Java
         private string _Status = "";
         public string Status { get => _Status; }
         // public Javahook hook { get; set; } = new Javahook();
-        public System.Windows.Controls.UserControl editor => null;
+        private Views.RecordPluginView view;
+        public System.Windows.Controls.UserControl editor
+        {
+            get
+            {
+                if (view == null)
+                {
+                    view = new Views.RecordPluginView();
+                }
+                return view;
+            }
+        }
         public void Start()
         {
+            if (PluginConfig.auto_launch_java_bridge)
+            {
+                Javahook.Instance.init();
+            }
             Javahook.Instance.OnMouseClicked += Hook_OnMouseClicked;
         }
         public void Stop()

@@ -14,6 +14,7 @@ using SharpAvi.Output;
 using System.Windows.Interop;
 using System.Diagnostics;
 using SharpAvi;
+using OpenRPA.Interfaces;
 
 namespace OpenRPA.AviRecorder
 {
@@ -235,16 +236,23 @@ namespace OpenRPA.AviRecorder
         }
         private void GetScreenshot(byte[] buffer)
         {
-            using (var bitmap = new Bitmap(screenWidth, screenHeight))
-            using (var graphics = Graphics.FromImage(bitmap))
+            try
             {
-                graphics.CopyFromScreen(0, 0, 0, 0, new System.Drawing.Size(screenWidth, screenHeight));
-                var bits = bitmap.LockBits(new Rectangle(0, 0, screenWidth, screenHeight), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb);
-                Marshal.Copy(bits.Scan0, buffer, 0, buffer.Length);
-                bitmap.UnlockBits(bits);
-                // Should also capture the mouse cursor here, but skipping for simplicity
-                // For those who are interested, look at http://www.codeproject.com/Articles/12850/Capturing-the-Desktop-Screen-with-the-Mouse-Cursor
-                // or https://www.red-gate.com/simple-talk/dotnet/net-framework/capturing-screenshots-for-automated-error-reporting/
+                using (var bitmap = new Bitmap(screenWidth, screenHeight))
+                using (var graphics = Graphics.FromImage(bitmap))
+                {
+                    graphics.CopyFromScreen(0, 0, 0, 0, new System.Drawing.Size(screenWidth, screenHeight));
+                    var bits = bitmap.LockBits(new Rectangle(0, 0, screenWidth, screenHeight), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb);
+                    Marshal.Copy(bits.Scan0, buffer, 0, buffer.Length);
+                    bitmap.UnlockBits(bits);
+                    // Should also capture the mouse cursor here, but skipping for simplicity
+                    // For those who are interested, look at http://www.codeproject.com/Articles/12850/Capturing-the-Desktop-Screen-with-the-Mouse-Cursor
+                    // or https://www.red-gate.com/simple-talk/dotnet/net-framework/capturing-screenshots-for-automated-error-reporting/
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
             }
         }
 

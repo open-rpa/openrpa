@@ -306,6 +306,9 @@
   <data name="recordingoverlay" xml:space="preserve">
     <value>Recording Overlay</value>
   </data>
+  <data name="ribbon_search" xml:space="preserve">
+    <value>Search</value>
+  </data>
   <data name="runplugins" xml:space="preserve">
     <value>Run plugins</value>
   </data>

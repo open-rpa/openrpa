@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json.Linq;
-using OpenRPA.ExpressionEditor;
 using OpenRPA.Interfaces;
 using System;
 using System.Activities;
@@ -80,6 +79,18 @@ namespace OpenRPA.Views
             {
                 _Properties = value;
                 NotifyPropertyChanged("Properties");
+            }
+        }
+        public bool IsSelected
+        {
+            get
+            {
+                return tab.IsSelected;
+            }
+            set
+            {
+                if (tab.IsSelected) return;
+                tab.IsSelected = true;
             }
         }
         private void NotifyPropertyChanged(string propertyName)
@@ -261,7 +272,8 @@ namespace OpenRPA.Views
                 ReadOnly = true;
             }
 
-            WorkflowDesigner.Context.Services.Publish<IExpressionEditorService>(new EditorService(this));
+            //WorkflowDesigner.Context.Services.Publish<IExpressionEditorService>(new EditorService(this));
+            WorkflowDesigner.Context.Services.Publish<IExpressionEditorService>(new CodeEditor.EditorService(this));
             if (!string.IsNullOrEmpty(Workflow.Xaml))
             {
                 WorkflowDesigner.Text = Workflow.Xaml;
@@ -345,10 +357,6 @@ namespace OpenRPA.Views
         {
             PropertyChanged?.Invoke(this, e);
         }
-
-
-
-
         public async Task Save()
         {
             // var basepath = Project.Path;
@@ -1618,6 +1626,5 @@ namespace OpenRPA.Views
             wfDesigner.Flush();
             return wfDesigner.Text;
         }
-
     }
 }

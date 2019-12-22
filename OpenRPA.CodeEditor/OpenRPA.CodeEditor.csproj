@@ -1,0 +1,108 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
+    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageIconUrl />
+    <Authors>OpenRPA</Authors>
+    <Product>OpenRPA</Product>
+    <Description>Code Edtior with syntax Coloring and intellisense</Description>
+    <Version>1.0.1</Version>
+    <PackageReleaseNotes>1.0.1 Downgrade roslyn compiler to avoid https://github.com/dotnet/roslyn/issues/38779</PackageReleaseNotes>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\debug</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\dist</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+  <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
+    <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
+  </Target>
+  <ItemGroup>
+    <None Remove="Resources\CodeEditorResources.xaml" />
+    <None Remove="Resources\ImageResources.xaml" />
+    <None Remove="Resources\Images\Class16.png" />
+    <None Remove="Resources\Images\Constant16.png" />
+    <None Remove="Resources\Images\Copy16.png" />
+    <None Remove="Resources\Images\Cut16.png" />
+    <None Remove="Resources\Images\Delegate16.png" />
+    <None Remove="Resources\Images\Enum16.png" />
+    <None Remove="Resources\Images\EnumItem16.png" />
+    <None Remove="Resources\Images\Error16.png" />
+    <None Remove="Resources\Images\Event16.png" />
+    <None Remove="Resources\Images\ExtensionMethod16.png" />
+    <None Remove="Resources\Images\Field16.png" />
+    <None Remove="Resources\Images\Info16.png" />
+    <None Remove="Resources\Images\Interface16.png" />
+    <None Remove="Resources\Images\Keyword16.png" />
+    <None Remove="Resources\Images\Method16.png" />
+    <None Remove="Resources\Images\Module16.png" />
+    <None Remove="Resources\Images\Namespace16.png" />
+    <None Remove="Resources\Images\Paste16.png" />
+    <None Remove="Resources\Images\Property16.png" />
+    <None Remove="Resources\Images\Start16.png" />
+    <None Remove="Resources\Images\Stop16.png" />
+    <None Remove="Resources\Images\Structure16.png" />
+    <None Remove="Resources\Images\Warning16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AvalonEdit" Version="6.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="3.2.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="3.2.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Resources\CodeEditorResources.xaml" />
+    <Page Include="Resources\ImageResources.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Class16.png" />
+    <Resource Include="Resources\Images\Constant16.png" />
+    <Resource Include="Resources\Images\Copy16.png" />
+    <Resource Include="Resources\Images\Cut16.png" />
+    <Resource Include="Resources\Images\Delegate16.png" />
+    <Resource Include="Resources\Images\Enum16.png" />
+    <Resource Include="Resources\Images\EnumItem16.png" />
+    <Resource Include="Resources\Images\Error16.png" />
+    <Resource Include="Resources\Images\Event16.png" />
+    <Resource Include="Resources\Images\ExtensionMethod16.png" />
+    <Resource Include="Resources\Images\Field16.png" />
+    <Resource Include="Resources\Images\Info16.png" />
+    <Resource Include="Resources\Images\Interface16.png" />
+    <Resource Include="Resources\Images\Keyword16.png" />
+    <Resource Include="Resources\Images\Method16.png" />
+    <Resource Include="Resources\Images\Module16.png" />
+    <Resource Include="Resources\Images\Namespace16.png" />
+    <Resource Include="Resources\Images\Paste16.png" />
+    <Resource Include="Resources\Images\Property16.png" />
+    <Resource Include="Resources\Images\Start16.png" />
+    <Resource Include="Resources\Images\Stop16.png" />
+    <Resource Include="Resources\Images\Structure16.png" />
+    <Resource Include="Resources\Images\Warning16.png" />
+  </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'PrepInstaller'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+</Project>

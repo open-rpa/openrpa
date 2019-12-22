@@ -11,7 +11,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Tags;
 using OpenRPA.Interfaces;
 
-namespace OpenRPA.Script.CodeEditor
+namespace OpenRPA.CodeEditor
 {
     public class CodeCompletionData : ICompletionData
     {

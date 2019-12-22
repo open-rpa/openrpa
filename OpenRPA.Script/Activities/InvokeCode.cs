@@ -140,10 +140,17 @@ namespace OpenRPA.Script.Activities
                     {
                         var value = runspace.SessionStateProxy.GetVariable(v.DisplayName);
                         var myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
-                        if (myVar != null && value != null && value != "")
+                        try
                         {
-                            //var myValue = myVar.GetValue(context.DataContext);
-                            myVar.SetValue(context.DataContext, value);
+                            if (myVar != null && value != null)
+                            {
+                                //var myValue = myVar.GetValue(context.DataContext);
+                                myVar.SetValue(context.DataContext, value);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
                         }
                     }
                     PipelineOutput.Set(context, res);
@@ -177,7 +184,7 @@ namespace OpenRPA.Script.Activities
                     {
                         var value = ahk.GetVar(v.DisplayName);
                         PropertyDescriptor myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
-                        if (myVar != null && value != null && value != "")
+                        if (myVar != null && value != null)
                         {
                             if (myVar.PropertyType == typeof(string))
                                 myVar.SetValue(context.DataContext, value);

@@ -176,7 +176,8 @@ namespace OpenRPA
             {
                 try
                 {
-                    ExpressionEditor.EditorUtil.Init();
+                    // ExpressionEditor.EditorUtil.Init();
+                    _ = CodeEditor.init.Initialize();
                 }
                 catch (Exception ex)
                 {
@@ -825,7 +826,6 @@ namespace OpenRPA
                 NotifyPropertyChanged("recording_add_to_designer");
             }
         }
-        
         public ICommand LoggingOptionCommand { get { return new RelayCommand<object>(OnLoggingOptionCommand, CanAllways); } }
         public ICommand ExitAppCommand { get { return new RelayCommand<object>(OnExitApp, (e) => true); } }
         public ICommand SettingsCommand { get { return new RelayCommand<object>(OnSettings, CanSettings); } }
@@ -2910,5 +2910,212 @@ namespace OpenRPA
             var result = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId).FirstOrDefault();
             return result;
         }
+        private void searchBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            QuickLaunchItem item = null;
+            if (searchBox.SelectedItem!=null && searchBox.SelectedItem is QuickLaunchItem)
+            {
+                item = searchBox.SelectedItem as QuickLaunchItem;
+            }
+            if(item == null)
+            {
+                return;
+            }
+            if (item.designer == null) return;
+            GenericTools.RunUI(() =>
+            {
+                item.designer.SetDebugLocation(null);
+                item.designer.IsSelected = true;
+                if (item.item != null && item.item != item.originalitem)
+                {
+                    item.designer.NavigateTo(item.item);
+                }
+                if (item.originalitem != null)
+                {
+                    item.designer.NavigateTo(item.originalitem);
+                }
+            });
+        }
+        private void searchBox_Populating(object sender, PopulatingEventArgs e)
+        {
+            var text = searchBox.Text.ToLower();
+            var options = new List<QuickLaunchItem>();
+            foreach (var designer in Designers)
+            {
+                var suboptions = new List<QuickLaunchItem>();
+                foreach (var arg in designer.GetParameters())
+                {
+                    if (arg.Name.ToLower().Contains(text))
+                    {
+                        addOption(designer, arg, suboptions);
+                    }
+                }
+                foreach (System.Activities.Presentation.Model.ModelItem item in designer.GetWorkflowActivities())
+                {
+
+                    bool wasadded = false;
+
+                    string displayname = item.ToString();
+                    System.Activities.Presentation.Model.ModelProperty property = item.Properties["ExpressionText"];
+                    if ((property != null) && (property.Value != null))
+                    {
+                        string input = item.Properties["ExpressionText"].Value.ToString();
+                        if (input.ToLower().Contains(text))
+                        {
+                            wasadded = true;
+                            addOption(designer, item, suboptions);
+                        }
+                    }
+                    property = item.Properties["Variables"];
+                    if ((property != null) && (property.Value != null))
+                    {
+                        foreach (var v in property.Collection)
+                        {
+                            var nameproperty = v.Properties["Name"];
+                            if (nameproperty.Value.ToString().ToLower().Contains(text))
+                            {
+                                wasadded = true;
+                                addOption(designer, v, suboptions);
+                            }
+
+                        }
+                    }
+                    if (!wasadded && displayname.ToLower().Contains(text))
+                    {
+                        wasadded = true;
+                        addOption(designer, item, suboptions);
+                    }
+                }
+                if (suboptions.Count > 0)
+                {
+                    options.Add(new QuickLaunchItem() { Header = designer.Workflow.name });
+                    options.AddRange(suboptions);
+                }
+            }
+            searchBox.ItemsSource = options;
+        }
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.F && (System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Control) == System.Windows.Input.ModifierKeys.Control)
+            {
+                tabGeneral.IsSelected = true;
+                //searchTab.Focus();
+                searchBox.Focus();
+            }
+        }
+        private void addOption(Views.WFDesigner designer, System.Activities.Presentation.Model.ModelItem item, List<QuickLaunchItem> options)
+        {
+            var ImageSource = new BitmapImage(new Uri("/Resources/icons/activity.png", UriKind.Relative));
+            var _item = getActivity(designer, item);
+            if (!item.ItemType.ToString().Contains("System.Activities.Variable"))
+            {
+                var exists = options.Where(x => x.item == _item).FirstOrDefault();
+                if (exists != null) return;
+            }
+            if (item.ItemType.ToString().Contains("System.Activities.Statements.Flow") ||
+                item.ItemType.ToString().Contains("System.Activities.Statements.Flow"))
+            {
+                ImageSource = new BitmapImage(new Uri("/Resources/icons/flowchart.png", UriKind.Relative));
+            }
+            var displayname = _item.ToString();
+            if (_item != item)
+            {
+                if (item.ItemType.ToString().Contains("System.Activities.Variable"))
+                {
+                    ImageSource = new BitmapImage(new Uri("/Resources/icons/variable.png", UriKind.Relative));
+                    displayname = "Variable of " + _item.ToString();
+                    var p = item.Properties["Name"];
+                    if (p != null && p.Value != null)
+                    {
+                        displayname = "Variable " + p.Value + " of " + _item.ToString();
+                    }
+                }
+                else
+                {
+                    ImageSource = new BitmapImage(new Uri("/Resources/icons/property.png", UriKind.Relative));
+                    displayname = "Property of " + _item.ToString();
+                    foreach (var p in _item.Properties)
+                    {
+                        if (p.Value == item)
+                        {
+                            displayname = "Property " + p.Name + " of " + _item.ToString();
+                        }
+                        else if (p.Value == item.Parent)
+                        {
+                            displayname = "Property " + p.Name + " of " + _item.ToString();
+                        }
+                    }
+                }
+            }
+            options.Add(new QuickLaunchItem()
+            {
+                Text = displayname,
+                designer = designer,
+                originalitem = item,
+                item = _item,
+                ImageSource = ImageSource
+            });
+        }
+        private void addOption(Views.WFDesigner designer, DynamicActivityProperty arg, List<QuickLaunchItem> options)
+        {
+            var ImageSource = new BitmapImage(new Uri("/Resources/icons/openin.png", UriKind.Relative));
+            var displayname = "Argument " + arg.Name;
+            options.Add(new QuickLaunchItem()
+            {
+                Text = displayname,
+                designer = designer,
+                argument = arg,
+                ImageSource = ImageSource
+            });
+        }
+        private System.Activities.Presentation.Model.ModelItem getActivity(Views.WFDesigner designer, System.Activities.Presentation.Model.ModelItem item)
+        {
+            try
+            {
+                var result = item;
+                while (result != null)
+                {
+                    if (result.ItemType.ToString().Contains("System.Activities.InArgument") ||
+                        result.ItemType.ToString().Contains("System.Activities.OutArgument") ||
+                        result.ItemType.ToString().Contains("System.Activities.InOutArgument") ||
+                        result.ItemType.ToString().Contains("VisualBasic.Activities.VisualBasicValue") ||
+                        result.ItemType.ToString().Contains("VisualBasic.Activities.VisualBasicReference") ||
+                        result.ItemType.ToString().Contains("System.Activities.Variable") ||
+                        result.ItemType.ToString().Contains("System.Activities.Expressions"))
+                    {
+                        result = result.Parent;
+                        continue;
+                    }
+                    return result;
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        private void searchBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (searchBox.IsDropDownOpen)
+            {
+                e.Handled = true;
+            }
+        }
+        private void searchBox_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (searchBox.IsDropDownOpen) e.Handled = true;
+        }
+    }
+    public class QuickLaunchItem
+    {
+        public System.Windows.Media.ImageSource ImageSource { get; set; }
+        public string Text { get; set; }
+        public System.Activities.Presentation.Model.ModelItem item { get; set; }
+        public System.Activities.Presentation.Model.ModelItem originalitem { get; set; }
+        public Views.WFDesigner designer { get; set; }
+        public string Header { get; set; }
+        public DynamicActivityProperty argument { get; set; }
     }
 }

@@ -9,7 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Media;
 
-namespace OpenRPA.Script.CodeEditor
+namespace OpenRPA.CodeEditor
 {
     public class TaggedTextListConverter : IValueConverter
     {
@@ -31,9 +31,17 @@ namespace OpenRPA.Script.CodeEditor
         private static TextBlock CreateTextBlock(ImmutableArray<TaggedText> text)
         {
             var textBlock = new TextBlock() { MaxWidth = 600, TextWrapping = TextWrapping.Wrap };
-            foreach (var part in text)
+            try
             {
-                textBlock.Inlines.Add(CreateRun(part));
+                foreach (var part in text)
+                {
+                    var res = CreateRun(part);
+                    if (res != null) textBlock.Inlines.Add(res);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
             }
             return textBlock;
         }

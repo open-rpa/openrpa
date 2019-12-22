@@ -119,7 +119,7 @@ namespace OpenRPA.Updater
                 {
                     var exists = result.Where(x => x.Identity.Id == p.Identity.Id).FirstOrDefault();
                     if (p.Identity.Id.ToLower().EndsWith("openrpa.interfaces") || p.Identity.Id.ToLower().EndsWith("openrpa.namedpipewrapper")
-                        || p.Identity.Id.ToLower().EndsWith("openrpa.expressioneditor") || p.Identity.Id.ToLower().EndsWith("openrpa.net")
+                        || p.Identity.Id.ToLower().EndsWith("openrpa.codeeditor") || p.Identity.Id.ToLower().EndsWith("openrpa.net")
                         || p.Identity.Id.ToLower().EndsWith("openrpa.windows") || p.Identity.Id.ToLower().EndsWith("openrpa.updater")
                         || p.Identity.Id.ToLower().EndsWith("openrpa.nativemessaginghost") || p.Identity.Id.ToLower().EndsWith("openrpa.javabridge")
                         || p.Identity.Id.ToLower().EndsWith("openrpa.rdservice")) continue;

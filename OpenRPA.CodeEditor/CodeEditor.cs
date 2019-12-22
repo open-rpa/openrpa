@@ -7,7 +7,6 @@ using Microsoft.CodeAnalysis.Completion;
 using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Text;
 using OpenRPA.Interfaces;
-using OpenRPA.Script.Activities;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -20,11 +19,24 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 
-namespace OpenRPA.Script.CodeEditor
+namespace OpenRPA.CodeEditor
 {
     // https://www.strathweb.com/2018/12/using-roslyn-c-completion-service-programmatically/
     // https://github.com/microsoft/AppConsult-WinAppsModernizationWorkshop/blob/master/Samples/DotNetPad/DotNetPad.Presentation/Controls/CodeEditor.cs
-
+    public class init
+    {
+        public async static Task Initialize()
+        {
+            CodeEditor ce = null;
+            GenericTools.RunUI(() =>
+            {
+                ce = new CodeEditor();
+                ce.document = ce.Initialize();
+            });
+            var completionService = CompletionService.GetService(ce.document);
+            var completionList = await Task.Run(async () => await completionService.GetCompletionsAsync(ce.document, 0));
+        }
+    }
     public class CodeEditor : TextEditor, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -41,6 +53,15 @@ namespace OpenRPA.Script.CodeEditor
         public CodeEditor()
         {
             SearchPanel.Install(TextArea);
+            if(SyntaxHighlighting==null)
+            {
+                SyntaxHighlighting = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager.Instance.HighlightingDefinitions.Where(x => x.Name == "VB").FirstOrDefault();
+            }
+            var dict = new ResourceDictionary();
+            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/OpenRPA.CodeEditor;component/Resources/ImageResources.xaml") });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/OpenRPA.CodeEditor;component/Resources/CodeEditorResources.xaml") });
+
             completionCancellation = new CancellationTokenSource();
             TextArea.TextEntering += TextAreaTextEntering;
             TextArea.TextEntered += TextAreaTextEntered;
@@ -93,10 +114,30 @@ namespace OpenRPA.Script.CodeEditor
         private bool _initialized = false;
         private ProjectInfo projectinfo;
         private Project project;
-        private Document document;
+        public Document document;
         private string currentLanguage = "";
         string header;
         string footer;
+        private MetadataReference[] GetReferences()
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+            var mr = new List<MetadataReference>();
+            foreach (var asm in assemblies)
+            {
+                try
+                {
+                    if (!asm.IsDynamic)
+                    {
+                        mr.Add(MetadataReference.CreateFromFile(asm.Location));
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return mr.ToArray();
+            // return new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) };
+        }
         private Document InitializeCSharp()
         {
             _initialized = true;
@@ -136,31 +177,15 @@ namespace OpenRPA.Script.CodeEditor
                 .WithCompilationOptions(compilationOptions);
 
             project = workspace.AddProject(projectinfo);
+            
             return project.AddDocument("TestDocument.vb", header + Text + footer);
 
         }
-        private MetadataReference[] GetReferences()
+        public Document Initialize()
         {
-            //var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
-            //var mr = new List<MetadataReference>();
-            //foreach (var asm in assemblies)
-            //{
-            //    try
-            //    {
-            //        mr.Add(MetadataReference.CreateFromFile(asm.Location));
-            //    }
-            //    catch (Exception)
-            //    {
-            //    }
-            //}
-            //return mr;
-            return new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) };
-        }
-        private async Task ShowCompletionAsync(char? triggerChar)
-        {
-            try
+            Document document = this.document;
+            GenericTools.RunUI(() =>
             {
-                if (completionCancellation.IsCancellationRequested) return;
                 if (currentLanguage != SyntaxHighlighting.Name)
                 {
                     currentLanguage = SyntaxHighlighting.Name;
@@ -168,7 +193,6 @@ namespace OpenRPA.Script.CodeEditor
                 }
                 if (!_initialized)
                 {
-                    currentLanguage = SyntaxHighlighting.Name;
                     if (currentLanguage == "C#")
                     {
                         document = InitializeCSharp();
@@ -179,7 +203,7 @@ namespace OpenRPA.Script.CodeEditor
                         document = InitializeVB();
                     }
                     if (document == null) return;
-                } 
+                }
                 else
                 {
                     if (document == null) return;
@@ -192,16 +216,25 @@ namespace OpenRPA.Script.CodeEditor
                     {
                         document = document.WithText(SourceText.From(header + Text + footer));
                     }
-
                 }
+            });
+            return document;
+        }
+        private async Task ShowCompletionAsync(char? triggerChar)
+        {
+            try
+            {
+                document = Initialize();
                 
+                if (document == null) return;
                 currentLanguage = SyntaxHighlighting.Name;
-                completionCancellation.Cancel();
-                completionCancellation = new CancellationTokenSource();
-                var cancellationToken = completionCancellation.Token;
 
                 if (completionWindow == null && (triggerChar == null || triggerChar == '.' || IsAllowedLanguageLetter(triggerChar.Value)))
                 {
+                    completionCancellation.Cancel();
+                    completionCancellation = new CancellationTokenSource();
+                    var cancellationToken = completionCancellation.Token;
+
                     var word = GetWord(CaretOffset);
                     var completionService = CompletionService.GetService(document);
 
@@ -211,8 +244,10 @@ namespace OpenRPA.Script.CodeEditor
                         position = CaretOffset + header.Length;
                     }
 
+                    //var completionList = await Task.Run(async () =>
+                    //    await completionService.GetCompletionsAsync(document, position, cancellationToken: cancellationToken), cancellationToken);
                     var completionList = await Task.Run(async () =>
-                        await completionService.GetCompletionsAsync(document, position, cancellationToken: cancellationToken), cancellationToken);
+                        await completionService.GetCompletionsAsync(document, position), cancellationToken);
                     if (completionList == null) { return; }
                     if (completionCancellation.IsCancellationRequested) return;
                     //cancellationToken.ThrowIfCancellationRequested();
@@ -269,11 +304,11 @@ namespace OpenRPA.Script.CodeEditor
             // Inject namespace imports
             //var headerText = new StringBuilder("Imports System\r\nImports System.Collections\r\nImports System.Collections.Generic\r\nImports System.Linq\r\n");
             var headerText = new StringBuilder();
-
-            foreach (var n in namespaces)
-            {
-                headerText.AppendLine("Imports " + n);
-            }
+            if(namespaces!=null)
+                foreach (var n in namespaces)
+                {
+                    headerText.AppendLine("Imports " + n);
+                }
 
 
             // NOTE: Automated IntelliPrompt will only show for namespaces and types that are within the imported namespaces...
@@ -356,6 +391,7 @@ namespace OpenRPA.Script.CodeEditor
         public static string GetCSharpHeaderText(Dictionary<string, Type> variables, string moduleName, string[] namespaces)
         {
             var headerText = new StringBuilder();
+            if(namespaces!=null)
             foreach (var n in namespaces)
             {
                 headerText.AppendLine("using " + n + ";");

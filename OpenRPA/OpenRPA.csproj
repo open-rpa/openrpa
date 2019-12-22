@@ -9,8 +9,10 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.60</Version>
-    <PackageReleaseNotes>1.0.60 Begin implementing intellisense for C# and VB
+    <Version>1.0.62</Version>
+    <PackageReleaseNotes>1.0.62 Improve intellisense, add translation dlls in installer
+1.0.61 Finish implementing intellisense, add preloading of intellisense
+1.0.60 Begin implementing intellisense for C# and VB
 1.0.59 Make enable_cache default true
 1.0.58 Improve UI and speed
 1.0.57 Fast fix, to speed up wpf finding
@@ -196,6 +198,12 @@
     <None Remove="Resources\designer\webscraping.png" />
     <None Remove="Resources\designer\writeexcel.png" />
     <None Remove="Resources\designer\writefile.png" />
+    <None Remove="Resources\icons\activity.png" />
+    <None Remove="Resources\icons\activity.svg" />
+    <None Remove="Resources\icons\flowchart.png" />
+    <None Remove="Resources\icons\openin.png" />
+    <None Remove="Resources\icons\property.png" />
+    <None Remove="Resources\icons\variable.png" />
     <None Remove="Resources\open.png" />
     <None Remove="Resources\open_flow.ico" />
     <None Remove="Resources\open_flow_org.ico" />
@@ -380,6 +388,12 @@
     <Resource Include="Resources\Buttons\Zeniverse_ikon.png" />
     <Resource Include="Resources\Buttons\zeniverse_ikon_84Z_icon.ico" />
     <Resource Include="Resources\close.png" />
+    <Resource Include="Resources\icons\activity.png" />
+    <Resource Include="Resources\icons\activity.svg" />
+    <Resource Include="Resources\icons\flowchart.png" />
+    <Resource Include="Resources\icons\openin.png" />
+    <Resource Include="Resources\icons\property.png" />
+    <Resource Include="Resources\icons\variable.png" />
     <Resource Include="Resources\open.png" />
     <Resource Include="Resources\open_flow.ico" />
     <Resource Include="Resources\open_flow_org.ico" />
@@ -474,9 +488,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenRPA.ExpressionEditor\OpenRPA.ExpressionEditor.csproj">
-      <IncludeAssets>all</IncludeAssets>
-    </ProjectReference>
+    <ProjectReference Include="..\OpenRPA.CodeEditor\OpenRPA.CodeEditor.csproj" />
     <ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj">
       <IncludeAssets>all</IncludeAssets>
     </ProjectReference>

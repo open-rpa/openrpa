@@ -51,6 +51,7 @@
     <None Remove="Resources\toolbox\getjavaelement.png" />
     <None Remove="Resources\x.png" />
     <None Remove="Views\JavaClickDetectorView.xaml" />
+    <None Remove="Views\RecordPluginView.xaml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\toolbox\getjavaelement.png" />
@@ -60,6 +61,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\JavaClickDetectorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RecordPluginView.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

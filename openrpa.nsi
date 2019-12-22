@@ -105,7 +105,7 @@ Section "Base robot files" ; section 0
   
   File /r "C:\code\openrpa\OpenRPA\bin\PrepInstaller\net462\*"
   File /r "C:\code\openrpa\OpenRPA.Utilities\bin\PrepInstaller\net462\*"  
-  
+
   WriteRegStr HKLM SOFTWARE\OpenRPA "Install_Dir" "$INSTDIR"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenRPA" "DisplayName" "OpenRPA"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenRPA" "UninstallString" '"$INSTDIR\uninstall.exe"'
@@ -134,6 +134,7 @@ Section "Office" ; section 2
   File "C:\code\openrpa\OpenRPA.Office\bin\PrepInstaller\net462\Microsoft.Office.Interop.Outlook.dll"
   File "C:\code\openrpa\OpenRPA.Office\bin\PrepInstaller\net462\OpenRPA.Office.dll"
   File "C:\code\openrpa\OpenRPA.Office\bin\PrepInstaller\net462\OpenRPA.Office.pdb"
+  File /r "C:\code\openrpa\OpenRPA.Office\bin\PrepInstaller\net462\OpenRPA.Office.resources.dll"
 SectionEnd
 Section "Forms" ; section 3
   SetOutPath $INSTDIR
@@ -149,11 +150,13 @@ Section "Forms" ; section 3
   File "C:\code\openrpa\OpenRPA.Forms\bin\PrepInstaller\net462\OpenRPA.Forms.pdb"
   File "C:\code\openrpa\OpenRPA.Forms\bin\PrepInstaller\net462\ToastNotifications.dll"
   File "C:\code\openrpa\OpenRPA.Forms\bin\PrepInstaller\net462\ToastNotifications.Messages.dll"
+  File /r "C:\code\openrpa\OpenRPA.Forms\bin\PrepInstaller\net462\OpenRPA.Forms.resources.dll"
 SectionEnd
 Section "IE" ; section 4
   SetOutPath $INSTDIR
   File "C:\code\openrpa\OpenRPA.IE\bin\PrepInstaller\net462\OpenRPA.IE.dll"
   File "C:\code\openrpa\OpenRPA.IE\bin\PrepInstaller\net462\OpenRPA.IE.pdb"
+  File /r "C:\code\openrpa\OpenRPA.IE\bin\PrepInstaller\net462\OpenRPA.IE.resources.dll"
 SectionEnd
 Section "Chrome and Firefox (NM)" ; section 5
   SetOutPath $INSTDIR
@@ -164,6 +167,7 @@ Section "Chrome and Firefox (NM)" ; section 5
   File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\OpenRPA.NativeMessagingHost.pdb"
   File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\OpenRPA.NM.dll"
   File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\OpenRPA.NM.pdb"
+  File /r "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\OpenRPA.NM.resources.dll"
 
   !insertmacro StrRep '$0' "$INSTDIR\OpenRPA.NativeMessagingHost.exe" '\' '\\'
   !insertmacro _ReplaceInFile "chromemanifest.json" "REPLACEPATH" $0
@@ -181,17 +185,16 @@ Section "Image recognition and OCR" ; section 6
   File "C:\code\openrpa\OpenRPA.Image\bin\PrepInstaller\net462\OpenRPA.Image.dll"
   File "C:\code\openrpa\OpenRPA.Image\bin\PrepInstaller\net462\OpenRPA.Image.pdb"
   File "C:\code\openrpa\OpenRPA.Image\bin\PrepInstaller\net462\ZedGraph.dll"
+  File /r "C:\code\openrpa\OpenRPA.Image\bin\PrepInstaller\net462\OpenRPA.Image.resources.dll"
 SectionEnd
 Section "Generic Scripting support" ; section 7
   SetOutPath $INSTDIR
-  ; File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\ICSharpCode.AvalonEdit.dll"
-  ; File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\OpenRPA.Script.dll"
-  ; File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\OpenRPA.Script.pdb"
-  ; File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\Python.Included.dll"
-  ; File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\Python.Runtime.NETStandard.dll"
-  ; File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\sharpAHK.dll"
-  File /r "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\*"
-
+  File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\OpenRPA.Script.dll"
+  File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\OpenRPA.Script.pdb"
+  File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\Python.Included.dll"
+  File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\Python.Runtime.NETStandard.dll"
+  File "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\sharpAHK.dll"
+  File /r "C:\code\openrpa\OpenRPA.Script\bin\PrepInstaller\net462\OpenRPA.Script.resources.dll"
 SectionEnd
 Section "AviRecorder" ; section 8
   SetOutPath $INSTDIR
@@ -199,16 +202,19 @@ Section "AviRecorder" ; section 8
   File "C:\code\openrpa\OpenRPA.AviRecorder\bin\PrepInstaller\net462\OpenRPA.AviRecorder.dll"
   File "C:\code\openrpa\OpenRPA.AviRecorder\bin\PrepInstaller\net462\OpenRPA.AviRecorder.pdb"
   File "C:\code\openrpa\OpenRPA.AviRecorder\bin\PrepInstaller\net462\SharpAvi.dll"
+  File /r "C:\code\openrpa\OpenRPA.AviRecorder\bin\PrepInstaller\net462\OpenRPA.AviRecorder.resources.dll"
 SectionEnd
 Section "OpenFlowDB" ; section 9
   SetOutPath $INSTDIR
   File "C:\code\openrpa\OpenRPA.OpenFlowDB\bin\PrepInstaller\net462\OpenRPA.OpenFlowDB.dll"
   File "C:\code\openrpa\OpenRPA.OpenFlowDB\bin\PrepInstaller\net462\OpenRPA.OpenFlowDB.pdb"
+  File /r "C:\code\openrpa\OpenRPA.OpenFlowDB\bin\PrepInstaller\net462\OpenRPA.OpenFlowDB.resources.dll"
 SectionEnd
 Section "FileWatcher" ; section 10
   SetOutPath $INSTDIR
   File "C:\code\openrpa\OpenRPA.FileWatcher\bin\PrepInstaller\net462\OpenRPA.FileWatcher.dll"
   File "C:\code\openrpa\OpenRPA.FileWatcher\bin\PrepInstaller\net462\OpenRPA.FileWatcher.pdb"
+  File /r "C:\code\openrpa\OpenRPA.FileWatcher\bin\PrepInstaller\net462\OpenRPA.FileWatcher.resources.dll"
 SectionEnd
 
 Section "Java support" ; section 11
@@ -221,6 +227,7 @@ Section "Java support" ; section 11
   File "C:\code\openrpa\OpenRPA.Java\bin\PrepInstaller\net462\OpenRPA.JavaBridge.pdb"
   File "C:\code\openrpa\OpenRPA.Java\bin\PrepInstaller\net462\WindowsAccessBridgeInterop.dll"
   File "C:\code\openrpa\OpenRPA.Java\bin\PrepInstaller\net462\WindowsAccessBridgeInterop.pdb"
+  File /r "C:\code\openrpa\OpenRPA.Java\bin\PrepInstaller\net462\OpenRPA.Java.resources.dll"
 SectionEnd
 Section "High Density robots using Remote Desktop" ; section 12
   SetOutPath $INSTDIR\x64
@@ -236,9 +243,12 @@ Section "High Density robots using Remote Desktop" ; section 12
   File "C:\code\openrpa\OpenRPA.RDServicePlugin\bin\PrepInstaller\net462\OpenRPA.RDService.pdb"
   File "C:\code\openrpa\OpenRPA.RDServicePlugin\bin\PrepInstaller\net462\OpenRPA.RDServicePlugin.dll"
   File "C:\code\openrpa\OpenRPA.RDServicePlugin\bin\PrepInstaller\net462\OpenRPA.RDServicePlugin.pdb"
+  ; File /r "C:\code\openrpa\OpenRPA.RDServicePlugin\bin\PrepInstaller\net462\OpenRPA.RDService.resources.dll"
+  File /r "C:\code\openrpa\OpenRPA.RDServicePlugin\bin\PrepInstaller\net462\OpenRPA.RDServicePlugin.resources.dll"
 SectionEnd
 Section "Elis Rossum" ; section 13
   SetOutPath $INSTDIR
   File "C:\code\openrpa\OpenRPA.Elis.Rossum\bin\PrepInstaller\net462\OpenRPA.Elis.Rossum.dll"
   File "C:\code\openrpa\OpenRPA.Elis.Rossum\bin\PrepInstaller\net462\OpenRPA.Elis.Rossum.pdb"
+  File /r "C:\code\openrpa\OpenRPA.Elis.Rossum\bin\PrepInstaller\net462\OpenRPA.Elis.Rossum.resources.dll"
 SectionEnd

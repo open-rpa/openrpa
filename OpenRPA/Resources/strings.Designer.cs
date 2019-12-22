@@ -628,6 +628,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string ribbon_search {
+            get {
+                return ResourceManager.GetString("ribbon_search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run plugins.
         /// </summary>
         public static string runplugins {

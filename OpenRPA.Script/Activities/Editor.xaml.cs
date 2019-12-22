@@ -49,10 +49,6 @@ namespace OpenRPA.Script.Activities
         {
             InitializeComponent();
 
-            var dict = new ResourceDictionary();
-            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/OpenRPA.Script;component/Resources/ImageResources.xaml") });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/OpenRPA.Script;component/Resources/CodeEditorResources.xaml") });
 
             var variables = new Dictionary<string, Type>();
             foreach (var variableModel in Variables)

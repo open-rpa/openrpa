@@ -306,6 +306,9 @@
   <data name="recordingoverlay" xml:space="preserve">
     <value>Superposición de grabación</value>
   </data>
+  <data name="ribbon_search" xml:space="preserve">
+    <value>Buscar</value>
+  </data>
   <data name="runplugins" xml:space="preserve">
     <value>Ejecutar complementos</value>
   </data>

@@ -93,7 +93,10 @@ namespace OpenRPA.Script.Activities
                 bool changed = false;
                 for (var i = 0; i < namespaces.Count(); i++)
                     if (namespaces[i] != current[i]) changed = true;
-                if(changed) ModelItem.Properties["namespaces"].SetValue(namespaces.ToArray());
+                if(changed)
+                {
+                    ModelItem.Properties["namespaces"].SetValue(namespaces.ToArray());
+                }
             }
 
         }

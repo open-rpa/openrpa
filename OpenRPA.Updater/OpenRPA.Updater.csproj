@@ -9,8 +9,9 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.24</Version>
-    <PackageReleaseNotes>1.0.24 bug fixes
+    <Version>1.0.25</Version>
+    <PackageReleaseNotes>1.0.25 replace expressioneditor with CodeEditor
+1.0.24 bug fixes
 1.0.23 add searching
 1.0.21 force running as administrator, to handle updates 
 1.0.20 hotfix

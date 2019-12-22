@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Windows", "OpenRPA.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Net", "OpenRPA.Net\OpenRPA.Net.csproj", "{84971661-E141-410F-8E9E-ADE610D1961A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.ExpressionEditor", "OpenRPA.ExpressionEditor\OpenRPA.ExpressionEditor.csproj", "{0D52B2E1-1998-4238-B601-57A2D6ADE2E8}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.AviRecorder", "OpenRPA.AviRecorder\OpenRPA.AviRecorder.csproj", "{0BEAA729-25D2-4715-B273-C57E90546E88}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.FileWatcher", "OpenRPA.FileWatcher\OpenRPA.FileWatcher.csproj", "{16F995FE-CD1E-43AD-815F-4FCA86A378C8}"
@@ -85,14 +83,6 @@ Global
 		{84971661-E141-410F-8E9E-ADE610D1961A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{84971661-E141-410F-8E9E-ADE610D1961A}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
 		{84971661-E141-410F-8E9E-ADE610D1961A}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
-		{0D52B2E1-1998-4238-B601-57A2D6ADE2E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0D52B2E1-1998-4238-B601-57A2D6ADE2E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0D52B2E1-1998-4238-B601-57A2D6ADE2E8}.PrepInstaller|Any CPU.ActiveCfg = PrepInstaller|Any CPU
-		{0D52B2E1-1998-4238-B601-57A2D6ADE2E8}.PrepInstaller|Any CPU.Build.0 = PrepInstaller|Any CPU
-		{0D52B2E1-1998-4238-B601-57A2D6ADE2E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0D52B2E1-1998-4238-B601-57A2D6ADE2E8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0D52B2E1-1998-4238-B601-57A2D6ADE2E8}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
-		{0D52B2E1-1998-4238-B601-57A2D6ADE2E8}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
 		{0BEAA729-25D2-4715-B273-C57E90546E88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0BEAA729-25D2-4715-B273-C57E90546E88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BEAA729-25D2-4715-B273-C57E90546E88}.PrepInstaller|Any CPU.ActiveCfg = PrepInstaller|Any CPU
@@ -274,7 +264,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
+		BuildVersion_StartDate = 2000/1/1
 	EndGlobalSection
 EndGlobal

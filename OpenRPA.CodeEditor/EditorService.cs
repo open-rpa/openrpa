@@ -12,7 +12,6 @@ namespace OpenRPA.CodeEditor
 {
     public class EditorService : IExpressionEditorService
     {
-        private static OpenRPA.ExpressionEditor.EditorService service;
         public EditorService(Interfaces.IDesigner designer)
         {
             this.designer = designer;
@@ -23,17 +22,6 @@ namespace OpenRPA.CodeEditor
             if (namespaces == null) namespaces = new System.Collections.ObjectModel.Collection<string>();
             if (!namespaces.Contains("System.Collections")) namespaces.Add("System.Collections");
             if (!namespaces.Contains("System.Collections.Generic")) namespaces.Add("System.Collections.Generic");
-
-            bool useOld = false;
-            if((initialSize.IsEmpty || initialSize.Height < 25) && useOld)
-            {
-                if (service == null)
-                {
-                    ExpressionEditor.EditorUtil.Init();
-                    service = new OpenRPA.ExpressionEditor.EditorService(designer);
-                }
-                return service.CreateEditor(importedNamespaces, Variables, text, expressionType);
-            }
             var variables = new Dictionary<string, Type>();
             foreach (var variableModel in Variables)
             {

@@ -30,6 +30,19 @@ namespace OpenRPA.CodeEditor
             LostFocus += Editor_LostFocus;
             Unloaded += Editor_Unloaded;
             IsKeyboardFocusWithinChanged += EditorInstance_IsKeyboardFocusWithinChanged;
+            KeyUp += Editor_KeyUp;
+        }
+        private void Editor_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.KeyboardDevice.Modifiers != System.Windows.Input.ModifierKeys.Control || e.Key != System.Windows.Input.Key.K) return;
+            if (designer == null) return;
+            string Variablename = Text;
+            if (expressionType == null) { expressionType = typeof(string); }
+            var arg = designer.GetArgument(Variablename, false, expressionType);
+            if (arg == null)
+            {
+                var _var = designer.GetVariable(Variablename, expressionType);
+            }
         }
         private void EditorInstance_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
         {

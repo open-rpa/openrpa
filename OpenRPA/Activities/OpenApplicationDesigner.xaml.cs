@@ -34,6 +34,23 @@ namespace OpenRPA.Activities
             if (selectors.ShowDialog() == true)
             {
                 ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(selectors.vm.json) });
+                var Plugin = Interfaces.Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
+                var _base = Plugin.GetElementsWithSelector(selector, null, 10);
+                if (_base == null && _base.Length == 0) return;
+                var ele = _base[0];
+                if (ele is UIElement ui)
+                {
+                    var window = ui.GetWindow();
+                    if (!string.IsNullOrEmpty(window.Name))
+                    {
+                        ModelItem.Properties["DisplayName"].SetValue(window.Name);
+                    }
+                    ModelItem.Properties["X"].SetValue(new InArgument<int>() { Expression = new Literal<int>(window.BoundingRectangle.X) });
+                    ModelItem.Properties["Y"].SetValue(new InArgument<int>() { Expression = new Literal<int>(window.BoundingRectangle.Y) });
+                    ModelItem.Properties["Width"].SetValue(new InArgument<int>() { Expression = new Literal<int>(window.BoundingRectangle.Width) });
+                    ModelItem.Properties["Height"].SetValue(new InArgument<int>() { Expression = new Literal<int>(window.BoundingRectangle.Height) });
+                }
+
             }
         }
         private async void Highlight_Click(object sender, RoutedEventArgs e)
@@ -87,7 +104,10 @@ namespace OpenRPA.Activities
                     {
                         ModelItem.Properties["DisplayName"].SetValue(window.Name);
                     }
-
+                    ModelItem.Properties["X"].SetValue(new InArgument<int>() { Expression = new Literal<int>(window.BoundingRectangle.X) });
+                    ModelItem.Properties["Y"].SetValue(new InArgument<int>() { Expression = new Literal<int>(window.BoundingRectangle.Y) });
+                    ModelItem.Properties["Width"].SetValue(new InArgument<int>() { Expression = new Literal<int>(window.BoundingRectangle.Width) });
+                    ModelItem.Properties["Height"].SetValue(new InArgument<int>() { Expression = new Literal<int>(window.BoundingRectangle.Height) });
                 }
             }, null);
         }

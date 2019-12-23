@@ -248,7 +248,6 @@ namespace OpenRPA.Windows
             IElement[] elements = { };
             if (CheckRunning)
             {
-
                 sw.Start();
                 do
                 {
@@ -341,6 +340,10 @@ namespace OpenRPA.Windows
 
             sw = new Stopwatch();
             sw.Start();
+            if(timeout < TimeSpan.FromSeconds(3))
+            {
+                timeout = TimeSpan.FromSeconds(3);
+            }
             do
             {
                 if (PluginConfig.get_elements_in_different_thread)

@@ -29,6 +29,11 @@ namespace OpenRPA.Activities
         [RequiredArgument]
         public InArgument<TimeSpan> Timeout { get; set; }
         public InArgument<bool> CheckRunning { get; set; } = true;
+        public InArgument<int> X { get; set; }
+        public InArgument<int> Y { get; set; }
+        public InArgument<int> Width { get; set; }
+        public InArgument<int> Height { get; set; }
+        public InArgument<bool> AnimateMove { get; set; } = false;
         public OutArgument<IElement> Result { get; set; }
         private Variable<IEnumerator<IElement>> _elements = new Variable<IEnumerator<IElement>>("_elements");
         [Browsable(false)]
@@ -44,6 +49,24 @@ namespace OpenRPA.Activities
             var timeout = Timeout.Get(context);
             var element = Plugin.LaunchBySelector(selector, checkrunning, timeout);
             Result.Set(context, element);
+            if(element!=null && element is UIElement ui)
+            {
+                //var window = ((UIElement)element).GetWindow();
+                var x = X.Get(context);
+                var y = Y.Get(context);
+                var width = Width.Get(context);
+                var height = Height.Get(context);
+                var animatemove = AnimateMove.Get(context);
+                if(width > 0 && height > 0)
+                {
+                    ui.SetWindowSize(width, height);
+                }
+                if (x>0 && y>0)
+                {
+                    if (animatemove) ui.MoveWindowTo(x, y);
+                    if (!animatemove) ui.SetWindowPosition(x, y);
+                }
+            }
             if(element!=null && Body != null)
             {
                 context.ScheduleAction(Body, element, OnBodyComplete);

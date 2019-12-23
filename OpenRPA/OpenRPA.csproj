@@ -10,7 +10,7 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Version>1.0.63</Version>
-    <PackageReleaseNotes>1.0.63 Add support for moving and resizing windows
+    <PackageReleaseNotes>1.0.63 Add support for moving and resizing windows, add Portuguese Brazil
 1.0.62 Improve intellisense, add translation dlls in installer
 1.0.61 Finish implementing intellisense, add preloading of intellisense
 1.0.60 Begin implementing intellisense for C# and VB

@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.24</Version>
-    <PackageReleaseNotes>1.0.25 Improve UIElement
+    <Version>1.0.26</Version>
+    <PackageReleaseNotes>1.0.26 Add support for moving and resizing windows
+1.0.25 Improve UIElement
 1.0.24 Add langauges and bug fixes
 1.0.20 Add some terminal service apis
 1.0.18 Tweak input handling doing recording

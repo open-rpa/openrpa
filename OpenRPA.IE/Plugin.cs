@@ -172,14 +172,14 @@ namespace OpenRPA.IE
             var result = IESelector.GetElementsWithuiSelector(ieselector, fromElement, maxresults);
             return result;
         }
-        public void LaunchBySelector(Selector selector, TimeSpan timeout)
+        public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)
         {
-            if (selector == null || selector.Count == 0) return;
+            if (selector == null || selector.Count == 0) return null;
             var f = selector.First();
             var p = f.Properties.Where(x => x.Name == "url").FirstOrDefault();
-            if (p == null) return;
+            if (p == null) return null;
             var url = p.Value;
-            if (string.IsNullOrEmpty(url)) return;
+            if (string.IsNullOrEmpty(url)) return null;
             GenericTools.RunUI(() =>
             {
                 var browser = Browser.GetBrowser(url);
@@ -194,6 +194,7 @@ namespace OpenRPA.IE
                     Thread.Sleep(100);
                 }
             });
+            return null;
         }
         public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)
         {

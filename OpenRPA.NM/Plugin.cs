@@ -168,7 +168,7 @@ namespace OpenRPA.NM
                 Log.Error(ex.ToString());
             }
         }
-        public void LaunchBySelector(Selector selector, TimeSpan timeout)
+        public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)
         {
             var first = selector[0];
             var second = selector[1];
@@ -181,7 +181,7 @@ namespace OpenRPA.NM
             if (p != null) { url = p.Value; }
 
             NMHook.openurl(browser, url);
-
+            return null;
         }
         public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)
         {

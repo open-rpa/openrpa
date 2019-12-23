@@ -78,8 +78,17 @@ namespace OpenRPA.Activities
                         if (p.ParseUserAction(ref e)) continue;
                     }
                 }
-                e.Selector.RemoveRange(3, e.Selector.Count - 3);
+                e.Selector.RemoveRange(2, e.Selector.Count - 2);
                 ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(e.Selector.ToString() ) });
+                if(e.Element is UIElement ui)
+                {
+                    var window = ui.GetWindow();
+                    if (!string.IsNullOrEmpty(window.Name))
+                    {
+                        ModelItem.Properties["DisplayName"].SetValue(window.Name);
+                    }
+
+                }
             }, null);
         }
     }

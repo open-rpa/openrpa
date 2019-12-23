@@ -21,7 +21,7 @@ namespace OpenRPA.Interfaces
         Selector.treeelement[] GetRootElements(Selector.Selector anchor);
         Selector.Selector GetSelector(Selector.Selector anchor, Selector.treeelement item);
         IElement[] GetElementsWithSelector(Selector.Selector selector, IElement fromElement = null, int maxresults = 1);
-        void LaunchBySelector(Selector.Selector selector, TimeSpan timeout);
+        IElement LaunchBySelector(Selector.Selector selector, bool CheckRunning, TimeSpan timeout);
         void CloseBySelector(Selector.Selector selector, TimeSpan timeout, bool Force);
         bool Match(SelectorItem item, IElement m);
     }

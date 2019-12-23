@@ -84,6 +84,10 @@ namespace OpenRPA.Windows
                     }
                     else
                     {
+                        if(info.Filename.ToLower().Contains("system32\\conhost.exe"))
+                        {
+                            info.Filename = "%windir%\\system32\\cmd.exe";
+                        }
                         Properties.Add(new SelectorItemProperty("filename", info.Filename));
                         Properties.Add(new SelectorItemProperty("processname", info.ProcessName));
                         Properties.Add(new SelectorItemProperty("arguments", info.Arguments));

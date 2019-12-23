@@ -82,7 +82,7 @@ namespace OpenRPA.Script
         {
             return null;
         }
-        public void LaunchBySelector(Selector selector, TimeSpan timeout)
+        public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)
         {
             throw new NotImplementedException();
         }

@@ -283,7 +283,7 @@ namespace OpenRPA.Interfaces
             bool _isImmersiveProcess = false;
             try
             {
-                if (handle != IntPtr.Zero) _isImmersiveProcess = IsImmersiveProcess(handle);
+                if (handle != IntPtr.Zero) _isImmersiveProcess =  NativeMethods.IsImmersiveProcess(handle);
             }
             catch (Exception)
             {
@@ -384,9 +384,6 @@ namespace OpenRPA.Interfaces
             }
             return result;
         }
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool IsImmersiveProcess(IntPtr hWnd);
         public const int QueryLimitedInformation = 0x1000;
         public const int ERROR_INSUFFICIENT_BUFFER = 0x7a;
         public const int ERROR_SUCCESS = 0x0;

@@ -38,6 +38,10 @@
                         <TextBlock Text="{x:Static or:strings.activity_highlight}"></TextBlock>
                     </StackPanel>
                 </Button>
+                <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
+                                    HintText="{x:Static or:strings.activity_drop_hint}" AllowedItemType="sa:Activity"
+                                      Grid.Row="1" />
+
             </StackPanel>
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">

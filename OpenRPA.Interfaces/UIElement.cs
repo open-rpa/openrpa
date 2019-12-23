@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Automation;
 using FlaUI.Core.AutomationElements;
 using Newtonsoft.Json;
+using FlaUI.Core.Tools;
 
 namespace OpenRPA
 {
@@ -519,5 +520,170 @@ namespace OpenRPA
                 return result.ToArray();
             } 
         }
+        public Window GetWindow()
+        {
+            Window window = RawElement.AsWindow();
+            if (RawElement.ControlType != FlaUI.Core.Definitions.ControlType.Window)
+            {
+                AutomationElement item = RawElement.Parent;
+                do
+                {
+                    item = item.Parent;
+                } while (item != null && item.ControlType != FlaUI.Core.Definitions.ControlType.Window);
+                if (item != null && item.ControlType == FlaUI.Core.Definitions.ControlType.Window)
+                {
+                    window = item.AsWindow();
+                }
+            }
+            if(window.Parent != null && window.Parent.ControlType == FlaUI.Core.Definitions.ControlType.Window)
+            {
+                window = window.Parent.AsWindow();
+            }
+            return window;
+        }
+        public void SetPosition(int X, int Y)
+        {
+            Window window = GetWindow();
+            if (window == null) return;
+
+            //if(RawElement.Properties.ProcessId.IsSupported)
+            //{
+            //    var processId = RawElement.Properties.ProcessId.Value;
+            //    var p = System.Diagnostics.Process.GetProcessById(processId);
+            //    IntPtr handle = p.Handle;
+            //    if(NativeMethods.IsImmersiveProcess(handle))
+            //    {
+            //        var automation = AutomationUtil.getAutomation();
+            //        var pc = new FlaUI.Core.Conditions.PropertyCondition(automation.PropertyLibrary.Element.ClassName, "Windows.UI.Core.CoreWindow");
+            //        var _el = RawElement.FindFirstChild(pc);
+            //        if (_el != null)
+            //        {
+            //            window = _el.AsWindow();
+            //        } else
+            //        {
+            //            window = automation.FromPoint(WindowPosition).AsWindow();
+            //        }
+            //    }
+            //}
+            //window.Move(X, Y);
+            
+            var size = WindowSize;
+            NativeMethods.MoveWindow(window.Properties.NativeWindowHandle.Value, X, Y, size.Width, size.Height, true);
+
+
+
+            //window.Move(X, Y);
+            //NativeMethods.RECT rect;
+            //IntPtr hWnd = window.Properties.NativeWindowHandle.Value;
+            //if (NativeMethods.GetWindowRect(hWnd, out rect))
+            //{
+            //    // NativeMethods.MoveWindow(hWnd, X, Y, WindowSize.Width, WindowSize.Height, true);
+            //}
+
+        }
+        public void SetWindowPosition(int X, int Y)
+        {
+            WindowPosition = new System.Drawing.Point(X, Y);
+        }
+        System.Drawing.Point Position
+        {
+            get
+            {
+                return new System.Drawing.Point(RawElement.BoundingRectangle.X, RawElement.BoundingRectangle.Y);
+            }
+            set
+            {
+                if (RawElement.Patterns.Transform.TryGetPattern(out var tranPattern))
+                {
+                    if (tranPattern.CanMove)
+                    {
+                        tranPattern.Move(value.X, value.Y);
+                    }
+                }
+                if (RawElement.Patterns.Transform2.TryGetPattern(out var tran2Pattern))
+                {
+                    if (tran2Pattern.CanMove)
+                    {
+                        tran2Pattern.Move(value.X, value.Y);
+                    }
+                }
+            }
+        }
+        System.Drawing.Point WindowPosition
+        {
+            get
+            {
+                var window = GetWindow();
+                return new System.Drawing.Point(window.BoundingRectangle.X, window.BoundingRectangle.Y);
+            }
+            set
+            {
+                SetPosition(value.X, value.Y);
+            }
+        }
+        public static double MovePixelsPerMillisecond { get; } = 0.5;
+        public static double MovePixelsPerStep { get; } = 10;
+        public void MoveWindowTo(int newX, int newY)
+        {
+            // Get starting position
+            var startPos = WindowPosition;
+            var endPos = new System.Drawing.Point(newX, newY);
+
+            // Break out if there is no positional change
+            if (startPos == endPos)
+            {
+                return;
+            }
+
+            // Calculate some values for duration and interval
+            var totalDistance = startPos.Distance(newX, newY);
+            var duration = TimeSpan.FromMilliseconds(Convert.ToInt32(totalDistance / MovePixelsPerMillisecond));
+            var steps = Math.Max(Convert.ToInt32(totalDistance / MovePixelsPerStep), 1); // Make sure to have et least one step
+            var interval = TimeSpan.FromMilliseconds(duration.TotalMilliseconds / steps);
+
+            // Execute the movement
+            FlaUI.Core.Input.Interpolation.Execute(point => { WindowPosition = point; }, startPos, endPos, duration, interval, true);
+        }
+        public void SetWindowSize(int Width, int Height)
+        {
+            WindowSize = new System.Drawing.Size(Width, Height);
+        }
+        public System.Drawing.Size WindowSize
+        {
+            get
+            {
+                try
+                {
+                    var window = GetWindow();
+                    if (window == null) return System.Drawing.Size.Empty;
+                    return new System.Drawing.Size(window.BoundingRectangle.Width, window.BoundingRectangle.Height);
+                }
+                catch (Exception)
+                {
+                    
+                }
+                return System.Drawing.Size.Empty;
+            }
+            set {
+                var window = GetWindow();
+                if (window == null) return;
+                if (window.Patterns.Transform.TryGetPattern(out var tranPattern))
+                {
+                    if (tranPattern.CanResize)
+                    {
+                        tranPattern.Resize(value.Width, value.Height);
+                    }
+                }
+                if (window.Patterns.Transform2.TryGetPattern(out var tran2Pattern))
+                {
+                    if (tran2Pattern.CanResize)
+                    {
+                        tran2Pattern.Resize(value.Width, value.Height);
+                    }
+                }
+
+            }
+        }
+
     }
 }

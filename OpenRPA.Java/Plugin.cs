@@ -205,7 +205,7 @@ namespace OpenRPA.Java
             var result = JavaSelector.GetElementsWithuiSelector(selector as JavaSelector, fromElement, maxresults );
             return result;
         }
-        public void LaunchBySelector(Selector selector, TimeSpan timeout)
+        public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)
         {
             throw new NotImplementedException();
         }

@@ -621,7 +621,7 @@ namespace OpenRPA
                 SetPosition(value.X, value.Y);
             }
         }
-        public static double MovePixelsPerMillisecond { get; } = 0.5;
+        public static double MovePixelsPerMillisecond { get; } = 2; // 0.5;
         public static double MovePixelsPerStep { get; } = 10;
         public void MoveWindowTo(int newX, int newY)
         {

@@ -398,25 +398,31 @@ namespace OpenRPA.Windows
             sw.Start();
             do
             {
-                elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
+                if (PluginConfig.get_elements_in_different_thread)
                 {
-                    try
+                    elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
                     {
-                        return GetElementsWithSelector(selector, null, 1);
-                    }
-                    catch (System.Threading.ThreadAbortException)
-                    {
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex, "");
-                    }
-                    return new UIElement[] { };
-                }, TimeSpan.FromMilliseconds(250)).Result;
-                if (elements == null)
+                        try
+                        {
+                            return GetElementsWithSelector(selector, null, 1);
+                        }
+                        catch (System.Threading.ThreadAbortException)
+                        {
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex, "");
+                        }
+                        return new UIElement[] { };
+                    }, TimeSpan.FromMilliseconds(1000)).Result;
+                } else
                 {
-                    elements = new IElement[] { };
+                    elements = GetElementsWithSelector(selector, null, 1);
                 }
+                    if (elements == null)
+                    {
+                        elements = new IElement[] { };
+                    }
             } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
             // elements = GetElementsWithSelector(selector, null, 1);
             if (elements.Length > 0)

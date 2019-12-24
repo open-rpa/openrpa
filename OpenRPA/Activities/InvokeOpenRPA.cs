@@ -101,7 +101,8 @@ namespace OpenRPA.Activities
         {
             try
             {
-                context.RemoveBookmark(bookmark.Name);
+                // keep bookmark, incase workflow dies, and need to pickup data after being restarted 
+                // context.RemoveBookmark(bookmark.Name);
                 var instance = obj as WorkflowInstance;
                 if (instance == null) throw new Exception("Bookmark returned a non WorkflowInstance");
                 if (instance.Exception != null) throw instance.Exception;

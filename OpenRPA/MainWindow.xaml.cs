@@ -221,7 +221,7 @@ namespace OpenRPA
                         {
                             if (workflow.Project != null)
                             {
-                                _ = workflow.RunPendingInstances();
+                                workflow.RunPendingInstances();
                             }
 
                         }
@@ -426,14 +426,7 @@ namespace OpenRPA
                         InputDriver.Instance.Initialize();
                         SetStatus("Run pending workflow instances");
                         Log.Debug("RunPendingInstances::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        foreach (var workflow in workflows)
-                        {
-                            if (workflow.Project != null)
-                            {
-                                await workflow.RunPendingInstances();
-                            }
-
-                        }
+                        await WorkflowInstance.RunPendingInstances();
                         Log.Debug("RunPendingInstances::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                     }
                 }

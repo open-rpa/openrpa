@@ -87,8 +87,9 @@ namespace OpenRPA.Activities
 
         void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object obj)
         {
-            context.RemoveBookmark(bookmark.Name);
-            var command = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.mq.RobotCommand>(obj.ToString());
+            // keep bookmark, incase workflow dies, and need to pickup more data when started again
+            // context.RemoveBookmark(bookmark.Name);
+           var command = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.mq.RobotCommand>(obj.ToString());
             if (command.data == null) return;
             if (string.IsNullOrEmpty(command.data.ToString())) return;
             var payload = JObject.Parse(command.data.ToString());

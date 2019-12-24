@@ -335,7 +335,7 @@ namespace OpenRPA.Windows
                         //if (i == 0) count = midcounter;
                         //// if (i < selectors.Count) count = 500;
                         //if ((i + 1) < selectors.Count) count = 1;
-                        if (i < selectors.Count) count = 500;
+                        if (i < (selectors.Count-1)) count = 500;
                         var matches = (s).matches(startfrom, i, _element.RawElement, count, isDesktop, search_descendants); // (i == 0 ? 1: maxresults)
                         var uimatches = new List<UIElement>();
                         foreach (var m in matches)
@@ -350,17 +350,9 @@ namespace OpenRPA.Windows
                             return new UIElement[] { };
                         }
                     }
-                    count = current.Count;
-                    if (count > 1)
-                    {
-                        //if (i < selectors.Count && maxresults == 1)
-                        //{
-                        //    Log.Warning("Selector had " + count + " hits and not just one, at element " + i + " this selector will be slow!");
-                        //}
-                    }
                     if (i == (selectors.Count - 1)) result = current.ToArray();
-                    Log.Selector(string.Format("Found " + count + " hits for selector # " + i + " {0:mm\\:ss\\.fff}", sw.Elapsed));
-                    if (count == 0) break;
+                    isDesktop = false;
+                    Log.Selector(string.Format("Found " + current.Count + " hits for selector # " + i + " {0:mm\\:ss\\.fff}", sw.Elapsed));
                     if(i==0 && isDesktop)
                     {
                         if (current[0].RawElement.Patterns.Window.TryGetPattern(out var winPattern))
@@ -371,33 +363,16 @@ namespace OpenRPA.Windows
                                 winPattern.SetWindowVisualState(FlaUI.Core.Definitions.WindowVisualState.Normal);
                             }
                         }
-                        //IntPtr handle = current[0].RawElement.Properties.NativeWindowHandle.Value;
-                        //long style = NativeMethods.GetWindowLongPtr(handle, NativeMethods.GWL_STYLE);
-                        //bool isMinimized = ((style & NativeMethods.SW_SHOWMINIMIZED) == NativeMethods.SW_SHOWMINIMIZED);
-                        //bool isVisible = ((style & NativeMethods.WindowStyles.WS_VISIBLE) != 0);
-                        //if (isMinimized)
-                        //{
-                        //    if (NativeMethods.IsIconic(handle))
-                        //    {
-                        //        NativeMethods.ShowWindow(handle, NativeMethods.SW_SHOWNORMAL);
-                        //        NativeMethods.ShowWindow(handle, NativeMethods.SW_SHOW);
-                        //    }
-                        //    else
-                        //    {
-                        //        NativeMethods.SetForegroundWindow(handle);
-                        //    }
-                        //    NativeMethods.UpdateWindow(handle);
-                        //}
                     }
                     isDesktop = false;
                 }
-
             }
             if (result == null)
             {
                 Log.Selector(string.Format("GetElementsWithuiSelector::ended with 0 results after {0:mm\\:ss\\.fff}", sw.Elapsed));
                 return new UIElement[] { };
             }
+            if (result.Count() > maxresults) result = result.Take(maxresults).ToArray();
             Log.Selector(string.Format("GetElementsWithuiSelector::ended with " + result.Length + " results after {0:mm\\:ss\\.fff}", sw.Elapsed));
             return result;
         }

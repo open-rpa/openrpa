@@ -41,14 +41,19 @@ namespace OpenRPA.Activities
                 if (ele is UIElement ui)
                 {
                     var window = ui.GetWindow();
+                    if (window == null) return;
                     if (!string.IsNullOrEmpty(window.Name))
                     {
                         ModelItem.Properties["DisplayName"].SetValue(window.Name);
                     }
-                    ModelItem.Properties["X"].SetValue(new InArgument<int>() { Expression = new Literal<int>(window.BoundingRectangle.X) });
-                    ModelItem.Properties["Y"].SetValue(new InArgument<int>() { Expression = new Literal<int>(window.BoundingRectangle.Y) });
-                    ModelItem.Properties["Width"].SetValue(new InArgument<int>() { Expression = new Literal<int>(window.BoundingRectangle.Width) });
-                    ModelItem.Properties["Height"].SetValue(new InArgument<int>() { Expression = new Literal<int>(window.BoundingRectangle.Height) });
+                    if(window.Properties.BoundingRectangle.IsSupported)
+                    {
+                        var bound = window.BoundingRectangle;
+                        ModelItem.Properties["X"].SetValue(new InArgument<int>() { Expression = new Literal<int>(bound.X) });
+                        ModelItem.Properties["Y"].SetValue(new InArgument<int>() { Expression = new Literal<int>(bound.Y) });
+                        ModelItem.Properties["Width"].SetValue(new InArgument<int>() { Expression = new Literal<int>(bound.Width) });
+                        ModelItem.Properties["Height"].SetValue(new InArgument<int>() { Expression = new Literal<int>(bound.Height) });
+                    }
                 }
 
             }
@@ -100,14 +105,19 @@ namespace OpenRPA.Activities
                 if(e.Element is UIElement ui)
                 {
                     var window = ui.GetWindow();
+                    if (window == null) return;
                     if (!string.IsNullOrEmpty(window.Name))
                     {
                         ModelItem.Properties["DisplayName"].SetValue(window.Name);
                     }
-                    ModelItem.Properties["X"].SetValue(new InArgument<int>() { Expression = new Literal<int>(window.BoundingRectangle.X) });
-                    ModelItem.Properties["Y"].SetValue(new InArgument<int>() { Expression = new Literal<int>(window.BoundingRectangle.Y) });
-                    ModelItem.Properties["Width"].SetValue(new InArgument<int>() { Expression = new Literal<int>(window.BoundingRectangle.Width) });
-                    ModelItem.Properties["Height"].SetValue(new InArgument<int>() { Expression = new Literal<int>(window.BoundingRectangle.Height) });
+                    if (window.Properties.BoundingRectangle.IsSupported)
+                    {
+                        var bound = window.BoundingRectangle;
+                        ModelItem.Properties["X"].SetValue(new InArgument<int>() { Expression = new Literal<int>(bound.X) });
+                        ModelItem.Properties["Y"].SetValue(new InArgument<int>() { Expression = new Literal<int>(bound.Y) });
+                        ModelItem.Properties["Width"].SetValue(new InArgument<int>() { Expression = new Literal<int>(bound.Width) });
+                        ModelItem.Properties["Height"].SetValue(new InArgument<int>() { Expression = new Literal<int>(bound.Height) });
+                    }
                 }
             }, null);
         }

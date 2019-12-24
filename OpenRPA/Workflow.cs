@@ -51,7 +51,7 @@ namespace OpenRPA
             }
         }
 
-        [JsonIgnore]
+        [JsonProperty("projectandname")]
         public string ProjectAndName
         {
             get

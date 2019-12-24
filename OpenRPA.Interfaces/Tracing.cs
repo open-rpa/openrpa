@@ -90,10 +90,6 @@ namespace OpenRPA.Interfaces
             }
             if (category == "Tracing") return;
             DateTime dt = DateTime.Now;
-            //lock(Log.loglock)
-            //{
-            //    System.IO.File.AppendAllText(System.IO.Path.Combine(logpath, "log.txt"), string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
-            //}
             if (category == "Output")
             {
                 _OutputMessages = _OutputMessages.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
@@ -105,47 +101,12 @@ namespace OpenRPA.Interfaces
         }
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         public DateTime lastEvent = DateTime.Now;
-        //  private Task pending = null;
         protected virtual void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (PropertyChanged != null)
             {
                 Task.Run(() => { PropertyChanged?.Invoke(this, e); });
             }
-            //if (DateTime.Now - lastEvent < TimeSpan.FromSeconds(1))
-            //{
-            //    try
-            //    {
-            //        if (pending != null)
-            //        {
-            //            if (pending.IsCompleted) pending = null;
-            //        }
-            //        if (pending == null)
-            //        {
-            //            pending = Task.Run(async () =>
-            //            {
-            //                try
-            //                {
-            //                    await Task.Delay(500);
-            //                    OnPropertyChanged(e);
-            //                }
-            //                catch (Exception)
-            //                {
-            //                    pending = null;
-            //                }
-            //            });
-            //        }
-            //        return;
-            //    }
-            //    catch (Exception)
-            //    {
-            //        pending = null;
-            //    }
-            //}
-            //if (PropertyChanged != null)
-            //{
-            //    Task.Run(() => { PropertyChanged?.Invoke(this, e); lastEvent = DateTime.Now; });
-            //}
         }
         public IFormatProvider formatProvider { get; set; }
     }
@@ -160,7 +121,110 @@ namespace OpenRPA.Interfaces
             this.isError = isError;
             m_OriginalConsoleStream = consoleTextWriter;
         }
+        public override void Write(bool value)
+        {
+            Write(value.ToString());
+        }
+        public override void Write(char value)
+        {
+            Write(value.ToString());
+        }
+        public override void Write(decimal value)
+        {
+            Write(value.ToString());
+        }
+        public override void Write(double value)
+        {
+            Write(value.ToString());
+        }
+        public override void Write(float value)
+        {
+            Write(value.ToString());
+        }
+        public override void Write(int value)
+        {
+            Write(value.ToString());
+        }
+        public override void Write(long value)
+        {
+            Write(value.ToString());
+        }
+        public override void Write(object value)
+        {
+            if (value == null) Write("");
+            Write(value.ToString());
+        }
+        public override void WriteLine(bool value)
+        {
+            base.WriteLine(value);
+        }
+        public override void WriteLine(char value)
+        {
+            WriteLine(value.ToString());
+        }
+        public override void WriteLine(decimal value)
+        {
+            WriteLine(value.ToString());
+        }
+        public override void WriteLine(double value)
+        {
+            WriteLine(value.ToString());
+        }
+        public override void WriteLine(float value)
+        {
+            WriteLine(value.ToString());
+        }
+        public override void WriteLine(int value)
+        {
+            WriteLine(value.ToString());
+        }
+        public override void WriteLine(long value)
+        {
+            WriteLine(value.ToString());
+        }
+        public override void WriteLine(uint value)
+        {
+            WriteLine(value.ToString());
+        }
+        public override void WriteLine(ulong value)
+        {
+            WriteLine(value.ToString());
+        }
+        public override void WriteLine(string format, object arg0)
+        {
+            WriteLine(string.Format(format, arg0));
+        }
+        public override void WriteLine(string format, object arg0, object arg1)
+        {
+            WriteLine(string.Format(format, arg0, arg1));
+        }
+        public override void WriteLine(string format, object arg0, object arg1, object arg2)
+        {
+            WriteLine(string.Format(format, arg0, arg1, arg2));
+        }
+        public override void WriteLine(string format, params object[] arg)
+        {
+            WriteLine(string.Format(format, arg));
+        }
+        public override void WriteLine(object value)
+        {
+            if (value == null) WriteLine("");
+            WriteLine(value.ToString());
+        }
         public override void WriteLine(string value)
+        {
+            var msg = cache + value;
+            cache = "";
+            if (string.IsNullOrEmpty(msg)) return;
+            if (msg.EndsWith(Environment.NewLine)) msg = msg.Remove(msg.Length - 2);
+            if (msg.StartsWith(Environment.NewLine)) msg = msg.Remove(0, 2);
+            msg = msg.Trim(new char[] { '\uFEFF' });
+            if (string.IsNullOrEmpty(msg)) return;
+            if (isError) Log.Error(msg);
+            if (!isError) Log.Output(msg);
+        }
+        private string cache = "";
+        public override void Write(string value)
         {
             var msg = value;
             if (string.IsNullOrEmpty(msg)) return;
@@ -168,9 +232,7 @@ namespace OpenRPA.Interfaces
             if (msg.StartsWith(Environment.NewLine)) msg = msg.Remove(0, 2);
             msg = msg.Trim(new char[] { '\uFEFF' });
             if (string.IsNullOrEmpty(msg)) return;
-            char c = msg[0];
-            if (isError) Log.Error(msg);
-            if (!isError) Log.Output(msg);
+            cache += msg;
         }
         public static void SetToConsole()
         {

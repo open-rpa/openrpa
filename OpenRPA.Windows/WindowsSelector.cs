@@ -351,9 +351,8 @@ namespace OpenRPA.Windows
                         }
                     }
                     if (i == (selectors.Count - 1)) result = current.ToArray();
-                    isDesktop = false;
                     Log.Selector(string.Format("Found " + current.Count + " hits for selector # " + i + " {0:mm\\:ss\\.fff}", sw.Elapsed));
-                    if(i==0 && isDesktop)
+                    if(i==0 && isDesktop && current.Count > 0)
                     {
                         if (current[0].RawElement.Patterns.Window.TryGetPattern(out var winPattern))
                         {

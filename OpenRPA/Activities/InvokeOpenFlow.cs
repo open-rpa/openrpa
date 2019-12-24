@@ -82,7 +82,8 @@ namespace OpenRPA.Activities
 
         void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object obj)
         {
-            context.RemoveBookmark(bookmark.Name);
+            // keep bookmark, incase workflow dies, and need to pickup more data when started again
+            // context.RemoveBookmark(bookmark.Name);
             var payload = JObject.Parse(obj.ToString());
             List<string> keys = payload.Properties().Select(p => p.Name).ToList();
             foreach (var key in keys)

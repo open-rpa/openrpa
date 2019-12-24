@@ -276,7 +276,7 @@ namespace OpenRPA
                 await global.webSocketClient.DeleteOne("openrpa", this._id);
             }
         }
-        public async Task RunPendingInstances()
+        public void RunPendingInstances()
         {
             var statepath = System.IO.Path.Combine(Project.Path, "state");
             if(System.IO.Directory.Exists(statepath))
@@ -325,44 +325,6 @@ namespace OpenRPA
                     }
                 }
             }
-            if (!global.isConnected) return;
-            var host = Environment.MachineName.ToLower();
-            var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
-            var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{WorkflowId: '" + _id + "', state: 'idle', fqdn: '" + fqdn + "'}");
-            foreach(var i in results)
-            {
-                try
-                {
-                    i.Workflow = this;
-                    if(!string.IsNullOrEmpty(i.InstanceId) && string.IsNullOrEmpty(i.xml))
-                    {
-                        Log.Error("Refuse to load instance " + i.InstanceId + " it contains no state!");
-                        i.state = "aborted";
-                        i.errormessage = "Refuse to load instance " + i.InstanceId + " it contains no state!";
-                        i.Save();
-                        continue;
-                    }
-                    //if (idleOrComplete != null) i.OnIdleOrComplete += idleOrComplete;
-                    //if (VisualTracking != null) i.OnVisualTracking += VisualTracking;
-                    WorkflowInstance.Instances.Add(i);
-                    var _ref = (i as IWorkflowInstance);
-                    foreach (var runner in Plugins.runPlugins)
-                    {
-                        if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
-                    }
-                    i.createApp();
-                    i.Run();
-                }
-                catch (Exception ex)
-                {
-                    i.state = "failed";
-                    i.Exception = ex;
-                    i.errormessage = ex.Message;
-                    i.Save();
-                    Log.Error("RunPendingInstances: " + ex.ToString());
-                }
-            }
-            
         }
         public string UniqueFilename()
         {

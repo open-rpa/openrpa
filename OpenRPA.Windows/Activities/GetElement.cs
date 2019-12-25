@@ -58,7 +58,7 @@ namespace OpenRPA.Windows
             var from = From.Get(context);
 
             //            double _timeout = 250;
-            double _timeout = 1000;
+            double _timeout = 5000;
             if (PluginConfig.search_descendants)
             {
                 _timeout = 5000;

@@ -188,11 +188,19 @@ namespace OpenRPA.Interfaces.Selector
         {
             Task.Run(() =>
             {
-                var selector = Plugin.GetSelector(Anchor, item);
-                Selector = selector;
+                try
+                {
+                    var selector = Plugin.GetSelector(Anchor, item);
+                    Selector = selector;
 
-                OnPropertyChanged("Selector");
-                OnPropertyChanged("json");
+                    OnPropertyChanged("Selector");
+                    OnPropertyChanged("json");
+
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
             });
             // FocusElement(selector);
         }

@@ -94,7 +94,7 @@ namespace OpenRPA.Windows
                     bool isDesktop = true;
                     AutomationElement parent = null;
                     if (anchor != null) { parent = temppathToRoot[0].Parent; isDesktop = false; }
-                    else { automation.GetDesktop(); }
+                    else { parent = automation.GetDesktop(); }
                     int count = temppathToRoot.Count;
                     while (temppathToRoot.Count > 0)
                     {
@@ -102,29 +102,36 @@ namespace OpenRPA.Windows
                         var i = temppathToRoot.First();
                         temppathToRoot.Remove(i);
                         item = new WindowsSelectorItem(i, false);
-                        var m = item.matches(root, count, parent, 2, isDesktop, false);
-                        if (m.Length > 0)
+                        if(parent!=null)
                         {
-                            newpathToRoot.Add(i);
-                            parent = i;
-                            isDesktop = false;
-                        }
-                        if (m.Length == 0 && Config.local.log_selector)
+                            var m = item.matches(root, count, parent, 2, isDesktop, false);
+                            if (m.Length > 0)
+                            {
+                                newpathToRoot.Add(i);
+                                parent = i;
+                                isDesktop = false;
+                            }
+                            if (m.Length == 0 && Config.local.log_selector)
+                            {
+                                //var message = "needed to find " + Environment.NewLine + item.ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
+                                //var children = parent.FindAllChildren();
+                                //foreach (var c in children)
+                                //{
+                                //    try
+                                //    {
+                                //        message += new UIElement(c).ToString() + Environment.NewLine;
+                                //    }
+                                //    catch (Exception)
+                                //    {
+                                //    }
+                                //}
+                                //Log.Debug(message);
+                            }
+                        } else
                         {
-                            //var message = "needed to find " + Environment.NewLine + item.ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
-                            //var children = parent.FindAllChildren();
-                            //foreach (var c in children)
-                            //{
-                            //    try
-                            //    {
-                            //        message += new UIElement(c).ToString() + Environment.NewLine;
-                            //    }
-                            //    catch (Exception)
-                            //    {
-                            //    }
-                            //}
-                            //Log.Debug(message);
+                            var b = true;
                         }
+
                     }
                 }
                 if (newpathToRoot.Count != pathToRoot.Count)
@@ -286,7 +293,7 @@ namespace OpenRPA.Windows
         }
         public static UIElement[] GetElementsWithuiSelector(WindowsSelector selector, IElement fromElement = null, int maxresults = 1)
         {
-            TimeSpan timeout = TimeSpan.FromMilliseconds(1000);
+            TimeSpan timeout = TimeSpan.FromMilliseconds(5000);
             timeout = TimeSpan.FromMilliseconds(20000);
             var midcounter = 1;
             if (PluginConfig.allow_multiple_hits_mid_selector)

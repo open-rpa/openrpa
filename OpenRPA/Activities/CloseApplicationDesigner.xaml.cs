@@ -23,7 +23,6 @@ namespace OpenRPA.Activities
         private void Open_Selector(object sender, RoutedEventArgs e)
         {
             string SelectorString = ModelItem.GetValue<string>("Selector");
-            //int maxresult = ModelItem.GetValue<int>("MaxResults");
             int maxresult = 1;
 
             if (string.IsNullOrEmpty(SelectorString)) SelectorString = "[{Selector: 'Windows'}]";
@@ -39,7 +38,7 @@ namespace OpenRPA.Activities
         private async void Highlight_Click(object sender, RoutedEventArgs e)
         {
             string SelectorString = ModelItem.GetValue<string>("Selector");
-            int maxresults = ModelItem.GetValue<int>("MaxResults");
+            int maxresults = 1;
             var selector = new Interfaces.Selector.Selector(SelectorString);
 
             var pluginname = selector.First().Selector;

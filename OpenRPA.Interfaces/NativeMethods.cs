@@ -103,16 +103,15 @@ namespace OpenRPA.Interfaces
             WTSDown,
             WTSInit
         }
-
-
         public static bool Launch(System.Diagnostics.Process p, string CurrentDirectory, string appCmdLine)
         {
-            if (GetPrimaryToken(p) == IntPtr.Zero) return false;
+            var priToken = GetPrimaryToken(p);
+            if (priToken == IntPtr.Zero) return false;
             IntPtr envBlock = IntPtr.Zero;
             try
             {
-                if (!CreateEnvironmentBlock(out envBlock, GetPrimaryToken(p), false)) return false;
-                if (!LaunchProcessAsUser(CurrentDirectory, appCmdLine, GetPrimaryToken(p), envBlock, out System.Diagnostics.Process newProcess, true, out string ErrorMessage))
+                if (!CreateEnvironmentBlock(out envBlock, priToken, false)) return false;
+                if (!LaunchProcessAsUser(CurrentDirectory, appCmdLine, priToken, envBlock, out System.Diagnostics.Process newProcess, true, out string ErrorMessage))
                 {
                     Log.Error(ErrorMessage);
                     return false;
@@ -126,6 +125,7 @@ namespace OpenRPA.Interfaces
             finally
             {
                 if (envBlock != IntPtr.Zero) DestroyEnvironmentBlock(envBlock);
+                if(priToken != IntPtr.Zero) CloseHandle(priToken);
             }
             return true;
         }
@@ -234,7 +234,7 @@ namespace OpenRPA.Interfaces
 
             }
             //We'll Close this token after it is used. 
-            return IntPtr.Zero;
+            return primaryToken;
         }
         public static System.Diagnostics.Process GetParentProcessId(System.Diagnostics.Process p = null)
         {

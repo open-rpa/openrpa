@@ -20,6 +20,7 @@ namespace OpenRPA
         public static T Load(string fileName)
         {
             T t = new T();
+            
             if (System.IO.File.Exists(fileName))
             {
                 t = JsonConvert.DeserializeObject<T>(System.IO.File.ReadAllText(fileName));

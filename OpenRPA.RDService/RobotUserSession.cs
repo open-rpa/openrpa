@@ -59,6 +59,10 @@ namespace OpenRPA.RDService
         {
             try
             {
+                if(System.Diagnostics.Debugger.IsAttached)
+                {
+                    skiprdp = true;
+                }
                 if (client == null)
                 {
                     Log.Information("client is null");
@@ -268,9 +272,11 @@ namespace OpenRPA.RDService
                     //var p = runner.Run();
 
                     //if (!NativeMethods.Launch(ownerexplorer, path, @"c:\windows\system32\cmd.exe /C " + "\"" + client.openrpapath + "\""))
-                    if (!NativeMethods.Launch(ownerexplorer, path, client.openrpapath))
+                    if (!NativeMethods.Launch(ownerexplorer, path, client.openrpapath.Replace("/", @"\")))
                     {
                         Log.Error("Failed launching robot in session");
+                        string errorMessage = new System.ComponentModel.Win32Exception(System.Runtime.InteropServices.Marshal.GetLastWin32Error()).Message;
+                        Log.Error(errorMessage);
                     }
                 }
                 catch (Exception ex)

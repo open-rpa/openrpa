@@ -21,7 +21,6 @@ namespace OpenRPA.RDService
                     var asm = System.Reflection.Assembly.GetEntryAssembly();
                     var filepath = asm.CodeBase.Replace("file:///", "");
                     var path = System.IO.Path.GetDirectoryName(filepath);
-
                     _globallocal = AppSettings<Config>.Load(System.IO.Path.Combine(path, "settings.json")); ;
                 }
                 return _globallocal;

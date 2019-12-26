@@ -57,33 +57,35 @@ namespace OpenRPA.RDService
         }
         static void Main(string[] args)
         {
-            var asm = System.Reflection.Assembly.GetEntryAssembly();
-            var filepath = asm.CodeBase.Replace("file:///", "");
-            var path = System.IO.Path.GetDirectoryName(filepath);
-            Interfaces.Extensions.ProjectsDirectory = path;
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-            try
+            System.Threading.Thread.Sleep(1000 * StartupWaitSeconds);
+            // Don't mess with ProjectsDirectory if we need to reauth
+            if (args.Length == 0)
             {
-                if(PluginConfig.usefreerdp)
+                AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+                try
                 {
-                    using(var rdp = new FreeRDP.Core.RDP())
+                    if (PluginConfig.usefreerdp)
                     {
+                        using (var rdp = new FreeRDP.Core.RDP())
+                        {
 
+                        }
                     }
                 }
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Failed initilizing FreeRDP, is Visual C++ Runtime installed ?");
-                // Console.WriteLine("https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads");
-                Console.WriteLine("https://www.microsoft.com/en-us/download/details.aspx?id=40784");
-                return;
+                catch (Exception)
+                {
+                    Console.WriteLine("Failed initilizing FreeRDP, is Visual C++ Runtime installed ?");
+                    // Console.WriteLine("https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads");
+                    Console.WriteLine("https://www.microsoft.com/en-us/download/details.aspx?id=40784");
+                    return;
+                }
+
             }
             var parentProcess = NativeMethods.GetParentProcessId();
             isService = (parentProcess.ProcessName.ToLower() == "services");
             if (args.Length == 0)
             {
-                System.Threading.Thread.Sleep(1000 * StartupWaitSeconds);
+                // System.Threading.Thread.Sleep(1000 * StartupWaitSeconds);
                 if (!manager.IsServiceInstalled)
                 {
                     //Console.Write("Username (" + NativeMethods.GetProcessUserName() + "): ");
@@ -128,7 +130,10 @@ namespace OpenRPA.RDService
                     {
                         Log.Information("Saving temporart jwt token, from local settings.json");
                         PluginConfig.tempjwt = new System.Net.NetworkCredential(string.Empty, Config.local.UnprotectString(Config.local.jwt)).Password;
+                        PluginConfig.Save();
                         Config.Save();
+                        Console.WriteLine("local  count: " + Config.local.properties.Count);
+                        Console.WriteLine("Plugin count: " + PluginConfig.globallocal.properties.Count);
                     }
                     return;
                 }

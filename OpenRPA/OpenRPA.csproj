@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.65</Version>
-    <PackageReleaseNotes>1.0.65 Fix issue with "traverse back" recorder options when running with Japanese language
+    <Version>1.0.66</Version>
+    <PackageReleaseNotes>1.0.66 Fix reconnect for RD Service, Add auto refresh
+1.0.65 Fix issue with "traverse back" recorder options when running with Japanese language
 1.0.64 Bug fixes for windows selector, improve speed (and fix a bug) when running pending workflow
 1.0.63 Add support for moving and resizing windows, add Portuguese Brazil
 1.0.62 Improve intellisense, add translation dlls in installer

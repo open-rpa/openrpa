@@ -26,8 +26,17 @@ namespace OpenRPA.Interfaces
             get
             {
                 var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                if (!System.IO.Directory.Exists(System.IO.Path.Combine(dir)))
-                    System.IO.Directory.CreateDirectory(dir);
+                if(!string.IsNullOrEmpty(dir))
+                {
+                    if (!System.IO.Directory.Exists(System.IO.Path.Combine(dir)))
+                        System.IO.Directory.CreateDirectory(dir);
+                } else
+                {
+                    string filename = "settings.json";
+                    var fi = new System.IO.FileInfo(filename);
+                    return System.IO.Path.GetDirectoryName(fi.FullName);
+
+                }
                 return dir;
             }
         }

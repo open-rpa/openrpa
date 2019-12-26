@@ -7,11 +7,12 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
-    <PackageReleaseNotes>1.0.7 Add langauges and bug fixes
+    <PackageReleaseNotes>1.0.8 Fix launch error
+1.0.7 Add langauges and bug fixes
 1.0.6 Improve high density robots
 1.0.4 update interfaces reference
 1.0.1 Improve UI and service installation</PackageReleaseNotes>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>

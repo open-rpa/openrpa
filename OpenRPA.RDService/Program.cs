@@ -57,33 +57,35 @@ namespace OpenRPA.RDService
         }
         static void Main(string[] args)
         {
-            var asm = System.Reflection.Assembly.GetEntryAssembly();
-            var filepath = asm.CodeBase.Replace("file:///", "");
-            var path = System.IO.Path.GetDirectoryName(filepath);
-            Interfaces.Extensions.ProjectsDirectory = path;
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-            try
+            System.Threading.Thread.Sleep(1000 * StartupWaitSeconds);
+            // Don't mess with ProjectsDirectory if we need to reauth
+            if (args.Length == 0)
             {
-                if(PluginConfig.usefreerdp)
+                AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+                try
                 {
-                    using(var rdp = new FreeRDP.Core.RDP())
+                    if (PluginConfig.usefreerdp)
                     {
+                        using (var rdp = new FreeRDP.Core.RDP())
+                        {
 
+                        }
                     }
                 }
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Failed initilizing FreeRDP, is Visual C++ Runtime installed ?");
-                // Console.WriteLine("https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads");
-                Console.WriteLine("https://www.microsoft.com/en-us/download/details.aspx?id=40784");
-                return;
+                catch (Exception)
+                {
+                    Console.WriteLine("Failed initilizing FreeRDP, is Visual C++ Runtime installed ?");
+                    // Console.WriteLine("https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads");
+                    Console.WriteLine("https://www.microsoft.com/en-us/download/details.aspx?id=40784");
+                    return;
+                }
+
             }
             var parentProcess = NativeMethods.GetParentProcessId();
             isService = (parentProcess.ProcessName.ToLower() == "services");
             if (args.Length == 0)
             {
-                System.Threading.Thread.Sleep(1000 * StartupWaitSeconds);
+                // System.Threading.Thread.Sleep(1000 * StartupWaitSeconds);
                 if (!manager.IsServiceInstalled)
                 {
                     //Console.Write("Username (" + NativeMethods.GetProcessUserName() + "): ");
@@ -120,6 +122,7 @@ namespace OpenRPA.RDService
             System.Diagnostics.Trace.Listeners.Add(tracing);
             Console.SetOut(new ConsoleDecorator(Console.Out));
             Console.SetError(new ConsoleDecorator(Console.Out, true));
+            Console.WriteLine("****** BEGIN");
             if (args.Length > 0)
             {
                 if (args[0].ToLower() == "auth" || args[0].ToLower() == "reauth")
@@ -128,7 +131,10 @@ namespace OpenRPA.RDService
                     {
                         Log.Information("Saving temporart jwt token, from local settings.json");
                         PluginConfig.tempjwt = new System.Net.NetworkCredential(string.Empty, Config.local.UnprotectString(Config.local.jwt)).Password;
+                        PluginConfig.Save();
                         Config.Save();
+                        Console.WriteLine("local  count: " + Config.local.properties.Count);
+                        Console.WriteLine("Plugin count: " + PluginConfig.globallocal.properties.Count);
                     }
                     return;
                 }
@@ -141,6 +147,7 @@ namespace OpenRPA.RDService
                     return;
                 }
             }
+            Console.WriteLine("****** isService: " + isService);
             if (isService)
             {
                 System.ServiceProcess.ServiceBase.Run(new MyServiceBase(ServiceName, DoWork));
@@ -161,9 +168,26 @@ namespace OpenRPA.RDService
         {
             Log.Debug("WebSocketClient_OnQueueMessage");
         }
-        private static void WebSocketClient_OnClose(string obj)
+        private static bool autoReconnect = true;
+        private async static void WebSocketClient_OnClose(string reason)
         {
-            Log.Information("WebSocketClient_OnClose: " + obj);
+            Log.Information("Disconnected " + reason);
+            await Task.Delay(1000);
+            if (autoReconnect)
+            {
+                autoReconnect = false;
+                global.webSocketClient.OnOpen -= WebSocketClient_OnOpen;
+                global.webSocketClient.OnClose -= WebSocketClient_OnClose;
+                global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
+                global.webSocketClient = null;
+
+                global.webSocketClient = new WebSocketClient(Config.local.wsurl);
+                global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
+                global.webSocketClient.OnClose += WebSocketClient_OnClose;
+                global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
+                await global.webSocketClient.Connect();
+                autoReconnect = true;
+            }
         }
         public static byte[] Base64Decode(string base64EncodedData)
         {
@@ -224,16 +248,19 @@ namespace OpenRPA.RDService
                 //foreach (var c in clients) sessions.Add(new RobotUserSession(c));
                 // Log.Information("Loaded " + sessions.Count + " sessions");
                 // Create listener for robots to connect too
-                PipeSecurity ps = new PipeSecurity();
-                ps.AddAccessRule(new PipeAccessRule("Users", PipeAccessRights.ReadWrite | PipeAccessRights.CreateNewInstance, System.Security.AccessControl.AccessControlType.Allow));
-                ps.AddAccessRule(new PipeAccessRule("CREATOR OWNER", PipeAccessRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
-                ps.AddAccessRule(new PipeAccessRule("SYSTEM", PipeAccessRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
-                pipe = new OpenRPA.NamedPipeWrapper.NamedPipeServer<RPAMessage>("openrpa_service", ps);
-                pipe.ClientConnected += Pipe_ClientConnected;
-                pipe.ClientMessage += Pipe_ClientMessage;
-                pipe.Start();
+                if(pipe==null)
+                {
+                    PipeSecurity ps = new PipeSecurity();
+                    ps.AddAccessRule(new PipeAccessRule("Users", PipeAccessRights.ReadWrite | PipeAccessRights.CreateNewInstance, System.Security.AccessControl.AccessControlType.Allow));
+                    ps.AddAccessRule(new PipeAccessRule("CREATOR OWNER", PipeAccessRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
+                    ps.AddAccessRule(new PipeAccessRule("SYSTEM", PipeAccessRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
+                    pipe = new OpenRPA.NamedPipeWrapper.NamedPipeServer<RPAMessage>("openrpa_service", ps);
+                    pipe.ClientConnected += Pipe_ClientConnected;
+                    pipe.ClientMessage += Pipe_ClientMessage;
+                    pipe.Start();
+                }
 
-                if(reloadTimer==null)
+                if (reloadTimer==null)
                 {
                     reloadTimer = new System.Timers.Timer(PluginConfig.reloadinterval.TotalMilliseconds);
                     reloadTimer.Elapsed += async (o,e) =>
@@ -286,7 +313,7 @@ namespace OpenRPA.RDService
                     }
                     else
                     {
-                        if (c._modified != session.client._modified)
+                        if (c._modified != session.client._modified || c._version != session.client._version)
                         {
                             Log.Information("Removing:1 session for " + session.client.windowsusername);
                             if (c.enabled)

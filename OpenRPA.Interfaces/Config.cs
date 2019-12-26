@@ -45,6 +45,7 @@ namespace OpenRPA
         public TimeSpan use_postwait = TimeSpan.Zero;
         public bool minimize = true;
         public bool recording_add_to_designer = true;
+        public TimeSpan reloadinterval = TimeSpan.FromMinutes(5);
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)

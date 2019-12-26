@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.28</Version>
-    <PackageReleaseNotes>1.0.28 Fix launch error for RDService
+    <Version>1.0.29</Version>
+    <PackageReleaseNotes>1.0.29 Fix reconnect for RD Service, Add auto refresh
+1.0.28 Fix launch error for RDService
 1.0.27 Fix issue with "traverse back" recorder options when running with Japanese language
 1.0.26 Add support for moving and resizing windows
 1.0.25 Improve UIElement

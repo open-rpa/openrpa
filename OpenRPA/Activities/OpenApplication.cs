@@ -35,7 +35,7 @@ namespace OpenRPA.Activities
         public InArgument<int> Height { get; set; }
         public InArgument<bool> AnimateMove { get; set; } = false;
         public OutArgument<IElement> Result { get; set; }
-        private Variable<IEnumerator<IElement>> _elements = new Variable<IEnumerator<IElement>>("_elements");
+        private Variable<IElement> _element = new Variable<IElement>("_element");
         [Browsable(false)]
         public ActivityAction<IElement> Body { get; set; }
         protected override void Execute(NativeActivityContext context)
@@ -49,7 +49,8 @@ namespace OpenRPA.Activities
             var timeout = Timeout.Get(context);
             var element = Plugin.LaunchBySelector(selector, checkrunning, timeout);
             Result.Set(context, element);
-            if(element!=null && element is UIElement ui)
+            _element.Set(context, element);
+            if (element!=null && element is UIElement ui && Body == null)
             {
                 //var window = ((UIElement)element).GetWindow();
                 var x = X.Get(context);
@@ -74,6 +75,25 @@ namespace OpenRPA.Activities
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
+            IElement element = _element.Get(context);
+            if (element != null && element is UIElement ui)
+            {
+                //var window = ((UIElement)element).GetWindow();
+                var x = X.Get(context);
+                var y = Y.Get(context);
+                var width = Width.Get(context);
+                var height = Height.Get(context);
+                var animatemove = AnimateMove.Get(context);
+                if (width > 0 && height > 0)
+                {
+                    ui.SetWindowSize(width, height);
+                }
+                if (x > 0 && y > 0)
+                {
+                    if (animatemove) ui.MoveWindowTo(x, y);
+                    if (!animatemove) ui.SetWindowPosition(x, y);
+                }
+            }
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {
@@ -82,7 +102,7 @@ namespace OpenRPA.Activities
             Interfaces.Extensions.AddCacheArgument(metadata, "Timeout", Timeout);
             Interfaces.Extensions.AddCacheArgument(metadata, "Result", Result);
 
-            metadata.AddImplementationVariable(_elements);
+            metadata.AddImplementationVariable(_element);
             base.CacheMetadata(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)

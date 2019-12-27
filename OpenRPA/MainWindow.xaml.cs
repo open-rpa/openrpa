@@ -360,26 +360,26 @@ namespace OpenRPA
                 var test = lvDataBinding.ItemsSource;
                 //lvDataBinding.ItemsSource = Plugins.recordPlugins;
 
-                if (reloadTimer == null)
-                {
-                    reloadTimer = new System.Timers.Timer(Config.local.reloadinterval.TotalMilliseconds);
-                    reloadTimer.Elapsed += async (_sender, e) =>
-                    {
-                        reloadTimer.Stop();
-                        try
-                        {
-                            GenericTools.RunUI(async () => {
-                                await LoadServerData();
-                            });
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error(ex.ToString());
-                            reloadTimer.Start();
-                        }
-                    };
-                    reloadTimer.Start();
-                }
+                //if (reloadTimer == null)
+                //{
+                //    reloadTimer = new System.Timers.Timer(Config.local.reloadinterval.TotalMilliseconds);
+                //    reloadTimer.Elapsed += async (_sender, e) =>
+                //    {
+                //        reloadTimer.Stop();
+                //        try
+                //        {
+                //            GenericTools.RunUI(async () => {
+                //                await LoadServerData();
+                //            });
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //            Log.Error(ex.ToString());
+                //            reloadTimer.Start();
+                //        }
+                //    };
+                //    reloadTimer.Start();
+                //}
                 await LoadServerData();
                 try
                 {
@@ -468,7 +468,7 @@ namespace OpenRPA
             {
                 var sw = new System.Diagnostics.Stopwatch();
                 sw.Start();
-                reloadTimer.Stop();
+                if(reloadTimer!=null) reloadTimer.Stop();
                 if (Projects.Count == 0)
                 {
                     SetStatus("Loading workflows and state from " + Config.local.wsurl);
@@ -645,7 +645,7 @@ namespace OpenRPA
             }
             finally
             {
-                reloadTimer.Start();
+                if (reloadTimer != null) reloadTimer.Start();
                 SetStatus("Connected to " + Config.local.wsurl + " as " + global.webSocketClient.user.name);
             }
         }

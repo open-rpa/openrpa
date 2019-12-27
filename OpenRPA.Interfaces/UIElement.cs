@@ -179,9 +179,23 @@ namespace OpenRPA
                     if (RawElement.Patterns.Invoke.IsSupported)
                         if(RawElement.Patterns.Invoke.TryGetPattern(out var InvokePattern))
                     {
-                        InvokePattern.Invoke();
-                        // Log.Selector(string.Format("UIElement.LegacyIAccessible.set::SetValue::end {0:mm\\:ss\\.fff}", sw.Elapsed));
-                        return;
+                            if(RawElement.IsEnabled)
+                            {
+                                InvokePattern.Invoke();
+                            } 
+                            else
+                            {
+                                try
+                                {
+                                    InvokePattern.Invoke();
+                                }
+                                catch (Exception ex)
+                                {
+                                    throw new Exception("Failed clicking disabled object", ex);
+                                }
+                            }
+                            // Log.Selector(string.Format("UIElement.LegacyIAccessible.set::SetValue::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+                            return;
                     }
                     VirtualClick = false;
                 }

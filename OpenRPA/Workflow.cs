@@ -11,7 +11,7 @@ using System.Windows.Threading;
 
 namespace OpenRPA
 {
-    public class Workflow : apibase, IWorkflow
+    public class Workflow : apibase, IWorkflow, IDisposable
     {
         [JsonIgnore]
         public DispatcherTimer _timer;
@@ -20,12 +20,13 @@ namespace OpenRPA
             Serializable = true;
             _timer = new DispatcherTimer(DispatcherPriority.Render);
             _timer.Interval = TimeSpan.FromSeconds(1);
-            _timer.Tick += (sender, args) =>
-            {
-                NotifyPropertyChanged("State");
-                NotifyPropertyChanged("StateImage");
-            };
+            _timer.Tick += _timer_Tick;
             _timer.Start();
+        }
+        private void _timer_Tick(object sender, EventArgs e)
+        {
+            NotifyPropertyChanged("State");
+            NotifyPropertyChanged("StateImage");
         }
         public string queue { get { return GetProperty<string>(); } set { SetProperty(value); } }        
         public string Xaml { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -417,7 +418,26 @@ namespace OpenRPA
                 }
             }
         }
-
+        #region IDisposable Support
+        private bool disposedValue = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _timer.Stop();
+                    _timer.Tick -= _timer_Tick;
+                    _timer = null;
+                }
+                disposedValue = true;
+            }
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 
 }

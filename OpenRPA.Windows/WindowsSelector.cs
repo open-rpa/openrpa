@@ -54,48 +54,41 @@ namespace OpenRPA.Windows
             pathToRoot.Reverse();
             if (anchor != null)
             {
-                // version 1
-                //var anchorlist = anchor.Where(x => x.Enabled && x.Selector == null).ToList();
-                //for (var i = 0; i < anchorlist.Count(); i++)
-                //{
-                //    if(WindowsSelectorItem.Match(anchorlist[i], pathToRoot[0]))
-                //    //if (((WindowsSelectorItem)anchorlist[i]).Match(pathToRoot[0]))
-                //    {
-                //        pathToRoot.Remove(pathToRoot[0]);
-                //    }
-                //    else
-                //    {
-                //        Log.Selector("Element does not match the anchor path");
-                //        return;
-                //    }
-                //}
-
-                // version 2
-                //var a = anchor.Last();
-                //var idx = -1;
-                //for (var i = 0; i < pathToRoot.Count(); i++)
-                //{
-                //    if (WindowsSelectorItem.Match(a, pathToRoot[i]))
-                //    {
-                //        idx = i;
-                //        // break;
-                //    }
-                //}
-                //pathToRoot.RemoveRange(0, idx);
-
-                var anchorlist = anchor.Where(x => x.Enabled && x.Selector == null).ToList();
-                for (var i = 0; i < anchorlist.Count(); i++)
+                bool SearchDescendants = false;
+                var p = anchor.First().Properties.Where(x => x.Name == "SearchDescendants").FirstOrDefault();
+                if (p.Value != null && p.Value == "true") SearchDescendants = true;
+                if(SearchDescendants)
                 {
-                    if (WindowsSelectorItem.Match(anchorlist[i], pathToRoot[0]))
-                    //if (((WindowsSelectorItem)anchorlist[i]).Match(pathToRoot[0]))
+                    var a = anchor.Last();
+                    var idx = -1;
+                    for (var i = 0; i < pathToRoot.Count(); i++)
                     {
-                        pathToRoot.Remove(pathToRoot[0]);
+                        if (WindowsSelectorItem.Match(a, pathToRoot[i]))
+                        {
+                            idx = i;
+                            // break;
+                        }
                     }
-                    else
+                    pathToRoot.RemoveRange(0, idx);
+
+                }
+                else
+                {
+                    var anchorlist = anchor.Where(x => x.Enabled && x.Selector == null).ToList();
+                    for (var i = 0; i < anchorlist.Count(); i++)
                     {
-                        Log.Selector("Element does not match the anchor path");
-                        return;
+                        if (WindowsSelectorItem.Match(anchorlist[i], pathToRoot[0]))
+                        //if (((WindowsSelectorItem)anchorlist[i]).Match(pathToRoot[0]))
+                        {
+                            pathToRoot.Remove(pathToRoot[0]);
+                        }
+                        else
+                        {
+                            Log.Selector("Element does not match the anchor path");
+                            return;
+                        }
                     }
+
                 }
 
             }

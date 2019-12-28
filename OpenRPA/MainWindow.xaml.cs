@@ -443,9 +443,12 @@ namespace OpenRPA
         }
         private void ReloadTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            reloadTimer.Stop();
-            reloadTimer.Elapsed -= ReloadTimer_Elapsed;
-            reloadTimer = null;
+            if(reloadTimer!=null)
+            {
+                reloadTimer.Stop();
+                reloadTimer.Elapsed -= ReloadTimer_Elapsed;
+                reloadTimer = null;
+            }
             LoadServerData();
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

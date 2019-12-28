@@ -194,6 +194,30 @@ namespace OpenRPA.IE
                     Thread.Sleep(100);
                 }
             });
+
+            var wbs = new SHDocVw.ShellWindows().Cast<SHDocVw.WebBrowser>().ToList();
+            foreach (var w in wbs)
+            {
+                try
+                {
+                    var doc = (w.Document as MSHTML.HTMLDocument);
+                    if (doc != null)
+                    {
+                        var wBrowser = w as SHDocVw.WebBrowser;
+                        var automation = Interfaces.AutomationUtil.getAutomation();
+                        var _ele = automation.FromHandle(new IntPtr(wBrowser.HWND));
+                        if(_ele != null)
+                        {
+                            var ui = new UIElement(_ele);
+                            var window = ui.GetWindow();
+                            if (window != null) return new UIElement(window);
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
             return null;
         }
         public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)

@@ -536,24 +536,53 @@ namespace OpenRPA
         }
         public Window GetWindow()
         {
-            Window window = RawElement.AsWindow();
-            if (RawElement.ControlType != FlaUI.Core.Definitions.ControlType.Window)
+            AutomationElement last = RawElement;
+            AutomationElement current = RawElement;
+            do
             {
-                AutomationElement item = RawElement.Parent;
-                do
-                {
-                    item = item.Parent;
-                } while (item != null && item.ControlType != FlaUI.Core.Definitions.ControlType.Window);
-                if (item != null && item.ControlType == FlaUI.Core.Definitions.ControlType.Window)
-                {
-                    window = item.AsWindow();
-                }
-            }
-            if(window.Parent != null && window.Parent.ControlType == FlaUI.Core.Definitions.ControlType.Window)
-            {
-                window = window.Parent.AsWindow();
-            }
+                last = current;
+                current = current.Parent;
+            } while (current.Parent != null);
+            Window window = last.AsWindow();
             return window;
+            //Window window = RawElement.AsWindow();
+            //FlaUI.Core.Definitions.ControlType ct = FlaUI.Core.Definitions.ControlType.Button;
+            //if (RawElement.ControlType != FlaUI.Core.Definitions.ControlType.Window)
+            //{
+            //    AutomationElement item = RawElement.Parent;
+            //    do
+            //    {
+            //        item = item.Parent;
+            //        try
+            //        {
+            //            if(item!=null) ct = item.ControlType;
+            //        }
+            //        catch (Exception)
+            //        {
+            //            ct = FlaUI.Core.Definitions.ControlType.Button;
+            //        }
+            //    } while (item != null && ct != FlaUI.Core.Definitions.ControlType.Window);
+            //    if (item != null && ct == FlaUI.Core.Definitions.ControlType.Window)
+            //    {
+            //        window = item.AsWindow();
+            //    }
+            //}
+            //try
+            //{
+            //    if(window.Parent != null)
+            //    {
+            //        ct = window.Parent.ControlType;
+            //    }
+            //}
+            //catch (Exception)
+            //{
+            //    ct = FlaUI.Core.Definitions.ControlType.Button;
+            //}
+            //if(window.Parent != null && ct == FlaUI.Core.Definitions.ControlType.Window)
+            //{
+            //    window = window.Parent.AsWindow();
+            //}
+            //return window;
         }
         public void SetPosition(int X, int Y)
         {
@@ -635,6 +664,28 @@ namespace OpenRPA
                 SetPosition(value.X, value.Y);
             }
         }
+        public System.Drawing.Rectangle WindowRectangle
+        {
+            get
+            {
+                try
+                {
+                    var window = GetWindow();
+                    return new System.Drawing.Rectangle((int)window.Properties.BoundingRectangle.Value.X,
+                        (int)window.Properties.BoundingRectangle.Value.Y, (int)window.Properties.BoundingRectangle.Value.Width,
+                        (int)window.Properties.BoundingRectangle.Value.Height);
+                }
+                catch (Exception)
+                {
+                    return System.Drawing.Rectangle.Empty;
+                }
+            }
+            set 
+            {
+                var window = GetWindow();
+                NativeMethods.MoveWindow(window.Properties.NativeWindowHandle.Value, value.X, value.Y, value.Width, value.Height, true);
+            }
+        }
         public static double MovePixelsPerMillisecond { get; } = 2; // 0.5;
         public static double MovePixelsPerStep { get; } = 10;
         public void MoveWindowTo(int newX, int newY)
@@ -654,10 +705,63 @@ namespace OpenRPA
             var duration = TimeSpan.FromMilliseconds(Convert.ToInt32(totalDistance / MovePixelsPerMillisecond));
             var steps = Math.Max(Convert.ToInt32(totalDistance / MovePixelsPerStep), 1); // Make sure to have et least one step
             var interval = TimeSpan.FromMilliseconds(duration.TotalMilliseconds / steps);
-
             // Execute the movement
-            FlaUI.Core.Input.Interpolation.Execute(point => { WindowPosition = point; }, startPos, endPos, duration, interval, true);
+            FlaUI.Core.Input.Interpolation.Execute(point => {
+                WindowPosition = point;
+            }, startPos, endPos, duration, interval, true);
         }
+        public void MoveWindowTo(int newX, int newY, int newW, int newH)
+        {
+            var startPos = WindowRectangle;
+            var endPos = new System.Drawing.Rectangle(newX, newY, newW, newH);
+
+            // Break out if there is no positional change
+            if (startPos == endPos)
+            {
+                return;
+            }
+            var steps = 20;
+            var runtime = TimeSpan.FromMilliseconds(500);
+            var xsteps = (newX - startPos.X) / steps;
+            var ysteps = (newY - startPos.Y) / steps;
+            var xWidthsteps = (newW - startPos.Width) / steps;
+            var yHeightsteps = (newH - startPos.Height) / steps;
+            System.Drawing.Rectangle newPos = new System.Drawing.Rectangle(startPos.X, startPos.Y, startPos.Width, startPos.Height);
+            for (var i = 0; i < steps; i++)
+            {
+                newPos.X += xsteps;
+                newPos.Y += ysteps;
+                newPos.Width += xWidthsteps;
+                newPos.Height += yHeightsteps;
+                WindowRectangle = newPos;
+                System.Threading.Thread.Sleep((int)(runtime.TotalMilliseconds/steps));
+            }
+
+            WindowRectangle = endPos;
+        }
+
+        //public void MoveWindowTo(int newX, int newY, int newW, int newH)
+        //{
+        //    var startPos = WindowRectangle;
+        //    var endPos = new System.Drawing.Rectangle(newX, newY, newW, newH);
+
+        //    // Break out if there is no positional change
+        //    if (startPos == endPos)
+        //    {
+        //        return;
+        //    }
+        //    var steps = 10;
+        //    var xsteps = newX - startPos.X / steps;
+        //    System.Drawing.Rectangle newPos = new System.Drawing.Rectangle(startPos.X, startPos.Y, startPos.Width, startPos.Height);
+        //    for(var i=0; i< steps; i++)
+        //    {
+        //        newPos.X += xsteps;
+        //        WindowRectangle = newPos;
+        //        System.Threading.Thread.Sleep(100);
+        //    }
+
+        //    WindowRectangle = endPos;
+        //}
         public void SetWindowSize(int Width, int Height)
         {
             WindowSize = new System.Drawing.Size(Width, Height);

@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic.Activities;
+using OpenRPA.Interfaces;
 using System;
 using System.Activities;
 using System.Activities.Expressions;
@@ -37,6 +38,19 @@ namespace OpenRPA.Activities
                 var _base = Plugin.GetElementsWithSelector(selector, null, 10);
                 if (_base == null && _base.Length == 0) return;
                 var ele = _base[0];
+                if(ele != null && !(ele is UIElement))
+                {
+                    var automation = AutomationUtil.getAutomation();
+                    var p = new System.Drawing.Point(ele.Rectangle.X + 10, ele.Rectangle.Y + 10);
+                    if(p.X > 0 && p.Y > 0)
+                    {
+                        var _temp = automation.FromPoint(p);
+                        if(_temp != null)
+                        {
+                            ele = new UIElement(_temp);
+                        }
+                    }
+                }
                 if (ele is UIElement ui)
                 {
                     var window = ui.GetWindow();
@@ -101,7 +115,22 @@ namespace OpenRPA.Activities
                 }
                 e.Selector.RemoveRange(2, e.Selector.Count - 2);
                 ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(e.Selector.ToString() ) });
-                if(e.Element is UIElement ui)
+                var ele = e.Element;
+                if (ele != null && !(ele is UIElement))
+                {
+                    var automation = AutomationUtil.getAutomation();
+                    var p = new System.Drawing.Point(ele.Rectangle.X + 10, ele.Rectangle.Y + 10);
+                    if (p.X > 0 && p.Y > 0)
+                    {
+                        var _temp = automation.FromPoint(p);
+                        if (_temp != null)
+                        {
+                            ele = new UIElement(_temp);
+                        }
+                    }
+                }
+
+                if (ele is UIElement ui)
                 {
                     var window = ui.GetWindow();
                     if (window == null) return;

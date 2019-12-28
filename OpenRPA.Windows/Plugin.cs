@@ -398,10 +398,6 @@ namespace OpenRPA.Windows
         public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)
         {
             IElement[] elements = { };
-            var sw = new Stopwatch();
-            sw.Start();
-            do
-            {
                 if (PluginConfig.get_elements_in_different_thread)
                 {
                     elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
@@ -427,7 +423,6 @@ namespace OpenRPA.Windows
                     {
                         elements = new IElement[] { };
                     }
-            } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
             // elements = GetElementsWithSelector(selector, null, 1);
             if (elements.Length > 0)
             {

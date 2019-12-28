@@ -65,9 +65,9 @@ namespace OpenRPA.Windows
                 }
                 if (anchor!=null)
                 {
-                    ModelItem.Properties["From"].SetValue(new InArgument<UIElement>()
+                    ModelItem.Properties["From"].SetValue(new InArgument<IElement>()
                     {
-                        Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<UIElement>("item")
+                        Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<IElement>("item")
                     });
 
                 }

@@ -54,31 +54,43 @@ namespace OpenRPA.Windows
             pathToRoot.Reverse();
             if (anchor != null)
             {
-                //var anchorlist = anchor.Where(x => x.Enabled && x.Selector == null).ToList();
-                //for (var i = 0; i < anchorlist.Count(); i++)
-                //{
-                //    if(WindowsSelectorItem.Match(anchorlist[i], pathToRoot[0]))
-                //    //if (((WindowsSelectorItem)anchorlist[i]).Match(pathToRoot[0]))
-                //    {
-                //        pathToRoot.Remove(pathToRoot[0]);
-                //    }
-                //    else
-                //    {
-                //        Log.Selector("Element does not match the anchor path");
-                //        return;
-                //    }
-                //}
-                var a = anchor.Last();
-                var idx = -1;
-                for (var i = 0; i < pathToRoot.Count(); i++)
+                bool SearchDescendants = false;
+                var p = anchor.First().Properties.Where(x => x.Name == "SearchDescendants").FirstOrDefault();
+                if (p.Value != null && p.Value == "true") SearchDescendants = true;
+                if(SearchDescendants)
                 {
-                    if (WindowsSelectorItem.Match(a, pathToRoot[i]))
+                    var a = anchor.Last();
+                    var idx = -1;
+                    for (var i = 0; i < pathToRoot.Count(); i++)
                     {
-                        idx = i;
-                        break;
+                        if (WindowsSelectorItem.Match(a, pathToRoot[i]))
+                        {
+                            idx = i;
+                            // break;
+                        }
                     }
+                    pathToRoot.RemoveRange(0, idx);
+
                 }
-                pathToRoot.RemoveRange(0, idx);
+                else
+                {
+                    var anchorlist = anchor.Where(x => x.Enabled && x.Selector == null).ToList();
+                    for (var i = 0; i < anchorlist.Count(); i++)
+                    {
+                        if (WindowsSelectorItem.Match(anchorlist[i], pathToRoot[0]))
+                        //if (((WindowsSelectorItem)anchorlist[i]).Match(pathToRoot[0]))
+                        {
+                            pathToRoot.Remove(pathToRoot[0]);
+                        }
+                        else
+                        {
+                            Log.Selector("Element does not match the anchor path");
+                            return;
+                        }
+                    }
+
+                }
+
             }
             WindowsSelectorItem item;
 

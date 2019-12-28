@@ -34,7 +34,8 @@ namespace OpenRPA.Windows
         public InArgument<int> MaxResults { get; set; }
         public InArgument<int> MinResults { get; set; }
         public InArgument<string> Selector { get; set; }
-        public InArgument<UIElement> From { get; set; }
+        // public InArgument<UIElement> From { get; set; }
+        public InArgument<IElement> From { get; set; }
         public OutArgument<UIElement[]> Elements { get; set; }
         [Browsable(false)]
         public string Image { get; set; }

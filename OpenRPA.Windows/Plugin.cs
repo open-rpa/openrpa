@@ -255,40 +255,36 @@ namespace OpenRPA.Windows
             IElement[] elements = { };
             if (CheckRunning)
             {
-                sw.Start();
-                do
+                if (PluginConfig.get_elements_in_different_thread)
                 {
-                    if (PluginConfig.get_elements_in_different_thread)
+                    elements = AutomationHelper.RunSTAThread<IElement[]>(() =>
                     {
-                        elements = AutomationHelper.RunSTAThread<IElement[]>(() =>
+                        try
                         {
-                            try
-                            {
-                                Log.Selector("LaunchBySelector in non UI thread");
-                                return GetElementsWithSelector(selector, null, 1);
-                            }
-                            catch (System.Threading.ThreadAbortException ex)
-                            {
-                                Log.Error(ex, "");
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.Error(ex, "");
-                            }
-                            return new UIElement[] { };
-                        }, TimeSpan.FromMilliseconds(5000)).Result;
+                            Log.Selector("LaunchBySelector in non UI thread");
+                            return GetElementsWithSelector(selector, null, 1);
+                        }
+                        catch (System.Threading.ThreadAbortException ex)
+                        {
+                            Log.Error(ex, "");
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex, "");
+                        }
+                        return new UIElement[] { };
+                    }, TimeSpan.FromMilliseconds(5000)).Result;
 
-                    }
-                    else
-                    {
-                        Log.Selector("LaunchBySelector using UI thread");
-                        elements = GetElementsWithSelector(selector, null, 1);
-                    }
-                    if (elements == null)
-                    {
-                        elements = new IElement[] { };
-                    }
-                } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
+                }
+                else
+                {
+                    Log.Selector("LaunchBySelector using UI thread");
+                    elements = GetElementsWithSelector(selector, null, 1);
+                }
+                if (elements == null)
+                {
+                    elements = new IElement[] { };
+                }
                 // elements = GetElementsWithSelector(selector, null, 1);
                 if (elements.Length > 0)
                 {
@@ -347,9 +343,9 @@ namespace OpenRPA.Windows
 
             sw = new Stopwatch();
             sw.Start();
-            if(timeout < TimeSpan.FromSeconds(3))
+            if(timeout < TimeSpan.FromSeconds(10))
             {
-                timeout = TimeSpan.FromSeconds(3);
+                timeout = TimeSpan.FromSeconds(10);
             }
             do
             {
@@ -388,7 +384,8 @@ namespace OpenRPA.Windows
             {
                 var window = ((UIElement)elements[0]);
                 return new UIElement(window.GetWindow());
-            } else
+            } 
+            else
             {
                 return null;
             }

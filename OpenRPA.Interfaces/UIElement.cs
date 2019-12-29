@@ -540,8 +540,15 @@ namespace OpenRPA
             AutomationElement current = RawElement;
             do
             {
-                last = current;
-                current = current.Parent;
+                try
+                {
+                    last = current;
+                    current = current.Parent;
+                }
+                catch (Exception)
+                {
+                    // throw;
+                }
             } while (current != null && current.Parent != null);
             Window window = last.AsWindow();
             return window;

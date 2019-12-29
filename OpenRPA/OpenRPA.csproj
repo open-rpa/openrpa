@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.67</Version>
-    <PackageReleaseNotes>1.0.67 Fix Memory leak in auto reload
+    <Version>1.0.68</Version>
+    <PackageReleaseNotes>1.0.68 Improvements
+1.0.67 Fix Memory leak in auto reload
 1.0.66 Fix reconnect for RD Service, Add auto refresh
 1.0.65 Fix issue with "traverse back" recorder options when running with Japanese language
 1.0.64 Bug fixes for windows selector, improve speed (and fix a bug) when running pending workflow

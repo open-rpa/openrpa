@@ -542,7 +542,7 @@ namespace OpenRPA
             {
                 last = current;
                 current = current.Parent;
-            } while (current.Parent != null);
+            } while (current != null && current.Parent != null);
             Window window = last.AsWindow();
             return window;
             //Window window = RawElement.AsWindow();
@@ -720,26 +720,26 @@ namespace OpenRPA
             {
                 return;
             }
-            var steps = 20;
-            var runtime = TimeSpan.FromMilliseconds(500);
+            var steps = Config.local.move_animation_steps;
+            var runtime = Config.local.move_animation_run_time;
             var xsteps = (newX - startPos.X) / steps;
             var ysteps = (newY - startPos.Y) / steps;
-            var xWidthsteps = (newW - startPos.Width) / steps;
-            var yHeightsteps = (newH - startPos.Height) / steps;
+            var wsteps = (newW - startPos.Width) / steps;
+            var hsteps = (newH - startPos.Height) / steps;
             System.Drawing.Rectangle newPos = new System.Drawing.Rectangle(startPos.X, startPos.Y, startPos.Width, startPos.Height);
             for (var i = 0; i < steps; i++)
             {
                 newPos.X += xsteps;
                 newPos.Y += ysteps;
-                newPos.Width += xWidthsteps;
-                newPos.Height += yHeightsteps;
+                newPos.Width += wsteps;
+                newPos.Height += hsteps;
+                Log.Verbose(newPos);
                 WindowRectangle = newPos;
                 System.Threading.Thread.Sleep((int)(runtime.TotalMilliseconds/steps));
             }
 
             WindowRectangle = endPos;
         }
-
         //public void MoveWindowTo(int newX, int newY, int newW, int newH)
         //{
         //    var startPos = WindowRectangle;

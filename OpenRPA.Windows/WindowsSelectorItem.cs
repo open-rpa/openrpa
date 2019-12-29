@@ -288,6 +288,7 @@ namespace OpenRPA.Windows
                 {
                     foreach (var e in result.Result)
                     {
+                        // _ = e.Parent;
                         if (!e.IsAvailable)
                         {
                             RemoveFromCache(result);
@@ -398,6 +399,7 @@ namespace OpenRPA.Windows
             }
             if((isDesktop || !isDesktop) && matchs.Count > 0)
             {
+                foreach(var e in matchs) { _ = e.Parent; }
                 AddToCache(root, ident, Conditions.ToString(), matchs.ToArray());
             }
             Log.Selector(string.Format("matches::matches::complete {0:mm\\:ss\\.fff}", sw.Elapsed));

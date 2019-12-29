@@ -58,14 +58,17 @@ namespace OpenRPA.Activities
                 var width = Width.Get(context);
                 var height = Height.Get(context);
                 var animatemove = AnimateMove.Get(context);
-                if(width > 0 && height > 0)
+                if((width == 0 && height == 0) || (x == 0 && y == 0))
                 {
-                    ui.SetWindowSize(width, height);
                 }
-                if (x>0 && y>0)
+                else
                 {
-                    if (animatemove) ui.MoveWindowTo(x, y);
-                    if (!animatemove) ui.SetWindowPosition(x, y);
+                    if (animatemove) ui.MoveWindowTo(x, y, width, height);
+                    if (!animatemove)
+                    {
+                        ui.SetWindowSize(width, height);
+                        ui.SetWindowPosition(x, y);
+                    }
                 }
             }
             if(element!=null && Body != null)
@@ -84,15 +87,20 @@ namespace OpenRPA.Activities
                 var width = Width.Get(context);
                 var height = Height.Get(context);
                 var animatemove = AnimateMove.Get(context);
-                if (width > 0 && height > 0)
+                //if(width > 0 && height > 0)
+                //{
+                //    ui.SetWindowSize(width, height);
+                //}
+                //if (x>0 && y>0)
+                //{
+                // if (animatemove) ui.MoveWindowTo(x, y);
+                if (animatemove) ui.MoveWindowTo(x, y, width, height);
+                if (!animatemove)
                 {
                     ui.SetWindowSize(width, height);
+                    ui.SetWindowPosition(x, y);
                 }
-                if (x > 0 && y > 0)
-                {
-                    if (animatemove) ui.MoveWindowTo(x, y);
-                    if (!animatemove) ui.SetWindowPosition(x, y);
-                }
+                //}
             }
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)

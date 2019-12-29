@@ -381,7 +381,7 @@ namespace OpenRPA
                 }
                 Log.Debug("WebSocketClient_OnOpen::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                 SetStatus("Load layout and reopen workflows");
-                if (Projects.Count == 0)
+                if (Projects.Count == 0 && reloadTimer == null)
                 {
                     OnOpen(null);
                     string Name = "New Project";
@@ -443,9 +443,12 @@ namespace OpenRPA
         }
         private void ReloadTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            reloadTimer.Stop();
-            reloadTimer.Elapsed -= ReloadTimer_Elapsed;
-            reloadTimer = null;
+            if(reloadTimer!=null)
+            {
+                reloadTimer.Stop();
+                reloadTimer.Elapsed -= ReloadTimer_Elapsed;
+                reloadTimer = null;
+            }
             LoadServerData();
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

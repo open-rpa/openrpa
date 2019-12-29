@@ -38,6 +38,7 @@ namespace OpenRPA
         {
             get
             {
+                if (Project == null) return Filename;
                 string lastFolderName = System.IO.Path.GetFileName(Project.Path);
                 return System.IO.Path.Combine(lastFolderName, Filename);
             }

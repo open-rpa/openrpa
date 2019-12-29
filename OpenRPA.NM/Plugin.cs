@@ -181,6 +181,25 @@ namespace OpenRPA.NM
             if (p != null) { url = p.Value; }
 
             NMHook.openurl(browser, url);
+            if(browser=="chrome")
+            {
+                foreach (var process in System.Diagnostics.Process.GetProcesses())
+                {
+                    string pname = process.ProcessName.ToLower();
+                    if(pname.Contains("chrome"))
+                    {
+                        string title = process.MainWindowTitle;
+                        Console.WriteLine(title);
+                        if(!string.IsNullOrEmpty(title))
+                        {
+                            var exists = NMHook.tabs.Where(x => x.title == title).FirstOrDefault();
+                            var automation = AutomationUtil.getAutomation();
+                            var _ele = automation.FromHandle(process.MainWindowHandle);
+                            return new UIElement(_ele);
+                        }
+                    }
+                }
+            }
             return null;
         }
         public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)

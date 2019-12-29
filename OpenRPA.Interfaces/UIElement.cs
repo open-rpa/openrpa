@@ -733,7 +733,7 @@ namespace OpenRPA
                 newPos.Y += ysteps;
                 newPos.Width += wsteps;
                 newPos.Height += hsteps;
-                Log.Verbose(newPos);
+                Log.Verbose(newPos.ToString());
                 WindowRectangle = newPos;
                 System.Threading.Thread.Sleep((int)(runtime.TotalMilliseconds/steps));
             }

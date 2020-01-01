@@ -54,6 +54,7 @@ namespace OpenRPA.RDService
         private DateTime lastrdp = DateTime.Now - TimeSpan.FromMinutes(1);
         private int ConnectionAttempts = 0;
         private bool skiprdp = false;
+        private bool hasShownLaunchWarning = false;
         [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
         public void DoWork()
         {
@@ -190,6 +191,12 @@ namespace OpenRPA.RDService
                     if (rdp == null || rdp.Connected == false) return;
                 }
 
+                NativeMethods.EnableDisablePrivilege(NativeMethods.GetSecurityEntityValue(NativeMethods.SecurityEntity.SE_ASSIGNPRIMARYTOKEN_NAME), true);
+                NativeMethods.EnableDisablePrivilege(NativeMethods.GetSecurityEntityValue(NativeMethods.SecurityEntity.SE_BACKUP_NAME), true);
+                NativeMethods.EnableDisablePrivilege(NativeMethods.GetSecurityEntityValue(NativeMethods.SecurityEntity.SE_DEBUG_NAME), true);
+                NativeMethods.EnableDisablePrivilege(NativeMethods.GetSecurityEntityValue(NativeMethods.SecurityEntity.SE_LOAD_DRIVER_NAME), true);
+                NativeMethods.EnableDisablePrivilege(NativeMethods.GetSecurityEntityValue(NativeMethods.SecurityEntity.SE_TCB_NAME), true);
+
                 try
                 {
                     var procs = Process.GetProcessesByName("explorer");
@@ -198,7 +205,7 @@ namespace OpenRPA.RDService
                     {
                         try
                         {
-                            var owner = NativeMethods.GetProcessUserName(explorer).ToLower();
+                            var owner = NativeMethods.GetProcessUserName(explorer.Id).ToLower();
                             if (owner == client.windowsusername)
                             {
                                 ownerexplorer = explorer;
@@ -218,7 +225,7 @@ namespace OpenRPA.RDService
                     {
                         try
                         {
-                            var owner = NativeMethods.GetProcessUserName(rpa).ToLower();
+                            var owner = NativeMethods.GetProcessUserName(rpa.Id).ToLower();
                             if (owner == client.windowsusername)
                             {
                                 ownerrpa = rpa;
@@ -258,9 +265,6 @@ namespace OpenRPA.RDService
                     //    Process.Start(new ProcessStartInfo(client.openrpapath) { WorkingDirectory = path });
                     //    return;
                     //}
-                    Log.Information("Attaching to user explorer and launching robot in session");
-                    Log.Information(client.openrpapath);
-                    created = DateTime.Now;
                     // IntPtr hSessionToken = IntPtr.Zero;
                     // SessionFinder sf = new SessionFinder();
                     // hSessionToken = sf.GetLocalInteractiveSession();
@@ -272,11 +276,45 @@ namespace OpenRPA.RDService
                     //var p = runner.Run();
 
                     //if (!NativeMethods.Launch(ownerexplorer, path, @"c:\windows\system32\cmd.exe /C " + "\"" + client.openrpapath + "\""))
-                    if (!NativeMethods.Launch(ownerexplorer, path, client.openrpapath.Replace("/", @"\")))
+
+
+                    //var me = System.Security.Principal.WindowsIdentity.GetCurrent();
+                    ////var mep = new System.Security.Principal.WindowsPrincipal(me);
+                    //var acct = new System.Security.Principal.NTAccount(me.Name);
+                    //var rule = new ProcessAccessRule(acct, ProcessAccessRights.PROCESS_ALL_ACCESS, false, System.Security.AccessControl.InheritanceFlags.None, System.Security.AccessControl.PropagationFlags.None, System.Security.AccessControl.AccessControlType.Allow);
+
+                    //SafeTokenHandle handle = new SafeTokenHandle(ownerexplorer.Handle);
+                    ////var perm = new OpenRPA.Interfaces.ProcessSecurity(handle);
+                    //var perm = new OpenRPA.Interfaces.ProcessSecurity(handle);
+                    //perm.AddAccessRule(rule);
+                    //try
+                    //{
+                    //    perm.SaveChanges(handle);
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    Log.Error(new Exception("Failed setting DACL on explore proccess: " + ex.Message, ex).ToString());
+                    //    created = DateTime.Now;
+                    //    return;
+                    //}
+                    if (Program.isService)
                     {
-                        Log.Error("Failed launching robot in session");
-                        string errorMessage = new System.ComponentModel.Win32Exception(System.Runtime.InteropServices.Marshal.GetLastWin32Error()).Message;
-                        Log.Error(errorMessage);
+                        Log.Information("Attaching to user explorer and launching robot in session");
+                        Log.Information(client.openrpapath);
+                        created = DateTime.Now;
+                        hasShownLaunchWarning = false;
+                        if (!NativeMethods.Launch(ownerexplorer, path, client.openrpapath.Replace("/", @"\")))
+                        {
+                            Log.Error("Failed launching robot in session");
+                            string errorMessage = new System.ComponentModel.Win32Exception(System.Runtime.InteropServices.Marshal.GetLastWin32Error()).Message;
+                            Log.Error(errorMessage);
+                        }
+                    }
+                    else if(!hasShownLaunchWarning)
+                    {
+                        Log.Warning("Not running as Local System, so cannot spawn processes in other users desktops");
+                        created = DateTime.Now;
+                        hasShownLaunchWarning = true;
                     }
                 }
                 catch (Exception ex)

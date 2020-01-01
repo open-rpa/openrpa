@@ -131,6 +131,8 @@ namespace OpenRPA.RDService
                     {
                         Log.Information("Saving temporart jwt token, from local settings.json");
                         PluginConfig.tempjwt = new System.Net.NetworkCredential(string.Empty, Config.local.UnprotectString(Config.local.jwt)).Password;
+                        PluginConfig.wsurl = Config.local.wsurl;
+                        
                         PluginConfig.Save();
                         Config.Save();
                         Console.WriteLine("local  count: " + Config.local.properties.Count);
@@ -146,6 +148,12 @@ namespace OpenRPA.RDService
                     }
                     return;
                 }
+                else
+                {
+                    Console.WriteLine("unknown command " + args[0]);
+                    Console.WriteLine("try uninstall or reauth ");
+                }
+                return;
             }
             Console.WriteLine("****** isService: " + isService);
             if (isService)
@@ -181,7 +189,7 @@ namespace OpenRPA.RDService
                 global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
                 global.webSocketClient = null;
 
-                global.webSocketClient = new WebSocketClient(Config.local.wsurl);
+                global.webSocketClient = new WebSocketClient(PluginConfig.wsurl);
                 global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
                 global.webSocketClient.OnClose += WebSocketClient_OnClose;
                 global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
@@ -241,7 +249,7 @@ namespace OpenRPA.RDService
                 if (servers.Length == 0)
                 {
                     Log.Information("Adding new unattendedserver for " + computerfqdn);
-                    server = new unattendedserver() { computername = computername, computerfqdn = computerfqdn, name = computerfqdn };
+                    server = new unattendedserver() { computername = computername, computerfqdn = computerfqdn, name = computerfqdn, enabled = true };
                     server = await global.webSocketClient.InsertOne("openrpa", 1, false, server);
                 }
                 //var clients = await global.webSocketClient.Query<unattendedclient>("openrpa", "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
@@ -284,6 +292,7 @@ namespace OpenRPA.RDService
                 Log.Error(ex.ToString());
             }
         }
+        private static bool disabledmessageshown = false;
         private static async Task ReloadConfig()
         {
             try
@@ -297,7 +306,12 @@ namespace OpenRPA.RDService
                 unattendedclient[] clients = new unattendedclient[] { };
                 if(server != null && server.enabled)
                 {
+                    disabledmessageshown = false;
                     clients = await global.webSocketClient.Query<unattendedclient>("openrpa", "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
+                } else if (disabledmessageshown == false)
+                {
+                    Log.Information("No server for " + computerfqdn + " found, or server is disabled");
+                    disabledmessageshown = true;
                 }
                 var sessioncount = sessions.Count();
                 foreach (var c in clients)
@@ -404,7 +418,7 @@ namespace OpenRPA.RDService
         private static void DoWork()
         {
             Task.Run(() => {
-                global.webSocketClient = new WebSocketClient(Config.local.wsurl);
+                global.webSocketClient = new WebSocketClient(PluginConfig.wsurl);
                 global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
                 global.webSocketClient.OnClose += WebSocketClient_OnClose;
                 global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;

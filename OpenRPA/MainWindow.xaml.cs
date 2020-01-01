@@ -460,6 +460,7 @@ namespace OpenRPA
         }
         private void LoadServerData()
         {
+            if (!global.isSignedIn) return;
             GenericTools.RunUI(async () =>
             {
                 var sw = new System.Diagnostics.Stopwatch();
@@ -470,9 +471,11 @@ namespace OpenRPA
                     {
                         SetStatus("Loading workflows and state from " + Config.local.wsurl);
                         Log.Debug("Get workflows from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", top: 5000);
+                        var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", orderby: "{projectid:-1,name:-1}", top: 5000);
+                        workflows = workflows.OrderBy(x => x.name).ToArray();
                         Log.Debug("Get projects from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}");
+                        var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}", orderby: "{name:-1}");
+                        projects = projects.OrderBy(x => x.name).ToArray();
                         Log.Debug("Get detectors from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         var detectors = await global.webSocketClient.Query<Detector>("openrpa", "{_type: 'detector'}");
                         Log.Debug("Done getting workflows and projects " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
@@ -499,7 +502,7 @@ namespace OpenRPA
                             }
                             folders.Add(p.Path);
                         }
-                        SetStatus("Initialize projects and workflows");
+                        SetStatus("Initialize projects and workflows ");
                         foreach (var p in projects)
                         {
                             p.Path = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, p.name);
@@ -547,11 +550,13 @@ namespace OpenRPA
                                 Projects.Add(project);
                             }
                         }
-                        var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", top: 5000);
+                        var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", orderby: "{projectid:-1,name:-1}", top: 5000);
                         foreach (var workflow in workflows)
                         {
                             Workflow exists = null;
-                            Project project = null;
+                            Project project = projects.Where(x => x._id == workflow.projectid).FirstOrDefault();
+                            workflow.Project = project;
+
                             Projects.ForEach(p =>
                             {
                                 if (exists == null)
@@ -560,7 +565,6 @@ namespace OpenRPA
                                     var temp = p.Workflows.Where(x => x.IDOrRelativeFilename == workflow.IDOrRelativeFilename).FirstOrDefault();
                                     if (temp != null)
                                     {
-                                        project = p;
                                         exists = temp;
                                     }
                                 }
@@ -576,6 +580,7 @@ namespace OpenRPA
                                     project.Workflows.Remove(exists);
                                     exists.Dispose();
                                     project.Workflows.Insert(index, workflow);
+                                    project.NotifyPropertyChanged("Workflows");
                                 } else
                                 {
                                     workflow.Dispose();
@@ -586,17 +591,21 @@ namespace OpenRPA
                                 project = Projects.Where(p => p._id == workflow.projectid).FirstOrDefault();
                                 if (project != null)
                                 {
+                                    Log.Information("Adding " + workflow.name + " to project " + project.name);
                                     workflow.Project = project;
                                     if (project.Workflows == null) project.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
                                     project.Workflows.Add(workflow);
+                                    project.NotifyPropertyChanged("Workflows");
                                 }
                                 else
                                 {
+                                    Log.Information("No project found, so disposing workflow " + workflow.name);
                                     workflow.Dispose();
                                 }
                             }
                             else
                             {
+                                // workflow not new and not updated, so dispose
                                 workflow.Dispose();
                             }
                         }
@@ -1005,6 +1014,7 @@ namespace OpenRPA
         public ICommand ImportCommand { get { return new RelayCommand<object>(OnImport, CanImport); } }
         public ICommand ExportCommand { get { return new RelayCommand<object>(OnExport, CanExport); } }
         public ICommand PermissionsCommand { get { return new RelayCommand<object>(OnPermissions, CanPermissions); } }
+        public ICommand reloadCommand { get { return new RelayCommand<object>(OnReload, CanReload); } }
         public ICommand LinkOpenFlowCommand { get { return new RelayCommand<object>(OnlinkOpenFlow, CanlinkOpenFlow); } }
         public ICommand LinkNodeREDCommand { get { return new RelayCommand<object>(OnlinkNodeRED, CanlinkNodeRED); } }
         public ICommand OpenChromePageCommand { get { return new RelayCommand<object>(OnOpenChromePage, CanAllways); } }
@@ -1281,6 +1291,14 @@ namespace OpenRPA
             {
                 Show();
             }
+        }
+        private bool CanReload(object _item)
+        {
+            return true;
+        }
+        private void OnReload(object _item)
+        {
+            LoadServerData();
         }
         private bool CanImport(object _item)
         {

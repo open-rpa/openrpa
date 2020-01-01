@@ -331,6 +331,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reload.
+        /// </summary>
+        public static string main_reload {
+            get {
+                return ResourceManager.GetString("main_reload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Record directly into designer.
         /// </summary>
         public static string main_settings_recording_add_to_designer {

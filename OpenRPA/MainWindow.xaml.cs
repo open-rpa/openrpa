@@ -540,10 +540,19 @@ namespace OpenRPA
                             Project exists = Projects.Where(x => x._id == project._id).FirstOrDefault();
                             if (exists != null && exists._version != project._version)
                             {
-                                Log.Information("Updating project " + project.name);
-                                var index = Projects.IndexOf(exists);
-                                Projects.Remove(exists);
-                                Projects.Insert(index, project);
+                                int index = -1;
+                                try
+                                {
+                                    Log.Information("Updating project " + project.name);
+                                    index = Projects.IndexOf(exists);
+                                    Projects.Remove(exists);
+                                    Projects.Insert(index, project);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.Error("project1, index: " + index.ToString());
+                                    Log.Error(ex.ToString());
+                                }
                             }
                             else if (exists == null)
                             {
@@ -554,7 +563,7 @@ namespace OpenRPA
                         foreach (var workflow in workflows)
                         {
                             Workflow exists = null;
-                            Project project = projects.Where(x => x._id == workflow.projectid).FirstOrDefault();
+                            Project project = Projects.Where(x => x._id == workflow.projectid).FirstOrDefault();
                             workflow.Project = project;
 
                             Projects.ForEach(p =>
@@ -575,12 +584,21 @@ namespace OpenRPA
                                 var designer = GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename);
                                 if (designer == null)
                                 {
-                                    if (project.Workflows == null) project.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
-                                    var index = project.Workflows.IndexOf(exists);
-                                    project.Workflows.Remove(exists);
-                                    exists.Dispose();
-                                    project.Workflows.Insert(index, workflow);
-                                    project.NotifyPropertyChanged("Workflows");
+                                    int index = -1;
+                                    try
+                                    {
+                                        if (project.Workflows == null) project.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
+                                        index = project.Workflows.IndexOf(exists);
+                                        project.Workflows.Remove(exists);
+                                        exists.Dispose();
+                                        project.Workflows.Insert(index, workflow);
+                                        project.NotifyPropertyChanged("Workflows");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Log.Error("project2, index: " + index.ToString());
+                                        Log.Error(ex.ToString());
+                                    }
                                 } else
                                 {
                                     workflow.Dispose();
@@ -664,7 +682,7 @@ namespace OpenRPA
                 catch (Exception ex)
                 {
                     Log.Error(ex, "");
-                    MessageBox.Show("WebSocketClient_OnOpen::Sync projects " + ex.Message);
+                    // MessageBox.Show("WebSocketClient_OnOpen::Sync projects " + ex.Message);
                 }
                 finally
                 {

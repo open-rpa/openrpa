@@ -131,6 +131,8 @@ namespace OpenRPA.RDService
                     {
                         Log.Information("Saving temporart jwt token, from local settings.json");
                         PluginConfig.tempjwt = new System.Net.NetworkCredential(string.Empty, Config.local.UnprotectString(Config.local.jwt)).Password;
+                        PluginConfig.wsurl = Config.local.wsurl;
+                        
                         PluginConfig.Save();
                         Config.Save();
                         Console.WriteLine("local  count: " + Config.local.properties.Count);
@@ -187,7 +189,7 @@ namespace OpenRPA.RDService
                 global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
                 global.webSocketClient = null;
 
-                global.webSocketClient = new WebSocketClient(Config.local.wsurl);
+                global.webSocketClient = new WebSocketClient(PluginConfig.wsurl);
                 global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
                 global.webSocketClient.OnClose += WebSocketClient_OnClose;
                 global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
@@ -416,7 +418,7 @@ namespace OpenRPA.RDService
         private static void DoWork()
         {
             Task.Run(() => {
-                global.webSocketClient = new WebSocketClient(Config.local.wsurl);
+                global.webSocketClient = new WebSocketClient(PluginConfig.wsurl);
                 global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
                 global.webSocketClient.OnClose += WebSocketClient_OnClose;
                 global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;

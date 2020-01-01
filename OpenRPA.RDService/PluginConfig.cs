@@ -28,6 +28,7 @@ namespace OpenRPA.RDService
         }
         public static TimeSpan reloadinterval  { get { return globallocal.GetProperty<TimeSpan>(pluginname, TimeSpan.FromSeconds(1)); } set { globallocal.SetProperty(pluginname, value); } }
         public static string jwt { get { return globallocal.GetProperty<string>(pluginname, null); } set { globallocal.SetProperty(pluginname, value); } }
+        public static string wsurl { get { return globallocal.GetProperty<string>(pluginname, null); } set { globallocal.SetProperty(pluginname, value); } }        
         public static string entropy { get { return globallocal.GetProperty<string>(pluginname, null); } set { globallocal.SetProperty(pluginname, value); } }
         public static string tempjwt { get { return globallocal.GetProperty<string>(pluginname, null); } set { globallocal.SetProperty(pluginname, value); } }
         public static bool usefreerdp { get { return globallocal.GetProperty<bool>(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }

@@ -90,6 +90,9 @@
                     <RibbonButton Label="{x:Static or:strings.permissions}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Manage.png" 
                                   Command="{Binding Data.PermissionsCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
+                    <RibbonButton Label="{x:Static or:strings.main_reload}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Revert.png" 
+                                  Command="{Binding Data.reloadCommand, Source={StaticResource proxy}}" 
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                     <RibbonButton Label="{x:Static or:strings.import}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Import.png" 
                                   Command="{Binding Data.ImportCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />

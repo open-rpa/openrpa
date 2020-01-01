@@ -35,7 +35,7 @@ namespace OpenRPA.RDServicePlugin.Views
             InitializeComponent();
             DataContext = this;
             this.plugin = plugin;
-            lblWindowsusername.Text = NativeMethods.GetProcessUserName();
+            lblWindowsusername.Text = NativeMethods.GetProcessUserName(System.Diagnostics.Process.GetCurrentProcess().Id);
         }
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
@@ -163,7 +163,7 @@ namespace OpenRPA.RDServicePlugin.Views
             {
                 string computername = NativeMethods.GetHostName().ToLower();
                 string computerfqdn = NativeMethods.GetFQDN().ToLower();
-                string windowsusername = NativeMethods.GetProcessUserName().ToLower();
+                string windowsusername = NativeMethods.GetProcessUserName(System.Diagnostics.Process.GetCurrentProcess().Id).ToLower();
 
                 var servers = await global.webSocketClient.Query<RDService.unattendedserver>("openrpa", "{'_type':'unattendedserver', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
                 server = servers.FirstOrDefault();
@@ -214,7 +214,7 @@ namespace OpenRPA.RDServicePlugin.Views
                 DisableButtons();
                 string computername = NativeMethods.GetHostName().ToLower();
                 string computerfqdn = NativeMethods.GetFQDN().ToLower();
-                string windowsusername = NativeMethods.GetProcessUserName().ToLower();
+                string windowsusername = NativeMethods.GetProcessUserName(System.Diagnostics.Process.GetCurrentProcess().Id).ToLower();
                 var asm = System.Reflection.Assembly.GetEntryAssembly();
                 var path = asm.CodeBase.Replace("file:///", "");
                 if (client == null)

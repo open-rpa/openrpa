@@ -772,6 +772,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Swap Animate.
+        /// </summary>
+        public static string tools_swap_animate {
+            get {
+                return ResourceManager.GetString("tools_swap_animate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Swap SendKeys.
         /// </summary>
         public static string tools_swap_sendkeys {

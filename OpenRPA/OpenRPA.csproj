@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.69</Version>
-    <PackageReleaseNotes>1.0.69 Fix reload issue in new projects
+    <Version>1.0.70</Version>
+    <PackageReleaseNotes>1.0.70 Add support for custom iterator variable
+1.0.69 Fix reload issue in new projects
 1.0.68 Improvements
 1.0.67 Fix Memory leak in auto reload
 1.0.66 Fix reconnect for RD Service, Add auto refresh

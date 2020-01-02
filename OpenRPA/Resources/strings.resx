@@ -354,6 +354,9 @@
   <data name="tools_change_type" xml:space="preserve">
     <value>Change Type</value>
   </data>
+  <data name="tools_swap_animate" xml:space="preserve">
+    <value>Swap Animate</value>
+  </data>
   <data name="tools_swap_sendkeys" xml:space="preserve">
     <value>Swap SendKeys</value>
   </data>

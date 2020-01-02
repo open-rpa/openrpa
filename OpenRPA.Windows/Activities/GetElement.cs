@@ -67,7 +67,7 @@ namespace OpenRPA.Windows
             //#if DEBUG
             //            _timeout = _timeout * 8;
             //#endif
-            
+            int failcounter = 0;
             do
             {
                 if (PluginConfig.get_elements_in_different_thread)
@@ -99,7 +99,14 @@ namespace OpenRPA.Windows
                 {
                     elements = new UIElement[] { };
                 }
-                if(elements.Length == 0) Log.Selector(string.Format("Windows.GetElement::Found no elements {0:mm\\:ss\\.fff}", sw.Elapsed));
+                if (elements.Length == 0) { 
+                    Log.Selector(string.Format("Windows.GetElement::Found no elements {0:mm\\:ss\\.fff}", sw.Elapsed));
+                    failcounter++;
+                }
+                if(failcounter > 2)
+                {
+                    WindowsSelectorItem.ClearCache();
+                }
             } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
             //if (PluginConfig.get_elements_in_different_thread && elements.Length > 0)
             //{

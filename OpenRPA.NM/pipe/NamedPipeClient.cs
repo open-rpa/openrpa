@@ -32,6 +32,7 @@ namespace OpenRPA.NM.pipe
                 {
                     queue.result = message;
                     queue.autoReset.Set();
+                    // Log.Information("received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));
                     return;
                 }
                 ServerMessage?.Invoke(message);

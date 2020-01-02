@@ -42,6 +42,8 @@ namespace OpenRPA.Utilities
             if(System.IO.File.Exists(filepath) && ! overwrite ) return 42;
             using (var client = new System.Net.WebClient())
             {
+                var dir = System.IO.Path.GetDirectoryName(filepath);
+                if (!System.IO.Directory.Exists(dir)) System.IO.Directory.CreateDirectory(dir);
                 await client.DownloadFileTaskAsync(new Uri(url), filepath);
             }
             return 42;

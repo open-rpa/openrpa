@@ -129,4 +129,10 @@
   <data name="activity_openurl_getcurrent" xml:space="preserve">
     <value>Get current</value>
   </data>
+  <data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
+    <value>Wait after set value</value>
+  </data>
+  <data name="plugin_wait_for_tab_after_set_value_help" xml:space="preserve">
+    <value>Wait for tab status to be in ready state after setting a value</value>
+  </data>
 </root>

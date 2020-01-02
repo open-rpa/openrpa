@@ -168,10 +168,13 @@ namespace OpenRPA.NM
                         frameId = message.frameId,
                         data = value
                     };
-                    var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(2));
-                    if (subsubresult == null) throw new Exception("Failed clicking html element");
-                    System.Threading.Thread.Sleep(500);
-                    NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
+                    var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(10));
+                    if (subsubresult == null) throw new Exception("Failed setting html element value");
+                    //System.Threading.Thread.Sleep(500);
+                    if (PluginConfig.wait_for_tab_after_set_value)
+                    {
+                        NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
+                    }
                     return;
                 }
             }

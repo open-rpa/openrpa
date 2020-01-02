@@ -5,6 +5,8 @@
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
     xmlns:or="clr-namespace:OpenRPA.Resources"
+    xmlns:s="clr-namespace:System.Data;assembly=System.Data"
+    xmlns:Converters="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
     >
 
 
@@ -26,16 +28,35 @@
 
     
     <sap:ActivityDesigner.Resources>
+        <Converters:ArgumentToExpressionConverter x:Key="ArgumentToExpressionConverter" />
         <DataTemplate x:Key="Collapsed">
             <Label Padding="0,0,0,0" FontStyle="Italic" Foreground="{x:Static SystemColors.GrayTextBrush}" HorizontalAlignment="Center"
                        VerticalAlignment="Center" Content="{x:Static or:strings.activity_click_to_view}"></Label>
         </DataTemplate>
         <DataTemplate x:Key="Expanded">
-            <StackPanel>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Text="For each " Grid.Column="0" />
+                <TextBox Text="{Binding ModelItem.Body.Argument.Name}" Grid.Column="1" />
+                <TextBlock Text=" in " Grid.Column="2" />
+                <sapv:ExpressionTextBox Expression="{Binding Path=ModelItem.DataTable, Converter={StaticResource ArgumentToExpressionConverter}}"
+                                       ExpressionType="s:DataTable"
+                                       OwnerActivity="{Binding ModelItem}" Grid.Column="3" />
                 <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
                                     HintText="{x:Static or:strings.activity_drop_hint}" AllowedItemType="sa:Activity"
-                                      Grid.Row="1" />
-            </StackPanel>
+                                      Grid.Row="1" Grid.ColumnSpan="4" />
+            </Grid>
+
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
             <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>

@@ -67,7 +67,7 @@ namespace OpenRPA.Activities
             var fef = new ForEachDataRow();
             var aa = new ActivityAction<System.Data.DataRowView>();
             var da = new DelegateInArgument<System.Data.DataRowView>();
-            da.Name = "item";
+            da.Name = "row";
             fef.Body = aa;
             aa.Argument = da;
             return fef;

@@ -95,5 +95,23 @@ namespace OpenRPA.NM.Resources {
                 return ResourceManager.GetString("activity_openurl_getcurrent", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait after set value.
+        /// </summary>
+        public static string plugin_wait_for_tab_after_set_value {
+            get {
+                return ResourceManager.GetString("plugin_wait_for_tab_after_set_value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait for tab status to be in ready state after setting a value.
+        /// </summary>
+        public static string plugin_wait_for_tab_after_set_value_help {
+            get {
+                return ResourceManager.GetString("plugin_wait_for_tab_after_set_value_help", resourceCulture);
+            }
+        }
     }
 }

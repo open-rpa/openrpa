@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.AutomationElements.Infrastructure;
@@ -85,7 +84,7 @@ namespace OpenRPA.Windows
         public string Name { get => "Windows"; }
         public string Status => _status;
         private Views.RecordPluginView view;
-        public UserControl editor
+        public System.Windows.Controls.UserControl editor
         {
             get
             {

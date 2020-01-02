@@ -40,6 +40,7 @@
     <None Remove="Resources\toolbox\gethtmlelement.png" />
     <None Remove="Snippets\ChromeGoogleSearch.xaml" />
     <None Remove="Snippets\FirefoxGoogleSearch.xaml" />
+    <None Remove="Views\RecordPluginView.xaml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\toolbox\gethtmlelement.png" />
@@ -49,6 +50,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\OpenURLDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RecordPluginView.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

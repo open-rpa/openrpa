@@ -20,7 +20,18 @@ namespace OpenRPA.NM
             add { }
             remove { }
         }
-        public System.Windows.Controls.UserControl editor => null;
+        private Views.RecordPluginView view; 
+        public System.Windows.Controls.UserControl editor
+        {
+            get
+            {
+                if (view == null)
+                {
+                    view = new Views.RecordPluginView();
+                }
+                return view;
+            }
+        }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
             if (!(selector is NMSelector nmselector))
@@ -113,6 +124,7 @@ namespace OpenRPA.NM
             NMHook.onMessage += OnMessage;
             NMHook.Connected += OnConnected;
             NMHook.onDisconnected += OnDisconnected;
+            _ = PluginConfig.wait_for_tab_after_set_value;
         }
         private void OnConnected(string obj)
         {

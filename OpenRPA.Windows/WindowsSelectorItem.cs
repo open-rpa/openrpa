@@ -326,6 +326,10 @@ namespace OpenRPA.Windows
             foreach (var e in items) MatchCache.Remove(e);
             MatchCache.Remove(item);
         }
+        public static void ClearCache()
+        {
+            MatchCache.Clear();
+        }
         public void AddToCache(AutomationElement root, int ident, string Conditions, AutomationElement[] Result)
         {
             if (!PluginConfig.enable_cache) return;

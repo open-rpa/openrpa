@@ -371,7 +371,23 @@ namespace OpenRPA.Windows
                     }
                     if (i == (selectors.Count - 1)) result = current.ToArray();
                     Log.Selector(string.Format("Found " + current.Count + " hits for selector # " + i + " {0:mm\\:ss\\.fff}", sw.Elapsed));
-                    if(i==0 && isDesktop && current.Count > 0)
+                    if(i > 0 && elements.Count > 0 && current.Count == 0)
+                    {
+                        //var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
+                        //var children = elements[0].RawElement.FindAllChildren();
+                        //foreach (var c in children)
+                        //{
+                        //    try
+                        //    {
+                        //        message += new UIElement(c).ToString() + Environment.NewLine;
+                        //    }
+                        //    catch (Exception)
+                        //    {
+                        //    }
+                        //}
+                        //Log.Selector(message);
+                    }
+                    if (i==0 && isDesktop && current.Count > 0)
                     {
                         if (current[0].RawElement.Patterns.Window.TryGetPattern(out var winPattern))
                         {

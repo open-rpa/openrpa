@@ -380,7 +380,8 @@ namespace OpenRPA.Windows
                     elements = new IElement[] { };
                 }
             } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
-            if(elements.Length > 0)
+            WindowsSelectorItem.ClearCache();
+            if (elements.Length > 0)
             {
                 var window = ((UIElement)elements[0]);
                 return new UIElement(window.GetWindow());

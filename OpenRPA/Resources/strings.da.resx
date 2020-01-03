@@ -213,6 +213,9 @@
   <data name="maintitle" xml:space="preserve">
     <value>OpenRPA</value>
   </data>
+  <data name="main_reload" xml:space="preserve">
+    <value>Genindlæs</value>
+  </data>
   <data name="main_settings_recording_add_to_designer" xml:space="preserve">
     <value>Optage direkte i designer</value>
   </data>

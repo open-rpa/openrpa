@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA
 {
+
     class ResFinder
     {
     }

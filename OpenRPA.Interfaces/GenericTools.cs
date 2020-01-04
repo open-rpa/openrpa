@@ -70,6 +70,21 @@ namespace OpenRPA.Interfaces
         }
         public static System.Windows.Window MainWindow { get; set; }
         public static IDesigner Designer { get => ((IMainWindow)MainWindow).Designer; }
+        public static async Task<T> RunUIAsync<T>(Func<Task<T>> action)
+        {
+            return await RunUIAsync(MainWindow, action);
+        }
+        public static async Task<T> RunUIAsync<T>(System.Windows.Window window, Func<Task<T>> action)
+        {
+            if (window != null)
+            {
+                return await window.Dispatcher.Invoke(action);
+            }
+            else
+            {
+                return await action();
+            }
+        }
         public static void RunUI(Action action)
         {
             RunUI(MainWindow, action);

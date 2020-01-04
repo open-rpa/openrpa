@@ -63,7 +63,7 @@ namespace OpenRPA.Views
                     f.XAML = workflow.Xaml;
                     f.ShowDialog();
                     workflow.Xaml = f.XAML;
-                    await workflow.Save();
+                    await workflow.Save(false);
                 }
                 catch (Exception ex)
                 {

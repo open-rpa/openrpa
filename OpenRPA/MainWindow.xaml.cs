@@ -454,6 +454,7 @@ namespace OpenRPA
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Save " + designer.Workflow.name + " ?", "Workflow unsaved", MessageBoxButton.YesNoCancel);
                 if (messageBoxResult == MessageBoxResult.Yes)
                 {
+                    designer.Workflow.current_version = designer.Workflow._version;
                     var res = await designer.SaveAsync();
                     if (res)
                     {
@@ -479,6 +480,7 @@ namespace OpenRPA
                     MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Save " + designer.Workflow.name + " ?", "Workflow unsaved", MessageBoxButton.YesNoCancel);
                     if (messageBoxResult == MessageBoxResult.Yes)
                     {
+                        designer.Workflow.current_version = designer.Workflow._version;
                         var res = await designer.SaveAsync();
                         if (!res)
                         {
@@ -664,8 +666,10 @@ namespace OpenRPA
                                 } 
                                 else
                                 {
-                                    var messageBoxResult = MessageBox.Show(workflow.name + " has been updated by " + workflow._modifiedby + ", reload workflow ?", "Workflow has been updated", 
-                                        MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.Yes, MessageBoxOptions.DefaultDesktopOnly);
+                                    //var messageBoxResult = MessageBox.Show(workflow.name + " has been updated by " + workflow._modifiedby + ", reload workflow ?", "Workflow has been updated", 
+                                    //    MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.Yes, MessageBoxOptions.DefaultDesktopOnly);
+                                    var messageBoxResult = MessageBox.Show(workflow.name + " has been updated by " + workflow._modifiedby + ", reload workflow ?", "Workflow has been updated",
+                                        MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.Yes);
                                     if (messageBoxResult == MessageBoxResult.Yes)
                                     {
                                         int index = -1;

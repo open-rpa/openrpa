@@ -104,6 +104,7 @@ namespace OpenRPA.Views
         public WorkflowDesigner WorkflowDesigner { get; private set; }
         public Workflow Workflow { get; private set; }
         public bool HasChanged { get; private set; }
+        public void forceHasChanged(bool value) { HasChanged = value; }
         public ModelItem SelectedActivity { get; private set; }
         public Project Project
         {
@@ -367,11 +368,12 @@ namespace OpenRPA.Views
                 if (!string.IsNullOrEmpty(Workflow._id))
                 {
                     var exists = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow', _id: '" + Workflow._id + "'}", top: 1);
-                    if (Workflow._version != exists[0]._version)
+                    if (Workflow.current_version != exists[0]._version)
                     {
                         var messageBoxResult = MessageBox.Show(Workflow.name + " has a newer version, that has been updated by " + exists[0]._modifiedby + ", do you still wish to overwrite the workflow ?", "Workflow has been updated by someone else", MessageBoxButton.YesNo);
                         if (messageBoxResult != MessageBoxResult.Yes)
                         {
+                            Workflow.current_version = exists[0]._version;
                             return false;
                         }
                     }

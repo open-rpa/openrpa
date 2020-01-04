@@ -14,6 +14,16 @@ namespace OpenRPA
     public class Workflow : apibase, IWorkflow, IDisposable
     {
         [JsonIgnore]
+        private long _current_version = 0;
+        public long current_version { get {
+                if (_version > _current_version) return _version;
+                return _current_version;
+                        } 
+            set {
+                _current_version = value;
+            } 
+        }
+        [JsonIgnore]
         public DispatcherTimer _timer;
         public Workflow()
         {
@@ -248,7 +258,7 @@ namespace OpenRPA
                 _modifiedby = result._modifiedby;
                 _modifiedbyid = result._modifiedbyid;
                 _version = result._version;
-                if(UpdateImages)
+                if (UpdateImages)
                 {
                     var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
                     foreach (var f in files)

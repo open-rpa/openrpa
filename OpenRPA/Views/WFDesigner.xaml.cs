@@ -104,6 +104,7 @@ namespace OpenRPA.Views
         public WorkflowDesigner WorkflowDesigner { get; private set; }
         public Workflow Workflow { get; private set; }
         public bool HasChanged { get; private set; }
+        public void forceHasChanged(bool value) { HasChanged = value; }
         public ModelItem SelectedActivity { get; private set; }
         public Project Project
         {

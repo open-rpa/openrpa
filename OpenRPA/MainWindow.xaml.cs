@@ -66,7 +66,7 @@ namespace OpenRPA
         }
         public Views.WFToolbox Toolbox { get; set; }
         public Views.Snippets Snippets { get; set; }
-        public bool AllowQuite { get; set; } = true;
+        // public bool AllowQuite { get; set; } = true;
         static Assembly LoadFromSameFolder(object sender, ResolveEventArgs args)
         {
             string folderPath = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -89,6 +89,8 @@ namespace OpenRPA
             {
                 System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo(Config.local.culture);
             }
+            reloadTimer = new System.Timers.Timer(Config.local.reloadinterval.TotalMilliseconds);
+            reloadTimer.Elapsed += ReloadTimer_Elapsed;
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LoadFromSameFolder);
             System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = false;
             System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.BelowNormal;
@@ -360,13 +362,7 @@ namespace OpenRPA
                 var test = lvDataBinding.ItemsSource;
                 //lvDataBinding.ItemsSource = Plugins.recordPlugins;
 
-                if (reloadTimer == null)
-                {
-                    reloadTimer = new System.Timers.Timer(Config.local.reloadinterval.TotalMilliseconds);
-                    reloadTimer.Elapsed += ReloadTimer_Elapsed;
-                    reloadTimer.Start();
-                }
-                LoadServerData();
+                await LoadServerData();
                 try
                 {
                     InputDriver.Instance.Initialize();
@@ -381,7 +377,7 @@ namespace OpenRPA
                 }
                 Log.Debug("WebSocketClient_OnOpen::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                 SetStatus("Load layout and reopen workflows");
-                if (Projects.Count == 0 && reloadTimer == null)
+                if (Projects.Count == 0 && reloadTimer.Enabled == false)
                 {
                     OnOpen(null);
                     string Name = "New Project";
@@ -443,30 +439,86 @@ namespace OpenRPA
         }
         private void ReloadTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if(reloadTimer!=null)
-            {
-                reloadTimer.Stop();
-                reloadTimer.Elapsed -= ReloadTimer_Elapsed;
-                reloadTimer = null;
-            }
-            LoadServerData();
+            reloadTimer.Stop();
+            _ = LoadServerData();
         }
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private async void LayoutDocument_Closing(object sender, CancelEventArgs e)
         {
-            if (AllowQuite)
+            var tab = sender as LayoutDocument;
+            if (!(tab.Content is Views.WFDesigner designer)) return;
+            if (!designer.HasChanged) return;
+
+            if (designer.HasChanged && (global.isConnected ? designer.Workflow.hasRight(global.webSocketClient.user, ace_right.update) : true))
+            {
+                e.Cancel = true;
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Save " + designer.Workflow.name + " ?", "Workflow unsaved", MessageBoxButton.YesNoCancel);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    var res = await designer.SaveAsync();
+                    if (res)
+                    {
+                        var doc = sender as LayoutDocument;
+                        doc.Close();
+                    }
+                }
+                else if (messageBoxResult == MessageBoxResult.No)
+                {
+                    e.Cancel = false;
+                }
+            }
+        }
+        private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            reloadTimer.Stop();
+            bool AllowQuite = true;
+            foreach (var designer in Designers)
+            {
+                if (designer.HasChanged)
+                {
+                    e.Cancel = true;
+                    MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Save " + designer.Workflow.name + " ?", "Workflow unsaved", MessageBoxButton.YesNoCancel);
+                    if (messageBoxResult == MessageBoxResult.Yes)
+                    {
+                        var res = await designer.SaveAsync();
+                        if (!res)
+                        {
+                            AllowQuite = false;
+                        }
+                    }
+                    else if (messageBoxResult != MessageBoxResult.No)
+                    {
+                        AllowQuite = false;
+                    }
+                    else
+                    {
+                        designer.forceHasChanged(false);
+                        designer.tab.Close();
+                    }
+                }
+            }
+            Log.Information("AllowQuite: " + AllowQuite);
+            if (AllowQuite && e.Cancel == false)
             {
                 foreach (var d in Plugins.detectorPlugins) d.Stop();
-                foreach (var p in Projects) foreach(var wf in p.Workflows) wf.Dispose();
+                foreach (var p in Projects) foreach (var wf in p.Workflows) wf.Dispose();
                 return;
             }
-            App.notifyIcon.Visible = true;
-            e.Cancel = true;
-            this.Visibility = Visibility.Hidden;
+            if(AllowQuite)
+            {
+                await Task.Delay(TimeSpan.FromMilliseconds(100));
+                this.Close();
+            } else
+            {
+                reloadTimer.Start();
+            }
+
+            //App.notifyIcon.Visible = true;
+            //this.Visibility = Visibility.Hidden;
         }
-        private void LoadServerData()
+        private async Task LoadServerData()
         {
             if (!global.isSignedIn) return;
-            GenericTools.RunUI(async () =>
+            await GenericTools.RunUIAsync(async () =>
             {
                 var sw = new System.Diagnostics.Stopwatch();
                 sw.Start();
@@ -686,21 +738,49 @@ namespace OpenRPA
                             }
                         }
 
-                        Projects.ForEach(p =>
+                        Projects.ToList().ForEach(p =>
                         {
-                            Workflow exists = null;
+                            Workflow wfexists = null;
                             if (p.Workflows == null) p.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
                             foreach (var workflow in p.Workflows.ToList())
                             {
-                                exists = workflows.Where(x => x.IDOrRelativeFilename == workflow.IDOrRelativeFilename).FirstOrDefault();
-                                if (exists == null)
+                                wfexists = workflows.Where(x => x.IDOrRelativeFilename == workflow.IDOrRelativeFilename).FirstOrDefault();
+                                if (wfexists == null)
                                 {
                                     var designer = GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename);
                                     if (designer == null)
                                     {
                                         p.Workflows.Remove(workflow);
+                                        try
+                                        {
+                                            System.IO.File.Delete(workflow.FilePath);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Log.Error(ex.ToString());
+                                        }
                                         workflow.Dispose();
                                     }
+                                }
+                            }
+                            Project projexists = null;
+                            projexists = projects.Where(x => x._id == p._id).FirstOrDefault();
+                            if (wfexists == null)
+                            {
+                                if(p.Workflows.Count == 0)
+                                {
+                                    Projects.Remove(p);
+                                    try
+                                    {
+                                        var projectfilepath = System.IO.Path.Combine(p.Path, p.Filename);
+                                        System.IO.File.Delete(projectfilepath);
+                                        System.IO.Directory.Delete(p.Path);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Log.Error(ex.ToString());
+                                    }
+
                                 }
                             }
                         });
@@ -714,10 +794,7 @@ namespace OpenRPA
                 }
                 finally
                 {
-                    if (reloadTimer != null) reloadTimer.Start();
                     SetStatus("Connected to " + Config.local.wsurl + " as " + global.webSocketClient.user.name);
-                    reloadTimer = new System.Timers.Timer(Config.local.reloadinterval.TotalMilliseconds);
-                    reloadTimer.Elapsed += ReloadTimer_Elapsed;
                     reloadTimer.Start();
                 }
             });
@@ -1442,7 +1519,7 @@ namespace OpenRPA
         }
         private void OnReload(object _item)
         {
-            LoadServerData();
+            _ = LoadServerData();
         }
         private bool CanImport(object _item)
         {
@@ -1656,7 +1733,6 @@ namespace OpenRPA
         }
         private void OnExitApp(object _item)
         {
-            AllowQuite = true;
             Close();
         }
         private void OnSave(object sender, ExecutedRoutedEventArgs e)
@@ -2021,31 +2097,6 @@ namespace OpenRPA
             var url = global.openflowconfig.nodered_domain_schema.Replace("$nodered_id$", username);
             if (baseurl.Scheme == "wss") { url = "https://" + url; } else { url = "http://" + url; }
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url));
-        }
-        private async void LayoutDocument_Closing(object sender, CancelEventArgs e)
-        {
-            var tab = sender as LayoutDocument;
-            if (!(tab.Content is Views.WFDesigner designer)) return;
-            if (!designer.HasChanged) return;
-
-            if (designer.HasChanged && (global.isConnected ? designer.Workflow.hasRight(global.webSocketClient.user, ace_right.update) : true))
-            {
-                e.Cancel = true;
-                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Save " + designer.Workflow.name + " ?", "Workflow unsaved", MessageBoxButton.YesNoCancel);
-                if (messageBoxResult == MessageBoxResult.Yes)
-                {
-                    var res = await designer.SaveAsync();
-                    if (res)
-                    {
-                        var doc = sender as LayoutDocument;
-                        doc.Close();
-                    }
-                }
-                else if (messageBoxResult == MessageBoxResult.No)
-                {
-                    e.Cancel = false;
-                }
-            }
         }
         private void SaveLayout()
         {

@@ -640,7 +640,7 @@ namespace OpenRPA
                                 }
 
                             });
-                            if (exists != null && exists._version != workflow._version)
+                            if (exists != null && exists.current_version != workflow._version)
                             {
                                 var designer = GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) as Views.WFDesigner;
                                 if (designer == null)
@@ -664,10 +664,12 @@ namespace OpenRPA
                                 } 
                                 else
                                 {
-                                    var messageBoxResult = MessageBox.Show(workflow.name + " has been updated by " + workflow._modifiedby + ", reload workflow ?", "Workflow has been updated", MessageBoxButton.YesNo);
+                                    var messageBoxResult = MessageBox.Show(workflow.name + " has been updated by " + workflow._modifiedby + ", reload workflow ?", "Workflow has been updated", 
+                                        MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.Yes, MessageBoxOptions.DefaultDesktopOnly);
                                     if (messageBoxResult == MessageBoxResult.Yes)
                                     {
                                         int index = -1;
+                                        designer.forceHasChanged(false);
                                         designer.tab.Close();
                                         index = project.Workflows.IndexOf(exists);
                                         project.Workflows.Remove(exists);
@@ -679,6 +681,7 @@ namespace OpenRPA
                                     }
                                     else
                                     {
+                                        designer.Workflow.current_version = workflow._version;
                                         workflow.Dispose();
                                     }                                        
                                 }

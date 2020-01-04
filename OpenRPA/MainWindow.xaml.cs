@@ -453,7 +453,12 @@ namespace OpenRPA
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (AllowQuite) return;
+            if (AllowQuite)
+            {
+                foreach (var d in Plugins.detectorPlugins) d.Stop();
+                foreach (var p in Projects) foreach(var wf in p.Workflows) wf.Dispose();
+                return;
+            }
             App.notifyIcon.Visible = true;
             e.Cancel = true;
             this.Visibility = Visibility.Hidden;
@@ -537,6 +542,7 @@ namespace OpenRPA
                         var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}", top: 5000);
                         foreach (var project in projects)
                         {
+                            project.Path = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, project.name);
                             Project exists = Projects.Where(x => x._id == project._id).FirstOrDefault();
                             if (exists != null && exists._version != project._version)
                             {
@@ -545,8 +551,9 @@ namespace OpenRPA
                                 {
                                     Log.Information("Updating project " + project.name);
                                     index = Projects.IndexOf(exists);
+                                    project.SaveFile();
                                     Projects.Remove(exists);
-                                    Projects.Insert(index, project);
+                                    Projects.Insert(index, project);                                    
                                 }
                                 catch (Exception ex)
                                 {
@@ -556,7 +563,9 @@ namespace OpenRPA
                             }
                             else if (exists == null)
                             {
+                                project.SaveFile();
                                 Projects.Add(project);
+                                
                             }
                         }
                         var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", orderby: "{projectid:-1,name:-1}", top: 5000);
@@ -581,7 +590,7 @@ namespace OpenRPA
                             });
                             if (exists != null && exists._version != workflow._version)
                             {
-                                var designer = GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename);
+                                var designer = GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) as Views.WFDesigner;
                                 if (designer == null)
                                 {
                                     int index = -1;
@@ -592,6 +601,7 @@ namespace OpenRPA
                                         project.Workflows.Remove(exists);
                                         exists.Dispose();
                                         project.Workflows.Insert(index, workflow);
+                                        workflow.SaveFile();
                                         project.NotifyPropertyChanged("Workflows");
                                     }
                                     catch (Exception ex)
@@ -599,9 +609,26 @@ namespace OpenRPA
                                         Log.Error("project2, index: " + index.ToString());
                                         Log.Error(ex.ToString());
                                     }
-                                } else
+                                } 
+                                else
                                 {
-                                    workflow.Dispose();
+                                    var messageBoxResult = MessageBox.Show(workflow.name + " has been updated by " + workflow._modifiedby + ", reload workflow ?", "Workflow has been updated", MessageBoxButton.YesNo);
+                                    if (messageBoxResult == MessageBoxResult.Yes)
+                                    {
+                                        int index = -1;
+                                        designer.tab.Close();
+                                        index = project.Workflows.IndexOf(exists);
+                                        project.Workflows.Remove(exists);
+                                        exists.Dispose();
+                                        project.Workflows.Insert(index, workflow);
+                                        workflow.SaveFile();
+                                        project.NotifyPropertyChanged("Workflows");
+                                        OnOpenWorkflow(workflow);
+                                    }
+                                    else
+                                    {
+                                        workflow.Dispose();
+                                    }                                        
                                 }
                             }
                             else if (exists == null)
@@ -613,6 +640,7 @@ namespace OpenRPA
                                     workflow.Project = project;
                                     if (project.Workflows == null) project.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
                                     project.Workflows.Add(workflow);
+                                    workflow.SaveFile();
                                     project.NotifyPropertyChanged("Workflows");
                                 }
                                 else
@@ -1387,9 +1415,9 @@ namespace OpenRPA
                     {
                         wf._acl = p._acl;
                     }
-                    await ((Project)result).Save();
+                    await ((Project)result).Save(true);
                 }
-                if (result is Workflow) await ((Workflow)result).Save();
+                if (result is Workflow) await ((Workflow)result).Save(true);
                 if (result is Detector)
                 {
                     var _result = await global.webSocketClient.UpdateOne("openrpa", 0, false, result);
@@ -1491,7 +1519,7 @@ namespace OpenRPA
                     Projects.Add(project);
                     project.name = name;
                     project._id = null;
-                    await project.Save();
+                    await project.Save(false);
                     Workflow workflow = project.Workflows.First();
                     workflow.Project = project;
                     OnOpenWorkflow(workflow);
@@ -1994,7 +2022,7 @@ namespace OpenRPA
             if (baseurl.Scheme == "wss") { url = "https://" + url; } else { url = "http://" + url; }
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url));
         }
-        private void LayoutDocument_Closing(object sender, CancelEventArgs e)
+        private async void LayoutDocument_Closing(object sender, CancelEventArgs e)
         {
             var tab = sender as LayoutDocument;
             if (!(tab.Content is Views.WFDesigner designer)) return;
@@ -2002,14 +2030,20 @@ namespace OpenRPA
 
             if (designer.HasChanged && (global.isConnected ? designer.Workflow.hasRight(global.webSocketClient.user, ace_right.update) : true))
             {
+                e.Cancel = true;
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Save " + designer.Workflow.name + " ?", "Workflow unsaved", MessageBoxButton.YesNoCancel);
                 if (messageBoxResult == MessageBoxResult.Yes)
                 {
-                    _ = designer.Save();
+                    var res = await designer.SaveAsync();
+                    if (res)
+                    {
+                        var doc = sender as LayoutDocument;
+                        doc.Close();
+                    }
                 }
-                else if (messageBoxResult != MessageBoxResult.No)
+                else if (messageBoxResult == MessageBoxResult.No)
                 {
-                    e.Cancel = true;
+                    e.Cancel = false;
                 }
             }
         }
@@ -2202,14 +2236,14 @@ namespace OpenRPA
             {
                 if (SelectedContent is Views.WFDesigner designer)
                 {
-                    await designer.Save();
+                    await designer.SaveAsync();
                 }
                 if (SelectedContent is Views.OpenProject view)
                 {
                     var Project = view.listWorkflows.SelectedItem as Project;
                     if (Project != null)
                     {
-                        await Project.Save();
+                        await Project.Save(false);
                     }
                 }
             }
@@ -2319,7 +2353,7 @@ namespace OpenRPA
             try
             {
                 var designer = (Views.WFDesigner)SelectedContent;
-                await designer.Save();
+                await designer.SaveAsync();
                 Workflow workflow = Workflow.Create(designer.Project, "Copy of " + designer.Workflow.name);
                 var xaml = designer.Workflow.Xaml;
                 xaml = Views.WFDesigner.SetWorkflowName(xaml, workflow.name);
@@ -2478,7 +2512,7 @@ namespace OpenRPA
             {
                 if (!(SelectedContent is Views.WFDesigner)) return;
                 var designer = (Views.WFDesigner)SelectedContent;
-                if (designer.HasChanged) { await designer.Save(); }
+                if (designer.HasChanged) { await designer.SaveAsync(); }
                 designer.Run(VisualTracking, SlowMotion, null);
             }
             catch (Exception ex)

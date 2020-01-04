@@ -39,6 +39,7 @@ namespace OpenRPA
             get
             {
                 if (Project == null) return Filename;
+                if (string.IsNullOrEmpty(Project.Path)) return Filename;
                 string lastFolderName = System.IO.Path.GetFileName(Project.Path);
                 return System.IO.Path.Combine(lastFolderName, Filename);
             }
@@ -218,7 +219,7 @@ namespace OpenRPA
             }
             System.IO.File.WriteAllText(workflowfilepath, Xaml);
         }
-        public async Task Save()
+        public async Task Save(bool UpdateImages)
         {
             try
             {
@@ -246,14 +247,18 @@ namespace OpenRPA
                 _modified = result._modified;
                 _modifiedby = result._modifiedby;
                 _modifiedbyid = result._modifiedbyid;
-                var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
-                foreach (var f in files)
+                _version = result._version;
+                if(UpdateImages)
                 {
-                    bool equal = f.metadata._acl.SequenceEqual(_acl);
-                    if (!equal)
+                    var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
+                    foreach (var f in files)
                     {
-                        f.metadata._acl = _acl;
-                        await global.webSocketClient.UpdateOne("files", 0, false, f);
+                        bool equal = f.metadata._acl.SequenceEqual(_acl);
+                        if (!equal)
+                        {
+                            f.metadata._acl = _acl;
+                            await global.webSocketClient.UpdateOne("files", 0, false, f);
+                        }
                     }
                 }
             }

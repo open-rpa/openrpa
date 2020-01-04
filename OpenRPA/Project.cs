@@ -88,12 +88,12 @@ namespace OpenRPA
                 Filename = System.IO.Path.GetFileName(Filepath),
                 Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>()
             };
-            await p.Save();
+            await p.Save(false);
             if(addDefault)
             {
                 var w = Workflow.Create(p, "New Workflow");
                 p.Workflows.Add(w);
-                await w.Save();
+                await w.Save(false);
             }
             return p;
         }
@@ -115,6 +115,8 @@ namespace OpenRPA
             if (!string.IsNullOrEmpty(rootpath)) projectpath = System.IO.Path.Combine(rootpath, name);
             if (!System.IO.Directory.Exists(projectpath)) System.IO.Directory.CreateDirectory(projectpath);
 
+            if (Workflows == null) Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
+
             var projectfilepath = System.IO.Path.Combine(projectpath, Filename);
             System.IO.File.WriteAllText(projectfilepath, JsonConvert.SerializeObject(this));
             var filenames = new List<string>();
@@ -123,13 +125,13 @@ namespace OpenRPA
                 if(filenames.Contains(workflow.Filename))
                 {
                     workflow.Filename = workflow.UniqueFilename();
-                    _ = workflow.Save();
+                    _ = workflow.Save(false);
                 }
                 filenames.Add(workflow.Filename);
                 workflow.SaveFile(projectpath, exportImages);
             }
         }
-        public async Task Save()
+        public async Task Save(bool UpdateImages)
         {
             SaveFile();
             if (global.isConnected)
@@ -150,13 +152,14 @@ namespace OpenRPA
                     _modified = result._modified;
                     _modifiedby = result._modifiedby;
                     _modifiedbyid = result._modifiedbyid;
+                    _version = result._version;
                 }
             }
             foreach (var workflow in Workflows)
             {
                 try
                 {
-                    await workflow.Save();
+                    await workflow.Save(UpdateImages);
                 }
                 catch (Exception ex)
                 {

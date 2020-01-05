@@ -9,8 +9,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.73</Version>
-    <PackageReleaseNotes>1.0.73 Promp for saving unsaved workflow on close
+    <Version>1.0.74</Version>
+    <PackageReleaseNotes>1.0.74 Improve startup time of rdservice, add version info to login message
+1.0.73 Promp for saving unsaved workflow on close
 1.0.72 Detect when other users have updated a workflow
 1.0.71 Add German translations, ( thank you Marcus von Goerne )
 1.0.70 Add support for custom iterator variable

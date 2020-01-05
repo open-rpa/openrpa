@@ -432,7 +432,7 @@ namespace OpenRPA.Net
         }
         public async Task<TokenUser> Signin(string username, SecureString password)
         {
-            SigninMessage signin = new SigninMessage(username, password);
+            SigninMessage signin = new SigninMessage(username, password, System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
             signin = await signin.SendMessage<SigninMessage>(this);
             if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
             user = signin.user;
@@ -445,7 +445,7 @@ namespace OpenRPA.Net
         }
         public async Task<TokenUser> Signin(string jwt)
         {
-            SigninMessage signin = new SigninMessage(jwt);
+            SigninMessage signin = new SigninMessage(jwt, System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
             signin = await signin.SendMessage<SigninMessage>(this);
             if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
             user = signin.user;
@@ -458,7 +458,7 @@ namespace OpenRPA.Net
         }
         public async Task<TokenUser> Signin(SecureString jwt)
         {
-            SigninMessage signin = new SigninMessage(jwt);
+            SigninMessage signin = new SigninMessage(jwt, System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
             signin = await signin.SendMessage<SigninMessage>(this);
             if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
             user = signin.user;

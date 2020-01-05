@@ -11,13 +11,19 @@ namespace OpenRPA.Interfaces
         // private static string logpath = "";
         // public static object loglock = new object();
         private static NLog.Logger nlog = null;
+        public static void ResetLogPath(string folder)
+        {
+            Config.local.log_to_file = true;
+            nlog = null;
+            Extensions.ProjectsDirectory = folder;
+        }
         public static void LogLine(string message, string category)
         {
             if (!Config.local.log_to_file) return;
             if (nlog == null)
             {
                 var config = new NLog.Config.LoggingConfiguration();
-                var logfile = new NLog.Targets.FileTarget("logfile") { FileName = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "logfile.txt") };
+                var logfile = new NLog.Targets.FileTarget("logfile") { FileName = System.IO.Path.Combine(Extensions.ProjectsDirectory, "logfile.txt") };
                 var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
                 // config.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
                 // config.AddRule(NLog.LogLevel.Trace, NLog.LogLevel.Fatal, logfile);

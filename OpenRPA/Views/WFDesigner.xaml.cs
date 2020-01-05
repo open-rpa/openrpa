@@ -370,7 +370,8 @@ namespace OpenRPA.Views
                     var exists = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow', _id: '" + Workflow._id + "'}", top: 1);
                     if (Workflow.current_version != exists[0]._version)
                     {
-                        var messageBoxResult = MessageBox.Show(Workflow.name + " has a newer version, that has been updated by " + exists[0]._modifiedby + ", do you still wish to overwrite the workflow ?", "Workflow has been updated by someone else", MessageBoxButton.YesNo);
+                        var messageBoxResult = MessageBox.Show(Workflow.name + " has a newer version, that has been updated by " + exists[0]._modifiedby +
+                            ", do you still wish to overwrite the workflow ?", "Workflow has been updated by someone else", MessageBoxButton.YesNo);
                         if (messageBoxResult != MessageBoxResult.Yes)
                         {
                             Workflow.current_version = exists[0]._version;

@@ -11,8 +11,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
-    <Version>1.0.12</Version>
-    <PackageReleaseNotes>1.0.12 Improve RD Service
+    <Version>1.0.13</Version>
+    <PackageReleaseNotes>1.0.13 Improve startup time of rdservice
+1.0.12 Improve RD Service
 1.0.11 report disabled server
 1.0.10 Fix reconnect for RD Service, Add auto refresh
 1.0.9 Fix launch error

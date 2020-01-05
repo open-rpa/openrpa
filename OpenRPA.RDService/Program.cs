@@ -55,114 +55,42 @@ namespace OpenRPA.RDService
                 }
             }
         }
+        private static string logpath = "";
+        private static void log(string message)
+        {
+            DateTime dt = DateTime.Now;
+            var _msg = string.Format(@"[{0:HH\:mm\:ss\.fff}] {1}", dt, message);
+            System.IO.File.AppendAllText(System.IO.Path.Combine(logpath, "log_rdservice.txt"), _msg + Environment.NewLine);
+        }
+        private static string[] args;
         static void Main(string[] args)
         {
-            System.Threading.Thread.Sleep(1000 * StartupWaitSeconds);
-            // Don't mess with ProjectsDirectory if we need to reauth
-            if (args.Length == 0)
+            try
             {
-                AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-                try
-                {
-                    if (PluginConfig.usefreerdp)
-                    {
-                        using (var rdp = new FreeRDP.Core.RDP())
-                        {
+                Program.args = args;
+                var asm = System.Reflection.Assembly.GetEntryAssembly();
+                var filepath = asm.CodeBase.Replace("file:///", "");
+                logpath = System.IO.Path.GetDirectoryName(filepath);
 
-                        }
-                    }
-                }
-                catch (Exception)
+                log("GetParentProcessId");
+                var parentProcess = NativeMethods.GetParentProcessId();
+                log("Check parentProcess");
+                isService = (parentProcess.ProcessName.ToLower() == "services");
+                Console.WriteLine("****** isService: " + isService);
+                if (isService)
                 {
-                    Console.WriteLine("Failed initilizing FreeRDP, is Visual C++ Runtime installed ?");
-                    // Console.WriteLine("https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads");
-                    Console.WriteLine("https://www.microsoft.com/en-us/download/details.aspx?id=40784");
-                    return;
-                }
-
-            }
-            var parentProcess = NativeMethods.GetParentProcessId();
-            isService = (parentProcess.ProcessName.ToLower() == "services");
-            if (args.Length == 0)
-            {
-                // System.Threading.Thread.Sleep(1000 * StartupWaitSeconds);
-                if (!manager.IsServiceInstalled)
-                {
-                    //Console.Write("Username (" + NativeMethods.GetProcessUserName() + "): ");
-                    //var username = Console.ReadLine();
-                    //if (string.IsNullOrEmpty(username)) username = NativeMethods.GetProcessUserName();
-                    //Console.Write("Password: ");
-                    //string pass = "";
-                    //do
-                    //{
-                    //    ConsoleKeyInfo key = Console.ReadKey(true);
-                    //    if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
-                    //    {
-                    //        pass += key.KeyChar;
-                    //        Console.Write("*");
-                    //    }
-                    //    else
-                    //    {
-                    //        if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
-                    //        {
-                    //            pass = pass.Substring(0, (pass.Length - 1));
-                    //            Console.Write("\b \b");
-                    //        }
-                    //        else if (key.Key == ConsoleKey.Enter)
-                    //        {
-                    //            break;
-                    //        }
-                    //    }
-                    //} while (true);
-                    //manager.InstallService(typeof(Program), new string[] { "username=" + username, "password=" + pass });
-                    manager.InstallService(typeof(Program), new string[] {  });
-                }
-            }
-            tracing = new Tracing(Console.Out);
-            System.Diagnostics.Trace.Listeners.Add(tracing);
-            Console.SetOut(new ConsoleDecorator(Console.Out));
-            Console.SetError(new ConsoleDecorator(Console.Out, true));
-            Console.WriteLine("****** BEGIN");
-            if (args.Length > 0)
-            {
-                if (args[0].ToLower() == "auth" || args[0].ToLower() == "reauth")
-                {
-                    if (Config.local.jwt != null && Config.local.jwt.Length > 0)
-                    {
-                        Log.Information("Saving temporart jwt token, from local settings.json");
-                        PluginConfig.tempjwt = new System.Net.NetworkCredential(string.Empty, Config.local.UnprotectString(Config.local.jwt)).Password;
-                        PluginConfig.wsurl = Config.local.wsurl;
-                        
-                        PluginConfig.Save();
-                        Config.Save();
-                        Console.WriteLine("local  count: " + Config.local.properties.Count);
-                        Console.WriteLine("Plugin count: " + PluginConfig.globallocal.properties.Count);
-                    }
-                    return;
-                }
-                else if (args[0].ToLower() == "uninstall" || args[0].ToLower() == "u")
-                {
-                    if (manager.IsServiceInstalled)
-                    {
-                        manager.UninstallService(typeof(Program));
-                    }
-                    return;
+                    log("ServiceBase.Run");
+                    System.ServiceProcess.ServiceBase.Run(new MyServiceBase(ServiceName, DoWork));
                 }
                 else
                 {
-                    Console.WriteLine("unknown command " + args[0]);
-                    Console.WriteLine("try uninstall or reauth ");
+                    log("DoWork");
+                    DoWork();
                 }
-                return;
             }
-            Console.WriteLine("****** isService: " + isService);
-            if (isService)
+            catch (Exception ex)
             {
-                System.ServiceProcess.ServiceBase.Run(new MyServiceBase(ServiceName, DoWork));
-            } 
-            else
-            {
-                DoWork();
+                Log.Error(ex.ToString());
             }
         }
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs args)
@@ -417,27 +345,152 @@ namespace OpenRPA.RDService
         private static ServiceManager manager = new ServiceManager(ServiceName);
         private static void DoWork()
         {
-            Task.Run(() => {
-                global.webSocketClient = new WebSocketClient(PluginConfig.wsurl);
-                global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
-                global.webSocketClient.OnClose += WebSocketClient_OnClose;
-                global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
-                _ = global.webSocketClient.Connect();
-            });
-            // NativeMethods.AllocConsole();
-            // if (System.Diagnostics.Debugger.IsAttached && !isService)
-            if (!isService)
+            try
             {
-                Log.Information("******************************");
-                Log.Information("* Done                       *");
-                Log.Information("******************************");
-                Console.ReadLine();
-            } else
-            {
-                while (MyServiceBase.isRunning)
+
+                log("BEGIN::Set ProjectsDirectory");
+                // Don't mess with ProjectsDirectory if we need to reauth
+                if (args.Length == 0) Log.ResetLogPath(logpath);
+
+                log("Set UnhandledException");
+                AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+                System.Threading.Thread.Sleep(1000 * StartupWaitSeconds);
+                if (args.Length != 0)
                 {
-                    System.Threading.Thread.Sleep(100);
+                    try
+                    {
+                        log("Get usefreerdp");
+                        if (PluginConfig.usefreerdp)
+                        {
+                            log("Init Freerdp");
+                            using (var rdp = new FreeRDP.Core.RDP())
+                            {
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Failed initilizing FreeRDP, is Visual C++ Runtime installed ?");
+                        // Console.WriteLine("https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads");
+                        Console.WriteLine("https://www.microsoft.com/en-us/download/details.aspx?id=40784");
+                        return;
+                    }
                 }
+                if (args.Length == 0)
+                {
+                    log("Check IsServiceInstalled");
+                    // System.Threading.Thread.Sleep(1000 * StartupWaitSeconds);
+                    if (!manager.IsServiceInstalled)
+                    {
+                        //Console.Write("Username (" + NativeMethods.GetProcessUserName() + "): ");
+                        //var username = Console.ReadLine();
+                        //if (string.IsNullOrEmpty(username)) username = NativeMethods.GetProcessUserName();
+                        //Console.Write("Password: ");
+                        //string pass = "";
+                        //do
+                        //{
+                        //    ConsoleKeyInfo key = Console.ReadKey(true);
+                        //    if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
+                        //    {
+                        //        pass += key.KeyChar;
+                        //        Console.Write("*");
+                        //    }
+                        //    else
+                        //    {
+                        //        if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
+                        //        {
+                        //            pass = pass.Substring(0, (pass.Length - 1));
+                        //            Console.Write("\b \b");
+                        //        }
+                        //        else if (key.Key == ConsoleKey.Enter)
+                        //        {
+                        //            break;
+                        //        }
+                        //    }
+                        //} while (true);
+                        //manager.InstallService(typeof(Program), new string[] { "username=" + username, "password=" + pass });
+                        log("InstallService");
+                        manager.InstallService(typeof(Program), new string[] { });
+                    }
+                }
+                if (args.Length > 0)
+                {
+                    if (args[0].ToLower() == "auth" || args[0].ToLower() == "reauth")
+                    {
+                        if (Config.local.jwt != null && Config.local.jwt.Length > 0)
+                        {
+                            Log.Information("Saving temporart jwt token, from local settings.json");
+                            PluginConfig.tempjwt = new System.Net.NetworkCredential(string.Empty, Config.local.UnprotectString(Config.local.jwt)).Password;
+                            PluginConfig.wsurl = Config.local.wsurl;
+
+                            PluginConfig.Save();
+                            Config.Save();
+                        }
+                        return;
+                    }
+                    else if (args[0].ToLower() == "uninstall" || args[0].ToLower() == "u")
+                    {
+                        if (manager.IsServiceInstalled)
+                        {
+                            manager.UninstallService(typeof(Program));
+                        }
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("unknown command " + args[0]);
+                        Console.WriteLine("try uninstall or reauth ");
+                    }
+                    return;
+                }
+
+
+                log("Create Tracing");
+                tracing = new Tracing(Console.Out);
+                log("Add Tracing");
+                System.Diagnostics.Trace.Listeners.Add(tracing);
+                log("Override SetOut");
+                Console.SetOut(new ConsoleDecorator(Console.Out));
+                log("Override SetError");
+                Console.SetError(new ConsoleDecorator(Console.Out, true));
+                log("ResetLogPath");
+                Log.ResetLogPath(logpath);
+                Console.WriteLine("****** BEGIN");
+                
+                Task.Run(async () => {
+                    try
+                    {
+                        global.webSocketClient = new WebSocketClient(PluginConfig.wsurl);
+                        global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
+                        global.webSocketClient.OnClose += WebSocketClient_OnClose;
+                        global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
+                        await global.webSocketClient.Connect();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                });
+                // NativeMethods.AllocConsole();
+                // if (System.Diagnostics.Debugger.IsAttached && !isService)
+                if (!isService)
+                {
+                    Log.Information("******************************");
+                    Log.Information("* Done                       *");
+                    Log.Information("******************************");
+                    Console.ReadLine();
+                }
+                else
+                {
+                    while (MyServiceBase.isRunning)
+                    {
+                        System.Threading.Thread.Sleep(100);
+                    }
+                }
+            }
+            catch (Exception ex) 
+            {
+                Log.Error(ex.ToString());
             }
         }
     }

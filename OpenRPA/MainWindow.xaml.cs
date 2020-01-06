@@ -38,7 +38,7 @@ namespace OpenRPA
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         public event SignedinEventHandler Signedin;
         public event DisconnectedEventHandler Disconnected;
-        private System.Timers.Timer reloadTimer = null;
+        private readonly System.Timers.Timer reloadTimer = null;
         public void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
@@ -47,7 +47,6 @@ namespace OpenRPA
         private bool isRecording = false;
         private bool autoReconnect = true;
         private bool loginInProgress = false;
-        // public static Tracing tracing = new Tracing();
         public Tracing Tracing { get; set; } = new Tracing();
         private static readonly object statelock = new object();
         public List<string> OCRlangs { get; set; } = new List<string>() { "afr", "amh", "ara", "asm", "aze", "aze_cyrl", "bel", "ben", "bod", "bos", "bre", "bul", "cat", "ceb", "ces", "chi_sim", "chi_sim_vert", "chi_tra", "chi_tra_vert", "chr", "cos", "cym", "dan", "dan_frak", "deu", "deu_frak", "div", "dzo", "ell", "eng", "enm", "epo", "equ", "est", "eus", "fao", "fas", "fil", "fin", "fra", "frk", "frm", "fry", "gla", "gle", "glg", "grc", "guj", "hat", "heb", "hin", "hrv", "hun", "hye", "iku", "ind", "isl", "ita", "ita_old", "jav", "jpn", "jpn_vert", "kan", "kat", "kat_old", "kaz", "khm", "kir", "kmr", "kor", "kor_vert", "lao", "lat", "lav", "lit", "ltz", "mal", "mar", "mkd", "mlt", "mon", "mri", "msa", "mya", "nep", "nld", "nor", "oci", "ori", "osd", "pan", "pol", "por", "pus", "que", "ron", "rus", "san", "sin", "slk", "slk_frak", "slv", "snd", "spa", "spa_old", "sqi", "srp", "srp_latn", "sun", "swa", "swe", "syr", "tam", "tat", "tel", "tgk", "tgl", "tha", "tir", "ton", "tur", "uig", "ukr", "urd", "uzb", "uzb_cyrl", "vie", "yid", "yor" };
@@ -66,7 +65,6 @@ namespace OpenRPA
         }
         public Views.WFToolbox Toolbox { get; set; }
         public Views.Snippets Snippets { get; set; }
-        // public bool AllowQuite { get; set; } = true;
         static Assembly LoadFromSameFolder(object sender, ResolveEventArgs args)
         {
             string folderPath = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -503,6 +501,7 @@ namespace OpenRPA
             {
                 foreach (var d in Plugins.detectorPlugins) d.Stop();
                 foreach (var p in Projects) foreach (var wf in p.Workflows) wf.Dispose();
+                InputDriver.Instance.Dispose();
                 return;
             }
             if(AllowQuite)
@@ -513,9 +512,6 @@ namespace OpenRPA
             {
                 reloadTimer.Start();
             }
-
-            //App.notifyIcon.Visible = true;
-            //this.Visibility = Visibility.Hidden;
         }
         private async Task LoadServerData()
         {
@@ -644,8 +640,7 @@ namespace OpenRPA
                             });
                             if (exists != null && exists.current_version != workflow._version)
                             {
-                                var designer = GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) as Views.WFDesigner;
-                                if (designer == null)
+                                if (!(GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) is Views.WFDesigner designer))
                                 {
                                     int index = -1;
                                     try
@@ -663,7 +658,7 @@ namespace OpenRPA
                                         Log.Error("project2, index: " + index.ToString());
                                         Log.Error(ex.ToString());
                                     }
-                                } 
+                                }
                                 else
                                 {
                                     //var messageBoxResult = MessageBox.Show(workflow.name + " has been updated by " + workflow._modifiedby + ", reload workflow ?", "Workflow has been updated", 
@@ -687,7 +682,7 @@ namespace OpenRPA
                                     {
                                         designer.Workflow.current_version = workflow._version;
                                         workflow.Dispose();
-                                    }                                        
+                                    }
                                 }
                             }
                             else if (exists == null)
@@ -1144,7 +1139,7 @@ namespace OpenRPA
         public ICommand ImportCommand { get { return new RelayCommand<object>(OnImport, CanImport); } }
         public ICommand ExportCommand { get { return new RelayCommand<object>(OnExport, CanExport); } }
         public ICommand PermissionsCommand { get { return new RelayCommand<object>(OnPermissions, CanPermissions); } }
-        public ICommand reloadCommand { get { return new RelayCommand<object>(OnReload, CanReload); } }
+        public ICommand ReloadCommand { get { return new RelayCommand<object>(OnReload, CanReload); } }
         public ICommand LinkOpenFlowCommand { get { return new RelayCommand<object>(OnlinkOpenFlow, CanlinkOpenFlow); } }
         public ICommand LinkNodeREDCommand { get { return new RelayCommand<object>(OnlinkNodeRED, CanlinkNodeRED); } }
         public ICommand OpenChromePageCommand { get { return new RelayCommand<object>(OnOpenChromePage, CanAllways); } }
@@ -3307,12 +3302,12 @@ namespace OpenRPA
             var result = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId).FirstOrDefault();
             return result;
         }
-        private void searchBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void SearchBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             QuickLaunchItem item = null;
-            if (searchBox.SelectedItem!=null && searchBox.SelectedItem is QuickLaunchItem)
+            if (SearchBox.SelectedItem!=null && SearchBox.SelectedItem is QuickLaunchItem)
             {
-                item = searchBox.SelectedItem as QuickLaunchItem;
+                item = SearchBox.SelectedItem as QuickLaunchItem;
             }
             if(item == null)
             {
@@ -3333,9 +3328,9 @@ namespace OpenRPA
                 }
             });
         }
-        private void searchBox_Populating(object sender, PopulatingEventArgs e)
+        private void SearchBox_Populating(object sender, PopulatingEventArgs e)
         {
-            var text = searchBox.Text.ToLower();
+            var text = SearchBox.Text.ToLower();
             var options = new List<QuickLaunchItem>();
             foreach (var designer in Designers)
             {
@@ -3344,14 +3339,12 @@ namespace OpenRPA
                 {
                     if (arg.Name.ToLower().Contains(text))
                     {
-                        addOption(designer, arg, suboptions);
+                        AddOption(designer, arg, suboptions);
                     }
                 }
                 foreach (System.Activities.Presentation.Model.ModelItem item in designer.GetWorkflowActivities())
                 {
-
                     bool wasadded = false;
-
                     string displayname = item.ToString();
                     System.Activities.Presentation.Model.ModelProperty property = item.Properties["ExpressionText"];
                     if ((property != null) && (property.Value != null))
@@ -3360,7 +3353,7 @@ namespace OpenRPA
                         if (input.ToLower().Contains(text))
                         {
                             wasadded = true;
-                            addOption(designer, item, suboptions);
+                            AddOption(designer, item, suboptions);
                         }
                     }
                     property = item.Properties["Variables"];
@@ -3372,15 +3365,14 @@ namespace OpenRPA
                             if (nameproperty.Value.ToString().ToLower().Contains(text))
                             {
                                 wasadded = true;
-                                addOption(designer, v, suboptions);
+                                AddOption(designer, v, suboptions);
                             }
 
                         }
                     }
                     if (!wasadded && displayname.ToLower().Contains(text))
                     {
-                        wasadded = true;
-                        addOption(designer, item, suboptions);
+                        AddOption(designer, item, suboptions);
                     }
                 }
                 if (suboptions.Count > 0)
@@ -3389,7 +3381,7 @@ namespace OpenRPA
                     options.AddRange(suboptions);
                 }
             }
-            searchBox.ItemsSource = options;
+            SearchBox.ItemsSource = options;
         }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
@@ -3397,13 +3389,13 @@ namespace OpenRPA
             {
                 tabGeneral.IsSelected = true;
                 //searchTab.Focus();
-                searchBox.Focus();
+                SearchBox.Focus();
             }
         }
-        private void addOption(Views.WFDesigner designer, System.Activities.Presentation.Model.ModelItem item, List<QuickLaunchItem> options)
+        private void AddOption(Views.WFDesigner designer, System.Activities.Presentation.Model.ModelItem item, List<QuickLaunchItem> options)
         {
             var ImageSource = new BitmapImage(new Uri("/Resources/icons/activity.png", UriKind.Relative));
-            var _item = getActivity(designer, item);
+            var _item = GetActivity(item);
             if (!item.ItemType.ToString().Contains("System.Activities.Variable"))
             {
                 var exists = options.Where(x => x.item == _item).FirstOrDefault();
@@ -3453,7 +3445,7 @@ namespace OpenRPA
                 ImageSource = ImageSource
             });
         }
-        private void addOption(Views.WFDesigner designer, DynamicActivityProperty arg, List<QuickLaunchItem> options)
+        private void AddOption(Views.WFDesigner designer, DynamicActivityProperty arg, List<QuickLaunchItem> options)
         {
             var ImageSource = new BitmapImage(new Uri("/Resources/icons/openin.png", UriKind.Relative));
             var displayname = "Argument " + arg.Name;
@@ -3465,7 +3457,7 @@ namespace OpenRPA
                 ImageSource = ImageSource
             });
         }
-        private System.Activities.Presentation.Model.ModelItem getActivity(Views.WFDesigner designer, System.Activities.Presentation.Model.ModelItem item)
+        private System.Activities.Presentation.Model.ModelItem GetActivity(System.Activities.Presentation.Model.ModelItem item)
         {
             try
             {
@@ -3493,16 +3485,16 @@ namespace OpenRPA
                 throw;
             }
         }
-        private void searchBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        private void SearchBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (searchBox.IsDropDownOpen)
+            if (SearchBox.IsDropDownOpen)
             {
                 e.Handled = true;
             }
         }
-        private void searchBox_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        private void SearchBox_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            if (searchBox.IsDropDownOpen) e.Handled = true;
+            if (SearchBox.IsDropDownOpen) e.Handled = true;
         }
     }
     public class QuickLaunchItem

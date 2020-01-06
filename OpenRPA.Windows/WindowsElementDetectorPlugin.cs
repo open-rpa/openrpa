@@ -72,6 +72,14 @@ namespace OpenRPA.Windows
         }
         public void Stop()
         {
+            try
+            {
+                desktop.FrameworkAutomationElement.UnregisterStructureChangedEventHandler(StructureChangedEventHandler);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
             //desktop.RemoveStructureChangedEventHandler(StructureChangedEventHandler);
         }
         //private FlaUI.Core.EventHandlers.IAutomationStructureChangedEventHandler StructureChangedEventHandler;

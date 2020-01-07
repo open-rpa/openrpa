@@ -15,6 +15,7 @@ namespace OpenRPA.Net
         }
         public JObject query { get; set; }
         public string projection { get; set; }
+        public string queryas { get; set; }
         public int top { get; set; }
         public int skip { get; set; }
         public string orderby { get; set; }

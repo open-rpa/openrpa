@@ -149,7 +149,7 @@ namespace OpenRPA.RDService
                             {
                                 PluginConfig.jwt = Base64Encode(PluginConfig.ProtectString(PluginConfig.tempjwt));
                                 PluginConfig.tempjwt = null;
-                                Config.Save();
+                                PluginConfig.Save();
                             }
                             Log.Information("Signed in as " + user.username);
                         }
@@ -422,9 +422,7 @@ namespace OpenRPA.RDService
                             Log.Information("Saving temporart jwt token, from local settings.json");
                             PluginConfig.tempjwt = new System.Net.NetworkCredential(string.Empty, Config.local.UnprotectString(Config.local.jwt)).Password;
                             PluginConfig.wsurl = Config.local.wsurl;
-
                             PluginConfig.Save();
-                            Config.Save();
                         }
                         return;
                     }

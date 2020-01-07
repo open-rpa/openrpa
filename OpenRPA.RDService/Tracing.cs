@@ -51,7 +51,6 @@ namespace OpenRPA.RDService
         {
             if(string.IsNullOrEmpty(logpath))
             {
-                // logpath = Interfaces.Extensions.ProjectsDirectory;
                 var asm = System.Reflection.Assembly.GetEntryAssembly();
                 var filepath = asm.CodeBase.Replace("file:///", "");
                 logpath = System.IO.Path.GetDirectoryName(filepath);

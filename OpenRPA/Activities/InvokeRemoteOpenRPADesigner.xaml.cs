@@ -33,6 +33,7 @@ namespace OpenRPA.Activities
         public ObservableCollection<Workflow> workflows { get; set; }
         public ObservableCollection<apiuser> robots { get; set; }
         private string originalworkflow = null;
+        private string originaltarget = null;
         private void loadLocalWorkflows()
         {
             workflows.Clear();
@@ -47,7 +48,8 @@ namespace OpenRPA.Activities
         private async void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
         {
             originalworkflow = ModelItem.GetValue<string>("workflow");
-            loadLocalWorkflows();
+            originaltarget = ModelItem.GetValue<string>("target");
+            // loadLocalWorkflows();
             var _users = await global.webSocketClient.Query<apiuser>("users", "{\"$or\":[ {\"_type\": \"user\"}, {\"_type\": \"role\", \"rparole\": true} ]}", top: 5000);
             foreach (var u in _users) robots.Add(u);
         }
@@ -77,13 +79,20 @@ namespace OpenRPA.Activities
             string workflow = ModelItem.GetValue<string>("workflow");
             string target = ModelItem.GetValue<string>("target");
             if (string.IsNullOrEmpty(target)) { loadLocalWorkflows();  return; }
-            workflows.Clear();
-            workflows.Add(new Workflow() { name = "Loading...", _id = "loading" });
-            ModelItem.Properties["workflow"].SetValue("loading");
+            if(target != originaltarget)
+            {
+                workflows.Clear();
+                workflows.Add(new Workflow() { name = "Loading...", _id = "loading" });
+                ModelItem.Properties["workflow"].SetValue("loading");
+            }
             var _workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", null, 100, 0, null, target );
             workflows.Clear();
             foreach (var w in _workflows) workflows.Add(w);
-            ModelItem.Properties["workflow"].SetValue(workflow);
+            var currentworkflow = ModelItem.GetValue<string>("workflow");
+            if(workflow != currentworkflow && !string.IsNullOrEmpty(currentworkflow))
+            {
+                ModelItem.Properties["workflow"].SetValue(workflow);
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net462</TargetFramework>
     <ApplicationIcon>Resources\open_rpa.ico</ApplicationIcon>
@@ -9,8 +10,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.75</Version>
-    <PackageReleaseNotes>1.0.45 filter workflows on user permissions in InvokeRemoteOpenRPA
+    <Version>1.0.76</Version>
+    <PackageReleaseNotes>1.0.76 Swap login screen from IE to chrome
+1.0.75 filter workflows on user permissions in InvokeRemoteOpenRPA
 1.0.74 Improve startup time of rdservice, add version info to login message
 1.0.73 Promp for saving unsaved workflow on close
 1.0.72 Detect when other users have updated a workflow
@@ -92,6 +94,7 @@
     <None Include="$(OutputPath)\OpenRPA.exe.config" Pack="true" PackagePath="build" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CefSharp.Wpf" Version="75.1.143" />
     <PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />

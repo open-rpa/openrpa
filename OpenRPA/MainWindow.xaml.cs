@@ -65,22 +65,6 @@ namespace OpenRPA
         }
         public Views.WFToolbox Toolbox { get; set; }
         public Views.Snippets Snippets { get; set; }
-        static Assembly LoadFromSameFolder(object sender, ResolveEventArgs args)
-        {
-            string folderPath = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string assemblyPath = System.IO.Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
-            if (System.IO.File.Exists(assemblyPath)) return Assembly.LoadFrom(assemblyPath);
-
-            folderPath = Interfaces.Extensions.PluginsDirectory;
-            assemblyPath = System.IO.Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
-            if (System.IO.File.Exists(assemblyPath)) return Assembly.LoadFrom(assemblyPath);
-
-            folderPath = Interfaces.Extensions.ProjectsDirectory;
-            assemblyPath = System.IO.Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
-            if (System.IO.File.Exists(assemblyPath)) return Assembly.LoadFrom(assemblyPath);
-
-            return null;
-        }
         public MainWindow()
         {
             if (!string.IsNullOrEmpty(Config.local.culture))
@@ -89,7 +73,6 @@ namespace OpenRPA
             }
             reloadTimer = new System.Timers.Timer(Config.local.reloadinterval.TotalMilliseconds);
             reloadTimer.Elapsed += ReloadTimer_Elapsed;
-            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LoadFromSameFolder);
             System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = false;
             System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.BelowNormal;
             System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.BelowNormal;

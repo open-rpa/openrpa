@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -31,27 +34,62 @@ namespace OpenRPA
         public static System.Windows.Forms.NotifyIcon notifyIcon { get; set; }  = new System.Windows.Forms.NotifyIcon();
         public App()
         {
-            //if (!mutex.WaitOne(TimeSpan.FromSeconds(2), false))
-            //{
-            //    Process currentProcess = Process.GetCurrentProcess();
-            //    var runningProcess = (from process in Process.GetProcesses()
-            //                          where
-            //                            process.Id != currentProcess.Id &&
-            //                            process.ProcessName.Equals(
-            //                              currentProcess.ProcessName,
-            //                              StringComparison.Ordinal)
-            //                          select process).FirstOrDefault();
-            //    if (runningProcess != null)
-            //    {
-            //        GenericTools.restore(runningProcess.MainWindowHandle);
-            //    }
-            //    Application.Current.Shutdown(0);
-            //}
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LoadFromSameFolder);
+            InitializeCefSharp();
             var iconStream = System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/Resources/open_rpa.ico")).Stream;
             notifyIcon.Icon = new System.Drawing.Icon(iconStream);
             notifyIcon.Visible = false;
             //notifyIcon.ShowBalloonTip(5000, "Title", "Text", System.Windows.Forms.ToolTipIcon.Info);
             notifyIcon.Click += nIcon_Click;
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void InitializeCefSharp()
+        {
+            //Perform dependency check to make sure all relevant resources are in our output directory.
+            var settings = new CefSharp.Wpf.CefSettings();
+            settings.CachePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CefSharp\\Cache");
+
+            CefSharp.Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
+        }
+        private static void CopyFilesRecursively(DirectoryInfo source, DirectoryInfo target)
+        {
+            foreach (DirectoryInfo dir in source.GetDirectories())
+            {
+                CopyFilesRecursively(dir, target.CreateSubdirectory(dir.Name));
+            }
+
+            foreach (FileInfo file in source.GetFiles())
+            {
+                file.CopyTo(System.IO.Path.Combine(target.FullName, file.Name));
+            }
+        }
+        static Assembly LoadFromSameFolder(object sender, ResolveEventArgs args)
+        {
+            if (args.Name.StartsWith("CefSharp"))
+            {
+                string assemblyName = args.Name.Split(new[] { ',' }, 2)[0] + ".dll";
+                string archSpecificPath = System.IO.Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
+                                                       Environment.Is64BitProcess ? "x64" : "x86",
+                                                       assemblyName);
+
+                return File.Exists(archSpecificPath)
+                           ? Assembly.LoadFile(archSpecificPath)
+                           : null;
+            }
+
+            string folderPath = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string assemblyPath = System.IO.Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
+            if (System.IO.File.Exists(assemblyPath)) return Assembly.LoadFrom(assemblyPath);
+
+            folderPath = Interfaces.Extensions.PluginsDirectory;
+            assemblyPath = System.IO.Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
+            if (System.IO.File.Exists(assemblyPath)) return Assembly.LoadFrom(assemblyPath);
+
+            folderPath = Interfaces.Extensions.ProjectsDirectory;
+            assemblyPath = System.IO.Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
+            if (System.IO.File.Exists(assemblyPath)) return Assembly.LoadFrom(assemblyPath);
+            return null;
         }
         void nIcon_Click(object sender, EventArgs e)
         {
@@ -61,7 +99,6 @@ namespace OpenRPA
             notifyIcon.Visible = false;
             Interfaces.GenericTools.Restore(Interfaces.GenericTools.MainWindow);
         }
-
         private void Application_Exit(object sender, ExitEventArgs e)
         {
             //try
@@ -72,7 +109,6 @@ namespace OpenRPA
             //{
             //}
         }
-
         public bool SignalExternalCommandLineArgs(IList<string> args)
         {
             nIcon_Click(null, null);

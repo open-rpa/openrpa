@@ -64,13 +64,22 @@ namespace OpenRPA
             }
         }
 
+        private string _ProjectAndName;
         [JsonProperty("projectandname")]
         public string ProjectAndName
         {
             get
             {
-                if (Project == null) return name;
+                if (Project == null)
+                {
+                    if (!string.IsNullOrEmpty(_ProjectAndName)) return _ProjectAndName;
+                    return name;
+                }
                 return Project.name + "/" + name;
+            }
+            set
+            {
+                _ProjectAndName = value;
             }
         }
         public string FilePath

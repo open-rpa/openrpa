@@ -28,43 +28,26 @@ using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-
 namespace OpenRPA.Input
 {
     public sealed partial class InputDriver : IDisposable
     {
         private IntPtr keyboardHook;
-
         private NativeMethods.LLProc keyboardProc;
-
         private IntPtr mouseHook;
-
         private NativeMethods.LLProc mouseProc;
         public event InputEventHandler OnKeyUp = delegate { };
-
         public event InputEventHandler OnKeyDown = delegate { };
-
         public event InputEventHandler OnMouseUp = delegate { };
-
         public event InputEventHandler OnMouseDown = delegate { };
-
         public event InputEventHandler OnMouseMove = delegate { };
-
         public event CancelEventHandler onCancel = delegate { };
-
         public delegate void CancelEventHandler();
-
         public void KeyUp(KeyboardKey key) => SetInputState(new InputEventArgs() { Type = InputEventType.KeyUp, Key = key });
-
         public void KeyDown(KeyboardKey key) => SetInputState(new InputEventArgs() { Type = InputEventType.KeyDown, Key = key });
-
         public void MouseUp(MouseButton button) => SetInputState(new InputEventArgs() { Type = InputEventType.MouseUp, Button = button });
-
         public void MouseDown(MouseButton button) => SetInputState(new InputEventArgs() { Type = InputEventType.MouseDown, Button = button });
-
         public void MouseMove(int x, int y) => SetInputState(new InputEventArgs() { Type = InputEventType.MouseMove, X = x, Y = y });
-
-
         public static void DoMouseClick()
         {
             InputDriver.Instance.Element = null;
@@ -124,7 +107,6 @@ namespace OpenRPA.Input
                 KeyUp((KeyboardKey)(-c));
             }
         }
-
         public List<Interfaces.Input.vKey> cancelKeys = new List<Interfaces.Input.vKey>();
         private static InputDriver _Instance = null;
         private KeyboardDetectorPlugin cancelDetector;
@@ -168,7 +150,6 @@ namespace OpenRPA.Input
         // public bool SkipEvent { get; set; }
         private int currentprocessid = 0;
         // public var test = Activities.TypeText.parseText(cancelkey.Text);
-
         private IntPtr LowLevelKeyboardProc(Int32 nCode, IntPtr wParam, IntPtr lParam)
         {
             if (nCode >= NativeMethods.HC_ACTION)
@@ -409,7 +390,6 @@ namespace OpenRPA.Input
             NativeMethods.UnhookWindowsHookEx(keyboardHook);
             NativeMethods.UnhookWindowsHookEx(mouseHook);
         }
-
         private void SetInputState(InputEventArgs e)
         {
             var input = new NativeMethods.INPUT();
@@ -469,8 +449,6 @@ namespace OpenRPA.Input
                     break;
             }
         }
-
-
     }
 
 }

@@ -4,15 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenRPA.Views"
-        mc:Ignorable="d" Loaded="Window_Loaded"
+        mc:Ignorable="d"
         Title="Login" Height="600" Width="600">
     <Grid>
-        <WebBrowser x:Name="myBrowser" LoadCompleted="WebBrowser_LoadCompleted" 
+        <Border x:Name="content"></Border>
+        <!--<WebBrowser x:Name="myBrowser" LoadCompleted="WebBrowser_LoadCompleted" 
                                 OverridesDefaultStyle="False"
             ScrollViewer.CanContentScroll="False"
             ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
             ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                    />
+                    />-->
     </Grid>
 
 </Window>

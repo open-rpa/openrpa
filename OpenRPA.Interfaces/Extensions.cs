@@ -93,7 +93,6 @@ namespace OpenRPA.Interfaces
                 return path;
             }
         }
-
         public static string DataDirectory
         {
             get
@@ -106,7 +105,6 @@ namespace OpenRPA.Interfaces
                 return UserDirectory;
             }
         }
-
         static public string ResourceAsString(this Type type, string resourceName)
         {
             // string[] names = typeof(Extensions).Assembly.GetManifestResourceNames();

@@ -139,11 +139,7 @@ namespace OpenRPA.Windows
                                 //}
                                 //Log.Debug(message);
                             }
-                        } else
-                        {
-                            var b = true;
                         }
-
                     }
                 }
                 if (newpathToRoot.Count != pathToRoot.Count)
@@ -307,11 +303,11 @@ namespace OpenRPA.Windows
         {
             TimeSpan timeout = TimeSpan.FromMilliseconds(5000);
             timeout = TimeSpan.FromMilliseconds(20000);
-            var midcounter = 1;
-            if (PluginConfig.allow_multiple_hits_mid_selector)
-            {
-                midcounter = 10;
-            }
+            //var midcounter = 1;
+            //if (PluginConfig.allow_multiple_hits_mid_selector)
+            //{
+            //    midcounter = 10;
+            //}
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
             Log.Selector(string.Format("GetElementsWithuiSelector::begin {0:mm\\:ss\\.fff}", sw.Elapsed));

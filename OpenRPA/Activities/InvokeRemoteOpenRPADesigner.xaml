@@ -31,14 +31,15 @@
         </DataTemplate>
         <DataTemplate x:Key="Expanded">
             <StackPanel>
-                <ComboBox 
+                <ComboBox
                 ItemsSource="{Binding robots}"
+                    SelectionChanged="ComboBox_SelectionChanged"
                 DisplayMemberPath="name"
                 SelectedValuePath="_id"
                 SelectedValue="{Binding Path=ModelItem.target, Mode=TwoWay}"
                 >
                 </ComboBox>
-                <ComboBox 
+                <ComboBox
                 ItemsSource="{Binding workflows}"
                 DisplayMemberPath="ProjectAndName"
                 SelectedValuePath="IDOrRelativeFilename"

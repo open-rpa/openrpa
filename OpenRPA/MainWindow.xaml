@@ -10,7 +10,7 @@
         xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
         xmlns:dockctrl="clr-namespace:Xceed.Wpf.AvalonDock.Controls;assembly=Xceed.Wpf.AvalonDock"
         mc:Ignorable="d"
-        Loaded="Window_Loaded" Closed="Window_Closed" Closing="Window_Closing" StateChanged="Window_StateChanged" PreviewMouseWheel="searchBox_PreviewMouseWheel"
+        Loaded="Window_Loaded" Closed="Window_Closed" Closing="Window_Closing" StateChanged="Window_StateChanged" PreviewMouseWheel="SearchBox_PreviewMouseWheel"
         KeyDown="Window_KeyDown"
         Title="OpenRPA"
         x:Uid="title"
@@ -25,7 +25,7 @@
             <RowDefinition />
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
-        <Ribbon DockPanel.Dock="Top" Margin="0,-22,0,0" Grid.Row="0" PreviewMouseWheel="searchBox_PreviewMouseWheel" x:Name="MainRibbon">
+        <Ribbon DockPanel.Dock="Top" Margin="0,-22,0,0" Grid.Row="0" PreviewMouseWheel="SearchBox_PreviewMouseWheel" x:Name="MainRibbon">
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu SmallImageSource="/OpenRPA;component/Resources/Buttons/Export.png">
                     <RibbonApplicationMenuItem Header="{x:Static or:strings.settingsfile}" ImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
@@ -66,7 +66,7 @@
                 xmlns:local="clr-namespace:OpenRPA"  Header="{x:Static or:strings.general}" x:Name="tabGeneral"
                
                 >
-                <RibbonGroup Header="{x:Static or:strings.files}" PreviewMouseWheel="searchBox_PreviewMouseWheel">
+                <RibbonGroup Header="{x:Static or:strings.files}" PreviewMouseWheel="SearchBox_PreviewMouseWheel">
                     <RibbonMenuButton x:Name="ButtonNew" Label="{x:Static or:strings.mainnew}" LargeImageSource="/OpenRPA;component/Resources/Buttons/New.png">
                         <RibbonMenuItem Header="{x:Static or:strings.newworkflow}"
                                 Command="{Binding Data.NewWorkflowCommand, Source={StaticResource proxy}}" 
@@ -91,7 +91,7 @@
                                   Command="{Binding Data.PermissionsCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                     <RibbonButton Label="{x:Static or:strings.main_reload}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Revert.png" 
-                                  Command="{Binding Data.reloadCommand, Source={StaticResource proxy}}" 
+                                  Command="{Binding Data.ReloadCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                     <RibbonButton Label="{x:Static or:strings.import}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Import.png" 
                                   Command="{Binding Data.ImportCommand, Source={StaticResource proxy}}" 
@@ -129,15 +129,15 @@
                 </RibbonGroup>
                 <RibbonGroup Header="{x:Static or:strings.ribbon_search}">
                     <input:AutoCompleteBox Width="80"
-                                           x:Name="searchBox" 
+                                           x:Name="SearchBox" 
                                            FilterMode="None"
                                            IsTextCompletionEnabled="False"
                                            Placeholder="{x:Static or:strings.ribbon_search}"
-                                           SelectionChanged="searchBox_SelectionChanged"
-                                           Populating="searchBox_Populating"
+                                           SelectionChanged="SearchBox_SelectionChanged"
+                                           Populating="SearchBox_Populating"
                                            MinimumPopulateDelay="200"
                                            ValueMemberPath="name"
-                                           PreviewLostKeyboardFocus="searchBox_PreviewLostKeyboardFocus"
+                                           PreviewLostKeyboardFocus="SearchBox_PreviewLostKeyboardFocus"
             >
                         <input:AutoCompleteBox.ItemTemplate>
                             <DataTemplate>

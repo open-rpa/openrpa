@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.76</Version>
-    <PackageReleaseNotes>1.0.76 Swap login screen from IE to chrome
+    <Version>1.0.77</Version>
+    <PackageReleaseNotes>1.0.77 Add MoveMouse activity
+1.0.76 Swap login screen from IE to chrome
 1.0.75 filter workflows on user permissions in InvokeRemoteOpenRPA
 1.0.74 Improve startup time of rdservice, add version info to login message
 1.0.73 Promp for saving unsaved workflow on close
@@ -115,6 +116,7 @@
     <None Remove="Activities\InvokeOpenFlowDesigner.xaml" />
     <None Remove="Activities\InvokeOpenRPADesigner.xaml" />
     <None Remove="Activities\InvokeRemoteOpenRPADesigner.xaml" />
+    <None Remove="Activities\MoveMouseDesigner.xaml" />
     <None Remove="Activities\OpenApplicationDesigner.xaml" />
     <None Remove="Activities\TypeTextDesigner.xaml" />
     <None Remove="App.xaml" />
@@ -203,6 +205,7 @@
     <None Remove="Resources\designer\killapp.png" />
     <None Remove="Resources\designer\log.png" />
     <None Remove="Resources\designer\messagebox.png" />
+    <None Remove="Resources\designer\mouse.png" />
     <None Remove="Resources\designer\openurl.png" />
     <None Remove="Resources\designer\prompt.png" />
     <None Remove="Resources\designer\readexcel.png" />
@@ -300,6 +303,7 @@
     <None Remove="Resources\toolbox\killapp.png" />
     <None Remove="Resources\toolbox\log.png" />
     <None Remove="Resources\toolbox\messagebox.png" />
+    <None Remove="Resources\toolbox\mouse.png" />
     <None Remove="Resources\toolbox\openurl.png" />
     <None Remove="Resources\toolbox\prompt.png" />
     <None Remove="Resources\toolbox\readexcel.png" />
@@ -330,6 +334,9 @@
     <None Remove="Views\wfToolbox.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\MoveMouseDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\ClickElementDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -404,6 +411,7 @@
     <Resource Include="Resources\Buttons\Zeniverse_ikon.png" />
     <Resource Include="Resources\Buttons\zeniverse_ikon_84Z_icon.ico" />
     <Resource Include="Resources\close.png" />
+    <Resource Include="Resources\designer\mouse.png" />
     <Resource Include="Resources\icons\activity.png" />
     <Resource Include="Resources\icons\activity.svg" />
     <Resource Include="Resources\icons\flowchart.png" />
@@ -648,6 +656,7 @@
     <Resource Include="Resources\state\Running.png" />
     <Resource Include="Resources\state\Running_green.png" />
     <Resource Include="Resources\state\unloaded.png" />
+    <EmbeddedResource Include="Resources\toolbox\mouse.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources\strings.Designer.cs">

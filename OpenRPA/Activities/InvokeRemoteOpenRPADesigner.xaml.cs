@@ -85,7 +85,9 @@ namespace OpenRPA.Activities
                 workflows.Add(new Workflow() { name = "Loading...", _id = "loading" });
                 ModelItem.Properties["workflow"].SetValue("loading");
             }
-            var _workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", null, 100, 0, null, target );
+            // var _workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", "{'name':1, 'projectandname': 1}", orderby: "{projectid:-1,name:-1}", queryas: target);
+            var _workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", queryas: target);
+            _workflows = _workflows.OrderBy(x => x.ProjectAndName).ToArray();
             workflows.Clear();
             foreach (var w in _workflows) workflows.Add(w);
             var currentworkflow = ModelItem.GetValue<string>("workflow");

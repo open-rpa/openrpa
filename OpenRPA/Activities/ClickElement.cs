@@ -46,7 +46,7 @@ namespace OpenRPA.Activities
         public InArgument<bool> DoubleClick { get; set; } = false;
         public InArgument<bool> VirtualClick { get; set; } = true;
         public InArgument<TimeSpan> PostWait { get; set; }
-        [Editor(typeof(SelectNewEmailOptionsEditor), typeof(System.Activities.Presentation.PropertyEditing.ExtendedPropertyValueEditor))]
+        [Editor(typeof(KeyModifiersOptionsEditor), typeof(System.Activities.Presentation.PropertyEditing.ExtendedPropertyValueEditor))]
         public InArgument<string> KeyModifiers { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
@@ -79,7 +79,7 @@ namespace OpenRPA.Activities
 
         }
     }
-    class SelectNewEmailOptionsEditor : CustomSelectEditor
+    class KeyModifiersOptionsEditor : CustomSelectEditor
     {
         public override System.Data.DataTable options
         {

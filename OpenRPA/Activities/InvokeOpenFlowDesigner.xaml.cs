@@ -31,7 +31,8 @@ namespace OpenRPA.Activities
         public ObservableCollection<apibase> workflows { get; set; }
         private async void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
         {
-            var _workflows = await global.webSocketClient.Query<Workflow>("workflow", "{_type: 'workflow', rpa: true}");
+            var _workflows = await global.webSocketClient.Query<apibase>("workflow", "{_type: 'workflow', rpa: true}");
+            _workflows = _workflows.OrderBy(x => x.name).ToArray();
             workflows.Clear();
             foreach (var w in _workflows)
             {

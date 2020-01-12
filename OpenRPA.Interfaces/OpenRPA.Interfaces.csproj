@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.33</Version>
-    <PackageReleaseNotes>1.0.33 add queryas support
+    <Version>1.0.34</Version>
+    <PackageReleaseNotes>1.0.34 Add AsDateTable() to UIElement
+1.0.33 add queryas support
 1.0.32 Improve startup time of rdservice, add version info to login message
 1.0.31 Detect when other users have updated a workflow
 1.0.30 Updates

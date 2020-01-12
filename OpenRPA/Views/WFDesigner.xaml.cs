@@ -144,6 +144,8 @@ namespace OpenRPA.Views
                         var element = AutomationHelper.GetFromFocusedElement();
                         if (element.ProcessId != currentprocessid) return;
                     }
+                    if (e.AltKey || e.CtrlKey || e.ShiftKey || e.WinKey) return;
+                    if (Workflow.Activity == null) return;
                     Singlestep = true;
                     // if (e.Key == Input.KeyboardKey.F11) { StepInto = true; }
                     if (BreakPointhit)
@@ -178,6 +180,7 @@ namespace OpenRPA.Views
                 }
                 try
                 {
+                    if (Workflow.Activity == null) return;
                     Run(VisualTracking, SlowMotion, null);
                 }
                 catch (Exception ex)
@@ -1313,8 +1316,7 @@ namespace OpenRPA.Views
                 ReadOnly = true;
                 if (!VisualTracking && Config.local.minimize) GenericTools.Minimize(GenericTools.MainWindow);
             });
-
-            instance.Run();
+            if(instance!=null) instance.Run();
         }
         private void ShowVariables(IDictionary<string, WorkflowInstanceValueType> Variables)
         {

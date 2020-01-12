@@ -809,6 +809,52 @@ namespace OpenRPA
 
             }
         }
+        public System.Data.DataTable AsDataTable()
+        {
+            var table = new System.Data.DataTable();
+            DataGridView view = null;
+            AutomationElement element = RawElement;
+            do
+            {
+                try
+                {
+                    view = element.AsDataGridView();
+                    if((view.Header == null && view.Rows.Length == 0) || (element.ControlType == FlaUI.Core.Definitions.ControlType.DataItem)) { view = null; }
+                    if (view == null) element = element.Parent;
+                }
+                catch (Exception)
+                {
+                    return table;
+                }
+            } while (view == null && element != null);
+            if (view == null) return table;
+            if(view.Rows==null) return table;
+            if (view.Header != null)
+            {
+                foreach (var h in view.Header.Columns)
+                {
+                    table.Columns.Add(h.Text, typeof(string));
+                }
+            } else
+            {
+                if (view.Rows.Length == 0) return table;
+                DataGridViewRow row = view.Rows[0];
+                foreach (var cell in row.Cells)
+                {
+                    table.Columns.Add(cell.AutomationId, typeof(string));
+                }
 
+            }
+            foreach (var _row in view.Rows)
+            {
+                var objs = new List<object>();
+                foreach (var cell in _row.Cells)
+                {
+                    objs.Add(cell.Value);
+                }
+                table.Rows.Add(objs.ToArray());
+            }
+            return table;
+        }
     }
 }

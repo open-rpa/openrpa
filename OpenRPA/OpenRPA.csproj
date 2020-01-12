@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.77</Version>
-    <PackageReleaseNotes>1.0.77 Add MoveMouse activity
+    <Version>1.0.78</Version>
+    <PackageReleaseNotes>1.0.78 Add AsDateTable() to UIElement
+1.0.77 Add MoveMouse activity
 1.0.76 Swap login screen from IE to chrome
 1.0.75 filter workflows on user permissions in InvokeRemoteOpenRPA
 1.0.74 Improve startup time of rdservice, add version info to login message

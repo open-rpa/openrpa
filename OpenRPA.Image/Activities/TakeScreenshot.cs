@@ -13,18 +13,16 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Image
 {
-    [System.ComponentModel.Designer(typeof(GetImageDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(GetImage), "Resources.toolbox.getimage.png")]
+    [System.ComponentModel.Designer(typeof(TakeScreenshotDesigner), typeof(System.ComponentModel.Design.IDesigner))]
+    [System.Drawing.ToolboxBitmap(typeof(GetImage), "Resources.toolbox.camera.png")]
     [System.Windows.Markup.ContentProperty("Body")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
-    public class GetImage : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    public class TakeScreenshot : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {
-        // I want this !!!!
-        // https://stackoverflow.com/questions/50669794/alternative-to-taking-rapid-screenshots-of-a-window
-        public GetImage()
+        public TakeScreenshot()
         {
-            OffsetX = 0;
-            OffsetY = 0;
+            X = 0;
+            Y = 0;
             Width = 10;
             Height = 10;
             Element = new InArgument<IElement>()
@@ -32,18 +30,11 @@ namespace OpenRPA.Image
                 Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<IElement>("item")
             };
         }
-        [Browsable(false)]
-        public InArgument<bool> FailOnNotFound { get; set; }
-        [RequiredArgument]
         public InArgument<IElement> Element { get; set; }
         public OutArgument<ImageElement> Result { get; set; }
-        [RequiredArgument]
-        public InArgument<int> OffsetX { get; set; }
-        [RequiredArgument]
-        public InArgument<int> OffsetY { get; set; }
-        [RequiredArgument]
+        public InArgument<int> X { get; set; }
+        public InArgument<int> Y { get; set; }
         public InArgument<int> Width { get; set; }
-        [RequiredArgument]
         public InArgument<int> Height { get; set; }
         [Browsable(false)]
         public ActivityAction<ImageElement> Body { get; set; }
@@ -51,28 +42,18 @@ namespace OpenRPA.Image
         protected override void Execute(NativeActivityContext context)
         {
             var relativelement = Element.Get(context);
-            var match = relativelement.Rectangle;
-            match.X += OffsetX.Get(context);
-            match.Y += OffsetY.Get(context);
-            match.Width = Width.Get(context);
-            match.Height = Height.Get(context);
-            var imageelement = relativelement as ImageElement;
-            if(imageelement!=null)
+            Rectangle match = new Rectangle(0, 0, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
+            if(relativelement!=null)
             {
-                var processname = imageelement.Processname;
-                if (!string.IsNullOrEmpty(processname))
-                {
-                    var _element = AutomationHelper.GetFromPoint(match.X, match.Y);
-                    if (_element.ProcessId < 1) throw new ElementNotFoundException("Failed locating Image, expected " + processname + " but found nothing");
-                    var p = System.Diagnostics.Process.GetProcessById(_element.ProcessId);
-                    if (p.ProcessName != processname)
-                    {
-                        throw new ElementNotFoundException("Failed locating Image, expected " + processname + " but found " + p.ProcessName);
-                    }
-                }
+                match = relativelement.Rectangle;
             }
+            match.X += X.Get(context);
+            match.Y += Y.Get(context);
+            var h = Height.Get(context);
+            var w = Width.Get(context);
+            if (h > 10) match.Height = h;
+            if (w > 10) match.Width = w;
             var b = Interfaces.Image.Util.Screenshot(match);
-            //Interfaces.Image.Util.SaveImageStamped(b, "c:\\temp", "GetImage-result");
             var v = new ImageElement(match, b);
             context.SetValue(Result, v);
             context.ScheduleAction(Body, v, OnBodyComplete);
@@ -90,8 +71,8 @@ namespace OpenRPA.Image
             Extensions.AddCacheArgument(metadata, "Element", Element);
 
             Extensions.AddCacheArgument(metadata, "Result", Result);
-            Extensions.AddCacheArgument(metadata, "OffsetX", OffsetX);
-            Extensions.AddCacheArgument(metadata, "OffsetY", OffsetY);
+            Extensions.AddCacheArgument(metadata, "OffsetX", X);
+            Extensions.AddCacheArgument(metadata, "OffsetY", Y);
             Extensions.AddCacheArgument(metadata, "Width", Width);
             Extensions.AddCacheArgument(metadata, "Height", Height);
 
@@ -100,7 +81,7 @@ namespace OpenRPA.Image
         }
         public Activity Create(System.Windows.DependencyObject target)
         {
-            var fef = new GetImage();
+            var fef = new TakeScreenshot();
             var aa = new ActivityAction<ImageElement>();
             var da = new DelegateInArgument<ImageElement>();
             da.Name = "item";

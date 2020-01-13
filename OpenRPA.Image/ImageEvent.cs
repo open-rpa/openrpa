@@ -177,7 +177,7 @@ namespace OpenRPA.Image
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine(ex.ToString());
+                Interfaces.Log.Error(ex.ToString());
             }
             return false;
         }

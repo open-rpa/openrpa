@@ -20,7 +20,18 @@ namespace OpenRPA.NM
             add { }
             remove { }
         }
-        public System.Windows.Controls.UserControl editor => null;
+        private Views.RecordPluginView view; 
+        public System.Windows.Controls.UserControl editor
+        {
+            get
+            {
+                if (view == null)
+                {
+                    view = new Views.RecordPluginView();
+                }
+                return view;
+            }
+        }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
             if (!(selector is NMSelector nmselector))
@@ -113,6 +124,7 @@ namespace OpenRPA.NM
             NMHook.onMessage += OnMessage;
             NMHook.Connected += OnConnected;
             NMHook.onDisconnected += OnDisconnected;
+            _ = PluginConfig.wait_for_tab_after_set_value;
         }
         private void OnConnected(string obj)
         {
@@ -168,7 +180,7 @@ namespace OpenRPA.NM
                 Log.Error(ex.ToString());
             }
         }
-        public void LaunchBySelector(Selector selector, TimeSpan timeout)
+        public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)
         {
             var first = selector[0];
             var second = selector[1];
@@ -181,7 +193,26 @@ namespace OpenRPA.NM
             if (p != null) { url = p.Value; }
 
             NMHook.openurl(browser, url);
-
+            if(browser=="chrome")
+            {
+                foreach (var process in System.Diagnostics.Process.GetProcesses())
+                {
+                    string pname = process.ProcessName.ToLower();
+                    if(pname.Contains("chrome"))
+                    {
+                        string title = process.MainWindowTitle;
+                        Console.WriteLine(title);
+                        if(!string.IsNullOrEmpty(title))
+                        {
+                            var exists = NMHook.tabs.Where(x => x.title == title).FirstOrDefault();
+                            var automation = AutomationUtil.getAutomation();
+                            var _ele = automation.FromHandle(process.MainWindowHandle);
+                            return new UIElement(_ele);
+                        }
+                    }
+                }
+            }
+            return null;
         }
         public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)
         {

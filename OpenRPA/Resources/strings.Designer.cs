@@ -331,6 +331,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reload.
+        /// </summary>
+        public static string main_reload {
+            get {
+                return ResourceManager.GetString("main_reload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Record directly into designer.
         /// </summary>
         public static string main_settings_recording_add_to_designer {
@@ -628,6 +637,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string ribbon_search {
+            get {
+                return ResourceManager.GetString("ribbon_search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run plugins.
         /// </summary>
         public static string runplugins {
@@ -750,6 +768,15 @@ namespace OpenRPA.Resources {
         public static string tools_change_type {
             get {
                 return ResourceManager.GetString("tools_change_type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Swap Animate.
+        /// </summary>
+        public static string tools_swap_animate {
+            get {
+                return ResourceManager.GetString("tools_swap_animate", resourceCulture);
             }
         }
         

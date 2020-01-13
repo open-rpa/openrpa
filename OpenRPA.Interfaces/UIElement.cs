@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Automation;
 using FlaUI.Core.AutomationElements;
 using Newtonsoft.Json;
+using FlaUI.Core.Tools;
 
 namespace OpenRPA
 {
@@ -178,9 +179,23 @@ namespace OpenRPA
                     if (RawElement.Patterns.Invoke.IsSupported)
                         if(RawElement.Patterns.Invoke.TryGetPattern(out var InvokePattern))
                     {
-                        InvokePattern.Invoke();
-                        // Log.Selector(string.Format("UIElement.LegacyIAccessible.set::SetValue::end {0:mm\\:ss\\.fff}", sw.Elapsed));
-                        return;
+                            if(RawElement.IsEnabled)
+                            {
+                                InvokePattern.Invoke();
+                            } 
+                            else
+                            {
+                                try
+                                {
+                                    InvokePattern.Invoke();
+                                }
+                                catch (Exception ex)
+                                {
+                                    throw new Exception("Failed clicking disabled object", ex);
+                                }
+                            }
+                            // Log.Selector(string.Format("UIElement.LegacyIAccessible.set::SetValue::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+                            return;
                     }
                     VirtualClick = false;
                 }
@@ -267,6 +282,15 @@ namespace OpenRPA
                         Log.Selector(string.Format("UIElement.Value.get::textPattern::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                         return textPattern.DocumentRange.GetText(Int32.MaxValue);
                     }
+                    if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
+                    {
+                        var combo = RawElement.AsListBox();
+                        if(combo.SelectedItem!=null)
+                        {
+                            return combo.SelectedItem.Name;
+                        }
+                    }
+
                 }
                 catch (Exception)
                 {
@@ -294,6 +318,37 @@ namespace OpenRPA
                 {
                     Enter(value);
                     Log.Selector(string.Format("UIElement.Value.set::Enter::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+                }
+                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
+                {
+                    var combo = RawElement.AsListBox();
+                    combo.Select(value);
+                }
+            }
+        }
+        public void SelectItem(UIElement element)
+        {
+            if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
+            {
+                var combo = RawElement.AsListBox();
+                for(var i=0; i < combo.Items.Length; i ++)
+                {
+                    if(combo.Items[i].Name == element.Value)
+                    {
+                        combo.AddToSelection(i);
+                    }
+                    
+                }
+            }
+        }
+        public int SelectedIndex
+        {
+            set
+            {
+                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
+                {
+                    var combo = RawElement.AsListBox();
+                    combo.Select(value);
                 }
             }
         }
@@ -461,14 +516,345 @@ namespace OpenRPA
         public IElement[] Items { 
             get 
             {
+                
                 var result = new List<IElement>();
-                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.ComboBox)
+                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.ComboBox )
                 {
                     var combo = RawElement.AsComboBox();
                     foreach (var c in combo.Items) result.Add(new UIElement(c));
+                } else if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
+                {
+                    var combo = RawElement.AsListBox();
+                    foreach (var c in combo.Items)
+                    {
+                        var tt = c.AsListBoxItem();
+                        result.Add(new UIElement(tt));
+                    }
                 }
                 return result.ToArray();
             } 
+        }
+        public Window GetWindow()
+        {
+            AutomationElement last = RawElement;
+            AutomationElement current = RawElement;
+            do
+            {
+                try
+                {
+                    last = current;
+                    current = current.Parent;
+                }
+                catch (Exception)
+                {
+                    // throw;
+                }
+            } while (current != null && current.Parent != null);
+            Window window = last.AsWindow();
+            return window;
+            //Window window = RawElement.AsWindow();
+            //FlaUI.Core.Definitions.ControlType ct = FlaUI.Core.Definitions.ControlType.Button;
+            //if (RawElement.ControlType != FlaUI.Core.Definitions.ControlType.Window)
+            //{
+            //    AutomationElement item = RawElement.Parent;
+            //    do
+            //    {
+            //        item = item.Parent;
+            //        try
+            //        {
+            //            if(item!=null) ct = item.ControlType;
+            //        }
+            //        catch (Exception)
+            //        {
+            //            ct = FlaUI.Core.Definitions.ControlType.Button;
+            //        }
+            //    } while (item != null && ct != FlaUI.Core.Definitions.ControlType.Window);
+            //    if (item != null && ct == FlaUI.Core.Definitions.ControlType.Window)
+            //    {
+            //        window = item.AsWindow();
+            //    }
+            //}
+            //try
+            //{
+            //    if(window.Parent != null)
+            //    {
+            //        ct = window.Parent.ControlType;
+            //    }
+            //}
+            //catch (Exception)
+            //{
+            //    ct = FlaUI.Core.Definitions.ControlType.Button;
+            //}
+            //if(window.Parent != null && ct == FlaUI.Core.Definitions.ControlType.Window)
+            //{
+            //    window = window.Parent.AsWindow();
+            //}
+            //return window;
+        }
+        public void SetPosition(int X, int Y)
+        {
+            Window window = GetWindow();
+            if (window == null) return;
+
+            //if(RawElement.Properties.ProcessId.IsSupported)
+            //{
+            //    var processId = RawElement.Properties.ProcessId.Value;
+            //    var p = System.Diagnostics.Process.GetProcessById(processId);
+            //    IntPtr handle = p.Handle;
+            //    if(NativeMethods.IsImmersiveProcess(handle))
+            //    {
+            //        var automation = AutomationUtil.getAutomation();
+            //        var pc = new FlaUI.Core.Conditions.PropertyCondition(automation.PropertyLibrary.Element.ClassName, "Windows.UI.Core.CoreWindow");
+            //        var _el = RawElement.FindFirstChild(pc);
+            //        if (_el != null)
+            //        {
+            //            window = _el.AsWindow();
+            //        } else
+            //        {
+            //            window = automation.FromPoint(WindowPosition).AsWindow();
+            //        }
+            //    }
+            //}
+            //window.Move(X, Y);
+            
+            var size = WindowSize;
+            NativeMethods.MoveWindow(window.Properties.NativeWindowHandle.Value, X, Y, size.Width, size.Height, true);
+
+
+
+            //window.Move(X, Y);
+            //NativeMethods.RECT rect;
+            //IntPtr hWnd = window.Properties.NativeWindowHandle.Value;
+            //if (NativeMethods.GetWindowRect(hWnd, out rect))
+            //{
+            //    // NativeMethods.MoveWindow(hWnd, X, Y, WindowSize.Width, WindowSize.Height, true);
+            //}
+
+        }
+        public void SetWindowPosition(int X, int Y)
+        {
+            WindowPosition = new System.Drawing.Point(X, Y);
+        }
+        System.Drawing.Point Position
+        {
+            get
+            {
+                return new System.Drawing.Point(RawElement.BoundingRectangle.X, RawElement.BoundingRectangle.Y);
+            }
+            set
+            {
+                if (RawElement.Patterns.Transform.TryGetPattern(out var tranPattern))
+                {
+                    if (tranPattern.CanMove)
+                    {
+                        tranPattern.Move(value.X, value.Y);
+                    }
+                }
+                if (RawElement.Patterns.Transform2.TryGetPattern(out var tran2Pattern))
+                {
+                    if (tran2Pattern.CanMove)
+                    {
+                        tran2Pattern.Move(value.X, value.Y);
+                    }
+                }
+            }
+        }
+        System.Drawing.Point WindowPosition
+        {
+            get
+            {
+                var window = GetWindow();
+                return new System.Drawing.Point(window.BoundingRectangle.X, window.BoundingRectangle.Y);
+            }
+            set
+            {
+                SetPosition(value.X, value.Y);
+            }
+        }
+        public System.Drawing.Rectangle WindowRectangle
+        {
+            get
+            {
+                try
+                {
+                    var window = GetWindow();
+                    return new System.Drawing.Rectangle((int)window.Properties.BoundingRectangle.Value.X,
+                        (int)window.Properties.BoundingRectangle.Value.Y, (int)window.Properties.BoundingRectangle.Value.Width,
+                        (int)window.Properties.BoundingRectangle.Value.Height);
+                }
+                catch (Exception)
+                {
+                    return System.Drawing.Rectangle.Empty;
+                }
+            }
+            set 
+            {
+                var window = GetWindow();
+                NativeMethods.MoveWindow(window.Properties.NativeWindowHandle.Value, value.X, value.Y, value.Width, value.Height, true);
+            }
+        }
+        public static double MovePixelsPerMillisecond { get; } = 2; // 0.5;
+        public static double MovePixelsPerStep { get; } = 10;
+        public void MoveWindowTo(int newX, int newY)
+        {
+            // Get starting position
+            var startPos = WindowPosition;
+            var endPos = new System.Drawing.Point(newX, newY);
+
+            // Break out if there is no positional change
+            if (startPos == endPos)
+            {
+                return;
+            }
+
+            // Calculate some values for duration and interval
+            var totalDistance = startPos.Distance(newX, newY);
+            var duration = TimeSpan.FromMilliseconds(Convert.ToInt32(totalDistance / MovePixelsPerMillisecond));
+            var steps = Math.Max(Convert.ToInt32(totalDistance / MovePixelsPerStep), 1); // Make sure to have et least one step
+            var interval = TimeSpan.FromMilliseconds(duration.TotalMilliseconds / steps);
+            // Execute the movement
+            FlaUI.Core.Input.Interpolation.Execute(point => {
+                WindowPosition = point;
+            }, startPos, endPos, duration, interval, true);
+        }
+        public void MoveWindowTo(int newX, int newY, int newW, int newH)
+        {
+            var startPos = WindowRectangle;
+            var endPos = new System.Drawing.Rectangle(newX, newY, newW, newH);
+
+            // Break out if there is no positional change
+            if (startPos == endPos)
+            {
+                return;
+            }
+            var steps = Config.local.move_animation_steps;
+            var runtime = Config.local.move_animation_run_time;
+            var xsteps = (newX - startPos.X) / steps;
+            var ysteps = (newY - startPos.Y) / steps;
+            var wsteps = (newW - startPos.Width) / steps;
+            var hsteps = (newH - startPos.Height) / steps;
+            System.Drawing.Rectangle newPos = new System.Drawing.Rectangle(startPos.X, startPos.Y, startPos.Width, startPos.Height);
+            for (var i = 0; i < steps; i++)
+            {
+                newPos.X += xsteps;
+                newPos.Y += ysteps;
+                newPos.Width += wsteps;
+                newPos.Height += hsteps;
+                Log.Verbose(newPos.ToString());
+                WindowRectangle = newPos;
+                System.Threading.Thread.Sleep((int)(runtime.TotalMilliseconds/steps));
+            }
+
+            WindowRectangle = endPos;
+        }
+        //public void MoveWindowTo(int newX, int newY, int newW, int newH)
+        //{
+        //    var startPos = WindowRectangle;
+        //    var endPos = new System.Drawing.Rectangle(newX, newY, newW, newH);
+
+        //    // Break out if there is no positional change
+        //    if (startPos == endPos)
+        //    {
+        //        return;
+        //    }
+        //    var steps = 10;
+        //    var xsteps = newX - startPos.X / steps;
+        //    System.Drawing.Rectangle newPos = new System.Drawing.Rectangle(startPos.X, startPos.Y, startPos.Width, startPos.Height);
+        //    for(var i=0; i< steps; i++)
+        //    {
+        //        newPos.X += xsteps;
+        //        WindowRectangle = newPos;
+        //        System.Threading.Thread.Sleep(100);
+        //    }
+
+        //    WindowRectangle = endPos;
+        //}
+        public void SetWindowSize(int Width, int Height)
+        {
+            WindowSize = new System.Drawing.Size(Width, Height);
+        }
+        public System.Drawing.Size WindowSize
+        {
+            get
+            {
+                try
+                {
+                    var window = GetWindow();
+                    if (window == null) return System.Drawing.Size.Empty;
+                    return new System.Drawing.Size(window.BoundingRectangle.Width, window.BoundingRectangle.Height);
+                }
+                catch (Exception)
+                {
+                    
+                }
+                return System.Drawing.Size.Empty;
+            }
+            set {
+                var window = GetWindow();
+                if (window == null) return;
+                if (window.Patterns.Transform.TryGetPattern(out var tranPattern))
+                {
+                    if (tranPattern.CanResize)
+                    {
+                        tranPattern.Resize(value.Width, value.Height);
+                    }
+                }
+                if (window.Patterns.Transform2.TryGetPattern(out var tran2Pattern))
+                {
+                    if (tran2Pattern.CanResize)
+                    {
+                        tran2Pattern.Resize(value.Width, value.Height);
+                    }
+                }
+
+            }
+        }
+        public System.Data.DataTable AsDataTable()
+        {
+            var table = new System.Data.DataTable();
+            DataGridView view = null;
+            AutomationElement element = RawElement;
+            do
+            {
+                try
+                {
+                    view = element.AsDataGridView();
+                    if((view.Header == null && view.Rows.Length == 0) || (element.ControlType == FlaUI.Core.Definitions.ControlType.DataItem)) { view = null; }
+                    if (view == null) element = element.Parent;
+                }
+                catch (Exception)
+                {
+                    return table;
+                }
+            } while (view == null && element != null);
+            if (view == null) return table;
+            if(view.Rows==null) return table;
+            if (view.Header != null)
+            {
+                foreach (var h in view.Header.Columns)
+                {
+                    table.Columns.Add(h.Text, typeof(string));
+                }
+            } else
+            {
+                if (view.Rows.Length == 0) return table;
+                DataGridViewRow row = view.Rows[0];
+                foreach (var cell in row.Cells)
+                {
+                    table.Columns.Add(cell.AutomationId, typeof(string));
+                }
+
+            }
+            foreach (var _row in view.Rows)
+            {
+                var objs = new List<object>();
+                foreach (var cell in _row.Cells)
+                {
+                    objs.Add(cell.Value);
+                }
+                table.Rows.Add(objs.ToArray());
+            }
+            return table;
         }
     }
 }

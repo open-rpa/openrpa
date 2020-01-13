@@ -29,8 +29,9 @@ namespace OpenRPA.RDService
             string password)
         {
             ImpersonateValidUser(userName, domainName, password);
+            instance = this;
         }
-
+        public static Impersonator instance = null;
         // ------------------------------------------------------------------
         #endregion
 
@@ -148,6 +149,7 @@ namespace OpenRPA.RDService
             {
                 impersonationContext.Undo();
             }
+            instance = null;
         }
 
         private WindowsImpersonationContext impersonationContext = null;

@@ -11,8 +11,18 @@ using System.Windows.Threading;
 
 namespace OpenRPA
 {
-    public class Workflow : apibase, IWorkflow
+    public class Workflow : apibase, IWorkflow, IDisposable
     {
+        [JsonIgnore]
+        private long _current_version = 0;
+        public long current_version { get {
+                if (_version > _current_version) return _version;
+                return _current_version;
+                        } 
+            set {
+                _current_version = value;
+            } 
+        }
         [JsonIgnore]
         public DispatcherTimer _timer;
         public Workflow()
@@ -20,12 +30,13 @@ namespace OpenRPA
             Serializable = true;
             _timer = new DispatcherTimer(DispatcherPriority.Render);
             _timer.Interval = TimeSpan.FromSeconds(1);
-            _timer.Tick += (sender, args) =>
-            {
-                NotifyPropertyChanged("State");
-                NotifyPropertyChanged("StateImage");
-            };
+            _timer.Tick += _timer_Tick;
             _timer.Start();
+        }
+        private void _timer_Tick(object sender, EventArgs e)
+        {
+            NotifyPropertyChanged("State");
+            NotifyPropertyChanged("StateImage");
         }
         public string queue { get { return GetProperty<string>(); } set { SetProperty(value); } }        
         public string Xaml { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -37,6 +48,8 @@ namespace OpenRPA
         {
             get
             {
+                if (Project == null) return Filename;
+                if (string.IsNullOrEmpty(Project.Path)) return Filename;
                 string lastFolderName = System.IO.Path.GetFileName(Project.Path);
                 return System.IO.Path.Combine(lastFolderName, Filename);
             }
@@ -51,13 +64,22 @@ namespace OpenRPA
             }
         }
 
-        [JsonIgnore]
+        private string _ProjectAndName;
+        [JsonProperty("projectandname")]
         public string ProjectAndName
         {
             get
             {
-                if (Project == null) return name;
+                if (Project == null)
+                {
+                    if (!string.IsNullOrEmpty(_ProjectAndName)) return _ProjectAndName;
+                    return name;
+                }
                 return Project.name + "/" + name;
+            }
+            set
+            {
+                _ProjectAndName = value;
             }
         }
         public string FilePath
@@ -216,7 +238,7 @@ namespace OpenRPA
             }
             System.IO.File.WriteAllText(workflowfilepath, Xaml);
         }
-        public async Task Save()
+        public async Task Save(bool UpdateImages)
         {
             try
             {
@@ -244,14 +266,18 @@ namespace OpenRPA
                 _modified = result._modified;
                 _modifiedby = result._modifiedby;
                 _modifiedbyid = result._modifiedbyid;
-                var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
-                foreach (var f in files)
+                _version = result._version;
+                if (UpdateImages)
                 {
-                    bool equal = f.metadata._acl.SequenceEqual(_acl);
-                    if (!equal)
+                    var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
+                    foreach (var f in files)
                     {
-                        f.metadata._acl = _acl;
-                        await global.webSocketClient.UpdateOne("files", 0, false, f);
+                        bool equal = f.metadata._acl.SequenceEqual(_acl);
+                        if (!equal)
+                        {
+                            f.metadata._acl = _acl;
+                            await global.webSocketClient.UpdateOne("files", 0, false, f);
+                        }
                     }
                 }
             }
@@ -276,7 +302,7 @@ namespace OpenRPA
                 await global.webSocketClient.DeleteOne("openrpa", this._id);
             }
         }
-        public async Task RunPendingInstances()
+        public void RunPendingInstances()
         {
             var statepath = System.IO.Path.Combine(Project.Path, "state");
             if(System.IO.Directory.Exists(statepath))
@@ -325,44 +351,6 @@ namespace OpenRPA
                     }
                 }
             }
-            if (!global.isConnected) return;
-            var host = Environment.MachineName.ToLower();
-            var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
-            var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{WorkflowId: '" + _id + "', state: 'idle', fqdn: '" + fqdn + "'}");
-            foreach(var i in results)
-            {
-                try
-                {
-                    i.Workflow = this;
-                    if(!string.IsNullOrEmpty(i.InstanceId) && string.IsNullOrEmpty(i.xml))
-                    {
-                        Log.Error("Refuse to load instance " + i.InstanceId + " it contains no state!");
-                        i.state = "aborted";
-                        i.errormessage = "Refuse to load instance " + i.InstanceId + " it contains no state!";
-                        i.Save();
-                        continue;
-                    }
-                    //if (idleOrComplete != null) i.OnIdleOrComplete += idleOrComplete;
-                    //if (VisualTracking != null) i.OnVisualTracking += VisualTracking;
-                    WorkflowInstance.Instances.Add(i);
-                    var _ref = (i as IWorkflowInstance);
-                    foreach (var runner in Plugins.runPlugins)
-                    {
-                        if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
-                    }
-                    i.createApp();
-                    i.Run();
-                }
-                catch (Exception ex)
-                {
-                    i.state = "failed";
-                    i.Exception = ex;
-                    i.errormessage = ex.Message;
-                    i.Save();
-                    Log.Error("RunPendingInstances: " + ex.ToString());
-                }
-            }
-            
         }
         public string UniqueFilename()
         {
@@ -455,7 +443,26 @@ namespace OpenRPA
                 }
             }
         }
-
+        #region IDisposable Support
+        private bool disposedValue = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _timer.Stop();
+                    _timer.Tick -= _timer_Tick;
+                    _timer = null;
+                }
+                disposedValue = true;
+            }
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 
 }

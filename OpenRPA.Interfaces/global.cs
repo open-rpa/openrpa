@@ -18,6 +18,14 @@ namespace OpenRPA
                 return true;
             }
         }
+        public static bool isSignedIn
+        {
+            get
+            {
+                if (!isConnected || webSocketClient.user == null) return false;
+                return true;
+            }
+        }
         private static openflowconfig _openflowconfig = null;
         public static openflowconfig openflowconfig
         {

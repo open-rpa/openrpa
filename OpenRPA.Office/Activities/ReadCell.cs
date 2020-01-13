@@ -45,7 +45,13 @@ namespace OpenRPA.Office.Activities
                 if(range.Value2==null) context.SetValue(Result, null);
                 try
                 {
-                    context.SetValue(Result, range.Value2.ToString());
+                    if(range.Value2 != null)
+                    {
+                        context.SetValue(Result, range.Value2.ToString());
+                    } else
+                    {
+                        context.SetValue(Result, null);
+                    }
                 }
                 catch (Exception)
                 {

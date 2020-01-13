@@ -46,17 +46,28 @@ namespace OpenRPA.RDService
         }
 
         private static string logpath = "";
+        private static bool HadError = false;
         public override void WriteLine(string message, string category)
         {
             if(string.IsNullOrEmpty(logpath))
             {
-                logpath = Interfaces.Extensions.ProjectsDirectory;
+                var asm = System.Reflection.Assembly.GetEntryAssembly();
+                var filepath = asm.CodeBase.Replace("file:///", "");
+                logpath = System.IO.Path.GetDirectoryName(filepath);
+                HadError = false;
             }
 
             if (category == "Tracing") return;
             DateTime dt = DateTime.Now;
             var _msg = string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" , dt, category, message);
-            System.IO.File.AppendAllText(System.IO.Path.Combine(logpath, "log_rdservice.txt"), _msg + Environment.NewLine);
+            try
+            {
+                if(!HadError) System.IO.File.AppendAllText(System.IO.Path.Combine(logpath, "log_rdservice.txt"), _msg + Environment.NewLine);
+            }
+            catch (Exception)
+            {
+                HadError = true;
+            }
             m_OriginalConsoleStream.WriteLine(_msg);
             // Console.WriteLine(_msg);
         }

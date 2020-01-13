@@ -86,7 +86,7 @@ namespace OpenRPA.Interfaces.Overlay
             var result = SetWindowPos(handleRef, key, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
             if (!result)
             {
-                Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
+                throw NativeMethods.GetLastWin32Error("SetTopMost:SetWindowPos");
             }
         }
         [DllImport("user32.dll", CharSet = CharSet.Auto)]

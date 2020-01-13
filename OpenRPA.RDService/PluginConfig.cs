@@ -21,7 +21,6 @@ namespace OpenRPA.RDService
                     var asm = System.Reflection.Assembly.GetEntryAssembly();
                     var filepath = asm.CodeBase.Replace("file:///", "");
                     var path = System.IO.Path.GetDirectoryName(filepath);
-
                     _globallocal = AppSettings<Config>.Load(System.IO.Path.Combine(path, "settings.json")); ;
                 }
                 return _globallocal;
@@ -29,6 +28,7 @@ namespace OpenRPA.RDService
         }
         public static TimeSpan reloadinterval  { get { return globallocal.GetProperty<TimeSpan>(pluginname, TimeSpan.FromSeconds(1)); } set { globallocal.SetProperty(pluginname, value); } }
         public static string jwt { get { return globallocal.GetProperty<string>(pluginname, null); } set { globallocal.SetProperty(pluginname, value); } }
+        public static string wsurl { get { return globallocal.GetProperty<string>(pluginname, null); } set { globallocal.SetProperty(pluginname, value); } }        
         public static string entropy { get { return globallocal.GetProperty<string>(pluginname, null); } set { globallocal.SetProperty(pluginname, value); } }
         public static string tempjwt { get { return globallocal.GetProperty<string>(pluginname, null); } set { globallocal.SetProperty(pluginname, value); } }
         public static bool usefreerdp { get { return globallocal.GetProperty<bool>(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }

@@ -9,10 +9,70 @@ namespace OpenRPA.Interfaces
     using System.ComponentModel;
     using System.Runtime.InteropServices;
     using System.Security;
+    using System.Security.AccessControl;
 
     [System.Security.SuppressUnmanagedCodeSecurity]
     public static class NativeMethods
     {
+        public static string GetLastWin32ErrorMessage(string functionName)
+        {
+            var code = Marshal.GetLastWin32Error();
+            var ex = new Win32Exception(Marshal.GetLastWin32Error());
+            string message = String.Format("{0} Error: {1} {2}", functionName, code, ex.Message);
+            return message;
+        }
+        public static Win32Exception GetLastWin32Error(string functionName)
+        {
+            var code = Marshal.GetLastWin32Error();
+            var ex = new Win32Exception(Marshal.GetLastWin32Error());
+            // return new Win32Exception(Marshal.GetLastWin32Error());
+            return new Win32Exception(Marshal.GetLastWin32Error(), functionName + "::" + ex.Message);
+        }
+        public const int SW_FORCEMINIMIZE = 11; // Minimizes a window, even if the thread that owns the window is not responding. This flag should only be used when minimizing windows from a different thread.
+        public const int SW_HIDE = 0; // Hides the window and activates another window.
+        public const int SW_MAXIMIZE = 3; // Maximizes the specified window.
+        public const int SW_MINIMIZE = 2; // Minimizes the specified window and activates the next top-level window in the Z order.
+        public const int SW_RESTORE = 9; // Activates and displays the window. If the window is minimized or maximized, the system restores it to its original size and position. An application should specify this flag when restoring a minimized window.
+        public const int SW_SHOW = 5; // Activates the window and displays it in its current size and position.
+        public const int SW_SHOWDEFAULT = 10; // Sets the show state based on the SW_ value specified in the STARTUPINFO structure passed to the CreateProcess function by the program that started the application.
+        public const int SW_SHOWMAXIMIZED = 3; // Activates the window and displays it as a maximized window.
+        public const int SW_SHOWMINIMIZED = 2; // Activates the window and displays it as a minimized window.
+        public const int SW_SHOWMINNOACTIVE = 7; // Displays the window as a minimized window. This value is similar to SW_SHOWMINIMIZED, except the window is not activated.
+        public const int SW_SHOWNA = 8; // Displays the window in its current size and position. This value is similar to SW_SHOW, except that the window is not activated.
+        public const int SW_SHOWNOACTIVATE = 4; // Displays a window in its most recent size and position. This value is similar to SW_SHOWNORMAL, except that the window is not activated.
+        public const int SW_SHOWNORMAL = 1; // Activates and displays a window. If the window is minimized or maximized, the system restores it to its original size and position. An application should specify this flag when displaying the window for the first time.
+
+        public static readonly int GWL_WNDPROC = -4; // Retrieves the address of the window procedure, or a handle representing the address of the window procedure. You must use the CallWindowProc function to call the window procedure.
+        public static readonly int GWL_HINSTANCE = -6;
+        public static readonly int GWL_HWNDPARENT = -8;
+        public static readonly int GWL_STYLE = -16; // Retrieves the window styles.
+        public static readonly int GWL_EXSTYLE = -20; // Retrieves the extended window styles.
+        public static readonly int GWL_USERDATA = -21; // Gets the 32-bit value associated with the window. Each window has a corresponding 32-bit value intended for use by the application that created the window. Windows CE versions 2.0 and later support this value, but Windows CE versions 1.0 and 1.01 do not.
+        public static readonly int GWL_ID = -12; // Not supported.
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr")]
+        public static extern long GetWindowLongPtr(IntPtr hWnd, int nIndex);
+        //public static extern IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex);
+
+        // This static method is required because legacy OSes do not support
+        // SetWindowLongPtr
+        public static IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, long dwNewLong)
+        {
+            if (IntPtr.Size == 8)
+                return SetWindowLongPtr64(hWnd, nIndex, dwNewLong);
+            else
+                return new IntPtr(SetWindowLong32(hWnd, nIndex, (int)dwNewLong));
+        }
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLong")]
+        private static extern int SetWindowLong32(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr")]
+        private static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, int nIndex, long dwNewLong);
+        [DllImport("user32")]
+        public static extern int UpdateWindow(IntPtr hwnd);
         [DllImport("user32.dll", SetLastError = true)]
         public static extern uint GetDoubleClickTime();
         [DllImport("wtsapi32.dll", SetLastError = true)]
@@ -58,19 +118,17 @@ namespace OpenRPA.Interfaces
             WTSDown,
             WTSInit
         }
-
-
         public static bool Launch(System.Diagnostics.Process p, string CurrentDirectory, string appCmdLine)
         {
-            if (GetPrimaryToken(p) == IntPtr.Zero) return false;
+            var priToken = GetPrimaryToken(p);
+            if (priToken == IntPtr.Zero) return false;
             IntPtr envBlock = IntPtr.Zero;
             try
             {
-                if (!CreateEnvironmentBlock(out envBlock, GetPrimaryToken(p), false)) return false;
-                if (!LaunchProcessAsUser(CurrentDirectory, appCmdLine, GetPrimaryToken(p), envBlock, out System.Diagnostics.Process newProcess, true, out string ErrorMessage))
+                if (!CreateEnvironmentBlock(out envBlock, priToken, false)) throw GetLastWin32Error("Launch:CreateEnvironmentBlock");
+                if (!LaunchProcessAsUser(CurrentDirectory, appCmdLine, priToken, envBlock, out System.Diagnostics.Process newProcess, true, out string ErrorMessage))
                 {
-                    Log.Error(ErrorMessage);
-                    return false;
+                    throw GetLastWin32Error("Launch:CreateEnvironmentBlock");
                 }
             }
             catch (Exception ex)
@@ -81,6 +139,7 @@ namespace OpenRPA.Interfaces
             finally
             {
                 if (envBlock != IntPtr.Zero) DestroyEnvironmentBlock(envBlock);
+                if (priToken != IntPtr.Zero) CloseHandle(priToken);
             }
             return true;
         }
@@ -103,18 +162,15 @@ namespace OpenRPA.Interfaces
             si.dwFlags = (int)(STARTF.STARTF_USESHOWWINDOW | STARTF.STARTF_FORCEONFEEDBACK);
             si.wShowWindow = SW_SHOW;
 
-            bool result = CreateProcessAsUser(token, null, cmdLine, ref saProcess, ref saThread, false,
-    (uint)CreateProcessFlags.CREATE_UNICODE_ENVIRONMENT, envBlock, CurrentDirectory, ref si, out pi);
-            if (result == false)
+            if(!CreateProcessAsUser(token, null, cmdLine, ref saProcess, ref saThread, false, (uint)CreateProcessFlags.CREATE_UNICODE_ENVIRONMENT, envBlock, CurrentDirectory, ref si, out pi))
             {
-                var hResult = Marshal.GetLastWin32Error();
-                ErrorMessage = String.Format("CreateProcessAsUser Error: {0}", hResult);
+                throw GetLastWin32Error("LaunchProcessAsUser:CreateProcessAsUser");
             }
             else
             {
                 newProcess = System.Diagnostics.Process.GetProcessById(pi.dwProcessId);
             }
-            return result;
+            return true;
         }
         public static string GetDomainName() => System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName;
         public static string GetHostName() => System.Net.Dns.GetHostName();
@@ -160,36 +216,27 @@ namespace OpenRPA.Interfaces
         {
             IntPtr primaryToken = IntPtr.Zero;
             //Gets impersonation token 
-            bool retVal = OpenProcessToken(p.Handle, TOKEN_DUPLICATE, out IntPtr token);
-            if (retVal == true)
+            if (!OpenProcessToken(p.Handle, TOKEN_DUPLICATE, out IntPtr token))
             {
-                SECURITY_ATTRIBUTES sa = new SECURITY_ATTRIBUTES();
-                sa.nLength = (uint)Marshal.SizeOf(sa);
-                //Convert the impersonation token into Primary token 
-                retVal = DuplicateTokenEx(
-                    token,
-                    TOKEN_ASSIGN_PRIMARY | TOKEN_DUPLICATE | TOKEN_QUERY,
-                    ref sa,
-                    (int)SECURITY_IMPERSONATION_LEVEL.SecurityIdentification,
-                    (int)TOKEN_TYPE.TokenPrimary,
-                    ref primaryToken);
-
-                //Close the Token that was previously opened. 
-                CloseHandle(token);
-                if (retVal == false)
-                {
-                    string message = String.Format("DuplicateTokenEx Error: {0}", Marshal.GetLastWin32Error());
-                    System.Diagnostics.Debug.WriteLine(message);
-                }
+                throw GetLastWin32Error("GetPrimaryToken:OpenProcessToken");
             }
-            else
+            SECURITY_ATTRIBUTES sa = new SECURITY_ATTRIBUTES();
+            sa.nLength = (uint)Marshal.SizeOf(sa);
+            //Convert the impersonation token into Primary token 
+            if(!DuplicateTokenEx(
+                token,
+                TOKEN_ASSIGN_PRIMARY | TOKEN_DUPLICATE | TOKEN_QUERY,
+                ref sa,
+                (int)SECURITY_IMPERSONATION_LEVEL.SecurityIdentification,
+                (int)TOKEN_TYPE.TokenPrimary,
+                ref primaryToken))
             {
-                string message = String.Format("OpenProcessToken Error: {0}", Marshal.GetLastWin32Error());
-                System.Diagnostics.Debug.WriteLine(message);
-
+                throw GetLastWin32Error("GetPrimaryToken:DuplicateTokenEx");
             }
-            //We'll Close this token after it is used. 
-            return IntPtr.Zero;
+
+            //Close the Token that was previously opened. 
+            CloseHandle(token);
+            return primaryToken;
         }
         public static System.Diagnostics.Process GetParentProcessId(System.Diagnostics.Process p = null)
         {
@@ -231,10 +278,11 @@ namespace OpenRPA.Interfaces
             byte[] sidBytes;
 
             // Get the Process Token
-            if (!OpenProcessToken(processHandle, TOKEN_READ, out IntPtr tokenHandle))
-                throw new ApplicationException("Could not get process token.  Win32 Error Code: " + Marshal.GetLastWin32Error());
+            if (!OpenProcessToken(processHandle, TOKEN_READ, out IntPtr tokenHandle)) throw GetLastWin32Error("GetSIDByteArr:OpenProcessToken");
 
-            _ = GetTokenInformation(tokenHandle, TOKEN_INFORMATION_CLASS.TokenUser, IntPtr.Zero, 0, out uint tokenInfoLength);  // get the token info length
+            // get the token info length
+            if (!GetTokenInformation(tokenHandle, TOKEN_INFORMATION_CLASS.TokenUser, IntPtr.Zero, 0, out uint tokenInfoLength)) throw GetLastWin32Error("GetSIDByteArr:GetTokenInformation");
+
             IntPtr tokenInfo = Marshal.AllocHGlobal((int)tokenInfoLength);
 
             // Get the User SID
@@ -244,7 +292,7 @@ namespace OpenRPA.Interfaces
                 sidBytes = new byte[MAX_INTPTR_BYTE_ARR_SIZE];  // Since I don't yet know how to be more precise w/ the size of the byte arr, it is being set to 512
                 Marshal.Copy(tokenUser.User.Sid, sidBytes, 0, MAX_INTPTR_BYTE_ARR_SIZE);  // get a byte[] representation of the SID
             }
-            else throw new ApplicationException("Could not get process token.  Win32 Error Code: " + Marshal.GetLastWin32Error());
+            else throw GetLastWin32Error("GetSIDByteArr:GetTokenInformation");
 
             return sidBytes;
         }
@@ -281,20 +329,78 @@ namespace OpenRPA.Interfaces
             }
             return "";
         }
-        public static string GetProcessUserName(System.Diagnostics.Process process = null)
+        [Flags]
+        public enum ProcessAccessFlags : uint
         {
-            if (process == null) process = System.Diagnostics.Process.GetCurrentProcess();
-            if (process.HasExited) return "";
+            All = 0x001F0FFF,
+            Terminate = 0x00000001,
+            CreateThread = 0x00000002,
+            VirtualMemoryOperation = 0x00000008,
+            VirtualMemoryRead = 0x00000010,
+            VirtualMemoryWrite = 0x00000020,
+            DuplicateHandle = 0x00000040,
+            CreateProcess = 0x000000080,
+            SetQuota = 0x00000100,
+            SetInformation = 0x00000200,
+            QueryInformation = 0x00000400,
+            QueryLimitedInformation = 0x00001000,
+            Synchronize = 0x00100000
+        }
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern IntPtr OpenProcess(ProcessAccessFlags processAccess,bool bInheritHandle,     int processId);
+        public static IntPtr OpenProcess(System.Diagnostics.Process proc, ProcessAccessFlags flags)
+        {
+            return OpenProcess(flags, false, proc.Id);
+        }
+
+        public static int UOI_FLAGS = 1;
+
+        // GetUserObjectSecurity
+        [DllImport("user32.dll", EntryPoint = "GetUserObjectSecurity")]
+        public static extern int GetUserObjectSecurity([System.Runtime.InteropServices.InAttribute()] IntPtr hObj, 
+            [In] ref uint pSIRequested, System.IntPtr pSID, uint nLength, [System.Runtime.InteropServices.OutAttribute()] out uint lpnLengthNeeded);
+        public static int GetUserObjectInformationW([In] IntPtr hObj, int nIndex, object pvInfo, int nLength, out int LengthNeeded)
+        {
+            int flagsLength;
+            int retValue;
+
+            // First figure out how much length is needed
+            retValue = GetUserObjectInformationW(hObj, UOI_FLAGS, IntPtr.Zero, 0, out LengthNeeded);
+
+            // Set the length to the length needed
+            flagsLength = LengthNeeded;
+
+            // Now make the call again with the right size and structure
+            GCHandle h0 = GCHandle.Alloc(pvInfo, GCHandleType.Pinned);
+            try
+            {
+                retValue = GetUserObjectInformationW(hObj, UOI_FLAGS, h0.AddrOfPinnedObject(), flagsLength, out LengthNeeded);
+            }
+            finally
+            {
+                h0.Free();
+            }
+
+            return retValue;
+        }
+        //public static string GetProcessUserName(System.Diagnostics.Process process = null)
+        public static string GetProcessUserName(int PId)
+        {
+            var hProcess = OpenProcess(ProcessAccessFlags.QueryInformation, false, PId);	//PId is a target process id
+            if(hProcess == IntPtr.Zero) throw GetLastWin32Error("GetProcessUserName:OpenProcess");
             SafeTokenHandle hToken;
             try
             {
-                if (!NativeMethods.OpenProcessToken(process.Handle, NativeMethods.TOKEN_QUERY, out hToken))
+                // IntPtr handle = OpenProcess( ProcessAccessFlags.Synchronize, false, process.Id);
+                if (!OpenProcessToken(hProcess, TOKEN_QUERY, out hToken))
+                //if (!OpenProcessToken(OpenProcess(process, ProcessAccessFlags.QueryInformation), TOKEN_QUERY, out hToken))
                 {
-                    return "";
+                    throw GetLastWin32Error("GetProcessUserName:OpenProcessToken");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Log.Error(ex.ToString());
                 return "";
             }
             // first call gets lenght of TokenInformation
@@ -303,17 +409,275 @@ namespace OpenRPA.Interfaces
             if (GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, TokenInformation, TokenInfLength, out _))
             {
                 TOKEN_USER TokenUser = (TOKEN_USER)Marshal.PtrToStructure(TokenInformation, typeof(TOKEN_USER));
-
                 var a = new System.Security.Principal.SecurityIdentifier(TokenUser.User.Sid);
                 return a.Translate(typeof(System.Security.Principal.NTAccount)).ToString();
             }
-            return "";
+            else
+            {
+                throw GetLastWin32Error("GetProcessUserName:GetTokenInformation2");
+            }
+        }
+        public static string GetProcessUserName_old(System.Diagnostics.Process process = null)
+        {
+            if (process == null) process = System.Diagnostics.Process.GetCurrentProcess();
+            // if (process.HasExited) return "";
+            SafeTokenHandle hToken;
+            try
+            {
+                var me = process = System.Diagnostics.Process.GetCurrentProcess();
+                var htok = IntPtr.Zero;
+                if (!OpenProcessToken(me.Handle,
+                    System.Security.Principal.TokenAccessLevels.AdjustPrivileges | System.Security.Principal.TokenAccessLevels.Query, out htok))
+                {
+                    throw GetLastWin32Error("GetProcessUserName_old:OpenProcessToken");
+                }
+                var tkp = new TOKEN_PRIVILEGES { PrivilegeCount = 1, Privileges = new LUID_AND_ATTRIBUTES[1] };
+                LUID luid;
+                if (!LookupPrivilegeValue(null, "SeDebugPrivilege", out luid))
+                {
+                    throw GetLastWin32Error("GetProcessUserName_old:LookupPrivilegeValue");
+                }
+                tkp.Privileges[0].LUID = luid;
+                tkp.Privileges[0].Attributes = (uint)(2);
+                TOKEN_PRIVILEGES prv;
+                uint rb;
+                if (!AdjustTokenPrivileges(htok, false, tkp, 256, out prv, out rb))
+                {
+                    throw GetLastWin32Error("GetProcessUserName_old:AdjustTokenPrivileges");
+                }
+                if (!OpenProcessToken(me.Handle, NativeMethods.TOKEN_QUERY, out hToken))
+                {
+                    throw GetLastWin32Error("GetProcessUserName_old:OpenProcessToken");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return "";
+            }
+            // first call gets lenght of TokenInformation
+            _ = GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, IntPtr.Zero, 0, out uint TokenInfLength);
+            IntPtr TokenInformation = Marshal.AllocHGlobal(int.Parse(TokenInfLength.ToString()));
+            if (GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, TokenInformation, TokenInfLength, out _))
+            {
+                TOKEN_USER TokenUser = (TOKEN_USER)Marshal.PtrToStructure(TokenInformation, typeof(TOKEN_USER));
+                var a = new System.Security.Principal.SecurityIdentifier(TokenUser.User.Sid);
+                return a.Translate(typeof(System.Security.Principal.NTAccount)).ToString();
+            } else
+            {
+                throw GetLastWin32Error("GetProcessUserName_old:GetTokenInformation");
+            }
         }
         [DllImport("kernel32.dll")]
         public static extern IntPtr LocalFree(IntPtr hMem);
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern Boolean CloseHandle(IntPtr hObject);
+
+
+
+        public static string GetSecurityEntityValue(SecurityEntity securityEntity)
+        {
+            switch (securityEntity)
+            {
+                case SecurityEntity.SE_ASSIGNPRIMARYTOKEN_NAME:
+                    return "SeAssignPrimaryTokenPrivilege";
+                case SecurityEntity.SE_AUDIT_NAME:
+                    return "SeAuditPrivilege";
+                case SecurityEntity.SE_BACKUP_NAME:
+                    return "SeBackupPrivilege";
+                case SecurityEntity.SE_CHANGE_NOTIFY_NAME:
+                    return "SeChangeNotifyPrivilege";
+                case SecurityEntity.SE_CREATE_GLOBAL_NAME:
+                    return "SeCreateGlobalPrivilege";
+                case SecurityEntity.SE_CREATE_PAGEFILE_NAME:
+                    return "SeCreatePagefilePrivilege";
+                case SecurityEntity.SE_CREATE_PERMANENT_NAME:
+                    return "SeCreatePermanentPrivilege";
+                case SecurityEntity.SE_CREATE_SYMBOLIC_LINK_NAME:
+                    return "SeCreateSymbolicLinkPrivilege";
+                case SecurityEntity.SE_CREATE_TOKEN_NAME:
+                    return "SeCreateTokenPrivilege";
+                case SecurityEntity.SE_DEBUG_NAME:
+                    return "SeDebugPrivilege";
+                case SecurityEntity.SE_ENABLE_DELEGATION_NAME:
+                    return "SeEnableDelegationPrivilege";
+                case SecurityEntity.SE_IMPERSONATE_NAME:
+                    return "SeImpersonatePrivilege";
+                case SecurityEntity.SE_INC_BASE_PRIORITY_NAME:
+                    return "SeIncreaseBasePriorityPrivilege";
+                case SecurityEntity.SE_INCREASE_QUOTA_NAME:
+                    return "SeIncreaseQuotaPrivilege";
+                case SecurityEntity.SE_INC_WORKING_SET_NAME:
+                    return "SeIncreaseWorkingSetPrivilege";
+                case SecurityEntity.SE_LOAD_DRIVER_NAME:
+                    return "SeLoadDriverPrivilege";
+                case SecurityEntity.SE_LOCK_MEMORY_NAME:
+                    return "SeLockMemoryPrivilege";
+                case SecurityEntity.SE_MACHINE_ACCOUNT_NAME:
+                    return "SeMachineAccountPrivilege";
+                case SecurityEntity.SE_MANAGE_VOLUME_NAME:
+                    return "SeManageVolumePrivilege";
+                case SecurityEntity.SE_PROF_SINGLE_PROCESS_NAME:
+                    return "SeProfileSingleProcessPrivilege";
+                case SecurityEntity.SE_RELABEL_NAME:
+                    return "SeRelabelPrivilege";
+                case SecurityEntity.SE_REMOTE_SHUTDOWN_NAME:
+                    return "SeRemoteShutdownPrivilege";
+                case SecurityEntity.SE_RESTORE_NAME:
+                    return "SeRestorePrivilege";
+                case SecurityEntity.SE_SECURITY_NAME:
+                    return "SeSecurityPrivilege";
+                case SecurityEntity.SE_SHUTDOWN_NAME:
+                    return "SeShutdownPrivilege";
+                case SecurityEntity.SE_SYNC_AGENT_NAME:
+                    return "SeSyncAgentPrivilege";
+                case SecurityEntity.SE_SYSTEM_ENVIRONMENT_NAME:
+                    return "SeSystemEnvironmentPrivilege";
+                case SecurityEntity.SE_SYSTEM_PROFILE_NAME:
+                    return "SeSystemProfilePrivilege";
+                case SecurityEntity.SE_SYSTEMTIME_NAME:
+                    return "SeSystemtimePrivilege";
+                case SecurityEntity.SE_TAKE_OWNERSHIP_NAME:
+                    return "SeTakeOwnershipPrivilege";
+                case SecurityEntity.SE_TCB_NAME:
+                    return "SeTcbPrivilege";
+                case SecurityEntity.SE_TIME_ZONE_NAME:
+                    return "SeTimeZonePrivilege";
+                case SecurityEntity.SE_TRUSTED_CREDMAN_ACCESS_NAME:
+                    return "SeTrustedCredManAccessPrivilege";
+                case SecurityEntity.SE_UNDOCK_NAME:
+                    return "SeUndockPrivilege";
+                default:
+                    throw new ArgumentOutOfRangeException(typeof(SecurityEntity).Name);
+            }
+        }
+
+        public enum SecurityEntity
+        {
+            SE_CREATE_TOKEN_NAME,
+            SE_ASSIGNPRIMARYTOKEN_NAME,
+            SE_LOCK_MEMORY_NAME,
+            SE_INCREASE_QUOTA_NAME,
+            SE_UNSOLICITED_INPUT_NAME,
+            SE_MACHINE_ACCOUNT_NAME,
+            SE_TCB_NAME,
+            SE_SECURITY_NAME,
+            SE_TAKE_OWNERSHIP_NAME,
+            SE_LOAD_DRIVER_NAME,
+            SE_SYSTEM_PROFILE_NAME,
+            SE_SYSTEMTIME_NAME,
+            SE_PROF_SINGLE_PROCESS_NAME,
+            SE_INC_BASE_PRIORITY_NAME,
+            SE_CREATE_PAGEFILE_NAME,
+            SE_CREATE_PERMANENT_NAME,
+            SE_BACKUP_NAME,
+            SE_RESTORE_NAME,
+            SE_SHUTDOWN_NAME,
+            SE_DEBUG_NAME,
+            SE_AUDIT_NAME,
+            SE_SYSTEM_ENVIRONMENT_NAME,
+            SE_CHANGE_NOTIFY_NAME,
+            SE_REMOTE_SHUTDOWN_NAME,
+            SE_UNDOCK_NAME,
+            SE_SYNC_AGENT_NAME,
+            SE_ENABLE_DELEGATION_NAME,
+            SE_MANAGE_VOLUME_NAME,
+            SE_IMPERSONATE_NAME,
+            SE_CREATE_GLOBAL_NAME,
+            SE_CREATE_SYMBOLIC_LINK_NAME,
+            SE_INC_WORKING_SET_NAME,
+            SE_RELABEL_NAME,
+            SE_TIME_ZONE_NAME,
+            SE_TRUSTED_CREDMAN_ACCESS_NAME
+        }
+        public static void EnableDisablePrivilege(string PrivilegeName, bool EnableDisable)
+        {
+            var htok = IntPtr.Zero;
+            if (!OpenProcessToken(System.Diagnostics.Process.GetCurrentProcess().Handle,
+                System.Security.Principal.TokenAccessLevels.AdjustPrivileges | System.Security.Principal.TokenAccessLevels.Query, out htok)) throw GetLastWin32Error("EnableDisablePrivilege:OpenProcessToken");
+            var tkp = new TOKEN_PRIVILEGES { PrivilegeCount = 1, Privileges = new LUID_AND_ATTRIBUTES[1] };
+            LUID luid;
+            if (!LookupPrivilegeValue(null, PrivilegeName, out luid)) throw GetLastWin32Error("EnableDisablePrivilege:LookupPrivilegeValue");
+            tkp.Privileges[0].LUID = luid;
+            tkp.Privileges[0].Attributes = (uint)(EnableDisable ? 2 : 0);
+            TOKEN_PRIVILEGES prv;
+            uint rb;
+            if (!AdjustTokenPrivileges(htok, false, tkp, 256, out prv, out rb)) throw GetLastWin32Error("EnableDisablePrivilege:AdjustTokenPrivileges");
+        }
+
+        [DllImport("advapi32.dll", SetLastError = true)]
+        public static extern bool AdjustTokenPrivileges(IntPtr TokenHandle, bool DisableAllPrivileges, ref TOKEN_PRIVILEGES NewState, uint Bufferlength, IntPtr PreviousState, IntPtr ReturnLength);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct LUID
+        {
+            private uint lp;
+            private int hp;
+
+            public uint LowPart
+            {
+                get { return lp; }
+                set { lp = value; }
+            }
+
+            public int HighPart
+            {
+                get { return hp; }
+                set { hp = value; }
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct LUID_AND_ATTRIBUTES
+        {
+            private LUID luid;
+            private uint attributes;
+
+            public LUID LUID
+            {
+                get { return luid; }
+                set { luid = value; }
+            }
+
+            public uint Attributes
+            {
+                get { return attributes; }
+                set { attributes = value; }
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct TOKEN_PRIVILEGES
+        {
+            private uint prvct;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
+            private LUID_AND_ATTRIBUTES[] privileges;
+
+            public uint PrivilegeCount
+            {
+                get { return prvct; }
+                set { prvct = value; }
+            }
+
+            public LUID_AND_ATTRIBUTES[] Privileges
+            {
+                get { return privileges; }
+                set { privileges = value; }
+            }
+        }
+
+        [DllImport("advapi32", SetLastError = true)]
+        public static extern bool OpenProcessToken(IntPtr ProcessHandle, System.Security.Principal.TokenAccessLevels DesiredAccess, out IntPtr TokenHandle);
+
+        [DllImport("advapi32.dll", SetLastError = true)]
+        public static extern bool AdjustTokenPrivileges(IntPtr TokenHandle, bool DisableAllPrivileges, TOKEN_PRIVILEGES NewState, uint BufferLength, out TOKEN_PRIVILEGES PreviousState, out uint ReturnLength);
+
+        [DllImport("advapi32.dll", SetLastError = true)]
+        public static extern bool LookupPrivilegeValue(string lpSystemName, string lpName, out LUID lpLuid);
+
+
+
         [System.Runtime.InteropServices.DllImport("kernel32.dll")]
         public static extern Boolean AllocConsole();
         [DllImport("advapi32.dll", EntryPoint = "DuplicateTokenEx", SetLastError = true)]
@@ -323,6 +687,33 @@ namespace OpenRPA.Interfaces
         public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         public static extern int SetForegroundWindow(IntPtr hWnd);
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsIconic(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsImmersiveProcess(IntPtr hWnd);
+
+        // Win32 RECT
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+
+        // GetWindowRect gets the win32 RECT by a window handle.
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
+
+        // MoveWindow moves a window or changes its size based on a window handle.
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+
+
         [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         static extern bool CreateProcessAsUser(IntPtr hToken, string lpApplicationName, string lpCommandLine, ref SECURITY_ATTRIBUTES lpProcessAttributes,
     ref SECURITY_ATTRIBUTES lpThreadAttributes, bool bInheritHandles, uint dwCreationFlags, IntPtr lpEnvironment, string lpCurrentDirectory,
@@ -403,20 +794,20 @@ namespace OpenRPA.Interfaces
         //private static readonly uint TOKEN_ADJUST_GROUPS = 0x0040;
         //private static readonly uint TOKEN_ADJUST_DEFAULT = 0x0080;
         //private static readonly uint TOKEN_ADJUST_SESSIONID = 0x0100;
-        public const int SW_HIDE = 0;
-        public const int SW_SHOWNORMAL = 1;
-        public const int SW_SHOWMINIMIZED = 2;
-        public const int SW_SHOWMAXIMIZED = 3;
-        public const int SW_MINIMIZE = 6;
-        public const int SW_RESTORE = 9;
-        public const int SW_SHOWDEFAULT = 10;
-        public const int SW_SHOWMINNOACTIVE = 7;
-        public const int SW_SHOWNA = 8;
-        public const int SW_SHOWNOACTIVATE = 4;
+        //public const int SW_HIDE = 0;
+        //public const int SW_SHOWNORMAL = 1;
+        //public const int SW_SHOWMINIMIZED = 2;
+        //public const int SW_SHOWMAXIMIZED = 3;
+        //public const int SW_MINIMIZE = 6;
+        //public const int SW_RESTORE = 9;
+        //public const int SW_SHOWDEFAULT = 10;
+        //public const int SW_SHOWMINNOACTIVE = 7;
+        //public const int SW_SHOWNA = 8;
+        //public const int SW_SHOWNOACTIVATE = 4;
 
-        public const int SW_NORMAL = 1;
-        public const int SW_MAXIMIZE = 3;
-        public const int SW_SHOW = 5;
+        //public const int SW_NORMAL = 1;
+        //public const int SW_MAXIMIZE = 3;
+        //public const int SW_SHOW = 5;
         [Flags]
         enum CreateProcessFlags
         {
@@ -519,18 +910,7 @@ namespace OpenRPA.Interfaces
         {
             public SID_AND_ATTRIBUTES User;
         }
-        public class SafeTokenHandle : Microsoft.Win32.SafeHandles.SafeHandleZeroOrMinusOneIsInvalid
-        {
-            public SafeTokenHandle() : base(true) { }
-            public SafeTokenHandle(IntPtr handle) : base(true)
-            {
-                SetHandle(handle);
-            }
-            protected override bool ReleaseHandle()
-            {
-                return CloseHandle(handle);
-            }
-        }
+
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
         public struct PROCESS_BASIC_INFORMATION
         {
@@ -944,6 +1324,97 @@ namespace OpenRPA.Interfaces
         public const Int32 LLKHF_EXTENDED = 0x01;
         public const Int32 WM_MouseWheel = 522;
 
+        public abstract class WindowStyles
+        {
+            public const uint WS_OVERLAPPED = 0x00000000;
+            public const uint WS_POPUP = 0x80000000;
+            public const uint WS_CHILD = 0x40000000;
+            public const uint WS_MINIMIZE = 0x20000000;
+            public const uint WS_VISIBLE = 0x10000000;
+            public const uint WS_DISABLED = 0x08000000;
+            public const uint WS_CLIPSIBLINGS = 0x04000000;
+            public const uint WS_CLIPCHILDREN = 0x02000000;
+            public const uint WS_MAXIMIZE = 0x01000000;
+            public const uint WS_CAPTION = 0x00C00000;     /* WS_BORDER | WS_DLGFRAME  */
+            public const uint WS_BORDER = 0x00800000;
+            public const uint WS_DLGFRAME = 0x00400000;
+            public const uint WS_VSCROLL = 0x00200000;
+            public const uint WS_HSCROLL = 0x00100000;
+            public const uint WS_SYSMENU = 0x00080000;
+            public const uint WS_THICKFRAME = 0x00040000;
+            public const uint WS_GROUP = 0x00020000;
+            public const uint WS_TABSTOP = 0x00010000;
+
+            public const uint WS_MINIMIZEBOX = 0x00020000;
+            public const uint WS_MAXIMIZEBOX = 0x00010000;
+
+            public const uint WS_TILED = WS_OVERLAPPED;
+            public const uint WS_ICONIC = WS_MINIMIZE;
+            public const uint WS_SIZEBOX = WS_THICKFRAME;
+            public const uint WS_TILEDWINDOW = WS_OVERLAPPEDWINDOW;
+
+            // Common Window Styles
+
+            public const uint WS_OVERLAPPEDWINDOW =
+                (WS_OVERLAPPED |
+                  WS_CAPTION |
+                  WS_SYSMENU |
+                  WS_THICKFRAME |
+                  WS_MINIMIZEBOX |
+                  WS_MAXIMIZEBOX);
+
+            public const uint WS_POPUPWINDOW =
+                (WS_POPUP |
+                  WS_BORDER |
+                  WS_SYSMENU);
+
+            public const uint WS_CHILDWINDOW = WS_CHILD;
+
+            //Extended Window Styles
+
+            public const uint WS_EX_DLGMODALFRAME = 0x00000001;
+            public const uint WS_EX_NOPARENTNOTIFY = 0x00000004;
+            public const uint WS_EX_TOPMOST = 0x00000008;
+            public const uint WS_EX_ACCEPTFILES = 0x00000010;
+            public const uint WS_EX_TRANSPARENT = 0x00000020;
+
+            //#if(WINVER >= 0x0400)
+            public const uint WS_EX_MDICHILD = 0x00000040;
+            public const uint WS_EX_TOOLWINDOW = 0x00000080;
+            public const uint WS_EX_WINDOWEDGE = 0x00000100;
+            public const uint WS_EX_CLIENTEDGE = 0x00000200;
+            public const uint WS_EX_CONTEXTHELP = 0x00000400;
+
+            public const uint WS_EX_RIGHT = 0x00001000;
+            public const uint WS_EX_LEFT = 0x00000000;
+            public const uint WS_EX_RTLREADING = 0x00002000;
+            public const uint WS_EX_LTRREADING = 0x00000000;
+            public const uint WS_EX_LEFTSCROLLBAR = 0x00004000;
+            public const uint WS_EX_RIGHTSCROLLBAR = 0x00000000;
+
+            public const uint WS_EX_CONTROLPARENT = 0x00010000;
+            public const uint WS_EX_STATICEDGE = 0x00020000;
+            public const uint WS_EX_APPWINDOW = 0x00040000;
+
+            public const uint WS_EX_OVERLAPPEDWINDOW = (WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE);
+            public const uint WS_EX_PALETTEWINDOW = (WS_EX_WINDOWEDGE | WS_EX_TOOLWINDOW | WS_EX_TOPMOST);
+            //#endif /* WINVER >= 0x0400 */
+
+            //#if(_WIN32_WINNT >= 0x0500)
+            public const uint WS_EX_LAYERED = 0x00080000;
+            //#endif /* _WIN32_WINNT >= 0x0500 */
+
+            //#if(WINVER >= 0x0500)
+            public const uint WS_EX_NOINHERITLAYOUT = 0x00100000; // Disable inheritence of mirroring by children
+            public const uint WS_EX_LAYOUTRTL = 0x00400000; // Right to left mirroring
+                                                            //#endif /* WINVER >= 0x0500 */
+
+            //#if(_WIN32_WINNT >= 0x0500)
+            public const uint WS_EX_COMPOSITED = 0x02000000;
+            public const uint WS_EX_NOACTIVATE = 0x08000000;
+            //#endif /* _WIN32_WINNT >= 0x0500 */
+        }
+
         public struct KBDLLHOOKSTRUCT
         {
 #pragma warning disable 649
@@ -971,7 +1442,7 @@ namespace OpenRPA.Interfaces
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         //public static extern void mouse_event(long dwFlags, long dx, long dy, long cButtons, long dwExtraInfo);
         public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
-            public const int MOUSEEVENTF_LEFTDOWN = 0x02;
+        public const int MOUSEEVENTF_LEFTDOWN = 0x02;
         public const int MOUSEEVENTF_LEFTUP = 0x04;
         public const int MOUSEEVENTF_RIGHTDOWN = 0x08;
         public const int MOUSEEVENTF_RIGHTUP = 0x10;
@@ -1215,5 +1686,97 @@ namespace OpenRPA.Interfaces
         TRAYMOUSEMESSAGE = 0x800, //WM_USER + 1024
         APP = 0x8000,
     }
+    public class SafeTokenHandle : Microsoft.Win32.SafeHandles.SafeHandleZeroOrMinusOneIsInvalid
+    {
+        public SafeTokenHandle() : base(true) { }
+        public SafeTokenHandle(IntPtr handle) : base(true)
+        {
+            SetHandle(handle);
+        }
+        protected override bool ReleaseHandle()
+        {
+            return NativeMethods.CloseHandle(handle);
+        }
+    }
+    public class ProcessSecurity : NativeObjectSecurity
+    {
+        public ProcessSecurity(SafeHandle processHandle)
+            : base(false, ResourceType.KernelObject, processHandle, AccessControlSections.Access)
+        {
+
+        }
+
+        public void AddAccessRule(ProcessAccessRule rule)
+        {
+            base.AddAccessRule(rule);
+        }
+
+        // this is not a full impl- it only supports writing DACL changes
+        public void SaveChanges(SafeHandle processHandle)
+        {
+            Persist(processHandle, AccessControlSections.Access);
+        }
+
+        public override Type AccessRightType
+        {
+            get { return typeof(ProcessAccessRights); }
+        }
+
+        public override AccessRule AccessRuleFactory(System.Security.Principal.IdentityReference identityReference, int accessMask, bool isInherited, InheritanceFlags inheritanceFlags, PropagationFlags propagationFlags, AccessControlType type)
+        {
+            return new ProcessAccessRule(identityReference, (ProcessAccessRights)accessMask, isInherited, inheritanceFlags, propagationFlags, type);
+        }
+
+        public override Type AccessRuleType
+        {
+            get { return typeof(ProcessAccessRule); }
+        }
+
+        public override AuditRule AuditRuleFactory(System.Security.Principal.IdentityReference identityReference, int accessMask, bool isInherited, InheritanceFlags inheritanceFlags, PropagationFlags propagationFlags, AuditFlags flags)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Type AuditRuleType
+        {
+            get { throw new NotImplementedException(); }
+        }
+    }
+
+    public class ProcessAccessRule : AccessRule
+    {
+        public ProcessAccessRule(System.Security.Principal.IdentityReference identityReference, ProcessAccessRights accessMask, bool isInherited, InheritanceFlags inheritanceFlags, PropagationFlags propagationFlags, AccessControlType type)
+            : base(identityReference, (int)accessMask, isInherited, inheritanceFlags, propagationFlags, type)
+        {
+        }
+
+        public ProcessAccessRights ProcessAccessRights { get { return (ProcessAccessRights)AccessMask; } }
+    }
+
+    [Flags]
+    public enum ProcessAccessRights
+    {
+        STANDARD_RIGHTS_REQUIRED = (0x000F0000),
+        DELETE = (0x00010000), // Required to delete the object. 
+        READ_CONTROL = (0x00020000), // Required to read information in the security descriptor for the object, not including the information in the SACL. To read or write the SACL, you must request the ACCESS_SYSTEM_SECURITY access right. For more information, see SACL Access Right. 
+        WRITE_DAC = (0x00040000), // Required to modify the DACL in the security descriptor for the object. 
+        WRITE_OWNER = (0x00080000), // Required to change the owner in the security descriptor for the object. 
+
+        PROCESS_ALL_ACCESS = STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | 0xFFF, //All possible access rights for a process object.
+        PROCESS_CREATE_PROCESS = (0x0080), // Required to create a process. 
+        PROCESS_CREATE_THREAD = (0x0002), // Required to create a thread. 
+        PROCESS_DUP_HANDLE = (0x0040), // Required to duplicate a handle using DuplicateHandle. 
+        PROCESS_QUERY_INFORMATION = (0x0400), // Required to retrieve certain information about a process, such as its token, exit code, and priority class (see OpenProcessToken, GetExitCodeProcess, GetPriorityClass, and IsProcessInJob). 
+        PROCESS_QUERY_LIMITED_INFORMATION = (0x1000),
+        PROCESS_SET_INFORMATION = (0x0200), // Required to set certain information about a process, such as its priority class (see SetPriorityClass). 
+        PROCESS_SET_QUOTA = (0x0100), // Required to set memory limits using SetProcessWorkingSetSize. 
+        PROCESS_SUSPEND_RESUME = (0x0800), // Required to suspend or resume a process. 
+        PROCESS_TERMINATE = (0x0001), // Required to terminate a process using TerminateProcess. 
+        PROCESS_VM_OPERATION = (0x0008), // Required to perform an operation on the address space of a process (see VirtualProtectEx and WriteProcessMemory). 
+        PROCESS_VM_READ = (0x0010), // Required to read memory in a process using ReadProcessMemory. 
+        PROCESS_VM_WRITE = (0x0020), // Required to write to memory in a process using WriteProcessMemory. 
+        SYNCHRONIZE = (0x00100000), // Required to wait for the process to terminate using the wait functions. 
+    }
+
 
 }

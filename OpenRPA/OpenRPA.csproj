@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net462</TargetFramework>
     <ApplicationIcon>Resources\open_rpa.ico</ApplicationIcon>
@@ -9,8 +10,27 @@
     <Description>Base UI of OpenRPA</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.59</Version>
-    <PackageReleaseNotes>1.0.59 Make enable_cache default true
+    <Version>1.0.78</Version>
+    <PackageReleaseNotes>1.0.78 Add AsDateTable() to UIElement
+1.0.77 Add MoveMouse activity
+1.0.76 Swap login screen from IE to chrome
+1.0.75 filter workflows on user permissions in InvokeRemoteOpenRPA
+1.0.74 Improve startup time of rdservice, add version info to login message
+1.0.73 Promp for saving unsaved workflow on close
+1.0.72 Detect when other users have updated a workflow
+1.0.71 Add German translations, ( thank you Marcus von Goerne )
+1.0.70 Add support for custom iterator variable
+1.0.69 Fix reload issue in new projects
+1.0.68 Improvements
+1.0.67 Fix Memory leak in auto reload
+1.0.66 Fix reconnect for RD Service, Add auto refresh
+1.0.65 Fix issue with "traverse back" recorder options when running with Japanese language
+1.0.64 Bug fixes for windows selector, improve speed (and fix a bug) when running pending workflow
+1.0.63 Add support for moving and resizing windows, add Portuguese Brazil
+1.0.62 Improve intellisense, add translation dlls in installer
+1.0.61 Finish implementing intellisense, add preloading of intellisense
+1.0.60 Begin implementing intellisense for C# and VB
+1.0.59 Make enable_cache default true
 1.0.58 Improve UI and speed
 1.0.57 Fast fix, to speed up wpf finding
 1.0.56 Add langauges and bug fixes
@@ -76,6 +96,7 @@
     <None Include="$(OutputPath)\OpenRPA.exe.config" Pack="true" PackagePath="build" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CefSharp.Wpf" Version="75.1.143" />
     <PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
@@ -96,6 +117,7 @@
     <None Remove="Activities\InvokeOpenFlowDesigner.xaml" />
     <None Remove="Activities\InvokeOpenRPADesigner.xaml" />
     <None Remove="Activities\InvokeRemoteOpenRPADesigner.xaml" />
+    <None Remove="Activities\MoveMouseDesigner.xaml" />
     <None Remove="Activities\OpenApplicationDesigner.xaml" />
     <None Remove="Activities\TypeTextDesigner.xaml" />
     <None Remove="App.xaml" />
@@ -184,6 +206,7 @@
     <None Remove="Resources\designer\killapp.png" />
     <None Remove="Resources\designer\log.png" />
     <None Remove="Resources\designer\messagebox.png" />
+    <None Remove="Resources\designer\mouse.png" />
     <None Remove="Resources\designer\openurl.png" />
     <None Remove="Resources\designer\prompt.png" />
     <None Remove="Resources\designer\readexcel.png" />
@@ -195,6 +218,12 @@
     <None Remove="Resources\designer\webscraping.png" />
     <None Remove="Resources\designer\writeexcel.png" />
     <None Remove="Resources\designer\writefile.png" />
+    <None Remove="Resources\icons\activity.png" />
+    <None Remove="Resources\icons\activity.svg" />
+    <None Remove="Resources\icons\flowchart.png" />
+    <None Remove="Resources\icons\openin.png" />
+    <None Remove="Resources\icons\property.png" />
+    <None Remove="Resources\icons\variable.png" />
     <None Remove="Resources\open.png" />
     <None Remove="Resources\open_flow.ico" />
     <None Remove="Resources\open_flow_org.ico" />
@@ -275,6 +304,7 @@
     <None Remove="Resources\toolbox\killapp.png" />
     <None Remove="Resources\toolbox\log.png" />
     <None Remove="Resources\toolbox\messagebox.png" />
+    <None Remove="Resources\toolbox\mouse.png" />
     <None Remove="Resources\toolbox\openurl.png" />
     <None Remove="Resources\toolbox\prompt.png" />
     <None Remove="Resources\toolbox\readexcel.png" />
@@ -305,6 +335,9 @@
     <None Remove="Views\wfToolbox.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\MoveMouseDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\ClickElementDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -379,6 +412,13 @@
     <Resource Include="Resources\Buttons\Zeniverse_ikon.png" />
     <Resource Include="Resources\Buttons\zeniverse_ikon_84Z_icon.ico" />
     <Resource Include="Resources\close.png" />
+    <Resource Include="Resources\designer\mouse.png" />
+    <Resource Include="Resources\icons\activity.png" />
+    <Resource Include="Resources\icons\activity.svg" />
+    <Resource Include="Resources\icons\flowchart.png" />
+    <Resource Include="Resources\icons\openin.png" />
+    <Resource Include="Resources\icons\property.png" />
+    <Resource Include="Resources\icons\variable.png" />
     <Resource Include="Resources\open.png" />
     <Resource Include="Resources\open_flow.ico" />
     <Resource Include="Resources\open_flow_org.ico" />
@@ -473,9 +513,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenRPA.ExpressionEditor\OpenRPA.ExpressionEditor.csproj">
-      <IncludeAssets>all</IncludeAssets>
-    </ProjectReference>
+    <ProjectReference Include="..\OpenRPA.CodeEditor\OpenRPA.CodeEditor.csproj" />
     <ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj">
       <IncludeAssets>all</IncludeAssets>
     </ProjectReference>
@@ -619,6 +657,7 @@
     <Resource Include="Resources\state\Running.png" />
     <Resource Include="Resources\state\Running_green.png" />
     <Resource Include="Resources\state\unloaded.png" />
+    <EmbeddedResource Include="Resources\toolbox\mouse.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources\strings.Designer.cs">
@@ -631,6 +670,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Update="Resources\strings.es.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\strings.da.resx">
       <Generator></Generator>
     </EmbeddedResource>

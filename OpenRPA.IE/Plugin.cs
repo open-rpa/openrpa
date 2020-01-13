@@ -172,14 +172,14 @@ namespace OpenRPA.IE
             var result = IESelector.GetElementsWithuiSelector(ieselector, fromElement, maxresults);
             return result;
         }
-        public void LaunchBySelector(Selector selector, TimeSpan timeout)
+        public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)
         {
-            if (selector == null || selector.Count == 0) return;
+            if (selector == null || selector.Count == 0) return null;
             var f = selector.First();
             var p = f.Properties.Where(x => x.Name == "url").FirstOrDefault();
-            if (p == null) return;
+            if (p == null) return null;
             var url = p.Value;
-            if (string.IsNullOrEmpty(url)) return;
+            if (string.IsNullOrEmpty(url)) return null;
             GenericTools.RunUI(() =>
             {
                 var browser = Browser.GetBrowser(url);
@@ -194,6 +194,31 @@ namespace OpenRPA.IE
                     Thread.Sleep(100);
                 }
             });
+
+            var wbs = new SHDocVw.ShellWindows().Cast<SHDocVw.WebBrowser>().ToList();
+            foreach (var w in wbs)
+            {
+                try
+                {
+                    var doc = (w.Document as MSHTML.HTMLDocument);
+                    if (doc != null)
+                    {
+                        var wBrowser = w as SHDocVw.WebBrowser;
+                        var automation = Interfaces.AutomationUtil.getAutomation();
+                        var _ele = automation.FromHandle(new IntPtr(wBrowser.HWND));
+                        if(_ele != null)
+                        {
+                            var ui = new UIElement(_ele);
+                            var window = ui.GetWindow();
+                            if (window != null) return new UIElement(window);
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return null;
         }
         public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)
         {

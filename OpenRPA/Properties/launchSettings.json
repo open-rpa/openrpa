@@ -6,8 +6,8 @@
     },
     "ttttt": {
       "commandName": "Executable",
-      "executablePath": "C:\\Users\\Allan\\Downloads\\OpenRPA (3)\\OpenRPA.exe",
-      "workingDirectory": "C:\\Users\\Allan\\Downloads\\OpenRPA (3)"
+      "executablePath": "C:\\Program Files\\OpenRPA\\OpenRPA.exe",
+      "workingDirectory": "C:\\Program Files\\OpenRPA"
     }
   }
 }

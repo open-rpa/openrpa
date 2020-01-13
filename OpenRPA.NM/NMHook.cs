@@ -91,7 +91,7 @@ namespace OpenRPA.NM
                         var tab = tabs.Where(x => x.id == msg.tab.id && x.browser == msg.browser).FirstOrDefault();
                         if (tab != null) tabs.Remove(tab);
                         msg.tab.browser = msg.browser;
-                        Log.Debug(msg.browser + " " + msg.functionName + " " + msg.tab.id + " " + msg.tab.status);
+                        Log.Verbose(msg.browser + " " + msg.functionName + " " + msg.tab.id + " " + msg.tab.status);
                         tabs.Add(msg.tab);
                     }
                     if (msg.functionName == "tabremoved" || msg.functionName == "tabupdated")
@@ -102,11 +102,11 @@ namespace OpenRPA.NM
                         {
                             msg.tab.browser = msg.browser;
                             tabs.Add(msg.tab);
-                            Log.Debug(msg.browser + " " + msg.functionName + " " + msg.tab.id + " " + msg.tab.status);
+                            Log.Verbose(msg.browser + " " + msg.functionName + " " + msg.tab.id + " " + msg.tab.status);
                         }
                         else
                         {
-                            Log.Debug(msg.browser + " " + msg.functionName + " " + msg.tab.id);
+                            Log.Verbose(msg.browser + " " + msg.functionName + " " + msg.tab.id);
                         }
 
                     }

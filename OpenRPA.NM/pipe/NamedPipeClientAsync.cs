@@ -14,7 +14,6 @@ namespace OpenRPA.NM.pipe
         public NamedPipeClientAsync(string pipeName) : base(pipeName)
         {
         }
-
         async public Task<T> MessageAsync(T message, bool throwError)
         {
             T result = default(T);
@@ -35,6 +34,5 @@ namespace OpenRPA.NM.pipe
             if (!string.IsNullOrEmpty(result.error) && throwError) throw new NamedPipeException(result.error);
             return result;
         }
-
     }
 }

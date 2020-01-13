@@ -55,99 +55,42 @@ namespace OpenRPA.RDService
                 }
             }
         }
+        private static string logpath = "";
+        private static void log(string message)
+        {
+            DateTime dt = DateTime.Now;
+            var _msg = string.Format(@"[{0:HH\:mm\:ss\.fff}] {1}", dt, message);
+            System.IO.File.AppendAllText(System.IO.Path.Combine(logpath, "log_rdservice.txt"), _msg + Environment.NewLine);
+        }
+        private static string[] args;
         static void Main(string[] args)
         {
-            var asm = System.Reflection.Assembly.GetEntryAssembly();
-            var filepath = asm.CodeBase.Replace("file:///", "");
-            var path = System.IO.Path.GetDirectoryName(filepath);
-            Interfaces.Extensions.ProjectsDirectory = path;
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             try
             {
-                if(PluginConfig.usefreerdp)
-                {
-                    using(var rdp = new FreeRDP.Core.RDP())
-                    {
+                Program.args = args;
+                var asm = System.Reflection.Assembly.GetEntryAssembly();
+                var filepath = asm.CodeBase.Replace("file:///", "");
+                logpath = System.IO.Path.GetDirectoryName(filepath);
 
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Failed initilizing FreeRDP, is Visual C++ Runtime installed ?");
-                // Console.WriteLine("https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads");
-                Console.WriteLine("https://www.microsoft.com/en-us/download/details.aspx?id=40784");
-                return;
-            }
-            var parentProcess = NativeMethods.GetParentProcessId();
-            isService = (parentProcess.ProcessName.ToLower() == "services");
-            if (args.Length == 0)
-            {
-                System.Threading.Thread.Sleep(1000 * StartupWaitSeconds);
-                if (!manager.IsServiceInstalled)
+                log("GetParentProcessId");
+                var parentProcess = NativeMethods.GetParentProcessId();
+                log("Check parentProcess");
+                isService = (parentProcess.ProcessName.ToLower() == "services");
+                Console.WriteLine("****** isService: " + isService);
+                if (isService)
                 {
-                    //Console.Write("Username (" + NativeMethods.GetProcessUserName() + "): ");
-                    //var username = Console.ReadLine();
-                    //if (string.IsNullOrEmpty(username)) username = NativeMethods.GetProcessUserName();
-                    //Console.Write("Password: ");
-                    //string pass = "";
-                    //do
-                    //{
-                    //    ConsoleKeyInfo key = Console.ReadKey(true);
-                    //    if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
-                    //    {
-                    //        pass += key.KeyChar;
-                    //        Console.Write("*");
-                    //    }
-                    //    else
-                    //    {
-                    //        if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
-                    //        {
-                    //            pass = pass.Substring(0, (pass.Length - 1));
-                    //            Console.Write("\b \b");
-                    //        }
-                    //        else if (key.Key == ConsoleKey.Enter)
-                    //        {
-                    //            break;
-                    //        }
-                    //    }
-                    //} while (true);
-                    //manager.InstallService(typeof(Program), new string[] { "username=" + username, "password=" + pass });
-                    manager.InstallService(typeof(Program), new string[] {  });
+                    log("ServiceBase.Run");
+                    System.ServiceProcess.ServiceBase.Run(new MyServiceBase(ServiceName, DoWork));
+                }
+                else
+                {
+                    log("DoWork");
+                    DoWork();
                 }
             }
-            tracing = new Tracing(Console.Out);
-            System.Diagnostics.Trace.Listeners.Add(tracing);
-            Console.SetOut(new ConsoleDecorator(Console.Out));
-            Console.SetError(new ConsoleDecorator(Console.Out, true));
-            if (args.Length > 0)
+            catch (Exception ex)
             {
-                if (args[0].ToLower() == "auth" || args[0].ToLower() == "reauth")
-                {
-                    if (Config.local.jwt != null && Config.local.jwt.Length > 0)
-                    {
-                        Log.Information("Saving temporart jwt token, from local settings.json");
-                        PluginConfig.tempjwt = new System.Net.NetworkCredential(string.Empty, Config.local.UnprotectString(Config.local.jwt)).Password;
-                        Config.Save();
-                    }
-                    return;
-                }
-                else if (args[0].ToLower() == "uninstall" || args[0].ToLower() == "u")
-                {
-                    if (manager.IsServiceInstalled)
-                    {
-                        manager.UninstallService(typeof(Program));
-                    }
-                    return;
-                }
-            }
-            if (isService)
-            {
-                System.ServiceProcess.ServiceBase.Run(new MyServiceBase(ServiceName, DoWork));
-            } 
-            else
-            {
-                DoWork();
+                Log.Error(ex.ToString());
             }
         }
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs args)
@@ -161,9 +104,26 @@ namespace OpenRPA.RDService
         {
             Log.Debug("WebSocketClient_OnQueueMessage");
         }
-        private static void WebSocketClient_OnClose(string obj)
+        private static bool autoReconnect = true;
+        private async static void WebSocketClient_OnClose(string reason)
         {
-            Log.Information("WebSocketClient_OnClose: " + obj);
+            Log.Information("Disconnected " + reason);
+            await Task.Delay(1000);
+            if (autoReconnect)
+            {
+                autoReconnect = false;
+                global.webSocketClient.OnOpen -= WebSocketClient_OnOpen;
+                global.webSocketClient.OnClose -= WebSocketClient_OnClose;
+                global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
+                global.webSocketClient = null;
+
+                global.webSocketClient = new WebSocketClient(PluginConfig.wsurl);
+                global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
+                global.webSocketClient.OnClose += WebSocketClient_OnClose;
+                global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
+                await global.webSocketClient.Connect();
+                autoReconnect = true;
+            }
         }
         public static byte[] Base64Decode(string base64EncodedData)
         {
@@ -189,7 +149,7 @@ namespace OpenRPA.RDService
                             {
                                 PluginConfig.jwt = Base64Encode(PluginConfig.ProtectString(PluginConfig.tempjwt));
                                 PluginConfig.tempjwt = null;
-                                Config.Save();
+                                PluginConfig.Save();
                             }
                             Log.Information("Signed in as " + user.username);
                         }
@@ -217,23 +177,26 @@ namespace OpenRPA.RDService
                 if (servers.Length == 0)
                 {
                     Log.Information("Adding new unattendedserver for " + computerfqdn);
-                    server = new unattendedserver() { computername = computername, computerfqdn = computerfqdn, name = computerfqdn };
+                    server = new unattendedserver() { computername = computername, computerfqdn = computerfqdn, name = computerfqdn, enabled = true };
                     server = await global.webSocketClient.InsertOne("openrpa", 1, false, server);
                 }
                 //var clients = await global.webSocketClient.Query<unattendedclient>("openrpa", "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
                 //foreach (var c in clients) sessions.Add(new RobotUserSession(c));
                 // Log.Information("Loaded " + sessions.Count + " sessions");
                 // Create listener for robots to connect too
-                PipeSecurity ps = new PipeSecurity();
-                ps.AddAccessRule(new PipeAccessRule("Users", PipeAccessRights.ReadWrite | PipeAccessRights.CreateNewInstance, System.Security.AccessControl.AccessControlType.Allow));
-                ps.AddAccessRule(new PipeAccessRule("CREATOR OWNER", PipeAccessRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
-                ps.AddAccessRule(new PipeAccessRule("SYSTEM", PipeAccessRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
-                pipe = new OpenRPA.NamedPipeWrapper.NamedPipeServer<RPAMessage>("openrpa_service", ps);
-                pipe.ClientConnected += Pipe_ClientConnected;
-                pipe.ClientMessage += Pipe_ClientMessage;
-                pipe.Start();
+                if(pipe==null)
+                {
+                    PipeSecurity ps = new PipeSecurity();
+                    ps.AddAccessRule(new PipeAccessRule("Users", PipeAccessRights.ReadWrite | PipeAccessRights.CreateNewInstance, System.Security.AccessControl.AccessControlType.Allow));
+                    ps.AddAccessRule(new PipeAccessRule("CREATOR OWNER", PipeAccessRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
+                    ps.AddAccessRule(new PipeAccessRule("SYSTEM", PipeAccessRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
+                    pipe = new OpenRPA.NamedPipeWrapper.NamedPipeServer<RPAMessage>("openrpa_service", ps);
+                    pipe.ClientConnected += Pipe_ClientConnected;
+                    pipe.ClientMessage += Pipe_ClientMessage;
+                    pipe.Start();
+                }
 
-                if(reloadTimer==null)
+                if (reloadTimer==null)
                 {
                     reloadTimer = new System.Timers.Timer(PluginConfig.reloadinterval.TotalMilliseconds);
                     reloadTimer.Elapsed += async (o,e) =>
@@ -257,6 +220,7 @@ namespace OpenRPA.RDService
                 Log.Error(ex.ToString());
             }
         }
+        private static bool disabledmessageshown = false;
         private static async Task ReloadConfig()
         {
             try
@@ -270,7 +234,12 @@ namespace OpenRPA.RDService
                 unattendedclient[] clients = new unattendedclient[] { };
                 if(server != null && server.enabled)
                 {
+                    disabledmessageshown = false;
                     clients = await global.webSocketClient.Query<unattendedclient>("openrpa", "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
+                } else if (disabledmessageshown == false)
+                {
+                    Log.Information("No server for " + computerfqdn + " found, or server is disabled");
+                    disabledmessageshown = true;
                 }
                 var sessioncount = sessions.Count();
                 foreach (var c in clients)
@@ -286,7 +255,7 @@ namespace OpenRPA.RDService
                     }
                     else
                     {
-                        if (c._modified != session.client._modified)
+                        if (c._modified != session.client._modified || c._version != session.client._version)
                         {
                             Log.Information("Removing:1 session for " + session.client.windowsusername);
                             if (c.enabled)
@@ -376,27 +345,150 @@ namespace OpenRPA.RDService
         private static ServiceManager manager = new ServiceManager(ServiceName);
         private static void DoWork()
         {
-            Task.Run(() => {
-                global.webSocketClient = new WebSocketClient(Config.local.wsurl);
-                global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
-                global.webSocketClient.OnClose += WebSocketClient_OnClose;
-                global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
-                _ = global.webSocketClient.Connect();
-            });
-            // NativeMethods.AllocConsole();
-            // if (System.Diagnostics.Debugger.IsAttached && !isService)
-            if (!isService)
+            try
             {
-                Log.Information("******************************");
-                Log.Information("* Done                       *");
-                Log.Information("******************************");
-                Console.ReadLine();
-            } else
-            {
-                while (MyServiceBase.isRunning)
+
+                log("BEGIN::Set ProjectsDirectory");
+                // Don't mess with ProjectsDirectory if we need to reauth
+                if (args.Length == 0) Log.ResetLogPath(logpath);
+
+                log("Set UnhandledException");
+                AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+                System.Threading.Thread.Sleep(1000 * StartupWaitSeconds);
+                if (args.Length != 0)
                 {
-                    System.Threading.Thread.Sleep(100);
+                    try
+                    {
+                        log("Get usefreerdp");
+                        if (PluginConfig.usefreerdp)
+                        {
+                            log("Init Freerdp");
+                            using (var rdp = new FreeRDP.Core.RDP())
+                            {
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Failed initilizing FreeRDP, is Visual C++ Runtime installed ?");
+                        // Console.WriteLine("https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads");
+                        Console.WriteLine("https://www.microsoft.com/en-us/download/details.aspx?id=40784");
+                        return;
+                    }
                 }
+                if (args.Length == 0)
+                {
+                    log("Check IsServiceInstalled");
+                    // System.Threading.Thread.Sleep(1000 * StartupWaitSeconds);
+                    if (!manager.IsServiceInstalled)
+                    {
+                        //Console.Write("Username (" + NativeMethods.GetProcessUserName() + "): ");
+                        //var username = Console.ReadLine();
+                        //if (string.IsNullOrEmpty(username)) username = NativeMethods.GetProcessUserName();
+                        //Console.Write("Password: ");
+                        //string pass = "";
+                        //do
+                        //{
+                        //    ConsoleKeyInfo key = Console.ReadKey(true);
+                        //    if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
+                        //    {
+                        //        pass += key.KeyChar;
+                        //        Console.Write("*");
+                        //    }
+                        //    else
+                        //    {
+                        //        if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
+                        //        {
+                        //            pass = pass.Substring(0, (pass.Length - 1));
+                        //            Console.Write("\b \b");
+                        //        }
+                        //        else if (key.Key == ConsoleKey.Enter)
+                        //        {
+                        //            break;
+                        //        }
+                        //    }
+                        //} while (true);
+                        //manager.InstallService(typeof(Program), new string[] { "username=" + username, "password=" + pass });
+                        log("InstallService");
+                        manager.InstallService(typeof(Program), new string[] { });
+                    }
+                }
+                if (args.Length > 0)
+                {
+                    if (args[0].ToLower() == "auth" || args[0].ToLower() == "reauth")
+                    {
+                        if (Config.local.jwt != null && Config.local.jwt.Length > 0)
+                        {
+                            Log.Information("Saving temporart jwt token, from local settings.json");
+                            PluginConfig.tempjwt = new System.Net.NetworkCredential(string.Empty, Config.local.UnprotectString(Config.local.jwt)).Password;
+                            PluginConfig.wsurl = Config.local.wsurl;
+                            PluginConfig.Save();
+                        }
+                        return;
+                    }
+                    else if (args[0].ToLower() == "uninstall" || args[0].ToLower() == "u")
+                    {
+                        if (manager.IsServiceInstalled)
+                        {
+                            manager.UninstallService(typeof(Program));
+                        }
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("unknown command " + args[0]);
+                        Console.WriteLine("try uninstall or reauth ");
+                    }
+                    return;
+                }
+
+
+                log("Create Tracing");
+                tracing = new Tracing(Console.Out);
+                log("Add Tracing");
+                System.Diagnostics.Trace.Listeners.Add(tracing);
+                log("Override SetOut");
+                Console.SetOut(new ConsoleDecorator(Console.Out));
+                log("Override SetError");
+                Console.SetError(new ConsoleDecorator(Console.Out, true));
+                log("ResetLogPath");
+                Log.ResetLogPath(logpath);
+                Console.WriteLine("****** BEGIN");
+                
+                Task.Run(async () => {
+                    try
+                    {
+                        global.webSocketClient = new WebSocketClient(PluginConfig.wsurl);
+                        global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
+                        global.webSocketClient.OnClose += WebSocketClient_OnClose;
+                        global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
+                        await global.webSocketClient.Connect();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                });
+                // NativeMethods.AllocConsole();
+                // if (System.Diagnostics.Debugger.IsAttached && !isService)
+                if (!isService)
+                {
+                    Log.Information("******************************");
+                    Log.Information("* Done                       *");
+                    Log.Information("******************************");
+                    Console.ReadLine();
+                }
+                else
+                {
+                    while (MyServiceBase.isRunning)
+                    {
+                        System.Threading.Thread.Sleep(100);
+                    }
+                }
+            }
+            catch (Exception ex) 
+            {
+                Log.Error(ex.ToString());
             }
         }
     }

@@ -54,31 +54,43 @@ namespace OpenRPA.Windows
             pathToRoot.Reverse();
             if (anchor != null)
             {
-                //var anchorlist = anchor.Where(x => x.Enabled && x.Selector == null).ToList();
-                //for (var i = 0; i < anchorlist.Count(); i++)
-                //{
-                //    if(WindowsSelectorItem.Match(anchorlist[i], pathToRoot[0]))
-                //    //if (((WindowsSelectorItem)anchorlist[i]).Match(pathToRoot[0]))
-                //    {
-                //        pathToRoot.Remove(pathToRoot[0]);
-                //    }
-                //    else
-                //    {
-                //        Log.Selector("Element does not match the anchor path");
-                //        return;
-                //    }
-                //}
-                var a = anchor.Last();
-                var idx = -1;
-                for (var i = 0; i < pathToRoot.Count(); i++)
+                bool SearchDescendants = false;
+                var p = anchor.First().Properties.Where(x => x.Name == "SearchDescendants").FirstOrDefault();
+                if (p.Value != null && p.Value == "true") SearchDescendants = true;
+                if(SearchDescendants)
                 {
-                    if (WindowsSelectorItem.Match(a, pathToRoot[i]))
+                    var a = anchor.Last();
+                    var idx = -1;
+                    for (var i = 0; i < pathToRoot.Count(); i++)
                     {
-                        idx = i;
-                        break;
+                        if (WindowsSelectorItem.Match(a, pathToRoot[i]))
+                        {
+                            idx = i;
+                            // break;
+                        }
                     }
+                    pathToRoot.RemoveRange(0, idx);
+
                 }
-                pathToRoot.RemoveRange(0, idx);
+                else
+                {
+                    var anchorlist = anchor.Where(x => x.Enabled && x.Selector == null).ToList();
+                    for (var i = 0; i < anchorlist.Count(); i++)
+                    {
+                        if (WindowsSelectorItem.Match(anchorlist[i], pathToRoot[0]))
+                        //if (((WindowsSelectorItem)anchorlist[i]).Match(pathToRoot[0]))
+                        {
+                            pathToRoot.Remove(pathToRoot[0]);
+                        }
+                        else
+                        {
+                            Log.Selector("Element does not match the anchor path");
+                            return;
+                        }
+                    }
+
+                }
+
             }
             WindowsSelectorItem item;
 
@@ -94,7 +106,7 @@ namespace OpenRPA.Windows
                     bool isDesktop = true;
                     AutomationElement parent = null;
                     if (anchor != null) { parent = temppathToRoot[0].Parent; isDesktop = false; }
-                    else { automation.GetDesktop(); }
+                    else { parent = automation.GetDesktop(); }
                     int count = temppathToRoot.Count;
                     while (temppathToRoot.Count > 0)
                     {
@@ -102,28 +114,31 @@ namespace OpenRPA.Windows
                         var i = temppathToRoot.First();
                         temppathToRoot.Remove(i);
                         item = new WindowsSelectorItem(i, false);
-                        var m = item.matches(root, count, parent, 2, isDesktop, false);
-                        if (m.Length > 0)
+                        if(parent!=null)
                         {
-                            newpathToRoot.Add(i);
-                            parent = i;
-                            isDesktop = false;
-                        }
-                        if (m.Length == 0 && Config.local.log_selector)
-                        {
-                            //var message = "needed to find " + Environment.NewLine + item.ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
-                            //var children = parent.FindAllChildren();
-                            //foreach (var c in children)
-                            //{
-                            //    try
-                            //    {
-                            //        message += new UIElement(c).ToString() + Environment.NewLine;
-                            //    }
-                            //    catch (Exception)
-                            //    {
-                            //    }
-                            //}
-                            //Log.Debug(message);
+                            var m = item.matches(root, count, parent, 2, isDesktop, false);
+                            if (m.Length > 0)
+                            {
+                                newpathToRoot.Add(i);
+                                parent = i;
+                                isDesktop = false;
+                            }
+                            if (m.Length == 0 && Config.local.log_selector)
+                            {
+                                //var message = "needed to find " + Environment.NewLine + item.ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
+                                //var children = parent.FindAllChildren();
+                                //foreach (var c in children)
+                                //{
+                                //    try
+                                //    {
+                                //        message += new UIElement(c).ToString() + Environment.NewLine;
+                                //    }
+                                //    catch (Exception)
+                                //    {
+                                //    }
+                                //}
+                                //Log.Debug(message);
+                            }
                         }
                     }
                 }
@@ -286,13 +301,13 @@ namespace OpenRPA.Windows
         }
         public static UIElement[] GetElementsWithuiSelector(WindowsSelector selector, IElement fromElement = null, int maxresults = 1)
         {
-            TimeSpan timeout = TimeSpan.FromMilliseconds(1000);
+            TimeSpan timeout = TimeSpan.FromMilliseconds(5000);
             timeout = TimeSpan.FromMilliseconds(20000);
-            var midcounter = 1;
-            if (PluginConfig.allow_multiple_hits_mid_selector)
-            {
-                midcounter = 10;
-            }
+            //var midcounter = 1;
+            //if (PluginConfig.allow_multiple_hits_mid_selector)
+            //{
+            //    midcounter = 10;
+            //}
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
             Log.Selector(string.Format("GetElementsWithuiSelector::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
@@ -328,13 +343,14 @@ namespace OpenRPA.Windows
                     var elements = new List<UIElement>();
                     elements.AddRange(current);
                     current.Clear();
+                    int count = 0;
                     foreach (var _element in elements)
                     {
-                        var count = maxresults;
+                        count = maxresults;
                         //if (i == 0) count = midcounter;
                         //// if (i < selectors.Count) count = 500;
                         //if ((i + 1) < selectors.Count) count = 1;
-                        if (i < selectors.Count) count = 500;
+                        if (i < (selectors.Count-1)) count = 500;
                         var matches = (s).matches(startfrom, i, _element.RawElement, count, isDesktop, search_descendants); // (i == 0 ? 1: maxresults)
                         var uimatches = new List<UIElement>();
                         foreach (var m in matches)
@@ -349,225 +365,47 @@ namespace OpenRPA.Windows
                             return new UIElement[] { };
                         }
                     }
-                    if (current.Count > 1)
-                    {
-                        //if (i < selectors.Count && maxresults == 1)
-                        //{
-                        //    Log.Warning("Selector had " + current.Count + " hits and not just one, at element " + i + " this selector will be slow!");
-                        //}
-                    }
                     if (i == (selectors.Count - 1)) result = current.ToArray();
-                    isDesktop = false;
                     Log.Selector(string.Format("Found " + current.Count + " hits for selector # " + i + " {0:mm\\:ss\\.fff}", sw.Elapsed));
+                    if(i > 0 && elements.Count > 0 && current.Count == 0)
+                    {
+                        //var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
+                        //var children = elements[0].RawElement.FindAllChildren();
+                        //foreach (var c in children)
+                        //{
+                        //    try
+                        //    {
+                        //        message += new UIElement(c).ToString() + Environment.NewLine;
+                        //    }
+                        //    catch (Exception)
+                        //    {
+                        //    }
+                        //}
+                        //Log.Selector(message);
+                    }
+                    if (i==0 && isDesktop && current.Count > 0)
+                    {
+                        if (current[0].RawElement.Patterns.Window.TryGetPattern(out var winPattern))
+                        {
+                            if (winPattern.WindowVisualState.Value == FlaUI.Core.Definitions.WindowVisualState.Minimized)
+                            {
+                                IntPtr handle = current[0].RawElement.Properties.NativeWindowHandle.Value;
+                                winPattern.SetWindowVisualState(FlaUI.Core.Definitions.WindowVisualState.Normal);
+                            }
+                        }
+                    }
+                    isDesktop = false;
                 }
-
             }
             if (result == null)
             {
                 Log.Selector(string.Format("GetElementsWithuiSelector::ended with 0 results after {0:mm\\:ss\\.fff}", sw.Elapsed));
                 return new UIElement[] { };
             }
+            if (result.Count() > maxresults) result = result.Take(maxresults).ToArray();
             Log.Selector(string.Format("GetElementsWithuiSelector::ended with " + result.Length + " results after {0:mm\\:ss\\.fff}", sw.Elapsed));
             return result;
         }
 
-        //public static UIElement[] GetElementsWithuiSelector_old(WindowsSelector selector, IElement fromElement = null, int maxresults = 1)
-        //{
-        //    var midcounter = 1;
-        //    if(PluginConfig.allow_multiple_hits_mid_selector)
-        //    {
-        //        midcounter = 10;
-        //    }
-        //    var sw = new System.Diagnostics.Stopwatch();
-        //    sw.Start();
-        //    Log.Selector(string.Format("GetElementsWithuiSelector::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
-
-        //    UIElement _fromElement = fromElement as UIElement;
-        //    var selectors = selector.Where(x => x.Enabled == true && x.Selector == null).ToList();
-
-        //    var current = new List<UIElement>();
-        //    var automation = AutomationUtil.getAutomation();
-
-        //    // var search_descendants = PluginConfig.search_descendants;
-        //    var search_descendants = false;
-        //    var p = selector[0].Properties.Where(x=> x.Name == "SearchDescendants").FirstOrDefault();
-        //    if(p!=null) search_descendants = bool.Parse(p.Value);
-
-
-        //    UIElement[] result = null;
-        //    using (automation)
-        //    {
-        //        var _treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
-        //        AutomationElement startfrom = null;
-        //        if (_fromElement != null) startfrom = _fromElement.RawElement;
-        //        Log.SelectorVerbose("automation.GetDesktop");
-        //        bool isDesktop = false;
-        //        if (startfrom == null)
-        //        {
-        //            startfrom = automation.GetDesktop();
-        //            isDesktop = true;
-        //        }
-        //        current.Add(new UIElement(startfrom));
-
-        //        for (var i = 0; i < selectors.Count; i++)
-        //        {
-        //            var s = new WindowsSelectorItem(selectors[i]);
-        //            var elements = new List<UIElement>();
-        //            elements.AddRange(current);
-        //            current.Clear();
-        //            int failcounter = 0;
-        //            do
-        //            {
-        //                foreach (var _element in elements)
-        //                {
-        //                    var count = maxresults;
-        //                    if (i == 0) count = midcounter;
-        //                    // if (i < selectors.Count) count = 500;
-        //                    if ((i+1) < selectors.Count) count = 1;
-        //                    var matches = ((WindowsSelectorItem)s).matches(automation, _element.RawElement, _treeWalker, count, isDesktop, TimeSpan.FromSeconds(250), search_descendants); // (i == 0 ? 1: maxresults)
-        //                    var uimatches = new List<UIElement>();
-        //                    foreach (var m in matches)
-        //                    {
-        //                        var ui = new UIElement(m);
-        //                        var list = selectors.Take(i).ToList();
-        //                        list.Add(new WindowsSelectorItem(m, false));
-        //                        uimatches.Add(ui);
-        //                    }
-        //                    current.AddRange(uimatches.ToArray());
-        //                }
-        //                if (current.Count > 1)
-        //                {
-        //                    if(i < selectors.Count && maxresults == 1)
-        //                    {
-        //                        Log.Warning("Selector had " + current.Count + " hits and not just one, at element " + i + " this selector will be slow!");
-        //                    }
-        //                }
-        //                if (current.Count == 0 && PluginConfig.allow_child_searching)
-        //                {
-        //                    Log.Warning("Selector found not hits at element " + i + ", Try searching children, this selector will be slow!");
-        //                    if ((i+1) < selectors.Count && i > 0) {
-        //                        i++;
-        //                        s = new WindowsSelectorItem(selectors[i]);
-        //                        foreach (var _element in elements)
-        //                        {
-        //                            var count = maxresults;
-        //                            if (i == 0) count = 1;
-        //                            if (i < selectors.Count) count = 500;
-        //                            var matches = ((WindowsSelectorItem)s).matches(automation, _element.RawElement, _treeWalker, count, false, TimeSpan.FromSeconds(250), search_descendants); // (i == 0 ? 1 : maxresults)
-        //                            var uimatches = new List<UIElement>();
-        //                            foreach (var m in matches)
-        //                            {
-        //                                var ui = new UIElement(m);
-        //                                var list = selectors.Take(i).ToList();
-        //                                list.Add(new WindowsSelectorItem(m, false));
-        //                                uimatches.Add(ui);
-        //                            }
-        //                            current.AddRange(uimatches.ToArray());
-        //                        }
-        //                        Console.WriteLine(current.Count());
-        //                    }
-        //                }
-        //                if (current.Count == 0) ++failcounter;
-        //                if (current.Count == 0 && Config.local.log_selector)
-        //                {
-        //                    if(isDesktop)
-        //                    {
-        //                        var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
-        //                        var windows = Win32WindowUtils.GetTopLevelWindows(automation);
-        //                        foreach (var c in windows)
-        //                        {
-        //                            try
-        //                            {
-        //                                message += new UIElement(c).ToString() + Environment.NewLine;
-        //                            }
-        //                            catch (Exception)
-        //                            {
-        //                            }
-        //                        }
-        //                        // Log.Selector(message);
-        //                        Log.Warning(message);
-        //                    }
-        //                    else
-        //                    {
-        //                        foreach (var element in elements)
-        //                        {
-        //                            var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
-        //                            var children = element.RawElement.FindAllChildren();
-        //                            foreach (var c in children)
-        //                            {
-        //                                try
-        //                                {
-        //                                    message += new UIElement(c).ToString() + Environment.NewLine;
-        //                                }
-        //                                catch (Exception)
-        //                                {
-        //                                }
-        //                            }
-        //                            // Log.Selector(message);
-        //                            Log.Warning(message);
-        //                        }
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    Log.SelectorVerbose(string.Format("Found " + current.Count + " hits for selector # " + i + " {0:mm\\:ss\\.fff}", sw.Elapsed));
-        //                }
-        //            } while (failcounter < 2 && current.Count == 0);
-
-
-        //            if (i == (selectors.Count - 1)) result = current.ToArray();
-        //            if (current.Count == 0 && Config.local.log_selector)
-        //            {
-        //                if (isDesktop)
-        //                {
-        //                    var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
-        //                    var windows = Win32WindowUtils.GetTopLevelWindows(automation);
-        //                    foreach (var c in windows)
-        //                    {
-        //                        try
-        //                        {
-        //                            message += new UIElement(c).ToString() + Environment.NewLine;
-        //                        }
-        //                        catch (Exception)
-        //                        {
-        //                        }
-        //                    }
-        //                    Log.Warning(message);
-        //                }
-        //                else
-        //                {
-        //                    var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
-        //                    foreach (var element in elements)
-        //                    {
-        //                        var children = element.RawElement.FindAllChildren();
-        //                        foreach (var c in children)
-        //                        {
-        //                            try
-        //                            {
-        //                                message += new UIElement(c).ToString() + Environment.NewLine;
-        //                            }
-        //                            catch (Exception)
-        //                            {
-        //                            }
-        //                        }
-        //                    }
-        //                    Log.Warning(message);
-        //                }
-        //                Log.Selector(string.Format("GetElementsWithuiSelector::ended with 0 results after {0:mm\\:ss\\.fff}", sw.Elapsed));
-        //                return new UIElement[] { };
-        //            }
-        //            isDesktop = false;
-        //            Log.Selector(string.Format("GetElementsWithuiSelector::foreachloop " + i + " {0:mm\\:ss\\.fff}", sw.Elapsed));
-        //        }
-
-        //    }
-        //    if (result == null)
-        //    {
-        //        Log.Selector(string.Format("GetElementsWithuiSelector::ended with 0 results after {0:mm\\:ss\\.fff}", sw.Elapsed));
-        //        return new UIElement[] { };
-        //    }
-        //    Log.Selector(string.Format("GetElementsWithuiSelector::ended with " + result.Length + " results after {0:mm\\:ss\\.fff}", sw.Elapsed));
-        //    return result;
-        //}
     }
 }

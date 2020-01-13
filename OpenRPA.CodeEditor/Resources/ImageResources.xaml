@@ -1,0 +1,31 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Image x:Key="StartImage" x:Shared="False" Source="Images/Start16.png" Height="16" Width="16"/>
+    <Image x:Key="StopImage" x:Shared="False" Source="Images/Stop16.png" Height="16" Width="16"/>
+
+    <Image x:Key="CutImage" x:Shared="False" Source="Images/Cut16.png" Height="16" Width="16"/>
+    <Image x:Key="CopyImage" x:Shared="False" Source="Images/Copy16.png" Height="16" Width="16"/>
+    <Image x:Key="PasteImage" x:Shared="False" Source="Images/Paste16.png" Height="16" Width="16"/>
+
+    <Image x:Key="InfoImage" x:Shared="False" Source="Images/Info16.png" Height="16" Width="16"/>
+    <Image x:Key="WarningImage" x:Shared="False" Source="Images/Warning16.png" Height="16" Width="16"/>
+    <Image x:Key="ErrorImage" x:Shared="False" Source="Images/Error16.png" Height="16" Width="16"/>
+
+    <ImageSource x:Key="ClassImageSource">Images/Class16.png</ImageSource>
+    <ImageSource x:Key="ConstantImageSource">Images/Constant16.png</ImageSource>
+    <ImageSource x:Key="DelegateImageSource">Images/Delegate16.png</ImageSource>
+    <ImageSource x:Key="EnumImageSource">Images/Enum16.png</ImageSource>
+    <ImageSource x:Key="EnumItemImageSource">Images/EnumItem16.png</ImageSource>
+    <ImageSource x:Key="EventImageSource">Images/Event16.png</ImageSource>
+    <ImageSource x:Key="ExtensionMethodImageSource">Images/ExtensionMethod16.png</ImageSource>
+    <ImageSource x:Key="FieldImageSource">Images/Field16.png</ImageSource>
+    <ImageSource x:Key="InterfaceImageSource">Images/Interface16.png</ImageSource>
+    <ImageSource x:Key="KeywordImageSource">Images/Keyword16.png</ImageSource>
+    <ImageSource x:Key="MethodImageSource">Images/Method16.png</ImageSource>
+    <ImageSource x:Key="ModuleImageSource">Images/Module16.png</ImageSource>
+    <ImageSource x:Key="NamespaceImageSource">Images/Namespace16.png</ImageSource>
+    <ImageSource x:Key="PropertyImageSource">Images/Property16.png</ImageSource>
+    <ImageSource x:Key="StructureImageSource">Images/Structure16.png</ImageSource>
+
+</ResourceDictionary>

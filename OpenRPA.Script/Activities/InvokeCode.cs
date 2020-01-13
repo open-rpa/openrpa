@@ -99,8 +99,20 @@ namespace OpenRPA.Script.Activities
             {
                 throw new Exception("InvokeCode is missing namespaces, please open workflow in designer and save changes");
             }
-            if (language == "VB") sourcecode = GetVBHeaderText(variables, "Expression", namespaces) + code + GetVBFooterText();
-            if (language == "C#") sourcecode = GetCSharpHeaderText(variables, "Expression", namespaces) + code + GetCSharpFooterText();
+            if (language == "VB")
+            {
+                var header = GetVBHeaderText(variables, "Expression", namespaces);
+                sourcecode = header + code + GetVBFooterText();
+                int numLines = header.Split('\n').Length;
+                Log.Information("Header (add to line numbers): " + numLines);
+            }
+            if (language == "C#")
+            {
+                var header = GetCSharpHeaderText(variables, "Expression", namespaces);
+                sourcecode = header + code + GetCSharpFooterText();
+                int numLines = header.Split('\n').Length;
+                Log.Information("Header (add to line numbers): " + numLines);
+            }
             if (language == "PowerShell")
             {
 
@@ -128,10 +140,17 @@ namespace OpenRPA.Script.Activities
                     {
                         var value = runspace.SessionStateProxy.GetVariable(v.DisplayName);
                         var myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
-                        if (myVar != null && value != null && value != "")
+                        try
                         {
-                            //var myValue = myVar.GetValue(context.DataContext);
-                            myVar.SetValue(context.DataContext, value);
+                            if (myVar != null && value != null)
+                            {
+                                //var myValue = myVar.GetValue(context.DataContext);
+                                myVar.SetValue(context.DataContext, value);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
                         }
                     }
                     PipelineOutput.Set(context, res);
@@ -165,7 +184,7 @@ namespace OpenRPA.Script.Activities
                     {
                         var value = ahk.GetVar(v.DisplayName);
                         PropertyDescriptor myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
-                        if (myVar != null && value != null && value != "")
+                        if (myVar != null && value != null)
                         {
                             if (myVar.PropertyType == typeof(string))
                                 myVar.SetValue(context.DataContext, value);
@@ -205,21 +224,27 @@ namespace OpenRPA.Script.Activities
                                 }
                                 try
                                 {
-                                    PythonEngine.RunSimpleString(@"
-import sys
-from System import Console
-class output(object):
-    def write(self, msg):
-        Console.Out.Write(msg)
-    def writelines(self, msgs):
-        for msg in msgs:
-            Console.Out.Write(msg)
-    def flush(self):
-        pass
-    def close(self):
-        pass
-sys.stdout = sys.stderr = output()
-");
+
+                                    PythonOutput output = new PythonOutput();
+                                    dynamic sys = Py.Import("sys");
+                                    sys.stdout = output;
+                                    sys.stderr = output;
+
+//                                    PythonEngine.RunSimpleString(@"
+//import sys
+//from System import Console
+//class output(object):
+//    def write(self, msg):
+//        Console.Out.Write(msg)
+//    def writelines(self, msgs):
+//        for msg in msgs:
+//            Console.Out.Write(msg)
+//    def flush(self):
+//        pass
+//    def close(self):
+//        pass
+//sys.stdout = sys.stderr = output()
+//");
 
                                 }
                                 catch (Exception ex)
@@ -426,61 +451,7 @@ sys.stdout = sys.stderr = output()
                 }
             }
         }
-        public static string GetCSharpHeaderText(Dictionary<string, Type> variables, string moduleName, string[] namespaces)
-        {
-            var headerText = new StringBuilder();
-            foreach (var n in namespaces)
-            {
-                headerText.AppendLine("using " + n + ";\r\n");
-            }
-            headerText.Append("\r\n namespace SomeNamespace { public class " + moduleName + " { \r\n");
-            if (variables != null)
-            {
-                foreach (var var in variables)
-                {
-                    // Build a VB representation of the variable's type name
-                    var variableTypeName = new StringBuilder();
-                    AppendCSharpTypeName(variableTypeName, var.Value);
-
-                    headerText.Append("public static " + variableTypeName + " " + var.Key + " = default(" + variableTypeName + ");");
-                    headerText.AppendLine();
-                }
-            }
-            headerText.AppendLine();
-            headerText.AppendLine("public static void ExpressionValue() { ");
-            return headerText.ToString();
-        }
-        public static string GetCSharpFooterText()
-        {
-            return " } } }";
-        }
-        private static void AppendCSharpTypeName(StringBuilder typeName, Type type)
-        {
-            var typeFullName = type.FullName;
-
-            if (type.IsGenericType)
-            {
-                var tickIndex = typeFullName.IndexOf('`');
-                if (tickIndex != -1)
-                {
-                    typeName.Append(typeFullName.Substring(0, tickIndex));
-                    typeName.Append("<");
-                    var genericArgumentIndex = 0;
-                    foreach (var genericArgument in type.GetGenericArguments())
-                    {
-                        if (genericArgumentIndex++ > 0)
-                            typeName.Append(", ");
-
-                        AppendCSharpTypeName(typeName, genericArgument);
-                    }
-                    typeName.Append(">");
-                    return;
-                }
-            }
-
-            typeName.Append(typeFullName);
-        }
-        public static string GetVBHeaderText(Dictionary<string, Type> variables, string moduleName, string[] namespaces)
+        private static string GetVBHeaderText(Dictionary<string, Type> variables, string moduleName, string[] namespaces)
         {
             // Inject namespace imports
             //var headerText = new StringBuilder("Imports System\r\nImports System.Collections\r\nImports System.Collections.Generic\r\nImports System.Linq\r\n");
@@ -521,7 +492,7 @@ sys.stdout = sys.stderr = output()
             headerText.AppendLine();
             return headerText.ToString();
         }
-        public static string GetVBFooterText()
+        private static string GetVBFooterText()
         {
             // Close out the Sub and Class in the footer
             return "\r\nEnd Sub\r\nEnd Module";
@@ -546,6 +517,64 @@ sys.stdout = sys.stderr = output()
                         AppendVBTypeName(typeName, genericArgument);
                     }
                     typeName.Append(")");
+                    return;
+                }
+            }
+
+            typeName.Append(typeFullName);
+        }
+
+
+        public static string GetCSharpHeaderText(Dictionary<string, Type> variables, string moduleName, string[] namespaces)
+        {
+            var headerText = new StringBuilder();
+            foreach (var n in namespaces)
+            {
+                headerText.AppendLine("using " + n + ";\r\n");
+            }
+            headerText.Append("\r\n namespace SomeNamespace { public class " + moduleName + " { \r\n");
+            headerText.AppendLine();
+            if (variables != null)
+            {
+                foreach (var var in variables)
+                {
+                    // Build a VB representation of the variable's type name
+                    var variableTypeName = new StringBuilder();
+                    AppendCSharpTypeName(variableTypeName, var.Value);
+
+                    headerText.Append("public static " + variableTypeName + " " + var.Key + " = default(" + variableTypeName + ");");
+                    headerText.AppendLine();
+                }
+            }
+            headerText.AppendLine("public static void ExpressionValue() { ");
+
+
+            return headerText.ToString();
+        }
+        public static string GetCSharpFooterText()
+        {
+            return " } } }";
+        }
+        public static void AppendCSharpTypeName(StringBuilder typeName, Type type)
+        {
+            var typeFullName = type.FullName;
+
+            if (type.IsGenericType)
+            {
+                var tickIndex = typeFullName.IndexOf('`');
+                if (tickIndex != -1)
+                {
+                    typeName.Append(typeFullName.Substring(0, tickIndex));
+                    typeName.Append("<");
+                    var genericArgumentIndex = 0;
+                    foreach (var genericArgument in type.GetGenericArguments())
+                    {
+                        if (genericArgumentIndex++ > 0)
+                            typeName.Append(", ");
+
+                        AppendCSharpTypeName(typeName, genericArgument);
+                    }
+                    typeName.Append(">");
                     return;
                 }
             }

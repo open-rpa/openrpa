@@ -84,6 +84,10 @@ namespace OpenRPA.Windows
                     }
                     else
                     {
+                        if(info.Filename.ToLower().Contains("system32\\conhost.exe"))
+                        {
+                            info.Filename = "%windir%\\system32\\cmd.exe";
+                        }
                         Properties.Add(new SelectorItemProperty("filename", info.Filename));
                         Properties.Add(new SelectorItemProperty("processname", info.ProcessName));
                         Properties.Add(new SelectorItemProperty("arguments", info.Arguments));
@@ -284,6 +288,7 @@ namespace OpenRPA.Windows
                 {
                     foreach (var e in result.Result)
                     {
+                        // _ = e.Parent;
                         if (!e.IsAvailable)
                         {
                             RemoveFromCache(result);
@@ -320,6 +325,10 @@ namespace OpenRPA.Windows
             var items = MatchCache.Where(x => x.Root.Equals(item.Root) && x.Ident >= item.Ident).ToList();
             foreach (var e in items) MatchCache.Remove(e);
             MatchCache.Remove(item);
+        }
+        public static void ClearCache()
+        {
+            MatchCache.Clear();
         }
         public void AddToCache(AutomationElement root, int ident, string Conditions, AutomationElement[] Result)
         {
@@ -394,6 +403,7 @@ namespace OpenRPA.Windows
             }
             if((isDesktop || !isDesktop) && matchs.Count > 0)
             {
+                foreach(var e in matchs) { _ = e.Parent; }
                 AddToCache(root, ident, Conditions.ToString(), matchs.ToArray());
             }
             Log.Selector(string.Format("matches::matches::complete {0:mm\\:ss\\.fff}", sw.Elapsed));

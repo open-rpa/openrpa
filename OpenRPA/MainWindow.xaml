@@ -6,10 +6,12 @@
         xmlns:local="clr-namespace:OpenRPA"
         xmlns:or="clr-namespace:OpenRPA.Resources"
         xmlns:ribbon="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:input="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
         xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
         xmlns:dockctrl="clr-namespace:Xceed.Wpf.AvalonDock.Controls;assembly=Xceed.Wpf.AvalonDock"
         mc:Ignorable="d"
-        Loaded="Window_Loaded" Closed="Window_Closed" Closing="Window_Closing" StateChanged="Window_StateChanged"
+        Loaded="Window_Loaded" Closed="Window_Closed" Closing="Window_Closing" StateChanged="Window_StateChanged" PreviewMouseWheel="SearchBox_PreviewMouseWheel"
+        KeyDown="Window_KeyDown"
         Title="OpenRPA"
         x:Uid="title"
          Height="750" Width="1200">
@@ -23,7 +25,7 @@
             <RowDefinition />
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
-        <Ribbon DockPanel.Dock="Top" Margin="0,-22,0,0" Grid.Row="0">
+        <Ribbon DockPanel.Dock="Top" Margin="0,-22,0,0" Grid.Row="0" PreviewMouseWheel="SearchBox_PreviewMouseWheel" x:Name="MainRibbon">
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu SmallImageSource="/OpenRPA;component/Resources/Buttons/Export.png">
                     <RibbonApplicationMenuItem Header="{x:Static or:strings.settingsfile}" ImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
@@ -61,10 +63,10 @@
                 </RibbonApplicationMenu>
             </Ribbon.ApplicationMenu>
             <RibbonTab 
-                xmlns:local="clr-namespace:OpenRPA"  Header="{x:Static or:strings.general}"
+                xmlns:local="clr-namespace:OpenRPA"  Header="{x:Static or:strings.general}" x:Name="tabGeneral"
                
                 >
-                <RibbonGroup Header="{x:Static or:strings.files}">
+                <RibbonGroup Header="{x:Static or:strings.files}" PreviewMouseWheel="SearchBox_PreviewMouseWheel">
                     <RibbonMenuButton x:Name="ButtonNew" Label="{x:Static or:strings.mainnew}" LargeImageSource="/OpenRPA;component/Resources/Buttons/New.png">
                         <RibbonMenuItem Header="{x:Static or:strings.newworkflow}"
                                 Command="{Binding Data.NewWorkflowCommand, Source={StaticResource proxy}}" 
@@ -87,6 +89,9 @@
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                     <RibbonButton Label="{x:Static or:strings.permissions}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Manage.png" 
                                   Command="{Binding Data.PermissionsCommand, Source={StaticResource proxy}}" 
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
+                    <RibbonButton Label="{x:Static or:strings.main_reload}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Revert.png" 
+                                  Command="{Binding Data.ReloadCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                     <RibbonButton Label="{x:Static or:strings.import}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Import.png" 
                                   Command="{Binding Data.ImportCommand, Source={StaticResource proxy}}" 
@@ -122,6 +127,29 @@
                         <TextBlock Text="{x:Static or:strings.minimize}"></TextBlock>
                     </StackPanel>
                 </RibbonGroup>
+                <RibbonGroup Header="{x:Static or:strings.ribbon_search}">
+                    <input:AutoCompleteBox Width="80"
+                                           x:Name="SearchBox" 
+                                           FilterMode="None"
+                                           IsTextCompletionEnabled="False"
+                                           Placeholder="{x:Static or:strings.ribbon_search}"
+                                           SelectionChanged="SearchBox_SelectionChanged"
+                                           Populating="SearchBox_Populating"
+                                           MinimumPopulateDelay="200"
+                                           ValueMemberPath="name"
+                                           PreviewLostKeyboardFocus="SearchBox_PreviewLostKeyboardFocus"
+            >
+                        <input:AutoCompleteBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Width="16" Height="16" Source="{Binding ImageSource, Mode=OneWay}" />
+                                    <TextBlock Margin="5,0,0,0" Text="{Binding Text, Mode=OneWay}" VerticalAlignment="Center" />
+                                    <TextBlock FontWeight="Bold" Margin="5,0,0,0"  Text="{Binding Header, Mode=OneWay}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </input:AutoCompleteBox.ItemTemplate>
+                    </input:AutoCompleteBox>
+                </RibbonGroup>    
             </RibbonTab>
             <RibbonTab Header="{x:Static or:strings.settings}">
                 <RibbonGroup Header="{x:Static or:strings.cancelkey}">
@@ -232,6 +260,9 @@
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                     <RibbonButton Label="{x:Static or:strings.tools_swap_virtualclick}" LargeImageSource="/OpenRPA;component/Resources/Buttons/switch_216215.png" 
                                   Command="{Binding Data.SwapVirtualClickCommand, Source={StaticResource proxy}}" 
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
+                    <RibbonButton Label="{x:Static or:strings.tools_swap_animate}" LargeImageSource="/OpenRPA;component/Resources/Buttons/switch_216215.png" 
+                                  Command="{Binding Data.SwapAnimateCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                 </RibbonGroup>
             </RibbonTab>

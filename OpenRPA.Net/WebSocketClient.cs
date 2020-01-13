@@ -432,7 +432,7 @@ namespace OpenRPA.Net
         }
         public async Task<TokenUser> Signin(string username, SecureString password)
         {
-            SigninMessage signin = new SigninMessage(username, password);
+            SigninMessage signin = new SigninMessage(username, password, System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
             signin = await signin.SendMessage<SigninMessage>(this);
             if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
             user = signin.user;
@@ -445,7 +445,7 @@ namespace OpenRPA.Net
         }
         public async Task<TokenUser> Signin(string jwt)
         {
-            SigninMessage signin = new SigninMessage(jwt);
+            SigninMessage signin = new SigninMessage(jwt, System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
             signin = await signin.SendMessage<SigninMessage>(this);
             if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
             user = signin.user;
@@ -458,7 +458,7 @@ namespace OpenRPA.Net
         }
         public async Task<TokenUser> Signin(SecureString jwt)
         {
-            SigninMessage signin = new SigninMessage(jwt);
+            SigninMessage signin = new SigninMessage(jwt, System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
             signin = await signin.SendMessage<SigninMessage>(this);
             if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
             user = signin.user;
@@ -490,7 +490,7 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(qm.error)) throw new Exception(qm.error);
             return qm.data;
         }
-        private async Task<T[]> _Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby)
+        private async Task<T[]> _Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby, string queryas)
         {
             var result = new List<T>();
             bool cont = false;
@@ -501,7 +501,7 @@ namespace OpenRPA.Net
             {
                 cont = false;
                 QueryMessage<T> q = new QueryMessage<T>(); q.top = _top; q.skip = _skip;
-                q.projection = projection; q.orderby = orderby;
+                q.projection = projection; q.orderby = orderby; q.queryas = queryas;
                 q.collectionname = collectionname; q.query = JObject.Parse(query);
                 q = await q.SendMessage<QueryMessage<T>>(this);
                 if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
@@ -514,15 +514,9 @@ namespace OpenRPA.Net
             } while (cont);
             return result.ToArray();
         }
-        public async Task<T[]> Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby)
+        public async Task<T[]> Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby, string queryas)
         {
-            return await _Query<T>(collectionname, query, projection, top, skip, orderby);
-            //QueryMessage<T> q = new QueryMessage<T>(); q.top = top; q.skip = skip;
-            //q.projection = projection; q.orderby = orderby;
-            //q.collectionname = collectionname; q.query = JObject.Parse(query);
-            //q = await q.SendMessage<QueryMessage<T>>(this);
-            //if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
-            //return q.result;
+            return await _Query<T>(collectionname, query, projection, top, skip, orderby, queryas);
         }
         public async Task<T> InsertOrUpdateOne<T>(string collectionname, int w, bool j, string uniqeness, T item)
         {

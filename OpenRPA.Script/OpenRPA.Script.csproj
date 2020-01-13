@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
-    <Version>1.0.22</Version>
-    <PackageReleaseNotes>1.0.22 Add langauges and bug fixes
+    <Version>1.0.23</Version>
+    <PackageReleaseNotes>1.0.23 Begin implementing intellisense for C# and VB
+1.0.22 Add langauges and bug fixes
 1.0.20 update interfaces reference
 1.0.17 update reference
 1.0.16 update reference
@@ -57,6 +58,7 @@
     <None Remove="Resources\toolbox\autohotkey.png" />
     <None Remove="Resources\toolbox\comment.png" />
     <None Remove="Resources\toolbox\prompt.png" />
+    <None Remove="Views\RecordPluginView.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="lib\Python.Runtime.NETStandard.dll">
@@ -70,6 +72,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="3.4.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="3.4.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="3.4.0" />
     <PackageReference Include="Python.Included" Version="3.7.3.4" />
     <PackageReference Include="sharpAHK" Version="1.0.0.5" />
     <PackageReference Include="System.Management.Automation.dll" Version="10.0.10586" />
@@ -79,6 +84,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\InvokeCodeDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RecordPluginView.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -100,6 +109,7 @@
     <EmbeddedResource Include="Resources\ICSharpCode.PythonBinding.Resources.Python.xshd" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OpenRPA.CodeEditor\OpenRPA.CodeEditor.csproj" />
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
   </ItemGroup>
   <ItemGroup>

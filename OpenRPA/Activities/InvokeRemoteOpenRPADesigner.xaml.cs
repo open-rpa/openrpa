@@ -32,18 +32,24 @@ namespace OpenRPA.Activities
         }
         public ObservableCollection<Workflow> workflows { get; set; }
         public ObservableCollection<apiuser> robots { get; set; }
-        private async void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
+        private string originalworkflow = null;
+        private string originaltarget = null;
+        private void loadLocalWorkflows()
         {
-            //var _workflows = await global.webSocketClient.Query<Workflow>("workflow", "{_type: 'workflow'}");
-            //workflows.Clear();
+            workflows.Clear();
             var result = new List<Workflow>();
             foreach (var p in MainWindow.instance.Projects)
             {
-                foreach(var w in p.Workflows) result.Add(w);
+                foreach (var w in p.Workflows) result.Add(w);
             }
             result = result.OrderBy(x => x.name).OrderBy(x => x.Project.name).ToList();
             foreach (var w in result) workflows.Add(w);
-
+        }
+        private async void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
+        {
+            originalworkflow = ModelItem.GetValue<string>("workflow");
+            originaltarget = ModelItem.GetValue<string>("target");
+            // loadLocalWorkflows();
             var _users = await global.webSocketClient.Query<apiuser>("users", "{\"$or\":[ {\"_type\": \"user\"}, {\"_type\": \"role\", \"rparole\": true} ]}", top: 5000);
             foreach (var u in _users) robots.Add(u);
         }
@@ -51,6 +57,7 @@ namespace OpenRPA.Activities
         {
             try
             {
+                if (ModelItem.Properties["workflow"].Value == null) return;
                 string workflowid = (string)ModelItem.Properties["workflow"].Value.GetCurrentValue();
                 var workflow = MainWindow.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
                 var designer = MainWindow.instance.Designer;
@@ -65,6 +72,28 @@ namespace OpenRPA.Activities
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
+            }
+        }
+        private async void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            string workflow = ModelItem.GetValue<string>("workflow");
+            string target = ModelItem.GetValue<string>("target");
+            if (string.IsNullOrEmpty(target)) { loadLocalWorkflows();  return; }
+            if(target != originaltarget)
+            {
+                workflows.Clear();
+                workflows.Add(new Workflow() { name = "Loading...", _id = "loading" });
+                ModelItem.Properties["workflow"].SetValue("loading");
+            }
+            // var _workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", "{'name':1, 'projectandname': 1}", orderby: "{projectid:-1,name:-1}", queryas: target);
+            var _workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", queryas: target);
+            _workflows = _workflows.OrderBy(x => x.ProjectAndName).ToArray();
+            workflows.Clear();
+            foreach (var w in _workflows) workflows.Add(w);
+            var currentworkflow = ModelItem.GetValue<string>("workflow");
+            if(workflow != currentworkflow && !string.IsNullOrEmpty(currentworkflow))
+            {
+                ModelItem.Properties["workflow"].SetValue(workflow);
             }
         }
     }

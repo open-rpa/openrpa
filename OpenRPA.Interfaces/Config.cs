@@ -45,6 +45,11 @@ namespace OpenRPA
         public TimeSpan use_postwait = TimeSpan.Zero;
         public bool minimize = true;
         public bool recording_add_to_designer = true;
+        public TimeSpan reloadinterval = TimeSpan.FromMinutes(5);
+        public TimeSpan move_animation_run_time = TimeSpan.FromMilliseconds(500);
+        public int move_animation_steps = 20;
+        public bool remote_allow_multiple_running = false;
+        public int remote_allow_multiple_running_max = 2;
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)

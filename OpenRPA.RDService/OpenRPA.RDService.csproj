@@ -11,8 +11,14 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
-    <Version>1.0.8</Version>
-    <PackageReleaseNotes>1.0.8 bug fixes
+    <Version>1.0.14</Version>
+    <PackageReleaseNotes>1.0.14 cleanup
+1.0.13 Improve startup time of rdservice
+1.0.12 Improve RD Service
+1.0.11 report disabled server
+1.0.10 Fix reconnect for RD Service, Add auto refresh
+1.0.9 Fix launch error
+1.0.8 bug fixes
 1.0.7 Improve high density robots
 1.0.6 update interfaces reference
 1.0.2 More error catching, fix freerdp login error

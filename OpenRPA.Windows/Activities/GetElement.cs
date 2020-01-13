@@ -34,7 +34,8 @@ namespace OpenRPA.Windows
         public InArgument<int> MaxResults { get; set; }
         public InArgument<int> MinResults { get; set; }
         public InArgument<string> Selector { get; set; }
-        public InArgument<UIElement> From { get; set; }
+        // public InArgument<UIElement> From { get; set; }
+        public InArgument<IElement> From { get; set; }
         public OutArgument<UIElement[]> Elements { get; set; }
         [Browsable(false)]
         public string Image { get; set; }
@@ -58,7 +59,7 @@ namespace OpenRPA.Windows
             var from = From.Get(context);
 
             //            double _timeout = 250;
-            double _timeout = 1000;
+            double _timeout = 5000;
             if (PluginConfig.search_descendants)
             {
                 _timeout = 5000;
@@ -66,7 +67,7 @@ namespace OpenRPA.Windows
             //#if DEBUG
             //            _timeout = _timeout * 8;
             //#endif
-            
+            int failcounter = 0;
             do
             {
                 if (PluginConfig.get_elements_in_different_thread)
@@ -98,7 +99,14 @@ namespace OpenRPA.Windows
                 {
                     elements = new UIElement[] { };
                 }
-                if(elements.Length == 0) Log.Selector(string.Format("Windows.GetElement::Found no elements {0:mm\\:ss\\.fff}", sw.Elapsed));
+                if (elements.Length == 0) { 
+                    Log.Selector(string.Format("Windows.GetElement::Found no elements {0:mm\\:ss\\.fff}", sw.Elapsed));
+                    failcounter++;
+                }
+                if(failcounter > 2)
+                {
+                    WindowsSelectorItem.ClearCache();
+                }
             } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
             //if (PluginConfig.get_elements_in_different_thread && elements.Length > 0)
             //{

@@ -58,6 +58,17 @@ namespace OpenRPA.Java
         {
             try
             {
+                if (PluginConfig.auto_launch_java_bridge)
+                {
+                    EnsureJavaBridge();
+                    if (pipeclient == null)
+                    {
+                        pipeclient = new NamedPipeClient<JavaEvent>("openrpa_javabridge");
+                        pipeclient.ServerMessage += Pipeclient_ServerMessage;
+                        pipeclient.AutoReconnect = true;
+                        pipeclient.Start();
+                    }
+                }
                 if (Initilized) return;
                 Initilized = false;
                 _windowCache = new HwndCache();
@@ -70,11 +81,6 @@ namespace OpenRPA.Java
                 };
                 accessBridge.Initialize();
                 refreshJvms(200);
-                EnsureJavaBridge();
-                pipeclient = new NamedPipeClient<JavaEvent>("openrpa_javabridge");
-                pipeclient.ServerMessage += Pipeclient_ServerMessage;
-                pipeclient.AutoReconnect = true;
-                pipeclient.Start();
             }
             catch (Exception ex)
             {

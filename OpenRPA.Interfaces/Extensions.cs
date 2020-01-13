@@ -26,8 +26,17 @@ namespace OpenRPA.Interfaces
             get
             {
                 var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                if (!System.IO.Directory.Exists(System.IO.Path.Combine(dir)))
-                    System.IO.Directory.CreateDirectory(dir);
+                if(!string.IsNullOrEmpty(dir))
+                {
+                    if (!System.IO.Directory.Exists(System.IO.Path.Combine(dir)))
+                        System.IO.Directory.CreateDirectory(dir);
+                } else
+                {
+                    string filename = "settings.json";
+                    var fi = new System.IO.FileInfo(filename);
+                    return System.IO.Path.GetDirectoryName(fi.FullName);
+
+                }
                 return dir;
             }
         }
@@ -84,7 +93,6 @@ namespace OpenRPA.Interfaces
                 return path;
             }
         }
-
         public static string DataDirectory
         {
             get
@@ -97,7 +105,6 @@ namespace OpenRPA.Interfaces
                 return UserDirectory;
             }
         }
-
         static public string ResourceAsString(this Type type, string resourceName)
         {
             // string[] names = typeof(Extensions).Assembly.GetManifestResourceNames();
@@ -283,7 +290,7 @@ namespace OpenRPA.Interfaces
             bool _isImmersiveProcess = false;
             try
             {
-                if (handle != IntPtr.Zero) _isImmersiveProcess = IsImmersiveProcess(handle);
+                if (handle != IntPtr.Zero) _isImmersiveProcess =  NativeMethods.IsImmersiveProcess(handle);
             }
             catch (Exception)
             {
@@ -384,9 +391,6 @@ namespace OpenRPA.Interfaces
             }
             return result;
         }
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool IsImmersiveProcess(IntPtr hWnd);
         public const int QueryLimitedInformation = 0x1000;
         public const int ERROR_INSUFFICIENT_BUFFER = 0x7a;
         public const int ERROR_SUCCESS = 0x0;

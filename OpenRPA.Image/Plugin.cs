@@ -40,7 +40,7 @@ namespace OpenRPA.Image
         public void Initialize(IOpenRPAClient client)
         {
         }
-        public void LaunchBySelector(Selector selector, TimeSpan timeout)
+        public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)
         {
             throw new NotImplementedException();
         }

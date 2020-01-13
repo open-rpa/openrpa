@@ -213,6 +213,9 @@
   <data name="maintitle" xml:space="preserve">
     <value>OpenRPA</value>
   </data>
+  <data name="main_reload" xml:space="preserve">
+    <value>Reload</value>
+  </data>
   <data name="main_settings_recording_add_to_designer" xml:space="preserve">
     <value>Record directly into designer</value>
   </data>
@@ -306,6 +309,9 @@
   <data name="recordingoverlay" xml:space="preserve">
     <value>Recording Overlay</value>
   </data>
+  <data name="ribbon_search" xml:space="preserve">
+    <value>Search</value>
+  </data>
   <data name="runplugins" xml:space="preserve">
     <value>Run plugins</value>
   </data>
@@ -347,6 +353,9 @@
   </data>
   <data name="tools_change_type" xml:space="preserve">
     <value>Change Type</value>
+  </data>
+  <data name="tools_swap_animate" xml:space="preserve">
+    <value>Swap Animate</value>
   </data>
   <data name="tools_swap_sendkeys" xml:space="preserve">
     <value>Swap SendKeys</value>

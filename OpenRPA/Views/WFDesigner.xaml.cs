@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json.Linq;
-using OpenRPA.ExpressionEditor;
 using OpenRPA.Interfaces;
 using System;
 using System.Activities;
@@ -82,6 +81,18 @@ namespace OpenRPA.Views
                 NotifyPropertyChanged("Properties");
             }
         }
+        public bool IsSelected
+        {
+            get
+            {
+                return tab.IsSelected;
+            }
+            set
+            {
+                if (tab.IsSelected) return;
+                tab.IsSelected = true;
+            }
+        }
         private void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
@@ -93,6 +104,7 @@ namespace OpenRPA.Views
         public WorkflowDesigner WorkflowDesigner { get; private set; }
         public Workflow Workflow { get; private set; }
         public bool HasChanged { get; private set; }
+        public void forceHasChanged(bool value) { HasChanged = value; }
         public ModelItem SelectedActivity { get; private set; }
         public Project Project
         {
@@ -132,6 +144,8 @@ namespace OpenRPA.Views
                         var element = AutomationHelper.GetFromFocusedElement();
                         if (element.ProcessId != currentprocessid) return;
                     }
+                    if (e.AltKey || e.CtrlKey || e.ShiftKey || e.WinKey) return;
+                    if (Workflow.Activity == null) return;
                     Singlestep = true;
                     // if (e.Key == Input.KeyboardKey.F11) { StepInto = true; }
                     if (BreakPointhit)
@@ -166,6 +180,7 @@ namespace OpenRPA.Views
                 }
                 try
                 {
+                    if (Workflow.Activity == null) return;
                     Run(VisualTracking, SlowMotion, null);
                 }
                 catch (Exception ex)
@@ -261,7 +276,8 @@ namespace OpenRPA.Views
                 ReadOnly = true;
             }
 
-            WorkflowDesigner.Context.Services.Publish<IExpressionEditorService>(new EditorService(this));
+            //WorkflowDesigner.Context.Services.Publish<IExpressionEditorService>(new EditorService(this));
+            WorkflowDesigner.Context.Services.Publish<IExpressionEditorService>(new CodeEditor.EditorService(this));
             if (!string.IsNullOrEmpty(Workflow.Xaml))
             {
                 WorkflowDesigner.Text = Workflow.Xaml;
@@ -345,18 +361,28 @@ namespace OpenRPA.Views
         {
             PropertyChanged?.Invoke(this, e);
         }
-
-
-
-
-        public async Task Save()
+        public async Task<bool> SaveAsync()
         {
-            // var basepath = Project.Path;
             var imagepath = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "images");
             if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
             WorkflowDesigner.Flush();
-            if(global.isConnected)
+            if (global.isConnected)
             {
+                if (!string.IsNullOrEmpty(Workflow._id))
+                {
+                    var exists = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow', _id: '" + Workflow._id + "'}", top: 1);
+                    if (Workflow.current_version != exists[0]._version)
+                    {
+                        var messageBoxResult = MessageBox.Show(Workflow.name + " has a newer version, that has been updated by " + exists[0]._modifiedby +
+                            ", do you still wish to overwrite the workflow ?", "Workflow has been updated by someone else", MessageBoxButton.YesNo);
+                        if (messageBoxResult != MessageBoxResult.Yes)
+                        {
+                            Workflow.current_version = exists[0]._version;
+                            return false;
+                        }
+                    }
+                }
+
                 var modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
                 var usedimages = new List<string>();
                 using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
@@ -393,7 +419,7 @@ namespace OpenRPA.Views
                                 }
                                 string id = await global.webSocketClient.UploadFile(tempfilename, "", metadata);
                                 var filename = System.IO.Path.Combine(imagepath, id + ".png");
-                                System.IO.File.Copy( tempfilename, filename, true);
+                                System.IO.File.Copy(tempfilename, filename, true);
                                 System.IO.File.Delete(tempfilename);
                                 item.Properties["Image"].SetValue(id);
                                 usedimages.Add(id);
@@ -423,7 +449,8 @@ namespace OpenRPA.Views
                         if (System.IO.File.Exists(imagefilepath))
                         {
                             System.IO.File.Delete(imagefilepath);
-                        } else
+                        }
+                        else
                         {
                             Log.Error("Failed locating " + f._id + ".png");
                         }
@@ -438,17 +465,24 @@ namespace OpenRPA.Views
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
+                return false;
             }
             WorkflowDesigner.Flush();
             var modelItem = WorkflowDesigner.Context.Services.GetService<ModelService>().Root;
             Workflow.name = modelItem.GetValue<string>("Name");
             Workflow.Xaml = WorkflowDesigner.Text;
-            await Workflow.Save();
+            await Workflow.Save(false);
             if (HasChanged)
             {
                 HasChanged = false;
                 OnChanged?.Invoke(this);
             }
+            return true;
+        }
+        public bool Save()
+        {
+            bool result = GenericTools.RunUIAsync(SaveAsync).Result;
+            return result;
         }
         public KeyedCollection<string, DynamicActivityProperty> GetParameters()
         {
@@ -1282,8 +1316,7 @@ namespace OpenRPA.Views
                 ReadOnly = true;
                 if (!VisualTracking && Config.local.minimize) GenericTools.Minimize(GenericTools.MainWindow);
             });
-
-            instance.Run();
+            if(instance!=null) instance.Run();
         }
         private void ShowVariables(IDictionary<string, WorkflowInstanceValueType> Variables)
         {
@@ -1618,6 +1651,5 @@ namespace OpenRPA.Views
             wfDesigner.Flush();
             return wfDesigner.Text;
         }
-
     }
 }

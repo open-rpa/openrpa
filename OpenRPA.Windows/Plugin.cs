@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.AutomationElements.Infrastructure;
@@ -65,7 +64,7 @@ namespace OpenRPA.Windows
                         }
                     }
                 }
-            }).Wait(1000);
+            }).Wait(5000);
             return result.ToArray();
         }
         public treeelement[] GetRootElements(Selector anchor)
@@ -85,7 +84,7 @@ namespace OpenRPA.Windows
         public string Name { get => "Windows"; }
         public string Status => _status;
         private Views.RecordPluginView view;
-        public UserControl editor
+        public System.Windows.Controls.UserControl editor
         {
             get
             {
@@ -182,42 +181,49 @@ namespace OpenRPA.Windows
             isMouseDown = false;
             var thread = new Thread(new ThreadStart(() =>
             {
-                Log.Debug(string.Format("Windows.Recording::OnMouseUp::begin"));
-                var re = new RecordEvent
+                try
                 {
-                    Button = e.Button
-                }; var a = new GetElement { DisplayName = e.Element.Name };
-                var sw = new System.Diagnostics.Stopwatch();
-                sw.Start();
-                WindowsSelector sel = null;
-                // sel = new WindowsSelector(e.Element.rawElement, null, true);
-                sel = new WindowsSelector(e.Element.RawElement, null, PluginConfig.enum_selector_properties);
-                if (sel.Count < 2) return;
-                if (sel == null) return;
-                a.Selector = sel.ToString();
-                a.MaxResults = 1;
-                a.Image = e.Element.ImageString();
-                re.OffsetX = e.X - e.Element.Rectangle.X;
-                re.OffsetY = e.Y - e.Element.Rectangle.Y;
-                re.UIElement = e.Element;
-                re.Element = e.Element;
-                re.Selector = sel;
-                re.X = e.X;
-                re.Y = e.Y;
-                if (sel.Count > 3)
-                {
-                    var p1 = sel[1].Properties.Where(x => x.Name == "ClassName").FirstOrDefault();
-                    var p2 = sel[2].Properties.Where(x => x.Name == "AutomationId").FirstOrDefault();
-                    if (p1 != null && p2 != null)
+                    Log.Debug(string.Format("Windows.Recording::OnMouseUp::begin"));
+                    var re = new RecordEvent
                     {
-                        if (p1.Value.StartsWith("Windows.UI") && p2.Value == "SplitViewFrameXAMLWindow") re.SupportVirtualClick = false;
+                        Button = e.Button
+                    }; var a = new GetElement { DisplayName = e.Element.Name };
+                    var sw = new System.Diagnostics.Stopwatch();
+                    sw.Start();
+                    WindowsSelector sel = null;
+                    // sel = new WindowsSelector(e.Element.rawElement, null, true);
+                    sel = new WindowsSelector(e.Element.RawElement, null, PluginConfig.enum_selector_properties);
+                    if (sel.Count < 2) return;
+                    if (sel == null) return;
+                    a.Selector = sel.ToString();
+                    a.MaxResults = 1;
+                    a.Image = e.Element.ImageString();
+                    re.OffsetX = e.X - e.Element.Rectangle.X;
+                    re.OffsetY = e.Y - e.Element.Rectangle.Y;
+                    re.UIElement = e.Element;
+                    re.Element = e.Element;
+                    re.Selector = sel;
+                    re.X = e.X;
+                    re.Y = e.Y;
+                    if (sel.Count > 3)
+                    {
+                        var p1 = sel[1].Properties.Where(x => x.Name == "ClassName").FirstOrDefault();
+                        var p2 = sel[2].Properties.Where(x => x.Name == "AutomationId").FirstOrDefault();
+                        if (p1 != null && p2 != null)
+                        {
+                            if (p1.Value.StartsWith("Windows.UI") && p2.Value == "SplitViewFrameXAMLWindow") re.SupportVirtualClick = false;
+                        }
                     }
+                    re.a = new GetElementResult(a);
+                    re.SupportInput = e.Element.SupportInput;
+                    re.SupportSelect = e.Element.SupportSelect;
+                    Log.Debug(string.Format("Windows.Recording::OnMouseUp::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+                    OnUserAction?.Invoke(this, re);
                 }
-                re.a = new GetElementResult(a);
-                re.SupportInput = e.Element.SupportInput;
-                re.SupportSelect = e.Element.SupportSelect;
-                Log.Debug(string.Format("Windows.Recording::OnMouseUp::end {0:mm\\:ss\\.fff}", sw.Elapsed));
-                OnUserAction?.Invoke(this, re);
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
             }));
             thread.IsBackground = true;
             thread.Start();
@@ -240,16 +246,17 @@ namespace OpenRPA.Windows
             var result = WindowsSelector.GetElementsWithuiSelector(winselector, fromElement, maxresults);
             return result;
         }
-        public void LaunchBySelector(Selector selector, TimeSpan timeout)
+        public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)
         {
-            IElement[] elements = { };
+            if (selector == null || selector.Count == 0) return null;
+            Process process = null;
             var sw = new Stopwatch();
-            sw.Start();
-            do
+            IElement[] elements = { };
+            if (CheckRunning)
             {
                 if (PluginConfig.get_elements_in_different_thread)
                 {
-                    elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
+                    elements = AutomationHelper.RunSTAThread<IElement[]>(() =>
                     {
                         try
                         {
@@ -265,7 +272,7 @@ namespace OpenRPA.Windows
                             Log.Error(ex, "");
                         }
                         return new UIElement[] { };
-                    }, TimeSpan.FromMilliseconds(1000)).Result;
+                    }, TimeSpan.FromMilliseconds(5000)).Result;
 
                 }
                 else
@@ -277,16 +284,14 @@ namespace OpenRPA.Windows
                 {
                     elements = new IElement[] { };
                 }
-            } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
-            // elements = GetElementsWithSelector(selector, null, 1);
-            Process process = null;
-            if (elements.Length > 0)
-            {
-                elements[0].Focus();
-                return;
+                // elements = GetElementsWithSelector(selector, null, 1);
+                if (elements.Length > 0)
+                {
+                    elements[0].Focus();
+                    var _window = ((UIElement)elements[0]);
+                    return new UIElement(_window.GetWindow());
+                }
             }
-
-            if (selector == null || selector.Count == 0) return;
             var f = selector.First();
             SelectorItemProperty p;
             bool isImmersiveProcess = false;
@@ -294,7 +299,6 @@ namespace OpenRPA.Windows
             string filename = null;
             string processname = null;
             string arguments = null;
-
             p = f.Properties.Where(x => x.Name == "isImmersiveProcess").FirstOrDefault();
             if (p != null) isImmersiveProcess = bool.Parse(p.Value);
             p = f.Properties.Where(x => x.Name == "applicationUserModelId").FirstOrDefault();
@@ -305,8 +309,6 @@ namespace OpenRPA.Windows
             if (p != null) processname = p.Value;
             p = f.Properties.Where(x => x.Name == "arguments").FirstOrDefault();
             if (p != null) arguments = p.Value;
-
-
             if (isImmersiveProcess)
             {
                 process = FlaUI.Core.Tools.WindowsStoreAppLauncher.Launch(applicationUserModelId, arguments);
@@ -328,7 +330,65 @@ namespace OpenRPA.Windows
             {
                 Log.Error("restore window: " + ex.ToString());
             }
-            process.WaitForInputIdle();
+            try
+            {
+                // process.WaitForInputIdle();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("WaitForInputIdle window: " + ex.ToString());
+            }
+
+
+            sw = new Stopwatch();
+            sw.Start();
+            if(timeout < TimeSpan.FromSeconds(10))
+            {
+                timeout = TimeSpan.FromSeconds(10);
+            }
+            do
+            {
+                if (PluginConfig.get_elements_in_different_thread)
+                {
+                    elements = AutomationHelper.RunSTAThread<IElement[]>(() =>
+                    {
+                        try
+                        {
+                            Log.Selector("LaunchBySelector in non UI thread");
+                            return GetElementsWithSelector(selector, null, 1);
+                        }
+                        catch (System.Threading.ThreadAbortException ex)
+                        {
+                            Log.Error(ex, "");
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex, "");
+                        }
+                        return new UIElement[] { };
+                    }, TimeSpan.FromMilliseconds(5000)).Result;
+
+                }
+                else
+                {
+                    Log.Selector("LaunchBySelector using UI thread");
+                    elements = GetElementsWithSelector(selector, null, 1);
+                }
+                if (elements == null)
+                {
+                    elements = new IElement[] { };
+                }
+            } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
+            WindowsSelectorItem.ClearCache();
+            if (elements.Length > 0)
+            {
+                var window = ((UIElement)elements[0]);
+                return new UIElement(window.GetWindow());
+            } 
+            else
+            {
+                return null;
+            }
 
         }
         public bool Match(SelectorItem item, IElement m)
@@ -338,30 +398,31 @@ namespace OpenRPA.Windows
         public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)
         {
             IElement[] elements = { };
-            var sw = new Stopwatch();
-            sw.Start();
-            do
-            {
-                elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
+                if (PluginConfig.get_elements_in_different_thread)
                 {
-                    try
+                    elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
                     {
-                        return GetElementsWithSelector(selector, null, 1);
-                    }
-                    catch (System.Threading.ThreadAbortException)
-                    {
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex, "");
-                    }
-                    return new UIElement[] { };
-                }, TimeSpan.FromMilliseconds(250)).Result;
-                if (elements == null)
+                        try
+                        {
+                            return GetElementsWithSelector(selector, null, 1);
+                        }
+                        catch (System.Threading.ThreadAbortException)
+                        {
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex, "");
+                        }
+                        return new UIElement[] { };
+                    }, TimeSpan.FromMilliseconds(5000)).Result;
+                } else
                 {
-                    elements = new IElement[] { };
+                    elements = GetElementsWithSelector(selector, null, 1);
                 }
-            } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
+                    if (elements == null)
+                    {
+                        elements = new IElement[] { };
+                    }
             // elements = GetElementsWithSelector(selector, null, 1);
             if (elements.Length > 0)
             {

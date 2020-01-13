@@ -56,7 +56,7 @@ namespace OpenRPA.Interfaces
         Task RegisterUser(string name, string username, string password);
         Task RegisterQueue(string queuename);
         Task<object> QueueMessage(string queuename, object data, string correlationId = null);
-        Task<T[]> Query<T>(string collectionname, string query, string projection = null, int top = 100, int skip = 0, string orderby = null);
+        Task<T[]> Query<T>(string collectionname, string query, string projection = null, int top = 100, int skip = 0, string orderby = null, string queryas = null);
         Task<T> InsertOrUpdateOne<T>(string collectionname, int w, bool j, string uniqeness, T item);
         Task<T> InsertOne<T>(string collectionname, int w, bool j, T item);
         Task<T> UpdateOne<T>(string collectionname, int w, bool j, T item);

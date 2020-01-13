@@ -41,19 +41,6 @@ namespace OpenRPA.RDService
                 Console.WriteLine("username: " + Context.Parameters["username"]);
                 Console.WriteLine("password: " + Context.Parameters["password"]);
             }
-            if (Config.local.jwt != null && Config.local.jwt.Length > 0)
-            {
-                try
-                {
-                    PluginConfig.tempjwt = new System.Net.NetworkCredential(string.Empty, Config.local.UnprotectString(Config.local.jwt)).Password;
-                    PluginConfig.entropy = null;
-                    Config.Save();
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-            }
             SetInterActWithDesktop();
             base.Install(stateSaver);
         }

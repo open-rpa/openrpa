@@ -87,7 +87,7 @@ namespace OpenRPA.RDServicePlugin
             Log.Debug("OpenRPA connected to OpenRPA Windows Service");
             var asm = System.Reflection.Assembly.GetEntryAssembly();
             var path = asm.CodeBase.Replace("file:///", "");
-            pipe.PushMessage(new RPAMessage("hello", NativeMethods.GetProcessUserName(), global.webSocketClient.user, path));
+            pipe.PushMessage(new RPAMessage("hello", NativeMethods.GetProcessUserName(System.Diagnostics.Process.GetCurrentProcess().Id), global.webSocketClient.user, path));
         }
         public void ReloadConfig()
         {

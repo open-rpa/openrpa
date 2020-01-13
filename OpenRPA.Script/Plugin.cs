@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OpenRPA.Java
+namespace OpenRPA.Script
 {
     public class Plugin : ObservableObject, IRecordPlugin
     {
@@ -26,7 +26,7 @@ namespace OpenRPA.Java
         {
             return Plugin._GetRootElements(anchor);
         }
-        public Interfaces.Selector.Selector GetSelector(Selector anchor, Interfaces.Selector.treeelement item)
+        public Selector GetSelector(Selector anchor, Interfaces.Selector.treeelement item)
         {
             return null;
         }
@@ -40,9 +40,19 @@ namespace OpenRPA.Java
             add { }
             remove { }
         }
-        public System.Windows.Controls.UserControl editor => null;
+        private Views.RecordPluginView view;
+        public System.Windows.Controls.UserControl editor
+        {
+            get
+            {
+                if (view == null)
+                {
+                    view = new Views.RecordPluginView();
+                }
+                return view;
+            }
+        }
         public string Name { get => "Script"; }
-        // public string Status => (hook!=null && hook.jvms.Count>0 ? "online":"offline");
         public string Status { get => ""; }
         public void Start()
         {
@@ -56,6 +66,8 @@ namespace OpenRPA.Java
         }
         public void Initialize(IOpenRPAClient client)
         {
+            _ = PluginConfig.csharp_intellisense;
+            _ = PluginConfig.vb_intellisense;
             Python.Runtime.PythonEngine.Initialize();
             _ = Python.Runtime.PythonEngine.BeginAllowThreads();
             //if (InvokeCode.pool == null)
@@ -70,7 +82,7 @@ namespace OpenRPA.Java
         {
             return null;
         }
-        public void LaunchBySelector(Selector selector, TimeSpan timeout)
+        public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)
         {
             throw new NotImplementedException();
         }

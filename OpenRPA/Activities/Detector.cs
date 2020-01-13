@@ -29,7 +29,8 @@ namespace OpenRPA.Activities
 
         void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object obj)
         {
-            context.RemoveBookmark(bookmark.Name);
+            // keep bookmark, we want to support being triggerede multiple times, so bookmark needs to be keep incase workflow is restarted
+            // context.RemoveBookmark(bookmark.Name);
         }
         protected override bool CanInduceIdle
         {

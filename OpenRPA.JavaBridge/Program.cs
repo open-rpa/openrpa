@@ -12,6 +12,27 @@ namespace OpenRPA.JavaBridge
         private static JavaHook hook;
         public static NamedPipeServer<JavaEvent> pipe { get; set; }
         private static MainWindow form;
+        private static void log(string message)
+        {
+            try
+            {
+                Console.WriteLine(message);
+                System.IO.File.AppendAllText("log.txt", message);
+                return;
+            }
+            catch (Exception)
+            {
+            }
+            try
+            {
+                var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                System.IO.File.AppendAllText(System.IO.Path.Combine(dir, "log.txt"), message);
+                return;
+            }
+            catch (Exception)
+            {
+            }
+        }
         static void Main(string[] args)
         {
             try
@@ -34,54 +55,93 @@ namespace OpenRPA.JavaBridge
             }
             catch (Exception ex)
             {
-                System.IO.File.AppendAllText("log.txt", ex.ToString());
-                throw;
+                log(ex.ToString());
             }
         }
         private static void OnJavaShutDown(int vmID)
         {
-            var e = new JavaEvent("JavaShutDown", vmID);
-            string json = JsonConvert.SerializeObject(e);
-            form.AddText("JavaShutDown vmID:" + vmID);
-            pipe.PushMessage(e);
+            try
+            {
+                var e = new JavaEvent("JavaShutDown", vmID);
+                string json = JsonConvert.SerializeObject(e);
+                form.AddText("JavaShutDown vmID:" + vmID);
+                pipe.PushMessage(e);
+            }
+            catch (Exception ex)
+            {
+                log(ex.ToString());
+            }
         }
         private static void OnMouseEntered(int vmID, IntPtr jevent, IntPtr ac)
         {
-            var e = new JavaEvent("MouseEntered", vmID, jevent, ac);
-            string json = JsonConvert.SerializeObject(e);
-            form.AddText("MouseEntered vmID:" + vmID);
-            pipe.PushMessage(e);
+            try
+            {
+                var e = new JavaEvent("MouseEntered", vmID, jevent, ac);
+                string json = JsonConvert.SerializeObject(e);
+                form.AddText("MouseEntered vmID:" + vmID);
+                pipe.PushMessage(e);
+            }
+            catch (Exception ex)
+            {
+                log(ex.ToString());
+            }
         }
         private static void OnMouseExited(int vmID, IntPtr jevent, IntPtr ac)
         {
-            var e = new JavaEvent("MouseExited", vmID, jevent, ac);
-            string json = JsonConvert.SerializeObject(e);
-            form.AddText("MouseExited vmID:" + vmID);
-            pipe.PushMessage(e);
+            try
+            {
+                var e = new JavaEvent("MouseExited", vmID, jevent, ac);
+                string json = JsonConvert.SerializeObject(e);
+                form.AddText("MouseExited vmID:" + vmID);
+                pipe.PushMessage(e);
+            }
+            catch (Exception ex)
+            {
+                log(ex.ToString());
+            }
         }
         private static void OnMouseClicked(int vmID, IntPtr jevent, IntPtr ac)
         {
-            var e = new JavaEvent("MouseClicked", vmID, jevent, ac);
-            string json = JsonConvert.SerializeObject(e);
-            form.AddText("MouseClicked vmID:" + vmID);
-            pipe.PushMessage(e);
+            try
+            {
+                var e = new JavaEvent("MouseClicked", vmID, jevent, ac);
+                string json = JsonConvert.SerializeObject(e);
+                form.AddText("MouseClicked vmID:" + vmID);
+                pipe.PushMessage(e);
+            }
+            catch (Exception ex)
+            {
+                log(ex.ToString());
+            }
         }
         private static void OnMousePressed(int vmID, IntPtr jevent, IntPtr ac)
         {
-            var e = new JavaEvent("MousePressed", vmID, jevent, ac);
-            string json = JsonConvert.SerializeObject(e);
-            form.AddText("MousePressed vmID:" + vmID);
-            pipe.PushMessage(e);
+            try
+            {
+                var e = new JavaEvent("MousePressed", vmID, jevent, ac);
+                string json = JsonConvert.SerializeObject(e);
+                form.AddText("MousePressed vmID:" + vmID);
+                pipe.PushMessage(e);
+            }
+            catch (Exception ex)
+            {
+                log(ex.ToString());
+            }
         }
         private static void OnMouseReleased(int vmID, IntPtr jevent, IntPtr ac)
         {
-            var e = new JavaEvent("MouseReleased", vmID, jevent, ac);
-            string json = JsonConvert.SerializeObject(e);
-            form.AddText("MouseReleased vmID:" + vmID);
-            pipe.PushMessage(e);
+            try
+            {
+                var e = new JavaEvent("MouseReleased", vmID, jevent, ac);
+                string json = JsonConvert.SerializeObject(e);
+                form.AddText("MouseReleased vmID:" + vmID);
+                pipe.PushMessage(e);
+            }
+            catch (Exception ex)
+            {
+                log(ex.ToString());
+            }
         }
-
-
         private static void Server_OnReceivedMessage(NamedPipeConnection<JavaEvent, JavaEvent> connection, JavaEvent message)
         {
             try
@@ -95,6 +155,7 @@ namespace OpenRPA.JavaBridge
             }
             catch (Exception ex)
             {
+                log(ex.ToString());
                 form.AddText(ex.ToString());
             }
         }

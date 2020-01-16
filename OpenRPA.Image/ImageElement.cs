@@ -174,7 +174,19 @@ namespace OpenRPA.Image
                 return new IElement[] { };
             }
         }
-
+        public bool SaveAs(string filename)
+        {
+            try
+            {
+                element.Save(filename);
+                return true;
+            }
+            catch (Exception ex) 
+            {
+                Log.Error(ex.ToString());
+            }
+            return false;
+        }
 
     }
 }

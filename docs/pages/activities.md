@@ -9,7 +9,8 @@ description: A short Overview of base Activies
 
 **What:** The basic idea behind this activity, is to make it easy to check for a running application, and launch it, if it is not. At the time of writing this, the activity supports Windows components, Internet Explorer and NativeMessaging (chrome/Firefox)
 
-**How:** Click any running application/webpage and a selector for that application will be created. To fine tune, click Open Selector and make your modifications (like what elements to look for) To test the selector is working, click Highlight
+**How:** Click any running application/webpage and a selector for that application will be created. To fine tune, click Open Selector and make your modifications (like what elements to look for) To test the selector is working, click Highlight.
+Clicking "Select element" will try and find the position of the window, and save it in x,y,width and height. It will then reposition and resize the window to match that every time it gets called.
 
 **Why:** Use it instead of clicking though the start menu or opening files directly. The selector will include details like parameters, so if you opened word by clicking a document, the selector will detect that too.
 
@@ -22,8 +23,6 @@ description: A short Overview of base Activies
 **How:** Click any running application/webpage and a selector for that application will be created. To fine tune, click Open Selector and make your modifications (like what elements to look for) To test the selector is working, click Highlight
 
 **Why:** Use it instead of clicking the close button. Can be handy if the application some times hangs, or you just want an efficient way of forcing an application to close.
-
-
 
 # HighlightElement
 
@@ -67,6 +66,16 @@ Setting MinResults to 0, effectively means your only checking if an object exist
 
 **Why:** Without elements, it's not really RPA 
 
+# ForEachDataRow
+
+![image-20200116100128462](../img/image-20200116100128462.png)
+
+**What:** Many activities return a data table or dataset, and looping though that, can be a little bit of a hazel, since it does not have an easy accessible enumerator. Here, you 
+
+**How:** Just type the name of the table and everything in the body will be called once, for row.
+
+**Why:** Saves time, from having to setup an ForEachWithBodyFactory and writing a Linq query with an enumerator, or adding a the System.Data.DataSetExtensions namespace to get access to the AsEnumerable() extension method.
+
 # GetImage
 
 ![1563281185707](activities/1563281185707.png)
@@ -79,7 +88,7 @@ Setting MinResults to 0, effectively means your only checking if an object exist
 
 **Why:** Image you want to ready the assembly name, using images, you open properties on the project find the label for the field, and then in GetImage select the field with the value. Now you can easily grab the value using OCR ( .Value will use OpenCV OCR)
 
-GetText
+# GetText
 
 ![1564854374331](activities/GetText.png)
 
@@ -88,6 +97,24 @@ GetText
 **How:** Place GetText inside **any** GetElement or GetImage and gettext will get the text from the image using OCR, using the language selected under the Settings. To filter the results to a specefic word or sentence you can set WordLimit. Each result has coordinates and and a image, to be used by other activities, like elementclick, highlight etc.
 
 **Why:** Instead of searching for a specific picture you can use GetText to find elements in a picture, useful for automating in RDP/Citric/Teamviewer or games/paints etc.
+
+# LoadFromFile
+
+![image-20200116102833662](../img/image-20200116102833662.png)
+
+**What:** Load an image file, and returns an ImageElement
+
+**How:** Just select the file, and set Result to a variable of type ImageElement, or reference item inside the body.
+
+**Why:** Sometimes you may need and image from a file, not something currently present on the screen, for instance doing OCR on the image, or searching for something dynamicl
+
+# TakeScreenshot
+
+![image-20200116103206663](../img/image-20200116103206663.png)
+
+**What:** Takes a picture of either the whole screen, and element or a specific area of the screen.
+
+**How:** This activity almost works exactly like GetImage, except it also supports being used outside an GetElement, to take images of the desktop or a specific area.
 
 # CommentOut
 
@@ -116,6 +143,16 @@ GetText
 **What:** Insert a text string into the users clipboard
 
 **How:** Just drop it in and set the text in Text
+
+# MoveMouse
+
+![image-20200116101756696](../img/image-20200116101756696.png)
+
+**What:** Move the mouse to a specific location
+
+**How:** Either use within an GetElement and OffsetX, OffsetY will be relative to that item, or remove the item variable and OffsetX, OffsetY will be on desktop 1
+
+**Why:** One example would be menu's you can only open with mouse over but not click. 
 
 # Detector
 
@@ -153,6 +190,16 @@ You can use OpenFlow to trigger other robots based on a trigger ( or interact wi
 **How:** Drag in InvokeOpenRPA and select the workflow you would like to call. Any arguments in the targeted workflow will be mapped to local variables of the same name, to support transferring parameters between the two workflows. Click "Add variable" to have all the in and out arguments in the targeted workflow created locally in the current scope/sequence.
 
 **Why:** More complex workflows is easier to manage if split up to smaller "chucks" that call each other. Having multiple smaller workflows also give easy access to run statistics on each part of the workflow using OpenFlow.
+
+# InvokeRemoteOpenRPA
+
+![image-20200116101235702](../img/image-20200116101235702.png)
+
+**What:** Call a workflow on a remote robot, or group of robots.
+
+**How:** Just select the robot or role you want to send the request to, and the list of workflows will limit it self to what ever that robot or role have access too. If the workflow takes or returns arguments clicking "Add variables" will add a variable for each for those to the current sequence.
+
+**Why:** Easier than having to add an OpenFlow workflow to handle calling the robot. It's always more secure to use OpenFlow to handle multiple robots, but sometimes its nice to have a fast easy way, to get something done on multiple machines.
 
 # InsertOne
 
@@ -215,25 +262,55 @@ Using Uniqueness you can define a custom unique constraint when inserting or upd
 
 **Why:** Easy way to save and work with data across domains/multiple robots or use it as a convenient database.
 
-# UploadFile
+# SaveFile
 
-![1564853991010](activities/UploadFile.png)
+![image-20200116103439150](../img/image-20200116103439150.png)
 
 **What:** Upload a file to [GridFS](https://docs.mongodb.com/manual/core/gridfs/) in the database in OpenFlow.
 
-**How:** Uploads a file to OpenFlow, can be downloaded again using DownloadFile, updated using InsertOrUpdateOne and  deleted using RemoveOne 
+**How:** Uploads a file to OpenFlow, can be downloaded again using GetFile, updated using InsertOrUpdateOne and  deleted using RemoveOne 
 
 **Why:** Easy way to save and work with data across domains/multiple robots or use it as a convenient database.
 
-# DownloadFile
+# GetFile
 
-![1564854178523](activities/DownloadFile.png)
+![image-20200116103517686](../img/image-20200116103517686.png)
 
 **What:** Download a file from [GridFS](https://docs.mongodb.com/manual/core/gridfs/) stored in the database in OpenFlow.
 
 **How:** Download a file again using either _id or get the latest version based on the filename, if user has access.
 
 **Why:** Easy way to save and work with data across domains/multiple robots or use it as a convenient database.
+
+# SetCredentials
+
+![image-20200116103840559](../img/image-20200116103840559.png)
+
+**What:** Save a username and password with a name.
+
+**How:** Just find a name for your credential set, and set username and password,
+
+**Why:** For easy access to updating credentials from the robot
+
+GetCredentials
+
+![image-20200116104028045](../img/image-20200116104028045.png)
+
+**What:** Gets credentials by name from OpenFlow
+
+**How:** Set name, and save username and password in variables, if you cannot use SecureString use UnsecurePassword to save the password in a string variable instead.
+
+**Why:** It's not good practice to keep username and passwords in a workflow, so is more safe to save the them inside OpenFlow where username and password will be encrypted.
+
+# SetAutoLogin
+
+![image-20200116112256387](../img/image-20200116112256387.png)
+
+**What:** Set auto login information for current computer.
+
+**How:** This will only work if robot is running with admin privileges. Forces the computer to automatically login with the given credentials at next reboot. Will work for ever is count is set to 0. 
+
+**Why:** This is a better alternative than setting username and password in clear text in registry, this activity will save the password in the local lsaStore 
 
 # ReadCell
 
@@ -358,3 +435,67 @@ Using Uniqueness you can define a custom unique constraint when inserting or upd
 **How:** Click Open designer to design a workflow, you can find more information on the syntax on [Forge Forms](https://wpf-forge.github.io/Forge.Forms/) . Any variables matching a name in the form will be bound to that field, so if the variable has a value it will be show in the form, and once the user closes the form, the inserted values will be mapped to the variables. For easy creating the variable of the correct type, click "Create variables" once the form has been designed in the designer. Result.Action will contain the name of the button the user pressed and null/Nothing if canceled.
 
 **Why:** Handy for creating user interaction in the workflow
+
+# InvokeCode
+
+![image-20200116104451646](../img/image-20200116104451646.png)
+
+![image-20200116104547448](../img/image-20200116104547448.png)
+
+**What:** Allows you to write code in a couple of different languages. 
+
+**How:** Drop in the activity, and click Open Editor. This will copy the list of namespaces currently imported and save it (used when executing the code). In the drop down list select you preferred language, if you choose VB or C# you will also get IntelliSense while writing code. If you get an error executing the code, you will get a line number, to find the same line in your code, you need to substract the number of lines show in the title. So if you get an error on line 32 and the title say add 20 lines, the line that had the error will be line 12
+
+**Why:** Workflows are cool, but sometimes it is just more efficient or convenient to write a couple of lines of code in a familiar language.
+
+# DownloadFile
+
+![image-20200116110114662](../img/image-20200116110114662.png)
+
+**What:** Download a file to the local machine.
+
+**How:** Set URL and select a folder and filename to save as. If overwrite is false and the file exists, the file will not be downloaded again.
+
+# ReadExcel
+
+![image-20200116110712492](../img/image-20200116110712492.png)
+
+**What:** Reads an excel or CSV file, and returns a dataset while all the data. 
+
+**How:** Supply a filename, set weather first row should be treated as Header and a DataSet variable. If reading an excel file, each Worksheet will be added as a new table.
+You can use ForEachDataRow to loop though the data using .table(0) if you have multiple worksheets you can also get the table by name like .table("Sheet1")
+
+**Why:** Useful if you are on a computer without a newer office installed, or you don't want excel to open while reading the data.
+
+# WriteExcel
+
+![image-20200116112110212](../img/image-20200116112110212.png)
+
+**What:** Write a data table or data set to a new excel file
+
+**How:** Supply a filename and a data table or data set. This will overwrite the file, and this will remove any calculations or formatting. To include a header, set include header to true. You can have the data formatted a little better by selecting one of the built in themes.
+
+**Why:** Good alternative if a newer office is not installed, or if you don't care about layout and formulas.
+
+# ReadJSON
+
+![image-20200116110852261](../img/image-20200116110852261.png)
+
+**What:** Read a simple JSON structure or array, into a data table for easy parsing.
+
+**How:**Supply a json file, and a datatable variable and use ForEachDataRow to loop though it
+
+**Why:** An alternative to creating JObject/JArray and parse it your self 
+
+# ReadPDF
+
+![image-20200116111306492](../img/image-20200116111306492.png)
+
+**What:** Read a PDF file
+
+**How:** Supply a pdf file, and either get all text as a string or parse it using the [PDFReader](https://api.itextpdf.com/iText5/5.5.11/com/itextpdf/text/pdf/PdfReader.html) object 
+
+**Why:** Simple solution for basic PDF reading, use [AWS Textract](https://aws.amazon.com/textract/) or similar services for more advanced parsing, or [Abby](https://www.abbyy.com/en-eu/solutions/accounts-payable-automation) or [Rossum](https://rossum.ai/) or similar for invoice parsing.
+
+
+

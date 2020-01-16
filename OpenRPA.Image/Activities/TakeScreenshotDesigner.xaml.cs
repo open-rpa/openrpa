@@ -15,9 +15,9 @@ using System.Windows.Media.Imaging;
 
 namespace OpenRPA.Image
 {
-    public partial class GetImageDesigner : INotifyPropertyChanged
+    public partial class TakeScreenshotDesigner : INotifyPropertyChanged
     {
-        public GetImageDesigner()
+        public TakeScreenshotDesigner()
         {
             InitializeComponent();
             HighlightImage = Extensions.GetImageSourceFromResource("search.png");
@@ -126,29 +126,31 @@ namespace OpenRPA.Image
                 _overlayWindow.Bounds = match;
                 _overlayWindow.TopMost = true;
 
-                var tip = new Interfaces.Overlay.TooltipWindow("Select relative area to capture");
+                var msg = "Select relative area to capture";
+                if (match.IsEmpty) msg = "Select desktop area to capture";
+                var tip = new Interfaces.Overlay.TooltipWindow(msg);
                 rect = await getrectangle.GetitAsync();
                 tip.Close();
                 tip = null;
             }
-
-            ModelItem.Properties["OffsetX"].SetValue(new System.Activities.InArgument<int>(rect.X - match.X));
-            ModelItem.Properties["OffsetY"].SetValue(new System.Activities.InArgument<int>(rect.Y - match.Y));
+            ModelItem.Properties["X"].SetValue(new System.Activities.InArgument<int>(rect.X - match.X));
+            ModelItem.Properties["Y"].SetValue(new System.Activities.InArgument<int>(rect.Y - match.Y));
             ModelItem.Properties["Width"].SetValue(new System.Activities.InArgument<int>(rect.Width));
             ModelItem.Properties["Height"].SetValue(new System.Activities.InArgument<int>(rect.Height));
             Interfaces.GenericTools.Restore();
         }
         private async void Highlight_Click(object sender, RoutedEventArgs e)
         {
-            var OffsetX = ModelItem.GetValue<int>("OffsetX");
-            var OffsetY = ModelItem.GetValue<int>("OffsetY");
+            Rectangle match = await GetBaseRectangle();
+            var X = ModelItem.GetValue<int>("X");
+            var Y = ModelItem.GetValue<int>("Y");
             var Width = ModelItem.GetValue<int>("Width");
             var Height = ModelItem.GetValue<int>("Height");
-            Rectangle match = await GetBaseRectangle();
+
             var _hi = new ImageElement(match);
             _ = _hi.Highlight(false, System.Drawing.Color.Blue, TimeSpan.FromSeconds(1));
 
-            var rect = new ImageElement(new Rectangle(_hi.X + OffsetX, _hi.Y + OffsetY, Width, Height));
+            var rect = new ImageElement(new Rectangle(_hi.X + X, _hi.Y + Y, Width, Height));
             await rect.Highlight(false, System.Drawing.Color.PaleGreen, TimeSpan.FromSeconds(1));
             Interfaces.GenericTools.Restore();
         }

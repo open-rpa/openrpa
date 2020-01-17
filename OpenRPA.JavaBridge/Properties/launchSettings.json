@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "OpenRPA.JavaBridge": {
+      "commandName": "Project"
+    },
+    "1212": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\OpenRPA\\OpenRPA.JavaBridge.exe"
+    }
+  }
+}

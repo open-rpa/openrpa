@@ -226,196 +226,205 @@ namespace OpenRPA
         {
             AutomationHelper.syncContext.Post(async o =>
             {
-                string url = "http";
-                var u = new Uri(Config.local.wsurl);
-                if (u.Scheme == "wss" || u.Scheme == "https") url = "https";
-                url = url + "://" + u.Host;
-                if (!u.IsDefaultPort) url = url + ":" + u.Port.ToString();
-                // App.notifyIcon.ShowBalloonTip(5000, "tooltiptitle", "tipMessage", System.Windows.Forms.ToolTipIcon.Info);
-                var sw = new System.Diagnostics.Stopwatch();
-                sw.Start();
-                Log.Debug("WebSocketClient_OnOpen::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                SetStatus("Connected to " + Config.local.wsurl);
-                TokenUser user = null;
-                while (user == null)
+                try
                 {
-                    string errormessage = string.Empty;
-                    if (!string.IsNullOrEmpty(Config.local.username) && Config.local.password != null && Config.local.password.Length > 0)
+                    string url = "http";
+                    var u = new Uri(Config.local.wsurl);
+                    if (u.Scheme == "wss" || u.Scheme == "https") url = "https";
+                    url = url + "://" + u.Host;
+                    if (!u.IsDefaultPort) url = url + ":" + u.Port.ToString();
+                    // App.notifyIcon.ShowBalloonTip(5000, "tooltiptitle", "tipMessage", System.Windows.Forms.ToolTipIcon.Info);
+                    var sw = new System.Diagnostics.Stopwatch();
+                    sw.Start();
+                    Log.Debug("WebSocketClient_OnOpen::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                    SetStatus("Connected to " + Config.local.wsurl);
+                    TokenUser user = null;
+                    while (user == null)
                     {
-                        try
+                        string errormessage = string.Empty;
+                        if (!string.IsNullOrEmpty(Config.local.username) && Config.local.password != null && Config.local.password.Length > 0)
                         {
-                            SetStatus("Connected to " + Config.local.wsurl + " signing in as " + Config.local.username + " ...");
-                            Log.Debug("Signing in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                            user = await global.webSocketClient.Signin(Config.local.username, Config.local.UnprotectString(Config.local.password));
-                            Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                            SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
-                        }
-                        catch (Exception ex)
-                        {
-                            this.Hide();
-                            Log.Error(ex, "");
-                            errormessage = ex.Message;
-                        }
-                    }
-                    if (Config.local.jwt != null && Config.local.jwt.Length > 0)
-                    {
-                        try
-                        {
-                            SetStatus("Connected to " + Config.local.wsurl + " signing ...");
-                            Log.Debug("Signing in with token " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                            user = await global.webSocketClient.Signin(Config.local.UnprotectString(Config.local.jwt));
-                            if (user != null)
+                            try
                             {
-                                Config.local.username = user.username;
-                                Config.local.password = new byte[] { };
-                                Config.Save();
+                                SetStatus("Connected to " + Config.local.wsurl + " signing in as " + Config.local.username + " ...");
+                                Log.Debug("Signing in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                user = await global.webSocketClient.Signin(Config.local.username, Config.local.UnprotectString(Config.local.password));
                                 Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                                 SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
                             }
+                            catch (Exception ex)
+                            {
+                                this.Hide();
+                                Log.Error(ex, "");
+                                errormessage = ex.Message;
+                            }
+                        }
+                        if (Config.local.jwt != null && Config.local.jwt.Length > 0)
+                        {
+                            try
+                            {
+                                SetStatus("Connected to " + Config.local.wsurl + " signing ...");
+                                Log.Debug("Signing in with token " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                user = await global.webSocketClient.Signin(Config.local.UnprotectString(Config.local.jwt));
+                                if (user != null)
+                                {
+                                    Config.local.username = user.username;
+                                    Config.local.password = new byte[] { };
+                                    Config.Save();
+                                    Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                    SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                this.Hide();
+                                Log.Error(ex, "");
+                                errormessage = ex.Message;
+                            }
+                        }
+                        if (user == null)
+                        {
+                            if (loginInProgress == false)
+                            {
+                                loginInProgress = true;
+                                string jwt = null;
+                                try
+                                {
+                                    Hide();
+                                    var signinWindow = new Views.SigninWindow(url, true);
+                                    signinWindow.ShowDialog();
+                                    jwt = signinWindow.jwt;
+                                    if (!string.IsNullOrEmpty(jwt))
+                                    {
+                                        Config.local.jwt = Config.local.ProtectString(jwt);
+                                        user = await global.webSocketClient.Signin(Config.local.UnprotectString(Config.local.jwt));
+                                        if (user != null)
+                                        {
+                                            Config.local.username = user.username;
+                                            Config.Save();
+                                            Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                            SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Close();
+                                        Application.Current.Shutdown();
+                                    }
+
+                                }
+                                catch (Exception)
+                                {
+                                    throw;
+                                }
+                                finally
+                                {
+                                    Show();
+                                    loginInProgress = false;
+                                }
+                                //SetStatus("Connected to " + Config.local.wsurl);
+                                //loginInProgress = true;
+                                //var w = new Views.LoginWindow();
+                                //w.username = Config.local.username;
+                                //w.errormessage = errormessage;
+                                //w.fqdn = new Uri(Config.local.wsurl).Host;
+                                //this.Hide();
+                                //if (w.ShowDialog() != true) { this.Show(); return; }
+                                //Config.local.username = w.username; Config.local.password = Config.local.ProtectString(w.password);
+                                //Config.Save();
+                                //loginInProgress = false;
+
+                            }
+                            else
+                            {
+                                return;
+                            }
+                        }
+                    }
+                    this.Show();
+                    var test = lvDataBinding.ItemsSource;
+                    //lvDataBinding.ItemsSource = Plugins.recordPlugins;
+
+                    await LoadServerData();
+                    try
+                    {
+                        InputDriver.Instance.Initialize();
+                        SetStatus("Run pending workflow instances");
+                        Log.Debug("RunPendingInstances::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        await WorkflowInstance.RunPendingInstances();
+                        Log.Debug("RunPendingInstances::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                    Log.Debug("WebSocketClient_OnOpen::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                    SetStatus("Load layout and reopen workflows");
+                    if (Projects.Count == 0 && reloadTimer.Enabled == false)
+                    {
+                        OnOpen(null);
+                        string Name = "New Project";
+                        try
+                        {
+                            Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name, true);
+                            Workflow workflow = project.Workflows.First();
+                            workflow.Project = project;
+                            Projects.Add(project);
+                            OnOpenWorkflow(workflow);
                         }
                         catch (Exception ex)
                         {
-                            this.Hide();
-                            Log.Error(ex, "");
-                            errormessage = ex.Message;
+                            Log.Error(ex.ToString());
                         }
                     }
-                    if (user == null)
-                    {
-                        if (loginInProgress == false)
-                        {
-                            loginInProgress = true;
-                            string jwt = null;
-                            try
-                            {
-                                Hide();
-                                var signinWindow = new Views.SigninWindow(url, true);
-                                signinWindow.ShowDialog();
-                                jwt = signinWindow.jwt;
-                                if (!string.IsNullOrEmpty(jwt))
-                                {
-                                    Config.local.jwt = Config.local.ProtectString(jwt);
-                                    user = await global.webSocketClient.Signin(Config.local.UnprotectString(Config.local.jwt));
-                                    if (user != null)
-                                    {
-                                        Config.local.username = user.username;
-                                        Config.Save();
-                                        Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                                        SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
-                                    }
-                                }
-                                else
-                                {
-                                    Close();
-                                    Application.Current.Shutdown();
-                                }
-
-                            }
-                            catch (Exception)
-                            {
-                                throw;
-                            }
-                            finally
-                            {
-                                Show();
-                                loginInProgress = false;
-                            }
-                            //SetStatus("Connected to " + Config.local.wsurl);
-                            //loginInProgress = true;
-                            //var w = new Views.LoginWindow();
-                            //w.username = Config.local.username;
-                            //w.errormessage = errormessage;
-                            //w.fqdn = new Uri(Config.local.wsurl).Host;
-                            //this.Hide();
-                            //if (w.ShowDialog() != true) { this.Show(); return; }
-                            //Config.local.username = w.username; Config.local.password = Config.local.ProtectString(w.password);
-                            //Config.Save();
-                            //loginInProgress = false;
-
-                        }
-                        else
-                        {
-                            return;
-                        }
-                    }
-                }
-                this.Show();
-                var test = lvDataBinding.ItemsSource;
-                //lvDataBinding.ItemsSource = Plugins.recordPlugins;
-
-                await LoadServerData();
-                try
-                {
-                    InputDriver.Instance.Initialize();
-                    SetStatus("Run pending workflow instances");
-                    Log.Debug("RunPendingInstances::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    await WorkflowInstance.RunPendingInstances();
-                    Log.Debug("RunPendingInstances::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-                Log.Debug("WebSocketClient_OnOpen::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                SetStatus("Load layout and reopen workflows");
-                if (Projects.Count == 0 && reloadTimer.Enabled == false)
-                {
-                    OnOpen(null);
-                    string Name = "New Project";
+                    LoadLayout();
+                    System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = true;
+                    System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.Normal;
+                    System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Normal;
+                    SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
                     try
                     {
-                        Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name, true);
-                        Workflow workflow = project.Workflows.First();
-                        workflow.Project = project;
-                        Projects.Add(project);
-                        OnOpenWorkflow(workflow);
+                        Signedin?.Invoke(user);
                     }
                     catch (Exception ex)
                     {
                         Log.Error(ex.ToString());
                     }
-                }
-                LoadLayout();
-                System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = true;
-                System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.Normal;
-                System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Normal;
-                SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
-                try
-                {
-                    Signedin?.Invoke(user);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-                _ = Task.Run(async () =>
-                {
-                    try
+                    _ = Task.Run(async () =>
                     {
-                        SetStatus("Registering queue for robot");
-                        Log.Debug("Registering queue for robot " + global.webSocketClient.user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        await global.webSocketClient.RegisterQueue(global.webSocketClient.user._id);
-
-                        foreach (var role in global.webSocketClient.user.roles)
+                        try
                         {
-                            var roles = await global.webSocketClient.Query<apirole>("users", "{_id: '" + role._id + "'}", top: 5000);
-                            if (roles.Length == 1 && roles[0].rparole)
+                            SetStatus("Registering queue for robot");
+                            Log.Debug("Registering queue for robot " + global.webSocketClient.user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                            await global.webSocketClient.RegisterQueue(global.webSocketClient.user._id);
+
+                            foreach (var role in global.webSocketClient.user.roles)
                             {
-                                SetStatus("Registering queue for robot (" + role.name + ")");
-                                Log.Debug("Registering queue for role " + role.name + " " + role._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                                await global.webSocketClient.RegisterQueue(role._id);
+                                var roles = await global.webSocketClient.Query<apirole>("users", "{_id: '" + role._id + "'}", top: 5000);
+                                if (roles.Length == 1 && roles[0].rparole)
+                                {
+                                    SetStatus("Registering queue for robot (" + role.name + ")");
+                                    Log.Debug("Registering queue for role " + role.name + " " + role._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                    await global.webSocketClient.RegisterQueue(role._id);
+                                }
                             }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.ToString());
-                    }
-                    finally
-                    {
-                        SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
-                    }
-                });
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                        }
+                        finally
+                        {
+
+                            SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+                        }
+                    });
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }, null);
         }
         private void ReloadTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -831,10 +840,22 @@ namespace OpenRPA
         }
         private void SetStatus(string message)
         {
-            AutomationHelper.syncContext.Post(o =>
+            try
             {
-                LabelStatusBar.Content = message;
-            }, null);
+                AutomationHelper.syncContext.Post(o =>
+                {
+                    try
+                    {
+                        LabelStatusBar.Content = message;
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }, null);
+            }
+            catch (Exception)
+            {
+            }
         }
         private void DManager_ActiveContentChanged(object sender, EventArgs e)
         {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic.Activities;
+using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
 using System;
 using System.Activities;
@@ -31,12 +32,19 @@ namespace OpenRPA.Activities
         public ObservableCollection<apibase> workflows { get; set; }
         private async void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
         {
-            var _workflows = await global.webSocketClient.Query<apibase>("workflow", "{_type: 'workflow', rpa: true}");
-            _workflows = _workflows.OrderBy(x => x.name).ToArray();
-            workflows.Clear();
-            foreach (var w in _workflows)
+            try
             {
-                workflows.Add(w);
+                var _workflows = await global.webSocketClient.Query<apibase>("workflow", "{_type: 'workflow', rpa: true}");
+                _workflows = _workflows.OrderBy(x => x.name).ToArray();
+                workflows.Clear();
+                foreach (var w in _workflows)
+                {
+                    workflows.Add(w);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
             }
         }
     }

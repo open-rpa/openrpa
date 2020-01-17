@@ -32,13 +32,23 @@ namespace OpenRPA.Activities
         public ObservableCollection<Workflow> workflows { get; set; }
         private void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
         {
-            var result = new List<Workflow>();
-            foreach (var p in MainWindow.instance.Projects)
+            try
             {
-                foreach (var w in p.Workflows) result.Add(w);
+                if (MainWindow.instance == null) throw new ArgumentException("MainWindow.instance");
+                if (MainWindow.instance.Projects == null) throw new ArgumentException("MainWindow.instance.Projects");
+                if (MainWindow.instance.Projects.Count == 0) throw new ArgumentException("MainWindow.instance.Projects.Count == 0");
+                var result = new List<Workflow>();
+                foreach (var p in MainWindow.instance.Projects)
+                {
+                    foreach (var w in p.Workflows) result.Add(w);
+                }
+                result = result.OrderBy(x => x.name).OrderBy(x => x.Project.name).ToList();
+                foreach (var w in result) workflows.Add(w);
             }
-            result = result.OrderBy(x => x.name).OrderBy(x => x.Project.name).ToList();
-            foreach (var w in result) workflows.Add(w);
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -46,9 +56,12 @@ namespace OpenRPA.Activities
             try
             {
                 string workflowid = (string)ModelItem.Properties["workflow"].Value.GetCurrentValue();
+                if (string.IsNullOrEmpty(workflowid)) throw new ArgumentException("workflow property is null");
                 var workflow = MainWindow.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
                 var designer = MainWindow.instance.Designer;
-                foreach(var p in workflow.Parameters)
+                if (string.IsNullOrEmpty(workflowid)) throw new ArgumentException("workflow is null, not found");
+                if (string.IsNullOrEmpty(workflowid)) throw new ArgumentException("designer is null, cannot find current designer");
+                foreach (var p in workflow.Parameters)
                 {
                     Type t = Type.GetType(p.type);
                     Log.Information("Checking for variable " + p.name + " of type " + p.type);

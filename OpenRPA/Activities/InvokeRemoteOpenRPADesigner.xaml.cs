@@ -47,11 +47,20 @@ namespace OpenRPA.Activities
         }
         private async void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
         {
-            originalworkflow = ModelItem.GetValue<string>("workflow");
-            originaltarget = ModelItem.GetValue<string>("target");
-            // loadLocalWorkflows();
-            var _users = await global.webSocketClient.Query<apiuser>("users", "{\"$or\":[ {\"_type\": \"user\"}, {\"_type\": \"role\", \"rparole\": true} ]}", top: 5000);
-            foreach (var u in _users) robots.Add(u);
+            try
+            {
+                originalworkflow = ModelItem.GetValue<string>("workflow");
+                originaltarget = ModelItem.GetValue<string>("target");
+                //if (string.IsNullOrEmpty(originalworkflow)) throw new ArgumentException("ModelItem.workflow is null");
+                //if (string.IsNullOrEmpty(originaltarget)) throw new ArgumentException("ModelItem.target is null");
+                // loadLocalWorkflows();
+                var _users = await global.webSocketClient.Query<apiuser>("users", "{\"$or\":[ {\"_type\": \"user\"}, {\"_type\": \"role\", \"rparole\": true} ]}", top: 5000);
+                foreach (var u in _users) robots.Add(u);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -76,25 +85,33 @@ namespace OpenRPA.Activities
         }
         private async void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            string workflow = ModelItem.GetValue<string>("workflow");
-            string target = ModelItem.GetValue<string>("target");
-            if (string.IsNullOrEmpty(target)) { loadLocalWorkflows();  return; }
-            if(target != originaltarget)
+            try
             {
+                string workflow = ModelItem.GetValue<string>("workflow");
+                string target = ModelItem.GetValue<string>("target");
+                if (string.IsNullOrEmpty(target)) { loadLocalWorkflows(); return; }
+                if (target != originaltarget)
+                {
+                    workflows.Clear();
+                    workflows.Add(new Workflow() { name = "Loading...", _id = "loading" });
+                    ModelItem.Properties["workflow"].SetValue("loading");
+                }
+                // var _workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", "{'name':1, 'projectandname': 1}", orderby: "{projectid:-1,name:-1}", queryas: target);
+                var _workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", queryas: target);
+                _workflows = _workflows.OrderBy(x => x.ProjectAndName).ToArray();
                 workflows.Clear();
-                workflows.Add(new Workflow() { name = "Loading...", _id = "loading" });
-                ModelItem.Properties["workflow"].SetValue("loading");
+                foreach (var w in _workflows) workflows.Add(w);
+                var currentworkflow = ModelItem.GetValue<string>("workflow");
+                if (workflow != currentworkflow && !string.IsNullOrEmpty(currentworkflow))
+                {
+                    ModelItem.Properties["workflow"].SetValue(workflow);
+                }
             }
-            // var _workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", "{'name':1, 'projectandname': 1}", orderby: "{projectid:-1,name:-1}", queryas: target);
-            var _workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", queryas: target);
-            _workflows = _workflows.OrderBy(x => x.ProjectAndName).ToArray();
-            workflows.Clear();
-            foreach (var w in _workflows) workflows.Add(w);
-            var currentworkflow = ModelItem.GetValue<string>("workflow");
-            if(workflow != currentworkflow && !string.IsNullOrEmpty(currentworkflow))
+            catch (Exception ex)
             {
-                ModelItem.Properties["workflow"].SetValue(workflow);
+                Log.Error(ex.ToString());
             }
+
         }
     }
 }

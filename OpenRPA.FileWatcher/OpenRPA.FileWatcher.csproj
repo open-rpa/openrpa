@@ -3,7 +3,7 @@
     <TargetFramework>net462</TargetFramework>
     <Authors>OpenRPA</Authors>
     <Product>OpenRPA</Product>
-    <Description>Detector plugin for monitoring local file changes</Description>
+    <Description>Detector plugin for monitoring local file changes, created for OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -13,6 +13,7 @@
 1.0.9 update interfaces reference</PackageReleaseNotes>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
+    <PackageTags>OpenRPA</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>

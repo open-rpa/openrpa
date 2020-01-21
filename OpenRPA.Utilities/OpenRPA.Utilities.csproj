@@ -13,6 +13,7 @@
     <Version>1.0.2</Version>
     <PackageReleaseNotes>1.0.2 Add support for custom iterator variable
 1.0.1 Add langauges and bug fixes</PackageReleaseNotes>
+    <PackageTags>OpenRPAcore</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>

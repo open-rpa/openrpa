@@ -10,6 +10,7 @@
     <PackageIconUrl />
     <Description>OpenRPA Process Mining Addon</Description>
     <Configurations>Debug;Release;PrepInstaller;ReleaseNuget</Configurations>
+    <PackageTags>OpenRPA</PackageTags>
   </PropertyGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />

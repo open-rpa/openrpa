@@ -12,9 +12,10 @@
     <Version>1.0.9</Version>
     <PackageReleaseNotes>1.0.8 update interfaces reference
 1.0.5 update interfaces reference</PackageReleaseNotes>
-    <Description>Small proxy application that handles communication between Java and OpenRPA doing recording</Description>
+    <Description>Small proxy application that handles communication between Java and OpenRPA doing recording, created for OpenRPA robot</Description>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
+    <PackageTags />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath></OutputPath>

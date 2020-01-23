@@ -91,6 +91,7 @@ Function CheckForOffice
   SectionSetFlags 11 0 ; unselect Java per default
   SectionSetFlags 12 0 ; unselect High Density robots per default
   SectionSetFlags 13 0 ; unselect Elis Rossum per default
+  SectionSetFlags 14 0 ; unselect Process Mining per default
 
 FunctionEnd
 
@@ -251,4 +252,9 @@ Section "Elis Rossum" ; section 13
   File "C:\code\openrpa\OpenRPA.Elis.Rossum\bin\PrepInstaller\net462\OpenRPA.Elis.Rossum.dll"
   File "C:\code\openrpa\OpenRPA.Elis.Rossum\bin\PrepInstaller\net462\OpenRPA.Elis.Rossum.pdb"
   File /r "C:\code\openrpa\OpenRPA.Elis.Rossum\bin\PrepInstaller\net462\OpenRPA.Elis.Rossum.resources.dll"
+SectionEnd
+Section "Process Mining" ; section 14
+  SetOutPath $INSTDIR
+  File "C:\code\openrpa\OpenRPA.PMPlugin\bin\PrepInstaller\net462\OpenRPA.PMPlugin.dll"
+  File "C:\code\openrpa\OpenRPA.PMPlugin\bin\PrepInstaller\net462\OpenRPA.PMPlugin.pdb"
 SectionEnd

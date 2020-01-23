@@ -8,9 +8,11 @@
     <PackageIconUrl />
     <Authors>OpenRPA</Authors>
     <Product>OpenRPA</Product>
-    <Description>Code Edtior with syntax Coloring and intellisense</Description>
+    <Description>Code Edtior with syntax Coloring and intellisense for Microsoft Workflow Foundation, specifically tested and created for OpenRPA robot</Description>
     <Version>1.0.1</Version>
     <PackageReleaseNotes>1.0.1 Downgrade roslyn compiler to avoid https://github.com/dotnet/roslyn/issues/38779</PackageReleaseNotes>
+    <Configurations>Debug;Release;PrepInstaller;ReleaseNuget</Configurations>
+    <PackageTags>OpenRPAcore</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
@@ -19,6 +21,12 @@
     <OutputPath>..\debug</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\dist</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNuget|AnyCPU'">
+    <OutputPath>..\dist</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">
     <OutputPath>..\dist</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">

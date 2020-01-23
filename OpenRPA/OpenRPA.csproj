@@ -7,7 +7,7 @@
     <StartupObject />
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
-    <Description>Base UI of OpenRPA</Description>
+    <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Version>1.0.79</Version>
@@ -71,6 +71,7 @@
 </PackageReleaseNotes>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
+    <PackageTags>OpenRPAcore</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>

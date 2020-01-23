@@ -4,7 +4,7 @@
     <TargetFramework>net462</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
-    <Description>Simple wrapper activites around https://elis.rossum.ai api</Description>
+    <Description>Simple wrapper activites around https://elis.rossum.ai for Microsoft Workflow Foundation, specifically tested and created for OpenRPA robot</Description>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
@@ -12,6 +12,7 @@
     <PackageReleaseNotes>1.0.6 Add langauges and bug fixes
 1.0.4 update interfaces reference
 1.0.1 added a few more fields</PackageReleaseNotes>
+    <PackageTags>OpenRPA</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>

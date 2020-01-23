@@ -3430,9 +3430,9 @@ namespace OpenRPA
         }
         private void SearchBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            QuickLaunchItem item = null;
             try
             {
-                QuickLaunchItem item = null;
                 if (SearchBox.SelectedItem != null && SearchBox.SelectedItem is QuickLaunchItem)
                 {
                     item = SearchBox.SelectedItem as QuickLaunchItem;

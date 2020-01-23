@@ -200,6 +200,7 @@ async function portOnMessage(message) {
                 var singleresult = await tabssendMessage(message.tabid, message, options);
                 if (singleresult === null || singleresult === undefined) {
                     console.log('sendMessage null reply ' + message.functionName + ' for tab ' + message.tabid + ' - ' + message.messageid);
+                    console.log(message);
                     port.postMessage(JSON.parse(JSON.stringify(message)));
                     return;
                 }
@@ -213,11 +214,12 @@ async function portOnMessage(message) {
                     //result.uiy -= 7;
 
                     console.log('sendMessage reply with uix and uiy ' + result.functionName + ' for tab ' + result.tabid + ' - ' + result.messageid);
+                    console.log(result);
                     port.postMessage(JSON.parse(JSON.stringify(result)));
                 }
                 else {
-                    console.log(result);
                     console.log('sendMessage reply no cords ' + result.functionName + ' for tab ' + result.tabid + ' - ' + result.messageid);
+                    console.log(result);
                     port.postMessage(JSON.parse(JSON.stringify(result)));
                 }
                 return;
@@ -241,6 +243,7 @@ async function portOnMessage(message) {
         if (frameCount <= 0) {
             message.results = resultarray;
             console.log('sendMessage replys (' + resultarray.length + ') ' + message.functionName + ' - ' + message.messageid);
+            console.log(message);
             port.postMessage(JSON.parse(JSON.stringify(message)));
         }
     };
@@ -250,6 +253,7 @@ async function portOnMessage(message) {
     if (tabCount === 0) {
         console.log('sendMessage ' + message.functionName + ' - ' + message.messageid + ' is empty, no tabs found');
         message.results = resultarray;
+        console.log(message);
         port.postMessage(JSON.parse(JSON.stringify(message)));
     }
     else {

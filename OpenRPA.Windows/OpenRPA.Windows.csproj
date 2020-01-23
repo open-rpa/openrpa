@@ -24,6 +24,7 @@
     <Description>Recorder plugin and Activities for interacting with Windows Elements</Description>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
+    <PackageTags>OpenRPAcore</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <ShouldCreateLogs>True</ShouldCreateLogs>

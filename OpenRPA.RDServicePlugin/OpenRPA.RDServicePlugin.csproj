@@ -14,6 +14,7 @@
 1.0.4 update interfaces reference
 1.0.1 Improve UI and service installation</PackageReleaseNotes>
     <Version>1.0.9</Version>
+    <PackageTags>OpenRPA</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>

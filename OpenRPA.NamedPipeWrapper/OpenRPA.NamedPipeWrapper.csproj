@@ -11,9 +11,10 @@
     <PackageReleaseNotes>1.0.15 update interfaces reference
 1.0.12 update reference
 1.0.11 update interfaces reference</PackageReleaseNotes>
-    <Description>Helper classes that makes named pipe communication easier</Description>
+    <Description>Helper classes that makes named pipe communication easier, created for OpenRPA robot</Description>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
+    <PackageTags>OpenRPAcore</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath></OutputPath>

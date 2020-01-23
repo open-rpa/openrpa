@@ -42,14 +42,18 @@ namespace OpenRPA.Interfaces.entity
             }
             return false;
         }
-        public void AddRight(TokenUser user, ace_right[] rights) 
+        public void AddRight(TokenUser user, ace_right[] rights)
+        {
+            AddRight(user._id, user.name, rights);
+        }
+        public void AddRight(string _id, string name, ace_right[] rights)
         {
             if (_acl == null) _acl = new ace[] { };
-            var ace = _acl.Where(x => x._id == user._id).FirstOrDefault();
-            if (ace == null) { ace = new ace(); _acl = _acl.Concat(new ace[] { ace}).ToArray(); ace._id = user._id; ace.name = user.name; }
-            if(rights != null && rights.Length > 0)
+            var ace = _acl.Where(x => x._id == _id).FirstOrDefault();
+            if (ace == null) { ace = new ace(); _acl = _acl.Concat(new ace[] { ace }).ToArray(); ace._id = _id; ace.name = name; }
+            if (rights != null && rights.Length > 0)
             {
-                for (var bit = 0; bit < 10; bit++) ace.unsetBit(bit);
+                for (var bit = 0; bit < 10; bit++) ace.unsetBit((bit + 1));
                 foreach (ace_right bit in rights) ace.setBit((decimal)bit);
             }
         }

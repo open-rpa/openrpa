@@ -72,7 +72,7 @@ namespace OpenRPA.NM
             NativeMessagingMessage result = null;
             try
             {
-                result = NMHook.sendMessageResult(getelement, true, TimeSpan.FromSeconds(2));
+                result = NMHook.sendMessageResult(getelement, true, TimeSpan.FromSeconds(10));
             }
             catch (Exception)
             {
@@ -268,10 +268,11 @@ namespace OpenRPA.NM
             e.a = new GetElementResult(a);
             e.SupportInput = LastElement.SupportInput;
             e.SupportSelect = false;
-            e.ClickHandled = true;
             e.OffsetX = e.X - LastElement.Rectangle.X;
             e.OffsetY = e.Y - LastElement.Rectangle.Y;
-            LastElement.Click(true, e.Button, e.X, e.Y, false, false);
+            e.ClickHandled = false;
+            //e.ClickHandled = true;
+            //LastElement.Click(true, e.Button, e.X, e.Y, false, false);
             return true;
         }
         public bool IsRecording { get; set; } = false;

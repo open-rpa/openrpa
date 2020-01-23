@@ -35,6 +35,8 @@
 1.0.8 Add generic version of AsyncTaskCodeActivity</PackageReleaseNotes>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
+    <Description>OpenRPA interfaces and tools, used to add functionality for OpenRPA robot</Description>
+    <PackageTags>OpenRPAcore</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\dist</OutputPath>

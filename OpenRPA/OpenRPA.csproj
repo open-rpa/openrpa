@@ -11,7 +11,8 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Version>1.0.79</Version>
-    <PackageReleaseNotes>1.0.78 Refactore more code
+    <PackageReleaseNotes>1.0.79 Add custom user agent for login browser
+1.0.78 Refactore more code
 1.0.78 Add AsDateTable() to UIElement
 1.0.77 Add MoveMouse activity
 1.0.76 Swap login screen from IE to chrome

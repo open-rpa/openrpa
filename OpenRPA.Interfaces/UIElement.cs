@@ -797,6 +797,7 @@ namespace OpenRPA
                     if (tranPattern.CanResize)
                     {
                         tranPattern.Resize(value.Width, value.Height);
+                        return;
                     }
                 }
                 if (window.Patterns.Transform2.TryGetPattern(out var tran2Pattern))

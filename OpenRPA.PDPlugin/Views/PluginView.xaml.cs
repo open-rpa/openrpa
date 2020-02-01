@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace OpenRPA.PMPlugin.Views
+namespace OpenRPA.PDPlugin.Views
 {
     /// <summary>
     /// Interaction logic for WindowsClickDetectorView.xaml
@@ -28,8 +28,8 @@ namespace OpenRPA.PMPlugin.Views
         {
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
-        private PMPlugin plugin = null;
-        public PluginView(PMPlugin plugin)
+        private PDPlugin plugin = null;
+        public PluginView(PDPlugin plugin)
         {
             InitializeComponent();
             this.plugin = plugin;

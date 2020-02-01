@@ -3343,6 +3343,7 @@ namespace OpenRPA
             InputDriver.Instance.OnKeyDown -= OnKeyDown;
             InputDriver.Instance.OnKeyUp -= OnKeyUp;
             InputDriver.Instance.Dispose();
+            StopDetectorPlugins();
             SaveLayout();
             // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds
             Environment.Exit(Environment.ExitCode);

@@ -59,7 +59,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Utilities", "OpenRP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.CodeEditor", "OpenRPA.CodeEditor\OpenRPA.CodeEditor.csproj", "{A71E984D-180B-4EE3-85C1-86F3937A2B0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.PMPlugin", "OpenRPA.PMPlugin\OpenRPA.PMPlugin.csproj", "{EE984456-D7DE-4C9F-8DD0-D3BBC6E3FD1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.PDPlugin", "OpenRPA.PDPlugin\OpenRPA.PDPlugin.csproj", "{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -261,20 +261,20 @@ Global
 		{A71E984D-180B-4EE3-85C1-86F3937A2B0F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A71E984D-180B-4EE3-85C1-86F3937A2B0F}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
 		{A71E984D-180B-4EE3-85C1-86F3937A2B0F}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
-		{EE984456-D7DE-4C9F-8DD0-D3BBC6E3FD1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EE984456-D7DE-4C9F-8DD0-D3BBC6E3FD1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EE984456-D7DE-4C9F-8DD0-D3BBC6E3FD1D}.PrepInstaller|Any CPU.ActiveCfg = PrepInstaller|Any CPU
-		{EE984456-D7DE-4C9F-8DD0-D3BBC6E3FD1D}.PrepInstaller|Any CPU.Build.0 = PrepInstaller|Any CPU
-		{EE984456-D7DE-4C9F-8DD0-D3BBC6E3FD1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EE984456-D7DE-4C9F-8DD0-D3BBC6E3FD1D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EE984456-D7DE-4C9F-8DD0-D3BBC6E3FD1D}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
-		{EE984456-D7DE-4C9F-8DD0-D3BBC6E3FD1D}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
+		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.PrepInstaller|Any CPU.ActiveCfg = PrepInstaller|Any CPU
+		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.PrepInstaller|Any CPU.Build.0 = PrepInstaller|Any CPU
+		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
+		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
+		BuildVersion_StartDate = 2000/1/1
 	EndGlobalSection
 EndGlobal

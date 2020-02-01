@@ -1,7 +1,18 @@
 // https://developer.chrome.com/apps/manifest/key
 
+function inIframe() {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
+}
+console.log("inIframe: " + inIframe());
+if (inIframe() != true) {
+}
 if (typeof document.zeniverse === 'undefined') {
-    console.log('declaring zeniverse class');
+    console.log('declaring zeniverse class 3');
+    document.zeniverse = {};
     var last_mousemove = null;
     var cache = {};
     var cachecount = 0;
@@ -554,7 +565,6 @@ if (typeof document.zeniverse === 'undefined') {
 
 
 
-
 // https://chromium.googlesource.com/chromium/blink/+/master/Source/devtools/front_end/components/DOMPresentationUtils.js
 // https://gist.github.com/asfaltboy/8aea7435b888164e8563
 /*
@@ -870,3 +880,4 @@ UTILS.DOMNodePathStep.prototype = {
         return this.value;
     }
 };
+

@@ -6,11 +6,11 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenRPA.PMPlugin
+namespace OpenRPA.PDPlugin
 {
     class PluginConfig
     {
-        private static string pluginname => "PMPlugin";
+        private static string pluginname => "PDPlugin";
         private static Config _globallocal = null;
         public static Config globallocal
         {
@@ -25,7 +25,7 @@ namespace OpenRPA.PMPlugin
         }
         public static bool enabled_mouse_recording { get { return globallocal.GetProperty(pluginname, false); } set { globallocal.SetProperty(pluginname, value); } }
         public static bool enabled_keyboard_recording { get { return globallocal.GetProperty(pluginname, false); } set { globallocal.SetProperty(pluginname, value); } }
-        public static string collectionname { get { return globallocal.GetProperty(pluginname, "pm"); } set { globallocal.SetProperty(pluginname, value); } }
+        public static string collectionname { get { return globallocal.GetProperty(pluginname, "pd"); } set { globallocal.SetProperty(pluginname, value); } }
 
     }
 }

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace OpenRPA.PMPlugin.Resources {
+namespace OpenRPA.PDPlugin.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace OpenRPA.PMPlugin.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("OpenRPA.PMPlugin.Resources.strings", typeof(strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("OpenRPA.PDPlugin.Resources.strings", typeof(strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

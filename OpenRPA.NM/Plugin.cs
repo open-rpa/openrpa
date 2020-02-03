@@ -140,14 +140,7 @@ namespace OpenRPA.NM
             {
                 if (message.uiy > 0 && message.uix > 0 && message.uiwidth > 0 && message.uiheight > 0)
                 {
-                    if (!string.IsNullOrEmpty(message.data))
-                    {
-                        LastElement = new NMElement(message);
-                    }
-                    else
-                    {
-                        LastElement = new NMElement(message);
-                    }
+                    LastElement = new NMElement(message);
                 }
 
                 if (message.functionName == "click")

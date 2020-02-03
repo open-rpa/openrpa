@@ -11,18 +11,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenRPA.PMPlugin
+namespace OpenRPA.PDPlugin
 {
-    public class PMPlugin : ObservableObject, IRunPlugin
+    public class PDPlugin : ObservableObject, IRunPlugin
     {
         public string Name
         {
             get
             {
-                return "PMPlugin";
+                return "PDPlugin";
             }
         }
-        public static PMPlugin instance = null;
+        public static PDPlugin instance = null;
         public IOpenRPAClient client = null;
         public void Initialize(IOpenRPAClient client)
         {

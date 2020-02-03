@@ -255,6 +255,6 @@ Section "Elis Rossum" ; section 13
 SectionEnd
 Section "Process Mining" ; section 14
   SetOutPath $INSTDIR
-  File "C:\code\openrpa\OpenRPA.PMPlugin\bin\PrepInstaller\net462\OpenRPA.PMPlugin.dll"
-  File "C:\code\openrpa\OpenRPA.PMPlugin\bin\PrepInstaller\net462\OpenRPA.PMPlugin.pdb"
+  File "C:\code\openrpa\OpenRPA.PDPlugin\bin\PrepInstaller\net462\OpenRPA.PDPlugin.dll"
+  File "C:\code\openrpa\OpenRPA.PDPlugin\bin\PrepInstaller\net462\OpenRPA.PDPlugin.pdb"
 SectionEnd

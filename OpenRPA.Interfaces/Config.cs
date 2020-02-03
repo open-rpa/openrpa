@@ -50,6 +50,7 @@ namespace OpenRPA
         public int move_animation_steps = 20;
         public bool remote_allow_multiple_running = false;
         public int remote_allow_multiple_running_max = 2;
+        public string cef_useragent = "";
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)

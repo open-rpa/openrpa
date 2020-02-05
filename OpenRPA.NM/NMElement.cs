@@ -252,6 +252,42 @@ namespace OpenRPA.NM
                 NMHook.WaitForTab(getelement.tabid, getelement.browser, TimeSpan.FromSeconds(5));
             }
         }
+        public bool Refresh()
+        {
+            try
+            {
+                var getelement = new NativeMessagingMessage("getelement")
+                {
+                    browser = browser,
+                    cssPath = cssselector,
+                    xPath = xpath
+                };
+                NativeMessagingMessage message = null;
+                // getelement.data = "getdom";
+                if (NMHook.connected) message = NMHook.sendMessageResult(getelement, true, TimeSpan.FromSeconds(2));
+                if (message == null)
+                {
+                    Log.Error("Failed getting html element");
+                    return false;
+                }
+
+                parseChromeString(message.result);
+                zn_id = message.zn_id;
+                this.message = message;
+                if (!string.IsNullOrEmpty(message.xPath)) xpath = message.xPath;
+                if (!string.IsNullOrEmpty(message.cssPath)) cssselector = message.cssPath;
+                X = message.uix;
+                Y = message.uiy;
+                Width = message.uiwidth;
+                Height = message.uiheight;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
         public void Focus()
         {
         }

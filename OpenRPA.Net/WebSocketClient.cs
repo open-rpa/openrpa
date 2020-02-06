@@ -430,9 +430,11 @@ namespace OpenRPA.Net
             }
             return qm.reply as Message;
         }
-        public async Task<TokenUser> Signin(string username, SecureString password)
+        public async Task<TokenUser> Signin(string username, SecureString password, string clientagent = "", string clientversion = "")
         {
             SigninMessage signin = new SigninMessage(username, password, System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
+            if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
+            if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
             signin = await signin.SendMessage<SigninMessage>(this);
             if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
             user = signin.user;
@@ -443,9 +445,11 @@ namespace OpenRPA.Net
             }
             return signin.user;
         }
-        public async Task<TokenUser> Signin(string jwt)
+        public async Task<TokenUser> Signin(string jwt, string clientagent = "", string clientversion = "")
         {
             SigninMessage signin = new SigninMessage(jwt, System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
+            if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
+            if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
             signin = await signin.SendMessage<SigninMessage>(this);
             if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
             user = signin.user;
@@ -456,9 +460,11 @@ namespace OpenRPA.Net
             }
             return signin.user;
         }
-        public async Task<TokenUser> Signin(SecureString jwt)
+        public async Task<TokenUser> Signin(SecureString jwt, string clientagent = "", string clientversion = "")
         {
             SigninMessage signin = new SigninMessage(jwt, System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
+            if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
+            if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
             signin = await signin.SendMessage<SigninMessage>(this);
             if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
             user = signin.user;

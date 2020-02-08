@@ -50,9 +50,9 @@ namespace OpenRPA.Interfaces
         Task Connect();
         Task Close();
         // Task<IMessage> SendMessage(IMessage msg);
-        Task<TokenUser> Signin(string username, SecureString password);
-        Task<TokenUser> Signin(string jwt);
-        Task<TokenUser> Signin(SecureString jwt);
+        Task<TokenUser> Signin(string username, SecureString password, string clientagent = "", string clientversion = "");
+        Task<TokenUser> Signin(string jwt, string clientagent = "", string clientversion = "");
+        Task<TokenUser> Signin(SecureString jwt, string clientagent = "", string clientversion = "");
         Task RegisterUser(string name, string username, string password);
         Task RegisterQueue(string queuename);
         Task<object> QueueMessage(string queuename, object data, string correlationId = null);

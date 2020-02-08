@@ -143,7 +143,8 @@ namespace OpenRPA.RDService
                 {
                     if (!string.IsNullOrEmpty(PluginConfig.tempjwt))
                     {
-                        user = await global.webSocketClient.Signin(PluginConfig.tempjwt); if (user != null)
+                        user = await global.webSocketClient.Signin(PluginConfig.tempjwt, "RDService", System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString()); 
+                        if (user != null)
                         {
                             if (isService)
                             {
@@ -156,7 +157,8 @@ namespace OpenRPA.RDService
                     }
                     else if (PluginConfig.jwt != null && PluginConfig.jwt.Length > 0)
                     {
-                        user = await global.webSocketClient.Signin(PluginConfig.UnprotectString(Base64Decode(PluginConfig.jwt))); if (user != null)
+                        user = await global.webSocketClient.Signin(PluginConfig.UnprotectString(Base64Decode(PluginConfig.jwt)), "RDService", System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString()); 
+                        if (user != null)
                         {
                             Log.Information("Signed in as " + user.username);
                         }

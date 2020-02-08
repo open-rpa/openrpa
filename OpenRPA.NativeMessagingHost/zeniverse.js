@@ -68,27 +68,37 @@ if (typeof document.zeniverse === 'undefined') {
                     var form = zeniverse.findform(ele);
                     //var form = null;
                     if (ele.hasAttribute('ng-click')) {
-                        //console.log('click using triggerHandler');
+                        console.log('click using triggerHandler');
                         var $e = angular.element(ele);
+                        console.log(ele);
+                        console.log($e);
                         $e.triggerHandler('click');
                     }
                     else if (form && ele.type === 'submit') // && ele.tagName != "BUTTON") 
                     {
-                        //console.log('click using submit as form');
+                        console.log('click using submit as form');
+                        console.log(form);
                         //$(form).submit();
                         form.submit();
                     }
                     else {
-                        //console.log('click using click()');
+                        
                         try {
                             if (typeof jQuery !== 'undefined') {
+                                console.log('click using jQuery click()');
                                 var element = $(ele);
+                                console.log(element);
                                 element.click();
                             }
                         } catch (e) {
                             console.log(e);
                         }
-                        ele.click();
+                        console.log('click using element.click()');
+                        console.log(ele);
+                        // ele.click();
+                        ele.dispatchEvent(new Event('mousedown'));
+                        ele.dispatchEvent(new Event('click'));
+                        ele.dispatchEvent(new Event('mouseup'));
                     }
                 }
             } catch (e) {
@@ -150,8 +160,6 @@ if (typeof document.zeniverse === 'undefined') {
                     console.error(e);
                 }
             }
-            console.log(message.xPath);
-            console.log(ele.length);
             message.result = JSON.stringify(message.result);
             //return simpleStringify(message);
             var test = JSON.parse(JSON.stringify(message));
@@ -164,18 +172,21 @@ if (typeof document.zeniverse === 'undefined') {
                 var znEle = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
                 if (znEle === null) message.xPath = 'false';
                 if (znEle !== null) message.xPath = 'true';
+                console.log("Try using zn_id " + (znEle === null));
                 ele = znEle;
             }
             if (ele === null && message.xPath) {
                 var xpathEle = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
                 if (xpathEle === null) message.xPath = 'false';
                 if (xpathEle !== null) message.xPath = 'true';
+                console.log("Try using xPath " + (xpathEle === null));
                 ele = xpathEle;
             }
             if (ele === null && message.cssPath) {
                 var cssEle = document.querySelector(message.cssPath);
                 if (cssEle === null) message.cssPath = 'false';
                 if (cssEle !== null) message.cssPath = 'true';
+                console.log("Try using cssPath " + (cssEle === null));
                 ele = cssEle;
             }
             //console.log(message.functionName + ' - ' + message.messageid + ' xPath: ' + message.xPath + ' cssPath: ' + message.cssPath);
@@ -520,6 +531,7 @@ if (typeof document.zeniverse === 'undefined') {
                 }
             }
             treeHTML(element, treeObject, maxiden);
+            treeObject["value"] = element.value;
             return json ? JSON.stringify(treeObject) : treeObject;
         },
         getFrameName: function (frame) {

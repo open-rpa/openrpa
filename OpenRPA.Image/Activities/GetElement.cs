@@ -47,7 +47,7 @@ namespace OpenRPA.Image
         public string Image { get; set; }
         private Variable<IEnumerator<ImageElement>> _elements = new Variable<IEnumerator<ImageElement>>("_elements");
         public Activity LoopAction { get; set; }
-        private List<ImageElement> getBatch(int maxresults, Double Threshold, string Processname, TimeSpan Timeout, bool CompareGray, Rectangle limit)
+        private List<ImageElement> getBatch(int minresults, int maxresults, Double Threshold, string Processname, TimeSpan Timeout, bool CompareGray, Rectangle limit)
         {
             var result = new List<ImageElement>();
             Bitmap b = null;
@@ -83,6 +83,11 @@ namespace OpenRPA.Image
             {
                 result.Add(new ImageElement(r));
             }
+            if (result.Count() < minresults)
+            {
+                Log.Selector(string.Format("Image.GetElement::Failed locating " + minresults + " item(s)"));
+                throw new ElementNotFoundException("Failed locating " + minresults + " item(s)");
+            }
             return result;
         }
         protected override void Execute(NativeActivityContext context)
@@ -106,7 +111,7 @@ namespace OpenRPA.Image
             sw.Start();
             do
             {
-                elements = getBatch(maxresults, threshold, processname, timeout, comparegray, limit).ToArray();
+                elements = getBatch(minresults, maxresults, threshold, processname, timeout, comparegray, limit).ToArray();
             } while (elements.Count() == 0 && sw.Elapsed < timeout);
             // Log.Debug(string.Format("OpenRPA.Image::GetElement::found {1} elements in {0:mm\\:ss\\.fff}", sw.Elapsed, elements.Count()));
             context.SetValue(Elements, elements);

@@ -23,6 +23,10 @@ namespace OpenRPA.Office.Activities
         [RequiredArgument]
         [System.ComponentModel.Category("Input")]
         public InArgument<string> To { get; set; }
+        [System.ComponentModel.Category("Input")]
+        public InArgument<string> CC { get; set; }
+        [System.ComponentModel.Category("Input")]
+        public InArgument<string> BCC { get; set; }
         [RequiredArgument]
         [System.ComponentModel.Category("Input")]
         public InArgument<string> Subject { get; set; }
@@ -45,6 +49,8 @@ namespace OpenRPA.Office.Activities
             Microsoft.Office.Interop.Outlook.MailItem email = (Microsoft.Office.Interop.Outlook.MailItem)outlookApplication.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olMailItem);
 
             var to = To.Get(context);
+            var cc = CC.Get(context);
+            var bcc = BCC.Get(context);
             var subject = Subject.Get(context);
             string body = (Body != null ?Body.Get(context) : null);
             string htmlbody = (HTMLBody != null ? HTMLBody.Get(context) : null);
@@ -56,6 +62,8 @@ namespace OpenRPA.Office.Activities
             email.To = to;
             email.Subject = subject;
             email.HTMLBody = body;
+            email.CC = cc;
+            email.BCC = bcc;
 
             if (attachments != null && attachments.Count() > 0)
             {

@@ -112,21 +112,35 @@ namespace OpenRPA.PDPlugin
             var i = new keyboardevent(key);
             _ = global.webSocketClient.InsertOne(PluginConfig.collectionname, 0, false, i);
         }
+        public bool IsRecordingMouse = false;
+        public bool IsRecordingKeyboard = false;
         public void StartMouse()
         {
+            if (IsRecordingMouse) return;
+            Log.Information("PD: Start Mouse Capture");
             InputDriver.Instance.OnMouseUp += OnMouseUp;
+            IsRecordingMouse = true;
         }
         public void StopMouse()
         {
+            if (!IsRecordingMouse) return;
+            Log.Information("PD: Stop Mouse Capture");
             InputDriver.Instance.OnMouseUp -= OnMouseUp;
+            IsRecordingMouse = false;
         }
         public void StartKeyboard()
         {
+            if (IsRecordingKeyboard) return;
+            Log.Information("PD: Start Keyboard Capture");
             InputDriver.Instance.OnKeyUp += OnKeyUp;
+            IsRecordingKeyboard = true;
         }
         public void StopKeyboard()
         {
+            if (!IsRecordingKeyboard) return;
+            Log.Information("PD: Stop Keyboard Capture");
             InputDriver.Instance.OnKeyUp -= OnKeyUp;
+            IsRecordingKeyboard = false;
         }
         public bool onWorkflowStarting(ref IWorkflowInstance e, bool resumed)
         {

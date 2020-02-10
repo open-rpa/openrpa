@@ -57,12 +57,10 @@ namespace OpenRPA.Net
                     ws = null;
                 }
                 if(ws == null) {
-                    // ws = new ClientWebSocket();
                     // ws = (ClientWebSocket)SystemClientWebSocket.CreateClientWebSocket();
                     if (VersionHelper.IsWindows8OrGreater())
                     {
-                        // ws = new ClientWebSocket();
-                        ws = new System.Net.WebSockets.Managed.ClientWebSocket();
+                        ws = new ClientWebSocket();
                     }
                     else
                     {

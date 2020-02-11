@@ -65,7 +65,7 @@ namespace OpenRPA.Script.Activities
             {
                 if (hi.Name == "VB" || hi.Name == "C#" || hi.Name == "PowerShell" || hi.Name == "Python") Languages.Add(hi);
             }
-            LoadFromResource("ICSharpCode.PythonBinding.Resources.Python.xshd", typeof(Editor));
+            // LoadFromResource("ICSharpCode.PythonBinding.Resources.Python.xshd", typeof(Editor));
             LoadFromResource("Autohotkey.xshd", typeof(Editor));
             textEditor.Text = code;
 

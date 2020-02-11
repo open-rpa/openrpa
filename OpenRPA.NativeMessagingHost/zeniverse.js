@@ -172,21 +172,21 @@ if (typeof document.zeniverse === 'undefined') {
                 var znEle = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
                 if (znEle === null) message.xPath = 'false';
                 if (znEle !== null) message.xPath = 'true';
-                console.log("Try using zn_id " + (znEle === null));
+                // console.log("Try using zn_id " + (znEle === null));
                 ele = znEle;
             }
             if (ele === null && message.xPath) {
                 var xpathEle = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
                 if (xpathEle === null) message.xPath = 'false';
                 if (xpathEle !== null) message.xPath = 'true';
-                console.log("Try using xPath " + (xpathEle === null));
+                // console.log("Try using xPath " + (xpathEle === null));
                 ele = xpathEle;
             }
             if (ele === null && message.cssPath) {
                 var cssEle = document.querySelector(message.cssPath);
                 if (cssEle === null) message.cssPath = 'false';
                 if (cssEle !== null) message.cssPath = 'true';
-                console.log("Try using cssPath " + (cssEle === null));
+                // console.log("Try using cssPath " + (cssEle === null));
                 ele = cssEle;
             }
             //console.log(message.functionName + ' - ' + message.messageid + ' xPath: ' + message.xPath + ' cssPath: ' + message.cssPath);
@@ -211,10 +211,10 @@ if (typeof document.zeniverse === 'undefined') {
                 }
             }
             else {
-                console.log('skip mapping dom object, no results');
+                // console.log('skip mapping dom object, no results');
             }
             //return simpleStringify(message);
-            console.log(message);
+            // console.log(message);
             var test = JSON.parse(JSON.stringify(message));
             return test;
         },

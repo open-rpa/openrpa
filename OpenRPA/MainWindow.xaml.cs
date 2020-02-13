@@ -65,6 +65,35 @@ namespace OpenRPA
         }
         public Views.WFToolbox Toolbox { get; set; }
         public Views.Snippets Snippets { get; set; }
+        public void ParseCommandLineArgs(IList<string> args)
+        {
+            AutomationHelper.syncContext.Post(o =>
+            {
+                CommandLineParser parser = new CommandLineParser();
+                // parser.Parse(string.Join(" ", args), true);
+                var options = parser.Parse(args, true);
+                if (options.ContainsKey("workflowid"))
+                {
+                    IWorkflow workflow = GetWorkflowByIDOrRelativeFilename(options["workflowid"].ToString());
+                    if (workflow == null) { Log.Error("Unknown workflow " + options["workflowid"].ToString()); return; }
+                    if (GetWorkflowDesignerByIDOrRelativeFilename(options["workflowid"].ToString()) is Views.WFDesigner designer)
+                    {
+                        designer.BreakpointLocations = null;
+                        var instance = workflow.CreateInstance(options, "", "", designer.OnIdle, designer.OnVisualTracking);
+                        designer.Run(VisualTracking, SlowMotion, instance);
+                    }
+                    else
+                    {
+                        var instance = workflow.CreateInstance(options, "", "", IdleOrComplete, null);
+                        instance.Run();
+                    }
+                }
+            }, null);
+        }
+        public void ParseCommandLineArgs()
+        {
+            ParseCommandLineArgs(Environment.GetCommandLineArgs());
+        }
         public MainWindow()
         {
             if (!string.IsNullOrEmpty(Config.local.culture))
@@ -228,6 +257,7 @@ namespace OpenRPA
                     if (string.IsNullOrEmpty(Config.local.wsurl))
                     {
                         LoadLayout();
+                        ParseCommandLineArgs();
                     }
                 }
                 catch (Exception ex)
@@ -422,6 +452,7 @@ namespace OpenRPA
                                     await global.webSocketClient.RegisterQueue(role._id);
                                 }
                             }
+                            ParseCommandLineArgs();
                         }
                         catch (Exception ex)
                         {
@@ -429,7 +460,6 @@ namespace OpenRPA
                         }
                         finally
                         {
-
                             SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
                         }
                     });
@@ -3409,7 +3439,8 @@ namespace OpenRPA
         {
             foreach (var designer in Designers)
             {
-                if (designer.Workflow.IDOrRelativeFilename == IDOrRelativeFilename) return designer;
+                if (designer.Workflow._id == IDOrRelativeFilename) return designer;
+                if (designer.Workflow.RelativeFilename.ToLower().Replace("\\", "/") == IDOrRelativeFilename.ToLower().Replace("\\", "/")) return designer;
             }
             return null;
         }
@@ -3419,7 +3450,8 @@ namespace OpenRPA
             {
                 foreach (var wf in p.Workflows)
                 {
-                    if (wf.IDOrRelativeFilename == IDOrRelativeFilename) return wf;
+                    if (wf._id == IDOrRelativeFilename) return wf;
+                    if (wf.RelativeFilename.ToLower().Replace("\\", "/") == IDOrRelativeFilename.ToLower().Replace("\\", "/")) return wf;
                 }
             }
             return null;

@@ -45,13 +45,14 @@
     <Reference Include="System.Xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Resources\strings.Designer.cs">
-      <DependentUpon>strings.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
+    <EmbeddedResource Update="Resources\strings.ru.resx">
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\strings.ro.resx">
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\strings.resx">
       <LastGenOutput>strings.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>

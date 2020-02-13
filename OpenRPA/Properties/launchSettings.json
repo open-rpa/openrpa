@@ -2,6 +2,7 @@
   "profiles": {
     "OpenRPA": {
       "commandName": "Project",
+      "commandLineArgs": "/WorkflowID 5e4420de478059a8ec8ec211",
       "nativeDebugging": false
     },
     "ttttt": {

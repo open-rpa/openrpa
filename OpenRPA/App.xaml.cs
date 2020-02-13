@@ -123,6 +123,7 @@ namespace OpenRPA
         public bool SignalExternalCommandLineArgs(IList<string> args)
         {
             nIcon_Click(null, null);
+            OpenRPA.MainWindow.instance.ParseCommandLineArgs(args);
             return true;
         }
     }

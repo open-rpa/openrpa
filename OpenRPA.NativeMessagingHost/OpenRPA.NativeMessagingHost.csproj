@@ -32,6 +32,7 @@
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="addon\background.js" />
     <None Remove="background.js" />
     <None Remove="chromemanifest.json" />
     <None Remove="content.js" />
@@ -51,6 +52,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="addon\background.js" />
     <EmbeddedResource Include="background.js" />
     <EmbeddedResource Include="content.js" />
     <EmbeddedResource Include="zeniverse.js" />

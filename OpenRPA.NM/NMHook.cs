@@ -421,14 +421,14 @@ namespace OpenRPA.NM
                     if (!hklmExists(@"SOFTWARE\Google")) return;
                     if (!hklmExists(@"SOFTWARE\Google\Chrome")) return;
                     if (!hklmExists(@"SOFTWARE\Google\Chrome\NativeMessagingHosts")) hklmCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts");
-                    if (!hklmExists(@"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.zenamic.msg")) hklmCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.zenamic.msg");
+                    if (!hklmExists(@"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.openrpa.msg")) hklmCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.openrpa.msg");
                 }
                 else
                 {
                     if (!hkcuExists(@"SOFTWARE\Google")) return;
                     if (!hkcuExists(@"SOFTWARE\Google\Chrome")) return;
                     if (!hkcuExists(@"SOFTWARE\Google\Chrome\NativeMessagingHosts")) hkcuCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts");
-                    if (!hkcuExists(@"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.zenamic.msg")) hkcuCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.zenamic.msg");
+                    if (!hkcuExists(@"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.openrpa.msg")) hkcuCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.openrpa.msg");
                 }
                 //if(!regKey(@"HKEY_CURRENT_USER\stuff  ...  ", "value"))
                 var basepath = Interfaces.Extensions.PluginsDirectory;
@@ -447,8 +447,8 @@ namespace OpenRPA.NM
                 }
 
                 Microsoft.Win32.RegistryKey Chrome = null;
-                if (localMachine) Chrome = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Google\\Chrome\\NativeMessagingHosts\\com.zenamic.msg", true);
-                if (!localMachine) Chrome = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\Google\\Chrome\\NativeMessagingHosts\\com.zenamic.msg", true);
+                if (localMachine) Chrome = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Google\\Chrome\\NativeMessagingHosts\\com.openrpa.msg", true);
+                if (!localMachine) Chrome = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\Google\\Chrome\\NativeMessagingHosts\\com.openrpa.msg", true);
                 Chrome.SetValue("", filename);
             }
             catch (Exception ex)
@@ -464,13 +464,13 @@ namespace OpenRPA.NM
                 {
                     if (!hklmExists(@"Software\Mozilla")) return;
                     if (!hklmExists(@"SOFTWARE\Mozilla\NativeMessagingHosts")) hklmCreate(@"SOFTWARE\Mozilla\NativeMessagingHosts");
-                    if (!hklmExists(@"SOFTWARE\Mozilla\NativeMessagingHosts\com.zenamic.msg")) hklmCreate(@"SOFTWARE\Mozilla\NativeMessagingHosts\com.zenamic.msg");
+                    if (!hklmExists(@"SOFTWARE\Mozilla\NativeMessagingHosts\com.openrpa.msg")) hklmCreate(@"SOFTWARE\Mozilla\NativeMessagingHosts\com.openrpa.msg");
                 }
                 else
                 {
                     if (!hkcuExists(@"SOFTWARE\Mozilla")) return;
                     if (!hkcuExists(@"SOFTWARE\Mozilla\NativeMessagingHosts")) hkcuCreate(@"SOFTWARE\Mozilla\NativeMessagingHosts");
-                    if (!hkcuExists(@"SOFTWARE\Mozilla\NativeMessagingHosts\com.zenamic.msg")) hkcuCreate(@"SOFTWARE\Mozilla\NativeMessagingHosts\com.zenamic.msg");
+                    if (!hkcuExists(@"SOFTWARE\Mozilla\NativeMessagingHosts\com.openrpa.msg")) hkcuCreate(@"SOFTWARE\Mozilla\NativeMessagingHosts\com.openrpa.msg");
                 }
 
                 var basepath = Interfaces.Extensions.PluginsDirectory;
@@ -489,8 +489,8 @@ namespace OpenRPA.NM
                 }
 
                 Microsoft.Win32.RegistryKey Chrome = null;
-                if (localMachine) Chrome = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Mozilla\\NativeMessagingHosts\\com.zenamic.msg", true);
-                if (!localMachine) Chrome = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\Mozilla\\NativeMessagingHosts\\com.zenamic.msg", true);
+                if (localMachine) Chrome = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Mozilla\\NativeMessagingHosts\\com.openrpa.msg", true);
+                if (!localMachine) Chrome = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\Mozilla\\NativeMessagingHosts\\com.openrpa.msg", true);
                 Chrome.SetValue("", filename);
             }
             catch (Exception ex)

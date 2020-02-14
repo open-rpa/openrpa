@@ -1,8 +1,9 @@
 console.log('n/a');
-if (backgroundscript === undefined) backgroundscript = null;
-if (port === undefined) port = null;
+var backgroundscript = null;
+var port;
 var content_script = '';
 var zeniverse_script = '';
+var portname = 'com.openrpa.msg';
 
 // Opera 8.0+ (tested on Opera 42.0)
 var isOpera = !!window.opr && !!opr.addons || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
@@ -67,28 +68,20 @@ chrome.runtime.onMessage.addListener((sender, msg, fnResponse) => {
     }
 });
 async function runtimeOnMessage(sender, msg, fnResponse) {
+    if (port == null) return;
     if (isChrome) sender.browser = "chrome";
     if (isFirefox) sender.browser = "ff";
     sender.tabid = msg.tab.id;
     sender.windowId = msg.tab.windowId;
     if (sender.uix && sender.uiy) {
         var currentWindow = await windowsget(sender.windowId);
-        console.log(sender.uix + "," + sender.uiy);
         if (!('id' in currentWindow)) return;
 
         sender.uix += currentWindow.left;
         sender.uiy += currentWindow.top;
-        console.log("after: " + sender.uix + "," + sender.uiy);
-        sender.uix += 7;
-        sender.uiy -= 7;
 
         // https://docs.microsoft.com/en-us/dotnet/framework/winforms/controls/how-to-size-a-windows-forms-label-control-to-fit-its-contents
         var message = sender;
-        //console.log('[' + currentWindow.left.toString().padEnd(3, ' ') + ',' + currentWindow.top.toString().padEnd(3, ' ') + ']');
-        //console.log('[' + message.x.toString().padEnd(3, ' ') + ',' + message.y.toString().padEnd(3, ' ') + ',' + message.width.toString().padEnd(4, ' ') + ',' + message.height.toString().padEnd(4, ' ') + '] ' +
-        //    '[' + message.uix.toString().padEnd(3, ' ') + ',' + message.uiy.toString().padEnd(3, ' ') + ',' + message.uiwidth.toString().padEnd(4, ' ') + ',' + message.uiheight.toString().padEnd(4, ' ') + ']');
-        //sender.screenInfo = screenInfo;
-        //var screenInfo = sender.screenInfo;
         console.log("Send message " + sender.functionName + " to port");
         port.postMessage(JSON.parse(JSON.stringify(sender)));
     }
@@ -98,6 +91,7 @@ async function runtimeOnMessage(sender, msg, fnResponse) {
     }
 }
 async function portOnMessage(message) {
+    if (port == null) return;
     if (message.functionName === "zeniversescript") {
         console.log("received zeniverse script from host");
         zeniverse_script = message.script;
@@ -206,12 +200,10 @@ async function portOnMessage(message) {
                 }
                 var result = singleresult.result;
                 var currentWindow = await windowsgetCurrent();
-                if (result.uix !== undefined && result.uiy !== undefined) {
+                if (result !== null && result !== undefined && result.uix !== undefined && result.uiy !== undefined) {
                     if (!('id' in currentWindow)) return;
                     result.uix += currentWindow.left;
                     result.uiy += currentWindow.top;
-                    //result.uix += 7;
-                    //result.uiy -= 7;
 
                     console.log('sendMessage reply with uix and uiy ' + result.functionName + ' for tab ' + result.tabid + ' - ' + result.messageid);
                     console.log(result);
@@ -224,8 +216,9 @@ async function portOnMessage(message) {
                 }
                 return;
             } catch (e) {
-                message.error = e;
-                port.postMessage(JSON.parse(JSON.stringify(message)));
+                console.log(e);
+                // message.error = e;
+                // port.postMessage(JSON.parse(JSON.stringify(message)));
             }
         } catch (e) {
             console.log("Error while sending message to Tab" + message.tabid + " " + e);
@@ -243,7 +236,7 @@ async function portOnMessage(message) {
         if (frameCount <= 0) {
             message.results = resultarray;
             console.log('sendMessage replys (' + resultarray.length + ') ' + message.functionName + ' - ' + message.messageid);
-            console.log(message);
+            console.log(resultarray);
             port.postMessage(JSON.parse(JSON.stringify(message)));
         }
     };
@@ -278,9 +271,6 @@ async function portOnMessage(message) {
                                 for (var i = 0; i < arr.length; i++) {
                                     arr[i].uix += currentWindow.left;
                                     arr[i].uiy += currentWindow.top;
-                                    arr[i].uix += 7;
-                                    arr[i].uiy -= 7;
-
                                 }
                             }
                             result.result = JSON.stringify(arr);
@@ -288,15 +278,12 @@ async function portOnMessage(message) {
                             console.log(e);
                         }
                     }
-                    console.log(result.result);
                     if (result.result !== undefined && result.result !== null && ('id' in currentWindow)) {
 
                     }
                     if (result.uix && result.uiy && ('id' in currentWindow)) {
                         result.uix += currentWindow.left;
                         result.uiy += currentWindow.top;
-                        result.uix += 7;
-                        result.uiy -= 7;
 
                         console.log('sendMessage log reply ' + result.functionName + ' from Tab: ' + result.tabid + ' Frame: ' + result.frameId + ' messageid: ' + result.messageid);
                         messageSent(result);
@@ -314,8 +301,9 @@ async function portOnMessage(message) {
         for (var i in tabsList) {
             try {
                 var _tabid = tabsList[i].id;
-                details = await getAllFrames(_tabid);
+                console.log(tabsList[i]);
                 let subframeCount = 0;
+                details = await getAllFrames(_tabid);
                 details.forEach(() => {
                     ++subframeCount;
                     ++frameCount;
@@ -332,8 +320,8 @@ async function portOnMessage(message) {
             message.windowId = tabsList[z].windowId;
             //message.tab = tabsList[z];
             try {
-                details = await getAllFrames(tabid);
                 let subframeCount = 0;
+                details = await getAllFrames(tabid);
                 details.forEach((frame) => {
                     ++subframeCount;
                 });
@@ -368,12 +356,32 @@ async function portOnMessage(message) {
     }
 }
 function portOnDisconnect(message) {
-    console.log("onDisconnect from native port");
+    
     port = null;
+    if (chrome.runtime.lastError) {
+        console.warn("onDisconnect: " + chrome.runtime.lastError.message);
+        port = null;
+        if (portname == 'com.openrpa.msg') {
+            // Try with the old name
+            portname = 'com.zenamic.msg';
+            setTimeout(function () {
+                connect();
+            }, 1000);
+        } else {
+            // Wait a few seconds and reretry
+            portname = 'com.openrpa.msg';
+            setTimeout(function () {
+                connect();
+            }, 5000);
+        }
+        return;
+    } else {
+        console.log("onDisconnect from native port");
+    }
     //setTimeout(function () { connect(); }, 3000);
 }
 function connect() {
-    if (port !== null) {
+    if (port !== null && port !== undefined) {
         try {
             if (port.onConnect) { port.onConnect.removeListener(portOnConnect); }
             port.onMessage.removeListener(portOnMessage);
@@ -382,22 +390,40 @@ function connect() {
             console.log(e);
         }
     }
-    if (port === null) {
-        console.log("Connecting to com.zenamic.msg");
-        port = chrome.runtime.connectNative("com.zenamic.msg");
+    if (port === null || port === undefined) {
+        try {
+            console.log("Connecting to " + portname);
+            port = chrome.runtime.connectNative(portname);
+        } catch (e) {
+            console.error(e);
+            port = null;
+            return;
+        }
     }
     port.onMessage.addListener(portOnMessage);
     port.onDisconnect.addListener(portOnDisconnect);
 
-    console.log("Connected to native port, request zeniverse script");
+    if (chrome.runtime.lastError) {
+        console.warn("Whoops.. " + chrome.runtime.lastError.message);
+        port = null;
+        return;
+    } else {
+        console.log("Connected to native port, request zeniverse script 3");
+    }
+
     var message = { functionName: "zeniversescript" };
     if (isChrome) message.browser = "chrome";
     if (isFirefox) message.browser = "ff";
-    port.postMessage(JSON.parse(JSON.stringify(message)));
-
+    try {
+        port.postMessage(JSON.parse(JSON.stringify(message)));
+    } catch (e) {
+        console.error(e);
+        port = null;
+    }
 }
 
 async function OnPageLoad(event) {
+    if (port == null) return;
     if (window) window.removeEventListener("load", OnPageLoad, false);
     var allWindows = await windowsgetAll();
     for (var i in allWindows) {
@@ -405,6 +431,7 @@ async function OnPageLoad(event) {
         var message = { functionName: "windowcreated", windowId: window.id };
         if (isChrome) message.browser = "chrome";
         if (isFirefox) message.browser = "ff";
+        if (port == null) return;
         port.postMessage(JSON.parse(JSON.stringify(message)));
     }
     chrome.windows.onCreated.addListener((window) => {
@@ -424,18 +451,21 @@ async function OnPageLoad(event) {
 }
 
 async function tabsOnCreated(tab) {
+    if (port == null) return;
     var message = { functionName: "tabcreated", tab: tab };
     if (isChrome) message.browser = "chrome";
     if (isFirefox) message.browser = "ff";
     port.postMessage(JSON.parse(JSON.stringify(message)));
 }
 function tabsOnRemoved(tabId) {
+    if (port == null) return;
     var message = { functionName: "tabremoved", tabid: tabId };
     if (isChrome) message.browser = "chrome";
     if (isFirefox) message.browser = "ff";
     port.postMessage(JSON.parse(JSON.stringify(message)));
 }
 async function tabsOnUpdated(tabId, changeInfo, tab) {
+    if (port == null) return;
     try {
         await tabsexecuteScript(tab.id, { code: content_script, allFrames: true });
     } catch (e) {
@@ -447,6 +477,7 @@ async function tabsOnUpdated(tabId, changeInfo, tab) {
     port.postMessage(JSON.parse(JSON.stringify(message)));
 }
 function tabsOnActivated(activeInfo) {
+    if (port == null) return;
     var message = { functionName: "tabactivated", tabid: activeInfo.tabId, windowId: activeInfo.windowId };
     if (isChrome) message.browser = "chrome";
     if (isFirefox) message.browser = "ff";
@@ -606,71 +637,3 @@ var tabsexecuteScript = function (tabid, options) {
     });
 };
 
-
-
-// https://stackoverflow.com/questions/18309471/how-to-capture-a-screenshot-of-a-single-html-element-in-chrome-extension
-// here we create a new image
-function createImage(dataURL, x, y, width, height, callback) {
-    // create a canvas
-    var canvas = createCanvas(width, height);
-    // get the context of your canvas
-    var context = canvas.getContext('2d');
-    // create a new image object
-    var croppedImage = new Image();
-    // https://stackoverflow.com/questions/30466490/create-canvas-element-with-image-and-append-to-parent
-    croppedImage.onload = function () {
-        // this is where you manipulate the screenshot (cropping)
-        // parameter 1: source image (screenshot)
-        // parameter 2: source image x coordinate
-        // parameter 3: source image y coordinate
-        // parameter 4: source image width
-        // parameter 5: source image height
-        // parameter 6: destination x coordinate
-        // parameter 7: destination y coordinate
-        // parameter 8: destination width
-        // parameter 9: destination height
-        context.drawImage(croppedImage, x, y, width, height, 0, 0, width, height);
-
-        // canvas.toDataURL() contains your cropped image
-        //console.log(canvas.toDataURL());
-        callback(canvas.toDataURL());
-    };
-    croppedImage.src = dataURL; // screenshot (full image)
-}
-
-// creates a canvas element
-function createCanvas(canvasWidth, canvasHeight) {
-    var canvas = document.createElement("canvas");
-
-    // size of canvas in pixels
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
-    return canvas;
-}
-
-// calling the captureVisibleTab method takes a screenhot
-function createScreenshot(callback) {
-    // you can have two image formats (jpeg and png)
-    // for jpeg use { format: "jpeg", quality: 100 } (you can adjust the jpeg image quality from 0-100) 
-    // for png use { format: "png" }
-    chrome.tabs.captureVisibleTab(null, { format: "png" }, callback);
-}
-
-
-
-//createScreenshot(function (dataURL) {
-//    if (dataURL === null || dataURL === undefined) {
-//        console.log("send message to host, without image, dataURL is null");
-//        port.postMessage(sender);
-//    }
-//    else
-//    {
-//        createImage(dataURL, sender.x, sender.y, sender.width, sender.height, function (dataURL) {
-//            console.log(dataURL);
-//            sender.image = dataURL;
-//            console.log("send message to host, WITH image");
-//            //console.log(msg);
-//            port.postMessage(sender);
-//        });
-//    }
-//});

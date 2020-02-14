@@ -1,10 +1,4 @@
 window.chrome = window.chrome || window.browser;
-
-//console.log('*************************************');
-//console.log(window.innerHeight);
-//console.log(document.documentElement.clientHeight);
-//console.log('*************************************');
-
 // chrome.webstore.install("https://chrome.google.com/webstore/detail/faiaabbemgpndkgpjljhmjahkbpoopfp", successCallback, failureCallback);
 if (window.zeniverse_contentlistner === null || window.zeniverse_contentlistner === undefined) {
     chrome.runtime.onMessage.addListener(function (sender, message, fnResponse) {
@@ -18,7 +12,7 @@ if (window.zeniverse_contentlistner === null || window.zeniverse_contentlistner 
             if (fnResponse) fnResponse();
             return;
         }
-        if (typeof document.zeniverse !== 'undefined') {
+        if (typeof document.zeniverse !== 'undefined' && zeniverse !== undefined) {
             // console.log(sender.functionName);
             var func = zeniverse[sender.functionName];
             if (func) {

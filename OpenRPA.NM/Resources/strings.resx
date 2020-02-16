@@ -129,10 +129,28 @@
   <data name="activity_openurl_getcurrent" xml:space="preserve">
     <value>Get current</value>
   </data>
+  <data name="compensate_for_old_addon" xml:space="preserve">
+    <value>Compensate for old extension</value>
+  </data>
+  <data name="compensate_for_old_addon_help" xml:space="preserve">
+    <value>Add pixel compensation for old add</value>
+  </data>
   <data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
     <value>Wait after set value</value>
   </data>
   <data name="plugin_wait_for_tab_after_set_value_help" xml:space="preserve">
     <value>Wait for tab status to be in ready state after setting a value</value>
+  </data>
+  <data name="register_old_portname" xml:space="preserve">
+    <value>register old portname</value>
+  </data>
+  <data name="register_old_portname_help" xml:space="preserve">
+    <value>Register old browser extension port names </value>
+  </data>
+  <data name="wait_for_tab_click" xml:space="preserve">
+    <value>wait for tab</value>
+  </data>
+  <data name="wait_for_tab_click_help" xml:space="preserve">
+    <value>Wait for tab status to be in ready state after clicking a button</value>
   </data>
 </root>

@@ -53,17 +53,21 @@ namespace OpenRPA.NM.pipe
 
             var queue = new queuemsg<T>(message);
             replyqueue.Add(queue);
-            Log.Verbose("Send and queue message " + message.messageid);
+            Log.Debug("Send and queue message " + message.messageid);
             using (queue.autoReset = new AutoResetEvent(false))
             {
                 pipe.PushMessage(message);
                 queue.autoReset.WaitOne(timeout);
                 queue.sw.Stop();
             }
-            Log.Verbose("received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));
+            Log.Debug("received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));
             replyqueue.Remove(queue);
             result = queue.result;
-            if (result != null && !string.IsNullOrEmpty(result.error)) throw new NamedPipeException(result.error);
+            if (result != null && result.error != null)
+            {
+                string s = result.error.ToString().Trim();
+                if(!string.IsNullOrEmpty(s) && s != "{}") throw new NamedPipeException(result.error.ToString());
+            }
             return result;
         }
         [Serializable()]

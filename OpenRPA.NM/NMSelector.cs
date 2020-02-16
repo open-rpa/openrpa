@@ -130,20 +130,24 @@ namespace OpenRPA.NM
             string cssselector = "";
             if (p != null) { cssselector = p.Value; }
             NMElement fromNMElement = fromElement as NMElement;
+            string fromcssPath = "";
+            string fromxPath = "";
+
             if (fromElement != null)
             {
-                browser = fromNMElement.browser;
-                //if (browser != fromNMElement.browser) throw new ArgumentException("browser mismatch " + browser + "/" + fromNMElement.browser);
-                p = second.Properties.Where(x => x.Name == "cssselector").FirstOrDefault();
-                if (p == null) throw new ArgumentException("fromElement missing cssselector");
-                // xpath += p.Value.Substring(1);
-                xpath = "";
-                cssselector = fromNMElement.cssselector + " > " + p.Value;
+                //browser = fromNMElement.browser;
+                //p = second.Properties.Where(x => x.Name == "cssselector").FirstOrDefault();
+                //if (p == null) throw new ArgumentException("fromElement missing cssselector");
+                //xpath = "";
+                //cssselector = fromNMElement.cssselector + " > " + p.Value;
+                fromcssPath = fromNMElement.cssselector;
+                fromxPath = fromNMElement.xpath;
             }
+
 
             NMHook.checkForPipes(true, true);
             NMHook.reloadtabs();
-            var tabs = NMHook.tabs;
+            var tabs = NMHook.tabs.ToList();
             if (!string.IsNullOrEmpty(browser)) { 
                 lock(NMHook.tabs)
                 {
@@ -158,6 +162,8 @@ namespace OpenRPA.NM
                 getelement.browser = browser;
                 getelement.xPath = xpath;
                 getelement.cssPath = cssselector;
+                getelement.fromxPath = fromxPath;
+                getelement.fromcssPath = fromcssPath;
                 subresult = NMHook.sendMessageResult(getelement, false, TimeSpan.FromSeconds(2));
                 if(subresult != null)
                     if(subresult.results != null)

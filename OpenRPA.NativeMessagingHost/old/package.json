@@ -1,7 +1,7 @@
 {
     "name": "openrpa",
-    "version": "1.0.10",
-    "description": "",
+    "version": "0.0.0.10",
+    "description": "Support extension for OpenRPA",
     "main": "",
     "scripts": {
         "deps": "npm install",
@@ -21,8 +21,7 @@
         "url": "https://github.com/open-rpa/openrpa/issues"
     },
     "homepage": "https://openrpa.dk",
-    "dependencies": {
-    },
+    "dependencies": {},
     "devDependencies": {
         "browserify": "^13.3.0"
     }

@@ -31,7 +31,12 @@ namespace OpenRPA.NM.pipe
             Log.Debug("ASYNC received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));
             replyqueue.Remove(queue);
             result = queue.result;
-            if (!string.IsNullOrEmpty(result.error) && throwError) throw new NamedPipeException(result.error);
+            if (result != null && result.error != null)
+            {
+                string s = result.error.ToString().Trim();
+                if (!string.IsNullOrEmpty(s) && s != "{}") throw new NamedPipeException(result.error.ToString());
+            }
+
             return result;
         }
     }

@@ -168,7 +168,7 @@ namespace OpenRPA.NM
                         frameId = message.frameId,
                         data = value
                     };
-                    var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(10));
+                    var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(3));
                     if (subsubresult == null) throw new Exception("Failed setting html element value");
                     //System.Threading.Thread.Sleep(500);
                     if (PluginConfig.wait_for_tab_after_set_value)
@@ -212,8 +212,11 @@ namespace OpenRPA.NM
                     };
                     NativeMessagingMessage subsubresult = NMHook.sendMessageResult(getelement2, true, TimeSpan.FromSeconds(2));
                     if (subsubresult == null) throw new Exception("Failed clicking html element");
-                    System.Threading.Thread.Sleep(500);
-                    NMHook.WaitForTab(getelement2.tabid, getelement2.browser, TimeSpan.FromSeconds(5));
+                    //System.Threading.Thread.Sleep(500);
+                    if (PluginConfig.wait_for_tab_click)
+                    {
+                        NMHook.WaitForTab(getelement2.tabid, getelement2.browser, TimeSpan.FromSeconds(5));
+                    }
                     return;
                 }
                 NativeMessagingMessage subresult = null;
@@ -226,7 +229,7 @@ namespace OpenRPA.NM
                     frameId = message.frameId
                 };
                 if (NMHook.connected) subresult = NMHook.sendMessageResult(getelement, true, TimeSpan.FromSeconds(2));
-                if (subresult == null) throw new Exception("Failed clicking html element");
+                if (subresult == null) throw new Exception("Failed clicking html element, element not found");
                 int hitx = subresult.uix;
                 int hity = subresult.uiy;
                 int width = subresult.uiwidth;
@@ -248,8 +251,12 @@ namespace OpenRPA.NM
                 }
                 Input.InputDriver.Click(Button);
                 if (DoubleClick) Input.InputDriver.Click(Button);
-                System.Threading.Thread.Sleep(500);
-                NMHook.WaitForTab(getelement.tabid, getelement.browser, TimeSpan.FromSeconds(5));
+                //System.Threading.Thread.Sleep(500);
+                if (PluginConfig.wait_for_tab_click)
+                {
+                    NMHook.WaitForTab(getelement.tabid, getelement.browser, TimeSpan.FromSeconds(5));
+                }
+
             }
         }
         public bool Refresh()

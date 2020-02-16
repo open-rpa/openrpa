@@ -7,11 +7,13 @@ function inIframe() {
         return true;
     }
 }
-console.log("inIframe: " + inIframe());
-if (inIframe() != true) {
+
+if (inIframe() == true) {
+    console.debug('skip declaring zeniverse class');
+    document.zeniverse = {};
 }
 if (typeof document.zeniverse === 'undefined') {
-    console.log('declaring zeniverse class 3');
+    console.debug('declaring zeniverse class 4');
     document.zeniverse = {};
     var last_mousemove = null;
     var cache = {};
@@ -21,7 +23,6 @@ if (typeof document.zeniverse === 'undefined') {
             return "pong";
         },
         init: function () {
-            console.log('zeniverse init');
             document.addEventListener('click', function (e) { zeniverse.pushEvent('click', e); }, true);
             document.addEventListener('keydown', function (e) { zeniverse.pushEvent('keydown', e); }, true);
             document.addEventListener('keypress', function (e) { zeniverse.pushEvent('keyup', e); }, true);
@@ -44,7 +45,7 @@ if (typeof document.zeniverse === 'undefined') {
                 }
                 return form;
             } catch (e) {
-                console.log(e);
+                console.error(e);
                 return null;
             }
         },
@@ -109,14 +110,28 @@ if (typeof document.zeniverse === 'undefined') {
             return test;
         },
         getelements: function (message) {
+            var fromele = null;
+            if (message.fromxPath != null && message.fromxPath != "") {
+                if (message.fromxPath != null && message.fromxPath != "") {
+                    console.log("fromele = document.evaluate('" + message.fromxPath + "', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;");
+                    fromele = document.evaluate(message.fromxPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+                } else if (message.fromcssPath != null && message.fromcssPath != "") {
+                    console.log("fromele = document.querySelector('" + message.fromcssPath + "');");
+                    fromele = document.querySelector(message.fromcssPath);
+                }
+                if (fromele == null) {
+                    var test = JSON.parse(JSON.stringify(message));
+                    return test;
+                }
+            }
             var ele = [];
             if (ele === null && message.zn_id !== null && message.zn_id !== undefined && message.zn_id > -1) {
                 message.xPath = '//*[@zn_id="' + message.zn_id + '"]';
             }
-            if (ele.length === 0 && message.xPath) {
+            if (ele.length === 0 && message.xPath && fromele == null) {
                 //var iterator = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
                 var iterator = document.evaluate(message.xPath, document, null, XPathResult.ANY_TYPE, null);
-
+                console.log("document.evaluate('" + message.xPath + "', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);");
                 try {
                     var thisNode = iterator.iterateNext();
 
@@ -126,18 +141,26 @@ if (typeof document.zeniverse === 'undefined') {
                     }
                 }
                 catch (e) {
-                    console.log('Error: Document tree modified during iteration ' + e);
+                    console.error('Error: Document tree modified during iteration ' + e);
                 }
+                console.log(ele);
                 if (ele.length === 0) message.xPath = 'false';
                 if (ele.length > 0) message.xPath = 'true';
             }
             if (ele.length === 0 && message.cssPath) {
-                ele = document.querySelectorAll(message.cssPath);
+                if (fromele == null) {
+                    ele = document.querySelectorAll(message.cssPath);
+                    console.log("document.querySelector('" + message.cssPath + "');");
+                } else {
+                    ele = fromele.querySelectorAll(message.cssPath);
+                    console.log("fromele.querySelector('" + message.cssPath + "');");
+                }
+                
                 if (ele.length === 0) message.cssPath = 'false';
                 if (ele.length > 0) message.cssPath = 'true';
+                console.log(ele);
             }
             message.result = [];
-            //console.log(message.functionName + ' - ' + message.messageid + ' xPath: ' + message.xPath + ' cssPath: ' + message.cssPath);
             if (ele.length > 0) {
                 try {
                     for (var i = 0; i < ele.length; i++) {
@@ -153,12 +176,12 @@ if (typeof document.zeniverse === 'undefined') {
                         } catch (e) {
                             console.error(e);
                         }
-                        console.log(message.functionName + ' [' + result.uix + ',' + result.uiy + ',' + result.uiwidth + ',' + result.uiheight + ']');
                         message.result.push(result);
                     }
                 } catch (e) {
                     console.error(e);
                 }
+            } else {
             }
             message.result = JSON.stringify(message.result);
             //return simpleStringify(message);
@@ -169,27 +192,23 @@ if (typeof document.zeniverse === 'undefined') {
             var ele = null;
             if (ele === null && message.zn_id !== null && message.zn_id !== undefined && message.zn_id > -1) {
                 message.xPath = '//*[@zn_id="' + message.zn_id + '"]';
-                var znEle = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-                if (znEle === null) message.xPath = 'false';
-                if (znEle !== null) message.xPath = 'true';
-                // console.log("Try using zn_id " + (znEle === null));
-                ele = znEle;
             }
             if (ele === null && message.xPath) {
                 var xpathEle = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+                console.log("document.evaluate('" + message.xPath + "', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;");
                 if (xpathEle === null) message.xPath = 'false';
                 if (xpathEle !== null) message.xPath = 'true';
-                // console.log("Try using xPath " + (xpathEle === null));
                 ele = xpathEle;
+                console.log(ele);
             }
             if (ele === null && message.cssPath) {
                 var cssEle = document.querySelector(message.cssPath);
+                console.log("document.querySelector('" + message.cssPath + "');");
                 if (cssEle === null) message.cssPath = 'false';
                 if (cssEle !== null) message.cssPath = 'true';
-                // console.log("Try using cssPath " + (cssEle === null));
                 ele = cssEle;
+                console.log(ele);
             }
-            //console.log(message.functionName + ' - ' + message.messageid + ' xPath: ' + message.xPath + ' cssPath: ' + message.cssPath);
             if (ele !== null && ele !== undefined) {
                 try {
                     try {
@@ -197,7 +216,6 @@ if (typeof document.zeniverse === 'undefined') {
                     } catch (e) {
                         console.error(e);
                     }
-                    // console.log(message.functionName + ' - ' + message.messageid + ' [' + message.uix + ',' + message.uiy + ',' + message.uiwidth + ',' + message.uiheight + ']');
                 } catch (e) {
                     console.error(e);
                 }
@@ -210,11 +228,7 @@ if (typeof document.zeniverse === 'undefined') {
                     message.result = zeniverse.mapDOM(ele, true);
                 }
             }
-            else {
-                // console.log('skip mapping dom object, no results');
-            }
             //return simpleStringify(message);
-            // console.log(message);
             var test = JSON.parse(JSON.stringify(message));
             return test;
         },
@@ -240,12 +254,11 @@ if (typeof document.zeniverse === 'undefined') {
                 ele = cssEle;
             }
             if (ele) {
-                //console.log(ele);
-                //console.log(message.data);
                 ele.value = message.data;
+                var evt = document.createEvent("HTMLEvents");
+                evt.initEvent("change", false, true);
+                ele.dispatchEvent(evt);
             }
-
-
             var test = JSON.parse(JSON.stringify(message));
             return test;
         },
@@ -261,6 +274,20 @@ if (typeof document.zeniverse === 'undefined') {
             message.uiheight = Math.round(ele.offsetHeight * devicePixelRatio);
             message.uix = Math.round((ClientRect.left - scrollLeft) * devicePixelRatio);
             message.uiy = Math.round((ClientRect.top * devicePixelRatio) + (window.outerHeight - (window.innerHeight * devicePixelRatio))); //+ (window.outerHeight - window.innerHeight));
+            var isAtMaxWidth = screen.availWidth - window.innerWidth === 0;
+            if (isAtMaxWidth) {
+                var isFirefox = typeof InstallTrigger !== 'undefined';
+                if (isFirefox) {
+                    message.uix += 8;
+                    message.uiy -= 7;
+                } else {
+                    message.uix += 8;
+                    message.uiy += 8;
+                }
+            } else {
+                message.uix += 7;
+                message.uiy -= 7;
+            }
         },
         getOffset: function (el) {
             var _x = 0;
@@ -273,16 +300,11 @@ if (typeof document.zeniverse === 'undefined') {
             return { top: _y, left: _x };
         },
         pushEvent: function (action, event) {
-            // http://javascript.info/coordinates
-
             let frame = zeniverse.getFrameName(self);
-            //var events = top.window.events;
             if (action === 'keydown') {
-                //console.log('pushEvent: ' + action);
                 chrome.runtime.sendMessage({ functionName: action, key: String.fromCharCode(event.which) });
             }
             else if (action === 'keyup') {
-                //console.log('pushEvent: ' + action);
                 chrome.runtime.sendMessage({ functionName: action, key: String.fromCharCode(event.which) });
             }
             else {
@@ -301,8 +323,6 @@ if (typeof document.zeniverse === 'undefined') {
                     //    message.result = dom;
                     //}
                 }
-                //console.log('pushEvent: ' + action);
-                //debugger;
                 try {
                     zeniverse.applyPhysicalCords(message, targetElement);
                 } catch (e) {
@@ -314,11 +334,6 @@ if (typeof document.zeniverse === 'undefined') {
                 message.zn_id = zeniverse.getuniqueid(targetElement);
                 message.c = targetElement.childNodes.length;
                 message.result = zeniverse.mapDOM(targetElement, true);
-                // message.result = zeniverse.mapDOM(ele, true);
-                //console.log('zn_id: ', message.zn_id);
-                //if (action === 'mousemove') {
-                //    console.log(message.xPath);
-                //}
                 chrome.runtime.sendMessage(message);
             }
         },
@@ -484,12 +499,13 @@ if (typeof document.zeniverse === 'undefined') {
                 if (element.attributes) {
                     if (element.attributes.length) {
                         var wasDisabled = false;
-                        if (element.disabled === true) {
-                            console.log('removing disabled!!!!');
-                            wasDisabled = true;
-                            //element.disabled == false;
-                            element.removeAttribute("disabled");
-                        }
+                        // To read values of disabled objects, we need to undisable them
+                        //if (element.disabled === true) {
+                        //    console.log('removing disabled!!!!');
+                        //    wasDisabled = true;
+                        //    //element.disabled == false;
+                        //    element.removeAttribute("disabled");
+                        //}
                         var attributecount = 0;
                         //object["attributes"] = {};
                         
@@ -571,325 +587,324 @@ if (typeof document.zeniverse === 'undefined') {
     document.zeniverse = zeniverse;
     zeniverse.init();
 
-} else {
-    console.log('zeniverse is declared');
-}
 
 
 
-// https://chromium.googlesource.com/chromium/blink/+/master/Source/devtools/front_end/components/DOMPresentationUtils.js
-// https://gist.github.com/asfaltboy/8aea7435b888164e8563
-/*
- * Copyright (C) 2015 Pavel Savshenko
- * Copyright (C) 2011 Google Inc.  All rights reserved.
- * Copyright (C) 2007, 2008 Apple Inc.  All rights reserved.
- * Copyright (C) 2008 Matt Lilek <webkit@mattlilek.com>
- * Copyright (C) 2009 Joseph Pecoraro
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1.  Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- * 2.  Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of
- *     its contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 
-var UTILS = {};
-UTILS.xPath = function (node, optimized) {
-    if (node.nodeType === Node.DOCUMENT_NODE)
-        return "/";
-    var steps = [];
-    var contextNode = node;
-    while (contextNode) {
-        var step = UTILS._xPathValue(contextNode, optimized);
-        if (!step)
-            break; // Error - bail out early.
-        steps.push(step);
-        if (step.optimized)
-            break;
-        contextNode = contextNode.parentNode;
-    }
-    steps.reverse();
-    return (steps.length && steps[0].optimized ? "" : "/") + steps.join("/");
-};
-UTILS._xPathValue = function (node, optimized) {
-    var ownValue;
-    var ownIndex = UTILS._xPathIndex(node);
-    if (ownIndex === -1)
-        return null; // Error.
-    switch (node.nodeType) {
-        case Node.ELEMENT_NODE:
-            if (optimized && node.getAttribute("id"))
-                return new UTILS.DOMNodePathStep("//*[@id=\"" + node.getAttribute("id") + "\"]", true);
-            ownValue = node.localName;
-            break;
-        case Node.ATTRIBUTE_NODE:
-            ownValue = "@" + node.nodename;
-            break;
-        case Node.TEXT_NODE:
-        case Node.CDATA_SECTION_NODE:
-            ownValue = "text()";
-            break;
-        case Node.PROCESSING_INSTRUCTION_NODE:
-            ownValue = "processing-instruction()";
-            break;
-        case Node.COMMENT_NODE:
-            ownValue = "comment()";
-            break;
-        case Node.DOCUMENT_NODE:
-            ownValue = "";
-            break;
-        default:
-            ownValue = "";
-            break;
-    }
-    if (ownIndex > 0)
-        ownValue += "[" + ownIndex + "]";
-    return new UTILS.DOMNodePathStep(ownValue, node.nodeType === Node.DOCUMENT_NODE);
-};
+    // https://chromium.googlesource.com/chromium/blink/+/master/Source/devtools/front_end/components/DOMPresentationUtils.js
+    // https://gist.github.com/asfaltboy/8aea7435b888164e8563
+    /*
+     * Copyright (C) 2015 Pavel Savshenko
+     * Copyright (C) 2011 Google Inc.  All rights reserved.
+     * Copyright (C) 2007, 2008 Apple Inc.  All rights reserved.
+     * Copyright (C) 2008 Matt Lilek <webkit@mattlilek.com>
+     * Copyright (C) 2009 Joseph Pecoraro
+     *
+     * Redistribution and use in source and binary forms, with or without
+     * modification, are permitted provided that the following conditions
+     * are met:
+     *
+     * 1.  Redistributions of source code must retain the above copyright
+     *     notice, this list of conditions and the following disclaimer.
+     * 2.  Redistributions in binary form must reproduce the above copyright
+     *     notice, this list of conditions and the following disclaimer in the
+     *     documentation and/or other materials provided with the distribution.
+     * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of
+     *     its contributors may be used to endorse or promote products derived
+     *     from this software without specific prior written permission.
+     *
+     * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+     * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+     * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+     * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+     * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+     * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+     * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+     * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+     * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+     * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+     */
 
-UTILS._xPathValue = function (node, optimized) {
-    var ownValue;
-    var ownIndex = UTILS._xPathIndex(node);
-    if (ownIndex === -1)
-        return null; // Error.
-    switch (node.nodeType) {
-        case Node.ELEMENT_NODE:
-            if (optimized && node.getAttribute("id"))
-                return new UTILS.DOMNodePathStep("//*[@id=\"" + node.getAttribute("id") + "\"]", true);
-            ownValue = node.localName;
-            break;
-        case Node.ATTRIBUTE_NODE:
-            ownValue = "@" + node.nodename;
-            break;
-        case Node.TEXT_NODE:
-        case Node.CDATA_SECTION_NODE:
-            ownValue = "text()";
-            break;
-        case Node.PROCESSING_INSTRUCTION_NODE:
-            ownValue = "processing-instruction()";
-            break;
-        case Node.COMMENT_NODE:
-            ownValue = "comment()";
-            break;
-        case Node.DOCUMENT_NODE:
-            ownValue = "";
-            break;
-        default:
-            ownValue = "";
-            break;
-    }
-    if (ownIndex > 0)
-        ownValue += "[" + ownIndex + "]";
-    return new UTILS.DOMNodePathStep(ownValue, node.nodeType === Node.DOCUMENT_NODE);
-};
-UTILS._xPathIndex = function (node) {
-    // Returns -1 in case of error, 0 if no siblings matching the same expression, <XPath index among the same expression-matching sibling nodes> otherwise.
-    function areNodesSimilar(left, right) {
-        if (left === right)
-            return true;
-        if (left.nodeType === Node.ELEMENT_NODE && right.nodeType === Node.ELEMENT_NODE)
-            return left.localName === right.localName;
-        if (left.nodeType === right.nodeType)
-            return true;
-        // XPath treats CDATA as text nodes.
-        var leftType = left.nodeType === Node.CDATA_SECTION_NODE ? Node.TEXT_NODE : left.nodeType;
-        var rightType = right.nodeType === Node.CDATA_SECTION_NODE ? Node.TEXT_NODE : right.nodeType;
-        return leftType === rightType;
-    }
-    var siblings = node.parentNode ? node.parentNode.children : null;
-    if (!siblings)
-        return 0; // Root node - no siblings.
-    var hasSameNamedElements;
-    for (var i = 0; i < siblings.length; ++i) {
-        if (areNodesSimilar(node, siblings[i]) && siblings[i] !== node) {
-            hasSameNamedElements = true;
-            break;
+    var UTILS = {};
+    UTILS.xPath = function (node, optimized) {
+        if (node.nodeType === Node.DOCUMENT_NODE)
+            return "/";
+        var steps = [];
+        var contextNode = node;
+        while (contextNode) {
+            var step = UTILS._xPathValue(contextNode, optimized);
+            if (!step)
+                break; // Error - bail out early.
+            steps.push(step);
+            if (step.optimized)
+                break;
+            contextNode = contextNode.parentNode;
         }
-    }
-    if (!hasSameNamedElements)
-        return 0;
-    var ownIndex = 1; // XPath indices start with 1.
-    for (var z = 0; z < siblings.length; ++z) {
-        if (areNodesSimilar(node, siblings[z])) {
-            if (siblings[z] === node)
-                return ownIndex;
-            ++ownIndex;
+        steps.reverse();
+        return (steps.length && steps[0].optimized ? "" : "/") + steps.join("/");
+    };
+    UTILS._xPathValue = function (node, optimized) {
+        var ownValue;
+        var ownIndex = UTILS._xPathIndex(node);
+        if (ownIndex === -1)
+            return null; // Error.
+        switch (node.nodeType) {
+            case Node.ELEMENT_NODE:
+                if (optimized && node.getAttribute("id"))
+                    return new UTILS.DOMNodePathStep("//*[@id=\"" + node.getAttribute("id") + "\"]", true);
+                ownValue = node.localName;
+                break;
+            case Node.ATTRIBUTE_NODE:
+                ownValue = "@" + node.nodename;
+                break;
+            case Node.TEXT_NODE:
+            case Node.CDATA_SECTION_NODE:
+                ownValue = "text()";
+                break;
+            case Node.PROCESSING_INSTRUCTION_NODE:
+                ownValue = "processing-instruction()";
+                break;
+            case Node.COMMENT_NODE:
+                ownValue = "comment()";
+                break;
+            case Node.DOCUMENT_NODE:
+                ownValue = "";
+                break;
+            default:
+                ownValue = "";
+                break;
         }
-    }
-    return -1; // An error occurred: |node| not found in parent's children.
-};
+        if (ownIndex > 0)
+            ownValue += "[" + ownIndex + "]";
+        return new UTILS.DOMNodePathStep(ownValue, node.nodeType === Node.DOCUMENT_NODE);
+    };
 
-
-function simpleStringify(object) {
-    var simpleObject = {};
-    for (var prop in object) {
-        if (!object.hasOwnProperty(prop)) {
-            continue;
+    UTILS._xPathValue = function (node, optimized) {
+        var ownValue;
+        var ownIndex = UTILS._xPathIndex(node);
+        if (ownIndex === -1)
+            return null; // Error.
+        switch (node.nodeType) {
+            case Node.ELEMENT_NODE:
+                if (optimized && node.getAttribute("id"))
+                    return new UTILS.DOMNodePathStep("//*[@id=\"" + node.getAttribute("id") + "\"]", true);
+                ownValue = node.localName;
+                break;
+            case Node.ATTRIBUTE_NODE:
+                ownValue = "@" + node.nodename;
+                break;
+            case Node.TEXT_NODE:
+            case Node.CDATA_SECTION_NODE:
+                ownValue = "text()";
+                break;
+            case Node.PROCESSING_INSTRUCTION_NODE:
+                ownValue = "processing-instruction()";
+                break;
+            case Node.COMMENT_NODE:
+                ownValue = "comment()";
+                break;
+            case Node.DOCUMENT_NODE:
+                ownValue = "";
+                break;
+            default:
+                ownValue = "";
+                break;
         }
-        if (typeof object[prop] === 'object') {
-            continue;
+        if (ownIndex > 0)
+            ownValue += "[" + ownIndex + "]";
+        return new UTILS.DOMNodePathStep(ownValue, node.nodeType === Node.DOCUMENT_NODE);
+    };
+    UTILS._xPathIndex = function (node) {
+        // Returns -1 in case of error, 0 if no siblings matching the same expression, <XPath index among the same expression-matching sibling nodes> otherwise.
+        function areNodesSimilar(left, right) {
+            if (left === right)
+                return true;
+            if (left.nodeType === Node.ELEMENT_NODE && right.nodeType === Node.ELEMENT_NODE)
+                return left.localName === right.localName;
+            if (left.nodeType === right.nodeType)
+                return true;
+            // XPath treats CDATA as text nodes.
+            var leftType = left.nodeType === Node.CDATA_SECTION_NODE ? Node.TEXT_NODE : left.nodeType;
+            var rightType = right.nodeType === Node.CDATA_SECTION_NODE ? Node.TEXT_NODE : right.nodeType;
+            return leftType === rightType;
         }
-        if (typeof object[prop] === 'function') {
-            continue;
-        }
-        simpleObject[prop] = object[prop];
-    }
-    return simpleObject; // returns cleaned up JSON
-}
-
-
-
-UTILS.cssPath = function (node, optimized) {
-    if (node.nodeType !== Node.ELEMENT_NODE)
-        return "";
-    var steps = [];
-    var contextNode = node;
-    while (contextNode) {
-        var step = UTILS._cssPathStep(contextNode, !!optimized, contextNode === node);
-        if (!step)
-            break; // Error - bail out early.
-        steps.push(step);
-        if (step.optimized)
-            break;
-        contextNode = contextNode.parentNode;
-    }
-    steps.reverse();
-    return steps.join(" > ");
-};
-UTILS._cssPathStep = function (node, optimized, isTargetNode) {
-    if (node.nodeType !== Node.ELEMENT_NODE)
-        return null;
-
-    var id = node.getAttribute("id");
-    if (optimized) {
-        if (id)
-            return new UTILS.DOMNodePathStep(idSelector(id), true);
-        var nodeNameLower = node.nodeName.toLowerCase();
-        if (nodeNameLower === "body" || nodeNameLower === "head" || nodeNameLower === "html")
-            return new UTILS.DOMNodePathStep(node.nodeName.toLowerCase(), true);
-    }
-    var nodeName = node.nodeName.toLowerCase();
-
-    if (id)
-        return new UTILS.DOMNodePathStep(nodeName.toLowerCase() + idSelector(id), true);
-    var parent = node.parentNode;
-    if (!parent || parent.nodeType === Node.DOCUMENT_NODE)
-        return new UTILS.DOMNodePathStep(nodeName.toLowerCase(), true);
-    function prefixedElementClassNames(node) {
-        var classAttribute = node.getAttribute("class");
-        if (!classAttribute)
-            return [];
-
-        return classAttribute.split(/\s+/g).filter(Boolean).map(function (name) {
-            // The prefix is required to store "__proto__" in a object-based map.
-            return "$" + name;
-        });
-    }
-    function idSelector(id) {
-        return "#" + escapeIdentifierIfNeeded(id);
-    }
-    function escapeIdentifierIfNeeded(ident) {
-        if (isCSSIdentifier(ident))
-            return ident;
-        var shouldEscapeFirst = /^(?:[0-9]|-[0-9-]?)/.test(ident);
-        var lastIndex = ident.length - 1;
-        return ident.replace(/./g, function (c, i) {
-            return shouldEscapeFirst && i === 0 || !isCSSIdentChar(c) ? escapeAsciiChar(c, i === lastIndex) : c;
-        });
-    }
-    function escapeAsciiChar(c, isLast) {
-        return "\\" + toHexByte(c) + (isLast ? "" : " ");
-    }
-    function toHexByte(c) {
-        var hexByte = c.charCodeAt(0).toString(16);
-        if (hexByte.length === 1)
-            hexByte = "0" + hexByte;
-        return hexByte;
-    }
-    function isCSSIdentChar(c) {
-        if (/[a-zA-Z0-9_-]/.test(c))
-            return true;
-        return c.charCodeAt(0) >= 0xA0;
-    }
-    function isCSSIdentifier(value) {
-        return /^-?[a-zA-Z_][a-zA-Z0-9_-]*$/.test(value);
-    }
-    var prefixedOwnClassNamesArray = prefixedElementClassNames(node);
-    var needsClassNames = false;
-    var needsNthChild = false;
-    var ownIndex = -1;
-    var siblings = parent.children;
-    for (var i = 0; (ownIndex === -1 || !needsNthChild) && i < siblings.length; ++i) {
-        var sibling = siblings[i];
-        if (sibling === node) {
-            ownIndex = i;
-            continue;
-        }
-        if (needsNthChild)
-            continue;
-        if (sibling.nodeName.toLowerCase() !== nodeName.toLowerCase())
-            continue;
-
-        needsClassNames = true;
-        var ownClassNames = prefixedOwnClassNamesArray;
-        var ownClassNameCount = 0;
-        for (var name in ownClassNames)
-            ++ownClassNameCount;
-        if (ownClassNameCount === 0) {
-            needsNthChild = true;
-            continue;
-        }
-        var siblingClassNamesArray = prefixedElementClassNames(sibling);
-        for (var j = 0; j < siblingClassNamesArray.length; ++j) {
-            var siblingClass = siblingClassNamesArray[j];
-            if (ownClassNames.indexOf(siblingClass))
-                continue;
-            delete ownClassNames[siblingClass];
-            if (!--ownClassNameCount) {
-                needsNthChild = true;
+        var siblings = node.parentNode ? node.parentNode.children : null;
+        if (!siblings)
+            return 0; // Root node - no siblings.
+        var hasSameNamedElements;
+        for (var i = 0; i < siblings.length; ++i) {
+            if (areNodesSimilar(node, siblings[i]) && siblings[i] !== node) {
+                hasSameNamedElements = true;
                 break;
             }
         }
+        if (!hasSameNamedElements)
+            return 0;
+        var ownIndex = 1; // XPath indices start with 1.
+        for (var z = 0; z < siblings.length; ++z) {
+            if (areNodesSimilar(node, siblings[z])) {
+                if (siblings[z] === node)
+                    return ownIndex;
+                ++ownIndex;
+            }
+        }
+        return -1; // An error occurred: |node| not found in parent's children.
+    };
+
+
+    function simpleStringify(object) {
+        var simpleObject = {};
+        for (var prop in object) {
+            if (!object.hasOwnProperty(prop)) {
+                continue;
+            }
+            if (typeof object[prop] === 'object') {
+                continue;
+            }
+            if (typeof object[prop] === 'function') {
+                continue;
+            }
+            simpleObject[prop] = object[prop];
+        }
+        return simpleObject; // returns cleaned up JSON
     }
 
-    var result = nodeName.toLowerCase();
-    if (isTargetNode && nodeName.toLowerCase() === "input" && node.getAttribute("type") && !node.getAttribute("id") && !node.getAttribute("class"))
-        result += "[type=\"" + node.getAttribute("type") + "\"]";
-    if (needsNthChild) {
-        result += ":nth-child(" + (ownIndex + 1) + ")";
-    } else if (needsClassNames) {
-        for (var prefixedName in prefixedOwnClassNamesArray)
-            // for (var prefixedName in prefixedOwnClassNamesArray.keySet())
-            result += "." + escapeIdentifierIfNeeded(prefixedOwnClassNamesArray[prefixedName].substr(1));
-    }
 
-    return new UTILS.DOMNodePathStep(result, false);
-};
-UTILS.DOMNodePathStep = function (value, optimized) {
-    this.value = value;
-    this.optimized = optimized || false;
-};
-UTILS.DOMNodePathStep.prototype = {
-    toString: function () {
-        return this.value;
-    }
-};
 
+    UTILS.cssPath = function (node, optimized) {
+        if (node.nodeType !== Node.ELEMENT_NODE)
+            return "";
+        var steps = [];
+        var contextNode = node;
+        while (contextNode) {
+            var step = UTILS._cssPathStep(contextNode, !!optimized, contextNode === node);
+            if (!step)
+                break; // Error - bail out early.
+            steps.push(step);
+            if (step.optimized)
+                break;
+            contextNode = contextNode.parentNode;
+        }
+        steps.reverse();
+        return steps.join(" > ");
+    };
+    UTILS._cssPathStep = function (node, optimized, isTargetNode) {
+        if (node.nodeType !== Node.ELEMENT_NODE)
+            return null;
+
+        var id = node.getAttribute("id");
+        if (optimized) {
+            if (id)
+                return new UTILS.DOMNodePathStep(idSelector(id), true);
+            var nodeNameLower = node.nodeName.toLowerCase();
+            if (nodeNameLower === "body" || nodeNameLower === "head" || nodeNameLower === "html")
+                return new UTILS.DOMNodePathStep(node.nodeName.toLowerCase(), true);
+        }
+        var nodeName = node.nodeName.toLowerCase();
+
+        if (id)
+            return new UTILS.DOMNodePathStep(nodeName.toLowerCase() + idSelector(id), true);
+        var parent = node.parentNode;
+        if (!parent || parent.nodeType === Node.DOCUMENT_NODE)
+            return new UTILS.DOMNodePathStep(nodeName.toLowerCase(), true);
+        function prefixedElementClassNames(node) {
+            var classAttribute = node.getAttribute("class");
+            if (!classAttribute)
+                return [];
+
+            return classAttribute.split(/\s+/g).filter(Boolean).map(function (name) {
+                // The prefix is required to store "__proto__" in a object-based map.
+                return "$" + name;
+            });
+        }
+        function idSelector(id) {
+            return "#" + escapeIdentifierIfNeeded(id);
+        }
+        function escapeIdentifierIfNeeded(ident) {
+            if (isCSSIdentifier(ident))
+                return ident;
+            var shouldEscapeFirst = /^(?:[0-9]|-[0-9-]?)/.test(ident);
+            var lastIndex = ident.length - 1;
+            return ident.replace(/./g, function (c, i) {
+                return shouldEscapeFirst && i === 0 || !isCSSIdentChar(c) ? escapeAsciiChar(c, i === lastIndex) : c;
+            });
+        }
+        function escapeAsciiChar(c, isLast) {
+            return "\\" + toHexByte(c) + (isLast ? "" : " ");
+        }
+        function toHexByte(c) {
+            var hexByte = c.charCodeAt(0).toString(16);
+            if (hexByte.length === 1)
+                hexByte = "0" + hexByte;
+            return hexByte;
+        }
+        function isCSSIdentChar(c) {
+            if (/[a-zA-Z0-9_-]/.test(c))
+                return true;
+            return c.charCodeAt(0) >= 0xA0;
+        }
+        function isCSSIdentifier(value) {
+            return /^-?[a-zA-Z_][a-zA-Z0-9_-]*$/.test(value);
+        }
+        var prefixedOwnClassNamesArray = prefixedElementClassNames(node);
+        var needsClassNames = false;
+        var needsNthChild = false;
+        var ownIndex = -1;
+        var siblings = parent.children;
+        for (var i = 0; (ownIndex === -1 || !needsNthChild) && i < siblings.length; ++i) {
+            var sibling = siblings[i];
+            if (sibling === node) {
+                ownIndex = i;
+                continue;
+            }
+            if (needsNthChild)
+                continue;
+            if (sibling.nodeName.toLowerCase() !== nodeName.toLowerCase())
+                continue;
+
+            needsClassNames = true;
+            var ownClassNames = prefixedOwnClassNamesArray;
+            var ownClassNameCount = 0;
+            for (var name in ownClassNames)
+                ++ownClassNameCount;
+            if (ownClassNameCount === 0) {
+                needsNthChild = true;
+                continue;
+            }
+            var siblingClassNamesArray = prefixedElementClassNames(sibling);
+            for (var j = 0; j < siblingClassNamesArray.length; ++j) {
+                var siblingClass = siblingClassNamesArray[j];
+                if (ownClassNames.indexOf(siblingClass))
+                    continue;
+                delete ownClassNames[siblingClass];
+                if (!--ownClassNameCount) {
+                    needsNthChild = true;
+                    break;
+                }
+            }
+        }
+
+        var result = nodeName.toLowerCase();
+        if (isTargetNode && nodeName.toLowerCase() === "input" && node.getAttribute("type") && !node.getAttribute("id") && !node.getAttribute("class"))
+            result += "[type=\"" + node.getAttribute("type") + "\"]";
+        if (needsNthChild) {
+            result += ":nth-child(" + (ownIndex + 1) + ")";
+        } else if (needsClassNames) {
+            for (var prefixedName in prefixedOwnClassNamesArray)
+                // for (var prefixedName in prefixedOwnClassNamesArray.keySet())
+                result += "." + escapeIdentifierIfNeeded(prefixedOwnClassNamesArray[prefixedName].substr(1));
+        }
+
+        return new UTILS.DOMNodePathStep(result, false);
+    };
+    UTILS.DOMNodePathStep = function (value, optimized) {
+        this.value = value;
+        this.optimized = optimized || false;
+    };
+    UTILS.DOMNodePathStep.prototype = {
+        toString: function () {
+            return this.value;
+        }
+    };
+
+}

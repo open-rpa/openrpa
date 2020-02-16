@@ -1,5 +1,5 @@
 {
-  "name": "com.openrpa.msg",
+  "name": "com.zenamic.msg",
   "description": "Zenamic messaging host",
   "path": "REPLACEPATH",
   "type": "stdio",

@@ -1069,12 +1069,12 @@ namespace OpenRPA.Views
                 //location = _sourceLocationMapping[ActivityId];
                 //BreakPointhit = wfDesigner.DebugManagerView.GetBreakpointLocations().ContainsKey(location);
 
-                if (_sourceLocationMapping.ContainsKey(ChildActivityId) || _sourceLocationMapping.ContainsKey(ActivityId))
+                if (!_sourceLocationMapping.ContainsKey(ChildActivityId) || !_sourceLocationMapping.ContainsKey(ActivityId))
                 {
                     InitializeStateEnvironment();
                 }
 
-                InitializeStateEnvironment();
+                // InitializeStateEnvironment();
                 if (!_sourceLocationMapping.ContainsKey(ChildActivityId)) return;
                 location = _sourceLocationMapping[ChildActivityId];
                 if (location == null) return;

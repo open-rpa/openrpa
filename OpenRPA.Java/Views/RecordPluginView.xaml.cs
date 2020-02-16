@@ -40,5 +40,9 @@ namespace OpenRPA.Java.Views
             PluginConfig.auto_launch_java_bridge = auto_launch_java_bridge.IsChecked.Value;
             Config.Save();
         }
+        private void launch_java_bridge_Click(object sender, RoutedEventArgs e)
+        {
+            Javahook.EnsureJavaBridge();
+        }
     }
 }

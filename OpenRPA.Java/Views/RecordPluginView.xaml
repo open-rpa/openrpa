@@ -13,6 +13,7 @@
             Checked="auto_launch_java_bridge_Checked" Unchecked="auto_launch_java_bridge_Checked" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,10,0,0" Text="{x:Static or:strings.plugin_auto_launch_java_bridge_help}" VerticalAlignment="Top" />
 
+        <Button Height="23" HorizontalAlignment="Left" Margin="151,30,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_launch_java_bridge}" Click="launch_java_bridge_Click" ></Button>
 
     </Grid>
 </UserControl>

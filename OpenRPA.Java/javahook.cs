@@ -61,13 +61,13 @@ namespace OpenRPA.Java
                 if (PluginConfig.auto_launch_java_bridge)
                 {
                     EnsureJavaBridge();
-                    if (pipeclient == null)
-                    {
-                        pipeclient = new NamedPipeClient<JavaEvent>("openrpa_javabridge");
-                        pipeclient.ServerMessage += Pipeclient_ServerMessage;
-                        pipeclient.AutoReconnect = true;
-                        pipeclient.Start();
-                    }
+                }
+                if (pipeclient == null)
+                {
+                    pipeclient = new NamedPipeClient<JavaEvent>("openrpa_javabridge");
+                    pipeclient.ServerMessage += Pipeclient_ServerMessage;
+                    pipeclient.AutoReconnect = true;
+                    pipeclient.Start();
                 }
                 if (Initilized) return;
                 Initilized = false;

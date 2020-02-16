@@ -168,7 +168,7 @@ namespace OpenRPA.NM
                         frameId = message.frameId,
                         data = value
                     };
-                    var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(10));
+                    var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(3));
                     if (subsubresult == null) throw new Exception("Failed setting html element value");
                     //System.Threading.Thread.Sleep(500);
                     if (PluginConfig.wait_for_tab_after_set_value)
@@ -212,8 +212,8 @@ namespace OpenRPA.NM
                     };
                     NativeMessagingMessage subsubresult = NMHook.sendMessageResult(getelement2, true, TimeSpan.FromSeconds(2));
                     if (subsubresult == null) throw new Exception("Failed clicking html element");
-                    System.Threading.Thread.Sleep(500);
-                    NMHook.WaitForTab(getelement2.tabid, getelement2.browser, TimeSpan.FromSeconds(5));
+                    //System.Threading.Thread.Sleep(500);
+                    //NMHook.WaitForTab(getelement2.tabid, getelement2.browser, TimeSpan.FromSeconds(5));
                     return;
                 }
                 NativeMessagingMessage subresult = null;

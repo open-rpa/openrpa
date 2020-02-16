@@ -48,6 +48,7 @@ namespace OpenRPA.NativeMessagingHost
                             stdin.Read(buff, 0, buff.Length);
 
                             input += Encoding.UTF8.GetString(buff);
+                            // input += Encoding.Default.GetString(buff);
 
                             // make sure to get message as UTF-8 format
                             //String msgStr = new String(msg, "UTF-8");

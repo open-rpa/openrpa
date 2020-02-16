@@ -157,6 +157,7 @@ namespace OpenRPA.NM
             {
                 if (ffconnected)
                 {
+                    Log.Debug("Send and queue message " + message.functionName);
                     result = ffpipe.Message(message, throwError, timeout);
                 }
             }
@@ -164,6 +165,7 @@ namespace OpenRPA.NM
             {
                 if (chromeconnected)
                 {
+                    Log.Debug("Send and queue message " + message.functionName);
                     result = chromepipe.Message(message, throwError, timeout);
                 }
             }

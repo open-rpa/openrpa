@@ -12,7 +12,14 @@ if (window.zeniverse_contentlistner === null || window.zeniverse_contentlistner 
             if (fnResponse) fnResponse();
             return;
         }
-        if (typeof document.zeniverse !== 'undefined' && zeniverse !== undefined) {
+        if (sender.functionName == "getmanifest") {
+            //console.log("getmanifest");
+            var manifestData = chrome.runtime.getManifest();
+            //console.log(manifestData);
+            sender.result = manifestData;
+            var test = JSON.parse(JSON.stringify(sender));
+            fnResponse(test);
+        } else if (typeof document.zeniverse !== 'undefined' && zeniverse !== undefined) {
             // console.log(sender.functionName);
             var func = zeniverse[sender.functionName];
             if (func) {

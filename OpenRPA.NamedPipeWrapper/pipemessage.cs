@@ -19,6 +19,7 @@ namespace OpenRPA.NamedPipeWrapper
             messageid = message.messageid;
         }
         public string messageid { get; set; }
-        public string error { get; set; }
+        // public string error { get; set; }
+        public object error { get; set; }
     }
 }

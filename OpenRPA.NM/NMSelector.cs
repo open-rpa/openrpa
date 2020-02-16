@@ -147,7 +147,7 @@ namespace OpenRPA.NM
 
             NMHook.checkForPipes(true, true);
             NMHook.reloadtabs();
-            var tabs = NMHook.tabs;
+            var tabs = NMHook.tabs.ToList();
             if (!string.IsNullOrEmpty(browser)) { 
                 lock(NMHook.tabs)
                 {

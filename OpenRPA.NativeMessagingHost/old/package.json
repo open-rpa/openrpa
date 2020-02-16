@@ -1,0 +1,28 @@
+{
+    "name": "openrpa",
+    "version": "0.0.0.10",
+    "description": "Support extension for OpenRPA",
+    "main": "",
+    "scripts": {
+        "deps": "npm install",
+        "stage": "mkdir dist || echo Dist already exists.",
+        "bundle": "browserify -o dist/extension.js src/extension.js",
+        "fixmodules": "rm -f node_modules/public-encrypt/test/*.pem",
+        "build": "npm run fixmodules && npm run stage && npm run bundle && npm run package",
+        "package": "zip -r dist.zip dist manifest.json"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/open-rpa/openrpa.git"
+    },
+    "author": "Allan Zimmermann",
+    "license": "MPL-2.0",
+    "bugs": {
+        "url": "https://github.com/open-rpa/openrpa/issues"
+    },
+    "homepage": "https://openrpa.dk",
+    "dependencies": {},
+    "devDependencies": {
+        "browserify": "^13.3.0"
+    }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "openrpa",
+  "version": "0.0.0.10",
+  "description": "Support extension for OpenRPA",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "crx3": "^1.1.2"
+  }
+}

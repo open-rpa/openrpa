@@ -22,6 +22,7 @@ namespace OpenRPA.Interfaces.Selector
     public partial class SelectorWindow : Window, INotifyPropertyChanged
     {
         public SelectorModel vm;
+        Interfaces.Overlay.OverlayWindow _overlayWindow = null;
         public SelectorWindow(string pluginname, int maxresult)
         {
             InitializeComponent();
@@ -90,21 +91,110 @@ namespace OpenRPA.Interfaces.Selector
 
             }
         }
+        public void OnMouseMove(IRecordPlugin sender, IRecordEvent e)
+        {
+            if (!Config.local.record_overlay) return;
+            if (vm.Plugin != null)
+            {
+                if (!vm.Plugin.ParseMouseMoveAction(ref e)) return;
+            }
+            else
+            {
+                foreach (var p in Plugins.recordPlugins)
+                {
+                    if (p.Name != sender.Name)
+                    {
+                        if (p.ParseMouseMoveAction(ref e)) continue;
+                    }
+                }
+            }
+
+            // e.Element.Highlight(false, System.Drawing.Color.PaleGreen, TimeSpan.FromSeconds(1));
+            if (e.Element != null && _overlayWindow != null)
+            {
+
+                GenericTools.RunUI(_overlayWindow, () =>
+                {
+                    try
+                    {
+                        _overlayWindow.Visible = true;
+                        _overlayWindow.Bounds = e.Element.Rectangle;
+                    }
+                    catch (Exception)
+                    {
+                    }
+                });
+            }
+            else if (_overlayWindow != null)
+            {
+                GenericTools.RunUI(_overlayWindow, () =>
+                {
+                    try
+                    {
+                        _overlayWindow.Visible = false;
+                    }
+                    catch (Exception)
+                    {
+                    }
+                });
+            }
+        }
         private void Select_Click(object sender, RoutedEventArgs e)
         {
             vm.Plugin.Start();
             GenericTools.Minimize(GenericTools.MainWindow);
             GenericTools.Minimize(this);
+
             OpenRPA.Input.InputDriver.Instance.onCancel += OnCancel;
+            StartOverlay();
+        }
+        private void StartOverlay()
+        {
+            var p = Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
+            if (Config.local.record_overlay) p.OnMouseMove += OnMouseMove;
+            p.Start();
+            if (_overlayWindow == null && Config.local.record_overlay)
+            {
+                _overlayWindow = new Interfaces.Overlay.OverlayWindow(true)
+                {
+                    BackColor = System.Drawing.Color.PaleGreen,
+                    Visible = true,
+                    TopMost = true
+                };
+            }
+        }
+        private void CancelOverlay()
+        {
+            var p = Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
+            if (Config.local.record_overlay) p.OnMouseMove -= OnMouseMove;
+            p.Stop();
+            if (_overlayWindow != null)
+            {
+                GenericTools.RunUI(_overlayWindow, () =>
+                {
+                    try
+                    {
+                        _overlayWindow.Visible = true;
+                        _overlayWindow.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                });
+            }
+            _overlayWindow = null;
         }
         private void OnCancel()
         {
+            CancelOverlay();
             vm.Plugin.Stop();
             OpenRPA.Input.InputDriver.Instance.onCancel -= OnCancel;
             GenericTools.Restore(this);
         }
         private void Plugin_OnUserAction(IRecordPlugin sender, IRecordEvent e)
         {
+            CancelOverlay();
             vm.Plugin.Stop();
             OpenRPA.Input.InputDriver.Instance.onCancel -= OnCancel;
             e.ClickHandled = true;

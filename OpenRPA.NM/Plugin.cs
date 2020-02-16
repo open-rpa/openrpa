@@ -124,7 +124,10 @@ namespace OpenRPA.NM
             NMHook.onMessage += OnMessage;
             NMHook.Connected += OnConnected;
             NMHook.onDisconnected += OnDisconnected;
+            _ = PluginConfig.register_old_portname;
             _ = PluginConfig.wait_for_tab_after_set_value;
+            _ = PluginConfig.wait_for_tab_click;
+            _ = PluginConfig.compensate_for_old_addon;
         }
         private void OnConnected(string obj)
         {

@@ -9,8 +9,23 @@
     <Grid>
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,10,0,0" Text="{x:Static or:strings.plugin_wait_for_tab_after_set_value}" VerticalAlignment="Top" Width="110" />
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,10,0,0" VerticalAlignment="Top" Width="222" x:Name="wait_for_tab_after_set_value" 
-            Checked="wait_for_tab_after_set_value_IsEnabledChanged" Unchecked="wait_for_tab_after_set_value_IsEnabledChanged" />
+            Checked="value_Changed" Unchecked="value_Changed" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,10,0,0" Text="{x:Static or:strings.plugin_wait_for_tab_after_set_value_help}" VerticalAlignment="Top" />
+
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,30,0,0" Text="{x:Static or:strings.wait_for_tab_click}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,30,0,0" VerticalAlignment="Top" Width="222" x:Name="wait_for_tab_click" 
+            Checked="value_Changed" Unchecked="value_Changed" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,30,0,0" Text="{x:Static or:strings.wait_for_tab_click_help}" VerticalAlignment="Top" />
+
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,50,0,0" Text="{x:Static or:strings.register_old_portname}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,50,0,0" VerticalAlignment="Top" Width="222" x:Name="register_old_portname" 
+            Checked="value_Changed" Unchecked="value_Changed" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,50,0,0" Text="{x:Static or:strings.register_old_portname_help}" VerticalAlignment="Top" />
+
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,70,0,0" Text="{x:Static or:strings.compensate_for_old_addon}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,70,0,0" VerticalAlignment="Top" Width="222" x:Name="compensate_for_old_addon" 
+            Checked="value_Changed" Unchecked="value_Changed" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,70,0,0" Text="{x:Static or:strings.compensate_for_old_addon_help}" VerticalAlignment="Top" />
 
     </Grid>
 </UserControl>

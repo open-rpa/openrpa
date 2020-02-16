@@ -83,6 +83,11 @@ namespace OpenRPA.NM
                 {
                     return;
                 }
+                if(PluginConfig.compensate_for_old_addon)
+                {
+                    msg.uix -= 7;
+                    msg.uiy += 7;
+                }
                 if (msg.functionName == "windowcreated" && !windows.Contains(msg.windowId)) windows.Add(msg.windowId);
                 if (msg.functionName == "windowremoved" && windows.Contains(msg.windowId)) windows.Remove(msg.windowId);
                 if (msg.tab != null)

@@ -97,6 +97,24 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Compensate for old extension.
+        /// </summary>
+        public static string compensate_for_old_addon {
+            get {
+                return ResourceManager.GetString("compensate_for_old_addon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add pixel compensation for old add.
+        /// </summary>
+        public static string compensate_for_old_addon_help {
+            get {
+                return ResourceManager.GetString("compensate_for_old_addon_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wait after set value.
         /// </summary>
         public static string plugin_wait_for_tab_after_set_value {
@@ -111,6 +129,42 @@ namespace OpenRPA.NM.Resources {
         public static string plugin_wait_for_tab_after_set_value_help {
             get {
                 return ResourceManager.GetString("plugin_wait_for_tab_after_set_value_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to register old portname.
+        /// </summary>
+        public static string register_old_portname {
+            get {
+                return ResourceManager.GetString("register_old_portname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Register old browser extension port names .
+        /// </summary>
+        public static string register_old_portname_help {
+            get {
+                return ResourceManager.GetString("register_old_portname_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to wait for tab.
+        /// </summary>
+        public static string wait_for_tab_click {
+            get {
+                return ResourceManager.GetString("wait_for_tab_click", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait for tab status to be in ready state after clicking a button.
+        /// </summary>
+        public static string wait_for_tab_click_help {
+            get {
+                return ResourceManager.GetString("wait_for_tab_click_help", resourceCulture);
             }
         }
     }

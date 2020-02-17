@@ -78,10 +78,7 @@ namespace OpenRPA.Java
         }
         public void Start()
         {
-            if (PluginConfig.auto_launch_java_bridge)
-            {
-                Javahook.Instance.init();
-            }
+            Javahook.Instance.init();
             Javahook.Instance.OnMouseClicked += Hook_OnMouseClicked;
         }
         public void Stop()

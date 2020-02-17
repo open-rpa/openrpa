@@ -178,6 +178,24 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy ID.
+        /// </summary>
+        public static string copyid {
+            get {
+                return ResourceManager.GetString("copyid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy Relative Filename.
+        /// </summary>
+        public static string copyrelativefilename {
+            get {
+                return ResourceManager.GetString("copyrelativefilename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Debug.
         /// </summary>
         public static string debug {
@@ -633,6 +651,15 @@ namespace OpenRPA.Resources {
         public static string recordingoverlay {
             get {
                 return ResourceManager.GetString("recordingoverlay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rename.
+        /// </summary>
+        public static string rename {
+            get {
+                return ResourceManager.GetString("rename", resourceCulture);
             }
         }
         

@@ -149,5 +149,14 @@ namespace OpenRPA.Java.Resources {
                 return ResourceManager.GetString("plugin_auto_launch_java_bridge_help", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launch java bridge.
+        /// </summary>
+        public static string plugin_launch_java_bridge {
+            get {
+                return ResourceManager.GetString("plugin_launch_java_bridge", resourceCulture);
+            }
+        }
     }
 }

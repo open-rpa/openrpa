@@ -34,7 +34,7 @@ namespace OpenRPA.Activities
         {
             try
             {
-                var _workflows = await global.webSocketClient.Query<apibase>("workflow", "{_type: 'workflow', rpa: true}");
+                var _workflows = await global.webSocketClient.Query<openflowworkflow>("workflow", "{_type: 'workflow', rpa: true}");
                 _workflows = _workflows.OrderBy(x => x.name).ToArray();
                 workflows.Clear();
                 foreach (var w in _workflows)

@@ -7,6 +7,18 @@
 
   gtag('config', 'UA-139588965-1');
 </script>
+    <!-- Note: plugin scripts must be included after the tracking snippet. -->
+    <script src="https://ipmeta.io/plugin.js"></script>
+
+    <script>
+        provideGtagPlugin({
+            apiKey: 'e7879b2ae5246cd193d0468681902fba9589430ddcfc4e715bb90f1c8f6762bdd8da3b15a756b630',
+            serviceProvider: 'dimension1',
+            networkDomain: 'dimension2',
+            networkType: 'dimension3',
+        });
+    </script>
+
 <script type="text/javascript">
 _linkedin_partner_id = "1147386";
 window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];

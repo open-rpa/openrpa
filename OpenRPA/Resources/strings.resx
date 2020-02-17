@@ -156,6 +156,12 @@
   <data name="copy" xml:space="preserve">
     <value>Copy</value>
   </data>
+  <data name="copyid" xml:space="preserve">
+    <value>Copy ID</value>
+  </data>
+  <data name="copyrelativefilename" xml:space="preserve">
+    <value>Copy Relative Filename</value>
+  </data>
   <data name="debug" xml:space="preserve">
     <value>Debug</value>
   </data>
@@ -308,6 +314,9 @@
   </data>
   <data name="recordingoverlay" xml:space="preserve">
     <value>Recording Overlay</value>
+  </data>
+  <data name="rename" xml:space="preserve">
+    <value>Rename</value>
   </data>
   <data name="ribbon_search" xml:space="preserve">
     <value>Search</value>

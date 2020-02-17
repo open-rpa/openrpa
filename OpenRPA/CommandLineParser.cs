@@ -21,6 +21,24 @@ namespace OpenRPA
             var expando = new Dictionary<string, object>();
             try
             {
+                if (!containsExecutable)
+                {
+                    if (args.Count == 0) return expando;
+                    if (args.Count == 1)
+                    {
+                        expando.Add("workflowid", args[0]);
+                        return expando;
+                    }
+                } else
+                {
+                    if (args.Count == 1) return expando;
+                    if (args.Count == 2)
+                    {
+                        expando.Add("workflowid", args[1]);
+                        return expando;
+                    }
+
+                }
                 // dynamic expando = new ExpandoObject();
                 int idx = 0;
                 if (containsExecutable) idx = 1;

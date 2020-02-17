@@ -1735,7 +1735,7 @@ namespace OpenRPA
                 MessageBox.Show(ex.Message);
             }
         }
-        private bool CanExport(object _item)
+        internal bool CanExport(object _item)
         {
             try
             {
@@ -1748,7 +1748,7 @@ namespace OpenRPA
                 return false;
             }
         }
-        private async void OnExport(object _item)
+        internal async void OnExport(object _item)
         {
             if (SelectedContent is Views.WFDesigner designer)
             {
@@ -1835,7 +1835,11 @@ namespace OpenRPA
         {
             SaveCommand.Execute(SelectedContent);
         }
-        private void OnDelete(object sender, ExecutedRoutedEventArgs e)
+        internal void OnDelete(object sender, ExecutedRoutedEventArgs e)
+        {
+            DeleteCommand.Execute(SelectedContent);
+        }
+        internal void OnDelete2(object sender)
         {
             DeleteCommand.Execute(SelectedContent);
         }
@@ -2518,7 +2522,7 @@ namespace OpenRPA
                 MessageBox.Show(ex.Message);
             }
         }
-        private bool CanCopy(object _item)
+        internal bool CanCopy(object _item)
         {
             try
             {
@@ -2530,7 +2534,7 @@ namespace OpenRPA
                 return false;
             }
         }
-        private async void OnCopy(object _item)
+        internal async void OnCopy(object _item)
         {
             try
             {
@@ -2549,7 +2553,7 @@ namespace OpenRPA
                 MessageBox.Show(ex.Message);
             }
         }
-        private bool CanDelete(object _item)
+        internal bool CanDelete(object _item)
         {
             try
             {
@@ -2614,7 +2618,7 @@ namespace OpenRPA
                 MessageBox.Show(ex.Message);
             }
         }
-        private bool CanPlay(object _item)
+        internal bool CanPlay(object _item)
         {
             try
             {
@@ -2652,7 +2656,7 @@ namespace OpenRPA
                 return false;
             }
         }
-        private async void OnPlay(object _item)
+        internal async void OnPlay(object _item)
         {
             if (SelectedContent is Views.OpenProject view)
             {
@@ -2700,6 +2704,153 @@ namespace OpenRPA
             catch (Exception ex)
             {
                 MessageBox.Show("onPlay " + ex.Message);
+            }
+        }
+        internal bool CanRename(object _item)
+        {
+            try
+            {
+                if (SelectedContent is Views.OpenProject view)
+                {
+                    var val = view.listWorkflows.SelectedValue;
+                    if (val == null) return false;
+                    if (!(view.listWorkflows.SelectedValue is Workflow wf)) return false;
+                    if (global.isConnected)
+                    {
+                        return wf.hasRight(global.webSocketClient.user, ace_right.invoke);
+                    }
+                    return true;
+                }
+                if (!IsConnected) return false;
+                if (isRecording) return false;
+                if (!(SelectedContent is Views.WFDesigner)) return false;
+                var designer = (Views.WFDesigner)SelectedContent;
+                if (global.webSocketClient == null) return true;
+                return designer.Workflow.hasRight(global.webSocketClient.user, ace_right.invoke);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
+        internal async void OnRename(object _item)
+        {
+            if (SelectedContent is Views.OpenProject view)
+            {
+                var val = view.listWorkflows.SelectedValue;
+                if (val == null) return;
+                if (!(view.listWorkflows.SelectedValue is Workflow workflow)) return;
+                try
+                {
+                    if (GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) is Views.WFDesigner designer)
+                    {
+                        string Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "New name", designer.Workflow.name);
+                        if (string.IsNullOrEmpty(Name) || designer.Workflow.name == Name) return;
+                    }
+                    else
+                    {
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+                return;
+            }
+            try
+            {
+                if (!(SelectedContent is Views.WFDesigner)) return;
+                var designer = (Views.WFDesigner)SelectedContent;
+                if (designer.HasChanged) { await designer.SaveAsync(); }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("OnRename " + ex.Message);
+            }
+        }
+        internal bool CanCopyID(object _item)
+        {
+            try
+            {
+                if (SelectedContent is Views.OpenProject view)
+                {
+                    var val = view.listWorkflows.SelectedValue;
+                    if (val == null) return false;
+                    if (!(view.listWorkflows.SelectedValue is Workflow wf)) return false;
+                    if (global.isConnected)
+                    {
+                        return wf.hasRight(global.webSocketClient.user, ace_right.invoke);
+                    }
+                    return true;
+                }
+                if (!IsConnected) return false;
+                if (isRecording) return false;
+                if (!(SelectedContent is Views.WFDesigner)) return false;
+                var designer = (Views.WFDesigner)SelectedContent;
+                if (global.webSocketClient == null) return true;
+                return designer.Workflow.hasRight(global.webSocketClient.user, ace_right.invoke);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
+        internal void OnCopyID(object _item)
+        {
+            if (SelectedContent is Views.OpenProject view)
+            {
+                var val = view.listWorkflows.SelectedValue;
+                if (val == null) return;
+                if (!(view.listWorkflows.SelectedValue is Workflow workflow)) return;
+                try
+                {
+                    Clipboard.SetText(workflow._id);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+                return;
+            }
+            try
+            {
+                if (!(SelectedContent is Views.WFDesigner)) return;
+                var designer = (Views.WFDesigner)SelectedContent;
+                Clipboard.SetText(designer.Workflow._id);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("OnCopyID " + ex.Message);
+            }
+        }
+        internal void OnCopyRelativeFilename(object _item)
+        {
+            if (SelectedContent is Views.OpenProject view)
+            {
+                var val = view.listWorkflows.SelectedValue;
+                if (val == null) return;
+                if (!(view.listWorkflows.SelectedValue is Workflow workflow)) return;
+                try
+                {
+                    Clipboard.SetText(workflow.RelativeFilename);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+                return;
+            }
+            try
+            {
+                if (!(SelectedContent is Views.WFDesigner)) return;
+                var designer = (Views.WFDesigner)SelectedContent;
+                Clipboard.SetText(designer.Workflow.RelativeFilename);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("OnCopyID " + ex.Message);
             }
         }
         private bool CanStop(object _item)

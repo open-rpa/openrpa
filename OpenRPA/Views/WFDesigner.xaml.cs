@@ -469,7 +469,7 @@ namespace OpenRPA.Views
             }
             WorkflowDesigner.Flush();
             var modelItem = WorkflowDesigner.Context.Services.GetService<ModelService>().Root;
-            Workflow.name = modelItem.GetValue<string>("Name");
+            Workflow.name = modelItem.GetValue<string>("Name").Replace("_", " ");
             Workflow.Xaml = WorkflowDesigner.Text;
             await Workflow.Save(false);
             if (HasChanged)
@@ -1354,6 +1354,15 @@ namespace OpenRPA.Views
                         RenameVariable(SelectedVariableName, variableName);
                         //DesignerView.ToggleVariableDesignerCommand.Execute(null);
                         //} else if (model.ItemType.BaseType == typeof(KeyedCollection<string, DynamicActivityProperty>))
+                    }
+                    else if (model.ItemType == typeof(System.Activities.ActivityBuilder))
+                    {
+                        var name = model.GetValue<string>("Name");
+                        if(name != null && name.Contains(" "))
+                        {
+                            name = name.Replace(" ", "_");
+                            model.Properties["Name"].SetValue(name);
+                        }
                     }
                     else if (model.ItemType == typeof(DynamicActivityProperty))
                     {

@@ -61,6 +61,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.CodeEditor", "OpenR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.PDPlugin", "OpenRPA.PDPlugin\OpenRPA.PDPlugin.csproj", "{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.RDServiceMonitor", "OpenRPA.RDServiceMonitor\OpenRPA.RDServiceMonitor.csproj", "{B42506D3-469E-4283-95EF-95A580ADA86E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -269,12 +271,20 @@ Global
 		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
 		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
+		{B42506D3-469E-4283-95EF-95A580ADA86E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B42506D3-469E-4283-95EF-95A580ADA86E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B42506D3-469E-4283-95EF-95A580ADA86E}.PrepInstaller|Any CPU.ActiveCfg = Release|Any CPU
+		{B42506D3-469E-4283-95EF-95A580ADA86E}.PrepInstaller|Any CPU.Build.0 = Release|Any CPU
+		{B42506D3-469E-4283-95EF-95A580ADA86E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B42506D3-469E-4283-95EF-95A580ADA86E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B42506D3-469E-4283-95EF-95A580ADA86E}.ReleaseNuget|Any CPU.ActiveCfg = Release|Any CPU
+		{B42506D3-469E-4283-95EF-95A580ADA86E}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
 		BuildVersion_StartDate = 2000/1/1
+		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
 	EndGlobalSection
 EndGlobal

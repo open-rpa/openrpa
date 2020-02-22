@@ -14,6 +14,8 @@ namespace OpenRPA.RDService
     {
         public const int StartupWaitSeconds = 0;
         public const string ServiceName = "OpenRPA";
+        private static ServiceManager manager = new ServiceManager(ServiceName);
+        private static ServiceManager Monitormanager = new ServiceManager("OpenRPAMon");
         public static bool isService = false;
         private static Tracing tracing = null;
         private static System.Timers.Timer reloadTimer = null;
@@ -344,12 +346,10 @@ namespace OpenRPA.RDService
             }
         }
         public static OpenRPA.NamedPipeWrapper.NamedPipeServer<RPAMessage> pipe = null;
-        private static ServiceManager manager = new ServiceManager(ServiceName);
         private static void DoWork()
         {
             try
             {
-
                 log("BEGIN::Set ProjectsDirectory");
                 // Don't mess with ProjectsDirectory if we need to reauth
                 if (args.Length == 0) Log.ResetLogPath(logpath);
@@ -434,6 +434,15 @@ namespace OpenRPA.RDService
                         {
                             manager.UninstallService(typeof(Program));
                         }
+
+                        var asm = System.Reflection.Assembly.GetEntryAssembly();
+                        var filepath = asm.CodeBase.Replace("file:///", "");
+                        var exepath = System.IO.Path.GetDirectoryName(filepath);
+                        if (System.IO.File.Exists(System.IO.Path.Combine(exepath, "OpenRPA.RDServiceMonitor.exe")))
+                        {
+                            var process = System.Diagnostics.Process.Start(System.IO.Path.Combine(exepath, "OpenRPA.RDServiceMonitor.exe"), "uninstall");
+                            process.WaitForExit();
+                        }
                         return;
                     }
                     else
@@ -460,6 +469,7 @@ namespace OpenRPA.RDService
                 Task.Run(async () => {
                     try
                     {
+                        Console.WriteLine("Connect to " + PluginConfig.wsurl);
                         global.webSocketClient = new WebSocketClient(PluginConfig.wsurl);
                         global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
                         global.webSocketClient.OnClose += WebSocketClient_OnClose;
@@ -473,6 +483,17 @@ namespace OpenRPA.RDService
                 });
                 // NativeMethods.AllocConsole();
                 // if (System.Diagnostics.Debugger.IsAttached && !isService)
+                if (!Monitormanager.IsServiceInstalled)
+                {
+                    var asm = System.Reflection.Assembly.GetEntryAssembly();
+                    var filepath = asm.CodeBase.Replace("file:///", "");
+                    var exepath = System.IO.Path.GetDirectoryName(filepath);
+                    if (System.IO.File.Exists(System.IO.Path.Combine(exepath, "OpenRPA.RDServiceMonitor.exe")))
+                    {
+                        var process = System.Diagnostics.Process.Start(System.IO.Path.Combine(exepath, "OpenRPA.RDServiceMonitor.exe"));
+                        process.WaitForExit();
+                    }
+                }
                 if (!isService)
                 {
                     Log.Information("******************************");
@@ -482,9 +503,17 @@ namespace OpenRPA.RDService
                 }
                 else
                 {
+                    if (Monitormanager.IsServiceInstalled)
+                    {
+                        _ = Monitormanager.StartService();
+                    }
                     while (MyServiceBase.isRunning)
                     {
                         System.Threading.Thread.Sleep(100);
+                    }
+                    if(Monitormanager.IsServiceInstalled)
+                    {
+                        _ = Monitormanager.StopService();
                     }
                 }
             }

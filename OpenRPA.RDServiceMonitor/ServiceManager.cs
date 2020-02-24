@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenRPA.Interfaces
+namespace OpenRPA.RDServiceMonitor
 {
     public class ServiceManager
     {
@@ -110,12 +110,12 @@ namespace OpenRPA.Interfaces
         private async Task WaitForStatusChange(System.ServiceProcess.ServiceController serviceController, System.ServiceProcess.ServiceControllerStatus NewStatus)
         {
             int count = 0;
-            while (serviceController.Status != NewStatus && count< 30)
+            while (serviceController.Status != NewStatus && count < 30)
             {
                 await Task.Delay(1000);
                 serviceController.Refresh();
                 count++;
-                if(NewStatus == System.ServiceProcess.ServiceControllerStatus.Running && serviceController.Status == System.ServiceProcess.ServiceControllerStatus.Stopped) { break; }
+                if (NewStatus == System.ServiceProcess.ServiceControllerStatus.Running && serviceController.Status == System.ServiceProcess.ServiceControllerStatus.Stopped) { break; }
             }
             if (serviceController.Status != NewStatus) throw new Exception("Failed to change status of service. Current status: " + serviceController.Status + " Desired status: " + NewStatus);
         }

@@ -10,7 +10,7 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.80</Version>
+    <Version>1.0.81</Version>
     <PackageReleaseNotes>1.0.80 Added translations to Romanian and Russian languages
 1.0.79 Add custom user agent for login browser
 1.0.78 Refactore more code

@@ -79,5 +79,12 @@ namespace OpenRPA.Views
                 }
             }
         }
+        private void UserControl_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F2)
+            {
+                MainWindow.instance.OnRename(null);
+            }
+        }
     }
 }

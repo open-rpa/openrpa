@@ -8,6 +8,7 @@
              xmlns:or="clr-namespace:OpenRPA.Resources"
              xmlns:projectbase="clr-namespace:OpenRPA"
              mc:Ignorable="d" 
+             KeyUp="UserControl_KeyUp"
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
@@ -64,7 +65,7 @@
                         <StackPanel.ContextMenu >
                             <ContextMenu>
                                 <MenuItem Header="{x:Static or:strings.play}" Command="{Binding Data.PlayCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
-                                <!--<MenuItem Header="{x:Static or:strings.rename}" Command="{Binding Data.RenameCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />-->
+                                <MenuItem Header="{x:Static or:strings.rename}" Command="{Binding Data.RenameCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                                 <MenuItem Header="{x:Static or:strings.export}" Command="{Binding Data.ExportCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                                 <MenuItem Header="{x:Static or:strings.copyid}" Command="{Binding Data.CopyIDCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                                 <MenuItem Header="{x:Static or:strings.copyrelativefilename}" Command="{Binding Data.CopyRelativeFilenameCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />

@@ -479,6 +479,15 @@ namespace OpenRPA.Views
             }
             return true;
         }
+        public void RenameWorkflow(string name)
+        {
+            var modelItem = WorkflowDesigner.Context.Services.GetService<ModelService>().Root;
+            ModelProperty property = modelItem.Properties["Name"];
+            property.SetValue(name.Replace(" ", "_"));
+            //Workflow.name = name;
+            tab.IsSelected = true;
+            // Workflow.name = modelItem.GetValue<string>("Name").Replace("_", " ");
+        }
         public bool Save()
         {
             bool result = GenericTools.RunUIAsync(SaveAsync).Result;
@@ -1654,7 +1663,7 @@ namespace OpenRPA.Views
             using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
             {
                 var modelItem = wfDesigner.Context.Services.GetService<ModelService>().Root;
-                modelItem.Properties["Name"].SetValue(name);
+                modelItem.Properties["Name"].SetValue(name.Replace("_", " "));
                 editingScope.Complete();
             }
             wfDesigner.Flush();

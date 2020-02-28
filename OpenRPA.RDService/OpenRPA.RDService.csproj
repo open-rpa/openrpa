@@ -23,6 +23,8 @@
 1.0.6 update interfaces reference
 1.0.2 More error catching, fix freerdp login error
 1.0.1 Improve sigin process and stability</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
+    <PackageTags></PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug\</OutputPath>

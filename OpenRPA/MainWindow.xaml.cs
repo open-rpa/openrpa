@@ -3239,7 +3239,7 @@ namespace OpenRPA
                 }
             }, null);
         }
-        private void OnRecord(object _item)
+        internal void OnRecord(object _item)
         {
             if (!(SelectedContent is Views.WFDesigner)) return;
             var designer = (Views.WFDesigner)SelectedContent;

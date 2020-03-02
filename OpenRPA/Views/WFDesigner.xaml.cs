@@ -169,6 +169,14 @@ namespace OpenRPA.Views
                 var element = AutomationHelper.GetFromFocusedElement();
                 if (element.ProcessId != currentprocessid) return;
             }
+            if(e.Key == Key.F2)
+            {
+                Task.Run(() => {
+                    if (MainWindow.instance.Minimize) GenericTools.Minimize(GenericTools.MainWindow);
+                    System.Threading.Thread.Sleep(2000);
+                    MainWindow.instance.OnRecord(null);
+                });
+            }
             if (e.Key == Key.F5)
             {
                 if (BreakPointhit)

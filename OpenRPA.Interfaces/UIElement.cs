@@ -290,7 +290,15 @@ namespace OpenRPA
                             return combo.SelectedItem.Name;
                         }
                     }
-
+                    if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.CheckBox)
+                    {
+                        var combo = RawElement.AsCheckBox();
+                        if (combo.IsChecked.HasValue && combo.IsChecked.Value)
+                        {
+                            return "true";
+                        }
+                        return "false";
+                    }
                 }
                 catch (Exception)
                 {
@@ -323,6 +331,41 @@ namespace OpenRPA
                 {
                     var combo = RawElement.AsListBox();
                     combo.Select(value);
+                }
+                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.CheckBox)
+                {
+                    var combo = RawElement.AsCheckBox();
+                    if (!string.IsNullOrEmpty(value) && value.ToLower() == "true")
+                    {
+                        combo.IsChecked = true;
+                    } else
+                    {
+                        combo.IsChecked = false;
+                    }
+                }
+
+            }
+        }
+        public bool IsChecked
+        {
+            get
+            {
+                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.CheckBox)
+                {
+                    var combo = RawElement.AsCheckBox();
+                    if (combo.IsChecked.HasValue && combo.IsChecked.Value)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            set
+            {
+                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.CheckBox)
+                {
+                    var combo = RawElement.AsCheckBox();
+                    combo.IsChecked = value;
                 }
             }
         }

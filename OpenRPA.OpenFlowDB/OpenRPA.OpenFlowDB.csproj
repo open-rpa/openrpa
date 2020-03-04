@@ -12,7 +12,8 @@
     <Version>1.0.4</Version>
     <PackageReleaseNotes>1.0.4 Add langauges
 1.0.3 update reference</PackageReleaseNotes>
-    <PackageTags>OpenRPAcore</PackageTags>
+    <PackageTags>OpenRPA</PackageTags>
+    <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />

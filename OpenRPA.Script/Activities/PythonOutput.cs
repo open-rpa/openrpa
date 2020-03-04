@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenRPA.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace OpenRPA.Script.Activities
         public PythonOutput()
         {
         }
+        string buffer = "";
         public void write(string str)
         {
             str = str.Replace("\n", Environment.NewLine);
@@ -28,7 +30,14 @@ namespace OpenRPA.Script.Activities
             }
             else
             {
-                Console.Write(str);
+                buffer += str;
+                if(buffer.Contains(Environment.NewLine))
+                {
+                    if (buffer.EndsWith(Environment.NewLine)) buffer = buffer.Substring(0, buffer.Length - Environment.NewLine.Length);
+                    Log.Output(buffer);
+                    buffer = "";
+                }                
+                // Console.Write(str);
             }
         }
         public void writelines(string[] str)
@@ -41,7 +50,8 @@ namespace OpenRPA.Script.Activities
                 }
                 else
                 {
-                    Console.Write(str);
+                    Log.Output(line);
+                    // Console.Write(str);
                 }
             }
         }

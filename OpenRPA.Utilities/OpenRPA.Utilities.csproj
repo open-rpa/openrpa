@@ -10,10 +10,12 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.0.2</Version>
-    <PackageReleaseNotes>1.0.2 Add support for custom iterator variable
+    <Version>1.0.3</Version>
+    <PackageReleaseNotes>1.0.3 Add ReadCSV and WriteCSV
+1.0.2 Add support for custom iterator variable
 1.0.1 Add langauges and bug fixes</PackageReleaseNotes>
-    <PackageTags>OpenRPAcore</PackageTags>
+    <PackageTags>OpenRPA</PackageTags>
+    <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
@@ -27,11 +29,13 @@
   <ItemGroup>
     <None Remove="Activities\DownloadFileDesigner.xaml" />
     <None Remove="Activities\GetCredentialsDesigner.xaml" />
+    <None Remove="Activities\ReadCSVDesigner.xaml" />
     <None Remove="Activities\ReadExcelDesigner.xaml" />
     <None Remove="Activities\ReadJSONDesigner.xaml" />
     <None Remove="Activities\ReadPDFDesigner.xaml" />
     <None Remove="Activities\SetAutoLoginDesigner.xaml" />
     <None Remove="Activities\SetCredentialsDesigner.xaml" />
+    <None Remove="Activities\WriteCSVDesigner.xaml" />
     <None Remove="Activities\WriteExcelDesigner.xaml" />
     <None Remove="Resources\designer\closeworkbook.png" />
     <None Remove="Resources\designer\commentout.png" />
@@ -71,6 +75,7 @@
     <EmbeddedResource Include="Resources\toolbox\writefile.png" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Activities" />
@@ -104,6 +109,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Activities\ReadCSVDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\SetAutoLoginDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -117,6 +126,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\ReadPDFDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\WriteCSVDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -13,6 +13,7 @@
 1.0.4 update interfaces reference
 1.0.1 added a few more fields</PackageReleaseNotes>
     <PackageTags>OpenRPA</PackageTags>
+    <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>

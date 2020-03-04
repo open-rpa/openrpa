@@ -5,7 +5,7 @@
     <Authors>OpenRPA</Authors>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <RepositoryUrl></RepositoryUrl>
+    <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <PackageId>OpenRPA.NamedPipeWrapper</PackageId>
     <Version>1.0.16</Version>
     <PackageReleaseNotes>1.0.15 update interfaces reference
@@ -14,7 +14,7 @@
     <Description>Helper classes that makes named pipe communication easier, created for OpenRPA robot</Description>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
-    <PackageTags>OpenRPAcore</PackageTags>
+    <PackageTags></PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath></OutputPath>
@@ -22,9 +22,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">
     <OutputPath />
   </PropertyGroup>
-  <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
-    <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
-  </Target>
   <ItemGroup>
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
   </ItemGroup>
@@ -40,6 +37,9 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
+  <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
+    <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
+  </Target>
   <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
     <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
   </Target>

@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
-    <Version>1.0.23</Version>
-    <PackageReleaseNotes>1.0.23 Begin implementing intellisense for C# and VB
+    <Version>1.0.24</Version>
+    <PackageReleaseNotes>1.0.24 Fix print in python
+1.0.23 Begin implementing intellisense for C# and VB
 1.0.22 Add langauges and bug fixes
 1.0.20 update interfaces reference
 1.0.17 update reference
@@ -20,6 +21,7 @@
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <PackageTags>OpenRPA</PackageTags>
+    <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
@@ -31,9 +33,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">
     <OutputPath></OutputPath>
   </PropertyGroup>
-  <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
-    <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
-  </Target>
   <ItemGroup>
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
   </ItemGroup>
@@ -134,6 +133,9 @@
       <LastGenOutput>strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
+    <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
+  </Target>
   <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
     <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
   </Target>

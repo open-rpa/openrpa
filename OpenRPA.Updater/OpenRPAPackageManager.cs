@@ -123,7 +123,18 @@ namespace OpenRPA.Updater
                         || p.Identity.Id.ToLower().EndsWith("openrpa.windows") || p.Identity.Id.ToLower().EndsWith("openrpa.updater")
                         || p.Identity.Id.ToLower().EndsWith("openrpa.nativemessaginghost") || p.Identity.Id.ToLower().EndsWith("openrpa.javabridge")
                         || p.Identity.Id.ToLower().EndsWith("openrpa.rdservice")) continue;
-                    if (exists == null) result.Add(p);
+                    if (exists == null)
+                    {
+                        result.Add(p);
+                    }
+                    else
+                    {
+                        if (exists.Identity.Version < p.Identity.Version)
+                        {
+                            result.Remove(exists);
+                            result.Add(p);
+                        }
+                    }
                 }
             }
             return result;

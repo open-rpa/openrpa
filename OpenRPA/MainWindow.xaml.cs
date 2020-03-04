@@ -2740,6 +2740,13 @@ namespace OpenRPA
             {
                 var val = view.listWorkflows.SelectedValue;
                 if (val == null) return;
+                if (view.listWorkflows.SelectedValue is Project project)
+                {
+                    string Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "New name", project.name);
+                    if (string.IsNullOrEmpty(Name) || project.name == Name) return;
+                    project.name = Name;
+                    await project.Save(false);
+                }
                 if (!(view.listWorkflows.SelectedValue is Workflow workflow)) return;
                 try
                 {
@@ -2747,9 +2754,15 @@ namespace OpenRPA
                     {
                         string Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "New name", designer.Workflow.name);
                         if (string.IsNullOrEmpty(Name) || designer.Workflow.name == Name) return;
+                        designer.RenameWorkflow(Name);
                     }
                     else
                     {
+                        string Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "New name", workflow.name);
+                        if (string.IsNullOrEmpty(Name) || workflow.name == Name) return;
+                        workflow.Xaml = Views.WFDesigner.SetWorkflowName(workflow.Xaml, Name);
+                        workflow.name = Name;
+                        await workflow.Save(false);
                     }
                 }
                 catch (Exception ex)
@@ -2757,16 +2770,6 @@ namespace OpenRPA
                     Log.Error(ex.ToString());
                 }
                 return;
-            }
-            try
-            {
-                if (!(SelectedContent is Views.WFDesigner)) return;
-                var designer = (Views.WFDesigner)SelectedContent;
-                if (designer.HasChanged) { await designer.SaveAsync(); }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("OnRename " + ex.Message);
             }
         }
         internal bool CanCopyID(object _item)
@@ -3236,7 +3239,7 @@ namespace OpenRPA
                 }
             }, null);
         }
-        private void OnRecord(object _item)
+        internal void OnRecord(object _item)
         {
             if (!(SelectedContent is Views.WFDesigner)) return;
             var designer = (Views.WFDesigner)SelectedContent;

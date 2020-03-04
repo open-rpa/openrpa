@@ -15,6 +15,7 @@
 1.0.1 Improve UI and service installation</PackageReleaseNotes>
     <Version>1.0.9</Version>
     <PackageTags>OpenRPA</PackageTags>
+    <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>

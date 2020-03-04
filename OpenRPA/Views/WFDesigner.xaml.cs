@@ -169,6 +169,14 @@ namespace OpenRPA.Views
                 var element = AutomationHelper.GetFromFocusedElement();
                 if (element.ProcessId != currentprocessid) return;
             }
+            if(e.Key == Key.F2)
+            {
+                Task.Run(() => {
+                    if (MainWindow.instance.Minimize) GenericTools.Minimize(GenericTools.MainWindow);
+                    System.Threading.Thread.Sleep(2000);
+                    MainWindow.instance.OnRecord(null);
+                });
+            }
             if (e.Key == Key.F5)
             {
                 if (BreakPointhit)
@@ -478,6 +486,15 @@ namespace OpenRPA.Views
                 OnChanged?.Invoke(this);
             }
             return true;
+        }
+        public void RenameWorkflow(string name)
+        {
+            var modelItem = WorkflowDesigner.Context.Services.GetService<ModelService>().Root;
+            ModelProperty property = modelItem.Properties["Name"];
+            property.SetValue(name.Replace(" ", "_"));
+            //Workflow.name = name;
+            tab.IsSelected = true;
+            // Workflow.name = modelItem.GetValue<string>("Name").Replace("_", " ");
         }
         public bool Save()
         {
@@ -1654,7 +1671,7 @@ namespace OpenRPA.Views
             using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
             {
                 var modelItem = wfDesigner.Context.Services.GetService<ModelService>().Root;
-                modelItem.Properties["Name"].SetValue(name);
+                modelItem.Properties["Name"].SetValue(name.Replace("_", " "));
                 editingScope.Complete();
             }
             wfDesigner.Flush();

@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
-    <Version>1.0.23</Version>
-    <PackageReleaseNotes>1.0.23 Begin implementing intellisense for C# and VB
+    <Version>1.0.24</Version>
+    <PackageReleaseNotes>1.0.24 Fix print in python
+1.0.23 Begin implementing intellisense for C# and VB
 1.0.22 Add langauges and bug fixes
 1.0.20 update interfaces reference
 1.0.17 update reference

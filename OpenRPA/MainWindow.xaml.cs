@@ -132,6 +132,7 @@ namespace OpenRPA
             cancelkey.Text = Config.local.cancelkey;
             InputDriver.Instance.onCancel += OnCancel;
             NotifyPropertyChanged("Toolbox");
+            lblVersion.Text = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
         }
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -893,13 +894,19 @@ namespace OpenRPA
                             await updater.UpdateUpdater();
                         }
                     }
-                    var releasenotes = await updater.OpenRPANeedsUpdate();
-                    if (!string.IsNullOrEmpty(releasenotes))
+                    var newversion = await updater.OpenRPANeedsUpdate();
+                    if (!string.IsNullOrEmpty(newversion))
                     {
-                        var dialogResult = MessageBox.Show(releasenotes, "Update available", MessageBoxButton.YesNo);
+                        if (newversion.EndsWith(".0")) newversion = newversion.Substring(0, newversion.Length - 2);
+                        Assembly assembly = Assembly.GetExecutingAssembly();
+                        var fileVersionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+                        string version = fileVersionInfo.ProductVersion;
+                        if (version.EndsWith(".0")) version = version.Substring(0, version.Length - 2);
+                        var dialogResult = MessageBox.Show("A new version " + newversion + " is ready for download, current version is " + version, "Update available", MessageBoxButton.YesNo);
                         if (dialogResult == MessageBoxResult.Yes)
                         {
-                            OnManagePackages(null);
+                            //OnManagePackages(null);
+                            System.Diagnostics.Process.Start("https://github.com/open-rpa/openrpa/releases/download/" + newversion + "/OpenRPA.exe");
                             Application.Current.Shutdown();
                         }
                     }

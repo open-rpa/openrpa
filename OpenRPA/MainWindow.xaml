@@ -55,6 +55,13 @@
                                         <TextBlock Text="{x:Static or:strings.nodered}" />
                                     </Hyperlink>
                                 </RibbonGalleryItem>
+                                <RibbonGalleryItem>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{x:Static or:strings.version}" />
+                                        <TextBlock Text=" " />
+                                        <TextBlock x:Name="lblVersion" />
+                                    </StackPanel>
+                                </RibbonGalleryItem>
                             </RibbonGalleryCategory>
                         </RibbonGallery>
                     </RibbonApplicationMenu.AuxiliaryPaneContent>

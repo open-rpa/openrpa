@@ -56,7 +56,8 @@ namespace OpenRPA
             if (new Version(package.Identity.Version.ToString()) > new Version(version))
             {
                 // if(!string.IsNullOrEmpty(package.Summary)) return package.Summary;
-                return "A new version " + package.Identity.Version.ToString() + " is ready for download, current version is " + version;
+                // return "A new version " + package.Identity.Version.ToString() + " is ready for download, current version is " + version;
+                return package.Identity.Version.ToString();
             }
             return null;
         }

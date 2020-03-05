@@ -11,8 +11,8 @@ namespace OpenRPA.Utilities
     {
         public static void ToCSV(this DataTable dtDataTable, string strFilePath, string delimeter = ";", bool includeHeader = true)
         {
-            System.IO.StreamWriter sw = new System.IO.StreamWriter(strFilePath, false);
-            if(includeHeader)
+            System.IO.StreamWriter sw = new System.IO.StreamWriter(strFilePath, false, Encoding.UTF8 );
+            if (includeHeader)
             {
                 for (int i = 0; i < dtDataTable.Columns.Count; i++)
                 {

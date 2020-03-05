@@ -7,7 +7,7 @@ Join slack for for help or giving feedback [#openrpa](https://join.slack.com/t/o
 
 Check out the documentation on our [wiki pages](https://github.com/open-rpa/openrpa/wiki)
 
-Download and try it out here [here](https://github.com/open-rpa/openrpa/releases/download/1.0.82/OpenRPA.exe) 
+Download and try it out here [here](https://github.com/open-rpa/openrpa/releases/download/1.0.83/OpenRPA.exe) 
 
 Also checkout the "backend" for managing multiple robots at [OpenFlow](https://github.com/open-rpa/OpenFlow)
 

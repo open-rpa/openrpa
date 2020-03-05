@@ -387,6 +387,9 @@
   <data name="verbose" xml:space="preserve">
     <value>Verbose</value>
   </data>
+  <data name="version" xml:space="preserve">
+    <value>Version</value>
+  </data>
   <data name="visualtracking" xml:space="preserve">
     <value>Visual Tracking</value>
   </data>

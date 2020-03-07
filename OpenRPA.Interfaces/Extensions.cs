@@ -11,6 +11,10 @@ namespace OpenRPA.Interfaces
 {
     public static class Extensions
     {
+        public static bool GetIsEmpty<T>(this System.Activities.OutArgument<T> src)
+        {
+            return (bool)src.GetType().GetProperty("IsEmpty", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(src, null);
+        }
         public static string MyVideos
         {
             get

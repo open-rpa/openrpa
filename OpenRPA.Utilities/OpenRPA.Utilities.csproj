@@ -10,8 +10,9 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.0.4</Version>
-    <PackageReleaseNotes>1.0.4 Fix unicode characters for WriteCSV 
+    <Version>1.0.5</Version>
+    <PackageReleaseNotes>1.0.5 Add Match and Matches
+1.0.4 Fix unicode characters for WriteCSV 
 1.0.3 Add ReadCSV and WriteCSV
 1.0.2 Add support for custom iterator variable
 1.0.1 Add langauges and bug fixes</PackageReleaseNotes>
@@ -30,6 +31,8 @@
   <ItemGroup>
     <None Remove="Activities\DownloadFileDesigner.xaml" />
     <None Remove="Activities\GetCredentialsDesigner.xaml" />
+    <None Remove="Activities\MatchDesigner.xaml" />
+    <None Remove="Activities\MatchesDesigner.xaml" />
     <None Remove="Activities\ReadCSVDesigner.xaml" />
     <None Remove="Activities\ReadExcelDesigner.xaml" />
     <None Remove="Activities\ReadJSONDesigner.xaml" />
@@ -48,6 +51,7 @@
     <None Remove="Resources\designer\readfile.png" />
     <None Remove="Resources\designer\readjson.png" />
     <None Remove="Resources\designer\readpdf.png" />
+    <None Remove="Resources\designer\regex.png" />
     <None Remove="Resources\designer\writeexcel.png" />
     <None Remove="Resources\designer\writefile.png" />
     <None Remove="Resources\toolbox\closeworkbook.png" />
@@ -60,6 +64,7 @@
     <None Remove="Resources\toolbox\readfile.png" />
     <None Remove="Resources\toolbox\readjson.png" />
     <None Remove="Resources\toolbox\readpdf.png" />
+    <None Remove="Resources\toolbox\regex.png" />
     <None Remove="Resources\toolbox\writeexcel.png" />
     <None Remove="Resources\toolbox\writefile.png" />
   </ItemGroup>
@@ -95,8 +100,10 @@
     <Resource Include="Resources\designer\readfile.png" />
     <Resource Include="Resources\designer\readjson.png" />
     <Resource Include="Resources\designer\readpdf.png" />
+    <Resource Include="Resources\designer\regex.png" />
     <Resource Include="Resources\designer\writeexcel.png" />
     <Resource Include="Resources\designer\writefile.png" />
+    <EmbeddedResource Include="Resources\toolbox\regex.png" />
     <EmbeddedResource Include="Resources\toolbox\entity.png" />
     <EmbeddedResource Include="Resources\toolbox\downloadfile.png" />
   </ItemGroup>
@@ -107,6 +114,14 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\DownloadFileDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\MatchesDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\MatchDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

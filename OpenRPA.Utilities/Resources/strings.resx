@@ -120,6 +120,18 @@
   <data name="activity_downloadfile_hint" xml:space="preserve">
     <value>Save into this folder</value>
   </data>
+  <data name="activity_drop_hint" xml:space="preserve">
+    <value>Drop activity</value>
+  </data>
+  <data name="activity_match_compiled" xml:space="preserve">
+    <value>Compiled</value>
+  </data>
+  <data name="activity_match_input" xml:space="preserve">
+    <value>The input string to match against</value>
+  </data>
+  <data name="activity_match_pattern" xml:space="preserve">
+    <value>The regular expression to match</value>
+  </data>
   <data name="activity_readexcel_hint" xml:space="preserve">
     <value>Select excel file to read</value>
   </data>

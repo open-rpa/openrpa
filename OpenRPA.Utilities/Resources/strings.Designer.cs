@@ -70,6 +70,42 @@ namespace OpenRPA.Utilities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Drop activity.
+        /// </summary>
+        public static string activity_drop_hint {
+            get {
+                return ResourceManager.GetString("activity_drop_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compiled.
+        /// </summary>
+        public static string activity_match_compiled {
+            get {
+                return ResourceManager.GetString("activity_match_compiled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The input string to match against.
+        /// </summary>
+        public static string activity_match_input {
+            get {
+                return ResourceManager.GetString("activity_match_input", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The regular expression to match.
+        /// </summary>
+        public static string activity_match_pattern {
+            get {
+                return ResourceManager.GetString("activity_match_pattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select excel file to read.
         /// </summary>
         public static string activity_readexcel_hint {

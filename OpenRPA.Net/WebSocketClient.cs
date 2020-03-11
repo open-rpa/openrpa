@@ -158,7 +158,6 @@ namespace OpenRPA.Net
                         
                         if (TryParseJSON(tempbuffer + json))
                         {
-                            // Console.WriteLine("OK: " + tempbuffer);
                             var message = JsonConvert.DeserializeObject<SocketMessage>(tempbuffer + json);
                             if (message != null) _receiveQueue.Add(message);
                             tempbuffer = null;

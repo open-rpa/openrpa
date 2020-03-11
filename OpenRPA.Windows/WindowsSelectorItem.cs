@@ -307,7 +307,6 @@ namespace OpenRPA.Windows
                         //    ) &&e.IsOffscreen)
                         //{
                         //    RemoveFromCache(result);
-                        //    Console.WriteLine("DELETE " + result.Conditions);
                         //    return null;
                         //}
                     }

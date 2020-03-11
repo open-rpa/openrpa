@@ -157,7 +157,7 @@ namespace OpenRPA.NM
                 {
                     var tab = NMHook.tabs.Where(x => x.id == message.tabid).FirstOrDefault();
                     if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
-                    NMHook.HighlightTab(tab);
+                    // NMHook.HighlightTab(tab);
 
                     var updateelement = new NativeMessagingMessage("updateelementvalue")
                     {

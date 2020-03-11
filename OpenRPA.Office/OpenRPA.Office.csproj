@@ -42,6 +42,7 @@
     <None Remove="Activities\SaveMailItemDesigner.xaml" />
     <None Remove="Activities\SetParagraphDesigner.xaml" />
     <None Remove="Activities\WriteCellDesigner.xaml" />
+    <None Remove="Activities\WriteRangeDesigner.xaml" />
     <None Remove="Resources\designer\closeworkbook.png" />
     <None Remove="Resources\designer\commentout.png" />
     <None Remove="Resources\designer\newemail.png" />
@@ -73,6 +74,9 @@
     </Page>
     <Page Include="Activities\AddParagraphDesigner.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\WriteRangeDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\SetParagraphDesigner.xaml">

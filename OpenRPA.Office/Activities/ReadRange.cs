@@ -24,6 +24,7 @@ namespace OpenRPA.Office.Activities
         {
             UseHeaderRow = true;
             ClearFormats = false;
+            IgnoreEmptyRows = false;
         }
         [RequiredArgument]
         [System.ComponentModel.Category("Misc")]
@@ -31,8 +32,7 @@ namespace OpenRPA.Office.Activities
         [RequiredArgument]
         [System.ComponentModel.Category("Misc")]
         public InArgument<bool> ClearFormats { get; set; }
-        public InArgument<bool> IgnoreEmptyRows { get; set; } = true;
-
+        public InArgument<bool> IgnoreEmptyRows { get; set; }
         //[RequiredArgument]
         [System.ComponentModel.Category("Input")]
         public InArgument<string> Cells { get; set; }

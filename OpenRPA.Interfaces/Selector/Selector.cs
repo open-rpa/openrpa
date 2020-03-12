@@ -11,6 +11,33 @@ namespace OpenRPA.Interfaces.Selector
 {
     public partial class Selector : ExtendedObservableCollection<SelectorItem>
     {
+        public static string ReplaceVariables(string selector, System.Activities.WorkflowDataContext DataContext)
+        {
+            var vars = DataContext.GetProperties();
+            int begin, end;
+            do
+            {
+                begin = selector.IndexOf("{{");
+                end = selector.IndexOf("}}");
+                if (begin > -1 && begin < end)
+                {
+                    var str = selector.Substring(begin, (end - begin) + 2);
+                    var strvar = str.Substring(2, str.Length - 4);
+
+                    var v = vars.Find(strvar, true);
+                    if (v != null)
+                    {
+                        selector = selector.Replace(str, (string)v.GetValue(DataContext));
+                    }
+                    else
+                    {
+                        selector = selector.Replace(str, "");
+                    }
+                }
+                else { begin = 0; end = 0; }
+            } while (begin > 0 && end > 0);
+            return selector;
+        }
         public Selector() {  }
 
         //public event PropertyChangedEventHandler ElementPropertyChanged;

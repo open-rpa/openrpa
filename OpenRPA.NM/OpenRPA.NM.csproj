@@ -9,7 +9,8 @@
     <Product>OpenRPA</Product>
     <Description>Recorder plugin and Activities for interacting with Chrome/Firefox and Edge, created for OpenRPA robot</Description>
     <Version>1.0.21</Version>
-    <PackageReleaseNotes>1.0.20 Add langauges
+    <PackageReleaseNotes>1.0.21 Improve speed and click, and add support for variables in selector
+1.0.20 Add langauges
 1.0.18 update reference
 1.0.17 fix double click
 1.0.15 update interfaces reference

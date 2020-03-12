@@ -31,6 +31,7 @@ namespace OpenRPA.Java
         protected override void Execute(NativeActivityContext context)
         {
             var SelectorString = Selector.Get(context);
+            selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
             var sel = new JavaSelector(SelectorString);
             var timeout = TimeSpan.FromSeconds(3);
             var maxresults = MaxResults.Get(context);

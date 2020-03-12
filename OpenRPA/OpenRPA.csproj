@@ -11,7 +11,8 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Version>1.0.85</Version>
-    <PackageReleaseNotes>1.0.84 Add Match and Matches
+    <PackageReleaseNotes>1.0.85 Add support for variables in selector, improve speed and virtual clicks in nm
+1.0.84 Add Match and Matches
 1.0.83 Fix unicode characters for WriteCSV 
 1.0.82 Add ReadCSV and WriteCSV / Add support for checkboxes
 1.0.80 Added translations to Romanian and Russian languages

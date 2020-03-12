@@ -10,7 +10,7 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.84</Version>
+    <Version>1.0.85</Version>
     <PackageReleaseNotes>1.0.84 Add Match and Matches
 1.0.83 Fix unicode characters for WriteCSV 
 1.0.82 Add ReadCSV and WriteCSV / Add support for checkboxes

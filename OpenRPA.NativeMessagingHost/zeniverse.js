@@ -51,6 +51,9 @@ if (typeof document.zeniverse === 'undefined') {
         },
         clickelement: function (message) {
             var ele = null;
+            if (ele === null && message.zn_id !== null && message.zn_id !== undefined && message.zn_id > -1) {
+                message.xPath = '//*[@zn_id="' + message.zn_id + '"]';
+            }
             if (message.xPath) {
                 var xpathEle = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
                 if (xpathEle === null) message.xPath = 'false';
@@ -69,15 +72,22 @@ if (typeof document.zeniverse === 'undefined') {
                     var form = zeniverse.findform(ele);
                     //var form = null;
                     if (ele.hasAttribute('ng-click')) {
-                        // console.log('click using triggerHandler');
+                        console.log('click using triggerHandler');
                         var $e = angular.element(ele);
                         // console.log(ele);
                         // console.log($e);
                         $e.triggerHandler('click');
                     }
-                    else if (form && ele.type === 'submit') // && ele.tagName != "BUTTON") 
+                    else if (ele.hasAttribute('onclick')) 
                     {
-                        // console.log('click using submit as form');
+                        console.log('click using dispatchEvent');
+                        ele.dispatchEvent(new Event('mousedown'));
+                        ele.dispatchEvent(new Event('click'));
+                        ele.dispatchEvent(new Event('mouseup'));
+                    }
+                    else if (form && ele.type === 'submit' ) // && ele.tagName != "BUTTON") 
+                    {
+                        console.log('click using submit as form');
                         // console.log(form);
                         //$(form).submit();
                         form.submit();
@@ -97,6 +107,7 @@ if (typeof document.zeniverse === 'undefined') {
                         // console.log('click using element.click()');
                         // console.log(ele);
                         // ele.click();
+                        console.log('click using dispatchEvent');
                         ele.dispatchEvent(new Event('mousedown'));
                         ele.dispatchEvent(new Event('click'));
                         ele.dispatchEvent(new Event('mouseup'));

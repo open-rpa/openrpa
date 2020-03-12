@@ -348,8 +348,10 @@ namespace OpenRPA.Views
             if (modelService == null) return;
             modelService.ModelChanged -= new EventHandler<ModelChangedEventArgs>(ModelChanged);
             modelService.ModelChanged += new EventHandler<ModelChangedEventArgs>(ModelChanged);
+#if DEBUG
             WorkflowDesigner.ContextMenu.Items.Add(runthis);
             WorkflowDesigner.ContextMenu.Items.Add(runFromHere);
+#endif
             WorkflowDesigner.ContextMenu.Items.Add(comment);
             try
             {

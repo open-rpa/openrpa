@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="activity_converter_datatable" xml:space="preserve">
+    <value>Datatable</value>
+  </data>
+  <data name="activity_converter_jarray" xml:space="preserve">
+    <value>JArray</value>
+  </data>
   <data name="activity_downloadfile_hint" xml:space="preserve">
     <value>Save into this folder</value>
   </data>

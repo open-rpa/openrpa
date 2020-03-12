@@ -31,6 +31,7 @@
   <ItemGroup>
     <None Remove="Activities\DownloadFileDesigner.xaml" />
     <None Remove="Activities\GetCredentialsDesigner.xaml" />
+    <None Remove="Activities\JArrayToDataTableDesigner.xaml" />
     <None Remove="Activities\MatchDesigner.xaml" />
     <None Remove="Activities\MatchesDesigner.xaml" />
     <None Remove="Activities\ReadCSVDesigner.xaml" />
@@ -126,6 +127,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\ReadCSVDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\JArrayToDataTableDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

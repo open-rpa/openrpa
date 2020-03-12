@@ -22,8 +22,9 @@ namespace OpenRPA.Office.Activities
     {
         public ReadRange()
         {
-            UseHeaderRow = false;
+            UseHeaderRow = true;
             ClearFormats = false;
+            IgnoreEmptyRows = false;
         }
         [RequiredArgument]
         [System.ComponentModel.Category("Misc")]
@@ -31,7 +32,7 @@ namespace OpenRPA.Office.Activities
         [RequiredArgument]
         [System.ComponentModel.Category("Misc")]
         public InArgument<bool> ClearFormats { get; set; }
-
+        public InArgument<bool> IgnoreEmptyRows { get; set; }
         //[RequiredArgument]
         [System.ComponentModel.Category("Input")]
         public InArgument<string> Cells { get; set; }
@@ -45,7 +46,7 @@ namespace OpenRPA.Office.Activities
         protected override void Execute(CodeActivityContext context)
         {
             //Range xlActiveRange = base.worksheet.UsedRange;
-
+            var ignoreEmptyRows = (IgnoreEmptyRows != null ? IgnoreEmptyRows.Get(context) : false); 
             var useHeaderRow = (UseHeaderRow != null? UseHeaderRow.Get(context)  : false);
             base.Execute(context);
             var cells = Cells.Get(context);
@@ -68,7 +69,7 @@ namespace OpenRPA.Office.Activities
             object[,] valueArray = (object[,])range.get_Value(Microsoft.Office.Interop.Excel.XlRangeValueDataType.xlRangeValueDefault);
 
                 
-            var o = ProcessObjects(useHeaderRow, valueArray);
+            var o = ProcessObjects(useHeaderRow, ignoreEmptyRows, valueArray);
 
             System.Data.DataTable dt = o as System.Data.DataTable;
             dt.TableName = base.worksheet.Name;
@@ -146,11 +147,9 @@ namespace OpenRPA.Office.Activities
         }
 
 
-        private System.Data.DataTable ProcessObjects(bool useHeaderRow, object[,] valueArray)
+        private System.Data.DataTable ProcessObjects(bool useHeaderRow, bool ignoreEmptyRows, object[,] valueArray)
         {
             System.Data.DataTable dt = new System.Data.DataTable();
-
-            #region Get the COLUMN names
             if(useHeaderRow)
             {
                 for (int k = 1; k <= valueArray.GetLength(1); k++)
@@ -166,14 +165,11 @@ namespace OpenRPA.Office.Activities
                 }
 
             }
-            #endregion
-
-            #region Load Excel SHEET DATA into data table
-
             object[] singleDValue = new object[valueArray.GetLength(1)];
             //value array first row contains column names. so loop starts from 2 instead of 1
             for (int i = 2; i <= valueArray.GetLength(0); i++)
             {
+                bool hasValue = false;
                 for (int j = 0; j < valueArray.GetLength(1); j++)
                 {
                     if (valueArray[i, j + 1] != null)
@@ -184,12 +180,14 @@ namespace OpenRPA.Office.Activities
                     {
                         singleDValue[j] = valueArray[i, j + 1];
                     }
+                    if(ignoreEmptyRows && singleDValue[j] != null)
+                    {
+                        if (!string.IsNullOrEmpty(singleDValue[j].ToString())) hasValue = true;
+                    }
                 }
-                dt.LoadDataRow(singleDValue, System.Data.LoadOption.PreserveChanges);
+                if (!ignoreEmptyRows) hasValue = true;
+                if (hasValue) dt.LoadDataRow(singleDValue, System.Data.LoadOption.PreserveChanges);
             }
-            #endregion
-
-
             return (dt);
         }
 

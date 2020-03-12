@@ -2,8 +2,11 @@
 using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
 using System;
+using System.Activities;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.DurableInstancing;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,6 +53,8 @@ namespace OpenRPA
         public Workflow Workflow { get { return GetProperty<Workflow>(); } set { SetProperty(value); } }
         [JsonIgnore]
         public System.Activities.WorkflowApplication wfApp { get; set; }
+        [JsonIgnore]
+        public WorkflowTrackingParticipant TrackingParticipant { get; set; }
         private void NotifyCompleted()
         {
             var _ref = (this as IWorkflowInstance);
@@ -90,7 +95,7 @@ namespace OpenRPA
             }
             result.host = Environment.MachineName.ToLower();
             result.fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
-            result.createApp();
+            result.createApp(Workflow.Activity);
             Instances.Add(result);
             foreach (var i in Instances.ToList())
             {
@@ -98,12 +103,12 @@ namespace OpenRPA
             }
             return result;
         }
-        public void createApp()
+        public void createApp(Activity activity)
         {
             //var xh = new XamlHelper(workflow.xaml);
             //extraextension.updateProfile(xh.Variables.ToArray(), xh.ArgumentNames.ToArray());
-            var CustomTrackingParticipant = new WorkflowTrackingParticipant();
-            CustomTrackingParticipant.OnVisualTracking += Participant_OnVisualTracking;
+            TrackingParticipant = new WorkflowTrackingParticipant();
+            TrackingParticipant.OnVisualTracking += Participant_OnVisualTracking;
 
             if (string.IsNullOrEmpty(InstanceId))
             {
@@ -134,9 +139,9 @@ namespace OpenRPA
                         }
                     }
                 }
-                wfApp = new System.Activities.WorkflowApplication(Workflow.Activity, Parameters);
-                wfApp.Extensions.Add(CustomTrackingParticipant);
-                if (Workflow.Serializable )
+                wfApp = new System.Activities.WorkflowApplication(activity, Parameters);
+                wfApp.Extensions.Add(TrackingParticipant);
+                if (Workflow.Serializable)
                 {
                     //if (Config.local.localstate)
                     //{
@@ -153,8 +158,8 @@ namespace OpenRPA
             }
             else
             {
-                wfApp = new System.Activities.WorkflowApplication(Workflow.Activity);
-                wfApp.Extensions.Add(CustomTrackingParticipant);
+                wfApp = new System.Activities.WorkflowApplication(activity);
+                wfApp.Extensions.Add(TrackingParticipant);
                 addwfApphandlers(wfApp);
                 if (Workflow.Serializable || !Workflow.Serializable)
                 {
@@ -233,6 +238,325 @@ namespace OpenRPA
         }
         public System.Diagnostics.Stopwatch runWatch { get; set; }
         apibase IWorkflowInstance.Workflow { get => this.Workflow; set => this.Workflow = value as Workflow; }
+        //public void Run(Activity root, string activityid)
+
+        public void RunThis(Activity root, Activity activity)
+        {
+            createApp(activity);
+            Run();
+
+
+            //try
+            //{
+            //    if (SystemActivities == null)
+            //    {
+            //        SystemActivities = typeof(System.Activities.Hosting.WorkflowInstance).Assembly;
+            //    }
+
+
+            //    // Type WorkflowInstancet = activity.GetType().Assembly.GetTypes().Where(x => x.FullName == "System.Activities.Hosting.WorkflowInstance").FirstOrDefault();
+            //    // WorkflowInstancet.GetMethod("EnsureDefinitionReady", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(wfApp, null);
+
+            //    wfApp.GetType().GetMethod("EnsureInitialized", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(wfApp, null);
+
+
+            //    var executor = typeof(System.Activities.Hosting.WorkflowInstance).GetField("executor", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(wfApp);
+            //    var scheduler = executor.GetType().GetField("scheduler", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
+            //    var rootInstance = executor.GetType().GetField("rootInstance", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
+            //    var bookmarkManager = executor.GetType().GetField("bookmarkManager", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
+            //    var rootEnvironment = executor.GetType().GetField("rootEnvironment", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
+            //    scheduler.GetType().GetMethod("ClearAllWorkItems", BindingFlags.Public | BindingFlags.Instance).Invoke(scheduler, new object[] { executor });
+
+
+            //    executor.GetType().GetMethod("ScheduleRootActivity", BindingFlags.Public | BindingFlags.Instance).Invoke(executor, new object[] { activity, null, null });
+            //    wfApp.GetType().GetMethod("EnsureInitialized", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(wfApp, null);
+
+            //    // executor.GetType().GetMethod("ScheduleSecondaryRootActivity", BindingFlags.Public | BindingFlags.Instance).Invoke(executor, new object[] { activity , rootEnvironment });
+            //    wfApp.GetType().GetMethod("RunInstance", BindingFlags.NonPublic | BindingFlags.Static).Invoke(wfApp, new object[] { wfApp });
+            //    //ScheduleActivity
+
+
+            //    //var _enum = new ChildEnumerator(rootInstance as System.Activities.ActivityInstance);
+            //    //while (_enum.MoveNext())
+            //    //{
+            //    //    var id = _enum.Current.Activity.Id;
+            //    //}
+
+
+            //    // var bookmarkManager = executor.GetType().GetField("bookmarkManager", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
+            //    // scheduler.GetType().GetMethod("Resume", BindingFlags.Public | BindingFlags.Instance).Invoke(scheduler, new object[] { });
+            //    // scheduler.GetType().GetMethod("Resume", BindingFlags.Public | BindingFlags.Instance).Invoke(scheduler, new object[] { });
+
+
+            //    // var ActivityInstanceMap = executor.GetType().GetProperty("SerializedProgramMapping", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
+
+            //    // *************************************************
+            //    // wfApp.GetType().GetMethod("Invoke", BindingFlags.NonPublic | BindingFlags.Static).Invoke(wfApp, new object[] { activity, null, wfApp.Extensions, TimeSpan.FromMinutes(200) });
+            //    // *************************************************
+
+            //    // scheduler.GetType().GetMethod("ClearAllWorkItems", BindingFlags.Public | BindingFlags.Instance).Invoke(scheduler, new object[] { executor });
+
+            //    //executor.GetType().GetField("shouldRaiseMainBodyComplete", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(executor, true);
+
+
+            //    //var controller = wfApp.GetType().GetProperty("Controller", BindingFlags.Public | BindingFlags.Instance).GetValue(wfApp);
+
+            //    // rootInstance.GetType().GetField("state", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(rootInstance, 2);
+
+            //    //Type t = SystemActivities.GetType("System.Activities.Runtime.EmptyWorkItem");
+            //    //var EmptyWorkItem = Activator.CreateInstance(t);
+            //    // var EmptyWorkItem = executor.GetType().GetMethod("CreateEmptyWorkItem", BindingFlags.Public | BindingFlags.Instance).Invoke(executor, new object[] { rootInstance });
+            //    // scheduler.GetType().GetMethod("ClearAllWorkItems", BindingFlags.Public | BindingFlags.Instance).Invoke(scheduler, new object[] { executor });
+            //    // executor.GetType().GetMethod("CompleteActivityInstance", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(executor, new object[] { rootInstance });
+            //    // executor.GetType().GetMethod("CancelRootActivity", BindingFlags.Public | BindingFlags.Instance).Invoke(executor, new object[] { });
+
+            //    // executor.GetType().GetField("isAbortPending", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(executor, true);
+            //    // executor.GetType().GetField("isTerminatePending", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(executor, true);
+
+
+
+            //    // executor.GetType().GetField("executionState", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(executor, 1);
+
+            //    // *************************************************
+            //    // rootInstance.GetType().GetField("state", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(rootInstance, 1); // Closed
+            //    // wfApp.GetType().GetMethod("RunInstance", BindingFlags.NonPublic | BindingFlags.Static).Invoke(wfApp, new object[] { wfApp  });
+            //    // *************************************************
+
+            //    //var emptyParam = new Dictionary<string, object>();
+            //    //executor.GetType().GetMethod("Run", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(executor, new object[] { });
+
+            //    //executor.GetType().GetMethod("CancelRootActivity", BindingFlags.Public | BindingFlags.Instance).Invoke(executor, new object[] { });
+            //    //scheduler.GetType().GetMethod("NotifyWorkCompletion", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(scheduler, new object[] { });
+
+            //    //// rootInstance.GetType().GetMethod("OnNotifyPaused", BindingFlags.Public | BindingFlags.Instance).Invoke(rootInstance, new object[] { });
+
+            //    //var callbacks = scheduler.GetType().GetField("callbacks", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(scheduler);
+            //    //if(callbacks!=null) callbacks.GetType().GetMethod("SchedulerIdle", BindingFlags.Public | BindingFlags.Instance).Invoke(callbacks, new object[] { });
+            //    //var host = executor.GetType().GetField("host", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
+            //    //host.GetType().GetMethod("NotifyPaused", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(host, new object[] { });
+
+            //    //isCompleted = true;
+            //    //state = "completed";
+            //    //OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
+
+            //    //            public enum ActivityInstanceState
+            //    //{
+            //    //    [EnumMember]
+            //    //    Executing = 0,
+            //    //    [EnumMember]
+            //    //    Closed = 1,
+            //    //    [EnumMember]
+            //    //    Canceled = 2,
+            //    //    [EnumMember]
+            //    //    Faulted = 3
+            //    ////}
+
+            //    //        this.rootInstance.IsCompleted
+
+            //    //                public ActivityInstanceState State
+            //    //{
+            //    //    get
+            //    //    {
+            //    //        if (((this.executingSecondaryRootInstances != null) && (this.executingSecondaryRootInstances.Count > 0)) || ((this.rootInstance != null) && !this.rootInstance.IsCompleted))
+            //    //        {
+            //    //            return ActivityInstanceState.Executing;
+            //    //        }
+            //    //        return this.executionState;
+            //    //    }
+            //    //}
+
+            //    //                private enum WorkflowApplicationState : byte
+            //    //{
+            //    //    Paused = 0,
+            //    //    Runnable = 1,
+            //    //    Unloaded = 2,
+            //    //    Aborted = 3
+            //    //}
+
+
+            //    // Type t = Type.GetType("System.Activities.ActivityInstance, System.Activities");
+            //    // Type t = activity.GetType().Assembly.GetTypes().Where(x => x.FullName == "System.Activities.ActivityInstance").FirstOrDefault();
+
+
+            //    //var targetInstance = Activator.CreateInstance(t, BindingFlags.NonPublic | BindingFlags.Instance, null, new object[] { activity }, null, null);
+            //    //targetInstance.GetType().GetMethod("Execute", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(targetInstance, new object[] { executor, bookmarkManager });
+            //    // CompleteActivityInstance
+
+            //    //scheduler.GetType().GetMethod("NotifyWorkCompletion", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(scheduler, new object[] { });
+            //    //var callbacks = scheduler.GetType().GetField("callbacks", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(scheduler);
+            //    //callbacks.GetType().GetMethod("SchedulerIdle", BindingFlags.Public | BindingFlags.Instance).Invoke(callbacks, new object[] { });
+
+
+            //    //var callbacks = scheduler.GetType().GetField("callbacks", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(scheduler);
+            //    //callbacks.GetType().GetMethod("SchedulerIdle", BindingFlags.Public | BindingFlags.Instance).Invoke(callbacks, new object[] { });
+            //    //var host = executor.GetType().GetField("host", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
+            //    //host.GetType().GetMethod("NotifyPaused", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(host, new object[] { });
+
+
+            //    //OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
+            //    //wfApp.Abort("done");
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex, "");
+            //    hasError = true;
+            //    isCompleted = true;
+            //    //isUnloaded = true;
+            //    state = "failed";
+            //    Exception = ex;
+            //    errormessage = ex.Message;
+            //    Save();
+            //    if (runWatch != null) runWatch.Stop();
+            //    OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
+            //}
+        }
+        public void RunFromHere(Activity root, Activity activity)
+        {
+            try
+            {
+                if (SystemActivities == null)
+                {
+                    SystemActivities = typeof(System.Activities.Hosting.WorkflowInstance).Assembly;
+                }
+
+
+                //TrackingParticipant.runactivityid = activityid;
+                //Run();
+
+                //runWatch = new System.Diagnostics.Stopwatch();
+                //runWatch.Start();
+                //// wfApp.Run();
+
+                wfApp.GetType().GetMethod("EnsureInitialized", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(wfApp, null);
+                var executor = typeof(System.Activities.Hosting.WorkflowInstance).GetField("executor", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(wfApp);
+                var scheduler = executor.GetType().GetField("scheduler", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
+
+
+                var firstWorkItem = scheduler.GetType().GetField("firstWorkItem", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(scheduler);
+
+                wfApp.GetType().GetMethod("EnsureInitialized", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(wfApp, new object[] { });
+                wfApp.GetType().GetMethod("RunCore", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(wfApp, new object[] { });
+
+                System.Threading.SynchronizationContext synchronizationContext = scheduler.GetType().GetField("synchronizationContext", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(scheduler) as System.Threading.SynchronizationContext;
+                // synchronizationContext.OperationStarted();
+
+                synchronizationContext.Post(DoStuff, scheduler);
+
+                // scheduler.GetType().GetMethod("Resume", BindingFlags.Public | BindingFlags.Instance).Invoke(scheduler, new object[] { });
+
+
+                // wfApp.GetType().GetMethod("Invoke", BindingFlags.NonPublic | BindingFlags.Static).Invoke(wfApp, new object[] { root, null, wfApp.Extensions, TimeSpan.FromMinutes(200) });
+                // wfApp.GetType().GetMethod("Invoke", BindingFlags.NonPublic | BindingFlags.Static).Invoke(wfApp, new object[] { activity, null, wfApp.Extensions, TimeSpan.FromMinutes(200) });
+                //isCompleted = true;
+                //OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
+
+
+                //MethodInfo method = executor.GetType().GetMethod("ScheduleSecondaryRootActivity");
+                //var res = method.Invoke(executor, new object[] { activity, null });
+
+                // executor.ScheduleActivity(activity, ActivityInstance, CompletionBookmark, FaultBookmark, LocationEnvironment, IDictionary<String, Object>, Location) : ActivityInstance
+                // executor.ScheduleSecondaryRootActivity(activity, null);
+
+                // scheduler.ClearAllWorkItems(executor);
+
+
+                //if (string.IsNullOrEmpty(InstanceId))
+                //{
+                //    wfApp.Run();
+                //    InstanceId = wfApp.Id.ToString();
+                //    state = "running";
+                //    Save();
+                //}
+                //else
+                //{
+                //    foreach (var b in Bookmarks)
+                //    {
+                //        if (b.Value != null && !string.IsNullOrEmpty(b.Value.ToString())) wfApp.ResumeBookmark(b.Key, b.Value);
+                //    }
+                //    if (Bookmarks.Count() == 0)
+                //    {
+                //        wfApp.Run();
+                //    }
+                //    state = "running";
+                //    Save();
+                //}
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                hasError = true;
+                isCompleted = true;
+                //isUnloaded = true;
+                state = "failed";
+                Exception = ex;
+                errormessage = ex.Message;
+                Save();
+                if (runWatch != null) runWatch.Stop();
+                OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
+            }
+        }
+        private Assembly SystemActivities = null;
+        public void DoStuff(object scheduler)
+        {
+
+            if(SystemActivities == null)
+            {
+                SystemActivities = typeof(System.Activities.Hosting.WorkflowInstance).Assembly;
+            }
+            var executor = typeof(System.Activities.Hosting.WorkflowInstance).GetField("executor", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(wfApp);
+            var firstWorkItem = scheduler.GetType().GetField("firstWorkItem", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(scheduler);
+            System.Threading.SynchronizationContext synchronizationContext = scheduler.GetType().GetField("synchronizationContext", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(scheduler) as System.Threading.SynchronizationContext;
+            var callbacks = scheduler.GetType().GetField("callbacks", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(scheduler);
+            if (firstWorkItem == null) return;
+            var IsEmpty = (bool)firstWorkItem.GetType().GetProperty("IsEmpty", BindingFlags.Public | BindingFlags.Instance).GetValue(firstWorkItem);
+
+
+            var rootInstance = executor.GetType().GetField("rootInstance", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
+            var _enum = new ChildEnumerator(rootInstance as System.Activities.ActivityInstance);
+            while (_enum.MoveNext())
+            {
+                var id = _enum.Current.Activity.Id;
+            }
+
+            try
+            {
+                
+
+                
+                if (!IsEmpty)
+                {
+                    firstWorkItem.GetType().GetMethod("Release", BindingFlags.Public | BindingFlags.Instance).Invoke(firstWorkItem, new object[] { executor });
+                    var IsValid = (bool)firstWorkItem.GetType().GetProperty("IsValid", BindingFlags.Public | BindingFlags.Instance).GetValue(firstWorkItem);
+                    
+                    var action = executor.GetType().GetMethod("TryExecuteNonEmptyWorkItem", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(executor, new object[] { firstWorkItem });
+                    firstWorkItem.GetType().GetMethod("PostProcess", BindingFlags.Public | BindingFlags.Instance).Invoke(firstWorkItem, new object[] { executor });
+                }
+                executor.GetType().GetMethod("ScheduleRuntimeWorkItems", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(executor, new object[] { });
+
+                firstWorkItem.GetType().GetMethod("Dispose", BindingFlags.Public | BindingFlags.Instance).Invoke(firstWorkItem, new object[] { executor });
+
+                //if (firstWorkItem.GetType().Name == "EmptyWorkItem")
+                //{
+                //    scheduler.GetType().GetField("isPausing", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(scheduler, false);
+                //    scheduler.GetType().GetField("isRunning", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(scheduler, false);
+                //    // var continueAction = callbacks.GetType().GetMethod("ExecuteWorkItem", BindingFlags.Public | BindingFlags.Instance).Invoke(callbacks, new object[] { firstWorkItem });
+
+                //    scheduler.GetType().GetMethod("NotifyWorkCompletion", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(scheduler, new object[] { });
+                //    // callbacks.GetType().GetMethod("SchedulerIdle", BindingFlags.Public | BindingFlags.Instance).Invoke(callbacks, new object[] {  });
+                //}
+                //else
+                //{
+                //    // var continueAction = callbacks.GetType().GetMethod("ExecuteWorkItem", BindingFlags.Public | BindingFlags.Instance).Invoke(callbacks, new object[] { firstWorkItem });
+                //    synchronizationContext.Post(DoStuff, scheduler);
+                //}
+                synchronizationContext.Post(DoStuff, scheduler);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+        }
         public void Run()
         {
             try
@@ -473,7 +797,7 @@ namespace OpenRPA
                     {
                         if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
                     }
-                    i.createApp();
+                    i.createApp(workflow.Activity);
                     i.Run();
                 }
                 catch (Exception ex)

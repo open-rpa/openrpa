@@ -221,10 +221,6 @@ namespace OpenRPA.Input
         }
         private IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            if ((int)wParam != NativeMethods.WM_MOUSEMOVE || AllowOneClick)
-            {
-                // Console.WriteLine(tostring((int)wParam) + $" CallNext: {CallNext} AllowOneClick: {AllowOneClick}");
-            }
             if (AllowOneClick)
             {
                 if ((int)wParam == NativeMethods.WM_LBUTTONDOWN || (int)wParam == NativeMethods.WM_RBUTTONDOWN || (int)wParam == NativeMethods.WM_MBUTTONDOWN)

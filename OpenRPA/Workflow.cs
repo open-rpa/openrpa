@@ -39,7 +39,7 @@ namespace OpenRPA
             NotifyPropertyChanged("StateImage");
         }
         public string queue { get { return GetProperty<string>(); } set { SetProperty(value); } }        
-        public string Xaml { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string Xaml { get { return GetProperty<string>(); } set { _activity = null; SetProperty(value); } }
         public List<workflowparameter> Parameters { get { return GetProperty<List<workflowparameter>>(); } set { SetProperty(value); } }
         public bool Serializable { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -329,7 +329,7 @@ namespace OpenRPA
                                     if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
                                 }
                                 WorkflowInstance.Instances.Add(i);
-                                i.createApp();
+                                i.createApp(Activity);
                                 i.Run();
                             }
                         }
@@ -373,20 +373,22 @@ namespace OpenRPA
             }
             return Filename;
         }
+        private System.Activities.Activity _activity = null;
         [Newtonsoft.Json.JsonIgnore]
         public System.Activities.Activity Activity
         {
             get
             {
                 if (string.IsNullOrEmpty(Xaml)) return null;
+                if (_activity != null) return _activity;
                 var activitySettings = new System.Activities.XamlIntegration.ActivityXamlServicesSettings
                 {
                     CompileExpressions = true
                 };
                 var xamlReaderSettings = new System.Xaml.XamlXmlReaderSettings { LocalAssembly = typeof(Workflow).Assembly };
                 var xamlReader = new System.Xaml.XamlXmlReader(new System.IO.StringReader(Xaml), xamlReaderSettings);
-                var wf = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, activitySettings);
-                return wf;
+                _activity = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, activitySettings);
+                return _activity;
             }
         }
         public IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId,

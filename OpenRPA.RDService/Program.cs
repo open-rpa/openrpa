@@ -513,7 +513,7 @@ namespace OpenRPA.RDService
                     }
                     if(Monitormanager.IsServiceInstalled)
                     {
-                        _ = Monitormanager.StopService();
+                        // _ = Monitormanager.StopService();
                     }
                 }
             }

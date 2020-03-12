@@ -197,7 +197,6 @@ namespace OpenRPA.NM
                     if(pname.Contains("chrome"))
                     {
                         string title = process.MainWindowTitle;
-                        Console.WriteLine(title);
                         if(!string.IsNullOrEmpty(title))
                         {
                             var exists = NMHook.tabs.Where(x => x.title == title).FirstOrDefault();

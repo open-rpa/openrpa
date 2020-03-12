@@ -26,14 +26,18 @@ namespace OpenRPA.NM.pipe
             pipe.Connected += (sender) => { Connected?.Invoke(); };
             pipe.Error += (e) => { Error?.Invoke(e); };
             pipe.ServerMessage += (sender, message) => {
-
                 var queue = replyqueue.Where(x => x.messageid == message.messageid).FirstOrDefault();
                 if (queue != null)
                 {
-                    queue.result = message;
-                    queue.autoReset.Set();
                     // Log.Information("received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));
+                    if (queue.Received) return;
+                    queue.result = message;
+                    queue.Received = true;
+                    if(queue.autoReset!=null) queue.autoReset.Set();
                     return;
+                } else
+                {
+                    // Log.Information("received reply for unknown message id: " + message.messageid);
                 }
                 ServerMessage?.Invoke(message);
             };

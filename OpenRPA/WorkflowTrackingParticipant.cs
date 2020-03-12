@@ -10,10 +10,11 @@ using System.Threading.Tasks;
 
 namespace OpenRPA
 {
-    class WorkflowTrackingParticipant : TrackingParticipant
+    public class WorkflowTrackingParticipant : TrackingParticipant
     {
         public delegate void VisualTrackingHandler(WorkflowInstance Instance, string ActivityId, string ChildActivityId, string State);
         public event VisualTrackingHandler OnVisualTracking;
+        public string runactivityid { get; set; }
         public WorkflowTrackingParticipant()
         {
             TrackingProfile = new TrackingProfile()
@@ -79,10 +80,16 @@ namespace OpenRPA
                         }
                         //wfi.variables.Add(v.Key, v.Value);
                     }
-
+                    // Log.Activity(activityStateRecord.State + " " + activityStateRecord.Activity.Id + " " + activityStateRecord.Activity.Name);
                 }
                 if (activityScheduledRecord != null)
                 {
+                    var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
+                    if (Instance == null || Instance.wfApp == null) return;
+                    var wfApp = Instance.wfApp;
+                    var executor = typeof(System.Activities.Hosting.WorkflowInstance).GetField("executor", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(wfApp);
+                    var scheduler = executor.GetType().GetField("scheduler", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
+
                     string ActivityId = null;
                     string ChildActivityId = null;
                     if (activityStateRecord != null)
@@ -96,11 +103,33 @@ namespace OpenRPA
                         if (activityScheduledRecord.Activity != null) ActivityId = activityScheduledRecord.Activity.Id;
                         if (activityScheduledRecord.Child != null) ChildActivityId = activityScheduledRecord.Child.Id;
                     }
+                    if(activityScheduledRecord.Activity == null && activityScheduledRecord.Child!=null)
+                    {
+                        // this will make "1" be handles twice, but "1" is always sendt AFTER being scheduled, but we can catch it here ?
+                        ActivityId = activityScheduledRecord.Child.Id;
+                        ChildActivityId = activityScheduledRecord.Child.Id;
+                    }
                     if (string.IsNullOrEmpty(ActivityId)) return;
 
-                    var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
-                    if (Instance == null || Instance.wfApp == null) return;
-                    var wfApp = Instance.wfApp;
+                    if(activityScheduledRecord.Child.Id == "1.11")
+                    {
+                        // scheduler.GetType().GetMethod("ClearAllWorkItems", BindingFlags.Public | BindingFlags.Instance).Invoke(scheduler, new object[] { executor });
+                        // scheduler.GetType().GetMethod("ScheduleWork", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(scheduler, new object[] { false });
+                        //var firstWorkItem = scheduler.GetType().GetField("firstWorkItem", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(scheduler);
+                        //firstWorkItem.GetType().GetMethod("Release", BindingFlags.Public | BindingFlags.Instance).Invoke(firstWorkItem, new object[] { executor });
+                        //firstWorkItem.GetType().GetMethod("Dispose", BindingFlags.Public | BindingFlags.Instance).Invoke(firstWorkItem, new object[] { executor });
+
+                        //scheduler.GetType().GetMethod("NotifyWorkCompletion", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(scheduler, new object[] { });
+                    }
+                    if (activityScheduledRecord.Activity != null)
+                    {
+                        // Log.Activity("Scheduled " + activityScheduledRecord.Activity.Id + " " + activityScheduledRecord.Activity.Name + " -> " + activityScheduledRecord.Child.Id + " " + activityScheduledRecord.Child.Name);
+                    }
+                    else if (activityScheduledRecord.Child != null)
+                    {
+                        // Log.Activity("Scheduled " + activityScheduledRecord.Child.Id + " " + activityScheduledRecord.Child.Name);
+                    }
+
                     if (Instance.Variables == null) Instance.Variables = new Dictionary<string, WorkflowInstanceValueType>();
                     if (activityStateRecord != null)
                     {
@@ -116,7 +145,6 @@ namespace OpenRPA
                             }
                         }
                     }
-                    var executor = typeof(System.Activities.Hosting.WorkflowInstance).GetField("executor", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(wfApp);
                     var instanceMapField = executor.GetType().GetField("instanceMap", BindingFlags.NonPublic | BindingFlags.Instance);
 
                     // get SerializedProgramMapping to have InstanceMap get filled, needed by SerializedProgramMapping

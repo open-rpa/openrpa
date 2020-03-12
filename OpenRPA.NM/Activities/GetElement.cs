@@ -44,6 +44,7 @@ namespace OpenRPA.NM
         protected override void Execute(NativeActivityContext context)
         {
             var selector = Selector.Get(context);
+            selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
             var sel = new NMSelector(selector);
             var timeout = Timeout.Get(context);
             var from = From.Get(context);

@@ -157,7 +157,7 @@ namespace OpenRPA.NM
                 {
                     var tab = NMHook.tabs.Where(x => x.id == message.tabid).FirstOrDefault();
                     if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
-                    NMHook.HighlightTab(tab);
+                    // NMHook.HighlightTab(tab);
 
                     var updateelement = new NativeMessagingMessage("updateelementvalue")
                     {
@@ -205,8 +205,9 @@ namespace OpenRPA.NM
                     var getelement2 = new NativeMessagingMessage("clickelement")
                     {
                         browser = message.browser,
-                        cssPath = cssselector,
-                        xPath = xpath,
+                        //cssPath = cssselector,
+                        //xPath = xpath,
+                        zn_id = zn_id,
                         tabid = message.tabid,
                         frameId = message.frameId
                     };
@@ -223,8 +224,9 @@ namespace OpenRPA.NM
                 var getelement = new NativeMessagingMessage("getelement")
                 {
                     browser = message.browser,
-                    cssPath = cssselector,
-                    xPath = xpath,
+                    zn_id = zn_id,
+                    //cssPath = cssselector,
+                    //xPath = xpath,
                     tabid = message.tabid,
                     frameId = message.frameId
                 };

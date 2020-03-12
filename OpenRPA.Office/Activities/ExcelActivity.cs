@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Excel;
+using System;
 using System.Activities;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,17 @@ namespace OpenRPA.Office.Activities
         {
             get
             {
+                if (_application != null)
+                {
+                    try
+                    {
+                        var v = _application.Visible;
+                    }
+                    catch (Exception)
+                    {
+                        _application = null;
+                    }
+                }
                 if (_application == null)
                 {
                     _application = StartExcel();
@@ -114,8 +126,17 @@ namespace OpenRPA.Office.Activities
             {
                 officewrap.application.DisplayAlerts = false;
                 //application.AutomationSecurity = Microsoft.Office.Core.MsoAutomationSecurity.msoAutomationSecurityLow;
-                workbook = officewrap.application.Workbooks.Open(filename, ReadOnly: false,
-                    Password: readPassword, WriteResPassword: writePassword);
+                if(System.IO.File.Exists(filename))
+                {
+                    workbook = officewrap.application.Workbooks.Open(filename, ReadOnly: false,
+                        Password: readPassword, WriteResPassword: writePassword);
+                } else
+                {
+                    workbook = officewrap.application.Workbooks.Add();
+                    workbook.Activate();
+                    workbook.SaveCopyAs(filename);
+                }
+
                 officewrap.application.DisplayAlerts = true;
             }
         }
@@ -180,14 +201,21 @@ namespace OpenRPA.Office.Activities
             }
             if (!string.IsNullOrEmpty(_worksheet))
             {
+                bool found = false;
                 foreach (Microsoft.Office.Interop.Excel.Worksheet s in workbook.Sheets)
                 {
                     if (s.Name == _worksheet)
                     {
                         s.Activate();
                         worksheet = s;
+                        found = true;
                         break;
                     }
+                }
+                if(!found)
+                {
+                    worksheet = workbook.Sheets.Add(Type.Missing, workbook.Sheets[workbook.Sheets.Count], 1, Microsoft.Office.Interop.Excel.XlSheetType.xlWorksheet) as Microsoft.Office.Interop.Excel.Worksheet;
+                    worksheet.Name = _worksheet;
                 }
             }
             if (Workbook != null) Workbook.Set(context, workbook);

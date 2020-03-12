@@ -51,6 +51,9 @@ if (typeof document.zeniverse === 'undefined') {
         },
         clickelement: function (message) {
             var ele = null;
+            if (ele === null && message.zn_id !== null && message.zn_id !== undefined && message.zn_id > -1) {
+                message.xPath = '//*[@zn_id="' + message.zn_id + '"]';
+            }
             if (message.xPath) {
                 var xpathEle = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
                 if (xpathEle === null) message.xPath = 'false';
@@ -71,32 +74,45 @@ if (typeof document.zeniverse === 'undefined') {
                     if (ele.hasAttribute('ng-click')) {
                         console.log('click using triggerHandler');
                         var $e = angular.element(ele);
-                        console.log(ele);
-                        console.log($e);
+                        // console.log(ele);
+                        // console.log($e);
                         $e.triggerHandler('click');
                     }
-                    else if (form && ele.type === 'submit') // && ele.tagName != "BUTTON") 
+                    else if (ele.hasAttribute('onclick')) 
+                    {
+                        console.log('click using dispatchEvent');
+                        ele.dispatchEvent(new Event('mousedown'));
+                        ele.dispatchEvent(new Event('click'));
+                        ele.dispatchEvent(new Event('mouseup'));
+                    }
+                    else if (form && ele.type === 'submit' ) // && ele.tagName != "BUTTON") 
                     {
                         console.log('click using submit as form');
-                        console.log(form);
+                        // console.log(form);
                         //$(form).submit();
-                        form.submit();
+                        // form.submit();
+                        console.log('nah, click using dispatchEvent');
+                        ele.dispatchEvent(new Event('mousedown'));
+                        ele.dispatchEvent(new Event('click'));
+                        ele.dispatchEvent(new Event('mouseup'));
+
                     }
                     else {
                         
                         try {
                             if (typeof jQuery !== 'undefined') {
-                                console.log('click using jQuery click()');
+                                // console.log('click using jQuery click()');
                                 var element = $(ele);
-                                console.log(element);
+                                // console.log(element);
                                 element.click();
                             }
                         } catch (e) {
                             console.log(e);
                         }
-                        console.log('click using element.click()');
-                        console.log(ele);
+                        // console.log('click using element.click()');
+                        // console.log(ele);
                         // ele.click();
+                        console.log('click using dispatchEvent');
                         ele.dispatchEvent(new Event('mousedown'));
                         ele.dispatchEvent(new Event('click'));
                         ele.dispatchEvent(new Event('mouseup'));
@@ -113,10 +129,10 @@ if (typeof document.zeniverse === 'undefined') {
             var fromele = null;
             if (message.fromxPath != null && message.fromxPath != "") {
                 if (message.fromxPath != null && message.fromxPath != "") {
-                    console.log("fromele = document.evaluate('" + message.fromxPath + "', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;");
+                    // console.log("fromele = document.evaluate('" + message.fromxPath + "', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;");
                     fromele = document.evaluate(message.fromxPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
                 } else if (message.fromcssPath != null && message.fromcssPath != "") {
-                    console.log("fromele = document.querySelector('" + message.fromcssPath + "');");
+                    // console.log("fromele = document.querySelector('" + message.fromcssPath + "');");
                     fromele = document.querySelector(message.fromcssPath);
                 }
                 if (fromele == null) {
@@ -131,7 +147,7 @@ if (typeof document.zeniverse === 'undefined') {
             if (ele.length === 0 && message.xPath && fromele == null) {
                 //var iterator = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
                 var iterator = document.evaluate(message.xPath, document, null, XPathResult.ANY_TYPE, null);
-                console.log("document.evaluate('" + message.xPath + "', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);");
+                // console.log("document.evaluate('" + message.xPath + "', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);");
                 try {
                     var thisNode = iterator.iterateNext();
 
@@ -143,22 +159,22 @@ if (typeof document.zeniverse === 'undefined') {
                 catch (e) {
                     console.error('Error: Document tree modified during iteration ' + e);
                 }
-                console.log(ele);
+                // console.log(ele);
                 if (ele.length === 0) message.xPath = 'false';
                 if (ele.length > 0) message.xPath = 'true';
             }
             if (ele.length === 0 && message.cssPath) {
                 if (fromele == null) {
                     ele = document.querySelectorAll(message.cssPath);
-                    console.log("document.querySelector('" + message.cssPath + "');");
+                    // console.log("document.querySelector('" + message.cssPath + "');");
                 } else {
                     ele = fromele.querySelectorAll(message.cssPath);
-                    console.log("fromele.querySelector('" + message.cssPath + "');");
+                    // console.log("fromele.querySelector('" + message.cssPath + "');");
                 }
                 
                 if (ele.length === 0) message.cssPath = 'false';
                 if (ele.length > 0) message.cssPath = 'true';
-                console.log(ele);
+                // console.log(ele);
             }
             message.result = [];
             if (ele.length > 0) {
@@ -195,19 +211,19 @@ if (typeof document.zeniverse === 'undefined') {
             }
             if (ele === null && message.xPath) {
                 var xpathEle = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-                console.log("document.evaluate('" + message.xPath + "', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;");
+                // console.log("document.evaluate('" + message.xPath + "', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;");
                 if (xpathEle === null) message.xPath = 'false';
                 if (xpathEle !== null) message.xPath = 'true';
                 ele = xpathEle;
-                console.log(ele);
+                // console.log(ele);
             }
             if (ele === null && message.cssPath) {
                 var cssEle = document.querySelector(message.cssPath);
-                console.log("document.querySelector('" + message.cssPath + "');");
+                // console.log("document.querySelector('" + message.cssPath + "');");
                 if (cssEle === null) message.cssPath = 'false';
                 if (cssEle !== null) message.cssPath = 'true';
                 ele = cssEle;
-                console.log(ele);
+                // console.log(ele);
             }
             if (ele !== null && ele !== undefined) {
                 try {

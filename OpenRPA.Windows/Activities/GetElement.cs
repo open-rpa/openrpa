@@ -51,6 +51,7 @@ namespace OpenRPA.Windows
 
             UIElement[] elements = null;
             var selector = Selector.Get(context);
+            selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
             var sel = new WindowsSelector(selector);
             var timeout = Timeout.Get(context);
             var maxresults = MaxResults.Get(context);

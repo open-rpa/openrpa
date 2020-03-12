@@ -91,8 +91,23 @@ namespace OpenRPA.Activities
                 var myVar = context.DataContext.GetProperties().Find(key, true);
                 if (myVar != null)
                 {
+                    if(myVar.PropertyType.Name == "JArray")
+                    {
+                        var json = payload[key].ToString();
+                        var jobj = JArray.Parse(json);
+                        myVar.SetValue(context.DataContext, jobj);
+                    } else if (myVar.PropertyType.Name == "JObject")
+                    {
+                        var json = payload[key].ToString();
+                        var jobj = JObject.Parse(json);
+                        myVar.SetValue(context.DataContext, jobj);
+                    }
+                    else
+                    {
+                        myVar.SetValue(context.DataContext, payload[key].ToString());
+                    }
                     //var myValue = myVar.GetValue(context.DataContext);
-                    myVar.SetValue(context.DataContext, payload[key].ToString());
+
                 }
                 else
                 {

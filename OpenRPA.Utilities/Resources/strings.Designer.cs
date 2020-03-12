@@ -61,6 +61,24 @@ namespace OpenRPA.Utilities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Datatable.
+        /// </summary>
+        public static string activity_converter_datatable {
+            get {
+                return ResourceManager.GetString("activity_converter_datatable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to JArray.
+        /// </summary>
+        public static string activity_converter_jarray {
+            get {
+                return ResourceManager.GetString("activity_converter_jarray", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save into this folder.
         /// </summary>
         public static string activity_downloadfile_hint {

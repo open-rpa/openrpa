@@ -161,10 +161,6 @@ Section "IE" ; section 4
 SectionEnd
 Section "Chrome and Firefox (NM)" ; section 5
   SetOutPath $INSTDIR
-  File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\chromemanifest.json"
-  File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\ffmanifest.json"
-  File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\chromemanifestold.json"
-  File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\ffmanifestold.json"
   File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\OpenRPA.NativeMessagingHost.exe"
   File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\OpenRPA.NativeMessagingHost.exe.config"
   File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\OpenRPA.NativeMessagingHost.pdb"
@@ -172,12 +168,16 @@ Section "Chrome and Firefox (NM)" ; section 5
   File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\OpenRPA.NM.pdb"
   File /r "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\OpenRPA.NM.resources.dll"
 
+  # SetOverwrite ifnewer
+  File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\chromemanifest.json"
+  File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\ffmanifest.json"
+  File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\chromemanifestold.json"
+  File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\ffmanifestold.json"
   !insertmacro StrRep '$0' "$INSTDIR\OpenRPA.NativeMessagingHost.exe" '\' '\\'
   !insertmacro _ReplaceInFile "chromemanifest.json" "REPLACEPATH" $0
   !insertmacro _ReplaceInFile "ffmanifest.json" "REPLACEPATH" $0
   !insertmacro _ReplaceInFile "chromemanifestold.json" "REPLACEPATH" $0
   !insertmacro _ReplaceInFile "ffmanifestold.json" "REPLACEPATH" $0
-
 SectionEnd
 Section "Image recognition and OCR" ; section 6
   SetOutPath $INSTDIR\x64

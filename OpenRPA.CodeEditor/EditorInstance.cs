@@ -192,7 +192,6 @@ namespace OpenRPA.CodeEditor
 
         void IExpressionEditorInstance.Focus()
         {
-            Log.Information("IExpressionEditorInstance.Focus()");
             try
             {
                 // Dispatch to ensure that the visual is available before trying to move focus to the view

@@ -90,7 +90,12 @@ if (typeof document.zeniverse === 'undefined') {
                         console.log('click using submit as form');
                         // console.log(form);
                         //$(form).submit();
-                        form.submit();
+                        // form.submit();
+                        console.log('nah, click using dispatchEvent');
+                        ele.dispatchEvent(new Event('mousedown'));
+                        ele.dispatchEvent(new Event('click'));
+                        ele.dispatchEvent(new Event('mouseup'));
+
                     }
                     else {
                         

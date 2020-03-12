@@ -33,7 +33,7 @@ namespace OpenRPA.NM.pipe
                     if (queue.Received) return;
                     queue.result = message;
                     queue.Received = true;
-                    queue.autoReset.Set();
+                    if(queue.autoReset!=null) queue.autoReset.Set();
                     return;
                 } else
                 {

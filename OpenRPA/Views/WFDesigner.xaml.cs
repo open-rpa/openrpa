@@ -1078,6 +1078,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                         debugManagerView.InsertBreakpoint(selectedLocation, System.Activities.Presentation.Debug.BreakpointTypes.Bounded | System.Activities.Presentation.Debug.BreakpointTypes.Enabled);
                     }
                 }
+                BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
             }
             catch (Exception ex)
             {

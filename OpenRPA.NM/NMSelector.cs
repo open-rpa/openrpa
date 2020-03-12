@@ -132,73 +132,55 @@ namespace OpenRPA.NM
             NMElement fromNMElement = fromElement as NMElement;
             string fromcssPath = "";
             string fromxPath = "";
-
             if (fromElement != null)
             {
-                //browser = fromNMElement.browser;
-                //p = second.Properties.Where(x => x.Name == "cssselector").FirstOrDefault();
-                //if (p == null) throw new ArgumentException("fromElement missing cssselector");
-                //xpath = "";
-                //cssselector = fromNMElement.cssselector + " > " + p.Value;
                 fromcssPath = fromNMElement.cssselector;
                 fromxPath = fromNMElement.xpath;
             }
+            //NMHook.checkForPipes(true, true);
+            //NMHook.reloadtabs();
+            //var tabs = NMHook.tabs.ToList();
+            //if (!string.IsNullOrEmpty(browser)) { 
+            //    lock(NMHook.tabs)
+            //    {
+            //        tabs = NMHook.tabs.Where(x => x.browser == browser).ToList();
+            //    }
+            //}
+            //foreach (var tab in tabs)
+            //{
 
+            //}
+            NativeMessagingMessage subresult = null;
 
-            NMHook.checkForPipes(true, true);
-            NMHook.reloadtabs();
-            var tabs = NMHook.tabs.ToList();
-            if (!string.IsNullOrEmpty(browser)) { 
-                lock(NMHook.tabs)
-                {
-                    tabs = NMHook.tabs.Where(x => x.browser == browser).ToList();
-                }
-            }
-            foreach (var tab in tabs)
-            {
-                NativeMessagingMessage subresult = null;
-
-                var getelement = new NativeMessagingMessage("getelements");
-                getelement.browser = browser;
-                getelement.xPath = xpath;
-                getelement.cssPath = cssselector;
-                getelement.fromxPath = fromxPath;
-                getelement.fromcssPath = fromcssPath;
-                subresult = NMHook.sendMessageResult(getelement, false, TimeSpan.FromSeconds(2));
-                if(subresult != null)
-                    if(subresult.results != null)
-                        foreach (var b in subresult.results)
+            var getelement = new NativeMessagingMessage("getelements");
+            getelement.browser = browser;
+            getelement.xPath = xpath;
+            getelement.cssPath = cssselector;
+            getelement.fromxPath = fromxPath;
+            getelement.fromcssPath = fromcssPath;
+            subresult = NMHook.sendMessageResult(getelement, false, TimeSpan.FromSeconds(2));
+            if (subresult != null)
+                if (subresult.results != null)
+                    foreach (var b in subresult.results)
+                    {
+                        if (b.cssPath == "true" || b.xPath == "true")
                         {
-                            if (b.cssPath == "true" || b.xPath == "true")
+                            var data = b.result;
+                            var arr = JArray.Parse(data);
+                            foreach (var _e in arr)
                             {
-                                var data = b.result;
-                                var arr = JArray.Parse(data);
-                                foreach(var _e in arr)
-                                {
-                                    if (results.Count > maxresults) continue;
-                                    var json = _e.ToString();
-                                    var subsubresult = Newtonsoft.Json.JsonConvert.DeserializeObject<NativeMessagingMessage>(json);
-                                    subsubresult.browser = browser;
-                                    subsubresult.result = json;
-                                    subsubresult.tabid = b.tabid;
-                                    subsubresult.tab = b.tab;
-                                    results.Add(new NMElement(subsubresult));
-                                }
+                                if (results.Count > maxresults) continue;
+                                var json = _e.ToString();
+                                var subsubresult = Newtonsoft.Json.JsonConvert.DeserializeObject<NativeMessagingMessage>(json);
+                                subsubresult.browser = browser;
+                                subsubresult.result = json;
+                                subsubresult.tabid = b.tabid;
+                                subsubresult.tab = b.tab;
+                                results.Add(new NMElement(subsubresult));
                             }
                         }
-            }
+                    }
             return results.ToArray();
-            //NMHook.Instance.refreshJvms();
-            //NMElement[] result = null;
-            //foreach (var jvm in NMHook.Instance.jvms)
-            //{
-            //    result = GetElementsWithuiSelector(jvm, selector, fromElement, maxresults);
-            //    if (result.Count() > 0) return result;
-            //}
-
-            //if (result == null) return new NMElement[] { };
-            //return result;
-            //return new NMElement[] { };
         }
 
 

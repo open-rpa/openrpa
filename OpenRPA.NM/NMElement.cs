@@ -72,6 +72,10 @@ namespace OpenRPA.NM
         public string cssselector { get; set; }
         public string tagname { get; set; }
         public string classname { get; set; }
+        public bool IsVisible { get; set; }
+        public string Display { get; set; }
+        public bool isVisibleOnScreen { get; set; }
+        public bool Disabled { get; set; }
         public long zn_id { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
@@ -114,6 +118,11 @@ namespace OpenRPA.NM
                 if (chromeelement.ContainsKey("cssPath")) cssselector = chromeelement["cssPath"].ToString();
                 if (chromeelement.ContainsKey("csspath")) cssselector = chromeelement["csspath"].ToString();
                 if (chromeelement.ContainsKey("zn_id")) zn_id = int.Parse(chromeelement["zn_id"].ToString());
+
+                if (chromeelement.ContainsKey("isvisible")) IsVisible = bool.Parse(chromeelement["isvisible"].ToString());
+                if (chromeelement.ContainsKey("display")) Display = chromeelement["display"].ToString();
+                if (chromeelement.ContainsKey("isvisibleonscreen")) isVisibleOnScreen = bool.Parse(chromeelement["isvisibleonscreen"].ToString());
+                if (chromeelement.ContainsKey("disabled")) Disabled = bool.Parse(chromeelement["disabled"].ToString());
             }
         }
         public NMElement(NativeMessagingMessage message)

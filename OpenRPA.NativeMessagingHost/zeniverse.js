@@ -564,7 +564,23 @@ if (typeof document.zeniverse === 'undefined') {
             }
             treeHTML(element, treeObject, maxiden);
             treeObject["value"] = element.value;
+            treeObject["isvisible"] = zeniverse.isVisible(element);
+            treeObject["display"] = zeniverse.display(element);
+            treeObject["isvisibleonscreen"] = zeniverse.isVisibleOnScreen(element);
+            treeObject["disabled"] = element.disabled;
+            if (treeObject["disabled"] === null || treeObject["disabled"] === undefined) treeObject["disabled"] = false;
             return json ? JSON.stringify(treeObject) : treeObject;
+        },
+        isVisibleOnScreen: function (elm) {
+            var rect = elm.getBoundingClientRect();
+            var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+            return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+        },
+        isVisible: function (elm) {
+            return elm.offsetWidth > 0 && elm.offsetHeight > 0;
+        },
+        display: function (elm) {
+            return window.getComputedStyle(elm, null).getPropertyValue('display');
         },
         getFrameName: function (frame) {
             var frames = parent.frames,

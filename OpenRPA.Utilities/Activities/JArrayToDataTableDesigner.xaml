@@ -8,6 +8,8 @@
     xmlns:d="clr-namespace:System.Data;assembly=System.Data"
     xmlns:Converters="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
     xmlns:or="clr-namespace:OpenRPA.Utilities.Resources"
+    xmlns:nl="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json"
+    
     >
 
 
@@ -42,11 +44,11 @@
                 <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_converter_jarray}" MaxWidth="180" Margin="5" Grid.ColumnSpan="2"
                             OwnerActivity="{Binding Path=ModelItem}"
                             Expression="{Binding Path=ModelItem.JArray, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
-                            ExpressionType="s:String" HorizontalAlignment="Stretch" />
+                            ExpressionType="nl:JArray" HorizontalAlignment="Stretch" />
                 <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_converter_datatable}" MaxWidth="180" Margin="5" Grid.ColumnSpan="2" Grid.Row="1"
                             OwnerActivity="{Binding Path=ModelItem}"
-                            Expression="{Binding Path=ModelItem.DataTable, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
-                            ExpressionType="d:DataTable" HorizontalAlignment="Stretch" />
+                            Expression="{Binding Path=ModelItem.DataTable, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=Out}"
+                            ExpressionType="d:DataTable" HorizontalAlignment="Stretch" UseLocationExpression="True" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="Collapsed">

@@ -108,13 +108,16 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Office.Interop.Excel">
-      <HintPath>..\..\..\Windows\assembly\GAC_MSIL\Microsoft.Office.Interop.Excel\15.0.0.0__71e9bce111e9429c\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <HintPath>lib\Microsoft.Office.Interop.Excel.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Outlook">
-      <HintPath>..\..\..\Windows\assembly\GAC_MSIL\Microsoft.Office.Interop.Outlook\15.0.0.0__71e9bce111e9429c\Microsoft.Office.Interop.Outlook.dll</HintPath>
+      <HintPath>lib\Microsoft.Office.Interop.Outlook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.PowerPoint">
+      <HintPath>lib\Microsoft.Office.Interop.PowerPoint.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Word">
-      <HintPath>..\..\..\pia\Microsoft.Office.Interop.Word.dll</HintPath>
+      <HintPath>lib\Microsoft.Office.Interop.Word.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

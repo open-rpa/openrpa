@@ -18,8 +18,9 @@ namespace OpenRPA.Office.Activities
         [System.ComponentModel.Category("Input")]
         public InArgument<int> StartingSlide { get; set; }
         public InArgument<int> EndingSlide { get; set; }
-        public InArgument<int> AdvanceTime { get; set; }
+        public InArgument<TimeSpan> AdvanceTime { get; set; }
         public InArgument<bool> KioskMode { get; set; }
+        public InArgument<bool> CloseAtEnd { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             var filename = Filename.Get(context);
@@ -27,7 +28,6 @@ namespace OpenRPA.Office.Activities
             var kioskmode = KioskMode.Get(context);
             var endingslide = EndingSlide.Get(context);
             var advancetime = AdvanceTime.Get(context);
-            if (startingslide < 1) startingslide = 1;
             filename = Environment.ExpandEnvironmentVariables(filename);
             Application activeObject = null;
             Presentation document = null;
@@ -53,32 +53,38 @@ namespace OpenRPA.Office.Activities
                 activeObject.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
             }
             if(document==null) document = activeObject.Presentations.Open(filename);
+            document.Close();
+            document = activeObject.Presentations.Open(filename);
 
+            if (startingslide < 1) startingslide = 1;
             if (endingslide < 1 || endingslide > document.Slides.Count) endingslide = document.Slides.Count;
             if(kioskmode) document.SlideShowSettings.ShowType = PpSlideShowType.ppShowTypeKiosk;
             document.SlideShowSettings.ShowType = PpSlideShowType.ppShowTypeSpeaker;
-            document.SlideShowSettings.StartingSlide = startingslide;
             document.SlideShowSettings.RangeType =  PpSlideShowRangeType.ppShowSlideRange;
             document.SlideShowSettings.AdvanceMode = PpSlideShowAdvanceMode.ppSlideShowManualAdvance;
             document.Slides.Range().SlideShowTransition.AdvanceTime = 0;
             document.Slides.Range().SlideShowTransition.AdvanceOnTime = Microsoft.Office.Core.MsoTriState.msoFalse;
             document.Slides.Range().SlideShowTransition.AdvanceOnClick = Microsoft.Office.Core.MsoTriState.msoTrue;
-            //activeObject.ActivePresentation.Application.ActiveWindow.Panes[2].Activate();
             //activeObject.ActivePresentation.Application.ActivePresentation.Slides[startingslide].Select();
+
+            // StartingSlide does not seem to work the first time we open a powerpoint, so lets manually move forward
+            document.SlideShowSettings.StartingSlide = startingslide;
+            //activeObject.ActivePresentation.Application.ActiveWindow.Panes[2].Activate();
+
 
             SlideShowWindow obj = document.SlideShowSettings.Run();
             SlideShowView objSlideShow = document.SlideShowWindow.View;
             try
             {
-                while (objSlideShow.CurrentShowPosition < startingslide)
-                {
-                    objSlideShow.Next();
-                }
+                //while (objSlideShow.CurrentShowPosition < startingslide)
+                //{
+                //    objSlideShow.Next();
+                //}
                 while (objSlideShow.CurrentShowPosition < endingslide || objSlideShow.State != PpSlideShowState.ppSlideShowDone)
                 {
-                    if (advancetime > 0)
+                    if (advancetime != TimeSpan.Zero)
                     {
-                        System.Threading.Thread.Sleep(1000 * advancetime);
+                        System.Threading.Thread.Sleep(advancetime);
                         objSlideShow.Next();
                     }
                     else
@@ -87,15 +93,36 @@ namespace OpenRPA.Office.Activities
                     }
                 }
             }
-            catch (System.Runtime.InteropServices.COMException ex)
+            catch (COMException)
             {
             }
-            catch (System.Exception ex)
+            catch (Exception)
             {
                 throw;
             }
+            try
+            {
+                if(objSlideShow!=null && advancetime != TimeSpan.Zero) objSlideShow.Exit();
+            }
+            catch (Exception)
+            {
+            }
+            if(CloseAtEnd.Get(context))
+            {
+                try
+                {
+                    document.Close();
+                    if(activeObject.Presentations.Count == 0)
+                    {
+                        activeObject.Quit();
+                    }
+                }
+                catch (Exception)
+                {
 
-
+                    throw;
+                }
+            }
         }
     }
 }

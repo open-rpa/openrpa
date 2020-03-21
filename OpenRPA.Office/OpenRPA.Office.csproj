@@ -8,7 +8,8 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office, created for OpenRPA robot</Description>
     <Version>1.0.18</Version>
-    <PackageReleaseNotes>1.0.18 Add langauges and bug fixes
+    <PackageReleaseNotes>1.0.19 Add RunSlideShow, fix pia references
+1.0.18 Add langauges and bug fixes
 1.0.17 Fix excel loop snippet after moving download to OpenRPA.Utilities
 1.0.15 update interfaces reference
 1.0.12 update interfaces reference

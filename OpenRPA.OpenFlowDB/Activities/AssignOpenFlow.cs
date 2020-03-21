@@ -58,11 +58,11 @@ namespace OpenRPA.OpenFlowDB
             }
             try
             {
-                if(waitforcompleted)
+                bookmarkname = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
+                if (waitforcompleted)
                 {
                     context.CreateBookmark(bookmarkname, new BookmarkCallback(OnBookmarkCallback));
                 }
-                bookmarkname = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
             }
             catch (Exception ex)
             {

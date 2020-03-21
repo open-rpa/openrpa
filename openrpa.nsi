@@ -57,6 +57,15 @@ Function CheckForOffice
     ${EndIf}
   ${EndIf}
 
+  ${If} $hasoffice == "false"
+    ReadRegStr $0 HKLM "SOFTWARE\Microsoft\Office\14.0\Excel\InstallRoot" "Path"
+    ${If} ${Errors}
+      StrCpy $hasoffice "false"
+    ${Else}
+      StrCpy $hasoffice "true"
+    ${EndIf}
+  ${EndIf}
+
   ${If} ${RunningX64}
     SetRegView 64
 
@@ -79,10 +88,20 @@ Function CheckForOffice
         StrCpy $hasoffice "true"
       ${EndIf}
     ${EndIf}
+    
+    ${If} $hasoffice == "false"
+      ReadRegStr $0 HKLM "SOFTWARE\Microsoft\Office\14.0\Excel\InstallRoot" "Path"
+      ${If} ${Errors}
+        StrCpy $hasoffice "false"
+      ${Else}
+        StrCpy $hasoffice "true"
+      ${EndIf}
+    ${EndIf}
     ; https://nsis.sourceforge.io/Managing_Sections_on_Runtime
     ${If} $hasoffice == "false"
       SectionSetFlags 2 0 ; unselect office, when not found
     ${EndIf}
+
 
     SetRegView LastUsed
   ${EndIf}

@@ -70,6 +70,10 @@ namespace OpenRPA.Office.Activities
             SlideShowView objSlideShow = document.SlideShowWindow.View;
             try
             {
+                while (objSlideShow.CurrentShowPosition < startingslide)
+                {
+                    objSlideShow.Next();
+                }
                 while (objSlideShow.CurrentShowPosition < endingslide || objSlideShow.State != PpSlideShowState.ppSlideShowDone)
                 {
                     if (advancetime > 0)

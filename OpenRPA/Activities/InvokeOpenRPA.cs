@@ -19,8 +19,10 @@ namespace OpenRPA.Activities
     {
         [RequiredArgument]
         public string workflow { get; set; }
+        public InArgument<bool> WaitForCompleted { get; set; } = true;
         protected override void Execute(NativeActivityContext context)
         {
+            bool waitforcompleted = WaitForCompleted.Get(context);
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
             // IDictionary<string, object> _payload = new System.Dynamic.ExpandoObject();
             var param = new Dictionary<string, object>();
@@ -70,7 +72,7 @@ namespace OpenRPA.Activities
                     instance.caller = WorkflowInstanceId;
                 });
                 Log.Verbose("InvokeOpenRPA: Run Instance ID " + instance._id);
-                context.CreateBookmark(instance._id, new BookmarkCallback(OnBookmarkCallback));
+                if (waitforcompleted) context.CreateBookmark(instance._id, new BookmarkCallback(OnBookmarkCallback));
                 //GenericTools.RunUI(() =>
                 //{
                 //    if (designer != null)

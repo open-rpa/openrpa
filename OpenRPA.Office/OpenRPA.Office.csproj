@@ -39,6 +39,7 @@
     <None Remove="Activities\NewMailItemDesigner.xaml" />
     <None Remove="Activities\ReadCellDesigner.xaml" />
     <None Remove="Activities\ReadRangeDesigner.xaml" />
+    <None Remove="Activities\RunSlideShowDesigner.xaml" />
     <None Remove="Activities\SaveMailItemDesigner.xaml" />
     <None Remove="Activities\SetParagraphDesigner.xaml" />
     <None Remove="Activities\WriteCellDesigner.xaml" />
@@ -74,6 +75,9 @@
     </Page>
     <Page Include="Activities\AddParagraphDesigner.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\RunSlideShowDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\WriteRangeDesigner.xaml">
@@ -118,6 +122,9 @@
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Word">
       <HintPath>lib\Microsoft.Office.Interop.Word.dll</HintPath>
+    </Reference>
+    <Reference Include="office">
+      <HintPath>lib\Office.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

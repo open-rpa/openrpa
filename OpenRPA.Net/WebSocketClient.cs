@@ -616,5 +616,14 @@ namespace OpenRPA.Net
             filepath = System.IO.Path.Combine(filepath, filename);
             System.IO.File.WriteAllBytes(filepath, Convert.FromBase64String(res.file));
         }
+        public async Task<string> CreateWorkflowInstance(string workflowid, string resultqueue, string targetid, object payload, bool initialrun, string correlationId = null, string parentid = null)
+        {
+            var q = new CreateWorkflowInstanceMessage();
+            q.targetid = targetid; q.workflowid = workflowid; q.resultqueue = resultqueue; q.initialrun = initialrun;
+            q.correlationId = correlationId; q.parentid = parentid; q.jwt = jwt; q.payload = payload;
+            q = await q.SendMessage<CreateWorkflowInstanceMessage>(this);
+            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            return q.newinstanceid;
+        }
     }
 }

@@ -21,6 +21,7 @@ namespace OpenRPA
         public string culture = "";
         public string ocrlanguage = "eng";
         public string[] openworkflows = new string[] { };
+        public System.Drawing.Rectangle mainwindow_position = System.Drawing.Rectangle.Empty;
         public string designerlayout = "";
         public Dictionary<string, object> properties = new Dictionary<string, object>();
         public bool record_overlay = false;

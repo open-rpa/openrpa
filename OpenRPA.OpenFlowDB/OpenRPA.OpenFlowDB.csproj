@@ -9,8 +9,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Configurations>Debug;Release;PrepInstaller;ReleaseNuget</Configurations>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.0.4</Version>
-    <PackageReleaseNotes>1.0.4 Add langauges
+    <Version>1.0.5</Version>
+    <PackageReleaseNotes>1.0.5 Add AssignOpenFlow
+1.0.4 Add langauges
 1.0.3 update reference</PackageReleaseNotes>
     <PackageTags>OpenRPA</PackageTags>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
@@ -28,6 +29,7 @@
     <OutputPath>..\dist</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Activities\AssignOpenFlowDesigner.xaml" />
     <None Remove="Activities\DeleteOneDesigner.xaml" />
     <None Remove="Activities\GetCredentialsDesigner.xaml" />
     <None Remove="Activities\GetFileDesigner.xaml" />
@@ -196,6 +198,10 @@
     <PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\AssignOpenFlowDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\DeleteOneDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -109,9 +109,9 @@ namespace OpenRPA.Office.Activities
         public DateTime TaskCompletedDate { get { return mailItem.TaskCompletedDate; } set { mailItem.TaskCompletedDate = value; } }
         public DateTime ToDoTaskOrdinal { get { return mailItem.ToDoTaskOrdinal; } set { mailItem.ToDoTaskOrdinal = value; } }
         public bool IsMarkedAsTask { get { return mailItem.IsMarkedAsTask; } }
-        public string ConversationID { get { return mailItem.ConversationID; } }
+        //public string ConversationID { get { return mailItem.ConversationID; } }
         //public AddressEntry Sender { get { return mailItem.Sender; } set { mailItem.Sender = value; } }
-        public string PermissionTemplateGuid { get { return mailItem.PermissionTemplateGuid; } set { mailItem.PermissionTemplateGuid = value; } }
+        //public string PermissionTemplateGuid { get { return mailItem.PermissionTemplateGuid; } set { mailItem.PermissionTemplateGuid = value; } }
         //public dynamic RTFBody { get { return mailItem.RTFBody; } set { mailItem.RTFBody = value; } }
         //public string RetentionPolicyName { get { return mailItem.RetentionPolicyName; } }
         //public DateTime RetentionExpirationDate { get { return mailItem.RetentionExpirationDate; } }

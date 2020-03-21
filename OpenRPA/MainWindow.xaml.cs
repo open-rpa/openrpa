@@ -144,16 +144,19 @@ namespace OpenRPA
                 new DesignerMetadata().Register();
                 SetStatus("init CancelKey and Input Driver");
                 OpenRPA.Input.InputDriver.Instance.initCancelKey(cancelkey.Text);
+
+                var pos = Config.local.mainwindow_position;
+                if (pos.Left > 0 && pos.Top > 0 && pos.Width > 100 && pos.Height > 100)
+                {
+                    Left = pos.Left;
+                    Top = pos.Top;
+                    Width = pos.Width;
+                    Height = pos.Height;
+                }
+                LoadLayout();
+
                 SetStatus("loading plugins");
                 await Plugins.LoadPlugins(this, Interfaces.Extensions.PluginsDirectory);
-                //await Task.Run(() =>
-                //{
-                //    GenericTools.RunUI(() =>
-                //    {
-                //        Plugins.loadPlugins(Extensions.projectsDirectory);
-                //    });                
-                //});
-                LoadLayout();
                 if (string.IsNullOrEmpty(Config.local.wsurl))
                 {
                     SetStatus("loading detectors");
@@ -267,6 +270,7 @@ namespace OpenRPA
                 }
             });
         }
+        private bool first_connect = true;
         private void WebSocketClient_OnOpen()
         {
             AutomationHelper.syncContext.Post(async o =>
@@ -422,7 +426,12 @@ namespace OpenRPA
                             Log.Error(ex.ToString());
                         }
                     }
-                    LoadLayout();
+                    if(first_connect)
+                    {
+                        this.first_connect = false;
+                        LoadLayout();
+                    }
+                    
                     System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = true;
                     System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.Normal;
                     System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Normal;
@@ -2242,6 +2251,11 @@ namespace OpenRPA
                 }
             }
             Config.local.openworkflows = workflows.ToArray();
+            var pos = new System.Drawing.Rectangle( (int)Left, (int)Top, (int)Width, (int)Height);
+            if(pos.Left > 0 && pos.Top > 0 && pos.Width > 100 && pos.Height > 100)
+            {
+                Config.local.mainwindow_position = pos;
+            }
             try
             {
                 var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
@@ -3364,6 +3378,10 @@ namespace OpenRPA
                 }
                 JObject data;
                 if (command.data != null) { data = JObject.Parse(command.data.ToString()); } else { data = JObject.Parse("{}"); }
+                if(data!=null && data.ContainsKey("payload"))
+                {
+                    data = data.Value<JObject>("payload");
+                }
                 if (command.command == null) return;
                 if (command.command == "invoke" && !string.IsNullOrEmpty(command.workflowid))
                 {

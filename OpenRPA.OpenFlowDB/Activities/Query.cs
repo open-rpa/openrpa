@@ -36,7 +36,7 @@ namespace OpenRPA.OpenFlowDB
             var projection = Projection.Get(context);
             var top = Top.Get(context);
             var skip = Skip.Get(context);
-            if (top < 1) top = 1;
+            if (top < 1) top = 100;
             if (skip < 0) skip = 0;
             var orderby = Orderby.Get(context);
             if (string.IsNullOrEmpty(collection)) collection = "entities";

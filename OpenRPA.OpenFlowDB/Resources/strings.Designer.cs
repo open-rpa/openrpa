@@ -61,6 +61,15 @@ namespace OpenRPA.OpenFlowDB.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Double-click to view.
+        /// </summary>
+        public static string activity_click_to_view {
+            get {
+                return ResourceManager.GetString("activity_click_to_view", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Filename.
         /// </summary>
         public static string activity_filename {

@@ -10,20 +10,25 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace OpenRPA.Activities
+namespace OpenRPA.OpenFlowDB
 {
-    [System.ComponentModel.Designer(typeof(InvokeOpenFlowDesigner), typeof(System.ComponentModel.Design.IDesigner))]
+    [System.ComponentModel.Designer(typeof(AssignOpenFlowDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.invokezeniverseworkflow.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
-    public class InvokeOpenFlow : NativeActivity
+    public class AssignOpenFlow : NativeActivity
     {
         [RequiredArgument]
-        public string workflow { get; set; }
-
+        public string targetid { get; set; }
+        [RequiredArgument]
+        public string workflowid { get; set; }
+        public InArgument<bool> InitialRun { get; set; }
+        public InArgument<bool> WaitForCompleted { get; set; } = true;
         protected override async void Execute(NativeActivityContext context)
         {
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            bool waitforcompleted = WaitForCompleted.Get(context);
             string bookmarkname = null;
+            bool initialrun = InitialRun.Get(context);
             IDictionary<string, object> _payload = new System.Dynamic.ExpandoObject();
             var vars = context.DataContext.GetProperties();
             foreach (dynamic v in vars)
@@ -53,8 +58,11 @@ namespace OpenRPA.Activities
             }
             try
             {
+                if(waitforcompleted)
+                {
+                    context.CreateBookmark(bookmarkname, new BookmarkCallback(OnBookmarkCallback));
+                }
                 bookmarkname = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
-                context.CreateBookmark(bookmarkname, new BookmarkCallback(OnBookmarkCallback));
             }
             catch (Exception ex)
             {
@@ -65,21 +73,14 @@ namespace OpenRPA.Activities
             {
                 if (!string.IsNullOrEmpty(bookmarkname))
                 {
-                    var result = await global.webSocketClient.QueueMessage(workflow, _payload, bookmarkname);
+                    var result = await global.webSocketClient.CreateWorkflowInstance(workflowid, global.webSocketClient.user._id, targetid, _payload, initialrun, bookmarkname);
                 }
             }
             catch (Exception ex)
             {
-                var i = WorkflowInstance.Instances.Where(x => x.InstanceId == WorkflowInstanceId).FirstOrDefault();
-                if(i != null)
-                {
-                    i.Abort(ex.Message);
-                }
-                //context.RemoveBookmark(bookmarkname);
                 Log.Error(ex.ToString());
             }
         }
-
         void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object obj)
         {
             // context.RemoveBookmark(bookmark.Name);

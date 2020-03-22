@@ -1,6 +1,6 @@
 window.chrome = window.chrome || window.browser;
 // chrome.webstore.install("https://chrome.google.com/webstore/detail/faiaabbemgpndkgpjljhmjahkbpoopfp", successCallback, failureCallback);
-if (window.zeniverse_contentlistner === null || window.zeniverse_contentlistner === undefined) {
+if (window.openrpautil_contentlistner === null || window.openrpautil_contentlistner === undefined) {
     chrome.runtime.onMessage.addListener(function (sender, message, fnResponse) {
         if (sender === "loadscript") {
             try {
@@ -19,9 +19,9 @@ if (window.zeniverse_contentlistner === null || window.zeniverse_contentlistner 
             sender.result = manifestData;
             var test = JSON.parse(JSON.stringify(sender));
             fnResponse(test);
-        } else if (typeof document.zeniverse !== 'undefined' && zeniverse !== undefined) {
+        } else if (typeof document.openrpautil !== 'undefined' && openrpautil !== undefined) {
             // console.log(sender.functionName);
-            var func = zeniverse[sender.functionName];
+            var func = openrpautil[sender.functionName];
             if (func) {
                 sender.result = func(sender);
                 fnResponse(sender);
@@ -32,14 +32,14 @@ if (window.zeniverse_contentlistner === null || window.zeniverse_contentlistner 
             }
         }
         else {
-            sender.error = "zeniverse not loaded";
+            sender.error = "openrpautil not loaded";
             fnResponse(sender);
         }
     });
-    window.zeniverse_contentlistner = true;
+    window.openrpautil_contentlistner = true;
 }
 
-if (typeof document.zeniverse === 'undefined') {
+if (typeof document.openrpautil === 'undefined') {
     chrome.runtime.sendMessage("loadscript", function (message) {
         if (message) {
             try {

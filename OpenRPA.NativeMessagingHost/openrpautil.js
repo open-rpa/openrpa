@@ -9,25 +9,25 @@ function inIframe() {
 }
 
 if (inIframe() == true) {
-    console.debug('skip declaring zeniverse class');
-    document.zeniverse = {};
+    console.debug('skip declaring openrpautil class');
+    document.openrpautil = {};
 }
-if (typeof document.zeniverse === 'undefined') {
-    console.debug('declaring zeniverse class 4');
-    document.zeniverse = {};
+if (typeof document.openrpautil === 'undefined') {
+    console.debug('declaring openrpautil class 1');
+    document.openrpautil = {};
     var last_mousemove = null;
     var cache = {};
     var cachecount = 0;
-    var zeniverse = {
+    var openrpautil = {
         ping: function () {
             return "pong";
         },
         init: function () {
-            document.addEventListener('click', function (e) { zeniverse.pushEvent('click', e); }, true);
-            document.addEventListener('keydown', function (e) { zeniverse.pushEvent('keydown', e); }, true);
-            document.addEventListener('keypress', function (e) { zeniverse.pushEvent('keyup', e); }, true);
-            document.addEventListener('mousedown', function (e) { zeniverse.pushEvent('mousedown', e); }, true);
-            document.addEventListener('mousemove', function (e) { zeniverse.pushEvent('mousemove', e); }, true);
+            document.addEventListener('click', function (e) { openrpautil.pushEvent('click', e); }, true);
+            document.addEventListener('keydown', function (e) { openrpautil.pushEvent('keydown', e); }, true);
+            document.addEventListener('keypress', function (e) { openrpautil.pushEvent('keyup', e); }, true);
+            document.addEventListener('mousedown', function (e) { openrpautil.pushEvent('mousedown', e); }, true);
+            document.addEventListener('mousemove', function (e) { openrpautil.pushEvent('mousemove', e); }, true);
         },
         findform: function (element) {
             try {
@@ -69,7 +69,7 @@ if (typeof document.zeniverse === 'undefined') {
             try {
                 //console.log(message.functionName + ' - ' + message.messageid + ' xPath: ' + message.xPath + ' cssPath: ' + message.cssPath);
                 if (ele !== null && ele !== undefined) {
-                    var form = zeniverse.findform(ele);
+                    var form = openrpautil.findform(ele);
                     //var form = null;
                     if (ele.hasAttribute('ng-click')) {
                         console.log('click using triggerHandler');
@@ -182,13 +182,13 @@ if (typeof document.zeniverse === 'undefined') {
                     for (var i = 0; i < ele.length; i++) {
                         var result = {};
                         if (message.data === 'getdom') {
-                            result = zeniverse.mapDOM(ele[i], false, true);
+                            result = openrpautil.mapDOM(ele[i], false, true);
                         }
                         else {
-                            result = zeniverse.mapDOM(ele[i], false);
+                            result = openrpautil.mapDOM(ele[i], false);
                         }
                         try {
-                            zeniverse.applyPhysicalCords(result, ele[i]);
+                            openrpautil.applyPhysicalCords(result, ele[i]);
                         } catch (e) {
                             console.error(e);
                         }
@@ -228,7 +228,7 @@ if (typeof document.zeniverse === 'undefined') {
             if (ele !== null && ele !== undefined) {
                 try {
                     try {
-                        zeniverse.applyPhysicalCords(message, ele);
+                        openrpautil.applyPhysicalCords(message, ele);
                     } catch (e) {
                         console.error(e);
                     }
@@ -238,10 +238,10 @@ if (typeof document.zeniverse === 'undefined') {
             }
             if (ele !== null) {
                 if (message.data === 'getdom') {
-                    message.result = zeniverse.mapDOM(ele, true, true);
+                    message.result = openrpautil.mapDOM(ele, true, true);
                 }
                 else {
-                    message.result = zeniverse.mapDOM(ele, true);
+                    message.result = openrpautil.mapDOM(ele, true);
                 }
             }
             //return simpleStringify(message);
@@ -316,7 +316,7 @@ if (typeof document.zeniverse === 'undefined') {
             return { top: _y, left: _x };
         },
         pushEvent: function (action, event) {
-            let frame = zeniverse.getFrameName(self);
+            let frame = openrpautil.getFrameName(self);
             if (action === 'keydown') {
                 chrome.runtime.sendMessage({ functionName: action, key: String.fromCharCode(event.which) });
             }
@@ -335,21 +335,21 @@ if (typeof document.zeniverse === 'undefined') {
                     if (targetElement === last_mousemove) return;
                     last_mousemove = targetElement;
                     //if (targetElement !== null) {
-                    //    var dom = zeniverse.mapDOM(targetElement, true);
+                    //    var dom = openrpautil.mapDOM(targetElement, true);
                     //    message.result = dom;
                     //}
                 }
                 try {
-                    zeniverse.applyPhysicalCords(message, targetElement);
+                    openrpautil.applyPhysicalCords(message, targetElement);
                 } catch (e) {
                     console.error(e);
                 }
                 //xPath: UTILS.xPath(targetElement, true), cssPath: UTILS.cssPath(targetElement)
                 message.cssPath = UTILS.cssPath(targetElement);
                 message.xPath = UTILS.xPath(targetElement, true);
-                message.zn_id = zeniverse.getuniqueid(targetElement);
+                message.zn_id = openrpautil.getuniqueid(targetElement);
                 message.c = targetElement.childNodes.length;
-                message.result = zeniverse.mapDOM(targetElement, true);
+                message.result = openrpautil.mapDOM(targetElement, true);
                 chrome.runtime.sendMessage(message);
             }
         },
@@ -415,7 +415,7 @@ if (typeof document.zeniverse === 'undefined') {
                 length = childNodes.length;
                 arr = obj.childNodes = new Array(length);
                 for (i = 0; i < length; i++) {
-                    arr[i] = zeniverse.toJSON(childNodes[i], maxiden, ident + 1);
+                    arr[i] = openrpautil.toJSON(childNodes[i], maxiden, ident + 1);
                 }
             }
             return obj;
@@ -455,7 +455,7 @@ if (typeof document.zeniverse === 'undefined') {
             if (nodeType === 1 || nodeType === 11) {
                 var childNodes = obj.childNodes || [];
                 for (i = 0, len = childNodes.length; i < len; i++) {
-                    node.appendChild(zeniverse.toDOM(childNodes[i]));
+                    node.appendChild(openrpautil.toDOM(childNodes[i]));
                 }
             }
             return node;
@@ -481,7 +481,7 @@ if (typeof document.zeniverse === 'undefined') {
             function treeHTML(element, object, maxiden, ident) {
                 if (ident === null || ident === undefined) ident = 0;
                 if (maxiden === null || maxiden === undefined) maxiden = 1;
-                zeniverse.getuniqueid(element);
+                openrpautil.getuniqueid(element);
                 object["tagName"] = element.tagName;
                 if (ident === 0) {
                     object["xPath"] = UTILS.xPath(element, true);
@@ -526,7 +526,7 @@ if (typeof document.zeniverse === 'undefined') {
                         //object["attributes"] = {};
                         
                         if (element.attributes["zn_id"] == undefined || element.attributes["zn_id"] == null) {
-                            var zn_id = zeniverse.getuniqueid(element);
+                            var zn_id = openrpautil.getuniqueid(element);
                         }
                         object["zn_id"] = element.attributes["zn_id"].nodeValue;
                         for (var r = 0; r < element.attributes.length; r++) {
@@ -564,9 +564,9 @@ if (typeof document.zeniverse === 'undefined') {
             }
             treeHTML(element, treeObject, maxiden);
             treeObject["value"] = element.value;
-            treeObject["isvisible"] = zeniverse.isVisible(element);
-            treeObject["display"] = zeniverse.display(element);
-            treeObject["isvisibleonscreen"] = zeniverse.isVisibleOnScreen(element);
+            treeObject["isvisible"] = openrpautil.isVisible(element);
+            treeObject["display"] = openrpautil.display(element);
+            treeObject["isvisibleonscreen"] = openrpautil.isVisibleOnScreen(element);
             treeObject["disabled"] = element.disabled;
             if (treeObject["disabled"] === null || treeObject["disabled"] === undefined) treeObject["disabled"] = false;
             return json ? JSON.stringify(treeObject) : treeObject;
@@ -616,8 +616,8 @@ if (typeof document.zeniverse === 'undefined') {
         }
 
     };
-    document.zeniverse = zeniverse;
-    zeniverse.init();
+    document.openrpautil = openrpautil;
+    openrpautil.init();
 
 
 

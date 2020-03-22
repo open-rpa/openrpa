@@ -1,6 +1,6 @@
 {
   "name": "com.zenamic.msg",
-  "description": "Zenamic messaging host",
+  "description": "OpenRPA messaging host",
   "type": "stdio",
   "allowed_extensions": [ "info@zenamic.dk", "info@openrpa.dk" ],
   "path": "REPLACEPATH"

@@ -17,12 +17,14 @@ namespace OpenRPA.Activities
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class InvokeOpenFlow : NativeActivity
     {
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_workflow", typeof(Resources.strings)), LocalizedDescription("activity_workflow_help", typeof(Resources.strings))]
         public string workflow { get; set; }
-
+        [RequiredArgument, LocalizedDisplayName("activity_waitforcompleted", typeof(Resources.strings)), LocalizedDescription("activity_ignoreerrors_help", typeof(Resources.strings))]
+        public InArgument<bool> WaitForCompleted { get; set; } = true;
         protected override async void Execute(NativeActivityContext context)
         {
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            bool waitforcompleted = WaitForCompleted.Get(context);
             string bookmarkname = null;
             IDictionary<string, object> _payload = new System.Dynamic.ExpandoObject();
             var vars = context.DataContext.GetProperties();
@@ -54,7 +56,7 @@ namespace OpenRPA.Activities
             try
             {
                 bookmarkname = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
-                context.CreateBookmark(bookmarkname, new BookmarkCallback(OnBookmarkCallback));
+                if(waitforcompleted) context.CreateBookmark(bookmarkname, new BookmarkCallback(OnBookmarkCallback));
             }
             catch (Exception ex)
             {
@@ -79,9 +81,10 @@ namespace OpenRPA.Activities
                 Log.Error(ex.ToString());
             }
         }
-
         void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object obj)
         {
+            bool waitforcompleted = WaitForCompleted.Get(context);
+            if (!waitforcompleted) return;
             // context.RemoveBookmark(bookmark.Name);
             var _msg = JObject.Parse(obj.ToString());
             JObject payload = _msg; // Backward compatible with older version of openflow
@@ -144,6 +147,18 @@ namespace OpenRPA.Activities
             get
             {
                 return true;
+            }
+        }
+        [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
+        public new string DisplayName
+        {
+            get
+            {
+                return base.DisplayName;
+            }
+            set
+            {
+                base.DisplayName = value;
             }
         }
     }

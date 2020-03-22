@@ -17,8 +17,9 @@ namespace OpenRPA.Activities
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class InvokeOpenRPA : NativeActivity
     {
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_workflow", typeof(Resources.strings)), LocalizedDescription("activity_workflow_help", typeof(Resources.strings))]
         public string workflow { get; set; }
+        [RequiredArgument, LocalizedDisplayName("activity_waitforcompleted", typeof(Resources.strings)), LocalizedDescription("activity_waitforcompleted_help", typeof(Resources.strings))]
         public InArgument<bool> WaitForCompleted { get; set; } = true;
         protected override void Execute(NativeActivityContext context)
         {
@@ -103,6 +104,8 @@ namespace OpenRPA.Activities
         {
             try
             {
+                bool waitforcompleted = WaitForCompleted.Get(context);
+                if (!waitforcompleted) return;
                 // keep bookmark, incase workflow dies, and need to pickup data after being restarted 
                 // context.RemoveBookmark(bookmark.Name);
                 var instance = obj as WorkflowInstance;
@@ -153,6 +156,18 @@ namespace OpenRPA.Activities
             get
             {
                 return true;
+            }
+        }
+        [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
+        public new string DisplayName
+        {
+            get
+            {
+                return base.DisplayName;
+            }
+            set
+            {
+                base.DisplayName = value;
             }
         }
     }

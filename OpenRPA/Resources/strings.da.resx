@@ -120,20 +120,125 @@
   <data name="activity_add_variables" xml:space="preserve">
     <value>Tilføj variabler</value>
   </data>
+  <data name="activity_animatemouse" xml:space="preserve">
+    <value>Animere Mus</value>
+  </data>
+  <data name="activity_animatemouse_help" xml:space="preserve">
+    <value>Bevæg musen synligt i stedet for øjeblikkeligt at flytte den til destinationen</value>
+  </data>
+  <data name="activity_animatemove" xml:space="preserve">
+    <value>Animere bevægelse</value>
+  </data>
+  <data name="activity_blocking" xml:space="preserve">
+    <value>Bloker</value>
+  </data>
+  <data name="activity_checkrunning" xml:space="preserve">
+    <value>Tjek kører</value>
+  </data>
   <data name="activity_click_to_view" xml:space="preserve">
     <value>Dobblet klik for a se</value>
+  </data>
+  <data name="activity_datatable" xml:space="preserve">
+    <value>Data Tabel</value>
+  </data>
+  <data name="activity_dataview" xml:space="preserve">
+    <value>Data View</value>
+  </data>
+  <data name="activity_detector" xml:space="preserve">
+    <value>Detektor</value>
+  </data>
+  <data name="activity_displayname" xml:space="preserve">
+    <value>Visningsnavn</value>
+  </data>
+  <data name="activity_doubleclick" xml:space="preserve">
+    <value>Dobbelt Klik</value>
   </data>
   <data name="activity_drop_hint" xml:space="preserve">
     <value>Slip aktiviteter her</value>
   </data>
+  <data name="activity_duration" xml:space="preserve">
+    <value>Varighed</value>
+  </data>
+  <data name="activity_element" xml:space="preserve">
+    <value>Element</value>
+  </data>
+  <data name="activity_force" xml:space="preserve">
+    <value>Gennemtving</value>
+  </data>
+  <data name="activity_height" xml:space="preserve">
+    <value>Højde</value>
+  </data>
   <data name="activity_highlight" xml:space="preserve">
     <value>Fremhæv</value>
+  </data>
+  <data name="activity_ignoreerrors" xml:space="preserve">
+    <value>Ignorer Fejl</value>
+  </data>
+  <data name="activity_imageresult" xml:space="preserve">
+    <value>Resultat Billede</value>
+  </data>
+  <data name="activity_keymodifiers" xml:space="preserve">
+    <value>Brug også Tastetur Knap</value>
+  </data>
+  <data name="activity_mousebutton" xml:space="preserve">
+    <value>Museknap</value>
+  </data>
+  <data name="activity_mousebutton_help" xml:space="preserve">
+    <value>Brug følgende muse knap til at klikke med</value>
+  </data>
+  <data name="activity_offsetx" xml:space="preserve">
+    <value>X Offset</value>
+  </data>
+  <data name="activity_offsety" xml:space="preserve">
+    <value>Y Offset</value>
   </data>
   <data name="activity_open_selector" xml:space="preserve">
     <value>Åben selektor</value>
   </data>
+  <data name="activity_postwait" xml:space="preserve">
+    <value>Efter Vent </value>
+  </data>
+  <data name="activity_result" xml:space="preserve">
+    <value>Resultat</value>
+  </data>
+  <data name="activity_selector" xml:space="preserve">
+    <value>Selector</value>
+  </data>
   <data name="activity_select_element" xml:space="preserve">
     <value>Vælg element</value>
+  </data>
+  <data name="activity_sendctrlc" xml:space="preserve">
+    <value>Send Ctrl+C</value>
+  </data>
+  <data name="activity_stringresult" xml:space="preserve">
+    <value>Resultat Streng</value>
+  </data>
+  <data name="activity_target" xml:space="preserve">
+    <value>Modtager</value>
+  </data>
+  <data name="activity_text" xml:space="preserve">
+    <value>Tekst</value>
+  </data>
+  <data name="activity_timeout" xml:space="preserve">
+    <value>Timeout</value>
+  </data>
+  <data name="activity_virtualclick" xml:space="preserve">
+    <value>Virtuelt Klik</value>
+  </data>
+  <data name="activity_waitforcompleted" xml:space="preserve">
+    <value>Vent til afsluttet</value>
+  </data>
+  <data name="activity_width" xml:space="preserve">
+    <value>Bredde</value>
+  </data>
+  <data name="activity_workflow" xml:space="preserve">
+    <value>Workflow</value>
+  </data>
+  <data name="activity_x" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="activity_y" xml:space="preserve">
+    <value>Y</value>
   </data>
   <data name="animatemouse" xml:space="preserve">
     <value>Brug muse animation</value>

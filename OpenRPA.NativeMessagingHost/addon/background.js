@@ -1,17 +1,18 @@
 var port = null;
 var portname = 'com.openrpa.msg';
-function OnPortMessage(message) {
+function BaseOnPortMessage(message) {
     if (port == null) {
-        console.warn("OnPortMessage: port is null!");
+        console.warn("BaseOnPortMessage: port is null!");
         console.log(message);
         return;
     }
     if (message === null || message === undefined) {
-        console.warn("OnPortMessage: Received null message!");
+        console.warn("BaseOnPortMessage: Received null message!");
         return;
     }
+    if (message.functionName === "ping") return;
+    console.log("[baseresc][" + message.messageid + "]" + message.functionName);
     if (message.functionName === "backgroundscript") {
-        console.log("[resc]" + message.functionName);
         try {
             eval.call(window, message.script);
             message.result = "ok";
@@ -22,36 +23,36 @@ function OnPortMessage(message) {
         return;
     }
 };
-function OnPortDisconnect(message) {
-    console.log("OnPortDisconnect: " + message);
+function BaseOnPortDisconnect(message) {
+    console.log("BaseOnPortDisconnect: " + message);
     port = null;
     if (chrome.runtime.lastError) {
-        console.warn("onDisconnect: " + chrome.runtime.lastError.message);
+        console.warn("BaseOnPortDisconnect: " + chrome.runtime.lastError.message);
         port = null;
         if (portname == 'com.openrpa.msg') {
             // Try with the old name
             portname = 'com.zenamic.msg';
             setTimeout(function () {
-                connect();
+                Baseconnect();
             }, 1000);
         } else {
             // Wait a few seconds and reretry
             portname = 'com.openrpa.msg';
             setTimeout(function () {
-                connect();
+                Baseconnect();
             }, 5000);
         }
         return;
     } else {
-        console.log("onDisconnect from native port");
+        console.log("BaseOnPortDisconnect from native port");
     }
 }
-function connect() {
-    console.log("connect()");
+function Baseconnect() {
+    console.log("Baseconnect()");
     if (port !== null && port !== undefined) {
         try {
-            port.onMessage.removeListener(OnPortMessage);
-            port.onDisconnect.removeListener(OnPortDisconnect);
+            port.onMessage.removeListener(BaseOnPortMessage);
+            port.onDisconnect.removeListener(BaseOnPortDisconnect);
         } catch (e) {
             console.log(e);
         }
@@ -66,8 +67,8 @@ function connect() {
             return;
         }
     }
-    port.onMessage.addListener(OnPortMessage);
-    port.onDisconnect.addListener(OnPortDisconnect);
+    port.onMessage.addListener(BaseOnPortMessage);
+    port.onDisconnect.addListener(BaseOnPortDisconnect);
 
     if (chrome.runtime.lastError) {
         console.warn("Whoops.. " + chrome.runtime.lastError.message);
@@ -85,4 +86,4 @@ function connect() {
         port = null;
     }
 }
-connect();
+Baseconnect();

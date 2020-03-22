@@ -120,20 +120,47 @@
   <data name="activity_add_variables" xml:space="preserve">
     <value>Tilføj variabler</value>
   </data>
+  <data name="activity_animatemouse" xml:space="preserve">
+    <value>Animere Mus</value>
+  </data>
   <data name="activity_click_to_view" xml:space="preserve">
     <value>Dobblet klik for a se</value>
+  </data>
+  <data name="activity_doubleclick" xml:space="preserve">
+    <value>Dobbelt Klik</value>
   </data>
   <data name="activity_drop_hint" xml:space="preserve">
     <value>Slip aktiviteter her</value>
   </data>
+  <data name="activity_element" xml:space="preserve">
+    <value>Element</value>
+  </data>
   <data name="activity_highlight" xml:space="preserve">
     <value>Fremhæv</value>
+  </data>
+  <data name="activity_keymodifiers" xml:space="preserve">
+    <value>Brug også Tastetur Knap</value>
+  </data>
+  <data name="activity_mousebutton" xml:space="preserve">
+    <value>Museknap</value>
+  </data>
+  <data name="activity_offsetx" xml:space="preserve">
+    <value>X Offset</value>
+  </data>
+  <data name="activity_offsety" xml:space="preserve">
+    <value>Y Offset</value>
   </data>
   <data name="activity_open_selector" xml:space="preserve">
     <value>Åben selektor</value>
   </data>
+  <data name="activity_postwait" xml:space="preserve">
+    <value>Efter Vent </value>
+  </data>
   <data name="activity_select_element" xml:space="preserve">
     <value>Vælg element</value>
+  </data>
+  <data name="activity_virtualclick" xml:space="preserve">
+    <value>Virtuelt Klik</value>
   </data>
   <data name="animatemouse" xml:space="preserve">
     <value>Brug muse animation</value>

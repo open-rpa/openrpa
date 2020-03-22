@@ -23,30 +23,29 @@ namespace OpenRPA.Activities
             {
                 Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<IElement>("item")
             };
-            //PostWait = new InArgument<TimeSpan>()
-            //{
-            //    Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(150)")
-            //};
             VirtualClick = Config.local.use_virtual_click;
             AnimateMouse = Config.local.use_animate_mouse;
             PostWait = Config.local.use_postwait;
         }
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_animatemouse", typeof(Resources.strings)) ]
         public InArgument<bool> AnimateMouse { get; set; } = false;
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_mousebutton", typeof(Resources.strings))]
         //[Editor(typeof(SelectButtonEditor), typeof(PropertyValueEditor))]
         public InArgument<int> Button { get; set; } = (int)Input.MouseButton.Left;
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_offsetx", typeof(Resources.strings))]
         public int OffsetX { get; set; } = 5;
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_offsety", typeof(Resources.strings))]
         public int OffsetY { get; set; } = 5;
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_element", typeof(Resources.strings))]
         public InArgument<IElement> Element { get; set; }
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_doubleclick", typeof(Resources.strings))]
         public InArgument<bool> DoubleClick { get; set; } = false;
+        [LocalizedDisplayName("activity_virtualclick", typeof(Resources.strings))]
         public InArgument<bool> VirtualClick { get; set; } = true;
+        [LocalizedDisplayName("activity_postwait", typeof(Resources.strings))]
         public InArgument<TimeSpan> PostWait { get; set; }
         [Editor(typeof(KeyModifiersOptionsEditor), typeof(System.Activities.Presentation.PropertyEditing.ExtendedPropertyValueEditor))]
+        [LocalizedDisplayName("activity_keymodifiers", typeof(Resources.strings))]
         public InArgument<string> KeyModifiers { get; set; }
         protected override void Execute(CodeActivityContext context)
         {

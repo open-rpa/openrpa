@@ -70,11 +70,29 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Animate Mouse.
+        /// </summary>
+        public static string activity_animatemouse {
+            get {
+                return ResourceManager.GetString("activity_animatemouse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Double-click to view.
         /// </summary>
         public static string activity_click_to_view {
             get {
                 return ResourceManager.GetString("activity_click_to_view", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Double Click.
+        /// </summary>
+        public static string activity_doubleclick {
+            get {
+                return ResourceManager.GetString("activity_doubleclick", resourceCulture);
             }
         }
         
@@ -88,11 +106,56 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Element.
+        /// </summary>
+        public static string activity_element {
+            get {
+                return ResourceManager.GetString("activity_element", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Highlight.
         /// </summary>
         public static string activity_highlight {
             get {
                 return ResourceManager.GetString("activity_highlight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Key Modifiers.
+        /// </summary>
+        public static string activity_keymodifiers {
+            get {
+                return ResourceManager.GetString("activity_keymodifiers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mouse Button.
+        /// </summary>
+        public static string activity_mousebutton {
+            get {
+                return ResourceManager.GetString("activity_mousebutton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X Offset.
+        /// </summary>
+        public static string activity_offsetx {
+            get {
+                return ResourceManager.GetString("activity_offsetx", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y Offset.
+        /// </summary>
+        public static string activity_offsety {
+            get {
+                return ResourceManager.GetString("activity_offsety", resourceCulture);
             }
         }
         
@@ -106,11 +169,29 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Post Wait.
+        /// </summary>
+        public static string activity_postwait {
+            get {
+                return ResourceManager.GetString("activity_postwait", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select Element.
         /// </summary>
         public static string activity_select_element {
             get {
                 return ResourceManager.GetString("activity_select_element", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Virtual Click.
+        /// </summary>
+        public static string activity_virtualclick {
+            get {
+                return ResourceManager.GetString("activity_virtualclick", resourceCulture);
             }
         }
         

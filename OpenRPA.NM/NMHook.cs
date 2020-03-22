@@ -52,7 +52,7 @@ namespace OpenRPA.NM
                 chromepipe = new NamedPipeClientAsync<NativeMessagingMessage>(PIPE_NAME + "_chrome");
                 chromepipe.ServerMessage += Client_OnReceivedMessage;
                 chromepipe.Disconnected += () => { onDisconnected?.Invoke("chrome"); };
-                chromepipe.Connected += () => {  Connected?.Invoke("chrome"); Task.Run(()=> reloadtabs());  };
+                chromepipe.Connected += () => {  Connected?.Invoke("chrome"); Task.Run(()=> enumwindowandtabs());  };
                 chromepipe.Error += (e) => { Log.Debug(e.ToString()); };
                 chromepipe.Start();
             }
@@ -61,13 +61,106 @@ namespace OpenRPA.NM
                 ffpipe = new NamedPipeClientAsync<NativeMessagingMessage>(PIPE_NAME + "_ff");
                 ffpipe.ServerMessage += Client_OnReceivedMessage;
                 ffpipe.Disconnected += () => { onDisconnected?.Invoke("ff"); };
-                ffpipe.Connected += () => { Connected?.Invoke("ff"); Task.Run(() => reloadtabs()); };
+                ffpipe.Connected += () => { Connected?.Invoke("ff"); Task.Run(() => enumwindowandtabs()); };
                 ffpipe.Error += (e) => { Log.Debug(e.ToString()); };
                 ffpipe.Start();
             }
         }
         public static List<NativeMessagingMessageWindow> windows = new List<NativeMessagingMessageWindow>();
         public static List<NativeMessagingMessageTab> tabs = new List<NativeMessagingMessageTab>();
+        public static NativeMessagingMessageWindow CurrentChromeWindow
+        {
+            get
+            {
+                var win = windows.Where(x => x.browser == "chrome" && x.focused).FirstOrDefault();
+                if (win != null) return win;
+                win = windows.Where(x => x.browser == "chrome" && x.id == 1).FirstOrDefault();
+                if (win != null) return win;
+                win = windows.Where(x => x.browser == "chrome").FirstOrDefault();
+                return win;
+            }
+        }
+        public static NativeMessagingMessageWindow CurrentFFWindow
+        {
+            get
+            {
+                var win = windows.Where(x => x.browser == "ff" && x.focused).FirstOrDefault();
+                if (win != null) return win;
+                win = windows.Where(x => x.browser == "ff" && x.id == 1).FirstOrDefault();
+                if (win != null) return win;
+                win = windows.Where(x => x.browser == "ff").FirstOrDefault();
+                return win;
+            }
+        }
+        public static NativeMessagingMessageTab CurrentChromeTab
+        {
+            get
+            {
+                var win = CurrentChromeWindow;
+                if (win == null) return null;
+                return tabs.Where(x => x.browser == "chrome" && x.windowId == win.id && x.selected).FirstOrDefault();
+            }
+        }
+        public static NativeMessagingMessageTab CurrentFFTab
+        {
+            get
+            {
+                var win = CurrentFFWindow;
+                if (win == null) return null;
+                return tabs.Where(x => x.browser == "ff" && x.windowId == win.id && x.selected).FirstOrDefault();
+            }
+        }
+        private static void windowcreated(NativeMessagingMessage msg)
+        {
+            windowremoved(msg);
+            var win = new NativeMessagingMessageWindow(msg);
+            windows.Add(win);
+        }
+        private static void windowremoved(NativeMessagingMessage msg)
+        {
+            var win = windows.Where(x => x.id == msg.windowId).FirstOrDefault();
+            if (win != null) windows.Remove(win);
+        }
+        private static void windowfocus(NativeMessagingMessage msg)
+        {
+            var win = windows.Where(x => x.id == msg.windowId).FirstOrDefault();
+            if (win != null)
+            {
+                windows.ForEach(x => x.focused = false && x.browser == msg.browser);
+                Console.WriteLine("Selected " + msg.browser + " windows " + win.id);
+                win.focused = true;
+            }
+        }
+        private static void tabcreated(NativeMessagingMessage msg)
+        {
+            var tab = tabs.Where(x => x.id == msg.tab.id && x.browser == msg.browser).FirstOrDefault();
+            if (tab != null) tabs.Remove(tab);
+            msg.tab.browser = msg.browser;
+            tabs.Add(msg.tab);
+        }
+        private static void tabupdated(NativeMessagingMessage msg)
+        {
+            tabremoved(msg);
+            msg.tab.browser = msg.browser;
+            tabs.Add(msg.tab);
+        }
+        private static void tabremoved(NativeMessagingMessage msg)
+        {
+            var tab = tabs.Where(x => x.id == msg.tab.id && x.browser == msg.browser).FirstOrDefault();
+            if (tab != null) tabs.Remove(tab);
+        }
+        private static void tabactivated(NativeMessagingMessage msg)
+        {
+            foreach (var tab in tabs.Where(x => x.browser == msg.browser && x.windowId == msg.windowId))
+            {
+                tab.highlighted = (tab.id == msg.tabid);
+                tab.selected = (tab.id == msg.tabid);
+                if(tab.highlighted)
+                {
+                    Console.WriteLine("Selected " + msg.browser + " tab " + msg.tabid + " (" + tab.title + ")");
+                }
+            }
+        }
         private static void Client_OnReceivedMessage(NativeMessagingMessage message)
         {
             try
@@ -88,60 +181,13 @@ namespace OpenRPA.NM
                     msg.uix -= 7;
                     msg.uiy += 7;
                 }
-                if (msg.functionName == "windowcreated")
-                {
-                    var win = windows.Where(x => x.id == msg.windowId).FirstOrDefault(); 
-                    if (win != null) windows.Remove(win);
-                    win = new NativeMessagingMessageWindow(msg);
-                    windows.Add(win);
-                }
-                if (msg.functionName == "windowremoved") { var win = windows.Where(x => x.id == msg.windowId).FirstOrDefault(); if(win!=null) windows.Remove(win); }
-                if (msg.functionName == "windowfocus")
-                {
-                    windows.ForEach(x => x.focused = false);
-                    var win = windows.Where(x => x.id == msg.windowId).FirstOrDefault();
-                    if (win != null) win.focused = true;
-                }
-                
-                if (msg.tab != null)
-                {
-                    if (msg.functionName == "tabcreated")
-                    {
-                        var tab = tabs.Where(x => x.id == msg.tab.id && x.browser == msg.browser).FirstOrDefault();
-                        if (tab != null) tabs.Remove(tab);
-                        msg.tab.browser = msg.browser;
-                        Log.Verbose(msg.browser + " " + msg.functionName + " " + msg.tab.id + " " + msg.tab.status);
-                        tabs.Add(msg.tab);
-                    }
-                    if (msg.functionName == "tabremoved" || msg.functionName == "tabupdated")
-                    {
-                        var tab = tabs.Where(x => x.id == msg.tab.id && x.browser == msg.browser).FirstOrDefault();
-                        if (tab != null) tabs.Remove(tab);
-                        if (msg.functionName == "tabupdated")
-                        {
-                            msg.tab.browser = msg.browser;
-                            tabs.Add(msg.tab);
-                            Log.Verbose(msg.browser + " " + msg.functionName + " " + msg.tab.id + " " + msg.tab.status);
-                        }
-                        else
-                        {
-                            Log.Verbose(msg.browser + " " + msg.functionName + " " + msg.tab.id);
-                        }
-
-                    }
-                } else
-                {
-                    msg.tab = tabs.Where(x => x.id == msg.tabid && x.browser == msg.browser).FirstOrDefault();
-                }
-
-
-                if (msg.functionName == "tabactivated")
-                {
-                    foreach (var tab in tabs.Where(x => x.browser == msg.browser && x.windowId == msg.windowId))
-                    {
-                        tab.highlighted = (tab.id == msg.tabid);
-                    }
-                }
+                if (msg.functionName == "windowcreated") windowcreated(msg);
+                if (msg.functionName == "windowremoved") windowremoved(msg);
+                if (msg.functionName == "windowfocus") windowfocus(msg);
+                if (msg.functionName == "tabcreated") tabcreated(msg);
+                if (msg.functionName == "tabremoved") tabremoved(msg);
+                if (msg.functionName == "tabupdated") tabupdated(msg);
+                if (msg.functionName == "tabactivated") tabactivated(msg);
                 Task.Run(() => { onMessage?.Invoke(msg); });
             }
             catch (Exception ex)
@@ -189,13 +235,57 @@ namespace OpenRPA.NM
             }
             return result;
         }
-        public static void reloadtabs()
+        public static void enumwindows()
+        {
+            windows.Clear();
+            NativeMessagingMessage message = new NativeMessagingMessage("enumwindows");
+            if (chromeconnected)
+            {
+                var result = sendMessageChromeResult(message, true, TimeSpan.FromSeconds(10));
+                if(result.results != null)
+                    foreach (var msg in result.results)
+                    {
+                        if (msg.functionName == "windowcreated") windowcreated(msg);
+                    }
+            }
+            if (ffconnected)
+            {
+                var result = sendMessageFFResult(message, true, TimeSpan.FromSeconds(10));
+                if (result.results != null)
+                    foreach (var msg in result.results)
+                    {
+                        if (msg.functionName == "windowcreated") windowcreated(msg);
+                    }
+            }
+        }
+        public static void enumtabs()
         {
             tabs.Clear();
-            NativeMessagingMessage result = null;
-            NativeMessagingMessage message = new NativeMessagingMessage("refreshtabs");
-            result = sendMessageChromeResult(message, true, TimeSpan.FromSeconds(2));
-            result = sendMessageFFResult(message, true, TimeSpan.FromSeconds(2));
+            NativeMessagingMessage message = new NativeMessagingMessage("enumtabs");
+
+            if (chromeconnected)
+            {
+                var result = sendMessageChromeResult(message, true, TimeSpan.FromSeconds(10));
+                if (result.results != null)
+                    foreach (var msg in result.results)
+                    {
+                        if (msg.functionName == "tabcreated") tabcreated(msg);
+                    }
+            }
+            if (ffconnected)
+            {
+                var result = sendMessageFFResult(message, true, TimeSpan.FromSeconds(10));
+                if (result.results != null)
+                    foreach (var msg in result.results)
+                    {
+                        if (msg.functionName == "tabcreated") tabcreated(msg);
+                    }
+            }
+        }
+        public static void enumwindowandtabs()
+        {
+            enumwindows();
+            enumtabs();
         }
         public static void UpdateTab(NativeMessagingMessageTab tab)
         {
@@ -273,7 +363,7 @@ namespace OpenRPA.NM
             {
                 NativeMessagingMessage result = null;
                 NativeMessagingMessage message = new NativeMessagingMessage("openurl") { data = url };
-                reloadtabs();
+                enumtabs();
                 var tab = tabs.Where(x => x.url == url && x.highlighted == true && x.browser == "ff").FirstOrDefault();
                 if (tab == null)
                 {
@@ -304,33 +394,37 @@ namespace OpenRPA.NM
         {
             if (chromeconnected)
             {
-                NativeMessagingMessage result = null;
                 NativeMessagingMessage message = new NativeMessagingMessage("openurl") { data = url };
-                reloadtabs();
-                var tab = tabs.Where(x => x.url == url && x.highlighted == true && x.browser == "chrome").FirstOrDefault();
-                if (tab == null)
-                {
-                    tab = tabs.Where(x => x.url == url && x.browser == "chrome").FirstOrDefault();
-                }
-                if (tab == null)
-                {
-                    tab = tabs.Where(x => x.highlighted == true && x.browser == "chrome").FirstOrDefault();
-                }
-                if (tab != null && !forceNew)
-                {
-                    //if (tab.highlighted && tab.url == url) return;
-                    message.functionName = "updatetab";
-                    message.data = url;
-                    tab.highlighted = true;
-                    message.tab = tab;
-                    result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
-                    if(result!=null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
-                    return;
-                }
-                result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
-                if (result == null) throw new Exception("Failed loading url " + url + " in chrome");
-                WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
-                return;
+                var result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
+                if(result!=null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
+
+                //NativeMessagingMessage result = null;
+                //NativeMessagingMessage message = new NativeMessagingMessage("openurl") { data = url };
+                //enumtabs();
+                //var tab = tabs.Where(x => x.url == url && x.highlighted == true && x.browser == "chrome").FirstOrDefault();
+                //if (tab == null)
+                //{
+                //    tab = tabs.Where(x => x.url == url && x.browser == "chrome").FirstOrDefault();
+                //}
+                //if (tab == null)
+                //{
+                //    tab = tabs.Where(x => x.highlighted == true && x.browser == "chrome").FirstOrDefault();
+                //}
+                //if (tab != null && !forceNew)
+                //{
+                //    //if (tab.highlighted && tab.url == url) return;
+                //    message.functionName = "updatetab";
+                //    message.data = url;
+                //    tab.highlighted = true;
+                //    message.tab = tab;
+                //    result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
+                //    if(result!=null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
+                //    return;
+                //}
+                //result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
+                //if (result == null) throw new Exception("Failed loading url " + url + " in chrome");
+                //WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
+                //return;
             }
         }
         public static NMElement[] getElement(int tabid, string browser, string xPath, TimeSpan timeout)
@@ -382,7 +476,7 @@ namespace OpenRPA.NM
                 else
                 {
                     Log.Debug("WaitForTab, failed locating tab: " + tabid);
-                    reloadtabs();
+                    enumtabs();
                 }
                 System.Threading.Thread.Sleep(500);
                 tab = tabs.Where(x => x.id == tabid).FirstOrDefault();

@@ -45,7 +45,7 @@ namespace OpenRPA.NM
         public static treeelement[] _GetRootElements(Selector anchor)
         {
             var rootelements = new List<treeelement>();
-            NMHook.reloadtabs();
+            NMHook.enumtabs();
             // var tab = NMHook.tabs.Where(x => x.highlighted == true && x.browser == "chrome").FirstOrDefault();
             var tab = NMHook.tabs.Where(x => x.highlighted == true).FirstOrDefault();
             if (tab == null)
@@ -220,7 +220,7 @@ namespace OpenRPA.NM
             p = first.Properties.Where(x => x.Name == "url").FirstOrDefault();
             string url = "";
             if (p != null) { url = p.Value; }
-            NMHook.reloadtabs();
+            NMHook.enumtabs();
             var tabs = NMHook.tabs.Where(x => x.browser == browser && x.url == url).ToList();
             if (string.IsNullOrEmpty(url)) tabs = NMHook.tabs.Where(x => x.browser == browser).ToList();
             foreach (var tab in tabs)

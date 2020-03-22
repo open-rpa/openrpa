@@ -120,20 +120,47 @@
   <data name="activity_add_variables" xml:space="preserve">
     <value>Add variables</value>
   </data>
+  <data name="activity_animatemouse" xml:space="preserve">
+    <value>Animate Mouse</value>
+  </data>
   <data name="activity_click_to_view" xml:space="preserve">
     <value>Double-click to view</value>
+  </data>
+  <data name="activity_doubleclick" xml:space="preserve">
+    <value>Double Click</value>
   </data>
   <data name="activity_drop_hint" xml:space="preserve">
     <value>Drop activity</value>
   </data>
+  <data name="activity_element" xml:space="preserve">
+    <value>Element</value>
+  </data>
   <data name="activity_highlight" xml:space="preserve">
     <value>Highlight</value>
+  </data>
+  <data name="activity_keymodifiers" xml:space="preserve">
+    <value>Key Modifiers</value>
+  </data>
+  <data name="activity_mousebutton" xml:space="preserve">
+    <value>Mouse Button</value>
+  </data>
+  <data name="activity_offsetx" xml:space="preserve">
+    <value>X Offset</value>
+  </data>
+  <data name="activity_offsety" xml:space="preserve">
+    <value>Y Offset</value>
   </data>
   <data name="activity_open_selector" xml:space="preserve">
     <value>Open Selector</value>
   </data>
+  <data name="activity_postwait" xml:space="preserve">
+    <value>Post Wait</value>
+  </data>
   <data name="activity_select_element" xml:space="preserve">
     <value>Select Element</value>
+  </data>
+  <data name="activity_virtualclick" xml:space="preserve">
+    <value>Virtual Click</value>
   </data>
   <data name="animatemouse" xml:space="preserve">
     <value>Use Animate Mouse</value>

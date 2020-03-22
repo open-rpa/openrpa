@@ -58,7 +58,10 @@ async function OnPortMessage(message) {
     if (message.functionName === "ping") {
         return;
     }
-    console.log("[resc]" + message.functionName);
+    if (isChrome) message.browser = "chrome";
+    if (isFirefox) message.browser = "ff";
+    if (isChromeEdge) message.browser = "edge";
+    console.log("[resc][" + message.messageid + "]" + message.functionName);
     if (message.functionName === "backgroundscript") {
         try {
             eval.call(window, message.script);
@@ -85,6 +88,30 @@ async function OnPortMessage(message) {
         }
         return;
     }
+    if (message.functionName === "enumwindows") {
+        await EnumWindows(message);
+        console.log("[send][" + message.messageid + "]" + message.functionName + " results: " + message.results.length);
+        port.postMessage(JSON.parse(JSON.stringify(message)));
+        return;
+    }
+    if (message.functionName === "enumtabs") {
+        await EnumTabs(message);
+        console.log("[send][" + message.messageid + "]" + message.functionName + " results: " + message.results.length);
+        port.postMessage(JSON.parse(JSON.stringify(message)));
+        return;
+    }
+    if (message.functionName === "openurl") {
+        var tab = await getCurrentTab();
+        var updateoptions = { active: message.tab.active, highlighted: message.tab.highlighted };
+        updateoptions.url = message.data;
+        tab = await tabsupdate(tab.id, updateoptions);
+        message.tab = tab;
+        message.tabid = tab.id;
+        console.log("[send][" + message.messageid + "]" + message.functionName);
+        port.postMessage(JSON.parse(JSON.stringify(message)));
+        return;
+    }
+    
     // port.postMessage(JSON.parse(JSON.stringify(message)));
 
 };
@@ -150,7 +177,11 @@ async function EnumTabs(message) {
     message.results = [];
     var tabsList = await tabsquery();
     tabsList.forEach((tab) => {
-        message.results.push({ functionName: "tabcreated", tabid: tab.id, tab: tab });
+        var _message = { functionName: "tabcreated", tabid: tab.id, tab: tab };
+        if (isChrome) _message.browser = "chrome";
+        if (isFirefox) _message.browser = "ff";
+        if (isChromeEdge) _message.browser = "edge";
+        message.results.push(_message);
     });
 }
 async function EnumWindows(message) {
@@ -173,7 +204,7 @@ async function OnPageLoad(event) {
             if (isChrome) message.browser = "chrome";
             if (isFirefox) message.browser = "ff";
             if (isChromeEdge) message.browser = "edge";
-            console.log("[send]" + message.functionName + " " + window.id);
+            console.log("[send][" + message.messageid + "]" + message.functionName + " " + window.id);
             port.postMessage(JSON.parse(JSON.stringify(message)));
         }
     });
@@ -182,7 +213,7 @@ async function OnPageLoad(event) {
         if (isChrome) message.browser = "chrome";
         if (isFirefox) message.browser = "ff";
         if (isChromeEdge) message.browser = "edge";
-        console.log("[send]" + message.functionName + " " + windowId);
+        console.log("[send][" + message.messageid + "]" + message.functionName + " " + windowId);
         port.postMessage(JSON.parse(JSON.stringify(message)));
     });
     chrome.windows.onFocusChanged.addListener((windowId) => {
@@ -190,7 +221,7 @@ async function OnPageLoad(event) {
         if (isChrome) message.browser = "chrome";
         if (isFirefox) message.browser = "ff";
         if (isChromeEdge) message.browser = "edge";
-        console.log("[send]" + message.functionName + " " + windowId);
+        console.log("[send][" + message.messageid + "]" + message.functionName + " " + windowId);
         port.postMessage(JSON.parse(JSON.stringify(message)));
     });
 
@@ -198,15 +229,58 @@ async function OnPageLoad(event) {
 
     var message = { functionName: "enumwindows" };
     await EnumWindows(message);
-    console.log("[send]" + message.functionName + " results: " + message.results.length);
+    console.log("[send][" + message.messageid + "]" + message.functionName + " results: " + message.results.length);
     port.postMessage(JSON.parse(JSON.stringify(message)));
 
     message = { functionName: "enumtabs" };
     await EnumTabs(message);
-    console.log("[send]" + message.functionName + " results: " + message.results.length);
+    console.log("[send][" + message.messageid + "]" + message.functionName + " results: " + message.results.length);
     port.postMessage(JSON.parse(JSON.stringify(message)));
 
 }
+async function tabsOnCreated(tab) {
+    if (port == null) return;
+    var message = { functionName: "tabcreated", tab: tab, tabid: tab.id };
+    if (isChrome) message.browser = "chrome";
+    if (isFirefox) message.browser = "ff";
+    if (isChromeEdge) message.browser = "edge";
+    console.log("[send][" + message.messageid + "]" + message.functionName);
+    port.postMessage(JSON.parse(JSON.stringify(message)));
+}
+function tabsOnRemoved(tabId) {
+    if (port == null) return;
+    var message = { functionName: "tabremoved", tabid: tabId };
+    if (isChrome) message.browser = "chrome";
+    if (isFirefox) message.browser = "ff";
+    if (isChromeEdge) message.browser = "edge";
+    console.log("[send][" + message.messageid + "]" + message.functionName);
+    port.postMessage(JSON.parse(JSON.stringify(message)));
+}
+async function tabsOnUpdated(tabId, changeInfo, tab) {
+    if (port == null) return;
+    try {
+        await tabsexecuteScript(tab.id, { code: content_script, allFrames: true });
+    } catch (e) {
+        console.log(e);
+    }
+    var message = { functionName: "tabupdated", tabid: tabId, tab: tab };
+    if (isChrome) message.browser = "chrome";
+    if (isFirefox) message.browser = "ff";
+    if (isChromeEdge) message.browser = "edge";
+    console.log("[send][" + message.messageid + "]" + message.functionName);
+    port.postMessage(JSON.parse(JSON.stringify(message)));
+}
+function tabsOnActivated(activeInfo) {
+    if (port == null) return;
+    var message = { functionName: "tabactivated", tabid: activeInfo.tabId, windowId: activeInfo.windowId };
+    if (isChrome) message.browser = "chrome";
+    if (isFirefox) message.browser = "ff";
+    if (isChromeEdge) message.browser = "edge";
+    console.log("[send][" + message.messageid + "]" + message.functionName);
+    port.postMessage(JSON.parse(JSON.stringify(message)));
+}
+//window.addEventListener("load", OnPageLoad, false);
+
 var tabsquery = function (options) {
     return new Promise(function (resolve, reject) {
         try {
@@ -223,48 +297,6 @@ var tabsquery = function (options) {
         }
     });
 };
-async function tabsOnCreated(tab) {
-    if (port == null) return;
-    var message = { functionName: "tabcreated", tab: tab, tabid: tab.id };
-    if (isChrome) message.browser = "chrome";
-    if (isFirefox) message.browser = "ff";
-    if (isChromeEdge) message.browser = "edge";
-    console.log("[send]" + message.functionName);
-    port.postMessage(JSON.parse(JSON.stringify(message)));
-}
-function tabsOnRemoved(tabId) {
-    if (port == null) return;
-    var message = { functionName: "tabremoved", tabid: tabId };
-    if (isChrome) message.browser = "chrome";
-    if (isFirefox) message.browser = "ff";
-    if (isChromeEdge) message.browser = "edge";
-    console.log("[send]" + message.functionName);
-    port.postMessage(JSON.parse(JSON.stringify(message)));
-}
-async function tabsOnUpdated(tabId, changeInfo, tab) {
-    if (port == null) return;
-    try {
-        await tabsexecuteScript(tab.id, { code: content_script, allFrames: true });
-    } catch (e) {
-        console.log(e);
-    }
-    var message = { functionName: "tabupdated", tabid: tabId, tab: tab };
-    if (isChrome) message.browser = "chrome";
-    if (isFirefox) message.browser = "ff";
-    if (isChromeEdge) message.browser = "edge";
-    console.log("[send]" + message.functionName);
-    port.postMessage(JSON.parse(JSON.stringify(message)));
-}
-function tabsOnActivated(activeInfo) {
-    if (port == null) return;
-    var message = { functionName: "tabactivated", tabid: activeInfo.tabId, windowId: activeInfo.windowId };
-    if (isChrome) message.browser = "chrome";
-    if (isFirefox) message.browser = "ff";
-    if (isChromeEdge) message.browser = "edge";
-    console.log("[send]" + message.functionName);
-    port.postMessage(JSON.parse(JSON.stringify(message)));
-}
-//window.addEventListener("load", OnPageLoad, false);
 var windowsgetAll = function () {
     return new Promise(function (resolve, reject) {
         try {
@@ -295,17 +327,52 @@ var tabsexecuteScript = function (tabid, options) {
         }
     });
 };
+var getCurrentTab = function () {
+    return new Promise(function (resolve, reject) {
+        try {
+            chrome.tabs.getCurrent((tab) => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError.message);
+                    return;
+                }
+                resolve(tab);
+            });
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+var tabsupdate = function (tabid, updateoptions) {
+    return new Promise(function (resolve, reject) {
+        try {
+            chrome.tabs.update(tabid, updateoptions, (tab) => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError.message);
+                    return;
+                }
+                resolve(tab);
+            });
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
 
 OnPageLoad();
 chrome.tabs.onCreated.addListener(tabsOnCreated);
 chrome.tabs.onRemoved.addListener(tabsOnRemoved);
 chrome.tabs.onUpdated.addListener(tabsOnUpdated);
 chrome.tabs.onActivated.addListener(tabsOnActivated);
+
+if (port != null) {
+    port.onMessage.addListener(OnPortMessage);
+    port.onDisconnect.addListener(OnPortDisconnect);
+}
 if (openrpautil_script === null || openrpautil_script === undefined || openrpautil_script === '') {
     if (port != null) {
         var message = { functionName: "openrpautilscript" };
         try {
-            console.log("[send]" + message.functionName);
+            console.log("[send][" + message.messageid + "]" + message.functionName);
             port.postMessage(JSON.parse(JSON.stringify(message)));
         } catch (e) {
             console.error(e);
@@ -317,7 +384,7 @@ if (content_script === null || content_script === undefined || content_script ==
     if (port != null) {
         var message = { functionName: "contentscript" };
         try {
-            console.log("[send]" + message.functionName);
+            console.log("[send][" + message.messageid + "]" + message.functionName);
             port.postMessage(JSON.parse(JSON.stringify(message)));
         } catch (e) {
             console.error(e);

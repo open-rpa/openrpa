@@ -30,7 +30,7 @@ namespace OpenRPA.NM
             {
                 if (NMHook.chromeconnected)
                 {
-                    var tab = NMHook.tabs.Where(x => x.browser == "chrome" && x.selected).FirstOrDefault();
+                    var tab = NMHook.CurrentChromeTab;
                     if (tab != null)
                     {
                         ModelItem.Properties["Url"].SetValue(new InArgument<string>(tab.url));
@@ -38,7 +38,7 @@ namespace OpenRPA.NM
                 }
                 if (NMHook.ffconnected)
                 {
-                    var tab = NMHook.tabs.Where(x => x.browser == "ff" && x.selected).FirstOrDefault();
+                    var tab = NMHook.CurrentFFTab;
                     if (tab != null)
                     {
                         ModelItem.Properties["Url"].SetValue(new InArgument<string>(tab.url));

@@ -17,7 +17,7 @@ namespace OpenRPA.Activities
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class TypeText : CodeActivity
     {
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_text", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
         public InArgument<string> Text { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
@@ -263,5 +263,18 @@ namespace OpenRPA.Activities
             if (result == null) result = "";
             lastinsertedmodel.Properties["Text"].SetValue(new InArgument<string>(result));
         }
+        [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
+        public new string DisplayName
+        {
+            get
+            {
+                return base.DisplayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
+        }
+
     }
 }

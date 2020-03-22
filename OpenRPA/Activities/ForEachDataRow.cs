@@ -17,9 +17,9 @@ namespace OpenRPA.Activities
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class ForEachDataRow : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {
-        [RequiredArgument,Category("Input"),OverloadGroup("DataTable")]
+        [RequiredArgument,Category("Input"),OverloadGroup("DataTable"), LocalizedDisplayName("activity_datatable", typeof(Resources.strings)), LocalizedDescription("activity_datatable_help", typeof(Resources.strings))s]
         public InArgument<System.Data.DataTable> DataTable { get; set; }
-        [RequiredArgument, Category("Input"), OverloadGroup("DataView")]
+        [RequiredArgument, Category("Input"), OverloadGroup("DataView"), LocalizedDisplayName("activity_dataview", typeof(Resources.strings)), LocalizedDescription("activity_dataview_help", typeof(Resources.strings))]
         public InArgument<System.Data.DataView> DataView { get; set; }
         [Browsable(false)]
         public ActivityAction<System.Data.DataRowView> Body { get; set; }
@@ -72,6 +72,17 @@ namespace OpenRPA.Activities
             aa.Argument = da;
             return fef;
         }
-
+        [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
+        public new string DisplayName
+        {
+            get
+            {
+                return base.DisplayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
+        }
     }
 }

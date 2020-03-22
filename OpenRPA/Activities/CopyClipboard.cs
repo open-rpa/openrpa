@@ -15,8 +15,11 @@ namespace OpenRPA.Activities
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class CopyClipboard : CodeActivity
     {
+        [LocalizedDisplayName("activity_sendctrlc", typeof(Resources.strings)), LocalizedDescription("activity_sendctrlc_help", typeof(Resources.strings))]
         public InArgument<bool> SendCtrlC { get; set; } = false;
+        [LocalizedDisplayName("activity_stringresult", typeof(Resources.strings)), LocalizedDescription("activity_stringresult_help", typeof(Resources.strings))]
         public OutArgument<string> StringResult { get; set; }
+        [LocalizedDisplayName("activity_imageresult", typeof(Resources.strings)), LocalizedDescription("activity_imageresult_help", typeof(Resources.strings))]
         public OutArgument<System.Windows.Media.Imaging.BitmapSource> ImageResult { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
@@ -72,6 +75,18 @@ namespace OpenRPA.Activities
             }
             context.SetValue(StringResult, text);
             context.SetValue(ImageResult, image);
+        }
+        [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
+        public new string DisplayName
+        {
+            get
+            {
+                return base.DisplayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
         }
     }
 }

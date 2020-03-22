@@ -17,14 +17,17 @@ namespace OpenRPA.Activities
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class InvokeRemoteOpenRPA : NativeActivity
     {
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_workflow", typeof(Resources.strings)), LocalizedDescription("activity_workflow_help", typeof(Resources.strings))]
         public string workflow { get; set; }
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_target", typeof(Resources.strings)), LocalizedDescription("activity_target_help", typeof(Resources.strings))]
         public string target { get; set; }
+        [RequiredArgument, LocalizedDisplayName("activity_waitforcompleted", typeof(Resources.strings)), LocalizedDescription("activity_waitforcompleted_help", typeof(Resources.strings))]
+        public InArgument<bool> WaitForCompleted { get; set; } = true;
         protected async override void Execute(NativeActivityContext context)
         {
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
             string bookmarkname = null;
+            bool waitforcompleted = WaitForCompleted.Get(context);
             IDictionary<string, object> _payload = new System.Dynamic.ExpandoObject();
             var vars = context.DataContext.GetProperties();
             foreach (dynamic v in vars)
@@ -55,7 +58,7 @@ namespace OpenRPA.Activities
             try
             {
                 bookmarkname = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
-                context.CreateBookmark(bookmarkname, new BookmarkCallback(OnBookmarkCallback));
+                if (waitforcompleted) context.CreateBookmark(bookmarkname, new BookmarkCallback(OnBookmarkCallback));
             }
             catch (Exception ex)
             {
@@ -84,12 +87,13 @@ namespace OpenRPA.Activities
                 Log.Error(ex.ToString());
             }
         }
-
         void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object obj)
         {
+            bool waitforcompleted = WaitForCompleted.Get(context);
+            if (!waitforcompleted) return;
             // keep bookmark, incase workflow dies, and need to pickup more data when started again
             // context.RemoveBookmark(bookmark.Name);
-           var command = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.mq.RobotCommand>(obj.ToString());
+            var command = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.mq.RobotCommand>(obj.ToString());
             if (command.data == null) return;
             if (string.IsNullOrEmpty(command.data.ToString())) return;
             var payload = JObject.Parse(command.data.ToString());
@@ -115,6 +119,18 @@ namespace OpenRPA.Activities
             get
             {
                 return true;
+            }
+        }
+        [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
+        public new string DisplayName
+        {
+            get
+            {
+                return base.DisplayName;
+            }
+            set
+            {
+                base.DisplayName = value;
             }
         }
     }

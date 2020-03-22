@@ -22,6 +22,7 @@ namespace OpenRPA.OpenFlowDB
         [RequiredArgument]
         public string workflowid { get; set; }
         public InArgument<bool> InitialRun { get; set; }
+        //[RequiredArgument, LocalizedDisplayName("activity_waitforcompleted", typeof(Resources.strings))]
         public InArgument<bool> WaitForCompleted { get; set; } = true;
         protected override async void Execute(NativeActivityContext context)
         {
@@ -59,10 +60,7 @@ namespace OpenRPA.OpenFlowDB
             try
             {
                 bookmarkname = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
-                if (waitforcompleted)
-                {
-                    context.CreateBookmark(bookmarkname, new BookmarkCallback(OnBookmarkCallback));
-                }
+                if (waitforcompleted) context.CreateBookmark(bookmarkname, new BookmarkCallback(OnBookmarkCallback));
             }
             catch (Exception ex)
             {
@@ -84,6 +82,8 @@ namespace OpenRPA.OpenFlowDB
         void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object obj)
         {
             // context.RemoveBookmark(bookmark.Name);
+            bool waitforcompleted = WaitForCompleted.Get(context);
+            if (!waitforcompleted) return;
             var _msg = JObject.Parse(obj.ToString());
             JObject payload = _msg; // Backward compatible with older version of openflow
             if (_msg.ContainsKey("payload")) payload = _msg.Value<JObject>("payload");

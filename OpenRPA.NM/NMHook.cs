@@ -443,6 +443,10 @@ namespace OpenRPA.NM
                 catch (Exception)
                 {
                 }
+                Microsoft.Win32.RegistryKey Chrome = null;
+                if (localMachine) Chrome = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Google\\Chrome\\NativeMessagingHosts\\com.openrpa.msg", true);
+                if (!localMachine) Chrome = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\Google\\Chrome\\NativeMessagingHosts\\com.openrpa.msg", true);
+                Chrome.SetValue("", filename);
                 if (PluginConfig.register_old_portname)
                 {
 
@@ -460,10 +464,6 @@ namespace OpenRPA.NM
                     {
                     }
                 }
-                Microsoft.Win32.RegistryKey Chrome = null;
-                if (localMachine) Chrome = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Google\\Chrome\\NativeMessagingHosts\\com.openrpa.msg", true);
-                if (!localMachine) Chrome = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\Google\\Chrome\\NativeMessagingHosts\\com.openrpa.msg", true);
-                Chrome.SetValue("", filename);
                 if (PluginConfig.register_old_portname)
                 {
                     if (localMachine) Chrome = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Google\\Chrome\\NativeMessagingHosts\\com.zenamic.msg", true);
@@ -521,6 +521,10 @@ namespace OpenRPA.NM
                 catch (Exception)
                 {
                 }
+                Microsoft.Win32.RegistryKey Chrome = null;
+                if (localMachine) Chrome = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Mozilla\\NativeMessagingHosts\\com.openrpa.msg", true);
+                if (!localMachine) Chrome = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\Mozilla\\NativeMessagingHosts\\com.openrpa.msg", true);
+                Chrome.SetValue("", filename);
                 if (PluginConfig.register_old_portname)
                 {
                     basepath = Interfaces.Extensions.PluginsDirectory;
@@ -538,10 +542,6 @@ namespace OpenRPA.NM
                     {
                     }
                 }
-                Microsoft.Win32.RegistryKey Chrome = null;
-                if (localMachine) Chrome = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Mozilla\\NativeMessagingHosts\\com.openrpa.msg", true);
-                if (!localMachine) Chrome = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\Mozilla\\NativeMessagingHosts\\com.openrpa.msg", true);
-                Chrome.SetValue("", filename);
                 if (PluginConfig.register_old_portname)
                 {
                     if (localMachine) Chrome = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Mozilla\\NativeMessagingHosts\\com.zenamic.msg", true);

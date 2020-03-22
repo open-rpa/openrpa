@@ -30,11 +30,11 @@ namespace OpenRPA.Activities
                 Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(2000)")
             };
         }
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_element", typeof(Resources.strings)), LocalizedDescription("activity_element_help", typeof(Resources.strings))]
         public InArgument<IElement> Element { get; set; }
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_blocking", typeof(Resources.strings)), LocalizedDescription("activity_blocking_help", typeof(Resources.strings))]
         public InArgument<bool> Blocking { get; set; }
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_duration", typeof(Resources.strings)), LocalizedDescription("activity_duration_help", typeof(Resources.strings))]
         public InArgument<TimeSpan> Duration { get; set; }
         protected async override Task<int> ExecuteAsync(AsyncCodeActivityContext context)
         {
@@ -43,6 +43,18 @@ namespace OpenRPA.Activities
             var duration = Duration.Get(context);
             await el.Highlight(blocking, System.Drawing.Color.Red, duration);
             return 13;
+        }
+        [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
+        public new string DisplayName
+        {
+            get
+            {
+                return base.DisplayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
         }
     }
 }

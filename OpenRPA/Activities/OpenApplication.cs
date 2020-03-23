@@ -24,16 +24,23 @@ namespace OpenRPA.Activities
                 Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(1000)")
             };
         }
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_selector", typeof(Resources.strings)), LocalizedDescription("activity_selector_help", typeof(Resources.strings))]
         public InArgument<string> Selector { get; set; }
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_timeout", typeof(Resources.strings)), LocalizedDescription("activity_timeout_help", typeof(Resources.strings))]
         public InArgument<TimeSpan> Timeout { get; set; }
+        [RequiredArgument, LocalizedDisplayName("activity_checkrunning", typeof(Resources.strings)), LocalizedDescription("activity_checkrunning_help", typeof(Resources.strings))]
         public InArgument<bool> CheckRunning { get; set; } = true;
+        [LocalizedDisplayName("activity_x", typeof(Resources.strings)), LocalizedDescription("activity_x_help", typeof(Resources.strings))]
         public InArgument<int> X { get; set; }
+        [LocalizedDisplayName("activity_y", typeof(Resources.strings)), LocalizedDescription("activity_y_help", typeof(Resources.strings))]
         public InArgument<int> Y { get; set; }
+        [LocalizedDisplayName("activity_width", typeof(Resources.strings)), LocalizedDescription("activity_width_help", typeof(Resources.strings))]
         public InArgument<int> Width { get; set; }
+        [LocalizedDisplayName("activity_height", typeof(Resources.strings)), LocalizedDescription("activity_height_help", typeof(Resources.strings))]
         public InArgument<int> Height { get; set; }
+        [RequiredArgument, LocalizedDisplayName("activity_animatemove", typeof(Resources.strings)), LocalizedDescription("activity_animatemove_help", typeof(Resources.strings))]
         public InArgument<bool> AnimateMove { get; set; } = false;
+        [LocalizedDisplayName("activity_result", typeof(Resources.strings)), LocalizedDescription("activity_result_help", typeof(Resources.strings))]
         public OutArgument<IElement> Result { get; set; }
         private Variable<IElement> _element = new Variable<IElement>("_element");
         [Browsable(false)]
@@ -128,6 +135,18 @@ namespace OpenRPA.Activities
                 // , Handler = (Activity)instance
             };
             return fef;
+        }
+        [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
+        public new string DisplayName
+        {
+            get
+            {
+                return base.DisplayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
         }
 
     }

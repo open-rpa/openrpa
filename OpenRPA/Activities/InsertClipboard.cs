@@ -16,9 +16,9 @@ namespace OpenRPA.Activities
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class InsertClipboard : CodeActivity
     {
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_ignoreerrors", typeof(Resources.strings)), LocalizedDescription("activity_ignoreerrors_help", typeof(Resources.strings))]
         public InArgument<bool> IgnoreErrors { get; set; } = false;
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_text", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
         public InArgument<string> Text { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
@@ -41,6 +41,18 @@ namespace OpenRPA.Activities
                     return;
                 }
                 throw;
+            }
+        }
+        [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
+        public new string DisplayName
+        {
+            get
+            {
+                return base.DisplayName;
+            }
+            set
+            {
+                base.DisplayName = value;
             }
         }
     }

@@ -24,13 +24,12 @@ namespace OpenRPA.Activities
             };
             Force = true;
         }
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_selector", typeof(Resources.strings)), LocalizedDescription("activity_selector_help", typeof(Resources.strings))]
         public InArgument<string> Selector { get; set; }
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_timeout", typeof(Resources.strings)), LocalizedDescription("activity_timeout_help", typeof(Resources.strings))]
         public InArgument<TimeSpan> Timeout { get; set; }
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_force", typeof(Resources.strings)), LocalizedDescription("activity_force_help", typeof(Resources.strings))]
         public InArgument<bool> Force { get; set; }
-
         protected override void Execute(CodeActivityContext context)
         {
             var selectorstring = Selector.Get(context);
@@ -41,6 +40,18 @@ namespace OpenRPA.Activities
             var force = Force.Get(context);
             Plugin.CloseBySelector(selector, timeout, force);
 
+        }
+        [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
+        public new string DisplayName
+        {
+            get
+            {
+                return base.DisplayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
         }
     }
 }

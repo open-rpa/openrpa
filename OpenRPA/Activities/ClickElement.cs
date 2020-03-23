@@ -27,25 +27,25 @@ namespace OpenRPA.Activities
             AnimateMouse = Config.local.use_animate_mouse;
             PostWait = Config.local.use_postwait;
         }
-        [RequiredArgument, LocalizedDisplayName("activity_animatemouse", typeof(Resources.strings)) ]
+        [RequiredArgument, LocalizedDisplayName("activity_animatemouse", typeof(Resources.strings)), LocalizedDescription("activity_animatemouse_help", typeof(Resources.strings))]
         public InArgument<bool> AnimateMouse { get; set; } = false;
-        [RequiredArgument, LocalizedDisplayName("activity_mousebutton", typeof(Resources.strings))]
+        [RequiredArgument, LocalizedDisplayName("activity_mousebutton", typeof(Resources.strings)), LocalizedDescription("activity_mousebutton_help", typeof(Resources.strings))]
         //[Editor(typeof(SelectButtonEditor), typeof(PropertyValueEditor))]
         public InArgument<int> Button { get; set; } = (int)Input.MouseButton.Left;
-        [RequiredArgument, LocalizedDisplayName("activity_offsetx", typeof(Resources.strings))]
+        [RequiredArgument, LocalizedDisplayName("activity_offsetx", typeof(Resources.strings)), LocalizedDescription("activity_offsetx_help", typeof(Resources.strings))]
         public int OffsetX { get; set; } = 5;
-        [RequiredArgument, LocalizedDisplayName("activity_offsety", typeof(Resources.strings))]
+        [RequiredArgument, LocalizedDisplayName("activity_offsety", typeof(Resources.strings)), LocalizedDescription("activity_offsety_help", typeof(Resources.strings))]
         public int OffsetY { get; set; } = 5;
-        [RequiredArgument, LocalizedDisplayName("activity_element", typeof(Resources.strings))]
+        [RequiredArgument, LocalizedDisplayName("activity_element", typeof(Resources.strings)), LocalizedDescription("activity_element_help", typeof(Resources.strings))]
         public InArgument<IElement> Element { get; set; }
-        [RequiredArgument, LocalizedDisplayName("activity_doubleclick", typeof(Resources.strings))]
+        [RequiredArgument, LocalizedDisplayName("activity_doubleclick", typeof(Resources.strings)), LocalizedDescription("activity_doubleclick_help", typeof(Resources.strings))]
         public InArgument<bool> DoubleClick { get; set; } = false;
-        [LocalizedDisplayName("activity_virtualclick", typeof(Resources.strings))]
+        [LocalizedDisplayName("activity_virtualclick", typeof(Resources.strings)), LocalizedDescription("activity_virtualclick_help", typeof(Resources.strings))]
         public InArgument<bool> VirtualClick { get; set; } = true;
-        [LocalizedDisplayName("activity_postwait", typeof(Resources.strings))]
+        [LocalizedDisplayName("activity_postwait", typeof(Resources.strings)), LocalizedDescription("activity_postwait_help", typeof(Resources.strings))]
         public InArgument<TimeSpan> PostWait { get; set; }
         [Editor(typeof(KeyModifiersOptionsEditor), typeof(System.Activities.Presentation.PropertyEditing.ExtendedPropertyValueEditor))]
-        [LocalizedDisplayName("activity_keymodifiers", typeof(Resources.strings))]
+        [LocalizedDisplayName("activity_keymodifiers", typeof(Resources.strings)), LocalizedDescription("activity_keymodifiers_help", typeof(Resources.strings))]
         public InArgument<string> KeyModifiers { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
@@ -63,19 +63,31 @@ namespace OpenRPA.Activities
 
             var disposes = new List<IDisposable>();
             var keys = TypeText.GetKeys(keymodifiers);
-            foreach(var vk in keys) disposes.Add(FlaUI.Core.Input.Keyboard.Pressing(vk));
+            foreach (var vk in keys) disposes.Add(FlaUI.Core.Input.Keyboard.Pressing(vk));
 
             var _button = (Input.MouseButton)button;
             el.Click(virtualClick, _button, OffsetX, OffsetY, doubleclick, animatemouse);
             disposes.ForEach(x => { x.Dispose(); });
             TimeSpan postwait = TimeSpan.Zero;
-            if (PostWait!=null) { postwait = PostWait.Get(context); }
-            if(postwait != TimeSpan.Zero)
+            if (PostWait != null) { postwait = PostWait.Get(context); }
+            if (postwait != TimeSpan.Zero)
             {
                 System.Threading.Thread.Sleep(postwait);
                 // FlaUI.Core.Input.Wait.UntilInputIsProcessed();
             }
 
+        }
+        [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
+        public new string DisplayName
+        {
+            get
+            {
+                return base.DisplayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
         }
     }
     class KeyModifiersOptionsEditor : CustomSelectEditor

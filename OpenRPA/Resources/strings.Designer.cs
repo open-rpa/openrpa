@@ -79,11 +79,146 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Visibly move the mouse, instead of instantly moving it to the destination.
+        /// </summary>
+        public static string activity_animatemouse_help {
+            get {
+                return ResourceManager.GetString("activity_animatemouse_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Animate Move.
+        /// </summary>
+        public static string activity_animatemove {
+            get {
+                return ResourceManager.GetString("activity_animatemove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visibly move the window, instead of instantly moving it to the destination.
+        /// </summary>
+        public static string activity_animatemove_help {
+            get {
+                return ResourceManager.GetString("activity_animatemove_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blocking.
+        /// </summary>
+        public static string activity_blocking {
+            get {
+                return ResourceManager.GetString("activity_blocking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Block execution until the complete.
+        /// </summary>
+        public static string activity_blocking_help {
+            get {
+                return ResourceManager.GetString("activity_blocking_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check Running.
+        /// </summary>
+        public static string activity_checkrunning {
+            get {
+                return ResourceManager.GetString("activity_checkrunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check if application is already running using the selector, if set to false, will launch a new application no matter what.
+        /// </summary>
+        public static string activity_checkrunning_help {
+            get {
+                return ResourceManager.GetString("activity_checkrunning_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Double-click to view.
         /// </summary>
         public static string activity_click_to_view {
             get {
                 return ResourceManager.GetString("activity_click_to_view", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data Table.
+        /// </summary>
+        public static string activity_datatable {
+            get {
+                return ResourceManager.GetString("activity_datatable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The DataTable to work with.
+        /// </summary>
+        public static string activity_datatable_help {
+            get {
+                return ResourceManager.GetString("activity_datatable_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data View.
+        /// </summary>
+        public static string activity_dataview {
+            get {
+                return ResourceManager.GetString("activity_dataview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The DateView to work with.
+        /// </summary>
+        public static string activity_dataview_help {
+            get {
+                return ResourceManager.GetString("activity_dataview_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Detector.
+        /// </summary>
+        public static string activity_detector {
+            get {
+                return ResourceManager.GetString("activity_detector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will wait for this detector to trigger, then the workflow will continue.
+        /// </summary>
+        public static string activity_detector_help {
+            get {
+                return ResourceManager.GetString("activity_detector_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displayname.
+        /// </summary>
+        public static string activity_displayname {
+            get {
+                return ResourceManager.GetString("activity_displayname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displayname inside the workflow designer.
+        /// </summary>
+        public static string activity_displayname_help {
+            get {
+                return ResourceManager.GetString("activity_displayname_help", resourceCulture);
             }
         }
         
@@ -97,11 +232,38 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do a double click instead of single click.
+        /// </summary>
+        public static string activity_doubleclick_help {
+            get {
+                return ResourceManager.GetString("activity_doubleclick_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Drop activity.
         /// </summary>
         public static string activity_drop_hint {
             get {
                 return ResourceManager.GetString("activity_drop_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duration.
+        /// </summary>
+        public static string activity_duration {
+            get {
+                return ResourceManager.GetString("activity_duration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will run for the duration.
+        /// </summary>
+        public static string activity_duration_help {
+            get {
+                return ResourceManager.GetString("activity_duration_help", resourceCulture);
             }
         }
         
@@ -115,11 +277,92 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Click on this element, the return type of all GetElement activites and some others.
+        /// </summary>
+        public static string activity_element_help {
+            get {
+                return ResourceManager.GetString("activity_element_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Force.
+        /// </summary>
+        public static string activity_force {
+            get {
+                return ResourceManager.GetString("activity_force", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Forcefully do the action.
+        /// </summary>
+        public static string activity_force_help {
+            get {
+                return ResourceManager.GetString("activity_force_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Height.
+        /// </summary>
+        public static string activity_height {
+            get {
+                return ResourceManager.GetString("activity_height", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If set, will move the window to this location.
+        /// </summary>
+        public static string activity_height_help {
+            get {
+                return ResourceManager.GetString("activity_height_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Highlight.
         /// </summary>
         public static string activity_highlight {
             get {
                 return ResourceManager.GetString("activity_highlight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignore Errors.
+        /// </summary>
+        public static string activity_ignoreerrors {
+            get {
+                return ResourceManager.GetString("activity_ignoreerrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If an error occurs, will ignore it an continue.
+        /// </summary>
+        public static string activity_ignoreerrors_help {
+            get {
+                return ResourceManager.GetString("activity_ignoreerrors_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Image Result.
+        /// </summary>
+        public static string activity_imageresult {
+            get {
+                return ResourceManager.GetString("activity_imageresult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Return the result as an image.
+        /// </summary>
+        public static string activity_imageresult_help {
+            get {
+                return ResourceManager.GetString("activity_imageresult_help", resourceCulture);
             }
         }
         
@@ -133,11 +376,29 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hold this key down, while clicking, only works if Virtual click is disabled.
+        /// </summary>
+        public static string activity_keymodifiers_help {
+            get {
+                return ResourceManager.GetString("activity_keymodifiers_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mouse Button.
         /// </summary>
         public static string activity_mousebutton {
             get {
                 return ResourceManager.GetString("activity_mousebutton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mouse button to click with.
+        /// </summary>
+        public static string activity_mousebutton_help {
+            get {
+                return ResourceManager.GetString("activity_mousebutton_help", resourceCulture);
             }
         }
         
@@ -151,11 +412,29 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Click with this offset inside the element.
+        /// </summary>
+        public static string activity_offsetx_help {
+            get {
+                return ResourceManager.GetString("activity_offsetx_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Y Offset.
         /// </summary>
         public static string activity_offsety {
             get {
                 return ResourceManager.GetString("activity_offsety", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click with this offset inside the element.
+        /// </summary>
+        public static string activity_offsety_help {
+            get {
+                return ResourceManager.GetString("activity_offsety_help", resourceCulture);
             }
         }
         
@@ -178,6 +457,33 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Wait this amount of time, after doing the click, help full one applications that can be very slow to react on clicks.
+        /// </summary>
+        public static string activity_postwait_help {
+            get {
+                return ResourceManager.GetString("activity_postwait_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Result.
+        /// </summary>
+        public static string activity_result {
+            get {
+                return ResourceManager.GetString("activity_result", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save the result into this variable.
+        /// </summary>
+        public static string activity_result_help {
+            get {
+                return ResourceManager.GetString("activity_result_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select Element.
         /// </summary>
         public static string activity_select_element {
@@ -187,11 +493,209 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Selector.
+        /// </summary>
+        public static string activity_selector {
+            get {
+                return ResourceManager.GetString("activity_selector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The selector used to find the element(s), supports mapping workflow variables by using {{variablename}}.
+        /// </summary>
+        public static string activity_selector_help {
+            get {
+                return ResourceManager.GetString("activity_selector_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send Ctrl+C.
+        /// </summary>
+        public static string activity_sendctrlc {
+            get {
+                return ResourceManager.GetString("activity_sendctrlc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send Ctrl+C before trying to copy the Clipboard Content.
+        /// </summary>
+        public static string activity_sendctrlc_help {
+            get {
+                return ResourceManager.GetString("activity_sendctrlc_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to String Result.
+        /// </summary>
+        public static string activity_stringresult {
+            get {
+                return ResourceManager.GetString("activity_stringresult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Return the result as a string.
+        /// </summary>
+        public static string activity_stringresult_help {
+            get {
+                return ResourceManager.GetString("activity_stringresult_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target.
+        /// </summary>
+        public static string activity_target {
+            get {
+                return ResourceManager.GetString("activity_target", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The target user or role.
+        /// </summary>
+        public static string activity_target_help {
+            get {
+                return ResourceManager.GetString("activity_target_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text.
+        /// </summary>
+        public static string activity_text {
+            get {
+                return ResourceManager.GetString("activity_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timeout.
+        /// </summary>
+        public static string activity_timeout {
+            get {
+                return ResourceManager.GetString("activity_timeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait this long before giving up and either failing or continuing depending on other settings.
+        /// </summary>
+        public static string activity_timeout_help {
+            get {
+                return ResourceManager.GetString("activity_timeout_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Virtual Click.
         /// </summary>
         public static string activity_virtualclick {
             get {
                 return ResourceManager.GetString("activity_virtualclick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Try and do a Virtual click instead of using the mouse, not all elements supports this.
+        /// </summary>
+        public static string activity_virtualclick_help {
+            get {
+                return ResourceManager.GetString("activity_virtualclick_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait until Completed.
+        /// </summary>
+        public static string activity_waitforcompleted {
+            get {
+                return ResourceManager.GetString("activity_waitforcompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait for Completion before continuing with workflow.
+        /// </summary>
+        public static string activity_waitforcompleted_help {
+            get {
+                return ResourceManager.GetString("activity_waitforcompleted_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Width.
+        /// </summary>
+        public static string activity_width {
+            get {
+                return ResourceManager.GetString("activity_width", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If set, will move the window to this location.
+        /// </summary>
+        public static string activity_width_help {
+            get {
+                return ResourceManager.GetString("activity_width_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workflow.
+        /// </summary>
+        public static string activity_workflow {
+            get {
+                return ResourceManager.GetString("activity_workflow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use this workflow.
+        /// </summary>
+        public static string activity_workflow_help {
+            get {
+                return ResourceManager.GetString("activity_workflow_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X.
+        /// </summary>
+        public static string activity_x {
+            get {
+                return ResourceManager.GetString("activity_x", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If set, will move the window to this location.
+        /// </summary>
+        public static string activity_x_help {
+            get {
+                return ResourceManager.GetString("activity_x_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y.
+        /// </summary>
+        public static string activity_y {
+            get {
+                return ResourceManager.GetString("activity_y", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If set, will move the window to this location.
+        /// </summary>
+        public static string activity_y_help {
+            get {
+                return ResourceManager.GetString("activity_y_help", resourceCulture);
             }
         }
         

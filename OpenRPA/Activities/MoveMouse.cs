@@ -26,13 +26,15 @@ namespace OpenRPA.Activities
             AnimateMouse = Config.local.use_animate_mouse;
             PostWait = Config.local.use_postwait;
         }
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_animatemouse", typeof(Resources.strings)), LocalizedDescription("activity_animatemouse_help", typeof(Resources.strings))]
         public InArgument<bool> AnimateMouse { get; set; } = false;
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_offsetx", typeof(Resources.strings)), LocalizedDescription("activity_offsetx_help", typeof(Resources.strings))]
         public int OffsetX { get; set; } = 5;
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_offsety", typeof(Resources.strings)), LocalizedDescription("activity_offsety_help", typeof(Resources.strings))]
         public int OffsetY { get; set; } = 5;
+        [LocalizedDisplayName("activity_element", typeof(Resources.strings)), LocalizedDescription("activity_element_help", typeof(Resources.strings))]
         public InArgument<IElement> Element { get; set; }
+        [LocalizedDisplayName("activity_postwait", typeof(Resources.strings)), LocalizedDescription("activity_postwait_help", typeof(Resources.strings))]
         public InArgument<TimeSpan> PostWait { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
@@ -59,6 +61,18 @@ namespace OpenRPA.Activities
             if(postwait != TimeSpan.Zero)
             {
                 System.Threading.Thread.Sleep(postwait);
+            }
+        }
+        [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
+        public new string DisplayName
+        {
+            get
+            {
+                return base.DisplayName;
+            }
+            set
+            {
+                base.DisplayName = value;
             }
         }
     }

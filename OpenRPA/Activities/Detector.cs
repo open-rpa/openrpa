@@ -1,5 +1,6 @@
 ﻿using FlaUI.Core.AutomationElements.Infrastructure;
 using Newtonsoft.Json.Linq;
+using OpenRPA.Interfaces;
 using System;
 using System.Activities;
 using System.Collections.Generic;
@@ -18,15 +19,12 @@ namespace OpenRPA.Activities
     //[designer.ToolboxTooltip(Text = "Puts workflow in idle mode, waiting on selected detector to trigger")]
     public class Detector : NativeActivity
     {
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_detector", typeof(Resources.strings)), LocalizedDescription("activity_detector_help", typeof(Resources.strings))]
         public string detector { get; set; }
-
-        //private AutoResetEvent syncEvent = null;
         protected override void Execute(NativeActivityContext context)
         {
             context.CreateBookmark("detector_" + detector, new BookmarkCallback(OnBookmarkCallback));
         }
-
         void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object obj)
         {
             // keep bookmark, we want to support being triggerede multiple times, so bookmark needs to be keep incase workflow is restarted
@@ -39,6 +37,17 @@ namespace OpenRPA.Activities
                 return true;
             }
         }
-
+        [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
+        public new string DisplayName
+        {
+            get
+            {
+                return base.DisplayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
+        }
     }
 }

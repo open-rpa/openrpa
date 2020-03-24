@@ -142,12 +142,39 @@ namespace OpenRPA.NM
         {
             NotifyPropertyChanged("Status");
         }
+        private float dpiscale = 0;
+        private object _lock = new object();
         private void OnMessage(NativeMessagingMessage message)
         {
             try
             {
+                lock(_lock)
+                {
+
+                    //if (dpiscale == 0)
+                    //{
+                    //    dpiscale = NativeMethods.getScalingFactor();
+                    //} else
+                    //{
+                    //    dpiscale = NativeMethods.getScalingFactor();
+                    //}
+                    var dpi = NativeMethods.GetDpiForSystem();
+                    dpiscale = 1;
+                    if (dpi == 96) dpiscale = 1;
+                    if (dpi == 120) dpiscale = 1.25f;
+                    if (dpi == 144) dpiscale = 1.5f;
+                    if (dpi == 192) dpiscale = 2;
+                }
                 if (message.uiy > 0 && message.uix > 0 && message.uiwidth > 0 && message.uiheight > 0)
                 {
+                    //message.uiy = (int)(message.uiy * dpiscale);
+                    //message.uix = (int)(message.uix * dpiscale);
+                    //message.uiwidth = (int)(message.uiwidth * dpiscale);
+                    //message.uiheight = (int)(message.uiheight * dpiscale);
+                    if(dpiscale == 1.25)
+                    {
+                        message.uiy += 158;
+                    }
                     LastElement = new NMElement(message);
                 }
 

@@ -155,7 +155,6 @@ if (typeof document.zeniverse === 'undefined') {
             } else {
             }
             message.result = JSON.stringify(message.result);
-            //return simpleStringify(message);
             var test = JSON.parse(JSON.stringify(message));
             return test;
         },
@@ -199,7 +198,6 @@ if (typeof document.zeniverse === 'undefined') {
                     message.result = zeniverse.mapDOM(ele, true);
                 }
             }
-            //return simpleStringify(message);
             var test = JSON.parse(JSON.stringify(message));
             return test;
         },
@@ -722,42 +720,6 @@ if (typeof document.zeniverse === 'undefined') {
             ownValue += "[" + ownIndex + "]";
         return new UTILS.DOMNodePathStep(ownValue, node.nodeType === Node.DOCUMENT_NODE);
     };
-
-    UTILS._xPathValue = function (node, optimized) {
-        var ownValue;
-        var ownIndex = UTILS._xPathIndex(node);
-        if (ownIndex === -1)
-            return null; // Error.
-        switch (node.nodeType) {
-            case Node.ELEMENT_NODE:
-                if (optimized && node.getAttribute("id"))
-                    return new UTILS.DOMNodePathStep("//*[@id=\"" + node.getAttribute("id") + "\"]", true);
-                ownValue = node.localName;
-                break;
-            case Node.ATTRIBUTE_NODE:
-                ownValue = "@" + node.nodename;
-                break;
-            case Node.TEXT_NODE:
-            case Node.CDATA_SECTION_NODE:
-                ownValue = "text()";
-                break;
-            case Node.PROCESSING_INSTRUCTION_NODE:
-                ownValue = "processing-instruction()";
-                break;
-            case Node.COMMENT_NODE:
-                ownValue = "comment()";
-                break;
-            case Node.DOCUMENT_NODE:
-                ownValue = "";
-                break;
-            default:
-                ownValue = "";
-                break;
-        }
-        if (ownIndex > 0)
-            ownValue += "[" + ownIndex + "]";
-        return new UTILS.DOMNodePathStep(ownValue, node.nodeType === Node.DOCUMENT_NODE);
-    };
     UTILS._xPathIndex = function (node) {
         // Returns -1 in case of error, 0 if no siblings matching the same expression, <XPath index among the same expression-matching sibling nodes> otherwise.
         function areNodesSimilar(left, right) {
@@ -794,24 +756,6 @@ if (typeof document.zeniverse === 'undefined') {
         }
         return -1; // An error occurred: |node| not found in parent's children.
     };
-
-
-    function simpleStringify(object) {
-        var simpleObject = {};
-        for (var prop in object) {
-            if (!object.hasOwnProperty(prop)) {
-                continue;
-            }
-            if (typeof object[prop] === 'object') {
-                continue;
-            }
-            if (typeof object[prop] === 'function') {
-                continue;
-            }
-            simpleObject[prop] = object[prop];
-        }
-        return simpleObject; // returns cleaned up JSON
-    }
 
 
 

@@ -278,7 +278,10 @@ namespace OpenRPA.NM
                 {
                     browser = browser,
                     cssPath = cssselector,
-                    xPath = xpath
+                    xPath = xpath,
+                    frameId = this.message.frameId,
+                    windowId = this.message.windowId,
+                    zn_id = this.zn_id
                 };
                 NativeMessagingMessage message = null;
                 // getelement.data = "getdom";
@@ -405,6 +408,11 @@ namespace OpenRPA.NM
                 var result = new List<IElement>();
                 if (tagname.ToLower() == "select")
                 {
+                    foreach(var item in Children)
+                    {
+                        item.Refresh();
+                        result.Add(item);
+                    }
 
                 }
                 return result.ToArray();

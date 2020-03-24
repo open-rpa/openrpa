@@ -903,41 +903,7 @@ if (true == false) {
                 return new UTILS.DOMNodePathStep(ownValue, node.nodeType === Node.DOCUMENT_NODE);
             };
 
-            UTILS._xPathValue = function (node, optimized) {
-                var ownValue;
-                var ownIndex = UTILS._xPathIndex(node);
-                if (ownIndex === -1)
-                    return null; // Error.
-                switch (node.nodeType) {
-                    case Node.ELEMENT_NODE:
-                        if (optimized && node.getAttribute("id"))
-                            return new UTILS.DOMNodePathStep("//*[@id=\"" + node.getAttribute("id") + "\"]", true);
-                        ownValue = node.localName;
-                        break;
-                    case Node.ATTRIBUTE_NODE:
-                        ownValue = "@" + node.nodename;
-                        break;
-                    case Node.TEXT_NODE:
-                    case Node.CDATA_SECTION_NODE:
-                        ownValue = "text()";
-                        break;
-                    case Node.PROCESSING_INSTRUCTION_NODE:
-                        ownValue = "processing-instruction()";
-                        break;
-                    case Node.COMMENT_NODE:
-                        ownValue = "comment()";
-                        break;
-                    case Node.DOCUMENT_NODE:
-                        ownValue = "";
-                        break;
-                    default:
-                        ownValue = "";
-                        break;
-                }
-                if (ownIndex > 0)
-                    ownValue += "[" + ownIndex + "]";
-                return new UTILS.DOMNodePathStep(ownValue, node.nodeType === Node.DOCUMENT_NODE);
-            };
+
             UTILS._xPathIndex = function (node) {
                 // Returns -1 in case of error, 0 if no siblings matching the same expression, <XPath index among the same expression-matching sibling nodes> otherwise.
                 function areNodesSimilar(left, right) {

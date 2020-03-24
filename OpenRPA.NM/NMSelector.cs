@@ -51,57 +51,6 @@ namespace OpenRPA.NM
         {
             return NMSelector.GetElementsWithuiSelector(this, fromElement, maxresults);
         }
-        //private static NMElement[] GetElementsWithuiSelector(WindowsAccessBridgeInterop.AccessibleJvm jvm, NMSelector selector, IElement fromElement, int maxresults)
-        //{
-        //    NMElement[] result = null;
-        //    NMElement _fromElement = fromElement as NMElement;
-        //    var selectors = selector.Where(x => x.Enabled == true && x.Selector == null).ToList();
-        //    var current = new List<NMElement>();
-        //    NMElement startfrom = null;
-        //    if (_fromElement != null) startfrom = _fromElement;
-        //    if (startfrom == null) startfrom = new NMElement(jvm);
-        //    current.Add(startfrom);
-        //    for (var i = 0; i < selectors.Count; i++)
-        //    {
-        //        var sw = new System.Diagnostics.Stopwatch();
-        //        sw.Start();
-        //        var s = new NMSelectorItem(selectors[i]);
-        //        Log.Selector(string.Format("OpenRPA.NM::GetElementsWithuiSelector::Find for selector {0} {1}", i, s.ToString()));
-        //        var elements = new List<NMElement>();
-        //        elements.AddRange(current);
-        //        current.Clear();
-        //        foreach (var _element in elements)
-        //        {
-        //            result = ((NMSelectorItem)s).matches(_element);
-        //            current.AddRange(result);
-        //        }
-        //        if (i == (selectors.Count - 1)) result = current.ToArray();
-        //        if (current.Count == 0)
-        //        {
-        //            var _c = new NMSelectorItem(selectors[i]);
-        //            var message = "needed to find " + Environment.NewLine + _c.ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
-        //            foreach (var element in elements)
-        //            {
-        //                var children = element.Children;
-        //                foreach (var c in children)
-        //                {
-        //                    try
-        //                    {
-        //                        message += c.ToString() + Environment.NewLine;
-        //                    }
-        //                    catch (Exception)
-        //                    {
-        //                    }
-        //                }
-        //            }
-        //            Log.Selector(message);
-        //            return new NMElement[] { };
-        //        }
-        //        Log.Selector(string.Format("OpenRPA.NM::GetElement::found {1} for selector {2} in {0:mm\\:ss\\.fff}", sw.Elapsed, elements.Count(), i));
-        //    }
-        //    if (result == null) return new NMElement[] { };
-        //    return result;
-        //}
         public static NMElement[] GetElementsWithuiSelector(NMSelector selector, IElement fromElement = null, int maxresults = 1)
         {
             var results = new List<NMElement>();
@@ -118,7 +67,7 @@ namespace OpenRPA.NM
             }
             else if (fromElement == null)
             {
-                throw new ArgumentException("Invalid select with onlu 1 child and no anchor");
+                throw new ArgumentException("Invalid select with only 1 child and no anchor");
             } else
             {
                 second = selector[0];
@@ -152,7 +101,7 @@ namespace OpenRPA.NM
             //}
             NativeMessagingMessage subresult = null;
 
-            var getelement = new NativeMessagingMessage("getelements");
+            var getelement = new NativeMessagingMessage("getelements", PluginConfig.debug_console_output);
             getelement.browser = browser;
             getelement.xPath = xpath;
             getelement.cssPath = cssselector;
@@ -165,19 +114,21 @@ namespace OpenRPA.NM
                     {
                         if (b.cssPath == "true" || b.xPath == "true")
                         {
-                            var data = b.result;
-                            var arr = JArray.Parse(data);
-                            foreach (var _e in arr)
-                            {
-                                if (results.Count > maxresults) continue;
-                                var json = _e.ToString();
-                                var subsubresult = Newtonsoft.Json.JsonConvert.DeserializeObject<NativeMessagingMessage>(json);
-                                subsubresult.browser = browser;
-                                subsubresult.result = json;
-                                subsubresult.tabid = b.tabid;
-                                subsubresult.tab = b.tab;
-                                results.Add(new NMElement(subsubresult));
-                            }
+                            if (results.Count > maxresults) continue;
+                            results.Add(new NMElement(b));
+                            //var data = b.result;
+                            //var arr = JArray.Parse(data.ToString());
+                            //foreach (var _e in arr)
+                            //{
+                            //    if (results.Count > maxresults) continue;
+                            //    var json = _e.ToString();
+                            //    var subsubresult = Newtonsoft.Json.JsonConvert.DeserializeObject<NativeMessagingMessage>(json);
+                            //    subsubresult.browser = browser;
+                            //    subsubresult.result = json;
+                            //    subsubresult.tabid = b.tabid;
+                            //    subsubresult.tab = b.tab;
+                            //    results.Add(new NMElement(subsubresult));
+                            //}
                         }
                     }
             return results.ToArray();

@@ -127,7 +127,7 @@ namespace OpenRPA.NM
             if (win != null)
             {
                 windows.ForEach(x => x.focused = false && x.browser == msg.browser);
-                Console.WriteLine("Selected " + msg.browser + " windows " + win.id);
+                Log.Debug("Selected " + msg.browser + " windows " + win.id);
                 win.focused = true;
             }
         }
@@ -146,7 +146,7 @@ namespace OpenRPA.NM
         }
         private static void tabremoved(NativeMessagingMessage msg)
         {
-            var tab = tabs.Where(x => x.id == msg.tab.id && x.browser == msg.browser).FirstOrDefault();
+            var tab = tabs.Where(x => x.id == msg.tabid && x.browser == msg.browser).FirstOrDefault();
             if (tab != null) tabs.Remove(tab);
         }
         private static void tabactivated(NativeMessagingMessage msg)
@@ -157,7 +157,7 @@ namespace OpenRPA.NM
                 tab.selected = (tab.id == msg.tabid);
                 if(tab.highlighted)
                 {
-                    Console.WriteLine("Selected " + msg.browser + " tab " + msg.tabid + " (" + tab.title + ")");
+                    Log.Debug("Selected " + msg.browser + " tab " + msg.tabid + " (" + tab.title + ")");
                 }
             }
         }
@@ -221,7 +221,7 @@ namespace OpenRPA.NM
             {
                 if (ffconnected)
                 {
-                    Log.Debug("Send and queue message " + message.functionName);
+                    // Log.Debug("Send and queue message " + message.functionName);
                     result = ffpipe.Message(message, throwError, timeout);
                 }
             }
@@ -229,7 +229,7 @@ namespace OpenRPA.NM
             {
                 if (chromeconnected)
                 {
-                    Log.Debug("Send and queue message " + message.functionName);
+                    // Log.Debug("Send and queue message " + message.functionName);
                     result = chromepipe.Message(message, throwError, timeout);
                 }
             }
@@ -238,7 +238,7 @@ namespace OpenRPA.NM
         public static void enumwindows()
         {
             windows.Clear();
-            NativeMessagingMessage message = new NativeMessagingMessage("enumwindows");
+            NativeMessagingMessage message = new NativeMessagingMessage("enumwindows", PluginConfig.debug_console_output);
             if (chromeconnected)
             {
                 var result = sendMessageChromeResult(message, true, TimeSpan.FromSeconds(10));
@@ -261,7 +261,7 @@ namespace OpenRPA.NM
         public static void enumtabs()
         {
             tabs.Clear();
-            NativeMessagingMessage message = new NativeMessagingMessage("enumtabs");
+            NativeMessagingMessage message = new NativeMessagingMessage("enumtabs", PluginConfig.debug_console_output);
 
             if (chromeconnected)
             {
@@ -289,7 +289,7 @@ namespace OpenRPA.NM
         }
         public static void UpdateTab(NativeMessagingMessageTab tab)
         {
-            NativeMessagingMessage message = new NativeMessagingMessage("updatetab");
+            NativeMessagingMessage message = new NativeMessagingMessage("updatetab", PluginConfig.debug_console_output);
             NativeMessagingMessage result = null;
             message.browser = tab.browser; message.tabid = tab.id; message.tab = tab;
             message.windowId = tab.windowId;
@@ -301,7 +301,7 @@ namespace OpenRPA.NM
         }
         public static void CloseTab(NativeMessagingMessageTab tab)
         {
-            NativeMessagingMessage message = new NativeMessagingMessage("closetab");
+            NativeMessagingMessage message = new NativeMessagingMessage("closetab", PluginConfig.debug_console_output);
             NativeMessagingMessage result = null;
             message.browser = tab.browser; message.tabid = tab.id; message.tab = tab;
             message.windowId = tab.windowId;
@@ -362,7 +362,7 @@ namespace OpenRPA.NM
             if (ffconnected)
             {
                 NativeMessagingMessage result = null;
-                NativeMessagingMessage message = new NativeMessagingMessage("openurl") { data = url };
+                NativeMessagingMessage message = new NativeMessagingMessage("openurl", PluginConfig.debug_console_output) { data = url };
                 enumtabs();
                 var tab = tabs.Where(x => x.url == url && x.highlighted == true && x.browser == "ff").FirstOrDefault();
                 if (tab == null)
@@ -394,7 +394,7 @@ namespace OpenRPA.NM
         {
             if (chromeconnected)
             {
-                NativeMessagingMessage message = new NativeMessagingMessage("openurl") { data = url };
+                NativeMessagingMessage message = new NativeMessagingMessage("openurl", PluginConfig.debug_console_output) { data = url };
                 var result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
                 if(result!=null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
 
@@ -430,7 +430,7 @@ namespace OpenRPA.NM
         public static NMElement[] getElement(int tabid, string browser, string xPath, TimeSpan timeout)
         {
             var results = new List<NMElement>();
-            var getelement = new NativeMessagingMessage("getelement");
+            var getelement = new NativeMessagingMessage("getelement", PluginConfig.debug_console_output);
             getelement.browser = browser;
             getelement.tabid = tabid;
             getelement.xPath = xPath;
@@ -471,11 +471,11 @@ namespace OpenRPA.NM
             {
                 if (tab != null)
                 {
-                    Log.Debug("WaitForTab: " + tabid + " " + tab.status);
+                    // Log.Debug("WaitForTab: " + tabid + " " + tab.status);
                 }
                 else
                 {
-                    Log.Debug("WaitForTab, failed locating tab: " + tabid);
+                    // Log.Debug("WaitForTab, failed locating tab: " + tabid);
                     enumtabs();
                 }
                 System.Threading.Thread.Sleep(500);
@@ -519,23 +519,6 @@ namespace OpenRPA.NM
                     if (!hkcuExists(@"SOFTWARE\Google\Chrome\NativeMessagingHosts")) hkcuCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts");
                     if (!hkcuExists(@"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.openrpa.msg")) hkcuCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.openrpa.msg");
                 }
-                if (PluginConfig.register_old_portname)
-                {
-                    if (localMachine)
-                    {
-                        if (!hklmExists(@"SOFTWARE\Google")) return;
-                        if (!hklmExists(@"SOFTWARE\Google\Chrome")) return;
-                        if (!hklmExists(@"SOFTWARE\Google\Chrome\NativeMessagingHosts")) hklmCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts");
-                        if (!hklmExists(@"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.zenamic.msg")) hklmCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.zenamic.msg");
-                    }
-                    else
-                    {
-                        if (!hkcuExists(@"SOFTWARE\Google")) return;
-                        if (!hkcuExists(@"SOFTWARE\Google\Chrome")) return;
-                        if (!hkcuExists(@"SOFTWARE\Google\Chrome\NativeMessagingHosts")) hkcuCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts");
-                        if (!hkcuExists(@"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.zenamic.msg")) hkcuCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.zenamic.msg");
-                    }
-                }
                 var basepath = Interfaces.Extensions.PluginsDirectory;
                 var filename = System.IO.Path.Combine(basepath, "chromemanifest.json");
                 if (!System.IO.File.Exists(filename)) return;
@@ -554,29 +537,6 @@ namespace OpenRPA.NM
                 if (localMachine) Chrome = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Google\\Chrome\\NativeMessagingHosts\\com.openrpa.msg", true);
                 if (!localMachine) Chrome = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\Google\\Chrome\\NativeMessagingHosts\\com.openrpa.msg", true);
                 Chrome.SetValue("", filename);
-                if (PluginConfig.register_old_portname)
-                {
-
-                    filename = System.IO.Path.Combine(basepath, "chromemanifestold.json");
-                    if (!System.IO.File.Exists(filename)) return;
-                    json = System.IO.File.ReadAllText(filename);
-                    jsonObj = JsonConvert.DeserializeObject(json);
-                    jsonObj["path"] = System.IO.Path.Combine(basepath, "OpenRPA.NativeMessagingHost.exe");
-                    output = JsonConvert.SerializeObject(jsonObj, Formatting.Indented);
-                    try
-                    {
-                        System.IO.File.WriteAllText(filename, output);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-                if (PluginConfig.register_old_portname)
-                {
-                    if (localMachine) Chrome = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Google\\Chrome\\NativeMessagingHosts\\com.zenamic.msg", true);
-                    if (!localMachine) Chrome = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\Google\\Chrome\\NativeMessagingHosts\\com.zenamic.msg", true);
-                    Chrome.SetValue("", filename);
-                }                
             }
             catch (Exception ex)
             {
@@ -599,21 +559,6 @@ namespace OpenRPA.NM
                     if (!hkcuExists(@"SOFTWARE\Mozilla\NativeMessagingHosts")) hkcuCreate(@"SOFTWARE\Mozilla\NativeMessagingHosts");
                     if (!hkcuExists(@"SOFTWARE\Mozilla\NativeMessagingHosts\com.openrpa.msg")) hkcuCreate(@"SOFTWARE\Mozilla\NativeMessagingHosts\com.openrpa.msg");
                 }
-                if (PluginConfig.register_old_portname)
-                {
-                    if (localMachine)
-                    {
-                        if (!hklmExists(@"Software\Mozilla")) return;
-                        if (!hklmExists(@"SOFTWARE\Mozilla\NativeMessagingHosts")) hklmCreate(@"SOFTWARE\Mozilla\NativeMessagingHosts");
-                        if (!hklmExists(@"SOFTWARE\Mozilla\NativeMessagingHosts\com.zenamic.msg")) hklmCreate(@"SOFTWARE\Mozilla\NativeMessagingHosts\com.zenamic.msg");
-                    }
-                    else
-                    {
-                        if (!hkcuExists(@"SOFTWARE\Mozilla")) return;
-                        if (!hkcuExists(@"SOFTWARE\Mozilla\NativeMessagingHosts")) hkcuCreate(@"SOFTWARE\Mozilla\NativeMessagingHosts");
-                        if (!hkcuExists(@"SOFTWARE\Mozilla\NativeMessagingHosts\com.zenamic.msg")) hkcuCreate(@"SOFTWARE\Mozilla\NativeMessagingHosts\com.zenamic.msg");
-                    }
-                }
                 var basepath = Interfaces.Extensions.PluginsDirectory;
                 var filename = System.IO.Path.Combine(basepath, "ffmanifest.json");
                 if (!System.IO.File.Exists(filename)) return;
@@ -632,29 +577,6 @@ namespace OpenRPA.NM
                 if (localMachine) Chrome = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Mozilla\\NativeMessagingHosts\\com.openrpa.msg", true);
                 if (!localMachine) Chrome = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\Mozilla\\NativeMessagingHosts\\com.openrpa.msg", true);
                 Chrome.SetValue("", filename);
-                if (PluginConfig.register_old_portname)
-                {
-                    basepath = Interfaces.Extensions.PluginsDirectory;
-                    filename = System.IO.Path.Combine(basepath, "ffmanifestold.json");
-                    if (!System.IO.File.Exists(filename)) return;
-                    json = System.IO.File.ReadAllText(filename);
-                    jsonObj = JsonConvert.DeserializeObject(json);
-                    jsonObj["path"] = System.IO.Path.Combine(basepath, "OpenRPA.NativeMessagingHost.exe");
-                    output = JsonConvert.SerializeObject(jsonObj, Formatting.Indented);
-                    try
-                    {
-                        System.IO.File.WriteAllText(filename, output);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-                if (PluginConfig.register_old_portname)
-                {
-                    if (localMachine) Chrome = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Mozilla\\NativeMessagingHosts\\com.zenamic.msg", true);
-                    if (!localMachine) Chrome = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\Mozilla\\NativeMessagingHosts\\com.zenamic.msg", true);
-                    Chrome.SetValue("", filename);
-                }
             }
             catch (Exception ex)
             {

@@ -27,5 +27,9 @@
             Checked="value_Changed" Unchecked="value_Changed" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,70,0,0" Text="{x:Static or:strings.compensate_for_old_addon_help}" VerticalAlignment="Top" />
 
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,90,0,0" Text="{x:Static or:strings.debug_console_output}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,90,0,0" VerticalAlignment="Top" Width="222" x:Name="debug_console_output" 
+            Checked="value_Changed" Unchecked="value_Changed" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,90,0,0" Text="{x:Static or:strings.debug_console_output_help}" VerticalAlignment="Top" />
     </Grid>
 </UserControl>

@@ -363,7 +363,7 @@ function portOnDisconnect(message) {
         console.warn("onDisconnect: " + chrome.runtime.lastError.message);
         if (portname == 'com.openrpa.msg') {
             // Try with the old name
-            portname = 'com.zenamic.msg';
+            portname = 'com.zena mic.msg';
             setTimeout(function () {
                 connect();
             }, 1000);

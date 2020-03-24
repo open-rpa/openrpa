@@ -1,5 +1,6 @@
 var port = null;
 var portname = 'com.openrpa.msg';
+var base_debug = false;
 function BaseOnPortMessage(message) {
     if (port == null) {
         console.warn("BaseOnPortMessage: port is null!");
@@ -11,7 +12,7 @@ function BaseOnPortMessage(message) {
         return;
     }
     if (message.functionName === "ping") return;
-    console.log("[baseresc][" + message.messageid + "]" + message.functionName);
+    if (base_debug) console.log("[baseresc][" + message.messageid + "]" + message.functionName);
     if (message.functionName === "backgroundscript") {
         try {
             eval.call(window, message.script);
@@ -24,31 +25,21 @@ function BaseOnPortMessage(message) {
     }
 };
 function BaseOnPortDisconnect(message) {
-    console.log("BaseOnPortDisconnect: " + message);
+    if (base_debug) console.log("BaseOnPortDisconnect: " + message);
     port = null;
     if (chrome.runtime.lastError) {
         console.warn("BaseOnPortDisconnect: " + chrome.runtime.lastError.message);
         port = null;
-        if (portname == 'com.openrpa.msg') {
-            // Try with the old name
-            portname = 'com.zenamic.msg';
-            setTimeout(function () {
-                Baseconnect();
-            }, 1000);
-        } else {
-            // Wait a few seconds and reretry
-            portname = 'com.openrpa.msg';
-            setTimeout(function () {
-                Baseconnect();
-            }, 5000);
-        }
+        setTimeout(function () {
+            Baseconnect();
+        }, 1000);
         return;
     } else {
-        console.log("BaseOnPortDisconnect from native port");
+        if (base_debug) console.log("BaseOnPortDisconnect from native port");
     }
 }
 function Baseconnect() {
-    console.log("Baseconnect()");
+    if (base_debug) console.log("Baseconnect()");
     if (port !== null && port !== undefined) {
         try {
             port.onMessage.removeListener(BaseOnPortMessage);
@@ -75,7 +66,7 @@ function Baseconnect() {
         port = null;
         return;
     } else {
-        console.log("Connected to native port, request backgroundscript script");
+        if (base_debug) console.log("Connected to native port, request backgroundscript script");
     }
 
     var message = { functionName: "backgroundscript" };

@@ -16,7 +16,7 @@ namespace OpenRPA.Interfaces
             id = msg.windowId;
             try
             {
-                var obj = JObject.Parse(msg.result);
+                var obj = JObject.Parse(msg.result.ToString());
                 if (obj.ContainsKey("alwaysOnTop")) alwaysOnTop = obj.Value<bool>("alwaysOnTop");
                 if (obj.ContainsKey("focused")) focused = obj.Value<bool>("focused");
                 if (obj.ContainsKey("heigh")) heigh = obj.Value<int>("heigh");

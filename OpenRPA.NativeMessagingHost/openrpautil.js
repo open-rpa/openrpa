@@ -367,7 +367,6 @@ if (true == false) {
                                 for (let t = 0; t < currentParentWindow.frames.length; t++) {
                                     try {
                                         let frameElement = currentParentWindow.frames[t];
-                                        console.log(frameElement);
                                         if (frameElement.contentWindow === currentWindow) {
                                             rect = frameElement.getBoundingClientRect();
                                             positions.push({ x: rect.x, y: rect.y });

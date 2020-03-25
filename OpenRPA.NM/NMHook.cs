@@ -242,7 +242,7 @@ namespace OpenRPA.NM
             if (chromeconnected)
             {
                 var result = sendMessageChromeResult(message, true, TimeSpan.FromSeconds(10));
-                if(result.results != null)
+                if(result != null && result.results != null)
                     foreach (var msg in result.results)
                     {
                         if (msg.functionName == "windowcreated") windowcreated(msg);
@@ -251,7 +251,7 @@ namespace OpenRPA.NM
             if (ffconnected)
             {
                 var result = sendMessageFFResult(message, true, TimeSpan.FromSeconds(10));
-                if (result.results != null)
+                if (result != null && result.results != null)
                     foreach (var msg in result.results)
                     {
                         if (msg.functionName == "windowcreated") windowcreated(msg);

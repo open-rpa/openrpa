@@ -95,48 +95,6 @@ if (true == false) {
                             for (var i = 0; i < events.length; ++i) {
                                 simulate(ele, events[i]);
                             }
-                            //var form = openrpautil.findform(ele);
-                            ////var form = null;
-                            //if (ele.hasAttribute('ng-click')) {
-                            //    if (document.openrpadebug) console.log('click using triggerHandler');
-                            //    var $e = angular.element(ele);
-                            //    $e.triggerHandler('click');
-                            //}
-                            //else if (ele.hasAttribute('onclick')) {
-                            //    if (document.openrpadebug) console.log('click using dispatchEvent');
-                            //    ele.dispatchEvent(new Event('mousedown'));
-                            //    ele.dispatchEvent(new Event('click'));
-                            //    ele.dispatchEvent(new Event('mouseup'));
-                            //}
-                            //else if (form && ele.type === 'submit') // && ele.tagName != "BUTTON") 
-                            //{
-                            //    if ((form.method == "post" || form.method == "get") && (form.action != null && form.action != "")) {
-                            //        if (document.openrpadebug) console.log('click using submit as form');
-                            //        // form.requestSubmit()
-                            //        form.submit()
-                            //    } else {
-                            //        if (document.openrpadebug) console.log('(form), click using dispatchEvent');
-                            //        ele.dispatchEvent(new Event('mousedown'));
-                            //        ele.dispatchEvent(new Event('click'));
-                            //        ele.dispatchEvent(new Event('mouseup'));
-                            //    }
-                            //}
-                            //else {
-
-                            //    try {
-                            //        if (typeof jQuery !== 'undefined') {
-                            //            if (document.openrpadebug) console.log('click using jQuery click()');
-                            //            var element = $(ele);
-                            //            element.click();
-                            //        }
-                            //    } catch (e) {
-                            //        console.log(e);
-                            //    }
-                            //    if (document.openrpadebug) console.log('click using dispatchEvent');
-                            //    ele.dispatchEvent(new Event('mousedown'));
-                            //    ele.dispatchEvent(new Event('click'));
-                            //    ele.dispatchEvent(new Event('mouseup'));
-                            //}
                         }
                     } catch (e) {
                         console.log(e);
@@ -160,8 +118,10 @@ if (true == false) {
                             }
                             if (fromele == null) {
                                 var test = JSON.parse(JSON.stringify(message));
+                                if (document.openrpadebug) console.log("null hits when searching for anchor (from element!)");
                                 return test;
                             }
+                            if (document.openrpadebug) console.log(fromele);
                         }
                         var ele = [];
                         if (ele === null && message.zn_id !== null && message.zn_id !== undefined && message.zn_id > -1) {
@@ -169,18 +129,21 @@ if (true == false) {
                         }
                         if (ele.length === 0 && message.xPath) {
                             //var iterator = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-                            var iterator
+                            var iterator;
+                            var xpath = message.xPath;
+                            var searchfrom = document;
                             if (fromele) {
                                 var prexpath = UTILS.xPath(fromele, true);
-                                var xpath = prexpath + "/" + message.xPath.substr(1, message.xPath.length - 1);
-                                iterator = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null);
-                            } else {
-                                iterator = document.evaluate(message.xPath, document, null, XPathResult.ANY_TYPE, null);
+                                // xpath = prexpath + message.xPath.substr(1, message.xPath.length - 1);
+                                xpath = prexpath + message.xPath;
+                                searchfrom = document;
                             }
+                            iterator = document.evaluate(xpath, searchfrom, null, XPathResult.ANY_TYPE, null);
 
-                            if (document.openrpadebug) console.log("document.evaluate('" + message.xPath + "', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);");
+                            if (document.openrpadebug) console.log("document.evaluate('" + xpath + "', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);");
                             try {
                                 var thisNode = iterator.iterateNext();
+                                if (thisNode && document.openrpadebug) console.log(thisNode);
 
                                 while (thisNode) {
                                     ele.push(thisNode);
@@ -348,7 +311,6 @@ if (true == false) {
                     }
                     // https://blog.crimx.com/2017/04/06/position-and-drag-iframe-en/
                     var currentFramePosition = openrpautil.currentFrameAbsolutePosition();
-                    // console.log(currentFramePosition);
                     message.uix += currentFramePosition.x;
                     message.uiy += currentFramePosition.y;
                     message.buble = currentFramePosition.buble;
@@ -373,14 +335,14 @@ if (true == false) {
                                         } else if (frameElement.window === currentWindow) {
                                             if (typeof frameElement.getBoundingClientRect === "function") {
                                                 rect = frameElement.getBoundingClientRect();
+                                                positions.push(rect);
                                             } else if (frameElement.frameElement != null && typeof frameElement.frameElement.getBoundingClientRect === "function") {
                                                 rect = frameElement.frameElement.getBoundingClientRect();
+                                                positions.push(rect);
                                             } else {
-                                                //// rect = { x: frameElement.document.body.offsetWidth, y: frameElement.document.body.offsetHeight}
-                                                //rect = { x: frameElement.screenX, y: frameElement.screenY }
-                                                rect = { x: frameElement.screenX, y: frameElement.screenY }
+                                                positions.push({ x: 0, y: 0 });
                                             }
-                                            positions.push({ x: 0, y: 0 });
+                                            
                                         }
                                     } catch (e) {
                                         console.error(e);
@@ -626,8 +588,6 @@ if (true == false) {
                                 //    element.removeAttribute("disabled");
                                 //}
                                 var attributecount = 0;
-                                //object["attributes"] = {};
-
                                 if (element.attributes["zn_id"] == undefined || element.attributes["zn_id"] == null) {
                                     var zn_id = openrpautil.getuniqueid(element);
                                 }

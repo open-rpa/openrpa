@@ -107,7 +107,13 @@ namespace OpenRPA.NM
             getelement.cssPath = cssselector;
             getelement.fromxPath = fromxPath;
             getelement.fromcssPath = fromcssPath;
-            subresult = NMHook.sendMessageResult(getelement, false, TimeSpan.FromSeconds(2));
+            if (fromElement != null && fromElement is NMElement)
+            {
+                getelement.windowId = ((NMElement)fromElement).message.windowId;
+                getelement.tabid = ((NMElement)fromElement).message.tabid;
+                getelement.frameId = ((NMElement)fromElement).message.frameId;
+            }
+                subresult = NMHook.sendMessageResult(getelement, false, TimeSpan.FromSeconds(2));
             if (subresult != null)
                 if (subresult.results != null)
                     foreach (var b in subresult.results)

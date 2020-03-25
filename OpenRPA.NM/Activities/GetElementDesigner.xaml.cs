@@ -78,6 +78,7 @@ namespace OpenRPA.NM
             ModelItem loadFrom = ModelItem.Parent;
             string loadFromSelectorString = "";
             NMSelector anchor = null;
+            int parentmaxresults = 1;
             while (loadFrom.Parent != null)
             {
                 var p = loadFrom.Properties.Where(x => x.Name == "Selector").FirstOrDefault();
@@ -85,6 +86,7 @@ namespace OpenRPA.NM
                 {
                     loadFromSelectorString = loadFrom.GetValue<string>("Selector");
                     anchor = new NMSelector(loadFromSelectorString);
+                    parentmaxresults = loadFrom.GetValue<int>("MaxResults");
                     break;
                 }
                 loadFrom = loadFrom.Parent;
@@ -98,7 +100,7 @@ namespace OpenRPA.NM
             var elements = new List<NMElement>();
             if (anchor != null)
             {
-                var _base = NMSelector.GetElementsWithuiSelector(anchor, null, 10);
+                var _base = NMSelector.GetElementsWithuiSelector(anchor, null, parentmaxresults);
                 foreach (var _e in _base)
                 {
                     var res = NMSelector.GetElementsWithuiSelector(selector, _e, maxresults);

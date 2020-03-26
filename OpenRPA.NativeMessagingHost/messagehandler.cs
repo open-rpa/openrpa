@@ -55,22 +55,22 @@ namespace OpenRPA.NativeMessagingHost
 
                             var msg = JsonConvert.DeserializeObject<NativeMessagingMessage>(input);
 
-                            if (msg.functionName == "zeniversescript")
+                            if (msg.functionName == "openrpautilscript")
                             {
-                                var r2 = new NativeMessagingMessage() { functionName = msg.functionName };
-                                loadscript(ref r2, "zeniverse");
+                                var r2 = new NativeMessagingMessage(msg.functionName, msg.debug);
+                                loadscript(ref r2, "openrpautil");
                                 sendMessage(r2);
                             }
                             if (msg.functionName == "contentscript")
                             {
-                                var r2 = new NativeMessagingMessage() { functionName = msg.functionName };
+                            var r2 = new NativeMessagingMessage(msg.functionName, msg.debug);
                                 loadscript(ref r2, "content");
                                 sendMessage(r2);
                             }
 
                             if (msg.functionName == "backgroundscript")
                             {
-                                var r2 = new NativeMessagingMessage() { functionName = msg.functionName };
+                                var r2 = new NativeMessagingMessage(msg.functionName, msg.debug);
                                 loadscript(ref r2, "background");
                                 sendMessage(r2);
                             }

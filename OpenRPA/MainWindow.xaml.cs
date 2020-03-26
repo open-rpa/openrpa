@@ -9,6 +9,7 @@ using System.Activities;
 using System.Activities.Core.Presentation;
 using System.Activities.Expressions;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -63,6 +64,58 @@ namespace OpenRPA
                 Config.Save();
             }
         }
+        public class uilocal
+        {
+            public uilocal(string Name, string Value)
+            {
+                this.Name = Name;
+                this.Value = Value;
+            }
+            public string Name { get; set; }
+            public string Value { get; set; }
+        }
+        // private ObservableCollection<string> _uilocals = null;
+        private ObservableCollection<uilocal> _uilocals = new ObservableCollection<uilocal>();
+        public ObservableCollection<uilocal> uilocals { 
+            get {
+                if(_uilocals.Count == 0)
+                {
+                    var cultures = Interfaces.Extensions.GetAvailableCultures(typeof(OpenRPA.Resources.strings));
+                    _uilocals.Add(new uilocal("English (English [en])", "en"));
+                    foreach (System.Globalization.CultureInfo culture in cultures)
+                        _uilocals.Add(new uilocal(culture.NativeName + " (" + culture.EnglishName + " [" + culture.TwoLetterISOLanguageName + "])", culture.TwoLetterISOLanguageName));
+                }
+                return _uilocals;
+            }
+            set { }
+        }
+        public uilocal defaultuilocal
+        {
+            get
+            {
+                var item = uilocals.Where(x => x.Value == Config.local.culture).FirstOrDefault();
+                if(item==null) item = uilocals.Where(x => x.Value == "en").FirstOrDefault();
+                return item;
+            }
+            set
+            {
+                Console.WriteLine("defaultuilocal: " + value);
+                if(value != null && !string.IsNullOrEmpty(value.Value) && value.Value != Config.local.culture)
+                {
+                    Config.local.culture = value.Value;
+                    Config.Save();
+                    try
+                    {
+                        System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo(Config.local.culture);
+                        InitializeComponent();
+                        MessageBox.Show("Please restart the robot for the change to take fully effect");
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+            }
+        }
         public Views.WFToolbox Toolbox { get; set; }
         public Views.Snippets Snippets { get; set; }
         public void ParseCommandLineArgs(IList<string> args)
@@ -98,7 +151,13 @@ namespace OpenRPA
         {
             if (!string.IsNullOrEmpty(Config.local.culture))
             {
-                System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo(Config.local.culture);
+                try
+                {
+                    System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo(Config.local.culture);
+                }
+                catch (Exception)
+                {
+                }
             }
             reloadTimer = new System.Timers.Timer(Config.local.reloadinterval.TotalMilliseconds);
             reloadTimer.Elapsed += ReloadTimer_Elapsed;

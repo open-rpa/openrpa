@@ -11,12 +11,13 @@ namespace OpenRPA.Interfaces
     public class NativeMessagingMessage : PipeMessage
     {
 
-        public NativeMessagingMessage() : base()
+        private  NativeMessagingMessage() : base()
         {
         }
-        public NativeMessagingMessage(string functionName) : base()
+        public NativeMessagingMessage(string functionName, bool debug) : base()
         {
             this.functionName = functionName;
+            this.debug = debug;
         }
         public NativeMessagingMessage(NativeMessagingMessage e) : base(e)
         {
@@ -26,10 +27,11 @@ namespace OpenRPA.Interfaces
             tabid = e.tabid;
         }
         public string browser { get; set; }
+        public bool debug { get; set; }
         public int windowId { get; set; } = -1;
         public string functionName { get; set; } = "ping";
         public string script { get; set; }
-        public string result { get; set; }
+        public object result { get; set; }
         public NativeMessagingMessage[] results { get; set; }
         public int tabid { get; set; } = -1;
         public long frameId { get; set; } = -1;

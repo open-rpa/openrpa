@@ -245,7 +245,7 @@ namespace OpenRPA.Interfaces.Image
             }
             catch (Exception ex)
             {
-                Log.Error(ex.ToString());
+                Log.Debug(ex.ToString());
                 return null;
             }
         }

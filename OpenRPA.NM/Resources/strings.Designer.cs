@@ -115,6 +115,24 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Debug Console.
+        /// </summary>
+        public static string debug_console_output {
+            get {
+                return ResourceManager.GetString("debug_console_output", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Write debug informtation to browser console.
+        /// </summary>
+        public static string debug_console_output_help {
+            get {
+                return ResourceManager.GetString("debug_console_output_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wait after set value.
         /// </summary>
         public static string plugin_wait_for_tab_after_set_value {

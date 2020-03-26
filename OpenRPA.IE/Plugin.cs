@@ -259,14 +259,13 @@ namespace OpenRPA.IE
         {
             return IESelectorItem.Match(item, m.RawElement as MSHTML.IHTMLElement);
         }
+        private Browser browser = null;
         public bool ParseMouseMoveAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) return false;
             if (e.UIElement.ProcessId < 1) return false;
             var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
             if (p.ProcessName != "iexplore" && p.ProcessName != "iexplore.exe") return false;
-            e.UIElement = null;
-            e.Element = null;
             return true;
         }
     }

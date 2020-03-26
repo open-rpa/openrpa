@@ -45,21 +45,23 @@ namespace OpenRPA.NM
         public static treeelement[] _GetRootElements(Selector anchor)
         {
             var rootelements = new List<treeelement>();
-            NMHook.reloadtabs();
-            // var tab = NMHook.tabs.Where(x => x.highlighted == true && x.browser == "chrome").FirstOrDefault();
-            var tab = NMHook.tabs.Where(x => x.highlighted == true).FirstOrDefault();
-            if (tab == null)
+            var browser = "";
+            if (NMHook.chromeconnected) browser = "chrome";
+            if (NMHook.ffconnected) browser = "ff";
+            if(string.IsNullOrEmpty(browser)) return rootelements.ToArray();
+            //NMHook.enumtabs();
+            //// var tab = NMHook.tabs.Where(x => x.highlighted == true && x.browser == "chrome").FirstOrDefault();
+            //var tab = NMHook.tabs.Where(x => x.highlighted == true).FirstOrDefault();
+            //if (tab == null)
+            //{
+            //    // tab = NMHook.tabs.Where(x => x.browser == "chrome").FirstOrDefault();
+            //    tab = NMHook.tabs.FirstOrDefault();
+            //}
+            //if (NMHook.tabs.Count == 0) { return rootelements.ToArray(); }
+            //// getelement.data = "getdom";
+            var getelement = new NativeMessagingMessage("getelement", PluginConfig.debug_console_output)
             {
-                // tab = NMHook.tabs.Where(x => x.browser == "chrome").FirstOrDefault();
-                tab = NMHook.tabs.FirstOrDefault();
-            }
-            if (NMHook.tabs.Count == 0) { return rootelements.ToArray(); }
-            // getelement.data = "getdom";
-            var getelement = new NativeMessagingMessage("getelement")
-            {
-                browser = tab.browser,
-                tabid = tab.id,
-
+                browser = browser,
                 xPath = "/html"
             };
             if (anchor != null && anchor.Count > 1)
@@ -79,7 +81,10 @@ namespace OpenRPA.NM
             }
             if (result != null && result.result != null && result.results == null)
             {
-                result.results = new NativeMessagingMessage[] { result };
+                // result.results = new NativeMessagingMessage[] { result };
+                var html = new NMElement(result);
+                rootelements.Add(new NMTreeElement(null, true, html));
+                return rootelements.ToArray();
             }
             if (result != null && result.results != null && result.results.Count() > 0)
             {
@@ -87,9 +92,9 @@ namespace OpenRPA.NM
                 {
                     if (res.result != null)
                     {
-                        //var html = new HtmlElement(getelement.xPath, getelement.cssPath, res.tabid, res.frameId, res.result);
                         var html = new NMElement(res);
                         rootelements.Add(new NMTreeElement(null, true, html));
+                        //var html = new HtmlElement(getelement.xPath, getelement.cssPath, res.tabid, res.frameId, res.result);
                     }
                 }
                 //result = result.results[0];
@@ -124,7 +129,7 @@ namespace OpenRPA.NM
             NMHook.onMessage += OnMessage;
             NMHook.Connected += OnConnected;
             NMHook.onDisconnected += OnDisconnected;
-            _ = PluginConfig.register_old_portname;
+            _ = PluginConfig.debug_console_output;
             _ = PluginConfig.wait_for_tab_after_set_value;
             _ = PluginConfig.wait_for_tab_click;
             _ = PluginConfig.compensate_for_old_addon;
@@ -137,12 +142,39 @@ namespace OpenRPA.NM
         {
             NotifyPropertyChanged("Status");
         }
+        private float dpiscale = 0;
+        private object _lock = new object();
         private void OnMessage(NativeMessagingMessage message)
         {
             try
             {
+                lock(_lock)
+                {
+
+                    //if (dpiscale == 0)
+                    //{
+                    //    dpiscale = NativeMethods.getScalingFactor();
+                    //} else
+                    //{
+                    //    dpiscale = NativeMethods.getScalingFactor();
+                    //}
+                    var dpi = NativeMethods.GetDpiForSystem();
+                    dpiscale = 1;
+                    if (dpi == 96) dpiscale = 1;
+                    if (dpi == 120) dpiscale = 1.25f;
+                    if (dpi == 144) dpiscale = 1.5f;
+                    if (dpi == 192) dpiscale = 2;
+                }
                 if (message.uiy > 0 && message.uix > 0 && message.uiwidth > 0 && message.uiheight > 0)
                 {
+                    //message.uiy = (int)(message.uiy * dpiscale);
+                    //message.uix = (int)(message.uix * dpiscale);
+                    //message.uiwidth = (int)(message.uiwidth * dpiscale);
+                    //message.uiheight = (int)(message.uiheight * dpiscale);
+                    if(dpiscale == 1.25)
+                    {
+                        message.uiy += 158;
+                    }
                     LastElement = new NMElement(message);
                 }
 
@@ -155,6 +187,8 @@ namespace OpenRPA.NM
                         {
                             Button = Input.MouseButton.Left
                         }; var a = new GetElement { DisplayName = LastElement.ToString() };
+
+                        message.tab = NMHook.tabs.Where(x => x.id == message.tabid && x.windowId == message.windowId).FirstOrDefault();
 
                         var selector = new NMSelector(LastElement, null, true, null);
                         a.Selector = selector.ToString();
@@ -220,7 +254,7 @@ namespace OpenRPA.NM
             p = first.Properties.Where(x => x.Name == "url").FirstOrDefault();
             string url = "";
             if (p != null) { url = p.Value; }
-            NMHook.reloadtabs();
+            NMHook.enumtabs();
             var tabs = NMHook.tabs.Where(x => x.browser == browser && x.url == url).ToList();
             if (string.IsNullOrEmpty(url)) tabs = NMHook.tabs.Where(x => x.browser == browser).ToList();
             foreach (var tab in tabs)
@@ -252,6 +286,11 @@ namespace OpenRPA.NM
                 return false;
             }
             if (LastElement == null) return false;
+            if(LastElement.message == null) return false;
+            if (LastElement.message.tab == null)
+            {
+                LastElement.message.tab = NMHook.tabs.Where(x => x.id == LastElement.message.tabid && x.browser == LastElement.message.browser && x.windowId == LastElement.message.windowId).FirstOrDefault();
+            }
             var selector = new NMSelector(LastElement, null, true, null);
             var a = new GetElement { DisplayName = LastElement.id + " " + LastElement.type + " " + LastElement.Name };
             a.Selector = selector.ToString();

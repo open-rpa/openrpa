@@ -127,7 +127,7 @@ namespace OpenRPA.NM
         }
         public NMElement(NativeMessagingMessage message)
         {
-            parseChromeString(message.result);
+            parseChromeString(message.result.ToString());
             _browser = message.browser;
             zn_id = message.zn_id;
             this.message = message;
@@ -168,7 +168,7 @@ namespace OpenRPA.NM
                     if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
                     // NMHook.HighlightTab(tab);
 
-                    var updateelement = new NativeMessagingMessage("updateelementvalue")
+                    var updateelement = new NativeMessagingMessage("updateelementvalue", PluginConfig.debug_console_output)
                     {
                         browser = message.browser,
                         cssPath = cssselector,
@@ -211,7 +211,7 @@ namespace OpenRPA.NM
             {
                 if (virtualClick)
                 {
-                    var getelement2 = new NativeMessagingMessage("clickelement")
+                    var getelement2 = new NativeMessagingMessage("clickelement", PluginConfig.debug_console_output)
                     {
                         browser = message.browser,
                         //cssPath = cssselector,
@@ -230,7 +230,7 @@ namespace OpenRPA.NM
                     return;
                 }
                 NativeMessagingMessage subresult = null;
-                var getelement = new NativeMessagingMessage("getelement")
+                var getelement = new NativeMessagingMessage("getelement", PluginConfig.debug_console_output)
                 {
                     browser = message.browser,
                     zn_id = zn_id,
@@ -274,11 +274,14 @@ namespace OpenRPA.NM
         {
             try
             {
-                var getelement = new NativeMessagingMessage("getelement")
+                var getelement = new NativeMessagingMessage("getelement", PluginConfig.debug_console_output)
                 {
                     browser = browser,
                     cssPath = cssselector,
-                    xPath = xpath
+                    xPath = xpath,
+                    frameId = this.message.frameId,
+                    windowId = this.message.windowId,
+                    zn_id = this.zn_id
                 };
                 NativeMessagingMessage message = null;
                 // getelement.data = "getdom";
@@ -289,7 +292,7 @@ namespace OpenRPA.NM
                     return false;
                 }
 
-                parseChromeString(message.result);
+                parseChromeString(message.result.ToString());
                 zn_id = message.zn_id;
                 this.message = message;
                 if (!string.IsNullOrEmpty(message.xPath)) xpath = message.xPath;
@@ -405,6 +408,11 @@ namespace OpenRPA.NM
                 var result = new List<IElement>();
                 if (tagname.ToLower() == "select")
                 {
+                    foreach(var item in Children)
+                    {
+                        item.Refresh();
+                        result.Add(item);
+                    }
 
                 }
                 return result.ToArray();

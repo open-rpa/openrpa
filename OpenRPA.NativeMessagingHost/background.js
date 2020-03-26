@@ -492,8 +492,10 @@ var tabssendMessage = function (tabid, message) {
             }
             if (details.length == 0 || details.length == 1) {
                 try {
-                    // result = await TabsSendMessage(tabid, message, { frameId: message.frameId });
-                    result = await TabsSendMessage(tabid, message);
+                    if (message.frameId > -1) result = await TabsSendMessage(tabid, message, { frameId: message.frameId });
+                    if (message.frameId == -1) result = await TabsSendMessage(tabid, message);
+                    
+                    // result = await TabsSendMessage(tabid, message);
 
                     if (result == null) {
                         var tabsList = await tabsquery();

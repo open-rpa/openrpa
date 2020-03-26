@@ -287,18 +287,18 @@ namespace OpenRPA.NM
             enumwindows();
             enumtabs();
         }
-        public static void UpdateTab(NativeMessagingMessageTab tab)
-        {
-            NativeMessagingMessage message = new NativeMessagingMessage("updatetab", PluginConfig.debug_console_output);
-            NativeMessagingMessage result = null;
-            message.browser = tab.browser; message.tabid = tab.id; message.tab = tab;
-            message.windowId = tab.windowId;
-            if (connected)
-            {
-                result = sendMessageResult(message, true, TimeSpan.FromSeconds(2));
-                WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
-            }
-        }
+        //public static void UpdateTab(NativeMessagingMessageTab tab)
+        //{
+        //    NativeMessagingMessage message = new NativeMessagingMessage("updatetab", PluginConfig.debug_console_output);
+        //    NativeMessagingMessage result = null;
+        //    message.browser = tab.browser; message.tabid = tab.id; message.tab = tab;
+        //    message.windowId = tab.windowId;
+        //    if (connected)
+        //    {
+        //        result = sendMessageResult(message, true, TimeSpan.FromSeconds(2));
+        //        WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
+        //    }
+        //}
         public static void CloseTab(NativeMessagingMessageTab tab)
         {
             NativeMessagingMessage message = new NativeMessagingMessage("closetab", PluginConfig.debug_console_output);
@@ -310,14 +310,14 @@ namespace OpenRPA.NM
                 result = sendMessageResult(message, true, TimeSpan.FromSeconds(2));
             }
         }
-        public static void HighlightTab(NativeMessagingMessageTab tab)
-        {
-            if (!tab.highlighted)
-            {
-                tab.highlighted = true;
-                UpdateTab(tab);
-            }
-        }
+        //public static void HighlightTab(NativeMessagingMessageTab tab)
+        //{
+        //    if (!tab.highlighted)
+        //    {
+        //        tab.highlighted = true;
+        //        UpdateTab(tab);
+        //    }
+        //}
         public static void openurl(string browser, string url)
         {
             if (browser == "chrome")
@@ -361,33 +361,36 @@ namespace OpenRPA.NM
         {
             if (ffconnected)
             {
-                NativeMessagingMessage result = null;
                 NativeMessagingMessage message = new NativeMessagingMessage("openurl", PluginConfig.debug_console_output) { data = url };
-                enumtabs();
-                var tab = tabs.Where(x => x.url == url && x.highlighted == true && x.browser == "ff").FirstOrDefault();
-                if (tab == null)
-                {
-                    tab = tabs.Where(x => x.url == url && x.browser == "ff").FirstOrDefault();
-                }
-                if (tab == null)
-                {
-                    tab = tabs.Where(x => x.highlighted == true && x.browser == "ff").FirstOrDefault();
-                }
-                if (tab != null && !forceNew)
-                {
-                    //if (tab.highlighted && tab.url == url) return;
-                    message.functionName = "updatetab";
-                    message.data = url;
-                    tab.highlighted = true;
-                    message.tab = tab;
-                    result = ffpipe.Message(message, true, TimeSpan.FromSeconds(2));
-                    WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
-                    return;
-                }
-                result = ffpipe.Message(message, true, TimeSpan.FromSeconds(2));
-                if (result == null) throw new Exception("Failed loading url " + url + " in ff");
-                WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
-                return;
+                var result = ffpipe.Message(message, true, TimeSpan.FromSeconds(2));
+                if (result != null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
+                //NativeMessagingMessage result = null;
+                //NativeMessagingMessage message = new NativeMessagingMessage("openurl", PluginConfig.debug_console_output) { data = url };
+                //enumtabs();
+                //var tab = tabs.Where(x => x.url == url && x.highlighted == true && x.browser == "ff").FirstOrDefault();
+                //if (tab == null)
+                //{
+                //    tab = tabs.Where(x => x.url == url && x.browser == "ff").FirstOrDefault();
+                //}
+                //if (tab == null)
+                //{
+                //    tab = tabs.Where(x => x.highlighted == true && x.browser == "ff").FirstOrDefault();
+                //}
+                //if (tab != null && !forceNew)
+                //{
+                //    //if (tab.highlighted && tab.url == url) return;
+                //    message.functionName = "updatetab";
+                //    message.data = url;
+                //    tab.highlighted = true;
+                //    message.tab = tab;
+                //    result = ffpipe.Message(message, true, TimeSpan.FromSeconds(2));
+                //    WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
+                //    return;
+                //}
+                //result = ffpipe.Message(message, true, TimeSpan.FromSeconds(2));
+                //if (result == null) throw new Exception("Failed loading url " + url + " in ff");
+                //WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
+                //return;
             }
         }
         internal static void chromeopenurl(string url, bool forceNew)

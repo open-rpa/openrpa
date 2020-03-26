@@ -109,6 +109,7 @@ async function OnPortMessage(message) {
             var subtabsList = await tabsquery();
             for (var l in subtabsList) {
                 try {
+                    if (!allowExecuteScript(subtabsList[l])) continue;
                     await tabsexecuteScript(subtabsList[l].id, { code: openrpautil_script, allFrames: true });
                 } catch (e) {
                     console.log(e);
@@ -316,11 +317,12 @@ function tabsOnRemoved(tabId) {
     port.postMessage(JSON.parse(JSON.stringify(message)));
 }
 async function tabsOnUpdated(tabId, changeInfo, tab) {
-    if (port == null) return;
+    if (!allowExecuteScript(tab)) return;
     try {
         await tabsexecuteScript(tab.id, { code: openrpautil_script, allFrames: true });
     } catch (e) {
         console.log(e);
+        console.log(tab);
     }
     var message = { functionName: "tabupdated", tabid: tabId, tab: tab };
     if (isChrome) message.browser = "chrome";
@@ -340,6 +342,19 @@ function tabsOnActivated(activeInfo) {
 }
 //window.addEventListener("load", OnPageLoad, false);
 
+var allowExecuteScript = function (tab){
+    if (port == null) return;
+    if (isFirefox) {
+        if (tab.url.startsWith("about:")) return;
+        if (tab.url.startsWith("https://support.mozilla.org")) return;
+    }
+    // ff uses chrome:// when debugging ?
+    if (tab.url.startsWith("chrome://")) return;
+    if (isChrome) {
+        if (tab.url.startsWith("https://chrome.google.com")) return;
+    }
+    return true;
+}
 var tabsquery = function (options) {
     return new Promise(function (resolve, reject) {
         try {
@@ -431,57 +446,65 @@ var tabssendMessage = function (tabid, message) {
             }
             var result = null;
             var lasterror = "tabssendMessage: No error";
-            for (var i = 0; i < details.length; i++)
-            {
-                try {
-                    var frame = details[i];
-                    var tmp = await TabsSendMessage(tabid, message, { frameId: frame.frameId });
-                    if (result == null) {
-                        result = tmp;
-                        result.frameId = frame.frameId;
-                        if (result.result != null) {
+            if (details.length > 1) {
+                for (var i = 0; i < details.length; i++) {
+                    try {
+                        var frame = details[i];
+                        if (!allowExecuteScript(frame)) continue;
+                        var tmp = await TabsSendMessage(tabid, message, { frameId: frame.frameId });
+                        if (result == null) {
+                            result = tmp;
                             result.frameId = frame.frameId;
-                        }
-                        if (result.results != null && result.results.length > 0) {
-                            for (var z = 0; z < result.results.length; z++) {
-                                result.results[z].frameId = frame.frameId;
+                            if (result.result != null) {
+                                result.frameId = frame.frameId;
+                            }
+                            if (result.results != null && result.results.length > 0) {
+                                for (var z = 0; z < result.results.length; z++) {
+                                    result.results[z].frameId = frame.frameId;
+                                }
+                            }
+                        } else {
+                            if (result.result != null || result.result != undefined) {
+                                //if (typeof result.result == "string") {
+                                //    result.results = [JSON.parse(result.result)];
+                                //} else {
+                                //    result.results = [result.result];
+                                //}                            
+                                //delete result.result;
+                            }
+                            if (tmp.result != null) {
+                                tmp.result.frameId = frame.frameId;
+                                if (result.results == null) result.results = [];
+                                result.results.push(tmp.result);
+                            }
+                            if (tmp.results != null && tmp.results.length > 0) {
+                                for (var z = 0; z < tmp.results.length; z++) {
+                                    tmp.results[z].frameId = frame.frameId;
+                                }
+                                result.results = result.results.concat(tmp.results);
                             }
                         }
-                    } else {
-                        if (result.result != null || result.result != undefined) {
-                            //if (typeof result.result == "string") {
-                            //    result.results = [JSON.parse(result.result)];
-                            //} else {
-                            //    result.results = [result.result];
-                            //}                            
-                            //delete result.result;
-                        }
-                        if (tmp.result != null) {
-                            tmp.result.frameId = frame.frameId;
-                            if (result.results == null) result.results = [];
-                            result.results.push(tmp.result);
-                        }
-                        if (tmp.results != null && tmp.results.length > 0) {
-                            for (var z = 0; z < tmp.results.length; z++) {
-                                tmp.results[z].frameId = frame.frameId;
-                            }
-                            result.results = result.results.concat(tmp.results);
-                        }
+                    } catch (e) {
+                        lasterror = e;
+                        console.debug(e);
                     }
-                } catch (e) {
-                    lasterror = e;
-                    console.debug(e);
                 }
             }
-            if (details.length == 0) {
+            if (details.length == 0 || details.length == 1) {
                 try {
-                    result = await TabsSendMessage(tabid, message, { frameId: message.frameId });
+                    // result = await TabsSendMessage(tabid, message, { frameId: message.frameId });
+                    result = await TabsSendMessage(tabid, message);
+
+                    if (result == null) {
+                        var tabsList = await tabsquery();
+                    }
+
                 } catch (e) {
                     lasterror = e;
                     console.debug(e);
                 }
             }
-            if (result == null) {
+            if (result == null || result == undefined) {
                 // this will fail with "Could not establish connection. Receiving end does not exist." when page is loading, so just send empty result to robot, it will try again 
                 //console.debug("tabssendMessage has no result, return original message");
                 //message.error = lasterror;
@@ -490,13 +513,6 @@ var tabssendMessage = function (tabid, message) {
             }
             console.debug(result);
             resolve(result);
-            //chrome.tabs.sendMessage(tabid, message, options, (result) => {
-            //    if (chrome.runtime.lastError) {
-            //        reject(chrome.runtime.lastError.message);
-            //        return;
-            //    }
-            //    resolve(result);
-            //});
         } catch (e) {
             reject(e);
         }
@@ -505,7 +521,7 @@ var tabssendMessage = function (tabid, message) {
 var TabsSendMessage = function (tabid, message, options) {
     return new Promise(function (resolve, reject) {
         try {
-            chrome.tabs.sendMessage(tabid, message, options, (result) => {
+            chrome.tabs.sendMessage(tabid, message, options, (result, r2, r3) => {
                 if (chrome.runtime.lastError) {
                     reject(chrome.runtime.lastError.message);
                     return;
@@ -588,7 +604,7 @@ if (openrpautil_script === null || openrpautil_script === undefined || openrpaut
     if (port != null) {
         var message = { functionName: "openrpautilscript" };
         try {
-            console.log("[send][" + message.messageid + "]" + message.functionName);
+            console.log("[send]" + message.functionName);
             port.postMessage(JSON.parse(JSON.stringify(message)));
         } catch (e) {
             console.error(e);

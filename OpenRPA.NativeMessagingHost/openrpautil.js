@@ -13,13 +13,18 @@ if (true == false) {
     document.openrpautil = {};
 } else {
     if (window.openrpautil_contentlistner === null || window.openrpautil_contentlistner === undefined) {
-        var runtimeOnMessage = async function (sender, message, fnResponse) {
+        var runtimeOnMessage = function (sender, message, fnResponse) {
             try {
                 if (openrpautil == undefined) return;
                 var func = openrpautil[sender.functionName];
                 if (func) {
                     var result = func(sender);
-                    fnResponse(result);
+                    if (result == null) {
+                        console.warn(sender.functionName + " gave no result.");
+                        fnResponse(sender);
+                    } else {
+                        fnResponse(result);
+                    }
                 }
                 else {
                     sender.error = "Unknown function " + sender.functionName;

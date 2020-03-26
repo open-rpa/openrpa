@@ -16,6 +16,11 @@ namespace OpenRPA.Interfaces
             id = msg.windowId;
             try
             {
+                if(msg.result == null || string.IsNullOrEmpty(msg.result.ToString()))
+                {
+                    Log.Warning("parsing NMElement that is not an html element (functionName: " + msg.functionName + ")");
+                    return;
+                }
                 var obj = JObject.Parse(msg.result.ToString());
                 if (obj.ContainsKey("alwaysOnTop")) alwaysOnTop = obj.Value<bool>("alwaysOnTop");
                 if (obj.ContainsKey("focused")) focused = obj.Value<bool>("focused");

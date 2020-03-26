@@ -41,6 +41,7 @@
     <None Remove="Resources\OpenRPA.png" />
     <None Remove="Resources\OpenRPA2.ico" />
     <None Remove="Resources\OpenRPA2.png" />
+    <None Remove="zeniverse.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="chromemanifest.json">

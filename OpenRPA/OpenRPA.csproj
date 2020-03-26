@@ -10,7 +10,7 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.90</Version>
+    <Version>1.0.87</Version>
     <PackageReleaseNotes>1.0.87 Add support for translation of property displaynames and descriptions
 1.0.86 Rewrite InvokeOpenFlow logic and add AssignOpenFlow, save Window state, improve invokeopenflow
 1.0.85 Add support for variables in selector, improve speed and virtual clicks in nm

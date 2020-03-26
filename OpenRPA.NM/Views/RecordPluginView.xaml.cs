@@ -34,16 +34,16 @@ namespace OpenRPA.NM.Views
             DataContext = this;
             wait_for_tab_after_set_value.IsChecked = PluginConfig.wait_for_tab_after_set_value;
             wait_for_tab_click.IsChecked = PluginConfig.wait_for_tab_click;
-            register_old_portname.IsChecked = PluginConfig.register_old_portname;
             compensate_for_old_addon.IsChecked = PluginConfig.compensate_for_old_addon;
+            debug_console_output.IsChecked = PluginConfig.debug_console_output;
         }
         private void value_Changed(object sender, RoutedEventArgs e)
         {
             if (wait_for_tab_after_set_value.IsChecked == null) return;
             PluginConfig.wait_for_tab_after_set_value = wait_for_tab_after_set_value.IsChecked.Value;
             PluginConfig.wait_for_tab_click = wait_for_tab_click.IsChecked.Value;
-            PluginConfig.register_old_portname = register_old_portname.IsChecked.Value;
             PluginConfig.compensate_for_old_addon = compensate_for_old_addon.IsChecked.Value;
+            PluginConfig.debug_console_output = debug_console_output.IsChecked.Value;
             Config.Save();
         }
     }

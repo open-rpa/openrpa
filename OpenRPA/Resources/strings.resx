@@ -570,6 +570,9 @@
   <data name="type" xml:space="preserve">
     <value>Type</value>
   </data>
+  <data name="uilanguage" xml:space="preserve">
+    <value>UI Language</value>
+  </data>
   <data name="usesendkeys" xml:space="preserve">
     <value>Use SendKeys</value>
   </data>

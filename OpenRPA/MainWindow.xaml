@@ -175,6 +175,16 @@
                     </StackPanel>
 
                 </RibbonGroup>
+                <RibbonGroup Header="{x:Static or:strings.uilanguage}">
+                    <StackPanel>
+                        <ribbon:RibbonComboBox>
+                            <ribbon:RibbonGallery SelectedItem="{Binding Path=defaultuilocal}" SelectedValuePath="Value" >
+                                <ribbon:RibbonGalleryCategory ItemsSource="{Binding uilocals}" DisplayMemberPath="Name"  />
+                            </ribbon:RibbonGallery>
+                        </ribbon:RibbonComboBox>
+                    </StackPanel>
+
+                </RibbonGroup>
                 <RibbonGroup Header="{x:Static or:strings.browseraddons}">
                     <RibbonButton Label="{x:Static or:strings.chrome}" LargeImageSource="/OpenRPA;component/Resources/Buttons/OpenChrome.png" 
                                   Command="{Binding Data.OpenChromePageCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />

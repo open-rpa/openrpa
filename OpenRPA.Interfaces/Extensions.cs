@@ -11,6 +11,30 @@ namespace OpenRPA.Interfaces
 {
     public static class Extensions
     {
+        public static IEnumerable<System.Globalization.CultureInfo> GetAvailableCultures(Type type)
+        {
+            List<System.Globalization.CultureInfo> result = new List<System.Globalization.CultureInfo>();
+
+            var rm = new System.Resources.ResourceManager(type);
+
+            System.Globalization.CultureInfo[] cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.AllCultures);
+            foreach (System.Globalization.CultureInfo culture in cultures)
+            {
+                try
+                {
+                    if (culture.Equals(System.Globalization.CultureInfo.InvariantCulture)) continue; //do not use "==", won't work
+
+                    var rs = rm.GetResourceSet(culture, true, false);
+                    if (rs != null)
+                        result.Add(culture);
+                }
+                catch (System.Globalization.CultureNotFoundException)
+                {
+                    //NOP
+                }
+            }
+            return result;
+        }
         public static bool GetIsEmpty<T>(this System.Activities.OutArgument<T> src)
         {
             return (bool)src.GetType().GetProperty("IsEmpty", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(src, null);

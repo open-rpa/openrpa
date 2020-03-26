@@ -32,16 +32,15 @@
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="addon\background.js" />
+    <None Remove="background - Copy.js" />
     <None Remove="background.js" />
     <None Remove="chromemanifest.json" />
-    <None Remove="content.js" />
     <None Remove="ffmanifest.json" />
+    <None Remove="openrpautil.js" />
     <None Remove="Resources\OpenRPA.ico" />
     <None Remove="Resources\OpenRPA.png" />
     <None Remove="Resources\OpenRPA2.ico" />
     <None Remove="Resources\OpenRPA2.png" />
-    <None Remove="zeniverse.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="chromemanifest.json">
@@ -52,10 +51,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="addon\background.js" />
     <EmbeddedResource Include="background.js" />
-    <EmbeddedResource Include="content.js" />
-    <EmbeddedResource Include="zeniverse.js" />
+    <EmbeddedResource Include="openrpautil.js" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
@@ -65,14 +62,6 @@
     <Resource Include="Resources\OpenRPA.png" />
     <Resource Include="Resources\OpenRPA2.ico" />
     <Resource Include="Resources\OpenRPA2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="chromemanifestold.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="ffmanifestold.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />

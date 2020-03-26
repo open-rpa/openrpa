@@ -8,7 +8,8 @@ namespace OpenRPA.NamedPipeWrapper
     [Serializable]
     public class PipeMessage
     {
-        private static int messagecounter = 0;
+        private static Random rnd = new Random();
+        private static int messagecounter = rnd.Next(100, 9000);
         public PipeMessage()
         {
             ++messagecounter;

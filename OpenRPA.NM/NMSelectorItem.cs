@@ -45,7 +45,8 @@ namespace OpenRPA.NM
             //{
             //    p.Enabled = true;
             //    p.canDisable = true;
-            //};
+            //};>	OpenRPA.NM.dll!OpenRPA.NM.NMSelectorItem.NMSelectorItem(OpenRPA.NM.NMElement element, bool isRoot, bool hasAnchor) Line 31	C#
+
             foreach (var p in Properties) p.PropertyChanged += (sender, e) =>
             {
                 OnPropertyChanged("Displayname");

@@ -190,13 +190,9 @@ Section "Chrome and Firefox (NM)" ; section 5
   # SetOverwrite ifnewer
   File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\chromemanifest.json"
   File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\ffmanifest.json"
-  File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\chromemanifestold.json"
-  File "C:\code\openrpa\OpenRPA.NM\bin\PrepInstaller\net462\ffmanifestold.json"
   !insertmacro StrRep '$0' "$INSTDIR\OpenRPA.NativeMessagingHost.exe" '\' '\\'
   !insertmacro _ReplaceInFile "chromemanifest.json" "REPLACEPATH" $0
   !insertmacro _ReplaceInFile "ffmanifest.json" "REPLACEPATH" $0
-  !insertmacro _ReplaceInFile "chromemanifestold.json" "REPLACEPATH" $0
-  !insertmacro _ReplaceInFile "ffmanifestold.json" "REPLACEPATH" $0
 SectionEnd
 Section "Image recognition and OCR" ; section 6
   SetOutPath $INSTDIR\x64

@@ -1420,6 +1420,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UI Language.
+        /// </summary>
+        public static string uilanguage {
+            get {
+                return ResourceManager.GetString("uilanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use SendKeys.
         /// </summary>
         public static string usesendkeys {

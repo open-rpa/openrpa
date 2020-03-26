@@ -135,6 +135,12 @@
   <data name="compensate_for_old_addon_help" xml:space="preserve">
     <value>Add pixel compensation for old add</value>
   </data>
+  <data name="debug_console_output" xml:space="preserve">
+    <value>Debug Console</value>
+  </data>
+  <data name="debug_console_output_help" xml:space="preserve">
+    <value>Write debug informtation to browser console</value>
+  </data>
   <data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
     <value>Wait after set value</value>
   </data>

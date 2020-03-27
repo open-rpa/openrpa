@@ -11,7 +11,7 @@ Join slack for for help or giving feedback [#openrpa](https://join.slack.com/t/o
 
 Check out the documentation on our [wiki pages](https://github.com/open-rpa/openrpa/wiki)
 
-Download and try it out here [here](https://github.com/open-rpa/openrpa/releases/download/1.0.87/OpenRPA.exe) 
+Download and try it out here [here](https://github.com/open-rpa/openrpa/releases/download/1.0.88/OpenRPA.exe) 
 
 ![1564858527749](img/MainWindowProjects.png)
 
@@ -59,7 +59,7 @@ Join slack for for help or giving feedback [#openrpa](https://join.slack.com/t/o
 
 Check out the documentation on our [wiki pages](https://github.com/open-rpa/openrpa/wiki)
 
-Download and try it out here [here](https://github.com/open-rpa/openrpa/releases/download/1.0.87/OpenRPA.exe) 
+Download and try it out here [here](https://github.com/open-rpa/openrpa/releases/download/1.0.88/OpenRPA.exe) 
 
 Try with central management using [OpenFlow](https://github.com/open-rpa/OpenFlow) here
 

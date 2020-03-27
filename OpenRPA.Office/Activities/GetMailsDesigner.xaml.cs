@@ -14,8 +14,7 @@ namespace OpenRPA.Office.Activities
         public string name { get; set; }
         public string _id { get; set; }
     }
-    // Interaction logic for addinputDesigner.xaml
-    public partial class GetMailsDesigner //: INotifyPropertyChanged
+    public partial class GetMailsDesigner
     {
         public ObservableCollection<outlookfolder> folders { get; set; }
         public GetMailsDesigner()
@@ -24,7 +23,6 @@ namespace OpenRPA.Office.Activities
             folders.Add(new outlookfolder() { name = "", _id = "" });
             InitializeComponent();
         }
-        // private Microsoft.Office.Interop.Outlook.Explorer mOutlookExplorer;
         private Microsoft.Office.Interop.Outlook.Application CreateOutlookInstance()
         {
             var outlookApplication = new Microsoft.Office.Interop.Outlook.Application();
@@ -38,12 +36,19 @@ namespace OpenRPA.Office.Activities
         }
         private void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
         {
-            var outlookApplication = CreateOutlookInstance();
-            MAPIFolder inBox = (MAPIFolder)outlookApplication.ActiveExplorer().Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox);
-            MAPIFolder folderbase = inBox.Store.GetRootFolder();
-            foreach (MAPIFolder folder in folderbase.Folders)
+            try
             {
-                GetFolders(folder, 0);
+                var outlookApplication = CreateOutlookInstance();
+                MAPIFolder inBox = (MAPIFolder)outlookApplication.ActiveExplorer().Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox);
+                MAPIFolder folderbase = inBox.Store.GetRootFolder();
+                foreach (MAPIFolder folder in folderbase.Folders)
+                {
+                    GetFolders(folder, 0);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Log.Error(ex.ToString());
             }
         }
         public void GetFolders(MAPIFolder folder, int ident)
@@ -70,15 +75,10 @@ namespace OpenRPA.Office.Activities
             return new String(' ', num);
         }
 
-        //public event PropertyChangedEventHandler PropertyChanged;
-        //private void NotifyPropertyChanged(String propertyName)
-        //{
-        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        //}
-
-        //private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        //{
-        //    NotifyPropertyChanged("theCommentOnLiner");
-        //}
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            folders.Clear();
+            ActivityDesigner_Loaded(null, null);
+        }
     }
 }

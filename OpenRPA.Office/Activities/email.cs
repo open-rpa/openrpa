@@ -22,7 +22,21 @@ namespace OpenRPA.Office.Activities
         //public NameSpace Session { get { return mailItem.Session; } }
         //public dynamic Parent { get { return mailItem.Parent; } }
         //public Actions Actions { get { return mailItem.Actions; } }
-        //public Attachments Attachments { get { return mailItem.Attachments; } }
+        public Attachment[] Attachments { 
+            get {
+                var result = new List<Attachment>();
+                foreach (Microsoft.Office.Interop.Outlook.Attachment a in mailItem.Attachments) result.Add(new Attachment(a));
+                return result.ToArray(); 
+            } 
+        }
+        public bool SaveAttachments(string Path, bool Overwrite = false)
+        {
+            foreach(var a in Attachments)
+            {
+                if (!a.SaveTo(Path)) return false;
+            }
+            return true;
+        }
         public string BillingInformation { get { return mailItem.BillingInformation; } set { mailItem.BillingInformation = value; } }
         public string Body { get { return mailItem.Body; } set { mailItem.Body = value; } }
         public string Categories { get { return mailItem.Categories; } set { mailItem.Categories = value; } }

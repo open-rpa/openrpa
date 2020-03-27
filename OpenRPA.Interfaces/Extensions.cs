@@ -9,14 +9,12 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Interfaces
 {
-    public static class Extensions
+    public class OtherExtensions : MarshalByRefObject
     {
-        public static IEnumerable<System.Globalization.CultureInfo> GetAvailableCultures(Type type)
+        public IEnumerable<System.Globalization.CultureInfo> GetAvailableCultures(Type type)
         {
             List<System.Globalization.CultureInfo> result = new List<System.Globalization.CultureInfo>();
-
             var rm = new System.Resources.ResourceManager(type);
-
             System.Globalization.CultureInfo[] cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.AllCultures);
             foreach (System.Globalization.CultureInfo culture in cultures)
             {
@@ -32,8 +30,34 @@ namespace OpenRPA.Interfaces
                 {
                     //NOP
                 }
+                rm.ReleaseAllResources();
             }
             return result;
+        }
+    }
+    public static class Extensions
+    {
+        public static IEnumerable<System.Globalization.CultureInfo> GetAvailableCultures(Type type)
+        {
+            AppDomain otherDomain = null;
+            try
+            {
+                otherDomain = AppDomain.CreateDomain("other domain");
+                var otherType = typeof(OtherExtensions);
+                var obj = otherDomain.CreateInstanceAndUnwrap(
+                                         otherType.Assembly.FullName,
+                                         otherType.FullName) as OtherExtensions;
+                return obj.GetAvailableCultures(type);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                if (otherDomain != null) AppDomain.Unload(otherDomain);
+            }
         }
         public static bool GetIsEmpty<T>(this System.Activities.OutArgument<T> src)
         {

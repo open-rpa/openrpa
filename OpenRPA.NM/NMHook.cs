@@ -107,7 +107,7 @@ namespace OpenRPA.NM
             {
                 var win = CurrentFFWindow;
                 if (win == null) return null;
-                return tabs.Where(x => x.browser == "ff" && x.windowId == win.id && x.selected).FirstOrDefault();
+                return tabs.Where(x => x.browser == "ff" && x.windowId == win.id && (x.selected || x.highlighted)).FirstOrDefault();
             }
         }
         private static void windowcreated(NativeMessagingMessage msg)
@@ -296,7 +296,7 @@ namespace OpenRPA.NM
         //    if (connected)
         //    {
         //        result = sendMessageResult(message, true, TimeSpan.FromSeconds(2));
-        //        WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
+        //          (result.tabid, result.browser, TimeSpan.FromSeconds(5));
         //    }
         //}
         public static void CloseTab(NativeMessagingMessageTab tab)
@@ -318,7 +318,7 @@ namespace OpenRPA.NM
         //        UpdateTab(tab);
         //    }
         //}
-        public static void openurl(string browser, string url)
+        public static void openurl(string browser, string url, bool newtab)
         {
             if (browser == "chrome")
             {
@@ -334,7 +334,7 @@ namespace OpenRPA.NM
                 }
                 else
                 {
-                    chromeopenurl(url, false);
+                    chromeopenurl(url, newtab);
                 }
             }
             else
@@ -352,7 +352,7 @@ namespace OpenRPA.NM
                 }
                 else
                 {
-                    ffopenurl(url, false);
+                    ffopenurl(url, newtab);
                 }
 
             }
@@ -362,6 +362,7 @@ namespace OpenRPA.NM
             if (ffconnected)
             {
                 NativeMessagingMessage message = new NativeMessagingMessage("openurl", PluginConfig.debug_console_output) { data = url };
+                message.xPath = forceNew.ToString().ToLower();
                 var result = ffpipe.Message(message, true, TimeSpan.FromSeconds(2));
                 if (result != null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
                 //NativeMessagingMessage result = null;
@@ -398,6 +399,7 @@ namespace OpenRPA.NM
             if (chromeconnected)
             {
                 NativeMessagingMessage message = new NativeMessagingMessage("openurl", PluginConfig.debug_console_output) { data = url };
+                message.xPath = forceNew.ToString().ToLower();
                 var result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
                 if(result!=null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
 
@@ -469,6 +471,7 @@ namespace OpenRPA.NM
         {
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
+            enumtabs();
             var tab = tabs.Where(x => x.id == tabid && x.browser == browser).FirstOrDefault();
             do
             {

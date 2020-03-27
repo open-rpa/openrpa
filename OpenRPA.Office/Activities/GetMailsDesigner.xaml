@@ -33,13 +33,14 @@
             <DataTemplate x:Uid="DataTemplate_1" x:Key="ExpandedCommentOutTemplate">
                 <Border x:Uid="Border_1" BorderThickness ="1">
                     <StackPanel>
-                    <ComboBox 
+                    <ComboBox
                     ItemsSource="{Binding Path=folders}"
                     DisplayMemberPath="name"
                     SelectedValuePath="_id"
                     SelectedValue="{Binding Path=ModelItem.Folder, Mode=TwoWay, Converter={rpaoffice:InArgumentStringConverter}}"
                     >
                     </ComboBox>
+                            <Button Click="Button_Click">Reload</Button>
                     <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
                                     HintText="{x:Static or:strings.activity_drop_hint}" AllowedItemType="sa:Activity"
                                       Grid.Row="1" />

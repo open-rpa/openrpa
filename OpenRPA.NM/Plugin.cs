@@ -222,7 +222,7 @@ namespace OpenRPA.NM
             string url = "";
             if (p != null) { url = p.Value; }
 
-            NMHook.openurl(browser, url);
+            NMHook.openurl(browser, url, false);
             if(browser=="chrome")
             {
                 foreach (var process in System.Diagnostics.Process.GetProcesses())

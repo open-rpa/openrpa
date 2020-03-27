@@ -40,7 +40,7 @@
                     SelectedValue="{Binding Path=ModelItem.Folder, Mode=TwoWay, Converter={rpaoffice:InArgumentStringConverter}}"
                     >
                     </ComboBox>
-                            <Button>Reload</Button>
+                            <Button Click="Button_Click">Reload</Button>
                     <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
                                     HintText="{x:Static or:strings.activity_drop_hint}" AllowedItemType="sa:Activity"
                                       Grid.Row="1" />

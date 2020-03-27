@@ -19,6 +19,7 @@ namespace OpenRPA.NM
         [RequiredArgument]
         public InArgument<string> Url { get; set; }
         public InArgument<string> Browser { get; set; }
+        public InArgument<bool> NewTab { get; set; }
         public OpenURL()
         {
         }
@@ -27,9 +28,9 @@ namespace OpenRPA.NM
             var url = Url.Get(context);
             var browser = Browser.Get(context);
             var timeout = TimeSpan.FromSeconds(3);
+            var newtab = NewTab.Get(context);
             if (browser != "chrome" && browser != "ff") browser = "chrome";
-            NMHook.openurl(browser, url);
-
+            NMHook.openurl(browser, url, newtab);
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {

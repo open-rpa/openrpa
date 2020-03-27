@@ -99,15 +99,14 @@ namespace OpenRPA
             }
             set
             {
-                Console.WriteLine("defaultuilocal: " + value);
                 if(value != null && !string.IsNullOrEmpty(value.Value) && value.Value != Config.local.culture)
                 {
                     Config.local.culture = value.Value;
                     Config.Save();
                     try
                     {
-                        System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo(Config.local.culture);
-                        InitializeComponent();
+                        //System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo(Config.local.culture);
+                        //InitializeComponent();
                         MessageBox.Show("Please restart the robot for the change to take fully effect");
                     }
                     catch (Exception)

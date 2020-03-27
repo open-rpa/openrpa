@@ -74,5 +74,11 @@ namespace OpenRPA.Office.Activities
         {
             return new String(' ', num);
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            folders.Clear();
+            ActivityDesigner_Loaded(null, null);
+        }
     }
 }

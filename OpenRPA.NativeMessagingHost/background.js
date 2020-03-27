@@ -133,6 +133,16 @@ async function OnPortMessage(message) {
             return;
         }
         if (message.functionName === "openurl") {
+            if (message.xPath == "true") {
+                var createProperties = { url: message.data };
+                //if (message.windowId !== null && message.windowId !== undefined && message.windowId > 0) createProperties.windowId = message.windowId;
+                var newtab = await tabscreate(createProperties);
+                message.tab = newtab;
+                message.tabid = newtab.id;
+                console.log("[send][" + message.messageid + "]" + message.functionName);
+                port.postMessage(JSON.parse(JSON.stringify(message)));
+                return;
+            }
             var tabsList = await tabsquery();
             if (message.windowId !== null && message.windowId !== undefined && message.windowId !== '' && message.windowId > 0) {
                 tabsList = tabsList.filter(x => x.windowId == message.windowId);
@@ -550,7 +560,21 @@ var getAllFrames = function (tabid) {
         }
     });
 };
-
+var tabscreate = function (createProperties) {
+    return new Promise(function (resolve, reject) {
+        try {
+            chrome.tabs.create(createProperties, (tab) => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError.message);
+                    return;
+                }
+                resolve(tab);
+            });
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
 OnPageLoad();
 chrome.tabs.onCreated.addListener(tabsOnCreated);
 chrome.tabs.onRemoved.addListener(tabsOnRemoved);

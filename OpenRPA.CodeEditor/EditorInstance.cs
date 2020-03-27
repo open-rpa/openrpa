@@ -72,8 +72,15 @@ namespace OpenRPA.CodeEditor
             }
             else
             {
+                try
+                {
+                    // LostAggregateFocus?.Invoke(this, EventArgs.Empty);
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug(ex.ToString());
+                }
                 // Raise an event
-                LostAggregateFocus?.Invoke(this, EventArgs.Empty);
             }
         }
         private void Editor_Unloaded(object sender, RoutedEventArgs e)

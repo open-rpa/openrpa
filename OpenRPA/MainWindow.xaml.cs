@@ -214,7 +214,7 @@ namespace OpenRPA
                 LoadLayout();
 
                 SetStatus("loading plugins");
-                await Plugins.LoadPlugins(this, Interfaces.Extensions.PluginsDirectory);
+                Plugins.LoadPlugins(this, Interfaces.Extensions.PluginsDirectory);
                 if (string.IsNullOrEmpty(Config.local.wsurl))
                 {
                     SetStatus("loading detectors");

@@ -123,6 +123,10 @@ namespace OpenRPA.NM
                 if (chromeelement.ContainsKey("display")) Display = chromeelement["display"].ToString();
                 if (chromeelement.ContainsKey("isvisibleonscreen")) isVisibleOnScreen = bool.Parse(chromeelement["isvisibleonscreen"].ToString());
                 if (chromeelement.ContainsKey("disabled")) Disabled = bool.Parse(chromeelement["disabled"].ToString());
+                if (string.IsNullOrEmpty(Name) && tagname == "OPTION" && chromeelement.ContainsKey("content"))
+                {
+                    Name = Text;
+                }
             }
         }
         public NMElement(NativeMessagingMessage message)
@@ -152,6 +156,42 @@ namespace OpenRPA.NM
             }
         }
         object IElement.RawElement { get => message; set => message = value as NativeMessagingMessage; }
+        public string Text
+        {
+            get
+            {
+                if (chromeelement.ContainsKey("text")) return chromeelement["text"].ToString();
+                if (chromeelement.ContainsKey("innertext")) return chromeelement["innertext"].ToString();
+                return null;
+            }
+            set
+            {
+                if (NMHook.connected)
+                {
+                    var tab = NMHook.tabs.Where(x => x.id == message.tabid).FirstOrDefault();
+                    if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
+                    // NMHook.HighlightTab(tab);
+
+                    var updateelement = new NativeMessagingMessage("updateelementtext", PluginConfig.debug_console_output)
+                    {
+                        browser = message.browser,
+                        cssPath = cssselector,
+                        xPath = xpath,
+                        tabid = message.tabid,
+                        frameId = message.frameId,
+                        data = value
+                    };
+                    var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(3));
+                    if (subsubresult == null) throw new Exception("Failed setting html element value");
+                    //System.Threading.Thread.Sleep(500);
+                    if (PluginConfig.wait_for_tab_after_set_value)
+                    {
+                        NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
+                    }
+                    return;
+                }
+            }
+        }
         public string Value
         {
             get

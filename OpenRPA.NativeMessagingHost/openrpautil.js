@@ -636,6 +636,9 @@ if (true == false) {
                     treeObject["display"] = openrpautil.display(element);
                     treeObject["isvisibleonscreen"] = openrpautil.isVisibleOnScreen(element);
                     treeObject["disabled"] = element.disabled;
+                    treeObject["innerText"] = element.innerText;
+
+                    //updateelementtext
                     if (treeObject["disabled"] === null || treeObject["disabled"] === undefined) treeObject["disabled"] = false;
                     return json ? JSON.stringify(treeObject) : treeObject;
                 },

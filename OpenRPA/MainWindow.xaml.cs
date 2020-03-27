@@ -75,7 +75,7 @@ namespace OpenRPA
             public string Value { get; set; }
         }
         // private ObservableCollection<string> _uilocals = null;
-        private ObservableCollection<uilocal> _uilocals = new ObservableCollection<uilocal>();
+        private readonly ObservableCollection<uilocal> _uilocals = new ObservableCollection<uilocal>();
         public ObservableCollection<uilocal> uilocals { 
             get {
                 if(_uilocals.Count == 0)
@@ -214,7 +214,7 @@ namespace OpenRPA
                 LoadLayout();
 
                 SetStatus("loading plugins");
-                await Plugins.LoadPlugins(this, Interfaces.Extensions.PluginsDirectory);
+                Plugins.LoadPlugins(this, Interfaces.Extensions.PluginsDirectory);
                 if (string.IsNullOrEmpty(Config.local.wsurl))
                 {
                     SetStatus("loading detectors");

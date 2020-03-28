@@ -135,4 +135,16 @@
 	<data name="activity_noti_message_hint" xml:space="preserve">
     <value>Mesaj de notificare</value>
   </data>
+	<data name="activity_invokeform" xml:space="preserve">
+		<value>Invocați formula</value>
+	</data>
+	<data name="activity_invokeform_tooltip" xml:space="preserve">
+		<value>Faceți interacțiuni cu utilizatorul la computer cu formule predisemnate</value>
+	</data>
+	<data name="activity_shownotification" xml:space="preserve">
+		<value>Arată notificarea</value>
+	</data>
+	<data name="activity_shownotification_tooltip" xml:space="preserve">
+		<value>Afișați o notificare în colțul din dreapta jos al ecranului pentru o perioadă limitată de timp</value>
+	</data>
 </root>

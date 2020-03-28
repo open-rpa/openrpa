@@ -156,4 +156,34 @@
 	<data name="activity_loadfile_filename_hint" xml:space="preserve">
     <value>Arquivo de Imagem para carregar</value>
   </data>
+	<data name="activity_getelement" xml:space="preserve">
+		<value>Maghanap ng isang imahe sa screen o sa loob ng isang tiyak na window ng aplikasyon</value>
+	</data>
+	<data name="activity_getelement_tooltip" xml:space="preserve">
+		<value>Kumuha ng Elemento</value>
+	</data>
+	<data name="activity_getimage" xml:space="preserve">
+		<value>Kumuha ng isang imahe ng kamag-anak sa screen mula sa isa pang imahe o elemento na natagpuan sa GetElement</value>
+	</data>
+	<data name="activity_getimage_tooltip" xml:space="preserve">
+		<value>Kumuha ng Imahe</value>
+	</data>
+	<data name="activity_gettext" xml:space="preserve">
+		<value>Kumuha ng Teksto</value>
+	</data>
+	<data name="activity_gettext_tooltip" xml:space="preserve">
+		<value>Ang paggamit ng OCR makuha ang lahat ng teksto mula sa isang imahe, maaaring limitado sa isang tiyak na salita o pangungusap</value>
+	</data>
+	<data name="activity_loadfromfile" xml:space="preserve">
+		<value>Mag-load Mula sa File</value>
+	</data>
+	<data name="activity_loadfromfile_tooltip" xml:space="preserve">
+		<value>Mag-load ng isang imahe mula sa isang file at ibalik ang isang ImageElement</value>
+	</data>
+	<data name="activity_takescreenshot" xml:space="preserve">
+		<value>Kumuha ng screenshot</value>
+	</data>
+	<data name="activity_takescreenshot_tooltip" xml:space="preserve">
+		<value>Kumuha ng screenshot ng buong screen o isang tukoy na elemento na natagpuan gamit ang Kumuha ng Elemento</value>
+	</data>
 </root>

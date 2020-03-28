@@ -16,7 +16,8 @@ namespace OpenRPA.Image
     [System.ComponentModel.Designer(typeof(LoadFromFileDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(LoadFromFile), "Resources.toolbox.getimage.png")]
     [System.Windows.Markup.ContentProperty("Body")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_loadfromfile_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_loadfromfile", typeof(Resources.strings))]
     public class LoadFromFile : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {
         [RequiredArgument]
@@ -58,6 +59,23 @@ namespace OpenRPA.Image
             fef.Body = aa;
             aa.Argument = da;
             return fef;
+        }
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
         }
     }
 }

@@ -156,4 +156,34 @@
 	<data name="activity_loadfile_filename_hint" xml:space="preserve">
     <value>Billed fil at indlæse</value>
   </data>
+	<data name="activity_getelement" xml:space="preserve">
+		<value>Find et billede på skærmen eller i et specifikt programvindue</value>
+	</data>
+	<data name="activity_getelement_tooltip" xml:space="preserve">
+		<value>Hent element</value>
+	</data>
+	<data name="activity_getimage" xml:space="preserve">
+		<value>Hent et billede af skærmen relativt fra et andet billede eller element, der findes med GetElement</value>
+	</data>
+	<data name="activity_getimage_tooltip" xml:space="preserve">
+		<value>Hent billede</value>
+	</data>
+	<data name="activity_gettext" xml:space="preserve">
+		<value>Hent tekst</value>
+	</data>
+	<data name="activity_gettext_tooltip" xml:space="preserve">
+		<value>Henter al tekst fra et billede ved hjælp af OCR, kan begrænses til et specifikt ord eller sætning</value>
+	</data>
+	<data name="activity_loadfromfile" xml:space="preserve">
+		<value>Indlæs fra fil</value>
+	</data>
+	<data name="activity_loadfromfile_tooltip" xml:space="preserve">
+		<value>Indlæs et billede fra en fil, og returner et ImageElement</value>
+	</data>
+	<data name="activity_takescreenshot" xml:space="preserve">
+		<value>Tag skærmbillede</value>
+	</data>
+	<data name="activity_takescreenshot_tooltip" xml:space="preserve">
+		<value>Tag skærmbillede af hele skærmen eller et bestemt element fundet ved hjælp af Get Element</value>
+	</data>
 </root>

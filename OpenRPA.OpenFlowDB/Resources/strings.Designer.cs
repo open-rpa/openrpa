@@ -61,11 +61,47 @@ namespace OpenRPA.OpenFlowDB.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Assign OpenFlow.
+        /// </summary>
+        public static string activity_assignopenflow {
+            get {
+                return ResourceManager.GetString("activity_assignopenflow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assign an OpenFlow workflow to a user or role.
+        /// </summary>
+        public static string activity_assignopenflow_tooltip {
+            get {
+                return ResourceManager.GetString("activity_assignopenflow_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Double-click to view.
         /// </summary>
         public static string activity_click_to_view {
             get {
                 return ResourceManager.GetString("activity_click_to_view", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete One.
+        /// </summary>
+        public static string activity_deleteone {
+            get {
+                return ResourceManager.GetString("activity_deleteone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete one item in the OpenFlow database.
+        /// </summary>
+        public static string activity_deleteone_tooltip {
+            get {
+                return ResourceManager.GetString("activity_deleteone_tooltip", resourceCulture);
             }
         }
         
@@ -84,6 +120,96 @@ namespace OpenRPA.OpenFlowDB.Resources {
         public static string activity_filename_hint {
             get {
                 return ResourceManager.GetString("activity_filename_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Credentials.
+        /// </summary>
+        public static string activity_getcredentials {
+            get {
+                return ResourceManager.GetString("activity_getcredentials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get a set of encrypted credentials from OpenFlow.
+        /// </summary>
+        public static string activity_getcredentials_tooltip {
+            get {
+                return ResourceManager.GetString("activity_getcredentials_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get File.
+        /// </summary>
+        public static string activity_getfile {
+            get {
+                return ResourceManager.GetString("activity_getfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download a file saved inside the OpenFlow database.
+        /// </summary>
+        public static string activity_getfile_tooltip {
+            get {
+                return ResourceManager.GetString("activity_getfile_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grant Permission.
+        /// </summary>
+        public static string activity_grantpermission {
+            get {
+                return ResourceManager.GetString("activity_grantpermission", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add or update permissions for a user or role on the specified object, you must update the document in OpenFlow after.
+        /// </summary>
+        public static string activity_grantpermission_tooltip {
+            get {
+                return ResourceManager.GetString("activity_grantpermission_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Insert One.
+        /// </summary>
+        public static string activity_insertone {
+            get {
+                return ResourceManager.GetString("activity_insertone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inserts one item into the OpenFlow database.
+        /// </summary>
+        public static string activity_insertone_tooltip {
+            get {
+                return ResourceManager.GetString("activity_insertone_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Insert Or Update One.
+        /// </summary>
+        public static string activity_insertorupdateone {
+            get {
+                return ResourceManager.GetString("activity_insertorupdateone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inserts one item into the OpenFlow database, update if already exists. checks on _id unless you specify Uniqueness then it will find existing items based on the fields mentioned in Uniqueness.
+        /// </summary>
+        public static string activity_insertorupdateone_tooltip {
+            get {
+                return ResourceManager.GetString("activity_insertorupdateone_tooltip", resourceCulture);
             }
         }
         
@@ -129,6 +255,96 @@ namespace OpenRPA.OpenFlowDB.Resources {
         public static string activity_perm_update {
             get {
                 return ResourceManager.GetString("activity_perm_update", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Query.
+        /// </summary>
+        public static string activity_query {
+            get {
+                return ResourceManager.GetString("activity_query", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Query the OpenFlow database for one or more items.
+        /// </summary>
+        public static string activity_query_tooltip {
+            get {
+                return ResourceManager.GetString("activity_query_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove Permission.
+        /// </summary>
+        public static string activity_removepermission {
+            get {
+                return ResourceManager.GetString("activity_removepermission", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove a permission from a user or role on the specified object, you must update the document in OpenFlow after.
+        /// </summary>
+        public static string activity_removepermission_tooltip {
+            get {
+                return ResourceManager.GetString("activity_removepermission_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save File.
+        /// </summary>
+        public static string activity_savefile {
+            get {
+                return ResourceManager.GetString("activity_savefile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload and save a file into the OpenFlow database.
+        /// </summary>
+        public static string activity_savefile_tooltip {
+            get {
+                return ResourceManager.GetString("activity_savefile_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Credentials.
+        /// </summary>
+        public static string activity_setcredentials {
+            get {
+                return ResourceManager.GetString("activity_setcredentials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create or update a set of encrypted credentials in OpenFlow.
+        /// </summary>
+        public static string activity_setcredentials_tooltip {
+            get {
+                return ResourceManager.GetString("activity_setcredentials_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait until Completed.
+        /// </summary>
+        public static string activity_waitforcompleted {
+            get {
+                return ResourceManager.GetString("activity_waitforcompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait for Completion before continuing with workflow.
+        /// </summary>
+        public static string activity_waitforcompleted_help {
+            get {
+                return ResourceManager.GetString("activity_waitforcompleted_help", resourceCulture);
             }
         }
     }

@@ -490,7 +490,7 @@
 		<value>Ibalik ang resulta bilang isang imahe</value>
 	</data>
 	<data name="activity_insertclipboard_tooltip" xml:space="preserve">
-		<value>Ipasok ang bagong nilalaman sa mga gumagamit ng CLipboard buffer</value>
+		<value>Ipasok ang bagong nilalaman sa mga gumagamit ng Clipboard buffer</value>
 	</data>
 	<data name="activity_invokeopenflow_tooltip" xml:space="preserve">
 		<value>Mag-imbita ng isang daloy ng trabaho sa node na nakarehistro para sa paggamit ng RPA sa loob ng OpenFlow</value>
@@ -638,5 +638,41 @@
 	</data>
 	<data name="activity_clickelement" xml:space="preserve">
 		<value>I-click ang Elemento</value>
+	</data>
+	<data name="activity_closeapplication" xml:space="preserve">
+		<value>Isara ang Application</value>
+	</data>
+	<data name="activity_commentout" xml:space="preserve">
+		<value>Mag-Komento Out</value>
+	</data>
+	<data name="activity_copyclipboard" xml:space="preserve">
+		<value>Kopyahin ang clipboard</value>
+	</data>
+	<data name="activity_foreachdatarow" xml:space="preserve">
+		<value>Magpakailanman ng DataRow</value>
+	</data>
+	<data name="activity_highlightelement" xml:space="preserve">
+		<value>I-highlight ang Elemento</value>
+	</data>
+	<data name="activity_insertclipboard" xml:space="preserve">
+		<value>Ipasok ang Clipboard</value>
+	</data>
+	<data name="activity_invokeopenflow" xml:space="preserve">
+		<value>Imbitahan ang OpenFlow</value>
+	</data>
+	<data name="activity_invokeopenrpa" xml:space="preserve">
+		<value>Imbitahan ang OpenRPA</value>
+	</data>
+	<data name="activity_invokeremoteopenrpa" xml:space="preserve">
+		<value>Imbitahan ang Remote OpenRPA</value>
+	</data>
+	<data name="activity_movemouse" xml:space="preserve">
+		<value>Ilipat Mouse</value>
+	</data>
+	<data name="activity_openapplication" xml:space="preserve">
+		<value>Buksan ang Application</value>
+	</data>
+	<data name="activity_typetext" xml:space="preserve">
+		<value>Uri ng Teksto</value>
 	</data>
 </root>

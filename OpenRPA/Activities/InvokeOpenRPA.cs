@@ -15,6 +15,7 @@ namespace OpenRPA.Activities
     [System.ComponentModel.Designer(typeof(InvokeOpenRPADesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.invokerpaworkflow.png")]
     [LocalizedToolboxTooltip("activity_invokeopenrpa_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_invokeopenrpa", typeof(Resources.strings))]
     public class InvokeOpenRPA : NativeActivity
     {
         [RequiredArgument, LocalizedDisplayName("activity_workflow", typeof(Resources.strings)), LocalizedDescription("activity_workflow_help", typeof(Resources.strings))]

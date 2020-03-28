@@ -121,4 +121,76 @@
 	<data name="activity_perm_update" xml:space="preserve">
 		<value>Actualizar</value>
 	</data>
+	<data name="activity_assignopenflow" xml:space="preserve">
+		<value>Asignar OpenFlow</value>
+	</data>
+	<data name="activity_assignopenflow_tooltip" xml:space="preserve">
+		<value>Asignar un flujo de trabajo de OpenFlow a un usuario o rol</value>
+	</data>
+	<data name="activity_deleteone" xml:space="preserve">
+		<value>Eliminar uno</value>
+	</data>
+	<data name="activity_deleteone_tooltip" xml:space="preserve">
+		<value>Eliminar un elemento en la base de datos OpenFlow</value>
+	</data>
+	<data name="activity_getcredentials" xml:space="preserve">
+		<value>Obtenga credenciales</value>
+	</data>
+	<data name="activity_getcredentials_tooltip" xml:space="preserve">
+		<value>Obtenga un conjunto de credenciales cifradas de OpenFlow</value>
+	</data>
+	<data name="activity_getfile" xml:space="preserve">
+		<value>Obtener el archivo</value>
+	</data>
+	<data name="activity_getfile_tooltip" xml:space="preserve">
+		<value>Descargue un archivo guardado dentro de la base de datos OpenFlow</value>
+	</data>
+	<data name="activity_grantpermission" xml:space="preserve">
+		<value>Conceder permiso</value>
+	</data>
+	<data name="activity_grantpermission_tooltip" xml:space="preserve">
+		<value>Agregar o actualizar permisos para un usuario o rol en el objeto especificado, debe actualizar el documento en OpenFlow después</value>
+	</data>
+	<data name="activity_insertone" xml:space="preserve">
+		<value>Insertar uno</value>
+	</data>
+	<data name="activity_insertone_tooltip" xml:space="preserve">
+		<value>Inserta un elemento en la base de datos OpenFlow</value>
+	</data>
+	<data name="activity_insertorupdateone" xml:space="preserve">
+		<value>Insertar o actualizar uno</value>
+	</data>
+	<data name="activity_insertorupdateone_tooltip" xml:space="preserve">
+		<value>Inserta un elemento en la base de datos de OpenFlow, actualice si ya existe. comprueba _id a menos que especifique Uniqueness, entonces encontrará elementos existentes basados en los campos mencionados en Uniqueness</value>
+	</data>
+	<data name="activity_query" xml:space="preserve">
+		<value>Consulta</value>
+	</data>
+	<data name="activity_query_tooltip" xml:space="preserve">
+		<value>Consultar la base de datos OpenFlow para uno o más elementos</value>
+	</data>
+	<data name="activity_removepermission" xml:space="preserve">
+		<value>Eliminar permiso</value>
+	</data>
+	<data name="activity_removepermission_tooltip" xml:space="preserve">
+		<value>Elimine un permiso de un usuario o rol en el objeto especificado, debe actualizar el documento en OpenFlow después</value>
+	</data>
+	<data name="activity_savefile" xml:space="preserve">
+		<value>Guardar el archivo</value>
+	</data>
+	<data name="activity_savefile_tooltip" xml:space="preserve">
+		<value>Cargue y guarde un archivo en la base de datos de OpenFlow</value>
+	</data>
+	<data name="activity_setcredentials" xml:space="preserve">
+		<value>Establecer credenciales</value>
+	</data>
+	<data name="activity_setcredentials_tooltip" xml:space="preserve">
+		<value>Cree o actualice un conjunto de credenciales cifradas en OpenFlow</value>
+	</data>
+	<data name="activity_waitforcompleted" xml:space="preserve">
+		<value>Espera hasta que se complete</value>
+	</data>
+	<data name="activity_waitforcompleted_help" xml:space="preserve">
+		<value>Espere a que finalice antes de continuar con el flujo de trabajo</value>
+	</data>
 </root>

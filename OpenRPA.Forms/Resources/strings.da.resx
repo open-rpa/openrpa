@@ -135,4 +135,16 @@
 	<data name="activity_noti_message_hint" xml:space="preserve">
     <value>Notifikations besked</value>
   </data>
+	<data name="activity_invokeform" xml:space="preserve">
+		<value>Påkald formel</value>
+	</data>
+	<data name="activity_invokeform_tooltip" xml:space="preserve">
+		<value>Foretag interaktion med brugeren på computeren med foruddefinerede formler</value>
+	</data>
+	<data name="activity_shownotification" xml:space="preserve">
+		<value>Vis notifikation</value>
+	</data>
+	<data name="activity_shownotification_tooltip" xml:space="preserve">
+		<value>Vis en notifikation i nederste højre hjørne af skærmen i en begrænset periode</value>
+	</data>
 </root>

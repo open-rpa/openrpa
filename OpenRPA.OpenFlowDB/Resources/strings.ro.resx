@@ -141,4 +141,76 @@
 	<data name="activity_click_to_view" xml:space="preserve">
 		<value>Faceți dublu clic pentru a vizualiza</value>
 	</data>
+	<data name="activity_assignopenflow" xml:space="preserve">
+		<value>Alocați OpenFlow</value>
+	</data>
+	<data name="activity_assignopenflow_tooltip" xml:space="preserve">
+		<value>Alocați un flux de lucru OpenFlow unui utilizator sau unui rol</value>
+	</data>
+	<data name="activity_deleteone" xml:space="preserve">
+		<value>Ștergeți unul</value>
+	</data>
+	<data name="activity_deleteone_tooltip" xml:space="preserve">
+		<value>Ștergeți un element din baza de date OpenFlow</value>
+	</data>
+	<data name="activity_getcredentials" xml:space="preserve">
+		<value>Obțineți datele de acreditare</value>
+	</data>
+	<data name="activity_getcredentials_tooltip" xml:space="preserve">
+		<value>Obțineți un set de acreditări criptate de la OpenFlow</value>
+	</data>
+	<data name="activity_getfile" xml:space="preserve">
+		<value>Ia fisierul</value>
+	</data>
+	<data name="activity_getfile_tooltip" xml:space="preserve">
+		<value>Descărcați un fișier salvat în baza de date OpenFlow</value>
+	</data>
+	<data name="activity_grantpermission" xml:space="preserve">
+		<value>Permisie garantata</value>
+	</data>
+	<data name="activity_grantpermission_tooltip" xml:space="preserve">
+		<value>Adăugați sau actualizați permisiunile pentru un utilizator sau rol pe obiectul specificat, trebuie să actualizați documentul în OpenFlow după</value>
+	</data>
+	<data name="activity_insertone" xml:space="preserve">
+		<value>Inserați unul</value>
+	</data>
+	<data name="activity_insertone_tooltip" xml:space="preserve">
+		<value>Inserează un element în baza de date OpenFlow</value>
+	</data>
+	<data name="activity_insertorupdateone" xml:space="preserve">
+		<value>Inserați sau actualizați una</value>
+	</data>
+	<data name="activity_insertorupdateone_tooltip" xml:space="preserve">
+		<value>Inserează un element în baza de date OpenFlow, actualizarea dacă există deja. verifică pe _id dacă nu specificați Unicitate, atunci va găsi elemente existente pe baza câmpurilor menționate în Unicitate</value>
+	</data>
+	<data name="activity_query" xml:space="preserve">
+		<value>întrebare</value>
+	</data>
+	<data name="activity_query_tooltip" xml:space="preserve">
+		<value>Întrebați baza de date OpenFlow pentru unul sau mai multe elemente</value>
+	</data>
+	<data name="activity_removepermission" xml:space="preserve">
+		<value>Eliminați permisiunea</value>
+	</data>
+	<data name="activity_removepermission_tooltip" xml:space="preserve">
+		<value>Înlăturați o permisiune de la un utilizator sau rol pe obiectul specificat, trebuie să actualizați documentul în OpenFlow după</value>
+	</data>
+	<data name="activity_savefile" xml:space="preserve">
+		<value>Salvează fișierul</value>
+	</data>
+	<data name="activity_savefile_tooltip" xml:space="preserve">
+		<value>Încărcați și salvați un fișier în baza de date OpenFlow</value>
+	</data>
+	<data name="activity_setcredentials" xml:space="preserve">
+		<value>Setați datele de acreditare</value>
+	</data>
+	<data name="activity_setcredentials_tooltip" xml:space="preserve">
+		<value>Creați sau actualizați un set de acreditări criptate în OpenFlow</value>
+	</data>
+	<data name="activity_waitforcompleted" xml:space="preserve">
+		<value>Așteptați până la finalizare</value>
+	</data>
+	<data name="activity_waitforcompleted_help" xml:space="preserve">
+		<value>Așteptați finalizarea înainte de a continua cu fluxul de lucru</value>
+	</data>
 </root>

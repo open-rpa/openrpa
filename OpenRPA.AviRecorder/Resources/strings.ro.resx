@@ -144,4 +144,22 @@
 	<data name="plugin_save_in_folder" xml:space="preserve">
     <value>Salvați în folder</value>
   </data>
+	<data name="activity_playrecording" xml:space="preserve">
+		<value>Redare înregistrare</value>
+	</data>
+	<data name="activity_playrecording_tooltip" xml:space="preserve">
+		<value>Redați o înregistrare video</value>
+	</data>
+	<data name="activity_startrecording" xml:space="preserve">
+		<value>Începe înregistrarea</value>
+	</data>
+	<data name="activity_startrecording_tooltip" xml:space="preserve">
+		<value>Începeți înregistrarea ecranului într-un fișier</value>
+	</data>
+	<data name="activity_stoprecording" xml:space="preserve">
+		<value>Opriți înregistrarea</value>
+	</data>
+	<data name="activity_stoprecording_tooltip" xml:space="preserve">
+		<value>Opriți o înregistrare pe ecran rulant și salvați în fișier</value>
+	</data>
 </root>

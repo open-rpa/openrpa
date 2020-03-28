@@ -169,6 +169,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close Application.
+        /// </summary>
+        public static string activity_closeapplication {
+            get {
+                return ResourceManager.GetString("activity_closeapplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Find application based on a UI selector and the closes the Application.
         /// </summary>
         public static string activity_closeapplication_tooltip {
@@ -178,11 +187,29 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Comment Out.
+        /// </summary>
+        public static string activity_commentout {
+            get {
+                return ResourceManager.GetString("activity_commentout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ignore everything inside this Acitvity, handy for quickly remarking something out.
         /// </summary>
         public static string activity_commentout_tooltip {
             get {
                 return ResourceManager.GetString("activity_commentout_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy Clipboard.
+        /// </summary>
+        public static string activity_copyclipboard {
+            get {
+                return ResourceManager.GetString("activity_copyclipboard", resourceCulture);
             }
         }
         
@@ -358,6 +385,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Foreach DataRow.
+        /// </summary>
+        public static string activity_foreachdatarow {
+            get {
+                return ResourceManager.GetString("activity_foreachdatarow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enumerate through each row inside a DataTable.
         /// </summary>
         public static string activity_foreachdatarow_tooltip {
@@ -390,6 +426,15 @@ namespace OpenRPA.Resources {
         public static string activity_highlight {
             get {
                 return ResourceManager.GetString("activity_highlight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Highlight Element.
+        /// </summary>
+        public static string activity_highlightelement {
+            get {
+                return ResourceManager.GetString("activity_highlightelement", resourceCulture);
             }
         }
         
@@ -439,11 +484,29 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Insert Clipboard.
+        /// </summary>
+        public static string activity_insertclipboard {
+            get {
+                return ResourceManager.GetString("activity_insertclipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Insert new content into the users CLipboard buffer.
         /// </summary>
         public static string activity_insertclipboard_tooltip {
             get {
                 return ResourceManager.GetString("activity_insertclipboard_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoke OpenFlow.
+        /// </summary>
+        public static string activity_invokeopenflow {
+            get {
+                return ResourceManager.GetString("activity_invokeopenflow", resourceCulture);
             }
         }
         
@@ -457,11 +520,29 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invoke OpenRPA.
+        /// </summary>
+        public static string activity_invokeopenrpa {
+            get {
+                return ResourceManager.GetString("activity_invokeopenrpa", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invoke a local OpenRPA Workflow.
         /// </summary>
         public static string activity_invokeopenrpa_tooltip {
             get {
                 return ResourceManager.GetString("activity_invokeopenrpa_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoke Remote OpenRPA.
+        /// </summary>
+        public static string activity_invokeremoteopenrpa {
+            get {
+                return ResourceManager.GetString("activity_invokeremoteopenrpa", resourceCulture);
             }
         }
         
@@ -507,6 +588,15 @@ namespace OpenRPA.Resources {
         public static string activity_mousebutton_help {
             get {
                 return ResourceManager.GetString("activity_mousebutton_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move Mouse.
+        /// </summary>
+        public static string activity_movemouse {
+            get {
+                return ResourceManager.GetString("activity_movemouse", resourceCulture);
             }
         }
         
@@ -561,6 +651,15 @@ namespace OpenRPA.Resources {
         public static string activity_open_selector {
             get {
                 return ResourceManager.GetString("activity_open_selector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Application.
+        /// </summary>
+        public static string activity_openapplication {
+            get {
+                return ResourceManager.GetString("activity_openapplication", resourceCulture);
             }
         }
         
@@ -714,6 +813,15 @@ namespace OpenRPA.Resources {
         public static string activity_timeout_help {
             get {
                 return ResourceManager.GetString("activity_timeout_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type Text.
+        /// </summary>
+        public static string activity_typetext {
+            get {
+                return ResourceManager.GetString("activity_typetext", resourceCulture);
             }
         }
         

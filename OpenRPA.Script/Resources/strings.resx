@@ -120,6 +120,12 @@
 	<data name="activity_click_to_view" xml:space="preserve">
     <value>Double-click to view</value>
   </data>
+	<data name="activity_invokecode" xml:space="preserve">
+    <value>Invoke Code</value>
+  </data>
+	<data name="activity_invokecode_tooltip" xml:space="preserve">
+    <value>Invoke code written in one of several languages</value>
+  </data>
 	<data name="activity_open_editor" xml:space="preserve">
     <value>Open Editor</value>
   </data>

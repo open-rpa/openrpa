@@ -14,6 +14,7 @@ namespace OpenRPA.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.commentout.png")]
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_commentout_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_commentout", typeof(Resources.strings))]
     public class CommentOut : CodeActivity
     {
         [DefaultValue(null)]

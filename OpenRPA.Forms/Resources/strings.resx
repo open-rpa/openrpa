@@ -123,16 +123,28 @@
 	<data name="activity_formdesigner_build" xml:space="preserve">
     <value>Build form</value>
   </data>
+	<data name="activity_invokeform" xml:space="preserve">
+    <value>Invoke Formula</value>
+  </data>
 	<data name="activity_invokeform_create_var" xml:space="preserve">
     <value>Create variables</value>
   </data>
 	<data name="activity_invokeform_open" xml:space="preserve">
     <value>Open designer</value>
   </data>
+	<data name="activity_invokeform_tooltip" xml:space="preserve">
+    <value>Do interaction with user at the computer with predesigned formulas</value>
+  </data>
 	<data name="activity_noti_message" xml:space="preserve">
     <value>Message</value>
   </data>
 	<data name="activity_noti_message_hint" xml:space="preserve">
     <value>Notification message</value>
+  </data>
+	<data name="activity_shownotification" xml:space="preserve">
+    <value>Show Notification</value>
+  </data>
+	<data name="activity_shownotification_tooltip" xml:space="preserve">
+    <value>Show a notification in the lower right corner of the screen for a limited amount of time</value>
   </data>
 </root>

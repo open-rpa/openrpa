@@ -117,9 +117,6 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="selector_buttons_cancel" xml:space="preserve">
-    <value>Renunță</value>
-  </data>
 	<data name="selector_buttons_cancel_hint" xml:space="preserve">
     <value>Anulați modificările și închideți fereastra de selectare</value>
   </data>
@@ -150,4 +147,7 @@
 	<data name="selector_menu_select" xml:space="preserve">
     <value>Selectați elementul</value>
   </data>
+	<data name="selector_buttons_cancel" xml:space="preserve">
+		<value>Redare înregistrare</value>
+	</data>
 </root>

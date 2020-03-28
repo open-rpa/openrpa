@@ -135,4 +135,10 @@
 	<data name="plugin_vb_intellisense_help" xml:space="preserve">
     <value>Включить intellisense для скриптов Visual Basic</value>
   </data>
+	<data name="activity_invokecode" xml:space="preserve">
+		<value>Вызвать код</value>
+	</data>
+	<data name="activity_invokecode_tooltip" xml:space="preserve">
+		<value>Вызвать код, написанный на одном из нескольких языков</value>
+	</data>
 </root>

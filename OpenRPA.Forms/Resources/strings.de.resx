@@ -135,4 +135,16 @@
 	<data name="activity_noti_message_hint" xml:space="preserve">
     <value>Benachrichtigung</value>
   </data>
+	<data name="activity_invokeform" xml:space="preserve">
+		<value>Formel aufrufen</value>
+	</data>
+	<data name="activity_invokeform_tooltip" xml:space="preserve">
+		<value>Führen Sie eine Interaktion mit dem Benutzer am Computer mit vordefinierten Formeln durch</value>
+	</data>
+	<data name="activity_shownotification" xml:space="preserve">
+		<value>Benachrichtigung anzeigen</value>
+	</data>
+	<data name="activity_shownotification_tooltip" xml:space="preserve">
+		<value>Zeigen Sie eine Benachrichtigung für eine begrenzte Zeit in der unteren rechten Ecke des Bildschirms an</value>
+	</data>
 </root>

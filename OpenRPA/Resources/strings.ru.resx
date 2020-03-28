@@ -496,7 +496,7 @@
 		<value>Вернуть результат в виде изображения</value>
 	</data>
 	<data name="activity_insertclipboard_tooltip" xml:space="preserve">
-		<value>Вставьте новый контент в пользовательский буфер CLipboard</value>
+		<value>Вставьте новый контент в пользовательский буфер Clipboard</value>
 	</data>
 	<data name="activity_invokeopenflow_tooltip" xml:space="preserve">
 		<value>Вызвать рабочий процесс в узле, зарегистрированном для использования RPA внутри OpenFlow</value>
@@ -638,5 +638,41 @@
 	</data>
 	<data name="activity_clickelement" xml:space="preserve">
 		<value>Нажмите элемент</value>
+	</data>
+	<data name="activity_closeapplication" xml:space="preserve">
+		<value>Закрыть приложение</value>
+	</data>
+	<data name="activity_commentout" xml:space="preserve">
+		<value>Закомментируйте</value>
+	</data>
+	<data name="activity_copyclipboard" xml:space="preserve">
+		<value>Копировать буфер обмена</value>
+	</data>
+	<data name="activity_foreachdatarow" xml:space="preserve">
+		<value>Foreach DataRow</value>
+	</data>
+	<data name="activity_highlightelement" xml:space="preserve">
+		<value>Выделить элемент</value>
+	</data>
+	<data name="activity_insertclipboard" xml:space="preserve">
+		<value>Вставить буфер обмена</value>
+	</data>
+	<data name="activity_invokeopenflow" xml:space="preserve">
+		<value>Вызвать OpenFlow</value>
+	</data>
+	<data name="activity_invokeopenrpa" xml:space="preserve">
+		<value>Вызвать OpenRPA</value>
+	</data>
+	<data name="activity_invokeremoteopenrpa" xml:space="preserve">
+		<value>Вызов удаленного OpenRPA</value>
+	</data>
+	<data name="activity_movemouse" xml:space="preserve">
+		<value>Переместить мышь</value>
+	</data>
+	<data name="activity_openapplication" xml:space="preserve">
+		<value>Открытое приложение</value>
+	</data>
+	<data name="activity_typetext" xml:space="preserve">
+		<value>Введите текст</value>
 	</data>
 </root>

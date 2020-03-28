@@ -144,4 +144,22 @@
 	<data name="plugin_save_in_folder" xml:space="preserve">
     <value>Speicher in Ordnern</value>
   </data>
+	<data name="activity_playrecording" xml:space="preserve">
+		<value>Aufnahme abspielen</value>
+	</data>
+	<data name="activity_playrecording_tooltip" xml:space="preserve">
+		<value>Wiedergabe einer Videoaufnahme</value>
+	</data>
+	<data name="activity_startrecording" xml:space="preserve">
+		<value>Starte die Aufnahme</value>
+	</data>
+	<data name="activity_startrecording_tooltip" xml:space="preserve">
+		<value>Starten Sie die Aufzeichnung des Bildschirms in einer Datei</value>
+	</data>
+	<data name="activity_stoprecording" xml:space="preserve">
+		<value>Höre auf, aufzunehmen</value>
+	</data>
+	<data name="activity_stoprecording_tooltip" xml:space="preserve">
+		<value>Stoppen Sie eine laufende Bildschirmaufnahme und speichern Sie sie in einer Datei</value>
+	</data>
 </root>

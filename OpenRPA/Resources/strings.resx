@@ -153,11 +153,20 @@
 	<data name="activity_click_to_view" xml:space="preserve">
     <value>Double-click to view</value>
   </data>
+	<data name="activity_closeapplication" xml:space="preserve">
+    <value>Close Application</value>
+  </data>
 	<data name="activity_closeapplication_tooltip" xml:space="preserve">
     <value>Find application based on a UI selector and the closes the Application</value>
   </data>
+	<data name="activity_commentout" xml:space="preserve">
+    <value>Comment Out</value>
+  </data>
 	<data name="activity_commentout_tooltip" xml:space="preserve">
     <value>Ignore everything inside this Acitvity, handy for quickly remarking something out</value>
+  </data>
+	<data name="activity_copyclipboard" xml:space="preserve">
+    <value>Copy Clipboard</value>
   </data>
 	<data name="activity_copyclipboard_tooltip" xml:space="preserve">
     <value>Copy content of Clipboard into a variable</value>
@@ -216,6 +225,9 @@
 	<data name="activity_force_help" xml:space="preserve">
     <value>Forcefully do the action</value>
   </data>
+	<data name="activity_foreachdatarow" xml:space="preserve">
+    <value>Foreach DataRow</value>
+  </data>
 	<data name="activity_foreachdatarow_tooltip" xml:space="preserve">
     <value>Enumerate through each row inside a DataTable</value>
   </data>
@@ -227,6 +239,9 @@
   </data>
 	<data name="activity_highlight" xml:space="preserve">
     <value>Highlight</value>
+  </data>
+	<data name="activity_highlightelement" xml:space="preserve">
+    <value>Highlight Element</value>
   </data>
 	<data name="activity_highlightelement_tooltip" xml:space="preserve">
     <value>Highlight an element found with GetElement</value>
@@ -243,14 +258,26 @@
 	<data name="activity_imageresult_help" xml:space="preserve">
     <value>Return the result as an image</value>
   </data>
+	<data name="activity_insertclipboard" xml:space="preserve">
+    <value>Insert Clipboard</value>
+  </data>
 	<data name="activity_insertclipboard_tooltip" xml:space="preserve">
-    <value>Insert new content into the users CLipboard buffer</value>
+    <value>Insert new content into the users Clipboard buffer</value>
+  </data>
+	<data name="activity_invokeopenflow" xml:space="preserve">
+    <value>Invoke OpenFlow</value>
   </data>
 	<data name="activity_invokeopenflow_tooltip" xml:space="preserve">
     <value>Invoke a workflow in node registered for RPA usage inside OpenFlow</value>
   </data>
+	<data name="activity_invokeopenrpa" xml:space="preserve">
+    <value>Invoke OpenRPA</value>
+  </data>
 	<data name="activity_invokeopenrpa_tooltip" xml:space="preserve">
     <value>Invoke a local OpenRPA Workflow</value>
+  </data>
+	<data name="activity_invokeremoteopenrpa" xml:space="preserve">
+    <value>Invoke Remote OpenRPA</value>
   </data>
 	<data name="activity_invokeremoteopenrpa_tooltip" xml:space="preserve">
     <value>Invoke a OpenRPA Workflow on a remote Robot</value>
@@ -267,6 +294,9 @@
 	<data name="activity_mousebutton_help" xml:space="preserve">
     <value>Mouse button to click with</value>
   </data>
+	<data name="activity_movemouse" xml:space="preserve">
+    <value>Move Mouse</value>
+  </data>
 	<data name="activity_movemouse_tooltip" xml:space="preserve">
     <value>Move mouse cursor to a location relative to an element found with GetElement (or desktop if no element supplied)</value>
   </data>
@@ -281,6 +311,9 @@
   </data>
 	<data name="activity_offsety_help" xml:space="preserve">
     <value>Click with this offset inside the element</value>
+  </data>
+	<data name="activity_openapplication" xml:space="preserve">
+    <value>Open Application</value>
   </data>
 	<data name="activity_openapplication_tooltip" xml:space="preserve">
     <value>Search for Windows element based on a selector, and give it focus, if not found start the application</value>
@@ -335,6 +368,9 @@
   </data>
 	<data name="activity_timeout_help" xml:space="preserve">
     <value>Wait this long before giving up and either failing or continuing depending on other settings</value>
+  </data>
+	<data name="activity_typetext" xml:space="preserve">
+    <value>Type Text</value>
   </data>
 	<data name="activity_typetext_tooltip" xml:space="preserve">
     <value>Send keyboard strokes to what ever that has focus, should only be used by recorder</value>

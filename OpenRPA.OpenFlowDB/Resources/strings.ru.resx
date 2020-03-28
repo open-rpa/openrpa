@@ -141,4 +141,76 @@
 	<data name="activity_click_to_view" xml:space="preserve">
 		<value>Двойной щелчок для просмотра</value>
 	</data>
+	<data name="activity_assignopenflow" xml:space="preserve">
+		<value>Назначить OpenFlow</value>
+	</data>
+	<data name="activity_assignopenflow_tooltip" xml:space="preserve">
+		<value>Назначьте рабочий процесс OpenFlow пользователю или роли</value>
+	</data>
+	<data name="activity_deleteone" xml:space="preserve">
+		<value>Удалить один</value>
+	</data>
+	<data name="activity_deleteone_tooltip" xml:space="preserve">
+		<value>Удалить один элемент в базе данных OpenFlow</value>
+	</data>
+	<data name="activity_getcredentials" xml:space="preserve">
+		<value>Получить учетные данные</value>
+	</data>
+	<data name="activity_getcredentials_tooltip" xml:space="preserve">
+		<value>Получить набор зашифрованных учетных данных от OpenFlow</value>
+	</data>
+	<data name="activity_getfile" xml:space="preserve">
+		<value>Получить файл</value>
+	</data>
+	<data name="activity_getfile_tooltip" xml:space="preserve">
+		<value>Загрузите файл, сохраненный в базе данных OpenFlow</value>
+	</data>
+	<data name="activity_grantpermission" xml:space="preserve">
+		<value>Предоставить разрешение</value>
+	</data>
+	<data name="activity_grantpermission_tooltip" xml:space="preserve">
+		<value>Чтобы добавить или обновить разрешения для пользователя или роли для указанного объекта, необходимо обновить документ в OpenFlow после</value>
+	</data>
+	<data name="activity_insertone" xml:space="preserve">
+		<value>Вставить один</value>
+	</data>
+	<data name="activity_insertone_tooltip" xml:space="preserve">
+		<value>Вставляет один элемент в базу данных OpenFlow</value>
+	</data>
+	<data name="activity_insertorupdateone" xml:space="preserve">
+		<value>Вставить или обновить один</value>
+	</data>
+	<data name="activity_insertorupdateone_tooltip" xml:space="preserve">
+		<value>Вставляет один элемент в базу данных OpenFlow, обновляет, если он уже существует. проверяет _id, если вы не укажете уникальность, тогда он найдет существующие элементы на основе полей, упомянутых в уникальности</value>
+	</data>
+	<data name="activity_query" xml:space="preserve">
+		<value>запрос</value>
+	</data>
+	<data name="activity_query_tooltip" xml:space="preserve">
+		<value>Запросите базу данных OpenFlow для одного или нескольких элементов</value>
+	</data>
+	<data name="activity_removepermission" xml:space="preserve">
+		<value>Удалить разрешение</value>
+	</data>
+	<data name="activity_removepermission_tooltip" xml:space="preserve">
+		<value>Чтобы удалить разрешение пользователя или роли для указанного объекта, необходимо обновить документ в OpenFlow после того, как</value>
+	</data>
+	<data name="activity_savefile" xml:space="preserve">
+		<value>Сохранить файл</value>
+	</data>
+	<data name="activity_savefile_tooltip" xml:space="preserve">
+		<value>Загрузить и сохранить файл в базе данных OpenFlow</value>
+	</data>
+	<data name="activity_setcredentials" xml:space="preserve">
+		<value>Установить учетные данные</value>
+	</data>
+	<data name="activity_setcredentials_tooltip" xml:space="preserve">
+		<value>Создать или обновить набор зашифрованных учетных данных в OpenFlow</value>
+	</data>
+	<data name="activity_waitforcompleted" xml:space="preserve">
+		<value>Дождитесь завершения</value>
+	</data>
+	<data name="activity_waitforcompleted_help" xml:space="preserve">
+		<value>Подождите завершения, прежде чем продолжить рабочий процесс</value>
+	</data>
 </root>

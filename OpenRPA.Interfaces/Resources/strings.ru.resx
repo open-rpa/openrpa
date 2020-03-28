@@ -117,9 +117,6 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="selector_buttons_cancel" xml:space="preserve">
-    <value>отменить</value>
-  </data>
 	<data name="selector_buttons_cancel_hint" xml:space="preserve">
     <value>Отменить изменения и закрыть окно селектора</value>
   </data>
@@ -150,4 +147,7 @@
 	<data name="selector_menu_select" xml:space="preserve">
     <value>Выберите элемент</value>
   </data>
+	<data name="selector_buttons_cancel" xml:space="preserve">
+		<value>Воспроизвести запись</value>
+	</data>
 </root>

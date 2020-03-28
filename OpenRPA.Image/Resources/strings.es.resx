@@ -136,4 +136,34 @@
 	<data name="activity_loadfile_filename_hint" xml:space="preserve">
 		<value>Archivo de imagen para cargar</value>
 	</data>
+	<data name="activity_getelement" xml:space="preserve">
+		<value>Encuentre una imagen en la pantalla o dentro de una ventana de aplicación específica</value>
+	</data>
+	<data name="activity_getelement_tooltip" xml:space="preserve">
+		<value>Obtener elemento</value>
+	</data>
+	<data name="activity_getimage" xml:space="preserve">
+		<value>Obtenga una imagen de la pantalla relativa de otra imagen o elemento encontrado con GetElement</value>
+	</data>
+	<data name="activity_getimage_tooltip" xml:space="preserve">
+		<value>Obtener la imagen</value>
+	</data>
+	<data name="activity_gettext" xml:space="preserve">
+		<value>Obtener texto</value>
+	</data>
+	<data name="activity_gettext_tooltip" xml:space="preserve">
+		<value>El uso de OCR para obtener todo el texto de una imagen puede limitarse a una palabra u oración específica</value>
+	</data>
+	<data name="activity_loadfromfile" xml:space="preserve">
+		<value>Carga del archivo</value>
+	</data>
+	<data name="activity_loadfromfile_tooltip" xml:space="preserve">
+		<value>Cargue una imagen de un archivo y devuelva un ImageElement</value>
+	</data>
+	<data name="activity_takescreenshot" xml:space="preserve">
+		<value>Tomar captura de pantalla</value>
+	</data>
+	<data name="activity_takescreenshot_tooltip" xml:space="preserve">
+		<value>Tome una captura de pantalla de toda la pantalla o de un elemento específico encontrado usando Obtener elemento</value>
+	</data>
 </root>

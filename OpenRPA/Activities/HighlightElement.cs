@@ -15,6 +15,7 @@ namespace OpenRPA.Activities
     [System.ComponentModel.Designer(typeof(HighlightElementDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.highlight.png")]
     [LocalizedToolboxTooltip("activity_highlightelement_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_highlightelement", typeof(Resources.strings))]
     public class HighlightElement : AsyncTaskCodeActivity<int>
     {
         public HighlightElement()

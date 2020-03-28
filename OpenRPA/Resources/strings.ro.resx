@@ -496,7 +496,7 @@
 		<value>Întoarceți rezultatul ca imagine</value>
 	</data>
 	<data name="activity_insertclipboard_tooltip" xml:space="preserve">
-		<value>Introduceți conținut nou în bufferul CLipboard pentru utilizatori</value>
+		<value>Introduceți conținut nou în bufferul Clipboard pentru utilizatori</value>
 	</data>
 	<data name="activity_invokeopenflow_tooltip" xml:space="preserve">
 		<value>Invocați un flux de lucru într-un nod înregistrat pentru utilizarea RPA în OpenFlow</value>
@@ -638,5 +638,41 @@
 	</data>
 	<data name="activity_clickelement" xml:space="preserve">
 		<value>Faceți clic pe Element</value>
+	</data>
+	<data name="activity_closeapplication" xml:space="preserve">
+		<value>Închideți aplicația</value>
+	</data>
+	<data name="activity_commentout" xml:space="preserve">
+		<value>Comentariu</value>
+	</data>
+	<data name="activity_copyclipboard" xml:space="preserve">
+		<value>Copiați Clipboard</value>
+	</data>
+	<data name="activity_foreachdatarow" xml:space="preserve">
+		<value>Foreach DataRow</value>
+	</data>
+	<data name="activity_highlightelement" xml:space="preserve">
+		<value>Evidențiați elementul</value>
+	</data>
+	<data name="activity_insertclipboard" xml:space="preserve">
+		<value>Introduceți Clipboard</value>
+	</data>
+	<data name="activity_invokeopenflow" xml:space="preserve">
+		<value>Invocați OpenFlow</value>
+	</data>
+	<data name="activity_invokeopenrpa" xml:space="preserve">
+		<value>Invocați OpenRPA</value>
+	</data>
+	<data name="activity_invokeremoteopenrpa" xml:space="preserve">
+		<value>Invocați OpenRPA de la distanță</value>
+	</data>
+	<data name="activity_movemouse" xml:space="preserve">
+		<value>Move Mouse</value>
+	</data>
+	<data name="activity_openapplication" xml:space="preserve">
+		<value>Aplicație deschisă</value>
+	</data>
+	<data name="activity_typetext" xml:space="preserve">
+		<value>Tastați text</value>
 	</data>
 </root>

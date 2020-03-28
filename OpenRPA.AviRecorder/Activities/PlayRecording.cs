@@ -13,7 +13,8 @@ namespace OpenRPA.AviRecorder.Activities
 {
     [System.ComponentModel.Designer(typeof(PlayRecordingDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.gethtmlelement.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_playrecording_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_playrecording", typeof(Resources.strings))]
     public class PlayRecording : NativeActivity
     {
         [RequiredArgument]
@@ -27,6 +28,22 @@ namespace OpenRPA.AviRecorder.Activities
                 f.ShowDialog();
             });
         }
-
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
+        }
     }
 }

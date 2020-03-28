@@ -156,4 +156,34 @@
 	<data name="activity_loadfile_filename_hint" xml:space="preserve">
     <value>Nume fișier pentru încărcare</value>
   </data>
+	<data name="activity_getelement" xml:space="preserve">
+		<value>Găsiți o imagine pe ecran sau în interiorul unei ferestre specifice aplicației</value>
+	</data>
+	<data name="activity_getelement_tooltip" xml:space="preserve">
+		<value>Obține element</value>
+	</data>
+	<data name="activity_getimage" xml:space="preserve">
+		<value>Obțineți o imagine a rudei ecranului dintr-o altă imagine sau element găsit cu GetElement</value>
+	</data>
+	<data name="activity_getimage_tooltip" xml:space="preserve">
+		<value>Obțineți imagine</value>
+	</data>
+	<data name="activity_gettext" xml:space="preserve">
+		<value>Obțineți text</value>
+	</data>
+	<data name="activity_gettext_tooltip" xml:space="preserve">
+		<value>Folosind OCR obțineți tot textul dintr-o imagine, poate fi limitat la un cuvânt sau o propoziție specifică</value>
+	</data>
+	<data name="activity_loadfromfile" xml:space="preserve">
+		<value>Încărcare din fișier</value>
+	</data>
+	<data name="activity_loadfromfile_tooltip" xml:space="preserve">
+		<value>Încărcați o imagine dintr-un fișier și returnați ImageElement</value>
+	</data>
+	<data name="activity_takescreenshot" xml:space="preserve">
+		<value>Faceți Screenshot</value>
+	</data>
+	<data name="activity_takescreenshot_tooltip" xml:space="preserve">
+		<value>Faceți captură de ecran a întregului ecran sau a unui element specific găsit folosind Obține element</value>
+	</data>
 </root>

@@ -115,4 +115,16 @@
 	<data name="activity_noti_message_hint" xml:space="preserve">
 		<value>Mensaje de notificación</value>
 	</data>
+	<data name="activity_invokeform" xml:space="preserve">
+		<value>Invocar fórmula</value>
+	</data>
+	<data name="activity_invokeform_tooltip" xml:space="preserve">
+		<value>Hacer interacción con el usuario en la computadora con fórmulas prediseñadas</value>
+	</data>
+	<data name="activity_shownotification" xml:space="preserve">
+		<value>Muestra la notificación</value>
+	</data>
+	<data name="activity_shownotification_tooltip" xml:space="preserve">
+		<value>Mostrar una notificación en la esquina inferior derecha de la pantalla durante un tiempo limitado</value>
+	</data>
 </root>

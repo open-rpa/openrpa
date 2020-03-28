@@ -13,8 +13,9 @@ namespace OpenRPA.Activities
 {
     [System.ComponentModel.Designer(typeof(OpenApplicationDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.getapp.png")]
-    [LocalizedToolboxTooltip("activity_openapplication_tooltip", typeof(Resources.strings))]
     [System.Windows.Markup.ContentProperty("Body")]
+    [LocalizedToolboxTooltip("activity_openapplication_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_openapplication", typeof(Resources.strings))]
     public class OpenApplication : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {
         public OpenApplication()

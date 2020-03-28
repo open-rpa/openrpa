@@ -135,4 +135,16 @@
 	<data name="activity_noti_message_hint" xml:space="preserve">
     <value>Mensagem de Notificação</value>
   </data>
+	<data name="activity_invokeform" xml:space="preserve">
+		<value>Invoke Formula</value>
+	</data>
+	<data name="activity_invokeform_tooltip" xml:space="preserve">
+		<value>Gawin ang pakikipag-ugnay sa gumagamit sa computer na may mga paunang natukoy na mga pormula</value>
+	</data>
+	<data name="activity_shownotification" xml:space="preserve">
+		<value>Ipakita ang Abiso</value>
+	</data>
+	<data name="activity_shownotification_tooltip" xml:space="preserve">
+		<value>Magpakita ng isang abiso sa ibabang kanang sulok ng screen para sa isang limitadong oras</value>
+	</data>
 </root>

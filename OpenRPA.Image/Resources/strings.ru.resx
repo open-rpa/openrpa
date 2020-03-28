@@ -156,4 +156,34 @@
 	<data name="activity_loadfile_filename_hint" xml:space="preserve">
     <value>Файл изображения для загрузки</value>
   </data>
+	<data name="activity_getelement" xml:space="preserve">
+		<value>Найти изображение на экране или внутри определенного окна приложения</value>
+	</data>
+	<data name="activity_getelement_tooltip" xml:space="preserve">
+		<value>Получить элемент</value>
+	</data>
+	<data name="activity_getimage" xml:space="preserve">
+		<value>Получить изображение экрана относительно другого изображения или элемента, найденного с помощью GetElement</value>
+	</data>
+	<data name="activity_getimage_tooltip" xml:space="preserve">
+		<value>Получить изображение</value>
+	</data>
+	<data name="activity_gettext" xml:space="preserve">
+		<value>Получить текст</value>
+	</data>
+	<data name="activity_gettext_tooltip" xml:space="preserve">
+		<value>Использование OCR позволяет получить весь текст из изображения, может быть ограничено конкретным словом или предложением</value>
+	</data>
+	<data name="activity_loadfromfile" xml:space="preserve">
+		<value>Загрузить из файла</value>
+	</data>
+	<data name="activity_loadfromfile_tooltip" xml:space="preserve">
+		<value>Загрузите изображение из файла и верните ImageElement</value>
+	</data>
+	<data name="activity_takescreenshot" xml:space="preserve">
+		<value>Сделать скриншот</value>
+	</data>
+	<data name="activity_takescreenshot_tooltip" xml:space="preserve">
+		<value>Сделайте скриншот всего экрана или определенного элемента, найденного с помощью Get Element</value>
+	</data>
 </root>

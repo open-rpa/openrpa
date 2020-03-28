@@ -141,4 +141,76 @@
 	<data name="activity_click_to_view" xml:space="preserve">
 		<value>Duplo clique para visualizar</value>
 	</data>
+	<data name="activity_assignopenflow" xml:space="preserve">
+		<value>Magtalaga ng OpenFlow</value>
+	</data>
+	<data name="activity_assignopenflow_tooltip" xml:space="preserve">
+		<value>Magtalaga ng isang OpenFlow daloy ng trabaho sa isang gumagamit o papel</value>
+	</data>
+	<data name="activity_deleteone" xml:space="preserve">
+		<value>Tanggalin ang Isa</value>
+	</data>
+	<data name="activity_deleteone_tooltip" xml:space="preserve">
+		<value>Tanggalin ang isang item sa database ng OpenFlow</value>
+	</data>
+	<data name="activity_getcredentials" xml:space="preserve">
+		<value>Kumuha ng mga Kredensyal</value>
+	</data>
+	<data name="activity_getcredentials_tooltip" xml:space="preserve">
+		<value>Kumuha ng isang hanay ng mga naka-encrypt na kredensyal mula sa OpenFlow</value>
+	</data>
+	<data name="activity_getfile" xml:space="preserve">
+		<value>Kumuha ng File</value>
+	</data>
+	<data name="activity_getfile_tooltip" xml:space="preserve">
+		<value>Mag-download ng isang file na nai-save sa loob ng OpenFlow database</value>
+	</data>
+	<data name="activity_grantpermission" xml:space="preserve">
+		<value>Pinayagang pahintulot</value>
+	</data>
+	<data name="activity_grantpermission_tooltip" xml:space="preserve">
+		<value>Magdagdag o mag-update ng mga pahintulot para sa isang gumagamit o papel sa tinukoy na bagay, dapat mong i-update ang dokumento sa OpenFlow pagkatapos</value>
+	</data>
+	<data name="activity_insertone" xml:space="preserve">
+		<value>Ipasok ang Isa</value>
+	</data>
+	<data name="activity_insertone_tooltip" xml:space="preserve">
+		<value>Nagpasok ng isang item sa database ng OpenFlow</value>
+	</data>
+	<data name="activity_insertorupdateone" xml:space="preserve">
+		<value>Ipasok o I-update ang Isa</value>
+	</data>
+	<data name="activity_insertorupdateone_tooltip" xml:space="preserve">
+		<value>Magsingit ng isang item sa OpenFlow database, i-update kung mayroon na. mga tseke sa _ maliban kung tinukoy mo ang Pagkakaiba-iba pagkatapos ay makakahanap ito ng mga umiiral na item batay sa mga patlang na nabanggit sa Uniqueness</value>
+	</data>
+	<data name="activity_query" xml:space="preserve">
+		<value>Tanong</value>
+	</data>
+	<data name="activity_query_tooltip" xml:space="preserve">
+		<value>Query ang OpenFlow database para sa isa o higit pang mga item</value>
+	</data>
+	<data name="activity_removepermission" xml:space="preserve">
+		<value>Alisin ang Pahintulot</value>
+	</data>
+	<data name="activity_removepermission_tooltip" xml:space="preserve">
+		<value>Alisin ang isang pahintulot mula sa isang gumagamit o papel sa tinukoy na bagay, dapat mong i-update ang dokumento sa OpenFlow pagkatapos</value>
+	</data>
+	<data name="activity_savefile" xml:space="preserve">
+		<value>I-save ang File</value>
+	</data>
+	<data name="activity_savefile_tooltip" xml:space="preserve">
+		<value>Mag-upload at mag-save ng isang file sa OpenFlow database</value>
+	</data>
+	<data name="activity_setcredentials" xml:space="preserve">
+		<value>Itakda ang Mga Kredensyal</value>
+	</data>
+	<data name="activity_setcredentials_tooltip" xml:space="preserve">
+		<value>Lumikha o mag-update ng isang hanay ng mga naka-encrypt na mga kredensyal sa OpenFlow</value>
+	</data>
+	<data name="activity_waitforcompleted" xml:space="preserve">
+		<value>Maghintay hanggang Nakumpleto</value>
+	</data>
+	<data name="activity_waitforcompleted_help" xml:space="preserve">
+		<value>Maghintay para sa Pagkumpleto bago magpatuloy sa daloy ng trabaho</value>
+	</data>
 </root>

@@ -156,4 +156,34 @@
 	<data name="activity_loadfile_filename_hint" xml:space="preserve">
     <value>Bilddatei laden</value>
   </data>
+	<data name="activity_getelement" xml:space="preserve">
+		<value>Suchen Sie ein Bild auf dem Bildschirm oder in einem bestimmten Anwendungsfenster</value>
+	</data>
+	<data name="activity_getelement_tooltip" xml:space="preserve">
+		<value>Element abrufen</value>
+	</data>
+	<data name="activity_getimage" xml:space="preserve">
+		<value>Ruft ein Bild des Bildschirmverwandten von einem anderen Bild oder Element ab, das mit GetElement gefunden wurde</value>
+	</data>
+	<data name="activity_getimage_tooltip" xml:space="preserve">
+		<value>Bild abrufen</value>
+	</data>
+	<data name="activity_gettext" xml:space="preserve">
+		<value>Text abrufen</value>
+	</data>
+	<data name="activity_gettext_tooltip" xml:space="preserve">
+		<value>Mit OCR kann der gesamte Text aus einem Bild abgerufen und auf ein bestimmtes Wort oder einen bestimmten Satz beschränkt werden</value>
+	</data>
+	<data name="activity_loadfromfile" xml:space="preserve">
+		<value>Lade von der Datei</value>
+	</data>
+	<data name="activity_loadfromfile_tooltip" xml:space="preserve">
+		<value>Laden Sie ein Bild aus einer Datei und geben Sie ein ImageElement zurück</value>
+	</data>
+	<data name="activity_takescreenshot" xml:space="preserve">
+		<value>Einen Screenshot machen</value>
+	</data>
+	<data name="activity_takescreenshot_tooltip" xml:space="preserve">
+		<value>Machen Sie einen Screenshot des gesamten Bildschirms oder eines bestimmten Elements, das mit Get Element gefunden wurde</value>
+	</data>
 </root>

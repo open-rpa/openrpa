@@ -15,7 +15,8 @@ namespace OpenRPA.OpenFlowDB
 {
     [System.ComponentModel.Designer(typeof(GetCredentialsDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.entity.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_getcredentials_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_getcredentials", typeof(Resources.strings))]
     public sealed class GetCredentials : AsyncTaskCodeActivity
     {
         [RequiredArgument]
@@ -42,6 +43,23 @@ namespace OpenRPA.OpenFlowDB
             var result = await global.webSocketClient.Query<JObject>("openrpa", "{name: \"" + name + "\", _type: \"credential\"}", top:2);
             if (result.Length != 1) throw new Exception("Failed locating credentials " + name);
             return result[0];
+        }
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
         }
     }
 }

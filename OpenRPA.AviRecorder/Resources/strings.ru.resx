@@ -144,4 +144,22 @@
 	<data name="plugin_save_in_folder" xml:space="preserve">
     <value>Сохранить в папке</value>
   </data>
+	<data name="activity_playrecording" xml:space="preserve">
+		<value>Воспроизвести запись</value>
+	</data>
+	<data name="activity_playrecording_tooltip" xml:space="preserve">
+		<value>Воспроизведение видеозаписи</value>
+	</data>
+	<data name="activity_startrecording" xml:space="preserve">
+		<value>Начать запись</value>
+	</data>
+	<data name="activity_startrecording_tooltip" xml:space="preserve">
+		<value>Начать запись экрана в файл</value>
+	</data>
+	<data name="activity_stoprecording" xml:space="preserve">
+		<value>Остановить запись</value>
+	</data>
+	<data name="activity_stoprecording_tooltip" xml:space="preserve">
+		<value>Остановить запись рабочего экрана и сохранить в файл</value>
+	</data>
 </root>

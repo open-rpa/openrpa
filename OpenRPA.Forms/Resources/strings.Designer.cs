@@ -79,6 +79,15 @@ namespace OpenRPA.Forms.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invoke Formula.
+        /// </summary>
+        public static string activity_invokeform {
+            get {
+                return ResourceManager.GetString("activity_invokeform", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create variables.
         /// </summary>
         public static string activity_invokeform_create_var {
@@ -97,6 +106,15 @@ namespace OpenRPA.Forms.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do interaction with user at the computer with predesigned formulas.
+        /// </summary>
+        public static string activity_invokeform_tooltip {
+            get {
+                return ResourceManager.GetString("activity_invokeform_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Message.
         /// </summary>
         public static string activity_noti_message {
@@ -111,6 +129,24 @@ namespace OpenRPA.Forms.Resources {
         public static string activity_noti_message_hint {
             get {
                 return ResourceManager.GetString("activity_noti_message_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Notification.
+        /// </summary>
+        public static string activity_shownotification {
+            get {
+                return ResourceManager.GetString("activity_shownotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show a notification in the lower right corner of the screen for a limited amount of time.
+        /// </summary>
+        public static string activity_shownotification_tooltip {
+            get {
+                return ResourceManager.GetString("activity_shownotification_tooltip", resourceCulture);
             }
         }
     }

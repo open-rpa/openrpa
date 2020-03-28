@@ -14,7 +14,8 @@ namespace OpenRPA.AviRecorder.Activities
 {
     [System.ComponentModel.Designer(typeof(StartRecordingDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.gethtmlelement.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_startrecording_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_startrecording", typeof(Resources.strings))]
     public class StartRecording : NativeActivity
     {
         [Editor(typeof(SelectNewEmailOptionsEditor), typeof(ExtendedPropertyValueEditor))]
@@ -52,26 +53,24 @@ namespace OpenRPA.AviRecorder.Activities
             var instance = p.client.GetWorkflowInstanceByInstanceId(context.WorkflowInstanceId.ToString());
             if (instance == null) return;
             p.startRecording(instance);
-            //if (!Record.Instance.IsRecording)
-            //{
-            //    try
-            //    {
-            //        Record.Instance.StartRecording(codec, folder, quality);
-            //    }
-            //    catch (Exception)
-            //    {
-            //        try
-            //        {
-            //            System.IO.File.Delete(Record.Instance.lastFileName);
-            //        }
-            //        catch (Exception)
-            //        {
-            //        }
-            //        throw;
-            //    }
-            //}
         }
-
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
+        }
     }
 
     class SelectNewEmailOptionsEditor : CustomSelectEditor

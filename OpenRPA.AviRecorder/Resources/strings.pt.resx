@@ -144,4 +144,22 @@
 	<data name="plugin_save_in_folder" xml:space="preserve">
     <value>Salvar na pasta</value>
   </data>
+	<data name="activity_playrecording" xml:space="preserve">
+		<value>Pag-record ng Play</value>
+	</data>
+	<data name="activity_playrecording_tooltip" xml:space="preserve">
+		<value>I-playback ang isang pag-record ng video</value>
+	</data>
+	<data name="activity_startrecording" xml:space="preserve">
+		<value>Simulan ang recording</value>
+	</data>
+	<data name="activity_startrecording_tooltip" xml:space="preserve">
+		<value>Simulan ang pagrekord ng screen sa isang file</value>
+	</data>
+	<data name="activity_stoprecording" xml:space="preserve">
+		<value>Itigil ang Pag-record</value>
+	</data>
+	<data name="activity_stoprecording_tooltip" xml:space="preserve">
+		<value>Itigil ang isang tumatakbo na pag-record ng screen at i-save upang mag-file</value>
+	</data>
 </root>

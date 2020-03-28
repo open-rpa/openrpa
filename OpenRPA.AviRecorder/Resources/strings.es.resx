@@ -124,4 +124,22 @@
 	<data name="plugin_save_in_folder" xml:space="preserve">
 		<value>Guardar en carpeta</value>
 	</data>
+	<data name="activity_playrecording" xml:space="preserve">
+		<value>Reproducir grabación</value>
+	</data>
+	<data name="activity_playrecording_tooltip" xml:space="preserve">
+		<value>Reproducción de una grabación de video</value>
+	</data>
+	<data name="activity_startrecording" xml:space="preserve">
+		<value>Iniciar la grabación</value>
+	</data>
+	<data name="activity_startrecording_tooltip" xml:space="preserve">
+		<value>Comience a grabar la pantalla en un archivo</value>
+	</data>
+	<data name="activity_stoprecording" xml:space="preserve">
+		<value>Para de grabar</value>
+	</data>
+	<data name="activity_stoprecording_tooltip" xml:space="preserve">
+		<value>Detenga una grabación de pantalla en ejecución y guárdela en un archivo</value>
+	</data>
 </root>

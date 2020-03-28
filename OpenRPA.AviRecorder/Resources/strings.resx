@@ -120,11 +120,29 @@
 	<data name="activity_click_to_view" xml:space="preserve">
     <value>Double-click to view</value>
   </data>
+	<data name="activity_playrecording" xml:space="preserve">
+    <value>Play Recording</value>
+  </data>
+	<data name="activity_playrecording_tooltip" xml:space="preserve">
+    <value>Playback a video recording</value>
+  </data>
 	<data name="activity_play_hint" xml:space="preserve">
     <value>Play this video file</value>
   </data>
+	<data name="activity_startrecording" xml:space="preserve">
+    <value>Start Recording</value>
+  </data>
+	<data name="activity_startrecording_tooltip" xml:space="preserve">
+    <value>Start recording the screen to a file</value>
+  </data>
 	<data name="activity_start_hint" xml:space="preserve">
     <value>Save in this folder</value>
+  </data>
+	<data name="activity_stoprecording" xml:space="preserve">
+    <value>Stop Recording</value>
+  </data>
+	<data name="activity_stoprecording_tooltip" xml:space="preserve">
+    <value>Stop a running screen recording and save to file</value>
   </data>
 	<data name="activity_stop_hint" xml:space="preserve">
     <value>Save video filename</value>

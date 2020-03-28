@@ -144,4 +144,22 @@
 	<data name="plugin_save_in_folder" xml:space="preserve">
     <value>Gem i folder</value>
   </data>
+	<data name="activity_playrecording" xml:space="preserve">
+		<value>Afspil optagelse</value>
+	</data>
+	<data name="activity_playrecording_tooltip" xml:space="preserve">
+		<value>Afspilning af en videooptagelse</value>
+	</data>
+	<data name="activity_startrecording" xml:space="preserve">
+		<value>Start optagelse</value>
+	</data>
+	<data name="activity_startrecording_tooltip" xml:space="preserve">
+		<value>Begynd med at optage skærmen til en fil</value>
+	</data>
+	<data name="activity_stoprecording" xml:space="preserve">
+		<value>Stop optagelse</value>
+	</data>
+	<data name="activity_stoprecording_tooltip" xml:space="preserve">
+		<value>Stop en optagelse af køreskærm, og gem den til filen</value>
+	</data>
 </root>

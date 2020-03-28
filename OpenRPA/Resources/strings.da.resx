@@ -550,16 +550,16 @@
 		<value>Returner resultatet som et billede</value>
 	</data>
 	<data name="activity_insertclipboard_tooltip" xml:space="preserve">
-		<value>Indsæt nyt indhold i brugerens CLipboard-buffer</value>
+		<value>Indsæt nyt indhold i brugerens Clipboard-buffer</value>
 	</data>
 	<data name="activity_invokeopenflow_tooltip" xml:space="preserve">
-		<value>Påkald en arbejdsgang i node, der er registreret til RPA-brug i OpenFlow</value>
+		<value>Kald en arbejdsgang i node, der er registreret til RPA-brug i OpenFlow</value>
 	</data>
 	<data name="activity_invokeopenrpa_tooltip" xml:space="preserve">
-		<value>Påkald en lokal OpenRPA-arbejdsgang</value>
+		<value>Kald en lokal OpenRPA-arbejdsgang</value>
 	</data>
 	<data name="activity_invokeremoteopenrpa_tooltip" xml:space="preserve">
-		<value>Påkald en OpenRPA-arbejdsgang på en ekstern robot</value>
+		<value>Kald en OpenRPA-arbejdsgang på en ekstern robot</value>
 	</data>
 	<data name="activity_keymodifiers_help" xml:space="preserve">
 		<value>Hold denne tast nede, mens du klikker, fungerer den kun, hvis Virtuel klik er deaktiveret</value>
@@ -638,5 +638,41 @@
 	</data>
 	<data name="activity_clickelement" xml:space="preserve">
 		<value>Klik på Element</value>
+	</data>
+	<data name="activity_closeapplication" xml:space="preserve">
+		<value>Luk Applikation</value>
+	</data>
+	<data name="activity_commentout" xml:space="preserve">
+		<value>Kommenter ud</value>
+	</data>
+	<data name="activity_copyclipboard" xml:space="preserve">
+		<value>Kopier udklipsholder</value>
+	</data>
+	<data name="activity_foreachdatarow" xml:space="preserve">
+		<value>Foreach DataRow</value>
+	</data>
+	<data name="activity_highlightelement" xml:space="preserve">
+		<value>Fremhæv element</value>
+	</data>
+	<data name="activity_insertclipboard" xml:space="preserve">
+		<value>Indsæt udklipsholder</value>
+	</data>
+	<data name="activity_invokeopenflow" xml:space="preserve">
+		<value>Kald OpenFlow</value>
+	</data>
+	<data name="activity_invokeopenrpa" xml:space="preserve">
+		<value>Kald OpenRPA</value>
+	</data>
+	<data name="activity_invokeremoteopenrpa" xml:space="preserve">
+		<value>Kald Remote OpenRPA</value>
+	</data>
+	<data name="activity_movemouse" xml:space="preserve">
+		<value>Flyt musen</value>
+	</data>
+	<data name="activity_openapplication" xml:space="preserve">
+		<value>Åben ansøgning</value>
+	</data>
+	<data name="activity_typetext" xml:space="preserve">
+		<value>Skriv tekst</value>
 	</data>
 </root>

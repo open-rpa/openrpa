@@ -15,6 +15,7 @@ namespace OpenRPA.Activities
     [Designer(typeof(MoveMouseDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.mouse.png")]
     [LocalizedToolboxTooltip("activity_movemouse_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_movemouse", typeof(Resources.strings))]
     public class MoveMouse : CodeActivity
     {
         public MoveMouse()

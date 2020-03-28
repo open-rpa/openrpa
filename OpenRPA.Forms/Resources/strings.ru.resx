@@ -135,4 +135,16 @@
 	<data name="activity_noti_message_hint" xml:space="preserve">
     <value>Уведомление</value>
   </data>
+	<data name="activity_invokeform" xml:space="preserve">
+		<value>Вызвать формулу</value>
+	</data>
+	<data name="activity_invokeform_tooltip" xml:space="preserve">
+		<value>Взаимодействовать с пользователем за компьютером по заранее разработанным формулам</value>
+	</data>
+	<data name="activity_shownotification" xml:space="preserve">
+		<value>Показать уведомление</value>
+	</data>
+	<data name="activity_shownotification_tooltip" xml:space="preserve">
+		<value>Показать уведомление в правом нижнем углу экрана в течение ограниченного периода времени</value>
+	</data>
 </root>

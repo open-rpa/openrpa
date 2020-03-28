@@ -490,7 +490,7 @@
 		<value>Geben Sie das Ergebnis als Bild zurück</value>
 	</data>
 	<data name="activity_insertclipboard_tooltip" xml:space="preserve">
-		<value>Fügen Sie neuen Inhalt in den CLipboard-Puffer des Benutzers ein</value>
+		<value>Fügen Sie neuen Inhalt in den Clipboard-Puffer des Benutzers ein</value>
 	</data>
 	<data name="activity_invokeopenflow_tooltip" xml:space="preserve">
 		<value>Rufen Sie einen Workflow in einem Knoten auf, der für die RPA-Verwendung in OpenFlow registriert ist</value>
@@ -638,5 +638,41 @@
 	</data>
 	<data name="activity_clickelement" xml:space="preserve">
 		<value>Klicken Sie auf Element</value>
+	</data>
+	<data name="activity_closeapplication" xml:space="preserve">
+		<value>Schließe die Anwendung</value>
+	</data>
+	<data name="activity_commentout" xml:space="preserve">
+		<value>Auskommentieren</value>
+	</data>
+	<data name="activity_copyclipboard" xml:space="preserve">
+		<value>Zwischenablage kopieren</value>
+	</data>
+	<data name="activity_foreachdatarow" xml:space="preserve">
+		<value>Foreach DataRow</value>
+	</data>
+	<data name="activity_highlightelement" xml:space="preserve">
+		<value>Element markieren</value>
+	</data>
+	<data name="activity_insertclipboard" xml:space="preserve">
+		<value>Zwischenablage einfügen</value>
+	</data>
+	<data name="activity_invokeopenflow" xml:space="preserve">
+		<value>Rufen Sie OpenFlow auf</value>
+	</data>
+	<data name="activity_invokeopenrpa" xml:space="preserve">
+		<value>Rufen Sie OpenRPA auf</value>
+	</data>
+	<data name="activity_invokeremoteopenrpa" xml:space="preserve">
+		<value>Rufen Sie Remote OpenRPA auf</value>
+	</data>
+	<data name="activity_movemouse" xml:space="preserve">
+		<value>Maus bewegen</value>
+	</data>
+	<data name="activity_openapplication" xml:space="preserve">
+		<value>Öffnen Sie die Anwendung</value>
+	</data>
+	<data name="activity_typetext" xml:space="preserve">
+		<value>Text eingeben</value>
 	</data>
 </root>

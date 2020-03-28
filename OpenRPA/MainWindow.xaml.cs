@@ -851,7 +851,11 @@ namespace OpenRPA
                             else if (exists == null)
                             {
                                 exists = Plugins.AddDetector(this, d);
-                                exists.OnDetector += OnDetector;
+                                if(exists != null)
+                                {
+                                    exists.OnDetector += OnDetector;
+                                } else { Log.Information("Failed loading detector " + d.name);  }
+                                
                             }
                         }
                         foreach (var d in Plugins.detectorPlugins.ToList())

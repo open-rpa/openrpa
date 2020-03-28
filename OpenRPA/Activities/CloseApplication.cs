@@ -13,7 +13,7 @@ namespace OpenRPA.Activities
 {
     [Designer(typeof(CloseApplicationDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.killapp.png")]
-    [ToolboxTooltip("Find application based on a UI selector and the closes the Application")]
+    [LocalizedToolboxTooltip("activity_closeapplication_tooltip", typeof(Resources.strings))]
     public class CloseApplication : CodeActivity
     {
         public CloseApplication()

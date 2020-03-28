@@ -13,7 +13,7 @@ namespace OpenRPA.Activities
 {
     [System.ComponentModel.Designer(typeof(InsertClipboardDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.insertclipboard.png")]
-    [ToolboxTooltip("Insert new content into the users CLipboard buffer")]
+    [LocalizedToolboxTooltip("activity_insertclipboard_tooltip", typeof(Resources.strings))]
     public class InsertClipboard : CodeActivity
     {
         [RequiredArgument, LocalizedDisplayName("activity_ignoreerrors", typeof(Resources.strings)), LocalizedDescription("activity_ignoreerrors_help", typeof(Resources.strings))]

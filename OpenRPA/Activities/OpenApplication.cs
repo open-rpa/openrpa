@@ -13,7 +13,7 @@ namespace OpenRPA.Activities
 {
     [System.ComponentModel.Designer(typeof(OpenApplicationDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.getapp.png")]
-    [ToolboxTooltip("Search for Windows element based on a selector, and give it focus, if not found start the application")]
+    [LocalizedToolboxTooltip("activity_openapplication_tooltip", typeof(Resources.strings))]
     [System.Windows.Markup.ContentProperty("Body")]
     public class OpenApplication : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {

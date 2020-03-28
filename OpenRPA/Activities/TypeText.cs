@@ -14,7 +14,7 @@ namespace OpenRPA.Activities
 {
     [System.ComponentModel.Designer(typeof(TypeTextDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.typetext.png")]
-    [ToolboxTooltip("Send keyboard strokes to what ever that has focus, should only be used by recorder")]
+    [LocalizedToolboxTooltip("activity_typetext_tooltip", typeof(Resources.strings))]
     public class TypeText : CodeActivity
     {
         [RequiredArgument, LocalizedDisplayName("activity_text", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]

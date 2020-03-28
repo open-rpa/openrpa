@@ -13,7 +13,7 @@ namespace OpenRPA.Activities
     [Designer(typeof(CommentOutDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.commentout.png")]
     [System.Windows.Markup.ContentProperty("Body")]
-    [ToolboxTooltip("Ignore everything inside this Acitvity, handy for quickly remarking something out")]
+    [LocalizedToolboxTooltip("activity_commentout_tooltip", typeof(Resources.strings))]
     public class CommentOut : CodeActivity
     {
         [DefaultValue(null)]

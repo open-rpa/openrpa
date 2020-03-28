@@ -14,7 +14,7 @@ namespace OpenRPA.Activities
 {
     [Designer(typeof(ClickElementDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.elementclick.png")]
-    [ToolboxTooltip("Click on an element found with GetElement")]
+    [LocalizedToolboxTooltip("activity_clickelement_tooltip" , typeof(Resources.strings))]
     public class ClickElement : CodeActivity
     {
         public ClickElement()

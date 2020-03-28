@@ -144,8 +144,20 @@
   <data name="activity_checkrunning_help" xml:space="preserve">
     <value>Check if application is already running using the selector, if set to false, will launch a new application no matter what</value>
   </data>
+  <data name="activity_clickelement_tooltip" xml:space="preserve">
+    <value>Click on an element found with GetElement</value>
+  </data>
   <data name="activity_click_to_view" xml:space="preserve">
     <value>Double-click to view</value>
+  </data>
+  <data name="activity_closeapplication_tooltip" xml:space="preserve">
+    <value>Find application based on a UI selector and the closes the Application</value>
+  </data>
+  <data name="activity_commentout_tooltip" xml:space="preserve">
+    <value>Ignore everything inside this Acitvity, handy for quickly remarking something out</value>
+  </data>
+  <data name="activity_copyclipboard_tooltip" xml:space="preserve">
+    <value>Copy content of Clipboard into a variable</value>
   </data>
   <data name="activity_datatable" xml:space="preserve">
     <value>Data Table</value>
@@ -164,6 +176,9 @@
   </data>
   <data name="activity_detector_help" xml:space="preserve">
     <value>Will wait for this detector to trigger, then the workflow will continue</value>
+  </data>
+  <data name="activity_detector_tooltip" xml:space="preserve">
+    <value>Puts workflow in idle mode, waiting on selected detector to trigger</value>
   </data>
   <data name="activity_displayname" xml:space="preserve">
     <value>Displayname</value>
@@ -198,6 +213,9 @@
   <data name="activity_force_help" xml:space="preserve">
     <value>Forcefully do the action</value>
   </data>
+  <data name="activity_foreachdatarow_tooltip" xml:space="preserve">
+    <value>Enumerate through each row inside a DataTable</value>
+  </data>
   <data name="activity_height" xml:space="preserve">
     <value>Height</value>
   </data>
@@ -206,6 +224,9 @@
   </data>
   <data name="activity_highlight" xml:space="preserve">
     <value>Highlight</value>
+  </data>
+  <data name="activity_highlightelement_tooltip" xml:space="preserve">
+    <value>Highlight an element found with GetElement</value>
   </data>
   <data name="activity_ignoreerrors" xml:space="preserve">
     <value>Ignore Errors</value>
@@ -219,6 +240,18 @@
   <data name="activity_imageresult_help" xml:space="preserve">
     <value>Return the result as an image</value>
   </data>
+  <data name="activity_insertclipboard_tooltip" xml:space="preserve">
+    <value>Insert new content into the users CLipboard buffer</value>
+  </data>
+  <data name="activity_invokeopenflow_tooltip" xml:space="preserve">
+    <value>Invoke a workflow in node registered for RPA usage inside OpenFlow</value>
+  </data>
+  <data name="activity_invokeopenrpa_tooltip" xml:space="preserve">
+    <value>Invoke a local OpenRPA Workflow</value>
+  </data>
+  <data name="activity_invokeremoteopenrpa_tooltip" xml:space="preserve">
+    <value>Invoke a OpenRPA Workflow on a remote Robot</value>
+  </data>
   <data name="activity_keymodifiers" xml:space="preserve">
     <value>Key Modifiers</value>
   </data>
@@ -231,6 +264,9 @@
   <data name="activity_mousebutton_help" xml:space="preserve">
     <value>Mouse button to click with</value>
   </data>
+  <data name="activity_movemouse_tooltip" xml:space="preserve">
+    <value>Move mouse cursor to a location relative to an element found with GetElement (or desktop if no element supplied)</value>
+  </data>
   <data name="activity_offsetx" xml:space="preserve">
     <value>X Offset</value>
   </data>
@@ -242,6 +278,9 @@
   </data>
   <data name="activity_offsety_help" xml:space="preserve">
     <value>Click with this offset inside the element</value>
+  </data>
+  <data name="activity_openapplication_tooltip" xml:space="preserve">
+    <value>Search for Windows element based on a selector, and give it focus, if not found start the application</value>
   </data>
   <data name="activity_open_selector" xml:space="preserve">
     <value>Open Selector</value>
@@ -293,6 +332,9 @@
   </data>
   <data name="activity_timeout_help" xml:space="preserve">
     <value>Wait this long before giving up and either failing or continuing depending on other settings</value>
+  </data>
+  <data name="activity_typetext_tooltip" xml:space="preserve">
+    <value>Send keyboard strokes to what ever that has focus, should only be used by recorder</value>
   </data>
   <data name="activity_virtualclick" xml:space="preserve">
     <value>Virtual Click</value>

@@ -34,6 +34,17 @@ namespace OpenRPA.Views
             // toolborder.Child = InitializeActivitiesToolbox();
             InitializeActivitiesToolbox();
         }
+
+        private string getDisplayName(Type type)
+        {
+            string displayName = type.Name;
+            string[] splitName = displayName.Split('`');
+            displayName = splitName[0];
+            var displayNameAttribute = type.GetCustomAttributes(typeof(System.ComponentModel.DisplayNameAttribute), true).FirstOrDefault() as System.ComponentModel.DisplayNameAttribute;
+            if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+            if (splitName.Length > 1) displayName = string.Format("{0}<>", splitName[0]);
+            return displayName;
+        }
         public void InitializeActivitiesToolbox()
         {
             try
@@ -98,7 +109,9 @@ namespace OpenRPA.Views
                                         orderby
                                             activityType.Name
                                         select
-                                            new ToolboxItemWrapper(activityType, activityType.Name.Replace("`1", ""));
+                                            new ToolboxItemWrapper(activityType, getDisplayName(activityType));
+
+                        // , activityType.Name.Replace("`1", "")
                         actvities.ToList().ForEach(wfToolboxCategory.Add);
 
                         if (wfToolboxCategory.Tools.Count > 0)

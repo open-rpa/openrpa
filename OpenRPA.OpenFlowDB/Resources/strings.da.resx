@@ -58,7 +58,6 @@
 			: using a System.ComponentModel.TypeConverter
 			: and then encoded with base64 encoding.
 	-->
-	
 	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
 		<xsd:element name="root" msdata:IsDataSet="true">
 			<xsd:complexType>
@@ -98,4 +97,28 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="activity_click_to_view" xml:space="preserve">
+		<value>Dobblet klik for a se</value>
+	</data>
+	<data name="activity_filename" xml:space="preserve">
+		<value>Fil navn</value>
+	</data>
+	<data name="activity_filename_hint" xml:space="preserve">
+		<value>Fil navn</value>
+	</data>
+	<data name="activity_local_path" xml:space="preserve">
+		<value>Lokal sti</value>
+	</data>
+	<data name="activity_local_path_hint" xml:space="preserve">
+		<value>Gem fil i denne mappe</value>
+	</data>
+	<data name="activity_perm_delete" xml:space="preserve">
+		<value>Slet</value>
+	</data>
+	<data name="activity_perm_read" xml:space="preserve">
+		<value>Læse</value>
+	</data>
+	<data name="activity_perm_update" xml:space="preserve">
+		<value>Opdatere</value>
+	</data>
 </root>

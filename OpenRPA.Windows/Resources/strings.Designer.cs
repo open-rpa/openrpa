@@ -61,6 +61,24 @@ namespace OpenRPA.Windows.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get Element.
+        /// </summary>
+        public static string activity_getelement {
+            get {
+                return ResourceManager.GetString("activity_getelement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Find an Windows UI element based on selector.
+        /// </summary>
+        public static string activity_getelement_tooltip {
+            get {
+                return ResourceManager.GetString("activity_getelement_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Highlight.
         /// </summary>
         public static string detector_button_highlight {

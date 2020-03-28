@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!-- 
+		Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>1.3</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="activity_getelement" xml:space="preserve">
+		<value>Obține element</value>
+	</data>
+	<data name="activity_getelement_drop_hint" xml:space="preserve">
+		<value>Renunță activitatea</value>
+	</data>
+	<data name="activity_getelement_highlight" xml:space="preserve">
+		<value>Evidențiați</value>
+	</data>
+	<data name="activity_getelement_open_selector" xml:space="preserve">
+		<value>Deschide selectorul</value>
+	</data>
+	<data name="activity_getelement_tooltip" xml:space="preserve">
+		<value>Găsiți un element de browser bazat pe selector</value>
+	</data>
+	<data name="activity_getelement_tooltip1" xml:space="preserve">
+		<value>Găsiți un element Windows UI bazat pe selector</value>
+	</data>
+	<data name="activity_openurl" xml:space="preserve">
+		<value>Deschideți adresa URL</value>
+	</data>
+	<data name="activity_openurl_getcurrent" xml:space="preserve">
+		<value>Obțineți curent</value>
+	</data>
+	<data name="activity_openurl_tooltip" xml:space="preserve">
+		<value>Deschideți urlul specificat în browserul selectat</value>
+	</data>
+	<data name="compensate_for_old_addon" xml:space="preserve">
+		<value>Compensează pentru extensia veche</value>
+	</data>
+	<data name="compensate_for_old_addon_help" xml:space="preserve">
+		<value>Adăugați compensație de pixeli pentru adaos vechi</value>
+	</data>
+	<data name="debug_console_output" xml:space="preserve">
+		<value>Consola de depanare</value>
+	</data>
+	<data name="debug_console_output_help" xml:space="preserve">
+		<value>Scrieți informația de depanare în consola browserului</value>
+	</data>
+	<data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
+		<value>Așteptați după valoarea setată</value>
+	</data>
+	<data name="plugin_wait_for_tab_after_set_value_help" xml:space="preserve">
+		<value>Așteptați ca starea filei să fie în stare gata după setarea unei valori</value>
+	</data>
+	<data name="register_old_portname" xml:space="preserve">
+		<value>înregistrați numele de port vechi</value>
+	</data>
+	<data name="register_old_portname_help" xml:space="preserve">
+		<value>Înregistrați numele porturilor de extensie ale browserului vechi</value>
+	</data>
+	<data name="wait_for_tab_click" xml:space="preserve">
+		<value>așteptați fila</value>
+	</data>
+	<data name="wait_for_tab_click_help" xml:space="preserve">
+		<value>Așteptați ca starea filei să fie în stare gata după ce faceți clic pe un buton</value>
+	</data>
+</root>

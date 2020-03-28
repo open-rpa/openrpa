@@ -89,22 +89,33 @@ namespace OpenRPA
             }
             set { }
         }
+        private bool SkipLayoutSaving = false;
         public uilocal defaultuilocal
         {
             get
             {
                 var item = uilocals.Where(x => x.Value == Config.local.culture).FirstOrDefault();
-                if(item==null) item = uilocals.Where(x => x.Value == "en").FirstOrDefault();
+
+                var current = System.Globalization.CultureInfo.CurrentCulture;
+                if (item == null) item = uilocals.Where(x => x.Value == current.TwoLetterISOLanguageName).FirstOrDefault();
+                if (item == null) item = uilocals.Where(x => x.Value == "en").FirstOrDefault();
                 return item;
             }
             set
             {
-                if(value != null && !string.IsNullOrEmpty(value.Value) && value.Value != Config.local.culture)
+                var current = System.Globalization.CultureInfo.CurrentCulture;
+                if (string.IsNullOrEmpty(Config.local.culture)) Config.local.culture = current.TwoLetterISOLanguageName;
+                if (value != null && !string.IsNullOrEmpty(value.Value) && value.Value != Config.local.culture)
                 {
                     Config.local.culture = value.Value;
                     Config.Save();
                     try
                     {
+                        if (System.IO.File.Exists(System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "layout.config")))
+                        {
+                            System.IO.File.Delete(System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "layout.config"));
+                            SkipLayoutSaving = true;
+                        }                        
                         //System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo(Config.local.culture);
                         //InitializeComponent();
                         MessageBox.Show("Please restart the robot for the change to take fully effect");
@@ -2318,6 +2329,8 @@ namespace OpenRPA
             {
                 Config.local.mainwindow_position = pos;
             }
+            Config.Save();
+            if (SkipLayoutSaving) return;
             try
             {
                 var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
@@ -2329,7 +2342,6 @@ namespace OpenRPA
 
                 throw;
             }
-            Config.Save();
         }
         private void LoadLayout()
         {

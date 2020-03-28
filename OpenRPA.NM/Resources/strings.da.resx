@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+	<!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,74 +59,119 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="activity_getelement_drop_hint" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="activity_getelement_drop_hint" xml:space="preserve">
     <value>Slip aktiviteter her</value>
   </data>
-  <data name="activity_getelement_highlight" xml:space="preserve">
+	<data name="activity_getelement_highlight" xml:space="preserve">
     <value>Fremhæv</value>
   </data>
-  <data name="activity_getelement_open_selector" xml:space="preserve">
+	<data name="activity_getelement_open_selector" xml:space="preserve">
     <value>Åben selektor</value>
   </data>
-  <data name="activity_openurl_getcurrent" xml:space="preserve">
+	<data name="activity_openurl_getcurrent" xml:space="preserve">
     <value>Hent nuværende</value>
   </data>
+	<data name="activity_getelement" xml:space="preserve">
+		<value>Hent element</value>
+	</data>
+	<data name="activity_getelement_tooltip" xml:space="preserve">
+		<value>Find et browserelement baseret på vælger</value>
+	</data>
+	<data name="activity_getelement_tooltip1" xml:space="preserve">
+		<value>Find et Windows UI-element baseret på vælger</value>
+	</data>
+	<data name="activity_openurl" xml:space="preserve">
+		<value>Åbn URL</value>
+	</data>
+	<data name="activity_openurl_tooltip" xml:space="preserve">
+		<value>Åbn den specificerede url i den valgte browser</value>
+	</data>
+	<data name="compensate_for_old_addon" xml:space="preserve">
+		<value>Kompensere for gammel udvidelse</value>
+	</data>
+	<data name="compensate_for_old_addon_help" xml:space="preserve">
+		<value>Tilføj pixelkompensation for gamle tilføjelse</value>
+	</data>
+	<data name="debug_console_output" xml:space="preserve">
+		<value>Debug Console</value>
+	</data>
+	<data name="debug_console_output_help" xml:space="preserve">
+		<value>Skriv fejlfindingsinformation til browserkonsollen</value>
+	</data>
+	<data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
+		<value>Vent efter den indstillede værdi</value>
+	</data>
+	<data name="plugin_wait_for_tab_after_set_value_help" xml:space="preserve">
+		<value>Vent til fanebladets status er i klar tilstand efter indstilling af en værdi</value>
+	</data>
+	<data name="register_old_portname" xml:space="preserve">
+		<value>registrere gammelt portnavn</value>
+	</data>
+	<data name="register_old_portname_help" xml:space="preserve">
+		<value>Registrer gamle navneudvidelsesportnavne</value>
+	</data>
+	<data name="wait_for_tab_click" xml:space="preserve">
+		<value>vent til fanen</value>
+	</data>
+	<data name="wait_for_tab_click_help" xml:space="preserve">
+		<value>Vent til fanebladets status er i klar tilstand, når du har klikket på en knap</value>
+	</data>
 </root>

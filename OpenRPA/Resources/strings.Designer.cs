@@ -151,6 +151,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Click Element.
+        /// </summary>
+        public static string activity_clickelement {
+            get {
+                return ResourceManager.GetString("activity_clickelement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Click on an element found with GetElement.
         /// </summary>
         public static string activity_clickelement_tooltip {

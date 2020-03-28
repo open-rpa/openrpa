@@ -14,7 +14,7 @@ namespace OpenRPA.Activities
 {
     [Designer(typeof(ClickElementDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.elementclick.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [ToolboxTooltip("Click on an element found with GetElement")]
     public class ClickElement : CodeActivity
     {
         public ClickElement()

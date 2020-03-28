@@ -31,13 +31,14 @@ namespace OpenRPA.Views
         {
             InitializeComponent();
             DataContext = this;
-            toolborder.Child = InitializeActivitiesToolbox();
+            // toolborder.Child = InitializeActivitiesToolbox();
+            InitializeActivitiesToolbox();
         }
-        public ToolboxControl InitializeActivitiesToolbox()
+        public void InitializeActivitiesToolbox()
         {
             try
             {
-                var Toolbox = new ToolboxControl();
+                // var tb = new ToolboxControl();
                 // get all loaded assemblies
                 IEnumerable<System.Reflection.Assembly> appAssemblies = AppDomain.CurrentDomain.GetAssemblies().OrderBy(a => a.GetName().Name)
                     .Where(a => a.GetName().Name != "System.ServiceModel.Activities");
@@ -102,7 +103,7 @@ namespace OpenRPA.Views
 
                         if (wfToolboxCategory.Tools.Count > 0)
                         {
-                            Toolbox.Categories.Add(wfToolboxCategory);
+                            tb.Categories.Add(wfToolboxCategory);
                             activitiesCount += wfToolboxCategory.Tools.Count;
                             //if(wfToolboxCategory.CategoryName == "System.Activities")
                             //{
@@ -115,13 +116,13 @@ namespace OpenRPA.Views
                     {
                     }
                 }
-                return Toolbox;
+                // return tb;
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "");
                 MessageBox.Show("InitializeActivitiesToolbox: " + ex.Message);
-                return null;
+                // return null;
             }
         }
     }

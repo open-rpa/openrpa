@@ -43,9 +43,11 @@ namespace OpenRPA.Interfaces
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
             Log.Information("LoadPlugins::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+            ICollection<Type> alltypes = new List<Type>();
             ICollection<Type> pluginTypes = new List<Type>();
             ICollection<Type> snippetTypes = new List<Type>();
             ICollection<Type> runPluginTypes = new List<Type>();
+            ICollection<Type> IDetectorPluginTypes = new List<Type>(); 
 
             List<string> dllFileNames = new List<string>();
             foreach (var path in System.IO.Directory.GetFiles(projectsDirectory, "*.dll")) dllFileNames.Add(path);
@@ -54,7 +56,7 @@ namespace OpenRPA.Interfaces
             {
                 try
                 {
-                    if (dllFile.Contains("OpenRPA.Interfaces.")) continue;
+                    // if (dllFile.Contains("OpenRPA.Interfaces.")) continue;
                     if (dllFile.Contains("DotNetProjects.")) continue;
                     if (dllFile.Contains("Emgu.")) continue;
                     if (dllFile.Contains("Microsoft.CodeAnalysis.")) continue;
@@ -76,8 +78,11 @@ namespace OpenRPA.Interfaces
                     if (dllFile.Contains("System.Text.")) continue;
                     if (dllFile.Contains("System.Threading.")) continue;
                     if (dllFile.Contains("System.Xml.")) continue;
+                    if (dllFile.Contains("System.Windows.")) continue;
                     if (dllFile.Contains("ToastNotifications.")) continue;
                     if (dllFile.Contains("Xceed.Wpf.")) continue;
+                    if (dllFile.Contains("ControlzEx.")) continue;
+                    if (dllFile.Contains("MahApps.")) continue;
                     AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
                     Assembly assembly = Assembly.Load(an);
                     assemblies.Add(assembly);
@@ -88,72 +93,62 @@ namespace OpenRPA.Interfaces
                 }
             }
             Log.Information("LoadPlugins::Get types " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-            var alltypes = assemblies.SelectMany(s => s.GetTypes());
+            foreach (var a in assemblies)
+            {
+                try
+                {
+                    foreach(var s in a.GetTypes())
+                    {
+                        alltypes.Add(s);
+                    }
+                }
+                catch (Exception) { }
+            }
 
             Log.Information("LoadPlugins::Get all IRecordPlugins " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
             var IRecordPlugintype = typeof(IRecordPlugin);
-            pluginTypes = alltypes.Where(p => IRecordPlugintype.IsAssignableFrom(p)).ToList();
-
+            foreach(var p in alltypes)
+            {
+                try
+                {
+                    if (IRecordPlugintype.IsAssignableFrom(p) && p.IsInterface == false) pluginTypes.Add(p);
+                }
+                catch (Exception) { }
+            }
             Log.Information("LoadPlugins::Get all IDetectorPlugin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
             var IDetectorPlugintype = typeof(IDetectorPlugin);
-            var IDetectorPluginTypes = alltypes.Where(p => IDetectorPlugintype.IsAssignableFrom(p));
+            foreach (var p in alltypes)
+            {
+                try
+                {
+                    if (IDetectorPlugintype.IsAssignableFrom(p) && p.IsInterface == false) IDetectorPluginTypes.Add(p);
+                }
+                catch (Exception) { }
+            }
             
             Log.Information("LoadPlugins::Get all ISnippet " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
             var ISnippettype = typeof(ISnippet);
-            snippetTypes = alltypes.Where(p => ISnippettype.IsAssignableFrom(p)).ToList();
-            
+            foreach (var p in alltypes)
+            {
+                try
+                {
+                    if (ISnippettype.IsAssignableFrom(p) && p.IsInterface == false) snippetTypes.Add(p);
+                }
+                catch (Exception) { }
+            }
+
             Log.Information("LoadPlugins::Get all IRunPlugin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
             var IRunPlugintype = typeof(IRunPlugin);
-            runPluginTypes = alltypes.Where(p => IRunPlugintype.IsAssignableFrom(p)).ToList();
+            foreach (var p in alltypes)
+            {
+                try
+                {
+                    if (IRunPlugintype.IsAssignableFrom(p) && p.IsInterface == false) runPluginTypes.Add(p);
+                }
+                catch (Exception) { }
+            }
 
-            // foreach (var type in IRecordPluginTypes) pluginTypes.Add(type);
             foreach (var type in IDetectorPluginTypes) Plugins.detectorPluginTypes.Add(type.FullName, type);
-            // foreach (var type in IDetectorPluginTypes) snippetTypes.Add(type);
-            // foreach (var type in IDetectorPluginTypes) runPluginTypes.Add(type);
-
-            //foreach (Assembly assembly in assemblies)
-            //{
-            //    if (assembly != null && !assembly.CodeBase.Contains("Microsoft.CodeAnalysis"))
-            //    {
-            //        try
-            //        {
-            //            Type[] types = assembly.GetTypes();
-            //            foreach (Type type in types)
-            //            {
-            //                if (type.IsInterface || type.IsAbstract)
-            //                {
-            //                    continue;
-            //                }
-            //                else
-            //                {
-            //                    if (type.GetInterface(typeof(IRecordPlugin).FullName) != null)
-            //                    {
-            //                        pluginTypes.Add(type);
-            //                    }
-            //                    if (type.GetInterface(typeof(IDetectorPlugin).FullName) != null)
-            //                    {
-            //                        Plugins.detectorPluginTypes.Add(type.FullName, type);
-            //                    }
-            //                    if (type.GetInterface(typeof(ISnippet).FullName) != null)
-            //                    {
-            //                        snippetTypes.Add(type);
-            //                    }
-            //                    if (type.GetInterface(typeof(IRunPlugin).FullName) != null)
-            //                    {
-            //                        runPluginTypes.Add(type);
-            //                    }                                    
-            //                }
-            //            }
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            Log.Error(ex, "loadPlugins");
-            //        }
-            //    }
-            // }
-            //await Task.Run(() =>
-            //{
-            //});
             foreach (Type type in pluginTypes)
             {
                 try
@@ -196,7 +191,6 @@ namespace OpenRPA.Interfaces
                     Log.Error(ex.ToString());
                 }
             }
-            Log.Information("LoadPlugins::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
             Log.Information("LoadPlugins::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
         }
     }

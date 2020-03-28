@@ -16,7 +16,7 @@ namespace OpenRPA.Activities
 {
     [System.ComponentModel.Designer(typeof(DetectorDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.detector.png")]
-    //[designer.ToolboxTooltip(Text = "Puts workflow in idle mode, waiting on selected detector to trigger")]
+    [ToolboxTooltip(Text = "Puts workflow in idle mode, waiting on selected detector to trigger")]
     public class Detector : NativeActivity
     {
         [RequiredArgument, LocalizedDisplayName("activity_detector", typeof(Resources.strings)), LocalizedDescription("activity_detector_help", typeof(Resources.strings))]

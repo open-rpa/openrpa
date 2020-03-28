@@ -14,7 +14,7 @@ namespace OpenRPA.Activities
 {
     [System.ComponentModel.Designer(typeof(HighlightElementDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.highlight.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [ToolboxTooltip("Highlight an element found with GetElement")]
     public class HighlightElement : AsyncTaskCodeActivity<int>
     {
         public HighlightElement()

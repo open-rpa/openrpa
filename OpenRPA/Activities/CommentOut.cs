@@ -13,7 +13,7 @@ namespace OpenRPA.Activities
     [Designer(typeof(CommentOutDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.commentout.png")]
     [System.Windows.Markup.ContentProperty("Body")]
-    // [designer.ToolboxTooltip(Text = "Find an HTML element based on css/xpath selector")]
+    [ToolboxTooltip("Ignore everything inside this Acitvity, handy for quickly remarking something out")]
     public class CommentOut : CodeActivity
     {
         [DefaultValue(null)]

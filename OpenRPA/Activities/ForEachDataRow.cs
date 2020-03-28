@@ -14,7 +14,7 @@ namespace OpenRPA.Activities
     [System.ComponentModel.Designer(typeof(ForEachDataRowDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.foreach.png")]
     [System.Windows.Markup.ContentProperty("Body")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [ToolboxTooltip("Enumerate through each row inside a DataTable")]
     public class ForEachDataRow : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {
         [RequiredArgument,Category("Input"),OverloadGroup("DataTable"), LocalizedDisplayName("activity_datatable", typeof(Resources.strings)), LocalizedDescription("activity_datatable_help", typeof(Resources.strings))]

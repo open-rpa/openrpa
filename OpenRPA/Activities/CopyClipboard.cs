@@ -12,7 +12,7 @@ namespace OpenRPA.Activities
 {
     [Designer(typeof(CopyClipboardDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.copyclipboard.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [ToolboxTooltip("Copy content of Clipboard into a variable")]
     public class CopyClipboard : CodeActivity
     {
         [LocalizedDisplayName("activity_sendctrlc", typeof(Resources.strings)), LocalizedDescription("activity_sendctrlc_help", typeof(Resources.strings))]

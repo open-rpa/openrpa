@@ -14,7 +14,7 @@ namespace OpenRPA.Activities
 {
     [Designer(typeof(MoveMouseDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.mouse.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [ToolboxTooltip("Move mouse cursor to a location relative to an element found with GetElement (or desktop if no element supplied)")]
     public class MoveMouse : CodeActivity
     {
         public MoveMouse()

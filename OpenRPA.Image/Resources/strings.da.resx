@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+	<!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,101 +59,131 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="activity_getelement_drop_hint" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="activity_getelement_drop_hint" xml:space="preserve">
     <value>Slip aktiviteter her</value>
   </data>
-  <data name="activity_getelement_highlight" xml:space="preserve">
+	<data name="activity_getelement_highlight" xml:space="preserve">
     <value>Fremhæv</value>
   </data>
-  <data name="activity_getelement_process_limit" xml:space="preserve">
+	<data name="activity_getelement_process_limit" xml:space="preserve">
     <value>Process begrænsning</value>
   </data>
-  <data name="activity_getelement_select" xml:space="preserve">
+	<data name="activity_getelement_select" xml:space="preserve">
     <value>Vælg billede</value>
   </data>
-  <data name="activity_getimage_drop_hint" xml:space="preserve">
+	<data name="activity_getimage_drop_hint" xml:space="preserve">
     <value>Slip aktiviteter her</value>
   </data>
-  <data name="activity_getimage_highlight" xml:space="preserve">
+	<data name="activity_getimage_highlight" xml:space="preserve">
     <value>Fremhæv</value>
   </data>
-  <data name="activity_getimage_select" xml:space="preserve">
+	<data name="activity_getimage_select" xml:space="preserve">
     <value>Vælg billede</value>
   </data>
-  <data name="activity_gettext_drop_hint" xml:space="preserve">
+	<data name="activity_gettext_drop_hint" xml:space="preserve">
     <value>Slip aktiviteter her</value>
   </data>
-  <data name="activity_gettext_limit" xml:space="preserve">
+	<data name="activity_gettext_limit" xml:space="preserve">
     <value>Begræns til</value>
   </data>
-  <data name="activity_gettext_limit_hint" xml:space="preserve">
+	<data name="activity_gettext_limit_hint" xml:space="preserve">
     <value>Søg kun efter ord</value>
   </data>
-  <data name="activity_loadfile_drop_hint" xml:space="preserve">
+	<data name="activity_loadfile_drop_hint" xml:space="preserve">
     <value>Slip aktiviteter her</value>
   </data>
-  <data name="activity_loadfile_filename" xml:space="preserve">
+	<data name="activity_loadfile_filename" xml:space="preserve">
     <value>Billed fil</value>
   </data>
-  <data name="activity_loadfile_filename_hint" xml:space="preserve">
+	<data name="activity_loadfile_filename_hint" xml:space="preserve">
     <value>Billed fil at indlæse</value>
   </data>
+	<data name="activity_getelement" xml:space="preserve">
+		<value>Find et billede på skærmen eller i et specifikt programvindue</value>
+	</data>
+	<data name="activity_getelement_tooltip" xml:space="preserve">
+		<value>Hent element</value>
+	</data>
+	<data name="activity_getimage" xml:space="preserve">
+		<value>Hent et billede af skærmen relativt fra et andet billede eller element, der findes med GetElement</value>
+	</data>
+	<data name="activity_getimage_tooltip" xml:space="preserve">
+		<value>Hent billede</value>
+	</data>
+	<data name="activity_gettext" xml:space="preserve">
+		<value>Hent tekst</value>
+	</data>
+	<data name="activity_gettext_tooltip" xml:space="preserve">
+		<value>Henter al tekst fra et billede ved hjælp af OCR, kan begrænses til et specifikt ord eller sætning</value>
+	</data>
+	<data name="activity_loadfromfile" xml:space="preserve">
+		<value>Indlæs fra fil</value>
+	</data>
+	<data name="activity_loadfromfile_tooltip" xml:space="preserve">
+		<value>Indlæs et billede fra en fil, og returner et ImageElement</value>
+	</data>
+	<data name="activity_takescreenshot" xml:space="preserve">
+		<value>Tag skærmbillede</value>
+	</data>
+	<data name="activity_takescreenshot_tooltip" xml:space="preserve">
+		<value>Tag skærmbillede af hele skærmen eller et bestemt element fundet ved hjælp af Get Element</value>
+	</data>
 </root>

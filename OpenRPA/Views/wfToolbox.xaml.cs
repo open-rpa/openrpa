@@ -31,13 +31,25 @@ namespace OpenRPA.Views
         {
             InitializeComponent();
             DataContext = this;
-            toolborder.Child = InitializeActivitiesToolbox();
+            // toolborder.Child = InitializeActivitiesToolbox();
+            InitializeActivitiesToolbox();
         }
-        public ToolboxControl InitializeActivitiesToolbox()
+
+        private string getDisplayName(Type type)
+        {
+            string displayName = type.Name;
+            string[] splitName = displayName.Split('`');
+            displayName = splitName[0];
+            var displayNameAttribute = type.GetCustomAttributes(typeof(System.ComponentModel.DisplayNameAttribute), true).FirstOrDefault() as System.ComponentModel.DisplayNameAttribute;
+            if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+            if (splitName.Length > 1) displayName = string.Format("{0}<>", splitName[0]);
+            return displayName;
+        }
+        public void InitializeActivitiesToolbox()
         {
             try
             {
-                var Toolbox = new ToolboxControl();
+                // var tb = new ToolboxControl();
                 // get all loaded assemblies
                 IEnumerable<System.Reflection.Assembly> appAssemblies = AppDomain.CurrentDomain.GetAssemblies().OrderBy(a => a.GetName().Name)
                     .Where(a => a.GetName().Name != "System.ServiceModel.Activities");
@@ -97,12 +109,14 @@ namespace OpenRPA.Views
                                         orderby
                                             activityType.Name
                                         select
-                                            new ToolboxItemWrapper(activityType, activityType.Name.Replace("`1", ""));
+                                            new ToolboxItemWrapper(activityType, getDisplayName(activityType));
+
+                        // , activityType.Name.Replace("`1", "")
                         actvities.ToList().ForEach(wfToolboxCategory.Add);
 
                         if (wfToolboxCategory.Tools.Count > 0)
                         {
-                            Toolbox.Categories.Add(wfToolboxCategory);
+                            tb.Categories.Add(wfToolboxCategory);
                             activitiesCount += wfToolboxCategory.Tools.Count;
                             //if(wfToolboxCategory.CategoryName == "System.Activities")
                             //{
@@ -115,13 +129,13 @@ namespace OpenRPA.Views
                     {
                     }
                 }
-                return Toolbox;
+                // return tb;
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "");
                 MessageBox.Show("InitializeActivitiesToolbox: " + ex.Message);
-                return null;
+                // return null;
             }
         }
     }

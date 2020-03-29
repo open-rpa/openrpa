@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+	<!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,326 +59,632 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="activity_add_variables" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="activity_add_variables" xml:space="preserve">
     <value>Agregar variables</value>
   </data>
-  <data name="activity_click_to_view" xml:space="preserve">
+	<data name="activity_click_to_view" xml:space="preserve">
     <value>Double-click to view</value>
   </data>
-  <data name="activity_drop_hint" xml:space="preserve">
+	<data name="activity_drop_hint" xml:space="preserve">
     <value>Haga doble clic para ver</value>
   </data>
-  <data name="activity_highlight" xml:space="preserve">
+	<data name="activity_highlight" xml:space="preserve">
     <value>Realce</value>
   </data>
-  <data name="activity_open_selector" xml:space="preserve">
+	<data name="activity_open_selector" xml:space="preserve">
     <value>Selector abierto</value>
   </data>
-  <data name="activity_select_element" xml:space="preserve">
+	<data name="activity_select_element" xml:space="preserve">
     <value>Seleccionar elemento</value>
   </data>
-  <data name="animatemouse" xml:space="preserve">
+	<data name="animatemouse" xml:space="preserve">
     <value>Seleccionar elemento...</value>
   </data>
-  <data name="browseraddons" xml:space="preserve">
+	<data name="browseraddons" xml:space="preserve">
     <value>Complementos del navegador</value>
   </data>
-  <data name="button_ok" xml:space="preserve">
+	<data name="button_ok" xml:space="preserve">
     <value>Okay</value>
   </data>
-  <data name="cancelkey" xml:space="preserve">
+	<data name="cancelkey" xml:space="preserve">
     <value>Cancelar clave</value>
   </data>
-  <data name="chrome" xml:space="preserve">
+	<data name="chrome" xml:space="preserve">
     <value>Chrome</value>
   </data>
-  <data name="clickpostwait" xml:space="preserve">
+	<data name="clickpostwait" xml:space="preserve">
     <value>Establecer Click PostWait</value>
   </data>
-  <data name="copy" xml:space="preserve">
+	<data name="copy" xml:space="preserve">
     <value>Dupdo</value>
   </data>
-  <data name="debug" xml:space="preserve">
+	<data name="debug" xml:space="preserve">
     <value>Depurar</value>
   </data>
-  <data name="delete" xml:space="preserve">
+	<data name="delete" xml:space="preserve">
     <value>Borrar</value>
   </data>
-  <data name="details" xml:space="preserve">
+	<data name="details" xml:space="preserve">
     <value>Detalles</value>
   </data>
-  <data name="detectors" xml:space="preserve">
+	<data name="detectors" xml:space="preserve">
     <value>Detectores</value>
   </data>
-  <data name="dock_logging" xml:space="preserve">
+	<data name="dock_logging" xml:space="preserve">
     <value>Explotación florestal</value>
   </data>
-  <data name="dock_output" xml:space="preserve">
+	<data name="dock_output" xml:space="preserve">
     <value>Salida</value>
   </data>
-  <data name="dock_properties" xml:space="preserve">
+	<data name="dock_properties" xml:space="preserve">
     <value>Propiedades</value>
   </data>
-  <data name="dock_snippets" xml:space="preserve">
+	<data name="dock_snippets" xml:space="preserve">
     <value>Fragmentos</value>
   </data>
-  <data name="dock_toolbox" xml:space="preserve">
+	<data name="dock_toolbox" xml:space="preserve">
     <value>Caja de instrumento</value>
   </data>
-  <data name="download" xml:space="preserve">
+	<data name="download" xml:space="preserve">
     <value>Descargar</value>
   </data>
-  <data name="exitapplication" xml:space="preserve">
+	<data name="exitapplication" xml:space="preserve">
     <value>Salir de la aplicación</value>
   </data>
-  <data name="export" xml:space="preserve">
+	<data name="export" xml:space="preserve">
     <value>Exportar</value>
   </data>
-  <data name="files" xml:space="preserve">
+	<data name="files" xml:space="preserve">
     <value>Archivos</value>
   </data>
-  <data name="firefox" xml:space="preserve">
+	<data name="firefox" xml:space="preserve">
     <value>Firefox</value>
   </data>
-  <data name="general" xml:space="preserve">
+	<data name="general" xml:space="preserve">
     <value>General</value>
   </data>
-  <data name="import" xml:space="preserve">
+	<data name="import" xml:space="preserve">
     <value>Importar</value>
   </data>
-  <data name="logging" xml:space="preserve">
+	<data name="logging" xml:space="preserve">
     <value>Explotación florestal</value>
   </data>
-  <data name="mainnew" xml:space="preserve">
+	<data name="mainnew" xml:space="preserve">
     <value>Nuevo</value>
   </data>
-  <data name="maintitle" xml:space="preserve">
+	<data name="maintitle" xml:space="preserve">
     <value>OpenRPA</value>
   </data>
-  <data name="main_reload" xml:space="preserve">
+	<data name="main_reload" xml:space="preserve">
     <value>Recargar</value>
   </data>
-  <data name="main_settings_recording_add_to_designer" xml:space="preserve">
+	<data name="main_settings_recording_add_to_designer" xml:space="preserve">
     <value>Grabar directamente en diseñador</value>
   </data>
-  <data name="minimize" xml:space="preserve">
+	<data name="minimize" xml:space="preserve">
     <value>Minimizar</value>
   </data>
-  <data name="name" xml:space="preserve">
+	<data name="name" xml:space="preserve">
     <value>Nombre</value>
   </data>
-  <data name="newproject" xml:space="preserve">
+	<data name="newproject" xml:space="preserve">
     <value>Nuevo proyecto</value>
   </data>
-  <data name="newworkflow" xml:space="preserve">
+	<data name="newworkflow" xml:space="preserve">
     <value>Nuevo flujo de trabajo</value>
   </data>
-  <data name="nodered" xml:space="preserve">
+	<data name="nodered" xml:space="preserve">
     <value>NodeRED</value>
   </data>
-  <data name="open" xml:space="preserve">
+	<data name="open" xml:space="preserve">
     <value>Abierto</value>
   </data>
-  <data name="openflow" xml:space="preserve">
+	<data name="openflow" xml:space="preserve">
     <value>OpenFlow</value>
   </data>
-  <data name="openrpa" xml:space="preserve">
+	<data name="openrpa" xml:space="preserve">
     <value>OpenRPA</value>
   </data>
-  <data name="open_created" xml:space="preserve">
+	<data name="open_created" xml:space="preserve">
     <value>Creado en</value>
   </data>
-  <data name="open_createdby" xml:space="preserve">
+	<data name="open_createdby" xml:space="preserve">
     <value>Creado por</value>
   </data>
-  <data name="open_edit" xml:space="preserve">
+	<data name="open_edit" xml:space="preserve">
     <value>Editar</value>
   </data>
-  <data name="open_edit_xaml" xml:space="preserve">
+	<data name="open_edit_xaml" xml:space="preserve">
     <value>Editar XAML</value>
   </data>
-  <data name="open_modified" xml:space="preserve">
+	<data name="open_modified" xml:space="preserve">
     <value>Última modificación a las</value>
   </data>
-  <data name="open_modifiedby" xml:space="preserve">
+	<data name="open_modifiedby" xml:space="preserve">
     <value>Ultima modificacion por</value>
   </data>
-  <data name="open_name" xml:space="preserve">
+	<data name="open_name" xml:space="preserve">
     <value>Nombre</value>
   </data>
-  <data name="open_serializable" xml:space="preserve">
+	<data name="open_serializable" xml:space="preserve">
     <value>Serializable</value>
   </data>
-  <data name="open_state" xml:space="preserve">
+	<data name="open_state" xml:space="preserve">
     <value>Estado</value>
   </data>
-  <data name="packages" xml:space="preserve">
+	<data name="packages" xml:space="preserve">
     <value>Paquetes</value>
   </data>
-  <data name="permissions" xml:space="preserve">
+	<data name="permissions" xml:space="preserve">
     <value>Permisos</value>
   </data>
-  <data name="permissionswindow_delete" xml:space="preserve">
+	<data name="permissionswindow_delete" xml:space="preserve">
     <value>Borrar</value>
   </data>
-  <data name="permissionswindow_new" xml:space="preserve">
+	<data name="permissionswindow_new" xml:space="preserve">
     <value>Nuevo</value>
   </data>
-  <data name="permissions_delete" xml:space="preserve">
+	<data name="permissions_delete" xml:space="preserve">
     <value>Borrar</value>
   </data>
-  <data name="permissions_invoke" xml:space="preserve">
+	<data name="permissions_invoke" xml:space="preserve">
     <value>Invocar</value>
   </data>
-  <data name="permissions_read" xml:space="preserve">
+	<data name="permissions_read" xml:space="preserve">
     <value>Leer</value>
   </data>
-  <data name="permissions_update" xml:space="preserve">
+	<data name="permissions_update" xml:space="preserve">
     <value>Actualizar</value>
   </data>
-  <data name="play" xml:space="preserve">
+	<data name="play" xml:space="preserve">
     <value>Jugar</value>
   </data>
-  <data name="plugins" xml:space="preserve">
+	<data name="plugins" xml:space="preserve">
     <value>Complementos</value>
   </data>
-  <data name="record" xml:space="preserve">
+	<data name="record" xml:space="preserve">
     <value>Grabar</value>
   </data>
-  <data name="recorderplugins" xml:space="preserve">
+	<data name="recorderplugins" xml:space="preserve">
     <value>Complementos de grabadora</value>
   </data>
-  <data name="recordingoverlay" xml:space="preserve">
+	<data name="recordingoverlay" xml:space="preserve">
     <value>Superposición de grabación</value>
   </data>
-  <data name="ribbon_search" xml:space="preserve">
+	<data name="ribbon_search" xml:space="preserve">
     <value>Buscar</value>
   </data>
-  <data name="runplugins" xml:space="preserve">
+	<data name="runplugins" xml:space="preserve">
     <value>Ejecutar complementos</value>
   </data>
-  <data name="runtime" xml:space="preserve">
+	<data name="runtime" xml:space="preserve">
     <value>Tiempo de ejecución</value>
   </data>
-  <data name="save" xml:space="preserve">
+	<data name="save" xml:space="preserve">
     <value>Salvar</value>
   </data>
-  <data name="selector" xml:space="preserve">
+	<data name="selector" xml:space="preserve">
     <value>Selector</value>
   </data>
-  <data name="selectorverbose" xml:space="preserve">
+	<data name="selectorverbose" xml:space="preserve">
     <value>Selector Verbose</value>
   </data>
-  <data name="settings" xml:space="preserve">
+	<data name="settings" xml:space="preserve">
     <value>Configuraciones</value>
   </data>
-  <data name="settingsfile" xml:space="preserve">
+	<data name="settingsfile" xml:space="preserve">
     <value>Archivo de configuración</value>
   </data>
-  <data name="signout" xml:space="preserve">
+	<data name="signout" xml:space="preserve">
     <value>Desconectar</value>
   </data>
-  <data name="slowmotion" xml:space="preserve">
+	<data name="slowmotion" xml:space="preserve">
     <value>Camara lenta</value>
   </data>
-  <data name="status_disconnected" xml:space="preserve">
+	<data name="status_disconnected" xml:space="preserve">
     <value>Desconectado</value>
   </data>
-  <data name="stop" xml:space="preserve">
+	<data name="stop" xml:space="preserve">
     <value>Detener</value>
   </data>
-  <data name="tesseract" xml:space="preserve">
+	<data name="tesseract" xml:space="preserve">
     <value>Tesseract</value>
   </data>
-  <data name="tools" xml:space="preserve">
+	<data name="tools" xml:space="preserve">
     <value>Herramientas</value>
   </data>
-  <data name="tools_change_type" xml:space="preserve">
+	<data name="tools_change_type" xml:space="preserve">
     <value>Cambiar tipo</value>
   </data>
-  <data name="tools_swap_sendkeys" xml:space="preserve">
+	<data name="tools_swap_sendkeys" xml:space="preserve">
     <value>Intercambiar SendKeys</value>
   </data>
-  <data name="tools_swap_virtualclick" xml:space="preserve">
+	<data name="tools_swap_virtualclick" xml:space="preserve">
     <value>Intercambiar clics virtuales</value>
   </data>
-  <data name="type" xml:space="preserve">
+	<data name="type" xml:space="preserve">
     <value>Tipo</value>
   </data>
-  <data name="usesendkeys" xml:space="preserve">
+	<data name="usesendkeys" xml:space="preserve">
     <value>Use SendKeys</value>
   </data>
-  <data name="usevirtualclicks" xml:space="preserve">
+	<data name="usevirtualclicks" xml:space="preserve">
     <value>Usar clics virtuales</value>
   </data>
-  <data name="value" xml:space="preserve">
+	<data name="value" xml:space="preserve">
     <value>Valor</value>
   </data>
-  <data name="verbose" xml:space="preserve">
+	<data name="verbose" xml:space="preserve">
     <value>Verboso</value>
   </data>
-  <data name="visualtracking" xml:space="preserve">
+	<data name="visualtracking" xml:space="preserve">
     <value>Seguimiento visual</value>
   </data>
-  <data name="warning" xml:space="preserve">
+	<data name="warning" xml:space="preserve">
     <value>Advertencia</value>
   </data>
+	<data name="activity_animatemouse" xml:space="preserve">
+		<value>Ratón animado</value>
+	</data>
+	<data name="activity_animatemouse_help" xml:space="preserve">
+		<value>Mueva visiblemente el mouse, en lugar de moverlo instantáneamente al destino</value>
+	</data>
+	<data name="activity_animatemove" xml:space="preserve">
+		<value>Movimiento animado</value>
+	</data>
+	<data name="activity_animatemove_help" xml:space="preserve">
+		<value>Mueva visiblemente la ventana, en lugar de moverla instantáneamente al destino</value>
+	</data>
+	<data name="activity_blocking" xml:space="preserve">
+		<value>Bloqueo</value>
+	</data>
+	<data name="activity_blocking_help" xml:space="preserve">
+		<value>Bloquear ejecución hasta completar</value>
+	</data>
+	<data name="activity_checkrunning" xml:space="preserve">
+		<value>Check Running</value>
+	</data>
+	<data name="activity_checkrunning_help" xml:space="preserve">
+		<value>Compruebe si la aplicación ya se está ejecutando con el selector, si se establece en falso, se iniciará una nueva aplicación sin importar qué</value>
+	</data>
+	<data name="activity_clickelement_tooltip" xml:space="preserve">
+		<value>Haga clic en un elemento encontrado con GetElement</value>
+	</data>
+	<data name="activity_closeapplication_tooltip" xml:space="preserve">
+		<value>Encuentra la aplicación basada en un selector de interfaz de usuario y cierra la aplicación</value>
+	</data>
+	<data name="activity_commentout_tooltip" xml:space="preserve">
+		<value>Ignora todo lo que hay dentro de este Acitvity, útil para remarcar rápidamente algo</value>
+	</data>
+	<data name="activity_copyclipboard_tooltip" xml:space="preserve">
+		<value>Copie el contenido del Portapapeles en una variable</value>
+	</data>
+	<data name="activity_datatable" xml:space="preserve">
+		<value>Tabla de datos</value>
+	</data>
+	<data name="activity_datatable_help" xml:space="preserve">
+		<value>La tabla de datos para trabajar</value>
+	</data>
+	<data name="activity_dataview" xml:space="preserve">
+		<value>Vista de datos</value>
+	</data>
+	<data name="activity_dataview_help" xml:space="preserve">
+		<value>DateView para trabajar con</value>
+	</data>
+	<data name="activity_detector" xml:space="preserve">
+		<value>Detector</value>
+	</data>
+	<data name="activity_detector_help" xml:space="preserve">
+		<value>Esperará a que se active este detector, luego el flujo de trabajo continuará</value>
+	</data>
+	<data name="activity_detector_tooltip" xml:space="preserve">
+		<value>Pone el flujo de trabajo en modo inactivo, esperando que el detector seleccionado se active</value>
+	</data>
+	<data name="activity_displayname" xml:space="preserve">
+		<value>Nombre para mostrar</value>
+	</data>
+	<data name="activity_displayname_help" xml:space="preserve">
+		<value>Nombre para mostrar dentro del diseñador de flujo de trabajo</value>
+	</data>
+	<data name="activity_doubleclick" xml:space="preserve">
+		<value>Haga doble clic</value>
+	</data>
+	<data name="activity_doubleclick_help" xml:space="preserve">
+		<value>Haga un doble clic en lugar de un solo clic</value>
+	</data>
+	<data name="activity_duration" xml:space="preserve">
+		<value>Duración</value>
+	</data>
+	<data name="activity_duration_help" xml:space="preserve">
+		<value>Correrá por la duración</value>
+	</data>
+	<data name="activity_element" xml:space="preserve">
+		<value>Elemento</value>
+	</data>
+	<data name="activity_element_help" xml:space="preserve">
+		<value>Haga clic en este elemento, el tipo de retorno de todas las actividades GetElement y algunas otras</value>
+	</data>
+	<data name="activity_force" xml:space="preserve">
+		<value>Fuerza</value>
+	</data>
+	<data name="activity_force_help" xml:space="preserve">
+		<value>Haz la acción con fuerza</value>
+	</data>
+	<data name="activity_foreachdatarow_tooltip" xml:space="preserve">
+		<value>Enumerar a través de cada fila dentro de una DataTable</value>
+	</data>
+	<data name="activity_height" xml:space="preserve">
+		<value>Altura</value>
+	</data>
+	<data name="activity_height_help" xml:space="preserve">
+		<value>Si está configurado, moverá la ventana a esta ubicación</value>
+	</data>
+	<data name="activity_highlightelement_tooltip" xml:space="preserve">
+		<value>Resalta un elemento encontrado con GetElement</value>
+	</data>
+	<data name="activity_ignoreerrors" xml:space="preserve">
+		<value>Ignorar errores</value>
+	</data>
+	<data name="activity_ignoreerrors_help" xml:space="preserve">
+		<value>Si ocurre un error, lo ignorará y continuará</value>
+	</data>
+	<data name="activity_imageresult" xml:space="preserve">
+		<value>Resultado de imagen</value>
+	</data>
+	<data name="activity_imageresult_help" xml:space="preserve">
+		<value>Devuelve el resultado como una imagen</value>
+	</data>
+	<data name="activity_insertclipboard_tooltip" xml:space="preserve">
+		<value>Inserte contenido nuevo en el búfer de Clipboard de los usuarios</value>
+	</data>
+	<data name="activity_invokeopenflow_tooltip" xml:space="preserve">
+		<value>Invocar un flujo de trabajo en el nodo registrado para el uso de RPA dentro de OpenFlow</value>
+	</data>
+	<data name="activity_invokeopenrpa_tooltip" xml:space="preserve">
+		<value>Invocar un flujo de trabajo local de OpenRPA</value>
+	</data>
+	<data name="activity_invokeremoteopenrpa_tooltip" xml:space="preserve">
+		<value>Invocar un flujo de trabajo OpenRPA en un robot remoto</value>
+	</data>
+	<data name="activity_keymodifiers" xml:space="preserve">
+		<value>Modificadores clave</value>
+	</data>
+	<data name="activity_keymodifiers_help" xml:space="preserve">
+		<value>Mantenga presionada esta tecla, mientras hace clic, solo funciona si el clic virtual está deshabilitado</value>
+	</data>
+	<data name="activity_mousebutton" xml:space="preserve">
+		<value>Botón del ratón</value>
+	</data>
+	<data name="activity_mousebutton_help" xml:space="preserve">
+		<value>Botón del mouse para hacer clic</value>
+	</data>
+	<data name="activity_movemouse_tooltip" xml:space="preserve">
+		<value>Mueva el cursor del mouse a una ubicación relativa a un elemento encontrado con GetElement (o escritorio si no se proporciona ningún elemento)</value>
+	</data>
+	<data name="activity_offsetx" xml:space="preserve">
+		<value>X Offset</value>
+	</data>
+	<data name="activity_offsetx_help" xml:space="preserve">
+		<value>Haga clic con este desplazamiento dentro del elemento</value>
+	</data>
+	<data name="activity_offsety" xml:space="preserve">
+		<value>Desplazamiento Y</value>
+	</data>
+	<data name="activity_offsety_help" xml:space="preserve">
+		<value>Haga clic con este desplazamiento dentro del elemento</value>
+	</data>
+	<data name="activity_openapplication_tooltip" xml:space="preserve">
+		<value>Busque el elemento de Windows basado en un selector y concéntrelo; si no lo encuentra, inicie la aplicación</value>
+	</data>
+	<data name="activity_postwait" xml:space="preserve">
+		<value>Post Wait</value>
+	</data>
+	<data name="activity_postwait_help" xml:space="preserve">
+		<value>Espere este tiempo, después de hacer clic, ayude a completar las aplicaciones que pueden ser muy lentas para reaccionar a los clics.</value>
+	</data>
+	<data name="activity_result" xml:space="preserve">
+		<value>Resultado</value>
+	</data>
+	<data name="activity_result_help" xml:space="preserve">
+		<value>Guarde el resultado en esta variable</value>
+	</data>
+	<data name="activity_selector" xml:space="preserve">
+		<value>Selector</value>
+	</data>
+	<data name="activity_selector_help" xml:space="preserve">
+		<value>El selector utilizado para encontrar el elemento (s), admite la asignación de variables de flujo de trabajo mediante el uso de {{variablename}}</value>
+	</data>
+	<data name="activity_sendctrlc" xml:space="preserve">
+		<value>Enviar Ctrl + C</value>
+	</data>
+	<data name="activity_sendctrlc_help" xml:space="preserve">
+		<value>Envíe Ctrl + C antes de intentar copiar el contenido del Portapapeles</value>
+	</data>
+	<data name="activity_stringresult" xml:space="preserve">
+		<value>Resultado de cadena</value>
+	</data>
+	<data name="activity_stringresult_help" xml:space="preserve">
+		<value>Devuelve el resultado como una cadena</value>
+	</data>
+	<data name="activity_target" xml:space="preserve">
+		<value>Objetivo</value>
+	</data>
+	<data name="activity_target_help" xml:space="preserve">
+		<value>El usuario o rol objetivo</value>
+	</data>
+	<data name="activity_text" xml:space="preserve">
+		<value>Texto</value>
+	</data>
+	<data name="activity_timeout" xml:space="preserve">
+		<value>Se acabó el tiempo</value>
+	</data>
+	<data name="activity_timeout_help" xml:space="preserve">
+		<value>Espere tanto tiempo antes de darse por vencido y fallar o continuar dependiendo de otras configuraciones</value>
+	</data>
+	<data name="activity_typetext_tooltip" xml:space="preserve">
+		<value>Enviar golpes de teclado a cualquier cosa que tenga foco, solo debe ser utilizado por el grabador</value>
+	</data>
+	<data name="activity_virtualclick" xml:space="preserve">
+		<value>Clic virtual</value>
+	</data>
+	<data name="activity_virtualclick_help" xml:space="preserve">
+		<value>Intente hacer un clic virtual en lugar de usar el mouse, no todos los elementos lo admiten</value>
+	</data>
+	<data name="activity_waitforcompleted" xml:space="preserve">
+		<value>Espera hasta que se complete</value>
+	</data>
+	<data name="activity_waitforcompleted_help" xml:space="preserve">
+		<value>Espere a que finalice antes de continuar con el flujo de trabajo</value>
+	</data>
+	<data name="activity_width" xml:space="preserve">
+		<value>Anchura</value>
+	</data>
+	<data name="activity_width_help" xml:space="preserve">
+		<value>Si está configurado, moverá la ventana a esta ubicación</value>
+	</data>
+	<data name="activity_workflow" xml:space="preserve">
+		<value>Flujo de trabajo</value>
+	</data>
+	<data name="activity_workflow_help" xml:space="preserve">
+		<value>Usa este flujo de trabajo</value>
+	</data>
+	<data name="activity_x" xml:space="preserve">
+		<value>X</value>
+	</data>
+	<data name="activity_x_help" xml:space="preserve">
+		<value>Si está configurado, moverá la ventana a esta ubicación</value>
+	</data>
+	<data name="activity_y" xml:space="preserve">
+		<value>Y</value>
+	</data>
+	<data name="activity_y_help" xml:space="preserve">
+		<value>Si está configurado, moverá la ventana a esta ubicación</value>
+	</data>
+	<data name="copyid" xml:space="preserve">
+		<value>ID de copia</value>
+	</data>
+	<data name="copyrelativefilename" xml:space="preserve">
+		<value>Copiar nombre de archivo relativo</value>
+	</data>
+	<data name="rename" xml:space="preserve">
+		<value>Rebautizar</value>
+	</data>
+	<data name="tools_swap_animate" xml:space="preserve">
+		<value>Intercambiar animado</value>
+	</data>
+	<data name="uilanguage" xml:space="preserve">
+		<value>Idioma de la interfaz de usuario</value>
+	</data>
+	<data name="version" xml:space="preserve">
+		<value>Versión</value>
+	</data>
+	<data name="activity_clickelement" xml:space="preserve">
+		<value>Haga clic en elemento</value>
+	</data>
+	<data name="activity_closeapplication" xml:space="preserve">
+		<value>Cierra la aplicación</value>
+	</data>
+	<data name="activity_commentout" xml:space="preserve">
+		<value>Comentar</value>
+	</data>
+	<data name="activity_copyclipboard" xml:space="preserve">
+		<value>Copiar Portapapeles</value>
+	</data>
+	<data name="activity_foreachdatarow" xml:space="preserve">
+		<value>Foreach DataRow</value>
+	</data>
+	<data name="activity_highlightelement" xml:space="preserve">
+		<value>Elemento destacado</value>
+	</data>
+	<data name="activity_insertclipboard" xml:space="preserve">
+		<value>Insertar portapapeles</value>
+	</data>
+	<data name="activity_invokeopenflow" xml:space="preserve">
+		<value>Invocar OpenFlow</value>
+	</data>
+	<data name="activity_invokeopenrpa" xml:space="preserve">
+		<value>Invocar OpenRPA</value>
+	</data>
+	<data name="activity_invokeremoteopenrpa" xml:space="preserve">
+		<value>Invocar Remote OpenRPA</value>
+	</data>
+	<data name="activity_movemouse" xml:space="preserve">
+		<value>Mover el ratón</value>
+	</data>
+	<data name="activity_openapplication" xml:space="preserve">
+		<value>Aplicación abierta</value>
+	</data>
+	<data name="activity_typetext" xml:space="preserve">
+		<value>Teclee el texto</value>
+	</data>
+	<data name="designer_menu_commentout" xml:space="preserve">
+		<value>Comentar</value>
+	</data>
+	<data name="designer_menu_runfromhere" xml:space="preserve">
+		<value>Corre desde aquí</value>
+	</data>
+	<data name="designer_menu_runthis" xml:space="preserve">
+		<value>Ejecute esta actividad</value>
+	</data>
+	<data name="designer_menu_uncomment" xml:space="preserve">
+		<value>Descomentar</value>
+	</data>
 </root>

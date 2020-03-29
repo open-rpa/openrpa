@@ -1,6 +1,4 @@
-﻿//using ClosedXML.Excel;
-//using ExcelDataReader;
-using System;
+﻿using System;
 using System.Activities;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,13 +9,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Office.Interop;
 using Microsoft.Office.Interop.Excel;
-//using System.Windows.Forms;
+using OpenRPA.Interfaces;
 
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(ReadRangeDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.readexcel.png")]
-    //[designer.ToolboxTooltip(Text = "Read CSV, xls or xlsx file and loads it into a DataSet")]
+    [LocalizedToolboxTooltip("activity_readrange_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_readrange", typeof(Resources.strings))]
     public class ReadRange : ExcelActivity
     {
         public ReadRange()
@@ -42,7 +41,6 @@ namespace OpenRPA.Office.Activities
         public OutArgument<int> lastUsedRow { get; set; }
         [System.ComponentModel.Category("Output")]
         public OutArgument<string> lastUsedColumn { get; set; }
-
         protected override void Execute(CodeActivityContext context)
         {
             //Range xlActiveRange = base.worksheet.UsedRange;
@@ -130,7 +128,6 @@ namespace OpenRPA.Office.Activities
             }
 
         }
-
         static string ColumnIndexToColumnLetter(int colIndex)
         {
             int div = colIndex;
@@ -145,8 +142,6 @@ namespace OpenRPA.Office.Activities
             }
             return colLetter;
         }
-
-
         private System.Data.DataTable ProcessObjects(bool useHeaderRow, bool ignoreEmptyRows, object[,] valueArray)
         {
             System.Data.DataTable dt = new System.Data.DataTable();
@@ -190,7 +185,22 @@ namespace OpenRPA.Office.Activities
             }
             return (dt);
         }
-
-
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
+        }
     }
 }

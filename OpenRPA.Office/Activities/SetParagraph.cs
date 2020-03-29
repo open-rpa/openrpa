@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Activities;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Office.Interop.Word;
+using OpenRPA.Interfaces;
 
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(SetParagraphDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.readexcel.png")]
+    [LocalizedToolboxTooltip("activity_setparagraph_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_setparagraph", typeof(Resources.strings))]
     public class SetParagraph : CodeActivity
     {
         [System.ComponentModel.Category("Input")]
@@ -60,6 +64,23 @@ namespace OpenRPA.Office.Activities
             {
                 if (p.Count < index) throw new Exception("filename only contains " + p.Count + " Paragraphs");
                 p[index].Range.Text = Text.Get(context);
+            }
+        }
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
             }
         }
     }

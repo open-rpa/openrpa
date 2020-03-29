@@ -61,6 +61,15 @@ namespace OpenRPA.Java.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get Element.
+        /// </summary>
+        public static string activity_getelement {
+            get {
+                return ResourceManager.GetString("activity_getelement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Drop activity.
         /// </summary>
         public static string activity_getelement_drop_hint {
@@ -84,6 +93,15 @@ namespace OpenRPA.Java.Resources {
         public static string activity_getelement_open_selector {
             get {
                 return ResourceManager.GetString("activity_getelement_open_selector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Find an Windows Java element based on selector.
+        /// </summary>
+        public static string activity_getelement_tooltip {
+            get {
+                return ResourceManager.GetString("activity_getelement_tooltip", resourceCulture);
             }
         }
         

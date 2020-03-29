@@ -256,18 +256,15 @@ namespace OpenRPA.Views
             {
                 tab.Title = workflow.name;
             }
-            //WeakEventManager<System.ComponentModel.INotifyPropertyChanged, System.ComponentModel.PropertyChangedEventArgs>.
-            //    AddHandler(MainWindow.tracing, "PropertyChanged", traceOnPropertyChanged);
-            comment = new MenuItem() { Header = "Comment out" };
-            uncomment = new MenuItem() { Header = "Uncomment" };
-            runthis = new MenuItem() { Header = "Run this activity" };
-            runFromHere = new MenuItem() { Header = "Run from here" };
+
+            comment = new MenuItem() { Header = OpenRPA.Resources.strings.designer_menu_commentout };
+            uncomment = new MenuItem() { Header = OpenRPA.Resources.strings.designer_menu_uncomment };
+            runthis = new MenuItem() { Header = OpenRPA.Resources.strings.designer_menu_runthis };
+            runFromHere = new MenuItem() { Header = OpenRPA.Resources.strings.designer_menu_runfromhere };
             comment.Click += OnComment;
             uncomment.Click += OnUncomment;
             runthis.Click += OnRunthis;
             runFromHere.Click += OnRunFromHere;
-
-
 
             WorkflowDesigner = new WorkflowDesigner();
             DesignerConfigurationService configService = WorkflowDesigner.Context.Services.GetRequiredService<DesignerConfigurationService>();
@@ -288,8 +285,6 @@ namespace OpenRPA.Views
             {
                 ReadOnly = true;
             }
-
-            //WorkflowDesigner.Context.Services.Publish<IExpressionEditorService>(new EditorService(this));
             WorkflowDesigner.Context.Services.Publish<IExpressionEditorService>(new CodeEditor.EditorService(this));
             if (!string.IsNullOrEmpty(Workflow.Xaml))
             {
@@ -304,9 +299,6 @@ namespace OpenRPA.Views
                     Name = Workflow.name,
                     Implementation = wf
                 };
-
-                // typeof(Microsoft.VisualBasic.Collection),
-
                 AddVBNamespaceSettings(ab, typeof(Action),
                     typeof(System.Xml.XmlNode),
                     typeof(OpenRPA.Workflow),
@@ -317,28 +309,15 @@ namespace OpenRPA.Views
                     );
                 AddVBNamespaceSettings(ab, extratypes);
 
-                //if (workflow.language == entity.workflowLanguage.CSharp)
-                //{
-                //    System.Activities.Presentation.Expressions.ExpressionActivityEditor.SetExpressionActivityEditor(ab, "C#");
-                //}
                 WorkflowDesigner.Load(ab);
             }
             if (global.isConnected)
             {
                 ReadOnly = !Workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.update);
             }
-
             HasChanged = false;
             WorkflowDesigner.ModelChanged += (sender, e) =>
             {
-                if (!HasChanged)
-                {
-                    // _modelLocationMapping.Clear();
-                    //_sourceLocationMapping.Clear();
-                    //_activityIdMapping.Clear();
-                    //_activitysourceLocationMapping.Clear();
-                    //_activityIdModelItemMapping.Clear();
-                }
                 SetHasChanged();
             };
             WorkflowDesigner.Context.Items.Subscribe(new SubscribeContextCallback<Selection>(SelectionChanged));
@@ -366,8 +345,6 @@ namespace OpenRPA.Views
                 Log.Debug(ex.ToString());
             }
             NotifyPropertyChanged("View");
-            // WfDesignerBorder.Child = wfDesigner.View;
-
         }
         private void UnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {

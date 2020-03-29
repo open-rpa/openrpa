@@ -13,7 +13,8 @@ namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(NewMailItemDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.newemail.png")]
-    //[designer.ToolboxTooltip(Text = "Add inline comments, a supplement to the built-in annotation feature")]
+    [LocalizedToolboxTooltip("activity_newmailitem_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_newmailitem", typeof(Resources.strings))]
     public class NewMailItem : CodeActivity
     {
         [RequiredArgument]
@@ -42,7 +43,6 @@ namespace OpenRPA.Office.Activities
         public InArgument<string[]> Attachments { get; set; }
         [System.ComponentModel.Category("Output")]
         public OutArgument<email> EMail { get; set; }
-
         protected override void Execute(CodeActivityContext context)
         {
             Microsoft.Office.Interop.Outlook.Application outlookApplication = new Microsoft.Office.Interop.Outlook.Application();
@@ -93,9 +93,24 @@ namespace OpenRPA.Office.Activities
                 EMail.Set(context, new email(email));
             }
         }
-
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
+        }
     }
-
     class SelectNewEmailOptionsEditor : CustomSelectEditor
     {
         public override DataTable options
@@ -111,7 +126,6 @@ namespace OpenRPA.Office.Activities
                 return lst;
             }
         }
-
     }
     class olSaveAsTypeEditor : CustomSelectEditor
     {
@@ -136,6 +150,5 @@ namespace OpenRPA.Office.Activities
                 return lst;
             }
         }
-
     }
 }

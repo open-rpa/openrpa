@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+	<!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,83 +59,158 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="activity_filename" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="activity_filename" xml:space="preserve">
     <value>Nume fișier</value>
   </data>
-  <data name="activity_filename_hint" xml:space="preserve">
+	<data name="activity_filename_hint" xml:space="preserve">
     <value>Nume fișier</value>
   </data>
-  <data name="activity_local_path" xml:space="preserve">
+	<data name="activity_local_path" xml:space="preserve">
     <value>Calea locală</value>
   </data>
-  <data name="activity_local_path_hint" xml:space="preserve">
+	<data name="activity_local_path_hint" xml:space="preserve">
     <value>Salvați fișierul în acest folder</value>
   </data>
-  <data name="activity_perm_delete" xml:space="preserve">
+	<data name="activity_perm_delete" xml:space="preserve">
     <value>Șterge</value>
   </data>
-  <data name="activity_perm_read" xml:space="preserve">
+	<data name="activity_perm_read" xml:space="preserve">
     <value>Citește</value>
   </data>
-  <data name="activity_perm_update" xml:space="preserve">
+	<data name="activity_perm_update" xml:space="preserve">
     <value>Actualizează</value>
   </data>
+	<data name="activity_click_to_view" xml:space="preserve">
+		<value>Faceți dublu clic pentru a vizualiza</value>
+	</data>
+	<data name="activity_assignopenflow" xml:space="preserve">
+		<value>Alocați OpenFlow</value>
+	</data>
+	<data name="activity_assignopenflow_tooltip" xml:space="preserve">
+		<value>Alocați un flux de lucru OpenFlow unui utilizator sau unui rol</value>
+	</data>
+	<data name="activity_deleteone" xml:space="preserve">
+		<value>Ștergeți unul</value>
+	</data>
+	<data name="activity_deleteone_tooltip" xml:space="preserve">
+		<value>Ștergeți un element din baza de date OpenFlow</value>
+	</data>
+	<data name="activity_getcredentials" xml:space="preserve">
+		<value>Obțineți datele de acreditare</value>
+	</data>
+	<data name="activity_getcredentials_tooltip" xml:space="preserve">
+		<value>Obțineți un set de acreditări criptate de la OpenFlow</value>
+	</data>
+	<data name="activity_getfile" xml:space="preserve">
+		<value>Ia fisierul</value>
+	</data>
+	<data name="activity_getfile_tooltip" xml:space="preserve">
+		<value>Descărcați un fișier salvat în baza de date OpenFlow</value>
+	</data>
+	<data name="activity_grantpermission" xml:space="preserve">
+		<value>Permisie garantata</value>
+	</data>
+	<data name="activity_grantpermission_tooltip" xml:space="preserve">
+		<value>Adăugați sau actualizați permisiunile pentru un utilizator sau rol pe obiectul specificat, trebuie să actualizați documentul în OpenFlow după</value>
+	</data>
+	<data name="activity_insertone" xml:space="preserve">
+		<value>Inserați unul</value>
+	</data>
+	<data name="activity_insertone_tooltip" xml:space="preserve">
+		<value>Inserează un element în baza de date OpenFlow</value>
+	</data>
+	<data name="activity_insertorupdateone" xml:space="preserve">
+		<value>Inserați sau actualizați una</value>
+	</data>
+	<data name="activity_insertorupdateone_tooltip" xml:space="preserve">
+		<value>Inserează un element în baza de date OpenFlow, actualizarea dacă există deja. verifică pe _id dacă nu specificați Unicitate, atunci va găsi elemente existente pe baza câmpurilor menționate în Unicitate</value>
+	</data>
+	<data name="activity_query" xml:space="preserve">
+		<value>întrebare</value>
+	</data>
+	<data name="activity_query_tooltip" xml:space="preserve">
+		<value>Întrebați baza de date OpenFlow pentru unul sau mai multe elemente</value>
+	</data>
+	<data name="activity_removepermission" xml:space="preserve">
+		<value>Eliminați permisiunea</value>
+	</data>
+	<data name="activity_removepermission_tooltip" xml:space="preserve">
+		<value>Înlăturați o permisiune de la un utilizator sau rol pe obiectul specificat, trebuie să actualizați documentul în OpenFlow după</value>
+	</data>
+	<data name="activity_savefile" xml:space="preserve">
+		<value>Salvează fișierul</value>
+	</data>
+	<data name="activity_savefile_tooltip" xml:space="preserve">
+		<value>Încărcați și salvați un fișier în baza de date OpenFlow</value>
+	</data>
+	<data name="activity_setcredentials" xml:space="preserve">
+		<value>Setați datele de acreditare</value>
+	</data>
+	<data name="activity_setcredentials_tooltip" xml:space="preserve">
+		<value>Creați sau actualizați un set de acreditări criptate în OpenFlow</value>
+	</data>
+	<data name="activity_waitforcompleted" xml:space="preserve">
+		<value>Așteptați până la finalizare</value>
+	</data>
+	<data name="activity_waitforcompleted_help" xml:space="preserve">
+		<value>Așteptați finalizarea înainte de a continua cu fluxul de lucru</value>
+	</data>
 </root>

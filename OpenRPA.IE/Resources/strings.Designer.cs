@@ -61,6 +61,15 @@ namespace OpenRPA.IE.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get Element.
+        /// </summary>
+        public static string activity_getelement {
+            get {
+                return ResourceManager.GetString("activity_getelement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Drop activity.
         /// </summary>
         public static string activity_getelement_drop_hint {
@@ -88,11 +97,38 @@ namespace OpenRPA.IE.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Find an Windows UI element based on selector.
+        /// </summary>
+        public static string activity_getelement_tooltip {
+            get {
+                return ResourceManager.GetString("activity_getelement_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open URL.
+        /// </summary>
+        public static string activity_openurl {
+            get {
+                return ResourceManager.GetString("activity_openurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Get current.
         /// </summary>
         public static string activity_openurl_getcurrent {
             get {
                 return ResourceManager.GetString("activity_openurl_getcurrent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open the specefied url in Internet Explorer.
+        /// </summary>
+        public static string activity_openurl_tooltip {
+            get {
+                return ResourceManager.GetString("activity_openurl_tooltip", resourceCulture);
             }
         }
     }

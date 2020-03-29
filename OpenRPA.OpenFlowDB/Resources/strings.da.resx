@@ -58,7 +58,6 @@
 			: using a System.ComponentModel.TypeConverter
 			: and then encoded with base64 encoding.
 	-->
-	
 	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
 		<xsd:element name="root" msdata:IsDataSet="true">
 			<xsd:complexType>
@@ -98,4 +97,100 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="activity_click_to_view" xml:space="preserve">
+		<value>Dobblet klik for a se</value>
+	</data>
+	<data name="activity_filename" xml:space="preserve">
+		<value>Fil navn</value>
+	</data>
+	<data name="activity_filename_hint" xml:space="preserve">
+		<value>Fil navn</value>
+	</data>
+	<data name="activity_local_path" xml:space="preserve">
+		<value>Lokal sti</value>
+	</data>
+	<data name="activity_local_path_hint" xml:space="preserve">
+		<value>Gem fil i denne mappe</value>
+	</data>
+	<data name="activity_perm_delete" xml:space="preserve">
+		<value>Slet</value>
+	</data>
+	<data name="activity_perm_read" xml:space="preserve">
+		<value>Læse</value>
+	</data>
+	<data name="activity_perm_update" xml:space="preserve">
+		<value>Opdatere</value>
+	</data>
+	<data name="activity_assignopenflow" xml:space="preserve">
+		<value>Tildel OpenFlow</value>
+	</data>
+	<data name="activity_assignopenflow_tooltip" xml:space="preserve">
+		<value>Tildel en OpenFlow-arbejdsgang til en bruger eller rolle</value>
+	</data>
+	<data name="activity_deleteone" xml:space="preserve">
+		<value>Slet en</value>
+	</data>
+	<data name="activity_deleteone_tooltip" xml:space="preserve">
+		<value>Slet et element i OpenFlow-databasen</value>
+	</data>
+	<data name="activity_getcredentials" xml:space="preserve">
+		<value>Få legitimationsoplysninger</value>
+	</data>
+	<data name="activity_getcredentials_tooltip" xml:space="preserve">
+		<value>Hent et sæt krypterede legitimationsoplysninger fra OpenFlow</value>
+	</data>
+	<data name="activity_getfile" xml:space="preserve">
+		<value>Hent fil</value>
+	</data>
+	<data name="activity_getfile_tooltip" xml:space="preserve">
+		<value>Download en fil gemt i OpenFlow-databasen</value>
+	</data>
+	<data name="activity_grantpermission" xml:space="preserve">
+		<value>Giv tilladelse</value>
+	</data>
+	<data name="activity_grantpermission_tooltip" xml:space="preserve">
+		<value>Tilføj eller opdater tilladelser for en bruger eller rolle på det specificerede objekt, du skal opdatere dokumentet i OpenFlow efter</value>
+	</data>
+	<data name="activity_insertone" xml:space="preserve">
+		<value>Indsæt en</value>
+	</data>
+	<data name="activity_insertone_tooltip" xml:space="preserve">
+		<value>Indsætter et element i OpenFlow-databasen</value>
+	</data>
+	<data name="activity_insertorupdateone" xml:space="preserve">
+		<value>Indsæt eller opdater en</value>
+	</data>
+	<data name="activity_insertorupdateone_tooltip" xml:space="preserve">
+		<value>Indsætter et element i OpenFlow-databasen, opdater, hvis allerede findes. tjekker _id, medmindre du specificerer unikhed, vil den finde eksisterende elementer baseret på felterne nævnt i unikhed</value>
+	</data>
+	<data name="activity_query" xml:space="preserve">
+		<value>Forespørgsel</value>
+	</data>
+	<data name="activity_query_tooltip" xml:space="preserve">
+		<value>Forespørg OpenFlow-databasen for et eller flere elementer</value>
+	</data>
+	<data name="activity_removepermission" xml:space="preserve">
+		<value>Fjern tilladelse</value>
+	</data>
+	<data name="activity_removepermission_tooltip" xml:space="preserve">
+		<value>Fjern en tilladelse fra en bruger eller en rolle på det specificerede objekt. Du skal opdatere dokumentet i OpenFlow efter</value>
+	</data>
+	<data name="activity_savefile" xml:space="preserve">
+		<value>Gem filen</value>
+	</data>
+	<data name="activity_savefile_tooltip" xml:space="preserve">
+		<value>Upload og gem en fil i OpenFlow-databasen</value>
+	</data>
+	<data name="activity_setcredentials" xml:space="preserve">
+		<value>Angiv legitimationsoplysninger</value>
+	</data>
+	<data name="activity_setcredentials_tooltip" xml:space="preserve">
+		<value>Opret eller opdater et sæt krypterede legitimationsoplysninger i OpenFlow</value>
+	</data>
+	<data name="activity_waitforcompleted" xml:space="preserve">
+		<value>Vent til afsluttet</value>
+	</data>
+	<data name="activity_waitforcompleted_help" xml:space="preserve">
+		<value>Vent til afsluttet, før du fortsætter med arbejdsgangen</value>
+	</data>
 </root>

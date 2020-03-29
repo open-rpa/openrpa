@@ -21,7 +21,8 @@ namespace OpenRPA.Script.Activities
 {
     [System.ComponentModel.Designer(typeof(InvokeCodeDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.comment.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_invokecode_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_invokecode", typeof(Resources.strings))]
     public class InvokeCode : CodeActivity
     {
         public InvokeCode()
@@ -523,8 +524,6 @@ namespace OpenRPA.Script.Activities
 
             typeName.Append(typeFullName);
         }
-
-
         public static string GetCSharpHeaderText(Dictionary<string, Type> variables, string moduleName, string[] namespaces)
         {
             var headerText = new StringBuilder();
@@ -580,6 +579,23 @@ namespace OpenRPA.Script.Activities
             }
 
             typeName.Append(typeFullName);
+        }
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
         }
     }
     public class AssemblyLoader

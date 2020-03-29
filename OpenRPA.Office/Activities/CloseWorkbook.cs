@@ -1,6 +1,4 @@
-﻿//using ClosedXML.Excel;
-//using ExcelDataReader;
-using System;
+﻿using System;
 using System.Activities;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,33 +10,27 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Office.Interop.Excel;
-//using System.Windows.Forms;
+using OpenRPA.Interfaces;
 
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(CloseWorkbookDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.closeworkbook.png")]
-    //[designer.ToolboxTooltip(Text = "Read CSV, xls or xlsx file and loads it into a DataSet")]
+    [LocalizedToolboxTooltip("activity_closeworkbook_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_closeworkbook", typeof(Resources.strings))]
     public class CloseWorkbook : CodeActivity
     {
-        public CloseWorkbook()
-        {
-        }
-
         [RequiredArgument]
         [System.ComponentModel.Category("Input")]
         [OverloadGroup("asworkbook")]
         public InOutArgument<Microsoft.Office.Interop.Excel.Workbook> Workbook { get; set; }
-
         [RequiredArgument]
         [System.ComponentModel.Category("Input")]
         [OverloadGroup("asfilename")]
-
         public InArgument<string> Filename { get; set; }
         [RequiredArgument]
         [System.ComponentModel.Category("Input")]
         public InArgument<bool> SaveChanges { get; set; } = true;
-
         protected override void Execute(CodeActivityContext context)
         {
             var workbook = Workbook.Get(context);
@@ -51,9 +43,10 @@ namespace OpenRPA.Office.Activities
             }
             else
             {
+                int workbookcount = 0;
                 foreach (Microsoft.Office.Interop.Excel.Workbook w in officewrap.application.Workbooks)
                 {
-                    if (w.FullName == filename)
+                    if (w.FullName == filename || string.IsNullOrEmpty(filename))
                     {
                         try
                         {
@@ -68,6 +61,27 @@ namespace OpenRPA.Office.Activities
                         }
                     }
                 }
+                if(workbookcount== 0 || string.IsNullOrEmpty(filename))
+                {
+                    officewrap.application.Quit();
+                }
+            }
+        }
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
             }
         }
     }

@@ -15,7 +15,8 @@ namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(SaveMailItemDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.commentout.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_savemailitem_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_savemailitem", typeof(Resources.strings))]
     public sealed class SaveMailItem : CodeActivity
     {
         public SaveMailItem()
@@ -78,6 +79,23 @@ namespace OpenRPA.Office.Activities
                 Filename.Set(context, filename);
             }
             
+        }
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
         }
     }
 }

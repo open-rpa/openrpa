@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+	<!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,83 +59,158 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="activity_filename" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="activity_filename" xml:space="preserve">
     <value>Имя файла</value>
   </data>
-  <data name="activity_filename_hint" xml:space="preserve">
+	<data name="activity_filename_hint" xml:space="preserve">
     <value>Имя файла</value>
   </data>
-  <data name="activity_local_path" xml:space="preserve">
+	<data name="activity_local_path" xml:space="preserve">
     <value>Местный путь</value>
   </data>
-  <data name="activity_local_path_hint" xml:space="preserve">
+	<data name="activity_local_path_hint" xml:space="preserve">
     <value>Сохранить файл в эту папку</value>
   </data>
-  <data name="activity_perm_delete" xml:space="preserve">
+	<data name="activity_perm_delete" xml:space="preserve">
     <value>Удалить</value>
   </data>
-  <data name="activity_perm_read" xml:space="preserve">
+	<data name="activity_perm_read" xml:space="preserve">
     <value>Читать</value>
   </data>
-  <data name="activity_perm_update" xml:space="preserve">
+	<data name="activity_perm_update" xml:space="preserve">
     <value>Обновить</value>
   </data>
+	<data name="activity_click_to_view" xml:space="preserve">
+		<value>Двойной щелчок для просмотра</value>
+	</data>
+	<data name="activity_assignopenflow" xml:space="preserve">
+		<value>Назначить OpenFlow</value>
+	</data>
+	<data name="activity_assignopenflow_tooltip" xml:space="preserve">
+		<value>Назначьте рабочий процесс OpenFlow пользователю или роли</value>
+	</data>
+	<data name="activity_deleteone" xml:space="preserve">
+		<value>Удалить один</value>
+	</data>
+	<data name="activity_deleteone_tooltip" xml:space="preserve">
+		<value>Удалить один элемент в базе данных OpenFlow</value>
+	</data>
+	<data name="activity_getcredentials" xml:space="preserve">
+		<value>Получить учетные данные</value>
+	</data>
+	<data name="activity_getcredentials_tooltip" xml:space="preserve">
+		<value>Получить набор зашифрованных учетных данных от OpenFlow</value>
+	</data>
+	<data name="activity_getfile" xml:space="preserve">
+		<value>Получить файл</value>
+	</data>
+	<data name="activity_getfile_tooltip" xml:space="preserve">
+		<value>Загрузите файл, сохраненный в базе данных OpenFlow</value>
+	</data>
+	<data name="activity_grantpermission" xml:space="preserve">
+		<value>Предоставить разрешение</value>
+	</data>
+	<data name="activity_grantpermission_tooltip" xml:space="preserve">
+		<value>Чтобы добавить или обновить разрешения для пользователя или роли для указанного объекта, необходимо обновить документ в OpenFlow после</value>
+	</data>
+	<data name="activity_insertone" xml:space="preserve">
+		<value>Вставить один</value>
+	</data>
+	<data name="activity_insertone_tooltip" xml:space="preserve">
+		<value>Вставляет один элемент в базу данных OpenFlow</value>
+	</data>
+	<data name="activity_insertorupdateone" xml:space="preserve">
+		<value>Вставить или обновить один</value>
+	</data>
+	<data name="activity_insertorupdateone_tooltip" xml:space="preserve">
+		<value>Вставляет один элемент в базу данных OpenFlow, обновляет, если он уже существует. проверяет _id, если вы не укажете уникальность, тогда он найдет существующие элементы на основе полей, упомянутых в уникальности</value>
+	</data>
+	<data name="activity_query" xml:space="preserve">
+		<value>запрос</value>
+	</data>
+	<data name="activity_query_tooltip" xml:space="preserve">
+		<value>Запросите базу данных OpenFlow для одного или нескольких элементов</value>
+	</data>
+	<data name="activity_removepermission" xml:space="preserve">
+		<value>Удалить разрешение</value>
+	</data>
+	<data name="activity_removepermission_tooltip" xml:space="preserve">
+		<value>Чтобы удалить разрешение пользователя или роли для указанного объекта, необходимо обновить документ в OpenFlow после того, как</value>
+	</data>
+	<data name="activity_savefile" xml:space="preserve">
+		<value>Сохранить файл</value>
+	</data>
+	<data name="activity_savefile_tooltip" xml:space="preserve">
+		<value>Загрузить и сохранить файл в базе данных OpenFlow</value>
+	</data>
+	<data name="activity_setcredentials" xml:space="preserve">
+		<value>Установить учетные данные</value>
+	</data>
+	<data name="activity_setcredentials_tooltip" xml:space="preserve">
+		<value>Создать или обновить набор зашифрованных учетных данных в OpenFlow</value>
+	</data>
+	<data name="activity_waitforcompleted" xml:space="preserve">
+		<value>Дождитесь завершения</value>
+	</data>
+	<data name="activity_waitforcompleted_help" xml:space="preserve">
+		<value>Подождите завершения, прежде чем продолжить рабочий процесс</value>
+	</data>
 </root>

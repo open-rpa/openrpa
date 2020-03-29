@@ -34,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\AddParagraphDesigner.xaml" />
+    <None Remove="Activities\CloseDocumentDesigner.xaml" />
     <None Remove="Activities\CloseWorkbookDesigner.xaml" />
     <None Remove="Activities\GetMailsDesigner.xaml" />
     <None Remove="Activities\GetParagraphDesigner.xaml" />
@@ -68,6 +69,9 @@
     <EmbeddedResource Include="Resources\toolbox\writeexcel.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\CloseDocumentDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\CloseWorkbookDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

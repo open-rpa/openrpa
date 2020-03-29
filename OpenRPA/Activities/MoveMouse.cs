@@ -14,7 +14,8 @@ namespace OpenRPA.Activities
 {
     [Designer(typeof(MoveMouseDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.mouse.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_movemouse_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_movemouse", typeof(Resources.strings))]
     public class MoveMouse : CodeActivity
     {
         public MoveMouse()
@@ -68,7 +69,13 @@ namespace OpenRPA.Activities
         {
             get
             {
-                return base.DisplayName;
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
             }
             set
             {

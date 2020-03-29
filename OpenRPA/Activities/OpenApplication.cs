@@ -13,8 +13,9 @@ namespace OpenRPA.Activities
 {
     [System.ComponentModel.Designer(typeof(OpenApplicationDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.getapp.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     [System.Windows.Markup.ContentProperty("Body")]
+    [LocalizedToolboxTooltip("activity_openapplication_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_openapplication", typeof(Resources.strings))]
     public class OpenApplication : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {
         public OpenApplication()
@@ -141,7 +142,13 @@ namespace OpenRPA.Activities
         {
             get
             {
-                return base.DisplayName;
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
             }
             set
             {

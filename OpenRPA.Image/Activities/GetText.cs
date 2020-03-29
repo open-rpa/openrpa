@@ -16,7 +16,8 @@ namespace OpenRPA.Image
     [System.ComponentModel.Designer(typeof(GetTextDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(GetText), "Resources.toolbox.getimage.png")]
     [System.Windows.Markup.ContentProperty("Body")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_gettext_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_gettext", typeof(Resources.strings))]
     public class GetText : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {
         public GetText()
@@ -36,7 +37,6 @@ namespace OpenRPA.Image
         public ActivityAction<ImageElement> Body { get; set; }
         private Variable<ImageElement[]> elements = new Variable<ImageElement[]>("elements");
         private Variable<IEnumerator<ImageElement>> _elements = new Variable<IEnumerator<ImageElement>>("_elements");
-
         public static ImageElement[]  Execute(IElement ele, System.Activities.Presentation.Model.ModelItem model)
         {
             var wordlimit = model.GetValue<string>("WordLimit");
@@ -160,6 +160,22 @@ namespace OpenRPA.Image
             aa.Argument = da;
             return fef;
         }
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
+        }
     }
-
 }

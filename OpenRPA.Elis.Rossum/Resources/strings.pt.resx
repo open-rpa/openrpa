@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+	<!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,140 +59,186 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="activity_auth_hint" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="activity_auth_hint" xml:space="preserve">
     <value>Nome do Usuário ou Email</value>
   </data>
-  <data name="activity_auth_username" xml:space="preserve">
+	<data name="activity_auth_username" xml:space="preserve">
     <value>Nome do Usuário</value>
   </data>
-  <data name="activity_exportfile_file" xml:space="preserve">
+	<data name="activity_exportfile_file" xml:space="preserve">
     <value>URL do Arquivo</value>
   </data>
-  <data name="activity_exportfile_file_hint" xml:space="preserve">
+	<data name="activity_exportfile_file_hint" xml:space="preserve">
     <value>URL do Arquivo para obter dados</value>
   </data>
-  <data name="activity_exportfile_key" xml:space="preserve">
+	<data name="activity_exportfile_key" xml:space="preserve">
     <value>Tecla</value>
   </data>
-  <data name="activity_exportfile_key_hint" xml:space="preserve">
+	<data name="activity_exportfile_key_hint" xml:space="preserve">
     <value>Tecla do API do autenticador de atividade</value>
   </data>
-  <data name="activity_exportfile_queue" xml:space="preserve">
+	<data name="activity_exportfile_queue" xml:space="preserve">
     <value>Fila</value>
   </data>
-  <data name="activity_exportfile_queue_hint" xml:space="preserve">
+	<data name="activity_exportfile_queue_hint" xml:space="preserve">
     <value>Fila de exportação de dados</value>
   </data>
-  <data name="activity_getqueues_key" xml:space="preserve">
+	<data name="activity_getqueues_key" xml:space="preserve">
     <value>Tecla</value>
   </data>
-  <data name="activity_getqueues_key_hint" xml:space="preserve">
+	<data name="activity_getqueues_key_hint" xml:space="preserve">
     <value>Tecla do API do autenticador de atividade</value>
   </data>
-  <data name="activity_getstatus_file" xml:space="preserve">
+	<data name="activity_getstatus_file" xml:space="preserve">
     <value>URL do Arquivo</value>
   </data>
-  <data name="activity_getstatus_file_hint" xml:space="preserve">
+	<data name="activity_getstatus_file_hint" xml:space="preserve">
     <value>URL do Arquivo para obter status</value>
   </data>
-  <data name="activity_getstatus_key" xml:space="preserve">
+	<data name="activity_getstatus_key" xml:space="preserve">
     <value>Tecla</value>
   </data>
-  <data name="activity_getstatus_key_hint" xml:space="preserve">
+	<data name="activity_getstatus_key_hint" xml:space="preserve">
     <value>Tecla do API do autenticador de atividade</value>
   </data>
-  <data name="activity_uploadfile_filename" xml:space="preserve">
+	<data name="activity_uploadfile_filename" xml:space="preserve">
     <value>Nome do Arquivo</value>
   </data>
-  <data name="activity_uploadfile_filename_hint" xml:space="preserve">
+	<data name="activity_uploadfile_filename_hint" xml:space="preserve">
     <value>Arquivo a ser carregado na fila</value>
   </data>
-  <data name="activity_uploadfile_key" xml:space="preserve">
+	<data name="activity_uploadfile_key" xml:space="preserve">
     <value>Tecla</value>
   </data>
-  <data name="activity_uploadfile_key_hint" xml:space="preserve">
+	<data name="activity_uploadfile_key_hint" xml:space="preserve">
     <value>Tecla do API do autenticador de atividade</value>
   </data>
-  <data name="activity_uploadfile_queue" xml:space="preserve">
+	<data name="activity_uploadfile_queue" xml:space="preserve">
     <value>Fila</value>
   </data>
-  <data name="activity_uploadfile_queue_hint" xml:space="preserve">
+	<data name="activity_uploadfile_queue_hint" xml:space="preserve">
     <value>Fila onde será carregado o arquivo</value>
   </data>
-  <data name="activity_waitforfile_file" xml:space="preserve">
+	<data name="activity_waitforfile_file" xml:space="preserve">
     <value>URL do Arquivo</value>
   </data>
-  <data name="activity_waitforfile_file_hint" xml:space="preserve">
+	<data name="activity_waitforfile_file_hint" xml:space="preserve">
     <value>URL do Arquivo para aguardar resposta</value>
   </data>
-  <data name="activity_waitforfile_key" xml:space="preserve">
+	<data name="activity_waitforfile_key" xml:space="preserve">
     <value>Tecla</value>
   </data>
-  <data name="activity_waitforfile_key_hint" xml:space="preserve">
+	<data name="activity_waitforfile_key_hint" xml:space="preserve">
     <value>Tecla do API do autenticador de atividade</value>
   </data>
-  <data name="activity_waitforfile_status" xml:space="preserve">
+	<data name="activity_waitforfile_status" xml:space="preserve">
     <value>Status</value>
   </data>
-  <data name="activity_waitforfile_status_hint" xml:space="preserve">
+	<data name="activity_waitforfile_status_hint" xml:space="preserve">
     <value>Status de Espera por</value>
   </data>
+	<data name="activity_auth" xml:space="preserve">
+		<value>May-akda</value>
+	</data>
+	<data name="activity_auth_tooltip" xml:space="preserve">
+		<value>Patunayan laban sa serbisyo ng Rossum at makakuha ng isang Token / Key back</value>
+	</data>
+	<data name="activity_exportfiledata" xml:space="preserve">
+		<value>I-export ang Data ng File</value>
+	</data>
+	<data name="activity_exportfiledata_tooltip" xml:space="preserve">
+		<value>Mag-date ang nakuha na data mula sa isang invoice, gumagana lamang sa sandaling ang katayuan ng file ay na-export sa katayuan</value>
+	</data>
+	<data name="activity_getfilestatus" xml:space="preserve">
+		<value>Kumuha ng Katayuan ng File</value>
+	</data>
+	<data name="activity_getfilestatus_tooltip" xml:space="preserve">
+		<value>Kumuha ng katayuan ng isang file sa pila, maaaring maging alinman
+pag-import - Ang dokumento ay pinoproseso ng AI Core Engine para sa pagkuha ng data; paunang estado ng dokumento.
+failed_import - Nabigo ang pag-import e.g. dahil sa isang hindi mabagong dokumento ng dokumento.
+to_review - Ang paunang hakbang ng pagkuha ay tapos na at naghihintay ang dokumento para sa pagpapatunay ng gumagamit.
+pagsusuri - Ang dokumento ay sumasailalim sa pagpapatunay sa interface ng gumagamit.
+pag-export - Ang dokumento ay napatunayan at naghihintay ngayon sa pagkumpleto ng tawag sa konektor na nag-save.
+nai-export - Ang dokumento ay napatunayan at matagumpay na naipasa ang lahat ng mga kawit; ito ang tipikal na estado ng terminal ng isang dokumento.
+failed_export - Kapag ang konektor ay nagbalik ng isang error.
+ipinagpaliban - Pinili ng Operator na ipagpaliban ang dokumento sa halip na i-export ito.
+tinanggal - Kapag tinanggal ang dokumento ng gumagamit.
+purged - Tanging ang metadata ay natipid pagkatapos ng isang pagtanggal.</value>
+	</data>
+	<data name="activity_getqueues" xml:space="preserve">
+		<value>Kumuha ng mga Queue</value>
+	</data>
+	<data name="activity_getqueues_tooltip" xml:space="preserve">
+		<value>Kumuha ng isang listahan ng mga pila mula sa rossum, dapat na mai-upload ang isang file sa isang pila na may mga setting ng pagkakaiba-iba ng mga setting kahit na ang website</value>
+	</data>
+	<data name="activity_uploadfile" xml:space="preserve">
+		<value>Mag-upload ng File</value>
+	</data>
+	<data name="activity_uploadfile_tooltip" xml:space="preserve">
+		<value>Nag-upload ng file sa isang Rossum pila</value>
+	</data>
+	<data name="activity_waitforfilestatus" xml:space="preserve">
+		<value>Maghintay Para sa Katayuan ng File</value>
+	</data>
+	<data name="activity_waitforfilestatus_tooltip" xml:space="preserve">
+		<value>Gawing idlip ang workflow habang naghihintay para sa file na mapunta sa tinukoy na katayuan</value>
+	</data>
 </root>

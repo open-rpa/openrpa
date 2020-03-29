@@ -16,7 +16,8 @@ namespace OpenRPA.Forms.Activities
 {
     [System.ComponentModel.Designer(typeof(InvokeFormDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.form30.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_invokeform_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_invokeform", typeof(Resources.strings))]
     public class InvokeForm : AsyncTaskCodeActivity<FormResult>
     {
         [RequiredArgument]
@@ -112,6 +113,23 @@ namespace OpenRPA.Forms.Activities
             await Task.Delay(1);
 
             return result;
+        }
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
         }
     }
 }

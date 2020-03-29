@@ -79,6 +79,24 @@ namespace OpenRPA.AviRecorder.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Play Recording.
+        /// </summary>
+        public static string activity_playrecording {
+            get {
+                return ResourceManager.GetString("activity_playrecording", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Playback a video recording.
+        /// </summary>
+        public static string activity_playrecording_tooltip {
+            get {
+                return ResourceManager.GetString("activity_playrecording_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save in this folder.
         /// </summary>
         public static string activity_start_hint {
@@ -88,11 +106,47 @@ namespace OpenRPA.AviRecorder.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start Recording.
+        /// </summary>
+        public static string activity_startrecording {
+            get {
+                return ResourceManager.GetString("activity_startrecording", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start recording the screen to a file.
+        /// </summary>
+        public static string activity_startrecording_tooltip {
+            get {
+                return ResourceManager.GetString("activity_startrecording_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save video filename.
         /// </summary>
         public static string activity_stop_hint {
             get {
                 return ResourceManager.GetString("activity_stop_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop Recording.
+        /// </summary>
+        public static string activity_stoprecording {
+            get {
+                return ResourceManager.GetString("activity_stoprecording", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop a running screen recording and save to file.
+        /// </summary>
+        public static string activity_stoprecording_tooltip {
+            get {
+                return ResourceManager.GetString("activity_stoprecording_tooltip", resourceCulture);
             }
         }
         

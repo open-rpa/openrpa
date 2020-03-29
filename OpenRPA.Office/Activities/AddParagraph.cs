@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Activities;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Office.Interop.Word;
+using OpenRPA.Interfaces;
 
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(AddParagraphDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.readexcel.png")]
+    [LocalizedToolboxTooltip("activity_addparagraph_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_addparagraph", typeof(Resources.strings))]
     public class AddParagraph : CodeActivity
     {
         [System.ComponentModel.Category("Input")]
@@ -65,6 +69,23 @@ namespace OpenRPA.Office.Activities
                 var p2 = document.Paragraphs.Add(p[index + 1].Range);
                 p2 = p[index + 1];
                 p2.Range.Text = Text.Get(context) + "\r";
+            }
+        }
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
             }
         }
     }

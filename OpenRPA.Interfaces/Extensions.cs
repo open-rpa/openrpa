@@ -37,6 +37,12 @@ namespace OpenRPA.Interfaces
     }
     public static class Extensions
     {
+        public static IEnumerable<T> GetMyCustomAttributes<T>(this Type type, bool inherit)
+        {
+            return type
+                .GetCustomAttributes(typeof(T), inherit)
+                .Cast<T>();
+        }
         public static IEnumerable<System.Globalization.CultureInfo> GetAvailableCultures(Type type)
         {
             AppDomain otherDomain = null;

@@ -15,7 +15,8 @@ namespace OpenRPA.OpenFlowDB
 {
     [System.ComponentModel.Designer(typeof(InsertOneDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.entity.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_insertone_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_insertone", typeof(Resources.strings))]
     public class InsertOne : AsyncTaskCodeActivity<JObject>
     {
         [RequiredArgument]
@@ -25,9 +26,7 @@ namespace OpenRPA.OpenFlowDB
         public InArgument<string> Collection { get; set; } = "entities";
         [RequiredArgument]
         public InArgument<Object> Item { get; set; }
-
         public InArgument<string> EncryptFields { get; set; }
-
         protected async override Task<JObject> ExecuteAsync(AsyncCodeActivityContext context)
         {
             var ignoreErrors = IgnoreErrors.Get(context);
@@ -73,6 +72,23 @@ namespace OpenRPA.OpenFlowDB
             }
             System.Windows.Forms.Application.DoEvents();
             return result;
+        }
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
         }
     }
 }

@@ -61,6 +61,15 @@ namespace OpenRPA.Image.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Find an image on the screen or inside a specific application window.
+        /// </summary>
+        public static string activity_getelement {
+            get {
+                return ResourceManager.GetString("activity_getelement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Drop activity.
         /// </summary>
         public static string activity_getelement_drop_hint {
@@ -97,6 +106,24 @@ namespace OpenRPA.Image.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get Element.
+        /// </summary>
+        public static string activity_getelement_tooltip {
+            get {
+                return ResourceManager.GetString("activity_getelement_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get an image of the screen relative from another image or element found with GetElement.
+        /// </summary>
+        public static string activity_getimage {
+            get {
+                return ResourceManager.GetString("activity_getimage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Drop activity.
         /// </summary>
         public static string activity_getimage_drop_hint {
@@ -120,6 +147,24 @@ namespace OpenRPA.Image.Resources {
         public static string activity_getimage_select {
             get {
                 return ResourceManager.GetString("activity_getimage_select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Image.
+        /// </summary>
+        public static string activity_getimage_tooltip {
+            get {
+                return ResourceManager.GetString("activity_getimage_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Text.
+        /// </summary>
+        public static string activity_gettext {
+            get {
+                return ResourceManager.GetString("activity_gettext", resourceCulture);
             }
         }
         
@@ -151,6 +196,15 @@ namespace OpenRPA.Image.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Using OCR get all text from a image, can be limited to a specific word or sentence.
+        /// </summary>
+        public static string activity_gettext_tooltip {
+            get {
+                return ResourceManager.GetString("activity_gettext_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Drop activity.
         /// </summary>
         public static string activity_loadfile_drop_hint {
@@ -174,6 +228,42 @@ namespace OpenRPA.Image.Resources {
         public static string activity_loadfile_filename_hint {
             get {
                 return ResourceManager.GetString("activity_loadfile_filename_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load From File.
+        /// </summary>
+        public static string activity_loadfromfile {
+            get {
+                return ResourceManager.GetString("activity_loadfromfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load an image from a file and return an ImageElement.
+        /// </summary>
+        public static string activity_loadfromfile_tooltip {
+            get {
+                return ResourceManager.GetString("activity_loadfromfile_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Take Screenshot.
+        /// </summary>
+        public static string activity_takescreenshot {
+            get {
+                return ResourceManager.GetString("activity_takescreenshot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Take screenshot of the entire screen or a specific element found using Get Element.
+        /// </summary>
+        public static string activity_takescreenshot_tooltip {
+            get {
+                return ResourceManager.GetString("activity_takescreenshot_tooltip", resourceCulture);
             }
         }
     }

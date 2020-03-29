@@ -13,7 +13,8 @@ namespace OpenRPA.Activities
 {
     [System.ComponentModel.Designer(typeof(InsertClipboardDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.insertclipboard.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_insertclipboard_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_insertclipboard", typeof(Resources.strings))]
     public class InsertClipboard : CodeActivity
     {
         [RequiredArgument, LocalizedDisplayName("activity_ignoreerrors", typeof(Resources.strings)), LocalizedDescription("activity_ignoreerrors_help", typeof(Resources.strings))]
@@ -48,7 +49,13 @@ namespace OpenRPA.Activities
         {
             get
             {
-                return base.DisplayName;
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
             }
             set
             {

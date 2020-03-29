@@ -15,7 +15,8 @@ namespace OpenRPA.OpenFlowDB
 {
     [Designer(typeof(DeleteOneDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.deleteentity.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_deleteone_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_deleteone", typeof(Resources.strings))]
     public class DeleteOne : AsyncTaskCodeActivity<bool>
     {
         [RequiredArgument]
@@ -59,6 +60,23 @@ namespace OpenRPA.OpenFlowDB
             await global.webSocketClient.DeleteOne(collection, id);
             System.Windows.Forms.Application.DoEvents();
             return true;
+        }
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
         }
     }
 }

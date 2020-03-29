@@ -143,7 +143,7 @@ namespace OpenRPA.NM
             NotifyPropertyChanged("Status");
         }
         private float dpiscale = 0;
-        private object _lock = new object();
+        private readonly object _lock = new object();
         private void OnMessage(NativeMessagingMessage message)
         {
             try

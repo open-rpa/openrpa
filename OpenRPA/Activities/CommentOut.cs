@@ -13,7 +13,8 @@ namespace OpenRPA.Activities
     [Designer(typeof(CommentOutDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.commentout.png")]
     [System.Windows.Markup.ContentProperty("Body")]
-    // [designer.ToolboxTooltip(Text = "Find an HTML element based on css/xpath selector")]
+    [LocalizedToolboxTooltip("activity_commentout_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_commentout", typeof(Resources.strings))]
     public class CommentOut : CodeActivity
     {
         [DefaultValue(null)]
@@ -28,7 +29,13 @@ namespace OpenRPA.Activities
         {
             get
             {
-                return base.DisplayName;
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
             }
             set
             {

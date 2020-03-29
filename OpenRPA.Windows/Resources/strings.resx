@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+	<!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,128 +59,134 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="detector_button_highlight" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="activity_getelement" xml:space="preserve">
+    <value>Get Element</value>
+  </data>
+	<data name="activity_getelement_tooltip" xml:space="preserve">
+    <value>Find an Windows UI element based on selector</value>
+  </data>
+	<data name="detector_button_highlight" xml:space="preserve">
     <value>Highlight</value>
   </data>
-  <data name="detector_button_open_selector" xml:space="preserve">
+	<data name="detector_button_open_selector" xml:space="preserve">
     <value>Open Selector</value>
   </data>
-  <data name="detector_button_select" xml:space="preserve">
+	<data name="detector_button_select" xml:space="preserve">
     <value>Select</value>
   </data>
-  <data name="detector_name" xml:space="preserve">
+	<data name="detector_name" xml:space="preserve">
     <value>Name</value>
   </data>
-  <data name="detector_selector" xml:space="preserve">
+	<data name="detector_selector" xml:space="preserve">
     <value>Selector</value>
   </data>
-  <data name="enable_cache_help" xml:space="preserve">
+	<data name="enable_cache_help" xml:space="preserve">
     <value>Enable caching of elements for faster automation at the expense of ram</value>
   </data>
-  <data name="getelement_drop_hint" xml:space="preserve">
+	<data name="getelement_drop_hint" xml:space="preserve">
     <value>Drop activity</value>
   </data>
-  <data name="getelement_highlight" xml:space="preserve">
+	<data name="getelement_highlight" xml:space="preserve">
     <value>Highlight</value>
   </data>
-  <data name="getelement_open_selector" xml:space="preserve">
+	<data name="getelement_open_selector" xml:space="preserve">
     <value>Open Selector</value>
   </data>
-  <data name="plugin_allow_child_searching" xml:space="preserve">
+	<data name="plugin_allow_child_searching" xml:space="preserve">
     <value>Allow child searching</value>
   </data>
-  <data name="plugin_allow_child_searching_help" xml:space="preserve">
+	<data name="plugin_allow_child_searching_help" xml:space="preserve">
     <value>If an element in a selector is not found, automaticly search all children for match</value>
   </data>
-  <data name="plugin_allow_multiple_hits" xml:space="preserve">
+	<data name="plugin_allow_multiple_hits" xml:space="preserve">
     <value>Allow multiple hits</value>
   </data>
-  <data name="plugin_allow_multiple_hits_help" xml:space="preserve">
+	<data name="plugin_allow_multiple_hits_help" xml:space="preserve">
     <value>Allow an element selector in a selector to find more than one child</value>
   </data>
-  <data name="plugin_enable_cache" xml:space="preserve">
+	<data name="plugin_enable_cache" xml:space="preserve">
     <value>Enable caching</value>
   </data>
-  <data name="plugin_enum_properties" xml:space="preserve">
+	<data name="plugin_enum_properties" xml:space="preserve">
     <value>Enum properties</value>
   </data>
-  <data name="plugin_enum_properties_help" xml:space="preserve">
+	<data name="plugin_enum_properties_help" xml:space="preserve">
     <value>Test each selector element for the minimum required amount of properties needed</value>
   </data>
-  <data name="plugin_get_elements_in_different_thread" xml:space="preserve">
+	<data name="plugin_get_elements_in_different_thread" xml:space="preserve">
     <value>Get elements in different thread</value>
   </data>
-  <data name="plugin_get_elements_in_different_thread_help" xml:space="preserve">
+	<data name="plugin_get_elements_in_different_thread_help" xml:space="preserve">
     <value>GetElement uses another thread while searching, to avoid locks if selector finds robot</value>
   </data>
-  <data name="plugin_search_descendants" xml:space="preserve">
+	<data name="plugin_search_descendants" xml:space="preserve">
     <value>Search descendants</value>
   </data>
-  <data name="plugin_search_descendants_help" xml:space="preserve">
+	<data name="plugin_search_descendants_help" xml:space="preserve">
     <value>Search all descendants, use for more simple selectors but is slower</value>
   </data>
-  <data name="plugin_traverse_selector_both_ways" xml:space="preserve">
+	<data name="plugin_traverse_selector_both_ways" xml:space="preserve">
     <value>Traverse selector both ways</value>
   </data>
-  <data name="plugin_traverse_selector_both_ways_help" xml:space="preserve">
+	<data name="plugin_traverse_selector_both_ways_help" xml:space="preserve">
     <value>Traverse UI tree both ways to filter out ghost selector elements</value>
   </data>
 </root>

@@ -58,7 +58,6 @@
 			: using a System.ComponentModel.TypeConverter
 			: and then encoded with base64 encoding.
 	-->
-	
 	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
 		<xsd:element name="root" msdata:IsDataSet="true">
 			<xsd:complexType>
@@ -98,4 +97,43 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="plugin_auto_signout" xml:space="preserve">
+		<value>Auto tilmelding</value>
+	</data>
+	<data name="plugin_button_add_user" xml:space="preserve">
+		<value>Tilføj nuværende bruger</value>
+	</data>
+	<data name="plugin_button_install_service" xml:space="preserve">
+		<value>Installer service</value>
+	</data>
+	<data name="plugin_button_reauth" xml:space="preserve">
+		<value>Genautentificer service</value>
+	</data>
+	<data name="plugin_button_remove_user" xml:space="preserve">
+		<value>Fjern den aktuelle bruger</value>
+	</data>
+	<data name="plugin_button_start_service" xml:space="preserve">
+		<value>Start service</value>
+	</data>
+	<data name="plugin_button_stop_service" xml:space="preserve">
+		<value>Stop service</value>
+	</data>
+	<data name="plugin_button_uninstall_service" xml:space="preserve">
+		<value>Afinstaller Service</value>
+	</data>
+	<data name="plugin_executable" xml:space="preserve">
+		<value>eksekverbar</value>
+	</data>
+	<data name="plugin_reload_interval" xml:space="preserve">
+		<value>Genindlæs interval</value>
+	</data>
+	<data name="plugin_use_free_rdp" xml:space="preserve">
+		<value>Brug gratis RDP</value>
+	</data>
+	<data name="plugin_windows_password" xml:space="preserve">
+		<value>Windows-adgangskode</value>
+	</data>
+	<data name="plugin_windows_username" xml:space="preserve">
+		<value>Windows-brugernavn</value>
+	</data>
 </root>

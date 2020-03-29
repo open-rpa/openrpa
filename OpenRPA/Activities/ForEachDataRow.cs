@@ -14,7 +14,8 @@ namespace OpenRPA.Activities
     [System.ComponentModel.Designer(typeof(ForEachDataRowDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.foreach.png")]
     [System.Windows.Markup.ContentProperty("Body")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_foreachdatarow_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_foreachdatarow", typeof(Resources.strings))]
     public class ForEachDataRow : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {
         [RequiredArgument,Category("Input"),OverloadGroup("DataTable"), LocalizedDisplayName("activity_datatable", typeof(Resources.strings)), LocalizedDescription("activity_datatable_help", typeof(Resources.strings))]
@@ -77,7 +78,13 @@ namespace OpenRPA.Activities
         {
             get
             {
-                return base.DisplayName;
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
             }
             set
             {

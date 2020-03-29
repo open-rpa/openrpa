@@ -1,5 +1,6 @@
 ﻿<sap:ActivityDesigner x:Class="OpenRPA.Office.Activities.GetParagraphDesigner"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
     xmlns:Converters="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
@@ -48,6 +49,9 @@
                             ExpressionType="s:String" HorizontalAlignment="Stretch" />
         </DockPanel>
         <Button Content="..." Click="Button_Click" Grid.Column="1" Width="30" />
+        <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
+                                    HintText="{x:Static or:strings.activity_drop_hint}" AllowedItemType="sa:Activity"
+                                      Grid.Row="1" />
 
 
         <!--Converter={StaticResource DebugBinding},

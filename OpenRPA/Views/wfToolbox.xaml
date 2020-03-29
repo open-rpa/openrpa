@@ -4,9 +4,39 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpenRPA.Views"
+             xmlns:toolbox="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation/toolbox"
+             xmlns:swd="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
+             xmlns:swd1="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Padding="0" Margin="0,0,0,0">
+    <UserControl.Resources>
+        <local:ToolTipConvertor x:Key="ToolTipConvertor"/>
+        <SolidColorBrush x:Uid="SolidColorBrush_3" x:Key="WorkflowViewElementSelectedBackground" Color="{x:Static swd:WorkflowDesignerColors.WorkflowViewElementSelectedBackgroundColor}" />
+
+    </UserControl.Resources>
     <Grid>
-        <Border x:Name="toolborder"></Border>
+        <toolbox:ToolboxControl x:Name="tb">
+            <toolbox:ToolboxControl.ToolItemStyle>
+                <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                    <Setter Property="ToolTip" Value="{Binding Converter={StaticResource ToolTipConvertor }}" />
+                    <Setter x:Uid="Setter_130" Property="AutomationProperties.Name" Value="{Binding Path=ToolboxItem.DisplayName}"/>
+                    <Setter x:Uid="Setter_65" Property="FontWeight" Value="Normal"/>
+                    <Setter x:Uid="Setter_66" Property="BorderThickness" Value="1"/>
+                    <Setter x:Uid="Setter_67" Property="BorderBrush" Value="{x:Null}"/>
+                    <Style.Triggers>
+                        <Trigger x:Uid="Trigger_2" Property="IsMouseOver" Value="True">
+                            <Setter x:Uid="Setter_68" Property="BorderBrush" Value="{StaticResource WorkflowViewElementSelectedBackground}"/>
+                            <Setter x:Uid="Setter_69" Property="Background" Value="{StaticResource WorkflowViewElementSelectedBackground}"/>
+                        </Trigger>
+                        <Trigger x:Uid="Trigger_3" Property="IsSelected" Value="True">
+                            <Setter x:Uid="Setter_70" Property="BorderBrush" Value="{StaticResource WorkflowViewElementSelectedBackground}"/>
+                            <Setter x:Uid="Setter_70_" Property="Background" Value="{StaticResource WorkflowViewElementSelectedBackground}"/>
+                            <Setter x:Uid="Setter_71" Property="FontWeight" Value="Bold"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </toolbox:ToolboxControl.ToolItemStyle>
+        </toolbox:ToolboxControl>
+
     </Grid>
 </UserControl>

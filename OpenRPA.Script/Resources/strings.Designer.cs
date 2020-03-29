@@ -70,6 +70,24 @@ namespace OpenRPA.Script.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invoke Code.
+        /// </summary>
+        public static string activity_invokecode {
+            get {
+                return ResourceManager.GetString("activity_invokecode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoke code written in one of several languages.
+        /// </summary>
+        public static string activity_invokecode_tooltip {
+            get {
+                return ResourceManager.GetString("activity_invokecode_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Editor.
         /// </summary>
         public static string activity_open_editor {
@@ -88,7 +106,7 @@ namespace OpenRPA.Script.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enable intellisense for c# scripts.
+        ///   Looks up a localized string similar to Enable intellisense for C# scripts.
         /// </summary>
         public static string plugin_csharp_intellisense_help {
             get {

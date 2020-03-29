@@ -13,7 +13,8 @@ namespace OpenRPA.Activities
 {
     [Designer(typeof(CloseApplicationDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.killapp.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_closeapplication_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_closeapplication", typeof(Resources.strings))]
     public class CloseApplication : CodeActivity
     {
         public CloseApplication()
@@ -46,7 +47,13 @@ namespace OpenRPA.Activities
         {
             get
             {
-                return base.DisplayName;
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
             }
             set
             {

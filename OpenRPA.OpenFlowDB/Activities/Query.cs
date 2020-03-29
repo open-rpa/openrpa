@@ -15,7 +15,8 @@ namespace OpenRPA.OpenFlowDB
 {
     [System.ComponentModel.Designer(typeof(QueryDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.getentities.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_query_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_query", typeof(Resources.strings))]
     public class Query : AsyncTaskCodeActivity<JObject[]>
     {
         [RequiredArgument]
@@ -44,6 +45,23 @@ namespace OpenRPA.OpenFlowDB
             result = await global.webSocketClient.Query<JObject>(collection, querystring, projection, top, skip, orderby);
             System.Windows.Forms.Application.DoEvents();
             return result;
+        }
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
         }
     }
 }

@@ -151,6 +151,78 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Click Element.
+        /// </summary>
+        public static string activity_clickelement {
+            get {
+                return ResourceManager.GetString("activity_clickelement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click on an element found with GetElement.
+        /// </summary>
+        public static string activity_clickelement_tooltip {
+            get {
+                return ResourceManager.GetString("activity_clickelement_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close Application.
+        /// </summary>
+        public static string activity_closeapplication {
+            get {
+                return ResourceManager.GetString("activity_closeapplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Find application based on a UI selector and the closes the Application.
+        /// </summary>
+        public static string activity_closeapplication_tooltip {
+            get {
+                return ResourceManager.GetString("activity_closeapplication_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Comment Out.
+        /// </summary>
+        public static string activity_commentout {
+            get {
+                return ResourceManager.GetString("activity_commentout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignore everything inside this Acitvity, handy for quickly remarking something out.
+        /// </summary>
+        public static string activity_commentout_tooltip {
+            get {
+                return ResourceManager.GetString("activity_commentout_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy Clipboard.
+        /// </summary>
+        public static string activity_copyclipboard {
+            get {
+                return ResourceManager.GetString("activity_copyclipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy content of Clipboard into a variable.
+        /// </summary>
+        public static string activity_copyclipboard_tooltip {
+            get {
+                return ResourceManager.GetString("activity_copyclipboard_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data Table.
         /// </summary>
         public static string activity_datatable {
@@ -201,6 +273,15 @@ namespace OpenRPA.Resources {
         public static string activity_detector_help {
             get {
                 return ResourceManager.GetString("activity_detector_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Puts workflow in idle mode, waiting on selected detector to trigger.
+        /// </summary>
+        public static string activity_detector_tooltip {
+            get {
+                return ResourceManager.GetString("activity_detector_tooltip", resourceCulture);
             }
         }
         
@@ -304,6 +385,24 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Foreach DataRow.
+        /// </summary>
+        public static string activity_foreachdatarow {
+            get {
+                return ResourceManager.GetString("activity_foreachdatarow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enumerate through each row inside a DataTable.
+        /// </summary>
+        public static string activity_foreachdatarow_tooltip {
+            get {
+                return ResourceManager.GetString("activity_foreachdatarow_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Height.
         /// </summary>
         public static string activity_height {
@@ -327,6 +426,24 @@ namespace OpenRPA.Resources {
         public static string activity_highlight {
             get {
                 return ResourceManager.GetString("activity_highlight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Highlight Element.
+        /// </summary>
+        public static string activity_highlightelement {
+            get {
+                return ResourceManager.GetString("activity_highlightelement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Highlight an element found with GetElement.
+        /// </summary>
+        public static string activity_highlightelement_tooltip {
+            get {
+                return ResourceManager.GetString("activity_highlightelement_tooltip", resourceCulture);
             }
         }
         
@@ -367,6 +484,78 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Insert Clipboard.
+        /// </summary>
+        public static string activity_insertclipboard {
+            get {
+                return ResourceManager.GetString("activity_insertclipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Insert new content into the users Clipboard buffer.
+        /// </summary>
+        public static string activity_insertclipboard_tooltip {
+            get {
+                return ResourceManager.GetString("activity_insertclipboard_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoke OpenFlow.
+        /// </summary>
+        public static string activity_invokeopenflow {
+            get {
+                return ResourceManager.GetString("activity_invokeopenflow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoke a workflow in node registered for RPA usage inside OpenFlow.
+        /// </summary>
+        public static string activity_invokeopenflow_tooltip {
+            get {
+                return ResourceManager.GetString("activity_invokeopenflow_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoke OpenRPA.
+        /// </summary>
+        public static string activity_invokeopenrpa {
+            get {
+                return ResourceManager.GetString("activity_invokeopenrpa", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoke a local OpenRPA Workflow.
+        /// </summary>
+        public static string activity_invokeopenrpa_tooltip {
+            get {
+                return ResourceManager.GetString("activity_invokeopenrpa_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoke Remote OpenRPA.
+        /// </summary>
+        public static string activity_invokeremoteopenrpa {
+            get {
+                return ResourceManager.GetString("activity_invokeremoteopenrpa", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoke a OpenRPA Workflow on a remote Robot.
+        /// </summary>
+        public static string activity_invokeremoteopenrpa_tooltip {
+            get {
+                return ResourceManager.GetString("activity_invokeremoteopenrpa_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Key Modifiers.
         /// </summary>
         public static string activity_keymodifiers {
@@ -399,6 +588,24 @@ namespace OpenRPA.Resources {
         public static string activity_mousebutton_help {
             get {
                 return ResourceManager.GetString("activity_mousebutton_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move Mouse.
+        /// </summary>
+        public static string activity_movemouse {
+            get {
+                return ResourceManager.GetString("activity_movemouse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move mouse cursor to a location relative to an element found with GetElement (or desktop if no element supplied).
+        /// </summary>
+        public static string activity_movemouse_tooltip {
+            get {
+                return ResourceManager.GetString("activity_movemouse_tooltip", resourceCulture);
             }
         }
         
@@ -444,6 +651,24 @@ namespace OpenRPA.Resources {
         public static string activity_open_selector {
             get {
                 return ResourceManager.GetString("activity_open_selector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Application.
+        /// </summary>
+        public static string activity_openapplication {
+            get {
+                return ResourceManager.GetString("activity_openapplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search for Windows element based on a selector, and give it focus, if not found start the application.
+        /// </summary>
+        public static string activity_openapplication_tooltip {
+            get {
+                return ResourceManager.GetString("activity_openapplication_tooltip", resourceCulture);
             }
         }
         
@@ -588,6 +813,24 @@ namespace OpenRPA.Resources {
         public static string activity_timeout_help {
             get {
                 return ResourceManager.GetString("activity_timeout_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type Text.
+        /// </summary>
+        public static string activity_typetext {
+            get {
+                return ResourceManager.GetString("activity_typetext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send keyboard strokes to what ever that has focus, should only be used by recorder.
+        /// </summary>
+        public static string activity_typetext_tooltip {
+            get {
+                return ResourceManager.GetString("activity_typetext_tooltip", resourceCulture);
             }
         }
         
@@ -795,6 +1038,42 @@ namespace OpenRPA.Resources {
         public static string delete {
             get {
                 return ResourceManager.GetString("delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Comment out.
+        /// </summary>
+        public static string designer_menu_commentout {
+            get {
+                return ResourceManager.GetString("designer_menu_commentout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run from here.
+        /// </summary>
+        public static string designer_menu_runfromhere {
+            get {
+                return ResourceManager.GetString("designer_menu_runfromhere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run this activity.
+        /// </summary>
+        public static string designer_menu_runthis {
+            get {
+                return ResourceManager.GetString("designer_menu_runthis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uncomment.
+        /// </summary>
+        public static string designer_menu_uncomment {
+            get {
+                return ResourceManager.GetString("designer_menu_uncomment", resourceCulture);
             }
         }
         

@@ -58,7 +58,6 @@
 			: using a System.ComponentModel.TypeConverter
 			: and then encoded with base64 encoding.
 	-->
-	
 	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
 		<xsd:element name="root" msdata:IsDataSet="true">
 			<xsd:complexType>
@@ -98,4 +97,58 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="main_button_install" xml:space="preserve">
+		<value>Installere</value>
+	</data>
+	<data name="main_button_launch" xml:space="preserve">
+		<value>Lancering</value>
+	</data>
+	<data name="main_button_launch_hint" xml:space="preserve">
+		<value>Start OpenRPA</value>
+	</data>
+	<data name="main_button_reinstall" xml:space="preserve">
+		<value>Geninstaller</value>
+	</data>
+	<data name="main_button_search" xml:space="preserve">
+		<value>Søg</value>
+	</data>
+	<data name="main_button_search_hint" xml:space="preserve">
+		<value>Søg efter aktiviteter</value>
+	</data>
+	<data name="main_button_search_text" xml:space="preserve">
+		<value>Søg...</value>
+	</data>
+	<data name="main_button_uninstall" xml:space="preserve">
+		<value>Afinstaller</value>
+	</data>
+	<data name="main_button_update_all" xml:space="preserve">
+		<value>Opdater alle</value>
+	</data>
+	<data name="main_button_update_all_hint" xml:space="preserve">
+		<value>Opdater alle</value>
+	</data>
+	<data name="main_button_upgrade" xml:space="preserve">
+		<value>Opgrader</value>
+	</data>
+	<data name="main_label_authors" xml:space="preserve">
+		<value>Forfattere</value>
+	</data>
+	<data name="main_label_description" xml:space="preserve">
+		<value>Beskrivelse</value>
+	</data>
+	<data name="main_label_id" xml:space="preserve">
+		<value>Id</value>
+	</data>
+	<data name="main_label_latestversion" xml:space="preserve">
+		<value>Nyeste version</value>
+	</data>
+	<data name="main_label_summary" xml:space="preserve">
+		<value>Resumé</value>
+	</data>
+	<data name="main_label_tags" xml:space="preserve">
+		<value>Tags</value>
+	</data>
+	<data name="main_label_version" xml:space="preserve">
+		<value>Version</value>
+	</data>
 </root>

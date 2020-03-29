@@ -241,7 +241,7 @@ namespace OpenRPA.NM
             NativeMessagingMessage message = new NativeMessagingMessage("enumwindows", PluginConfig.debug_console_output);
             if (chromeconnected)
             {
-                var result = sendMessageChromeResult(message, true, TimeSpan.FromSeconds(10));
+                var result = sendMessageChromeResult(message, true, TimeSpan.FromSeconds(3));
                 if(result != null && result.results != null)
                     foreach (var msg in result.results)
                     {
@@ -250,7 +250,7 @@ namespace OpenRPA.NM
             }
             if (ffconnected)
             {
-                var result = sendMessageFFResult(message, true, TimeSpan.FromSeconds(10));
+                var result = sendMessageFFResult(message, true, TimeSpan.FromSeconds(3));
                 if (result != null && result.results != null)
                     foreach (var msg in result.results)
                     {
@@ -265,7 +265,7 @@ namespace OpenRPA.NM
 
             if (chromeconnected)
             {
-                var result = sendMessageChromeResult(message, true, TimeSpan.FromSeconds(10));
+                var result = sendMessageChromeResult(message, true, TimeSpan.FromSeconds(3));
                 if (result.results != null)
                     foreach (var msg in result.results)
                     {
@@ -274,7 +274,7 @@ namespace OpenRPA.NM
             }
             if (ffconnected)
             {
-                var result = sendMessageFFResult(message, true, TimeSpan.FromSeconds(10));
+                var result = sendMessageFFResult(message, true, TimeSpan.FromSeconds(3));
                 if (result.results != null)
                     foreach (var msg in result.results)
                     {
@@ -329,8 +329,9 @@ namespace OpenRPA.NM
                     sw.Start();
                     do
                     {
-
-                    } while (sw.Elapsed < TimeSpan.FromSeconds(10) && !chromeconnected);
+                        System.Threading.Thread.Sleep(500);
+                        Console.WriteLine("pending chrome addon to connect");
+                    } while (sw.Elapsed < TimeSpan.FromSeconds(20) && !chromeconnected);
                 }
                 else
                 {
@@ -346,8 +347,9 @@ namespace OpenRPA.NM
                     sw.Start();
                     do
                     {
-
-                    } while (sw.Elapsed < TimeSpan.FromSeconds(10) && !ffconnected);
+                        System.Threading.Thread.Sleep(500);
+                        Console.WriteLine("pending ff addon to connect");
+                    } while (sw.Elapsed < TimeSpan.FromSeconds(20) && !ffconnected);
 
                 }
                 else

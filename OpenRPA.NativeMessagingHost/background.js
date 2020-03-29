@@ -521,7 +521,7 @@ var tabssendMessage = function (tabid, message) {
                 //console.debug("tabssendMessage has no result, return original message");
                 //message.error = lasterror;
                 result = message;
-                console.error(lasterror);
+                console.debug(lasterror);
             }
             console.debug(result);
             resolve(result);
@@ -638,3 +638,19 @@ if (openrpautil_script === null || openrpautil_script === undefined || openrpaut
         }
     }
 }
+setInterval(function () {
+    try {
+        if (port != null) {
+            var message = { functionName: "ping" };
+            if (isChrome) message.browser = "chrome";
+            if (isFirefox) message.browser = "ff";
+            if (isChromeEdge) message.browser = "edge";
+            // console.debug("[send]" + message.functionName);
+            port.postMessage(JSON.parse(JSON.stringify(message)));
+        } else {
+            console.log("no port, cannot ping");
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}, 1000);

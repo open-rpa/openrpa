@@ -42,7 +42,7 @@ namespace OpenRPA.Views
             displayName = splitName[0];
             var displayNameAttribute = type.GetCustomAttributes(typeof(System.ComponentModel.DisplayNameAttribute), true).FirstOrDefault() as System.ComponentModel.DisplayNameAttribute;
             if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
-            if (splitName.Length > 1) displayName = string.Format("{0}<>", splitName[0]);
+            if (splitName.Length > 1) displayName = string.Format("{0}<>", displayName);
             return displayName;
         }
         public void InitializeActivitiesToolbox()

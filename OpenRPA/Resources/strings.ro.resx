@@ -667,7 +667,7 @@
 		<value>Invocați OpenRPA de la distanță</value>
 	</data>
 	<data name="activity_movemouse" xml:space="preserve">
-		<value>Move Mouse</value>
+		<value>Mișcarea mouse-ului</value>
 	</data>
 	<data name="activity_openapplication" xml:space="preserve">
 		<value>Aplicație deschisă</value>

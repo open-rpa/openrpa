@@ -17,14 +17,14 @@ namespace OpenRPA.Elis.Rossum
 {
     [System.ComponentModel.Designer(typeof(UploadFileDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(UploadFile), "Resources.toolbox.getimage.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_uploadfile_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_uploadfile", typeof(Resources.strings))]
     public class UploadFile : CodeActivity
     {
         [RequiredArgument]
         public InArgument<string> Key { get; set; }
         [RequiredArgument]
         public InArgument<string> Queue { get; set; }
-        
         [RequiredArgument]
         public InArgument<string> Filename { get; set; }
         [RequiredArgument]
@@ -39,6 +39,23 @@ namespace OpenRPA.Elis.Rossum
             var o = JObject.Parse(res);
             var fileurl = o["results"][0]["annotation"].ToString();
             context.SetValue(Result, fileurl);
+        }
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
         }
     }
 }

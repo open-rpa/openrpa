@@ -675,4 +675,16 @@
 	<data name="activity_typetext" xml:space="preserve">
 		<value>Tastați text</value>
 	</data>
+	<data name="designer_menu_commentout" xml:space="preserve">
+		<value>Comentariu</value>
+	</data>
+	<data name="designer_menu_runfromhere" xml:space="preserve">
+		<value>Fugi de aici</value>
+	</data>
+	<data name="designer_menu_runthis" xml:space="preserve">
+		<value>Derulați această activitate</value>
+	</data>
+	<data name="designer_menu_uncomment" xml:space="preserve">
+		<value>decomentați</value>
+	</data>
 </root>

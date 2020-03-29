@@ -195,4 +195,50 @@
 	<data name="activity_waitforfile_status_hint" xml:space="preserve">
     <value>Статус ждать</value>
   </data>
+	<data name="activity_auth" xml:space="preserve">
+		<value>Auth</value>
+	</data>
+	<data name="activity_auth_tooltip" xml:space="preserve">
+		<value>Аутентифицируйся против сервиса Россум и получи токен / ключ обратно</value>
+	</data>
+	<data name="activity_exportfiledata" xml:space="preserve">
+		<value>Экспорт данных файла</value>
+	</data>
+	<data name="activity_exportfiledata_tooltip" xml:space="preserve">
+		<value>Получить дату извлечения данных из счета, работает, только когда статус файла в статусе экспортирован</value>
+	</data>
+	<data name="activity_getfilestatus" xml:space="preserve">
+		<value>Получить статус файла</value>
+	</data>
+	<data name="activity_getfilestatus_tooltip" xml:space="preserve">
+		<value>Получить статус файла в очереди, может быть либо
+импорт - документ обрабатывается AI Core Engine для извлечения данных; исходное состояние документа.
+failed_import - Не удалось импортировать, например, из-за искаженного файла документа.
+to_review - Начальный шаг извлечения выполнен, и документ ожидает подтверждения пользователя.
+рецензирование - документ проходит проверку в пользовательском интерфейсе.
+экспорт - документ проверен и теперь ожидает завершения вызова сохранения соединителя.
+экспорт - документ проверен и успешно прошел все хуки; это типичное конечное состояние документа.
+failed_export - Когда соединитель возвратил ошибку.
+отложено - оператор решил отложить документ, а не экспортировать его.
+удален - когда документ был удален пользователем.
+очищено - только метаданные были сохранены после удаления.</value>
+	</data>
+	<data name="activity_getqueues" xml:space="preserve">
+		<value>Получить очереди</value>
+	</data>
+	<data name="activity_getqueues_tooltip" xml:space="preserve">
+		<value>Получить список очередей из rossum, файл должен быть загружен в очередь с настройками variuse, установленными на веб-сайте.</value>
+	</data>
+	<data name="activity_uploadfile" xml:space="preserve">
+		<value>Загрузить файл</value>
+	</data>
+	<data name="activity_uploadfile_tooltip" xml:space="preserve">
+		<value>Загружает файл в очередь Россум</value>
+	</data>
+	<data name="activity_waitforfilestatus" xml:space="preserve">
+		<value>Ожидание статуса файла</value>
+	</data>
+	<data name="activity_waitforfilestatus_tooltip" xml:space="preserve">
+		<value>Сделать рабочий процесс бездействующим в ожидании перехода файла в указанный статус</value>
+	</data>
 </root>

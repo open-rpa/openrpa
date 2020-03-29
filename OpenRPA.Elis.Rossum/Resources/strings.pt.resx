@@ -195,4 +195,50 @@
 	<data name="activity_waitforfile_status_hint" xml:space="preserve">
     <value>Status de Espera por</value>
   </data>
+	<data name="activity_auth" xml:space="preserve">
+		<value>May-akda</value>
+	</data>
+	<data name="activity_auth_tooltip" xml:space="preserve">
+		<value>Patunayan laban sa serbisyo ng Rossum at makakuha ng isang Token / Key back</value>
+	</data>
+	<data name="activity_exportfiledata" xml:space="preserve">
+		<value>I-export ang Data ng File</value>
+	</data>
+	<data name="activity_exportfiledata_tooltip" xml:space="preserve">
+		<value>Mag-date ang nakuha na data mula sa isang invoice, gumagana lamang sa sandaling ang katayuan ng file ay na-export sa katayuan</value>
+	</data>
+	<data name="activity_getfilestatus" xml:space="preserve">
+		<value>Kumuha ng Katayuan ng File</value>
+	</data>
+	<data name="activity_getfilestatus_tooltip" xml:space="preserve">
+		<value>Kumuha ng katayuan ng isang file sa pila, maaaring maging alinman
+pag-import - Ang dokumento ay pinoproseso ng AI Core Engine para sa pagkuha ng data; paunang estado ng dokumento.
+failed_import - Nabigo ang pag-import e.g. dahil sa isang hindi mabagong dokumento ng dokumento.
+to_review - Ang paunang hakbang ng pagkuha ay tapos na at naghihintay ang dokumento para sa pagpapatunay ng gumagamit.
+pagsusuri - Ang dokumento ay sumasailalim sa pagpapatunay sa interface ng gumagamit.
+pag-export - Ang dokumento ay napatunayan at naghihintay ngayon sa pagkumpleto ng tawag sa konektor na nag-save.
+nai-export - Ang dokumento ay napatunayan at matagumpay na naipasa ang lahat ng mga kawit; ito ang tipikal na estado ng terminal ng isang dokumento.
+failed_export - Kapag ang konektor ay nagbalik ng isang error.
+ipinagpaliban - Pinili ng Operator na ipagpaliban ang dokumento sa halip na i-export ito.
+tinanggal - Kapag tinanggal ang dokumento ng gumagamit.
+purged - Tanging ang metadata ay natipid pagkatapos ng isang pagtanggal.</value>
+	</data>
+	<data name="activity_getqueues" xml:space="preserve">
+		<value>Kumuha ng mga Queue</value>
+	</data>
+	<data name="activity_getqueues_tooltip" xml:space="preserve">
+		<value>Kumuha ng isang listahan ng mga pila mula sa rossum, dapat na mai-upload ang isang file sa isang pila na may mga setting ng pagkakaiba-iba ng mga setting kahit na ang website</value>
+	</data>
+	<data name="activity_uploadfile" xml:space="preserve">
+		<value>Mag-upload ng File</value>
+	</data>
+	<data name="activity_uploadfile_tooltip" xml:space="preserve">
+		<value>Nag-upload ng file sa isang Rossum pila</value>
+	</data>
+	<data name="activity_waitforfilestatus" xml:space="preserve">
+		<value>Maghintay Para sa Katayuan ng File</value>
+	</data>
+	<data name="activity_waitforfilestatus_tooltip" xml:space="preserve">
+		<value>Gawing idlip ang workflow habang naghihintay para sa file na mapunta sa tinukoy na katayuan</value>
+	</data>
 </root>

@@ -675,4 +675,16 @@
 	<data name="activity_typetext" xml:space="preserve">
 		<value>Uri ng Teksto</value>
 	</data>
+	<data name="designer_menu_commentout" xml:space="preserve">
+		<value>Mag-Komento Out</value>
+	</data>
+	<data name="designer_menu_runfromhere" xml:space="preserve">
+		<value>Tumakbo mula dito</value>
+	</data>
+	<data name="designer_menu_runthis" xml:space="preserve">
+		<value>Patakbuhin ang aktibidad na ito</value>
+	</data>
+	<data name="designer_menu_uncomment" xml:space="preserve">
+		<value>Uncomment</value>
+	</data>
 </root>

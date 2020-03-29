@@ -195,4 +195,50 @@
 	<data name="activity_waitforfile_status_hint" xml:space="preserve">
     <value>Stare de așteptat</value>
   </data>
+	<data name="activity_auth" xml:space="preserve">
+		<value>Auth</value>
+	</data>
+	<data name="activity_auth_tooltip" xml:space="preserve">
+		<value>Autentificați-vă împotriva serviciului Rossum și obțineți înapoi o token / cheie</value>
+	</data>
+	<data name="activity_exportfiledata" xml:space="preserve">
+		<value>Exportul fișierelor de date</value>
+	</data>
+	<data name="activity_exportfiledata_tooltip" xml:space="preserve">
+		<value>Obțineți data extrasă dintr-o factură, funcționează numai după ce starea fișierului este în starea exportată</value>
+	</data>
+	<data name="activity_getfilestatus" xml:space="preserve">
+		<value>Obțineți starea fișierului</value>
+	</data>
+	<data name="activity_getfilestatus_tooltip" xml:space="preserve">
+		<value>Obține starea unui fișier în coadă, poate fi fie
+importarea - Documentul este procesat de AI Core Engine pentru extragerea datelor; starea inițială a documentului.
+failed_import - Importul eșuat, de ex. din cauza unui fișier document defect.
+to_review - Etapa inițială de extracție este făcută și documentul așteaptă validarea utilizatorului.
+revizuire - Documentul este în curs de validare în interfața utilizator.
+exportare - Documentul este validat și așteaptă acum finalizarea apelului de salvare a conectorului.
+exportat - Documentul este validat și trecut cu succes toate cârligele; aceasta este starea terminală tipică a unui document.
+failed_export - Când conectorul a returnat o eroare.
+amânat - Operatorul a ales să amâne documentul în loc să-l exporte.
+șters - când documentul a fost șters de către utilizator.
+purjată - numai metadatele au fost păstrate după o ștergere.</value>
+	</data>
+	<data name="activity_getqueues" xml:space="preserve">
+		<value>Obțineți cozi</value>
+	</data>
+	<data name="activity_getqueues_tooltip" xml:space="preserve">
+		<value>Obțineți o listă de cozi din rossum, un fișier trebuie încărcat într-o coadă care are setări variuse setate deși site-ul web</value>
+	</data>
+	<data name="activity_uploadfile" xml:space="preserve">
+		<value>Incarca fisier</value>
+	</data>
+	<data name="activity_uploadfile_tooltip" xml:space="preserve">
+		<value>Încarcă un fișier într-o coadă Rossum</value>
+	</data>
+	<data name="activity_waitforfilestatus" xml:space="preserve">
+		<value>Așteptați starea fișierului</value>
+	</data>
+	<data name="activity_waitforfilestatus_tooltip" xml:space="preserve">
+		<value>Faceți ca fluxul de lucru să meargă inactiv în așteptarea ca fișierul să intre în starea specificată</value>
+	</data>
 </root>

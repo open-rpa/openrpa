@@ -195,4 +195,50 @@
 	<data name="activity_waitforfile_status_hint" xml:space="preserve">
     <value>Status auf den gewartet werden soll</value>
   </data>
+	<data name="activity_auth" xml:space="preserve">
+		<value>Auth</value>
+	</data>
+	<data name="activity_auth_tooltip" xml:space="preserve">
+		<value>Authentifizieren Sie sich beim Rossum-Service und erhalten Sie ein Token / einen Schlüssel zurück</value>
+	</data>
+	<data name="activity_exportfiledata" xml:space="preserve">
+		<value>Dateidaten exportieren</value>
+	</data>
+	<data name="activity_exportfiledata_tooltip" xml:space="preserve">
+		<value>Abrufdatum der extrahierten Daten aus einer Rechnung, funktioniert erst, wenn der Dateistatus exportiert ist</value>
+	</data>
+	<data name="activity_getfilestatus" xml:space="preserve">
+		<value>Dateistatus abrufen</value>
+	</data>
+	<data name="activity_getfilestatus_tooltip" xml:space="preserve">
+		<value>Der Status einer Datei in der Warteschlange kann entweder sein
+Importieren - Das Dokument wird von der AI Core Engine zur Datenextraktion verarbeitet. Ausgangszustand des Dokuments.
+failed_import - Import fehlgeschlagen, z. aufgrund einer fehlerhaften Dokumentdatei.
+to_review - Der erste Extraktionsschritt ist abgeschlossen und das Dokument wartet auf die Benutzerüberprüfung.
+Überprüfung - Das Dokument wird in der Benutzeroberfläche überprüft.
+Exportieren - Das Dokument wird validiert und wartet nun auf den Abschluss des Aufrufs zum Speichern des Connectors.
+exportiert - Das Dokument wurde validiert und hat alle Hooks erfolgreich bestanden. Dies ist der typische Endzustand eines Dokuments.
+failed_export - Wenn der Connector einen Fehler zurückgegeben hat.
+verschoben - Der Bediener hat beschlossen, das Dokument zu verschieben, anstatt es zu exportieren.
+gelöscht - Wenn das Dokument vom Benutzer gelöscht wurde.
+bereinigt - Nach dem Löschen wurden nur Metadaten beibehalten.</value>
+	</data>
+	<data name="activity_getqueues" xml:space="preserve">
+		<value>Warteschlangen abrufen</value>
+	</data>
+	<data name="activity_getqueues_tooltip" xml:space="preserve">
+		<value>Wenn Sie eine Liste der Warteschlangen von rossum erhalten möchten, muss eine Datei in eine Warteschlange hochgeladen werden, für die über die Website verschiedene Einstellungen festgelegt wurden</value>
+	</data>
+	<data name="activity_uploadfile" xml:space="preserve">
+		<value>Datei hochladen</value>
+	</data>
+	<data name="activity_uploadfile_tooltip" xml:space="preserve">
+		<value>Lädt eine Datei in eine Rossum-Warteschlange hoch</value>
+	</data>
+	<data name="activity_waitforfilestatus" xml:space="preserve">
+		<value>Warten Sie auf den Dateistatus</value>
+	</data>
+	<data name="activity_waitforfilestatus_tooltip" xml:space="preserve">
+		<value>Schalten Sie den Workflow inaktiv, während Sie darauf warten, dass die Datei den angegebenen Status annimmt</value>
+	</data>
 </root>

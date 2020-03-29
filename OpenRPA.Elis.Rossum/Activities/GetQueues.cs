@@ -18,7 +18,8 @@ namespace OpenRPA.Elis.Rossum
 {
     [System.ComponentModel.Designer(typeof(GetQueuesDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(GetQueues), "Resources.toolbox.getimage.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_getqueues_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_getqueues", typeof(Resources.strings))]
     public class GetQueues : CodeActivity
     {
         [RequiredArgument]
@@ -31,6 +32,23 @@ namespace OpenRPA.Elis.Rossum
             var res = SimpleRequests.GET("https://api.elis.rossum.ai/v1/queues?page_size=1", key);
             var qs = JsonConvert.DeserializeObject<QueuesResult>(res);
             context.SetValue(Results, qs.results);
+        }
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
         }
     }
 }

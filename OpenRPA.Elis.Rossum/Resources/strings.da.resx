@@ -195,4 +195,50 @@
 	<data name="activity_waitforfile_status_hint" xml:space="preserve">
     <value>Vent til fil har denne status</value>
   </data>
+	<data name="activity_auth" xml:space="preserve">
+		<value>Auth</value>
+	</data>
+	<data name="activity_auth_tooltip" xml:space="preserve">
+		<value>Autentificeres mod Rossum-service og få et token / nøgle tilbage</value>
+	</data>
+	<data name="activity_exportfiledata" xml:space="preserve">
+		<value>Eksporter fildata</value>
+	</data>
+	<data name="activity_exportfiledata_tooltip" xml:space="preserve">
+		<value>Hent dato for de udpakkede data fra en faktura, fungerer kun, når filstatus er i status eksporteret</value>
+	</data>
+	<data name="activity_getfilestatus" xml:space="preserve">
+		<value>Hent filstatus</value>
+	</data>
+	<data name="activity_getfilestatus_tooltip" xml:space="preserve">
+		<value>Få status for en fil i kø, kan være enten
+import - Dokument behandles af AI Core Engine til dataekstraktion; dokumentets oprindelige tilstand.
+failed_import - Import mislykkedes f.eks. på grund af en misdannet dokumentfil.
+to_review - Det første udtrækstrin udføres, og dokumentet venter på brugervalidering.
+gennemgang - Dokumentet gennemgår validering i brugergrænsefladen.
+eksport - Dokumentet er valideret og afventer nu afslutningen af forbindelsesbesparelsesopkald.
+eksporteret - Dokumentet er valideret og med succes sendt alle kroge; dette er den typiske terminaltilstand for et dokument.
+failed_export - Når stikket returnerede en fejl.
+udsat - Operatøren har valgt at udskyde dokumentet i stedet for at eksportere det.
+slettet - Når dokumentet blev slettet af brugeren.
+udrenset - Kun metadata blev bevaret efter en sletning.</value>
+	</data>
+	<data name="activity_getqueues" xml:space="preserve">
+		<value>Få køer</value>
+	</data>
+	<data name="activity_getqueues_tooltip" xml:space="preserve">
+		<value>Få en liste over køer fra rossum, en fil skal uploades til en kø, der har indstillinger for variabler indstillet på webstedet</value>
+	</data>
+	<data name="activity_uploadfile" xml:space="preserve">
+		<value>Upload fil</value>
+	</data>
+	<data name="activity_uploadfile_tooltip" xml:space="preserve">
+		<value>Uploader en fil til en Rossum-kø</value>
+	</data>
+	<data name="activity_waitforfilestatus" xml:space="preserve">
+		<value>Vent på filstatus</value>
+	</data>
+	<data name="activity_waitforfilestatus_tooltip" xml:space="preserve">
+		<value>Få arbejdsgangen til at gå i tomgang, mens du venter på, at filen skal gå i den specificerede status</value>
+	</data>
 </root>

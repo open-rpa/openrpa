@@ -444,6 +444,18 @@
 	<data name="delete" xml:space="preserve">
     <value>Delete</value>
   </data>
+	<data name="designer_menu_commentout" xml:space="preserve">
+    <value>Comment out</value>
+  </data>
+	<data name="designer_menu_runfromhere" xml:space="preserve">
+    <value>Run from here</value>
+  </data>
+	<data name="designer_menu_runthis" xml:space="preserve">
+    <value>Run this activity</value>
+  </data>
+	<data name="designer_menu_uncomment" xml:space="preserve">
+    <value>Uncomment</value>
+  </data>
 	<data name="details" xml:space="preserve">
     <value>Details</value>
   </data>

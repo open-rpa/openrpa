@@ -493,7 +493,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Insert new content into the users CLipboard buffer.
+        ///   Looks up a localized string similar to Insert new content into the users Clipboard buffer.
         /// </summary>
         public static string activity_insertclipboard_tooltip {
             get {
@@ -1038,6 +1038,42 @@ namespace OpenRPA.Resources {
         public static string delete {
             get {
                 return ResourceManager.GetString("delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Comment out.
+        /// </summary>
+        public static string designer_menu_commentout {
+            get {
+                return ResourceManager.GetString("designer_menu_commentout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run from here.
+        /// </summary>
+        public static string designer_menu_runfromhere {
+            get {
+                return ResourceManager.GetString("designer_menu_runfromhere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run this activity.
+        /// </summary>
+        public static string designer_menu_runthis {
+            get {
+                return ResourceManager.GetString("designer_menu_runthis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uncomment.
+        /// </summary>
+        public static string designer_menu_uncomment {
+            get {
+                return ResourceManager.GetString("designer_menu_uncomment", resourceCulture);
             }
         }
         

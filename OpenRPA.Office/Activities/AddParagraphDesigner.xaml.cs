@@ -15,7 +15,6 @@ namespace OpenRPA.Office.Activities
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            //openFileDialog1.Filter = "Binary Excel files (2.0-2003 format)|*.xls|OpenXml Excel files (2007 format)|*.xlsx|Comma-separated values (csv format)|*.csv|All files (*.*)|*.*";
             openFileDialog1.Filter = "Word and Text files|*.doc;*.docx;*.txt|All files (*.*)|*.*";
             if (openFileDialog1.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
             ModelItem.Properties["Filename"].SetValue(

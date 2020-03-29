@@ -675,4 +675,16 @@
 	<data name="activity_typetext" xml:space="preserve">
 		<value>Text eingeben</value>
 	</data>
+	<data name="designer_menu_commentout" xml:space="preserve">
+		<value>Auskommentieren</value>
+	</data>
+	<data name="designer_menu_runfromhere" xml:space="preserve">
+		<value>Lauf von hier weg</value>
+	</data>
+	<data name="designer_menu_runthis" xml:space="preserve">
+		<value>Führen Sie diese Aktivität aus</value>
+	</data>
+	<data name="designer_menu_uncomment" xml:space="preserve">
+		<value>Kommentar</value>
+	</data>
 </root>

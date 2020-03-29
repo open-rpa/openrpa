@@ -7,12 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using OpenRPA.Interfaces;
 
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(ReadCellDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.readexcel.png")]
     [System.Activities.Presentation.DefaultTypeArgument(typeof(String))]
+    [LocalizedToolboxTooltip("activity_readcell_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_readcell", typeof(Resources.strings))]
     public class ReadCell<TResult> : ExcelActivityOf<TResult>
     {
         [RequiredArgument]
@@ -26,20 +29,9 @@ namespace OpenRPA.Office.Activities
         {
             base.Execute(context);
             var cell = Cell.Get(context);
-            //Microsoft.Office.Interop.Excel.Range range = worksheet.get_Range(cell, cell);
             Microsoft.Office.Interop.Excel.Range range = worksheet.get_Range(cell);
-            //Microsoft.Office.Interop.Excel.Range range = (Microsoft.Office.Interop.Excel.Range)excelWorksheet.UsedRange;
-            //string sValue = (range.Cells[1, 1] as Microsoft.Office.Interop.Excel.Range).Value2.ToString();
-            //string sValue = null;
-            //var v = range.Value2;
-            //if (v != null)
-            //{
-            //    sValue = range.Value2.ToString();
-            //}
-            //Value.Set(context, sValue);
             Formula.Set(context, range.Formula);
             Range.Set(context, range);
-            //var range = worksheet.get_Range("A1", "A" + Convert.ToString(worksheet.UsedRange.Rows.Count));
             if(this.ResultType == typeof(string))
             {
                 if(range.Value2==null) context.SetValue(Result, null);
@@ -55,16 +47,30 @@ namespace OpenRPA.Office.Activities
                 }
                 catch (Exception)
                 {
-                    //Trace.WriteLine(ex.ToString(), "Debug");
                     context.SetValue(Result, null);
                 }
-                
             }
             else
             {
                 context.SetValue(Result, (TResult)range.Value2);
             }
-            //cleanup();
+        }
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
         }
     }
 }

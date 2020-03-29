@@ -61,11 +61,29 @@ namespace OpenRPA.Elis.Rossum.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Auth.
+        /// </summary>
+        public static string activity_auth {
+            get {
+                return ResourceManager.GetString("activity_auth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Username or Email.
         /// </summary>
         public static string activity_auth_hint {
             get {
                 return ResourceManager.GetString("activity_auth_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Authenticate against Rossum service and get a Token/Key back.
+        /// </summary>
+        public static string activity_auth_tooltip {
+            get {
+                return ResourceManager.GetString("activity_auth_tooltip", resourceCulture);
             }
         }
         
@@ -133,6 +151,57 @@ namespace OpenRPA.Elis.Rossum.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export File Data.
+        /// </summary>
+        public static string activity_exportfiledata {
+            get {
+                return ResourceManager.GetString("activity_exportfiledata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get date the extracted data from an invoice, only works once the file status is in status exported.
+        /// </summary>
+        public static string activity_exportfiledata_tooltip {
+            get {
+                return ResourceManager.GetString("activity_exportfiledata_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get File Status.
+        /// </summary>
+        public static string activity_getfilestatus {
+            get {
+                return ResourceManager.GetString("activity_getfilestatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get status of a file in queue, can be either 
+        ///importing - Document is being processed by the AI Core Engine for data extraction; initial state of the document.
+        ///failed_import - Import failed e.g. due to a malformed document file.
+        ///to_review - Initial extraction step is done and the document is waiting for user validation.
+        ///reviewing - Document is undergoing validation in the user interface.
+        ///exporting - Document is validated and is now awaiting the completion of connector save call.
+        ///exported - Document is [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string activity_getfilestatus_tooltip {
+            get {
+                return ResourceManager.GetString("activity_getfilestatus_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Queues.
+        /// </summary>
+        public static string activity_getqueues {
+            get {
+                return ResourceManager.GetString("activity_getqueues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Key.
         /// </summary>
         public static string activity_getqueues_key {
@@ -147,6 +216,15 @@ namespace OpenRPA.Elis.Rossum.Resources {
         public static string activity_getqueues_key_hint {
             get {
                 return ResourceManager.GetString("activity_getqueues_key_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get a list of queues from rossum, a file must be upload to a queue that has variuse settings set though the website.
+        /// </summary>
+        public static string activity_getqueues_tooltip {
+            get {
+                return ResourceManager.GetString("activity_getqueues_tooltip", resourceCulture);
             }
         }
         
@@ -183,6 +261,15 @@ namespace OpenRPA.Elis.Rossum.Resources {
         public static string activity_getstatus_key_hint {
             get {
                 return ResourceManager.GetString("activity_getstatus_key_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload File.
+        /// </summary>
+        public static string activity_uploadfile {
+            get {
+                return ResourceManager.GetString("activity_uploadfile", resourceCulture);
             }
         }
         
@@ -241,6 +328,15 @@ namespace OpenRPA.Elis.Rossum.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Uploads a file to a Rossum queue.
+        /// </summary>
+        public static string activity_uploadfile_tooltip {
+            get {
+                return ResourceManager.GetString("activity_uploadfile_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FileURL.
         /// </summary>
         public static string activity_waitforfile_file {
@@ -291,6 +387,24 @@ namespace OpenRPA.Elis.Rossum.Resources {
         public static string activity_waitforfile_status_hint {
             get {
                 return ResourceManager.GetString("activity_waitforfile_status_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait For File Status.
+        /// </summary>
+        public static string activity_waitforfilestatus {
+            get {
+                return ResourceManager.GetString("activity_waitforfilestatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Make workflow go idle while waiting for file to go into the specified status.
+        /// </summary>
+        public static string activity_waitforfilestatus_tooltip {
+            get {
+                return ResourceManager.GetString("activity_waitforfilestatus_tooltip", resourceCulture);
             }
         }
     }

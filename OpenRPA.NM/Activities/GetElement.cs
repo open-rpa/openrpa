@@ -32,7 +32,7 @@ namespace OpenRPA.NM
         public OutArgument<NMElement[]> Elements { get; set; }
         [Browsable(false)]
         public string Image { get; set; }
-        private Variable<IEnumerator<NMElement>> _elements = new Variable<IEnumerator<NMElement>>("_elements");
+        private readonly Variable<IEnumerator<NMElement>> _elements = new Variable<IEnumerator<NMElement>>("_elements");
         public Activity LoopAction { get; set; }
         public GetElement()
         {

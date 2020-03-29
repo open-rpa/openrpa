@@ -123,4 +123,82 @@
 	<data name="activity_filename" xml:space="preserve">
     <value>Nome do Arquivo</value>
   </data>
+	<data name="activity_addparagraph" xml:space="preserve">
+		<value>Magdagdag ng Talata</value>
+	</data>
+	<data name="activity_addparagraph_tooltip" xml:space="preserve">
+		<value>Magdagdag ng isang bagong Talata sa isang dokumento ng Microsoft Word</value>
+	</data>
+	<data name="activity_closedocument" xml:space="preserve">
+		<value>Isara ang Dokumento</value>
+	</data>
+	<data name="activity_closedocument_tooltip" xml:space="preserve">
+		<value>Isara ang isang dokumento ng Microsoft Word kung bukas, ay magsasara din ng salita kung wala nang bukas ang mga dokumento</value>
+	</data>
+	<data name="activity_closeworkbook" xml:space="preserve">
+		<value>Isara ang Workbook</value>
+	</data>
+	<data name="activity_closeworkbook_tooltip" xml:space="preserve">
+		<value>Isara ang isang Workbook kung bukas, ay magsasara din ng excel kung wala nang buksan ang mga workbook</value>
+	</data>
+	<data name="activity_getmails" xml:space="preserve">
+		<value>Kumuha ng mga Mail</value>
+	</data>
+	<data name="activity_getmails_tooltip" xml:space="preserve">
+		<value>Kunin ang lahat ng mga email mula sa isang folder ng Microsoft Outlook</value>
+	</data>
+	<data name="activity_getparagraph" xml:space="preserve">
+		<value>Kumuha ng Talata</value>
+	</data>
+	<data name="activity_getparagraph_tooltip" xml:space="preserve">
+		<value>Kumuha ng isa o higit pang mga talata mula sa isang dokumento ng Microsoft Word</value>
+	</data>
+	<data name="activity_newmailitem" xml:space="preserve">
+		<value>Bagong MailItem</value>
+	</data>
+	<data name="activity_newmailitem_tooltip" xml:space="preserve">
+		<value>Lumikha ng isang bagong Microsoft Outlook Mailitem</value>
+	</data>
+	<data name="activity_readcell" xml:space="preserve">
+		<value>Basahin ang Cell</value>
+	</data>
+	<data name="activity_readcell_tooltip" xml:space="preserve">
+		<value>Basahin ang nilalaman ng isang solong cell sa Microsoft Excel</value>
+	</data>
+	<data name="activity_readrange" xml:space="preserve">
+		<value>Basahin ang Saklaw</value>
+	</data>
+	<data name="activity_readrange_tooltip" xml:space="preserve">
+		<value>Basahin ang isang saklaw mula sa isang sheet ng Microsoft Excel</value>
+	</data>
+	<data name="activity_runslideshow" xml:space="preserve">
+		<value>Patakbuhin ang Slideshow</value>
+	</data>
+	<data name="activity_runslideshow_tooltip" xml:space="preserve">
+		<value>Magbukas ng Microsoft Powerpoint Presentation at simulan ang slide show</value>
+	</data>
+	<data name="activity_savemailitem" xml:space="preserve">
+		<value>I-save ang MailItem</value>
+	</data>
+	<data name="activity_savemailitem_tooltip" xml:space="preserve">
+		<value>I-save ang item ng Microsoft Outlook Mail bilang isang file</value>
+	</data>
+	<data name="activity_setparagraph" xml:space="preserve">
+		<value>Itakda ang Talata</value>
+	</data>
+	<data name="activity_setparagraph_tooltip" xml:space="preserve">
+		<value>Itakda ang nilalaman ng isang talata sa tabi ng isang dokumento ng Microsoft Word</value>
+	</data>
+	<data name="activity_writecell" xml:space="preserve">
+		<value>Sumulat ng Cell</value>
+	</data>
+	<data name="activity_writecell_tooltip" xml:space="preserve">
+		<value>Magtakda ng isang halaga o pormal sa isang solong cell sa Microsoft Excel</value>
+	</data>
+	<data name="activity_writerange" xml:space="preserve">
+		<value>Sumulat ng Saklaw</value>
+	</data>
+	<data name="activity_writerange_tooltip" xml:space="preserve">
+		<value>Isulat ang lahat ng data mula sa isang DataTable hanggang sa isang saklaw sa loob ng sheet ng Microsoft Excel</value>
+	</data>
 </root>

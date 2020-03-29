@@ -2,6 +2,9 @@
 using System.Activities;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -11,20 +14,20 @@ using OpenRPA.Interfaces;
 
 namespace OpenRPA.Office.Activities
 {
-    [System.ComponentModel.Designer(typeof(SetParagraphDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.readexcel.png")]
-    [LocalizedToolboxTooltip("activity_setparagraph_tooltip", typeof(Resources.strings))]
-    [LocalizedDisplayName("activity_setparagraph", typeof(Resources.strings))]
-    public class SetParagraph : CodeActivity
+    [System.ComponentModel.Designer(typeof(CloseDocumentDesigner), typeof(System.ComponentModel.Design.IDesigner))]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.closeworkbook.png")]
+    [LocalizedToolboxTooltip("activity_closedocument_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_closedocument", typeof(Resources.strings))]
+    public class CloseDocument : CodeActivity
     {
         [System.ComponentModel.Category("Input")]
         public InArgument<string> Filename { get; set; }
+        [RequiredArgument]
         [System.ComponentModel.Category("Input")]
-        public InArgument<int> Index { get; set; }
-        [System.ComponentModel.Category("Input")]
-        public InArgument<string> Text { get; set; }
+        public InArgument<bool> SaveChanges { get; set; } = true;
         protected override void Execute(CodeActivityContext context)
         {
+            var saveChanges = SaveChanges.Get(context);
             var filename = Filename.Get(context);
             filename = Environment.ExpandEnvironmentVariables(filename);
             Application activeObject = null;
@@ -33,12 +36,16 @@ namespace OpenRPA.Office.Activities
             try
             {
                 activeObject = (Application)Marshal.GetActiveObject("Word.Application");
-                foreach (Document current in activeObject.Documents)
+                if (!string.IsNullOrEmpty(filename))
                 {
-                    if (current.FullName == filename)
+                    foreach (Document current in activeObject.Documents)
                     {
-                        document = current;
-                        break;
+                        if (current.FullName == filename)
+                        {
+                            document = current;
+                            document.Close(saveChanges);
+                            break;
+                        }
                     }
                 }
             }
@@ -48,22 +55,21 @@ namespace OpenRPA.Office.Activities
             }
             finally
             {
-                if(activeObject==null) activeObject = (Application)Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid("000209FF-0000-0000-C000-000000000046")));
+                if (activeObject == null) activeObject = (Application)Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid("000209FF-0000-0000-C000-000000000046")));
                 activeObject.Visible = true;
             }
-            object ofilename = filename;
-            if(document==null) document = activeObject.Documents.Open(ref ofilename, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing);
-            var p = document.Content.Paragraphs;
-            int index = Index.Get(context);
-            if (Index.Expression == null)
+            int doccount = 0;
+            foreach (Document current in activeObject.Documents)
             {
-                var r = document.Range(0, document.Paragraphs.Last.Range.End);
-                r.Text = Text.Get(context); //  + "\r";
+                if (current.FullName == filename)
+                {
+                    doccount++;
+                    break;
+                }
             }
-            else
+            if(doccount==0 || string.IsNullOrEmpty(filename))
             {
-                if (p.Count < index) throw new Exception("filename only contains " + p.Count + " Paragraphs");
-                p[index].Range.Text = Text.Get(context);
+                activeObject.Quit(saveChanges);
             }
         }
         public new string DisplayName

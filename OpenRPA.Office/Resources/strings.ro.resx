@@ -123,4 +123,82 @@
 	<data name="activity_filename" xml:space="preserve">
     <value>Nume fișier</value>
   </data>
+	<data name="activity_addparagraph" xml:space="preserve">
+		<value>Adaugă paragraful</value>
+	</data>
+	<data name="activity_addparagraph_tooltip" xml:space="preserve">
+		<value>Adăugați un nou alineat la un document Microsoft Word</value>
+	</data>
+	<data name="activity_closedocument" xml:space="preserve">
+		<value>Închideți documentul</value>
+	</data>
+	<data name="activity_closedocument_tooltip" xml:space="preserve">
+		<value>Închideți un document Microsoft Word dacă este deschis, va închide, de asemenea, cuvântul dacă nu mai sunt deschise alte documente</value>
+	</data>
+	<data name="activity_closeworkbook" xml:space="preserve">
+		<value>Închideți carte de lucru</value>
+	</data>
+	<data name="activity_closeworkbook_tooltip" xml:space="preserve">
+		<value>Închideți un registru de lucru dacă este deschis, va închide, de asemenea, excel dacă nu mai sunt cărți de lucru deschise</value>
+	</data>
+	<data name="activity_getmails" xml:space="preserve">
+		<value>Obțineți e-mailuri</value>
+	</data>
+	<data name="activity_getmails_tooltip" xml:space="preserve">
+		<value>Obțineți toate e-mailurile dintr-un folder Microsoft Outlook</value>
+	</data>
+	<data name="activity_getparagraph" xml:space="preserve">
+		<value>Obțineți paragraful</value>
+	</data>
+	<data name="activity_getparagraph_tooltip" xml:space="preserve">
+		<value>Obțineți unul sau mai multe paragrafe dintr-un document Microsoft Word</value>
+	</data>
+	<data name="activity_newmailitem" xml:space="preserve">
+		<value>MailItem nou</value>
+	</data>
+	<data name="activity_newmailitem_tooltip" xml:space="preserve">
+		<value>Creați un nou Microsoft Outlook Mailitem</value>
+	</data>
+	<data name="activity_readcell" xml:space="preserve">
+		<value>Citiți celula</value>
+	</data>
+	<data name="activity_readcell_tooltip" xml:space="preserve">
+		<value>Citiți conținutul unei singure celule în Microsoft Excel</value>
+	</data>
+	<data name="activity_readrange" xml:space="preserve">
+		<value>Citiți Gama</value>
+	</data>
+	<data name="activity_readrange_tooltip" xml:space="preserve">
+		<value>Citiți o gamă dintr-o foaie Microsoft Excel</value>
+	</data>
+	<data name="activity_runslideshow" xml:space="preserve">
+		<value>Rulați prezentarea</value>
+	</data>
+	<data name="activity_runslideshow_tooltip" xml:space="preserve">
+		<value>Deschideți o prezentare Microsoft Powerpoint și începeți prezentarea de diapozitive</value>
+	</data>
+	<data name="activity_savemailitem" xml:space="preserve">
+		<value>Salvați MailItem</value>
+	</data>
+	<data name="activity_savemailitem_tooltip" xml:space="preserve">
+		<value>Salvați un articol Microsoft Outlook Mail ca fișier</value>
+	</data>
+	<data name="activity_setparagraph" xml:space="preserve">
+		<value>Setați paragraful</value>
+	</data>
+	<data name="activity_setparagraph_tooltip" xml:space="preserve">
+		<value>Setați conținutul unui paragraf în partea unui document Microsoft Word</value>
+	</data>
+	<data name="activity_writecell" xml:space="preserve">
+		<value>Scrie celula</value>
+	</data>
+	<data name="activity_writecell_tooltip" xml:space="preserve">
+		<value>Setați o valoare sau un formular la o singură celulă în Microsoft Excel</value>
+	</data>
+	<data name="activity_writerange" xml:space="preserve">
+		<value>Scrieți intervalul</value>
+	</data>
+	<data name="activity_writerange_tooltip" xml:space="preserve">
+		<value>Scrieți toate datele dintr-o tabelă de date într-o gamă dintr-o foaie Microsoft Excel</value>
+	</data>
 </root>

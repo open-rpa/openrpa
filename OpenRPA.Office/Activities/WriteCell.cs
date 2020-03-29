@@ -1,6 +1,4 @@
-﻿//using ClosedXML.Excel;
-//using ExcelDataReader;
-using System;
+﻿using System;
 using System.Activities;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,16 +10,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Office.Interop.Excel;
-//using System.Windows.Forms;
+using OpenRPA.Interfaces;
 
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(WriteCellDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.writeexcel.png")]
-    //[designer.ToolboxTooltip(Text = "Read CSV, xls or xlsx file and loads it into a DataSet")]
+    [LocalizedToolboxTooltip("activity_writecell_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_writecell", typeof(Resources.strings))]
     public class WriteCell<TResult> : ExcelActivityOf<TResult>
     {
-
         [RequiredArgument]
         [System.ComponentModel.Category("Input")]
         public InArgument<string> Cell { get; set; }
@@ -46,8 +44,22 @@ namespace OpenRPA.Office.Activities
             }
             //cleanup();
         }
-
-
-
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
+        }
     }
 }

@@ -2437,7 +2437,7 @@ namespace OpenRPA
             try
             {
                 var types = new List<Type>();
-                foreach (var p in Plugins.recordPlugins) { types.Add(p.GetType()); }
+                // foreach (var p in Plugins.recordPlugins) { types.Add(p.GetType()); }
                 LayoutDocument layoutDocument = new LayoutDocument { Title = workflow.name };
                 layoutDocument.ContentId = workflow._id;
                 Views.WFDesigner view = new Views.WFDesigner(layoutDocument, workflow, types.ToArray())

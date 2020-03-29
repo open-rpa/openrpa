@@ -675,4 +675,16 @@
 	<data name="activity_typetext" xml:space="preserve">
 		<value>Skriv tekst</value>
 	</data>
+	<data name="designer_menu_commentout" xml:space="preserve">
+		<value>Kommenter ud</value>
+	</data>
+	<data name="designer_menu_runfromhere" xml:space="preserve">
+		<value>Kør herfra</value>
+	</data>
+	<data name="designer_menu_runthis" xml:space="preserve">
+		<value>Kør denne aktivitet</value>
+	</data>
+	<data name="designer_menu_uncomment" xml:space="preserve">
+		<value>Afkommentér</value>
+	</data>
 </root>

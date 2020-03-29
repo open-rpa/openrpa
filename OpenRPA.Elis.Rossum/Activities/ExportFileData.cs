@@ -18,7 +18,8 @@ namespace OpenRPA.Elis.Rossum
 {
     [System.ComponentModel.Designer(typeof(ExportFileDataDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ExportFileData), "Resources.toolbox.getimage.png")]
-    //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
+    [LocalizedToolboxTooltip("activity_exportfiledata_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_exportfiledata", typeof(Resources.strings))]
     public class ExportFileData : CodeActivity
     {
         [RequiredArgument]
@@ -54,6 +55,23 @@ namespace OpenRPA.Elis.Rossum
                 Log.Error(ex.ToString());
             }
             context.SetValue(Result, results);
+        }
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
         }
     }
 }

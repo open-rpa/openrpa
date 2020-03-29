@@ -14,7 +14,8 @@ namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(GetMailsDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.outlook.png")]
-    //[designer.ToolboxTooltip(Text = "Add inline comments, a supplement to the built-in annotation feature")]
+    [LocalizedToolboxTooltip("activity_getmails_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_getmails", typeof(Resources.strings))]
     public class GetMails : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {
         public GetMails()
@@ -29,10 +30,9 @@ namespace OpenRPA.Office.Activities
         public InArgument<string> Folder { get; set; }
         [System.ComponentModel.Category("Output")]
         public OutArgument<System.Collections.Generic.IEnumerable<email>> Emails { get; set; }
-
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<email> Body { get; set; }
-        private Variable<IEnumerator<email>> _elements = new Variable<IEnumerator<email>>("_elements");
+        private readonly Variable<IEnumerator<email>> _elements = new Variable<IEnumerator<email>>("_elements");
         private Microsoft.Office.Interop.Outlook.Application CreateOutlookInstance()
         {
             var outlookApplication = new Microsoft.Office.Interop.Outlook.Application();
@@ -44,7 +44,6 @@ namespace OpenRPA.Office.Activities
             }
             return outlookApplication;
         }
-
         protected override void Execute(NativeActivityContext context)
         {
             var folder = Folder.Get(context);
@@ -132,8 +131,6 @@ namespace OpenRPA.Office.Activities
             aa.Argument = da;
             return fef;
         }
-
-
         public MAPIFolder GetFolder(MAPIFolder folder, string FullFolderPath)
         {
             if (folder.Folders.Count == 0)
@@ -157,7 +154,23 @@ namespace OpenRPA.Office.Activities
             }
             return null;
         }
-
+        public new string DisplayName
+        {
+            get
+            {
+                var displayName = base.DisplayName;
+                if (displayName == this.GetType().Name)
+                {
+                    var displayNameAttribute = this.GetType().GetCustomAttributes(typeof(DisplayNameAttribute), true).FirstOrDefault() as DisplayNameAttribute;
+                    if (displayNameAttribute != null) displayName = displayNameAttribute.DisplayName;
+                }
+                return displayName;
+            }
+            set
+            {
+                base.DisplayName = value;
+            }
+        }
     }
 
 }

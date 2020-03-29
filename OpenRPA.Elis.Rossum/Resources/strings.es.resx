@@ -175,4 +175,50 @@
 	<data name="activity_waitforfile_status_hint" xml:space="preserve">
 		<value>Estado a esperar</value>
 	</data>
+	<data name="activity_auth" xml:space="preserve">
+		<value>Autenticación</value>
+	</data>
+	<data name="activity_auth_tooltip" xml:space="preserve">
+		<value>Autentíquese contra el servicio Rossum y recupere un token / clave</value>
+	</data>
+	<data name="activity_exportfiledata" xml:space="preserve">
+		<value>Exportar datos de archivo</value>
+	</data>
+	<data name="activity_exportfiledata_tooltip" xml:space="preserve">
+		<value>Obtener la fecha de los datos extraídos de una factura, solo funciona una vez que el estado del archivo está en estado exportado</value>
+	</data>
+	<data name="activity_getfilestatus" xml:space="preserve">
+		<value>Obtener estado del archivo</value>
+	</data>
+	<data name="activity_getfilestatus_tooltip" xml:space="preserve">
+		<value>Obtener el estado de un archivo en cola, puede ser
+importación: el AI Core Engine está procesando el documento para la extracción de datos; estado inicial del documento.
+fail_import - Falló la importación, p. debido a un archivo de documento mal formado.
+to_review: se realiza el paso de extracción inicial y el documento está esperando la validación del usuario.
+revisión: el documento se está validando en la interfaz de usuario.
+exportar: el documento está validado y ahora está esperando la finalización de la llamada de guardado del conector.
+exportado: el documento se valida y pasa todos los ganchos con éxito; Este es el estado terminal típico de un documento.
+failure_export: cuando el conector devolvió un error.
+pospuesto: el operador ha optado por posponer el documento en lugar de exportarlo.
+eliminado: cuando el usuario eliminó el documento.
+purgado: solo se conservaron los metadatos después de una eliminación.</value>
+	</data>
+	<data name="activity_getqueues" xml:space="preserve">
+		<value>Obtener colas</value>
+	</data>
+	<data name="activity_getqueues_tooltip" xml:space="preserve">
+		<value>Obtenga una lista de colas de rossum, se debe cargar un archivo a una cola que tenga configuradas varias configuraciones a través del sitio web</value>
+	</data>
+	<data name="activity_uploadfile" xml:space="preserve">
+		<value>Subir archivo</value>
+	</data>
+	<data name="activity_uploadfile_tooltip" xml:space="preserve">
+		<value>Sube un archivo a una cola Rossum</value>
+	</data>
+	<data name="activity_waitforfilestatus" xml:space="preserve">
+		<value>Esperar el estado del archivo</value>
+	</data>
+	<data name="activity_waitforfilestatus_tooltip" xml:space="preserve">
+		<value>Haga que el flujo de trabajo quede inactivo mientras espera que el archivo entre en el estado especificado</value>
+	</data>
 </root>

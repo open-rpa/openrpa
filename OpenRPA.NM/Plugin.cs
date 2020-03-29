@@ -74,7 +74,7 @@ namespace OpenRPA.NM
             NativeMessagingMessage result = null;
             try
             {
-                result = NMHook.sendMessageResult(getelement, true, TimeSpan.FromSeconds(10));
+                result = NMHook.sendMessageResult(getelement, true, TimeSpan.FromSeconds(3));
             }
             catch (Exception)
             {

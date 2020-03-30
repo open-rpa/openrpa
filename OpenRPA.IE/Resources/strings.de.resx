@@ -133,7 +133,7 @@
 		<value>Element abrufen</value>
 	</data>
 	<data name="activity_getelement_tooltip" xml:space="preserve">
-		<value>Suchen Sie ein Windows-Benutzeroberflächenelement basierend auf dem Selektor</value>
+		<value>Suchen Sie ein Windows UI-Element basierend auf dem Selektor</value>
 	</data>
 	<data name="activity_openurl" xml:space="preserve">
 		<value>Öffne URL</value>

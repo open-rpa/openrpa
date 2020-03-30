@@ -137,16 +137,16 @@
 		<value>Archivo de imagen para cargar</value>
 	</data>
 	<data name="activity_getelement" xml:space="preserve">
-		<value>Encuentre una imagen en la pantalla o dentro de una ventana de aplicación específica</value>
-	</data>
-	<data name="activity_getelement_tooltip" xml:space="preserve">
 		<value>Obtener elemento</value>
 	</data>
+	<data name="activity_getelement_tooltip" xml:space="preserve">
+		<value>Encuentre una imagen en la pantalla o dentro de una ventana de aplicación específica</value>
+	</data>
 	<data name="activity_getimage" xml:space="preserve">
-		<value>Obtenga una imagen de la pantalla relativa de otra imagen o elemento encontrado con GetElement</value>
+		<value>Obtener la imagen</value>
 	</data>
 	<data name="activity_getimage_tooltip" xml:space="preserve">
-		<value>Obtener la imagen</value>
+		<value>Obtenga una imagen de la pantalla relativa de otra imagen o elemento encontrado con GetElement</value>
 	</data>
 	<data name="activity_gettext" xml:space="preserve">
 		<value>Obtener texto</value>

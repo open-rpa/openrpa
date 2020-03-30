@@ -151,7 +151,7 @@
     <value>Chrome</value>
   </data>
 	<data name="clickpostwait" xml:space="preserve">
-    <value>Click PostWait setzen</value>
+    <value>Klick bei Warten auf Vorgangsende setzen</value>
   </data>
 	<data name="copy" xml:space="preserve">
     <value>Kopieren</value>
@@ -217,7 +217,7 @@
     <value>Neu laden</value>
   </data>
 	<data name="main_settings_recording_add_to_designer" xml:space="preserve">
-    <value>Aufnahmefunktion direkt in den Designer</value>
+    <value>Direkt in den Designer aufnehmen</value>
   </data>
 	<data name="minimize" xml:space="preserve">
     <value>Minimieren</value>
@@ -418,19 +418,19 @@
 		<value>Datentabelle</value>
 	</data>
 	<data name="activity_datatable_help" xml:space="preserve">
-		<value>Die DataTable, mit der gearbeitet werden soll</value>
+		<value>Die Datentabelle, mit der gearbeitet werden soll</value>
 	</data>
 	<data name="activity_dataview" xml:space="preserve">
 		<value>Datenansicht</value>
 	</data>
 	<data name="activity_dataview_help" xml:space="preserve">
-		<value>Die DateView, mit der gearbeitet werden soll</value>
+		<value>Die Datenansicht, mit der gearbeitet werden soll</value>
 	</data>
 	<data name="activity_detector" xml:space="preserve">
 		<value>Detektor</value>
 	</data>
 	<data name="activity_detector_help" xml:space="preserve">
-		<value>Wartet, bis dieser Detektor ausgelöst wird, und der Workflow wird fortgesetzt</value>
+		<value>Wartet bis dieser Detektor ausgelöst wird - dann wird der Workflow fortgesetzt</value>
 	</data>
 	<data name="activity_detector_tooltip" xml:space="preserve">
 		<value>Versetzt den Workflow in den Leerlaufmodus und wartet darauf, dass der ausgewählte Detektor ausgelöst wird</value>
@@ -457,55 +457,55 @@
 		<value>Element</value>
 	</data>
 	<data name="activity_element_help" xml:space="preserve">
-		<value>Klicken Sie auf dieses Element, den Rückgabetyp aller GetElement-Aktivitäten und einige andere</value>
+		<value>Klicken Sie auf dieses Element, um den Rückgabetyp aller Element abrufen-Aktivitäten und einiger anderer zu erhalten</value>
 	</data>
 	<data name="activity_force" xml:space="preserve">
-		<value>Macht</value>
+		<value>Erzwingen</value>
 	</data>
 	<data name="activity_force_help" xml:space="preserve">
-		<value>Mach die Aktion mit Gewalt</value>
+		<value>Erzwinge die Ausführung</value>
 	</data>
 	<data name="activity_foreachdatarow_tooltip" xml:space="preserve">
-		<value>Zählen Sie durch jede Zeile in einer DataTable</value>
+		<value>Geht durch jede Zeile in einer Datentabelle</value>
 	</data>
 	<data name="activity_height" xml:space="preserve">
 		<value>Höhe</value>
 	</data>
 	<data name="activity_height_help" xml:space="preserve">
-		<value>Wenn festgelegt, wird das Fenster an diesen Speicherort verschoben</value>
+		<value>Wenn festgelegt, wird das Fenster an diese Position verschoben</value>
 	</data>
 	<data name="activity_highlightelement_tooltip" xml:space="preserve">
-		<value>Markieren Sie ein mit GetElement gefundenes Element</value>
+		<value>Markieren Sie ein mit Element abrufen gefundenes Element</value>
 	</data>
 	<data name="activity_ignoreerrors" xml:space="preserve">
 		<value>Fehler ignorieren</value>
 	</data>
 	<data name="activity_ignoreerrors_help" xml:space="preserve">
-		<value>Wenn ein Fehler auftritt, wird er ignoriert und fortgesetzt</value>
+		<value>Wenn ein Fehler auftritt, wird er ignoriert und der Workflow wird fortgesetzt</value>
 	</data>
 	<data name="activity_imageresult" xml:space="preserve">
 		<value>Bildergebnis</value>
 	</data>
 	<data name="activity_imageresult_help" xml:space="preserve">
-		<value>Geben Sie das Ergebnis als Bild zurück</value>
+		<value>Gibt das Ergebnis als Bild zurück</value>
 	</data>
 	<data name="activity_insertclipboard_tooltip" xml:space="preserve">
-		<value>Fügen Sie neuen Inhalt in den Clipboard-Puffer des Benutzers ein</value>
+		<value>Fügt neuen Inhalt in den Zwischenablage-Puffer des Benutzers ein</value>
 	</data>
 	<data name="activity_invokeopenflow_tooltip" xml:space="preserve">
-		<value>Rufen Sie einen Workflow in einem Knoten auf, der für die RPA-Verwendung in OpenFlow registriert ist</value>
+		<value>Ruft einen Workflow in NodeRed auf, der für die RPA-Verwendung in OpenFlow registriert ist</value>
 	</data>
 	<data name="activity_invokeopenrpa_tooltip" xml:space="preserve">
-		<value>Rufen Sie einen lokalen OpenRPA-Workflow auf</value>
+		<value>Ruft einen lokalen OpenRPA-Workflow auf</value>
 	</data>
 	<data name="activity_invokeremoteopenrpa_tooltip" xml:space="preserve">
-		<value>Rufen Sie einen OpenRPA-Workflow auf einem Remote-Roboter auf</value>
+		<value>Ruft einen OpenRPA-Workflow auf einem Remote-Robot auf</value>
 	</data>
 	<data name="activity_keymodifiers" xml:space="preserve">
 		<value>Schlüsselmodifikatoren</value>
 	</data>
 	<data name="activity_keymodifiers_help" xml:space="preserve">
-		<value>Halten Sie diese Taste gedrückt, während Sie klicken. Dies funktioniert nur, wenn der virtuelle Klick deaktiviert ist</value>
+		<value>Halten Sie diese Taste gedrückt während Sie klicken. Dies funktioniert nur, wenn der virtuelle Klick deaktiviert ist</value>
 	</data>
 	<data name="activity_mousebutton" xml:space="preserve">
 		<value>Maustaste</value>
@@ -514,7 +514,7 @@
 		<value>Maustaste zum Klicken</value>
 	</data>
 	<data name="activity_movemouse_tooltip" xml:space="preserve">
-		<value>Bewegen Sie den Mauszeiger an eine Position relativ zu einem mit GetElement gefundenen Element (oder Desktop, wenn kein Element angegeben ist).</value>
+		<value>Bewegen Sie den Mauszeiger an eine Position relativ zu einem mit Element abrufen gefundenen Element (oder Desktop, wenn kein Element angegeben ist).</value>
 	</data>
 	<data name="activity_offsetx" xml:space="preserve">
 		<value>X Versatz</value>
@@ -532,16 +532,16 @@
 		<value>Suchen Sie nach einem Windows-Element basierend auf einem Selektor und geben Sie ihm den Fokus. Wenn es nicht gefunden wird, starten Sie die Anwendung</value>
 	</data>
 	<data name="activity_postwait" xml:space="preserve">
-		<value>Post Wait</value>
+		<value>Warten auf Vorgangsende</value>
 	</data>
 	<data name="activity_postwait_help" xml:space="preserve">
-		<value>Warten Sie so lange, bis Sie nach dem Klicken eine Anwendung vollständig ausgeführt haben, die sehr langsam auf Klicks reagieren kann</value>
+		<value>Wartet so lange, bis Sie nach dem Klicken eine Anwendung vollständig ausgeführt haben- hilft bei Anwendungen, die sehr langsam auf Klicks reagieren</value>
 	</data>
 	<data name="activity_result" xml:space="preserve">
 		<value>Ergebnis</value>
 	</data>
 	<data name="activity_result_help" xml:space="preserve">
-		<value>Speichern Sie das Ergebnis in dieser Variablen</value>
+		<value>Speichert das Ergebnis in dieser Variable</value>
 	</data>
 	<data name="activity_selector" xml:space="preserve">
 		<value>Wähler</value>
@@ -550,10 +550,10 @@
 		<value>Der Selektor zum Suchen der Elemente unterstützt die Zuordnung von Workflowvariablen mithilfe von {{Variablenname}}</value>
 	</data>
 	<data name="activity_sendctrlc" xml:space="preserve">
-		<value>Senden Sie Strg + C.</value>
+		<value>Sendet Strg + C.</value>
 	</data>
 	<data name="activity_sendctrlc_help" xml:space="preserve">
-		<value>Senden Sie Strg + C, bevor Sie versuchen, den Inhalt der Zwischenablage zu kopieren</value>
+		<value>Sendet Strg + C, bevor Sie versuchen, den Inhalt der Zwischenablage zu kopieren</value>
 	</data>
 	<data name="activity_stringresult" xml:space="preserve">
 		<value>String Ergebnis</value>
@@ -574,7 +574,7 @@
 		<value>Auszeit</value>
 	</data>
 	<data name="activity_timeout_help" xml:space="preserve">
-		<value>Warten Sie so lange, bevor Sie aufgeben und je nach anderen Einstellungen entweder fehlschlagen oder fortfahren</value>
+		<value>Wartet so lange, bevor aufgeben wird oder je nach anderen Einstellungen fortfahren gefahren wird</value>
 	</data>
 	<data name="activity_typetext_tooltip" xml:space="preserve">
 		<value>Senden Sie Tastaturanschläge an einen beliebigen Ort, der den Fokus hat und nur vom Rekorder verwendet werden sollte</value>
@@ -583,7 +583,7 @@
 		<value>Virtueller Klick</value>
 	</data>
 	<data name="activity_virtualclick_help" xml:space="preserve">
-		<value>Versuchen Sie, einen virtuellen Klick auszuführen, anstatt die Maus zu verwenden. Nicht alle Elemente unterstützen dies</value>
+		<value>Versucht einen virtuellen Klick auszuführen anstatt die Maus zu verwenden - nicht alle Elemente unterstützen dies.</value>
 	</data>
 	<data name="activity_waitforcompleted" xml:space="preserve">
 		<value>Warten Sie, bis der Vorgang abgeschlossen ist</value>
@@ -601,16 +601,16 @@
 		<value>Arbeitsablauf</value>
 	</data>
 	<data name="activity_workflow_help" xml:space="preserve">
-		<value>Verwenden Sie diesen Workflow</value>
+		<value>Verwendet diesen Workflow</value>
 	</data>
 	<data name="activity_x" xml:space="preserve">
-		<value>X.</value>
+		<value>X</value>
 	</data>
 	<data name="activity_x_help" xml:space="preserve">
 		<value>Wenn festgelegt, wird das Fenster an diesen Speicherort verschoben</value>
 	</data>
 	<data name="activity_y" xml:space="preserve">
-		<value>Y.</value>
+		<value>Y</value>
 	</data>
 	<data name="activity_y_help" xml:space="preserve">
 		<value>Wenn festgelegt, wird das Fenster an diesen Speicherort verschoben</value>
@@ -649,7 +649,7 @@
 		<value>Zwischenablage kopieren</value>
 	</data>
 	<data name="activity_foreachdatarow" xml:space="preserve">
-		<value>Foreach DataRow</value>
+		<value>Für jede Datentabellen-Zeile</value>
 	</data>
 	<data name="activity_highlightelement" xml:space="preserve">
 		<value>Element markieren</value>
@@ -658,19 +658,19 @@
 		<value>Zwischenablage einfügen</value>
 	</data>
 	<data name="activity_invokeopenflow" xml:space="preserve">
-		<value>Rufen Sie OpenFlow auf</value>
+		<value>Ruft OpenFlow auf</value>
 	</data>
 	<data name="activity_invokeopenrpa" xml:space="preserve">
-		<value>Rufen Sie OpenRPA auf</value>
+		<value>Ruft OpenRPA auf</value>
 	</data>
 	<data name="activity_invokeremoteopenrpa" xml:space="preserve">
-		<value>Rufen Sie Remote OpenRPA auf</value>
+		<value>Ruft Remote OpenRPA auf</value>
 	</data>
 	<data name="activity_movemouse" xml:space="preserve">
-		<value>Maus bewegen</value>
+		<value>Mauszeiger bewegen</value>
 	</data>
 	<data name="activity_openapplication" xml:space="preserve">
-		<value>Öffnen Sie die Anwendung</value>
+		<value>Öffnet eine Anwendung</value>
 	</data>
 	<data name="activity_typetext" xml:space="preserve">
 		<value>Text eingeben</value>

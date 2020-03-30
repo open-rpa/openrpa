@@ -118,7 +118,7 @@
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
 	<data name="activity_auth_hint" xml:space="preserve">
-    <value>Benutzername oder E-Mail-Adresse</value>
+    <value>Benutzername oder E-Mailadresse</value>
   </data>
 	<data name="activity_auth_username" xml:space="preserve">
     <value>Benutzername</value>
@@ -196,30 +196,30 @@
     <value>Status auf den gewartet werden soll</value>
   </data>
 	<data name="activity_auth" xml:space="preserve">
-		<value>Auth</value>
+		<value>Authentifizieren</value>
 	</data>
 	<data name="activity_auth_tooltip" xml:space="preserve">
-		<value>Authentifizieren Sie sich beim Rossum-Service und erhalten Sie ein Token / einen Schlüssel zurück</value>
+		<value>Authentifizierungsdaten für den Elis Rossum Dienst um einen Token / Schlüssel zu erhalten</value>
 	</data>
 	<data name="activity_exportfiledata" xml:space="preserve">
-		<value>Dateidaten exportieren</value>
+		<value>Exportieren der Dateidaten</value>
 	</data>
 	<data name="activity_exportfiledata_tooltip" xml:space="preserve">
-		<value>Abrufdatum der extrahierten Daten aus einer Rechnung, funktioniert erst, wenn der Dateistatus exportiert ist</value>
+		<value>Exportiert die extrahierten Daten aus einer Rechnung - funktioniert erst, wenn der Dateistatus auf "exportiert" lautet</value>
 	</data>
 	<data name="activity_getfilestatus" xml:space="preserve">
 		<value>Dateistatus abrufen</value>
 	</data>
 	<data name="activity_getfilestatus_tooltip" xml:space="preserve">
-		<value>Der Status einer Datei in der Warteschlange kann entweder sein
+		<value>Der Status einer Datei in der Warteschlange kann folgende Zustände aufweisen
 Importieren - Das Dokument wird von der AI Core Engine zur Datenextraktion verarbeitet. Ausgangszustand des Dokuments.
-failed_import - Import fehlgeschlagen, z. aufgrund einer fehlerhaften Dokumentdatei.
+failed_import - Import fehlgeschlagen, z.B. aufgrund einer fehlerhaften Dokumentdatei.
 to_review - Der erste Extraktionsschritt ist abgeschlossen und das Dokument wartet auf die Benutzerüberprüfung.
 Überprüfung - Das Dokument wird in der Benutzeroberfläche überprüft.
-Exportieren - Das Dokument wird validiert und wartet nun auf den Abschluss des Aufrufs zum Speichern des Connectors.
-exportiert - Das Dokument wurde validiert und hat alle Hooks erfolgreich bestanden. Dies ist der typische Endzustand eines Dokuments.
+exportieren - Das Dokument wird validiert und wartet nun auf den Abschluss des Aufrufs zum Speichern des Connectors.
+exportiert - Das Dokument wurde validiert und hat alle Hooks erfolgreich bestanden - der typische Endzustand eines Dokuments.
 failed_export - Wenn der Connector einen Fehler zurückgegeben hat.
-verschoben - Der Bediener hat beschlossen, das Dokument zu verschieben, anstatt es zu exportieren.
+verschoben - Der Bediener hat gewählt das Dokument zu verschieben, anstatt es zu exportieren.
 gelöscht - Wenn das Dokument vom Benutzer gelöscht wurde.
 bereinigt - Nach dem Löschen wurden nur Metadaten beibehalten.</value>
 	</data>
@@ -233,12 +233,12 @@ bereinigt - Nach dem Löschen wurden nur Metadaten beibehalten.</value>
 		<value>Datei hochladen</value>
 	</data>
 	<data name="activity_uploadfile_tooltip" xml:space="preserve">
-		<value>Lädt eine Datei in eine Rossum-Warteschlange hoch</value>
+		<value>Lädt eine Datei in eine Elis Rossum-Warteschlange hoch</value>
 	</data>
 	<data name="activity_waitforfilestatus" xml:space="preserve">
-		<value>Warten Sie auf den Dateistatus</value>
+		<value>Wartet auf den Dateistatus</value>
 	</data>
 	<data name="activity_waitforfilestatus_tooltip" xml:space="preserve">
-		<value>Schalten Sie den Workflow inaktiv, während Sie darauf warten, dass die Datei den angegebenen Status annimmt</value>
+		<value>Schaltet den Workflow inaktiv - Es wird darauf gewartet, dass die Datei den gewünschten Status annimmt</value>
 	</data>
 </root>

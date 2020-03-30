@@ -127,7 +127,7 @@
     <value>Variablen erstellen</value>
   </data>
 	<data name="activity_invokeform_open" xml:space="preserve">
-    <value>Designer öffnen</value>
+    <value>Formular-Designer öffnen</value>
   </data>
 	<data name="activity_noti_message" xml:space="preserve">
     <value>Nachricht</value>
@@ -136,10 +136,10 @@
     <value>Benachrichtigung</value>
   </data>
 	<data name="activity_invokeform" xml:space="preserve">
-		<value>Formel aufrufen</value>
+		<value>Formular aufrufen</value>
 	</data>
 	<data name="activity_invokeform_tooltip" xml:space="preserve">
-		<value>Führen Sie eine Interaktion mit dem Benutzer am Computer mit vordefinierten Formeln durch</value>
+		<value>Führen Sie eine Interaktion mit dem Benutzer am Computer mit vordefinierten Formularen durch</value>
 	</data>
 	<data name="activity_shownotification" xml:space="preserve">
 		<value>Benachrichtigung anzeigen</value>

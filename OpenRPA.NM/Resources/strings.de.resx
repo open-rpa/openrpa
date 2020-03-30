@@ -133,7 +133,7 @@
 		<value>Element abrufen</value>
 	</data>
 	<data name="activity_getelement_tooltip" xml:space="preserve">
-		<value>Suchen Sie ein Browserelement basierend auf dem Selektor</value>
+		<value>Sucht ein Browserelement basierend auf dem Selektor</value>
 	</data>
 	<data name="activity_getelement_tooltip1" xml:space="preserve">
 		<value>Suchen Sie ein Windows-Benutzeroberflächenelement basierend auf dem Selektor</value>
@@ -142,36 +142,36 @@
 		<value>Öffne URL</value>
 	</data>
 	<data name="activity_openurl_tooltip" xml:space="preserve">
-		<value>Öffnen Sie die angegebene URL im ausgewählten Browser</value>
+		<value>Öffnet die angegebene URL im ausgewählten Browser</value>
 	</data>
 	<data name="compensate_for_old_addon" xml:space="preserve">
-		<value>Alte Erweiterung ausgleichen</value>
+		<value>Alte Erweiterungen ausgleichen</value>
 	</data>
 	<data name="compensate_for_old_addon_help" xml:space="preserve">
-		<value>Pixelkompensation für altes Hinzufügen hinzufügen</value>
+		<value>Pixelkompensation für altes Erweiterungen hinzufügen</value>
 	</data>
 	<data name="debug_console_output" xml:space="preserve">
 		<value>Debug-Konsole</value>
 	</data>
 	<data name="debug_console_output_help" xml:space="preserve">
-		<value>Schreiben Sie Debug-Informationen in die Browserkonsole</value>
+		<value>Schreibt Debug-Informationen in die Browserkonsole</value>
 	</data>
 	<data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
-		<value>Warten Sie nach dem eingestellten Wert</value>
+		<value>Wartet nach Festlegen eines Werts</value>
 	</data>
 	<data name="plugin_wait_for_tab_after_set_value_help" xml:space="preserve">
-		<value>Warten Sie, bis der Registerkartenstatus bereit ist, nachdem Sie einen Wert festgelegt haben</value>
+		<value>Wartet bis der Registerkartenstatus bereit ist, nachdem ein Wert festgelegt wurde</value>
 	</data>
 	<data name="register_old_portname" xml:space="preserve">
-		<value>alten Portnamen registrieren</value>
+		<value>Alten Portnamen registrieren</value>
 	</data>
 	<data name="register_old_portname_help" xml:space="preserve">
 		<value>Registrieren Sie alte Browser-Erweiterungsportnamen</value>
 	</data>
 	<data name="wait_for_tab_click" xml:space="preserve">
-		<value>Warten Sie auf die Registerkarte</value>
+		<value>Wartet auf die Registerkarte</value>
 	</data>
 	<data name="wait_for_tab_click_help" xml:space="preserve">
-		<value>Warten Sie, bis der Registerkartenstatus bereit ist, nachdem Sie auf eine Schaltfläche geklickt haben</value>
+		<value>Wartet bis der Registerkartenstatus bereit ist, nachdem auf eine Schaltfläche geklickt wurde</value>
 	</data>
 </root>

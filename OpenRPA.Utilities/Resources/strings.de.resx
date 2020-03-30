@@ -118,7 +118,7 @@
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
 	<data name="activity_downloadfile_hint" xml:space="preserve">
-    <value>Speichern in diesem Ordner</value>
+    <value>In diesem Ordner abspeichern</value>
   </data>
 	<data name="activity_readexcel_hint" xml:space="preserve">
     <value>Excel-Datei zum Einlesen wählen</value>
@@ -148,6 +148,6 @@
 		<value>Die Eingabezeichenfolge, mit der abgeglichen werden soll</value>
 	</data>
 	<data name="activity_match_pattern" xml:space="preserve">
-		<value>Der passende reguläre Ausdruck</value>
+		<value>Der passende Regular Expressions Ausdruck</value>
 	</data>
 </root>

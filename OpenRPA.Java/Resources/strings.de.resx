@@ -151,9 +151,9 @@
 		<value>Autostart</value>
 	</data>
 	<data name="plugin_auto_launch_java_bridge_help" xml:space="preserve">
-		<value>Starten Sie die Java Bridge-Anwendung automatisch, wenn der Roboter ausgeführt wird</value>
+		<value>Startet die Java Bridge-Anwendung wenn der Roboter ausgeführt wird</value>
 	</data>
 	<data name="plugin_launch_java_bridge" xml:space="preserve">
-		<value>Starten Sie die Java-Brücke</value>
+		<value>Startet die Java Bridge-Anwendung</value>
 	</data>
 </root>

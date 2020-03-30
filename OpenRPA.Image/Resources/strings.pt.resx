@@ -157,16 +157,16 @@
     <value>Arquivo de Imagem para carregar</value>
   </data>
 	<data name="activity_getelement" xml:space="preserve">
-		<value>Maghanap ng isang imahe sa screen o sa loob ng isang tiyak na window ng aplikasyon</value>
-	</data>
-	<data name="activity_getelement_tooltip" xml:space="preserve">
 		<value>Kumuha ng Elemento</value>
 	</data>
+	<data name="activity_getelement_tooltip" xml:space="preserve">
+		<value>Maghanap ng isang imahe sa screen o sa loob ng isang tiyak na window ng aplikasyon</value>
+	</data>
 	<data name="activity_getimage" xml:space="preserve">
-		<value>Kumuha ng isang imahe ng kamag-anak sa screen mula sa isa pang imahe o elemento na natagpuan sa GetElement</value>
+		<value>Kumuha ng Imahe</value>
 	</data>
 	<data name="activity_getimage_tooltip" xml:space="preserve">
-		<value>Kumuha ng Imahe</value>
+		<value>Kumuha ng isang imahe ng kamag-anak sa screen mula sa isa pang imahe o elemento na natagpuan sa GetElement</value>
 	</data>
 	<data name="activity_gettext" xml:space="preserve">
 		<value>Kumuha ng Teksto</value>

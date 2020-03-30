@@ -166,10 +166,10 @@
     <value>Testen jedes Selektor-Elements auf die minimal erforderliche Menge an Eigenschaften</value>
   </data>
 	<data name="plugin_get_elements_in_different_thread" xml:space="preserve">
-    <value>GetElement in einem unterschiedlichen Strang</value>
+    <value>Element abrufen in einem unterschiedlichen Strang</value>
   </data>
 	<data name="plugin_get_elements_in_different_thread_help" xml:space="preserve">
-    <value>GetElement verwendet anderen Strang während der Suche, um das Sperren zu verhindern, wenn der Selektor einen Roboter findet</value>
+    <value>Element abrufen verwendet anderen Strang während der Suche, um das Sperren zu verhindern, wenn der Selektor einen Roboter findet</value>
   </data>
 	<data name="plugin_search_descendants" xml:space="preserve">
     <value>Suche nach Unterattributen</value>

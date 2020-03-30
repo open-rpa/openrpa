@@ -157,16 +157,16 @@
     <value>Nume fișier pentru încărcare</value>
   </data>
 	<data name="activity_getelement" xml:space="preserve">
-		<value>Găsiți o imagine pe ecran sau în interiorul unei ferestre specifice aplicației</value>
-	</data>
-	<data name="activity_getelement_tooltip" xml:space="preserve">
 		<value>Obține element</value>
 	</data>
+	<data name="activity_getelement_tooltip" xml:space="preserve">
+		<value>Găsiți o imagine pe ecran sau în interiorul unei ferestre specifice aplicației</value>
+	</data>
 	<data name="activity_getimage" xml:space="preserve">
-		<value>Obțineți o imagine a rudei ecranului dintr-o altă imagine sau element găsit cu GetElement</value>
+		<value>Obțineți imagine</value>
 	</data>
 	<data name="activity_getimage_tooltip" xml:space="preserve">
-		<value>Obțineți imagine</value>
+		<value>Obțineți o imagine a rudei ecranului dintr-o altă imagine sau element găsit cu GetElement</value>
 	</data>
 	<data name="activity_gettext" xml:space="preserve">
 		<value>Obțineți text</value>

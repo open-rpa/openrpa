@@ -118,7 +118,7 @@
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
 	<data name="activity_getelement" xml:space="preserve">
-    <value>Find an image on the screen or inside a specific application window</value>
+    <value>Get Element</value>
   </data>
 	<data name="activity_getelement_drop_hint" xml:space="preserve">
     <value>Drop activity</value>
@@ -133,10 +133,10 @@
     <value>Select Image</value>
   </data>
 	<data name="activity_getelement_tooltip" xml:space="preserve">
-    <value>Get Element</value>
+    <value>Find an image on the screen or inside a specific application window</value>
   </data>
 	<data name="activity_getimage" xml:space="preserve">
-    <value>Get an image of the screen relative from another image or element found with GetElement</value>
+    <value>Get Image</value>
   </data>
 	<data name="activity_getimage_drop_hint" xml:space="preserve">
     <value>Drop activity</value>
@@ -148,7 +148,7 @@
     <value>Select Image</value>
   </data>
 	<data name="activity_getimage_tooltip" xml:space="preserve">
-    <value>Get Image</value>
+    <value>Get an image of the screen relative from another image or element found with GetElement</value>
   </data>
 	<data name="activity_gettext" xml:space="preserve">
     <value>Get Text</value>

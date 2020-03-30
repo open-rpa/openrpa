@@ -101,18 +101,18 @@
 		<value>Sammlungsname</value>
 	</data>
 	<data name="plugin_collectionname_help" xml:space="preserve">
-		<value>Speichern Sie Ereignisse in dieser Sammlung</value>
+		<value>Speichert Ereignisse in einer Sammlung</value>
 	</data>
 	<data name="plugin_enabled_keyboard_recording" xml:space="preserve">
 		<value>Tastatur erfassen</value>
 	</data>
 	<data name="plugin_enabled_keyboard_recording_help" xml:space="preserve">
-		<value>Zeichnen Sie alle Tastaturereignisse auf</value>
+		<value>Zeichnet alle Tastaturereignisse auf</value>
 	</data>
 	<data name="plugin_enabled_mouse_recording" xml:space="preserve">
 		<value>Maus erfassen</value>
 	</data>
 	<data name="plugin_enabled_mouse_recording_help" xml:space="preserve">
-		<value>Notieren Sie alle Mausklicks</value>
+		<value>Zeichnet alle Mausklicks auf</value>
 	</data>
 </root>

@@ -145,7 +145,7 @@
     <value>Ausführbar</value>
   </data>
 	<data name="plugin_reload_interval" xml:space="preserve">
-    <value>Intervall neu laden</value>
+    <value>Neulade-Intervall</value>
   </data>
 	<data name="plugin_use_free_rdp" xml:space="preserve">
     <value>Free RDP verwenden</value>

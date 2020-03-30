@@ -121,13 +121,13 @@
     <value>Doppelklick zur Ansicht</value>
   </data>
 	<data name="activity_play_hint" xml:space="preserve">
-    <value>Video Datei abspielen</value>
+    <value>Wiedergabe der Video-Datei</value>
   </data>
 	<data name="activity_start_hint" xml:space="preserve">
-    <value>In diesem Ordner speichern</value>
+    <value>In diesem Ordner abspeichern</value>
   </data>
 	<data name="activity_stop_hint" xml:space="preserve">
-    <value>Video Dateinamen speichern</value>
+    <value>Video Dateinamen abspeichern</value>
   </data>
 	<data name="plugin_codec" xml:space="preserve">
     <value>Codec</value>
@@ -142,7 +142,7 @@
     <value>Aufnahmequalität</value>
   </data>
 	<data name="plugin_save_in_folder" xml:space="preserve">
-    <value>Speicher in Ordnern</value>
+    <value>In Ordner abspeichern</value>
   </data>
 	<data name="activity_playrecording" xml:space="preserve">
 		<value>Aufnahme abspielen</value>
@@ -151,15 +151,15 @@
 		<value>Wiedergabe einer Videoaufnahme</value>
 	</data>
 	<data name="activity_startrecording" xml:space="preserve">
-		<value>Starte die Aufnahme</value>
+		<value>Aufnahme starten</value>
 	</data>
 	<data name="activity_startrecording_tooltip" xml:space="preserve">
-		<value>Starten Sie die Aufzeichnung des Bildschirms in einer Datei</value>
+		<value>Beginnt eine Videoaufnahme des aktuellen Bildschirms</value>
 	</data>
 	<data name="activity_stoprecording" xml:space="preserve">
-		<value>Höre auf, aufzunehmen</value>
+		<value>Aufnahme stoppen</value>
 	</data>
 	<data name="activity_stoprecording_tooltip" xml:space="preserve">
-		<value>Stoppen Sie eine laufende Bildschirmaufnahme und speichern Sie sie in einer Datei</value>
+		<value>Stoppt die Videoaufnahme des aktuellen Bildschirms</value>
 	</data>
 </root>

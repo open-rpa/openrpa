@@ -127,58 +127,58 @@
 		<value>Absatz hinzufügen</value>
 	</data>
 	<data name="activity_addparagraph_tooltip" xml:space="preserve">
-		<value>Fügen Sie einem Microsoft Word-Dokument einen neuen Absatz hinzu</value>
+		<value>Fügt einem Microsoft Word-Dokument einen neuen Absatz hinzu</value>
 	</data>
 	<data name="activity_closedocument" xml:space="preserve">
 		<value>Dokument schließen</value>
 	</data>
 	<data name="activity_closedocument_tooltip" xml:space="preserve">
-		<value>Wenn Sie ein Microsoft Word-Dokument schließen, wenn es geöffnet ist, wird Word auch geschlossen, wenn keine weiteren Dokumente geöffnet sind</value>
+		<value>Microsoft Word-Dokument wird geschlossen wenn es geöffnet ist - auch wenn keine weiteren Dokumente geöffnet sind</value>
 	</data>
 	<data name="activity_closeworkbook" xml:space="preserve">
 		<value>Arbeitsmappe schließen</value>
 	</data>
 	<data name="activity_closeworkbook_tooltip" xml:space="preserve">
-		<value>Schließen Sie eine Arbeitsmappe, wenn sie geöffnet ist, und schließen Sie Excel, wenn keine weiteren Arbeitsmappen geöffnet sind</value>
+		<value>Schließt die Arbeitsmappe wenn sie geöffnet ist - auch wenn keine weiteren Arbeitsmappen geöffnet sind</value>
 	</data>
 	<data name="activity_getmails" xml:space="preserve">
-		<value>Holen Sie sich Mails</value>
+		<value>Mails abrufen</value>
 	</data>
 	<data name="activity_getmails_tooltip" xml:space="preserve">
-		<value>Rufen Sie alle E-Mails aus einem Microsoft Outlook-Ordner ab</value>
+		<value>Ruft alle E-Mails aus einem Microsoft Outlook-Ordner ab</value>
 	</data>
 	<data name="activity_getparagraph" xml:space="preserve">
 		<value>Absatz abrufen</value>
 	</data>
 	<data name="activity_getparagraph_tooltip" xml:space="preserve">
-		<value>Rufen Sie einen oder mehrere Absätze aus einem Microsoft Word-Dokument ab</value>
+		<value>Ruft einen oder mehrere Absätze aus einem Microsoft Word-Dokument ab</value>
 	</data>
 	<data name="activity_newmailitem" xml:space="preserve">
-		<value>Neues MailItem</value>
+		<value>Neue MS Outlook E-Mail</value>
 	</data>
 	<data name="activity_newmailitem_tooltip" xml:space="preserve">
-		<value>Erstellen Sie ein neues Microsoft Outlook Mailitem</value>
+		<value>Erstellt eine neue E-Mail in Microsoft Outlook</value>
 	</data>
 	<data name="activity_readcell" xml:space="preserve">
 		<value>Zelle lesen</value>
 	</data>
 	<data name="activity_readcell_tooltip" xml:space="preserve">
-		<value>Lesen Sie den Inhalt einer einzelnen Zelle in Microsoft Excel</value>
+		<value>Liest den Inhalt einer einzelnen Zelle in Microsoft Excel aus</value>
 	</data>
 	<data name="activity_readrange" xml:space="preserve">
-		<value>Lesebereich</value>
+		<value>Zellbereich lesen</value>
 	</data>
 	<data name="activity_readrange_tooltip" xml:space="preserve">
-		<value>Lesen Sie einen Bereich aus einer Microsoft Excel-Tabelle</value>
+		<value>Liest einen Bereich aus einer Microsoft Excel-Tabelle aus</value>
 	</data>
 	<data name="activity_runslideshow" xml:space="preserve">
-		<value>Führen Sie die Diashow aus</value>
+		<value>Startet MS PowerPoint Slideshow</value>
 	</data>
 	<data name="activity_runslideshow_tooltip" xml:space="preserve">
-		<value>Öffnen Sie eine Microsoft Powerpoint-Präsentation und starten Sie die Diashow</value>
+		<value>Öffnet eine Microsoft Powerpoint-Präsentation und starten Sie die Diashow</value>
 	</data>
 	<data name="activity_savemailitem" xml:space="preserve">
-		<value>Speichern Sie MailItem</value>
+		<value>Speichern eines MS Outlook Mail Elements</value>
 	</data>
 	<data name="activity_savemailitem_tooltip" xml:space="preserve">
 		<value>Speichern Sie ein Microsoft Outlook Mail-Element als Datei</value>
@@ -187,7 +187,7 @@
 		<value>Absatz setzen</value>
 	</data>
 	<data name="activity_setparagraph_tooltip" xml:space="preserve">
-		<value>Legen Sie den Inhalt eines Absatzes neben einem Microsoft Word-Dokument fest</value>
+		<value>Legt Inhalt eines Absatzes in einem Microsoft Word-Dokument fest</value>
 	</data>
 	<data name="activity_writecell" xml:space="preserve">
 		<value>Zelle schreiben</value>
@@ -196,7 +196,7 @@
 		<value>Legen Sie in Microsoft Excel einen Wert oder ein Formular für eine einzelne Zelle fest</value>
 	</data>
 	<data name="activity_writerange" xml:space="preserve">
-		<value>Schreibbereich</value>
+		<value>Zellbereich schreiben</value>
 	</data>
 	<data name="activity_writerange_tooltip" xml:space="preserve">
 		<value>Schreiben Sie alle Daten aus einer DataTable in einen Bereich innerhalb einer Microsoft Excel-Tabelle</value>

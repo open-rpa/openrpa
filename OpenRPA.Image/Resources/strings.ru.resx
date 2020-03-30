@@ -157,16 +157,16 @@
     <value>Файл изображения для загрузки</value>
   </data>
 	<data name="activity_getelement" xml:space="preserve">
-		<value>Найти изображение на экране или внутри определенного окна приложения</value>
-	</data>
-	<data name="activity_getelement_tooltip" xml:space="preserve">
 		<value>Получить элемент</value>
 	</data>
+	<data name="activity_getelement_tooltip" xml:space="preserve">
+		<value>Найти изображение на экране или внутри определенного окна приложения</value>
+	</data>
 	<data name="activity_getimage" xml:space="preserve">
-		<value>Получить изображение экрана относительно другого изображения или элемента, найденного с помощью GetElement</value>
+		<value>Получить изображение</value>
 	</data>
 	<data name="activity_getimage_tooltip" xml:space="preserve">
-		<value>Получить изображение</value>
+		<value>Получить изображение экрана относительно другого изображения или элемента, найденного с помощью GetElement</value>
 	</data>
 	<data name="activity_gettext" xml:space="preserve">
 		<value>Получить текст</value>

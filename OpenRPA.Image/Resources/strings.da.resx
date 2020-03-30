@@ -157,16 +157,16 @@
     <value>Billed fil at indlæse</value>
   </data>
 	<data name="activity_getelement" xml:space="preserve">
-		<value>Find et billede på skærmen eller i et specifikt programvindue</value>
-	</data>
-	<data name="activity_getelement_tooltip" xml:space="preserve">
 		<value>Hent element</value>
 	</data>
+	<data name="activity_getelement_tooltip" xml:space="preserve">
+		<value>Find et billede på skærmen eller i et specifikt programvindue</value>
+	</data>
 	<data name="activity_getimage" xml:space="preserve">
-		<value>Hent et billede af skærmen relativt fra et andet billede eller element, der findes med GetElement</value>
+		<value>Hent billede</value>
 	</data>
 	<data name="activity_getimage_tooltip" xml:space="preserve">
-		<value>Hent billede</value>
+		<value>Hent et billede af skærmen relativt fra et andet billede eller element, der findes med GetElement</value>
 	</data>
 	<data name="activity_gettext" xml:space="preserve">
 		<value>Hent tekst</value>

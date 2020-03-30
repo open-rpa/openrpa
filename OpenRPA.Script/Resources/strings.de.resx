@@ -127,18 +127,18 @@
 		<value>C# Intellisense</value>
 	</data>
 	<data name="plugin_csharp_intellisense_help" xml:space="preserve">
-		<value>Aktivieren Sie Intellisense für C# -Skripte</value>
+		<value>Aktiviert Intellisense für C# -Skripte</value>
 	</data>
 	<data name="plugin_vb_intellisense" xml:space="preserve">
 		<value>VB Intellisense</value>
 	</data>
 	<data name="plugin_vb_intellisense_help" xml:space="preserve">
-		<value>Aktivieren Sie Intellisense für Visual Basic-Skripts</value>
+		<value>Aktiviert Intellisense für Visual Basic-Skripts</value>
 	</data>
 	<data name="activity_invokecode" xml:space="preserve">
 		<value>Code aufrufen</value>
 	</data>
 	<data name="activity_invokecode_tooltip" xml:space="preserve">
-		<value>Rufen Sie Code auf, der in einer von mehreren Sprachen geschrieben ist</value>
+		<value>Ruft Code auf der in mehreren Parogrammiersprachen geschrieben sein kann</value>
 	</data>
 </root>

@@ -145,7 +145,7 @@
     <value>Beschränken auf</value>
   </data>
 	<data name="activity_gettext_limit_hint" xml:space="preserve">
-    <value>Suche nur für dieses Wort</value>
+    <value>Suche nur folgendes Wort</value>
   </data>
 	<data name="activity_loadfile_drop_hint" xml:space="preserve">
     <value>Aktivität löschen</value>
@@ -157,16 +157,16 @@
     <value>Bilddatei laden</value>
   </data>
 	<data name="activity_getelement" xml:space="preserve">
-		<value>Suchen Sie ein Bild auf dem Bildschirm oder in einem bestimmten Anwendungsfenster</value>
-	</data>
-	<data name="activity_getelement_tooltip" xml:space="preserve">
 		<value>Element abrufen</value>
 	</data>
+	<data name="activity_getelement_tooltip" xml:space="preserve">
+		<value>Suchen Sie ein Bild auf dem Bildschirm oder in einem bestimmten Anwendungsfenster</value>
+	</data>
 	<data name="activity_getimage" xml:space="preserve">
-		<value>Ruft ein Bild des Bildschirmverwandten von einem anderen Bild oder Element ab, das mit GetElement gefunden wurde</value>
+		<value>Bild abrufen</value>
 	</data>
 	<data name="activity_getimage_tooltip" xml:space="preserve">
-		<value>Bild abrufen</value>
+		<value>Ruft ein Bild in Relation zu einem anderen Bild oder Element ab, das mit GetElement gefunden wurde</value>
 	</data>
 	<data name="activity_gettext" xml:space="preserve">
 		<value>Text abrufen</value>
@@ -178,12 +178,12 @@
 		<value>Lade von der Datei</value>
 	</data>
 	<data name="activity_loadfromfile_tooltip" xml:space="preserve">
-		<value>Laden Sie ein Bild aus einer Datei und geben Sie ein ImageElement zurück</value>
+		<value>Laden Sie ein Bild aus einer Datei und gibt ein Bildelement aus</value>
 	</data>
 	<data name="activity_takescreenshot" xml:space="preserve">
-		<value>Einen Screenshot machen</value>
+		<value>Screenshot auslösen</value>
 	</data>
 	<data name="activity_takescreenshot_tooltip" xml:space="preserve">
-		<value>Machen Sie einen Screenshot des gesamten Bildschirms oder eines bestimmten Elements, das mit Get Element gefunden wurde</value>
+		<value>Screenshot des gesamten Bildschirms oder eines bestimmten Elements, das mit "Element abrufen" gefunden wurde</value>
 	</data>
 </root>

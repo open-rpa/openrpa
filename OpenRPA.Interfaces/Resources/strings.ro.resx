@@ -148,6 +148,6 @@
     <value>Selectați elementul</value>
   </data>
 	<data name="selector_buttons_cancel" xml:space="preserve">
-		<value>Redare înregistrare</value>
+		<value>Anulare</value>
 	</data>
 </root>

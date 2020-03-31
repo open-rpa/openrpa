@@ -148,6 +148,6 @@
     <value>Выберите элемент</value>
   </data>
 	<data name="selector_buttons_cancel" xml:space="preserve">
-		<value>Воспроизвести запись</value>
+		<value>отменить</value>
 	</data>
 </root>

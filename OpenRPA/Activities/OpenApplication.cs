@@ -81,6 +81,7 @@ namespace OpenRPA.Activities
             }
             if(element!=null && Body != null)
             {
+                // element.Focus();
                 context.ScheduleAction(Body, element, OnBodyComplete);
             }
         }

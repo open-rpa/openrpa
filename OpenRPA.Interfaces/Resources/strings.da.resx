@@ -148,6 +148,6 @@
     <value>Vælg element</value>
   </data>
 	<data name="selector_buttons_cancel" xml:space="preserve">
-		<value>Afspil optagelse</value>
+		<value>Afbryd</value>
 	</data>
 </root>

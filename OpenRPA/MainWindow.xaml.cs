@@ -499,8 +499,18 @@ namespace OpenRPA
                     {
                         this.first_connect = false;
                         LoadLayout();
+                        LayoutDocument layoutDocument = new LayoutDocument { Title = "Getting started" };
+                        layoutDocument.ContentId = "GettingStarted";
+                        // Views.GettingStarted view = new Views.GettingStarted(url + "://" + u.Host + "/gettingstarted.html");
+                        if(Config.local.show_getting_started)
+                        {
+                            Views.GettingStarted view = new Views.GettingStarted("https://openrpa.dk/gettingstarted.html");
+                            layoutDocument.Content = view;
+                            MainTabControl.Children.Add(layoutDocument);
+                            layoutDocument.IsSelected = true;
+                            layoutDocument.Closing += LayoutDocument_Closing;
+                        }
                     }
-                    
                     System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = true;
                     System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.Normal;
                     System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Normal;

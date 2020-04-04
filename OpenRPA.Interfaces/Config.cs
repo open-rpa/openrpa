@@ -52,6 +52,7 @@ namespace OpenRPA
         public bool remote_allow_multiple_running = false;
         public int remote_allow_multiple_running_max = 2;
         public string cef_useragent = "";
+        public bool show_getting_started = true;
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)

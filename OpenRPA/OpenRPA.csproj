@@ -333,6 +333,7 @@
     <None Remove="Views\CloseableHeader.xaml" />
     <None Remove="Views\DetectorsView.xaml" />
     <None Remove="Views\EditXAML.xaml" />
+    <None Remove="Views\GettingStarted.xaml" />
     <None Remove="Views\InsertSelect.xaml" />
     <None Remove="Views\InsertText.xaml" />
     <None Remove="Views\KeyboardSeqWindow.xaml" />
@@ -401,6 +402,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RunPlugins.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GettingStarted.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SigninWindow.xaml">

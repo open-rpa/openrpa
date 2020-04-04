@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+  <ComponentGroup Id="MainComponents" Directory="INSTALLDIR" >
+      <Component Id='OpenRPA.exe' Guid='7EBC5B95-EB7B-4F16-B65B-E1244403E7BF' Win64='yes'>
+        <RegistryValue Root='HKCU' Key='Software\OpenRPA'
+                   Name='InstallFolder'
+                   Value='[INSTALLDIR]'
+                   Type='string'
+                   KeyPath='yes' />        
+        <File Id='openrpaExe' Source='$(var.ProjectDir)..\OpenRPA\bin\PrepInstaller\net462\OpenRPA.exe' />
+        
+        <RemoveFolder Id='RemoveLocalAppDataFolder' Directory='INSTALLDIR' On='uninstall' />
+      </Component>
+    </ComponentGroup>
+
+  </Fragment>
+</Wix>

@@ -3488,12 +3488,25 @@ namespace OpenRPA
                             }
                             if(!Config.local.remote_allow_multiple_running && RunningCount > 0)
                             {
-                                Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
+                                if(i.Workflow!=null)
+                                {
+                                    Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
+                                } else
+                                {
+                                    Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
+                                }
                                 e.isBusy = true; return;
                             } 
                             else if (Config.local.remote_allow_multiple_running && RemoteRunningCount > Config.local.remote_allow_multiple_running_max)
                             {
-                                Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
+                                if (i.Workflow != null)
+                                {
+                                    Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
+                                }
+                                else
+                                {
+                                    Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
+                                }
                                 e.isBusy = true; return;
                             }
                         }

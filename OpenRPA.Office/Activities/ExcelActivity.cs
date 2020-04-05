@@ -50,6 +50,11 @@ namespace OpenRPA.Office.Activities
             {
                 instance = new Microsoft.Office.Interop.Excel.Application();
             }
+            //finally
+            //{
+            //    if (activeObject == null) activeObject = (Application)Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid("00024500-0000-0000-C000-000000000046")));
+            //    activeObject.Visible = true;
+            //}
 
             return instance;
         }

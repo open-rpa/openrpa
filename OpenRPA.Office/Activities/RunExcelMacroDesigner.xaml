@@ -1,4 +1,4 @@
-﻿<sap:ActivityDesigner x:Class="OpenRPA.Office.Activities.AddParagraphDesigner"
+﻿<sap:ActivityDesigner x:Class="OpenRPA.Office.Activities.RunExcelMacroDesigner"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
@@ -48,6 +48,13 @@
                             ExpressionType="s:String" HorizontalAlignment="Stretch" />
         </DockPanel>
         <Button Content="..." Click="Button_Click" Grid.Column="1" Width="30" />
+        <DockPanel Height="Auto" Name="stackPanel2" Width="Auto" LastChildFill="True" Grid.Row="2" Grid.ColumnSpan="2">
+            <TextBlock Text="{x:Static or:strings.activity_runexcelmacro_name_hint}" VerticalAlignment="Center" />
+            <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_filename}" MaxWidth="180" Margin="5"
+                            OwnerActivity="{Binding Path=ModelItem}"
+                            Expression="{Binding Path=ModelItem.Name, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
+                            ExpressionType="s:String" HorizontalAlignment="Stretch" />
+        </DockPanel>
 
 
         <!--Converter={StaticResource DebugBinding},

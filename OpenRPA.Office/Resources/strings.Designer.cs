@@ -223,6 +223,33 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Run Excel Macro.
+        /// </summary>
+        public static string activity_runexcelmacro {
+            get {
+                return ResourceManager.GetString("activity_runexcelmacro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Macro Name.
+        /// </summary>
+        public static string activity_runexcelmacro_name_hint {
+            get {
+                return ResourceManager.GetString("activity_runexcelmacro_name_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run a Macro within a Excel workbook. The Workbook file needs to be enabled for Macros.
+        /// </summary>
+        public static string activity_runexcelmacro_tooltip {
+            get {
+                return ResourceManager.GetString("activity_runexcelmacro_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run Slideshow.
         /// </summary>
         public static string activity_runslideshow {

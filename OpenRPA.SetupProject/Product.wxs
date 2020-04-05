@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <?define VersionNumber="!(bind.FileVersion.openrpaExe)" ?>
+  <!--
+   Upgrade code HAS to be the same for all updates.
+   Once you've chosen it don't change it.
+   -->
+  <?define UpgradeCode="c3ca861f-6a0c-40ad-b62d-ef94b84256ec" ?>
+
+  <!-- The URL for add/remove programs -->
+  <?define InfoURL="https://openrpa.dk/" ?>
+  
+  <?define Win64 = "yes" ?>
+  <!-- 32-bit / 64-bit variables -->
+  <?if $(var.Platform) = x64 ?>
+  <?define Win64 = "yes" ?>
+  <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
+  <?define openrpaExeSourcePath = "$(var.ProjectDir)..\OpenRPA\bin\PrepInstaller\net462\OpenRPA.exe" ?>
+  <?else ?>
+  <?define Win64 = "no" ?>
+  <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
+  <?define openrpaExeSourcePath = "$(var.ProjectDir)..\OpenRPA\bin\PrepInstaller\net462\OpenRPA.exe" ?>
+  <?endif ?>
+  <Product Id="*" Name="!(loc.ApplicationName)" Language="!(loc.Language)" Version="$(var.VersionNumber)" Manufacturer="!(loc.ManufacturerFullName)" UpgradeCode="$(var.UpgradeCode)" >
+		<Package InstallerVersion="200" Compressed="yes"  Platform="x64" InstallScope="perMachine" />
+    <!-- InstallScope="perMachine" -->
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes" />
+
+    <Icon Id="open_rpa.ico" SourceFile="open_rpa.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="open_rpa.ico" />
+
+
+    <Property Id="INSTALLOFFICEFEATURE" Value="TRUE" />
+
+    <WixVariable Id="MainSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA\bin\PrepInstaller\net462"/>
+    <WixVariable Id="MainSource2" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.NativeMessagingHost\bin\PrepInstaller\net462"/>
+    <WixVariable Id="OfficeSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Office\bin\PrepInstaller\net462"/>
+    <WixVariable Id="FormsSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Forms\bin\PrepInstaller\net462"/>
+    <WixVariable Id="IESource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.IE\bin\PrepInstaller\net462"/>
+    <WixVariable Id="NMSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.NM\bin\PrepInstaller\net462"/>
+    <WixVariable Id="ImageSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Image\bin\PrepInstaller\net462"/>
+    <WixVariable Id="JavaSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Java\bin\PrepInstaller\net462"/>
+    <WixVariable Id="ScriptSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Script\bin\PrepInstaller\net462"/>
+    <WixVariable Id="AviRecorderSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.AviRecorder\bin\PrepInstaller\net462"/>
+    <WixVariable Id="OpenFlowDBSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.OpenFlowDB\bin\PrepInstaller\net462"/>
+    <WixVariable Id="RDServicePluginSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.RDServicePlugin\bin\PrepInstaller\net462"/>
+    <WixVariable Id="FileWatcherSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.FileWatcher\bin\PrepInstaller\net462"/>
+    <WixVariable Id="ElisRossumSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Elis.Rossum\bin\PrepInstaller\net462"/>
+    <WixVariable Id="PDPluginSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.PDPlugin\bin\PrepInstaller\net462"/>
+    <WixVariable Id="UtilitiesSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Utilities\bin\PrepInstaller\net462"/>
+    
+
+
+    <Feature Id="MainFeature" Title="OpenRPA Core Components" Level="1" Absent='disallow' AllowAdvertise='no' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
+      <!--  Display="hidden" -->
+      <ComponentGroupRef Id="MainComponents" />
+      <ComponentGroupRef Id="UtilitiesComponents" />
+      <ComponentGroupRef Id="MainComponentFiles" />
+    </Feature>
+    <Feature Id="OpenFlowDBFeature" Title="OpenFlow specific activities" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
+      <ComponentGroupRef Id="OpenFlowDBComponents" />
+    </Feature>
+    <Feature Id="OfficeFeature" Title="Microsoft Office Integration" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
+      <Condition Level="0"><![CDATA[NOT(INSTALLOFFICEFEATURE~="TRUE")]]></Condition>
+      <ComponentGroupRef Id="OfficeComponents" />
+    </Feature>
+    <Feature Id="FormsFeature" Title="Forge Forms Integration" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
+      <ComponentGroupRef Id="FormsComponents" />
+    </Feature>
+    <Feature Id="IEFeature" Title="Internet Explorer Integration" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
+      <ComponentGroupRef Id="IEComponents" />
+    </Feature>
+    <Feature Id="NMFeature" Title="Chrome/Firefox/Edge Integration" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
+      <ComponentGroupRef Id="NMComponents" />
+    </Feature>
+    <Feature Id="ImageFeature" Title="Image Recognition and OCR using OpenCV" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
+      <ComponentGroupRef Id="ImageComponents" />
+    </Feature>
+    <Feature Id="JavaFeature" Title="Java Integration" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
+      <ComponentGroupRef Id="JavaComponents" />
+    </Feature>
+    <Feature Id="ScriptFeature" Title="Generic Scripting support" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
+      <ComponentGroupRef Id="ScriptComponents" />
+    </Feature>
+    <Feature Id="RDServicePluginFeature" Title="High Density robots using Remote Desktop" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
+      <ComponentGroupRef Id="RDServicePluginComponents" />
+    </Feature>
+    <Feature Id="AviRecorderFeature" Title="AviRecord activities and Run plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
+      <ComponentGroupRef Id="AviRecorderComponents" />
+    </Feature>
+    <Feature Id="FileWatcherFeature" Title="File Watcher run plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
+      <ComponentGroupRef Id="FileWatcherComponents" />
+    </Feature>
+    <Feature Id="ElisRossumFeature" Title="Invoice scanning using Elis Rossum" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
+      <ComponentGroupRef Id="ElisRossumComponents" />
+    </Feature>
+    <Feature Id="PDPluginFeature" Title="Process Discovery Harvesting Run Plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
+      <ComponentGroupRef Id="PDPluginComponents" />
+    </Feature>
+
+
+
+    <!--<Property Id="ALLUSERS" Value="2" />-->
+    <!--<Property Id="InstallFolder" Value="0" />
+    <Property Id='ALLUSERS' Value='2' />
+    <Property Id='MSIINSTALLPERUSER' Value='1' />-->
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+
+    <UIRef Id="UI_OPENRPA" />
+
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <Component Id="ApplicationShortcut" Guid="$(var.UpgradeCode)" Feature="MainFeature">
+        <Shortcut Id="ApplicationStartMenuShortcut"
+                  Name="OpenRPA"
+                  Description="OpenRPA"
+                  Target="[#openrpaExe]"
+                  WorkingDirectory="APPLICATIONROOTDIRECTORY"/>
+        <RemoveFolder Id="CleanUpShortCut" Directory="ApplicationProgramsFolder" On="uninstall"/>
+        <RegistryValue Root="HKCU" Key="Software\OpenRPA" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
+
+    <!--
+    https://stackoverflow.com/questions/43043088/wix-install-feature-conditionally
+    
+    https://codingbee.net/wix/wix-the-installation-sequence
+    -->
+
+
+    
+    <Binary Id="HasExcelBinary" SourceFile="$(var.OpenRPA.SetupActions.TargetDir)$(var.OpenRPA.SetupActions.TargetName).CA.dll" />
+    <!--<CustomAction Id="SetProperty" Return="check" Property="FixPaths" Value="[INSTALLDIR]"></CustomAction>-->
+    <!--<CustomAction Id="FixPaths" BinaryKey="HasExcelBinary" DllEntry="FixPaths" Execute="deferred" Impersonate="no" />-->
+    <CustomAction Id="HasExcel" BinaryKey="HasExcelBinary" DllEntry="HasExcel" Execute="immediate" Return="check" />
+
+    <CustomAction Id="FixPaths"
+                BinaryKey="HasExcelBinary"
+                DllEntry="FixPaths"
+                Execute="deferred"
+                Return="check" 
+                Impersonate="no" />
+    <CustomAction Id="SetCustomActionDataValue" Return="check"
+                 Property="FixPaths" Value="INSTALLDIR=[INSTALLDIR]" />
+
+
+
+    <CustomAction Id="test_command2" Script="vbscript">
+      <![CDATA[          
+          MsgBox(Session.Property("INSTALLOFFICEFEATURE"))
+      ]]>
+    </CustomAction>
+    <InstallUISequence>
+      <Custom Action='HasExcel'  Before='AppSearch' />
+      <!--<Custom Action="test_command2" After="HasExcel">NOT Installed</Custom>-->
+    </InstallUISequence>
+
+    <InstallExecuteSequence>
+      <Custom Action="SetCustomActionDataValue" Before="FixPaths" />
+      <Custom Action="FixPaths" Before="InstallFinalize" />
+    </InstallExecuteSequence>
+
+
+
+    
+  </Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="LocalAppDataFolder">
+        <!--<Directory Id="INSTALLDIR2" Name="OpenRPA" />-->
+        <!--<Component Id="MainFeature" Guid="*">
+        </Component>-->
+
+      </Directory>
+			<Directory Id="ProgramFiles64Folder">
+				<Directory Id="INSTALLDIR" Name="OpenRPA" />
+			</Directory>
+
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="OpenRPA"/>
+      </Directory>
+    </Directory>
+
+    
+	</Fragment>
+
+  
+  
+
+
+</Wix>

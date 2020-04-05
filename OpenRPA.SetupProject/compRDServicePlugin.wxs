@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="RDServicePluginComponents">
+      <Component Id='RDServicePluginComponent' Guid='{2A11B80C-8BAA-4F8B-ACF8-B4A1D1B2C32E}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="AxInterop.MSTSCLib.dll" Source="!(wix.RDServicePluginSource)\AxInterop.MSTSCLib.dll" />
+        <File Id="FreeRDP.dll" Source="!(wix.RDServicePluginSource)\FreeRDP.dll" />
+        <File Id="MSTSCLib.dll" Source="!(wix.RDServicePluginSource)\MSTSCLib.dll" />
+        <File Id="OpenRPA.RDService.exe" Source="!(wix.RDServicePluginSource)\OpenRPA.RDService.exe" />
+        <File Id="OpenRPA.RDService.exe.config" Source="!(wix.RDServicePluginSource)\OpenRPA.RDService.exe.config" />
+        <File Id="OpenRPA.RDServiceMonitor.exe" Source="!(wix.RDServicePluginSource)\OpenRPA.RDServiceMonitor.exe" />
+        <File Id="OpenRPA.RDServiceMonitor.exe.config" Source="!(wix.RDServicePluginSource)\OpenRPA.RDServiceMonitor.exe.config" />
+        <File Id="OpenRPA.RDServicePlugin.dll" Source="!(wix.RDServicePluginSource)\OpenRPA.RDServicePlugin.dll" />
+      </Component>
+
+      <Component Id='RDServicePluginComponentx64' Win64='yes' Directory="RDServicePluginx64" Guid='{81AD9BB8-D6A8-4509-A5B8-C36159A36B2B}'>
+        <File Id="libeay32.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libeay32.dll" />
+        <File Id="libfreerdpcache.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libfreerdp-cache.dll" />
+        <File Id="libfreerdpclient.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libfreerdp-client.dll" />
+        <File Id="libfreerdpcodec.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libfreerdp-codec.dll" />
+        <File Id="libfreerdpcommon.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libfreerdp-common.dll" />
+        <File Id="libfreerdpcore.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libfreerdp-core.dll" />
+        <File Id="libfreerdpcrypto.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libfreerdp-crypto.dll" />
+        <File Id="libfreerdpgdi.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libfreerdp-gdi.dll" />
+        <File Id="libfreerdplocale.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libfreerdp-locale.dll" />
+        <File Id="libfreerdpprimitives.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libfreerdp-primitives.dll" />
+        <File Id="libfreerdprail.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libfreerdp-rail.dll" />
+        <File Id="libfreerdputils.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libfreerdp-utils.dll" />
+        <File Id="libwfreerdpclient.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwfreerdp-client.dll" />
+        <File Id="libwinprasn1.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-asn1.dll" />
+        <File Id="libwinprbcrypt.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-bcrypt.dll" />
+        <File Id="libwinprcredentials.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-credentials.dll" />
+        <File Id="libwinprcredui.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-credui.dll" />
+        <File Id="libwinprcrt.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-crt.dll" />
+        <File Id="libwinprcrypto.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-crypto.dll" />
+        <File Id="libwinprdsparse.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-dsparse.dll" />
+        <File Id="libwinprenvironment.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-environment.dll" />
+        <File Id="libwinprerror.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-error.dll" />
+        <File Id="libwinprfile.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-file.dll" />
+        <File Id="libwinprhandle.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-handle.dll" />
+        <File Id="libwinprheap.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-heap.dll" />
+        <File Id="libwinprinput.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-input.dll" />
+        <File Id="libwinprinterlocked.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-interlocked.dll" />
+        <File Id="libwinprio.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-io.dll" />
+        <File Id="libwinprlibrary.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-library.dll" />
+        <File Id="libwinprpath.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-path.dll" />
+        <File Id="libwinprpipe.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-pipe.dll" />
+        <File Id="libwinprpool.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-pool.dll" />
+        <File Id="libwinprregistry.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-registry.dll" />
+        <File Id="libwinprrpc.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-rpc.dll" />
+        <File Id="libwinprsspi.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-sspi.dll" />
+        <File Id="libwinprsspicli.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-sspicli.dll" />
+        <File Id="libwinprsynch.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-synch.dll" />
+        <File Id="libwinprsysinfo.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-sysinfo.dll" />
+        <File Id="libwinprthread.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-thread.dll" />
+        <File Id="libwinprtimezone.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-timezone.dll" />
+        <File Id="libwinprutils.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-utils.dll" />
+        <File Id="libwinprwinhttp.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-winhttp.dll" />
+        <File Id="libwinprwinsock.dll_x64" Source="!(wix.RDServicePluginSource)\x64\libwinpr-winsock.dll" />
+        <File Id="ssleay32.dll_x64" Source="!(wix.RDServicePluginSource)\x64\ssleay32.dll" />
+      </Component>
+      <Component Id='RDServicePluginComponentde' Win64='yes' Directory="RDServicePluginde" Guid='{11F606E9-82E7-45BF-B47B-CA929557467E}'>
+        <File Id="OpenRPA.RDServicePlugin.resources.dll_de" Source="!(wix.RDServicePluginSource)\de\OpenRPA.RDServicePlugin.resources.dll" />
+      </Component>
+      <Component Id='RDServicePluginComponentda' Win64='yes' Directory="RDServicePluginda" Guid='{FDD8758F-C549-442B-BDC5-CC4BB63FCD2D}'>
+        <File Id="OpenRPA.RDServicePlugin.resources.dll_da" Source="!(wix.RDServicePluginSource)\da\OpenRPA.RDServicePlugin.resources.dll" />
+      </Component>
+      <Component Id='RDServicePluginComponentes' Win64='yes' Directory="RDServicePlugines" Guid='{869FD73A-12FB-4AD9-8199-8EE3203DC914}'>
+        <File Id="OpenRPA.RDServicePlugin.resources.dll_es" Source="!(wix.RDServicePluginSource)\es\OpenRPA.RDServicePlugin.resources.dll" />
+      </Component>
+      <Component Id='RDServicePluginComponentpt' Win64='yes' Directory="RDServicePluginpt" Guid='{16BF71B9-5EA5-42B9-BEE8-D6FF2CFCF85E}'>
+        <File Id="OpenRPA.RDServicePlugin.resources.dll_pt" Source="!(wix.RDServicePluginSource)\pt\OpenRPA.RDServicePlugin.resources.dll" />
+      </Component>
+      <Component Id='RDServicePluginComponentro' Win64='yes' Directory="RDServicePluginro" Guid='{BC5FC792-39C7-48D1-984F-74530E68F4ED}'>
+        <File Id="OpenRPA.RDServicePlugin.resources.dll_ro" Source="!(wix.RDServicePluginSource)\ro\OpenRPA.RDServicePlugin.resources.dll" />
+      </Component>
+      <Component Id='RDServicePluginComponentru' Win64='yes' Directory="RDServicePluginru" Guid='{CBEFB416-771B-482C-BDCD-A8E0DEEAFE7A}'>
+        <File Id="OpenRPA.RDServicePlugin.resources.dll_ru" Source="!(wix.RDServicePluginSource)\ru\OpenRPA.RDServicePlugin.resources.dll" />
+      </Component>
+
+    </ComponentGroup>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="RDServicePluginx64" Name="x64" />
+      <Directory Id="RDServicePluginde" Name="de" />
+      <Directory Id="RDServicePluginda" Name="da" />
+      <Directory Id="RDServicePlugines" Name="es" />
+      <Directory Id="RDServicePluginpt" Name="pt" />
+      <Directory Id="RDServicePluginro" Name="ro" />
+      <Directory Id="RDServicePluginru" Name="ru" />
+    </DirectoryRef>
+
+  </Fragment>
+</Wix>

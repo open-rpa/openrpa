@@ -18,7 +18,7 @@ namespace OpenRPA
         public Updates()
         {
             TargetFramework = new System.Runtime.Versioning.FrameworkName(".NETFramework", new Version("4.6.2"));
-            var cur = new System.IO.DirectoryInfo(Environment.CurrentDirectory);
+            var cur = new System.IO.DirectoryInfo(global.CurrentDirectory);
             //RepositoryPath = cur.Parent.FullName + @"\Packages";
             //// InstallPath = cur.Parent.FullName + @"\OpenRPA";
             //InstallPath = cur.Parent.FullName;

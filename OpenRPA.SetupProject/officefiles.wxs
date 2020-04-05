@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="INSTALLDIR">
+            
+            
+            
+            <Component Id="cmp69DE287175A9C165F85AA7EA72A9311E" Guid="{3416F9FB-2A17-42DB-B00E-ECC82EF12F3A}" Win64="yes">
+                <File Id="filBF8ADC7CCFDFD435CDE651D897920191" KeyPath="yes" Source="!(wix.OfficeSource)\Microsoft.Office.Interop.Excel.dll" />
+            </Component>
+            <Component Id="cmp6632865B777FB098826ADEBFEBCE8887" Guid="{D415F72F-4184-455F-9CDC-F87E91BFE56F}" Win64="yes">
+                <File Id="filC4FF1B266B493B0A9E94E08755482873" KeyPath="yes" Source="!(wix.OfficeSource)\Microsoft.Office.Interop.Outlook.dll" />
+            </Component>
+            <Component Id="cmp25CF335ED78E968EA4E0850B859B3ADC" Guid="{ECF4D7C8-9CE7-4A64-96B1-1EC82168DC0B}" Win64="yes">
+                <File Id="fil274977624E363E7B1F70E87DBA6F1CC4" KeyPath="yes" Source="!(wix.OfficeSource)\Microsoft.Office.Interop.PowerPoint.dll" />
+            </Component>
+            <Component Id="cmpF1F877D45BA3FE2504D1D22A680B148E" Guid="{DB2BCF18-65E4-4567-8233-42EF271DF45D}" Win64="yes">
+                <File Id="filB100352C96F1F216561E12CACE0CA5A6" KeyPath="yes" Source="!(wix.OfficeSource)\Microsoft.Office.Interop.Word.dll" />
+            </Component>
+            
+            
+            <Component Id="cmpED8252DD41B5A49349CE5DA0892F3729" Guid="{95FCDADD-E856-4DA5-AF0F-EB09B673FB16}" Win64="yes">
+                <File Id="filE1AF434A3DE8CC321A43DA75009088EB" KeyPath="yes" Source="!(wix.OfficeSource)\Office.dll" />
+            </Component>
+            
+            
+            
+            
+            <Component Id="cmp92E5BAECF06BDC4071B58C81ABA5BF03" Guid="{580930D9-3E98-4D08-AC6C-59427E274D21}" Win64="yes">
+                <File Id="fil492E4A9DB3DF6931956747883E3FF4B7" KeyPath="yes" Source="!(wix.OfficeSource)\OpenRPA.Office.dll" />
+            </Component>
+            <Component Id="cmpCFD7D6D6929BF067F0B65D34EB7B81C4" Guid="{A1237363-E3A7-4600-BB7C-7205C99C8BCA}" Win64="yes">
+                <File Id="fil53BFFCD04DABB149CFCD96FD1B17468A" KeyPath="yes" Source="!(wix.OfficeSource)\OpenRPA.Office.pdb" />
+            </Component>
+            <Directory Id="dir43A0033346A51A6633F88C79EA143D36" Name="da">
+                
+                <Component Id="cmpD94FC65C7DB178C88371441A430AD095" Guid="{4946CBF4-E904-405B-A8C9-E734D3683936}" Win64="yes">
+                    <File Id="filD41DF6EE1256878CC2EC77039C48057E" KeyPath="yes" Source="!(wix.OfficeSource)\da\OpenRPA.Office.resources.dll" />
+                </Component>
+            </Directory>
+            <Directory Id="dirF7A62AAB979B938D6BCEC1392A589DA5" Name="de">
+                
+                <Component Id="cmp6BD7ABDABFE2D4C548F0B700D043582F" Guid="{C6146852-AD5F-44E5-9EB3-AD31DF1431E5}" Win64="yes">
+                    <File Id="fil7AED70E9C7C51CC5FB708B77820DBE5F" KeyPath="yes" Source="!(wix.OfficeSource)\de\OpenRPA.Office.resources.dll" />
+                </Component>
+            </Directory>
+            <Directory Id="dir577231E2EF642DDF4B09B65F4BEE3BE2" Name="es">
+                
+                <Component Id="cmp54B7C41197230F71192827624C4E6729" Guid="{E84EB5CB-706B-4F10-8D79-6AB5CE7EE5B3}" Win64="yes">
+                    <File Id="filB7AC11E929D03651F09A16B654C40EDF" KeyPath="yes" Source="!(wix.OfficeSource)\es\OpenRPA.Office.resources.dll" />
+                </Component>
+            </Directory>
+            <Directory Id="dirC5F627279ECABE21145A844571EF9F74" Name="pt">
+                
+                <Component Id="cmp753958FF0F355C5B1876BA64DEB21A40" Guid="{ECFD2A01-650E-422F-AF6E-3DB530A60848}" Win64="yes">
+                    <File Id="filFF947390B7114B6663F0D0BAB77502C1" KeyPath="yes" Source="!(wix.OfficeSource)\pt\OpenRPA.Office.resources.dll" />
+                </Component>
+            </Directory>
+            <Directory Id="dirE46F01F498F9406B4F44136993088698" Name="ro">
+                
+                <Component Id="cmp6BA9C81A83587705F92A5A9015AB77FE" Guid="{59405EB9-B5C6-49F1-87A5-593ED550C7EC}" Win64="yes">
+                    <File Id="fil79E9C9EC92B8E2D4115D913E916C1F62" KeyPath="yes" Source="!(wix.OfficeSource)\ro\OpenRPA.Office.resources.dll" />
+                </Component>
+            </Directory>
+            <Directory Id="dirF7C0BEA86C276F53E8C9E8E6B2629A9B" Name="ru">
+                
+                <Component Id="cmpAC484207D64A8E0ED1257761AD127145" Guid="{268FA176-FDA1-48DD-8FDF-7BFED6B4670B}" Win64="yes">
+                    <File Id="fil0DFF2406FAE9B3C6F5FF0127797E9643" KeyPath="yes" Source="!(wix.OfficeSource)\ru\OpenRPA.Office.resources.dll" />
+                </Component>
+            </Directory>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="OfficeComponents">
+            
+            
+            
+            <ComponentRef Id="cmp69DE287175A9C165F85AA7EA72A9311E" />
+            <ComponentRef Id="cmp6632865B777FB098826ADEBFEBCE8887" />
+            <ComponentRef Id="cmp25CF335ED78E968EA4E0850B859B3ADC" />
+            <ComponentRef Id="cmpF1F877D45BA3FE2504D1D22A680B148E" />
+            
+            
+            <ComponentRef Id="cmpED8252DD41B5A49349CE5DA0892F3729" />
+            
+            
+            
+            
+            <ComponentRef Id="cmp92E5BAECF06BDC4071B58C81ABA5BF03" />
+            <ComponentRef Id="cmpCFD7D6D6929BF067F0B65D34EB7B81C4" />
+            
+            <ComponentRef Id="cmpD94FC65C7DB178C88371441A430AD095" />
+            
+            <ComponentRef Id="cmp6BD7ABDABFE2D4C548F0B700D043582F" />
+            
+            <ComponentRef Id="cmp54B7C41197230F71192827624C4E6729" />
+            
+            <ComponentRef Id="cmp753958FF0F355C5B1876BA64DEB21A40" />
+            
+            <ComponentRef Id="cmp6BA9C81A83587705F92A5A9015AB77FE" />
+            
+            <ComponentRef Id="cmpAC484207D64A8E0ED1257761AD127145" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

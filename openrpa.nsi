@@ -152,6 +152,8 @@ Section "Office" ; section 2
   SetOutPath $INSTDIR
   File "C:\code\openrpa\OpenRPA.Office\bin\PrepInstaller\net462\Microsoft.Office.Interop.Excel.dll"
   File "C:\code\openrpa\OpenRPA.Office\bin\PrepInstaller\net462\Microsoft.Office.Interop.Outlook.dll"
+  File "C:\code\openrpa\OpenRPA.Office\bin\PrepInstaller\net462\Microsoft.Office.Interop.PowerPoint.dll"
+  File "C:\code\openrpa\OpenRPA.Office\bin\PrepInstaller\net462\Microsoft.Office.Interop.Word.dll"
   File "C:\code\openrpa\OpenRPA.Office\bin\PrepInstaller\net462\OpenRPA.Office.dll"
   File "C:\code\openrpa\OpenRPA.Office\bin\PrepInstaller\net462\OpenRPA.Office.pdb"
   File /r "C:\code\openrpa\OpenRPA.Office\bin\PrepInstaller\net462\OpenRPA.Office.resources.dll"

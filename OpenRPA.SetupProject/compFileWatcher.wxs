@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="FileWatcherComponents">
+      <Component Id='FileWatcherComponent' Guid='{C29A141B-1D4E-40C1-94D8-E1610D06BF47}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="OpenRPA.FileWatcher.dll" Source="!(wix.FileWatcherSource)\OpenRPA.FileWatcher.dll" />
+      </Component>
+      
+      <Component Id='FileWatcherComponentde' Win64='yes' Directory="FileWatcherde" Guid='{F8A354D8-7881-4C13-8B5E-27E26E5253D1}'>
+        <File Id="OpenRPA.FileWatcher.resources.dll_de" Source="!(wix.FileWatcherSource)\de\OpenRPA.FileWatcher.resources.dll" />
+      </Component>
+      <Component Id='FileWatcherComponentda' Win64='yes' Directory="FileWatcherda" Guid='{BFF76170-B5D9-4ED9-89EA-F6FAAE2417C1}'>
+        <File Id="OpenRPA.FileWatcher.resources.dll_da" Source="!(wix.FileWatcherSource)\da\OpenRPA.FileWatcher.resources.dll" />
+      </Component>
+      <Component Id='FileWatcherComponentes' Win64='yes' Directory="FileWatcheres" Guid='{C4482E86-EE92-47A4-A4B0-784F1D8B4B70}'>
+        <File Id="OpenRPA.FileWatcher.resources.dll_es" Source="!(wix.FileWatcherSource)\es\OpenRPA.FileWatcher.resources.dll" />
+      </Component>
+      <Component Id='FileWatcherComponentpt' Win64='yes' Directory="FileWatcherpt" Guid='{91942420-1B9B-463F-81F3-5FF68BB4B41C}'>
+        <File Id="OpenRPA.FileWatcher.resources.dll_pt" Source="!(wix.FileWatcherSource)\pt\OpenRPA.FileWatcher.resources.dll" />
+      </Component>
+      <Component Id='FileWatcherComponentro' Win64='yes' Directory="FileWatcherro" Guid='{61BCB1AD-AC01-4646-8E14-A70F4C19C2D5}'>
+        <File Id="OpenRPA.FileWatcher.resources.dll_ro" Source="!(wix.FileWatcherSource)\ro\OpenRPA.FileWatcher.resources.dll" />
+      </Component>
+      <Component Id='FileWatcherComponentru' Win64='yes' Directory="FileWatcherru" Guid='{32157D98-982D-4875-9915-027DC322976C}'>
+        <File Id="OpenRPA.FileWatcher.resources.dll_ru" Source="!(wix.FileWatcherSource)\ru\OpenRPA.FileWatcher.resources.dll" />
+      </Component>
+
+    </ComponentGroup>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="FileWatcherde" Name="de">
+      </Directory>
+      <Directory Id="FileWatcherda" Name="da">
+      </Directory>
+      <Directory Id="FileWatcheres" Name="es">
+      </Directory>
+      <Directory Id="FileWatcherpt" Name="pt">
+      </Directory>
+      <Directory Id="FileWatcherro" Name="ro">
+      </Directory>
+      <Directory Id="FileWatcherru" Name="ru">
+      </Directory>
+    </DirectoryRef>
+
+  </Fragment>
+</Wix>

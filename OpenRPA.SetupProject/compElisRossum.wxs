@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="ElisRossumComponents">
+      <Component Id='ElisRossumComponent' Guid='{FA160AD8-9CB6-4B64-9FBE-C8B237B05ABC}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="OpenRPA.Elis.Rossum.dll" Source="!(wix.ElisRossumSource)\OpenRPA.Elis.Rossum.dll" />
+      </Component>
+      
+      <Component Id='ElisRossumComponentde' Win64='yes' Directory="ElisRossumde" Guid='{540094A3-FD81-4561-97F1-3A9BB25187D2}'>
+        <File Id="OpenRPA.Elis.Rossum.resources.dll_de" Source="!(wix.ElisRossumSource)\de\OpenRPA.Elis.Rossum.resources.dll" />
+      </Component>
+      <Component Id='ElisRossumComponentda' Win64='yes' Directory="ElisRossumda" Guid='{9BA98876-C2A3-4BCE-A685-DD646B515BB8}'>
+        <File Id="OpenRPA.Elis.Rossum.resources.dll_da" Source="!(wix.ElisRossumSource)\da\OpenRPA.Elis.Rossum.resources.dll" />
+      </Component>
+      <Component Id='ElisRossumComponentes' Win64='yes' Directory="ElisRossumes" Guid='{3BF3AAAA-395C-4659-9564-2C719BEDB002}'>
+        <File Id="OpenRPA.Elis.Rossum.resources.dll_es" Source="!(wix.ElisRossumSource)\es\OpenRPA.Elis.Rossum.resources.dll" />
+      </Component>
+      <Component Id='ElisRossumComponentpt' Win64='yes' Directory="ElisRossumpt" Guid='{2E061F78-D091-460B-B82C-B3BA53058963}'>
+        <File Id="OpenRPA.Elis.Rossum.resources.dll_pt" Source="!(wix.ElisRossumSource)\pt\OpenRPA.Elis.Rossum.resources.dll" />
+      </Component>
+      <Component Id='ElisRossumComponentro' Win64='yes' Directory="ElisRossumro" Guid='{8E039049-3F00-4D50-80CF-1E73160A63E6}'>
+        <File Id="OpenRPA.Elis.Rossum.resources.dll_ro" Source="!(wix.ElisRossumSource)\ro\OpenRPA.Elis.Rossum.resources.dll" />
+      </Component>
+      <Component Id='ElisRossumComponentru' Win64='yes' Directory="ElisRossumru" Guid='{9C4242F2-DAB0-47C4-B832-E7BE47F1ACEB}'>
+        <File Id="OpenRPA.Elis.Rossum.resources.dll_ru" Source="!(wix.ElisRossumSource)\ru\OpenRPA.Elis.Rossum.resources.dll" />
+      </Component>
+
+    </ComponentGroup>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="ElisRossumde" Name="de">
+      </Directory>
+      <Directory Id="ElisRossumda" Name="da">
+      </Directory>
+      <Directory Id="ElisRossumes" Name="es">
+      </Directory>
+      <Directory Id="ElisRossumpt" Name="pt">
+      </Directory>
+      <Directory Id="ElisRossumro" Name="ro">
+      </Directory>
+      <Directory Id="ElisRossumru" Name="ru">
+      </Directory>
+    </DirectoryRef>
+
+  </Fragment>
+</Wix>

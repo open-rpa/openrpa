@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="NMComponents">
+      <Component Id='NMComponent' Guid='{6E9CAB91-700B-4D22-80AB-0FCE0B90D3D6}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="OpenRPA.NM.dll" Source="!(wix.NMSource)\OpenRPA.NM.dll" />
+        <File Id="chromemanifest.json" Source="!(wix.NMSource)\chromemanifest.json" />
+        <File Id="ffmanifest.json" Source="!(wix.NMSource)\ffmanifest.json" />
+        <File Id="OpenRPA.NativeMessagingHost.exe" Source="!(wix.NMSource)\OpenRPA.NativeMessagingHost.exe" />
+        <File Id="OpenRPA.NativeMessagingHost.exe.config" Source="!(wix.NMSource)\OpenRPA.NativeMessagingHost.exe.config" />
+      </Component>
+      <Component Id='NMComponentde' Win64='yes' Directory="NMde" Guid='{4DA0696D-35AD-411A-BBBB-742BE2DA8F86}'>
+        <File Id="OpenRPA.NM.resources.dll_de" Source="!(wix.NMSource)\de\OpenRPA.NM.resources.dll" />
+      </Component>
+      <Component Id='NMComponentda' Win64='yes' Directory="NMda" Guid='{45887D1F-EDFA-4DB7-9061-E562B5568B96}'>
+        <File Id="OpenRPA.NM.resources.dll_da" Source="!(wix.NMSource)\da\OpenRPA.NM.resources.dll" />
+      </Component>
+      <Component Id='NMComponentes' Win64='yes' Directory="NMes" Guid='{78833A49-5225-428E-BA41-1C917C03D6A9}'>
+        <File Id="OpenRPA.NM.resources.dll_es" Source="!(wix.NMSource)\es\OpenRPA.NM.resources.dll" />
+      </Component>
+      <Component Id='NMComponentpt' Win64='yes' Directory="NMpt" Guid='{74D65529-8B30-4D45-AA8C-324ECC050F69}'>
+        <File Id="OpenRPA.NM.resources.dll_pt" Source="!(wix.NMSource)\pt\OpenRPA.NM.resources.dll" />
+      </Component>
+      <Component Id='NMComponentro' Win64='yes' Directory="NMro" Guid='{6D381B3C-4F56-460E-8B12-87354E6B06B3}'>
+        <File Id="OpenRPA.NM.resources.dll_ro" Source="!(wix.NMSource)\ro\OpenRPA.NM.resources.dll" />
+      </Component>
+      <Component Id='NMComponentru' Win64='yes' Directory="NMru" Guid='{D48F61C4-3E51-44CC-849E-0AEC6CA19D96}'>
+        <File Id="OpenRPA.NM.resources.dll_ru" Source="!(wix.NMSource)\ru\OpenRPA.NM.resources.dll" />
+      </Component>
+
+    </ComponentGroup>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="NMde" Name="de">
+      </Directory>
+      <Directory Id="NMda" Name="da">
+      </Directory>
+      <Directory Id="NMes" Name="es">
+      </Directory>
+      <Directory Id="NMpt" Name="pt">
+      </Directory>
+      <Directory Id="NMro" Name="ro">
+      </Directory>
+      <Directory Id="NMru" Name="ru">
+      </Directory>
+    </DirectoryRef>
+
+  </Fragment>
+</Wix>

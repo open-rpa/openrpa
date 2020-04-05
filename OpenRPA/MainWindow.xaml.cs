@@ -998,7 +998,8 @@ namespace OpenRPA
                         if (dialogResult == MessageBoxResult.Yes)
                         {
                             //OnManagePackages(null);
-                            System.Diagnostics.Process.Start("https://github.com/open-rpa/openrpa/releases/download/" + newversion + "/OpenRPA.exe");
+                            // System.Diagnostics.Process.Start("https://github.com/open-rpa/openrpa/releases/download/" + newversion + "/OpenRPA.exe");
+                            System.Diagnostics.Process.Start("https://github.com/open-rpa/openrpa/releases/download/" + newversion + "/OpenRPA.msi");
                             Application.Current.Shutdown();
                         }
                     }
@@ -2062,7 +2063,7 @@ namespace OpenRPA
         }
         private void OnManagePackages(object _item)
         {
-            var di = new System.IO.DirectoryInfo(Environment.CurrentDirectory);
+            var di = new System.IO.DirectoryInfo(global.CurrentDirectory);
             var path = "";
             var filename = "";
             if (System.IO.File.Exists(System.IO.Path.Combine(di.FullName, "Updater", "OpenRPA.Updater.exe")))

@@ -165,7 +165,7 @@ namespace OpenRPA.Script.Activities
                 try
                 {
                     AppDomainSetup domaininfo = new AppDomainSetup();
-                    domaininfo.ApplicationBase = System.Environment.CurrentDirectory;
+                    domaininfo.ApplicationBase = global.CurrentDirectory;
                     System.Security.Policy.Evidence adevidence = AppDomain.CurrentDomain.Evidence;
                     Temporary = AppDomain.CreateDomain("Temporary", adevidence, domaininfo);
                     Temporary.AssemblyResolve += AHKProxy.CurrentDomain_AssemblyResolve;

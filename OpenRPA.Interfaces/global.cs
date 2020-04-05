@@ -54,6 +54,17 @@ namespace OpenRPA
                 return _openflowconfig;
             }
         }
+        public static string CurrentDirectory
+        {
+            get
+            {
+                var asm = System.Reflection.Assembly.GetEntryAssembly();
+                var filepath = asm.CodeBase.Replace("file:///", "");
+                var path = System.IO.Path.GetDirectoryName(filepath);
+                return path;
+                // return Environment.CurrentDirectory;
+            }
+        }
     }
     public class openflowconfig
     {

@@ -8,8 +8,8 @@
     <ProjectGuid>{52AF10F7-DCF9-4E1D-B4DD-331456671118}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CheckForOffice</RootNamespace>
-    <AssemblyName>CheckForOffice</AssemblyName>
+    <RootNamespace>OpenRPA.SetupActions</RootNamespace>
+    <AssemblyName>OpenRPA.SetupActions</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomAction.cs" />
+    <Compile Include="MS_Office.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="CustomAction.config" />
   </ItemGroup>

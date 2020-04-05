@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="IEComponents">
+      <Component Id='IEComponent' Guid='{6F53CD9C-51AC-4B75-956C-8552D91D3AC8}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="OpenRPA.IE.dll" Source="!(wix.IESource)\OpenRPA.IE.dll" />
+      </Component>
+      <Component Id='IEComponentde' Win64='yes' Directory="IEde" Guid='{7161DAD7-AD0C-4799-80CE-1807DAA7E6B0}'>
+        <File Id="OpenRPA.IE.resources.dll_de" Source="!(wix.IESource)\de\OpenRPA.IE.resources.dll" />
+      </Component>
+      <Component Id='IEComponentda' Win64='yes' Directory="IEda" Guid='{5FE9F469-675A-4A39-9C0B-CEFC2CD49694}'>
+        <File Id="OpenRPA.IE.resources.dll_da" Source="!(wix.IESource)\da\OpenRPA.IE.resources.dll" />
+      </Component>
+      <Component Id='IEComponentes' Win64='yes' Directory="IEes" Guid='{30B9BB4C-0973-475A-B41A-039161B09326}'>
+        <File Id="OpenRPA.IE.resources.dll_es" Source="!(wix.IESource)\es\OpenRPA.IE.resources.dll" />
+      </Component>
+      <Component Id='IEComponentpt' Win64='yes' Directory="IEpt" Guid='{7D98B4F0-CA35-4D39-A2FE-F2A33DABBC09}'>
+        <File Id="OpenRPA.IE.resources.dll_pt" Source="!(wix.IESource)\pt\OpenRPA.IE.resources.dll" />
+      </Component>
+      <Component Id='IEComponentro' Win64='yes' Directory="IEro" Guid='{31444029-2D41-4A11-9056-4560420AB806}'>
+        <File Id="OpenRPA.IE.resources.dll_ro" Source="!(wix.IESource)\ro\OpenRPA.IE.resources.dll" />
+      </Component>
+      <Component Id='IEComponentru' Win64='yes' Directory="IEru" Guid='{DC89F690-5A3B-4E54-84DF-9DF81D3AFB56}'>
+        <File Id="OpenRPA.IE.resources.dll_ru" Source="!(wix.IESource)\ru\OpenRPA.IE.resources.dll" />
+      </Component>
+
+    </ComponentGroup>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="IEde" Name="de">
+      </Directory>
+      <Directory Id="IEda" Name="da">
+      </Directory>
+      <Directory Id="IEes" Name="es">
+      </Directory>
+      <Directory Id="IEpt" Name="pt">
+      </Directory>
+      <Directory Id="IEro" Name="ro">
+      </Directory>
+      <Directory Id="IEru" Name="ru">
+      </Directory>
+    </DirectoryRef>
+
+  </Fragment>
+</Wix>

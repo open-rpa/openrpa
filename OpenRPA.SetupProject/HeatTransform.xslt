@@ -6,6 +6,8 @@
 
   <xsl:output method="xml" encoding="UTF-8" indent="yes" />
 
+  <xsl:key match="wix:Component[ substring( wix:File/@Source, string-length( wix:File/@Source ) - 10 ) = 'OpenRPA.exe' ]" use="@Id" name="RemoveFile"  />
+  
   <xsl:template match="wix:Wix">
     <xsl:copy>
       <!-- The following enters the directive for adding the config.wxi include file to the dynamically generated file -->
@@ -34,5 +36,7 @@
       <xsl:apply-templates select="@*|node()" />
     </xsl:copy>
   </xsl:template>
+
+  <xsl:template match="*[ self::wix:Component or self::wix:ComponentRef ][ key( 'RemoveFile', @Id ) ]" />
 
 </xsl:stylesheet>

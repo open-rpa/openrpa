@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="OpenFlowDBComponents">
+      <Component Id='OpenFlowDBComponent' Guid='{B933EDED-15A4-44D7-8137-9499A3F9167E}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="OpenRPA.OpenFlowDB.dll" Source="!(wix.OpenFlowDBSource)\OpenRPA.OpenFlowDB.dll" />
+      </Component>
+      
+      <Component Id='OpenFlowDBComponentde' Win64='yes' Directory="OpenFlowDBde" Guid='{E6AB04E6-454A-4248-B95F-B5ABF39FC710}'>
+        <File Id="OpenRPA.OpenFlowDB.resources.dll_de" Source="!(wix.OpenFlowDBSource)\de\OpenRPA.OpenFlowDB.resources.dll" />
+      </Component>
+      <Component Id='OpenFlowDBComponentda' Win64='yes' Directory="OpenFlowDBda" Guid='{81081A07-79A6-4945-9ACC-F7270DA5383B}'>
+        <File Id="OpenRPA.OpenFlowDB.resources.dll_da" Source="!(wix.OpenFlowDBSource)\da\OpenRPA.OpenFlowDB.resources.dll" />
+      </Component>
+      <Component Id='OpenFlowDBComponentes' Win64='yes' Directory="OpenFlowDBes" Guid='{98C4BCF9-73A6-4CFA-B82C-B4E16DE229FB}'>
+        <File Id="OpenRPA.OpenFlowDB.resources.dll_es" Source="!(wix.OpenFlowDBSource)\es\OpenRPA.OpenFlowDB.resources.dll" />
+      </Component>
+      <Component Id='OpenFlowDBComponentpt' Win64='yes' Directory="OpenFlowDBpt" Guid='{71743BCD-B4EB-4724-9FBC-310A595C715B}'>
+        <File Id="OpenRPA.OpenFlowDB.resources.dll_pt" Source="!(wix.OpenFlowDBSource)\pt\OpenRPA.OpenFlowDB.resources.dll" />
+      </Component>
+      <Component Id='OpenFlowDBComponentro' Win64='yes' Directory="OpenFlowDBro" Guid='{A09DF647-0B75-4BF9-BC16-BCEEC079DCB7}'>
+        <File Id="OpenRPA.OpenFlowDB.resources.dll_ro" Source="!(wix.OpenFlowDBSource)\ro\OpenRPA.OpenFlowDB.resources.dll" />
+      </Component>
+      <Component Id='OpenFlowDBComponentru' Win64='yes' Directory="OpenFlowDBru" Guid='{A724563E-3149-4059-966A-99CEC3319760}'>
+        <File Id="OpenRPA.OpenFlowDB.resources.dll_ru" Source="!(wix.OpenFlowDBSource)\ru\OpenRPA.OpenFlowDB.resources.dll" />
+      </Component>
+
+    </ComponentGroup>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="OpenFlowDBde" Name="de">
+      </Directory>
+      <Directory Id="OpenFlowDBda" Name="da">
+      </Directory>
+      <Directory Id="OpenFlowDBes" Name="es">
+      </Directory>
+      <Directory Id="OpenFlowDBpt" Name="pt">
+      </Directory>
+      <Directory Id="OpenFlowDBro" Name="ro">
+      </Directory>
+      <Directory Id="OpenFlowDBru" Name="ru">
+      </Directory>
+    </DirectoryRef>
+
+  </Fragment>
+</Wix>

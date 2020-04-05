@@ -6,7 +6,7 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>70e2e351-ac0d-486d-b357-b890ef20d1c8</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>OpenRPASetupProject</OutputName>
+    <OutputName>OpenRPA</OutputName>
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -17,10 +17,25 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <SuppressPdbOutput>True</SuppressPdbOutput>
+    <VerboseOutput>False</VerboseOutput>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="compOffice.wxs" />
     <Compile Include="compMain.wxs" />
+    <Compile Include="compForms.wxs" />
+    <Compile Include="compIE.wxs" />
+    <Compile Include="compNM.wxs" />
+    <Compile Include="compImage.wxs" />
+    <Compile Include="compScript.wxs" />
+    <Compile Include="compAviRecorder.wxs" />
+    <Compile Include="compOpenFlowDB.wxs" />
+    <Compile Include="compFileWatcher.wxs" />
+    <Compile Include="compJava.wxs" />
+    <Compile Include="compElisRossum.wxs" />
+    <Compile Include="compPDPlugin.wxs" />
+    <Compile Include="compRDServicePlugin.wxs" />
+    <Compile Include="compUtilities.wxs" />
     <Compile Include="FeatureTreeDlg.wxs" />
     <Compile Include="mainfiles.wxs" />
     <Compile Include="Product.wxs" />
@@ -40,14 +55,17 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="debug.txt" />
+    <Content Include="HeatTransform2.xslt" />
     <Content Include="custom.xsl" />
     <Content Include="harvestMain.bat" />
+    <Content Include="HeatTransform.xslt" />
     <Content Include="lanEN.wxi" />
     <Content Include="open_rpa.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CheckForOffice\CheckForOffice.csproj">
-      <Name>CheckForOffice</Name>
+    <ProjectReference Include="..\OpenRPA.SetupActions\OpenRPA.SetupActions.csproj">
+      <Name>OpenRPA.SetupActions</Name>
       <Project>{52af10f7-dcf9-4e1d-b4dd-331456671118}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>

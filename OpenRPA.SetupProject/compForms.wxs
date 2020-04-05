@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="FormsComponents">
+      <Component Id='FormsComponent' Guid='{C416A9B1-DC68-4551-A704-57E621E2C9F5}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="ControlzEx.dll" Source="!(wix.FormsSource)\ControlzEx.dll" />
+        <File Id="Forge.Forms.dll" Source="!(wix.FormsSource)\Forge.Forms.dll" />
+        <File Id="Humanizer.dll" Source="!(wix.FormsSource)\Humanizer.dll" />
+        <File Id="MahApps.Metro.dll" Source="!(wix.FormsSource)\MahApps.Metro.dll" />
+        <File Id="MaterialDesignColors.dll" Source="!(wix.FormsSource)\MaterialDesignColors.dll" />
+        <File Id="MaterialDesignThemes.Wpf.dll" Source="!(wix.FormsSource)\MaterialDesignThemes.Wpf.dll" />
+        <File Id="OpenRPA.Forms.dll" Source="!(wix.FormsSource)\OpenRPA.Forms.dll" />
+        <File Id="ToastNotifications.dll" Source="!(wix.FormsSource)\ToastNotifications.dll" />
+        <File Id="ToastNotifications.Messages.dll" Source="!(wix.FormsSource)\ToastNotifications.Messages.dll" />
+      </Component>
+      <Component Id='FormsComponentde' Win64='yes' Directory="Formsde">
+        <File Id="OpenRPA.Forms.resources.dll_de" Source="!(wix.FormsSource)\de\OpenRPA.Forms.resources.dll" />
+      </Component>
+      <Component Id='FormsComponentda' Win64='yes' Directory="Formsda">
+        <File Id="OpenRPA.Forms.resources.dll_da" Source="!(wix.FormsSource)\da\OpenRPA.Forms.resources.dll" />
+      </Component>
+      <Component Id='FormsComponentes' Win64='yes' Directory="Formses">
+        <File Id="OpenRPA.Forms.resources.dll_es" Source="!(wix.FormsSource)\es\OpenRPA.Forms.resources.dll" />
+      </Component>
+      <Component Id='FormsComponentpt' Win64='yes' Directory="Formspt">
+        <File Id="OpenRPA.Forms.resources.dll_pt" Source="!(wix.FormsSource)\pt\OpenRPA.Forms.resources.dll" />
+      </Component>
+      <Component Id='FormsComponentro' Win64='yes' Directory="Formsro">
+        <File Id="OpenRPA.Forms.resources.dll_ro" Source="!(wix.FormsSource)\ro\OpenRPA.Forms.resources.dll" />
+      </Component>
+      <Component Id='FormsComponentru' Win64='yes' Directory="Formsru">
+        <File Id="OpenRPA.Forms.resources.dll_ru" Source="!(wix.FormsSource)\ru\OpenRPA.Forms.resources.dll" />
+      </Component>
+
+    </ComponentGroup>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="Formsde" Name="de">
+      </Directory>
+      <Directory Id="Formsda" Name="da">
+      </Directory>
+      <Directory Id="Formses" Name="es">
+      </Directory>
+      <Directory Id="Formspt" Name="pt">
+      </Directory>
+      <Directory Id="Formsro" Name="ro">
+      </Directory>
+      <Directory Id="Formsru" Name="ru">
+      </Directory>
+    </DirectoryRef>
+
+  </Fragment>
+</Wix>

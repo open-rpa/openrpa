@@ -16,13 +16,14 @@
   <?if $(var.Platform) = x64 ?>
   <?define Win64 = "yes" ?>
   <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
-  <?define openrpaExeSourcePath = "$(var.ProjectDir)..\OpenRPA\bin\PrepInstaller\net462\OpenRPA.exe" ?>
+  <?define openrpaExeSourcePath = "$(var.ProjectDir)..\OpenRPA\bin\PrepInstaller\net472\OpenRPA.exe" ?>
   <?else ?>
   <?define Win64 = "no" ?>
   <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
-  <?define openrpaExeSourcePath = "$(var.ProjectDir)..\OpenRPA\bin\PrepInstaller\net462\OpenRPA.exe" ?>
+  <?define openrpaExeSourcePath = "$(var.ProjectDir)..\OpenRPA\bin\PrepInstaller\net472\OpenRPA.exe" ?>
   <?endif ?>
-  <Product Id="*" Name="!(loc.ApplicationName)" Language="!(loc.Language)" Version="$(var.VersionNumber)" Manufacturer="!(loc.ManufacturerFullName)" UpgradeCode="$(var.UpgradeCode)" >
+  <Product Id="*" Name="!(loc.ApplicationName)" Language="!(loc.Language)" Version="$(var.VersionNumber)" Manufacturer="!(loc.ManufacturerFullName)" 
+           UpgradeCode="$(var.UpgradeCode)" >
 		<Package InstallerVersion="200" Compressed="yes"  Platform="x64" InstallScope="perMachine" />
     <!-- InstallScope="perMachine" -->
 
@@ -35,30 +36,33 @@
 
     <Property Id="INSTALLOFFICEFEATURE" Value="TRUE" />
 
-    <WixVariable Id="MainSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA\bin\PrepInstaller\net462"/>
-    <WixVariable Id="MainSource2" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.NativeMessagingHost\bin\PrepInstaller\net462"/>
-    <WixVariable Id="OfficeSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Office\bin\PrepInstaller\net462"/>
-    <WixVariable Id="FormsSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Forms\bin\PrepInstaller\net462"/>
-    <WixVariable Id="IESource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.IE\bin\PrepInstaller\net462"/>
-    <WixVariable Id="NMSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.NM\bin\PrepInstaller\net462"/>
-    <WixVariable Id="ImageSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Image\bin\PrepInstaller\net462"/>
-    <WixVariable Id="JavaSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Java\bin\PrepInstaller\net462"/>
-    <WixVariable Id="ScriptSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Script\bin\PrepInstaller\net462"/>
-    <WixVariable Id="AviRecorderSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.AviRecorder\bin\PrepInstaller\net462"/>
-    <WixVariable Id="OpenFlowDBSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.OpenFlowDB\bin\PrepInstaller\net462"/>
-    <WixVariable Id="RDServicePluginSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.RDServicePlugin\bin\PrepInstaller\net462"/>
-    <WixVariable Id="FileWatcherSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.FileWatcher\bin\PrepInstaller\net462"/>
-    <WixVariable Id="ElisRossumSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Elis.Rossum\bin\PrepInstaller\net462"/>
-    <WixVariable Id="PDPluginSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.PDPlugin\bin\PrepInstaller\net462"/>
-    <WixVariable Id="UtilitiesSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Utilities\bin\PrepInstaller\net462"/>
+    <WixVariable Id="MainSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA\bin\PrepInstaller\net472"/>
+    <WixVariable Id="MainSource2" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.NativeMessagingHost\bin\PrepInstaller\net472"/>
+    <WixVariable Id="OfficeSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Office\bin\PrepInstaller\net472"/>
+    <WixVariable Id="FormsSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Forms\bin\PrepInstaller\net472"/>
+    <WixVariable Id="IESource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.IE\bin\PrepInstaller\net472"/>
+    <WixVariable Id="NMSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.NM\bin\PrepInstaller\net472"/>
+    <WixVariable Id="ImageSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Image\bin\PrepInstaller\net472"/>
+    <WixVariable Id="JavaSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Java\bin\PrepInstaller\net472"/>
+    <WixVariable Id="ScriptSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Script\bin\PrepInstaller\net472"/>
+    <WixVariable Id="AviRecorderSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.AviRecorder\bin\PrepInstaller\net472"/>
+    <WixVariable Id="OpenFlowDBSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.OpenFlowDB\bin\PrepInstaller\net472"/>
+    <WixVariable Id="RDServicePluginSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.RDServicePlugin\bin\PrepInstaller\net472"/>
+    <WixVariable Id="FileWatcherSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.FileWatcher\bin\PrepInstaller\net472"/>
+    <WixVariable Id="ElisRossumSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Elis.Rossum\bin\PrepInstaller\net472"/>
+    <WixVariable Id="PDPluginSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.PDPlugin\bin\PrepInstaller\net472"/>
+    <WixVariable Id="UtilitiesSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Utilities\bin\PrepInstaller\net472"/>
+    <WixVariable Id="UpdaterSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Updater\bin\PrepInstaller\net472"/>
     
+
 
 
     <Feature Id="MainFeature" Title="OpenRPA Core Components" Level="1" Absent='disallow' AllowAdvertise='no' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
       <!--  Display="hidden" -->
       <ComponentGroupRef Id="MainComponents" />
       <ComponentGroupRef Id="UtilitiesComponents" />
-      <ComponentGroupRef Id="MainComponentFiles" />
+      <ComponentGroupRef Id="UpdaterComponents" />
+      <!--<ComponentGroupRef Id="MainComponentFiles" />-->
     </Feature>
     <Feature Id="OpenFlowDBFeature" Title="OpenFlow specific activities" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
       <ComponentGroupRef Id="OpenFlowDBComponents" />
@@ -85,17 +89,17 @@
     <Feature Id="ScriptFeature" Title="Generic Scripting support" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
       <ComponentGroupRef Id="ScriptComponents" />
     </Feature>
-    <Feature Id="RDServicePluginFeature" Title="High Density robots using Remote Desktop" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
-      <ComponentGroupRef Id="RDServicePluginComponents" />
+    <Feature Id="FileWatcherFeature" Title="File Watcher run plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
+      <ComponentGroupRef Id="FileWatcherComponents" />
     </Feature>
     <Feature Id="AviRecorderFeature" Title="AviRecord activities and Run plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
       <ComponentGroupRef Id="AviRecorderComponents" />
     </Feature>
-    <Feature Id="FileWatcherFeature" Title="File Watcher run plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
-      <ComponentGroupRef Id="FileWatcherComponents" />
-    </Feature>
     <Feature Id="ElisRossumFeature" Title="Invoice scanning using Elis Rossum" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
       <ComponentGroupRef Id="ElisRossumComponents" />
+    </Feature>
+    <Feature Id="RDServicePluginFeature" Title="High Density robots using Remote Desktop" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
+      <ComponentGroupRef Id="RDServicePluginComponents" />
     </Feature>
     <Feature Id="PDPluginFeature" Title="Process Discovery Harvesting Run Plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
       <ComponentGroupRef Id="PDPluginComponents" />
@@ -117,7 +121,7 @@
                   Name="OpenRPA"
                   Description="OpenRPA"
                   Target="[#openrpaExe]"
-                  WorkingDirectory="APPLICATIONROOTDIRECTORY"/>
+                  WorkingDirectory="INSTALLDIR"/>
         <RemoveFolder Id="CleanUpShortCut" Directory="ApplicationProgramsFolder" On="uninstall"/>
         <RegistryValue Root="HKCU" Key="Software\OpenRPA" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
       </Component>

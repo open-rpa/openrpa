@@ -1,14 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <Authors>OpenRPA</Authors>
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office, created for OpenRPA robot</Description>
-    <Version>1.0.18</Version>
-    <PackageReleaseNotes>1.0.19 Add RunSlideShow, fix pia references
+    <Version>1.0.20</Version>
+    <PackageReleaseNotes>1.0.20 Bump to framework 4.7.2
+1.0.19 Add RunSlideShow, fix pia references
 1.0.18 Add langauges and bug fixes
 1.0.17 Fix excel loop snippet after moving download to OpenRPA.Utilities
 1.0.15 update interfaces reference

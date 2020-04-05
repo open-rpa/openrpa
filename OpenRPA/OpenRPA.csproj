@@ -2,7 +2,7 @@
   <PropertyGroup>
     <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <ApplicationIcon>Resources\open_rpa.ico</ApplicationIcon>
     <StartupObject />
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -10,7 +10,7 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.89</Version>
+    <Version>1.0.90</Version>
     <PackageReleaseNotes>1.0.89 Improve plugin loading speed
 1.0.88 Add support for saving email attachments / Improve nm addon 
 1.0.87 Add support for translation of property displaynames and descriptions

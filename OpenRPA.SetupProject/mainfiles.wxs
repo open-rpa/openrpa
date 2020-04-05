@@ -2,1204 +2,236 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Fragment>
         <DirectoryRef Id="INSTALLDIR">
-            <Component Id="cmp8F831E6B3AFD94EE2834BBA61A7E1E8E" Guid="{D9C03958-535D-48C6-831F-C7D91BC61FA9}" Win64="yes">
-                <File Id="filD490978B0FA87AFBFC76FFEEA7125F82" KeyPath="yes" Source="!(wix.MainSource)\debug.log" />
-            </Component>
-            <Component Id="cmp9436871E84C09046B1723D8987C046DB" Guid="{9E15163C-8319-4AAE-81AE-925857BA4807}" Win64="yes">
-                <File Id="fil5A4BD987D2852D4ABC653BD9F45AC1F3" KeyPath="yes" Source="!(wix.MainSource)\DotNetProjects.DataVisualization.Toolkit.dll" />
-            </Component>
-            <Component Id="cmp7BE01297D830E7FE8D98822E731FBFAB" Guid="{80D172ED-AB7A-40E4-955C-6AFB9CDAA29C}" Win64="yes">
-                <File Id="fil32CB20C686F2A6C01A3E679A4C6D58C6" KeyPath="yes" Source="!(wix.MainSource)\DotNetProjects.Input.Toolkit.dll" />
-            </Component>
-            <Component Id="cmp442A7A87DA69C9B56F30577E04A4E4D9" Guid="{063EA734-64F4-4775-BCDA-1CAAF955975A}" Win64="yes">
-                <File Id="fil403875F1BC31A5787C30F5A9187BCC2B" KeyPath="yes" Source="!(wix.MainSource)\DotNetProjects.Layout.Toolkit.dll" />
-            </Component>
-            <Component Id="cmp570A0F73E234FD7D0A3F3F8DA49D4573" Guid="{3BCA8A5B-3870-4DD4-8A20-E4553D9A34C1}" Win64="yes">
-                <File Id="fil6B6A91279F72BDFAC94FA2C53DD4E0E0" KeyPath="yes" Source="!(wix.MainSource)\DotNetProjects.WPF.Themes.dll" />
-            </Component>
-            <Component Id="cmp5F2514DEF2E5E4485E49CCF5AF077A28" Guid="{E60698F5-284D-4D02-8C90-30CFF1AE3F4A}" Win64="yes">
-                <File Id="filC867EA0A820F3E5F56622396F0E263C1" KeyPath="yes" Source="!(wix.MainSource)\FlaUI.Core.dll" />
-            </Component>
-            <Component Id="cmp0D7E6005B4E529000333F80EEBC03C5D" Guid="{AA6D8D75-576E-4ECD-B9C4-D3B736E37346}" Win64="yes">
-                <File Id="filA0FEE3F77E25D1C480F6F18CD547B5BC" KeyPath="yes" Source="!(wix.MainSource)\FlaUI.UIA3.dll" />
-            </Component>
-            <Component Id="cmp0E16CB47C3F6B22E2FFDD2CC515AD1C8" Guid="{C5AF20F6-2D57-4C18-86CA-BADFA4D2580C}" Win64="yes">
-                <File Id="fil6D3D5546417727749907FC9E19D97FF8" KeyPath="yes" Source="!(wix.MainSource)\ICSharpCode.AvalonEdit.dll" />
-            </Component>
-            <Component Id="cmp168937271E3F3C72BE0B38E39A0BA056" Guid="{CA4D9798-1C92-4159-86BE-FF2E771B3F3C}" Win64="yes">
-                <File Id="fil9727C0AE97C7A52B6BA6DABB13D9BA49" KeyPath="yes" Source="!(wix.MainSource)\Interop.UIAutomationClient.dll" />
-            </Component>
-            <Component Id="cmp4F07074C4BF7BF4016DD5A470E2B9637" Guid="{25DFE77A-D4FD-45D5-B5F7-012022090F92}" Win64="yes">
-                <File Id="fil48A502818AF34CF3F90310C0DDE65DF8" KeyPath="yes" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.CSharp.dll" />
-            </Component>
-            <Component Id="cmp1E7D2794EE468678DC04DD756AA9D768" Guid="{12E1BF40-5AE7-4EEA-BE2F-A19B38A4A52E}" Win64="yes">
-                <File Id="fil11D1819F81DFD4511A8F9CE349C387F7" KeyPath="yes" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.CSharp.Features.dll" />
-            </Component>
-            <Component Id="cmp263602B88905943FD55E9B1A4088F2E1" Guid="{7AAB02E0-46F4-469E-A87B-00FFCED4BE50}" Win64="yes">
-                <File Id="fil19CF8ADEC4D357067D7436808E530ECE" KeyPath="yes" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.CSharp.Workspaces.dll" />
-            </Component>
-            <Component Id="cmpDA296E172B5770F0FA3EEE7889D77464" Guid="{632793E9-1EDB-423B-866F-61771AF021B2}" Win64="yes">
-                <File Id="filA694FFFBA0D6ABE28FDF8C85A0AEA552" KeyPath="yes" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.dll" />
-            </Component>
-            <Component Id="cmpDDDF532E331CC580F34D260C385E5BB4" Guid="{6D7A9328-D346-4154-BACA-46F1E6E3FFFA}" Win64="yes">
-                <File Id="filA528053A0C157E7F873A7E2028E87202" KeyPath="yes" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.Features.dll" />
-            </Component>
-            <Component Id="cmp59C7872C7564331AB9CCCF610E6D7B73" Guid="{4A48B6BF-507D-4B4F-A950-AC6C44CFB33F}" Win64="yes">
-                <File Id="fil7592E7F010975DA8A9E8F2D930A00944" KeyPath="yes" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.FlowAnalysis.Utilities.dll" />
-            </Component>
-            <Component Id="cmp32F256F0739B5E664E97843D18BECABB" Guid="{BEE667CC-B46F-449E-A047-36B764B3CF3A}" Win64="yes">
-                <File Id="filBB99E52B21192E7D2453BCF3706FA61E" KeyPath="yes" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.VisualBasic.dll" />
-            </Component>
-            <Component Id="cmpAD14CCAA4C75AB1FE7314571C3878134" Guid="{DF23259E-2585-4DBF-A23A-7E6F02167E86}" Win64="yes">
-                <File Id="filFDE5D0DE119D17C35BF28D30ADCDCF5D" KeyPath="yes" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.VisualBasic.Features.dll" />
-            </Component>
-            <Component Id="cmp2E574AF4AA73FD55EBEBDDA470F23145" Guid="{66946800-FC4D-46AE-8B34-C6341F8C3167}" Win64="yes">
-                <File Id="fil6FB1F3A80B56FDE7F980C8573E18525D" KeyPath="yes" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.VisualBasic.Workspaces.dll" />
-            </Component>
-            <Component Id="cmpB5C70718C06F34BC9EAA57BE3C948BBE" Guid="{7018588D-5B17-4FD7-8929-BF37D983E97B}" Win64="yes">
-                <File Id="filC0A966D19B84FD6A4969DA43A99C882B" KeyPath="yes" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.Workspaces.dll" />
-            </Component>
-            <Component Id="cmpB84FF3E662CF624991495002BF1BC88D" Guid="{CDA324D8-FC6D-468D-B33B-6A19AEF90EDC}" Win64="yes">
-                <File Id="fil05A7E61A6DFFA36C9ED0BAF2B52724DF" KeyPath="yes" Source="!(wix.MainSource)\Microsoft.DiaSymReader.dll" />
-            </Component>
-            <Component Id="cmpFC2072AC6AB749CFD7255D8127B1D945" Guid="{CAC62972-FB9A-4EB9-A4BA-D0F411683BB2}" Win64="yes">
-                <File Id="fil9394A47DDAD5C82DE43D4227296DDBFB" KeyPath="yes" Source="!(wix.MainSource)\Microsoft.Win32.Primitives.dll" />
-            </Component>
-            <Component Id="cmpACFF2DEC99E6BC166A0253634ED41A4F" Guid="{29771ED7-5740-4E26-971B-B4DB906AACF7}" Win64="yes">
-                <File Id="fil21E384679BF7C5ECBD525841F6692B51" KeyPath="yes" Source="!(wix.MainSource)\netstandard.dll" />
-            </Component>
-            <Component Id="cmp1874AB219070404EED322213C6A1A49E" Guid="{1CDA6BB3-7F0F-4CB7-8246-9099BACBDF6F}" Win64="yes">
-                <File Id="fil05FF769999D602AD4FA6A489C44ED290" KeyPath="yes" Source="!(wix.MainSource)\Newtonsoft.Json.dll" />
-            </Component>
-            <Component Id="cmp770B497917674F316826C902746C0409" Guid="{268BBCD8-8C26-426B-9A6F-894FF1B36043}" Win64="yes">
-                <File Id="filB9D0C89E2BE03F54B6210850B37C7B82" KeyPath="yes" Source="!(wix.MainSource)\NLog.dll" />
-            </Component>
-            <Component Id="cmp7573EC2390E2B47667BC392F0AB1294C" Guid="{C869DF33-D60B-4834-8260-557696FC7DFA}" Win64="yes">
-                <File Id="fil793549DAC9BBACE3FE0A2C6207439558" KeyPath="yes" Source="!(wix.MainSource)\NuGet.Common.dll" />
-            </Component>
-            <Component Id="cmp5D12C26270BD09CA3D45919FA8719AE2" Guid="{1D5ADC15-B5EE-4802-8C93-77D84357B418}" Win64="yes">
-                <File Id="fil1914470A96C406BB700EBFE4DFAB0CEF" KeyPath="yes" Source="!(wix.MainSource)\NuGet.Configuration.dll" />
-            </Component>
-            <Component Id="cmp5B4B4955C58608067B41D6BE02863260" Guid="{356EE541-94CF-4907-8642-2FB2E8E597BD}" Win64="yes">
-                <File Id="filC77BFD5C891086AC3DFE76BB004671EB" KeyPath="yes" Source="!(wix.MainSource)\NuGet.Frameworks.dll" />
-            </Component>
-            <Component Id="cmp4D072D5842DFB1E9399C435C746D295F" Guid="{8EEB4935-E278-43DB-B246-2F90D039274E}" Win64="yes">
-                <File Id="filA46D093A333210FF3DF479B37CE2796C" KeyPath="yes" Source="!(wix.MainSource)\NuGet.Packaging.dll" />
-            </Component>
-            <Component Id="cmp8CEEE4D31E44E6E8FE9E1E1B6213B6C3" Guid="{2DE556E3-D5D9-4714-BF49-E39ABFAD2231}" Win64="yes">
-                <File Id="fil3EFEB876BC03C56EB2BD3B5232C1DB09" KeyPath="yes" Source="!(wix.MainSource)\NuGet.Protocol.dll" />
-            </Component>
-            <Component Id="cmpFC9B48C936530BDA5B4EA99C9A0DAC10" Guid="{99F37377-2C34-4CA9-930C-EE87D545951E}" Win64="yes">
-                <File Id="fil5A46BE503A05AA31B5318277C4BB848F" KeyPath="yes" Source="!(wix.MainSource)\NuGet.Resolver.dll" />
-            </Component>
-            <Component Id="cmpEEB4733FD782D8FCC77902F908470D17" Guid="{158300CC-3335-411E-86E0-6F6DD5A02DF7}" Win64="yes">
-                <File Id="filFAE94905D72D8368BA8CE7A78C6DEA45" KeyPath="yes" Source="!(wix.MainSource)\NuGet.Versioning.dll" />
-            </Component>
-            <Component Id="cmpCB48DEBB3EC8B625F5A8D25D431A183B" Guid="{186E641F-646D-4213-BC86-B57008E2643D}" Win64="yes">
-                <File Id="fil6E894942E6ADFA63F3967E0A27F05784" KeyPath="yes" Source="!(wix.MainSource)\OpenRPA.CodeEditor.dll" />
-            </Component>
-            <Component Id="cmpD9C87A155F6F3A8C351457DA11F29592" Guid="{4B00D13C-374A-432D-B85F-3BC4070FDBC0}" Win64="yes">
-                <File Id="filF0FF646DFA53CCC3ABA2E049427B7EBE" KeyPath="yes" Source="!(wix.MainSource)\OpenRPA.CodeEditor.dll.config" />
-            </Component>
-            <Component Id="cmp3A533C6B2CB1C7BF544C404BCCB23979" Guid="{AEA9C1FC-A207-44E3-A9E7-4AEC1785C3E3}" Win64="yes">
-                <File Id="filFBB9AEF643789F56759A22B8A80601D1" KeyPath="yes" Source="!(wix.MainSource)\OpenRPA.CodeEditor.pdb" />
-            </Component>
-            
-            <Component Id="cmpEBFA6F2431B12910EEA710045362AE3C" Guid="{B06E2489-35D4-40B1-9531-CD89193F3414}" Win64="yes">
-                <File Id="fil57AE31DC28AB7B6FFDA5F69E89C07922" KeyPath="yes" Source="!(wix.MainSource)\OpenRPA.exe.config" />
-            </Component>
-            <Component Id="cmp765B622764B9FACE61914D92C0138224" Guid="{CC56F35C-35D6-44B9-A4C9-4B2DAD371978}" Win64="yes">
-                <File Id="filDE9EE88175C8A92C8C6EDAEEC002AF7A" KeyPath="yes" Source="!(wix.MainSource)\OpenRPA.Interfaces.dll" />
-            </Component>
-            <Component Id="cmp2B2B21C7360775B5438819D87B17248C" Guid="{9E901D41-4524-46F4-9D8B-BE4EDB49C412}" Win64="yes">
-                <File Id="filFF54CF59743AF55394EB12323FDBE831" KeyPath="yes" Source="!(wix.MainSource)\OpenRPA.Interfaces.pdb" />
-            </Component>
-            <Component Id="cmp3996E9035E948184F258B10FF11016D3" Guid="{79796A1E-6080-4632-8B3B-C77BABDFA367}" Win64="yes">
-                <File Id="filA3BCD5A3D7D25B0128DBA215D4662EC5" KeyPath="yes" Source="!(wix.MainSource)\OpenRPA.NamedPipeWrapper.dll" />
-            </Component>
-            <Component Id="cmp94B7F56EDC7C36D8DDF9B710373707C9" Guid="{EE2B9D4A-FD93-4AE5-B156-88F13DC7F942}" Win64="yes">
-                <File Id="fil9648E6F12C5BE79DFC2FB3BF81822475" KeyPath="yes" Source="!(wix.MainSource)\OpenRPA.NamedPipeWrapper.pdb" />
-            </Component>
-            <Component Id="cmpD321845D7D57B4324098B84486C9BAC4" Guid="{BD514E00-D17B-484B-A9A5-9E9E330F0D5A}" Win64="yes">
-                <File Id="filC6183D826FBAEDB32E8F9DBD1F7E15A4" KeyPath="yes" Source="!(wix.MainSource)\OpenRPA.Net.dll" />
-            </Component>
-            <Component Id="cmp698D7EC6CF226763BEE03D55D8B6B646" Guid="{005EBEEF-3CF2-470F-9A24-A9B9A6C9E61F}" Win64="yes">
-                <File Id="fil759AA304225769560185F794E39E6D4E" KeyPath="yes" Source="!(wix.MainSource)\OpenRPA.Net.pdb" />
-            </Component>
-            <Component Id="cmpEE43DB2A2FEDDD1EA0D7F8B8FC0B1690" Guid="{CE793E75-F2B6-4A1C-A81A-E76315934539}" Win64="yes">
-                <File Id="fil67325D5397BD733A4B3C2CC079252F7C" KeyPath="yes" Source="!(wix.MainSource)\OpenRPA.pdb" />
-            </Component>
-            <Component Id="cmp09713FE74EA723FA7C0F860AB69DA254" Guid="{5DF74067-BC38-4DEC-A1CA-04400458A951}" Win64="yes">
-                <File Id="filDB9CDEE3C08EDAA50BF126AEF358BCFC" KeyPath="yes" Source="!(wix.MainSource)\OpenRPA.Windows.dll" />
-            </Component>
-            <Component Id="cmpBBE8B538326AA17A34F69A7B96D5EAFF" Guid="{D72893DE-549C-47E6-BC9D-69EA4516F42E}" Win64="yes">
-                <File Id="filC25767F56A09684A9CDBB90D5A27E396" KeyPath="yes" Source="!(wix.MainSource)\OpenRPA.Windows.pdb" />
-            </Component>
-            <Component Id="cmp2DF0B2895DFC3CB720B48A6D9BFD37EF" Guid="{1CA64DA1-117B-4397-B6A2-EB12BE3B86AC}" Win64="yes">
-                <File Id="fil759547BBD39D067958C66E9281A84E0E" KeyPath="yes" Source="!(wix.MainSource)\System.AppContext.dll" />
-            </Component>
-            <Component Id="cmp73085246C202ABD1D96D2E5DEFB2A801" Guid="{24445F5D-A759-4E10-9209-48C9CFC015BE}" Win64="yes">
-                <File Id="filEDD81E77BF6933BF90C42AE0EFAA681B" KeyPath="yes" Source="!(wix.MainSource)\System.Buffers.dll" />
-            </Component>
-            <Component Id="cmpFCAB0086ACF92637C85CEFB939B694E1" Guid="{7FD9191A-F4C9-4A6B-A858-C896F40EF2E0}" Win64="yes">
-                <File Id="filAD99C15B3296CE6AABBE5BB40D132051" KeyPath="yes" Source="!(wix.MainSource)\System.Collections.Concurrent.dll" />
-            </Component>
-            <Component Id="cmpE4B4F7691D3ACD4A72AE99FFE470CE17" Guid="{6860EC25-E696-4210-BEFE-992EE28CA6F0}" Win64="yes">
-                <File Id="filF5B5D111739157EBBB5E22D86DF5780A" KeyPath="yes" Source="!(wix.MainSource)\System.Collections.dll" />
-            </Component>
-            <Component Id="cmp33FDA478CB86F083519801379B2D2D8B" Guid="{BF85CD44-378E-4C76-AFE0-9136900CAF12}" Win64="yes">
-                <File Id="fil5D4575804C3CE3ACC76FF53290806177" KeyPath="yes" Source="!(wix.MainSource)\System.Collections.Immutable.dll" />
-            </Component>
-            <Component Id="cmp75515765AA531707944115B02998F998" Guid="{94473EE0-00B9-4318-9164-3238A7429D45}" Win64="yes">
-                <File Id="fil6D02755830088A3C5A117FEE2B465D5D" KeyPath="yes" Source="!(wix.MainSource)\System.Collections.NonGeneric.dll" />
-            </Component>
-            <Component Id="cmp22D219EF6A7035FFC0254F6BE572FF77" Guid="{35F079CA-A79C-41E3-8ACA-7EDE8B412DF2}" Win64="yes">
-                <File Id="filCD75540AD97745722ED0A7EAABF287E1" KeyPath="yes" Source="!(wix.MainSource)\System.Collections.Specialized.dll" />
-            </Component>
-            <Component Id="cmp22AEF5790256905123AF78698CD859DD" Guid="{CA83E863-734C-46BE-9FDC-D0AE2E2784D4}" Win64="yes">
-                <File Id="fil09C18C7CA467795F6FA97EEB9E2387EB" KeyPath="yes" Source="!(wix.MainSource)\System.ComponentModel.dll" />
-            </Component>
-            <Component Id="cmp5349EC5703EBCAA1E6C7DA272802BE58" Guid="{2601B66D-9808-442B-95EF-057E528EA1A6}" Win64="yes">
-                <File Id="fil399C00E90F93D6D53C7EB4198B8E6425" KeyPath="yes" Source="!(wix.MainSource)\System.ComponentModel.EventBasedAsync.dll" />
-            </Component>
-            <Component Id="cmp7B3236183FA982DA508702B357E3D75E" Guid="{5938969E-DB5D-46D5-AD39-E40E38BB52B6}" Win64="yes">
-                <File Id="fil832F201A04CF05CFC4CF092D70DAB4D9" KeyPath="yes" Source="!(wix.MainSource)\System.ComponentModel.Primitives.dll" />
-            </Component>
-            <Component Id="cmp58C198180EDB7D42EDD28920E1B2E513" Guid="{E810ED14-91A4-4C41-88A6-1771E07AC90A}" Win64="yes">
-                <File Id="filF9ABD40F11D5C42FF00EF312FB605BA8" KeyPath="yes" Source="!(wix.MainSource)\System.ComponentModel.TypeConverter.dll" />
-            </Component>
-            <Component Id="cmp8543922EE398EBC73A1C63DB49365F51" Guid="{276BA266-5533-4758-99B8-F0BDD8366ABA}" Win64="yes">
-                <File Id="filB5FF2765E175A6C9AD05767B340DB194" KeyPath="yes" Source="!(wix.MainSource)\System.Composition.AttributedModel.dll" />
-            </Component>
-            <Component Id="cmpBE7DC73EEBFBC82396FDB9036DB50D8F" Guid="{8E11D4E0-DF70-42E2-9B38-8E898F77BA3F}" Win64="yes">
-                <File Id="filEC8798B40F53EE426933B4A1772703AA" KeyPath="yes" Source="!(wix.MainSource)\System.Composition.Convention.dll" />
-            </Component>
-            <Component Id="cmp7E01646DC669D02446B2CE5E20301692" Guid="{CDCD4084-8698-4EA3-BB16-B5578C7A58DB}" Win64="yes">
-                <File Id="fil29E458EDBCB625D8059CFC1B5EAE625A" KeyPath="yes" Source="!(wix.MainSource)\System.Composition.Hosting.dll" />
-            </Component>
-            <Component Id="cmpF6FE4629B7F5BEB83D1837244A2B2472" Guid="{FC4FD306-DE57-48C8-A56B-813C1A2F50A7}" Win64="yes">
-                <File Id="filC3531745E3934A2AA3E3B573EF05822B" KeyPath="yes" Source="!(wix.MainSource)\System.Composition.Runtime.dll" />
-            </Component>
-            <Component Id="cmp598C0CAE46924FCFBEDE421AFC62FEAC" Guid="{F1358295-8D35-4DCB-8814-F6886A1A80CC}" Win64="yes">
-                <File Id="fil4247AF19BBEC43CB533A0DF22E9A3DEB" KeyPath="yes" Source="!(wix.MainSource)\System.Composition.TypedParts.dll" />
-            </Component>
-            <Component Id="cmp03737AA3B5F539D51D9418A6ED0E4F6C" Guid="{34BD9A05-6792-432D-AFD1-46546B074F78}" Win64="yes">
-                <File Id="fil5272CFE8A4472345C08FD356C568CCDB" KeyPath="yes" Source="!(wix.MainSource)\System.Console.dll" />
-            </Component>
-            <Component Id="cmpB25E057E8242CD01A509E8CBCAB104DA" Guid="{A97F20B0-DB16-44BA-9E14-257E34E6535F}" Win64="yes">
-                <File Id="filEE34C54941CD776131B74466DF35363A" KeyPath="yes" Source="!(wix.MainSource)\System.Data.Common.dll" />
-            </Component>
-            <Component Id="cmp44C51162C2752731AF9E2E31BB09713C" Guid="{A01C8E00-C198-4C09-999B-8C112A6E426F}" Win64="yes">
-                <File Id="filB040E785B28D49D2AB7820EA35D4E70F" KeyPath="yes" Source="!(wix.MainSource)\System.Diagnostics.Contracts.dll" />
-            </Component>
-            <Component Id="cmpB0C2F11F7CA680BF7E48B8A4268E9C98" Guid="{514D8C08-F599-4F8C-9706-999897801895}" Win64="yes">
-                <File Id="fil3C470A1D30CD627DFFBF6DD8881B668D" KeyPath="yes" Source="!(wix.MainSource)\System.Diagnostics.Debug.dll" />
-            </Component>
-            <Component Id="cmpA59732DC764B94E5F1FB4BDE22083814" Guid="{A3B06161-F8FA-48BA-B94C-91DC62955BD9}" Win64="yes">
-                <File Id="fil2F1CF172154C6293C5A6ACB1E151C0A9" KeyPath="yes" Source="!(wix.MainSource)\System.Diagnostics.FileVersionInfo.dll" />
-            </Component>
-            <Component Id="cmpF6FEF9FF36C695681C6A77FAD09A51DA" Guid="{0CEDA788-8D67-478B-B928-ABB0B8E37545}" Win64="yes">
-                <File Id="fil51269EFEE8943C4F9AB6A03955BB33AD" KeyPath="yes" Source="!(wix.MainSource)\System.Diagnostics.Process.dll" />
-            </Component>
-            <Component Id="cmpFE82493E4455C953D8F01BA5365F9C1A" Guid="{25493248-6CE3-4CEB-AF94-9DAE3DD27449}" Win64="yes">
-                <File Id="fil0F5FC5A056E90A15787004331E6B2B8F" KeyPath="yes" Source="!(wix.MainSource)\System.Diagnostics.StackTrace.dll" />
-            </Component>
-            <Component Id="cmp0E83A6F1E468052C63DFCFE168BE9F86" Guid="{5B17E506-5898-44AD-8BB0-33270B024CB3}" Win64="yes">
-                <File Id="filF010877744275880482B24613609AB8D" KeyPath="yes" Source="!(wix.MainSource)\System.Diagnostics.TextWriterTraceListener.dll" />
-            </Component>
-            <Component Id="cmp50A76DD8AF0E25149A565F185A1F29A3" Guid="{DE418738-EDAA-4AB5-B20B-BD0DA4C75029}" Win64="yes">
-                <File Id="fil89402E5A5EF55D5D1DC9EB807D0163CD" KeyPath="yes" Source="!(wix.MainSource)\System.Diagnostics.Tools.dll" />
-            </Component>
-            <Component Id="cmpDBAE7236105C33C9758DD48E8B6DCCB2" Guid="{1F561C2E-C70B-4461-810E-C87355ECA9AF}" Win64="yes">
-                <File Id="fil57119B89E434A6BBC42AE8C1D26609BF" KeyPath="yes" Source="!(wix.MainSource)\System.Diagnostics.TraceSource.dll" />
-            </Component>
-            <Component Id="cmp5686A5DCF2A08C618B3500928277C12C" Guid="{A33031AD-8C03-4AEC-AC8C-3A0FADD34EF6}" Win64="yes">
-                <File Id="fil70BB899DCE8D657F32B0FAC4DFF6638E" KeyPath="yes" Source="!(wix.MainSource)\System.Diagnostics.Tracing.dll" />
-            </Component>
-            <Component Id="cmp8D6B0D0D5B997AF1B9BB2F2784692E03" Guid="{0F4B77CC-4638-45F1-B889-4F554A1C5FAB}" Win64="yes">
-                <File Id="filB19BBDDEF37FA03C3CE38BCFF05583EC" KeyPath="yes" Source="!(wix.MainSource)\System.Drawing.Primitives.dll" />
-            </Component>
-            <Component Id="cmp15CD896C1257803F1EAAF21F13643142" Guid="{B98CE5A8-8185-4406-962C-E273FABC93C8}" Win64="yes">
-                <File Id="filC982A846E7172EA04317E0E51B86A4E6" KeyPath="yes" Source="!(wix.MainSource)\System.Dynamic.Runtime.dll" />
-            </Component>
-            <Component Id="cmp29422AE271D6B2356E2AF332D256B1DE" Guid="{C063BDB4-D7DE-4254-8384-271895716DCB}" Win64="yes">
-                <File Id="filB54F98D44891971453C10FBE1B05B1AB" KeyPath="yes" Source="!(wix.MainSource)\System.Globalization.Calendars.dll" />
-            </Component>
-            <Component Id="cmpAA087E95574A085C5201D270F443E62E" Guid="{93372C5A-3D51-48AD-9E25-9871048EE053}" Win64="yes">
-                <File Id="filAE617BAD3153A0952E9F3AC5EEF74A91" KeyPath="yes" Source="!(wix.MainSource)\System.Globalization.dll" />
-            </Component>
-            <Component Id="cmp2AE6AC0EBDF241F5A2F3268BA1ACA754" Guid="{BFB13974-EBBA-4EAF-BABB-537811AC5252}" Win64="yes">
-                <File Id="filE95A7394964F5DE38E1D4BF952444394" KeyPath="yes" Source="!(wix.MainSource)\System.Globalization.Extensions.dll" />
-            </Component>
-            <Component Id="cmp129F5F5267671C7AB542077C2BDD8D72" Guid="{D2B132AB-475C-491E-A98F-D50B6A1A914E}" Win64="yes">
-                <File Id="fil9EAB17C18CD3A8D30FCF1017E3F9B1E6" KeyPath="yes" Source="!(wix.MainSource)\System.IO.Compression.dll" />
-            </Component>
-            <Component Id="cmp23F7C2354109EC7F3034457C47235AA0" Guid="{72C48C7E-1000-4952-A876-291DC6110F12}" Win64="yes">
-                <File Id="filA88EB5E9549A3F482ECCF70642AE8E9F" KeyPath="yes" Source="!(wix.MainSource)\System.IO.Compression.ZipFile.dll" />
-            </Component>
-            <Component Id="cmp1AB2F694FBE065FEC98E27EC233540D7" Guid="{5F8B017F-EDE6-4925-9762-20559C0C748C}" Win64="yes">
-                <File Id="filF97298386D9CA5BBFEF3BA1266204948" KeyPath="yes" Source="!(wix.MainSource)\System.IO.dll" />
-            </Component>
-            <Component Id="cmp4F71FF3179249F40AA83CC5D26424EFE" Guid="{DE785BEC-951C-4F26-A145-6C9A17A6DAAC}" Win64="yes">
-                <File Id="filC6DDCD354E20866B99A7A52238AAF325" KeyPath="yes" Source="!(wix.MainSource)\System.IO.FileSystem.dll" />
-            </Component>
-            <Component Id="cmpCE934969B52A8BF6C3B94FA9636916F6" Guid="{A0E4CD9A-60AE-4FAE-AE83-2B7E0E5E4B42}" Win64="yes">
-                <File Id="fil0E00B68474AC0129918FF360842A9CBF" KeyPath="yes" Source="!(wix.MainSource)\System.IO.FileSystem.DriveInfo.dll" />
-            </Component>
-            <Component Id="cmpC99C1FCF2F2B5727FFA9240232755632" Guid="{1DB32B8E-1CE1-4E85-91B6-EA81071E7946}" Win64="yes">
-                <File Id="filC3D4C9C1D8A5E81CA2C9F12AA05C8E2F" KeyPath="yes" Source="!(wix.MainSource)\System.IO.FileSystem.Primitives.dll" />
-            </Component>
-            <Component Id="cmp39DE53A6E602C76462F0260E369F2792" Guid="{FB09B2DA-40A4-472C-AEC0-AFB8771CDCF6}" Win64="yes">
-                <File Id="fil576190832420D0AA668E4332EFFB4CBF" KeyPath="yes" Source="!(wix.MainSource)\System.IO.FileSystem.Watcher.dll" />
-            </Component>
-            <Component Id="cmp4A7BCFB5DA46BC95D2E49236FC59D8A5" Guid="{2BAADCA4-7A48-46CB-8385-71017DD4FB27}" Win64="yes">
-                <File Id="filC8B845031D596C89E35A64614B930E36" KeyPath="yes" Source="!(wix.MainSource)\System.IO.IsolatedStorage.dll" />
-            </Component>
-            <Component Id="cmp3C994A927E01FC3CC7E0AE001AF0CD4C" Guid="{2470DB62-CBF8-4701-9EBA-B09C20D5BE3D}" Win64="yes">
-                <File Id="filA22B487AC8691FA22B43B5D947EB4791" KeyPath="yes" Source="!(wix.MainSource)\System.IO.MemoryMappedFiles.dll" />
-            </Component>
-            <Component Id="cmp461F4A455CD0EB1AD2E4E35B51C09850" Guid="{557183CC-8E0B-4634-A3EC-F2EEF53DDB76}" Win64="yes">
-                <File Id="fil0B2EFCDE9779CC5CD0E6EB630A00C291" KeyPath="yes" Source="!(wix.MainSource)\System.IO.Pipes.dll" />
-            </Component>
-            <Component Id="cmp6042D98678A0BF1EE1EB0EC4AF5E5C52" Guid="{11A00439-70B5-435C-A39D-B88D67812561}" Win64="yes">
-                <File Id="fil770B68ECB2EAAA73F75AE90EC59CDF4E" KeyPath="yes" Source="!(wix.MainSource)\System.IO.UnmanagedMemoryStream.dll" />
-            </Component>
-            <Component Id="cmpEE5BBE99E2C22FC8023A8976953D2181" Guid="{B7B290E7-9A8A-419A-9337-6B571B560E30}" Win64="yes">
-                <File Id="fil9624BD0666E81BA5E2C9A90C8EE12DF1" KeyPath="yes" Source="!(wix.MainSource)\System.Linq.dll" />
-            </Component>
-            <Component Id="cmp3B693E836B896CF886DF7174A12D37F7" Guid="{C67DF54B-392F-4FD1-8A0F-A703A94169C7}" Win64="yes">
-                <File Id="filC4914ECA26BAF54E9A2DD6F052DA9C90" KeyPath="yes" Source="!(wix.MainSource)\System.Linq.Expressions.dll" />
-            </Component>
-            <Component Id="cmp8EB6B1FB2B50FFBB0CA48841D0C7E01B" Guid="{DEC70BBC-37EC-4668-88D4-A5E56C81B8E8}" Win64="yes">
-                <File Id="filE34040F3256391C32697BF02C1A69D6C" KeyPath="yes" Source="!(wix.MainSource)\System.Linq.Parallel.dll" />
-            </Component>
-            <Component Id="cmpDB259A99945F85FEC221D6F75ACCB8EF" Guid="{91A5BF38-A48B-4530-ADBF-7B85CE2091A5}" Win64="yes">
-                <File Id="fil3B519832BFCC96F2B9F9A9E556AD7266" KeyPath="yes" Source="!(wix.MainSource)\System.Linq.Queryable.dll" />
-            </Component>
-            <Component Id="cmp4CFC7C3721FFD91FA4E9798A516D5E97" Guid="{56A77140-24AC-4FBE-AD67-278CE1C55EBB}" Win64="yes">
-                <File Id="fil1E24D2F3B531B1D76E1631314436BD58" KeyPath="yes" Source="!(wix.MainSource)\System.Memory.dll" />
-            </Component>
-            <Component Id="cmp7C8ACFEA497AD75401FFD01A9AEB31D4" Guid="{89AC4F83-46F7-4471-B95B-CE38D88D92BA}" Win64="yes">
-                <File Id="filE0C3E4A153D639D49A90C05560AF1912" KeyPath="yes" Source="!(wix.MainSource)\System.Net.Http.dll" />
-            </Component>
-            <Component Id="cmpD577135453C63C124E24214ACA6ED9B4" Guid="{ACEDB1C1-CCE5-4F02-8839-11262A9684F0}" Win64="yes">
-                <File Id="filE386BE0BA9453CEB70C0D0A4F87AFE13" KeyPath="yes" Source="!(wix.MainSource)\System.Net.NameResolution.dll" />
-            </Component>
-            <Component Id="cmp5CF9D73D8F28A4EF0D37B0136ED71006" Guid="{516E8C74-8982-4F28-8124-A5352C92A07D}" Win64="yes">
-                <File Id="filBE42196B38AEB33D0CDF75251FE2D7B1" KeyPath="yes" Source="!(wix.MainSource)\System.Net.NetworkInformation.dll" />
-            </Component>
-            <Component Id="cmpE95A3A7DB0E5B6B057A2BEF1A9ACCBA6" Guid="{349C47DC-60E2-493E-B524-235F9D6A7CF4}" Win64="yes">
-                <File Id="filE8CE2C8F8D88989206070BB80BED53C7" KeyPath="yes" Source="!(wix.MainSource)\System.Net.Ping.dll" />
-            </Component>
-            <Component Id="cmp57ED19A38749352B4A6312602AF32EEA" Guid="{908E2761-D644-47B1-9C12-51390C01B0C8}" Win64="yes">
-                <File Id="fil73A9A1A5553BBD979A6AE05955A0BFC3" KeyPath="yes" Source="!(wix.MainSource)\System.Net.Primitives.dll" />
-            </Component>
-            <Component Id="cmp3BED5AB46AF442FB282395C20F099F24" Guid="{5BE45DDB-38FF-4B11-AD9C-AEF27F6122A3}" Win64="yes">
-                <File Id="filBF1F0395A4430CE4FD07957B53031C4A" KeyPath="yes" Source="!(wix.MainSource)\System.Net.Requests.dll" />
-            </Component>
-            <Component Id="cmp4629EBAC56A143487ECF260AF98BF78D" Guid="{CF4C8CF2-AD8C-41D0-9F94-E68220C7A6C2}" Win64="yes">
-                <File Id="fil591D46E363F8E823067D9B8BEF2F7B81" KeyPath="yes" Source="!(wix.MainSource)\System.Net.Security.dll" />
-            </Component>
-            <Component Id="cmp6A4CEF696231A141C3BD0E963AF7FC9A" Guid="{4D4169DD-F82F-4D46-BA9E-699AA580D67D}" Win64="yes">
-                <File Id="filDEE378E4FB4D3F4448BC26AA15C9E83D" KeyPath="yes" Source="!(wix.MainSource)\System.Net.Sockets.dll" />
-            </Component>
-            <Component Id="cmpC11D8B4CADC383AE71657D4082C7C44C" Guid="{439D301F-CAA2-426B-A9D8-89CEDF99F4F5}" Win64="yes">
-                <File Id="filC9BBDB35B270BFF7BFB6C819013763B8" KeyPath="yes" Source="!(wix.MainSource)\System.Net.WebHeaderCollection.dll" />
-            </Component>
-            <Component Id="cmp7CDF555F26EC27374503C4D251C0ADD7" Guid="{1FE11565-32C2-4E4D-9393-ADD840B948F3}" Win64="yes">
-                <File Id="fil7E89DC70B56E449D3B0FBFB3811872C9" KeyPath="yes" Source="!(wix.MainSource)\System.Net.WebSockets.Client.dll" />
-            </Component>
-            <Component Id="cmpCB5AD0976B63430BEA529B0F2B10599A" Guid="{3EBC287F-4D57-4AA0-BFD3-E6EF41B7302E}" Win64="yes">
-                <File Id="fil377C264A4908CE349FB2070D4C79A5B4" KeyPath="yes" Source="!(wix.MainSource)\System.Net.WebSockets.Client.Managed.dll" />
-            </Component>
-            <Component Id="cmp7FDA86390D774733F2019204F3EF9348" Guid="{B0AAE11E-9938-4636-A291-AAFAC7840D30}" Win64="yes">
-                <File Id="filFF4A0F663A05BAEEDC1EF2CA53FB8D4F" KeyPath="yes" Source="!(wix.MainSource)\System.Net.WebSockets.dll" />
-            </Component>
-            <Component Id="cmpA780BD9CC7EF10DE58A9E17B691B0205" Guid="{C24F3AF4-01C0-4132-88E2-DD3EB34742AB}" Win64="yes">
-                <File Id="fil41D7AC86F0924A477EE48B3AF9E39249" KeyPath="yes" Source="!(wix.MainSource)\System.Numerics.Vectors.dll" />
-            </Component>
-            <Component Id="cmp0ECCBE7E7A91EA3F9AC4E08C42060A74" Guid="{979A71CA-6168-40CB-95F3-BC625D7AE8F3}" Win64="yes">
-                <File Id="filCD330848999366093EF4945E95052719" KeyPath="yes" Source="!(wix.MainSource)\System.ObjectModel.dll" />
-            </Component>
-            <Component Id="cmp7320660D409A823430EC1ADFF0D83564" Guid="{06BAB871-B109-4447-BF87-15C0C0D17805}" Win64="yes">
-                <File Id="fil0F1435C9F703FD077AC5E77B34B69CC8" KeyPath="yes" Source="!(wix.MainSource)\System.Reflection.dll" />
-            </Component>
-            <Component Id="cmp68097EB457BBDE8DE960E7CC72000139" Guid="{33FDE90F-AA92-4CBF-BD63-9890A48A63F7}" Win64="yes">
-                <File Id="filFFC887013D8E0165D1A96DFCECBB62D6" KeyPath="yes" Source="!(wix.MainSource)\System.Reflection.Extensions.dll" />
-            </Component>
-            <Component Id="cmpC4D6E68A472E9CC1FAF71994B5B4DE32" Guid="{880B1FC3-7164-4B40-BFC5-1882E01B7FEC}" Win64="yes">
-                <File Id="fil741DE04C3124C1446D2FFF811D83E100" KeyPath="yes" Source="!(wix.MainSource)\System.Reflection.Metadata.dll" />
-            </Component>
-            <Component Id="cmpC2109B9173A8B91CBDD411618A20588C" Guid="{7427A2BE-3907-4158-A576-ADDD02818772}" Win64="yes">
-                <File Id="fil2A581D7BEB9E3BA198BA51891387E525" KeyPath="yes" Source="!(wix.MainSource)\System.Reflection.Primitives.dll" />
-            </Component>
-            <Component Id="cmp48A7934AD38EE63A44A9478E1C31E3BB" Guid="{60597D75-4B6A-444D-B13E-75946F138237}" Win64="yes">
-                <File Id="fil3BB10164D9FC561AC346D63A8AB66A9E" KeyPath="yes" Source="!(wix.MainSource)\System.Resources.Reader.dll" />
-            </Component>
-            <Component Id="cmp92E77A73B8159FC7BF51704F06BB1689" Guid="{FF62FABD-5C3B-4053-84B2-39761C6B26BB}" Win64="yes">
-                <File Id="fil7656E2B5556FCB519B0B66F7B480FE7B" KeyPath="yes" Source="!(wix.MainSource)\System.Resources.ResourceManager.dll" />
-            </Component>
-            <Component Id="cmp82CD5F539E128C7A8CC025CBA927B9F3" Guid="{BA45014C-1206-4173-9241-64AF26BFC893}" Win64="yes">
-                <File Id="fil3BCC5DD79CA7001CCCDB0DE845D707D3" KeyPath="yes" Source="!(wix.MainSource)\System.Resources.Writer.dll" />
-            </Component>
-            <Component Id="cmp04E7760BC247B05C847A4A6D5D8C7091" Guid="{80138C8D-ED8F-4BD9-8FD6-F545709B2C40}" Win64="yes">
-                <File Id="fil8974B12282083EB6B4CB7BAC26546374" KeyPath="yes" Source="!(wix.MainSource)\System.Runtime.CompilerServices.Unsafe.dll" />
-            </Component>
-            <Component Id="cmp336F82620F5FFCA06611B8FD22F7066F" Guid="{0CCE3277-E4C2-4800-975A-F58712051AD8}" Win64="yes">
-                <File Id="fil3B157F8B05D7C8C49D0B2E4879F2135C" KeyPath="yes" Source="!(wix.MainSource)\System.Runtime.CompilerServices.VisualC.dll" />
-            </Component>
-            <Component Id="cmpF68CE304EDD0D14A7BFF18236F51BC48" Guid="{1B96A772-FFC5-4AAA-965C-C5865D7FA2B6}" Win64="yes">
-                <File Id="fil1DF46A3A328CA5A1B3C9E619D2E6B80A" KeyPath="yes" Source="!(wix.MainSource)\System.Runtime.dll" />
-            </Component>
-            <Component Id="cmp975FB1B5D4A3126E0525915FB4C90ECF" Guid="{950381A3-5A87-4A20-B6C6-0ECEE09E7C2B}" Win64="yes">
-                <File Id="filA4A42760CA9FD5DD6B18B4E51A05E900" KeyPath="yes" Source="!(wix.MainSource)\System.Runtime.Extensions.dll" />
-            </Component>
-            <Component Id="cmpE55D5ABD5E06B7AC82A1A464F710DC2E" Guid="{95648071-8E6D-4ED7-8305-4AAAF9DACA7F}" Win64="yes">
-                <File Id="fil1B530BA53CDCE15C6F6170DBC8B8D72B" KeyPath="yes" Source="!(wix.MainSource)\System.Runtime.Handles.dll" />
-            </Component>
-            <Component Id="cmpF8D128DB049817F164973BCC38DE4935" Guid="{608AEFE0-0EEE-4807-B3EF-77AAAF68C626}" Win64="yes">
-                <File Id="filFD0221B77EC7449E1F90EA01B453DEC9" KeyPath="yes" Source="!(wix.MainSource)\System.Runtime.InteropServices.dll" />
-            </Component>
-            <Component Id="cmpEF0EA4DA72195CE89ADEBCDFBBB1A537" Guid="{C24FC3BC-FFFD-412B-8AA0-2768CDE33985}" Win64="yes">
-                <File Id="fil3469E12317CB8788F95F8E393705340B" KeyPath="yes" Source="!(wix.MainSource)\System.Runtime.InteropServices.RuntimeInformation.dll" />
-            </Component>
-            <Component Id="cmp058B1E2892E76D2F98E9569E383E5B83" Guid="{C5404EE5-63FA-49D1-BE88-D3498077B304}" Win64="yes">
-                <File Id="fil57772530FF83DF69270D8AA86333BE83" KeyPath="yes" Source="!(wix.MainSource)\System.Runtime.Numerics.dll" />
-            </Component>
-            <Component Id="cmp8383C67527BDAFE41A3001900C896480" Guid="{7194CC20-AB96-481B-AE63-46C578790D1E}" Win64="yes">
-                <File Id="fil508F4D8A219CB235A6A05A06440BAD9A" KeyPath="yes" Source="!(wix.MainSource)\System.Runtime.Serialization.Formatters.dll" />
-            </Component>
-            <Component Id="cmp1D49D64F849E58598D108BA2293DAD87" Guid="{7E57ECDC-DE39-402B-B67B-FE730F21A263}" Win64="yes">
-                <File Id="fil996377CBD20957AB61D1F7794647229A" KeyPath="yes" Source="!(wix.MainSource)\System.Runtime.Serialization.Json.dll" />
-            </Component>
-            <Component Id="cmpFFD9C90842D9C8A5251533EE3764882E" Guid="{7A51D51F-FDD3-4890-9435-0ED88773A0EE}" Win64="yes">
-                <File Id="fil78BB41794127DCA0098197C99B85DEC0" KeyPath="yes" Source="!(wix.MainSource)\System.Runtime.Serialization.Primitives.dll" />
-            </Component>
-            <Component Id="cmp852AADF38F8E567003DDA62F8B2655B6" Guid="{7ED48F68-D073-4D65-8962-5872FFAF3382}" Win64="yes">
-                <File Id="filFBE1D5D50943EABD41BF7FBDDE38558D" KeyPath="yes" Source="!(wix.MainSource)\System.Runtime.Serialization.Xml.dll" />
-            </Component>
-            <Component Id="cmp74104254FD237403FE1336A0257C4330" Guid="{E1E372B8-F1FF-4800-BD2B-AE60DC4DD1C7}" Win64="yes">
-                <File Id="fil4B059CBA3EE02B33F172310663FA47A2" KeyPath="yes" Source="!(wix.MainSource)\System.Security.Claims.dll" />
-            </Component>
-            <Component Id="cmp92D5F6B984CFD9B211394CCCEE1F04A5" Guid="{ACB1853F-8F21-49E9-9BB3-B3D6822238A1}" Win64="yes">
-                <File Id="filEBF3D292F27598D7663F2D486D689D1E" KeyPath="yes" Source="!(wix.MainSource)\System.Security.Cryptography.Algorithms.dll" />
-            </Component>
-            <Component Id="cmpDFB191D893C4B975B51D3352B7B82109" Guid="{F22822DB-13AA-46C3-B06D-C74D11F460B0}" Win64="yes">
-                <File Id="fil5903FB61F7250A24E1C6485BA5781F06" KeyPath="yes" Source="!(wix.MainSource)\System.Security.Cryptography.Csp.dll" />
-            </Component>
-            <Component Id="cmp626E0E80197224B4DF0D25BD513CFE42" Guid="{9CBD54E3-5A7D-46F3-B34A-514F53020B29}" Win64="yes">
-                <File Id="fil1992BB2EBFE606350BB0C0A3EB90AE08" KeyPath="yes" Source="!(wix.MainSource)\System.Security.Cryptography.Encoding.dll" />
-            </Component>
-            <Component Id="cmp9AFF12285630BC013517118B5EEA5D3C" Guid="{BEE982FE-66BF-4475-860D-AB880B001D79}" Win64="yes">
-                <File Id="fil5CF1A17519FD312AFF94811EE6B36214" KeyPath="yes" Source="!(wix.MainSource)\System.Security.Cryptography.Primitives.dll" />
-            </Component>
-            <Component Id="cmpF504650A7859834E56B465827ADA1936" Guid="{179B94FC-1DB2-42BA-9231-E6E8B30943D9}" Win64="yes">
-                <File Id="filF3505C51B6D770D84F54BDDB6F4AE5C2" KeyPath="yes" Source="!(wix.MainSource)\System.Security.Cryptography.ProtectedData.dll" />
-            </Component>
-            <Component Id="cmp6951ADE3434FC5DEA7A943576EAFC9C9" Guid="{EB26C02D-DD77-41DB-B497-E4D6D5B47CDE}" Win64="yes">
-                <File Id="fil19629832AA6A1448CA14FB1052541870" KeyPath="yes" Source="!(wix.MainSource)\System.Security.Cryptography.X509Certificates.dll" />
-            </Component>
-            <Component Id="cmpA0BE31D5F64E6C8E4232B1246C6E6EBA" Guid="{4F4DE029-A662-4672-B252-CDD63A72970D}" Win64="yes">
-                <File Id="filB839AACE9B1FA27047CB38A105A51A43" KeyPath="yes" Source="!(wix.MainSource)\System.Security.Principal.dll" />
-            </Component>
-            <Component Id="cmpE7D2AE44E717D315763AA4408AAB16FB" Guid="{9359E406-8C8E-4CBD-A362-4A95722487C5}" Win64="yes">
-                <File Id="fil2DEEED95EC66E42E5135E15E0D4BDEAC" KeyPath="yes" Source="!(wix.MainSource)\System.Security.SecureString.dll" />
-            </Component>
-            <Component Id="cmpD5EF7B2A59F953E92E81EF7D6E6DBA82" Guid="{A78D2C36-7D29-44AE-843A-03B3655E8A6A}" Win64="yes">
-                <File Id="filC1BF4E80AF32E75E9827A0C9117D6A6B" KeyPath="yes" Source="!(wix.MainSource)\System.Text.Encoding.CodePages.dll" />
-            </Component>
-            <Component Id="cmp75DAC5FDC2337ECAD4CD4B6633997292" Guid="{13CD44A5-ED6A-4807-9323-AAB75652432C}" Win64="yes">
-                <File Id="fil882D2FAAA08CD42BDE8C89122E0451FC" KeyPath="yes" Source="!(wix.MainSource)\System.Text.Encoding.dll" />
-            </Component>
-            <Component Id="cmp69B094884B9A8B61C779794ADEBBC1A9" Guid="{CAB109AF-CA71-4B18-81F5-DE0540A264CB}" Win64="yes">
-                <File Id="filF2A6B49561E51548D949049A3979C98E" KeyPath="yes" Source="!(wix.MainSource)\System.Text.Encoding.Extensions.dll" />
-            </Component>
-            <Component Id="cmpC5D9D0B15AFBC0CF5AFAE1D408F93B74" Guid="{D0C1056A-FE07-4405-8640-5C68D614290A}" Win64="yes">
-                <File Id="filFE0C8F47D86E044043A5140C2900BC86" KeyPath="yes" Source="!(wix.MainSource)\System.Text.RegularExpressions.dll" />
-            </Component>
-            <Component Id="cmpF574B7D15C8F67E99CE93D4A59FC6585" Guid="{9D454B1F-6749-4643-BCCB-3F98D5C35E92}" Win64="yes">
-                <File Id="fil6382A5666A4DE7DD4AB95697F7D2C79F" KeyPath="yes" Source="!(wix.MainSource)\System.Threading.dll" />
-            </Component>
-            <Component Id="cmpEA99956125140C149444D0EA2A2FBD11" Guid="{1BC4F906-4D77-4A47-B717-0A5753C5A19A}" Win64="yes">
-                <File Id="filFAEBEC1A0D6D5ECFF6E97BBAE0CA0AE3" KeyPath="yes" Source="!(wix.MainSource)\System.Threading.Overlapped.dll" />
-            </Component>
-            <Component Id="cmp3B63C4A8BD59792FD308ADD749073AE3" Guid="{4D311621-B8DA-44C1-BAFD-50FC1F28CE20}" Win64="yes">
-                <File Id="filAFB2C8AB9328AAA60E4F1F016E024155" KeyPath="yes" Source="!(wix.MainSource)\System.Threading.Tasks.dll" />
-            </Component>
-            <Component Id="cmp9DA87BA429922A2AB9A872E6B393B838" Guid="{0CA931F5-74F4-4401-AF8D-B9398DBF3CA1}" Win64="yes">
-                <File Id="fil6A8BC02D0E287837DC8027D6A31B1B88" KeyPath="yes" Source="!(wix.MainSource)\System.Threading.Tasks.Extensions.dll" />
-            </Component>
-            <Component Id="cmp632B6E4876B3D900A85D26C65E49B166" Guid="{D2E567A5-FEC8-4DDE-AA72-BA45C4021B66}" Win64="yes">
-                <File Id="filDD4E8354C14401F7691CA8D69B4AB49D" KeyPath="yes" Source="!(wix.MainSource)\System.Threading.Tasks.Parallel.dll" />
-            </Component>
-            <Component Id="cmp6B712402D454F08D96D36C530166919B" Guid="{C467644A-6F58-4416-A76A-451B54084912}" Win64="yes">
-                <File Id="filFF87888E479CA922120322C6DD2CA43C" KeyPath="yes" Source="!(wix.MainSource)\System.Threading.Thread.dll" />
-            </Component>
-            <Component Id="cmp8AEEDC24B08C41AED47ACF763BF574A1" Guid="{3D451ADF-FD05-43BC-A0C0-A57CDC5E3E2A}" Win64="yes">
-                <File Id="filAA0C516BEAE2F97B5992ADB07A7F7275" KeyPath="yes" Source="!(wix.MainSource)\System.Threading.ThreadPool.dll" />
-            </Component>
-            <Component Id="cmpBAD65A0DD84D5EC853BB247DBE86F887" Guid="{16536A88-078F-4989-837A-9A133C928DC4}" Win64="yes">
-                <File Id="filC3DA66B6AA09D95F39F5A2E562CCEA8B" KeyPath="yes" Source="!(wix.MainSource)\System.Threading.Timer.dll" />
-            </Component>
-            <Component Id="cmpCB5E5E4C7D798FA2732BABDEB0BE886D" Guid="{69BB4550-1296-4572-92A0-4A5252D0BA20}" Win64="yes">
-                <File Id="fil2D8127F560A04E97657BE7D1D9CB7525" KeyPath="yes" Source="!(wix.MainSource)\System.ValueTuple.dll" />
-            </Component>
-            <Component Id="cmpB29480D26980660C0E9ADE25F14B43AD" Guid="{89DF7A28-0C6F-45AC-A29B-2DEC0A20ECE4}" Win64="yes">
-                <File Id="filA4CB8C3F6118005605F8F71AB7E4A572" KeyPath="yes" Source="!(wix.MainSource)\System.Xml.ReaderWriter.dll" />
-            </Component>
-            <Component Id="cmpE59C0BD28DF5A4DF51B1078ACE43A415" Guid="{FE90134E-75A6-4076-9711-96B81F5E5CAF}" Win64="yes">
-                <File Id="fil6CC059A8F8B87D96BDD3CBBDDC6744CC" KeyPath="yes" Source="!(wix.MainSource)\System.Xml.XDocument.dll" />
-            </Component>
-            <Component Id="cmp3123E1EB1C5D225391FC1D6617D55C3F" Guid="{89DCA47E-4F47-4A1D-B996-9E5B05FC5239}" Win64="yes">
-                <File Id="filAF8592E2C3BEA2ADA7883648F5BD3E2B" KeyPath="yes" Source="!(wix.MainSource)\System.Xml.XmlDocument.dll" />
-            </Component>
-            <Component Id="cmp31F020064DD03E3B81CC5C22BABF3806" Guid="{BCD69176-802B-44B2-9926-BC2D1BA2843C}" Win64="yes">
-                <File Id="fil6551700C172C6669B5CFDCBAC0B650DD" KeyPath="yes" Source="!(wix.MainSource)\System.Xml.XmlSerializer.dll" />
-            </Component>
-            <Component Id="cmp7F8869CF8631075DAAB292885B3366B9" Guid="{D844DD23-D5FA-47A6-9CB9-33BBD47DF43A}" Win64="yes">
-                <File Id="filBA372692826B579213FAF4D36C948A0B" KeyPath="yes" Source="!(wix.MainSource)\System.Xml.XPath.dll" />
-            </Component>
-            <Component Id="cmp808A78AA924556012D14BE1271FD1203" Guid="{F8AFB0BF-8E7C-4C21-BB6D-B4C5DF87A51B}" Win64="yes">
-                <File Id="filD68A3D67F917418E29DB132D939A3029" KeyPath="yes" Source="!(wix.MainSource)\System.Xml.XPath.XDocument.dll" />
-            </Component>
-            <Component Id="cmp7165B8BA93A80A0EA1B7728AD04D6E72" Guid="{61751F25-CE26-4F72-9B3D-031A22BED934}" Win64="yes">
-                <File Id="fil0F135695E925EFFCE422A78CD28F4C92" KeyPath="yes" Source="!(wix.MainSource)\Xceed.Wpf.AvalonDock.dll" />
-            </Component>
-            <Component Id="cmpE2468C9865F90573476173F547848D40" Guid="{CD616994-B304-4ECC-97CB-2ECCB492866A}" Win64="yes">
-                <File Id="fil283C54AA0CCA5A82032AD6F88F3D5D84" KeyPath="yes" Source="!(wix.MainSource)\Xceed.Wpf.AvalonDock.Themes.Aero.dll" />
-            </Component>
-            <Component Id="cmp25B7CDE65FC6F7EDFBADDCA69300789E" Guid="{199840AA-C509-4F31-B789-3E713BEE2815}" Win64="yes">
-                <File Id="filB6214F7016ABD85F0A90650A1F105B9C" KeyPath="yes" Source="!(wix.MainSource)\Xceed.Wpf.AvalonDock.Themes.Metro.dll" />
-            </Component>
-            <Component Id="cmp9A0FBE0E3FB55EEBB37903AC9A080A23" Guid="{A2ED2824-FD81-41BE-8B56-C79F8175B1C2}" Win64="yes">
-                <File Id="filBB96100CC38385FF7DB0DBFE799C5F23" KeyPath="yes" Source="!(wix.MainSource)\Xceed.Wpf.AvalonDock.Themes.VS2010.dll" />
-            </Component>
-            <Component Id="cmp6DF273F8C8C1322EE403E364E1D04A16" Guid="{F5E637D9-F936-4C7F-B768-CF52E6C3BF0F}" Win64="yes">
-                <File Id="fil4F8E845B9B0CB9B26B9D7BA0D7737124" KeyPath="yes" Source="!(wix.MainSource)\Xceed.Wpf.Toolkit.dll" />
-            </Component>
-            <Directory Id="dirBE132B8BAD188FE48DEA668A8A1A277A" Name="cs">
-                <Component Id="cmp65287F3E4DA1E585A8341B3A16A65FED" Guid="{20710492-772A-43EA-8566-CFB69F39FDA3}" Win64="yes">
-                    <File Id="fil2158B4E9DCAEB8F944F149A65A26E65E" KeyPath="yes" Source="!(wix.MainSource)\cs\Microsoft.CodeAnalysis.CSharp.Features.resources.dll" />
-                </Component>
-                <Component Id="cmpEA4BD9BE7BCA09DB3C0E7E31125BDA11" Guid="{E20F2E64-ADFD-46D0-8AF1-D4993C2F899D}" Win64="yes">
-                    <File Id="fil65B05C4ED58BD5BAC172B5A163D70A83" KeyPath="yes" Source="!(wix.MainSource)\cs\Microsoft.CodeAnalysis.CSharp.resources.dll" />
-                </Component>
-                <Component Id="cmp52D51F76F5C0362E1068468D2F37C92B" Guid="{891CDA3D-E285-49D4-A2D1-AAB51DBCD8CE}" Win64="yes">
-                    <File Id="fil45F584E65C063157C2B204CB55312D13" KeyPath="yes" Source="!(wix.MainSource)\cs\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmp0E2F62674E5ACD0A9ADEAEFF24F3B878" Guid="{0904FB30-8DF7-4C0A-8EFC-D87CB68FED2F}" Win64="yes">
-                    <File Id="filAAFAAF63E15ABAFBF7CF596FC0198185" KeyPath="yes" Source="!(wix.MainSource)\cs\Microsoft.CodeAnalysis.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp1A761DF5349446F72F35B7FEDBF3120F" Guid="{DB8F210E-7F93-49FF-92BA-F5C153B2C126}" Win64="yes">
-                    <File Id="fil3562B8289793F485FCC3AF02578C09BA" KeyPath="yes" Source="!(wix.MainSource)\cs\Microsoft.CodeAnalysis.resources.dll" />
-                </Component>
-                <Component Id="cmp3CF0195E5F1B24BD5A653DFB5D131E5F" Guid="{ACAAF1ED-C8BF-4D46-9535-2B1EFEA68ACE}" Win64="yes">
-                    <File Id="filB8B75F9A97C21437F1ED9687D83782F6" KeyPath="yes" Source="!(wix.MainSource)\cs\Microsoft.CodeAnalysis.VisualBasic.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp027B35AD6BF61AC76910ADE6436DDC32" Guid="{12D935F1-1023-4154-8447-B717FD17F3FC}" Win64="yes">
-                    <File Id="fil4E1127E7F11A832E7C617C3EE5124967" KeyPath="yes" Source="!(wix.MainSource)\cs\Microsoft.CodeAnalysis.VisualBasic.resources.dll" />
-                </Component>
-                <Component Id="cmp10C797B88A21A7084D84535848BD302F" Guid="{64B7A2E5-7F93-4433-85F4-C277E8145748}" Win64="yes">
-                    <File Id="fil9BC563E45FD6EFB8E4AE4A6707747454" KeyPath="yes" Source="!(wix.MainSource)\cs\Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmp87BCF51E839EDFB0ECE1309716DD85C6" Guid="{34B8896F-EE58-4555-B29C-1C2E4ECFEE3E}" Win64="yes">
-                    <File Id="filB8335ACC9D297CD241A27B628FF6EF16" KeyPath="yes" Source="!(wix.MainSource)\cs\Microsoft.CodeAnalysis.Workspaces.resources.dll" />
-                </Component>
-            </Directory>
-            <Directory Id="dir43A0033346A51A6633F88C79EA143D36" Name="da">
-                <Component Id="cmp22A5CAA14F0323427B7FC91089C8FF8B" Guid="{08B0CDA0-F1D7-4BB9-A219-EB6A7BAAFB29}" Win64="yes">
-                    <File Id="filA24898E5C7E8CB87CEA35187DAE669B3" KeyPath="yes" Source="!(wix.MainSource)\da\OpenRPA.Interfaces.resources.dll" />
-                </Component>
-                <Component Id="cmp06AC41CEA1AE4B5CE16B800F88F2AC85" Guid="{0C0E2660-8994-48A4-B8ED-4CEE822B108A}" Win64="yes">
-                    <File Id="fil4BE0EB83D68A5739E022CDE8B7A3D262" KeyPath="yes" Source="!(wix.MainSource)\da\OpenRPA.resources.dll" />
-                </Component>
-                <Component Id="cmpC86CAAC71D8260B14CD8A51CC8452848" Guid="{1B9390CD-05E3-46C1-81D3-F53B1407C096}" Win64="yes">
-                    <File Id="filDBB52774CBA866987F7C6B5046F7D82A" KeyPath="yes" Source="!(wix.MainSource)\da\OpenRPA.Windows.resources.dll" />
-                </Component>
-            </Directory>
-            <Directory Id="dirF7A62AAB979B938D6BCEC1392A589DA5" Name="de">
-                <Component Id="cmp1CCA7659C83443F83B89BAAA59CC8A38" Guid="{54270D93-CCFF-4B72-8DF6-013A6861B827}" Win64="yes">
-                    <File Id="filE94C7036FA2A5209574CFFFEE8DCB997" KeyPath="yes" Source="!(wix.MainSource)\de\Microsoft.CodeAnalysis.CSharp.Features.resources.dll" />
-                </Component>
-                <Component Id="cmpBEEDCA047A471366A76BB801865BBF2F" Guid="{1EBAAADE-88ED-4BED-A617-9D340784B415}" Win64="yes">
-                    <File Id="filEAA0ED3DD43CA4A6C5339C91B28893C2" KeyPath="yes" Source="!(wix.MainSource)\de\Microsoft.CodeAnalysis.CSharp.resources.dll" />
-                </Component>
-                <Component Id="cmpF0A6E90A6FDE803639EEC74E4552A64C" Guid="{FE7A954B-BC1B-4F4B-A054-7601B6E35DE6}" Win64="yes">
-                    <File Id="fil9E84B7F8D120F8F127389AB6C752D8F1" KeyPath="yes" Source="!(wix.MainSource)\de\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmp5AA3FE36A6A4BE7448F89CC6550367D1" Guid="{E7495529-A52D-4056-A834-EBBEDED7370C}" Win64="yes">
-                    <File Id="filACF880112B96E92E541869B6AAC725FA" KeyPath="yes" Source="!(wix.MainSource)\de\Microsoft.CodeAnalysis.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp1C6676866F01AA2556DAC1B771EF1539" Guid="{61108CC8-26B1-4DB6-85D5-FBFD663F8740}" Win64="yes">
-                    <File Id="fil41A20BAC1BDC430F046AE1A72B607C0F" KeyPath="yes" Source="!(wix.MainSource)\de\Microsoft.CodeAnalysis.resources.dll" />
-                </Component>
-                <Component Id="cmp1C4BC36522FF7FE081853CA5AD60E2BC" Guid="{4A2174AB-ABCB-41CD-B84D-E89D1A477440}" Win64="yes">
-                    <File Id="fil0CCB0439BAB9854A709AC22A01B2CEA1" KeyPath="yes" Source="!(wix.MainSource)\de\Microsoft.CodeAnalysis.VisualBasic.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp7D3BDC635C9309D6208618D98CA171F1" Guid="{51C2E405-C665-43D0-A0CB-566F73A57089}" Win64="yes">
-                    <File Id="filCAFE13C6535BF48785410D7A805E429A" KeyPath="yes" Source="!(wix.MainSource)\de\Microsoft.CodeAnalysis.VisualBasic.resources.dll" />
-                </Component>
-                <Component Id="cmpAD7383C7FB4F2C5782CAFEEB4E647444" Guid="{4154F310-1D8F-43AC-8360-641013A43458}" Win64="yes">
-                    <File Id="fil73F033DBB726E309A25A7D87FEDC939D" KeyPath="yes" Source="!(wix.MainSource)\de\Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmp16861D9E3F71E9550AECE3990319C900" Guid="{09F875D2-B51E-4521-8F0F-24112A68AEB4}" Win64="yes">
-                    <File Id="filF1FFF92014AC796756A35B9BC17005DD" KeyPath="yes" Source="!(wix.MainSource)\de\Microsoft.CodeAnalysis.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmp2A4D6385D37CB42FCB2D48983CC53485" Guid="{B03A0D9A-51F7-4AFA-98CC-C1175CF0E678}" Win64="yes">
-                    <File Id="filA5458E628554269CB6826367CEFB1666" KeyPath="yes" Source="!(wix.MainSource)\de\OpenRPA.Interfaces.resources.dll" />
-                </Component>
-                <Component Id="cmp192EA2431BF21C766E24AE76AD5FFBB3" Guid="{8E56A812-324E-4CFF-B5E2-DA7694B044E8}" Win64="yes">
-                    <File Id="fil797F0C60977BD6032BC2A613D743DD25" KeyPath="yes" Source="!(wix.MainSource)\de\OpenRPA.resources.dll" />
-                </Component>
-                <Component Id="cmp04233260B59C4258FF20B208FA8B49F0" Guid="{B3F29A7E-A802-499A-A370-A6E1DBD3A531}" Win64="yes">
-                    <File Id="fil14DBE8E2B9C70D54810FE919E0752A69" KeyPath="yes" Source="!(wix.MainSource)\de\OpenRPA.Windows.resources.dll" />
-                </Component>
-                <Component Id="cmp77E408438B67ACB68089BF9A4533D9B9" Guid="{E54A7B82-4A3F-4089-9649-3A86C41CFB5D}" Win64="yes">
-                    <File Id="fil9D2A1A803B60D41FC0B1B7FD67EEC9C8" KeyPath="yes" Source="!(wix.MainSource)\de\Xceed.Wpf.AvalonDock.resources.dll" />
-                </Component>
-            </Directory>
-            <Directory Id="dir577231E2EF642DDF4B09B65F4BEE3BE2" Name="es">
-                <Component Id="cmp29CAB6F545D7F49D84FBA1C85A8878BB" Guid="{C1DB9DD8-7DBA-4A62-BBEF-2FA55B0446B3}" Win64="yes">
-                    <File Id="filCFE2420AA71E80651A980CE0438D6B7F" KeyPath="yes" Source="!(wix.MainSource)\es\Microsoft.CodeAnalysis.CSharp.Features.resources.dll" />
-                </Component>
-                <Component Id="cmpF92D089E4A4AB6136800FE488C3A010B" Guid="{67C2B60F-6DBE-4586-9602-5F85B2D02C2B}" Win64="yes">
-                    <File Id="filE9BC9718A392FED24F9A6B492FFDDB7C" KeyPath="yes" Source="!(wix.MainSource)\es\Microsoft.CodeAnalysis.CSharp.resources.dll" />
-                </Component>
-                <Component Id="cmpEB1C5FC0447F8B6C83D0467C5B293EFC" Guid="{CCD03FEA-77EB-48D2-91BA-E2814C885D8B}" Win64="yes">
-                    <File Id="filFEC0BAEA1E0F545B60B1C2CEC45F05C2" KeyPath="yes" Source="!(wix.MainSource)\es\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmp5D00459EE20A1958E72A329087887507" Guid="{214D948C-5400-4314-A41C-EA511D907157}" Win64="yes">
-                    <File Id="fil7E86CCAE948189C9954CB2D1ACD08B12" KeyPath="yes" Source="!(wix.MainSource)\es\Microsoft.CodeAnalysis.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp990B94488BD9B35D447CB2BE66E1B672" Guid="{112542AB-E9F7-497F-8D54-54F6AAD5C39D}" Win64="yes">
-                    <File Id="filA177E076B4A6A18B081D730DF114F223" KeyPath="yes" Source="!(wix.MainSource)\es\Microsoft.CodeAnalysis.resources.dll" />
-                </Component>
-                <Component Id="cmpCF9E918829A7E4503CDC4ABEC1811C0B" Guid="{1658FFB5-D55F-4200-8D74-FFF6CAF42130}" Win64="yes">
-                    <File Id="fil94B7A4DF8AB91324B821B243D448010E" KeyPath="yes" Source="!(wix.MainSource)\es\Microsoft.CodeAnalysis.VisualBasic.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp18B5D928DD5616271ABC6B7DDA0D98BC" Guid="{2E0EF279-B52C-40B7-98D7-2BF8AF100189}" Win64="yes">
-                    <File Id="fil1ED329F2A51D282C0C5E4DF8D260D521" KeyPath="yes" Source="!(wix.MainSource)\es\Microsoft.CodeAnalysis.VisualBasic.resources.dll" />
-                </Component>
-                <Component Id="cmp87347D88D0734A19BC5769E338C8A3EC" Guid="{6BD692EB-6F59-42AC-92D2-627422075A06}" Win64="yes">
-                    <File Id="fil44FC080ADDC97CC4E9605840FB515E6A" KeyPath="yes" Source="!(wix.MainSource)\es\Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmpB5C93C8AE7BEE3ADD4135F79FC8E06A5" Guid="{7A81399F-9FC5-4AEA-B805-CC40B829FD6F}" Win64="yes">
-                    <File Id="fil2B533142900608318CDC7AD9B18CA1C3" KeyPath="yes" Source="!(wix.MainSource)\es\Microsoft.CodeAnalysis.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmpF477071E945B01E2D04643089DC1E53A" Guid="{83475130-4FC5-4C30-A8D7-3104E9F60E26}" Win64="yes">
-                    <File Id="fil901A37465B4269BCE9EE3F7B1884B8FA" KeyPath="yes" Source="!(wix.MainSource)\es\OpenRPA.Interfaces.resources.dll" />
-                </Component>
-                <Component Id="cmp8EB5EFBCDE3EACC797422D0C651A80B1" Guid="{DFE54450-184D-4D44-9381-7B6C73608780}" Win64="yes">
-                    <File Id="filDFE451954FC532AF4BBB503DD282485A" KeyPath="yes" Source="!(wix.MainSource)\es\OpenRPA.resources.dll" />
-                </Component>
-                <Component Id="cmpB3C01C93892C615B3D6C45E00119BC52" Guid="{D7764596-C4CA-4EF5-A794-35FA2AC9BE0B}" Win64="yes">
-                    <File Id="filA78901410E91AE56E3995ED51BBC7B53" KeyPath="yes" Source="!(wix.MainSource)\es\OpenRPA.Windows.resources.dll" />
-                </Component>
-                <Component Id="cmp20C601C515B1A9B1C8B83C4DC4B15A48" Guid="{E7EDD388-BD70-44B2-9CAC-CB2BC4451DE7}" Win64="yes">
-                    <File Id="filB2E79FB9BDA560198EF614222AEFD35B" KeyPath="yes" Source="!(wix.MainSource)\es\Xceed.Wpf.AvalonDock.resources.dll" />
-                </Component>
-            </Directory>
-            <Directory Id="dir0B7D401DE3233449E75F31A823BF5B99" Name="fr">
-                <Component Id="cmp9BF1E98782716508C8AAD6F0B367D281" Guid="{82FB6000-E69A-4F1D-9EB3-811F1F795D07}" Win64="yes">
-                    <File Id="filEC629B837F41393C688E18173814E164" KeyPath="yes" Source="!(wix.MainSource)\fr\Microsoft.CodeAnalysis.CSharp.Features.resources.dll" />
-                </Component>
-                <Component Id="cmpFA8C8F08B041B87E0F2EFD0EE7C4C241" Guid="{ADFB6F4C-035A-4554-9830-D6AFEB64AB68}" Win64="yes">
-                    <File Id="fil7FE724305613C803D98828159331E28E" KeyPath="yes" Source="!(wix.MainSource)\fr\Microsoft.CodeAnalysis.CSharp.resources.dll" />
-                </Component>
-                <Component Id="cmp1464B3DA837FF0EC944A3272F56501D6" Guid="{7A9CD6AD-E1AC-4895-8A5A-4ACF9C18F2D6}" Win64="yes">
-                    <File Id="filA2718FD707D607593D5B51AE8D238626" KeyPath="yes" Source="!(wix.MainSource)\fr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmpCA6DED1B62B2BA2885F226D30C3C7FF4" Guid="{80749336-88ED-46DB-98F7-49106A08CF84}" Win64="yes">
-                    <File Id="fil9C6CF732228CC33EF6D1CDE3AF082153" KeyPath="yes" Source="!(wix.MainSource)\fr\Microsoft.CodeAnalysis.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp18FB531E380E2A5A569EF18152DA1AC0" Guid="{D64B11F3-CDDD-46A8-9522-4CBBFA906779}" Win64="yes">
-                    <File Id="fil492DC5B33172FCA2C27811AB714D4B38" KeyPath="yes" Source="!(wix.MainSource)\fr\Microsoft.CodeAnalysis.resources.dll" />
-                </Component>
-                <Component Id="cmpDE2FC405CF0A0BD7BCB5F82188792B74" Guid="{E5785A95-43DE-4C92-8544-729B7667DD84}" Win64="yes">
-                    <File Id="fil0DFDEFE8B647D1FBB6B04252D73BC1B6" KeyPath="yes" Source="!(wix.MainSource)\fr\Microsoft.CodeAnalysis.VisualBasic.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp2055A25A0F0C52D93F012678AC906B91" Guid="{70C03B7F-2DE3-4715-B68B-012A38170AFD}" Win64="yes">
-                    <File Id="filCE9F8E37CE50D51F9EE5991EAB13011B" KeyPath="yes" Source="!(wix.MainSource)\fr\Microsoft.CodeAnalysis.VisualBasic.resources.dll" />
-                </Component>
-                <Component Id="cmp17FE96AF7BCC0E29E126749ECE5B46C2" Guid="{ECC2E8E0-3E00-4F8E-910F-CD1ECC7AA1B0}" Win64="yes">
-                    <File Id="fil7D069BDE05EE36E4EA91BE8D585C4737" KeyPath="yes" Source="!(wix.MainSource)\fr\Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmp0A760CC12B9942A13264B1A105EEF6C4" Guid="{25FE78CE-5FF4-412B-AED2-1B05988D637F}" Win64="yes">
-                    <File Id="fil2AB03C8763C7B5BE0FA069FDE9ECD642" KeyPath="yes" Source="!(wix.MainSource)\fr\Microsoft.CodeAnalysis.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmpAFBB23E4CB7AAFE3697723FBD0A8FAE5" Guid="{0B48BF56-2597-4A89-83E9-493E85F970C4}" Win64="yes">
-                    <File Id="fil0A7B95A544322FBF913EFC9F81F2F770" KeyPath="yes" Source="!(wix.MainSource)\fr\Xceed.Wpf.AvalonDock.resources.dll" />
-                </Component>
-            </Directory>
-            <Directory Id="dir09632C6D20BFA94E2A24ED0E6D9B2C41" Name="hu">
-                <Component Id="cmp95321C55A234B86BACD5AE0C9AB72BAE" Guid="{7A9D9E6F-9B17-4483-BAD5-8DC5B528D5DD}" Win64="yes">
-                    <File Id="fil03C9F91F31E8A7A36DB419C8FE1DC94A" KeyPath="yes" Source="!(wix.MainSource)\hu\Xceed.Wpf.AvalonDock.resources.dll" />
-                </Component>
-            </Directory>
-            <Directory Id="dirB5B71807E9474A6ED7A421DAF6D9317F" Name="it">
-                <Component Id="cmp673B61B21B5580591EF3467082B34528" Guid="{D8CB6CB2-D2D0-40E8-A426-8EE40CA7BE9C}" Win64="yes">
-                    <File Id="fil9FFC2E0DB5A277C0A06C246DCCEF2555" KeyPath="yes" Source="!(wix.MainSource)\it\Microsoft.CodeAnalysis.CSharp.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp0CEB672BFEC524145DF042ACB4BBA457" Guid="{43B9D3B4-37A8-49B7-9D6A-CB1A8A2B9925}" Win64="yes">
-                    <File Id="fil6E56E2B3E2E94898DE88827DA6F96307" KeyPath="yes" Source="!(wix.MainSource)\it\Microsoft.CodeAnalysis.CSharp.resources.dll" />
-                </Component>
-                <Component Id="cmpF85F268649B5E023BA48EF3FEDB2E784" Guid="{5941D30B-84BF-459A-9991-E5DFB189791B}" Win64="yes">
-                    <File Id="filEB24E587D223C901BC71F18518D7BCE0" KeyPath="yes" Source="!(wix.MainSource)\it\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmpB608AAFB5DFACA2055FF0D62576A77D9" Guid="{44C7C4DD-067D-4FCA-83FB-41D36D673250}" Win64="yes">
-                    <File Id="fil6F7AE5CACD21A7E1E6A3D5C9007811E3" KeyPath="yes" Source="!(wix.MainSource)\it\Microsoft.CodeAnalysis.Features.resources.dll" />
-                </Component>
-                <Component Id="cmpE36B8567E7CFFA5ECAFC23DD795BD6FD" Guid="{112E53A2-4C01-4927-826B-C2491C075BF4}" Win64="yes">
-                    <File Id="filFDDF905850500D7220E73EC9EF020D7C" KeyPath="yes" Source="!(wix.MainSource)\it\Microsoft.CodeAnalysis.resources.dll" />
-                </Component>
-                <Component Id="cmpC771EBB29D3DCB560819219F16F949B4" Guid="{AB148F12-5155-4CCF-9975-15DA9059D20C}" Win64="yes">
-                    <File Id="filE9EC351E96D5026F623B9084934A1F0F" KeyPath="yes" Source="!(wix.MainSource)\it\Microsoft.CodeAnalysis.VisualBasic.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp9ED144D07B8941C8B41A2571E6A0BD2D" Guid="{BE4FFF1E-1C42-420F-901D-75575A70B783}" Win64="yes">
-                    <File Id="filE4C98BC13EB74BE27D074D635135C780" KeyPath="yes" Source="!(wix.MainSource)\it\Microsoft.CodeAnalysis.VisualBasic.resources.dll" />
-                </Component>
-                <Component Id="cmpA1D313F34C981570E8211AD2D14EA796" Guid="{71C8E6F6-D53E-4004-B10A-1E44E8446DCD}" Win64="yes">
-                    <File Id="filFE28F453A8275709C84B5E643AF115F3" KeyPath="yes" Source="!(wix.MainSource)\it\Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmpD417DC2278871EAE1A2367F96773582F" Guid="{AE6F9958-8955-48DE-A646-914F2B06EE00}" Win64="yes">
-                    <File Id="fil5469BF8EF7DE39662635D60053F9EDC6" KeyPath="yes" Source="!(wix.MainSource)\it\Microsoft.CodeAnalysis.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmpC9079DF80F535A94B8EFD3CAEE503B47" Guid="{3941AAB0-DE63-46FB-8F44-B43C73F00D30}" Win64="yes">
-                    <File Id="fil9B6C5B62789CE1A08745B2D4EF180AD7" KeyPath="yes" Source="!(wix.MainSource)\it\Xceed.Wpf.AvalonDock.resources.dll" />
-                </Component>
-            </Directory>
-            <Directory Id="dir5315138C69BA7E69268AF83BB8AE9018" Name="ja">
-                <Component Id="cmp71309A5549584AF419A71807F87FCAD8" Guid="{C7E7A93C-3EFB-4F7D-B7D8-BA74692991A2}" Win64="yes">
-                    <File Id="filBF149436BA9B07D1394CB154DA939673" KeyPath="yes" Source="!(wix.MainSource)\ja\Microsoft.CodeAnalysis.CSharp.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp75050144596E1865F5F0EEA3C76CB60B" Guid="{EB3F1DA4-3584-41B8-BB56-3AA8C00E26D2}" Win64="yes">
-                    <File Id="filBBBE052F4026E7EB5BBC6C88E41E43A9" KeyPath="yes" Source="!(wix.MainSource)\ja\Microsoft.CodeAnalysis.CSharp.resources.dll" />
-                </Component>
-                <Component Id="cmp333A0B15D6BEA5EE61DAF80BBC33E2E1" Guid="{B2958672-AC2D-413C-B493-9F13935696F9}" Win64="yes">
-                    <File Id="fil1D93287D992AF23E38E3A274BC21988D" KeyPath="yes" Source="!(wix.MainSource)\ja\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmp276EE0D2179092A459B84F9A222AC184" Guid="{C0139133-8302-44AF-A506-8D382042B5BC}" Win64="yes">
-                    <File Id="fil8E8D8D27F1F41B537BCF84373CFB256D" KeyPath="yes" Source="!(wix.MainSource)\ja\Microsoft.CodeAnalysis.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp55D7B5BCB42B707583C1DB614AF516D7" Guid="{F3CEE61A-7023-4BDE-8D3F-0F362A3FDB17}" Win64="yes">
-                    <File Id="fil6911913142D63D4DD8C456F929EA41D6" KeyPath="yes" Source="!(wix.MainSource)\ja\Microsoft.CodeAnalysis.resources.dll" />
-                </Component>
-                <Component Id="cmpB40A462F2422775B8BC13C99502C00F1" Guid="{94236CBD-7027-450F-85C0-A97A80A10D50}" Win64="yes">
-                    <File Id="fil3EE7EF2D5FC947BEB35DA6A184FE0EE7" KeyPath="yes" Source="!(wix.MainSource)\ja\Microsoft.CodeAnalysis.VisualBasic.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp616F63B5AA0B9642BB84915E2ED834C8" Guid="{006364A4-3700-4920-AC4C-B4DA3C7C4271}" Win64="yes">
-                    <File Id="filC6A3141DFB92D94117C4B8357E895058" KeyPath="yes" Source="!(wix.MainSource)\ja\Microsoft.CodeAnalysis.VisualBasic.resources.dll" />
-                </Component>
-                <Component Id="cmp1066EDFE10D9DBB97764FEE310F395D1" Guid="{26B74E68-22D7-4644-8CBF-7396542E6A74}" Win64="yes">
-                    <File Id="fil798C6941112C090E24932EA1AF5D5F54" KeyPath="yes" Source="!(wix.MainSource)\ja\Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmpB62A214A20B890229C4655745C31837A" Guid="{9D87E27A-EFF1-4F85-891A-D710EE5A6518}" Win64="yes">
-                    <File Id="filC347945010864ACBA6A572CF5739CEC5" KeyPath="yes" Source="!(wix.MainSource)\ja\Microsoft.CodeAnalysis.Workspaces.resources.dll" />
-                </Component>
-            </Directory>
-            <Directory Id="dir6C3FEF1D6BC03982CA1FBA00284BF75D" Name="ko">
-                <Component Id="cmp7261A379103409A11F0FDC94878B5CA0" Guid="{39F47BD4-7121-4F1F-9551-26563B6EECAB}" Win64="yes">
-                    <File Id="filF9CDC1034222990A5E6A6FB8B6D4C1CB" KeyPath="yes" Source="!(wix.MainSource)\ko\Microsoft.CodeAnalysis.CSharp.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp4DAEDA3280093E29997D0BCD2FFC72FF" Guid="{C010F037-1CC5-4E3C-AAEC-23E358DEFD25}" Win64="yes">
-                    <File Id="fil25600BCB0EA76BE322394102D0256C53" KeyPath="yes" Source="!(wix.MainSource)\ko\Microsoft.CodeAnalysis.CSharp.resources.dll" />
-                </Component>
-                <Component Id="cmp0E0A521A0DA26C280EA018348111E3AF" Guid="{7DC8B5FE-820B-4D4E-832F-F9E7285E718A}" Win64="yes">
-                    <File Id="fil8A1BDEAF42B6C197D450ABD528FB79FB" KeyPath="yes" Source="!(wix.MainSource)\ko\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmp56A9D3100A982EA9A4EE38EE35DC4BBE" Guid="{7C4AC58C-D1FA-4A87-8E89-1C303A873A7F}" Win64="yes">
-                    <File Id="filBCEC2E88075C77A937A6A9631C449BC7" KeyPath="yes" Source="!(wix.MainSource)\ko\Microsoft.CodeAnalysis.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp99E1376FAA44BF35FEA90FDCB893DD7F" Guid="{3B540F67-70C5-4838-8DF0-2874AD31BAC2}" Win64="yes">
-                    <File Id="filA945C1386DF3DDA7E94BB24EA709F062" KeyPath="yes" Source="!(wix.MainSource)\ko\Microsoft.CodeAnalysis.resources.dll" />
-                </Component>
-                <Component Id="cmp41E1A2A9D24083E34A6550DA4D3F5720" Guid="{2689A26A-7845-43C4-891B-D5EDD6C7A550}" Win64="yes">
-                    <File Id="filAA2EAA970339BF4546CCDAEB5807390D" KeyPath="yes" Source="!(wix.MainSource)\ko\Microsoft.CodeAnalysis.VisualBasic.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp92DF35C45DF131FE7FB02ED399C45C75" Guid="{0FAF4EF2-7024-4CBC-9ECF-3F24D0105E09}" Win64="yes">
-                    <File Id="filEC6719FA1EB821873253CA881B6DAE09" KeyPath="yes" Source="!(wix.MainSource)\ko\Microsoft.CodeAnalysis.VisualBasic.resources.dll" />
-                </Component>
-                <Component Id="cmp565960DCB0A2122C83339B6EBA287659" Guid="{4DB51540-6DCD-4100-AEBA-41E84D5D4FFC}" Win64="yes">
-                    <File Id="filA3AD6EED4EF988EE99F75E6FCEE29A7A" KeyPath="yes" Source="!(wix.MainSource)\ko\Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmp6524E0DA6AD2B25F7F5E079259BF25EE" Guid="{C70A8C6D-1E96-47C5-BA58-815FE402BF9F}" Win64="yes">
-                    <File Id="fil8BC6B483EEDAB3107C15A4E79CC8CAF0" KeyPath="yes" Source="!(wix.MainSource)\ko\Microsoft.CodeAnalysis.Workspaces.resources.dll" />
-                </Component>
-            </Directory>
-            <Directory Id="dir42A5D57151A6A3E9D965C69C82893176" Name="pl">
-                <Component Id="cmp0F8EFE3AEF5BCD274ECE285151012969" Guid="{7913CA6C-EB20-4788-B645-451B236117F6}" Win64="yes">
-                    <File Id="fil5353B8AF11F7C670854C39561E891BBA" KeyPath="yes" Source="!(wix.MainSource)\pl\Microsoft.CodeAnalysis.CSharp.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp20DFAFD97DE1AB52199D05E23B83F1FC" Guid="{F4FE99D7-7303-4C13-B0F7-4DCDF8178503}" Win64="yes">
-                    <File Id="fil75BB6E4B788DFFF826915546A4E9D72C" KeyPath="yes" Source="!(wix.MainSource)\pl\Microsoft.CodeAnalysis.CSharp.resources.dll" />
-                </Component>
-                <Component Id="cmp78EFB70D7914F95BD00BFC35D6FE4A30" Guid="{9E3B795D-DBB4-40D9-8C8B-03B5FCB4C3A6}" Win64="yes">
-                    <File Id="filDB391469079E00067C382D22B1A7EF73" KeyPath="yes" Source="!(wix.MainSource)\pl\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmpBD83F83707B2399CD2616E8976180DBF" Guid="{95196E3B-21C0-418F-8493-A1609239BACE}" Win64="yes">
-                    <File Id="fil8AC30E4ED517D60C32941B646FE97C0F" KeyPath="yes" Source="!(wix.MainSource)\pl\Microsoft.CodeAnalysis.Features.resources.dll" />
-                </Component>
-                <Component Id="cmpE4583C6533010E05D38470264CD2AB61" Guid="{FE883641-56CF-4B24-93F8-C856F382799D}" Win64="yes">
-                    <File Id="fil6BFFB11E7A6031948F706509B842646D" KeyPath="yes" Source="!(wix.MainSource)\pl\Microsoft.CodeAnalysis.resources.dll" />
-                </Component>
-                <Component Id="cmp4FC28006E276F2FDD222F8E58CE073E9" Guid="{7A944AD9-BF18-4049-A872-D17C8660F192}" Win64="yes">
-                    <File Id="filE83A43DDB85B6401431FB1BEF8C9B118" KeyPath="yes" Source="!(wix.MainSource)\pl\Microsoft.CodeAnalysis.VisualBasic.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp6B207933E2663C096C5A630C6EFA8E18" Guid="{8B9540C7-AA11-41AC-8888-3C9B8AAB2D51}" Win64="yes">
-                    <File Id="filDC60C8243C2448D5B532AC609D1751FB" KeyPath="yes" Source="!(wix.MainSource)\pl\Microsoft.CodeAnalysis.VisualBasic.resources.dll" />
-                </Component>
-                <Component Id="cmp2034CEC3CB4FF1846AEAE7600078BB1C" Guid="{86F28893-DE65-4A06-AA67-2A1B5994537F}" Win64="yes">
-                    <File Id="filFB1991036E5502173729753AF961856C" KeyPath="yes" Source="!(wix.MainSource)\pl\Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmpFC1E8FC9EE126D1C04E36E35D24B57F6" Guid="{9D305149-DEA5-4336-A612-A755DBC9B9C2}" Win64="yes">
-                    <File Id="fil537A33C45215EBEFCC158B16C9D5D94E" KeyPath="yes" Source="!(wix.MainSource)\pl\Microsoft.CodeAnalysis.Workspaces.resources.dll" />
-                </Component>
-            </Directory>
-            <Directory Id="dirC5F627279ECABE21145A844571EF9F74" Name="pt">
-                <Component Id="cmpFEB50D5D94DA199144D1B4408E46619A" Guid="{85783BE7-1C36-4C70-B5BF-5B0DDF800666}" Win64="yes">
-                    <File Id="filF4BA2BA8FD71B387B8821A723886F1BF" KeyPath="yes" Source="!(wix.MainSource)\pt\OpenRPA.Interfaces.resources.dll" />
-                </Component>
-                <Component Id="cmp09A267CB18BAA2F931E9A67F5703E481" Guid="{ABAD3BE6-9EC9-434D-8EB7-1F6DF1891C5E}" Win64="yes">
-                    <File Id="fil34429B66C2C40EB3EEE1D2DA86B6B5DE" KeyPath="yes" Source="!(wix.MainSource)\pt\OpenRPA.resources.dll" />
-                </Component>
-                <Component Id="cmp27715C228698621B7B7EAB5263EBACC1" Guid="{CD3AE3CB-028F-459C-B6F1-356207487A09}" Win64="yes">
-                    <File Id="fil3316B9A3F177CF529C4C501F3A61AB77" KeyPath="yes" Source="!(wix.MainSource)\pt\OpenRPA.Windows.resources.dll" />
-                </Component>
-            </Directory>
-            <Directory Id="dir3CF6B6BC48181D29C167EF5DB7F05816" Name="pt-BR">
-                <Component Id="cmp75F95AD18274B19A52264AD8CC0D31F7" Guid="{E42478C5-61FC-40F9-ADEC-9B407AB6BF8F}" Win64="yes">
-                    <File Id="filECC72F1782B4E532ECAD69AE7564A2CF" KeyPath="yes" Source="!(wix.MainSource)\pt-BR\Microsoft.CodeAnalysis.CSharp.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp294B5EB50BF9CFA7D5D18EA57245EF0F" Guid="{0BA0F640-F5C8-4FC3-B83F-325EEF1660B7}" Win64="yes">
-                    <File Id="fil96997F1684E11D4C214842B0670E18D2" KeyPath="yes" Source="!(wix.MainSource)\pt-BR\Microsoft.CodeAnalysis.CSharp.resources.dll" />
-                </Component>
-                <Component Id="cmp384661C850D030ED1D86D442ED3B9F8B" Guid="{3532E948-CF58-471A-AAD0-4F88B2931CC0}" Win64="yes">
-                    <File Id="filFDEC7435959460137D3F784E0269B195" KeyPath="yes" Source="!(wix.MainSource)\pt-BR\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmp5612E4D41F4BE48C988023E867DAE725" Guid="{1565E7B6-85E2-4105-A0E2-46292EEB06EE}" Win64="yes">
-                    <File Id="fil0889851E4FC6DD4423DD808498FB1682" KeyPath="yes" Source="!(wix.MainSource)\pt-BR\Microsoft.CodeAnalysis.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp9B349D6A4624CD34E910DF6C2F50E8CC" Guid="{87D9DDA9-0967-4534-ACBF-0663892C6684}" Win64="yes">
-                    <File Id="fil0564CEE4E5C65A9E3CDB8CDE7F1BC451" KeyPath="yes" Source="!(wix.MainSource)\pt-BR\Microsoft.CodeAnalysis.resources.dll" />
-                </Component>
-                <Component Id="cmpF05D70C556BA0F4AA0A355CB974A4956" Guid="{D430B876-3720-4E53-BCEE-5E0D4574B77D}" Win64="yes">
-                    <File Id="filFFFB9C5063A178920D74186C9479A312" KeyPath="yes" Source="!(wix.MainSource)\pt-BR\Microsoft.CodeAnalysis.VisualBasic.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp2655B115922B5DF48B46D03970411B17" Guid="{FE14DFEE-4DBA-434C-8B6C-F5AFB3E744FB}" Win64="yes">
-                    <File Id="fil0F9C40695363EAC52A0D544881CAAC24" KeyPath="yes" Source="!(wix.MainSource)\pt-BR\Microsoft.CodeAnalysis.VisualBasic.resources.dll" />
-                </Component>
-                <Component Id="cmpE468509F2FD564123F20F54D2224A3E2" Guid="{8AEFA2C4-E990-407E-8D30-39E0892962D4}" Win64="yes">
-                    <File Id="fil65C7BE6804F9333B06981789EE7C9B56" KeyPath="yes" Source="!(wix.MainSource)\pt-BR\Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmp28F9266B781CC0503DFCF651B7EBB712" Guid="{4E58E81D-CA44-413D-AB73-6388F9877109}" Win64="yes">
-                    <File Id="fil94B9B980DEC52FE6DAE11F26743D94F5" KeyPath="yes" Source="!(wix.MainSource)\pt-BR\Microsoft.CodeAnalysis.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmp58E577A934474DDF9743DE68D7F6C376" Guid="{42629EE0-1409-4765-99E0-ACC6B24C0501}" Win64="yes">
-                    <File Id="fil4E3586A0BFA803F2FAD43187D2F52EF7" KeyPath="yes" Source="!(wix.MainSource)\pt-BR\Xceed.Wpf.AvalonDock.resources.dll" />
-                </Component>
-            </Directory>
-            <Directory Id="dirE46F01F498F9406B4F44136993088698" Name="ro">
-                <Component Id="cmp7AD050C0434C8F166D931E7E58D30A68" Guid="{BEA461D1-036D-4AC8-8BD6-A8E99115E5C9}" Win64="yes">
-                    <File Id="filCB0114F5EFE192364FBA9FB7F2F0C61F" KeyPath="yes" Source="!(wix.MainSource)\ro\OpenRPA.Interfaces.resources.dll" />
-                </Component>
-                <Component Id="cmpD857276B3C96F213DA4F45C728FB7BBC" Guid="{81C0528E-D0C5-4A8D-B717-C98B488AE3F7}" Win64="yes">
-                    <File Id="fil36507B8C89ECB8F8BF5B934D6FA434F8" KeyPath="yes" Source="!(wix.MainSource)\ro\OpenRPA.resources.dll" />
-                </Component>
-                <Component Id="cmpF7219721253748EFCB6172845D0555BA" Guid="{950BA7CC-6E62-4D41-A342-3E8E18A6FBDE}" Win64="yes">
-                    <File Id="filDA3067B9DC56657830C3E584F1D6B0B6" KeyPath="yes" Source="!(wix.MainSource)\ro\OpenRPA.Windows.resources.dll" />
-                </Component>
-                <Component Id="cmpDC2AEC8B5E546B28E433C6FD8DFFC9C5" Guid="{8BE4EBD9-3889-45AE-BC64-ED85199C3BDA}" Win64="yes">
-                    <File Id="fil3F9345202472B57C4B615EF270AFC9AA" KeyPath="yes" Source="!(wix.MainSource)\ro\Xceed.Wpf.AvalonDock.resources.dll" />
-                </Component>
-            </Directory>
-            <Directory Id="dirF7C0BEA86C276F53E8C9E8E6B2629A9B" Name="ru">
-                <Component Id="cmp0C1D770E8396A800C0F65CF9F2335FA7" Guid="{AD4187E6-54C0-4CCE-B6AE-BD4AD97D5647}" Win64="yes">
-                    <File Id="fil1418459A80AED41E94D949C11D506ECF" KeyPath="yes" Source="!(wix.MainSource)\ru\Microsoft.CodeAnalysis.CSharp.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp91DB723D2D8A6EDCB1BFEBA96873208B" Guid="{E4B14087-DDB1-46F2-9BE3-9C4686C4C766}" Win64="yes">
-                    <File Id="fil8D62D8EC05A4BC6B77079E00EE4A318C" KeyPath="yes" Source="!(wix.MainSource)\ru\Microsoft.CodeAnalysis.CSharp.resources.dll" />
-                </Component>
-                <Component Id="cmp0FCC877BEEFC04FC0AA804932D847E56" Guid="{D8174503-3312-466F-8A76-50EE80753688}" Win64="yes">
-                    <File Id="fil4FACAD0D748339FB7130E7058289DA8B" KeyPath="yes" Source="!(wix.MainSource)\ru\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmpFC9A6BDCAF133CECC628F8FF93F0DCEB" Guid="{8E9E5B35-6620-4EF8-B970-54D187BBB404}" Win64="yes">
-                    <File Id="fil00199FC0F87016874F0349205A8B433F" KeyPath="yes" Source="!(wix.MainSource)\ru\Microsoft.CodeAnalysis.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp6B9BDE3EAF74936D695A67D7F8F89D8E" Guid="{1FAB695A-6D78-455C-A5AF-07C07A1A8D8A}" Win64="yes">
-                    <File Id="fil46D66E54006F96077B3491BF70086810" KeyPath="yes" Source="!(wix.MainSource)\ru\Microsoft.CodeAnalysis.resources.dll" />
-                </Component>
-                <Component Id="cmp1A4986D1C04C5955B554D92F2C00455F" Guid="{CE93FC2B-ADD7-4E1A-B57D-D61AEB7B7BAB}" Win64="yes">
-                    <File Id="filA0DD5481D374A2C8A33763545D7EA06E" KeyPath="yes" Source="!(wix.MainSource)\ru\Microsoft.CodeAnalysis.VisualBasic.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp86815B1588318183BC2A54A765CA998F" Guid="{CC876CC9-78FA-453E-9A61-639DED23F31F}" Win64="yes">
-                    <File Id="filA0360FC6F8CB9A819729F3E35D795025" KeyPath="yes" Source="!(wix.MainSource)\ru\Microsoft.CodeAnalysis.VisualBasic.resources.dll" />
-                </Component>
-                <Component Id="cmp97F501480BEF849C4538E3AD525262D2" Guid="{D1EC6C2F-9B94-4AD6-ADB6-4B477006442A}" Win64="yes">
-                    <File Id="filEB38587D5B55BA537AC4FB40BFC9BD60" KeyPath="yes" Source="!(wix.MainSource)\ru\Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmpDE864E902D93AC27A4E32AF892DEA91B" Guid="{4B178997-6CB7-4301-851D-E738CF515926}" Win64="yes">
-                    <File Id="fil4C192320A4ABA4DC8813EAF36A52764A" KeyPath="yes" Source="!(wix.MainSource)\ru\Microsoft.CodeAnalysis.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmp035AA03635C426087A315752E55EC5E8" Guid="{15895819-C2FE-4106-81AB-D212D024E694}" Win64="yes">
-                    <File Id="fil99D92301886B43CC25CA00F3CC04DD25" KeyPath="yes" Source="!(wix.MainSource)\ru\OpenRPA.Interfaces.resources.dll" />
-                </Component>
-                <Component Id="cmp3B07CC3F19D87E1FD19E051C7A13A1E8" Guid="{D29FD1D6-A498-44A0-9CD2-64215D2CB41A}" Win64="yes">
-                    <File Id="filAB7C65F71250E2651BC942C367B07E6C" KeyPath="yes" Source="!(wix.MainSource)\ru\OpenRPA.resources.dll" />
-                </Component>
-                <Component Id="cmpF77203C341A0523A310834AB0AFAA450" Guid="{026C2376-1B17-4A11-8D40-4A8BC82B1AA2}" Win64="yes">
-                    <File Id="fil126FD8D7BC3CA134C631C10414C0844C" KeyPath="yes" Source="!(wix.MainSource)\ru\OpenRPA.Windows.resources.dll" />
-                </Component>
-                <Component Id="cmp1B521C36CDA7F2894096AEC00F606F18" Guid="{639F253B-0911-4E92-B3A1-E4E98E24735E}" Win64="yes">
-                    <File Id="fil746AB0109F6368FE0AE56C2FA8C44711" KeyPath="yes" Source="!(wix.MainSource)\ru\Xceed.Wpf.AvalonDock.resources.dll" />
-                </Component>
-            </Directory>
-            <Directory Id="dir9E3C384CF512A10216EFD01F9D77AA26" Name="sv">
-                <Component Id="cmp44669DE2975CB09B1ACBB4B0F7555A4A" Guid="{D990236D-485B-4EC4-9511-AD1A61D716A9}" Win64="yes">
-                    <File Id="filEEFE836949B46D161629A8ED45C16294" KeyPath="yes" Source="!(wix.MainSource)\sv\Xceed.Wpf.AvalonDock.resources.dll" />
-                </Component>
-            </Directory>
-            <Directory Id="dirABDF097918DC4D178C28DD77E3766325" Name="tr">
-                <Component Id="cmp869A9E6C43864538DA579AFC456A13E7" Guid="{4CF0E7A9-7D24-4191-84A0-C927D1B7EDFB}" Win64="yes">
-                    <File Id="filF5686B3129543EAF8427072A80D87C5C" KeyPath="yes" Source="!(wix.MainSource)\tr\Microsoft.CodeAnalysis.CSharp.Features.resources.dll" />
-                </Component>
-                <Component Id="cmpA414DD719A4D692BEDF26DA8ED7E45E7" Guid="{31E455B0-474B-4D6E-B8A4-418E88541E44}" Win64="yes">
-                    <File Id="filE3BE016450D67B5DEBE8B8B7D17F9B53" KeyPath="yes" Source="!(wix.MainSource)\tr\Microsoft.CodeAnalysis.CSharp.resources.dll" />
-                </Component>
-                <Component Id="cmp5A4798C9E7F0AA5C4996557805D89D61" Guid="{CF591862-9464-4B1C-9944-D694D8C3E425}" Win64="yes">
-                    <File Id="fil0A83A2A2A35A4B639D366751AD0A6DB9" KeyPath="yes" Source="!(wix.MainSource)\tr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmpAF35084DEE1C9B6331355C0E1F148E03" Guid="{DF1E9B1A-2511-46AA-AA74-5F168C85A996}" Win64="yes">
-                    <File Id="filE9812F50DF3263E399051B2AF8A01A46" KeyPath="yes" Source="!(wix.MainSource)\tr\Microsoft.CodeAnalysis.Features.resources.dll" />
-                </Component>
-                <Component Id="cmpE7D072C8F4C1335BDCD845D4521661C8" Guid="{A81183E7-24C2-4392-BB1E-AFD1D27377AE}" Win64="yes">
-                    <File Id="fil3969E3A3132025132A7D16C6DD8E3709" KeyPath="yes" Source="!(wix.MainSource)\tr\Microsoft.CodeAnalysis.resources.dll" />
-                </Component>
-                <Component Id="cmpC0B34761214D4ADABA75680C3B7B970E" Guid="{08EEEA06-3FCC-4C74-93BF-4D77CACBBA77}" Win64="yes">
-                    <File Id="fil6654CBBD37722DAB2E1119C3D6D0FA9B" KeyPath="yes" Source="!(wix.MainSource)\tr\Microsoft.CodeAnalysis.VisualBasic.Features.resources.dll" />
-                </Component>
-                <Component Id="cmp65E0A9E1E87C58B00DD9021717E8E4AC" Guid="{BE36237C-9644-407A-8DAD-C8C893573B51}" Win64="yes">
-                    <File Id="filD06328A4E2CB73A3EB20A74E0DF20326" KeyPath="yes" Source="!(wix.MainSource)\tr\Microsoft.CodeAnalysis.VisualBasic.resources.dll" />
-                </Component>
-                <Component Id="cmp9E9A5F2C85BACD97B2964CFCEDC25BBF" Guid="{EE0A78B8-262F-495B-B88E-69617D08C2F2}" Win64="yes">
-                    <File Id="filE1857FD9A3EC6EBFA1AB58A11BA3413E" KeyPath="yes" Source="!(wix.MainSource)\tr\Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll" />
-                </Component>
-                <Component Id="cmpA485E12D754B604451F9039E72E7D0E9" Guid="{E17EABDF-2914-447A-AFBD-C113E4B3FA06}" Win64="yes">
-                    <File Id="fil0BCC1AD043A842EDA8F2984A1E0A2B17" KeyPath="yes" Source="!(wix.MainSource)\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll" />
-                </Component>
-            </Directory>
+
             <Directory Id="dir2AFC18257B33E896219016CCEB7EA4A6" Name="x64">
-                <Component Id="cmp6E7CC889A0E0B2AB2F82044060AC7A28" Guid="{396AC757-5F98-45A8-B2FB-BF08875E1051}" Win64="yes">
-                    <File Id="filB436E4594E3544C098B9943DBDC1A518" KeyPath="yes" Source="!(wix.MainSource)\x64\cef.pak" />
-                </Component>
-                <Component Id="cmp47DEEB34C13A2C03C3C9A1D12F9DB890" Guid="{6F9C9C75-ACB5-49A8-8DB5-D59F8BF81EDD}" Win64="yes">
-                    <File Id="filCB052B4928C8DBE2730D9A211E470208" KeyPath="yes" Source="!(wix.MainSource)\x64\CefSharp.BrowserSubprocess.Core.dll" />
-                </Component>
-                <Component Id="cmpB4FF13F2F09CFA3E8BCDA47E57FD1987" Guid="{5FC234C4-024D-4228-9ABC-CFAAA377982A}" Win64="yes">
-                    <File Id="fil90EAD8EAE08190EF554F9F0F66FFD702" KeyPath="yes" Source="!(wix.MainSource)\x64\CefSharp.BrowserSubprocess.Core.pdb" />
-                </Component>
-                <Component Id="cmp17E4B6C9BB0BA9F054DFD7E535962570" Guid="{6E492884-92AC-4E21-B098-3FE8FDB702D6}" Win64="yes">
-                    <File Id="filAD8611FDD6171BAEF79E9F9EC1705EE9" KeyPath="yes" Source="!(wix.MainSource)\x64\CefSharp.BrowserSubprocess.exe" />
-                </Component>
-                <Component Id="cmp4EB6319CE44669FE303DE1FEA070FF05" Guid="{E1E04C50-695A-47E6-BB8C-9EC86CEE4A53}" Win64="yes">
-                    <File Id="filEAC3917C2D2DD644C60719B90AB7823B" KeyPath="yes" Source="!(wix.MainSource)\x64\CefSharp.BrowserSubprocess.pdb" />
-                </Component>
-                <Component Id="cmpACBE1BA9AD62F51C14B17D3C1EB96C0F" Guid="{223D53A8-43CF-4EE2-97C7-8969B733E497}" Win64="yes">
-                    <File Id="filC88C7623422BE649CB1D8DE7EFDA2997" KeyPath="yes" Source="!(wix.MainSource)\x64\CefSharp.Core.dll" />
-                </Component>
-                <Component Id="cmp6C99C3056AEA5C3D54047E2CEC18ADCC" Guid="{CDFFC9A6-91CC-4D82-8C73-C2C38CFDCAA4}" Win64="yes">
-                    <File Id="fil661FD5E081B39046CC104A96165D8374" KeyPath="yes" Source="!(wix.MainSource)\x64\CefSharp.Core.pdb" />
-                </Component>
-                <Component Id="cmpF74385ED9CB9B705F33D5D16F009D2B5" Guid="{FCD0AE0C-A8E3-47AE-9973-7D4B5EA0F611}" Win64="yes">
-                    <File Id="fil4C19941476E258861D238F3315543B39" KeyPath="yes" Source="!(wix.MainSource)\x64\CefSharp.Core.xml" />
-                </Component>
-                <Component Id="cmp6AB5C726DE7ECD1A7ED6B848A3D93360" Guid="{CA2A28FE-89C4-4CDC-A0A7-838BC0B616CE}" Win64="yes">
-                    <File Id="filF0CF59F24A01DAE00DEA461CE18C9389" KeyPath="yes" Source="!(wix.MainSource)\x64\CefSharp.dll" />
-                </Component>
-                <Component Id="cmp22397A3B9A73315681EB7F8AAF829DA9" Guid="{7D09DA15-F05D-4342-AC1D-D16A8CAAEA31}" Win64="yes">
-                    <File Id="filDEAFF31790255DA15A8A0926C96F6E5E" KeyPath="yes" Source="!(wix.MainSource)\x64\CefSharp.pdb" />
-                </Component>
-                <Component Id="cmpFE63881B29DFECF6C9FB55C2C6C679BE" Guid="{D8132B51-BAD0-4363-AE9D-367F0975CD10}" Win64="yes">
-                    <File Id="filB95C83CD1FA714D6B1FEAF7CC01A5BF5" KeyPath="yes" Source="!(wix.MainSource)\x64\CefSharp.Wpf.dll" />
-                </Component>
-                <Component Id="cmpAF2D3D15E06118D3883A5865DE6D5E2E" Guid="{20C1FA05-38CB-4F72-B596-7389D755C2C3}" Win64="yes">
-                    <File Id="filB250FD171ACDBD712715F3CF9B4DFA5E" KeyPath="yes" Source="!(wix.MainSource)\x64\CefSharp.Wpf.pdb" />
-                </Component>
-                <Component Id="cmp5AB8C2B3A934F871BCF3AE4800EDEBAD" Guid="{0BEF4A23-F873-4165-A3E4-6823D6FCD9E3}" Win64="yes">
-                    <File Id="fil20A7E14E1D3C37B0E54D8397517A3E73" KeyPath="yes" Source="!(wix.MainSource)\x64\CefSharp.Wpf.XML" />
-                </Component>
-                <Component Id="cmp2A0808E2D20F13D026C49E3BE82976B9" Guid="{5FC81006-5C6C-4120-B552-A3643BB5C40C}" Win64="yes">
-                    <File Id="filD2AA37AE152DD56688B960E7D87291C5" KeyPath="yes" Source="!(wix.MainSource)\x64\CefSharp.XML" />
-                </Component>
-                <Component Id="cmp6F96056C44B219C9BABF85867722457E" Guid="{038C7B15-ED57-46C2-A410-382654060DBA}" Win64="yes">
-                    <File Id="fil18028080F88700FE877D5F5995B9FAAC" KeyPath="yes" Source="!(wix.MainSource)\x64\cef_100_percent.pak" />
-                </Component>
-                <Component Id="cmp6A30A38B7803B1F91A55F739A7DBAFA1" Guid="{8067C6B1-88EF-4A47-9A8C-F4AC88ED3835}" Win64="yes">
-                    <File Id="fil86FBD9BD4053D025057804F494C3C44E" KeyPath="yes" Source="!(wix.MainSource)\x64\cef_200_percent.pak" />
-                </Component>
-                <Component Id="cmp9AE6A8C0ABD883B60EE90B2D06EC6239" Guid="{B0DFC6D8-13CC-4535-8743-4F0FD02F1F61}" Win64="yes">
-                    <File Id="filD132C0CB08CAA3499E2E024BAF5FE50F" KeyPath="yes" Source="!(wix.MainSource)\x64\cef_extensions.pak" />
-                </Component>
-                <Component Id="cmp27EC58D3FB4CBF8105B89BE333E9329C" Guid="{6B2E1012-46E6-4DFF-A794-AE34944196FF}" Win64="yes">
-                    <File Id="filDDDF9CCC8E330C0F855A1C50665348FD" KeyPath="yes" Source="!(wix.MainSource)\x64\chrome_elf.dll" />
-                </Component>
-                <Component Id="cmp9D4F5B896C299487132DFDAD0BD961FA" Guid="{DA5034C6-86AE-40B0-A9D9-05B0BE23EAD3}" Win64="yes">
-                    <File Id="fil1BD7CBF242A2FF3CDDABAEFD77107A5A" KeyPath="yes" Source="!(wix.MainSource)\x64\d3dcompiler_47.dll" />
-                </Component>
-                <Component Id="cmp4C5FBDB6B92031A4A79857602C3F11E8" Guid="{60AD75B3-14A7-45F7-A818-2E8A51BC0F60}" Win64="yes">
-                    <File Id="filA849CD5386108EDE5B8B3D8518EEEDB3" KeyPath="yes" Source="!(wix.MainSource)\x64\devtools_resources.pak" />
-                </Component>
-                <Component Id="cmp93ECC142F4850DC88A6AAED63F2B5565" Guid="{8741C2C5-829F-41A4-BE21-D459C4E6C43D}" Win64="yes">
-                    <File Id="filB0AB397896475F4E74FF1B70A72D0B8B" KeyPath="yes" Source="!(wix.MainSource)\x64\icudtl.dat" />
-                </Component>
-                <Component Id="cmpC412BB707CD806CC72C4FEC56F583393" Guid="{542705A8-E29B-4DFB-A2A3-EC66E2754E8A}" Win64="yes">
-                    <File Id="fil323CAEE6BB05F64F185321F5B2E40B68" KeyPath="yes" Source="!(wix.MainSource)\x64\libcef.dll" />
-                </Component>
-                <Component Id="cmp5C15AA45A4001615FECB51E367925407" Guid="{89280E2B-FEEC-47A3-BBEF-4EA69152FB80}" Win64="yes">
-                    <File Id="filAD78B91DA97E98FE6AF8DD9B80F98B22" KeyPath="yes" Source="!(wix.MainSource)\x64\libEGL.dll" />
-                </Component>
-                <Component Id="cmp38BAD696C3EDED2828FFD6DCAAD49D0C" Guid="{63900D6F-408B-43B6-B2EA-9A888529CD71}" Win64="yes">
-                    <File Id="fil37B200E9C3DCCC4F10FC43F9BEC63A0F" KeyPath="yes" Source="!(wix.MainSource)\x64\libGLESv2.dll" />
-                </Component>
-                <Component Id="cmpD353D0418882922529468DFDBC06AAA4" Guid="{5309D7FC-C3B2-4A10-A5C1-267DAF7B4CD3}" Win64="yes">
-                    <File Id="fil4E634A3E360C3A8A8E07F98A66B10343" KeyPath="yes" Source="!(wix.MainSource)\x64\natives_blob.bin" />
-                </Component>
-                <Component Id="cmp2845B1A76017335D3CACEF0CB23E7CA0" Guid="{C23A6239-AE8B-4FEF-97DF-516CF9E56C85}" Win64="yes">
-                    <File Id="fil9ACC4265158BEE28AC5D12597C532D84" KeyPath="yes" Source="!(wix.MainSource)\x64\README.txt" />
-                </Component>
-                <Component Id="cmp3FC749C5D041542A533536B2311B421C" Guid="{D1891D3F-39F4-4742-8DB1-B2A5D787F1E9}" Win64="yes">
-                    <File Id="fil171EB7F3B881DFD880449D01AB09ECA1" KeyPath="yes" Source="!(wix.MainSource)\x64\snapshot_blob.bin" />
-                </Component>
-                <Component Id="cmp355CEAAE3784E5911252A85747EE34FE" Guid="{42FB6BD3-2C49-4E76-B765-3C3E8FB0A1FA}" Win64="yes">
-                    <File Id="fil9CFD5D2CAB69A2A827A1756C5C77ACD3" KeyPath="yes" Source="!(wix.MainSource)\x64\v8_context_snapshot.bin" />
+                <Component Id="cmp355CEAAE3784E5911252A85747EE34FE" Guid="{CE9B0FBC-F6A7-4B8D-A555-2578A4A09799}" Win64="yes">
                 </Component>
                 <Directory Id="dirAD6BC31B867099C5ABB5C0467F7311F7" Name="locales">
-                    <Component Id="cmp316BFC86B2CE96A9A556D143D44FED9F" Guid="{A093FF68-62C0-4F04-8AD3-BDF6C1F37B49}" Win64="yes">
+                    <Component Id="cmp316BFC86B2CE96A9A556D143D44FED9F" Guid="{D04CE0F7-D9BE-4799-96F0-D4AA9AACEA07}" Win64="yes">
                         <File Id="fil86A9A7E770F1D12665745C0CF175A63E" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\am.pak" />
                     </Component>
-                    <Component Id="cmpEFB67E01B8DD7ADCE34A5A390947BA61" Guid="{74098D08-CFE6-4016-B124-B3DAFEC6A639}" Win64="yes">
+                    <Component Id="cmpEFB67E01B8DD7ADCE34A5A390947BA61" Guid="{AC9DADD0-6945-4E38-B2C2-AE67AC53F573}" Win64="yes">
                         <File Id="fil06317B36663DA76BC46D3B886811EEEE" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ar.pak" />
                     </Component>
-                    <Component Id="cmp9919810F0D2DD1973AB64DAEA04E049F" Guid="{125D93E5-4170-442D-965E-F9CC1AFDFCDA}" Win64="yes">
+                    <Component Id="cmp9919810F0D2DD1973AB64DAEA04E049F" Guid="{2EAAF0C0-8BCC-446C-A48A-BC90AB80DEC9}" Win64="yes">
                         <File Id="fil6084941CF47D74B47273D59641E5EFF2" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\bg.pak" />
                     </Component>
-                    <Component Id="cmpDFD31CEF69F510FBFA42E20927371B7E" Guid="{35D3F458-C5FE-40C8-971B-86C51AD77BA9}" Win64="yes">
+                    <Component Id="cmpDFD31CEF69F510FBFA42E20927371B7E" Guid="{28DBAE89-54B6-42C6-B2C0-4F6D5703A992}" Win64="yes">
                         <File Id="fil155FD8AD0AC000F4C560CE15DB507FBF" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\bn.pak" />
                     </Component>
-                    <Component Id="cmp02B191E85227F9C4398C74147923D9F4" Guid="{35116948-0166-4045-906A-B834C1751561}" Win64="yes">
+                    <Component Id="cmp02B191E85227F9C4398C74147923D9F4" Guid="{D48C0200-E41C-4D52-9F38-E86D55C63777}" Win64="yes">
                         <File Id="fil1C25BED78DBDC1E4C6B062CE3AFF40F8" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ca.pak" />
                     </Component>
-                    <Component Id="cmpBFF7DFEA7535559305F54B52A53287A9" Guid="{B431B793-C9CA-4001-B6EE-384AA2C7F87C}" Win64="yes">
+                    <Component Id="cmpBFF7DFEA7535559305F54B52A53287A9" Guid="{BBC5EE52-B4B6-4813-BE76-A05838220AC1}" Win64="yes">
                         <File Id="fil5373EC5B9DA3C7B33C4C65D3D4AA004F" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\cs.pak" />
                     </Component>
-                    <Component Id="cmpB1C447BC41B6DBC76335493CF39E734E" Guid="{194BAF34-FB5C-46D8-B16F-8ED3167808AB}" Win64="yes">
+                    <Component Id="cmpB1C447BC41B6DBC76335493CF39E734E" Guid="{CB4A39AB-B681-4275-9771-F64F89372B81}" Win64="yes">
                         <File Id="fil1E0556CE8B49ACC750AD7420F44A108F" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\da.pak" />
                     </Component>
-                    <Component Id="cmpF09C2B7B4BE9B9D6340ACEABA09DB4BA" Guid="{B3080250-7C3F-4576-A55A-EC67E586DC18}" Win64="yes">
+                    <Component Id="cmpF09C2B7B4BE9B9D6340ACEABA09DB4BA" Guid="{B3EE23D4-8A28-41E6-A43F-DB0C33AC03AE}" Win64="yes">
                         <File Id="filA24CC9D400AC9CBE8DE073A4683DDB79" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\de.pak" />
                     </Component>
-                    <Component Id="cmpBB0C7726592AE401714A41480B3D7B3C" Guid="{3A091194-73D6-4B30-A15C-10DAF20C268B}" Win64="yes">
+                    <Component Id="cmpBB0C7726592AE401714A41480B3D7B3C" Guid="{F3A977A6-AAD4-4C48-8DE9-C7C98CB3611A}" Win64="yes">
                         <File Id="fil213EB1DCE0F27F9ED44EA4FA58446182" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\el.pak" />
                     </Component>
-                    <Component Id="cmp651240FFFC9DE845E7AC029AB2B9B137" Guid="{D5134C58-9F62-4734-AC33-3B2DF2A2E7CC}" Win64="yes">
+                    <Component Id="cmp651240FFFC9DE845E7AC029AB2B9B137" Guid="{FEBF1041-131B-4ED9-8647-E6B9302DB147}" Win64="yes">
                         <File Id="filE20B97B5C558FF4CACACFCCD817F3015" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\en-GB.pak" />
                     </Component>
-                    <Component Id="cmp7CE284CD409356E6BDF945A0B52326D8" Guid="{9409E17E-D3BF-4CCC-8460-AB7477E4A55C}" Win64="yes">
+                    <Component Id="cmp7CE284CD409356E6BDF945A0B52326D8" Guid="{707E7082-3B69-4457-AE44-F472896AF421}" Win64="yes">
                         <File Id="filEF12054F8A16DD0B055F01537814B5BE" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\en-US.pak" />
                     </Component>
-                    <Component Id="cmpE9D4FE99932A3EB86677791082966723" Guid="{3464F069-1CD3-40CA-897F-7C97214F59C9}" Win64="yes">
+                    <Component Id="cmpE9D4FE99932A3EB86677791082966723" Guid="{277CE0DC-E55D-4C94-A113-DE1B603C2E22}" Win64="yes">
                         <File Id="fil307EEC4AD9A7E924D8C19001A92C9E24" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\es-419.pak" />
                     </Component>
-                    <Component Id="cmpC5A96EC5970BEA9CB801DCF6B4A74AC0" Guid="{12D3353D-2E65-448C-9D24-94EB782C24FF}" Win64="yes">
+                    <Component Id="cmpC5A96EC5970BEA9CB801DCF6B4A74AC0" Guid="{8AB998D0-FF89-4BD2-89D2-7F0D4FA8B3E9}" Win64="yes">
                         <File Id="filF53D96E18A72BAB81FB2392C474CC9E2" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\es.pak" />
                     </Component>
-                    <Component Id="cmp9669B67BDB089CA843D1C8FFDCC9460A" Guid="{710EAF59-CE76-4565-9F60-A631A997DBE6}" Win64="yes">
+                    <Component Id="cmp9669B67BDB089CA843D1C8FFDCC9460A" Guid="{D9B7D7E8-3FF5-4322-A1A5-ABB0A1ACFEB2}" Win64="yes">
                         <File Id="filD0F0226192325AC87C0113E7869340AD" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\et.pak" />
                     </Component>
-                    <Component Id="cmp7B30C1F9B1D26493B6BCAE024C81FF1B" Guid="{6CAF9FA2-393C-4B98-A3CB-A6D93533F89B}" Win64="yes">
+                    <Component Id="cmp7B30C1F9B1D26493B6BCAE024C81FF1B" Guid="{066CECB4-F42F-4C05-B6CE-DA5DE6FB7837}" Win64="yes">
                         <File Id="fil29B9B9F5F9089239D38B4A4E1AD45672" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\fa.pak" />
                     </Component>
-                    <Component Id="cmp5F7989253447E774AC6E27B0ABFFBB5D" Guid="{BB1D8193-2024-4287-8F7A-10100B18A5AB}" Win64="yes">
+                    <Component Id="cmp5F7989253447E774AC6E27B0ABFFBB5D" Guid="{8170B53E-4BEE-4137-B595-D217C5B06575}" Win64="yes">
                         <File Id="fil00DFF69C69A54086B3C75DA73C608836" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\fi.pak" />
                     </Component>
-                    <Component Id="cmpCFA6E0DDA2D4610B01D679E6CF1AF058" Guid="{92A6180A-6D5C-484B-8DF5-9BEDC39C19EF}" Win64="yes">
+                    <Component Id="cmpCFA6E0DDA2D4610B01D679E6CF1AF058" Guid="{A8A4EFAA-EACA-4FB7-9F12-1BEED73DC36E}" Win64="yes">
                         <File Id="fil22BA66F52FED7031EC7A4EDC1B4D874D" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\fil.pak" />
                     </Component>
-                    <Component Id="cmp90ACA681131D98ADFE29AD0D897EF788" Guid="{EFC17D5A-8009-4103-A826-069009F8978F}" Win64="yes">
+                    <Component Id="cmp90ACA681131D98ADFE29AD0D897EF788" Guid="{2AF74FBE-9589-4F6A-A34C-7E2A26945535}" Win64="yes">
                         <File Id="filBD5A1F5D4AAF65C189092CB3945E204D" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\fr.pak" />
                     </Component>
-                    <Component Id="cmp6861C41B2034D0153D52BF3A66CCBE79" Guid="{8A136AF1-49CB-49C8-99E4-D4682A00F92D}" Win64="yes">
+                    <Component Id="cmp6861C41B2034D0153D52BF3A66CCBE79" Guid="{AD7170AD-140E-44A4-9E0A-AE12B832E88B}" Win64="yes">
                         <File Id="filB1D1F01A4AC5B700AAD50E57D36C2AA6" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\gu.pak" />
                     </Component>
-                    <Component Id="cmpC734B804BD2548D223FFC37D9B389BB8" Guid="{11BDB30C-0416-4EEC-AF69-2985DABDD43B}" Win64="yes">
+                    <Component Id="cmpC734B804BD2548D223FFC37D9B389BB8" Guid="{2456A979-5B79-4821-8BAA-8231F59B951E}" Win64="yes">
                         <File Id="filBFF2631FC709F00D6920001E04A0A3F4" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\he.pak" />
                     </Component>
-                    <Component Id="cmpCB54D6473321F0BB49E71655927E5BC7" Guid="{4FA613EC-4365-4C2C-A4C0-5084F05387E5}" Win64="yes">
+                    <Component Id="cmpCB54D6473321F0BB49E71655927E5BC7" Guid="{D496BEDE-9167-42C1-9596-EE2995348790}" Win64="yes">
                         <File Id="filB0FA68489520ED1EE20C2B72766C0428" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\hi.pak" />
                     </Component>
-                    <Component Id="cmp7393DC3A9F84B0DF9E46E8947A888E57" Guid="{F2335C06-C68C-4A87-B214-611AE0E01D25}" Win64="yes">
+                    <Component Id="cmp7393DC3A9F84B0DF9E46E8947A888E57" Guid="{40CA694A-3BBE-4AF8-B470-96355941E280}" Win64="yes">
                         <File Id="fil9FBEDD7A8CF5855826035B74BAD9B8C1" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\hr.pak" />
                     </Component>
-                    <Component Id="cmpDC58E799478203A9D3B61198672DAF88" Guid="{CDDADDDA-483C-4846-B75D-7783B19735E7}" Win64="yes">
+                    <Component Id="cmpDC58E799478203A9D3B61198672DAF88" Guid="{B259EEBF-3480-43A0-9873-9E9542AB60BC}" Win64="yes">
                         <File Id="fil404A478DE40F0265A9CCA3BE49527145" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\hu.pak" />
                     </Component>
-                    <Component Id="cmpA4EBF7CB6129A806DBF29C0D8D08C000" Guid="{8AAFBB29-6A77-4D36-8924-FE1CC50CA977}" Win64="yes">
+                    <Component Id="cmpA4EBF7CB6129A806DBF29C0D8D08C000" Guid="{81E56B3E-41F7-46D0-B02D-7A8C5B74D451}" Win64="yes">
                         <File Id="fil6B904C3CDDBA40EDCD40D9FFC433CC9D" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\id.pak" />
                     </Component>
-                    <Component Id="cmpBA8595898A67D6C81F4040FAA713C208" Guid="{F9B0F777-664A-4E37-AA93-94AECBCC1A9A}" Win64="yes">
+                    <Component Id="cmpBA8595898A67D6C81F4040FAA713C208" Guid="{1A42208E-D3C3-40A5-9625-4C2FBC9FF294}" Win64="yes">
                         <File Id="fil1661B56AB9B801B986D2A426586D0602" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\it.pak" />
                     </Component>
-                    <Component Id="cmpCAB24C403E3237489E2F37D816AA074F" Guid="{5DEE5507-98C8-4054-996F-BD81047799A4}" Win64="yes">
+                    <Component Id="cmpCAB24C403E3237489E2F37D816AA074F" Guid="{DA323AA7-24D3-4869-9F8C-74F95F2DDA1D}" Win64="yes">
                         <File Id="fil8BB818BD4FE249AEC6271860D3FB3873" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ja.pak" />
                     </Component>
-                    <Component Id="cmpEB2DEE1A320291B26C13DF9C9D97C0C8" Guid="{20BA2EA1-9C16-4572-8916-E54CE43F64F8}" Win64="yes">
+                    <Component Id="cmpEB2DEE1A320291B26C13DF9C9D97C0C8" Guid="{44122B7E-5C1B-4252-BDFC-897C0A8D2C51}" Win64="yes">
                         <File Id="fil53D4546B6EA7FEE822C02CF6E01CFA9F" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\kn.pak" />
                     </Component>
-                    <Component Id="cmpF624A040EF038DFC2B6888300B4ED182" Guid="{58168D5A-AF0C-478B-BE63-09F690CF29C9}" Win64="yes">
+                    <Component Id="cmpF624A040EF038DFC2B6888300B4ED182" Guid="{FF2E797F-9E7D-4E40-B48F-64079A21AB8C}" Win64="yes">
                         <File Id="fil743152BCF693470A0B055911BE5075B1" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ko.pak" />
                     </Component>
-                    <Component Id="cmpCA04E22784E4A6BC25133322107CDEA2" Guid="{E31FDEA3-A3E7-48A6-BA01-02B6DFC14AC5}" Win64="yes">
+                    <Component Id="cmpCA04E22784E4A6BC25133322107CDEA2" Guid="{D0BB41BB-9827-47EA-B4BB-4D55E27ADA97}" Win64="yes">
                         <File Id="fil90F215F3A82894B6B65193ABD875022E" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\lt.pak" />
                     </Component>
-                    <Component Id="cmp7D8EE123B4EE598F7004E49A93ADFF91" Guid="{40D2D91D-68B6-49BA-8F0F-73730E716C23}" Win64="yes">
+                    <Component Id="cmp7D8EE123B4EE598F7004E49A93ADFF91" Guid="{7C9E471E-B5BE-47E6-98C2-A38C80C0D42D}" Win64="yes">
                         <File Id="filACBF9F0CA13D5FC8ED4A16BD8CBE3DB9" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\lv.pak" />
                     </Component>
-                    <Component Id="cmp7AE0813F276CFD816061E68D428420F9" Guid="{D0557236-7219-41AA-A3B8-B7E3A578EE80}" Win64="yes">
+                    <Component Id="cmp7AE0813F276CFD816061E68D428420F9" Guid="{E7BE280B-93F3-4EA6-A69A-01768232DC9B}" Win64="yes">
                         <File Id="fil38EE7FD0E63655126476D1931FEF7373" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ml.pak" />
                     </Component>
-                    <Component Id="cmp009361419F9FE311DEE1C2C08F02593A" Guid="{841D5BB9-68A0-489C-A069-CF4A84457E97}" Win64="yes">
+                    <Component Id="cmp009361419F9FE311DEE1C2C08F02593A" Guid="{A60A6FCF-4C53-46C8-B650-4A5E146C4DF0}" Win64="yes">
                         <File Id="filC053E1F808744BF947F1238A4B90F03B" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\mr.pak" />
                     </Component>
-                    <Component Id="cmpAB548147726C90E4D3167151A9BE5CBF" Guid="{DC3AF594-773F-4F63-BC30-029E8342BD59}" Win64="yes">
+                    <Component Id="cmpAB548147726C90E4D3167151A9BE5CBF" Guid="{98293513-96F4-4D1E-A084-8B4EC3DE1004}" Win64="yes">
                         <File Id="fil557F51774D8EF52EE9969A2456EBAC34" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ms.pak" />
                     </Component>
-                    <Component Id="cmp23609605E6BE14CF0DF544FC53BA43F6" Guid="{D52DC67B-DBD4-493B-8DEE-D9EAED2BC184}" Win64="yes">
+                    <Component Id="cmp23609605E6BE14CF0DF544FC53BA43F6" Guid="{B34D0336-934C-4E66-A8A9-DB9B847F4401}" Win64="yes">
                         <File Id="filCCFD78CCC58D460E5223BD8AC1B97D56" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\nb.pak" />
                     </Component>
-                    <Component Id="cmp0578CBE298FE8AFCBB0AA8D7229E2F42" Guid="{B9CABBA5-6D5A-4F42-A646-C8B66FE43F50}" Win64="yes">
+                    <Component Id="cmp0578CBE298FE8AFCBB0AA8D7229E2F42" Guid="{709B2C31-D7E0-4B3D-AAD2-5F007A2E2081}" Win64="yes">
                         <File Id="fil935FDE0D5A17780FE6A6F00357EECAB7" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\nl.pak" />
                     </Component>
-                    <Component Id="cmp724248389C3EDDA9EFA4D5508BF9B8E6" Guid="{8C77B406-C4BD-4BE0-9BDA-B9D8AE664A15}" Win64="yes">
+                    <Component Id="cmp724248389C3EDDA9EFA4D5508BF9B8E6" Guid="{0CBE4F23-E982-4060-B8C2-A5247E8E4055}" Win64="yes">
                         <File Id="fil9C39F19AA93BC0FCEE9FE3B4C9CF65C8" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\pl.pak" />
                     </Component>
-                    <Component Id="cmp02A97C69BCD8D340EB55725454F1D70F" Guid="{65BB4193-21B2-4DE1-A0FE-69D8D26DF4FA}" Win64="yes">
+                    <Component Id="cmp02A97C69BCD8D340EB55725454F1D70F" Guid="{1C37BDC8-4EF9-4BC6-BD40-9578F3C4D83E}" Win64="yes">
                         <File Id="filA1D8E1FC916553A428916E53D72A21EF" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\pt-BR.pak" />
                     </Component>
-                    <Component Id="cmp4F6DFAEEE6238FE47176B84F889B8E70" Guid="{C40AF818-1628-4E37-ABF4-EF707F50CE74}" Win64="yes">
+                    <Component Id="cmp4F6DFAEEE6238FE47176B84F889B8E70" Guid="{09593079-44CB-460C-AED8-635489B920B6}" Win64="yes">
                         <File Id="fil728FC9CA38634D0095AE8DDD502D1443" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\pt-PT.pak" />
                     </Component>
-                    <Component Id="cmp6CE61502BFC836796B14B67D068EE5E4" Guid="{8BB9EE3E-8732-4AFD-9999-F824284CFE63}" Win64="yes">
+                    <Component Id="cmp6CE61502BFC836796B14B67D068EE5E4" Guid="{F95D01FC-84F8-46C8-8C38-A40A7D3EB2F7}" Win64="yes">
                         <File Id="fil43A85D70105024970720B691D9545C75" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ro.pak" />
                     </Component>
-                    <Component Id="cmp8FE7B464C44A4274381248DDB92C73BA" Guid="{5895B138-681B-445B-863C-13DF6FB02C99}" Win64="yes">
+                    <Component Id="cmp8FE7B464C44A4274381248DDB92C73BA" Guid="{D856076F-282B-4951-8B2D-00CD40BFD59B}" Win64="yes">
                         <File Id="fil8CEEB78C878BB95C6CF89398FEEE53A6" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ru.pak" />
                     </Component>
-                    <Component Id="cmpADD5C5BAC584EC285844476943DEF5DC" Guid="{7B3FD95D-2BA0-40A3-AD0F-FDF6CFEE4F60}" Win64="yes">
+                    <Component Id="cmpADD5C5BAC584EC285844476943DEF5DC" Guid="{044417A2-9804-48AC-98BB-3292866C7BD7}" Win64="yes">
                         <File Id="filA58C9633E9E7A61BC9FC9B6939923E8B" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\sk.pak" />
                     </Component>
-                    <Component Id="cmp4DFEC021225B89F605B3B385668AD787" Guid="{D88B4065-DE1B-41CC-BC7A-24D204BD2862}" Win64="yes">
+                    <Component Id="cmp4DFEC021225B89F605B3B385668AD787" Guid="{393CDB02-0E05-4E4F-882F-796ECA62D095}" Win64="yes">
                         <File Id="fil11A5E812E80938F91D0E306C70E94434" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\sl.pak" />
                     </Component>
-                    <Component Id="cmpDFC47B261879C6054ED631292E9D7076" Guid="{CFC73B42-88E5-43A0-8764-2FF44038EF7F}" Win64="yes">
+                    <Component Id="cmpDFC47B261879C6054ED631292E9D7076" Guid="{594AC163-0AA2-4721-8C11-7BD320614064}" Win64="yes">
                         <File Id="filBBBAF6FFE0C4494D0773BC075CBEFF2F" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\sr.pak" />
                     </Component>
-                    <Component Id="cmp3F69DDAE13C02F7443783C83738F40D7" Guid="{44BE7A09-1A96-43AF-A20A-A12B011B7DED}" Win64="yes">
+                    <Component Id="cmp3F69DDAE13C02F7443783C83738F40D7" Guid="{54817866-43DF-41E7-B452-1CF2F3032BBE}" Win64="yes">
                         <File Id="fil7E9631C167CAA5241ABF9A9F61DF96C7" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\sv.pak" />
                     </Component>
-                    <Component Id="cmp35EBE3FF7133CA973352038BA475C4FD" Guid="{6FAC1008-328C-4EA0-9CB4-6142728EDDCF}" Win64="yes">
+                    <Component Id="cmp35EBE3FF7133CA973352038BA475C4FD" Guid="{2EC2919D-CC27-4178-9A86-47ED2AEA5792}" Win64="yes">
                         <File Id="fil81898E96165473D34CBA4786F6C9D29B" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\sw.pak" />
                     </Component>
-                    <Component Id="cmp29155A42136A7C51268CFBF9FE811EF9" Guid="{86B35AAA-634D-407F-BB9A-0A82063F539B}" Win64="yes">
+                    <Component Id="cmp29155A42136A7C51268CFBF9FE811EF9" Guid="{A50EDAD0-0DEB-4684-8FB4-AED7B03097DB}" Win64="yes">
                         <File Id="fil14245FA4755C7EC4083C16E9C79A149D" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ta.pak" />
                     </Component>
-                    <Component Id="cmp65EE0725E8203A2EED58764E797F4E69" Guid="{91BD843B-C898-4260-B897-6C1DE28C2C4F}" Win64="yes">
+                    <Component Id="cmp65EE0725E8203A2EED58764E797F4E69" Guid="{006A8CEB-BE7F-4866-9666-0509351DD068}" Win64="yes">
                         <File Id="fil04F63440E3AE429FA49430DA683E7B04" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\te.pak" />
                     </Component>
-                    <Component Id="cmp4764204CD5AA051CFA6DD38EDF9B2B35" Guid="{CE226F52-9892-4126-AC51-30AA1B9670DA}" Win64="yes">
+                    <Component Id="cmp4764204CD5AA051CFA6DD38EDF9B2B35" Guid="{99CCA751-C85D-450E-AF94-8710CF47A34B}" Win64="yes">
                         <File Id="fil6FC5A8DEE593AA0EA8DB4CC08BA707C3" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\th.pak" />
                     </Component>
-                    <Component Id="cmp461C7DE0313B2EB1F31BED8B4FA68979" Guid="{739DF9D1-3325-4175-B562-48E4D95E68A8}" Win64="yes">
+                    <Component Id="cmp461C7DE0313B2EB1F31BED8B4FA68979" Guid="{5D7D2058-FDE4-40E2-A6E3-E8571CDA6215}" Win64="yes">
                         <File Id="fil96625E6571E3D4CDA4FB04163B334F04" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\tr.pak" />
                     </Component>
-                    <Component Id="cmp6CD26B12700BA7BFF98D172AA9149B5C" Guid="{22F8EF44-AB1B-4CBE-BD88-44D0D8510DE2}" Win64="yes">
+                    <Component Id="cmp6CD26B12700BA7BFF98D172AA9149B5C" Guid="{BB87BEEB-F764-4D4C-B035-5465B51AA513}" Win64="yes">
                         <File Id="filD8CF4C25F836EBF8024C57E9CCB8FC73" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\uk.pak" />
                     </Component>
-                    <Component Id="cmp0D3D63D1759CF99092B16307160E7129" Guid="{A6CE51EC-31D7-49AB-839A-DFEB4D0A46C1}" Win64="yes">
+                    <Component Id="cmp0D3D63D1759CF99092B16307160E7129" Guid="{E2C05D65-BA05-4463-92D8-F56C5066C5B9}" Win64="yes">
                         <File Id="fil8FCB4D9F20A597D29C924F1B7CB2250A" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\vi.pak" />
                     </Component>
-                    <Component Id="cmp3BA42065DC542506B7B06C675CF2D675" Guid="{352090BB-778A-4CD7-8BFB-64D281002D57}" Win64="yes">
+                    <Component Id="cmp3BA42065DC542506B7B06C675CF2D675" Guid="{257C4780-5996-4960-8670-7524B440C01D}" Win64="yes">
                         <File Id="fil79D4C43A281BB3F547D50413F1DF40BF" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\zh-CN.pak" />
                     </Component>
-                    <Component Id="cmp220941B0341E219F8293492ECAEB8517" Guid="{C3F1E8AA-B1A8-4F9C-90B5-EC1546B32F33}" Win64="yes">
+                    <Component Id="cmp220941B0341E219F8293492ECAEB8517" Guid="{3A9BFD49-6115-4EB3-8B6D-729D8ACCF9A9}" Win64="yes">
                         <File Id="fil27E80824731A4DCE3736D619AD779370" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\zh-TW.pak" />
                     </Component>
                 </Directory>
                 <Directory Id="dirB973C600F9D42B3EFAD21A0968F1E91D" Name="swiftshader">
-                    <Component Id="cmpC6388A068BE45312D71FFBA20D5C47AD" Guid="{F78318B9-7377-4DE9-ADC9-BF0F568EEBC9}" Win64="yes">
-                        <File Id="filC9308A93852388F958DCE84F682053A6" KeyPath="yes" Source="!(wix.MainSource)\x64\swiftshader\libEGL.dll" />
+                    <Component Id="cmpC6388A068BE45312D71FFBA20D5C47AD" Guid="{8577D611-BA1A-46F9-9BF6-A3C258553C11}" Win64="yes">
                     </Component>
-                    <Component Id="cmp15021D6078FB75DCD1AA4D882FE565C4" Guid="{9EC82F69-E103-4336-AFA6-B8C757FA78E3}" Win64="yes">
-                        <File Id="fil8FF6AC89C5907A8A5363662784AB3F58" KeyPath="yes" Source="!(wix.MainSource)\x64\swiftshader\libGLESv2.dll" />
+                    <Component Id="cmp15021D6078FB75DCD1AA4D882FE565C4" Guid="{91F0D609-E64D-429D-84D5-764EA62FFEDB}" Win64="yes">
                     </Component>
                 </Directory>
             </Directory>
             <Directory Id="dirD5682402C737D6B46ADCA4F0C55141DF" Name="zh-Hans">
-                <Component Id="cmp989152507E076C4018C4B93F9B3581C6" Guid="{DAB62D7A-975F-442D-A7F1-91F0C9B364B5}" Win64="yes">
+                <Component Id="cmp989152507E076C4018C4B93F9B3581C6" Guid="{D36A9182-7BF6-411F-B6FB-007291A5AC72}" Win64="yes">
                     <File Id="filA1B24F0D30FB6979A35E39445EAF1173" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.CSharp.Features.resources.dll" />
                 </Component>
-                <Component Id="cmp363376071E960C25113D5206051E735C" Guid="{0E47BB58-95DA-489C-8CC4-52DF5481AE69}" Win64="yes">
+                <Component Id="cmp363376071E960C25113D5206051E735C" Guid="{38AFFF69-0F8F-402F-A8E8-E2ED43744D6B}" Win64="yes">
                     <File Id="fil17FD9AB0B307FD0DC6A43425CCB1F884" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll" />
                 </Component>
-                <Component Id="cmp692D61ED9166154584CE65C2F58AE635" Guid="{7D079FE3-AE3A-4299-9913-8983F14CCB60}" Win64="yes">
+                <Component Id="cmp692D61ED9166154584CE65C2F58AE635" Guid="{58980D0F-CD5A-449C-9B76-CC523CEC0FB9}" Win64="yes">
                     <File Id="fil83893FB073A079CDDF4896F4BFD45176" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll" />
                 </Component>
-                <Component Id="cmpA30569C58B448085BF438CB2B0353AB3" Guid="{96693A9F-8D9B-46C4-9E76-1EDE1924AC4E}" Win64="yes">
+                <Component Id="cmpA30569C58B448085BF438CB2B0353AB3" Guid="{063066D9-FCC5-4107-9FB5-ADDEC702A652}" Win64="yes">
                     <File Id="fil768E4D0F8A3F14F9160C3B9ADCE22978" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.Features.resources.dll" />
                 </Component>
-                <Component Id="cmp86106BAF0B837A6671BBC03F3FD4B3A0" Guid="{8CFCB593-88DE-4C20-A265-563D76020B0C}" Win64="yes">
+                <Component Id="cmp86106BAF0B837A6671BBC03F3FD4B3A0" Guid="{623C5BE4-B0E1-4AC7-BDDA-764E9979B805}" Win64="yes">
                     <File Id="fil75B8E1C7BF4AC93075D9612ECE7FE99A" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.resources.dll" />
                 </Component>
-                <Component Id="cmp96FE4DB8C3C1DE81DB7ED95A5B0AD949" Guid="{09B3FDD9-E886-42AC-91EF-49B8C4DDBF95}" Win64="yes">
+                <Component Id="cmp96FE4DB8C3C1DE81DB7ED95A5B0AD949" Guid="{3611CF79-B039-43E1-8BC9-9F3156343E9C}" Win64="yes">
                     <File Id="fil3D472D3E8C55DEC00CF4E9B6AF2AAA8C" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.VisualBasic.Features.resources.dll" />
                 </Component>
-                <Component Id="cmpFBA8B2F519DDA08DFDBCD24E9CB70697" Guid="{5D109C0D-5CAD-4A61-B4ED-C41AFB913E18}" Win64="yes">
+                <Component Id="cmpFBA8B2F519DDA08DFDBCD24E9CB70697" Guid="{C21775C6-D460-40A4-B9F5-C19B4D418C4D}" Win64="yes">
                     <File Id="fil017362B5D969B4CA0E9FF28D2B00A8AC" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.VisualBasic.resources.dll" />
                 </Component>
-                <Component Id="cmpC3A5250A9B055ACD759B16AC752DC341" Guid="{822D69B2-F9BC-450D-9CFA-49A2BDC7B5A2}" Win64="yes">
+                <Component Id="cmpC3A5250A9B055ACD759B16AC752DC341" Guid="{6BA861D5-14A3-46D1-96A3-32A20BC5A3BF}" Win64="yes">
                     <File Id="filD78CC221F5D7C68C93C88812F86D2B2F" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll" />
                 </Component>
-                <Component Id="cmp4BF603E550046E34D03169AEA492782E" Guid="{5671171E-18DF-496A-80DE-7C9EB6769DE7}" Win64="yes">
+                <Component Id="cmp4BF603E550046E34D03169AEA492782E" Guid="{58CA7927-7819-4B6D-84FB-29A5D9BE40C0}" Win64="yes">
                     <File Id="fil1086738427C8EE311559D55D0D82FD93" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll" />
                 </Component>
-                <Component Id="cmpABC3EB27A89BA4557928FFCF88C7959E" Guid="{2D354F79-B222-40F9-9F8B-7C329103E30A}" Win64="yes">
+                <Component Id="cmpABC3EB27A89BA4557928FFCF88C7959E" Guid="{9E417B1E-7427-4D21-8DF6-562FA9BF28E4}" Win64="yes">
                     <File Id="fil50159FD0A95E9B1A680715A7BCAF1835" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll" />
                 </Component>
             </Directory>
             <Directory Id="dir161743E4D186A5C18DD78D84F6714734" Name="zh-Hant">
-                <Component Id="cmpBABC8BD5B2E777093D6C2378E4B429A3" Guid="{B8A43A14-75A7-4823-8B38-75950D80A27C}" Win64="yes">
+                <Component Id="cmpBABC8BD5B2E777093D6C2378E4B429A3" Guid="{B5F97B8B-1AC2-4D10-92BD-E454DC8D55F8}" Win64="yes">
                     <File Id="fil2B4EBA478F7C51B5BB8B2B3DE0719EB5" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.CSharp.Features.resources.dll" />
                 </Component>
-                <Component Id="cmp4DC6059C93B3DE9388F154E7364EA1B0" Guid="{D2ED4B3D-73E7-4C43-89EC-F64355F0E3A2}" Win64="yes">
+                <Component Id="cmp4DC6059C93B3DE9388F154E7364EA1B0" Guid="{3715832D-5438-427D-91CF-3331FB9C5F90}" Win64="yes">
                     <File Id="filDF6C9E061F9924FB0B12790C22D61EF9" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll" />
                 </Component>
-                <Component Id="cmp4A7EEE1889B8E3D281F7C889BB32F185" Guid="{27A327E7-538D-4B09-8ECD-F0842F82B378}" Win64="yes">
+                <Component Id="cmp4A7EEE1889B8E3D281F7C889BB32F185" Guid="{83F4FED3-09A7-43F6-8C47-F6F1738B507A}" Win64="yes">
                     <File Id="fil6B0DD27D148F5F96CA48C77C92E3A179" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll" />
                 </Component>
-                <Component Id="cmp300EDEF51850DD7F18F665B302736EC9" Guid="{ADBAFCA1-642B-48A3-8654-E661BAADF884}" Win64="yes">
+                <Component Id="cmp300EDEF51850DD7F18F665B302736EC9" Guid="{08EFDD20-5B06-4245-AE38-24193D8F29BD}" Win64="yes">
                     <File Id="fil54DFE05516DB555CF9D812348048775F" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.Features.resources.dll" />
                 </Component>
-                <Component Id="cmp7947051F5B198D128AE48419153A8BC3" Guid="{2001A251-460B-42AC-AAA4-490E8B411C1F}" Win64="yes">
+                <Component Id="cmp7947051F5B198D128AE48419153A8BC3" Guid="{59822D28-ED21-4BCF-9535-41C93D9E730F}" Win64="yes">
                     <File Id="fil40E727760D71C1D864F0AB950887FB2D" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.resources.dll" />
                 </Component>
-                <Component Id="cmpC5C2BE5A6537F5CD5E9C0F99FBDBEBF2" Guid="{8EC50607-E31D-4E53-AB20-C46449064406}" Win64="yes">
+                <Component Id="cmpC5C2BE5A6537F5CD5E9C0F99FBDBEBF2" Guid="{E74D885D-846C-4CE5-BC43-1359706EA330}" Win64="yes">
                     <File Id="fil0959A4F5ACCC4005F1140565BF3BE721" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.VisualBasic.Features.resources.dll" />
                 </Component>
-                <Component Id="cmp35EE5186EF19C0FD748FE4398F45DE2F" Guid="{E7E20E69-FB11-4843-AC29-5010A3E46561}" Win64="yes">
+                <Component Id="cmp35EE5186EF19C0FD748FE4398F45DE2F" Guid="{47BAD2F7-4FE2-46EC-BFAE-4D5DFC7E2D24}" Win64="yes">
                     <File Id="fil4959C9DF7AE84E174378DA6505B6D3C9" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.VisualBasic.resources.dll" />
                 </Component>
-                <Component Id="cmp02150A27CD99510CDC2363DC3122320D" Guid="{A88BECAD-ADA1-4FB2-96AD-41AAC87F2D16}" Win64="yes">
+                <Component Id="cmp02150A27CD99510CDC2363DC3122320D" Guid="{866C138A-48B0-422B-B58C-53DE8E6A9AD3}" Win64="yes">
                     <File Id="filD42DB3205E0FC4782BAAF1DDC3583D1B" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll" />
                 </Component>
-                <Component Id="cmpAC14E69CE48A137AC777B80EDAF6B999" Guid="{3F798D43-FBB4-45AA-8609-5B69CA05400B}" Win64="yes">
+                <Component Id="cmpAC14E69CE48A137AC777B80EDAF6B999" Guid="{39D58467-916F-443C-ABB8-C3BD527C7849}" Win64="yes">
                     <File Id="fil00BAB4882D11CF12F7DE388CCDEAA956" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll" />
                 </Component>
             </Directory>
@@ -1207,7 +239,6 @@
     </Fragment>
     <Fragment>
         <ComponentGroup Id="MainComponentFiles">
-            <ComponentRef Id="cmp8F831E6B3AFD94EE2834BBA61A7E1E8E" />
             <ComponentRef Id="cmp9436871E84C09046B1723D8987C046DB" />
             <ComponentRef Id="cmp7BE01297D830E7FE8D98822E731FBFAB" />
             <ComponentRef Id="cmp442A7A87DA69C9B56F30577E04A4E4D9" />
@@ -1227,8 +258,6 @@
             <ComponentRef Id="cmp2E574AF4AA73FD55EBEBDDA470F23145" />
             <ComponentRef Id="cmpB5C70718C06F34BC9EAA57BE3C948BBE" />
             <ComponentRef Id="cmpB84FF3E662CF624991495002BF1BC88D" />
-            <ComponentRef Id="cmpFC2072AC6AB749CFD7255D8127B1D945" />
-            <ComponentRef Id="cmpACFF2DEC99E6BC166A0253634ED41A4F" />
             <ComponentRef Id="cmp1874AB219070404EED322213C6A1A49E" />
             <ComponentRef Id="cmp770B497917674F316826C902746C0409" />
             <ComponentRef Id="cmp7573EC2390E2B47667BC392F0AB1294C" />
@@ -1252,115 +281,20 @@
             <ComponentRef Id="cmpEE43DB2A2FEDDD1EA0D7F8B8FC0B1690" />
             <ComponentRef Id="cmp09713FE74EA723FA7C0F860AB69DA254" />
             <ComponentRef Id="cmpBBE8B538326AA17A34F69A7B96D5EAFF" />
-            <ComponentRef Id="cmp2DF0B2895DFC3CB720B48A6D9BFD37EF" />
             <ComponentRef Id="cmp73085246C202ABD1D96D2E5DEFB2A801" />
-            <ComponentRef Id="cmpFCAB0086ACF92637C85CEFB939B694E1" />
-            <ComponentRef Id="cmpE4B4F7691D3ACD4A72AE99FFE470CE17" />
             <ComponentRef Id="cmp33FDA478CB86F083519801379B2D2D8B" />
-            <ComponentRef Id="cmp75515765AA531707944115B02998F998" />
-            <ComponentRef Id="cmp22D219EF6A7035FFC0254F6BE572FF77" />
-            <ComponentRef Id="cmp22AEF5790256905123AF78698CD859DD" />
-            <ComponentRef Id="cmp5349EC5703EBCAA1E6C7DA272802BE58" />
-            <ComponentRef Id="cmp7B3236183FA982DA508702B357E3D75E" />
-            <ComponentRef Id="cmp58C198180EDB7D42EDD28920E1B2E513" />
             <ComponentRef Id="cmp8543922EE398EBC73A1C63DB49365F51" />
             <ComponentRef Id="cmpBE7DC73EEBFBC82396FDB9036DB50D8F" />
             <ComponentRef Id="cmp7E01646DC669D02446B2CE5E20301692" />
             <ComponentRef Id="cmpF6FE4629B7F5BEB83D1837244A2B2472" />
             <ComponentRef Id="cmp598C0CAE46924FCFBEDE421AFC62FEAC" />
-            <ComponentRef Id="cmp03737AA3B5F539D51D9418A6ED0E4F6C" />
-            <ComponentRef Id="cmpB25E057E8242CD01A509E8CBCAB104DA" />
-            <ComponentRef Id="cmp44C51162C2752731AF9E2E31BB09713C" />
-            <ComponentRef Id="cmpB0C2F11F7CA680BF7E48B8A4268E9C98" />
-            <ComponentRef Id="cmpA59732DC764B94E5F1FB4BDE22083814" />
-            <ComponentRef Id="cmpF6FEF9FF36C695681C6A77FAD09A51DA" />
-            <ComponentRef Id="cmpFE82493E4455C953D8F01BA5365F9C1A" />
-            <ComponentRef Id="cmp0E83A6F1E468052C63DFCFE168BE9F86" />
-            <ComponentRef Id="cmp50A76DD8AF0E25149A565F185A1F29A3" />
-            <ComponentRef Id="cmpDBAE7236105C33C9758DD48E8B6DCCB2" />
-            <ComponentRef Id="cmp5686A5DCF2A08C618B3500928277C12C" />
-            <ComponentRef Id="cmp8D6B0D0D5B997AF1B9BB2F2784692E03" />
-            <ComponentRef Id="cmp15CD896C1257803F1EAAF21F13643142" />
-            <ComponentRef Id="cmp29422AE271D6B2356E2AF332D256B1DE" />
-            <ComponentRef Id="cmpAA087E95574A085C5201D270F443E62E" />
-            <ComponentRef Id="cmp2AE6AC0EBDF241F5A2F3268BA1ACA754" />
-            <ComponentRef Id="cmp129F5F5267671C7AB542077C2BDD8D72" />
-            <ComponentRef Id="cmp23F7C2354109EC7F3034457C47235AA0" />
-            <ComponentRef Id="cmp1AB2F694FBE065FEC98E27EC233540D7" />
-            <ComponentRef Id="cmp4F71FF3179249F40AA83CC5D26424EFE" />
-            <ComponentRef Id="cmpCE934969B52A8BF6C3B94FA9636916F6" />
-            <ComponentRef Id="cmpC99C1FCF2F2B5727FFA9240232755632" />
-            <ComponentRef Id="cmp39DE53A6E602C76462F0260E369F2792" />
-            <ComponentRef Id="cmp4A7BCFB5DA46BC95D2E49236FC59D8A5" />
-            <ComponentRef Id="cmp3C994A927E01FC3CC7E0AE001AF0CD4C" />
-            <ComponentRef Id="cmp461F4A455CD0EB1AD2E4E35B51C09850" />
-            <ComponentRef Id="cmp6042D98678A0BF1EE1EB0EC4AF5E5C52" />
-            <ComponentRef Id="cmpEE5BBE99E2C22FC8023A8976953D2181" />
-            <ComponentRef Id="cmp3B693E836B896CF886DF7174A12D37F7" />
-            <ComponentRef Id="cmp8EB6B1FB2B50FFBB0CA48841D0C7E01B" />
-            <ComponentRef Id="cmpDB259A99945F85FEC221D6F75ACCB8EF" />
             <ComponentRef Id="cmp4CFC7C3721FFD91FA4E9798A516D5E97" />
-            <ComponentRef Id="cmp7C8ACFEA497AD75401FFD01A9AEB31D4" />
-            <ComponentRef Id="cmpD577135453C63C124E24214ACA6ED9B4" />
-            <ComponentRef Id="cmp5CF9D73D8F28A4EF0D37B0136ED71006" />
-            <ComponentRef Id="cmpE95A3A7DB0E5B6B057A2BEF1A9ACCBA6" />
-            <ComponentRef Id="cmp57ED19A38749352B4A6312602AF32EEA" />
-            <ComponentRef Id="cmp3BED5AB46AF442FB282395C20F099F24" />
-            <ComponentRef Id="cmp4629EBAC56A143487ECF260AF98BF78D" />
-            <ComponentRef Id="cmp6A4CEF696231A141C3BD0E963AF7FC9A" />
-            <ComponentRef Id="cmpC11D8B4CADC383AE71657D4082C7C44C" />
-            <ComponentRef Id="cmp7CDF555F26EC27374503C4D251C0ADD7" />
             <ComponentRef Id="cmpCB5AD0976B63430BEA529B0F2B10599A" />
-            <ComponentRef Id="cmp7FDA86390D774733F2019204F3EF9348" />
             <ComponentRef Id="cmpA780BD9CC7EF10DE58A9E17B691B0205" />
-            <ComponentRef Id="cmp0ECCBE7E7A91EA3F9AC4E08C42060A74" />
-            <ComponentRef Id="cmp7320660D409A823430EC1ADFF0D83564" />
-            <ComponentRef Id="cmp68097EB457BBDE8DE960E7CC72000139" />
             <ComponentRef Id="cmpC4D6E68A472E9CC1FAF71994B5B4DE32" />
-            <ComponentRef Id="cmpC2109B9173A8B91CBDD411618A20588C" />
-            <ComponentRef Id="cmp48A7934AD38EE63A44A9478E1C31E3BB" />
-            <ComponentRef Id="cmp92E77A73B8159FC7BF51704F06BB1689" />
-            <ComponentRef Id="cmp82CD5F539E128C7A8CC025CBA927B9F3" />
             <ComponentRef Id="cmp04E7760BC247B05C847A4A6D5D8C7091" />
-            <ComponentRef Id="cmp336F82620F5FFCA06611B8FD22F7066F" />
-            <ComponentRef Id="cmpF68CE304EDD0D14A7BFF18236F51BC48" />
-            <ComponentRef Id="cmp975FB1B5D4A3126E0525915FB4C90ECF" />
-            <ComponentRef Id="cmpE55D5ABD5E06B7AC82A1A464F710DC2E" />
-            <ComponentRef Id="cmpF8D128DB049817F164973BCC38DE4935" />
-            <ComponentRef Id="cmpEF0EA4DA72195CE89ADEBCDFBBB1A537" />
-            <ComponentRef Id="cmp058B1E2892E76D2F98E9569E383E5B83" />
-            <ComponentRef Id="cmp8383C67527BDAFE41A3001900C896480" />
-            <ComponentRef Id="cmp1D49D64F849E58598D108BA2293DAD87" />
-            <ComponentRef Id="cmpFFD9C90842D9C8A5251533EE3764882E" />
-            <ComponentRef Id="cmp852AADF38F8E567003DDA62F8B2655B6" />
-            <ComponentRef Id="cmp74104254FD237403FE1336A0257C4330" />
-            <ComponentRef Id="cmp92D5F6B984CFD9B211394CCCEE1F04A5" />
-            <ComponentRef Id="cmpDFB191D893C4B975B51D3352B7B82109" />
-            <ComponentRef Id="cmp626E0E80197224B4DF0D25BD513CFE42" />
-            <ComponentRef Id="cmp9AFF12285630BC013517118B5EEA5D3C" />
-            <ComponentRef Id="cmpF504650A7859834E56B465827ADA1936" />
-            <ComponentRef Id="cmp6951ADE3434FC5DEA7A943576EAFC9C9" />
-            <ComponentRef Id="cmpA0BE31D5F64E6C8E4232B1246C6E6EBA" />
-            <ComponentRef Id="cmpE7D2AE44E717D315763AA4408AAB16FB" />
             <ComponentRef Id="cmpD5EF7B2A59F953E92E81EF7D6E6DBA82" />
-            <ComponentRef Id="cmp75DAC5FDC2337ECAD4CD4B6633997292" />
-            <ComponentRef Id="cmp69B094884B9A8B61C779794ADEBBC1A9" />
-            <ComponentRef Id="cmpC5D9D0B15AFBC0CF5AFAE1D408F93B74" />
-            <ComponentRef Id="cmpF574B7D15C8F67E99CE93D4A59FC6585" />
-            <ComponentRef Id="cmpEA99956125140C149444D0EA2A2FBD11" />
-            <ComponentRef Id="cmp3B63C4A8BD59792FD308ADD749073AE3" />
             <ComponentRef Id="cmp9DA87BA429922A2AB9A872E6B393B838" />
-            <ComponentRef Id="cmp632B6E4876B3D900A85D26C65E49B166" />
-            <ComponentRef Id="cmp6B712402D454F08D96D36C530166919B" />
-            <ComponentRef Id="cmp8AEEDC24B08C41AED47ACF763BF574A1" />
-            <ComponentRef Id="cmpBAD65A0DD84D5EC853BB247DBE86F887" />
-            <ComponentRef Id="cmpCB5E5E4C7D798FA2732BABDEB0BE886D" />
-            <ComponentRef Id="cmpB29480D26980660C0E9ADE25F14B43AD" />
-            <ComponentRef Id="cmpE59C0BD28DF5A4DF51B1078ACE43A415" />
-            <ComponentRef Id="cmp3123E1EB1C5D225391FC1D6617D55C3F" />
-            <ComponentRef Id="cmp31F020064DD03E3B81CC5C22BABF3806" />
-            <ComponentRef Id="cmp7F8869CF8631075DAAB292885B3366B9" />
-            <ComponentRef Id="cmp808A78AA924556012D14BE1271FD1203" />
             <ComponentRef Id="cmp7165B8BA93A80A0EA1B7728AD04D6E72" />
             <ComponentRef Id="cmpE2468C9865F90573476173F547848D40" />
             <ComponentRef Id="cmp25B7CDE65FC6F7EDFBADDCA69300789E" />

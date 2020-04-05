@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <Authors>OpenRPA</Authors>
     <Product>OpenRPA</Product>
     <Copyright></Copyright>

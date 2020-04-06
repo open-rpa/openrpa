@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
@@ -9,8 +9,9 @@
     <Authors>OpenRPA</Authors>
     <Product>OpenRPA</Product>
     <Description>Code Edtior with syntax Coloring and intellisense for Microsoft Workflow Foundation, specifically tested and created for OpenRPA robot</Description>
-    <Version>1.0.1</Version>
-    <PackageReleaseNotes>1.0.1 Downgrade roslyn compiler to avoid https://github.com/dotnet/roslyn/issues/38779</PackageReleaseNotes>
+    <Version>1.0.2</Version>
+    <PackageReleaseNotes>1.0.2 Change target framework to 4.7.2
+1.0.1 Downgrade roslyn compiler to avoid https://github.com/dotnet/roslyn/issues/38779</PackageReleaseNotes>
     <Configurations>Debug;Release;PrepInstaller;ReleaseNuget</Configurations>
     <PackageTags></PackageTags>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>

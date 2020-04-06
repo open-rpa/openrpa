@@ -42,7 +42,7 @@
 
         <DockPanel Height="Auto" Name="stackPanel1" Width="Auto" LastChildFill="True" Grid.Column="0">
             <TextBlock Text="{x:Static or:strings.activity_filename}" VerticalAlignment="Center" />
-            <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_drop_hint}" MaxWidth="180" Margin="5"
+            <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_filename}" MaxWidth="180" Margin="5"
                             OwnerActivity="{Binding Path=ModelItem}"
                             Expression="{Binding Path=ModelItem.Filename, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
                             ExpressionType="s:String" HorizontalAlignment="Stretch" />

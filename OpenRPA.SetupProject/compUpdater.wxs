@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="UpdaterComponents">
+      <Component Id='UpdaterComponent' Guid='{C441A2BB-BE49-4494-8B2F-87A521745477}' Win64='yes' Directory="Updater">
+        <File Id="Newtonsoft.Json.dll_updater" Source="!(wix.UpdaterSource)\Newtonsoft.Json.dll" />
+        <File Id="NuGet.Common.dll_updater" Source="!(wix.UpdaterSource)\NuGet.Common.dll" />
+        <File Id="NuGet.Configuration.dll_updater" Source="!(wix.UpdaterSource)\NuGet.Configuration.dll" />
+        <File Id="NuGet.Frameworks.dll_updater" Source="!(wix.UpdaterSource)\NuGet.Frameworks.dll" />
+        <File Id="NuGet.Packaging.dll_updater" Source="!(wix.UpdaterSource)\NuGet.Packaging.dll" />
+        <File Id="NuGet.Protocol.dll_updater" Source="!(wix.UpdaterSource)\NuGet.Protocol.dll" />
+        <File Id="NuGet.Resolver.dll_updater" Source="!(wix.UpdaterSource)\NuGet.Resolver.dll" />
+        <File Id="NuGet.Versioning.dll_updater" Source="!(wix.UpdaterSource)\NuGet.Versioning.dll" />
+        <File Id="OpenRPA.Updater.exe_updater" Source="!(wix.UpdaterSource)\OpenRPA.Updater.exe" />
+        <File Id="OpenRPA.Updater.exe.config_updater" Source="!(wix.UpdaterSource)\OpenRPA.Updater.exe.config" />
+      </Component>
+      <Component Id='UpdaterComponentde' Win64='yes' Directory="Updaterde" Guid='{067B6379-A3C2-4A4A-90E9-59D2A65296FF}'>
+        <File Id="OpenRPA.Updater.resources.dll_de" Source="!(wix.UpdaterSource)\de\OpenRPA.Updater.resources.dll" />
+      </Component>
+      <Component Id='UpdaterComponentda' Win64='yes' Directory="Updaterda" Guid='{927C4487-43D3-4173-94DA-D77977D990E5}'>
+        <File Id="OpenRPA.Updater.resources.dll_da" Source="!(wix.UpdaterSource)\da\OpenRPA.Updater.resources.dll" />
+      </Component>
+      <Component Id='UpdaterComponentes' Win64='yes' Directory="Updateres" Guid='{5D4A3B32-8670-4341-81AE-A37189763B29}'>
+        <File Id="OpenRPA.Updater.resources.dll_es" Source="!(wix.UpdaterSource)\es\OpenRPA.Updater.resources.dll" />
+      </Component>
+      <Component Id='UpdaterComponentpt' Win64='yes' Directory="Updaterpt" Guid='{1205BC49-4D96-43A7-A262-ECB91E824C56}'>
+        <File Id="OpenRPA.Updater.resources.dll_pt" Source="!(wix.UpdaterSource)\pt\OpenRPA.Updater.resources.dll" />
+      </Component>
+      <Component Id='UpdaterComponentro' Win64='yes' Directory="Updaterro" Guid='{5A0AF224-453D-4559-BA8F-B7B4E5AE4F19}'>
+        <File Id="OpenRPA.Updater.resources.dll_ro" Source="!(wix.UpdaterSource)\ro\OpenRPA.Updater.resources.dll" />
+      </Component>
+      <Component Id='UpdaterComponentru' Win64='yes' Directory="Updaterru" Guid='{5BC43351-A674-4981-959C-F90C9782854F}'>
+        <File Id="OpenRPA.Updater.resources.dll_ru" Source="!(wix.UpdaterSource)\ru\OpenRPA.Updater.resources.dll" />
+      </Component>
+
+    </ComponentGroup>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="Updater" Name="Updater">
+        <Directory Id="Updaterde" Name="de">
+        </Directory>
+        <Directory Id="Updaterda" Name="da">
+        </Directory>
+        <Directory Id="Updateres" Name="es">
+        </Directory>
+        <Directory Id="Updaterpt" Name="pt">
+        </Directory>
+        <Directory Id="Updaterro" Name="ro">
+        </Directory>
+        <Directory Id="Updaterru" Name="ru">
+        </Directory>
+      </Directory>
+    </DirectoryRef>
+
+  </Fragment>
+</Wix>

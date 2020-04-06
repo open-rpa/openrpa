@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <Authors>OpenRPA</Authors>
     <Product>OpenRPA</Product>
     <Description>A few activites to handle recording the screen while a workflow is running, created for OpenRPA robot</Description>
@@ -8,7 +8,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Version>1.0.18</Version>
-    <PackageReleaseNotes>1.0.17 Add langauges and bug fixes
+    <PackageReleaseNotes>1.0.18 Change target framework to 4.7.2
+1.0.17 Add langauges and bug fixes
 1.0.16 update interfaces reference
 1.0.11 Make runner respect enabled setting in config
 1.0.9 Add runner plugin for auto recording workflows

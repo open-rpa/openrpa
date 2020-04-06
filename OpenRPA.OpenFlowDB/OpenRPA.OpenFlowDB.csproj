@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>OpenRPA</Authors>
     <Company>OpenRPA</Company>
@@ -9,8 +9,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Configurations>Debug;Release;PrepInstaller;ReleaseNuget</Configurations>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.0.5</Version>
-    <PackageReleaseNotes>1.0.5 Add AssignOpenFlow
+    <Version>1.0.6</Version>
+    <PackageReleaseNotes>1.0.6 Change target framework to 4.7.2
+1.0.5 Add AssignOpenFlow
 1.0.4 Add langauges
 1.0.3 update reference</PackageReleaseNotes>
     <PackageTags>OpenRPA</PackageTags>

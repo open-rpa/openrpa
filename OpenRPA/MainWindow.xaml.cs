@@ -499,8 +499,18 @@ namespace OpenRPA
                     {
                         this.first_connect = false;
                         LoadLayout();
+                        LayoutDocument layoutDocument = new LayoutDocument { Title = "Getting started" };
+                        layoutDocument.ContentId = "GettingStarted";
+                        // Views.GettingStarted view = new Views.GettingStarted(url + "://" + u.Host + "/gettingstarted.html");
+                        if(Config.local.show_getting_started)
+                        {
+                            Views.GettingStarted view = new Views.GettingStarted("https://openrpa.dk/gettingstarted.html");
+                            layoutDocument.Content = view;
+                            MainTabControl.Children.Add(layoutDocument);
+                            layoutDocument.IsSelected = true;
+                            layoutDocument.Closing += LayoutDocument_Closing;
+                        }
                     }
-                    
                     System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = true;
                     System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.Normal;
                     System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Normal;
@@ -988,7 +998,8 @@ namespace OpenRPA
                         if (dialogResult == MessageBoxResult.Yes)
                         {
                             //OnManagePackages(null);
-                            System.Diagnostics.Process.Start("https://github.com/open-rpa/openrpa/releases/download/" + newversion + "/OpenRPA.exe");
+                            // System.Diagnostics.Process.Start("https://github.com/open-rpa/openrpa/releases/download/" + newversion + "/OpenRPA.exe");
+                            System.Diagnostics.Process.Start("https://github.com/open-rpa/openrpa/releases/download/" + newversion + "/OpenRPA.msi");
                             Application.Current.Shutdown();
                         }
                     }
@@ -2052,7 +2063,7 @@ namespace OpenRPA
         }
         private void OnManagePackages(object _item)
         {
-            var di = new System.IO.DirectoryInfo(Environment.CurrentDirectory);
+            var di = new System.IO.DirectoryInfo(global.CurrentDirectory);
             var path = "";
             var filename = "";
             if (System.IO.File.Exists(System.IO.Path.Combine(di.FullName, "Updater", "OpenRPA.Updater.exe")))
@@ -3478,12 +3489,25 @@ namespace OpenRPA
                             }
                             if(!Config.local.remote_allow_multiple_running && RunningCount > 0)
                             {
-                                Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
+                                if(i.Workflow!=null)
+                                {
+                                    Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
+                                } else
+                                {
+                                    Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
+                                }
                                 e.isBusy = true; return;
                             } 
                             else if (Config.local.remote_allow_multiple_running && RemoteRunningCount > Config.local.remote_allow_multiple_running_max)
                             {
-                                Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
+                                if (i.Workflow != null)
+                                {
+                                    Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
+                                }
+                                else
+                                {
+                                    Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
+                                }
                                 e.isBusy = true; return;
                             }
                         }

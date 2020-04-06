@@ -7,7 +7,7 @@ description: First Open Source full Robotic Process Automation solution
 
 ![OpenRPA](img/OpenRPA-logo.png)Open Source Robotic Process Automation Software
 
-Join slack for for help or giving feedback [#openrpa](https://join.slack.com/t/openrpa/shared_invite/enQtNjI2ODE5NDIzNDg5LWI4YjFhZDI2OGJmZjA2MTNmNjNkZDRkMWU3MjgzMzY3NGM4MzI0OTFhY2Y2YzJlYmY4MTQzYWU1NGRhYmMxNmI)
+Join slack for for help or giving feedback [#openrpa](https://slack.openrpa.dk)
 
 Check out the documentation on our [wiki pages](https://github.com/open-rpa/openrpa/wiki)
 
@@ -55,7 +55,7 @@ World class security using Access Control Lists and on-the-fly encryption for al
 
 ![1563285778264](img/1563285778264.png)
 
-Join slack for for help or giving feedback [#openrpa](https://join.slack.com/t/openrpa/shared_invite/enQtNjI2ODE5NDIzNDg5LWI4YjFhZDI2OGJmZjA2MTNmNjNkZDRkMWU3MjgzMzY3NGM4MzI0OTFhY2Y2YzJlYmY4MTQzYWU1NGRhYmMxNmI)
+Join slack for for help or giving feedback [#openrpa](https://slack.openrpa.dk)
 
 Check out the documentation on our [wiki pages](https://github.com/open-rpa/openrpa/wiki)
 

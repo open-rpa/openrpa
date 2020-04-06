@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="UtilitiesComponents">
+      <Component Id='UtilitiesComponent' Guid='{C0E0BD5F-C9E0-448A-B0CD-9E0E4D037193}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="OpenRPA.Utilities.dll" Source="!(wix.UtilitiesSource)\OpenRPA.Utilities.dll" />
+        <File Id="ClosedXML.dll" Source="!(wix.UtilitiesSource)\ClosedXML.dll" />
+        <File Id="DocumentFormat.OpenXml.dll" Source="!(wix.UtilitiesSource)\DocumentFormat.OpenXml.dll" />
+        <File Id="ExcelDataReader.DataSet.dll" Source="!(wix.UtilitiesSource)\ExcelDataReader.DataSet.dll" />
+        <File Id="ExcelDataReader.dll" Source="!(wix.UtilitiesSource)\ExcelDataReader.dll" />
+        <File Id="ExcelNumberFormat.dll" Source="!(wix.UtilitiesSource)\ExcelNumberFormat.dll" />
+        <File Id="FastMember.dll" Source="!(wix.UtilitiesSource)\FastMember.dll" />
+        <File Id="itextsharp.dll" Source="!(wix.UtilitiesSource)\itextsharp.dll" />
+      </Component>
+      <Component Id='UtilitiesComponentde' Win64='yes' Directory="Utilitiesde" Guid='{60894AD4-AF07-46CC-B54B-EB8E8C5CB89A}'>
+        <File Id="OpenRPA.Utilities.resources.dll_de" Source="!(wix.UtilitiesSource)\de\OpenRPA.Utilities.resources.dll" />
+      </Component>
+      <Component Id='UtilitiesComponentda' Win64='yes' Directory="Utilitiesda" Guid='{00258A33-6EDF-48EA-9820-04FB7FDA9A23}'>
+        <File Id="OpenRPA.Utilities.resources.dll_da" Source="!(wix.UtilitiesSource)\da\OpenRPA.Utilities.resources.dll" />
+      </Component>
+      <Component Id='UtilitiesComponentes' Win64='yes' Directory="Utilitieses" Guid='{B44B9E0C-811F-40E1-8C00-084C9634B246}'>
+        <File Id="OpenRPA.Utilities.resources.dll_es" Source="!(wix.UtilitiesSource)\es\OpenRPA.Utilities.resources.dll" />
+      </Component>
+      <Component Id='UtilitiesComponentpt' Win64='yes' Directory="Utilitiespt" Guid='{4CC30EBB-AAD9-4415-B321-FE7169568DD2}'>
+        <File Id="OpenRPA.Utilities.resources.dll_pt" Source="!(wix.UtilitiesSource)\pt\OpenRPA.Utilities.resources.dll" />
+      </Component>
+      <Component Id='UtilitiesComponentro' Win64='yes' Directory="Utilitiesro" Guid='{911465DA-0BF5-48EE-B570-30055ECBBD09}'>
+        <File Id="OpenRPA.Utilities.resources.dll_ro" Source="!(wix.UtilitiesSource)\ro\OpenRPA.Utilities.resources.dll" />
+      </Component>
+      <Component Id='UtilitiesComponentru' Win64='yes' Directory="Utilitiesru" Guid='{B49A09EB-4533-465D-A13D-F2D76B42FCE1}'>
+        <File Id="OpenRPA.Utilities.resources.dll_ru" Source="!(wix.UtilitiesSource)\ru\OpenRPA.Utilities.resources.dll" />
+      </Component>
+
+    </ComponentGroup>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="Utilitiesde" Name="de">
+      </Directory>
+      <Directory Id="Utilitiesda" Name="da">
+      </Directory>
+      <Directory Id="Utilitieses" Name="es">
+      </Directory>
+      <Directory Id="Utilitiespt" Name="pt">
+      </Directory>
+      <Directory Id="Utilitiesro" Name="ro">
+      </Directory>
+      <Directory Id="Utilitiesru" Name="ru">
+      </Directory>
+    </DirectoryRef>
+
+  </Fragment>
+</Wix>

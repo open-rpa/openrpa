@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define lanIFCEXPORT = "IFC for Revit" ?>
+  <?define lanIFCEXPORTDescrip = "This feature installs the IFC Exporter/Importer for Revit from github.com/Autodesk/revit-ifc. The Installation overrides the shipped IFC Exporter/Importer for Revit." ?>
+  <?define lanIFCIMPORT = "Install IFC Importer" ?>
+  <?define lanIFCIMPORTDescrip = "This option installs the ”IFC Importer for Revit” from sourceforge.net. The installation overrides the shipped Revit IFC Exporter." ?>
+  <?define lanPUBLISHPDF = "PDFCreator" ?>
+  <?define lanPUBLISHPDFDescription = "In order to benefit from the "Publish PDF" function, you need to install PDFCreator, powered by www.pdfforge.org." ?>
+  <?define lanMDOCINTEGRATION = "Mdoc Integration" ?>
+  <?define lanMDOCINTEGRATIONDescription = "This feature will turn on integration with Mdoc and remind you to start Mdoc when running Publish methods, to ensure registration of published files." ?>
+</Include>

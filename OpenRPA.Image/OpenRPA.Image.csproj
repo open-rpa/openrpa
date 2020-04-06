@@ -1,14 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <Authors>OpenRPA</Authors>
     <Product>OpenRPA</Product>
     <Description>A couple of activities and a Record plugin for handling Image recognition and doing basic OCR using OpenCV, created for OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.21</Version>
-    <PackageReleaseNotes>1.0.21 Remove debug info
+    <Version>1.0.22</Version>
+    <PackageReleaseNotes>1.0.22 Change target framework to 4.7.2
+1.0.21 Remove debug info
 1.0.20 Add langauges and bug fixes
 1.0.18 Tweak input handling doing recording
 1.0.17 update reference

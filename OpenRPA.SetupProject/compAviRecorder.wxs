@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="AviRecorderComponents">
+      <Component Id='AviRecorderComponent' Guid='{C8B0EA69-9307-415B-B91C-A00063B10B70}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="OpenRPA.AviRecorder.dll" Source="!(wix.AviRecorderSource)\OpenRPA.AviRecorder.dll" />
+        <File Id="SharpAvi.dll" Source="!(wix.AviRecorderSource)\SharpAvi.dll" />
+        <File Id="NAudio.dll" Source="!(wix.AviRecorderSource)\NAudio.dll" />
+      </Component>
+      
+      <Component Id='AviRecorderComponentde' Win64='yes' Directory="AviRecorderde" Guid='{E5E526BD-2D95-47C8-BFD6-CE1158D14341}'>
+        <File Id="OpenRPA.AviRecorder.resources.dll_de" Source="!(wix.AviRecorderSource)\de\OpenRPA.AviRecorder.resources.dll" />
+      </Component>
+      <Component Id='AviRecorderComponentda' Win64='yes' Directory="AviRecorderda" Guid='{7BA5094B-A417-4905-8D2D-F558B104C8CC}'>
+        <File Id="OpenRPA.AviRecorder.resources.dll_da" Source="!(wix.AviRecorderSource)\da\OpenRPA.AviRecorder.resources.dll" />
+      </Component>
+      <Component Id='AviRecorderComponentes' Win64='yes' Directory="AviRecorderes" Guid='{9A3B599E-1D9E-48F2-B697-D8199031D78F}'>
+        <File Id="OpenRPA.AviRecorder.resources.dll_es" Source="!(wix.AviRecorderSource)\es\OpenRPA.AviRecorder.resources.dll" />
+      </Component>
+      <Component Id='AviRecorderComponentpt' Win64='yes' Directory="AviRecorderpt" Guid='{0E338867-709C-482E-9E39-70880070B9BA}'>
+        <File Id="OpenRPA.AviRecorder.resources.dll_pt" Source="!(wix.AviRecorderSource)\pt\OpenRPA.AviRecorder.resources.dll" />
+      </Component>
+      <Component Id='AviRecorderComponentro' Win64='yes' Directory="AviRecorderro" Guid='{B8F73E2F-A4F4-4211-99BB-31C4CED7D624}'>
+        <File Id="OpenRPA.AviRecorder.resources.dll_ro" Source="!(wix.AviRecorderSource)\ro\OpenRPA.AviRecorder.resources.dll" />
+      </Component>
+      <Component Id='AviRecorderComponentru' Win64='yes' Directory="AviRecorderru" Guid='{9CDF08F2-2A08-460F-8876-EBE010D05C67}'>
+        <File Id="OpenRPA.AviRecorder.resources.dll_ru" Source="!(wix.AviRecorderSource)\ru\OpenRPA.AviRecorder.resources.dll" />
+      </Component>
+
+    </ComponentGroup>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="AviRecorderde" Name="de">
+      </Directory>
+      <Directory Id="AviRecorderda" Name="da">
+      </Directory>
+      <Directory Id="AviRecorderes" Name="es">
+      </Directory>
+      <Directory Id="AviRecorderpt" Name="pt">
+      </Directory>
+      <Directory Id="AviRecorderro" Name="ro">
+      </Directory>
+      <Directory Id="AviRecorderru" Name="ru">
+      </Directory>
+    </DirectoryRef>
+
+  </Fragment>
+</Wix>

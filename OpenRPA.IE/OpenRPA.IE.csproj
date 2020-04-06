@@ -1,14 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>OpenRPA</Authors>
     <Product>OpenRPA</Product>
     <Description>Activities and record plugin for handling Internet Explorer, created for OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.22</Version>
-    <PackageReleaseNotes>1.0.22 Add support for variables in selector
+    <Version>1.0.23</Version>
+    <PackageReleaseNotes>1.0.23 Change target framework to 4.7.2
+1.0.22 Add support for variables in selector
 1.0.21 Add langauges
 1.0.20 Fix IE google Search Snippet
 1.0.18 update interfaces reference

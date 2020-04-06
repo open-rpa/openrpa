@@ -168,27 +168,38 @@ namespace OpenRPA.NM
             {
                 if (NMHook.connected)
                 {
-                    var tab = NMHook.tabs.Where(x => x.id == message.tabid).FirstOrDefault();
-                    if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
-                    // NMHook.HighlightTab(tab);
 
-                    var updateelement = new NativeMessagingMessage("updateelementtext", PluginConfig.debug_console_output)
+                    if (tagname.ToLower() == "select")
                     {
-                        browser = message.browser,
-                        cssPath = cssselector,
-                        xPath = xpath,
-                        tabid = message.tabid,
-                        frameId = message.frameId,
-                        data = value
-                    };
-                    var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(3));
-                    if (subsubresult == null) throw new Exception("Failed setting html element value");
-                    //System.Threading.Thread.Sleep(500);
-                    if (PluginConfig.wait_for_tab_after_set_value)
-                    {
-                        NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
+                        foreach (var item in Children)
+                        {
+                            if ((!string.IsNullOrEmpty(item.Text) && item.Text.ToLower() == value) || (string.IsNullOrEmpty(item.Text) && string.IsNullOrEmpty(value)))
+                            {
+                                Value = item.Value;
+                                return;
+                            }
+                        }
                     }
-                    return;
+                    //var tab = NMHook.tabs.Where(x => x.id == message.tabid).FirstOrDefault();
+                    //if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
+                    //// NMHook.HighlightTab(tab);
+                    //var updateelement = new NativeMessagingMessage("updateelementtext", PluginConfig.debug_console_output)
+                    //{
+                    //    browser = message.browser,
+                    //    cssPath = cssselector,
+                    //    xPath = xpath,
+                    //    tabid = message.tabid,
+                    //    frameId = message.frameId,
+                    //    data = value
+                    //};
+                    //var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(3));
+                    //if (subsubresult == null) throw new Exception("Failed setting html element value");
+                    ////System.Threading.Thread.Sleep(500);
+                    //if (PluginConfig.wait_for_tab_after_set_value)
+                    //{
+                    //    NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
+                    //}
+                    //return;
                 }
             }
         }

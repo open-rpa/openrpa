@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="PDPluginComponents">
+      <Component Id='PDPluginComponent' Guid='{4F305262-DF6B-424F-A6A3-216FBA2A2F73}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="OpenRPA.PDPlugin.dll" Source="!(wix.PDPluginSource)\OpenRPA.PDPlugin.dll" />
+      </Component>
+      
+      <Component Id='PDPluginComponentde' Win64='yes' Directory="PDPluginde" Guid='{6043A68D-BB45-44A2-8F16-6C49CDC57379}'>
+        <File Id="OpenRPA.PDPlugin.resources.dll_de" Source="!(wix.PDPluginSource)\de\OpenRPA.PDPlugin.resources.dll" />
+      </Component>
+      <Component Id='PDPluginComponentda' Win64='yes' Directory="PDPluginda" Guid='{AC9E87DC-36B4-4365-A0F6-20E586B4B3EF}'>
+        <File Id="OpenRPA.PDPlugin.resources.dll_da" Source="!(wix.PDPluginSource)\da\OpenRPA.PDPlugin.resources.dll" />
+      </Component>
+      <Component Id='PDPluginComponentes' Win64='yes' Directory="PDPlugines" Guid='{5A1895C0-A9A0-499C-BA1B-6EBE7468C432}'>
+        <File Id="OpenRPA.PDPlugin.resources.dll_es" Source="!(wix.PDPluginSource)\es\OpenRPA.PDPlugin.resources.dll" />
+      </Component>
+      <Component Id='PDPluginComponentpt' Win64='yes' Directory="PDPluginpt" Guid='{E62CC9B6-2F92-4592-B7B4-6F88B62CA592}'>
+        <File Id="OpenRPA.PDPlugin.resources.dll_pt" Source="!(wix.PDPluginSource)\pt\OpenRPA.PDPlugin.resources.dll" />
+      </Component>
+      <Component Id='PDPluginComponentro' Win64='yes' Directory="PDPluginro" Guid='{94DCED06-946C-4AC3-B911-778BAC4824AB}'>
+        <File Id="OpenRPA.PDPlugin.resources.dll_ro" Source="!(wix.PDPluginSource)\ro\OpenRPA.PDPlugin.resources.dll" />
+      </Component>
+      <Component Id='PDPluginComponentru' Win64='yes' Directory="PDPluginru" Guid='{8CF302DC-734C-471D-BFD5-37ED47B3B726}'>
+        <File Id="OpenRPA.PDPlugin.resources.dll_ru" Source="!(wix.PDPluginSource)\ru\OpenRPA.PDPlugin.resources.dll" />
+      </Component>
+
+    </ComponentGroup>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="PDPluginde" Name="de">
+      </Directory>
+      <Directory Id="PDPluginda" Name="da">
+      </Directory>
+      <Directory Id="PDPlugines" Name="es">
+      </Directory>
+      <Directory Id="PDPluginpt" Name="pt">
+      </Directory>
+      <Directory Id="PDPluginro" Name="ro">
+      </Directory>
+      <Directory Id="PDPluginru" Name="ru">
+      </Directory>
+    </DirectoryRef>
+
+  </Fragment>
+</Wix>

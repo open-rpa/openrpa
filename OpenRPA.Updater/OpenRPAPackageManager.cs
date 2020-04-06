@@ -337,6 +337,8 @@ namespace OpenRPA.Updater
                 catch (Exception)
                 {
                     KillOpenRPA();
+                    System.Threading.Thread.Sleep(250);
+                    KillOpenRPA();
                 }
                 finally
                 {

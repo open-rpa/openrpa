@@ -1,14 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>OpenRPA</Authors>
     <Product>OpenRPA</Product>
     <Description>A couple of activities to design and show forms, and notifications, created for OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.16</Version>
-    <PackageReleaseNotes>1.0.16 Add langauges
+    <Version>1.0.17</Version>
+    <PackageReleaseNotes>1.0.17 Change target framework to 4.7.2
+1.0.16 Add langauges
 1.0.14 update interfaces reference
 1.0.11 update interfaces reference</PackageReleaseNotes>
     <PackageIcon>open_rpa128.png</PackageIcon>

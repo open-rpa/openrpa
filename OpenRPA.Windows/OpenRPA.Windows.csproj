@@ -1,14 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
     <Authors>OpenRPA</Authors>
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
-    <Version>1.0.22</Version>
-    <PackageReleaseNotes>1.0.22 Add support for variables in selector
+    <Version>1.0.23</Version>
+    <PackageReleaseNotes>1.0.23 Change target framework to 4.7.2
+1.0.22 Add support for variables in selector
 1.0.21 Fix issue when searching for ghot elements on Windows 7
 1.0.20 Fix issue with "traverse back" recorder options when running with Japanese language
 1.0.19 Add support for moving and resizing windows

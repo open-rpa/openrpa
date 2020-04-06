@@ -1,0 +1,2 @@
+﻿msiexec /i "C:\code\openrpa\OpenRPA.SetupProject\bin\Debug\en-us\OpenRPA.msi" /L*V "C:\code\openrpa\OpenRPA.SetupProject\bin\Debug\en-us\log.txt"
+rem msiexec /i "C:\code\openrpa\OpenRPA.SetupProject\bin\Release\en-us\OpenRPA.msi" /L*V "C:\code\openrpa\OpenRPA.SetupProject\bin\Release\en-us\log.txt"

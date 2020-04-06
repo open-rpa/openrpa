@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="INSTALLDIR">
+            <Directory Id="dir5423D833CA79DA023BE123A97BB865E3" Name="net462">
+                <Component Id="cmp4AB4A94FE1E3EA7D32E191B459082F0B" Guid="{BB68F126-F6C8-4025-8722-749222407BEF}" Win64="yes">
+                    <File Id="fil7D5822F3D03A075C8699EB8C579AFF3E" KeyPath="yes" Source="!(wix.NMSource)\chromemanifest.json" />
+                </Component>
+                <Component Id="cmp217E660B7E4E5ECE8DAEC7BC1994B293" Guid="{8172EAF0-4193-429A-B888-F5B6EF5F59BE}" Win64="yes">
+                    <File Id="fil6D62D356BA0FB2BB303E9114E46B35C0" KeyPath="yes" Source="!(wix.NMSource)\ffmanifest.json" />
+                </Component>
+                <Component Id="cmp91DDF0ADA7A29F2B063F06A71DC82DFD" Guid="{FE67B5F5-CEBF-4FBF-B99F-98D1AE417856}" Win64="yes">
+                    <File Id="fil58C5DB2C3EC0E01CC67AF92F83F21640" KeyPath="yes" Source="!(wix.NMSource)\FlaUI.Core.dll" />
+                </Component>
+                <Component Id="cmpFD3A660CFE3B29319C9E9F83390EF8A3" Guid="{A3C0D544-A5A3-4579-8683-9D868D7A79B2}" Win64="yes">
+                    <File Id="fil5AD7511A706917C016F430CD4E536A4F" KeyPath="yes" Source="!(wix.NMSource)\FlaUI.UIA3.dll" />
+                </Component>
+                <Component Id="cmp088D08ACDF9B26412A7DBA762FB18E4D" Guid="{85D555FD-3D1E-4052-A8E3-8E402F5D8937}" Win64="yes">
+                    <File Id="fil2902850E1E01B819FE6DB71B99C20F9A" KeyPath="yes" Source="!(wix.NMSource)\Interop.UIAutomationClient.dll" />
+                </Component>
+                <Component Id="cmpFD3176A3FFF459618C5B1402E5B8E0F2" Guid="{7663E0E5-3328-4957-86E0-70B26F45752A}" Win64="yes">
+                    <File Id="fil14A036C919B243DB77360705EBBA869E" KeyPath="yes" Source="!(wix.NMSource)\Newtonsoft.Json.dll" />
+                </Component>
+                <Component Id="cmp01BF0FC70D4AC62F806E92B9CE36D098" Guid="{EE8EA99A-E297-483E-A7B7-10B307545D35}" Win64="yes">
+                    <File Id="filA19F2B8825E290892A62C79236B263F2" KeyPath="yes" Source="!(wix.NMSource)\NLog.dll" />
+                </Component>
+                <Component Id="cmp31301F41193E371EE1770B5278C45ACB" Guid="{8839F867-AF25-420C-B75E-FECA98A62C26}" Win64="yes">
+                    <File Id="filC77F5F862D9EF76153A07173DD4F645B" KeyPath="yes" Source="!(wix.NMSource)\OpenRPA.Interfaces.dll" />
+                </Component>
+                <Component Id="cmp47A4ADBCADCE70CD1143B80CF242D755" Guid="{88DA113E-DE77-46E0-BAA3-2A5B6E25EB67}" Win64="yes">
+                    <File Id="filE3DB1475EFCE8C6994D5990067BEE75D" KeyPath="yes" Source="!(wix.NMSource)\OpenRPA.Interfaces.pdb" />
+                </Component>
+                <Component Id="cmp681789F90344995C9EFA36E8C7BFD2F2" Guid="{D607F5D4-C220-4039-B2BC-C0203FFE0AA5}" Win64="yes">
+                    <File Id="fil10D253A7ADE4E03DD43F1E95A7289E38" KeyPath="yes" Source="!(wix.NMSource)\OpenRPA.NamedPipeWrapper.dll" />
+                </Component>
+                <Component Id="cmp569884E41E565AAED67F0DDB85EEDDBF" Guid="{4D39136F-B201-412C-8A1B-7E407E6255C5}" Win64="yes">
+                    <File Id="filC94430703A8F364FAFD135B93C59BEE3" KeyPath="yes" Source="!(wix.NMSource)\OpenRPA.NamedPipeWrapper.pdb" />
+                </Component>
+                
+                <Component Id="cmp659058B91E40891F32B63228D1D4C2A6" Guid="{81EFFD26-C3E1-4A77-82ED-926390C13FF3}" Win64="yes">
+                    <File Id="fil6763499F996A6902EF9E649CB918A17C" KeyPath="yes" Source="!(wix.NMSource)\OpenRPA.NativeMessagingHost.exe.config" />
+                </Component>
+                <Component Id="cmp77D5D50776C7C8919CF23782A73156A8" Guid="{3D547D87-7584-4AB2-ABC9-E9D3407E91B4}" Win64="yes">
+                    <File Id="fil88F6200F7D24724B581E3912521CC7B1" KeyPath="yes" Source="!(wix.NMSource)\OpenRPA.NativeMessagingHost.pdb" />
+                </Component>
+                <Component Id="cmp2B8C0339E94A751CA16381C3FB627DEA" Guid="{7FA5FCF7-D339-413E-9A02-371189EBF218}" Win64="yes">
+                    <File Id="fil87E9E1BE5539F30DAE1F1CD999425769" KeyPath="yes" Source="!(wix.NMSource)\OpenRPA.NM.dll" />
+                </Component>
+                <Component Id="cmp291D384411636DECC67808B60859CB16" Guid="{BEC49BFC-6777-4DF4-9C2D-FD090F5D7785}" Win64="yes">
+                    <File Id="filADDA0A02944150584ACF3D2FECCD8E41" KeyPath="yes" Source="!(wix.NMSource)\OpenRPA.NM.pdb" />
+                </Component>
+                <Directory Id="dir40DB1C33D28F235DDF016C9CFF240E0F" Name="da">
+                    <Component Id="cmp4F98A0820C7C13D598D6DB1A97F67482" Guid="{056187E8-6533-45CF-94A6-19E3BFF76B4E}" Win64="yes">
+                        <File Id="filB2F28FB11C51B8052955E72F447E35F6" KeyPath="yes" Source="!(wix.NMSource)\da\OpenRPA.Interfaces.resources.dll" />
+                    </Component>
+                    <Component Id="cmpFB001454274D3A21FB373B63E6FB9C07" Guid="{80884DE4-8139-49C3-ACA5-E3407CB587AE}" Win64="yes">
+                        <File Id="fil3C9CCAA7D63298BDD3BBC7AA556F454C" KeyPath="yes" Source="!(wix.NMSource)\da\OpenRPA.NM.resources.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="dir7F92BD764605EB16601B99D4A43FB7FC" Name="de">
+                    <Component Id="cmp4DA8C73741EAC9534376DAB89B3FECEC" Guid="{AFB28768-ECB3-4E00-8C10-582B0BB47E90}" Win64="yes">
+                        <File Id="filBAE32BD45CCB6812B48E8D5C5FF50684" KeyPath="yes" Source="!(wix.NMSource)\de\OpenRPA.Interfaces.resources.dll" />
+                    </Component>
+                    <Component Id="cmp0062DCE6C70271BC63DE65CD7F8C423B" Guid="{F62E76D3-9B6D-43D5-8600-7125BA4C0D7C}" Win64="yes">
+                        <File Id="fil12C9B58C4737AEAE94AD7B0B77FE7EA2" KeyPath="yes" Source="!(wix.NMSource)\de\OpenRPA.NM.resources.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="dir21D23A4E863529B01E9F956670492213" Name="es">
+                    <Component Id="cmpC1359392E586F86A8C750C3DD70A1DE4" Guid="{4DB3A135-2F82-4906-9CAA-52DA700F47A9}" Win64="yes">
+                        <File Id="fil39272E8DBDF3738A82FB3E54893C42CD" KeyPath="yes" Source="!(wix.NMSource)\es\OpenRPA.Interfaces.resources.dll" />
+                    </Component>
+                    <Component Id="cmp1B85D40B9FA6E48FE707D625DE4D4F4A" Guid="{BBF0E564-34FA-46A0-A65B-6174B00D1E66}" Win64="yes">
+                        <File Id="filBB5039124BFD2D18C8BD6C010A69A9E9" KeyPath="yes" Source="!(wix.NMSource)\es\OpenRPA.NM.resources.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="dir6601377C56368CD0F57B66E2412F1EB8" Name="pt">
+                    <Component Id="cmp9AD5FA6C2478CF807E32568E59D274ED" Guid="{C319E636-3270-4F7D-8BEC-C8C13C0CACC4}" Win64="yes">
+                        <File Id="fil407F017952625E8E385ED5A4C79A7743" KeyPath="yes" Source="!(wix.NMSource)\pt\OpenRPA.Interfaces.resources.dll" />
+                    </Component>
+                    <Component Id="cmp7F479694764341F65CD1DECA5B5F1F4F" Guid="{1F230A30-41C6-4AC1-B276-6C694A1AD9D6}" Win64="yes">
+                        <File Id="fil278C93E269706EC946EF3D3578E4A1D3" KeyPath="yes" Source="!(wix.NMSource)\pt\OpenRPA.NM.resources.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="dirDE821B23E6A1C60F28E57B41FE20F9D5" Name="ro">
+                    <Component Id="cmpBB55BD336CFC09726D5626AF92BFFBC5" Guid="{4CF90DB7-B9F1-4381-B784-5DD3904002A3}" Win64="yes">
+                        <File Id="fil12DAF7C154C8BC728421A456248872FB" KeyPath="yes" Source="!(wix.NMSource)\ro\OpenRPA.Interfaces.resources.dll" />
+                    </Component>
+                    <Component Id="cmp2C3DFDD9FEF34072F67A93830F0B588C" Guid="{04F340AF-090F-4ACD-ADBE-C01B88CB31A6}" Win64="yes">
+                        <File Id="fil701AF23207842BBC6A7AD3D112B1578D" KeyPath="yes" Source="!(wix.NMSource)\ro\OpenRPA.NM.resources.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="dirF549541EFC9242DFB0E71DB93BEFEB44" Name="ru">
+                    <Component Id="cmp40A49FB4B6FEBCF9F755F11E37C43105" Guid="{8B1D3D06-4C8A-47F1-BB69-22179F44D07A}" Win64="yes">
+                        <File Id="fil2DA2D9D0D01C975D238AF12B90C43371" KeyPath="yes" Source="!(wix.NMSource)\ru\OpenRPA.Interfaces.resources.dll" />
+                    </Component>
+                    <Component Id="cmp5A4099083DFB7AA2AC3264EC1A6CFBDF" Guid="{6FA45E41-CCB7-410A-B9B9-25690721A87D}" Win64="yes">
+                        <File Id="fil7B5D349BFA8470DC6AB1216C3073CAE8" KeyPath="yes" Source="!(wix.NMSource)\ru\OpenRPA.NM.resources.dll" />
+                    </Component>
+                </Directory>
+            </Directory>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="NMComponentFiles">
+            <ComponentRef Id="cmp4AB4A94FE1E3EA7D32E191B459082F0B" />
+            <ComponentRef Id="cmp217E660B7E4E5ECE8DAEC7BC1994B293" />
+            <ComponentRef Id="cmp91DDF0ADA7A29F2B063F06A71DC82DFD" />
+            <ComponentRef Id="cmpFD3A660CFE3B29319C9E9F83390EF8A3" />
+            <ComponentRef Id="cmp088D08ACDF9B26412A7DBA762FB18E4D" />
+            <ComponentRef Id="cmpFD3176A3FFF459618C5B1402E5B8E0F2" />
+            <ComponentRef Id="cmp01BF0FC70D4AC62F806E92B9CE36D098" />
+            <ComponentRef Id="cmp31301F41193E371EE1770B5278C45ACB" />
+            <ComponentRef Id="cmp47A4ADBCADCE70CD1143B80CF242D755" />
+            <ComponentRef Id="cmp681789F90344995C9EFA36E8C7BFD2F2" />
+            <ComponentRef Id="cmp569884E41E565AAED67F0DDB85EEDDBF" />
+            
+            <ComponentRef Id="cmp659058B91E40891F32B63228D1D4C2A6" />
+            <ComponentRef Id="cmp77D5D50776C7C8919CF23782A73156A8" />
+            <ComponentRef Id="cmp2B8C0339E94A751CA16381C3FB627DEA" />
+            <ComponentRef Id="cmp291D384411636DECC67808B60859CB16" />
+            <ComponentRef Id="cmp4F98A0820C7C13D598D6DB1A97F67482" />
+            <ComponentRef Id="cmpFB001454274D3A21FB373B63E6FB9C07" />
+            <ComponentRef Id="cmp4DA8C73741EAC9534376DAB89B3FECEC" />
+            <ComponentRef Id="cmp0062DCE6C70271BC63DE65CD7F8C423B" />
+            <ComponentRef Id="cmpC1359392E586F86A8C750C3DD70A1DE4" />
+            <ComponentRef Id="cmp1B85D40B9FA6E48FE707D625DE4D4F4A" />
+            <ComponentRef Id="cmp9AD5FA6C2478CF807E32568E59D274ED" />
+            <ComponentRef Id="cmp7F479694764341F65CD1DECA5B5F1F4F" />
+            <ComponentRef Id="cmpBB55BD336CFC09726D5626AF92BFFBC5" />
+            <ComponentRef Id="cmp2C3DFDD9FEF34072F67A93830F0B588C" />
+            <ComponentRef Id="cmp40A49FB4B6FEBCF9F755F11E37C43105" />
+            <ComponentRef Id="cmp5A4099083DFB7AA2AC3264EC1A6CFBDF" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

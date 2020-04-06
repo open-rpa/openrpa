@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="ScriptComponents">
+      <Component Id='ScriptComponent' Guid='{2F47EB82-7138-4EF1-8303-C3B80C373ED9}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="OpenRPA.Script.dll" Source="!(wix.ScriptSource)\OpenRPA.Script.dll" />
+        <File Id="Python.Included.dll" Source="!(wix.ScriptSource)\Python.Included.dll" />
+        <File Id="Python.Runtime.NETStandard.dll" Source="!(wix.ScriptSource)\Python.Runtime.NETStandard.dll" />
+        <File Id="sharpAHK.dll" Source="!(wix.ScriptSource)\sharpAHK.dll" />
+      </Component>
+      
+      <Component Id='ScriptComponentde' Win64='yes' Directory="Scriptde" Guid='{CDE7933C-79BC-432D-9BCE-021AF8EB6E5D}'>
+        <File Id="OpenRPA.Script.resources.dll_de" Source="!(wix.ScriptSource)\de\OpenRPA.Script.resources.dll" />
+      </Component>
+      <Component Id='ScriptComponentda' Win64='yes' Directory="Scriptda" Guid='{CF5C3CE6-3531-4F17-B1D0-1D73532A436D}'>
+        <File Id="OpenRPA.Script.resources.dll_da" Source="!(wix.ScriptSource)\da\OpenRPA.Script.resources.dll" />
+      </Component>
+      <Component Id='ScriptComponentes' Win64='yes' Directory="Scriptes" Guid='{0C47AE05-8103-4FEB-AED6-70E5346E7BC8}'>
+        <File Id="OpenRPA.Script.resources.dll_es" Source="!(wix.ScriptSource)\es\OpenRPA.Script.resources.dll" />
+      </Component>
+      <Component Id='ScriptComponentpt' Win64='yes' Directory="Scriptpt" Guid='{4B0CCB00-10F9-4AF1-AC27-75FD15CD8D45}'>
+        <File Id="OpenRPA.Script.resources.dll_pt" Source="!(wix.ScriptSource)\pt\OpenRPA.Script.resources.dll" />
+      </Component>
+      <Component Id='ScriptComponentro' Win64='yes' Directory="Scriptro" Guid='{FCAF4FF5-7790-4DAD-B799-FA79D520EAD1}'>
+        <File Id="OpenRPA.Script.resources.dll_ro" Source="!(wix.ScriptSource)\ro\OpenRPA.Script.resources.dll" />
+      </Component>
+      <Component Id='ScriptComponentru' Win64='yes' Directory="Scriptru" Guid='{B349FDF7-836D-457D-88B7-9A2AB7D0E3D8}'>
+        <File Id="OpenRPA.Script.resources.dll_ru" Source="!(wix.ScriptSource)\ru\OpenRPA.Script.resources.dll" />
+      </Component>
+
+    </ComponentGroup>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="Scriptde" Name="de">
+      </Directory>
+      <Directory Id="Scriptda" Name="da">
+      </Directory>
+      <Directory Id="Scriptes" Name="es">
+      </Directory>
+      <Directory Id="Scriptpt" Name="pt">
+      </Directory>
+      <Directory Id="Scriptro" Name="ro">
+      </Directory>
+      <Directory Id="Scriptru" Name="ru">
+      </Directory>
+    </DirectoryRef>
+
+  </Fragment>
+</Wix>

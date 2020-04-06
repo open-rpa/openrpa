@@ -3,5 +3,5 @@
   "description": "OpenRPA messaging host",
   "type": "stdio",
   "allowed_extensions": [ "info@openrpa.dk" ],
-  "path": "REPLACEPATH"
+  "path": "REPLACEPATH\\OpenRPA.NativeMessagingHost.exe"
 }

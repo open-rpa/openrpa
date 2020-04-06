@@ -1,0 +1,533 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="INSTALLDIR">
+
+            <Directory Id="dir2AFC18257B33E896219016CCEB7EA4A6" Name="x64">
+                <Component Id="cmp355CEAAE3784E5911252A85747EE34FE" Guid="{CE9B0FBC-F6A7-4B8D-A555-2578A4A09799}" Win64="yes">
+                </Component>
+                <Directory Id="dirAD6BC31B867099C5ABB5C0467F7311F7" Name="locales">
+                    <Component Id="cmp316BFC86B2CE96A9A556D143D44FED9F" Guid="{D04CE0F7-D9BE-4799-96F0-D4AA9AACEA07}" Win64="yes">
+                        <File Id="fil86A9A7E770F1D12665745C0CF175A63E" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\am.pak" />
+                    </Component>
+                    <Component Id="cmpEFB67E01B8DD7ADCE34A5A390947BA61" Guid="{AC9DADD0-6945-4E38-B2C2-AE67AC53F573}" Win64="yes">
+                        <File Id="fil06317B36663DA76BC46D3B886811EEEE" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ar.pak" />
+                    </Component>
+                    <Component Id="cmp9919810F0D2DD1973AB64DAEA04E049F" Guid="{2EAAF0C0-8BCC-446C-A48A-BC90AB80DEC9}" Win64="yes">
+                        <File Id="fil6084941CF47D74B47273D59641E5EFF2" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\bg.pak" />
+                    </Component>
+                    <Component Id="cmpDFD31CEF69F510FBFA42E20927371B7E" Guid="{28DBAE89-54B6-42C6-B2C0-4F6D5703A992}" Win64="yes">
+                        <File Id="fil155FD8AD0AC000F4C560CE15DB507FBF" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\bn.pak" />
+                    </Component>
+                    <Component Id="cmp02B191E85227F9C4398C74147923D9F4" Guid="{D48C0200-E41C-4D52-9F38-E86D55C63777}" Win64="yes">
+                        <File Id="fil1C25BED78DBDC1E4C6B062CE3AFF40F8" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ca.pak" />
+                    </Component>
+                    <Component Id="cmpBFF7DFEA7535559305F54B52A53287A9" Guid="{BBC5EE52-B4B6-4813-BE76-A05838220AC1}" Win64="yes">
+                        <File Id="fil5373EC5B9DA3C7B33C4C65D3D4AA004F" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\cs.pak" />
+                    </Component>
+                    <Component Id="cmpB1C447BC41B6DBC76335493CF39E734E" Guid="{CB4A39AB-B681-4275-9771-F64F89372B81}" Win64="yes">
+                        <File Id="fil1E0556CE8B49ACC750AD7420F44A108F" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\da.pak" />
+                    </Component>
+                    <Component Id="cmpF09C2B7B4BE9B9D6340ACEABA09DB4BA" Guid="{B3EE23D4-8A28-41E6-A43F-DB0C33AC03AE}" Win64="yes">
+                        <File Id="filA24CC9D400AC9CBE8DE073A4683DDB79" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\de.pak" />
+                    </Component>
+                    <Component Id="cmpBB0C7726592AE401714A41480B3D7B3C" Guid="{F3A977A6-AAD4-4C48-8DE9-C7C98CB3611A}" Win64="yes">
+                        <File Id="fil213EB1DCE0F27F9ED44EA4FA58446182" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\el.pak" />
+                    </Component>
+                    <Component Id="cmp651240FFFC9DE845E7AC029AB2B9B137" Guid="{FEBF1041-131B-4ED9-8647-E6B9302DB147}" Win64="yes">
+                        <File Id="filE20B97B5C558FF4CACACFCCD817F3015" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\en-GB.pak" />
+                    </Component>
+                    <Component Id="cmp7CE284CD409356E6BDF945A0B52326D8" Guid="{707E7082-3B69-4457-AE44-F472896AF421}" Win64="yes">
+                        <File Id="filEF12054F8A16DD0B055F01537814B5BE" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\en-US.pak" />
+                    </Component>
+                    <Component Id="cmpE9D4FE99932A3EB86677791082966723" Guid="{277CE0DC-E55D-4C94-A113-DE1B603C2E22}" Win64="yes">
+                        <File Id="fil307EEC4AD9A7E924D8C19001A92C9E24" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\es-419.pak" />
+                    </Component>
+                    <Component Id="cmpC5A96EC5970BEA9CB801DCF6B4A74AC0" Guid="{8AB998D0-FF89-4BD2-89D2-7F0D4FA8B3E9}" Win64="yes">
+                        <File Id="filF53D96E18A72BAB81FB2392C474CC9E2" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\es.pak" />
+                    </Component>
+                    <Component Id="cmp9669B67BDB089CA843D1C8FFDCC9460A" Guid="{D9B7D7E8-3FF5-4322-A1A5-ABB0A1ACFEB2}" Win64="yes">
+                        <File Id="filD0F0226192325AC87C0113E7869340AD" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\et.pak" />
+                    </Component>
+                    <Component Id="cmp7B30C1F9B1D26493B6BCAE024C81FF1B" Guid="{066CECB4-F42F-4C05-B6CE-DA5DE6FB7837}" Win64="yes">
+                        <File Id="fil29B9B9F5F9089239D38B4A4E1AD45672" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\fa.pak" />
+                    </Component>
+                    <Component Id="cmp5F7989253447E774AC6E27B0ABFFBB5D" Guid="{8170B53E-4BEE-4137-B595-D217C5B06575}" Win64="yes">
+                        <File Id="fil00DFF69C69A54086B3C75DA73C608836" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\fi.pak" />
+                    </Component>
+                    <Component Id="cmpCFA6E0DDA2D4610B01D679E6CF1AF058" Guid="{A8A4EFAA-EACA-4FB7-9F12-1BEED73DC36E}" Win64="yes">
+                        <File Id="fil22BA66F52FED7031EC7A4EDC1B4D874D" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\fil.pak" />
+                    </Component>
+                    <Component Id="cmp90ACA681131D98ADFE29AD0D897EF788" Guid="{2AF74FBE-9589-4F6A-A34C-7E2A26945535}" Win64="yes">
+                        <File Id="filBD5A1F5D4AAF65C189092CB3945E204D" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\fr.pak" />
+                    </Component>
+                    <Component Id="cmp6861C41B2034D0153D52BF3A66CCBE79" Guid="{AD7170AD-140E-44A4-9E0A-AE12B832E88B}" Win64="yes">
+                        <File Id="filB1D1F01A4AC5B700AAD50E57D36C2AA6" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\gu.pak" />
+                    </Component>
+                    <Component Id="cmpC734B804BD2548D223FFC37D9B389BB8" Guid="{2456A979-5B79-4821-8BAA-8231F59B951E}" Win64="yes">
+                        <File Id="filBFF2631FC709F00D6920001E04A0A3F4" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\he.pak" />
+                    </Component>
+                    <Component Id="cmpCB54D6473321F0BB49E71655927E5BC7" Guid="{D496BEDE-9167-42C1-9596-EE2995348790}" Win64="yes">
+                        <File Id="filB0FA68489520ED1EE20C2B72766C0428" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\hi.pak" />
+                    </Component>
+                    <Component Id="cmp7393DC3A9F84B0DF9E46E8947A888E57" Guid="{40CA694A-3BBE-4AF8-B470-96355941E280}" Win64="yes">
+                        <File Id="fil9FBEDD7A8CF5855826035B74BAD9B8C1" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\hr.pak" />
+                    </Component>
+                    <Component Id="cmpDC58E799478203A9D3B61198672DAF88" Guid="{B259EEBF-3480-43A0-9873-9E9542AB60BC}" Win64="yes">
+                        <File Id="fil404A478DE40F0265A9CCA3BE49527145" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\hu.pak" />
+                    </Component>
+                    <Component Id="cmpA4EBF7CB6129A806DBF29C0D8D08C000" Guid="{81E56B3E-41F7-46D0-B02D-7A8C5B74D451}" Win64="yes">
+                        <File Id="fil6B904C3CDDBA40EDCD40D9FFC433CC9D" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\id.pak" />
+                    </Component>
+                    <Component Id="cmpBA8595898A67D6C81F4040FAA713C208" Guid="{1A42208E-D3C3-40A5-9625-4C2FBC9FF294}" Win64="yes">
+                        <File Id="fil1661B56AB9B801B986D2A426586D0602" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\it.pak" />
+                    </Component>
+                    <Component Id="cmpCAB24C403E3237489E2F37D816AA074F" Guid="{DA323AA7-24D3-4869-9F8C-74F95F2DDA1D}" Win64="yes">
+                        <File Id="fil8BB818BD4FE249AEC6271860D3FB3873" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ja.pak" />
+                    </Component>
+                    <Component Id="cmpEB2DEE1A320291B26C13DF9C9D97C0C8" Guid="{44122B7E-5C1B-4252-BDFC-897C0A8D2C51}" Win64="yes">
+                        <File Id="fil53D4546B6EA7FEE822C02CF6E01CFA9F" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\kn.pak" />
+                    </Component>
+                    <Component Id="cmpF624A040EF038DFC2B6888300B4ED182" Guid="{FF2E797F-9E7D-4E40-B48F-64079A21AB8C}" Win64="yes">
+                        <File Id="fil743152BCF693470A0B055911BE5075B1" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ko.pak" />
+                    </Component>
+                    <Component Id="cmpCA04E22784E4A6BC25133322107CDEA2" Guid="{D0BB41BB-9827-47EA-B4BB-4D55E27ADA97}" Win64="yes">
+                        <File Id="fil90F215F3A82894B6B65193ABD875022E" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\lt.pak" />
+                    </Component>
+                    <Component Id="cmp7D8EE123B4EE598F7004E49A93ADFF91" Guid="{7C9E471E-B5BE-47E6-98C2-A38C80C0D42D}" Win64="yes">
+                        <File Id="filACBF9F0CA13D5FC8ED4A16BD8CBE3DB9" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\lv.pak" />
+                    </Component>
+                    <Component Id="cmp7AE0813F276CFD816061E68D428420F9" Guid="{E7BE280B-93F3-4EA6-A69A-01768232DC9B}" Win64="yes">
+                        <File Id="fil38EE7FD0E63655126476D1931FEF7373" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ml.pak" />
+                    </Component>
+                    <Component Id="cmp009361419F9FE311DEE1C2C08F02593A" Guid="{A60A6FCF-4C53-46C8-B650-4A5E146C4DF0}" Win64="yes">
+                        <File Id="filC053E1F808744BF947F1238A4B90F03B" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\mr.pak" />
+                    </Component>
+                    <Component Id="cmpAB548147726C90E4D3167151A9BE5CBF" Guid="{98293513-96F4-4D1E-A084-8B4EC3DE1004}" Win64="yes">
+                        <File Id="fil557F51774D8EF52EE9969A2456EBAC34" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ms.pak" />
+                    </Component>
+                    <Component Id="cmp23609605E6BE14CF0DF544FC53BA43F6" Guid="{B34D0336-934C-4E66-A8A9-DB9B847F4401}" Win64="yes">
+                        <File Id="filCCFD78CCC58D460E5223BD8AC1B97D56" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\nb.pak" />
+                    </Component>
+                    <Component Id="cmp0578CBE298FE8AFCBB0AA8D7229E2F42" Guid="{709B2C31-D7E0-4B3D-AAD2-5F007A2E2081}" Win64="yes">
+                        <File Id="fil935FDE0D5A17780FE6A6F00357EECAB7" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\nl.pak" />
+                    </Component>
+                    <Component Id="cmp724248389C3EDDA9EFA4D5508BF9B8E6" Guid="{0CBE4F23-E982-4060-B8C2-A5247E8E4055}" Win64="yes">
+                        <File Id="fil9C39F19AA93BC0FCEE9FE3B4C9CF65C8" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\pl.pak" />
+                    </Component>
+                    <Component Id="cmp02A97C69BCD8D340EB55725454F1D70F" Guid="{1C37BDC8-4EF9-4BC6-BD40-9578F3C4D83E}" Win64="yes">
+                        <File Id="filA1D8E1FC916553A428916E53D72A21EF" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\pt-BR.pak" />
+                    </Component>
+                    <Component Id="cmp4F6DFAEEE6238FE47176B84F889B8E70" Guid="{09593079-44CB-460C-AED8-635489B920B6}" Win64="yes">
+                        <File Id="fil728FC9CA38634D0095AE8DDD502D1443" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\pt-PT.pak" />
+                    </Component>
+                    <Component Id="cmp6CE61502BFC836796B14B67D068EE5E4" Guid="{F95D01FC-84F8-46C8-8C38-A40A7D3EB2F7}" Win64="yes">
+                        <File Id="fil43A85D70105024970720B691D9545C75" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ro.pak" />
+                    </Component>
+                    <Component Id="cmp8FE7B464C44A4274381248DDB92C73BA" Guid="{D856076F-282B-4951-8B2D-00CD40BFD59B}" Win64="yes">
+                        <File Id="fil8CEEB78C878BB95C6CF89398FEEE53A6" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ru.pak" />
+                    </Component>
+                    <Component Id="cmpADD5C5BAC584EC285844476943DEF5DC" Guid="{044417A2-9804-48AC-98BB-3292866C7BD7}" Win64="yes">
+                        <File Id="filA58C9633E9E7A61BC9FC9B6939923E8B" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\sk.pak" />
+                    </Component>
+                    <Component Id="cmp4DFEC021225B89F605B3B385668AD787" Guid="{393CDB02-0E05-4E4F-882F-796ECA62D095}" Win64="yes">
+                        <File Id="fil11A5E812E80938F91D0E306C70E94434" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\sl.pak" />
+                    </Component>
+                    <Component Id="cmpDFC47B261879C6054ED631292E9D7076" Guid="{594AC163-0AA2-4721-8C11-7BD320614064}" Win64="yes">
+                        <File Id="filBBBAF6FFE0C4494D0773BC075CBEFF2F" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\sr.pak" />
+                    </Component>
+                    <Component Id="cmp3F69DDAE13C02F7443783C83738F40D7" Guid="{54817866-43DF-41E7-B452-1CF2F3032BBE}" Win64="yes">
+                        <File Id="fil7E9631C167CAA5241ABF9A9F61DF96C7" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\sv.pak" />
+                    </Component>
+                    <Component Id="cmp35EBE3FF7133CA973352038BA475C4FD" Guid="{2EC2919D-CC27-4178-9A86-47ED2AEA5792}" Win64="yes">
+                        <File Id="fil81898E96165473D34CBA4786F6C9D29B" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\sw.pak" />
+                    </Component>
+                    <Component Id="cmp29155A42136A7C51268CFBF9FE811EF9" Guid="{A50EDAD0-0DEB-4684-8FB4-AED7B03097DB}" Win64="yes">
+                        <File Id="fil14245FA4755C7EC4083C16E9C79A149D" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\ta.pak" />
+                    </Component>
+                    <Component Id="cmp65EE0725E8203A2EED58764E797F4E69" Guid="{006A8CEB-BE7F-4866-9666-0509351DD068}" Win64="yes">
+                        <File Id="fil04F63440E3AE429FA49430DA683E7B04" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\te.pak" />
+                    </Component>
+                    <Component Id="cmp4764204CD5AA051CFA6DD38EDF9B2B35" Guid="{99CCA751-C85D-450E-AF94-8710CF47A34B}" Win64="yes">
+                        <File Id="fil6FC5A8DEE593AA0EA8DB4CC08BA707C3" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\th.pak" />
+                    </Component>
+                    <Component Id="cmp461C7DE0313B2EB1F31BED8B4FA68979" Guid="{5D7D2058-FDE4-40E2-A6E3-E8571CDA6215}" Win64="yes">
+                        <File Id="fil96625E6571E3D4CDA4FB04163B334F04" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\tr.pak" />
+                    </Component>
+                    <Component Id="cmp6CD26B12700BA7BFF98D172AA9149B5C" Guid="{BB87BEEB-F764-4D4C-B035-5465B51AA513}" Win64="yes">
+                        <File Id="filD8CF4C25F836EBF8024C57E9CCB8FC73" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\uk.pak" />
+                    </Component>
+                    <Component Id="cmp0D3D63D1759CF99092B16307160E7129" Guid="{E2C05D65-BA05-4463-92D8-F56C5066C5B9}" Win64="yes">
+                        <File Id="fil8FCB4D9F20A597D29C924F1B7CB2250A" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\vi.pak" />
+                    </Component>
+                    <Component Id="cmp3BA42065DC542506B7B06C675CF2D675" Guid="{257C4780-5996-4960-8670-7524B440C01D}" Win64="yes">
+                        <File Id="fil79D4C43A281BB3F547D50413F1DF40BF" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\zh-CN.pak" />
+                    </Component>
+                    <Component Id="cmp220941B0341E219F8293492ECAEB8517" Guid="{3A9BFD49-6115-4EB3-8B6D-729D8ACCF9A9}" Win64="yes">
+                        <File Id="fil27E80824731A4DCE3736D619AD779370" KeyPath="yes" Source="!(wix.MainSource)\x64\locales\zh-TW.pak" />
+                    </Component>
+                </Directory>
+                <Directory Id="dirB973C600F9D42B3EFAD21A0968F1E91D" Name="swiftshader">
+                    <Component Id="cmpC6388A068BE45312D71FFBA20D5C47AD" Guid="{8577D611-BA1A-46F9-9BF6-A3C258553C11}" Win64="yes">
+                    </Component>
+                    <Component Id="cmp15021D6078FB75DCD1AA4D882FE565C4" Guid="{91F0D609-E64D-429D-84D5-764EA62FFEDB}" Win64="yes">
+                    </Component>
+                </Directory>
+            </Directory>
+            <Directory Id="dirD5682402C737D6B46ADCA4F0C55141DF" Name="zh-Hans">
+                <Component Id="cmp989152507E076C4018C4B93F9B3581C6" Guid="{D36A9182-7BF6-411F-B6FB-007291A5AC72}" Win64="yes">
+                    <File Id="filA1B24F0D30FB6979A35E39445EAF1173" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.CSharp.Features.resources.dll" />
+                </Component>
+                <Component Id="cmp363376071E960C25113D5206051E735C" Guid="{38AFFF69-0F8F-402F-A8E8-E2ED43744D6B}" Win64="yes">
+                    <File Id="fil17FD9AB0B307FD0DC6A43425CCB1F884" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll" />
+                </Component>
+                <Component Id="cmp692D61ED9166154584CE65C2F58AE635" Guid="{58980D0F-CD5A-449C-9B76-CC523CEC0FB9}" Win64="yes">
+                    <File Id="fil83893FB073A079CDDF4896F4BFD45176" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll" />
+                </Component>
+                <Component Id="cmpA30569C58B448085BF438CB2B0353AB3" Guid="{063066D9-FCC5-4107-9FB5-ADDEC702A652}" Win64="yes">
+                    <File Id="fil768E4D0F8A3F14F9160C3B9ADCE22978" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.Features.resources.dll" />
+                </Component>
+                <Component Id="cmp86106BAF0B837A6671BBC03F3FD4B3A0" Guid="{623C5BE4-B0E1-4AC7-BDDA-764E9979B805}" Win64="yes">
+                    <File Id="fil75B8E1C7BF4AC93075D9612ECE7FE99A" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.resources.dll" />
+                </Component>
+                <Component Id="cmp96FE4DB8C3C1DE81DB7ED95A5B0AD949" Guid="{3611CF79-B039-43E1-8BC9-9F3156343E9C}" Win64="yes">
+                    <File Id="fil3D472D3E8C55DEC00CF4E9B6AF2AAA8C" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.VisualBasic.Features.resources.dll" />
+                </Component>
+                <Component Id="cmpFBA8B2F519DDA08DFDBCD24E9CB70697" Guid="{C21775C6-D460-40A4-B9F5-C19B4D418C4D}" Win64="yes">
+                    <File Id="fil017362B5D969B4CA0E9FF28D2B00A8AC" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.VisualBasic.resources.dll" />
+                </Component>
+                <Component Id="cmpC3A5250A9B055ACD759B16AC752DC341" Guid="{6BA861D5-14A3-46D1-96A3-32A20BC5A3BF}" Win64="yes">
+                    <File Id="filD78CC221F5D7C68C93C88812F86D2B2F" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll" />
+                </Component>
+                <Component Id="cmp4BF603E550046E34D03169AEA492782E" Guid="{58CA7927-7819-4B6D-84FB-29A5D9BE40C0}" Win64="yes">
+                    <File Id="fil1086738427C8EE311559D55D0D82FD93" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll" />
+                </Component>
+                <Component Id="cmpABC3EB27A89BA4557928FFCF88C7959E" Guid="{9E417B1E-7427-4D21-8DF6-562FA9BF28E4}" Win64="yes">
+                    <File Id="fil50159FD0A95E9B1A680715A7BCAF1835" KeyPath="yes" Source="!(wix.MainSource)\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll" />
+                </Component>
+            </Directory>
+            <Directory Id="dir161743E4D186A5C18DD78D84F6714734" Name="zh-Hant">
+                <Component Id="cmpBABC8BD5B2E777093D6C2378E4B429A3" Guid="{B5F97B8B-1AC2-4D10-92BD-E454DC8D55F8}" Win64="yes">
+                    <File Id="fil2B4EBA478F7C51B5BB8B2B3DE0719EB5" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.CSharp.Features.resources.dll" />
+                </Component>
+                <Component Id="cmp4DC6059C93B3DE9388F154E7364EA1B0" Guid="{3715832D-5438-427D-91CF-3331FB9C5F90}" Win64="yes">
+                    <File Id="filDF6C9E061F9924FB0B12790C22D61EF9" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll" />
+                </Component>
+                <Component Id="cmp4A7EEE1889B8E3D281F7C889BB32F185" Guid="{83F4FED3-09A7-43F6-8C47-F6F1738B507A}" Win64="yes">
+                    <File Id="fil6B0DD27D148F5F96CA48C77C92E3A179" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll" />
+                </Component>
+                <Component Id="cmp300EDEF51850DD7F18F665B302736EC9" Guid="{08EFDD20-5B06-4245-AE38-24193D8F29BD}" Win64="yes">
+                    <File Id="fil54DFE05516DB555CF9D812348048775F" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.Features.resources.dll" />
+                </Component>
+                <Component Id="cmp7947051F5B198D128AE48419153A8BC3" Guid="{59822D28-ED21-4BCF-9535-41C93D9E730F}" Win64="yes">
+                    <File Id="fil40E727760D71C1D864F0AB950887FB2D" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.resources.dll" />
+                </Component>
+                <Component Id="cmpC5C2BE5A6537F5CD5E9C0F99FBDBEBF2" Guid="{E74D885D-846C-4CE5-BC43-1359706EA330}" Win64="yes">
+                    <File Id="fil0959A4F5ACCC4005F1140565BF3BE721" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.VisualBasic.Features.resources.dll" />
+                </Component>
+                <Component Id="cmp35EE5186EF19C0FD748FE4398F45DE2F" Guid="{47BAD2F7-4FE2-46EC-BFAE-4D5DFC7E2D24}" Win64="yes">
+                    <File Id="fil4959C9DF7AE84E174378DA6505B6D3C9" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.VisualBasic.resources.dll" />
+                </Component>
+                <Component Id="cmp02150A27CD99510CDC2363DC3122320D" Guid="{866C138A-48B0-422B-B58C-53DE8E6A9AD3}" Win64="yes">
+                    <File Id="filD42DB3205E0FC4782BAAF1DDC3583D1B" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll" />
+                </Component>
+                <Component Id="cmpAC14E69CE48A137AC777B80EDAF6B999" Guid="{39D58467-916F-443C-ABB8-C3BD527C7849}" Win64="yes">
+                    <File Id="fil00BAB4882D11CF12F7DE388CCDEAA956" KeyPath="yes" Source="!(wix.MainSource)\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll" />
+                </Component>
+            </Directory>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="MainComponentFiles">
+            <ComponentRef Id="cmp9436871E84C09046B1723D8987C046DB" />
+            <ComponentRef Id="cmp7BE01297D830E7FE8D98822E731FBFAB" />
+            <ComponentRef Id="cmp442A7A87DA69C9B56F30577E04A4E4D9" />
+            <ComponentRef Id="cmp570A0F73E234FD7D0A3F3F8DA49D4573" />
+            <ComponentRef Id="cmp5F2514DEF2E5E4485E49CCF5AF077A28" />
+            <ComponentRef Id="cmp0D7E6005B4E529000333F80EEBC03C5D" />
+            <ComponentRef Id="cmp0E16CB47C3F6B22E2FFDD2CC515AD1C8" />
+            <ComponentRef Id="cmp168937271E3F3C72BE0B38E39A0BA056" />
+            <ComponentRef Id="cmp4F07074C4BF7BF4016DD5A470E2B9637" />
+            <ComponentRef Id="cmp1E7D2794EE468678DC04DD756AA9D768" />
+            <ComponentRef Id="cmp263602B88905943FD55E9B1A4088F2E1" />
+            <ComponentRef Id="cmpDA296E172B5770F0FA3EEE7889D77464" />
+            <ComponentRef Id="cmpDDDF532E331CC580F34D260C385E5BB4" />
+            <ComponentRef Id="cmp59C7872C7564331AB9CCCF610E6D7B73" />
+            <ComponentRef Id="cmp32F256F0739B5E664E97843D18BECABB" />
+            <ComponentRef Id="cmpAD14CCAA4C75AB1FE7314571C3878134" />
+            <ComponentRef Id="cmp2E574AF4AA73FD55EBEBDDA470F23145" />
+            <ComponentRef Id="cmpB5C70718C06F34BC9EAA57BE3C948BBE" />
+            <ComponentRef Id="cmpB84FF3E662CF624991495002BF1BC88D" />
+            <ComponentRef Id="cmp1874AB219070404EED322213C6A1A49E" />
+            <ComponentRef Id="cmp770B497917674F316826C902746C0409" />
+            <ComponentRef Id="cmp7573EC2390E2B47667BC392F0AB1294C" />
+            <ComponentRef Id="cmp5D12C26270BD09CA3D45919FA8719AE2" />
+            <ComponentRef Id="cmp5B4B4955C58608067B41D6BE02863260" />
+            <ComponentRef Id="cmp4D072D5842DFB1E9399C435C746D295F" />
+            <ComponentRef Id="cmp8CEEE4D31E44E6E8FE9E1E1B6213B6C3" />
+            <ComponentRef Id="cmpFC9B48C936530BDA5B4EA99C9A0DAC10" />
+            <ComponentRef Id="cmpEEB4733FD782D8FCC77902F908470D17" />
+            <ComponentRef Id="cmpCB48DEBB3EC8B625F5A8D25D431A183B" />
+            <ComponentRef Id="cmpD9C87A155F6F3A8C351457DA11F29592" />
+            <ComponentRef Id="cmp3A533C6B2CB1C7BF544C404BCCB23979" />
+            
+            <ComponentRef Id="cmpEBFA6F2431B12910EEA710045362AE3C" />
+            <ComponentRef Id="cmp765B622764B9FACE61914D92C0138224" />
+            <ComponentRef Id="cmp2B2B21C7360775B5438819D87B17248C" />
+            <ComponentRef Id="cmp3996E9035E948184F258B10FF11016D3" />
+            <ComponentRef Id="cmp94B7F56EDC7C36D8DDF9B710373707C9" />
+            <ComponentRef Id="cmpD321845D7D57B4324098B84486C9BAC4" />
+            <ComponentRef Id="cmp698D7EC6CF226763BEE03D55D8B6B646" />
+            <ComponentRef Id="cmpEE43DB2A2FEDDD1EA0D7F8B8FC0B1690" />
+            <ComponentRef Id="cmp09713FE74EA723FA7C0F860AB69DA254" />
+            <ComponentRef Id="cmpBBE8B538326AA17A34F69A7B96D5EAFF" />
+            <ComponentRef Id="cmp73085246C202ABD1D96D2E5DEFB2A801" />
+            <ComponentRef Id="cmp33FDA478CB86F083519801379B2D2D8B" />
+            <ComponentRef Id="cmp8543922EE398EBC73A1C63DB49365F51" />
+            <ComponentRef Id="cmpBE7DC73EEBFBC82396FDB9036DB50D8F" />
+            <ComponentRef Id="cmp7E01646DC669D02446B2CE5E20301692" />
+            <ComponentRef Id="cmpF6FE4629B7F5BEB83D1837244A2B2472" />
+            <ComponentRef Id="cmp598C0CAE46924FCFBEDE421AFC62FEAC" />
+            <ComponentRef Id="cmp4CFC7C3721FFD91FA4E9798A516D5E97" />
+            <ComponentRef Id="cmpCB5AD0976B63430BEA529B0F2B10599A" />
+            <ComponentRef Id="cmpA780BD9CC7EF10DE58A9E17B691B0205" />
+            <ComponentRef Id="cmpC4D6E68A472E9CC1FAF71994B5B4DE32" />
+            <ComponentRef Id="cmp04E7760BC247B05C847A4A6D5D8C7091" />
+            <ComponentRef Id="cmpD5EF7B2A59F953E92E81EF7D6E6DBA82" />
+            <ComponentRef Id="cmp9DA87BA429922A2AB9A872E6B393B838" />
+            <ComponentRef Id="cmp7165B8BA93A80A0EA1B7728AD04D6E72" />
+            <ComponentRef Id="cmpE2468C9865F90573476173F547848D40" />
+            <ComponentRef Id="cmp25B7CDE65FC6F7EDFBADDCA69300789E" />
+            <ComponentRef Id="cmp9A0FBE0E3FB55EEBB37903AC9A080A23" />
+            <ComponentRef Id="cmp6DF273F8C8C1322EE403E364E1D04A16" />
+            <ComponentRef Id="cmp65287F3E4DA1E585A8341B3A16A65FED" />
+            <ComponentRef Id="cmpEA4BD9BE7BCA09DB3C0E7E31125BDA11" />
+            <ComponentRef Id="cmp52D51F76F5C0362E1068468D2F37C92B" />
+            <ComponentRef Id="cmp0E2F62674E5ACD0A9ADEAEFF24F3B878" />
+            <ComponentRef Id="cmp1A761DF5349446F72F35B7FEDBF3120F" />
+            <ComponentRef Id="cmp3CF0195E5F1B24BD5A653DFB5D131E5F" />
+            <ComponentRef Id="cmp027B35AD6BF61AC76910ADE6436DDC32" />
+            <ComponentRef Id="cmp10C797B88A21A7084D84535848BD302F" />
+            <ComponentRef Id="cmp87BCF51E839EDFB0ECE1309716DD85C6" />
+            <ComponentRef Id="cmp22A5CAA14F0323427B7FC91089C8FF8B" />
+            <ComponentRef Id="cmp06AC41CEA1AE4B5CE16B800F88F2AC85" />
+            <ComponentRef Id="cmpC86CAAC71D8260B14CD8A51CC8452848" />
+            <ComponentRef Id="cmp1CCA7659C83443F83B89BAAA59CC8A38" />
+            <ComponentRef Id="cmpBEEDCA047A471366A76BB801865BBF2F" />
+            <ComponentRef Id="cmpF0A6E90A6FDE803639EEC74E4552A64C" />
+            <ComponentRef Id="cmp5AA3FE36A6A4BE7448F89CC6550367D1" />
+            <ComponentRef Id="cmp1C6676866F01AA2556DAC1B771EF1539" />
+            <ComponentRef Id="cmp1C4BC36522FF7FE081853CA5AD60E2BC" />
+            <ComponentRef Id="cmp7D3BDC635C9309D6208618D98CA171F1" />
+            <ComponentRef Id="cmpAD7383C7FB4F2C5782CAFEEB4E647444" />
+            <ComponentRef Id="cmp16861D9E3F71E9550AECE3990319C900" />
+            <ComponentRef Id="cmp2A4D6385D37CB42FCB2D48983CC53485" />
+            <ComponentRef Id="cmp192EA2431BF21C766E24AE76AD5FFBB3" />
+            <ComponentRef Id="cmp04233260B59C4258FF20B208FA8B49F0" />
+            <ComponentRef Id="cmp77E408438B67ACB68089BF9A4533D9B9" />
+            <ComponentRef Id="cmp29CAB6F545D7F49D84FBA1C85A8878BB" />
+            <ComponentRef Id="cmpF92D089E4A4AB6136800FE488C3A010B" />
+            <ComponentRef Id="cmpEB1C5FC0447F8B6C83D0467C5B293EFC" />
+            <ComponentRef Id="cmp5D00459EE20A1958E72A329087887507" />
+            <ComponentRef Id="cmp990B94488BD9B35D447CB2BE66E1B672" />
+            <ComponentRef Id="cmpCF9E918829A7E4503CDC4ABEC1811C0B" />
+            <ComponentRef Id="cmp18B5D928DD5616271ABC6B7DDA0D98BC" />
+            <ComponentRef Id="cmp87347D88D0734A19BC5769E338C8A3EC" />
+            <ComponentRef Id="cmpB5C93C8AE7BEE3ADD4135F79FC8E06A5" />
+            <ComponentRef Id="cmpF477071E945B01E2D04643089DC1E53A" />
+            <ComponentRef Id="cmp8EB5EFBCDE3EACC797422D0C651A80B1" />
+            <ComponentRef Id="cmpB3C01C93892C615B3D6C45E00119BC52" />
+            <ComponentRef Id="cmp20C601C515B1A9B1C8B83C4DC4B15A48" />
+            <ComponentRef Id="cmp9BF1E98782716508C8AAD6F0B367D281" />
+            <ComponentRef Id="cmpFA8C8F08B041B87E0F2EFD0EE7C4C241" />
+            <ComponentRef Id="cmp1464B3DA837FF0EC944A3272F56501D6" />
+            <ComponentRef Id="cmpCA6DED1B62B2BA2885F226D30C3C7FF4" />
+            <ComponentRef Id="cmp18FB531E380E2A5A569EF18152DA1AC0" />
+            <ComponentRef Id="cmpDE2FC405CF0A0BD7BCB5F82188792B74" />
+            <ComponentRef Id="cmp2055A25A0F0C52D93F012678AC906B91" />
+            <ComponentRef Id="cmp17FE96AF7BCC0E29E126749ECE5B46C2" />
+            <ComponentRef Id="cmp0A760CC12B9942A13264B1A105EEF6C4" />
+            <ComponentRef Id="cmpAFBB23E4CB7AAFE3697723FBD0A8FAE5" />
+            <ComponentRef Id="cmp95321C55A234B86BACD5AE0C9AB72BAE" />
+            <ComponentRef Id="cmp673B61B21B5580591EF3467082B34528" />
+            <ComponentRef Id="cmp0CEB672BFEC524145DF042ACB4BBA457" />
+            <ComponentRef Id="cmpF85F268649B5E023BA48EF3FEDB2E784" />
+            <ComponentRef Id="cmpB608AAFB5DFACA2055FF0D62576A77D9" />
+            <ComponentRef Id="cmpE36B8567E7CFFA5ECAFC23DD795BD6FD" />
+            <ComponentRef Id="cmpC771EBB29D3DCB560819219F16F949B4" />
+            <ComponentRef Id="cmp9ED144D07B8941C8B41A2571E6A0BD2D" />
+            <ComponentRef Id="cmpA1D313F34C981570E8211AD2D14EA796" />
+            <ComponentRef Id="cmpD417DC2278871EAE1A2367F96773582F" />
+            <ComponentRef Id="cmpC9079DF80F535A94B8EFD3CAEE503B47" />
+            <ComponentRef Id="cmp71309A5549584AF419A71807F87FCAD8" />
+            <ComponentRef Id="cmp75050144596E1865F5F0EEA3C76CB60B" />
+            <ComponentRef Id="cmp333A0B15D6BEA5EE61DAF80BBC33E2E1" />
+            <ComponentRef Id="cmp276EE0D2179092A459B84F9A222AC184" />
+            <ComponentRef Id="cmp55D7B5BCB42B707583C1DB614AF516D7" />
+            <ComponentRef Id="cmpB40A462F2422775B8BC13C99502C00F1" />
+            <ComponentRef Id="cmp616F63B5AA0B9642BB84915E2ED834C8" />
+            <ComponentRef Id="cmp1066EDFE10D9DBB97764FEE310F395D1" />
+            <ComponentRef Id="cmpB62A214A20B890229C4655745C31837A" />
+            <ComponentRef Id="cmp7261A379103409A11F0FDC94878B5CA0" />
+            <ComponentRef Id="cmp4DAEDA3280093E29997D0BCD2FFC72FF" />
+            <ComponentRef Id="cmp0E0A521A0DA26C280EA018348111E3AF" />
+            <ComponentRef Id="cmp56A9D3100A982EA9A4EE38EE35DC4BBE" />
+            <ComponentRef Id="cmp99E1376FAA44BF35FEA90FDCB893DD7F" />
+            <ComponentRef Id="cmp41E1A2A9D24083E34A6550DA4D3F5720" />
+            <ComponentRef Id="cmp92DF35C45DF131FE7FB02ED399C45C75" />
+            <ComponentRef Id="cmp565960DCB0A2122C83339B6EBA287659" />
+            <ComponentRef Id="cmp6524E0DA6AD2B25F7F5E079259BF25EE" />
+            <ComponentRef Id="cmp0F8EFE3AEF5BCD274ECE285151012969" />
+            <ComponentRef Id="cmp20DFAFD97DE1AB52199D05E23B83F1FC" />
+            <ComponentRef Id="cmp78EFB70D7914F95BD00BFC35D6FE4A30" />
+            <ComponentRef Id="cmpBD83F83707B2399CD2616E8976180DBF" />
+            <ComponentRef Id="cmpE4583C6533010E05D38470264CD2AB61" />
+            <ComponentRef Id="cmp4FC28006E276F2FDD222F8E58CE073E9" />
+            <ComponentRef Id="cmp6B207933E2663C096C5A630C6EFA8E18" />
+            <ComponentRef Id="cmp2034CEC3CB4FF1846AEAE7600078BB1C" />
+            <ComponentRef Id="cmpFC1E8FC9EE126D1C04E36E35D24B57F6" />
+            <ComponentRef Id="cmpFEB50D5D94DA199144D1B4408E46619A" />
+            <ComponentRef Id="cmp09A267CB18BAA2F931E9A67F5703E481" />
+            <ComponentRef Id="cmp27715C228698621B7B7EAB5263EBACC1" />
+            <ComponentRef Id="cmp75F95AD18274B19A52264AD8CC0D31F7" />
+            <ComponentRef Id="cmp294B5EB50BF9CFA7D5D18EA57245EF0F" />
+            <ComponentRef Id="cmp384661C850D030ED1D86D442ED3B9F8B" />
+            <ComponentRef Id="cmp5612E4D41F4BE48C988023E867DAE725" />
+            <ComponentRef Id="cmp9B349D6A4624CD34E910DF6C2F50E8CC" />
+            <ComponentRef Id="cmpF05D70C556BA0F4AA0A355CB974A4956" />
+            <ComponentRef Id="cmp2655B115922B5DF48B46D03970411B17" />
+            <ComponentRef Id="cmpE468509F2FD564123F20F54D2224A3E2" />
+            <ComponentRef Id="cmp28F9266B781CC0503DFCF651B7EBB712" />
+            <ComponentRef Id="cmp58E577A934474DDF9743DE68D7F6C376" />
+            <ComponentRef Id="cmp7AD050C0434C8F166D931E7E58D30A68" />
+            <ComponentRef Id="cmpD857276B3C96F213DA4F45C728FB7BBC" />
+            <ComponentRef Id="cmpF7219721253748EFCB6172845D0555BA" />
+            <ComponentRef Id="cmpDC2AEC8B5E546B28E433C6FD8DFFC9C5" />
+            <ComponentRef Id="cmp0C1D770E8396A800C0F65CF9F2335FA7" />
+            <ComponentRef Id="cmp91DB723D2D8A6EDCB1BFEBA96873208B" />
+            <ComponentRef Id="cmp0FCC877BEEFC04FC0AA804932D847E56" />
+            <ComponentRef Id="cmpFC9A6BDCAF133CECC628F8FF93F0DCEB" />
+            <ComponentRef Id="cmp6B9BDE3EAF74936D695A67D7F8F89D8E" />
+            <ComponentRef Id="cmp1A4986D1C04C5955B554D92F2C00455F" />
+            <ComponentRef Id="cmp86815B1588318183BC2A54A765CA998F" />
+            <ComponentRef Id="cmp97F501480BEF849C4538E3AD525262D2" />
+            <ComponentRef Id="cmpDE864E902D93AC27A4E32AF892DEA91B" />
+            <ComponentRef Id="cmp035AA03635C426087A315752E55EC5E8" />
+            <ComponentRef Id="cmp3B07CC3F19D87E1FD19E051C7A13A1E8" />
+            <ComponentRef Id="cmpF77203C341A0523A310834AB0AFAA450" />
+            <ComponentRef Id="cmp1B521C36CDA7F2894096AEC00F606F18" />
+            <ComponentRef Id="cmp44669DE2975CB09B1ACBB4B0F7555A4A" />
+            <ComponentRef Id="cmp869A9E6C43864538DA579AFC456A13E7" />
+            <ComponentRef Id="cmpA414DD719A4D692BEDF26DA8ED7E45E7" />
+            <ComponentRef Id="cmp5A4798C9E7F0AA5C4996557805D89D61" />
+            <ComponentRef Id="cmpAF35084DEE1C9B6331355C0E1F148E03" />
+            <ComponentRef Id="cmpE7D072C8F4C1335BDCD845D4521661C8" />
+            <ComponentRef Id="cmpC0B34761214D4ADABA75680C3B7B970E" />
+            <ComponentRef Id="cmp65E0A9E1E87C58B00DD9021717E8E4AC" />
+            <ComponentRef Id="cmp9E9A5F2C85BACD97B2964CFCEDC25BBF" />
+            <ComponentRef Id="cmpA485E12D754B604451F9039E72E7D0E9" />
+            <ComponentRef Id="cmp6E7CC889A0E0B2AB2F82044060AC7A28" />
+            <ComponentRef Id="cmp47DEEB34C13A2C03C3C9A1D12F9DB890" />
+            <ComponentRef Id="cmpB4FF13F2F09CFA3E8BCDA47E57FD1987" />
+            <ComponentRef Id="cmp17E4B6C9BB0BA9F054DFD7E535962570" />
+            <ComponentRef Id="cmp4EB6319CE44669FE303DE1FEA070FF05" />
+            <ComponentRef Id="cmpACBE1BA9AD62F51C14B17D3C1EB96C0F" />
+            <ComponentRef Id="cmp6C99C3056AEA5C3D54047E2CEC18ADCC" />
+            <ComponentRef Id="cmpF74385ED9CB9B705F33D5D16F009D2B5" />
+            <ComponentRef Id="cmp6AB5C726DE7ECD1A7ED6B848A3D93360" />
+            <ComponentRef Id="cmp22397A3B9A73315681EB7F8AAF829DA9" />
+            <ComponentRef Id="cmpFE63881B29DFECF6C9FB55C2C6C679BE" />
+            <ComponentRef Id="cmpAF2D3D15E06118D3883A5865DE6D5E2E" />
+            <ComponentRef Id="cmp5AB8C2B3A934F871BCF3AE4800EDEBAD" />
+            <ComponentRef Id="cmp2A0808E2D20F13D026C49E3BE82976B9" />
+            <ComponentRef Id="cmp6F96056C44B219C9BABF85867722457E" />
+            <ComponentRef Id="cmp6A30A38B7803B1F91A55F739A7DBAFA1" />
+            <ComponentRef Id="cmp9AE6A8C0ABD883B60EE90B2D06EC6239" />
+            <ComponentRef Id="cmp27EC58D3FB4CBF8105B89BE333E9329C" />
+            <ComponentRef Id="cmp9D4F5B896C299487132DFDAD0BD961FA" />
+            <ComponentRef Id="cmp4C5FBDB6B92031A4A79857602C3F11E8" />
+            <ComponentRef Id="cmp93ECC142F4850DC88A6AAED63F2B5565" />
+            <ComponentRef Id="cmpC412BB707CD806CC72C4FEC56F583393" />
+            <ComponentRef Id="cmp5C15AA45A4001615FECB51E367925407" />
+            <ComponentRef Id="cmp38BAD696C3EDED2828FFD6DCAAD49D0C" />
+            <ComponentRef Id="cmpD353D0418882922529468DFDBC06AAA4" />
+            <ComponentRef Id="cmp2845B1A76017335D3CACEF0CB23E7CA0" />
+            <ComponentRef Id="cmp3FC749C5D041542A533536B2311B421C" />
+            <ComponentRef Id="cmp355CEAAE3784E5911252A85747EE34FE" />
+            <ComponentRef Id="cmp316BFC86B2CE96A9A556D143D44FED9F" />
+            <ComponentRef Id="cmpEFB67E01B8DD7ADCE34A5A390947BA61" />
+            <ComponentRef Id="cmp9919810F0D2DD1973AB64DAEA04E049F" />
+            <ComponentRef Id="cmpDFD31CEF69F510FBFA42E20927371B7E" />
+            <ComponentRef Id="cmp02B191E85227F9C4398C74147923D9F4" />
+            <ComponentRef Id="cmpBFF7DFEA7535559305F54B52A53287A9" />
+            <ComponentRef Id="cmpB1C447BC41B6DBC76335493CF39E734E" />
+            <ComponentRef Id="cmpF09C2B7B4BE9B9D6340ACEABA09DB4BA" />
+            <ComponentRef Id="cmpBB0C7726592AE401714A41480B3D7B3C" />
+            <ComponentRef Id="cmp651240FFFC9DE845E7AC029AB2B9B137" />
+            <ComponentRef Id="cmp7CE284CD409356E6BDF945A0B52326D8" />
+            <ComponentRef Id="cmpE9D4FE99932A3EB86677791082966723" />
+            <ComponentRef Id="cmpC5A96EC5970BEA9CB801DCF6B4A74AC0" />
+            <ComponentRef Id="cmp9669B67BDB089CA843D1C8FFDCC9460A" />
+            <ComponentRef Id="cmp7B30C1F9B1D26493B6BCAE024C81FF1B" />
+            <ComponentRef Id="cmp5F7989253447E774AC6E27B0ABFFBB5D" />
+            <ComponentRef Id="cmpCFA6E0DDA2D4610B01D679E6CF1AF058" />
+            <ComponentRef Id="cmp90ACA681131D98ADFE29AD0D897EF788" />
+            <ComponentRef Id="cmp6861C41B2034D0153D52BF3A66CCBE79" />
+            <ComponentRef Id="cmpC734B804BD2548D223FFC37D9B389BB8" />
+            <ComponentRef Id="cmpCB54D6473321F0BB49E71655927E5BC7" />
+            <ComponentRef Id="cmp7393DC3A9F84B0DF9E46E8947A888E57" />
+            <ComponentRef Id="cmpDC58E799478203A9D3B61198672DAF88" />
+            <ComponentRef Id="cmpA4EBF7CB6129A806DBF29C0D8D08C000" />
+            <ComponentRef Id="cmpBA8595898A67D6C81F4040FAA713C208" />
+            <ComponentRef Id="cmpCAB24C403E3237489E2F37D816AA074F" />
+            <ComponentRef Id="cmpEB2DEE1A320291B26C13DF9C9D97C0C8" />
+            <ComponentRef Id="cmpF624A040EF038DFC2B6888300B4ED182" />
+            <ComponentRef Id="cmpCA04E22784E4A6BC25133322107CDEA2" />
+            <ComponentRef Id="cmp7D8EE123B4EE598F7004E49A93ADFF91" />
+            <ComponentRef Id="cmp7AE0813F276CFD816061E68D428420F9" />
+            <ComponentRef Id="cmp009361419F9FE311DEE1C2C08F02593A" />
+            <ComponentRef Id="cmpAB548147726C90E4D3167151A9BE5CBF" />
+            <ComponentRef Id="cmp23609605E6BE14CF0DF544FC53BA43F6" />
+            <ComponentRef Id="cmp0578CBE298FE8AFCBB0AA8D7229E2F42" />
+            <ComponentRef Id="cmp724248389C3EDDA9EFA4D5508BF9B8E6" />
+            <ComponentRef Id="cmp02A97C69BCD8D340EB55725454F1D70F" />
+            <ComponentRef Id="cmp4F6DFAEEE6238FE47176B84F889B8E70" />
+            <ComponentRef Id="cmp6CE61502BFC836796B14B67D068EE5E4" />
+            <ComponentRef Id="cmp8FE7B464C44A4274381248DDB92C73BA" />
+            <ComponentRef Id="cmpADD5C5BAC584EC285844476943DEF5DC" />
+            <ComponentRef Id="cmp4DFEC021225B89F605B3B385668AD787" />
+            <ComponentRef Id="cmpDFC47B261879C6054ED631292E9D7076" />
+            <ComponentRef Id="cmp3F69DDAE13C02F7443783C83738F40D7" />
+            <ComponentRef Id="cmp35EBE3FF7133CA973352038BA475C4FD" />
+            <ComponentRef Id="cmp29155A42136A7C51268CFBF9FE811EF9" />
+            <ComponentRef Id="cmp65EE0725E8203A2EED58764E797F4E69" />
+            <ComponentRef Id="cmp4764204CD5AA051CFA6DD38EDF9B2B35" />
+            <ComponentRef Id="cmp461C7DE0313B2EB1F31BED8B4FA68979" />
+            <ComponentRef Id="cmp6CD26B12700BA7BFF98D172AA9149B5C" />
+            <ComponentRef Id="cmp0D3D63D1759CF99092B16307160E7129" />
+            <ComponentRef Id="cmp3BA42065DC542506B7B06C675CF2D675" />
+            <ComponentRef Id="cmp220941B0341E219F8293492ECAEB8517" />
+            <ComponentRef Id="cmpC6388A068BE45312D71FFBA20D5C47AD" />
+            <ComponentRef Id="cmp15021D6078FB75DCD1AA4D882FE565C4" />
+            <ComponentRef Id="cmp989152507E076C4018C4B93F9B3581C6" />
+            <ComponentRef Id="cmp363376071E960C25113D5206051E735C" />
+            <ComponentRef Id="cmp692D61ED9166154584CE65C2F58AE635" />
+            <ComponentRef Id="cmpA30569C58B448085BF438CB2B0353AB3" />
+            <ComponentRef Id="cmp86106BAF0B837A6671BBC03F3FD4B3A0" />
+            <ComponentRef Id="cmp96FE4DB8C3C1DE81DB7ED95A5B0AD949" />
+            <ComponentRef Id="cmpFBA8B2F519DDA08DFDBCD24E9CB70697" />
+            <ComponentRef Id="cmpC3A5250A9B055ACD759B16AC752DC341" />
+            <ComponentRef Id="cmp4BF603E550046E34D03169AEA492782E" />
+            <ComponentRef Id="cmpABC3EB27A89BA4557928FFCF88C7959E" />
+            <ComponentRef Id="cmpBABC8BD5B2E777093D6C2378E4B429A3" />
+            <ComponentRef Id="cmp4DC6059C93B3DE9388F154E7364EA1B0" />
+            <ComponentRef Id="cmp4A7EEE1889B8E3D281F7C889BB32F185" />
+            <ComponentRef Id="cmp300EDEF51850DD7F18F665B302736EC9" />
+            <ComponentRef Id="cmp7947051F5B198D128AE48419153A8BC3" />
+            <ComponentRef Id="cmpC5C2BE5A6537F5CD5E9C0F99FBDBEBF2" />
+            <ComponentRef Id="cmp35EE5186EF19C0FD748FE4398F45DE2F" />
+            <ComponentRef Id="cmp02150A27CD99510CDC2363DC3122320D" />
+            <ComponentRef Id="cmpAC14E69CE48A137AC777B80EDAF6B999" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

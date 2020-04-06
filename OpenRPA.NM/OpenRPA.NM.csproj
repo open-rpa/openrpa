@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
@@ -8,8 +8,9 @@
     <Company>OpenRPA</Company>
     <Product>OpenRPA</Product>
     <Description>Recorder plugin and Activities for interacting with Chrome/Firefox and Edge, created for OpenRPA robot</Description>
-    <Version>1.0.22</Version>
-    <PackageReleaseNotes>1.0.22 Add IsVisible, Display, isVisibleOnScreen and Disabled to NMElement
+    <Version>1.0.23</Version>
+    <PackageReleaseNotes>1.0.23 Change target framework to 4.7.2
+1.0.22 Add IsVisible, Display, isVisibleOnScreen and Disabled to NMElement
 1.0.21 Improve speed and click, and add support for variables in selector
 1.0.20 Add langauges
 1.0.18 update reference

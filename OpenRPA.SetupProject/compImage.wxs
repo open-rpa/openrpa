@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="ImageComponents">
+      <Component Id='ImageComponent' Guid='{BAF9FE9C-959D-43E2-BD0D-CE1757DCD2B0}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="OpenRPA.Image.dll" Source="!(wix.ImageSource)\OpenRPA.Image.dll" />
+        <File Id="Emgu.CV.UI.dll" Source="!(wix.ImageSource)\Emgu.CV.UI.dll" />
+        <File Id="Emgu.CV.World.dll" Source="!(wix.ImageSource)\Emgu.CV.World.dll" />
+        <File Id="ZedGraph.dll" Source="!(wix.ImageSource)\ZedGraph.dll" />
+      </Component>
+      
+      <Component Id='ImageComponentx64' Win64='yes' Directory="Imagex64" Guid='{7A49555D-9212-4C82-B52D-5ED51DEF5AD9}'>
+        <File Id="concrt140.dll_x64" Source="!(wix.ImageSource)\x64\concrt140.dll" />
+        <File Id="cvextern.dll_x64" Source="!(wix.ImageSource)\x64\cvextern.dll" />
+        <File Id="msvcp140.dll_x64" Source="!(wix.ImageSource)\x64\msvcp140.dll" />
+        <File Id="opencv_videoio_ffmpeg411_64.dll_x64" Source="!(wix.ImageSource)\x64\opencv_videoio_ffmpeg411_64.dll" />
+        <File Id="vcruntime140.dll_x64" Source="!(wix.ImageSource)\x64\vcruntime140.dll" />
+      </Component>
+      
+      <Component Id='ImageComponentde' Win64='yes' Directory="Imagede" Guid='{4A802E92-28EC-4CBA-B948-6724D20CC9F2}'>
+        <File Id="OpenRPA.Image.resources.dll_de" Source="!(wix.ImageSource)\de\OpenRPA.Image.resources.dll" />
+        <File Id="ZedGraph.resources.dll_de" Source="!(wix.ImageSource)\de\ZedGraph.resources.dll" />
+      </Component>
+      <Component Id='ImageComponentda' Win64='yes' Directory="Imageda" Guid='{34D5D116-D542-4650-BCB5-52F47580F694}'>
+        <File Id="OpenRPA.Image.resources.dll_da" Source="!(wix.ImageSource)\da\OpenRPA.Image.resources.dll" />
+      </Component>
+      <Component Id='ImageComponentes' Win64='yes' Directory="Imagees" Guid='{87159FAA-DA50-422C-BFC5-B7E97769D74D}'>
+        <File Id="OpenRPA.Image.resources.dll_es" Source="!(wix.ImageSource)\es\OpenRPA.Image.resources.dll" />
+        <File Id="ZedGraph.resources.dll_es" Source="!(wix.ImageSource)\es\ZedGraph.resources.dll" />
+      </Component>
+      <Component Id='ImageComponentpt' Win64='yes' Directory="Imagept" Guid='{458482A0-3C4B-4EA8-B4B7-24387F037785}'>
+        <File Id="OpenRPA.Image.resources.dll_pt" Source="!(wix.ImageSource)\pt\OpenRPA.Image.resources.dll" />
+        <File Id="ZedGraph.resources.dll_pt" Source="!(wix.ImageSource)\pt\ZedGraph.resources.dll" />
+      </Component>
+      <Component Id='ImageComponentro' Win64='yes' Directory="Imagero" Guid='{60D44EA2-4CC5-4ADB-8DDB-E7B384FFE22F}'>
+        <File Id="OpenRPA.Image.resources.dll_ro" Source="!(wix.ImageSource)\ro\OpenRPA.Image.resources.dll" />
+      </Component>
+      <Component Id='ImageComponentru' Win64='yes' Directory="Imageru" Guid='{0956CF1F-136A-4A65-80E2-83C3E957ED4A}'>
+        <File Id="OpenRPA.Image.resources.dll_ru" Source="!(wix.ImageSource)\ru\OpenRPA.Image.resources.dll" />
+        <File Id="ZedGraph.resources.dll_ru" Source="!(wix.ImageSource)\ru\ZedGraph.resources.dll" />
+      </Component>
+
+    </ComponentGroup>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="Imagex64" Name="x64">
+      </Directory>
+      <Directory Id="Imagede" Name="de">
+      </Directory>
+      <Directory Id="Imageda" Name="da">
+      </Directory>
+      <Directory Id="Imagees" Name="es">
+      </Directory>
+      <Directory Id="Imagept" Name="pt">
+      </Directory>
+      <Directory Id="Imagero" Name="ro">
+      </Directory>
+      <Directory Id="Imageru" Name="ru">
+      </Directory>
+    </DirectoryRef>
+
+  </Fragment>
+</Wix>

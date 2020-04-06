@@ -10,8 +10,9 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.0.6</Version>
-    <PackageReleaseNotes>1.0.6 Fix input errors in JArrayToDataTable Designer
+    <Version>1.0.7</Version>
+    <PackageReleaseNotes>1.0.7 Change target framework to 4.7.2
+1.0.6 Fix input errors in JArrayToDataTable Designer
 1.0.5 Add Match and Matches
 1.0.4 Fix unicode characters for WriteCSV 
 1.0.3 Add ReadCSV and WriteCSV

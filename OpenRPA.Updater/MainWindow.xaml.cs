@@ -46,6 +46,9 @@ namespace OpenRPA.Updater
         public MainWindow()
         {
             InitializeComponent();
+
+            // https://martinbjorkstrom.com/posts/2018-09-19-revisiting-nuget-client-libraries
+
             ButtonUpdateAll.IsEnabled = false;
             DataContext = this;
             OpenRPAPackageManagerLogger.Instance.Updated += () =>

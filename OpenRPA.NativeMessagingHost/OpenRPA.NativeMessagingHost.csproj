@@ -6,11 +6,12 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.14</Version>
+    <Version>1.0.15</Version>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
     <StartupObject />
-    <PackageReleaseNotes>1.0.14 Add IsVisible, Display, isVisibleOnScreen and Disabled to GetDOM
+    <PackageReleaseNotes>1.0.15 Change target framework to 4.7.2
+1.0.14 Add IsVisible, Display, isVisibleOnScreen and Disabled to GetDOM
 1.0.11 update interfaces reference
 1.0.8 update interfaces reference</PackageReleaseNotes>
     <Description>The NativeMessagingHost serves as a proxy between chrome/ff and openrpa</Description>

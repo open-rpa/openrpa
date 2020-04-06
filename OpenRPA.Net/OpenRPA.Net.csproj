@@ -6,8 +6,9 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.17</Version>
-    <PackageReleaseNotes>1.0.17 add queryas support
+    <Version>1.0.18</Version>
+    <PackageReleaseNotes>1.0.18 Change target framework to 4.7.2
+1.0.17 add queryas support
 1.0.16 add version info to login message
 1.0.11 update interfaces reference
 1.0.8 make more resilient

@@ -12,6 +12,8 @@
     <Configurations>Debug;Release;PrepInstaller;ReleaseNuget</Configurations>
     <PackageTags>OpenRPA</PackageTags>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
+    <Version>1.0.1</Version>
+    <PackageReleaseNotes>1.0.1 Change target framework to 4.7.2</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Views\PluginView.xaml" />

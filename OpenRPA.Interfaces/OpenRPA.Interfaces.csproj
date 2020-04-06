@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.36</Version>
-    <PackageReleaseNotes>1.0.36 Add extension for getting has value on outargument
+    <Version>1.0.37</Version>
+    <PackageReleaseNotes>1.0.37 Change target framework to 4.7.2
+1.0.36 Add extension for getting has value on outargument
 1.0.35 Add support for checkboxes
 1.0.34 Add AsDateTable() to UIElement
 1.0.33 add queryas support

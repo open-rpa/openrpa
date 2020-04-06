@@ -11,8 +11,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
-    <Version>1.0.14</Version>
-    <PackageReleaseNotes>1.0.14 cleanup
+    <Version>1.0.15</Version>
+    <PackageReleaseNotes>1.0.15 Change target framework to 4.7.2
+1.0.14 cleanup
 1.0.13 Improve startup time of rdservice
 1.0.12 Improve RD Service
 1.0.11 report disabled server

@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
-    <Version>1.0.18</Version>
-    <PackageReleaseNotes>1.0.18 Add support for variables in selector
+    <Version>1.0.19</Version>
+    <PackageReleaseNotes>1.0.19 Change target framework to 4.7.2
+1.0.18 Add support for variables in selector
 1.0.17 Add langauges
 1.0.15 update reference
 1.0.14 fix double click

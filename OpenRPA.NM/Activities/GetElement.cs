@@ -30,9 +30,14 @@ namespace OpenRPA.NM
         public InArgument<string> Selector { get; set; }
         public InArgument<NMElement> From { get; set; }
         public OutArgument<NMElement[]> Elements { get; set; }
+        [LocalizedDisplayName("activity_waitforready", typeof(Resources.strings)), LocalizedDescription("activity_waitforready_help", typeof(Resources.strings))]
+        public InArgument<bool> WaitForReady { get; set; }
+
         [Browsable(false)]
         public string Image { get; set; }
         private readonly Variable<IEnumerator<NMElement>> _elements = new Variable<IEnumerator<NMElement>>("_elements");
+        private Variable<NMElement[]> _lastelements = new Variable<NMElement[]>("_lastelements");
+        [System.ComponentModel.Browsable(false)]
         public Activity LoopAction { get; set; }
         public GetElement()
         {
@@ -56,22 +61,51 @@ namespace OpenRPA.NM
             NMElement[] elements = { };
             var sw = new Stopwatch();
             sw.Start();
+            if (WaitForReady.Get(context))
+            {
+                string browser = sel.browser;
+                if (from != null) browser = from.browser;
+                if (!string.IsNullOrEmpty(browser))
+                {
+                    NMHook.enumtabs();
+                    if (browser == "chrome" && NMHook.CurrentChromeTab != null)
+                    {
+                        NMHook.WaitForTab(NMHook.CurrentChromeTab.id, browser, TimeSpan.FromSeconds(10));
+                    }
+                    if (browser == "ff" && NMHook.CurrentFFTab != null)
+                    {
+                        NMHook.WaitForTab(NMHook.CurrentFFTab.id, browser, TimeSpan.FromSeconds(10));
+                    }
+                }
+            }
             do
             {
                 elements = NMSelector.GetElementsWithuiSelector(sel, from, maxresults);
             } while (elements .Count() == 0 && sw.Elapsed < timeout);
             if (elements.Count() > maxresults) elements = elements.Take(maxresults).ToArray();
             context.SetValue(Elements, elements);
+
+            var lastelements = context.GetValue(_lastelements);
+            if (lastelements == null) lastelements = new NMElement[] { };
+            context.SetValue(_lastelements, elements);
+            if ((elements.Length + lastelements.Length) < minresults)
+            {
+                Log.Selector(string.Format("Windows.GetElement::Failed locating " + minresults + " item(s) {0:mm\\:ss\\.fff}", sw.Elapsed));
+                throw new ElementNotFoundException("Failed locating " + minresults + " item(s)");
+            }
+
             IEnumerator<NMElement> _enum = elements.ToList().GetEnumerator();
             bool more = _enum.MoveNext();
+            if (lastelements.Length == elements.Length && lastelements.Length > 0)
+            {
+                var eq = new Activities.NMEqualityComparer();
+
+                more = !System.Collections.StructuralComparisons.StructuralEqualityComparer.Equals(lastelements, elements);
+            }
             if (more)
             {
-                if(elements.Count() > 1) context.SetValue(_elements, _enum);
+                context.SetValue(_elements, _enum);
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
-            }
-            else if (elements.Length < minresults)
-            {
-                throw new Interfaces.ElementNotFoundException("Failed locating " + minresults + " item");
             }
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
@@ -103,6 +137,7 @@ namespace OpenRPA.NM
             Interfaces.Extensions.AddCacheArgument(metadata, "Elements", Elements);
             Interfaces.Extensions.AddCacheArgument(metadata, "MaxResults", MaxResults);
             metadata.AddImplementationVariable(_elements);
+            metadata.AddImplementationVariable(_lastelements);
             base.CacheMetadata(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)

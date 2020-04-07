@@ -147,5 +147,21 @@ namespace OpenRPA.Windows
                 }
             }
         }
+        public bool ShowLoopExpanded { get; set; }
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            ShowLoopExpanded = !ShowLoopExpanded;
+            NotifyPropertyChanged("ShowLoopExpanded");
+        }
+
+        private void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
+        {
+            Activity loopaction = ModelItem.GetValue<Activity>("LoopAction");
+            if(loopaction != null)
+            {
+                ShowLoopExpanded = true;
+                NotifyPropertyChanged("ShowLoopExpanded");
+            }
+        }
     }
 }

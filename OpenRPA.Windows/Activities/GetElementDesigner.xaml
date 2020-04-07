@@ -4,7 +4,7 @@
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
-    xmlns:or="clr-namespace:OpenRPA.Windows.Resources"
+    xmlns:or="clr-namespace:OpenRPA.Windows.Resources" Loaded="ActivityDesigner_Loaded"
     >
 
 
@@ -45,13 +45,35 @@
                 <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
                                     HintText="{x:Static or:strings.getelement_drop_hint}" AllowedItemType="sa:Activity"
                                       Grid.Row="1" />
+                <TextBlock HorizontalAlignment="Center" Margin="63,0"><Hyperlink FontStyle="Italic" Foreground="Gray" Click="Hyperlink_Click" 
+                                                                   ToolTip="{x:Static or:strings.activity_getelement_loopaction_tooltop}" >
+                    <TextBlock Text="{x:Static or:strings.activity_getelement_loopaction}"></TextBlock>
+                    </Hyperlink>
+                </TextBlock>
+                <ContentPresenter Style="{DynamicResource LoopExpandOrCollapsedStyle}" Content="{Binding}" />
+                
             </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="LoopCollapsed">
+        </DataTemplate>
+        <DataTemplate x:Key="LoopExpanded">
+            <sap:WorkflowItemPresenter Item="{Binding ModelItem.LoopAction}" 
+                                    HintText="{x:Static or:strings.getelement_drop_hint}" AllowedItemType="sa:Activity"
+                                      Grid.Row="1" />
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
             <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="false">
                     <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="LoopExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
+            <Setter Property="ContentTemplate" Value="{DynamicResource LoopExpanded}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=ShowLoopExpanded}" Value="false">
+                    <Setter Property="ContentTemplate" Value="{DynamicResource LoopCollapsed}"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>

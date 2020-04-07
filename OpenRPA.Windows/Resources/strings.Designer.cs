@@ -70,6 +70,24 @@ namespace OpenRPA.Windows.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loop action.
+        /// </summary>
+        public static string activity_getelement_loopaction {
+            get {
+                return ResourceManager.GetString("activity_getelement_loopaction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do this, once done processing each result, then reruns the selector and looks for new items.
+        /// </summary>
+        public static string activity_getelement_loopaction_tooltop {
+            get {
+                return ResourceManager.GetString("activity_getelement_loopaction_tooltop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Find an Windows UI element based on selector.
         /// </summary>
         public static string activity_getelement_tooltip {

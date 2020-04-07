@@ -178,7 +178,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Find application based on a UI selector and the closes the Application.
+        ///   Looks up a localized string similar to Find application based on a UI selector and then closes the Application.
         /// </summary>
         public static string activity_closeapplication_tooltip {
             get {

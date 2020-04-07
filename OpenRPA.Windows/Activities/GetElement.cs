@@ -41,9 +41,11 @@ namespace OpenRPA.Windows
         [Browsable(false)]
         public string Image { get; set; }
         private Variable<IEnumerator<UIElement>> _elements = new Variable<IEnumerator<UIElement>>("_elements");
+        private Variable<UIElement[]> _lastelements = new Variable<UIElement[]>("_lastelements");
         private Variable<Stopwatch> _sw = new Variable<Stopwatch>("_sw");
         [System.ComponentModel.Browsable(false)]
         public Activity LoopAction { get; set; }
+        // public ActivityAction<UIElement> LoopAction { get; set; }
         protected override void Execute(NativeActivityContext context)
         {
             var sw = new Stopwatch();
@@ -116,13 +118,21 @@ namespace OpenRPA.Windows
             //    elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
             //}
             context.SetValue(Elements, elements);
-            if(elements.Count() < minresults)
+
+            var lastelements = context.GetValue(_lastelements);
+            if (lastelements == null) lastelements = new UIElement[] { };
+            context.SetValue(_lastelements, elements);
+            if ((elements.Length + lastelements.Length) < minresults)
             {
                 Log.Selector(string.Format("Windows.GetElement::Failed locating " + minresults + " item(s) {0:mm\\:ss\\.fff}", sw.Elapsed));
                 throw new ElementNotFoundException("Failed locating " + minresults + " item(s)");
             }
             IEnumerator<UIElement> _enum = elements.ToList().GetEnumerator();
             bool more = _enum.MoveNext();
+            if(lastelements.Length == elements.Length && lastelements.Length > 0)
+            {
+                more = !System.Collections.StructuralComparisons.StructuralEqualityComparer.Equals(lastelements, elements);
+            }
             if (more)
             {
                 context.SetValue(_elements, _enum);
@@ -167,6 +177,7 @@ namespace OpenRPA.Windows
             Interfaces.Extensions.AddCacheArgument(metadata, "MaxResults", MaxResults);
 
             metadata.AddImplementationVariable(_elements);
+            metadata.AddImplementationVariable(_lastelements);
             metadata.AddImplementationVariable(_sw);
             base.CacheMetadata(metadata);
         }

@@ -88,6 +88,24 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loop action.
+        /// </summary>
+        public static string activity_getelement_loopaction {
+            get {
+                return ResourceManager.GetString("activity_getelement_loopaction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do this, once done processing each result, then reruns the selector and looks for new items.
+        /// </summary>
+        public static string activity_getelement_loopaction_tooltop {
+            get {
+                return ResourceManager.GetString("activity_getelement_loopaction_tooltop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Selector.
         /// </summary>
         public static string activity_getelement_open_selector {
@@ -102,15 +120,6 @@ namespace OpenRPA.NM.Resources {
         public static string activity_getelement_tooltip {
             get {
                 return ResourceManager.GetString("activity_getelement_tooltip", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Find an Windows UI element based on selector.
-        /// </summary>
-        public static string activity_getelement_tooltip1 {
-            get {
-                return ResourceManager.GetString("activity_getelement_tooltip1", resourceCulture);
             }
         }
         
@@ -138,6 +147,24 @@ namespace OpenRPA.NM.Resources {
         public static string activity_openurl_tooltip {
             get {
                 return ResourceManager.GetString("activity_openurl_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait for ready.
+        /// </summary>
+        public static string activity_waitforready {
+            get {
+                return ResourceManager.GetString("activity_waitforready", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait for page page to be ready / is not loading.
+        /// </summary>
+        public static string activity_waitforready_help {
+            get {
+                return ResourceManager.GetString("activity_waitforready_help", resourceCulture);
             }
         }
         

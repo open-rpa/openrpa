@@ -14,6 +14,17 @@ namespace OpenRPA.NM
     {
         NMElement element { get; set; }
         public NMSelector(string json) : base(json) { }
+        public string browser
+        {
+            get
+            {
+                if (this.Count == 0) return null;
+                var first = this[0];
+                var p = first.Properties.Where(x => x.Name == "browser").FirstOrDefault();
+                if (p == null) return null;
+                return p.Value;
+            }
+        }
         public NMSelector(NMElement element, NMSelector anchor, bool doEnum, NMElement anchorelement)
         {
             var sw = new System.Diagnostics.Stopwatch();
@@ -139,7 +150,5 @@ namespace OpenRPA.NM
                     }
             return results.ToArray();
         }
-
-
     }
 }

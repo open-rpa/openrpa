@@ -41,6 +41,16 @@ namespace OpenRPA
             notifyIcon.Visible = false;
             //notifyIcon.ShowBalloonTip(5000, "Title", "Text", System.Windows.Forms.ToolTipIcon.Info);
             notifyIcon.Click += nIcon_Click;
+            //try
+            //{
+            //    var temp2 = new System.Xml.Serialization.XmlSerializer(typeof(Xceed.Wpf.AvalonDock.Layout.LayoutRoot));
+            //    var temp = new System.Xml.Serialization.XmlSerializer(typeof(Xceed.Wpf.AvalonDock.Layout.LayoutRoot),
+            //        typeof(Xceed.Wpf.AvalonDock.Layout.LayoutRoot).GetNestedTypes());
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.ToString());
+            //}
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -88,6 +98,7 @@ namespace OpenRPA
                            ? Assembly.LoadFile(archSpecificPath)
                            : null;
             }
+            Console.WriteLine("Resolve " + args.Name);
 
             string folderPath = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string assemblyPath = System.IO.Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");

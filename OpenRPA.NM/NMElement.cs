@@ -469,6 +469,19 @@ namespace OpenRPA.NM
                 return result.ToArray();
             }
         }
-
+        public override bool Equals(object obj)
+        {
+            if (obj is NMElement nm)
+            {
+                var eq = new Activities.NMEqualityComparer();
+                return eq.Equals(this, nm);
+            }
+            return base.Equals(obj);
+        }
+        public override int GetHashCode()
+        {
+            int hCode = Height ^ X ^ Y ^ Width;
+            return hCode.GetHashCode();
+        }
     }
 }

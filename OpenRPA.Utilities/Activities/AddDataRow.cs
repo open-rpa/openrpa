@@ -18,23 +18,21 @@ using System.Windows;
 
 namespace OpenRPA.Utilities
 {
-    [Designer(typeof(CreateDataTableDesigner), typeof(System.ComponentModel.Design.IDesigner))]
+    [Designer(typeof(AddDataRowDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.database.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
-    public class CreateDataTable : CodeActivity
+    public class AddDataRow  : CodeActivity
     {
         [RequiredArgument]
-        public OutArgument<DataTable> DataTable { get; set; }
+        public InArgument<DataTable> DataTable { get; set; }
         [RequiredArgument]
-        public InArgument<string[]> ColumnNames { get; set; }
+        public InArgument<object[]> RowData { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
-            var dt = new DataTable();
-            foreach(var column in ColumnNames.Get(context))
-            {
-                dt.Columns.Add(column);
-            }
-            DataTable.Set(context, dt);
+            var dt = DataTable.Get(context);
+            var data = RowData.Get(context);
+            dt.Rows.Add(data);
+            // dt.Columns.Add(data);
         }
 
     }

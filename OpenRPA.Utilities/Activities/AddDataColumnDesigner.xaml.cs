@@ -14,16 +14,17 @@ using OpenRPA.Interfaces;
 
 namespace OpenRPA.Utilities
 {
-    public partial class CreateDataTableDesigner
+    public partial class AddDataColumnDesigner
     {
-        public CreateDataTableDesigner()
+        public AddDataColumnDesigner()
         {
             InitializeComponent();
         }
-
-        private void ExpressionTextBox_Loaded(object sender, RoutedEventArgs e)
+        protected override void OnModelItemChanged(Object newItem)
         {
-            ((System.Activities.Presentation.View.ExpressionTextBox)sender).ExpressionType = typeof(string[]);
+            base.OnModelItemChanged(newItem);
+            GenericArgumentTypeUpdater.Attach(ModelItem);
+
         }
     }
 }

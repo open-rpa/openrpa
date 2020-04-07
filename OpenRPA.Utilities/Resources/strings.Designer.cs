@@ -79,6 +79,33 @@ namespace OpenRPA.Utilities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DataTable.
+        /// </summary>
+        public static string activity_datatable {
+            get {
+                return ResourceManager.GetString("activity_datatable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Array of DataTable columns.
+        /// </summary>
+        public static string activity_datatable_columnnames {
+            get {
+                return ResourceManager.GetString("activity_datatable_columnnames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New columns Name.
+        /// </summary>
+        public static string activity_datatable_newcolumnname {
+            get {
+                return ResourceManager.GetString("activity_datatable_newcolumnname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save into this folder.
         /// </summary>
         public static string activity_downloadfile_hint {
@@ -120,6 +147,15 @@ namespace OpenRPA.Utilities.Resources {
         public static string activity_match_pattern {
             get {
                 return ResourceManager.GetString("activity_match_pattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New DataTable variable.
+        /// </summary>
+        public static string activity_new_datatable {
+            get {
+                return ResourceManager.GetString("activity_new_datatable", resourceCulture);
             }
         }
         

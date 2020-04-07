@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.90</Version>
-    <PackageReleaseNotes>1.0.90 Change target framework to 4.7.2
+    <Version>1.0.91</Version>
+    <PackageReleaseNotes>1.0.91 Add AddDataColumn, AddDataRow and CreateDataTable and Add Loop action to Windows.GetElement and nm.GetElement
+1.0.90 Change target framework to 4.7.2
 1.0.89 Improve plugin loading speed
 1.0.88 Add support for saving email attachments / Improve nm addon 
 1.0.87 Add support for translation of property displaynames and descriptions

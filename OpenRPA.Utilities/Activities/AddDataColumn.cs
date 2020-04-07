@@ -28,7 +28,7 @@ namespace OpenRPA.Utilities
         [RequiredArgument]
         public InArgument<string> ColumnName { get; set; }
         public Type TargetType { get; set; }
-        public bool AllowDBNull { get; set; }
+        public bool AllowDBNull { get; set; } = true;
         public bool AutoIncrement { get; set; }
         public object DefaultValue { get; set; }
         public int MaxLength { get; set; }
@@ -43,7 +43,13 @@ namespace OpenRPA.Utilities
             col.AllowDBNull = AllowDBNull;
             col.AutoIncrement = AutoIncrement;
             col.DefaultValue = DefaultValue;
-            col.MaxLength = MaxLength;
+            try
+            {
+                col.MaxLength = MaxLength;
+            }
+            catch (Exception)
+            {
+            }
             col.Unique = Unique;
             dt.Columns.Add(col);
         }

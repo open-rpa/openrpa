@@ -23,11 +23,11 @@
   <?define openrpaExeSourcePath = "$(var.ProjectDir)..\OpenRPA\bin\PrepInstaller\net472\OpenRPA.exe" ?>
   <?endif ?>
   <Product Id="*" Name="!(loc.ApplicationName)" Language="!(loc.Language)" Version="$(var.VersionNumber)" Manufacturer="!(loc.ManufacturerFullName)" 
-           UpgradeCode="$(var.UpgradeCode)" >
+           UpgradeCode="$(var.UpgradeCode)"  >
 		<Package InstallerVersion="200" Compressed="yes"  Platform="x64" InstallScope="perMachine" />
     <!-- InstallScope="perMachine" -->
 
-		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 		<MediaTemplate EmbedCab="yes" />
 
     <Icon Id="open_rpa.ico" SourceFile="open_rpa.ico"/>

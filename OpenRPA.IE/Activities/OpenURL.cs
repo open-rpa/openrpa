@@ -25,7 +25,10 @@ namespace OpenRPA.IE
             var browser = Browser.GetBrowser(url);
             var timeout = TimeSpan.FromSeconds(3);
             var doc = browser.Document;
-            if (!string.IsNullOrEmpty(url)) doc.url = url;
+            if (!string.IsNullOrEmpty(url))
+            {
+                if(doc.url != url) doc.url = url;
+            }
             browser.Show();
             var sw = new Stopwatch();
             sw.Start();

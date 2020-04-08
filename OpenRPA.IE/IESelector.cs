@@ -13,8 +13,26 @@ namespace OpenRPA.IE
 {
     class IESelector : Selector
     {
+        static internal string GetStringFromResource(string resourceName)
+        {
+            string[] names = typeof(IESelector).Assembly.GetManifestResourceNames();
+            foreach (var name in names)
+            {
+                if (name.EndsWith(resourceName))
+                {
+                    using (var stream = typeof(IESelector).Assembly.GetManifestResourceStream(name))
+                    using (var reader = new System.IO.StreamReader(stream))
+                    {
+                        string result = reader.ReadToEnd();
+                        return result;
+                    }
+                }
+            }
+            return null;
+        }
+
         public static readonly string[] frameTags = { "FRAME", "IFRAME" };
-        IEElement element { get; set; }
+        // IEElement element { get; set; }
         public IESelector(string json) : base(json) { }
         public IESelector(Browser browser, MSHTML.IHTMLElement baseelement, IESelector anchor, bool doEnum, int X, int Y)
         {
@@ -24,7 +42,27 @@ namespace OpenRPA.IE
             Log.Selector(string.Format("IEselector::GetControlViewWalker::end {0:mm\\:ss\\.fff}", sw.Elapsed));
 
             Clear();
-            enumElements(browser, baseelement, anchor, doEnum, X, Y);
+            if (PluginConfig.enable_xpath_support)
+            {
+                var item = new IESelectorItem(browser.Document);
+                item.Enabled = true;
+                //item.canDisable = false;
+                Items.Add(item);
+
+                var xpath = XPath.getXPath(baseelement);
+                item = new IESelectorItem();
+                item.Properties = new ObservableCollection<SelectorItemProperty>();
+                item.IEElement = new IEElement(browser, baseelement);
+                item.Element = item.IEElement;
+                item.Properties.Add(new SelectorItemProperty("xpath", xpath));
+                Items.Add(item);
+
+            }
+            else
+            {
+                enumElements(browser, baseelement, anchor, doEnum, X, Y);
+            }
+
 
             Log.Selector(string.Format("IEselector::EnumNeededProperties::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
@@ -166,7 +204,25 @@ namespace OpenRPA.IE
                 }
             }
         }
-
+        public string xpath
+        {
+            get
+            {
+                if (this.Count == 0) return null;
+                var first = this[0];
+                var p = first.Properties.Where(x => x.Name == "xpath").FirstOrDefault();
+                if (p == null)
+                {
+                    if(this.Count > 1)
+                    {
+                        var second = this[1];
+                        p = second.Properties.Where(x => x.Name == "xpath").FirstOrDefault();
+                        if (p == null) return null;
+                    }
+                }
+                return p.Value;
+            }
+        }
         public override IElement[] GetElements(IElement fromElement = null, int maxresults = 1)
         {
             return IESelector.GetElementsWithuiSelector(this, fromElement, maxresults );
@@ -200,7 +256,60 @@ namespace OpenRPA.IE
 
             int startIndex = 1;
 
-            if(iefromElement != null)
+            if(!string.IsNullOrEmpty(selector.xpath))
+            {
+                // https://stackoverflow.com/questions/6953553/is-there-a-js-library-to-provide-xpath-capacities-to-ie
+
+                var _results = new List<IEElement>();
+
+                    try
+                    {
+                        Log.Selector(string.Format("Create IHTMLDocument3 {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        MSHTML.IHTMLDocument3 sourceDoc = (MSHTML.IHTMLDocument3)browser.Document;
+                        string documentContents = sourceDoc.documentElement.outerHTML;
+
+                        HtmlAgilityPack.HtmlDocument targetDoc = new HtmlAgilityPack.HtmlDocument();
+                        Log.SelectorVerbose(string.Format("targetDoc.LoadHtml {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        targetDoc.LoadHtml(documentContents);
+                        if(maxresults == 1)
+                        {
+                            Log.Selector(string.Format("SelectSingleNode {0:mm\\:ss\\.fff}", sw.Elapsed));
+                            HtmlAgilityPack.HtmlNode node = targetDoc.DocumentNode.SelectSingleNode(selector.xpath);
+                            if(node != null)
+                            {
+                                Log.SelectorVerbose(string.Format("new IEElement {0:mm\\:ss\\.fff}", sw.Elapsed));
+                                var ele = new IEElement(browser, node);
+                                _results.Add(ele);
+                            }
+                        } 
+                        else
+                        {
+                            Log.Selector(string.Format("SelectNodes {0:mm\\:ss\\.fff}", sw.Elapsed));
+                            var nodes = targetDoc.DocumentNode.SelectNodes(selector.xpath);
+                            if (nodes != null)
+                            {
+                                foreach (var node in nodes)
+                                {
+                                    Log.SelectorVerbose(string.Format("new IEElement {0:mm\\:ss\\.fff}", sw.Elapsed));
+                                    var ele = new IEElement(browser, node);
+                                    _results.Add(ele);
+                                    if (_results.Count >= maxresults) break;
+                                }
+                            }
+
+                        }
+
+                    }
+                    catch (Exception)
+                    {
+                    }
+                //GenericTools.MainWindow.Dispatcher.Invoke(() =>
+                //{
+                //});
+                Log.Selector(string.Format("GetElementsWithuiSelector::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+                return _results.ToArray();
+            }
+            if (iefromElement != null)
             {
                 startIndex = 0;
                 current.Add(iefromElement);

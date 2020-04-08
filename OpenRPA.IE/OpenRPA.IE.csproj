@@ -7,8 +7,9 @@
     <Description>Activities and record plugin for handling Internet Explorer, created for OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.23</Version>
-    <PackageReleaseNotes>1.0.23 Change target framework to 4.7.2
+    <Version>1.0.24</Version>
+    <PackageReleaseNotes>1.0.24 Add experimental support for XPath for IE, also doing recording / Improve OpenURL for IE
+1.0.23 Change target framework to 4.7.2
 1.0.22 Add support for variables in selector
 1.0.21 Add langauges
 1.0.20 Fix IE google Search Snippet
@@ -53,12 +54,14 @@
   <ItemGroup>
     <None Remove="Activities\GetElementDesigner.xaml" />
     <None Remove="Activities\OpenURLDesigner.xaml" />
+    <None Remove="javascriptxml.js" />
     <None Remove="Resources\check.png" />
     <None Remove="Resources\designer\gethtmlelement.png" />
     <None Remove="Resources\search.png" />
     <None Remove="Resources\toolbox\gethtmlelement.png" />
     <None Remove="Resources\x.png" />
     <None Remove="Snippets\GoogleSearch.xaml" />
+    <None Remove="Views\RecordPluginView.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\designer\gethtmlelement.png" />
@@ -68,10 +71,14 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="javascriptxml.js" />
     <EmbeddedResource Include="Resources\check.png" />
     <EmbeddedResource Include="Resources\search.png" />
     <EmbeddedResource Include="Resources\toolbox\gethtmlelement.png" />
     <EmbeddedResource Include="Resources\x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.23" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Interop.MSHTML">
@@ -95,6 +102,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\OpenURLDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RecordPluginView.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

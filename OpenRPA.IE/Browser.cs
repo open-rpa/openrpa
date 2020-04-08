@@ -91,6 +91,9 @@ namespace OpenRPA.IE
             result.findPanel();
             return result;
         }
+        //MSHTML.HTMLDocument doc2 = browser.Document;
+        //MSHTML.IHTMLWindow2 win = browser.wBrowser as MSHTML.IHTMLWindow2;
+
 
         internal void Show()
         {

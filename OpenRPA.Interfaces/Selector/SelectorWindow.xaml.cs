@@ -26,8 +26,10 @@ namespace OpenRPA.Interfaces.Selector
         public SelectorWindow(string pluginname, int maxresult)
         {
             InitializeComponent();
-            vm = new SelectorModel(this);
-            vm.maxresult = maxresult;
+            vm = new SelectorModel(this)
+            {
+                maxresult = maxresult
+            };
             DataContext = vm;
             vm.PluginName = pluginname;
             vm.Plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
@@ -48,8 +50,10 @@ namespace OpenRPA.Interfaces.Selector
         public SelectorWindow(string pluginname, Selector selector, Selector anchor, int maxresult)
         {
             InitializeComponent();
-            vm = new SelectorModel(this, selector, anchor);
-            vm.maxresult = maxresult;
+            vm = new SelectorModel(this, selector, anchor)
+            {
+                maxresult = maxresult
+            };
             DataContext = vm;
             vm.PluginName = pluginname;
             vm.Plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
@@ -63,11 +67,9 @@ namespace OpenRPA.Interfaces.Selector
         }
         private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
         {
-            TreeViewItem tvi = e.OriginalSource as TreeViewItem;
-            if (tvi != null)
+            if (e.OriginalSource is TreeViewItem tvi)
             {
-                var treeele = tvi.DataContext as treeelement;
-                if (treeele != null)
+                if (tvi.DataContext is treeelement treeele)
                 {
                     //treeele.IsExpanded = !treeele.IsExpanded;
                     //tvi.BringIntoView();
@@ -76,13 +78,11 @@ namespace OpenRPA.Interfaces.Selector
         }
         private void TreeViewSelectedHandler(object sender, RoutedEventArgs e)
         {
-            var item = sender as TreeViewItem;
-            if (item != null)
+            if (sender is TreeViewItem item)
             {
                 item.BringIntoView();
                 e.Handled = true;
-                var treeele = item.DataContext as treeelement;
-                if (treeele != null)
+                if (item.DataContext is treeelement treeele)
                 {
                     if (vm.Highlight) { treeele.Element.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1)); }
                     treeele.LoadDetails();

@@ -9,7 +9,7 @@
                    Value='[INSTALLDIR]'
                    Type='string'
                    KeyPath='yes' />
-        <File Id='openrpaExe' Source='$(var.ProjectDir)..\OpenRPA\bin\PrepInstaller\net462\OpenRPA.exe' />
+        <File Id='openrpaExe' Source='!(wix.MainSource)\OpenRPA.exe' />
 
         <File Id="fil5A4BD987D2852D4ABC653BD9F45AC1F3" Source="!(wix.MainSource)\DotNetProjects.DataVisualization.Toolkit.dll" />
         <File Id="fil32CB20C686F2A6C01A3E679A4C6D58C6" Source="!(wix.MainSource)\DotNetProjects.Input.Toolkit.dll" />

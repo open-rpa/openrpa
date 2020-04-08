@@ -131,5 +131,23 @@ namespace OpenRPA.IE.Resources {
                 return ResourceManager.GetString("activity_openurl_tooltip", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable XPath.
+        /// </summary>
+        public static string enable_xpath_support {
+            get {
+                return ResourceManager.GetString("enable_xpath_support", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable experimental XPath support in IE.
+        /// </summary>
+        public static string enable_xpath_support_help {
+            get {
+                return ResourceManager.GetString("enable_xpath_support_help", resourceCulture);
+            }
+        }
     }
 }

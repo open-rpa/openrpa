@@ -50,6 +50,50 @@ namespace OpenRPA.IE
                 }
             }
         }
+        public HtmlAgilityPack.HtmlNode node { get; set; }
+        public IEElement(Browser browser, HtmlAgilityPack.HtmlNode node)
+        {
+            Browser = browser;
+            this.node = node;
+            this.xpath = node.XPath.Replace("[1]", "");
+            //var Element = GetLiveElement(node, browser);
+            //RawElement = Element;
+            ClassName = string.Join(" ", node.GetClasses());
+            Id = node.Id;
+            TagName = node.Name.ToLower();
+            Name = "";
+            try
+            {
+                if (node.Attributes.Contains("Name"))
+                {
+                    Name = node.Attributes["Name"].Value;
+                }
+            }
+            catch (Exception)
+            {
+            }
+            if (TagName == "input")
+            {
+                if (node.Attributes.Contains("type"))
+                {
+                    Type = node.Attributes["type"].Value.ToLower();
+                }
+                else { Type = "text"; }
+            }
+            IndexInParent = -1;
+            if (node.ParentNode != null)
+            {
+
+                var children = node.ParentNode.ChildNodes;
+                for (int i = 0; i < children.Count; i++)
+                {
+                    if (children[i].Equals(node))
+                    {
+                        IndexInParent = i; break;
+                    }
+                }
+            }
+        }
         public string Name { get; set; }
         public IEElement[] Children
         {
@@ -70,7 +114,6 @@ namespace OpenRPA.IE
                 return result.ToArray();
             }
         }
-
         private System.Drawing.Rectangle? _Rectangle = null;
         public System.Drawing.Rectangle Rectangle
         {
@@ -123,10 +166,56 @@ namespace OpenRPA.IE
         public string ClassName { get; set; }
         public string UniqueID { get; set; }
         public string Id { get; set; }
+        public string xpath { get; set; }
         public string TagName { get; set; }
         public string Type { get; set; }
         public int IndexInParent { get; set; }
-        public MSHTML.IHTMLElement RawElement { get; private set; }
+        private MSHTML.IHTMLElement _RawElement;
+        public MSHTML.IHTMLElement RawElement
+        {
+            get
+            {
+                if (_RawElement != null) return _RawElement;
+                if (node != null)
+                {
+                    var sw = new System.Diagnostics.Stopwatch();
+                    sw.Start();
+                    string csspath = null;
+                    if (!string.IsNullOrEmpty(xpath))
+                    {
+                        GenericTools.MainWindow.Dispatcher.Invoke(() =>
+                        {
+                            //csspath = CSSPath.getCSSPath(node, true);
+                            csspath = CSSPath.getCSSPath(node, false);
+                            while (_RawElement == null)
+                            {
+                                try
+                                {
+                                    _RawElement = Browser.Document.querySelector(csspath);
+                                }
+                                catch (Exception)
+                                {
+                                }
+                            }
+                        });
+                        if (_RawElement != null)
+                        {
+                            Log.SelectorVerbose(string.Format("IEElement.RawElement::Found with querySelector::end (" + csspath + ") {0:mm\\:ss\\.fff}", sw.Elapsed));
+                            return _RawElement;
+                        }
+                    }
+                    _RawElement = GetLiveElement(node, Browser);
+                    Log.SelectorVerbose(string.Format("IEElement.RawElement::Found with GetLiveElement::end (" + csspath + ") {0:mm\\:ss\\.fff}", sw.Elapsed));
+                    return _RawElement;
+                }
+                return null;
+            }
+            set
+            {
+                _RawElement = value;
+            }
+
+        }
         object IElement.RawElement { get => RawElement; set => RawElement = value as MSHTML.IHTMLElement; }
         public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse)
         {
@@ -135,7 +224,8 @@ namespace OpenRPA.IE
             {
                 RawElement.click();
                 if (DoubleClick) RawElement.click();
-            } else
+            }
+            else
             {
                 NativeMethods.SetCursorPos(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
                 Input.InputDriver.Click(Button);
@@ -194,15 +284,16 @@ namespace OpenRPA.IE
                     var ele = (MSHTML.IHTMLInputElement)RawElement;
                     ele.value = value;
                 }
-                if(RawElement.tagName.ToLower() == "select")
+                if (RawElement.tagName.ToLower() == "select")
                 {
                     var ele = (MSHTML.IHTMLSelectElement)RawElement;
-                    foreach(MSHTML.IHTMLOptionElement e in (dynamic)((dynamic)ele.options))
+                    foreach (MSHTML.IHTMLOptionElement e in (dynamic)((dynamic)ele.options))
                     {
-                        if(e.value == value)
+                        if (e.value == value)
                         {
                             ele.value = value;
-                        } else if (e.text == value)
+                        }
+                        else if (e.text == value)
                         {
                             ele.value = e.value;
                         }
@@ -277,6 +368,59 @@ namespace OpenRPA.IE
                 return result.ToArray();
             }
         }
+        static public MSHTML.IHTMLElement GetLiveElement(HtmlAgilityPack.HtmlNode node, Browser browser)
+        {
+            var pattern = @"/(.*?)\[(.*?)\]"; // like div[1]
+                                              // Parse the XPath to extract the nodes on the path
+            var matches = System.Text.RegularExpressions.Regex.Matches(node.XPath, pattern);
+            List<DocNode> PathToNode = new List<DocNode>();
+            foreach (System.Text.RegularExpressions.Match m in matches) // Make a path of nodes
+            {
+                DocNode n = new DocNode();
+                n.Name = n.Name = m.Groups[1].Value;
+                n.Pos = Convert.ToInt32(m.Groups[2].Value) - 1;
+                if (n.Name.ToLower() != "html") PathToNode.Add(n); // add the node to path 
+            }
 
+            MSHTML.IHTMLElement elem = null; //Traverse to the element using the path
+            if (PathToNode.Count > 0)
+            {
+                //elem = doc.Body; //begin from the body
+                elem = browser.Document.documentElement;
+                foreach (DocNode n in PathToNode)
+                {
+                    //Find the corresponding child by its name and position
+                    elem = GetChild(elem, n);
+                }
+            }
+            return elem;
+        }
+        public static MSHTML.IHTMLElement GetChild(MSHTML.IHTMLElement el, DocNode node)
+        {
+            // Find corresponding child of the elemnt 
+            // based on the name and position of the node
+            int childPos = 0;
+            MSHTML.IHTMLElementCollection children = (MSHTML.IHTMLElementCollection)el.children;
+            for (int i = 0; i < children.length; i++)
+            {
+                var child = children.item(i) as MSHTML.IHTMLElement;
+                if (child.tagName.Equals(node.Name,
+                   StringComparison.OrdinalIgnoreCase))
+                {
+                    if (childPos == node.Pos)
+                    {
+                        return child;
+                    }
+                    childPos++;
+                }
+            }
+            return null;
+        }
+
+    }
+    public struct DocNode
+    {
+        public string Name;
+        public int Pos;
     }
 }

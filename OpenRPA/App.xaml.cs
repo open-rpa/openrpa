@@ -98,7 +98,6 @@ namespace OpenRPA
                            ? Assembly.LoadFile(archSpecificPath)
                            : null;
             }
-            Console.WriteLine("Resolve " + args.Name);
 
             string folderPath = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string assemblyPath = System.IO.Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");

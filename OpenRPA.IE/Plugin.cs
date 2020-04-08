@@ -67,7 +67,18 @@ namespace OpenRPA.IE
         }
         public string Name { get => "IE"; }
         public string Status => "";
-        public UserControl editor => null;
+        private Views.RecordPluginView view;
+        public System.Windows.Controls.UserControl editor
+        {
+            get
+            {
+                if (view == null)
+                {
+                    view = new Views.RecordPluginView();
+                }
+                return view;
+            }
+        }
         public void Start()
         {
             InputDriver.Instance.OnMouseUp += OnMouseUp;
@@ -110,7 +121,8 @@ namespace OpenRPA.IE
 
                 Log.Debug(e.Element.SupportInput + " / " + e.Element.ControlType);
                 re.a = new GetElementResult(a);
-                if (htmlelement.tagName.ToLower() == "input" && htmlelement.tagName.ToLower() == "select")
+                //if (htmlelement.tagName.ToLower() == "input" && htmlelement.tagName.ToLower() == "select")
+                if (htmlelement.tagName.ToLower() == "input" )
                 {
                     MSHTML.IHTMLInputElement inputelement = (MSHTML.IHTMLInputElement)htmlelement;
                     re.SupportInput = (inputelement.type.ToLower() == "text" || inputelement.type.ToLower() == "password");
@@ -140,31 +152,38 @@ namespace OpenRPA.IE
 
             var htmlelement = browser.ElementFromPoint(e.X, e.Y);
             if (htmlelement == null) { return false; }
-
             var selector = new IESelector(browser, htmlelement, null, true, e.X, e.Y);
             e.Selector = selector;
             e.Element = new IEElement(browser, htmlelement);
 
             var a = new GetElement { DisplayName = (htmlelement.id + "-" + htmlelement.tagName + "-" + htmlelement.className).Replace(Environment.NewLine, "").Trim() };
             a.Selector = selector.ToString();
-            a.Image = selector.Last().Element.ImageString();
+
             var last = selector.Last() as IESelectorItem;
+            a.Image = last.Element.ImageString();
 
 
-            var tagName = last.tagName;
+            var tagName = htmlelement.tagName;
             if (string.IsNullOrEmpty(tagName)) tagName = "";
             tagName = tagName.ToLower();
             e.a = new GetElementResult(a);
-            if (tagName == "input")
+            //if (tagName == "input")
+            //{
+            //    // MSHTML.IHTMLInputElement inputelement = (MSHTML.IHTMLInputElement)htmlelement;
+            //    e.SupportInput = (last.type.ToLower() == "text" || last.type.ToLower() == "password");
+            //}
+            // if (htmlelement.tagName.ToLower() == "input" && htmlelement.tagName.ToLower() == "select")
+            if (htmlelement.tagName.ToLower() == "input")
             {
-                // MSHTML.IHTMLInputElement inputelement = (MSHTML.IHTMLInputElement)htmlelement;
-                e.SupportInput = (last.type.ToLower() == "text" || last.type.ToLower() == "password");
+                MSHTML.IHTMLInputElement inputelement = (MSHTML.IHTMLInputElement)htmlelement;
+                e.SupportInput = (inputelement.type.ToLower() == "text" || inputelement.type.ToLower() == "password");
             }
-
+            e.SupportSelect = false;
             return true;
         }
         public void Initialize(IOpenRPAClient client)
         {
+            _ = PluginConfig.enable_xpath_support;
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
@@ -257,6 +276,25 @@ namespace OpenRPA.IE
         }
         public bool Match(SelectorItem item, IElement m)
         {
+            var p = item.Properties.Where(x => x.Name == "xpath").FirstOrDefault();
+            //if(p != null)
+            //{
+            //    var xpath = p.Value;
+            //    var browser = Browser.GetBrowser();
+            //    if(browser != null)
+            //    {
+            //        MSHTML.IHTMLDocument3 sourceDoc = (MSHTML.IHTMLDocument3)browser.Document;
+            //        string documentContents = sourceDoc.documentElement.outerHTML;
+            //        HtmlAgilityPack.HtmlDocument targetDoc = new HtmlAgilityPack.HtmlDocument();
+            //        targetDoc.LoadHtml(documentContents);
+            //        HtmlAgilityPack.HtmlNode node = targetDoc.DocumentNode.SelectSingleNode(xpath);
+            //        if(node != null)
+            //        {
+            //            var ele = new IEElement(browser, node);
+
+            //        }
+            //    }
+            //}
             return IESelectorItem.Match(item, m.RawElement as MSHTML.IHTMLElement);
         }
         public bool ParseMouseMoveAction(ref IRecordEvent e)

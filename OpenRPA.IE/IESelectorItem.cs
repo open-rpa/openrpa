@@ -21,7 +21,6 @@ namespace OpenRPA.IE
             Properties = item.Properties;
         }
         // public IEElement element { get { return GetProperty<IEElement>(); } set { SetProperty(value); } }
-
         public IEElement IEElement { get { return GetProperty<IEElement>(); } set { SetProperty(value); } }
         public string tagName
         {
@@ -68,7 +67,6 @@ namespace OpenRPA.IE
                 return e.Value;
             }
         }
-        
         public IESelectorItem(MSHTML.HTMLDocument Document)
         {
             // this.element = new IEElement(element);
@@ -314,6 +312,23 @@ namespace OpenRPA.IE
                     }
 
                 }
+                //if (p.Name == "xpath")
+                //{
+                //    if (!string.IsNullOrEmpty(m.xpath))
+                //    {
+                //        var v = m.xpath;
+                //        if (!PatternMatcher.FitsMask(m.xpath, p.Value))
+                //        {
+                //            Log.Selector(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
+                //            return false;
+                //        }
+                //    }
+                //    else
+                //    {
+                //        Log.Selector(p.Name + " does not exists, but needed value '" + p.Value + "'");
+                //        return false;
+                //    }
+                //}
 
             }
             return true;

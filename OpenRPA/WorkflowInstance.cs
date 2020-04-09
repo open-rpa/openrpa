@@ -16,8 +16,14 @@ namespace OpenRPA
     {
         public WorkflowInstance()
         {
+        }
+        public WorkflowInstance(Workflow workflow)
+        {
+            Workflow = workflow;
+            WorkflowId = workflow._id;
             _type = "workflowinstance";
             _id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
+            _acl = workflow._acl;
             // LastUpdated = DateTime.Now;
         }
         [JsonIgnore]
@@ -81,7 +87,7 @@ namespace OpenRPA
         }
         public static WorkflowInstance Create(Workflow Workflow, Dictionary<string, object> Parameters)
         {
-            var result = new WorkflowInstance() { Workflow = Workflow, WorkflowId = Workflow._id, Parameters = Parameters, name = Workflow.name, Path = Workflow.Project.Path };
+            var result = new WorkflowInstance(Workflow) { Parameters = Parameters, name = Workflow.name, Path = Workflow.Project.Path };
             result.RelativeFilename = Workflow.RelativeFilename;
             var _ref = (result as IWorkflowInstance);
             foreach (var runner in Plugins.runPlugins)

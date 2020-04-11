@@ -1,0 +1,166 @@
+﻿<Window x:Class="OpenRPA.AgentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenRPA"
+        xmlns:or="clr-namespace:OpenRPA.Resources"
+        xmlns:ribbon="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:input="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
+        xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
+        xmlns:dockctrl="clr-namespace:Xceed.Wpf.AvalonDock.Controls;assembly=Xceed.Wpf.AvalonDock"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded" Closed="Window_Closed" Closing="Window_Closing" StateChanged="Window_StateChanged" 
+        Title="OpenRPA"
+        x:Uid="title"
+         Height="750" Width="1200">
+
+    <Window.Resources>
+        <local:BindingProxy x:Key="proxy" Data="{Binding}" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition  Height="120" />
+            <RowDefinition />
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+        <Ribbon DockPanel.Dock="Top" Margin="0,-22,0,0" Grid.Row="0" x:Name="MainRibbon">
+            <Ribbon.ApplicationMenu>
+                <RibbonApplicationMenu SmallImageSource="/OpenRPA;component/Resources/Buttons/Export.png">
+                    <!--<RibbonApplicationMenuItem Header="{x:Static or:strings.settingsfile}" ImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
+                                               Command="{Binding Data.SettingsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />-->
+                    <RibbonApplicationMenuItem Header="{x:Static or:strings.signout}" ImageSource="/OpenRPA;component/Resources/Buttons/Revert.png" 
+                                               Command="{Binding Data.SignoutCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                    <RibbonApplicationMenuItem Header="{x:Static or:strings.exitapplication}" ImageSource="/OpenRPA;component/Resources/Buttons/Signout.png" 
+                                               Command="{Binding Data.ExitAppCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+
+
+                    <RibbonApplicationMenu.AuxiliaryPaneContent>
+                        <RibbonGallery ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <RibbonGalleryCategory MaxColumnCount="1">
+                                <RibbonGalleryItem x:Name="GalleryItem1" Content="Application menu content" 
+                                MouseOverBackground="Transparent"
+                                MouseOverBorderBrush="Transparent"
+                                CheckedBackground="Transparent"
+                                CheckedBorderBrush="Transparent"
+                                               />
+                                <!--<RibbonGalleryItem>
+                                    <Hyperlink x:Name="linkOpenFlow" Command="{Binding Data.LinkOpenFlowCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" >
+                                        <TextBlock Text="{x:Static or:strings.openflow}" />
+                                    </Hyperlink>
+                                </RibbonGalleryItem>
+                                <RibbonGalleryItem>
+                                    <Hyperlink x:Name="linkNodeRED" Command="{Binding Data.LinkNodeREDCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" >
+                                        <TextBlock Text="{x:Static or:strings.nodered}" />
+                                    </Hyperlink>
+                                </RibbonGalleryItem>-->
+                                <RibbonGalleryItem>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{x:Static or:strings.version}" />
+                                        <TextBlock Text=" " />
+                                        <TextBlock x:Name="lblVersion" />
+                                    </StackPanel>
+                                </RibbonGalleryItem>
+                            </RibbonGalleryCategory>
+                        </RibbonGallery>
+                    </RibbonApplicationMenu.AuxiliaryPaneContent>
+
+
+                </RibbonApplicationMenu>
+            </Ribbon.ApplicationMenu>
+            <RibbonTab 
+                xmlns:local="clr-namespace:OpenRPA"  Header="{x:Static or:strings.general}" x:Name="tabGeneral"
+               
+                >
+                <RibbonGroup Header="{x:Static or:strings.runtime}">
+                    <RibbonButton Label="{x:Static or:strings.play}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Play.png" 
+                                  Command="{Binding Data.PlayCommand, Source={StaticResource proxy}}" 
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}"/>
+                    <RibbonButton Label="{x:Static or:strings.stop}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Stop.png" 
+                                  Command="{Binding Data.StopCommand, Source={StaticResource proxy}}" 
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
+                </RibbonGroup>
+            </RibbonTab>
+        </Ribbon>
+
+
+        <avalonDock:DockingManager Grid.Row="1" x:Name="DManager">
+            <avalonDock:DockingManager.Theme>
+                <!--<avalonDock:AeroTheme/>-->
+                <avalonDock:VS2010Theme/>
+                <!--<avalonDock:ExpressionDarkTheme/>-->
+                <!--<avalonDock:ExpressionLightTheme/>-->
+                <!--<avalonDock:GenericTheme/>-->
+                <!--<avalonDock:MetroTheme/>-->
+            </avalonDock:DockingManager.Theme>
+            <avalonDock:DockingManager.LayoutItemContainerStyle>
+                <Style TargetType="{x:Type dockctrl:LayoutItem}" >
+                    <Setter Property="Title" Value="{Binding Model.Title}" />
+                    <Setter Property="CloseCommand" Value="{Binding Model.CloseCommand}" />
+                    <Setter Property="CanClose"  Value="{Binding Model.CanClose}" />
+                    <Setter Property="dockctrl:LayoutAnchorableItem.CanHide" Value="{Binding Model.CanHide}" />
+                </Style>
+            </avalonDock:DockingManager.LayoutItemContainerStyle>
+            <avalonDock:LayoutRoot>
+                <avalonDock:LayoutPanel>
+                    <avalonDock:LayoutDocumentPane x:Name="dockpane">
+                    </avalonDock:LayoutDocumentPane>
+                </avalonDock:LayoutPanel>
+
+                <avalonDock:LayoutRoot.BottomSide>
+                    <avalonDock:LayoutAnchorSide>
+                        <avalonDock:LayoutAnchorGroup >
+                            <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="False"  x:Name="Logging" Title="{x:Static or:strings.dock_logging}" ContentId="Logging" >
+                                <TextBox Text="{Binding Tracing.TraceMessages}" TextWrapping="Wrap" IsReadOnly="False" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                            </avalonDock:LayoutAnchorable>
+                            <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="False"  x:Name="Output" Title="{x:Static or:strings.dock_output}" ContentId="Output" >
+                                <TextBox Text="{Binding Tracing.OutputMessages}" TextWrapping="Wrap" IsReadOnly="False" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                            </avalonDock:LayoutAnchorable>
+
+                        </avalonDock:LayoutAnchorGroup>
+                    </avalonDock:LayoutAnchorSide>
+                </avalonDock:LayoutRoot.BottomSide>
+            </avalonDock:LayoutRoot>
+        </avalonDock:DockingManager>
+
+
+        <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="2" Height="25" Background="Gray">
+            <StatusBar FocusManager.IsFocusScope="True" x:Name="StatusBar">
+                <StatusBarItem x:Name="LabelStatusBar" Content="{x:Static or:strings.status_disconnected}" />
+                <StatusBarItem VerticalAlignment="Top" HorizontalContentAlignment="Center">
+                    <ItemsControl x:Name="lvDataBinding">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="10,0,10,0">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status}" Value="">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} : {1}">
+                                            <Binding Path="Name" />
+                                            <Binding Path="Status" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StatusBarItem>
+            </StatusBar>
+        </StatusBar>
+
+    </Grid>
+
+
+</Window>

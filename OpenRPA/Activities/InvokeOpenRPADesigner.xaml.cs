@@ -34,11 +34,11 @@ namespace OpenRPA.Activities
         {
             try
             {
-                if (MainWindow.instance == null) throw new ArgumentException("MainWindow.instance");
-                if (MainWindow.instance.Projects == null) throw new ArgumentException("MainWindow.instance.Projects");
-                if (MainWindow.instance.Projects.Count == 0) throw new ArgumentException("MainWindow.instance.Projects.Count == 0");
+                if (RobotInstance.instance == null) throw new ArgumentException("RobotInstance.instance");
+                if (RobotInstance.instance.Projects == null) throw new ArgumentException("RobotInstance.instance.Projects");
+                if (RobotInstance.instance.Projects.Count == 0) throw new ArgumentException("RobotInstance.instance.Projects.Count == 0");
                 var result = new List<Workflow>();
-                foreach (var p in MainWindow.instance.Projects)
+                foreach (var p in RobotInstance.instance.Projects)
                 {
                     foreach (var w in p.Workflows) result.Add(w);
                 }
@@ -57,7 +57,7 @@ namespace OpenRPA.Activities
             {
                 string workflowid = (string)ModelItem.Properties["workflow"].Value.GetCurrentValue();
                 if (string.IsNullOrEmpty(workflowid)) throw new ArgumentException("workflow property is null");
-                var workflow = MainWindow.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
+                var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
                 var designer = MainWindow.instance.Designer;
                 if (string.IsNullOrEmpty(workflowid)) throw new ArgumentException("workflow is null, not found");
                 if (string.IsNullOrEmpty(workflowid)) throw new ArgumentException("designer is null, cannot find current designer");

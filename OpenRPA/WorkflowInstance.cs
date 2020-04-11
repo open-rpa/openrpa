@@ -784,7 +784,7 @@ namespace OpenRPA
             {
                 try
                 {
-                    var workflow = MainWindow.instance.GetWorkflowByIDOrRelativeFilename(i.WorkflowId) as Workflow;
+                    var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(i.WorkflowId) as Workflow;
                     if (workflow == null) continue;
                     i.Workflow = workflow;
                     if (!string.IsNullOrEmpty(i.InstanceId) && string.IsNullOrEmpty(i.xml))

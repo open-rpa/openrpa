@@ -19,7 +19,7 @@ namespace OpenRPA.Views
     /// <summary>
     /// Interaction logic for OpenProject.xaml
     /// </summary>
-    public partial class OpenProject : UserControl
+    public partial class AgentViewProjects : UserControl
     {
         public DelegateCommand DockAsDocumentCommand = new DelegateCommand((e) => { }, (e) => false);
         public DelegateCommand AutoHideCommand { get; set; } = new DelegateCommand((e) => { }, (e) => false);
@@ -28,14 +28,14 @@ namespace OpenRPA.Views
         public event Action<Workflow> onOpenWorkflow;
         public event Action<Project> onOpenProject;
         //public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; }
-        private MainWindow main = null;
-        public ICommand PlayCommand { get { return new RelayCommand<object>(MainWindow.instance.OnPlay, MainWindow.instance.CanPlay); } }
-        public ICommand ExportCommand { get { return new RelayCommand<object>(MainWindow.instance.OnExport, MainWindow.instance.CanExport); } }
-        public ICommand RenameCommand { get { return new RelayCommand<object>(MainWindow.instance.OnRename, MainWindow.instance.CanRename); } }
-        public ICommand DeleteCommand { get { return new RelayCommand<object>(MainWindow.instance.OnDelete2, MainWindow.instance.CanDelete); } }
-        // public ICommand DeleteCommand { get { return new RelayCommand<object>(MainWindow.instance.OnDelete, MainWindow.instance.CanDelete); } }
-        public ICommand CopyIDCommand { get { return new RelayCommand<object>(MainWindow.instance.OnCopyID, MainWindow.instance.CanCopyID); } }
-        public ICommand CopyRelativeFilenameCommand { get { return new RelayCommand<object>(MainWindow.instance.OnCopyRelativeFilename, MainWindow.instance.CanCopyID); } }
+        private AgentWindow main = null;
+        public ICommand PlayCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnPlay, AgentWindow.instance.CanPlay); } }
+        //public ICommand ExportCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnExport, AgentWindow.instance.CanExport); } }
+        //public ICommand RenameCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnRename, AgentWindow.instance.CanRename); } }
+        //public ICommand DeleteCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnDelete2, AgentWindow.instance.CanDelete); } }
+        //public ICommand DeleteCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnDelete, AgentWindow.instance.CanDelete); } }
+        //public ICommand CopyIDCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnCopyID, AgentWindow.instance.CanCopyID); } }
+        //public ICommand CopyRelativeFilenameCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnCopyRelativeFilename, AgentWindow.instance.CanCopyID); } }
         public System.Collections.ObjectModel.ObservableCollection<Project> Projects
         {
             get
@@ -43,7 +43,7 @@ namespace OpenRPA.Views
                 return RobotInstance.instance.Projects;
             }
         }
-        public OpenProject(MainWindow main)
+        public AgentViewProjects(AgentWindow main)
         {
             InitializeComponent();
             this.main = main;
@@ -83,7 +83,6 @@ namespace OpenRPA.Views
         {
             if (e.Key == Key.F2)
             {
-                MainWindow.instance.OnRename(null);
             }
         }
     }

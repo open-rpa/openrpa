@@ -38,7 +38,7 @@ namespace OpenRPA.Activities
         {
             workflows.Clear();
             var result = new List<Workflow>();
-            foreach (var p in MainWindow.instance.Projects)
+            foreach (var p in RobotInstance.instance.Projects)
             {
                 foreach (var w in p.Workflows) result.Add(w);
             }
@@ -68,7 +68,7 @@ namespace OpenRPA.Activities
             {
                 if (ModelItem.Properties["workflow"].Value == null) return;
                 string workflowid = (string)ModelItem.Properties["workflow"].Value.GetCurrentValue();
-                var workflow = MainWindow.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
+                var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
                 var designer = MainWindow.instance.Designer;
                 foreach(var p in workflow.Parameters)
                 {

@@ -17,22 +17,25 @@ namespace OpenRPA.Database
     [System.Drawing.ToolboxBitmap(typeof(ExecuteNonQuery), "Resources.toolbox.database.png")]
     [LocalizedToolboxTooltip("activity_executenonquery_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_executenonquery", typeof(Resources.strings))]
-    public class ExecuteNonQuery : NativeActivity
+    public class ExecuteNonQuery : CodeActivity
     {
         [RequiredArgument, LocalizedDisplayName("activity_executenonquery_query", typeof(Resources.strings)), LocalizedDescription("activity_executenonquery_query_help", typeof(Resources.strings))]
         public InArgument<string> Query { get; set; }
-        //[RequiredArgument, Browsable(false)]
-        //public InArgument<Connection> Connection { get; set; }
-        protected override void Execute(NativeActivityContext context)
+        public OutArgument<int> Result { get; set; }
+        protected override void Execute(CodeActivityContext context)
         {
+            var vars = context.DataContext.GetProperties();
+            Connection connection = null;
+            foreach (dynamic v in vars) { if (v.DisplayName == "conn") connection = v.GetValue(context.DataContext); }
             var query = Query.Get(context);
-            var connection = context.Properties.Find("Connection");
+            var result = connection.ExecuteNonQuery(query);
+            Result.Set(context, result);
         }
-        protected override void CacheMetadata(NativeActivityMetadata metadata)
-        {
-            Interfaces.Extensions.AddCacheArgument(metadata, "Query", Query);
-            base.CacheMetadata(metadata);
-        }
+        //protected override void CacheMetadata(NativeActivityMetadata metadata)
+        //{
+        //    Interfaces.Extensions.AddCacheArgument(metadata, "Query", Query);
+        //    base.CacheMetadata(metadata);
+        //}
         [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
         public new string DisplayName
         {

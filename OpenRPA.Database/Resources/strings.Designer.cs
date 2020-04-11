@@ -79,11 +79,29 @@ namespace OpenRPA.Database.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Database Scope.
+        /// </summary>
+        public static string activity_databasescope {
+            get {
+                return ResourceManager.GetString("activity_databasescope", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select Database.
         /// </summary>
         public static string activity_databasescope_select {
             get {
                 return ResourceManager.GetString("activity_databasescope_select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database scope that opens a connection to a database, and closes the connection at the end.
+        /// </summary>
+        public static string activity_databasescope_tooltip {
+            get {
+                return ResourceManager.GetString("activity_databasescope_tooltip", resourceCulture);
             }
         }
         

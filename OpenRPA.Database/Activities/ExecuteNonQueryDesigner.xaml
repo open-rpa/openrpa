@@ -34,10 +34,9 @@
                 <TextBlock Text="{x:Static or:strings.activity_database_query}" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" />
                 <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_database_query_hint}" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="5"
                                 OwnerActivity="{Binding Path=ModelItem}"
-                                Expression="{Binding Path=ModelItem.Message, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
+                                Expression="{Binding Path=ModelItem.Query, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
                                 ExpressionType="s:String" HorizontalAlignment="Stretch" />
             </DockPanel>
-
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
             <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>

@@ -14,8 +14,8 @@ namespace OpenRPA.Database
     [Designer(typeof(DatabaseScopeDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(DatabaseScope), "Resources.toolbox.database.png")]
     [System.Windows.Markup.ContentProperty("Body")]
-    [LocalizedToolboxTooltip("activity_getelement_tooltip", typeof(Resources.strings))]
-    [LocalizedDisplayName("activity_getelement", typeof(Resources.strings))]
+    [LocalizedToolboxTooltip("activity_databasescope_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_databasescope", typeof(Resources.strings))]
     public class DatabaseScope : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {
         [Browsable(false)]

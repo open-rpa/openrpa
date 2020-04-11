@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="activity_databasescope" xml:space="preserve">
+    <value>Database Scope</value>
+  </data>
   <data name="activity_databasescope_select" xml:space="preserve">
     <value>Select Database</value>
+  </data>
+  <data name="activity_databasescope_tooltip" xml:space="preserve">
+    <value>Database scope that opens a connection to a database, and closes the connection at the end</value>
   </data>
   <data name="activity_database_query" xml:space="preserve">
     <value>Query</value>

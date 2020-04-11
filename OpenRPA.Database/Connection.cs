@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using System.Data.OleDb;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +10,11 @@ namespace OpenRPA.Database
     public class Connection : IDisposable
     {
         private string ConnectionString;
-        private SqlConnection conn;
+        private OleDbConnection conn;
         public Connection(string ConnectionString)
         {
             this.ConnectionString = ConnectionString;
-            conn = new SqlConnection(this.ConnectionString);
+            conn = new OleDbConnection(this.ConnectionString);
         }
         public void Close()
         {
@@ -37,7 +37,7 @@ namespace OpenRPA.Database
         }
         public int ExecuteNonQuery(string Query)
         {
-            using (SqlCommand cmd = new SqlCommand(Query, conn))
+            using (OleDbCommand cmd = new OleDbCommand(Query, conn))
             {
                 // if (Params != null) cmd.Parameters.AddRange(Params);
                 // cmd.CommandType = CommandType.StoredProcedure;

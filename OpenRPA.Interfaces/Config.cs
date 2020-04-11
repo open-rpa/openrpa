@@ -54,6 +54,10 @@ namespace OpenRPA
         public int remote_allow_multiple_running_max = 2;
         public string cef_useragent = "";
         public bool show_getting_started = true;
+        // public bool notify_on_workflow_start = false;
+        public bool notify_on_workflow_remote_start = true;
+        public bool notify_on_workflow_end = true;
+        public bool notify_on_workflow_remote_end = false;
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)

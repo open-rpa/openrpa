@@ -46,7 +46,16 @@ namespace OpenRPA.IE
                     // Log.Debug(string.Format("Web Site : {0}", _ie.LocationURL));
                     try
                     {
-                        result.wBrowser = _ie as SHDocVw.WebBrowser;
+                        try
+                        {
+                            var doc = _ie.Document as MSHTML.HTMLDocument;
+                            result.wBrowser = _ie as SHDocVw.WebBrowser;
+                        }
+                        catch (System.Runtime.InteropServices.COMException)
+                        {
+                            Process.GetProcessesByName("IEXPLORE").ForEach(p => p.Kill());
+                        }
+
                         // result.IE = _ie;
                     }
                     catch (Exception ex)
@@ -64,7 +73,7 @@ namespace OpenRPA.IE
                 ie.Visible = true;
                 var sw = new Stopwatch();
                 sw.Start();
-                while (result.wBrowser == null)
+                while (result.wBrowser == null && sw.Elapsed < TimeSpan.FromSeconds(10))
                 {
                     try
                     {
@@ -99,6 +108,7 @@ namespace OpenRPA.IE
                     {
                     }
                 }
+                if (result.wBrowser == null) throw new Exception("Failed launching Internet Explorer");
 
             }
             if (result.wBrowser == null) return null;

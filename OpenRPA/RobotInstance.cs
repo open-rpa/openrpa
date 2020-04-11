@@ -1001,6 +1001,10 @@ namespace OpenRPA
                                     instance = workflow.CreateInstance(param, message.replyto, message.correlationId, Window.IdleOrComplete, null);
                                     instance.Run();
                                 }
+                                if (Config.local.notify_on_workflow_remote_start)
+                                {
+                                    App.notifyIcon.ShowBalloonTip(1000, "", workflow.name + " remotly started", System.Windows.Forms.ToolTipIcon.Info);
+                                }
                             }
                             catch (Exception ex)
                             {

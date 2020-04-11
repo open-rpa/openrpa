@@ -291,8 +291,10 @@ namespace OpenRPA
             });
             try
             {
+                bool isRemote = false;
                 if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
                 {
+                    isRemote = true;
                     Interfaces.mq.RobotCommand command = new Interfaces.mq.RobotCommand();
                     var data = JObject.FromObject(instance.Parameters);
                     command.command = "invoke" + instance.state;
@@ -317,6 +319,19 @@ namespace OpenRPA
                     }
                     if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
                     Log.Information(message);
+                    if ((Config.local.notify_on_workflow_end && !isRemote) || (Config.local.notify_on_workflow_remote_end && isRemote))
+                    {
+                        if (instance.state == "completed")
+                        {
+                            // App.notifyIcon.ShowBalloonTip(1000, instance.Workflow.name + " " + instance.state, message, System.Windows.Forms.ToolTipIcon.Info);
+                            App.notifyIcon.ShowBalloonTip(1000, "", message, System.Windows.Forms.ToolTipIcon.Info);
+                        }
+                        else
+                        {
+                            // App.notifyIcon.ShowBalloonTip(1000, instance.Workflow.name + " " + instance.state, message, System.Windows.Forms.ToolTipIcon.Error);
+                            App.notifyIcon.ShowBalloonTip(1000, "", message, System.Windows.Forms.ToolTipIcon.Error);
+                        }
+                    }
                     System.Threading.Thread.Sleep(200);
                     foreach (var wi in WorkflowInstance.Instances)
                     {

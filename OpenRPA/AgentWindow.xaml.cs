@@ -178,14 +178,15 @@ namespace OpenRPA
         {
             InputDriver.Instance.CallNext = true;
             InputDriver.Instance.Dispose();
-            Environment.Exit(Environment.ExitCode);
+            // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds
+            Application.Current.Shutdown();
         }
         private void Window_StateChanged(object sender, EventArgs e)
         {
             if (WindowState == WindowState.Minimized)
             {
                 Visibility = Visibility.Hidden;
-                // App.notifyIcon.Visible = true;
+                App.notifyIcon.Visible = true;
             }
             else
             {

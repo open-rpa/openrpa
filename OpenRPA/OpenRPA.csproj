@@ -137,6 +137,7 @@
     <None Remove="Activities\InvokeRemoteOpenRPADesigner.xaml" />
     <None Remove="Activities\MoveMouseDesigner.xaml" />
     <None Remove="Activities\OpenApplicationDesigner.xaml" />
+    <None Remove="Activities\ShowBalloonTipDesigner.xaml" />
     <None Remove="Activities\TypeTextDesigner.xaml" />
     <None Remove="AgentWindow.xaml" />
     <None Remove="App.xaml" />
@@ -191,6 +192,7 @@
     <None Remove="Resources\Buttons\zeniverse_ikon_84Z_icon.ico" />
     <None Remove="Resources\close.png" />
     <None Remove="Resources\designer\addentitypermission.png" />
+    <None Remove="Resources\designer\ballon.png" />
     <None Remove="Resources\designer\breakpoint.png" />
     <None Remove="Resources\designer\comment.png" />
     <None Remove="Resources\designer\commentout.png" />
@@ -290,6 +292,7 @@
     <None Remove="Resources\state\Running_green.png" />
     <None Remove="Resources\state\unloaded.png" />
     <None Remove="Resources\toolbox\addentitypermission.png" />
+    <None Remove="Resources\toolbox\ballon.png" />
     <None Remove="Resources\toolbox\breakpoint.png" />
     <None Remove="Resources\toolbox\comment.png" />
     <None Remove="Resources\toolbox\commentout.png" />
@@ -359,6 +362,9 @@
     <None Remove="Views\wfToolbox.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\ShowBalloonTipDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\MoveMouseDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -463,7 +469,9 @@
     <Resource Include="Resources\open_rpa.ico" />
     <Resource Include="Resources\open_rpa128.png" />
     <Resource Include="Resources\open_rpa512.png" />
+    <Resource Include="Resources\designer\ballon.png" />
     <EmbeddedResource Include="Resources\toolbox\addentitypermission.png" />
+    <EmbeddedResource Include="Resources\toolbox\ballon.png" />
     <EmbeddedResource Include="Resources\toolbox\breakpoint.png" />
     <EmbeddedResource Include="Resources\toolbox\comment.png" />
     <EmbeddedResource Include="Resources\toolbox\commentout.png" />

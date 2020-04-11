@@ -352,15 +352,14 @@ namespace OpenRPA
             StopDetectorPlugins();
             SaveLayout();
             // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds
-            Environment.Exit(Environment.ExitCode);
-
+            Application.Current.Shutdown();
         }
         private void Window_StateChanged(object sender, EventArgs e)
         {
             if (WindowState == WindowState.Minimized)
             {
                 Visibility = Visibility.Hidden;
-                // App.notifyIcon.Visible = true;
+                App.notifyIcon.Visible = true;
             }
             else
             {

@@ -127,7 +127,14 @@ namespace OpenRPA
         }
         public static void Save()
         {
-            local.Save(System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json"));
+            try
+            {
+                local.Save(System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json"));
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         public static void Reload()
         {

@@ -18,9 +18,12 @@ namespace OpenRPA.OpenFlowDB
     [LocalizedDisplayName("activity_savefile", typeof(Resources.strings))]
     public class SaveFile : AsyncTaskCodeActivity<string>
     {
-        [RequiredArgument]
+        [RequiredArgument, LocalizedDisplayName("activity_savefile_filename", typeof(Resources.strings)), LocalizedDescription("activity_savefile_filename_help", typeof(Resources.strings))]
         public InArgument<string> Filename { get; set; }
+        [LocalizedDisplayName("activity_savefile_path", typeof(Resources.strings)), LocalizedDescription("activity_savefile_path_help", typeof(Resources.strings))]
         public InArgument<string> Path { get; set; }
+        //[LocalizedDisplayName("activity_savefile_result", typeof(Resources.strings)), LocalizedDescription("activity_savefile_result_help", typeof(Resources.strings))]
+        //public new OutArgument<string> Result { get; set; }
         protected async override Task<string> ExecuteAsync(AsyncCodeActivityContext context)
         {
             var filename = Filename.Get(context);

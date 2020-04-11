@@ -17,7 +17,7 @@ namespace OpenRPA.OpenFlowDB
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.downloadfile.png")]
     [LocalizedToolboxTooltip("activity_getfile_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getfile", typeof(Resources.strings))]
-    public class GetFile : AsyncTaskCodeActivity<int>
+    public class GetFile : AsyncTaskCodeActivity
     {
         [RequiredArgument,OverloadGroupAttribute("Filename")]
         public InArgument<string> Filename { get; set; }
@@ -27,7 +27,7 @@ namespace OpenRPA.OpenFlowDB
         public InArgument<string> LocalPath { get; set; }
         [RequiredArgument]
         public InArgument<bool> IgnorePath { get; set; } = false;
-        protected async override Task<int> ExecuteAsync(AsyncCodeActivityContext context)
+        protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
             var filename = Filename.Get(context);
             var id = _id.Get(context);
@@ -58,6 +58,9 @@ namespace OpenRPA.OpenFlowDB
                 await client.DownloadFileTaskAsync(new Uri(url), System.IO.Path.Combine(filepath, filename));
             }
             return 42;
+        }
+        protected override void AfterExecute(AsyncCodeActivityContext context, object result)
+        {
         }
         public new string DisplayName
         {

@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Activities\AssignOpenFlowDesigner.xaml" />
+    <None Remove="Activities\DeleteFileDesigner.xaml" />
     <None Remove="Activities\DeleteOneDesigner.xaml" />
     <None Remove="Activities\GetCredentialsDesigner.xaml" />
     <None Remove="Activities\GetFileDesigner.xaml" />
@@ -47,6 +48,7 @@
     <None Remove="Resources\designer\commentout.png" />
     <None Remove="Resources\designer\copyclipboard.png" />
     <None Remove="Resources\designer\deleteentity.png" />
+    <None Remove="Resources\designer\deletefile.png" />
     <None Remove="Resources\designer\detector.png" />
     <None Remove="Resources\designer\downloadfile.png" />
     <None Remove="Resources\designer\elementclick.png" />
@@ -93,6 +95,7 @@
     <None Remove="Resources\toolbox\commentout.png" />
     <None Remove="Resources\toolbox\copyclipboard.png" />
     <None Remove="Resources\toolbox\deleteentity.png" />
+    <None Remove="Resources\toolbox\deletefile.png" />
     <None Remove="Resources\toolbox\detector.png" />
     <None Remove="Resources\toolbox\detector2.png" />
     <None Remove="Resources\toolbox\downloadfile.png" />
@@ -137,12 +140,14 @@
     <None Remove="Resources\toolbox\writefile.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\designer\deletefile.png" />
     <EmbeddedResource Include="Resources\toolbox\addentitypermission.png" />
     <EmbeddedResource Include="Resources\toolbox\breakpoint.png" />
     <EmbeddedResource Include="Resources\toolbox\comment.png" />
     <EmbeddedResource Include="Resources\toolbox\commentout.png" />
     <EmbeddedResource Include="Resources\toolbox\copyclipboard.png" />
     <EmbeddedResource Include="Resources\toolbox\deleteentity.png" />
+    <EmbeddedResource Include="Resources\toolbox\deletefile.png" />
     <EmbeddedResource Include="Resources\toolbox\detector.png" />
     <EmbeddedResource Include="Resources\toolbox\detector2.png" />
     <EmbeddedResource Include="Resources\toolbox\downloadfile.png" />
@@ -207,6 +212,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\GetCredentialsDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\DeleteFileDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -88,6 +88,24 @@ namespace OpenRPA.OpenFlowDB.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete File.
+        /// </summary>
+        public static string activity_deletefile {
+            get {
+                return ResourceManager.GetString("activity_deletefile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete a file from the OpenFlow database.
+        /// </summary>
+        public static string activity_deletefile_tooltip {
+            get {
+                return ResourceManager.GetString("activity_deletefile_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete One.
         /// </summary>
         public static string activity_deleteone {
@@ -300,6 +318,60 @@ namespace OpenRPA.OpenFlowDB.Resources {
         public static string activity_savefile {
             get {
                 return ResourceManager.GetString("activity_savefile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filename.
+        /// </summary>
+        public static string activity_savefile_filename {
+            get {
+                return ResourceManager.GetString("activity_savefile_filename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The complete path and filename of the file to upload.
+        /// </summary>
+        public static string activity_savefile_filename_help {
+            get {
+                return ResourceManager.GetString("activity_savefile_filename_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path.
+        /// </summary>
+        public static string activity_savefile_path {
+            get {
+                return ResourceManager.GetString("activity_savefile_path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save file in this subfolder on the server, this has relevans when getting the file again.
+        /// </summary>
+        public static string activity_savefile_path_help {
+            get {
+                return ResourceManager.GetString("activity_savefile_path_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Result.
+        /// </summary>
+        public static string activity_savefile_result {
+            get {
+                return ResourceManager.GetString("activity_savefile_result", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Returns the id of new uploaded file.
+        /// </summary>
+        public static string activity_savefile_result_help {
+            get {
+                return ResourceManager.GetString("activity_savefile_result_help", resourceCulture);
             }
         }
         

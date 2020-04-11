@@ -545,7 +545,8 @@ namespace OpenRPA
                 }
             }
             if(workflow  != null)
-            { 
+            {
+                string errormessage = "";
                 try
                 {
                     GenericTools.Minimize(GenericTools.MainWindow);
@@ -556,7 +557,13 @@ namespace OpenRPA
                 }
                 catch (Exception ex)
                 {
+                    errormessage = ex.Message;
                     Log.Error(ex.ToString());
+                }
+                if (Config.local.notify_on_workflow_end && !string.IsNullOrEmpty(errormessage))
+                {
+                    App.notifyIcon.ShowBalloonTip(1000, "", errormessage, System.Windows.Forms.ToolTipIcon.Error);
+                    GenericTools.Restore(GenericTools.MainWindow);
                 }
                 return;
             }

@@ -2103,6 +2103,7 @@ namespace OpenRPA
         }
         internal async void OnPlay(object _item)
         {
+            string errormessage = "";
             if (SelectedContent is Views.OpenProject view)
             {
                 var val = view.listWorkflows.SelectedValue;
@@ -2127,7 +2128,13 @@ namespace OpenRPA
                 }
                 catch (Exception ex)
                 {
+                    errormessage = ex.Message;
                     Log.Error(ex.ToString());
+                }
+                if (Config.local.notify_on_workflow_end && !string.IsNullOrEmpty(errormessage))
+                {
+                    App.notifyIcon.ShowBalloonTip(1000, "", errormessage, System.Windows.Forms.ToolTipIcon.Error);
+                    GenericTools.Restore(GenericTools.MainWindow);
                 }
                 return;
             }
@@ -2140,8 +2147,18 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                MessageBox.Show("onPlay " + ex.Message);
+                errormessage = ex.Message;
             }
+            if (Config.local.notify_on_workflow_end && !string.IsNullOrEmpty(errormessage))
+            {
+                App.notifyIcon.ShowBalloonTip(1000, "", errormessage, System.Windows.Forms.ToolTipIcon.Error);
+                GenericTools.Restore(GenericTools.MainWindow);
+            } else if (!string.IsNullOrEmpty(errormessage))
+            {
+                MessageBox.Show("onPlay " + errormessage);
+            }
+            
+
         }
         internal bool CanRename(object _item)
         {

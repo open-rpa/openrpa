@@ -988,6 +988,8 @@ namespace OpenRPA
                         Log.Information("Create instance of " + workflow.name);
                         GenericTools.RunUI(() =>
                         {
+                            command.command = "invokesuccess";
+                            string errormessage = "";
                             try
                             {
                                 if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(command.workflowid) is Views.WFDesigner designer)
@@ -1008,10 +1010,12 @@ namespace OpenRPA
                             }
                             catch (Exception ex)
                             {
+                                command.command = "error";
+                                command.data = data = JObject.FromObject(ex);
+                                errormessage = ex.Message;
                                 Log.Error(ex.ToString());
                             }
                         });
-                        command.command = "invokesuccess";
                     }
                 }
             }

@@ -754,6 +754,60 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Message.
+        /// </summary>
+        public static string activity_showballontop_message {
+            get {
+                return ResourceManager.GetString("activity_showballontop_message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Message to show.
+        /// </summary>
+        public static string activity_showballontop_message_hint {
+            get {
+                return ResourceManager.GetString("activity_showballontop_message_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title.
+        /// </summary>
+        public static string activity_showballontop_title {
+            get {
+                return ResourceManager.GetString("activity_showballontop_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title on bollanmessage.
+        /// </summary>
+        public static string activity_showballontop_title_hint {
+            get {
+                return ResourceManager.GetString("activity_showballontop_title_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Balloon Tip.
+        /// </summary>
+        public static string activity_showballoontip {
+            get {
+                return ResourceManager.GetString("activity_showballoontip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show a small ballontip near the system tray, will respect OS message center settings.
+        /// </summary>
+        public static string activity_showballoontip_tooltip {
+            get {
+                return ResourceManager.GetString("activity_showballoontip_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to String Result.
         /// </summary>
         public static string activity_stringresult {

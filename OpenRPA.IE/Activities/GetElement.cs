@@ -29,6 +29,8 @@ namespace OpenRPA.IE
         public InArgument<string> Selector { get; set; }
         public InArgument<IEElement> From { get; set; }
         public OutArgument<IEElement[]> Elements { get; set; }
+        [LocalizedDisplayName("activity_waitforready", typeof(Resources.strings)), LocalizedDescription("activity_waitforready_help", typeof(Resources.strings))]
+        public InArgument<bool> WaitForReady { get; set; }
         [Browsable(false)]
         public string Image { get; set; }
         private Variable<IEnumerator<IEElement>> _elements = new Variable<IEnumerator<IEElement>>("_elements");
@@ -51,6 +53,21 @@ namespace OpenRPA.IE
             var maxresults = MaxResults.Get(context);
             if (maxresults < 1) maxresults = 1;
             IEElement[] elements = { };
+
+            if (WaitForReady.Get(context))
+            {
+                var browser = Browser.GetBrowser();
+                MSHTML.HTMLDocument doc = browser.Document;
+                var sw2 = new Stopwatch();
+                sw2.Start();
+                while (sw2.Elapsed < timeout && doc.readyState != "complete" && doc.readyState != "interactive")
+                {
+                    // Log.Debug("pending complete, readyState: " + doc.readyState);
+                    System.Threading.Thread.Sleep(100);
+                }
+
+            }
+
             var sw = new Stopwatch();
             sw.Start();
             do

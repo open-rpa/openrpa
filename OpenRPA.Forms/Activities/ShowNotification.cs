@@ -36,25 +36,12 @@ namespace OpenRPA.Forms.Activities
                 FirstRun = false;
             }
         }
-        //public ShowNotification()
-        //{
-        //    Duration = new InArgument<TimeSpan>()
-        //    {
-        //        Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(5000)")
-        //    };
-
-            //}
-            //[RequiredArgument]
-            //public InArgument<TimeSpan> Duration { get; set; }
-            //[RequiredArgument]
-            //public InArgument<string> Title { get; set; }
-        [RequiredArgument]
+        [RequiredArgument, Category("Input")]
         public InArgument<string> Message { get; set; }
         [RequiredArgument]
         [System.ComponentModel.Category("Misc")]
         [Editor(typeof(SelectNotificationTypeEditor), typeof(System.Activities.Presentation.PropertyEditing.ExtendedPropertyValueEditor))]
         public InArgument<string> NotificationType { get; set; }
-
         public static Notifier notifier;
         protected override void Execute(CodeActivityContext context)
         {
@@ -96,7 +83,6 @@ namespace OpenRPA.Forms.Activities
             //    Type = nt
             //}, expirationTime: duration);
         }
-
         class SelectNotificationTypeEditor : CustomSelectEditor
         {
             public override DataTable options
@@ -113,7 +99,6 @@ namespace OpenRPA.Forms.Activities
                     return lst;
                 }
             }
-
         }
         public new string DisplayName
         {

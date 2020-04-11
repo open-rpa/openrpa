@@ -348,6 +348,24 @@
   <data name="activity_sendctrlc_help" xml:space="preserve">
     <value>Send Ctrl+C before trying to copy the Clipboard Content</value>
   </data>
+  <data name="activity_showballontop_message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="activity_showballontop_message_hint" xml:space="preserve">
+    <value>Message to show</value>
+  </data>
+  <data name="activity_showballontop_title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="activity_showballontop_title_hint" xml:space="preserve">
+    <value>Title on bollanmessage</value>
+  </data>
+  <data name="activity_showballoontip" xml:space="preserve">
+    <value>Show Balloon Tip</value>
+  </data>
+  <data name="activity_showballoontip_tooltip" xml:space="preserve">
+    <value>Show a small ballontip near the system tray, will respect OS message center settings</value>
+  </data>
   <data name="activity_stringresult" xml:space="preserve">
     <value>String Result</value>
   </data>

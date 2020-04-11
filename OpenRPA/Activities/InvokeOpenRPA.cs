@@ -56,12 +56,12 @@ namespace OpenRPA.Activities
             }
             try
             {
-                var workflow = MainWindow.instance.GetWorkflowByIDOrRelativeFilename(this.workflow);
+                var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(this.workflow);
                 IWorkflowInstance instance = null;
                 Views.WFDesigner designer = null;
                 GenericTools.RunUI(() =>
                 {
-                    designer = MainWindow.instance.GetWorkflowDesignerByIDOrRelativeFilename(this.workflow) as Views.WFDesigner;
+                    designer = RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(this.workflow) as Views.WFDesigner;
                     if (designer != null)
                     {
                         designer.BreakpointLocations = null;

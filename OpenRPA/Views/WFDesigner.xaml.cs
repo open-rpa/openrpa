@@ -1183,8 +1183,10 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 });
 
                 BreakPointhit = false; Singlestep = false;
+                bool isRemote = true;
                 if (string.IsNullOrEmpty(instance.queuename) && string.IsNullOrEmpty(instance.correlationId))
                 {
+                    isRemote = false;
                     if (instance.state != "completed")
                     {
                         System.Activities.Debugger.SourceLocation location;
@@ -1236,6 +1238,22 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 }
                 if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
                 Log.Output(message);
+                if (instance.hasError || instance.isCompleted)
+                {
+                    if ((Config.local.notify_on_workflow_end && !isRemote) || (Config.local.notify_on_workflow_remote_end && isRemote))
+                    {
+                        if (instance.state == "completed")
+                        {
+                            // App.notifyIcon.ShowBalloonTip(1000, instance.Workflow.name + " " + instance.state, message, System.Windows.Forms.ToolTipIcon.Info);
+                            App.notifyIcon.ShowBalloonTip(1000, "", message, System.Windows.Forms.ToolTipIcon.Info);
+                        }
+                        else
+                        {
+                            // App.notifyIcon.ShowBalloonTip(1000, instance.Workflow.name + " " + instance.state, message, System.Windows.Forms.ToolTipIcon.Error);
+                            App.notifyIcon.ShowBalloonTip(1000, "", message, System.Windows.Forms.ToolTipIcon.Error);
+                        }
+                    }
+                }
 
 
                 OnChanged?.Invoke(this);

@@ -32,7 +32,6 @@ namespace OpenRPA.NM
         public OutArgument<NMElement[]> Elements { get; set; }
         [LocalizedDisplayName("activity_waitforready", typeof(Resources.strings)), LocalizedDescription("activity_waitforready_help", typeof(Resources.strings))]
         public InArgument<bool> WaitForReady { get; set; }
-
         [Browsable(false)]
         public string Image { get; set; }
         private readonly Variable<IEnumerator<NMElement>> _elements = new Variable<IEnumerator<NMElement>>("_elements");

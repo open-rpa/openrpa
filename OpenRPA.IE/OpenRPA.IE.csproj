@@ -8,7 +8,8 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Version>1.0.24</Version>
-    <PackageReleaseNotes>1.0.24 Add experimental support for XPath for IE, also doing recording / Improve OpenURL for IE
+    <PackageReleaseNotes>1.0.25 Add WaitForReady to GetElement
+1.0.24 Add experimental support for XPath for IE, also doing recording / Improve OpenURL for IE
 1.0.23 Change target framework to 4.7.2
 1.0.22 Add support for variables in selector
 1.0.21 Add langauges

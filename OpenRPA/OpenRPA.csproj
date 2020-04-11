@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.93</Version>
-    <PackageReleaseNotes>1.0.93 Use workflow permissoins for new workflow instances
+    <Version>1.0.94</Version>
+    <PackageReleaseNotes>1.0.94 Add agent interface, Add loading screen, add ShowBalloonTip and DeleteFile, Add notifications
+1.0.93 Use workflow permissoins for new workflow instances
 1.0.92 Add experimental support for XPath for IE, also doing recording
 1.0.91 Add AddDataColumn, AddDataRow and CreateDataTable and Add Loop action to Windows.GetElement and nm.GetElement
 1.0.90 Change target framework to 4.7.2
@@ -137,7 +138,9 @@
     <None Remove="Activities\InvokeRemoteOpenRPADesigner.xaml" />
     <None Remove="Activities\MoveMouseDesigner.xaml" />
     <None Remove="Activities\OpenApplicationDesigner.xaml" />
+    <None Remove="Activities\ShowBalloonTipDesigner.xaml" />
     <None Remove="Activities\TypeTextDesigner.xaml" />
+    <None Remove="AgentWindow.xaml" />
     <None Remove="App.xaml" />
     <None Remove="Images\PinDocMenu_Black.png" />
     <None Remove="MainWindow.xaml" />
@@ -190,6 +193,7 @@
     <None Remove="Resources\Buttons\zeniverse_ikon_84Z_icon.ico" />
     <None Remove="Resources\close.png" />
     <None Remove="Resources\designer\addentitypermission.png" />
+    <None Remove="Resources\designer\ballon.png" />
     <None Remove="Resources\designer\breakpoint.png" />
     <None Remove="Resources\designer\comment.png" />
     <None Remove="Resources\designer\commentout.png" />
@@ -236,6 +240,7 @@
     <None Remove="Resources\designer\webscraping.png" />
     <None Remove="Resources\designer\writeexcel.png" />
     <None Remove="Resources\designer\writefile.png" />
+    <None Remove="Resources\gears-1236578_1920.jpg" />
     <None Remove="Resources\icons\activity.png" />
     <None Remove="Resources\icons\activity.svg" />
     <None Remove="Resources\icons\flowchart.png" />
@@ -247,6 +252,7 @@
     <None Remove="Resources\open_flow_org.ico" />
     <None Remove="Resources\open_rpa.ico" />
     <None Remove="Resources\open_rpa512.png" />
+    <None Remove="Resources\open_rpa_white.png" />
     <None Remove="Resources\Selector\Button.png" />
     <None Remove="Resources\Selector\Calendar.png" />
     <None Remove="Resources\Selector\CheckBox.png" />
@@ -287,6 +293,7 @@
     <None Remove="Resources\state\Running_green.png" />
     <None Remove="Resources\state\unloaded.png" />
     <None Remove="Resources\toolbox\addentitypermission.png" />
+    <None Remove="Resources\toolbox\ballon.png" />
     <None Remove="Resources\toolbox\breakpoint.png" />
     <None Remove="Resources\toolbox\comment.png" />
     <None Remove="Resources\toolbox\commentout.png" />
@@ -335,6 +342,7 @@
     <None Remove="Resources\toolbox\workflow.png" />
     <None Remove="Resources\toolbox\writeexcel.png" />
     <None Remove="Resources\toolbox\writefile.png" />
+    <None Remove="Views\AgentViewProjects.xaml" />
     <None Remove="Views\CloseableHeader.xaml" />
     <None Remove="Views\DetectorsView.xaml" />
     <None Remove="Views\EditXAML.xaml" />
@@ -350,10 +358,14 @@
     <None Remove="Views\showVariables.xaml" />
     <None Remove="Views\SigninWindow.xaml" />
     <None Remove="Views\Snippets.xaml" />
+    <None Remove="Views\SplashScreen.xaml" />
     <None Remove="Views\WFDesigner.xaml" />
     <None Remove="Views\wfToolbox.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\ShowBalloonTipDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\MoveMouseDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -399,6 +411,15 @@
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="AgentWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AgentViewProjects.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SplashScreen.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\InsertSelect.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -436,6 +457,7 @@
     <Resource Include="Resources\Buttons\zeniverse_ikon_84Z_icon.ico" />
     <Resource Include="Resources\close.png" />
     <Resource Include="Resources\designer\mouse.png" />
+    <Resource Include="Resources\gears-1236578_1920.jpg" />
     <Resource Include="Resources\icons\activity.png" />
     <Resource Include="Resources\icons\activity.svg" />
     <Resource Include="Resources\icons\flowchart.png" />
@@ -448,7 +470,9 @@
     <Resource Include="Resources\open_rpa.ico" />
     <Resource Include="Resources\open_rpa128.png" />
     <Resource Include="Resources\open_rpa512.png" />
+    <Resource Include="Resources\designer\ballon.png" />
     <EmbeddedResource Include="Resources\toolbox\addentitypermission.png" />
+    <EmbeddedResource Include="Resources\toolbox\ballon.png" />
     <EmbeddedResource Include="Resources\toolbox\breakpoint.png" />
     <EmbeddedResource Include="Resources\toolbox\comment.png" />
     <EmbeddedResource Include="Resources\toolbox\commentout.png" />
@@ -641,6 +665,7 @@
     <Resource Include="Resources\designer\webscraping.png" />
     <Resource Include="Resources\designer\writeexcel.png" />
     <Resource Include="Resources\designer\writefile.png" />
+    <Resource Include="Resources\open_rpa_white.png" />
     <Resource Include="Resources\Selector\Button.png" />
     <Resource Include="Resources\Selector\Calendar.png" />
     <Resource Include="Resources\Selector\CheckBox.png" />

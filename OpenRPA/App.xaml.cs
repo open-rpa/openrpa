@@ -30,7 +30,6 @@ namespace OpenRPA
                 SingleInstance<App>.Cleanup();
             }
         }
-        // static System.Threading.Mutex mutex = new System.Threading.Mutex(false, "OpenRPA");
         public static System.Windows.Forms.NotifyIcon notifyIcon { get; set; }  = new System.Windows.Forms.NotifyIcon();
         public App()
         {
@@ -41,18 +40,8 @@ namespace OpenRPA
             notifyIcon.Visible = false;
             //notifyIcon.ShowBalloonTip(5000, "Title", "Text", System.Windows.Forms.ToolTipIcon.Info);
             notifyIcon.Click += nIcon_Click;
-            //try
-            //{
-            //    var temp2 = new System.Xml.Serialization.XmlSerializer(typeof(Xceed.Wpf.AvalonDock.Layout.LayoutRoot));
-            //    var temp = new System.Xml.Serialization.XmlSerializer(typeof(Xceed.Wpf.AvalonDock.Layout.LayoutRoot),
-            //        typeof(Xceed.Wpf.AvalonDock.Layout.LayoutRoot).GetNestedTypes());
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex.ToString());
-            //}
+            notifyIcon.DoubleClick += nIcon_Click;
         }
-
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static void InitializeCefSharp()
         {
@@ -114,27 +103,75 @@ namespace OpenRPA
         }
         void nIcon_Click(object sender, EventArgs e)
         {
-            //events comes here
             MainWindow.Visibility = Visibility.Visible;
-            //MainWindow.WindowState = WindowState.Normal;
-            notifyIcon.Visible = false;
+            // notifyIcon.Visible = false;
             Interfaces.GenericTools.Restore(Interfaces.GenericTools.MainWindow);
         }
         private void Application_Exit(object sender, ExitEventArgs e)
         {
-            //try
-            //{
-            //    mutex.ReleaseMutex();
-            //}
-            //catch (Exception)
-            //{
-            //}
+            if (notifyIcon != null)
+            {
+                if (notifyIcon.Icon != null) notifyIcon.Icon.Dispose();
+                notifyIcon.Dispose();
+            }
         }
         public bool SignalExternalCommandLineArgs(IList<string> args)
         {
             nIcon_Click(null, null);
-            OpenRPA.MainWindow.instance.ParseCommandLineArgs(args);
+            RobotInstance.instance.ParseCommandLineArgs(args);
             return true;
+        }
+        public static Views.SplashScreen splash { get; set; }
+        private async void Application_Startup(object sender, StartupEventArgs e)
+        {
+            splash = new Views.SplashScreen();
+            splash.Show();
+            splash.BusyContent = "Loading main window";
+            AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
+            if (!Config.local.isagent)
+            {
+                RobotInstance.instance.MainWindow = new MainWindow();
+                RobotInstance.instance.Window = RobotInstance.instance.MainWindow;
+                RobotInstance.instance.MainWindow.ReadyForAction += RobotInstance.instance.MainWindowReadyForAction;
+                RobotInstance.instance.MainWindow.Status += RobotInstance.instance.MainWindowStatus;
+                GenericTools.MainWindow = RobotInstance.instance.MainWindow;
+                MainWindow = RobotInstance.instance.MainWindow;
+            } else
+            {
+                RobotInstance.instance.AgentWindow = new AgentWindow();
+                RobotInstance.instance.Window = RobotInstance.instance.AgentWindow;
+                RobotInstance.instance.AgentWindow.ReadyForAction += RobotInstance.instance.MainWindowReadyForAction;
+                RobotInstance.instance.AgentWindow.Status += RobotInstance.instance.MainWindowStatus;
+                GenericTools.MainWindow = RobotInstance.instance.AgentWindow;
+                MainWindow = RobotInstance.instance.AgentWindow;
+            }
+            RobotInstance.instance.Status += App_Status;
+            Input.InputDriver.Instance.initCancelKey(Config.local.cancelkey);
+            await Task.Run(() =>
+            {
+                try
+                {
+                    splash.BusyContent = "loading plugins";
+                    Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.PluginsDirectory);
+                    splash.BusyContent = "Initialize main window";
+                    RobotInstance.instance.init();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            });
+        }
+        private void App_Status(string message)
+        {
+            try
+            {
+                // notifyIcon.ShowBalloonTip(5000, "Title", message, System.Windows.Forms.ToolTipIcon.Info);
+                if (splash!=null) splash.BusyContent = message;
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

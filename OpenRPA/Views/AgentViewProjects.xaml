@@ -1,0 +1,116 @@
+﻿<UserControl x:Class="OpenRPA.Views.AgentViewProjects"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:OpenRPA.Views"
+             xmlns:localroot="clr-namespace:OpenRPA"
+             xmlns:or="clr-namespace:OpenRPA.Resources"
+             xmlns:projectbase="clr-namespace:OpenRPA"
+             mc:Ignorable="d" 
+             KeyUp="UserControl_KeyUp"
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <CollectionViewSource Source="{Binding Projects}" x:Key="Projects">
+        </CollectionViewSource>
+        <localroot:BindingProxy x:Key="proxy" Data="{Binding}" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBox x:Name="searchWorkflows" Grid.Column="0" Grid.Row="0" Height="20" BorderThickness="0"
+                                         Text="{Binding Path=FilterText,UpdateSourceTrigger=PropertyChanged}" 
+                                         ></TextBox>
+
+        <TreeView   x:Name="listWorkflows" ItemsSource="{Binding Source={StaticResource Projects}}" BorderThickness="0" Grid.Column="0"  Grid.Row="1" 
+                                       MouseDoubleClick="ListWorkflows_MouseDoubleClick">
+            <TreeView.ItemContainerStyle>
+                <!-- 
+    This Style binds a TreeViewItem to a ViewModel. 
+    -->
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                    <Setter Property="FontWeight" Value="Normal" />
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type projectbase:Project}" ItemsSource="{Binding Workflows}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding name}" />
+                        <StackPanel.ContextMenu >
+                            <ContextMenu>
+                                <!--<MenuItem Header="{x:Static or:strings.export}" Command="{Binding Data.ExportCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                                <MenuItem Header="{x:Static or:strings.delete}" Command="{Binding Data.DeleteCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />-->
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type projectbase:Workflow}" ItemsSource="{Binding Workflows}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding StateImage}" Width="16" Height="16" />
+                        <TextBlock Text="{Binding name}" />
+                        <StackPanel.ContextMenu >
+                            <ContextMenu>
+                                <MenuItem Header="{x:Static or:strings.play}" Command="{Binding Data.PlayCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                                <!--<MenuItem Header="{x:Static or:strings.rename}" Command="{Binding Data.RenameCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                                <MenuItem Header="{x:Static or:strings.export}" Command="{Binding Data.ExportCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                                <MenuItem Header="{x:Static or:strings.copyid}" Command="{Binding Data.CopyIDCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                                <MenuItem Header="{x:Static or:strings.copyrelativefilename}" Command="{Binding Data.CopyRelativeFilenameCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                                <MenuItem Header="{x:Static or:strings.delete}" Command="{Binding Data.DeleteCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />-->
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+        <StackPanel Grid.Column="1" Grid.Row="0">
+            <!--<StackPanel>
+                <TextBlock Text="{x:Static or:strings.open_edit}" FontWeight="Bold"></TextBlock>
+                <Button Click="ButtonEditXAML" Margin="20,0,0,0" Content="{x:Static or:strings.open_edit_xaml}"></Button>
+            </StackPanel>-->
+            <StackPanel>
+                <TextBlock Text="{x:Static or:strings.open_name}" FontWeight="Bold"></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue.name}" ></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="{x:Static or:strings.open_state}" FontWeight="Bold"></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue.State}" ></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="{x:Static or:strings.open_serializable}" FontWeight="Bold"></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue.Serializable}" ></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="{x:Static or:strings.open_createdby}" FontWeight="Bold"></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue._createdby}" ></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="{x:Static or:strings.open_created}" FontWeight="Bold"></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue._created}" ></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="{x:Static or:strings.open_modifiedby}" FontWeight="Bold"></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue._modifiedby}" ></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="{x:Static or:strings.open_modified}" FontWeight="Bold"></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue._modified}" ></TextBlock>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+
+
+</UserControl>

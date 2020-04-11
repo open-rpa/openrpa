@@ -17,7 +17,7 @@ namespace OpenRPA.OpenFlowDB
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.deleteentity.png")]
     [LocalizedToolboxTooltip("activity_deleteone_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_deleteone", typeof(Resources.strings))]
-    public class DeleteOne : AsyncTaskCodeActivity<bool>
+    public class DeleteOne : AsyncTaskCodeActivity
     {
         [RequiredArgument]
         public InArgument<bool> IgnoreErrors { get; set; } = false;
@@ -27,7 +27,7 @@ namespace OpenRPA.OpenFlowDB
         public InArgument<object> Item { get; set; }
         [RequiredArgument, OverloadGroup("Id")]
         public InArgument<string> _id { get; set; }
-        protected async override Task<bool> ExecuteAsync(AsyncCodeActivityContext context)
+        protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
             var ignoreErrors = IgnoreErrors.Get(context);
             var collection = Collection.Get(context);
@@ -60,6 +60,9 @@ namespace OpenRPA.OpenFlowDB
             await global.webSocketClient.DeleteOne(collection, id);
             System.Windows.Forms.Application.DoEvents();
             return true;
+        }
+        protected override void AfterExecute(AsyncCodeActivityContext context, object result)
+        {
         }
         public new string DisplayName
         {

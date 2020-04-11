@@ -141,6 +141,12 @@
   <data name="activity_openurl_tooltip" xml:space="preserve">
     <value>Open the specefied url in Internet Explorer</value>
   </data>
+  <data name="activity_waitforready" xml:space="preserve">
+    <value>Wait for ready</value>
+  </data>
+  <data name="activity_waitforready_help" xml:space="preserve">
+    <value>Wait for page page to be ready / is not loading</value>
+  </data>
   <data name="enable_xpath_support" xml:space="preserve">
     <value>Enable XPath</value>
   </data>

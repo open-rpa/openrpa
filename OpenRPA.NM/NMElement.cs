@@ -207,9 +207,11 @@ namespace OpenRPA.NM
         {
             get
             {
-                if (chromeelement.ContainsKey("value")) return chromeelement["value"].ToString();
-                if (chromeelement.ContainsKey("innertext")) return chromeelement["innertext"].ToString();
-                return null;
+                string result = null;
+                if (chromeelement.ContainsKey("value")) result = chromeelement["value"].ToString();
+                if (chromeelement.ContainsKey("innertext") && string.IsNullOrEmpty(result)) result = chromeelement["innertext"].ToString();
+                if (string.IsNullOrEmpty(result)) result = Text;
+                return result;
             }
             set
             {

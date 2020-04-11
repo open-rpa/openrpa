@@ -104,7 +104,7 @@ namespace OpenRPA.Views
             var d = new Interfaces.entity.Detector(); d.Plugin = kv.Value.FullName;
             IDetectorPlugin dp = null;
             d.Path = Interfaces.Extensions.ProjectsDirectory;
-            dp = Plugins.AddDetector(this.main, d);
+            dp = Plugins.AddDetector(RobotInstance.instance, d);
             dp.OnDetector += main.OnDetector;
             NotifyPropertyChanged("detectorPlugins");
         }

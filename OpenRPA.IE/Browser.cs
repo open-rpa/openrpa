@@ -17,8 +17,6 @@ namespace OpenRPA.IE
         public string title { get; set; }
         public SHDocVw.WebBrowser wBrowser { get; set; }
         public MSHTML.HTMLDocument Document { get; set; }
-        // public SHDocVw.InternetExplorer IE { get; set; }
-        
         public AutomationElement panel { get; set; }
         public string PageSource
         {
@@ -48,7 +46,16 @@ namespace OpenRPA.IE
                     // Log.Debug(string.Format("Web Site : {0}", _ie.LocationURL));
                     try
                     {
-                        result.wBrowser = _ie as SHDocVw.WebBrowser;
+                        try
+                        {
+                            var doc = _ie.Document as MSHTML.HTMLDocument;
+                            result.wBrowser = _ie as SHDocVw.WebBrowser;
+                        }
+                        catch (System.Runtime.InteropServices.COMException)
+                        {
+                            Process.GetProcessesByName("IEXPLORE").ForEach(p => p.Kill());
+                        }
+
                         // result.IE = _ie;
                     }
                     catch (Exception ex)
@@ -66,11 +73,29 @@ namespace OpenRPA.IE
                 ie.Visible = true;
                 var sw = new Stopwatch();
                 sw.Start();
-                while (result.wBrowser == null)
+                while (result.wBrowser == null && sw.Elapsed < TimeSpan.FromSeconds(10))
                 {
                     try
                     {
-                        var doc = ie.Document as MSHTML.HTMLDocument;
+                        MSHTML.HTMLDocument doc;
+                        try
+                        {
+                            doc = ie.Document as MSHTML.HTMLDocument;
+                        }
+                        catch (System.Runtime.InteropServices.COMException)
+                        {
+                            Process.GetProcessesByName("IEXPLORE").ForEach(p => p.Kill());
+                            ie = null;
+                            doc = null;
+                        }
+                        if(ie==null)
+                        {
+                            ie = new SHDocVw.InternetExplorer();
+                        }
+                        if(doc == null)
+                        {
+                            doc = ie.Document as MSHTML.HTMLDocument;
+                        }
                         var timeout = TimeSpan.FromSeconds(5);
                         while (sw.Elapsed < timeout && doc.readyState != "complete" && doc.readyState != "interactive")
                         {
@@ -83,6 +108,7 @@ namespace OpenRPA.IE
                     {
                     }
                 }
+                if (result.wBrowser == null) throw new Exception("Failed launching Internet Explorer");
 
             }
             if (result.wBrowser == null) return null;
@@ -93,14 +119,11 @@ namespace OpenRPA.IE
         }
         //MSHTML.HTMLDocument doc2 = browser.Document;
         //MSHTML.IHTMLWindow2 win = browser.wBrowser as MSHTML.IHTMLWindow2;
-
-
         internal void Show()
         {
             NativeMethods.ShowWindow(new IntPtr(wBrowser.HWND), NativeMethods.SW_SHOWNORMAL);
             NativeMethods.SetForegroundWindow(new IntPtr(wBrowser.HWND));
         }
-
         private Browser() { }
         public Browser(AutomationElement Element)
         {

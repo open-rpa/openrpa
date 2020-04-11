@@ -181,7 +181,6 @@ namespace OpenRPA
                 }
             });
         }
-
         internal void MainWindowStatus(string message)
         {
             try
@@ -192,7 +191,6 @@ namespace OpenRPA
             {
             }
         }
-
         public async Task LoadServerData()
         {
             if (!global.isSignedIn) return;
@@ -614,6 +612,17 @@ namespace OpenRPA
                         }
                     }
                     Log.Debug("RunPendingInstances::end ");
+                    GenericTools.RunUI(() =>
+                    {
+                        if (App.splash != null)
+                        {
+                            App.splash.Close();
+                            App.splash = null;
+                        }
+                        Show();
+                        ReadyForAction?.Invoke();
+                    });
+
                 }
                 AutomationHelper.init();
             }
@@ -723,25 +732,37 @@ namespace OpenRPA
                             try
                             {
                                 Hide();
-                                var signinWindow = new Views.SigninWindow(url, true);
-                                signinWindow.ShowDialog();
-                                jwt = signinWindow.jwt;
-                                if (!string.IsNullOrEmpty(jwt))
+                                GenericTools.RunUI(async () =>
                                 {
-                                    Config.local.jwt = Config.local.ProtectString(jwt);
-                                    user = await global.webSocketClient.Signin(Config.local.UnprotectString(Config.local.jwt));
-                                    if (user != null)
+                                    try
                                     {
-                                        Config.local.username = user.username;
-                                        Config.Save();
-                                        Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                                        SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+                                        var signinWindow = new Views.SigninWindow(url, true);
+                                        signinWindow.ShowDialog();
+                                        jwt = signinWindow.jwt;
+                                        if (!string.IsNullOrEmpty(jwt))
+                                        {
+                                            Config.local.jwt = Config.local.ProtectString(jwt);
+                                            user = await global.webSocketClient.Signin(Config.local.UnprotectString(Config.local.jwt));
+                                            if (user != null)
+                                            {
+                                                Config.local.username = user.username;
+                                                Config.Save();
+                                                Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                                SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Close();
+                                        }
+
                                     }
-                                }
-                                else
-                                {
-                                    Close();
-                                }
+                                    catch (Exception ex)
+                                    {
+                                        Log.Error(ex.ToString());
+                                    }
+                                });
+
 
                             }
                             catch (Exception)

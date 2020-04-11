@@ -121,39 +121,44 @@ namespace OpenRPA
         }
 
         private bool first_connect = true;
-        public async void WebSocketClient_OnOpen()
+        public void WebSocketClient_OnOpen()
         {
-            SetStatus("Load layout and reopen workflows");
-            if (RobotInstance.instance.Projects.Count == 0 && first_connect)
+            GenericTools.RunUI(async () =>
             {
-                string Name = "New Project";
-                try
+                SetStatus("Load layout and reopen workflows");
+                if (RobotInstance.instance.Projects.Count == 0 && first_connect)
                 {
-                    Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name, true);
-                    Workflow workflow = project.Workflows.First();
-                    workflow.Project = project;
-                    RobotInstance.instance.Projects.Add(project);
-                    OnOpenWorkflow(workflow);
+                    string Name = "New Project";
+                    try
+                    {
+                        Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name, true);
+                        Workflow workflow = project.Workflows.First();
+                        workflow.Project = project;
+                        RobotInstance.instance.Projects.Add(project);
+                        OnOpenWorkflow(workflow);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
                 }
-                catch (Exception ex)
+                if (first_connect)
                 {
-                    Log.Error(ex.ToString());
-                }
-            }
-            if (first_connect)
-            {
-                first_connect = false;
-                LoadLayout();
-                LayoutDocument layoutDocument = new LayoutDocument { Title = "Getting started" };
-                layoutDocument.ContentId = "GettingStarted";
-                // Views.GettingStarted view = new Views.GettingStarted(url + "://" + u.Host + "/gettingstarted.html");
-                if (Config.local.show_getting_started)
-                {
-                    Views.GettingStarted view = new Views.GettingStarted("https://openrpa.dk/gettingstarted.html");
-                    layoutDocument.Content = view;
-                    MainTabControl.Children.Add(layoutDocument);
-                    layoutDocument.IsSelected = true;
-                    layoutDocument.Closing += LayoutDocument_Closing;
+                    first_connect = false;
+                    LoadLayout();
+
+                    if (Config.local.show_getting_started)
+                    {
+
+                        LayoutDocument layoutDocument = new LayoutDocument { Title = "Getting started" };
+                        layoutDocument.ContentId = "GettingStarted";
+                        // Views.GettingStarted view = new Views.GettingStarted(url + "://" + u.Host + "/gettingstarted.html");
+                        Views.GettingStarted view = new Views.GettingStarted("https://openrpa.dk/gettingstarted.html");
+                        layoutDocument.Content = view;
+                        MainTabControl.Children.Add(layoutDocument);
+                        layoutDocument.IsSelected = true;
+                        layoutDocument.Closing += LayoutDocument_Closing;
+                    }
                 }
                 try
                 {
@@ -163,7 +168,7 @@ namespace OpenRPA
                 {
                     Log.Error(ex.ToString());
                 }
-            }
+            });
         }
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         public event StatusEventHandler Status;
@@ -2136,6 +2141,11 @@ namespace OpenRPA
                     App.notifyIcon.ShowBalloonTip(1000, "", errormessage, System.Windows.Forms.ToolTipIcon.Error);
                     GenericTools.Restore(GenericTools.MainWindow);
                 }
+                else if (!string.IsNullOrEmpty(errormessage))
+                {
+                    GenericTools.Restore(GenericTools.MainWindow);
+                    MessageBox.Show("onPlay " + errormessage);
+                }
                 return;
             }
             try
@@ -2155,10 +2165,9 @@ namespace OpenRPA
                 GenericTools.Restore(GenericTools.MainWindow);
             } else if (!string.IsNullOrEmpty(errormessage))
             {
+                GenericTools.Restore(GenericTools.MainWindow);
                 MessageBox.Show("onPlay " + errormessage);
             }
-            
-
         }
         internal bool CanRename(object _item)
         {

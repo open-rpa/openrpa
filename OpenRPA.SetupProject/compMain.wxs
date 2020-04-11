@@ -41,17 +41,11 @@
         <File Id="filFAE94905D72D8368BA8CE7A78C6DEA45" Source="!(wix.MainSource)\NuGet.Versioning.dll" />
         <File Id="fil6E894942E6ADFA63F3967E0A27F05784" Source="!(wix.MainSource)\OpenRPA.CodeEditor.dll" />
         <File Id="filF0FF646DFA53CCC3ABA2E049427B7EBE" Source="!(wix.MainSource)\OpenRPA.CodeEditor.dll.config" />
-        <File Id="filFBB9AEF643789F56759A22B8A80601D1" Source="!(wix.MainSource)\OpenRPA.CodeEditor.pdb" />
         <File Id="fil57AE31DC28AB7B6FFDA5F69E89C07922" Source="!(wix.MainSource)\OpenRPA.exe.config" />
         <File Id="filDE9EE88175C8A92C8C6EDAEEC002AF7A" Source="!(wix.MainSource)\OpenRPA.Interfaces.dll" />
-        <File Id="filFF54CF59743AF55394EB12323FDBE831" Source="!(wix.MainSource)\OpenRPA.Interfaces.pdb" />
         <File Id="filA3BCD5A3D7D25B0128DBA215D4662EC5" Source="!(wix.MainSource)\OpenRPA.NamedPipeWrapper.dll" />
-        <File Id="fil9648E6F12C5BE79DFC2FB3BF81822475" Source="!(wix.MainSource)\OpenRPA.NamedPipeWrapper.pdb" />
         <File Id="filC6183D826FBAEDB32E8F9DBD1F7E15A4" Source="!(wix.MainSource)\OpenRPA.Net.dll" />
-        <File Id="fil759AA304225769560185F794E39E6D4E" Source="!(wix.MainSource)\OpenRPA.Net.pdb" />
-        <File Id="fil67325D5397BD733A4B3C2CC079252F7C" Source="!(wix.MainSource)\OpenRPA.pdb" />
         <File Id="filDB9CDEE3C08EDAA50BF126AEF358BCFC" Source="!(wix.MainSource)\OpenRPA.Windows.dll" />
-        <File Id="filC25767F56A09684A9CDBB90D5A27E396" Source="!(wix.MainSource)\OpenRPA.Windows.pdb" />
         <File Id="filEDD81E77BF6933BF90C42AE0EFAA681B" Source="!(wix.MainSource)\System.Buffers.dll" />
         <File Id="fil5D4575804C3CE3ACC76FF53290806177" Source="!(wix.MainSource)\System.Collections.Immutable.dll" />
         <File Id="filB5FF2765E175A6C9AD05767B340DB194" Source="!(wix.MainSource)\System.Composition.AttributedModel.dll" />
@@ -110,16 +104,11 @@
       <Component Id='mainComponentx64' Win64='yes' Directory="mainx64" Guid='{225DF59C-8C11-4AFF-95A9-88A98A6CD576}'>
         <File Id="filB436E4594E3544C098B9943DBDC1A518" Source="!(wix.MainSource)\x64\cef.pak" />
         <File Id="filCB052B4928C8DBE2730D9A211E470208" Source="!(wix.MainSource)\x64\CefSharp.BrowserSubprocess.Core.dll" />
-        <File Id="fil90EAD8EAE08190EF554F9F0F66FFD702" Source="!(wix.MainSource)\x64\CefSharp.BrowserSubprocess.Core.pdb" />
         <File Id="filAD8611FDD6171BAEF79E9F9EC1705EE9" Source="!(wix.MainSource)\x64\CefSharp.BrowserSubprocess.exe" />
-        <File Id="filEAC3917C2D2DD644C60719B90AB7823B" Source="!(wix.MainSource)\x64\CefSharp.BrowserSubprocess.pdb" />
         <File Id="filC88C7623422BE649CB1D8DE7EFDA2997" Source="!(wix.MainSource)\x64\CefSharp.Core.dll" />
-        <File Id="fil661FD5E081B39046CC104A96165D8374" Source="!(wix.MainSource)\x64\CefSharp.Core.pdb" />
         <File Id="fil4C19941476E258861D238F3315543B39" Source="!(wix.MainSource)\x64\CefSharp.Core.xml" />
         <File Id="filF0CF59F24A01DAE00DEA461CE18C9389" Source="!(wix.MainSource)\x64\CefSharp.dll" />
-        <File Id="filDEAFF31790255DA15A8A0926C96F6E5E" Source="!(wix.MainSource)\x64\CefSharp.pdb" />
         <File Id="filB95C83CD1FA714D6B1FEAF7CC01A5BF5" Source="!(wix.MainSource)\x64\CefSharp.Wpf.dll" />
-        <File Id="filB250FD171ACDBD712715F3CF9B4DFA5E" Source="!(wix.MainSource)\x64\CefSharp.Wpf.pdb" />
         <File Id="fil20A7E14E1D3C37B0E54D8397517A3E73" Source="!(wix.MainSource)\x64\CefSharp.Wpf.XML" />
         <File Id="filD2AA37AE152DD56688B960E7D87291C5" Source="!(wix.MainSource)\x64\CefSharp.XML" />
         <File Id="fil18028080F88700FE877D5F5995B9FAAC" Source="!(wix.MainSource)\x64\cef_100_percent.pak" />

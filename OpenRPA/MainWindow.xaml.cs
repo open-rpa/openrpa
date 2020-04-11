@@ -2136,6 +2136,11 @@ namespace OpenRPA
                     App.notifyIcon.ShowBalloonTip(1000, "", errormessage, System.Windows.Forms.ToolTipIcon.Error);
                     GenericTools.Restore(GenericTools.MainWindow);
                 }
+                else if (!string.IsNullOrEmpty(errormessage))
+                {
+                    GenericTools.Restore(GenericTools.MainWindow);
+                    MessageBox.Show("onPlay " + errormessage);
+                }
                 return;
             }
             try
@@ -2155,10 +2160,9 @@ namespace OpenRPA
                 GenericTools.Restore(GenericTools.MainWindow);
             } else if (!string.IsNullOrEmpty(errormessage))
             {
+                GenericTools.Restore(GenericTools.MainWindow);
                 MessageBox.Show("onPlay " + errormessage);
             }
-            
-
         }
         internal bool CanRename(object _item)
         {

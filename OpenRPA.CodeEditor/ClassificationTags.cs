@@ -69,7 +69,8 @@ namespace OpenRPA.CodeEditor
                     return ClassificationTypeNames.Text;
 
                 default:
-                    throw new NotSupportedException(textTag);
+                    return ClassificationTypeNames.Text;
+                    // throw new NotSupportedException(textTag);
             }
         }
     }

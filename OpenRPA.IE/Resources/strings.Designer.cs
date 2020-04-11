@@ -133,6 +133,24 @@ namespace OpenRPA.IE.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Wait for ready.
+        /// </summary>
+        public static string activity_waitforready {
+            get {
+                return ResourceManager.GetString("activity_waitforready", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait for page page to be ready / is not loading.
+        /// </summary>
+        public static string activity_waitforready_help {
+            get {
+                return ResourceManager.GetString("activity_waitforready_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enable XPath.
         /// </summary>
         public static string enable_xpath_support {

@@ -614,6 +614,17 @@ namespace OpenRPA
                         }
                     }
                     Log.Debug("RunPendingInstances::end ");
+                    GenericTools.RunUI(() =>
+                    {
+                        if (App.splash != null)
+                        {
+                            App.splash.Close();
+                            App.splash = null;
+                        }
+                        Show();
+                        ReadyForAction?.Invoke();
+                    });
+
                 }
                 AutomationHelper.init();
             }

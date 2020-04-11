@@ -37,6 +37,7 @@
     <Compile Include="compRDServicePlugin.wxs" />
     <Compile Include="compUtilities.wxs" />
     <Compile Include="compUpdater.wxs" />
+    <Compile Include="compDatabase.wxs" />
     <Compile Include="FeatureTreeDlg.wxs" />
     <Compile Include="mainfiles.wxs" />
     <Compile Include="Product.wxs" />

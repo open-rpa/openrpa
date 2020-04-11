@@ -166,6 +166,7 @@ namespace OpenRPA
                 {
                     RobotInstance.instance.AutoReloading = true;
                     Visibility = Visibility.Hidden;
+                    App.notifyIcon.Visible = true;
                 }
                 e.Cancel = !AllowQuite;
             }

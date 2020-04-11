@@ -10,24 +10,23 @@
         <File Id="Microsoft.Office.Interop.Word.dll" Source="!(wix.OfficeSource)\Microsoft.Office.Interop.Word.dll" />
         <File Id="Office.dll" Source="!(wix.OfficeSource)\Office.dll" />
         <File Id="OpenRPA.Office.dll" Source="!(wix.OfficeSource)\OpenRPA.Office.dll" />
-        <File Id="OpenRPA.Office.pdb" Source="!(wix.OfficeSource)\OpenRPA.Office.pdb" />
       </Component>
-      <Component Id='OfficeComponentde' Win64='yes' Directory="officede">
+      <Component Id='OfficeComponentde' Win64='yes' Directory="officede" Guid="{B8D8CCD7-4C5E-4DFA-BC14-A052ADC5148B}">
         <File Id="OpenRPA.Office.resources.dll_de" Source="!(wix.OfficeSource)\de\OpenRPA.Office.resources.dll" />
       </Component>
-      <Component Id='OfficeComponentda' Win64='yes' Directory="officeda">
+      <Component Id='OfficeComponentda' Win64='yes' Directory="officeda" Guid="{202D3CA2-FA92-43A0-81EE-6BAF2EAFDD62}">
         <File Id="OpenRPA.Office.resources.dll_da" Source="!(wix.OfficeSource)\da\OpenRPA.Office.resources.dll" />
       </Component>
-      <Component Id='OfficeComponentes' Win64='yes' Directory="officees">
+      <Component Id='OfficeComponentes' Win64='yes' Directory="officees" Guid="{E8653ED3-EF33-474E-B87B-0B08707C93ED}">
         <File Id="OpenRPA.Office.resources.dll_es" Source="!(wix.OfficeSource)\es\OpenRPA.Office.resources.dll" />
       </Component>
-      <Component Id='OfficeComponentpt' Win64='yes' Directory="officept">
+      <Component Id='OfficeComponentpt' Win64='yes' Directory="officept" Guid="{9DEC2B2E-1F68-4A2F-96D7-6C0672C81CF5}">
         <File Id="OpenRPA.Office.resources.dll_pt" Source="!(wix.OfficeSource)\pt\OpenRPA.Office.resources.dll" />
       </Component>
-      <Component Id='OfficeComponentro' Win64='yes' Directory="officero">
+      <Component Id='OfficeComponentro' Win64='yes' Directory="officero" Guid="{DC500D28-166F-48B4-BDAC-2FD02BFB3C5E}">
         <File Id="OpenRPA.Office.resources.dll_ro" Source="!(wix.OfficeSource)\ro\OpenRPA.Office.resources.dll" />
       </Component>
-      <Component Id='OfficeComponentru' Win64='yes' Directory="officeru">
+      <Component Id='OfficeComponentru' Win64='yes' Directory="officeru" Guid="{906AE138-CB2E-47E2-841D-8931B0867E33}">
         <File Id="OpenRPA.Office.resources.dll_ru" Source="!(wix.OfficeSource)\ru\OpenRPA.Office.resources.dll" />
       </Component>
 

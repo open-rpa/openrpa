@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="DatabaseComponents">
+      <Component Id='DatabaseComponent' Guid='{CE8FE032-83AC-49B7-928D-75CE152B213F}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="adodb.dll" Source="!(wix.DatabaseSource)\adodb.dll" />
+        <File Id="Interop.MSDASC.dll" Source="!(wix.DatabaseSource)\Interop.MSDASC.dll" />
+        <File Id="OpenRPA.Database.dll" Source="!(wix.DatabaseSource)\OpenRPA.Database.dll" />
+      </Component>
+      <!--<Component Id='DatabaseComponentde' Win64='yes' Directory="Databasede" Guid="{35A4AB21-DB1B-4BCA-BF1C-C99E11FFC6B0}">
+        <File Id="OpenRPA.Database.resources.dll_de" Source="!(wix.DatabaseSource)\de\OpenRPA.Database.resources.dll" />
+      </Component>
+      <Component Id='DatabaseComponentda' Win64='yes' Directory="Databaseda" Guid="{2B73730E-6BDD-4409-B046-EBDC6D9777D4}">
+        <File Id="OpenRPA.Database.resources.dll_da" Source="!(wix.DatabaseSource)\da\OpenRPA.Database.resources.dll" />
+      </Component>
+      <Component Id='DatabaseComponentes' Win64='yes' Directory="Databasees" Guid="{1CB231F1-ECFA-4757-8786-FA2D5060CFD5}">
+        <File Id="OpenRPA.Database.resources.dll_es" Source="!(wix.DatabaseSource)\es\OpenRPA.Database.resources.dll" />
+      </Component>
+      <Component Id='DatabaseComponentpt' Win64='yes' Directory="Databasept" Guid="{BD440720-8AD7-4766-BDDA-9949B00FBC68}">
+        <File Id="OpenRPA.Database.resources.dll_pt" Source="!(wix.DatabaseSource)\pt\OpenRPA.Database.resources.dll" />
+      </Component>
+      <Component Id='DatabaseComponentro' Win64='yes' Directory="Databasero" Guid="{DA3E5756-EF09-4CD0-B272-0C6561083F79}">
+        <File Id="OpenRPA.Database.resources.dll_ro" Source="!(wix.DatabaseSource)\ro\OpenRPA.Database.resources.dll" />
+      </Component>
+      <Component Id='DatabaseComponentru' Win64='yes' Directory="Databaseru" Guid="{DBF4E2BC-DB1B-47BA-B679-DF915D4D4CDB}">
+        <File Id="OpenRPA.Database.resources.dll_ru" Source="!(wix.DatabaseSource)\ru\OpenRPA.Database.resources.dll" />
+      </Component>-->
+
+    </ComponentGroup>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="Databasede" Name="de">
+      </Directory>
+      <Directory Id="Databaseda" Name="da">
+      </Directory>
+      <Directory Id="Databasees" Name="es">
+      </Directory>
+      <Directory Id="Databasept" Name="pt">
+      </Directory>
+      <Directory Id="Databasero" Name="ro">
+      </Directory>
+      <Directory Id="Databaseru" Name="ru">
+      </Directory>
+    </DirectoryRef>
+    <!--<ComponentGroup Id="DatabaseComponentsde" >
+    </ComponentGroup>-->
+
+    <!--<Directory Id="de" Name="de">
+
+          <Component Id="OpenRPA.Database.resources.dll_1" Guid="{807C2001-96B1-493B-9FEB-BBE578444FF8}" Win64="yes">
+          </Component>
+        </Directory>
+        <Directory Id="es" Name="es">
+
+          <Component Id="OpenRPA.Database.resources.dll_2" Guid="{D05915BB-E49D-4FC9-AAEC-D0982DE432AB}" Win64="yes">
+            <File Id="OpenRPA.Database.resources.dll_2" Source="!(wix.DatabaseSource)\es\OpenRPA.Database.resources.dll" />
+          </Component>
+        </Directory>
+        <Directory Id="pt" Name="pt">
+
+          <Component Id="OpenRPA.Database.resources.dll_3" Guid="{ECAEC50A-03A8-43EA-BCEC-41420F3E1A02}" Win64="yes">
+            <File Id="OpenRPA.Database.resources.dll_3" Source="!(wix.DatabaseSource)\pt\OpenRPA.Database.resources.dll" />
+          </Component>
+        </Directory>
+        <Directory Id="ro" Name="ro">
+
+          <Component Id="OpenRPA.Database.resources.dll_4" Guid="{60B9769B-2EFA-48C6-941D-27B64E179BDB}" Win64="yes">
+            <File Id="OpenRPA.Database.resources.dll_4" Source="!(wix.DatabaseSource)\ro\OpenRPA.Database.resources.dll" />
+          </Component>
+        </Directory>
+        <Directory Id="ru" Name="ru">
+
+          <Component Id="OpenRPA.Database.resources.dll_5" Guid="{581713EC-8FD7-489D-8A12-C20A46A061E2}" Win64="yes">
+            <File Id="OpenRPA.Database.resources.dll_5" Source="!(wix.DatabaseSource)\ru\OpenRPA.Database.resources.dll" />
+          </Component>
+        </Directory>-->
+
+
+  </Fragment>
+</Wix>

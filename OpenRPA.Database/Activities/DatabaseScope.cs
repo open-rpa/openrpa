@@ -36,7 +36,11 @@ namespace OpenRPA.Database
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
             Connection connection = Connection.Get(context);
-            connection.Close();
+            if(connection!=null)
+            {
+                connection.Close();
+                connection.Dispose();
+            }
         }
         private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {

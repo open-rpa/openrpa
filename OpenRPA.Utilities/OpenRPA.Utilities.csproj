@@ -11,7 +11,8 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Version>1.0.8</Version>
-    <PackageReleaseNotes>1.0.8 Add AddDataColumn, AddDataRow and CreateDataTable
+    <PackageReleaseNotes>1.0.9 Add DeleteAllRows
+1.0.8 Add AddDataColumn, AddDataRow and CreateDataTable
 1.0.7 Change target framework to 4.7.2
 1.0.6 Fix input errors in JArrayToDataTable Designer
 1.0.5 Add Match and Matches
@@ -35,6 +36,7 @@
     <None Remove="Activities\AddDataColumnDesigner.xaml" />
     <None Remove="Activities\AddDataRowDesigner.xaml" />
     <None Remove="Activities\CreateDataTableDesigner.xaml" />
+    <None Remove="Activities\DeleteAllRowsDesigner.xaml" />
     <None Remove="Activities\DownloadFileDesigner.xaml" />
     <None Remove="Activities\GetCredentialsDesigner.xaml" />
     <None Remove="Activities\JArrayToDataTableDesigner.xaml" />
@@ -125,6 +127,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\AddDataColumnDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\DeleteAllRowsDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

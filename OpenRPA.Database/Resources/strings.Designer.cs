@@ -61,6 +61,24 @@ namespace OpenRPA.Database.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DataTable.
+        /// </summary>
+        public static string activity_database_datatable {
+            get {
+                return ResourceManager.GetString("activity_database_datatable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The DataTable to save result into.
+        /// </summary>
+        public static string activity_database_datatable_hint {
+            get {
+                return ResourceManager.GetString("activity_database_datatable_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Query.
         /// </summary>
         public static string activity_database_query {
@@ -75,6 +93,42 @@ namespace OpenRPA.Database.Resources {
         public static string activity_database_query_hint {
             get {
                 return ResourceManager.GetString("activity_database_query_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Result.
+        /// </summary>
+        public static string activity_database_result {
+            get {
+                return ResourceManager.GetString("activity_database_result", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The result of the query.
+        /// </summary>
+        public static string activity_database_result_hint {
+            get {
+                return ResourceManager.GetString("activity_database_result_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Table.
+        /// </summary>
+        public static string activity_database_table {
+            get {
+                return ResourceManager.GetString("activity_database_table", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Table to insert rows into.
+        /// </summary>
+        public static string activity_database_table_hint {
+            get {
+                return ResourceManager.GetString("activity_database_table_hint", resourceCulture);
             }
         }
         
@@ -142,11 +196,119 @@ namespace OpenRPA.Database.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Execute Query.
+        /// </summary>
+        public static string activity_executequery {
+            get {
+                return ResourceManager.GetString("activity_executequery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Runs a query and returns the result as a DataTable.
+        /// </summary>
+        public static string activity_executequery_tooltip {
+            get {
+                return ResourceManager.GetString("activity_executequery_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Execute Scalar.
+        /// </summary>
+        public static string activity_executescalar {
+            get {
+                return ResourceManager.GetString("activity_executescalar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Runs a query that returns exactly one result.
+        /// </summary>
+        public static string activity_executescalar_tooltip {
+            get {
+                return ResourceManager.GetString("activity_executescalar_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Drop activity.
         /// </summary>
         public static string activity_getelement_drop_hint {
             get {
                 return ResourceManager.GetString("activity_getelement_drop_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update From DataTable.
+        /// </summary>
+        public static string activity_updatefromtable {
+            get {
+                return ResourceManager.GetString("activity_updatefromtable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DataTable with the data you want to update from.
+        /// </summary>
+        public static string activity_updatefromtable_datatable {
+            get {
+                return ResourceManager.GetString("activity_updatefromtable_datatable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DataTable.
+        /// </summary>
+        public static string activity_updatefromtable_datatable_help {
+            get {
+                return ResourceManager.GetString("activity_updatefromtable_datatable_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Result.
+        /// </summary>
+        public static string activity_updatefromtable_result {
+            get {
+                return ResourceManager.GetString("activity_updatefromtable_result", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The number of rows affected.
+        /// </summary>
+        public static string activity_updatefromtable_result_help {
+            get {
+                return ResourceManager.GetString("activity_updatefromtable_result_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TableName.
+        /// </summary>
+        public static string activity_updatefromtable_tablename {
+            get {
+                return ResourceManager.GetString("activity_updatefromtable_tablename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Table to insert rows into.
+        /// </summary>
+        public static string activity_updatefromtable_tablename_help {
+            get {
+                return ResourceManager.GetString("activity_updatefromtable_tablename_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Insert, Update and Delete the data from the DataTable against the current database, returns the number of rows affected.
+        /// </summary>
+        public static string activity_updatefromtable_tooltip {
+            get {
+                return ResourceManager.GetString("activity_updatefromtable_tooltip", resourceCulture);
             }
         }
     }

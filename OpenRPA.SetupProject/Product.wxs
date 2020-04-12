@@ -90,9 +90,9 @@
     <Feature Id="ScriptFeature" Title="Generic Scripting support" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
       <ComponentGroupRef Id="ScriptComponents" />
     </Feature>
-    <!--<Feature Id="DatabaseFeature" Title="Microsoft ADO/Database Integration" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
+    <Feature Id="DatabaseFeature" Title="Microsoft ADO/Database Integration" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
       <ComponentGroupRef Id="DatabaseComponents" />
-    </Feature>-->
+    </Feature>
     <Feature Id="FileWatcherFeature" Title="File Watcher run plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
       <ComponentGroupRef Id="FileWatcherComponents" />
     </Feature>

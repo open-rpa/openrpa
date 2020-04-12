@@ -1,0 +1,63 @@
+﻿<sap:ActivityDesigner x:Class="OpenRPA.Database.UpdateFromDataTableDesigner"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
+    xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
+    xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
+    xmlns:Converters="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
+    xmlns:s="clr-namespace:System;assembly=mscorlib"
+    xmlns:or="clr-namespace:OpenRPA.Database.Resources"
+    xmlns:d="clr-namespace:System.Data;assembly=System.Data"
+    >
+
+
+    <sap:ActivityDesigner.Icon>
+        <DrawingBrush>
+            <DrawingBrush.Drawing>
+                <ImageDrawing>
+                    <ImageDrawing.Rect>
+                        <Rect Location="0,0" Size="16,16" ></Rect>
+                    </ImageDrawing.Rect>
+                    <ImageDrawing.ImageSource>
+                        <BitmapImage UriSource="/OpenRPA.Database;component/Resources/designer/database.png" ></BitmapImage>
+                    </ImageDrawing.ImageSource>
+                </ImageDrawing>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+    </sap:ActivityDesigner.Icon>
+
+    <sap:ActivityDesigner.Resources>
+        <Converters:ArgumentToExpressionConverter x:Key="ArgumentToExpressionConverter" />
+        <DataTemplate x:Key="Collapsed">
+        </DataTemplate>
+        <DataTemplate x:Key="Expanded">
+            <StackPanel>
+                <DockPanel Height="Auto" Width="Auto" LastChildFill="True">
+                    <TextBlock Text="{x:Static or:strings.activity_updatefromtable_tablename}" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" />
+                    <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_updatefromtable_tablename_help}" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="5"
+                                OwnerActivity="{Binding Path=ModelItem}"
+                                Expression="{Binding Path=ModelItem.TableName, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
+                                ExpressionType="s:String" HorizontalAlignment="Stretch" />
+                </DockPanel>
+                <DockPanel Height="Auto" Width="Auto" LastChildFill="True">
+                    <TextBlock Text="{x:Static or:strings.activity_database_datatable}" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" />
+                    <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_database_datatable_hint}" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="5"
+                                OwnerActivity="{Binding Path=ModelItem}"
+                                Expression="{Binding Path=ModelItem.DataTable, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
+                                ExpressionType="d:DataTable" HorizontalAlignment="Stretch" />
+                </DockPanel>
+            </StackPanel>
+        </DataTemplate>
+        <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
+            <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="false">
+                    <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </sap:ActivityDesigner.Resources>
+    <Grid>
+        <ContentPresenter Style="{DynamicResource ExpandOrCollapsedStyle}" Content="{Binding}" />
+    </Grid>
+</sap:ActivityDesigner>

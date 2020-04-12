@@ -10,32 +10,31 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Collections.ObjectModel;
+using System.Data;
 
 namespace OpenRPA.Database
 {
-    [Designer(typeof(ExecuteNonQueryDesigner), typeof(System.ComponentModel.Design.IDesigner))]
+    [Designer(typeof(UpdateFromDataTableDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ExecuteNonQuery), "Resources.toolbox.database.png")]
-    [LocalizedToolboxTooltip("activity_executenonquery_tooltip", typeof(Resources.strings))]
-    [LocalizedDisplayName("activity_executenonquery", typeof(Resources.strings))]
-    public class ExecuteNonQuery : CodeActivity
+    [LocalizedToolboxTooltip("activity_updatefromtable_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_updatefromtable", typeof(Resources.strings))]
+    public class UpdateFromDataTable : CodeActivity
     {
-        [RequiredArgument, Category("Input"), LocalizedDisplayName("activity_executenonquery_query", typeof(Resources.strings)), LocalizedDescription("activity_executenonquery_query_help", typeof(Resources.strings))]
-        public InArgument<string> Query { get; set; }
-        [Category("Output")]
+        [RequiredArgument, Category("Input"), LocalizedDisplayName("activity_updatefromtable_tablename", typeof(Resources.strings)), LocalizedDescription("activity_updatefromtable_tablename_help", typeof(Resources.strings))]
+        public InArgument<string> TableName { get; set; }
+        [RequiredArgument, Category("Input"), LocalizedDisplayName("activity_updatefromtable_datatable", typeof(Resources.strings)), LocalizedDescription("activity_updatefromtable_datatable_help", typeof(Resources.strings))]
+        public InArgument<DataTable> DataTable { get; set; }
+        [Category("Output"), LocalizedDisplayName("activity_updatefromtable_result", typeof(Resources.strings)), LocalizedDescription("activity_updatefromtable_result_help", typeof(Resources.strings))]
         public OutArgument<int> Result { get; set; }
-        [Editor(typeof(CommandTypeEditor), typeof(ExtendedPropertyValueEditor)), Category("Misc")]
-        public InArgument<string> CommandType { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             var vars = context.DataContext.GetProperties();
             Connection connection = null;
             foreach (dynamic v in vars) { if (v.DisplayName == "conn") connection = v.GetValue(context.DataContext); }
-            var query = Query.Get(context);
-            var strcommandtype = CommandType.Get(context);
-            System.Data.CommandType commandtype = System.Data.CommandType.Text;
-            if (!string.IsNullOrEmpty(strcommandtype) && strcommandtype.ToLower() == "storedprocedure") commandtype = System.Data.CommandType.StoredProcedure;
-            if (!string.IsNullOrEmpty(strcommandtype) && strcommandtype.ToLower() == "tabledirect") commandtype = System.Data.CommandType.TableDirect;
-            var result = connection.ExecuteNonQuery(query, commandtype);
+            var tablename = TableName.Get(context);
+            var datatable = DataTable.Get(context);
+
+            var result = connection.UpdateDataTable(tablename, datatable);
             Result.Set(context, result);
         }
         [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
@@ -56,6 +55,5 @@ namespace OpenRPA.Database
                 base.DisplayName = value;
             }
         }
-
     }
 }

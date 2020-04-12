@@ -105,14 +105,14 @@ namespace OpenRPA.Script.Activities
                 var header = GetVBHeaderText(variables, "Expression", namespaces);
                 sourcecode = header + code + GetVBFooterText();
                 int numLines = header.Split('\n').Length;
-                Log.Information("Header (add to line numbers): " + numLines);
+                Log.Debug("Header (add to line numbers): " + numLines);
             }
             if (language == "C#")
             {
                 var header = GetCSharpHeaderText(variables, "Expression", namespaces);
                 sourcecode = header + code + GetCSharpFooterText();
                 int numLines = header.Split('\n').Length;
-                Log.Information("Header (add to line numbers): " + numLines);
+                Log.Debug("Header (add to line numbers): " + numLines);
             }
             if (language == "PowerShell")
             {

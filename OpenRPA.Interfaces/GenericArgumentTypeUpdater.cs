@@ -11,16 +11,13 @@ namespace OpenRPA.Interfaces
     using System.Activities.Presentation;
     using System.Activities.Presentation.Model;
     using System.Linq;
-
     public static class GenericArgumentTypeUpdater
     {
         private const String DisplayName = "DisplayName";
-
         public static void Attach(ModelItem modelItem)
         {
             Attach(modelItem, Int32.MaxValue);
         }
-
         public static void Attach(ModelItem modelItem, Int32 maximumUpdatableTypes)
         {
             Type[] genericArguments = modelItem.ItemType.GetGenericArguments();
@@ -40,7 +37,6 @@ namespace OpenRPA.Interfaces
                 AttachUpdatableArgumentType(modelItem, attachedPropertiesService, index, updatableArgumentCount);
             }
         }
-
         private static void AttachUpdatableArgumentType(
             ModelItem modelItem, AttachedPropertiesService attachedPropertiesService, Int32 argumentIndex, Int32 argumentCount)
         {
@@ -63,7 +59,6 @@ namespace OpenRPA.Interfaces
 
             attachedPropertiesService.AddProperty(attachedProperty);
         }
-
         private static bool DisplayNameRequiresUpdate(ModelItem modelItem)
         {
             String currentDisplayName = (String)modelItem.Properties[DisplayName].ComputedValue;
@@ -89,19 +84,16 @@ namespace OpenRPA.Interfaces
 
             return false;
         }
-
         private static String GetActivityDefaultName(Type activityType)
         {
             Activity activity = (Activity)Activator.CreateInstance(activityType);
 
             return activity.DisplayName;
         }
-
         private static Type GetTypeArgument(ModelItem modelItem, Int32 argumentIndex)
         {
             return modelItem.ItemType.GetGenericArguments()[argumentIndex];
         }
-
         private static void UpdateTypeArgument(ModelItem modelItem, Int32 argumentIndex, Type newGenericType)
         {
             Type itemType = modelItem.ItemType;

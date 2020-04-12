@@ -14,16 +14,15 @@ using OpenRPA.Interfaces;
 
 namespace OpenRPA.Utilities
 {
-    public partial class AddDataColumnDesigner
+    public partial class DeleteAllRowsDesigner
     {
-        public AddDataColumnDesigner()
+        public DeleteAllRowsDesigner()
         {
             InitializeComponent();
         }
-        protected override void OnModelItemChanged(Object newItem)
+        private void ExpressionTextBox_Loaded(object sender, RoutedEventArgs e)
         {
-            base.OnModelItemChanged(newItem);
-            GenericArgumentTypeUpdater.Attach(ModelItem);
+            ((System.Activities.Presentation.View.ExpressionTextBox)sender).ExpressionType = typeof(object[]);
         }
     }
 }

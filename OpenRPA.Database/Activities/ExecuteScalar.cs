@@ -13,19 +13,18 @@ using System.Collections.ObjectModel;
 
 namespace OpenRPA.Database
 {
-    [Designer(typeof(ExecuteNonQueryDesigner), typeof(System.ComponentModel.Design.IDesigner))]
+    [Designer(typeof(ExecuteScalarDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ExecuteNonQuery), "Resources.toolbox.database.png")]
-    [LocalizedToolboxTooltip("activity_executenonquery_tooltip", typeof(Resources.strings))]
-    [LocalizedDisplayName("activity_executenonquery", typeof(Resources.strings))]
-    public class ExecuteNonQuery : CodeActivity
+    [LocalizedToolboxTooltip("activity_executescalar_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_executescalar", typeof(Resources.strings))]
+    public class ExecuteScalar<T> : CodeActivity<T>
     {
-        [RequiredArgument, Category("Input"), LocalizedDisplayName("activity_executenonquery_query", typeof(Resources.strings)), LocalizedDescription("activity_executenonquery_query_help", typeof(Resources.strings))]
+        [RequiredArgument, Category("Input"), LocalizedDisplayName("activity_executescalar_query", typeof(Resources.strings)), LocalizedDescription("activity_executescalar_query_help", typeof(Resources.strings))]
         public InArgument<string> Query { get; set; }
-        [Category("Output")]
-        public OutArgument<int> Result { get; set; }
         [Editor(typeof(CommandTypeEditor), typeof(ExtendedPropertyValueEditor)), Category("Misc")]
         public InArgument<string> CommandType { get; set; }
-        protected override void Execute(CodeActivityContext context)
+        // public Type TargetType { get; set; }
+        protected override T Execute(CodeActivityContext context)
         {
             var vars = context.DataContext.GetProperties();
             Connection connection = null;
@@ -35,8 +34,8 @@ namespace OpenRPA.Database
             System.Data.CommandType commandtype = System.Data.CommandType.Text;
             if (!string.IsNullOrEmpty(strcommandtype) && strcommandtype.ToLower() == "storedprocedure") commandtype = System.Data.CommandType.StoredProcedure;
             if (!string.IsNullOrEmpty(strcommandtype) && strcommandtype.ToLower() == "tabledirect") commandtype = System.Data.CommandType.TableDirect;
-            var result = connection.ExecuteNonQuery(query, commandtype);
-            Result.Set(context, result);
+            var result = connection.ExecuteScalar(query, commandtype);
+            return (T)result;
         }
         [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
         public new string DisplayName

@@ -61,6 +61,15 @@ namespace OpenRPA.Utilities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DataTable to insert into.
+        /// </summary>
+        public static string activity_adddatarow_datatable {
+            get {
+                return ResourceManager.GetString("activity_adddatarow_datatable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Datatable.
         /// </summary>
         public static string activity_converter_datatable {

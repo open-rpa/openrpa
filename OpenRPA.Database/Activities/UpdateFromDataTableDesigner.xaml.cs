@@ -10,20 +10,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using OpenRPA.Interfaces;
 
-namespace OpenRPA.Utilities
+namespace OpenRPA.Database
 {
-    public partial class AddDataColumnDesigner
+    public partial class UpdateFromDataTableDesigner
     {
-        public AddDataColumnDesigner()
+        public UpdateFromDataTableDesigner()
         {
             InitializeComponent();
-        }
-        protected override void OnModelItemChanged(Object newItem)
-        {
-            base.OnModelItemChanged(newItem);
-            GenericArgumentTypeUpdater.Attach(ModelItem);
         }
     }
 }

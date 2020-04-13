@@ -37,6 +37,7 @@ namespace OpenRPA
         public static MainWindow instance = null;
         public MainWindow()
         {
+            Log.FunctionIndent("MainWindow", "MainWindow");
             if (!string.IsNullOrEmpty(Config.local.culture))
             {
                 try
@@ -76,10 +77,11 @@ namespace OpenRPA
             InputDriver.Instance.onCancel += OnCancel;
             NotifyPropertyChanged("Toolbox");
             lblVersion.Text = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
-            
+            Log.FunctionOutdent("MainWindow", "MainWindow");
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            Log.FunctionIndent("MainWindow", "Window_Loaded");
             try
             {
                 SetStatus("Registering Designer Metadata");
@@ -118,48 +120,58 @@ namespace OpenRPA
                 Log.Error(ex.ToString());
                 throw;
             }
+            Log.FunctionOutdent("MainWindow", "Window_Loaded");
         }
 
         private bool first_connect = true;
-        public void WebSocketClient_OnOpen()
+        public void MainWindow_WebSocketClient_OnOpen()
         {
+            Log.FunctionIndent("MainWindow", "MainWindow_WebSocketClient_OnOpen");
             GenericTools.RunUI(async () =>
             {
-                SetStatus("Load layout and reopen workflows");
-                if (RobotInstance.instance.Projects.Count == 0 && first_connect)
+                try
                 {
-                    string Name = "New Project";
-                    try
+                    SetStatus("Load layout and reopen workflows");
+                    if (RobotInstance.instance.Projects.Count == 0 && first_connect)
                     {
-                        Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name, true);
-                        Workflow workflow = project.Workflows.First();
-                        workflow.Project = project;
-                        RobotInstance.instance.Projects.Add(project);
-                        OnOpenWorkflow(workflow);
+                        string Name = "New Project";
+                        try
+                        {
+                            Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name, true);
+                            Workflow workflow = project.Workflows.First();
+                            workflow.Project = project;
+                            RobotInstance.instance.Projects.Add(project);
+                            OnOpenWorkflow(workflow);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                        }
                     }
-                    catch (Exception ex)
+                    if (first_connect)
                     {
-                        Log.Error(ex.ToString());
+                        first_connect = false;
+                        LoadLayout();
+
+                        if (Config.local.show_getting_started)
+                        {
+
+                            LayoutDocument layoutDocument = new LayoutDocument { Title = "Getting started" };
+                            layoutDocument.ContentId = "GettingStarted";
+                            // Views.GettingStarted view = new Views.GettingStarted(url + "://" + u.Host + "/gettingstarted.html");
+                            Views.GettingStarted view = new Views.GettingStarted("https://openrpa.dk/gettingstarted.html");
+                            layoutDocument.Content = view;
+                            MainTabControl.Children.Add(layoutDocument);
+                            layoutDocument.IsSelected = true;
+                            layoutDocument.Closing += LayoutDocument_Closing;
+                        }
                     }
                 }
-                if (first_connect)
+                catch (Exception ex)
                 {
-                    first_connect = false;
-                    LoadLayout();
-
-                    if (Config.local.show_getting_started)
-                    {
-
-                        LayoutDocument layoutDocument = new LayoutDocument { Title = "Getting started" };
-                        layoutDocument.ContentId = "GettingStarted";
-                        // Views.GettingStarted view = new Views.GettingStarted(url + "://" + u.Host + "/gettingstarted.html");
-                        Views.GettingStarted view = new Views.GettingStarted("https://openrpa.dk/gettingstarted.html");
-                        layoutDocument.Content = view;
-                        MainTabControl.Children.Add(layoutDocument);
-                        layoutDocument.IsSelected = true;
-                        layoutDocument.Closing += LayoutDocument_Closing;
-                    }
+                    Log.Error(ex.ToString());
                 }
+
                 try
                 {
                     ReadyForAction?.Invoke();
@@ -169,6 +181,7 @@ namespace OpenRPA
                     Log.Error(ex.ToString());
                 }
             });
+            Log.FunctionOutdent("MainWindow", "MainWindow_WebSocketClient_OnOpen");
         }
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         public event StatusEventHandler Status;
@@ -262,11 +275,20 @@ namespace OpenRPA
         public Views.Snippets Snippets { get; set; }
         private async void LayoutDocument_Closing(object sender, CancelEventArgs e)
         {
+            Log.FunctionIndent("MainWindow", "LayoutDocument_Closing");
             try
             {
                 var tab = sender as LayoutDocument;
-                if (!(tab.Content is Views.WFDesigner designer)) return;
-                if (!designer.HasChanged) return;
+                if (!(tab.Content is Views.WFDesigner designer))
+                {
+                    Log.FunctionOutdent("MainWindow", "not Views.WFDesigner");
+                    return;
+                }
+                if (!designer.HasChanged)
+                {
+                    Log.FunctionOutdent("MainWindow", "designer.HasChanged is false");
+                    return;
+                }
 
                 if (designer.HasChanged && (global.isConnected ? designer.Workflow.hasRight(global.webSocketClient.user, ace_right.update) : true))
                 {
@@ -292,9 +314,11 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
+            Log.FunctionOutdent("MainWindow", "LayoutDocument_Closing");
         }
         private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            Log.FunctionIndent("MainWindow", "Window_Closing");
             try
             {
                 RobotInstance.instance.AutoReloading = false;
@@ -331,6 +355,7 @@ namespace OpenRPA
                     foreach (var d in Plugins.detectorPlugins) d.Stop();
                     foreach (var p in RobotInstance.instance.Projects) foreach (var wf in p.Workflows) wf.Dispose();
                     InputDriver.Instance.Dispose();
+                    Log.FunctionOutdent("MainWindow", "AllowQuite true");
                     return;
                 }
                 if (AllowQuite)
@@ -347,9 +372,11 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
+            Log.FunctionOutdent("MainWindow", "Window_Closing");
         }
         private void Window_Closed(object sender, EventArgs e)
         {
+            Log.FunctionIndent("MainWindow", "Window_Closed");
             InputDriver.Instance.CallNext = true;
             InputDriver.Instance.OnKeyDown -= OnKeyDown;
             InputDriver.Instance.OnKeyUp -= OnKeyUp;
@@ -358,9 +385,11 @@ namespace OpenRPA
             SaveLayout();
             // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds
             Application.Current.Shutdown();
+            Log.FunctionOutdent("MainWindow", "Window_Closed");
         }
         private void Window_StateChanged(object sender, EventArgs e)
         {
+            Log.FunctionIndent("MainWindow", "Window_StateChanged");
             if (WindowState == WindowState.Minimized)
             {
                 Visibility = Visibility.Hidden;
@@ -371,9 +400,11 @@ namespace OpenRPA
                 Visibility = Visibility.Visible;
                 // App.notifyIcon.Visible = false;
             }
+            Log.FunctionOutdent("MainWindow", "Window_StateChanged");
         }
         public void SetStatus(string message)
         {
+            Log.FunctionIndent("MainWindow", "SetStatus");
             try
             {
                 Status?.Invoke(message);
@@ -398,6 +429,7 @@ namespace OpenRPA
             catch (Exception)
             {
             }
+            Log.FunctionOutdent("MainWindow", "SetStatus");
         }
         private void DManager_ActiveContentChanged(object sender, EventArgs e)
         {
@@ -700,64 +732,72 @@ namespace OpenRPA
         }
         private void SwapSendKeys(Views.WFDesigner designer, System.Activities.Presentation.Model.ModelItem model)
         {
-            if (model.ItemType == typeof(System.Activities.Statements.Assign<string>))
+            Log.FunctionIndent("MainWindow", "SwapSendKeys");
+            try
             {
-
-                var To = model.GetValue<string>("To");
-                // var Value = model.GetValue<string>("Value");
-                if (!string.IsNullOrEmpty(To) && To.ToLower() == "item.value")
+                if (model.ItemType == typeof(System.Activities.Statements.Assign<string>))
                 {
-                    var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
-                    using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+
+                    var To = model.GetValue<string>("To");
+                    // var Value = model.GetValue<string>("Value");
+                    if (!string.IsNullOrEmpty(To) && To.ToLower() == "item.value")
                     {
-                        model.Properties["To"].ComputedValue = new OutArgument<string>(new VisualBasicReference<string>("item.SendKeys"));
-                        editingScope.Complete();
+                        var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
+                        using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+                        {
+                            model.Properties["To"].ComputedValue = new OutArgument<string>(new VisualBasicReference<string>("item.SendKeys"));
+                            editingScope.Complete();
+                        }
+                    }
+                    else if (!string.IsNullOrEmpty(To) && To.ToLower() == "item.sendkeys")
+                    {
+                        var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
+                        using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+                        {
+                            model.Properties["To"].ComputedValue = new OutArgument<string>(new VisualBasicReference<string>("item.Value"));
+                            editingScope.Complete();
+                        }
                     }
                 }
-                else if (!string.IsNullOrEmpty(To) && To.ToLower() == "item.sendkeys")
+                System.Activities.Presentation.Model.ModelItemCollection Activities = null;
+                if (model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] != null)
                 {
-                    var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
-                    using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+                    var a = model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] as System.Windows.Markup.ContentPropertyAttribute;
+                    if (model.Properties[a.Name] != null)
                     {
-                        model.Properties["To"].ComputedValue = new OutArgument<string>(new VisualBasicReference<string>("item.Value"));
-                        editingScope.Complete();
+                        if (model.Properties[a.Name].Collection != null)
+                        {
+                            Activities = model.Properties[a.Name].Collection;
+                        }
+                        else if (model.Properties[a.Name].Value != null)
+                        {
+                            if (model.Properties[a.Name].Value is System.Activities.Presentation.Model.ModelItem _a) SwapSendKeys(designer, _a);
+                        }
+
+                    }
+
+                }
+                //if (model.Properties["Activities"] != null)
+                //{
+                //    Activities = model.Properties["Activities"].Collection;
+                //}
+                //else if (model.Properties["Nodes"] != null)
+                //{
+                //    Activities = model.Properties["Nodes"].Collection;
+                //}
+                if (Activities != null)
+                {
+                    foreach (var a in Activities)
+                    {
+                        SwapSendKeys(designer, a);
                     }
                 }
             }
-            System.Activities.Presentation.Model.ModelItemCollection Activities = null;
-            if (model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] != null)
+            catch (Exception ex)
             {
-                var a = model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] as System.Windows.Markup.ContentPropertyAttribute;
-                if (model.Properties[a.Name] != null)
-                {
-                    if (model.Properties[a.Name].Collection != null)
-                    {
-                        Activities = model.Properties[a.Name].Collection;
-                    }
-                    else if (model.Properties[a.Name].Value != null)
-                    {
-                        if (model.Properties[a.Name].Value is System.Activities.Presentation.Model.ModelItem _a) SwapSendKeys(designer, _a);
-                    }
-
-                }
-
+                Log.Error(ex.ToString());
             }
-            //if (model.Properties["Activities"] != null)
-            //{
-            //    Activities = model.Properties["Activities"].Collection;
-            //}
-            //else if (model.Properties["Nodes"] != null)
-            //{
-            //    Activities = model.Properties["Nodes"].Collection;
-            //}
-            if (Activities != null)
-            {
-                foreach (var a in Activities)
-                {
-                    SwapSendKeys(designer, a);
-                }
-            }
-
+            Log.FunctionOutdent("MainWindow", "SwapSendKeys");
         }
         private void OnSwapSendKeys(object _item)
         {
@@ -787,64 +827,72 @@ namespace OpenRPA
         }
         private void SwapVirtualClick(Views.WFDesigner designer, System.Activities.Presentation.Model.ModelItem model)
         {
-            if (model.ItemType == typeof(Activities.ClickElement))
+            Log.FunctionIndent("MainWindow", "SwapVirtualClick");
+            try
             {
-
-                var VirtualClick = model.GetValue<bool>("VirtualClick");
-                if (VirtualClick)
+                if (model.ItemType == typeof(Activities.ClickElement))
                 {
-                    var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
-                    using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+
+                    var VirtualClick = model.GetValue<bool>("VirtualClick");
+                    if (VirtualClick)
                     {
-                        model.Properties["VirtualClick"].ComputedValue = new InArgument<bool>() { Expression = new VisualBasicValue<bool>("false") };
-                        editingScope.Complete();
+                        var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
+                        using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+                        {
+                            model.Properties["VirtualClick"].ComputedValue = new InArgument<bool>() { Expression = new VisualBasicValue<bool>("false") };
+                            editingScope.Complete();
+                        }
+                    }
+                    else
+                    {
+                        var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
+                        using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+                        {
+                            model.Properties["VirtualClick"].ComputedValue = new InArgument<bool>() { Expression = new VisualBasicValue<bool>("true") };
+                            editingScope.Complete();
+                        }
+
                     }
                 }
-                else
+                System.Activities.Presentation.Model.ModelItemCollection Activities = null;
+                if (model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] != null)
                 {
-                    var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
-                    using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+                    var a = model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] as System.Windows.Markup.ContentPropertyAttribute;
+                    if (model.Properties[a.Name] != null)
                     {
-                        model.Properties["VirtualClick"].ComputedValue = new InArgument<bool>() { Expression = new VisualBasicValue<bool>("true") };
-                        editingScope.Complete();
+                        if (model.Properties[a.Name].Collection != null)
+                        {
+                            Activities = model.Properties[a.Name].Collection;
+                        }
+                        else if (model.Properties[a.Name].Value != null)
+                        {
+                            if (model.Properties[a.Name].Value is System.Activities.Presentation.Model.ModelItem _a) SwapVirtualClick(designer, _a);
+                        }
+
                     }
 
+                }
+                //if (model.Properties["Activities"] != null)
+                //{
+                //    Activities = model.Properties["Activities"].Collection;
+                //}
+                //else if (model.Properties["Nodes"] != null)
+                //{
+                //    Activities = model.Properties["Nodes"].Collection;
+                //}
+                if (Activities != null)
+                {
+                    foreach (var a in Activities)
+                    {
+                        SwapVirtualClick(designer, a);
+                    }
                 }
             }
-            System.Activities.Presentation.Model.ModelItemCollection Activities = null;
-            if (model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] != null)
+            catch (Exception ex)
             {
-                var a = model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] as System.Windows.Markup.ContentPropertyAttribute;
-                if (model.Properties[a.Name] != null)
-                {
-                    if (model.Properties[a.Name].Collection != null)
-                    {
-                        Activities = model.Properties[a.Name].Collection;
-                    }
-                    else if (model.Properties[a.Name].Value != null)
-                    {
-                        if (model.Properties[a.Name].Value is System.Activities.Presentation.Model.ModelItem _a) SwapVirtualClick(designer, _a);
-                    }
-
-                }
-
+                Log.Error(ex.ToString());
             }
-            //if (model.Properties["Activities"] != null)
-            //{
-            //    Activities = model.Properties["Activities"].Collection;
-            //}
-            //else if (model.Properties["Nodes"] != null)
-            //{
-            //    Activities = model.Properties["Nodes"].Collection;
-            //}
-            if (Activities != null)
-            {
-                foreach (var a in Activities)
-                {
-                    SwapVirtualClick(designer, a);
-                }
-            }
-
+            Log.FunctionOutdent("MainWindow", "SwapVirtualClick");
         }
         private void OnSwapVirtualClick(object _item)
         {
@@ -879,78 +927,86 @@ namespace OpenRPA
         }
         private void SwapAnimate(Views.WFDesigner designer, System.Activities.Presentation.Model.ModelItem model)
         {
-            if (model.ItemType == typeof(Activities.ClickElement))
+            Log.FunctionIndent("MainWindow", "SwapAnimate");
+            try
             {
-                var AnimateMouse = model.GetValue<bool>("AnimateMouse");
-                if (AnimateMouse)
+                if (model.ItemType == typeof(Activities.ClickElement))
                 {
-                    var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
-                    using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+                    var AnimateMouse = model.GetValue<bool>("AnimateMouse");
+                    if (AnimateMouse)
                     {
-                        model.Properties["AnimateMouse"].ComputedValue = new InArgument<bool>() { Expression = new VisualBasicValue<bool>("false") };
-                        editingScope.Complete();
+                        var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
+                        using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+                        {
+                            model.Properties["AnimateMouse"].ComputedValue = new InArgument<bool>() { Expression = new VisualBasicValue<bool>("false") };
+                            editingScope.Complete();
+                        }
+                    }
+                    else
+                    {
+                        var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
+                        using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+                        {
+                            model.Properties["AnimateMouse"].ComputedValue = new InArgument<bool>() { Expression = new VisualBasicValue<bool>("true") };
+                            editingScope.Complete();
+                        }
+
                     }
                 }
-                else
+                if (model.ItemType == typeof(Activities.OpenApplication))
                 {
-                    var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
-                    using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+                    var AnimateMove = model.GetValue<bool>("AnimateMove");
+                    if (AnimateMove)
                     {
-                        model.Properties["AnimateMouse"].ComputedValue = new InArgument<bool>() { Expression = new VisualBasicValue<bool>("true") };
-                        editingScope.Complete();
+                        var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
+                        using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+                        {
+                            model.Properties["AnimateMove"].ComputedValue = new InArgument<bool>() { Expression = new VisualBasicValue<bool>("false") };
+                            editingScope.Complete();
+                        }
+                    }
+                    else
+                    {
+                        var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
+                        using (var editingScope = modelService.Root.BeginEdit("Implementation"))
+                        {
+                            model.Properties["AnimateMove"].ComputedValue = new InArgument<bool>() { Expression = new VisualBasicValue<bool>("true") };
+                            editingScope.Complete();
+                        }
+
+                    }
+                }
+                System.Activities.Presentation.Model.ModelItemCollection Activities = null;
+                if (model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] != null)
+                {
+                    var a = model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] as System.Windows.Markup.ContentPropertyAttribute;
+                    if (model.Properties[a.Name] != null)
+                    {
+                        if (model.Properties[a.Name].Collection != null)
+                        {
+                            Activities = model.Properties[a.Name].Collection;
+                        }
+                        else if (model.Properties[a.Name].Value != null)
+                        {
+                            if (model.Properties[a.Name].Value is System.Activities.Presentation.Model.ModelItem _a) SwapAnimate(designer, _a);
+                        }
+
                     }
 
+                }
+                if (Activities != null)
+                {
+                    foreach (var a in Activities)
+                    {
+                        SwapAnimate(designer, a);
+                    }
                 }
             }
-            if (model.ItemType == typeof(Activities.OpenApplication))
+            catch (Exception ex)
             {
-                var AnimateMove = model.GetValue<bool>("AnimateMove");
-                if (AnimateMove)
-                {
-                    var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
-                    using (var editingScope = modelService.Root.BeginEdit("Implementation"))
-                    {
-                        model.Properties["AnimateMove"].ComputedValue = new InArgument<bool>() { Expression = new VisualBasicValue<bool>("false") };
-                        editingScope.Complete();
-                    }
-                }
-                else
-                {
-                    var modelService = designer.WorkflowDesigner.Context.Services.GetService<System.Activities.Presentation.Services.ModelService>();
-                    using (var editingScope = modelService.Root.BeginEdit("Implementation"))
-                    {
-                        model.Properties["AnimateMove"].ComputedValue = new InArgument<bool>() { Expression = new VisualBasicValue<bool>("true") };
-                        editingScope.Complete();
-                    }
-
-                }
+                Log.Error(ex.ToString());
             }
-            System.Activities.Presentation.Model.ModelItemCollection Activities = null;
-            if (model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] != null)
-            {
-                var a = model.Attributes[typeof(System.Windows.Markup.ContentPropertyAttribute)] as System.Windows.Markup.ContentPropertyAttribute;
-                if (model.Properties[a.Name] != null)
-                {
-                    if (model.Properties[a.Name].Collection != null)
-                    {
-                        Activities = model.Properties[a.Name].Collection;
-                    }
-                    else if (model.Properties[a.Name].Value != null)
-                    {
-                        if (model.Properties[a.Name].Value is System.Activities.Presentation.Model.ModelItem _a) SwapAnimate(designer, _a);
-                    }
-
-                }
-
-            }
-            if (Activities != null)
-            {
-                foreach (var a in Activities)
-                {
-                    SwapAnimate(designer, a);
-                }
-            }
-
+            Log.FunctionOutdent("MainWindow", "SwapAnimate");
         }
         private void OnLoggingOptionCommand(object _item)
         {
@@ -1007,6 +1063,7 @@ namespace OpenRPA
                 if (val is Workflow wf) { result = wf; }
                 if (val is Project p) { result = p; }
             }
+            Log.FunctionIndent("MainWindow", "OnPermissions");
             if (SelectedContent is Views.WFDesigner designer)
             {
                 result = designer.Workflow;
@@ -1021,12 +1078,13 @@ namespace OpenRPA
             try
             {
                 result._acl.ForEach((a) => { if (a != null) orgAcl.Add(new ace(a)); });
-
+                Log.Function("MainWindow", "OnPermissions", "Create and show Views.PermissionsWindow");
                 var pw = new Views.PermissionsWindow(result);
                 Hide();
                 pw.ShowDialog();
                 if (result is Project)
                 {
+                    Log.Function("MainWindow", "OnPermissions", "Update permissions on each workflow in project");
                     var p = result as Project;
                     foreach (var wf in p.Workflows)
                     {
@@ -1034,6 +1092,7 @@ namespace OpenRPA
                     }
                     await ((Project)result).Save(true);
                 }
+                Log.Function("MainWindow", "OnPermissions", "save Entity");
                 if (result is Workflow) await ((Workflow)result).Save(true);
                 if (result is Detector)
                 {
@@ -1052,6 +1111,7 @@ namespace OpenRPA
             {
                 Show();
             }
+            Log.FunctionOutdent("MainWindow", "SwapAnimate");
         }
         private bool CanReload(object _item)
         {
@@ -1059,6 +1119,7 @@ namespace OpenRPA
         }
         private void OnReload(object _item)
         {
+            Log.Function("MainWindow", "OnReload");
             _ = RobotInstance.instance.LoadServerData();
         }
         private bool CanImport(object _item)
@@ -1076,6 +1137,7 @@ namespace OpenRPA
         }
         private async void OnImport(object _item)
         {
+            Log.FunctionIndent("MainWindow", "OnImport");
             try
             {
                 Views.WFDesigner designer = SelectedContent as Views.WFDesigner;
@@ -1178,6 +1240,7 @@ namespace OpenRPA
                 Log.Error(ex, "");
                 MessageBox.Show(ex.Message);
             }
+            Log.FunctionOutdent("MainWindow", "OnImport");
         }
         internal bool CanExport(object _item)
         {
@@ -1194,65 +1257,95 @@ namespace OpenRPA
         }
         internal async void OnExport(object _item)
         {
-            if (SelectedContent is Views.WFDesigner designer)
+            Log.FunctionIndent("MainWindow", "OnExport");
+            try
             {
-                designer.WorkflowDesigner.Flush();
-                string beforexaml = designer.WorkflowDesigner.Text;
-                string xaml = await Views.WFDesigner.LoadImages(beforexaml);
-                var dialogSave = new Microsoft.Win32.SaveFileDialog
+                if (SelectedContent is Views.WFDesigner designer)
                 {
-                    Title = "Save Workflow",
-                    Filter = "Workflows (.xaml)|*.xaml",
-                    FileName = designer.Workflow.name + ".xaml"
-                };
-                if (dialogSave.ShowDialog() == true)
-                {
-                    System.IO.File.WriteAllText(dialogSave.FileName, xaml);
-                }
-                return;
-            }
-            if (SelectedContent is Views.OpenProject op)
-            {
-                if (op.listWorkflows.SelectedItem is Project p)
-                {
-                    using (var openFileDialog1 = new System.Windows.Forms.FolderBrowserDialog())
-                    {
-                        if (openFileDialog1.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
-                        var path = openFileDialog1.SelectedPath;
-                        p.SaveFile(path, true);
-                    }
-                }
-                if (op.listWorkflows.SelectedItem is Workflow wf)
-                {
-                    string beforexaml = wf.Xaml;
+                    designer.WorkflowDesigner.Flush();
+                    string beforexaml = designer.WorkflowDesigner.Text;
                     string xaml = await Views.WFDesigner.LoadImages(beforexaml);
                     var dialogSave = new Microsoft.Win32.SaveFileDialog
                     {
                         Title = "Save Workflow",
                         Filter = "Workflows (.xaml)|*.xaml",
-                        FileName = wf.name + ".xaml"
+                        FileName = designer.Workflow.name + ".xaml"
                     };
                     if (dialogSave.ShowDialog() == true)
                     {
                         System.IO.File.WriteAllText(dialogSave.FileName, xaml);
                     }
+                    Log.FunctionOutdent("MainWindow", "OnExport");
+                    return;
                 }
-                return;
+                if (SelectedContent is Views.OpenProject op)
+                {
+                    if (op.listWorkflows.SelectedItem is Project p)
+                    {
+                        using (var openFileDialog1 = new System.Windows.Forms.FolderBrowserDialog())
+                        {
+                            if (openFileDialog1.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                            {
+                                Log.FunctionOutdent("MainWindow", "OnExport", "User canceled");
+                                return;
+                            }
+                            var path = openFileDialog1.SelectedPath;
+                            p.SaveFile(path, true);
+                        }
+                    }
+                    if (op.listWorkflows.SelectedItem is Workflow wf)
+                    {
+                        string beforexaml = wf.Xaml;
+                        string xaml = await Views.WFDesigner.LoadImages(beforexaml);
+                        var dialogSave = new Microsoft.Win32.SaveFileDialog
+                        {
+                            Title = "Save Workflow",
+                            Filter = "Workflows (.xaml)|*.xaml",
+                            FileName = wf.name + ".xaml"
+                        };
+                        if (dialogSave.ShowDialog() == true)
+                        {
+                            System.IO.File.WriteAllText(dialogSave.FileName, xaml);
+                        }
+                    }
+                    Log.FunctionOutdent("MainWindow", "OnExport");
+                    return;
+                }
             }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("MainWindow", "OnExport", "error?");
         }
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
-            Log.Error(e.Exception, "");
+            Log.Function("MainWindow", "Application_ThreadException");
+            try
+            {
+                Log.Error(e.Exception, "");
+            }
+            catch (Exception)
+            {
+            }
         }
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs args)
         {
-            Exception ex = (Exception)args.ExceptionObject;
-            Log.Error(ex, "");
-            Log.Error("MyHandler caught : " + ex.Message);
-            Log.Error("Runtime terminating: {0}", (args.IsTerminating).ToString());
+            Log.Function("MainWindow", "CurrentDomain_UnhandledException");
+            try
+            {
+                Exception ex = (Exception)args.ExceptionObject;
+                Log.Error(ex, "");
+                Log.Error("MyHandler caught : " + ex.Message);
+                Log.Error("Runtime terminating: {0}", (args.IsTerminating).ToString());
+            }
+            catch (Exception)
+            {
+            }
         }
         private void AddHotKeys()
         {
+            Log.FunctionIndent("MainWindow", "AddHotKeys");
             AutomationHelper.syncContext.Post(o =>
             {
                 try
@@ -1270,6 +1363,7 @@ namespace OpenRPA
                     MessageBox.Show(ex.Message);
                 }
             }, null);
+            Log.FunctionOutdent("MainWindow", "AddHotKeys");
         }
         private void OnExitApp(object _item)
         {
@@ -1407,45 +1501,56 @@ namespace OpenRPA
         }
         private void OnManagePackages(object _item)
         {
-            var di = new System.IO.DirectoryInfo(global.CurrentDirectory);
-            var path = "";
-            var filename = "";
-            if (System.IO.File.Exists(System.IO.Path.Combine(di.FullName, "Updater", "OpenRPA.Updater.exe")))
-            {
-                path = System.IO.Path.Combine(di.FullName, "Updater");
-                filename = System.IO.Path.Combine(path, "OpenRPA.Updater.exe");
-            }
-            else if (System.IO.File.Exists(System.IO.Path.Combine(di.Parent.FullName, "OpenRPA.Updater.exe")))
-            {
-                path = di.Parent.FullName;
-                filename = System.IO.Path.Combine(path, "OpenRPA.Updater.exe");
-            }
-            else if (System.IO.File.Exists(System.IO.Path.Combine(di.FullName, "OpenRPA.Updater.exe")))
-            {
-                path = di.FullName;
-                filename = System.IO.Path.Combine(path, "OpenRPA.Updater.exe");
-            }
-            if (string.IsNullOrEmpty(filename))
-            {
-                MessageBox.Show("OpenRPA.Updater.exe not found");
-                return;
-            }
+            Log.FunctionIndent("MainWindow", "OnManagePackages");
             try
             {
-                var p = new System.Diagnostics.Process();
-                p.StartInfo.FileName = filename;
-                p.StartInfo.WorkingDirectory = path;
-                p.StartInfo.UseShellExecute = false;
-                p.StartInfo.CreateNoWindow = true;
-                p.StartInfo.Verb = "runas";
-                p.StartInfo.UseShellExecute = true;
-                p.Start();
+                var di = new System.IO.DirectoryInfo(global.CurrentDirectory);
+                var path = "";
+                var filename = "";
+                if (System.IO.File.Exists(System.IO.Path.Combine(di.FullName, "Updater", "OpenRPA.Updater.exe")))
+                {
+                    path = System.IO.Path.Combine(di.FullName, "Updater");
+                    filename = System.IO.Path.Combine(path, "OpenRPA.Updater.exe");
+                }
+                else if (System.IO.File.Exists(System.IO.Path.Combine(di.Parent.FullName, "OpenRPA.Updater.exe")))
+                {
+                    path = di.Parent.FullName;
+                    filename = System.IO.Path.Combine(path, "OpenRPA.Updater.exe");
+                }
+                else if (System.IO.File.Exists(System.IO.Path.Combine(di.FullName, "OpenRPA.Updater.exe")))
+                {
+                    path = di.FullName;
+                    filename = System.IO.Path.Combine(path, "OpenRPA.Updater.exe");
+                }
+                if (string.IsNullOrEmpty(filename))
+                {
+                    Log.FunctionOutdent("MainWindow", "OpenRPA.Updater.exe not found");
+                    MessageBox.Show("OpenRPA.Updater.exe not found");
+                    return;
+                }
+                try
+                {
+                    var p = new System.Diagnostics.Process();
+                    p.StartInfo.FileName = filename;
+                    p.StartInfo.WorkingDirectory = path;
+                    p.StartInfo.UseShellExecute = false;
+                    p.StartInfo.CreateNoWindow = true;
+                    p.StartInfo.Verb = "runas";
+                    p.StartInfo.UseShellExecute = true;
+                    p.Start();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "");
+                    MessageBox.Show(ex.Message);
+                }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Log.Error(ex, "");
-                MessageBox.Show(ex.Message);
+
+                throw;
             }
+            Log.FunctionOutdent("MainWindow", "OnManagePackages");
         }
         private bool CanOpen(object _item)
         {
@@ -1517,6 +1622,7 @@ namespace OpenRPA
         }
         private void OnOpen(object _item)
         {
+            Log.FunctionIndent("MainWindow", "OnOpen");
             AutomationHelper.syncContext.Post(o =>
             {
                 try
@@ -1524,7 +1630,11 @@ namespace OpenRPA
                     var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
                     foreach (var document in ld)
                     {
-                        if (document.Content is Views.OpenProject op) { document.IsSelected = true; return; }
+                        if (document.Content is Views.OpenProject op) {
+                            document.IsSelected = true;
+                            Log.FunctionOutdent("MainWindow", "OnOpen", "allready open");
+                            return; 
+                        }
                     }
                     var view = new Views.OpenProject(this);
                     view.onOpenProject += OnOpenProject;
@@ -1544,9 +1654,11 @@ namespace OpenRPA
                     MessageBox.Show(ex.Message);
                 }
             }, null);
+            Log.FunctionOutdent("MainWindow", "OnOpen");
         }
         private void OnDetectors(object _item)
         {
+            Log.FunctionIndent("MainWindow", "OnDetectors");
             AutomationHelper.syncContext.Post(o =>
             {
                 try
@@ -1554,7 +1666,11 @@ namespace OpenRPA
                     var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
                     foreach (var document in ld)
                     {
-                        if (document.Content is Views.DetectorsView op) { document.IsSelected = true; return; }
+                        if (document.Content is Views.DetectorsView op) { 
+                            document.IsSelected = true;
+                            Log.FunctionOutdent("MainWindow", "OnDetectors", "allready open");
+                            return; 
+                        }
                     }
                     var view = new Views.DetectorsView(this);
                     LayoutDocument layoutDocument = new LayoutDocument { Title = "Detectors" };
@@ -1568,9 +1684,11 @@ namespace OpenRPA
                     Log.Error(ex.ToString());
                 }
             }, null);
+            Log.FunctionOutdent("MainWindow", "OnDetectors");
         }
         private void OnRunPlugins(object _item)
         {
+            Log.FunctionIndent("MainWindow", "OnRunPlugins");
             AutomationHelper.syncContext.Post(o =>
             {
                 try
@@ -1578,7 +1696,11 @@ namespace OpenRPA
                     var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
                     foreach (var document in ld)
                     {
-                        if (document.Content is Views.RunPlugins op) { document.IsSelected = true; return; }
+                        if (document.Content is Views.RunPlugins op) { 
+                            document.IsSelected = true;
+                            Log.FunctionOutdent("MainWindow", "OnRunPlugins", "allready open");
+                            return; 
+                        }
                     }
                     var view = new Views.RunPlugins();
                     LayoutDocument layoutDocument = new LayoutDocument { Title = "Run Plugins" };
@@ -1592,9 +1714,11 @@ namespace OpenRPA
                     Log.Error(ex.ToString());
                 }
             }, null);
+            Log.FunctionOutdent("MainWindow", "OnRunPlugins");
         }
         private void OnRecorderPluginsCommand(object _item)
         {
+            Log.FunctionIndent("MainWindow", "OnRecorderPluginsCommand");
             AutomationHelper.syncContext.Post(o =>
             {
                 try
@@ -1602,7 +1726,11 @@ namespace OpenRPA
                     var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
                     foreach (var document in ld)
                     {
-                        if (document.Content is Views.RecorderPlugins op) { document.IsSelected = true; return; }
+                        if (document.Content is Views.RecorderPlugins op) { 
+                            document.IsSelected = true;
+                            Log.FunctionOutdent("MainWindow", "OnRecorderPluginsCommand", "allready open");
+                            return; 
+                        }
                     }
                     var view = new Views.RecorderPlugins();
                     LayoutDocument layoutDocument = new LayoutDocument { Title = "Recorder Plugins" };
@@ -1616,6 +1744,7 @@ namespace OpenRPA
                     Log.Error(ex.ToString());
                 }
             }, null);
+            Log.FunctionOutdent("MainWindow", "OnRecorderPluginsCommand");
         }
         private bool CanlinkOpenFlow(object _item)
         {
@@ -1665,41 +1794,56 @@ namespace OpenRPA
         }
         private void SaveLayout()
         {
-            var workflows = new List<string>();
-            foreach (var designer in RobotInstance.instance.Designers)
-            {
-                if (string.IsNullOrEmpty(designer.Workflow._id) && !string.IsNullOrEmpty(designer.Workflow.Filename))
-                {
-                    workflows.Add(designer.Workflow.RelativeFilename);
-                }
-                else if (!string.IsNullOrEmpty(designer.Workflow._id))
-                {
-                    workflows.Add(designer.Workflow._id);
-
-                }
-            }
-            Config.local.openworkflows = workflows.ToArray();
-            var pos = new System.Drawing.Rectangle((int)Left, (int)Top, (int)Width, (int)Height);
-            if (pos.Left > 0 && pos.Top > 0 && pos.Width > 100 && pos.Height > 100)
-            {
-                Config.local.mainwindow_position = pos;
-            }
-            Config.Save();
-            if (SkipLayoutSaving) return;
+            Log.FunctionIndent("MainWindow", "SaveLayout");
             try
             {
-                var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
-                using (var stream = new System.IO.StreamWriter(System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "layout.config")))
-                    serializer.Serialize(stream);
+                var workflows = new List<string>();
+                foreach (var designer in RobotInstance.instance.Designers)
+                {
+                    if (string.IsNullOrEmpty(designer.Workflow._id) && !string.IsNullOrEmpty(designer.Workflow.Filename))
+                    {
+                        workflows.Add(designer.Workflow.RelativeFilename);
+                    }
+                    else if (!string.IsNullOrEmpty(designer.Workflow._id))
+                    {
+                        workflows.Add(designer.Workflow._id);
+
+                    }
+                }
+                Config.local.openworkflows = workflows.ToArray();
+                var pos = new System.Drawing.Rectangle((int)Left, (int)Top, (int)Width, (int)Height);
+                if (pos.Left > 0 && pos.Top > 0 && pos.Width > 100 && pos.Height > 100)
+                {
+                    Config.local.mainwindow_position = pos;
+                }
+                Config.Save();
+                if (SkipLayoutSaving)
+                {
+                    Log.FunctionOutdent("MainWindow", "SaveLayout", "SkipLayoutSaving");
+                    return;
+                }
+                try
+                {
+                    var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
+                    using (var stream = new System.IO.StreamWriter(System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "layout.config")))
+                        serializer.Serialize(stream);
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
             catch (Exception)
             {
 
                 throw;
             }
+            Log.FunctionOutdent("MainWindow", "SaveLayout");
         }
         private void LoadLayout()
         {
+            Log.FunctionIndent("MainWindow", "LoadLayout");
             GenericTools.RunUI(() =>
             {
                 try
@@ -1780,13 +1924,16 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
+            Log.FunctionOutdent("MainWindow", "LoadLayout");
         }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         public void _onOpenWorkflow(Workflow workflow, bool HasChanged = false)
         {
+            Log.FunctionIndent("MainWindow", "_onOpenWorkflow");
             if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) is Views.WFDesigner designer)
             {
                 designer.tab.IsSelected = true;
+                Log.FunctionOutdent("MainWindow", "_onOpenWorkflow", "Already open");
                 return;
             }
             try
@@ -1810,6 +1957,7 @@ namespace OpenRPA
                 Log.Error(ex, "");
                 MessageBox.Show(ex.Message);
             }
+            Log.FunctionOutdent("MainWindow", "_onOpenWorkflow");
         }
         public void OnOpenWorkflow(Workflow workflow)
         {
@@ -1831,6 +1979,7 @@ namespace OpenRPA
         }
         private void WFDesigneronChanged(Views.WFDesigner designer)
         {
+            Log.FunctionIndent("MainWindow", "WFDesigneronChanged");
             AutomationHelper.syncContext.Post(o =>
             {
                 try
@@ -1843,7 +1992,7 @@ namespace OpenRPA
                     Log.Error(ex.ToString());
                 }
             }, null);
-            //_syncContext.Post(o => CommandManager.InvalidateRequerySuggested(), null);
+            Log.FunctionOutdent("MainWindow", "WFDesigneronChanged");
         }
         public void OnOpenProject(Project project)
         {
@@ -1868,6 +2017,7 @@ namespace OpenRPA
         }
         private async void OnSave(object _item)
         {
+            Log.FunctionIndent("MainWindow", "OnSave");
             try
             {
                 if (SelectedContent is Views.WFDesigner designer)
@@ -1888,6 +2038,7 @@ namespace OpenRPA
                 Log.Error(ex, "");
                 MessageBox.Show(ex.Message);
             }
+            Log.FunctionOutdent("MainWindow", "OnSave");
         }
         private bool CanNewWorkflow(object _item)
         {
@@ -1911,12 +2062,14 @@ namespace OpenRPA
         }
         private void OnNewWorkflow(object _item)
         {
+            Log.FunctionIndent("MainWindow", "OnNewWorkflow");
             try
             {
                 if (SelectedContent is Views.WFDesigner designer)
                 {
                     Workflow workflow = Workflow.Create(designer.Project, "New Workflow");
                     OnOpenWorkflow(workflow);
+                    Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Designer selected");
                     return;
                 }
                 if (!(SelectedContent is Views.OpenProject view)) return;
@@ -1925,12 +2078,14 @@ namespace OpenRPA
                 {
                     Workflow workflow = Workflow.Create(wf.Project, "New Workflow");
                     OnOpenWorkflow(workflow);
+                    Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Workflow selected");
                     return;
                 }
                 if (val is Project p)
                 {
                     Workflow workflow = Workflow.Create(p, "New Workflow");
                     OnOpenWorkflow(workflow);
+                    Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Project selected");
                     return;
                 }
             }
@@ -1939,6 +2094,7 @@ namespace OpenRPA
                 Log.Error(ex, "");
                 MessageBox.Show(ex.Message);
             }
+            Log.FunctionOutdent("MainWindow", "OnNewWorkflow");
         }
         private bool CanNewProject(object _item)
         {
@@ -1955,10 +2111,15 @@ namespace OpenRPA
         }
         private async void OnNewProject(object _item)
         {
+            Log.FunctionIndent("MainWindow", "OnNewProject");
             try
             {
                 string Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "Name project", "New project");
-                if (string.IsNullOrEmpty(Name)) return;
+                if (string.IsNullOrEmpty(Name))
+                {
+                    Log.FunctionOutdent("MainWindow", "OnNewProject", "Name is null");
+                    return;
+                }
                 //string Name = "New project";
                 Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name, true);
                 Workflow workflow = project.Workflows.First();
@@ -1971,6 +2132,7 @@ namespace OpenRPA
                 Log.Error(ex, "");
                 MessageBox.Show(ex.Message);
             }
+            Log.FunctionOutdent("MainWindow", "OnNewProject");
         }
         internal bool CanCopy(object _item)
         {
@@ -1986,6 +2148,7 @@ namespace OpenRPA
         }
         internal async void OnCopy(object _item)
         {
+            Log.FunctionIndent("MainWindow", "OnCopy");
             try
             {
                 var designer = (Views.WFDesigner)SelectedContent;
@@ -2002,6 +2165,7 @@ namespace OpenRPA
                 Log.Error(ex, "");
                 MessageBox.Show(ex.Message);
             }
+            Log.FunctionOutdent("MainWindow", "OnCopy");
         }
         internal bool CanDelete(object _item)
         {
@@ -2033,15 +2197,24 @@ namespace OpenRPA
         }
         private async void OnDelete(object _item)
         {
+            Log.FunctionIndent("MainWindow", "OnCopy");
             try
             {
-                if (!(SelectedContent is Views.OpenProject view)) return;
+                if (!(SelectedContent is Views.OpenProject view))
+                {
+                    Log.FunctionOutdent("MainWindow", "OnCopy", "OpenProject not selected");
+                    return;
+                }
                 var val = view.listWorkflows.SelectedValue;
                 if (val is Workflow wf)
                 {
                     if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(wf.IDOrRelativeFilename) is Views.WFDesigner designer) { designer.tab.Close(); }
                     var messageBoxResult = MessageBox.Show("Delete " + wf.name + " ?", "Delete Confirmation", MessageBoxButton.YesNo);
-                    if (messageBoxResult != MessageBoxResult.Yes) return;
+                    if (messageBoxResult != MessageBoxResult.Yes)
+                    {
+                        Log.FunctionOutdent("MainWindow", "OnCopy", "User canceled");
+                        return;
+                    }
                     await wf.Delete();
                 }
                 if (val is Project p)
@@ -2049,7 +2222,11 @@ namespace OpenRPA
                     if (p.Workflows.Count > 0)
                     {
                         var messageBoxResult = MessageBox.Show("Delete project " + p.name + " containing " + p.Workflows.Count() + " workflows", "Delete Confirmation", MessageBoxButton.YesNo);
-                        if (messageBoxResult != MessageBoxResult.Yes) return;
+                        if (messageBoxResult != MessageBoxResult.Yes)
+                        {
+                            Log.FunctionOutdent("MainWindow", "OnCopy", "User canceled");
+                            return;
+                        }
                         foreach (var _wf in p.Workflows.ToList())
                         {
                             var designer = RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(_wf.IDOrRelativeFilename) as Views.WFDesigner;
@@ -2067,6 +2244,7 @@ namespace OpenRPA
                 Log.Error(ex, "");
                 MessageBox.Show(ex.Message);
             }
+            Log.FunctionOutdent("MainWindow", "OnCopy");
         }
         internal bool CanPlay(object _item)
         {
@@ -2108,12 +2286,21 @@ namespace OpenRPA
         }
         internal async void OnPlay(object _item)
         {
+            Log.FunctionIndent("MainWindow", "OnPlay");
             string errormessage = "";
             if (SelectedContent is Views.OpenProject view)
             {
                 var val = view.listWorkflows.SelectedValue;
-                if (val == null) return;
-                if (!(view.listWorkflows.SelectedValue is Workflow workflow)) return;
+                if (val == null)
+                {
+                    Log.FunctionOutdent("MainWindow", "OnPlay", "SelectedValue is null");
+                    return;
+                }
+                if (!(view.listWorkflows.SelectedValue is Workflow workflow))
+                {
+                    Log.FunctionOutdent("MainWindow", "OnPlay", "SelectedValue is not workflow");
+                    return;
+                }
                 try
                 {
                     if (this.Minimize) GenericTools.Minimize(GenericTools.MainWindow);
@@ -2146,11 +2333,16 @@ namespace OpenRPA
                     GenericTools.Restore(GenericTools.MainWindow);
                     MessageBox.Show("onPlay " + errormessage);
                 }
+                Log.FunctionOutdent("MainWindow", "OnPlay");
                 return;
             }
             try
             {
-                if (!(SelectedContent is Views.WFDesigner)) return;
+                if (!(SelectedContent is Views.WFDesigner))
+                {
+                    Log.FunctionOutdent("MainWindow", "OnPlay", "Selected content is not WFDesigner");
+                    return;
+                }
                 var designer = (Views.WFDesigner)SelectedContent;
                 if (designer.HasChanged) { await designer.SaveAsync(); }
                 designer.Run(VisualTracking, SlowMotion, null);
@@ -2168,6 +2360,7 @@ namespace OpenRPA
                 GenericTools.Restore(GenericTools.MainWindow);
                 MessageBox.Show("onPlay " + errormessage);
             }
+            Log.FunctionOutdent("MainWindow", "OnPlay");
         }
         internal bool CanRename(object _item)
         {
@@ -2510,53 +2703,89 @@ namespace OpenRPA
         }
         private void StartDetectorPlugins()
         {
-            foreach (var detector in Plugins.detectorPlugins) detector.Start();
+            Log.FunctionIndent("MainWindow", "StartDetectorPlugins");
+            try
+            {
+                foreach (var detector in Plugins.detectorPlugins) detector.Start();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("MainWindow", "StartDetectorPlugins");
         }
         private void StopDetectorPlugins()
         {
-            foreach (var detector in Plugins.detectorPlugins) detector.Stop();
+            Log.FunctionIndent("MainWindow", "StopDetectorPlugins");
+            try
+            {
+                foreach (var detector in Plugins.detectorPlugins) detector.Stop();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("MainWindow", "StopDetectorPlugins");
         }
         Interfaces.Overlay.OverlayWindow _overlayWindow = null;
         private void StartRecordPlugins()
         {
-            isRecording = true;
-            var p = Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
-            p.OnUserAction += OnUserAction;
-            if (Config.local.record_overlay) p.OnMouseMove += OnMouseMove;
-            p.Start();
-            if (_overlayWindow == null && Config.local.record_overlay)
+            Log.FunctionIndent("MainWindow", "StartRecordPlugins");
+            try
             {
-                _overlayWindow = new Interfaces.Overlay.OverlayWindow(true)
+                isRecording = true;
+                var p = Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
+                p.OnUserAction += OnUserAction;
+                if (Config.local.record_overlay) p.OnMouseMove += OnMouseMove;
+                p.Start();
+                if (_overlayWindow == null && Config.local.record_overlay)
                 {
-                    BackColor = System.Drawing.Color.PaleGreen,
-                    Visible = true,
-                    TopMost = true
-                };
+                    _overlayWindow = new Interfaces.Overlay.OverlayWindow(true)
+                    {
+                        BackColor = System.Drawing.Color.PaleGreen,
+                        Visible = true,
+                        TopMost = true
+                    };
+                }
             }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("MainWindow", "StartRecordPlugins");
         }
         private void StopRecordPlugins()
         {
-            isRecording = false;
-            var p = Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
-            p.OnUserAction -= OnUserAction;
-            if (Config.local.record_overlay) p.OnMouseMove -= OnMouseMove;
-            p.Stop();
-            if (_overlayWindow != null)
+            Log.FunctionIndent("MainWindow", "StopRecordPlugins");
+            try
             {
-                GenericTools.RunUI(_overlayWindow, () =>
+                isRecording = false;
+                var p = Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
+                p.OnUserAction -= OnUserAction;
+                if (Config.local.record_overlay) p.OnMouseMove -= OnMouseMove;
+                p.Stop();
+                if (_overlayWindow != null)
                 {
-                    try
+                    GenericTools.RunUI(_overlayWindow, () =>
                     {
-                        _overlayWindow.Visible = true;
-                        _overlayWindow.Dispose();
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.ToString());
-                    }
-                });
+                        try
+                        {
+                            _overlayWindow.Visible = true;
+                            _overlayWindow.Dispose();
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                        }
+                    });
+                }
+                _overlayWindow = null;
             }
-            _overlayWindow = null;
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("MainWindow", "StopRecordPlugins");
         }
         public void OnMouseMove(IRecordPlugin sender, IRecordEvent e)
         {
@@ -2601,6 +2830,7 @@ namespace OpenRPA
         }
         public void OnUserAction(IRecordPlugin sender, IRecordEvent e)
         {
+            Log.FunctionIndent("MainWindow", "OnUserAction");
             StopRecordPlugins();
             AutomationHelper.syncContext.Post(o =>
             {
@@ -2629,6 +2859,7 @@ namespace OpenRPA
                             NativeMethods.SetCursorPos(e.X, e.Y);
                             InputDriver.Click(e.Button);
                         }
+                        Log.Function("MainWindow", "OnUserAction", "Action is null");
                         return;
                     }
                     if (SelectedContent is Views.WFDesigner view)
@@ -2702,23 +2933,34 @@ namespace OpenRPA
                     Log.Error(ex.ToString());
                 }
             }, null);
+            Log.FunctionOutdent("MainWindow", "OnUserAction");
         }
         internal void OnRecord(object _item)
         {
             if (!(SelectedContent is Views.WFDesigner)) return;
-            var designer = (Views.WFDesigner)SelectedContent;
-            designer.ReadOnly = true;
-            designer.Lastinserted = null;
-            designer.Lastinsertedmodel = null;
-            StopDetectorPlugins();
-            InputDriver.Instance.OnKeyDown += OnKeyDown;
-            InputDriver.Instance.OnKeyUp += OnKeyUp;
-            StartRecordPlugins();
-            InputDriver.Instance.CallNext = false;
-            if (this.Minimize) GenericTools.Minimize(GenericTools.MainWindow);
+            Log.FunctionIndent("MainWindow", "OnRecord");
+            try
+            {
+                var designer = (Views.WFDesigner)SelectedContent;
+                designer.ReadOnly = true;
+                designer.Lastinserted = null;
+                designer.Lastinsertedmodel = null;
+                StopDetectorPlugins();
+                InputDriver.Instance.OnKeyDown += OnKeyDown;
+                InputDriver.Instance.OnKeyUp += OnKeyUp;
+                StartRecordPlugins();
+                InputDriver.Instance.CallNext = false;
+                if (this.Minimize) GenericTools.Minimize(GenericTools.MainWindow);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("MainWindow", "OnRecord");
         }
         public void OnDetector(IDetectorPlugin plugin, IDetectorEvent detector, EventArgs e)
         {
+            Log.FunctionIndent("MainWindow", "OnDetector");
             try
             {
                 Log.Information("Detector " + plugin.Entity.name + " was triggered, with id " + plugin.Entity._id);
@@ -2738,14 +2980,21 @@ namespace OpenRPA
                         }
                     }
                 }
-                if (!global.isConnected) return;
+                if (!global.isConnected)
+                {
+                    Log.FunctionOutdent("MainWindow", "OnDetector", "isConnected is false");
+                    return;
+                }
                 Interfaces.mq.RobotCommand command = new Interfaces.mq.RobotCommand();
                 detector.user = global.webSocketClient.user;
                 var data = JObject.FromObject(detector);
                 var Entity = (plugin.Entity as Detector);
                 command.command = "detector";
                 command.detectorid = Entity._id;
-                if (string.IsNullOrEmpty(Entity._id)) return;
+                if (string.IsNullOrEmpty(Entity._id)) {
+                    Log.FunctionOutdent("MainWindow", "OnDetector", "Entity._id is null");
+                    return;
+                }
                 command.data = data;
                 _ = global.webSocketClient.QueueMessage(Entity._id, command, null);
             }
@@ -2754,9 +3003,11 @@ namespace OpenRPA
                 Log.Error(ex, "");
                 MessageBox.Show(ex.Message);
             }
+            Log.FunctionOutdent("MainWindow", "OnDetector");
         }
         public void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
         {
+            Log.FunctionIndent("MainWindow", "IdleOrComplete");
             GenericTools.RunUI(() =>
             {
                 try
@@ -2833,6 +3084,7 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
+            Log.FunctionOutdent("MainWindow", "IdleOrComplete");
         }
         private Views.KeyboardSeqWindow view = null;
         private void Cancelkey_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
@@ -2869,12 +3121,15 @@ namespace OpenRPA
         }
         private void TesseractLang_Click(object sender, RoutedEventArgs e)
         {
+            Log.FunctionIndent("MainWindow", "TesseractLang_Click");
             string path = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "tessdata");
             TesseractDownloadLangFile(path, Config.local.ocrlanguage);
             System.Windows.MessageBox.Show("Download complete");
+            Log.FunctionOutdent("MainWindow", "TesseractLang_Click");
         }
         private void TesseractDownloadLangFile(string folder, string lang)
         {
+            Log.FunctionIndent("MainWindow", "TesseractLang_Click", lang + " " + folder);
             if (!System.IO.Directory.Exists(folder))
             {
                 System.IO.Directory.CreateDirectory(folder);
@@ -2889,9 +3144,11 @@ namespace OpenRPA
                     webclient.DownloadFile(source, dest);
                     Log.Information(String.Format("Download completed"));
                 }
+            Log.FunctionOutdent("MainWindow", "TesseractDownloadLangFile");
         }
         private void SearchBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            Log.FunctionIndent("MainWindow", "SearchBox_SelectionChanged");
             QuickLaunchItem item = null;
             try
             {
@@ -2901,9 +3158,14 @@ namespace OpenRPA
                 }
                 if (item == null)
                 {
+                    Log.FunctionOutdent("MainWindow", "SearchBox_SelectionChanged", "item is null");
                     return;
                 }
-                if (item.designer == null) return;
+                if (item.designer == null)
+                {
+                    Log.FunctionOutdent("MainWindow", "SearchBox_SelectionChanged", "item.designer is null");
+                    return;
+                }
             }
             catch (Exception ex)
             {
@@ -2929,61 +3191,71 @@ namespace OpenRPA
                     Log.Error(ex.ToString());
                 }
             });
+            Log.FunctionOutdent("MainWindow", "SearchBox_SelectionChanged");
         }
         private void SearchBox_Populating(object sender, PopulatingEventArgs e)
         {
-            var text = SearchBox.Text.ToLower();
-            var options = new List<QuickLaunchItem>();
-            foreach (var designer in RobotInstance.instance.Designers)
+            Log.FunctionIndent("MainWindow", "SearchBox_Populating");
+            try
             {
-                var suboptions = new List<QuickLaunchItem>();
-                foreach (var arg in designer.GetParameters())
+                var text = SearchBox.Text.ToLower();
+                var options = new List<QuickLaunchItem>();
+                foreach (var designer in RobotInstance.instance.Designers)
                 {
-                    if (arg.Name.ToLower().Contains(text))
+                    var suboptions = new List<QuickLaunchItem>();
+                    foreach (var arg in designer.GetParameters())
                     {
-                        AddOption(designer, arg, suboptions);
-                    }
-                }
-                foreach (System.Activities.Presentation.Model.ModelItem item in designer.GetWorkflowActivities())
-                {
-                    bool wasadded = false;
-                    string displayname = item.ToString();
-                    System.Activities.Presentation.Model.ModelProperty property = item.Properties["ExpressionText"];
-                    if ((property != null) && (property.Value != null))
-                    {
-                        string input = item.Properties["ExpressionText"].Value.ToString();
-                        if (input.ToLower().Contains(text))
+                        if (arg.Name.ToLower().Contains(text))
                         {
-                            wasadded = true;
+                            AddOption(designer, arg, suboptions);
+                        }
+                    }
+                    foreach (System.Activities.Presentation.Model.ModelItem item in designer.GetWorkflowActivities())
+                    {
+                        bool wasadded = false;
+                        string displayname = item.ToString();
+                        System.Activities.Presentation.Model.ModelProperty property = item.Properties["ExpressionText"];
+                        if ((property != null) && (property.Value != null))
+                        {
+                            string input = item.Properties["ExpressionText"].Value.ToString();
+                            if (input.ToLower().Contains(text))
+                            {
+                                wasadded = true;
+                                AddOption(designer, item, suboptions);
+                            }
+                        }
+                        property = item.Properties["Variables"];
+                        if ((property != null) && (property.Value != null))
+                        {
+                            foreach (var v in property.Collection)
+                            {
+                                var nameproperty = v.Properties["Name"];
+                                if (nameproperty.Value.ToString().ToLower().Contains(text))
+                                {
+                                    wasadded = true;
+                                    AddOption(designer, v, suboptions);
+                                }
+
+                            }
+                        }
+                        if (!wasadded && displayname.ToLower().Contains(text))
+                        {
                             AddOption(designer, item, suboptions);
                         }
                     }
-                    property = item.Properties["Variables"];
-                    if ((property != null) && (property.Value != null))
+                    if (suboptions.Count > 0)
                     {
-                        foreach (var v in property.Collection)
-                        {
-                            var nameproperty = v.Properties["Name"];
-                            if (nameproperty.Value.ToString().ToLower().Contains(text))
-                            {
-                                wasadded = true;
-                                AddOption(designer, v, suboptions);
-                            }
-
-                        }
-                    }
-                    if (!wasadded && displayname.ToLower().Contains(text))
-                    {
-                        AddOption(designer, item, suboptions);
+                        options.Add(new QuickLaunchItem() { Header = designer.Workflow.name });
+                        options.AddRange(suboptions);
                     }
                 }
-                if (suboptions.Count > 0)
-                {
-                    options.Add(new QuickLaunchItem() { Header = designer.Workflow.name });
-                    options.AddRange(suboptions);
-                }
+                SearchBox.ItemsSource = options;
             }
-            SearchBox.ItemsSource = options;
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("MainWindow", "SearchBox_Populating");
         }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
@@ -2996,71 +3268,90 @@ namespace OpenRPA
         }
         private void AddOption(Views.WFDesigner designer, System.Activities.Presentation.Model.ModelItem item, List<QuickLaunchItem> options)
         {
-            var ImageSource = new BitmapImage(new Uri("/Resources/icons/activity.png", UriKind.Relative));
-            var _item = GetActivity(item);
-            if (!item.ItemType.ToString().Contains("System.Activities.Variable"))
+            Log.FunctionIndent("MainWindow", "AddOption");
+            try
             {
-                var exists = options.Where(x => x.item == _item).FirstOrDefault();
-                if (exists != null) return;
-            }
-            if (item.ItemType.ToString().Contains("System.Activities.Statements.Flow") ||
-                item.ItemType.ToString().Contains("System.Activities.Statements.Flow"))
-            {
-                ImageSource = new BitmapImage(new Uri("/Resources/icons/flowchart.png", UriKind.Relative));
-            }
-            var displayname = _item.ToString();
-            if (_item != item)
-            {
-                if (item.ItemType.ToString().Contains("System.Activities.Variable"))
+                var ImageSource = new BitmapImage(new Uri("/Resources/icons/activity.png", UriKind.Relative));
+                var _item = GetActivity(item);
+                if (!item.ItemType.ToString().Contains("System.Activities.Variable"))
                 {
-                    ImageSource = new BitmapImage(new Uri("/Resources/icons/variable.png", UriKind.Relative));
-                    displayname = "Variable of " + _item.ToString();
-                    var p = item.Properties["Name"];
-                    if (p != null && p.Value != null)
-                    {
-                        displayname = "Variable " + p.Value + " of " + _item.ToString();
-                    }
+                    var exists = options.Where(x => x.item == _item).FirstOrDefault();
+                    if (exists != null) return;
                 }
-                else
+                if (item.ItemType.ToString().Contains("System.Activities.Statements.Flow") ||
+                    item.ItemType.ToString().Contains("System.Activities.Statements.Flow"))
                 {
-                    ImageSource = new BitmapImage(new Uri("/Resources/icons/property.png", UriKind.Relative));
-                    displayname = "Property of " + _item.ToString();
-                    foreach (var p in _item.Properties)
+                    ImageSource = new BitmapImage(new Uri("/Resources/icons/flowchart.png", UriKind.Relative));
+                }
+                var displayname = _item.ToString();
+                if (_item != item)
+                {
+                    if (item.ItemType.ToString().Contains("System.Activities.Variable"))
                     {
-                        if (p.Value == item)
+                        ImageSource = new BitmapImage(new Uri("/Resources/icons/variable.png", UriKind.Relative));
+                        displayname = "Variable of " + _item.ToString();
+                        var p = item.Properties["Name"];
+                        if (p != null && p.Value != null)
                         {
-                            displayname = "Property " + p.Name + " of " + _item.ToString();
-                        }
-                        else if (p.Value == item.Parent)
-                        {
-                            displayname = "Property " + p.Name + " of " + _item.ToString();
+                            displayname = "Variable " + p.Value + " of " + _item.ToString();
                         }
                     }
+                    else
+                    {
+                        ImageSource = new BitmapImage(new Uri("/Resources/icons/property.png", UriKind.Relative));
+                        displayname = "Property of " + _item.ToString();
+                        foreach (var p in _item.Properties)
+                        {
+                            if (p.Value == item)
+                            {
+                                displayname = "Property " + p.Name + " of " + _item.ToString();
+                            }
+                            else if (p.Value == item.Parent)
+                            {
+                                displayname = "Property " + p.Name + " of " + _item.ToString();
+                            }
+                        }
+                    }
                 }
+                options.Add(new QuickLaunchItem()
+                {
+                    Text = displayname,
+                    designer = designer,
+                    originalitem = item,
+                    item = _item,
+                    ImageSource = ImageSource
+                });
             }
-            options.Add(new QuickLaunchItem()
+            catch (Exception ex)
             {
-                Text = displayname,
-                designer = designer,
-                originalitem = item,
-                item = _item,
-                ImageSource = ImageSource
-            });
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("MainWindow", "AddOption");
         }
         private void AddOption(Views.WFDesigner designer, DynamicActivityProperty arg, List<QuickLaunchItem> options)
         {
-            var ImageSource = new BitmapImage(new Uri("/Resources/icons/openin.png", UriKind.Relative));
-            var displayname = "Argument " + arg.Name;
-            options.Add(new QuickLaunchItem()
+            Log.FunctionIndent("MainWindow", "AddOption");
+            try
             {
-                Text = displayname,
-                designer = designer,
-                argument = arg,
-                ImageSource = ImageSource
-            });
+                var ImageSource = new BitmapImage(new Uri("/Resources/icons/openin.png", UriKind.Relative));
+                var displayname = "Argument " + arg.Name;
+                options.Add(new QuickLaunchItem()
+                {
+                    Text = displayname,
+                    designer = designer,
+                    argument = arg,
+                    ImageSource = ImageSource
+                });
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("MainWindow", "AddOption");
         }
         private System.Activities.Presentation.Model.ModelItem GetActivity(System.Activities.Presentation.Model.ModelItem item)
         {
+            Log.FunctionIndent("MainWindow", "GetActivity");
             try
             {
                 var result = item;
@@ -3079,13 +3370,13 @@ namespace OpenRPA
                     }
                     return result;
                 }
-                return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                Log.Error(ex.ToString());
             }
+            Log.FunctionOutdent("MainWindow", "GetActivity");
+            return null;
         }
         private void SearchBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {

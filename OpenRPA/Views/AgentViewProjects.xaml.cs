@@ -45,39 +45,59 @@ namespace OpenRPA.Views
         }
         public AgentViewProjects(AgentWindow main)
         {
+            Log.FunctionIndent("AgentViewProjects", "AgentViewProjects");
             InitializeComponent();
             this.main = main;
             DataContext = this;
+            Log.FunctionOutdent("AgentViewProjects", "AgentViewProjects");
         }
         private void ListWorkflows_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (listWorkflows.SelectedItem is Workflow f)
+            Log.FunctionIndent("AgentViewProjects", "ListWorkflows_MouseDoubleClick");
+            try
             {
-                onOpenWorkflow?.Invoke(f);
-                return;
+                if (listWorkflows.SelectedItem is Workflow f)
+                {
+                    onOpenWorkflow?.Invoke(f);
+                    return;
+                }
+                var p = (Project)listWorkflows.SelectedItem;
+                if (p == null) return;
+                onOpenProject?.Invoke(p);
             }
-            var p = (Project)listWorkflows.SelectedItem;
-            if (p == null) return;
-            onOpenProject?.Invoke(p);
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("AgentViewProjects", "ListWorkflows_MouseDoubleClick");
         }
         private async void ButtonEditXAML(object sender, RoutedEventArgs e)
         {
-            if (listWorkflows.SelectedItem is Workflow workflow)
+            Log.FunctionIndent("AgentViewProjects", "ButtonEditXAML");
+            try
             {
-                try
+                if (listWorkflows.SelectedItem is Workflow workflow)
                 {
-                    var f = new EditXAML();
-                    f.XAML = workflow.Xaml;
-                    f.ShowDialog();
-                    workflow.Xaml = f.XAML;
-                    await workflow.Save(false);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                    System.Windows.MessageBox.Show("ButtonEditXAML: " + ex.Message);
+                    try
+                    {
+                        var f = new EditXAML();
+                        f.XAML = workflow.Xaml;
+                        f.ShowDialog();
+                        workflow.Xaml = f.XAML;
+                        await workflow.Save(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                        System.Windows.MessageBox.Show("ButtonEditXAML: " + ex.Message);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("AgentViewProjects", "ButtonEditXAML");
         }
         private void UserControl_KeyUp(object sender, KeyEventArgs e)
         {

@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.40</Version>
-    <PackageReleaseNotes>1.0.40 Add more settings
+    <Version>1.0.41</Version>
+    <PackageReleaseNotes>1.0.40 Fix terminal server name pipe issue and add more logging features
+1.0.40 Add more settings
 1.0.39 fix small issue with maxresult when highlighting
 1.0.38 Add DesignerUpdater classes for easy type handling
 1.0.37 Change target framework to 4.7.2

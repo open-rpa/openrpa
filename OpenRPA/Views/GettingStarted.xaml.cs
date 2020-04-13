@@ -31,12 +31,21 @@ namespace OpenRPA.Views
         private string url;
         public GettingStarted(string url )
         {
-            InitializeComponent();
-            DataContext = this;
-            this.url = url;
-            CefSharp.Wpf.ChromiumWebBrowser browser;
-            browser = new CefSharp.Wpf.ChromiumWebBrowser(this.url) { LifeSpanHandler = new BasicLifeSpanHandler() };
-            content.Child = browser;
+            Log.FunctionIndent("GettingStarted", "GettingStarted");
+            try
+            {
+                InitializeComponent();
+                DataContext = this;
+                this.url = url;
+                CefSharp.Wpf.ChromiumWebBrowser browser;
+                browser = new CefSharp.Wpf.ChromiumWebBrowser(this.url) { LifeSpanHandler = new BasicLifeSpanHandler() };
+                content.Child = browser;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("GettingStarted", "GettingStarted");
         }
         public bool ShowAgain
         {

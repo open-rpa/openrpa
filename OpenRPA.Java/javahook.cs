@@ -64,7 +64,8 @@ namespace OpenRPA.Java
                 }
                 if (pipeclient == null)
                 {
-                    pipeclient = new NamedPipeClient<JavaEvent>("openrpa_javabridge");
+                    var SessionId = System.Diagnostics.Process.GetCurrentProcess().SessionId;
+                    pipeclient = new NamedPipeClient<JavaEvent>(SessionId + "_openrpa_javabridge");
                     pipeclient.ServerMessage += Pipeclient_ServerMessage;
                     pipeclient.AutoReconnect = true;
                     pipeclient.Start();

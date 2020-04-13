@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenRPA.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,43 +23,77 @@ namespace OpenRPA.Views
         public string Text { get; set; }
         public InsertText()
         {
-            InitializeComponent();
-            EventManager.RegisterClassHandler(typeof(Window), Window.LoadedEvent, new RoutedEventHandler(Window_Loaded));
-            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            DataContext = this;
-            Activate();
-            Focus();
-            Topmost = true;
-            Topmost = false;
-            Focus();
-            textbox.Focus();
-            Topmost = true;
+            Log.FunctionIndent("InsertText", "InsertText");
+            try
+            {
+                InitializeComponent();
+                EventManager.RegisterClassHandler(typeof(Window), Window.LoadedEvent, new RoutedEventHandler(Window_Loaded));
+                this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                DataContext = this;
+                Activate();
+                Focus();
+                Topmost = true;
+                Topmost = false;
+                Focus();
+                textbox.Focus();
+                Topmost = true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("InsertText", "InsertText");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //rpaactivities.Generichook.enablecancel = false;
-            var window = e.Source as Window;
-            System.Threading.Thread.Sleep(100);
-            window.Dispatcher.Invoke(
-            new Action(() =>
+            Log.FunctionIndent("InsertText", "Window_Loaded");
+            try
             {
-                //window.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
-                textbox.Focus();
-            }));
+                //rpaactivities.Generichook.enablecancel = false;
+                var window = e.Source as Window;
+                System.Threading.Thread.Sleep(100);
+                window.Dispatcher.Invoke(
+                new Action(() =>
+                {
+                    try
+                    {
+                        //window.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+                        textbox.Focus();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                }));
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionIndent("InsertText", "Window_Loaded");
         }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Escape)
+            Log.FunctionIndent("InsertText", "Window_KeyDown");
+            try
             {
-                DialogResult = false;
-                Close();
+                if (e.Key == Key.Escape)
+                {
+                    DialogResult = false;
+                    Close();
+                }
+                if (e.Key == Key.Enter)
+                {
+                    DialogResult = true;
+                    Close();
+                }
             }
-            if (e.Key == Key.Enter)
+            catch (Exception ex)
             {
-                DialogResult = true;
-                Close();
+                Log.Error(ex.ToString());
             }
+            Log.FunctionOutdent("InsertText", "Window_KeyDown");
         }
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -67,12 +102,21 @@ namespace OpenRPA.Views
 
         private void Window_LostFocus(object sender, RoutedEventArgs e)
         {
-            Activate();
-            Focus();
-            Topmost = true;
-            Topmost = false;
-            Focus();
-            // textbox.Focus();
+            Log.FunctionIndent("InsertText", "Window_LostFocus");
+            try
+            {
+                Activate();
+                Focus();
+                Topmost = true;
+                Topmost = false;
+                Focus();
+                // textbox.Focus();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("InsertText", "Window_LostFocus");
         }
     }
 }

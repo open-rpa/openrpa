@@ -89,8 +89,9 @@ namespace OpenRPA
             }
         }
         private bool first_connect = true;
-        public void WebSocketClient_OnOpen()
+        public void MainWindow_WebSocketClient_OnOpen()
         {
+            Log.FunctionIndent("AgentWindow", "MainWindow_WebSocketClient_OnOpen");
             if (RobotInstance.instance.Projects.Count == 0 && first_connect)
             {
             }
@@ -106,6 +107,7 @@ namespace OpenRPA
                 }
                 first_connect = false;
             }
+            Log.FunctionOutdent("AgentWindow", "MainWindow_WebSocketClient_OnOpen");
         }
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propertyName)

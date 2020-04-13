@@ -29,10 +29,12 @@ namespace OpenRPA.Views
         // public ToolboxControl toolbox { get; set; } = null;
         public WFToolbox()
         {
+            Log.FunctionIndent("WFToolbox", "WFToolbox");
             InitializeComponent();
             DataContext = this;
             // toolborder.Child = InitializeActivitiesToolbox();
             InitializeActivitiesToolbox();
+            Log.FunctionOutdent("WFToolbox", "WFToolbox");
         }
 
         private string getDisplayName(Type type)
@@ -47,6 +49,7 @@ namespace OpenRPA.Views
         }
         public void InitializeActivitiesToolbox()
         {
+            Log.FunctionIndent("WFToolbox", "InitializeActivitiesToolbox");
             try
             {
                 // var tb = new ToolboxControl();
@@ -129,14 +132,13 @@ namespace OpenRPA.Views
                     {
                     }
                 }
-                // return tb;
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "");
                 MessageBox.Show("InitializeActivitiesToolbox: " + ex.Message);
-                // return null;
             }
+            Log.FunctionOutdent("WFToolbox", "InitializeActivitiesToolbox");
         }
     }
 }

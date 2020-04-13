@@ -38,7 +38,8 @@ namespace OpenRPA.JavaBridge
             try
             {
                 form = new MainWindow();
-                pipe = new NamedPipeServer<JavaEvent>("openrpa_javabridge");
+                var SessionId = System.Diagnostics.Process.GetCurrentProcess().SessionId;
+                pipe = new NamedPipeServer<JavaEvent>(SessionId + "_openrpa_javabridge");
                 pipe.ClientMessage += Server_OnReceivedMessage;
                 pipe.Start();
 

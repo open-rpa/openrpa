@@ -49,7 +49,8 @@ namespace OpenRPA.NM
             //registreffNativeMessagingHost(false);
             if (chromepipe == null && chrome)
             {
-                chromepipe = new NamedPipeClientAsync<NativeMessagingMessage>(PIPE_NAME + "_chrome");
+                var SessionId = System.Diagnostics.Process.GetCurrentProcess().SessionId;
+                chromepipe = new NamedPipeClientAsync<NativeMessagingMessage>(SessionId + "_" + PIPE_NAME + "_chrome");
                 chromepipe.ServerMessage += Client_OnReceivedMessage;
                 chromepipe.Disconnected += () => { onDisconnected?.Invoke("chrome"); };
                 chromepipe.Connected += () => {  Connected?.Invoke("chrome"); Task.Run(()=> enumwindowandtabs());  };
@@ -58,7 +59,8 @@ namespace OpenRPA.NM
             }
             if (ffpipe == null && ff)
             {
-                ffpipe = new NamedPipeClientAsync<NativeMessagingMessage>(PIPE_NAME + "_ff");
+                var SessionId = System.Diagnostics.Process.GetCurrentProcess().SessionId;
+                ffpipe = new NamedPipeClientAsync<NativeMessagingMessage>(SessionId + "_" + PIPE_NAME + "_ff");
                 ffpipe.ServerMessage += Client_OnReceivedMessage;
                 ffpipe.Disconnected += () => { onDisconnected?.Invoke("ff"); };
                 ffpipe.Connected += () => { Connected?.Invoke("ff"); Task.Run(() => enumwindowandtabs()); };

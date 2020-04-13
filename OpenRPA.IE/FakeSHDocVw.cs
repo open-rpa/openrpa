@@ -67,7 +67,7 @@ namespace OpenRPA.IE
                 // NativeMethods.SetForegroundWindow (IEHwnd);
                 NativeMethods.ShowWindow(IEHwnd, NativeMethods.WindowShowStyle.ShowMaximized);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 

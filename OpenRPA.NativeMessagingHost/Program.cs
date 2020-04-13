@@ -65,7 +65,8 @@ namespace OpenRPA.NativeMessagingHost
                 {
                     if (pipe == null && !string.IsNullOrEmpty(msg.browser))
                     {
-                        pipe = new NamedPipeServer<NativeMessagingMessage>(PIPE_NAME + "_" + msg.browser);
+                        var SessionId = System.Diagnostics.Process.GetCurrentProcess().SessionId;
+                        pipe = new NamedPipeServer<NativeMessagingMessage>(SessionId + "_" + PIPE_NAME + "_" + msg.browser);
                         pipe.ClientMessage += Server_OnReceivedMessage;
                         //pipe.OnReceivedMessage += Server_OnReceivedMessage;
                         pipe.Start();

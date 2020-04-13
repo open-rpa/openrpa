@@ -36,97 +36,172 @@ namespace OpenRPA.Views
         private pitem[] _items;
         public InsertSelect(IElement item)
         {
-            this.item = item;
-            var temp = new List<pitem>();
-            foreach (var i in item.Items) temp.Add(new pitem { Item = i, Name = i.Name });
-            _items = temp.ToArray();
-            InitializeComponent();
-            EventManager.RegisterClassHandler(typeof(Window), Window.LoadedEvent, new RoutedEventHandler(Window_Loaded));
-            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            DataContext = this;
-            Activate();
-            Focus();
-            Topmost = true;
-            Topmost = false;
-            Focus();
-            // textbox.Focus();
-            Topmost = true;
-
+            Log.FunctionIndent("InsertSelect", "InsertSelect");
+            try
+            {
+                this.item = item;
+                var temp = new List<pitem>();
+                foreach (var i in item.Items) temp.Add(new pitem { Item = i, Name = i.Name });
+                _items = temp.ToArray();
+                InitializeComponent();
+                EventManager.RegisterClassHandler(typeof(Window), Window.LoadedEvent, new RoutedEventHandler(Window_Loaded));
+                this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                DataContext = this;
+                Activate();
+                Focus();
+                Topmost = true;
+                Topmost = false;
+                Focus();
+                // textbox.Focus();
+                Topmost = true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("InsertSelect", "InsertSelect");
         }
         public IElement SelectedItem { get; set; }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            DataContext = this;
-            var window = e.Source as Window;
-            System.Threading.Thread.Sleep(100);
-            window.Dispatcher.Invoke(
-            new Action(() =>
+            Log.FunctionIndent("InsertSelect", "Window_Loaded");
+            try
             {
-                search.Focus();
-                search.ItemsSource = _items;
-                search.PopulateComplete();
-            }));
-            okButton.IsEnabled = false;
-            NotifyPropertyChanged("Items");
+                DataContext = this;
+                var window = e.Source as Window;
+                System.Threading.Thread.Sleep(100);
+                window.Dispatcher.Invoke(
+                new Action(() =>
+                {
+                    search.Focus();
+                    search.ItemsSource = _items;
+                    search.PopulateComplete();
+                }));
+                okButton.IsEnabled = false;
+                NotifyPropertyChanged("Items");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("InsertSelect", "Window_Loaded");
         }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Escape)
+            Log.FunctionIndent("InsertSelect", "Window_KeyDown");
+            try
             {
-                DialogResult = false;
-                Close();
+                if (e.Key == Key.Escape)
+                {
+                    DialogResult = false;
+                    Close();
+                }
+                if (e.Key == Key.Enter)
+                {
+                    DialogResult = true;
+                    Close();
+                }
             }
-            if (e.Key == Key.Enter)
+            catch (Exception ex)
             {
-                DialogResult = true;
-                Close();
+                Log.Error(ex.ToString());
             }
+            Log.FunctionOutdent("InsertSelect", "Window_KeyDown");
         }
         private void Window_LostFocus(object sender, RoutedEventArgs e)
         {
-            Activate();
-            Focus();
-            Topmost = true;
-            Topmost = false;
-            Focus();
-            // textbox.Focus();
+            Log.FunctionIndent("InsertSelect", "Window_LostFocus");
+            try
+            {
+                Activate();
+                Focus();
+                Topmost = true;
+                Topmost = false;
+                Focus();
+                // textbox.Focus();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("InsertSelect", "Window_LostFocus");
         }
         private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            AutoCompleteBox acb = (AutoCompleteBox)sender;
-            var p = (pitem)acb.SelectedItem;
-            if (p != null) SelectedItem = p.Item;
-            if (SelectedItem == null) return;
-            search.Text = SelectedItem.Name;
-            okButton.IsEnabled = true;
-
+            Log.FunctionIndent("InsertSelect", "OnSelectionChanged");
+            try
+            {
+                AutoCompleteBox acb = (AutoCompleteBox)sender;
+                var p = (pitem)acb.SelectedItem;
+                if (p != null) SelectedItem = p.Item;
+                if (SelectedItem == null) return;
+                search.Text = SelectedItem.Name;
+                okButton.IsEnabled = true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("InsertSelect", "OnSelectionChanged");
         }
         private void OnPopulatingAsynchronous(object sender, PopulatingEventArgs e)
         {
-            AutoCompleteBox source = (AutoCompleteBox)sender;
-            e.Cancel = true;
-            _ = Dispatcher.BeginInvoke(
-                new System.Action(delegate ()
-                {
-                    if(!string.IsNullOrEmpty(source.Text))
+            Log.FunctionIndent("InsertSelect", "OnPopulatingAsynchronous");
+            try
+            {
+                AutoCompleteBox source = (AutoCompleteBox)sender;
+                e.Cancel = true;
+                _ = Dispatcher.BeginInvoke(
+                    new System.Action(delegate ()
                     {
-                        source.ItemsSource = _items.Where(x => !string.IsNullOrEmpty(x.Name) && x.Name.ToLower().Contains(source.Text.ToLower())).ToArray();
-                    } else
-                    {
-                        source.ItemsSource = _items;
+                        try
+                        {
+                            if (!string.IsNullOrEmpty(source.Text))
+                            {
+                                source.ItemsSource = _items.Where(x => !string.IsNullOrEmpty(x.Name) && x.Name.ToLower().Contains(source.Text.ToLower())).ToArray();
+                            }
+                            else
+                            {
+                                source.ItemsSource = _items;
 
-                    }
-                    source.PopulateComplete();
-                }));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.ToString();
+                        }
+                        try
+                        {
+                            source.PopulateComplete();
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }));
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("InsertSelect", "OnPopulatingAsynchronous");
         }
 
         private void okButton_Click(object sender, RoutedEventArgs e)
         {
-            var p = (pitem)search.SelectedItem;
-            if (p != null) SelectedItem = p.Item;
-            if (SelectedItem == null) return;
-            DialogResult = true;
-            Close();
+            Log.FunctionIndent("InsertSelect", "okButton_Click");
+            try
+            {
+                var p = (pitem)search.SelectedItem;
+                if (p != null) SelectedItem = p.Item;
+                if (SelectedItem == null) return;
+                DialogResult = true;
+                Close();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("InsertSelect", "okButton_Click");
         }
     }
 }

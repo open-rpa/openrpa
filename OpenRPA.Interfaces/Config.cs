@@ -32,6 +32,8 @@ namespace OpenRPA
         public bool doupdatecheck = true;
         public bool autoupdateupdater = true;
         public bool log_to_file = false;
+        public int log_file_level_minimum = NLog.LogLevel.Info.Ordinal;
+        public int log_file_level_maximum = NLog.LogLevel.Fatal.Ordinal;
         public bool log_verbose = false;
         public bool log_activity = false;
         public bool log_debug = false;

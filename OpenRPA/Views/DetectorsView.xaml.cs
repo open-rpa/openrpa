@@ -46,14 +46,17 @@ namespace OpenRPA.Views
         }
         public DetectorsView(MainWindow main)
         {
+            Log.FunctionIndent("DetectorsView", "DetectorsView");
             InitializeComponent();
             this.main = main;
             DataContext = this;
             detectorPlugins.ItemPropertyChanged += DetectorPlugins_ItemPropertyChanged;
+            Log.FunctionOutdent("DetectorsView", "DetectorsView");
         }
         static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
         private async void DetectorPlugins_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            Log.FunctionIndent("DetectorsView", "DetectorPlugins_ItemPropertyChanged");
             try
             {
                 await semaphoreSlim.WaitAsync();
@@ -96,40 +99,58 @@ namespace OpenRPA.Views
             {
                 semaphoreSlim.Release();
             }
+            Log.FunctionOutdent("DetectorsView", "DetectorPlugins_ItemPropertyChanged");
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var btn = sender as System.Windows.Controls.Button;
-            var kv = (System.Collections.Generic.KeyValuePair<string, System.Type>)btn.DataContext;
-            var d = new Interfaces.entity.Detector(); d.Plugin = kv.Value.FullName;
-            IDetectorPlugin dp = null;
-            d.Path = Interfaces.Extensions.ProjectsDirectory;
-            dp = Plugins.AddDetector(RobotInstance.instance, d);
-            dp.OnDetector += main.OnDetector;
-            NotifyPropertyChanged("detectorPlugins");
+            Log.FunctionIndent("DetectorsView", "Button_Click");
+            try
+            {
+                var btn = sender as System.Windows.Controls.Button;
+                var kv = (System.Collections.Generic.KeyValuePair<string, System.Type>)btn.DataContext;
+                var d = new Interfaces.entity.Detector(); d.Plugin = kv.Value.FullName;
+                IDetectorPlugin dp = null;
+                d.Path = Interfaces.Extensions.ProjectsDirectory;
+                dp = Plugins.AddDetector(RobotInstance.instance, d);
+                dp.OnDetector += main.OnDetector;
+                NotifyPropertyChanged("detectorPlugins");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("DetectorsView", "Button_Click");
         }
         private async void LidtDetectors_KeyUp(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Delete)
+            Log.FunctionIndent("DetectorsView", "LidtDetectors_KeyUp");
+            try
             {
-                var item = lidtDetectors.SelectedValue as IDetectorPlugin;
-                item.Stop();
-                item.OnDetector -= main.OnDetector;
-                var d = item.Entity as OpenRPA.Interfaces.entity.Detector;
-                if (d != null) d.Delete();
-                var kd = item.Entity;
-                if (kd != null) kd.Delete();
-                if (global.isConnected)
+                if (e.Key == Key.Delete)
                 {
-                    var _id = (item.Entity as Interfaces.entity.Detector)._id;
-                    if (!string.IsNullOrEmpty(_id))
+                    var item = lidtDetectors.SelectedValue as IDetectorPlugin;
+                    item.Stop();
+                    item.OnDetector -= main.OnDetector;
+                    var d = item.Entity as OpenRPA.Interfaces.entity.Detector;
+                    if (d != null) d.Delete();
+                    var kd = item.Entity;
+                    if (kd != null) kd.Delete();
+                    if (global.isConnected)
                     {
-                        await global.webSocketClient.DeleteOne("openrpa", _id);
+                        var _id = (item.Entity as Interfaces.entity.Detector)._id;
+                        if (!string.IsNullOrEmpty(_id))
+                        {
+                            await global.webSocketClient.DeleteOne("openrpa", _id);
+                        }
                     }
+                    detectorPlugins.Remove(item);
                 }
-                detectorPlugins.Remove(item);
-
             }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("DetectorsView", "LidtDetectors_KeyUp");
         }
     }
 }

@@ -91,6 +91,7 @@ namespace OpenRPA
         }
         public void MainWindowReadyForAction()
         {
+            Log.FunctionIndent("RobotInstance", "MainWindowReadyForAction");
             GenericTools.RunUI(() =>
             {
                 try
@@ -110,6 +111,7 @@ namespace OpenRPA
                     Log.Error(ex.ToString());
                 }
             });
+            Log.FunctionOutdent("RobotInstance", "MainWindowReadyForAction");
         }
         private void ReloadTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
@@ -118,15 +120,18 @@ namespace OpenRPA
         }
         public IDesigner GetWorkflowDesignerByIDOrRelativeFilename(string IDOrRelativeFilename)
         {
+            Log.FunctionIndent("RobotInstance", "GetWorkflowDesignerByIDOrRelativeFilename");
             foreach (var designer in Designers)
             {
                 if (designer.Workflow._id == IDOrRelativeFilename) return designer;
                 if (designer.Workflow.RelativeFilename.ToLower().Replace("\\", "/") == IDOrRelativeFilename.ToLower().Replace("\\", "/")) return designer;
             }
+            Log.FunctionOutdent("RobotInstance", "GetWorkflowDesignerByIDOrRelativeFilename");
             return null;
         }
         public IWorkflow GetWorkflowByIDOrRelativeFilename(string IDOrRelativeFilename)
         {
+            Log.FunctionIndent("RobotInstance", "GetWorkflowByIDOrRelativeFilename");
             foreach (var p in Projects)
             {
                 foreach (var wf in p.Workflows)
@@ -135,19 +140,24 @@ namespace OpenRPA
                     if (wf.RelativeFilename.ToLower().Replace("\\", "/") == IDOrRelativeFilename.ToLower().Replace("\\", "/")) return wf;
                 }
             }
+            Log.FunctionOutdent("RobotInstance", "GetWorkflowByIDOrRelativeFilename");
             return null;
         }
         public IWorkflowInstance GetWorkflowInstanceByInstanceId(string InstanceId)
         {
+            Log.FunctionIndent("RobotInstance", "GetWorkflowInstanceByInstanceId");
             var result = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId).FirstOrDefault();
+            Log.FunctionOutdent("RobotInstance", "GetWorkflowInstanceByInstanceId");
             return result;
         }
         private async Task CheckForUpdatesAsync()
         {
+            Log.Function("RobotInstance", "CheckForUpdatesAsync");
             if (!Config.local.doupdatecheck) return;
             if ((DateTime.Now - Config.local.lastupdatecheck) < Config.local.updatecheckinterval) return;
             await Task.Run(async () =>
             {
+                Log.FunctionIndent("RobotInstance", "CheckForUpdatesAsync");
                 try
                 {
                     if (Config.local.autoupdateupdater)
@@ -179,12 +189,14 @@ namespace OpenRPA
                 {
                     Log.Debug(ex.ToString());
                 }
+                Log.FunctionOutdent("RobotInstance", "CheckForUpdatesAsync");
             });
         }
         internal void MainWindowStatus(string message)
         {
             try
             {
+                Log.Function("RobotInstance", "MainWindowStatus", message);
                 Status?.Invoke(message);
             }
             catch (Exception)
@@ -193,7 +205,12 @@ namespace OpenRPA
         }
         public async Task LoadServerData()
         {
-            if (!global.isSignedIn) return;
+            Log.FunctionIndent("RobotInstance", "LoadServerData");
+            if (!global.isSignedIn)
+            {
+                Log.FunctionOutdent("RobotInstance", "LoadServerData", "Not signed in");
+                return;
+            }
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
             try
@@ -496,11 +513,13 @@ namespace OpenRPA
             finally
             {
                 SetStatus("Connected to " + Config.local.wsurl + " as " + global.webSocketClient.user.name);
-                RobotInstance.instance.AutoReloading = true;
+                AutoReloading = true;
             }
+            Log.FunctionOutdent("RobotInstance", "LoadServerData");
         }
         private void SetStatus(string message)
         {
+            Log.FunctionIndent("RobotInstance", "SetStatus", "Status?.Invoke");
             try
             {
                 Status?.Invoke(message);
@@ -509,12 +528,22 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
-            Window.SetStatus(message);
+            Log.Function("RobotInstance", "SetStatus", "Window.SetStatus");
+            try
+            {
+                Window.SetStatus(message);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("RobotInstance", "SetStatus");
         }
         public void ParseCommandLineArgs(IList<string> args)
         {
             AutomationHelper.syncContext.Post(o =>
             {
+                Log.FunctionIndent("RobotInstance", "ParseCommandLineArgs");
                 CommandLineParser parser = new CommandLineParser();
                 // parser.Parse(string.Join(" ", args), true);
                 var options = parser.Parse(args, true);
@@ -534,6 +563,7 @@ namespace OpenRPA
                         instance.Run();
                     }
                 }
+                Log.FunctionOutdent("RobotInstance", "ParseCommandLineArgs");
             }, null);
         }
         public void ParseCommandLineArgs()
@@ -542,6 +572,7 @@ namespace OpenRPA
         }
         public void init()
         {
+            Log.FunctionIndent("RobotInstance", "init");
             SetStatus("Checking for updates");
             _ = CheckForUpdatesAsync();
             try
@@ -579,7 +610,7 @@ namespace OpenRPA
                 if (!string.IsNullOrEmpty(Config.local.wsurl))
                 {
                     global.webSocketClient = new Net.WebSocketClient(Config.local.wsurl);
-                    global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
+                    global.webSocketClient.OnOpen += RobotInstance_WebSocketClient_OnOpen;
                     global.webSocketClient.OnClose += WebSocketClient_OnClose;
                     global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
                     SetStatus("Connecting to " + Config.local.wsurl);
@@ -630,16 +661,20 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
+            Log.FunctionOutdent("RobotInstance", "init");
         }
         private void Hide()
         {
+            Log.FunctionIndent("RobotInstance", "Hide");
             GenericTools.RunUI(() => {
                 if (App.splash != null) App.splash.Hide();
                 if (Window != null) Window.Hide();
             });
+            Log.FunctionOutdent("RobotInstance", "Hide");
         }
         private void Show()
         {
+            Log.FunctionIndent("RobotInstance", "Show");
             GenericTools.RunUI(() => {
                 if (App.splash != null)
                 {
@@ -649,17 +684,21 @@ namespace OpenRPA
                     if (Window != null) Window.Show();
                 }
             });
+            Log.FunctionOutdent("RobotInstance", "Show");
         }
         private void Close()
         {
+            Log.FunctionIndent("RobotInstance", "Close");
             GenericTools.RunUI(() => {
                 if (App.splash != null) App.splash.Close();
                 if (Window != null) Window.Close();
                 System.Windows.Application.Current.Shutdown();
             });
+            Log.FunctionOutdent("RobotInstance", "Close");
         }
-        private async void WebSocketClient_OnOpen()
+        private async void RobotInstance_WebSocketClient_OnOpen()
         {
+            Log.FunctionIndent("RobotInstance", "RobotInstance_WebSocketClient_OnOpen");
             try
             {
                 Connected?.Invoke();
@@ -668,6 +707,7 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
+            Interfaces.entity.TokenUser user = null;
             try
             {
                 string url = "http";
@@ -680,7 +720,6 @@ namespace OpenRPA
                 sw.Start();
                 Log.Debug("WebSocketClient_OnOpen::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                 SetStatus("Connected to " + Config.local.wsurl);
-                Interfaces.entity.TokenUser user = null;
                 while (user == null)
                 {
                     string errormessage = string.Empty;
@@ -836,13 +875,21 @@ namespace OpenRPA
                     SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                Log.Error(ex.ToString());
             }
             if (Window != null)
             {
-                Window.WebSocketClient_OnOpen();
+                Window.MainWindow_WebSocketClient_OnOpen();
+            }
+            try
+            {
+                SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
             }
             if(first_connect)
             {
@@ -865,9 +912,11 @@ namespace OpenRPA
                     }
                 });
             }
+            Log.FunctionOutdent("RobotInstance", "RobotInstance_WebSocketClient_OnOpen");
         }
         private async void WebSocketClient_OnClose(string reason)
         {
+            Log.FunctionIndent("RobotInstance", "WebSocketClient_OnClose", reason);
             Log.Information("Disconnected " + reason);
             SetStatus("Disconnected from " + Config.local.wsurl + " reason " + reason);
             try
@@ -881,24 +930,33 @@ namespace OpenRPA
             await Task.Delay(1000);
             if (autoReconnect)
             {
-                autoReconnect = false;
-                global.webSocketClient.OnOpen -= WebSocketClient_OnOpen;
-                global.webSocketClient.OnClose -= WebSocketClient_OnClose;
-                global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
-                global.webSocketClient = null;
+                try
+                {
+                    autoReconnect = false;
+                    global.webSocketClient.OnOpen -= RobotInstance_WebSocketClient_OnOpen;
+                    global.webSocketClient.OnClose -= WebSocketClient_OnClose;
+                    global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
+                    global.webSocketClient = null;
 
-                global.webSocketClient = new Net.WebSocketClient(Config.local.wsurl);
-                global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
-                global.webSocketClient.OnClose += WebSocketClient_OnClose;
-                global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
-                SetStatus("Connecting to " + Config.local.wsurl);
+                    global.webSocketClient = new Net.WebSocketClient(Config.local.wsurl);
+                    global.webSocketClient.OnOpen += RobotInstance_WebSocketClient_OnOpen;
+                    global.webSocketClient.OnClose += WebSocketClient_OnClose;
+                    global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
+                    SetStatus("Connecting to " + Config.local.wsurl);
 
-                await global.webSocketClient.Connect();
-                autoReconnect = true;
+                    await global.webSocketClient.Connect();
+                    autoReconnect = true;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
             }
+            Log.FunctionOutdent("RobotInstance", "WebSocketClient_OnClose");
         }
         private async void WebSocketClient_OnQueueMessage(IQueueMessage message, QueueMessageEventArgs e)
         {
+            Log.FunctionIndent("RobotInstance", "WebSocketClient_OnQueueMessage");
             Interfaces.mq.RobotCommand command = null;
             try
             {
@@ -907,6 +965,7 @@ namespace OpenRPA
                 {
                     if (!string.IsNullOrEmpty(message.correlationId))
                     {
+                        Log.Function("RobotInstance", "WebSocketClient_OnQueueMessage", "loop instances");
                         foreach (var wi in WorkflowInstance.Instances)
                         {
                             if (wi.isCompleted) continue;
@@ -938,6 +997,7 @@ namespace OpenRPA
                 if (command.command == null) return;
                 if (command.command == "invoke" && !string.IsNullOrEmpty(command.workflowid))
                 {
+                    Log.Function("RobotInstance", "WebSocketClient_OnQueueMessage", "Prepare workflow invoke");
                     IWorkflowInstance instance = null;
                     var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(command.workflowid);
                     if (workflow == null) throw new ArgumentException("Unknown workflow " + command.workflowid);
@@ -1007,6 +1067,7 @@ namespace OpenRPA
                             }
                         }
                         Log.Information("Create instance of " + workflow.name);
+                        Log.Function("RobotInstance", "WebSocketClient_OnQueueMessage", "Create instance and run workflow");
                         GenericTools.RunUI(() =>
                         {
                             command.command = "invokesuccess";
@@ -1056,6 +1117,7 @@ namespace OpenRPA
                     await global.webSocketClient.QueueMessage(message.replyto, command, message.correlationId);
                 }
             }
+            Log.FunctionOutdent("RobotInstance", "WebSocketClient_OnQueueMessage");
         }
     }
 }

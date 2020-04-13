@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.95</Version>
-    <PackageReleaseNotes>1.0.95 Add DatabaseScope, ExecuteNonQuery, ExecuteQuery, ExecuteScalar, UpdateFromDataTable and DeleteAllRows
+    <Version>1.0.96</Version>
+    <PackageReleaseNotes>1.0.96 Fix terminal server name pipe issue and add more logging features
+1.0.95 Add DatabaseScope, ExecuteNonQuery, ExecuteQuery, ExecuteScalar, UpdateFromDataTable and DeleteAllRows
 1.0.94 Add agent interface, Add loading screen, add ShowBalloonTip and DeleteFile, Add notifications
 1.0.93 Use workflow permissoins for new workflow instances
 1.0.92 Add experimental support for XPath for IE, also doing recording

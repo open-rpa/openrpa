@@ -1,7 +1,7 @@
 # ![OpenRPA](OpenRPA-logo.png)OpenRPA
 Open Source Robotic Process Automation Software
 
-[![GitHub issues](https://img.shields.io/github/issues/open-rpa/openrpa.svg)](https://github.com/open-rpa/openrpa/issues)[![GitHub forks](https://img.shields.io/github/forks/open-rpa/openrpa.svg)](https://github.com/open-rpa/openrpa/network)[![GitHub license](https://img.shields.io/github/license/open-rpa/openrpa.svg)](https://github.com/open-rpa/openrpa/blob/master/LICENSE)[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/open-rpa/openrpa/graphs/commit-activity)
+[![GitHub issues](https://img.shields.io/github/issues/open-rpa/openrpa.svg)](https://github.com/open-rpa/openrpa/issues) [![GitHub forks](https://img.shields.io/github/forks/open-rpa/openrpa.svg)](https://github.com/open-rpa/openrpa/network) [![GitHub license](https://img.shields.io/github/license/open-rpa/openrpa.svg)](https://github.com/open-rpa/openrpa/blob/master/LICENSE) [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/open-rpa/openrpa/graphs/commit-activity) [![Downloads](https://github-basic-badges.herokuapp.com/downloads/open-rpa/openrpa/total.svg)](https://github.com/open-rpa/openrpa/releases/latest/download/OpenRPA.msi) 
 
 Join slack for for help or giving feedback [#openrpa](https://slack.openrpa.dk)
 

@@ -38,16 +38,6 @@ namespace OpenRPA
         public MainWindow()
         {
             Log.FunctionIndent("MainWindow", "MainWindow");
-            if (!string.IsNullOrEmpty(Config.local.culture))
-            {
-                try
-                {
-                    System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo(Config.local.culture);
-                }
-                catch (Exception)
-                {
-                }
-            }
             System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = false;
             System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.BelowNormal;
             System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.BelowNormal;

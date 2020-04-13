@@ -33,6 +33,20 @@ namespace OpenRPA
         public static System.Windows.Forms.NotifyIcon notifyIcon { get; set; }  = new System.Windows.Forms.NotifyIcon();
         public App()
         {
+            if (!string.IsNullOrEmpty(Config.local.culture))
+            {
+                try
+                {
+                    var cultur = System.Globalization.CultureInfo.GetCultureInfo(Config.local.culture);
+                    System.Threading.Thread.CurrentThread.CurrentUICulture = cultur;
+                    System.Globalization.CultureInfo.DefaultThreadCurrentCulture = cultur;
+                    System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = cultur;
+                    ProcessThreadCollection currentThreads = Process.GetCurrentProcess().Threads;
+                }
+                catch (Exception)
+                {
+                }
+            }
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LoadFromSameFolder);
             try
             {
@@ -154,6 +168,7 @@ namespace OpenRPA
         public static Views.SplashScreen splash { get; set; }
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
+
             splash = new Views.SplashScreen();
             splash.Show();
             splash.BusyContent = "Loading main window";

@@ -19,6 +19,7 @@ namespace OpenRPA.IE
     {
         [RequiredArgument]
         public InArgument<string> Url { get; set; }
+        public InArgument<bool> FocusBrowser { get; set; }
         protected override void Execute(NativeActivityContext context)
         {
             var url = Url.Get(context);
@@ -29,7 +30,7 @@ namespace OpenRPA.IE
             {
                 if(doc.url != url) doc.url = url;
             }
-            browser.Show();
+            if(FocusBrowser.Get(context)) browser.Show();
             var sw = new Stopwatch();
             sw.Start();
             while (sw.Elapsed < timeout && doc.readyState != "complete" && doc.readyState != "interactive")

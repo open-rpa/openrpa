@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.96</Version>
-    <PackageReleaseNotes>1.0.96 Fix terminal server name pipe issue and add more logging features
+    <Version>1.0.97</Version>
+    <PackageReleaseNotes>1.0.97 Add instance log window with last 10 runs
+1.0.96 Fix terminal server name pipe issue and add more logging features
 1.0.95 Add DatabaseScope, ExecuteNonQuery, ExecuteQuery, ExecuteScalar, UpdateFromDataTable and DeleteAllRows
 1.0.94 Add agent interface, Add loading screen, add ShowBalloonTip and DeleteFile, Add notifications
 1.0.93 Use workflow permissoins for new workflow instances
@@ -363,6 +364,7 @@
     <None Remove="Views\SplashScreen.xaml" />
     <None Remove="Views\WFDesigner.xaml" />
     <None Remove="Views\wfToolbox.xaml" />
+    <None Remove="Views\WorkflowInstances.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\ShowBalloonTipDesigner.xaml">
@@ -417,6 +419,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AgentViewProjects.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WorkflowInstances.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SplashScreen.xaml">
@@ -716,6 +722,9 @@
       <DependentUpon>strings.resx</DependentUpon>
     </Compile>
     <Compile Update="Views\RecorderPlugins.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\WorkflowInstances.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

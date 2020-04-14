@@ -30,7 +30,8 @@
                                          ></TextBox>
 
         <TreeView   x:Name="listWorkflows" ItemsSource="{Binding Source={StaticResource Projects}}" BorderThickness="0" Grid.Column="0"  Grid.Row="1" 
-                                       MouseDoubleClick="ListWorkflows_MouseDoubleClick">
+                                       MouseDoubleClick="ListWorkflows_MouseDoubleClick" SelectedItemChanged="listWorkflows_SelectedItemChanged"
+                    >
             <TreeView.ItemContainerStyle>
                 <!-- 
     This Style binds a TreeViewItem to a ViewModel. 

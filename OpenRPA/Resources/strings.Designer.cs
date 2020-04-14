@@ -1195,6 +1195,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Workflow Instances.
+        /// </summary>
+        public static string dock_workflowinstances {
+            get {
+                return ResourceManager.GetString("dock_workflowinstances", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Download.
         /// </summary>
         public static string download {

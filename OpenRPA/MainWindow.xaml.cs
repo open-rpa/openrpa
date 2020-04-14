@@ -427,6 +427,7 @@ namespace OpenRPA
             NotifyPropertyChanged("Minimize");
             NotifyPropertyChanged("SelectedContent");
             NotifyPropertyChanged("LastDesigner");
+            NotifyPropertyChanged("CurrentWorkflow");
         }
         public object SelectedContent
         {
@@ -435,6 +436,27 @@ namespace OpenRPA
                 if (DManager == null) return null;
                 var b = DManager.ActiveContent;
                 return b;
+            }
+        }
+        public Workflow CurrentWorkflow
+        {
+            get
+            {
+                Workflow workflow = null;
+                if (SelectedContent is Views.WFDesigner wfview)
+                {
+                    workflow = wfview.Workflow;
+                }
+                if (SelectedContent is Views.OpenProject opview)
+                {
+                    var wf = opview.listWorkflows.SelectedValue as Workflow;
+                    workflow = wf;
+                }
+                return workflow;
+            }
+            set
+            {
+
             }
         }
         public Views.WFDesigner Designer
@@ -1628,6 +1650,7 @@ namespace OpenRPA
                     var view = new Views.OpenProject(this);
                     view.onOpenProject += OnOpenProject;
                     view.onOpenWorkflow += OnOpenWorkflow;
+                    view.onSelectedItemChanged += View_onSelectedItemChanged;
 
                     LayoutDocument layoutDocument = new LayoutDocument { Title = "Open project" };
                     layoutDocument.ContentId = "openproject";
@@ -1645,6 +1668,12 @@ namespace OpenRPA
             }, null);
             Log.FunctionOutdent("MainWindow", "OnOpen");
         }
+
+        private void View_onSelectedItemChanged()
+        {
+            NotifyPropertyChanged("CurrentWorkflow");
+        }
+
         private void OnDetectors(object _item)
         {
             Log.FunctionIndent("MainWindow", "OnDetectors");

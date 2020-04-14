@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
-    <Version>1.0.20</Version>
-    <PackageReleaseNotes>1.0.20 Fix terminal server name pipe issue
+    <Version>1.0.21</Version>
+    <PackageReleaseNotes>1.0.21 Fix JavaBridge initialization failure
+1.0.20 Fix terminal server name pipe issue
 1.0.19 Change target framework to 4.7.2
 1.0.18 Add support for variables in selector
 1.0.17 Add langauges

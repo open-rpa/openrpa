@@ -71,17 +71,20 @@ namespace OpenRPA.Java
                     pipeclient.Start();
                 }
                 if (Initilized) return;
-                Initilized = false;
-                _windowCache = new HwndCache();
-                Log.Debug("javahook.init()");
-                accessBridge.Initilized += (e1, e2) =>
+                GenericTools.RunUI(() =>
                 {
-                    Initilized = true;
-                    Log.Information("javahook._accessBridge.Initilized");
-                    OnInitilized?.Invoke(accessBridge);
-                };
-                accessBridge.Initialize();
-                refreshJvms(200);
+                    Initilized = false;
+                    _windowCache = new HwndCache();
+                    Log.Debug("javahook.init()");
+                    accessBridge.Initilized += (e1, e2) =>
+                    {
+                        Initilized = true;
+                        Log.Information("javahook._accessBridge.Initilized");
+                        OnInitilized?.Invoke(accessBridge);
+                    };
+                    accessBridge.Initialize();
+                    refreshJvms(200);
+                });
             }
             catch (Exception ex)
             {

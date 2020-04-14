@@ -196,6 +196,15 @@ namespace OpenRPA.Utilities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select CSV file to write to.
+        /// </summary>
+        public static string activity_writecsv_hint {
+            get {
+                return ResourceManager.GetString("activity_writecsv_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select excel file to write to.
         /// </summary>
         public static string activity_writeexcel_hint {

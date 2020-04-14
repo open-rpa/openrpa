@@ -10,8 +10,9 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.0.8</Version>
-    <PackageReleaseNotes>1.0.9 Add DeleteAllRows
+    <Version>1.0.10</Version>
+    <PackageReleaseNotes>1.0.10 Fix hint text in WriteCSV activity
+1.0.9 Add DeleteAllRows
 1.0.8 Add AddDataColumn, AddDataRow and CreateDataTable
 1.0.7 Change target framework to 4.7.2
 1.0.6 Fix input errors in JArrayToDataTable Designer

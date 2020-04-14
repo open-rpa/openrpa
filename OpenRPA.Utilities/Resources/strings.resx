@@ -162,6 +162,9 @@
   <data name="activity_readpdf_hint" xml:space="preserve">
     <value>Select PDF file to read</value>
   </data>
+  <data name="activity_writecsv_hint" xml:space="preserve">
+    <value>Select CSV file to write to</value>
+  </data>
   <data name="activity_writeexcel_hint" xml:space="preserve">
     <value>Select excel file to write to</value>
   </data>

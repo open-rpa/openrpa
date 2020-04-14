@@ -343,7 +343,6 @@ namespace OpenRPA
                 if (AllowQuite && e.Cancel == false)
                 {
                     foreach (var d in Plugins.detectorPlugins) d.Stop();
-                    foreach (var p in RobotInstance.instance.Projects) foreach (var wf in p.Workflows) wf.Dispose();
                     InputDriver.Instance.Dispose();
                     Log.FunctionOutdent("MainWindow", "AllowQuite true");
                     return;
@@ -2299,7 +2298,7 @@ namespace OpenRPA
                     if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) is Views.WFDesigner designer)
                     {
                         designer.BreakpointLocations = null;
-                        instance = workflow.CreateInstance(param, null, null, new idleOrComplete(designer.OnIdle), designer.OnVisualTracking);
+                        instance = workflow.CreateInstance(param, null, null, new idleOrComplete(designer.IdleOrComplete), designer.OnVisualTracking);
                         designer.Run(VisualTracking, SlowMotion, instance);
                     }
                     else

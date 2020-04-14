@@ -155,7 +155,6 @@ namespace OpenRPA
                 if (AllowQuite && e.Cancel == false)
                 {
                     foreach (var d in Plugins.detectorPlugins) d.Stop();
-                    foreach (var p in RobotInstance.instance.Projects) foreach (var wf in p.Workflows) wf.Dispose();
                     InputDriver.Instance.Dispose();
                     return;
                 }

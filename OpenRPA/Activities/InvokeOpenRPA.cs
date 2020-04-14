@@ -65,7 +65,7 @@ namespace OpenRPA.Activities
                     if (designer != null)
                     {
                         designer.BreakpointLocations = null;
-                        instance = workflow.CreateInstance(param, null, null, designer.OnIdle, designer.OnVisualTracking);
+                        instance = workflow.CreateInstance(param, null, null, designer.IdleOrComplete, designer.OnVisualTracking);
                     }
                     else
                     {

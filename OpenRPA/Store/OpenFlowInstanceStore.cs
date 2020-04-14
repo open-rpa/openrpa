@@ -36,11 +36,6 @@ namespace OpenRPA.Store
                         else if (global.isConnected)
                         {
                             i.Save();
-                            //var v = JObject.Parse("{}");
-                            //v.Add("xml", JToken.FromObject(Base64Encode(doc)));
-                            //var set = JObject.Parse("{}");
-                            //set.Add("$set", v);
-                            //_ = global.webSocketClient.UpdateOne("openrpa_instances", "{_id: '" + i._id + "'}", 1, false, set);
                         }   
                     }
                 }

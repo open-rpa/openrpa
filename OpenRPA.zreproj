@@ -73,9 +73,9 @@
     <globalSetting name="CreateNewFileForm.newLanguageComboBox.SelectedIndex">-1</globalSetting>
     <globalSetting name="CreateNewFileForm.copyTextsCheckBox.Checked">False</globalSetting>
     <globalSetting name="CreateNewFileForm.automaticallyTranslateCheckBox.Checked">False</globalSetting>
-    <globalSetting name="sendFileToTranslator.destinationFilePathTextEdit.Text">C:\code\openrpa\OpenRPA-de.xlsx</globalSetting>
+    <globalSetting name="sendFileToTranslator.destinationFilePathTextEdit.Text">C:\code\openrpa\OpenRPA.xlsx</globalSetting>
     <globalSetting name="sendFileToTranslator.fileGroupsListBox">OpenRPA.AviRecorder\Resources\strings###{{{}}}###OpenRPA.Elis.Rossum\Resources\strings###{{{}}}###OpenRPA.FileWatcher\Resources\strings###{{{}}}###OpenRPA.Forms\Resources\strings###{{{}}}###OpenRPA.IE\Resources\strings###{{{}}}###OpenRPA.Image\Resources\strings###{{{}}}###OpenRPA.Interfaces\Resources\strings###{{{}}}###OpenRPA.Java\Resources\strings###{{{}}}###OpenRPA.NM\Resources\strings###{{{}}}###OpenRPA.Office\Resources\strings###{{{}}}###OpenRPA.OpenFlowDB\Resources\strings###{{{}}}###OpenRPA.PDPlugin\Resources\strings###{{{}}}###OpenRPA.RDServicePlugin\Resources\strings###{{{}}}###OpenRPA.Script\Resources\strings###{{{}}}###OpenRPA.Updater\Resources\strings###{{{}}}###OpenRPA.Utilities\Resources\strings###{{{}}}###OpenRPA.Windows\Resources\strings###{{{}}}###OpenRPA\Resources\strings</globalSetting>
-    <globalSetting name="sendFileToTranslator.languagesToExportCheckListBox">German (de)</globalSetting>
+    <globalSetting name="sendFileToTranslator.languagesToExportCheckListBox">Danish (da)###{{{}}}###German (de)###{{{}}}###Spanish (es)###{{{}}}###Portuguese (pt)###{{{}}}###Romanian (ro)###{{{}}}###Russian (ru)</globalSetting>
     <globalSetting name="sendFileToTranslator.referenceLanguageComboBoxEdit.SelectedIndex">2</globalSetting>
     <globalSetting name="sendFileToTranslator.openFileAfterGeneratingCheckEdit.Checked">True</globalSetting>
     <globalSetting name="sendFileToTranslator.openAfterGeneratingCheckEdit.Checked">False</globalSetting>

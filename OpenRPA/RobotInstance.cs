@@ -353,7 +353,6 @@ namespace OpenRPA
                                         if (project.Workflows == null) project.Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
                                         index = project.Workflows.IndexOf(exists);
                                         project.Workflows.Remove(exists);
-                                        exists.Dispose();
                                         project.Workflows.Insert(index, workflow);
                                         workflow.SaveFile();
                                         project.NotifyPropertyChanged("Workflows");
@@ -377,7 +376,6 @@ namespace OpenRPA
                                         designer.tab.Close();
                                         index = project.Workflows.IndexOf(exists);
                                         project.Workflows.Remove(exists);
-                                        exists.Dispose();
                                         project.Workflows.Insert(index, workflow);
                                         workflow.SaveFile();
                                         project.NotifyPropertyChanged("Workflows");
@@ -386,7 +384,6 @@ namespace OpenRPA
                                     else
                                     {
                                         designer.Workflow.current_version = workflow._version;
-                                        workflow.Dispose();
                                     }
                                 }
                             }
@@ -405,13 +402,11 @@ namespace OpenRPA
                                 else
                                 {
                                     Log.Information("No project found, so disposing workflow " + workflow.name);
-                                    workflow.Dispose();
                                 }
                             }
                             else
                             {
                                 // workflow not new and not updated, so dispose
-                                workflow.Dispose();
                             }
                         }
                         Log.Debug("Done getting workflows and projects " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
@@ -472,7 +467,6 @@ namespace OpenRPA
                                             {
                                                 Log.Error(ex.ToString());
                                             }
-                                            workflow.Dispose();
                                         }
                                     }
                                 }
@@ -554,7 +548,7 @@ namespace OpenRPA
                     if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(options["workflowid"].ToString()) is Views.WFDesigner designer)
                     {
                         designer.BreakpointLocations = null;
-                        var instance = workflow.CreateInstance(options, "", "", designer.OnIdle, designer.OnVisualTracking);
+                        var instance = workflow.CreateInstance(options, "", "", designer.IdleOrComplete, designer.OnVisualTracking);
                         designer.Run(MainWindow.VisualTracking, MainWindow.SlowMotion, instance);
                     }
                     else
@@ -1077,7 +1071,7 @@ namespace OpenRPA
                                 if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(command.workflowid) is Views.WFDesigner designer)
                                 {
                                     designer.BreakpointLocations = null;
-                                    instance = workflow.CreateInstance(param, message.replyto, message.correlationId, designer.OnIdle, designer.OnVisualTracking);
+                                    instance = workflow.CreateInstance(param, message.replyto, message.correlationId, designer.IdleOrComplete, designer.OnVisualTracking);
                                     designer.Run(MainWindow.VisualTracking, MainWindow.SlowMotion, instance);
                                 }
                                 else

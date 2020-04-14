@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="OpenRPA.Views.WorkflowInstances"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:OpenRPA.Views"
+             mc:Ignorable="d" Loaded="UserControl_Loaded"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <DataGrid ItemsSource="{Binding Instances}"  AutoGenerateColumns="False" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Updated" Binding="{Binding _modified}"  Width="{Binding Path=ActualWidth, ElementName=grid}"/>
+                <DataGridTextColumn Header="State" Binding="{Binding state}" Width="Auto"  />
+                <DataGridTextColumn Header="" Binding="{Binding errormessage}" Width="*" />
+                <!--<DataGridTemplateColumn Header="Image" Width="SizeToCells" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding Image}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>-->
+            </DataGrid.Columns>
+        </DataGrid>
+        <!--<TreeView ItemsSource="{Binding Instances,
+                                   Mode=TwoWay,
+                                   UpdateSourceTrigger=PropertyChanged}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type TreeViewItem}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Path=_modified}"></TextBlock>
+                        <TextBlock Text="{Binding Path=state}"></TextBlock>
+                        <TextBlock Text="{Binding Path=errormessage}"></TextBlock>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+
+        </TreeView>-->
+    </Grid>
+</UserControl>

@@ -11,7 +11,7 @@ using System.Windows.Threading;
 
 namespace OpenRPA
 {
-    public class Workflow : apibase, IWorkflow, IDisposable
+    public class Workflow : apibase, IWorkflow
     {
         [JsonIgnore]
         private long _current_version = 0;
@@ -23,20 +23,9 @@ namespace OpenRPA
                 _current_version = value;
             } 
         }
-        [JsonIgnore]
-        public DispatcherTimer _timer;
         public Workflow()
         {
             Serializable = true;
-            _timer = new DispatcherTimer(DispatcherPriority.Render);
-            _timer.Interval = TimeSpan.FromSeconds(1);
-            _timer.Tick += _timer_Tick;
-            _timer.Start();
-        }
-        private void _timer_Tick(object sender, EventArgs e)
-        {
-            NotifyPropertyChanged("State");
-            NotifyPropertyChanged("StateImage");
         }
         public string queue { get { return GetProperty<string>(); } set { SetProperty(value); } }        
         public string Xaml { get { return GetProperty<string>(); } set { _activity = null; SetProperty(value); } }
@@ -63,7 +52,6 @@ namespace OpenRPA
                 return _id;
             }
         }
-
         private string _ProjectAndName;
         [JsonProperty("projectandname")]
         public string ProjectAndName
@@ -94,12 +82,13 @@ namespace OpenRPA
         public bool IsExpanded { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         [JsonIgnore]
         public bool IsSelected { get { return GetProperty<bool>(); } set { SetProperty(value); } }
+        private string laststate = "unloaded";
         [JsonIgnore]
         public string State
         {
             get
             {
-                string state = "unloaded";
+                string state = laststate;
                 var instace = Instances;
                 if (instace.Count() > 0)
                 {
@@ -110,8 +99,10 @@ namespace OpenRPA
                     }
                     else
                     {
+                        laststate = "running";
                         state = instace.First().state;
                     }
+                    laststate = state;
                 }
                 return state;
             }
@@ -131,6 +122,11 @@ namespace OpenRPA
                     default: return "/OpenRPA;component/Resources/state/unloaded.png";
                 }
             }
+        }
+        public void NotifyUIState()
+        {
+            NotifyPropertyChanged("State");
+            NotifyPropertyChanged("StateImage");
         }
         [JsonIgnore]
         public List<WorkflowInstance> Instances
@@ -445,26 +441,6 @@ namespace OpenRPA
                 }
             }
         }
-        #region IDisposable Support
-        private bool disposedValue = false;
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    _timer.Stop();
-                    _timer.Tick -= _timer_Tick;
-                    _timer = null;
-                }
-                disposedValue = true;
-            }
-        }
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-        #endregion
     }
 
 }

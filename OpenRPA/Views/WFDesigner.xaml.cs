@@ -1126,7 +1126,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 Log.Error(ex.ToString());
             }
         }
-        internal void OnIdle(IWorkflowInstance instance, EventArgs e)
+        internal void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
         {
             if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
             {
@@ -1339,11 +1339,11 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
                     if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0 || Singlestep == true)
                     {
-                        instance = Workflow.CreateInstance(param, null, null, OnIdle, OnVisualTracking);
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking);
                     }
                     else
                     {
-                        instance = Workflow.CreateInstance(param, null, null, OnIdle, null);
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null);
                     }
                 }
                 ReadOnly = true;
@@ -1678,11 +1678,11 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
                     if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0)
                     {
-                        instance = Workflow.CreateInstance(param, null, null, OnIdle, OnVisualTracking) as WorkflowInstance;
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking) as WorkflowInstance;
                     }
                     else
                     {
-                        instance = Workflow.CreateInstance(param, null, null, OnIdle, null) as WorkflowInstance;
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null) as WorkflowInstance;
                     }
                 }
                 ReadOnly = true;
@@ -1746,11 +1746,11 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
                     if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0)
                     {
-                        instance = Workflow.CreateInstance(param, null, null, OnIdle, OnVisualTracking) as WorkflowInstance;
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking) as WorkflowInstance;
                     }
                     else
                     {
-                        instance = Workflow.CreateInstance(param, null, null, OnIdle, null) as WorkflowInstance;
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null) as WorkflowInstance;
                     }
                 }
                 ReadOnly = true;

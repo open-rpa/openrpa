@@ -22,10 +22,6 @@ namespace OpenRPA.Image
     {
         public TakeScreenshot()
         {
-            X = 0;
-            Y = 0;
-            Width = 10;
-            Height = 10;
             Element = new InArgument<IElement>()
             {
                 Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<IElement>("item")

@@ -270,7 +270,8 @@ namespace OpenRPA.Script.Activities
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine(ex.ToString());
+                            //Log.Error(ex.ToString());
+                            throw;
                         }
                         finally
                         {

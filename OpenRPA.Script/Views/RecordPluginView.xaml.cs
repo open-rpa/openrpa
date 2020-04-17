@@ -34,19 +34,16 @@ namespace OpenRPA.Script.Views
             DataContext = this;
             csharp_intellisense.IsChecked = PluginConfig.csharp_intellisense;
             vb_intellisense.IsChecked = PluginConfig.vb_intellisense;
+            use_embedded_python.IsChecked = PluginConfig.use_embedded_python;
         }
-        private void csharp_intellisense_Checked(object sender, RoutedEventArgs e)
+        private void on_Checked(object sender, RoutedEventArgs e)
         {
             if (csharp_intellisense.IsChecked == null) return;
             PluginConfig.csharp_intellisense = csharp_intellisense.IsChecked.Value;
+            PluginConfig.vb_intellisense = vb_intellisense.IsChecked.Value;
+            PluginConfig.use_embedded_python = use_embedded_python.IsChecked.Value;
             Config.Save();
         }
 
-        private void vb_intellisense_Checked(object sender, RoutedEventArgs e)
-        {
-            if (vb_intellisense.IsChecked == null) return;
-            PluginConfig.vb_intellisense = vb_intellisense.IsChecked.Value;
-            Config.Save();
-        }
     }
 }

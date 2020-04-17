@@ -64,11 +64,43 @@ namespace OpenRPA.Script
         {
             return false;
         }
+        //private static PyObject InstallAndImport(bool force = false)
+        //{
+        //    //var installer = new Installer();
+        //    Installer.SetupPython(force).Wait();
+        //    //Installer.InstallWheel(typeof(NumPy).Assembly, "numpy-1.16.3-cp37-cp37m-win_amd64.whl").Wait();
+        //    PythonEngine.Initialize();
+        //    var mod = Py.Import("numpy");
+        //    return mod;
+        //}
         public void Initialize(IOpenRPAClient client)
         {
             _ = PluginConfig.csharp_intellisense;
             _ = PluginConfig.vb_intellisense;
-            Python.Runtime.PythonEngine.Initialize();
+
+            //System.Diagnostics.Debugger.Launch();
+            //System.Diagnostics.Debugger.Break();
+            if (PluginConfig.use_embedded_python)
+            {
+                if(!Python.Included.Installer.IsPythonInstalled())
+                {
+                    Python.Included.Installer.SetupPython(true).Wait();
+                }
+                else
+                {
+                    Python.Included.Installer.SetupPython(false).Wait();
+                }
+                var path = Python.Included.Installer.EmbeddedPythonHome;
+                PythonUtil.Setup.SetPythonPath(path);
+                // Python.Runtime.PythonEngine.Initialize();
+            } else
+            {
+                PythonUtil.Setup.Run();
+            }
+
+
+            // PythonUtil.Setup.Run();
+            //Python.Runtime.PythonEngine.Initialize();
             _ = Python.Runtime.PythonEngine.BeginAllowThreads();
             //if (InvokeCode.pool == null)
             //{

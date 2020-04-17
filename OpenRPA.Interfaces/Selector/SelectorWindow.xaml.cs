@@ -144,6 +144,7 @@ namespace OpenRPA.Interfaces.Selector
             vm.Plugin.Start();
             GenericTools.Minimize(GenericTools.MainWindow);
             GenericTools.Minimize(this);
+            OpenRPA.Input.InputDriver.Instance.CallNext = false;
 
             OpenRPA.Input.InputDriver.Instance.onCancel += OnCancel;
             StartOverlay();
@@ -190,6 +191,7 @@ namespace OpenRPA.Interfaces.Selector
             CancelOverlay();
             vm.Plugin.Stop();
             OpenRPA.Input.InputDriver.Instance.onCancel -= OnCancel;
+            OpenRPA.Input.InputDriver.Instance.CallNext = true;
             GenericTools.Restore(this);
         }
         private void Plugin_OnUserAction(IRecordPlugin sender, IRecordEvent e)
@@ -197,6 +199,7 @@ namespace OpenRPA.Interfaces.Selector
             CancelOverlay();
             vm.Plugin.Stop();
             OpenRPA.Input.InputDriver.Instance.onCancel -= OnCancel;
+            OpenRPA.Input.InputDriver.Instance.CallNext = true;
             e.ClickHandled = true;
             // GenericTools.restore(GenericTools.mainWindow);
             GenericTools.Restore(this);

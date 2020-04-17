@@ -10,13 +10,18 @@
     <Grid>
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,10,0,0" Text="{x:Static or:strings.plugin_csharp_intellisense}" VerticalAlignment="Top" Width="110" />
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,10,0,0" VerticalAlignment="Top" Width="222" x:Name="csharp_intellisense" 
-            Checked="csharp_intellisense_Checked" Unchecked="csharp_intellisense_Checked" />
+            Checked="on_Checked" Unchecked="on_Checked" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,10,0,0" Text="{x:Static or:strings.plugin_csharp_intellisense_help}" VerticalAlignment="Top" />
 
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,30,0,0" Text="{x:Static or:strings.plugin_vb_intellisense}" VerticalAlignment="Top" Width="110" />
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,30,0,0" VerticalAlignment="Top" Width="222" x:Name="vb_intellisense" 
-            Checked="vb_intellisense_Checked" Unchecked="vb_intellisense_Checked" />
+            Checked="on_Checked" Unchecked="on_Checked" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,30,0,0" Text="{x:Static or:strings.plugin_vb_intellisense_help}" VerticalAlignment="Top" />
+
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,50,0,0" Text="{x:Static or:strings.plugin_use_embedded_python}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,50,0,0" VerticalAlignment="Top" Width="222" x:Name="use_embedded_python" 
+            Checked="on_Checked" Unchecked="on_Checked" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,50,0,0" Text="{x:Static or:strings.plugin_use_embedded_python_help}" VerticalAlignment="Top" />
 
     </Grid>
 </UserControl>

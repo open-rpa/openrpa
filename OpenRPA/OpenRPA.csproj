@@ -10,8 +10,10 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.97</Version>
-    <PackageReleaseNotes>1.0.97 Add instance log window with last 10 runs
+    <Version>1.0.98</Version>
+    <PackageReleaseNotes>1.0.98 Fix highlight button on Take Screenshot when used inside windows.getelement
+Add toggle between embedded and locally installed python, Add PipInstall activity
+1.0.97 Add instance log window with last 10 runs
 1.0.96 Fix terminal server name pipe issue and add more logging features
 1.0.95 Add DatabaseScope, ExecuteNonQuery, ExecuteQuery, ExecuteScalar, UpdateFromDataTable and DeleteAllRows
 1.0.94 Add agent interface, Add loading screen, add ShowBalloonTip and DeleteFile, Add notifications

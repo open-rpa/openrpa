@@ -65,7 +65,7 @@ namespace OpenRPA.Image
                 {
                     element = elements[0];
                 }
-
+                match = element.Rectangle;
 
             }
             if (gettext != null && element != null)
@@ -84,7 +84,7 @@ namespace OpenRPA.Image
                     tip = null;
                 }
             }
-            else
+            else if(match.IsEmpty)
             {
                 var image = loadFrom.GetValue<string>("Image");
                 if (!string.IsNullOrEmpty(image))
@@ -147,6 +147,10 @@ namespace OpenRPA.Image
             var Width = ModelItem.GetValue<int>("Width");
             var Height = ModelItem.GetValue<int>("Height");
 
+            if(match.IsEmpty)
+            {
+                match = new Rectangle(0, 0, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
+            }
             var _hi = new ImageElement(match);
             _ = _hi.Highlight(false, System.Drawing.Color.Blue, TimeSpan.FromSeconds(1));
 

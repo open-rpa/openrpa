@@ -97,6 +97,60 @@ namespace OpenRPA.Script.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pip Install.
+        /// </summary>
+        public static string activity_pipinstall {
+            get {
+                return ResourceManager.GetString("activity_pipinstall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Force.
+        /// </summary>
+        public static string activity_pipinstall_force {
+            get {
+                return ResourceManager.GetString("activity_pipinstall_force", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Force reinstall of module if already exists.
+        /// </summary>
+        public static string activity_pipinstall_force_help {
+            get {
+                return ResourceManager.GetString("activity_pipinstall_force_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modules.
+        /// </summary>
+        public static string activity_pipinstall_modules {
+            get {
+                return ResourceManager.GetString("activity_pipinstall_modules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to List of python modules to install.
+        /// </summary>
+        public static string activity_pipinstall_modules_help {
+            get {
+                return ResourceManager.GetString("activity_pipinstall_modules_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install one or more python modules in the currently selected python envoriment.
+        /// </summary>
+        public static string activity_pipinstall_tooltip {
+            get {
+                return ResourceManager.GetString("activity_pipinstall_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to C# Intellisense.
         /// </summary>
         public static string plugin_csharp_intellisense {
@@ -111,6 +165,24 @@ namespace OpenRPA.Script.Resources {
         public static string plugin_csharp_intellisense_help {
             get {
                 return ResourceManager.GetString("plugin_csharp_intellisense_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use embedded python.
+        /// </summary>
+        public static string plugin_use_embedded_python {
+            get {
+                return ResourceManager.GetString("plugin_use_embedded_python", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OpenRPA comes with python embedded, but will use the default system python if disabled.
+        /// </summary>
+        public static string plugin_use_embedded_python_help {
+            get {
+                return ResourceManager.GetString("plugin_use_embedded_python_help", resourceCulture);
             }
         }
         

@@ -20,10 +20,12 @@ namespace OpenRPA.Office.Activities
     [LocalizedDisplayName("activity_closedocument", typeof(Resources.strings))]
     public class CloseDocument : CodeActivity
     {
-        [System.ComponentModel.Category("Input")]
+        [Category("Input")]
+        [LocalizedDisplayName("activity_closedocument_filename", typeof(Resources.strings)), LocalizedDescription("activity_closedocument_filename_help", typeof(Resources.strings))]
         public InArgument<string> Filename { get; set; }
         [RequiredArgument]
-        [System.ComponentModel.Category("Input")]
+        [Category("Input")]
+        [LocalizedDisplayName("activity_closedocument_savechanges", typeof(Resources.strings)), LocalizedDescription("activity_closedocument_savechanges_help", typeof(Resources.strings))]
         public InArgument<bool> SaveChanges { get; set; } = true;
         protected override void Execute(CodeActivityContext context)
         {

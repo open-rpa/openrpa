@@ -26,10 +26,12 @@ namespace OpenRPA.Office.Activities
             IgnoreEmptyRows = false;
         }
         [RequiredArgument]
-        [System.ComponentModel.Category("Misc")]
+        [Category("Misc")]
+        [LocalizedDisplayName("activity_readrange_useheaderrow", typeof(Resources.strings)), LocalizedDescription("activity_readrange_useheaderrow_help", typeof(Resources.strings))]
         public InArgument<bool> UseHeaderRow { get; set; }
         [RequiredArgument]
-        [System.ComponentModel.Category("Misc")]
+        [Category("Misc")]
+        [LocalizedDisplayName("activity_readrange_clearformats", typeof(Resources.strings)), LocalizedDescription("activity_readrange_clearformats_help", typeof(Resources.strings))]
         public InArgument<bool> ClearFormats { get; set; }
         public InArgument<bool> IgnoreEmptyRows { get; set; }
         //[RequiredArgument]

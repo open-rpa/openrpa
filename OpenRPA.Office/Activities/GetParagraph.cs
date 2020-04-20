@@ -17,15 +17,21 @@ namespace OpenRPA.Office.Activities
     [LocalizedDisplayName("activity_getparagraph", typeof(Resources.strings))]
     public class GetParagraph : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {
-        [System.ComponentModel.Category("Input")]
+        [Category("Input")]
+        [LocalizedDisplayName("activity_getparagraph_filename", typeof(Resources.strings)), LocalizedDescription("activity_getparagraph_filename_help", typeof(Resources.strings))]
         public InArgument<string> Filename { get; set; }
-        [System.ComponentModel.Category("Input")]
+        [Category("Input")]
+        [LocalizedDisplayName("activity_getparagraph_index", typeof(Resources.strings)), LocalizedDescription("activity_getparagraph_index_help", typeof(Resources.strings))]
         public InArgument<int> Index { get; set; }
-        [System.ComponentModel.Category("Output")]
+        [Category("Output")]
+        [LocalizedDisplayName("activity_getparagraph_text", typeof(Resources.strings)), LocalizedDescription("activity_getparagraph_text_help", typeof(Resources.strings))]
         public OutArgument<string> Text { get; set; }
-        [System.ComponentModel.Category("Output")]
+        [Category("Output")]
+        [LocalizedDisplayName("activity_getparagraph_count", typeof(Resources.strings)), LocalizedDescription("activity_getparagraph_count_help", typeof(Resources.strings))]
         public OutArgument<int> Count { get; set; }
+        [LocalizedDisplayName("activity_getparagraph_maxresults", typeof(Resources.strings)), LocalizedDescription("activity_getparagraph_maxresults_help", typeof(Resources.strings))]
         public InArgument<int> MaxResults { get; set; }
+        [Browsable(false)]
         public ActivityAction<string> Body { get; set; }
         private readonly Variable<IEnumerator<string>> _elements = new Variable<IEnumerator<string>>("_elements");
         protected override void Execute(NativeActivityContext context)

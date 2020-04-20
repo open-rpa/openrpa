@@ -21,15 +21,18 @@ namespace OpenRPA.Office.Activities
     public class CloseWorkbook : CodeActivity
     {
         [RequiredArgument]
-        [System.ComponentModel.Category("Input")]
+        [Category("Input")]
         [OverloadGroup("asworkbook")]
+        [LocalizedDisplayName("activity_closeworkbook_workbook", typeof(Resources.strings)), LocalizedDescription("activity_closeworkbook_workbook_help", typeof(Resources.strings))]
         public InOutArgument<Microsoft.Office.Interop.Excel.Workbook> Workbook { get; set; }
         [RequiredArgument]
-        [System.ComponentModel.Category("Input")]
+        [Category("Input")]
         [OverloadGroup("asfilename")]
+        [LocalizedDisplayName("activity_closeworkbook_filename", typeof(Resources.strings)), LocalizedDescription("activity_closeworkbook_filename_help", typeof(Resources.strings))]
         public InArgument<string> Filename { get; set; }
         [RequiredArgument]
-        [System.ComponentModel.Category("Input")]
+        [Category("Input")]
+        [LocalizedDisplayName("activity_closeworkbook_savechanges", typeof(Resources.strings)), LocalizedDescription("activity_closeworkbook_savechanges_help", typeof(Resources.strings))]
         public InArgument<bool> SaveChanges { get; set; } = true;
         protected override void Execute(CodeActivityContext context)
         {

@@ -551,7 +551,7 @@ namespace OpenRPA
                 string errormessage = "";
                 try
                 {
-                    GenericTools.Minimize(GenericTools.MainWindow);
+                    GenericTools.Minimize();
                     IWorkflowInstance instance;
                     var param = new Dictionary<string, object>();
                     instance = workflow.CreateInstance(param, null, null, IdleOrComplete, null);
@@ -565,11 +565,11 @@ namespace OpenRPA
                 if (Config.local.notify_on_workflow_end && !string.IsNullOrEmpty(errormessage))
                 {
                     App.notifyIcon.ShowBalloonTip(1000, "", errormessage, System.Windows.Forms.ToolTipIcon.Error);
-                    GenericTools.Restore(GenericTools.MainWindow);
+                    GenericTools.Restore();
                 }
                 else if (!string.IsNullOrEmpty(errormessage))
                 {
-                    GenericTools.Restore(GenericTools.MainWindow);
+                    GenericTools.Restore();
                     MessageBox.Show("onPlay " + errormessage);
                 }
                 return;

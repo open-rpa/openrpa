@@ -31,7 +31,7 @@ namespace OpenRPA.Image
         public BitmapFrame HighlightImage { get; set; }
         private async void btn_Select(object sender, RoutedEventArgs e)
         {
-            Interfaces.GenericTools.Minimize(Interfaces.GenericTools.MainWindow);
+            Interfaces.GenericTools.Minimize();
 
             var limit = ModelItem.GetValue<Rectangle>("Limit");
             Rectangle rect = Rectangle.Empty;
@@ -130,7 +130,7 @@ namespace OpenRPA.Image
                 }
             }
 
-            Interfaces.GenericTools.Minimize(Interfaces.GenericTools.MainWindow);
+            Interfaces.GenericTools.Minimize();
             var rect = await getrectangle.GetitAsync();
 
             var limit = new System.Drawing.Rectangle(rect.X - (int)windowrect.X, rect.Y - (int)windowrect.Y, rect.Width, rect.Height);

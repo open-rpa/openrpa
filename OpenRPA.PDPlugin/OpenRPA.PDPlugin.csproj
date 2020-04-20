@@ -14,6 +14,7 @@
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <Version>1.0.1</Version>
     <PackageReleaseNotes>1.0.1 Change target framework to 4.7.2</PackageReleaseNotes>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Views\PluginView.xaml" />
@@ -23,6 +24,9 @@
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <OutputPath>..\debug86</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />

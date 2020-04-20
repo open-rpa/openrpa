@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.41</Version>
-    <PackageReleaseNotes>1.0.40 Fix terminal server name pipe issue and add more logging features
+    <Version>1.0.42</Version>
+    <PackageReleaseNotes>1.0.42 Fix bug when selecting object in selector UI
+1.0.41 Fix terminal server name pipe issue and add more logging features
 1.0.40 Add more settings
 1.0.39 fix small issue with maxresult when highlighting
 1.0.38 Add DesignerUpdater classes for easy type handling
@@ -44,12 +45,19 @@
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <Description>OpenRPA interfaces and tools, used to add functionality for OpenRPA robot</Description>
     <PackageTags></PackageTags>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\dist</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <OutputPath>..\dist</OutputPath>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">
     <OutputPath></OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|x86'">
+    <OutputPath />
   </PropertyGroup>
   <ItemGroup>
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />

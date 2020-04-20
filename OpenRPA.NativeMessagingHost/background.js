@@ -329,11 +329,27 @@ function tabsOnRemoved(tabId) {
 async function tabsOnUpdated(tabId, changeInfo, tab) {
     if (!allowExecuteScript(tab)) return;
     try {
+        console.log("tabsOnUpdated: " + changeInfo.status)
         await tabsexecuteScript(tab.id, { code: openrpautil_script, allFrames: true });
     } catch (e) {
         console.log(e);
         console.log(tab);
     }
+    // delay hack, for slow loading iframes
+    var counter = 0;
+    var timeid = setInterval(async () =>{
+        try {
+            counter++;
+            console.log("tabsexecuteScript" + changeInfo.tabid);
+            await tabsexecuteScript(tab.id, { code: openrpautil_script, allFrames: true });
+        } catch (e) {
+            console.log(e);
+            console.log(tab);
+        }
+        if (counter > 10) {
+            clearTimeout(timeid);
+        }
+    }, 1000);
     var message = { functionName: "tabupdated", tabid: tabId, tab: tab };
     if (isChrome) message.browser = "chrome";
     if (isFirefox) message.browser = "ff";

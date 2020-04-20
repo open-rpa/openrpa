@@ -84,7 +84,12 @@ namespace OpenRPA
             }
             set
             {
-                if (reloadTimer.Enabled = value) return;
+                if (reloadTimer.Enabled = value)
+                {
+                    reloadTimer.Stop();
+                    reloadTimer.Start();
+                    return;
+                }
                 if (value == true) reloadTimer.Start();
                 if (value == false) reloadTimer.Stop();
             }
@@ -282,6 +287,7 @@ namespace OpenRPA
                 }
                 else
                 {
+                    Log.Information("Reloading server data");
                     SetStatus("Fetching projects");
                     var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}", top: 5000);
                     SetStatus("Fetching workflows");

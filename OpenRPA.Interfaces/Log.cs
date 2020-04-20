@@ -78,15 +78,11 @@ namespace OpenRPA.Interfaces
                 logfile.Layout = "${time}|${message}";
                 // var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
                 // config.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
-
                 // config.AddRule(NLog.LogLevel.Trace, NLog.LogLevel.Fatal, logfile);
                 // config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, logfile);
-
                 var min = NLog.LogLevel.FromOrdinal(Config.local.log_file_level_minimum);
                 var max = NLog.LogLevel.FromOrdinal(Config.local.log_file_level_maximum);
                 config.AddRule(min, max, logfile);
-
-
                 //public static readonly NLog.LogLevel Trace = new NLog.LogLevel("Trace", 0);
                 //public static readonly NLog.LogLevel Debug = new NLog.LogLevel("Debug", 1);
                 //public static readonly NLog.LogLevel Info = new NLog.LogLevel("Info", 2);
@@ -98,19 +94,23 @@ namespace OpenRPA.Interfaces
                 NLog.LogManager.Configuration = config;
                 nlog = NLog.LogManager.GetCurrentClassLogger();
             }
-            switch (category)
+            Task.Run(() =>
             {
-                case "Error": nlog.Error(message); break;
-                case "Warning": nlog.Warn(message); break;
-                case "Output": nlog.Info(message); break;
-                case "Information": nlog.Info(message); break;
-                case "Debug": nlog.Debug(message); break;
-                case "Verbose": nlog.Trace(message); break;
-                case "Func": nlog.Info(message); break;
-                case "Activity": nlog.Trace(message); break;
-                case "Selector": nlog.Debug(message); break;
-                case "SelectorVerbose": nlog.Trace(message); break;
-            }
+                System.Threading.Thread.CurrentThread.Name = "NLogging";
+                switch (category)
+                {
+                    case "Error": nlog.Error(message); break;
+                    case "Warning": nlog.Warn(message); break;
+                    case "Output": nlog.Info(message); break;
+                    case "Information": nlog.Info(message); break;
+                    case "Debug": nlog.Debug(message); break;
+                    case "Verbose": nlog.Trace(message); break;
+                    case "Func": nlog.Info(message); break;
+                    case "Activity": nlog.Trace(message); break;
+                    case "Selector": nlog.Debug(message); break;
+                    case "SelectorVerbose": nlog.Trace(message); break;
+                }
+            });
         }
         public static void Verbose(string message)
         {

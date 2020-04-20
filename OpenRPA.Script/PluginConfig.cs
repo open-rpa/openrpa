@@ -24,5 +24,7 @@ namespace OpenRPA.Script
         public static bool csharp_intellisense { get { return globallocal.GetProperty(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }
         public static bool vb_intellisense { get { return globallocal.GetProperty(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }
         public static bool use_embedded_python { get { return globallocal.GetProperty(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }
+        public static bool py_create_no_window { get { return globallocal.GetProperty(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }
+        
     }
 }

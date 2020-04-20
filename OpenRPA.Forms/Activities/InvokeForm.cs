@@ -57,7 +57,6 @@ namespace OpenRPA.Forms.Activities
             }
 
             Exception LastError = null;
-            // var res = await GenericTools.mainWindow.Dispatcher.InvokeAsync<FormResult>(() =>
             var res = GenericTools.MainWindow.Dispatcher.Invoke<FormResult>(() =>
             {
                 var f = new Form(xmlString);
@@ -73,20 +72,6 @@ namespace OpenRPA.Forms.Activities
                 return _res;
             });
             if (LastError != null) throw LastError;
-            //var t = await GenericTools.mainWindow.Dispatcher.InvokeAsync(() =>
-            //{
-            //    //var min = true;
-            //    //if (GenericTools.mainWindow.WindowState != System.Windows.WindowState.Minimized) min = false;
-            //    //GenericTools.restore();
-            //    object model = Forge.Forms.FormBuilding.FormBuilder.Default.GetDefinition(xmlString);
-            //    // var options = new Forge.Forms.WindowOptions();
-            //    var options = Forge.Forms.WindowOptions.Default;
-            //    options.CanResize = true; options.TopMost = true; options.ShowCloseButton = true;
-            //    options.BringToFront = true;
-            //    var _result = Forge.Forms.Show.Window(options).For<object>(model);
-            //    // if (min) { GenericTools.minimize(); }
-            //    return _result;
-            //});
             json = JsonConvert.SerializeObject(res, Formatting.Indented);
             result = JsonConvert.DeserializeObject<FormResult>(json);
             if(result.Model!=null)
@@ -102,8 +87,6 @@ namespace OpenRPA.Forms.Activities
                         {
                             if (prop.Value != null) myVar.SetValue(context.DataContext, prop.Value);
                         }
-                        //var myValue = myVar.GetValue(context.DataContext);
-                    
                     }
                     else
                     {

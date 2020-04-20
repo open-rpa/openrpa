@@ -154,7 +154,7 @@ namespace OpenRPA.Interfaces
                 try
                 {
                     IRecordPlugin plugin = (IRecordPlugin)Activator.CreateInstance(type);
-                    Log.Information("LoadPlugins::Initialize plugin " + plugin.Name + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                    Log.Information("LoadPlugins::Initialize plugin " + plugin.Name + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                     // SetStatus("Initialize plugin " + plugin.Name);
                     plugin.Initialize(client);
                     GenericTools.RunUI(() => recordPlugins.Add(plugin));

@@ -58,13 +58,29 @@ namespace OpenRPA.Office.Activities
                 idx = 2;
             }
             //Datas
-            for (var i = 0; i < dt.Rows.Count; i++)
+
+            object[,] arr = new object[dt.Rows.Count, dt.Columns.Count];
+            for (int r = 0; r < dt.Rows.Count; r++)
             {
-                for (var j = 0; j < dt.Columns.Count; j++)
+                System.Data.DataRow dr = dt.Rows[r];
+                for (int c = 0; c < dt.Columns.Count; c++)
                 {
-                    xlRange.Cells[i + idx, j + 1] = dt.Rows[i][j];
+                    arr[r, c] = dr[c];
                 }
             }
+            // Microsoft.Office.Interop.Excel.Range c1 = (Microsoft.Office.Interop.Excel.Range)worksheet.Cells[topRow, 1];
+            Microsoft.Office.Interop.Excel.Range c2 = (Microsoft.Office.Interop.Excel.Range)worksheet.Cells[xlRange.Row + dt.Rows.Count - 1, xlRange.Column + dt.Columns.Count];
+            Microsoft.Office.Interop.Excel.Range range = worksheet.get_Range(xlRange, c2);
+            //range.Value = arr;
+            range.set_Value(Microsoft.Office.Interop.Excel.XlRangeValueDataType.xlRangeValueDefault, arr);
+
+            //for (var i = 0; i < dt.Rows.Count; i++)
+            //{
+            //    for (var j = 0; j < dt.Columns.Count; j++)
+            //    {
+            //        xlRange.Cells[i + idx, j + 1] = dt.Rows[i][j];
+            //    }
+            //}
         }
         public new string DisplayName
         {

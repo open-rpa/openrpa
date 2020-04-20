@@ -733,7 +733,7 @@ namespace OpenRPA
         public void Save()
         {
             SaveFile();
-            Workflow.NotifyUIState();
+            if(Workflow!=null) Workflow.NotifyUIState();
             if (SaveTask==null)
             {
                 //SaveTask = new Task.Delay(1000).ContinueWith(async () =>
@@ -826,7 +826,14 @@ namespace OpenRPA
                         i.state = "failed";
                         i.Exception = ex;
                         i.errormessage = ex.Message;
-                        i.Save();
+                        try
+                        {
+                            i.Save();
+                        }
+                        catch (Exception)
+                        {
+
+                        }
                         Log.Error("RunPendingInstances: " + ex.ToString());
                     }
                 }

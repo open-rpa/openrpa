@@ -49,7 +49,7 @@ namespace OpenRPA.Activities
         }
         private void Select_Click(object sender, RoutedEventArgs e)
         {
-            Interfaces.GenericTools.Minimize(Interfaces.GenericTools.MainWindow);
+            Interfaces.GenericTools.Minimize();
             StartRecordPlugins();
         }
         private void StartRecordPlugins()
@@ -69,7 +69,7 @@ namespace OpenRPA.Activities
             StopRecordPlugins();
             AutomationHelper.syncContext.Post(o =>
             {
-                Interfaces.GenericTools.Restore(Interfaces.GenericTools.MainWindow);
+                Interfaces.GenericTools.Restore();
                 foreach (var p in Interfaces.Plugins.recordPlugins)
                 {
                     if (p.Name != sender.Name)

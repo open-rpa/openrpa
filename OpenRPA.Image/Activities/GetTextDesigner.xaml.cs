@@ -51,7 +51,7 @@ namespace OpenRPA.Image
             var limit = loadFrom.GetValue<Rectangle>("Limit");
             if (Threshold < 0.5) Threshold = 0.8;
 
-            Interfaces.GenericTools.Minimize(Interfaces.GenericTools.MainWindow);
+            Interfaces.GenericTools.Minimize();
             System.Threading.Thread.Sleep(100);
             var matches = ImageEvent.waitFor(b, Threshold, Processname, TimeSpan.FromMilliseconds(100), CompareGray, limit);
             if (matches.Count() == 0)

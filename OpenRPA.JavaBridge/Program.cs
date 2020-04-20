@@ -9,7 +9,7 @@ namespace OpenRPA.JavaBridge
 {
     class Program
     {
-        private static JavaHook hook;
+        private static IJavaHook hook;
         public static NamedPipeServer<JavaEvent> pipe { get; set; }
         private static MainWindow form;
         private static void log(string message)
@@ -42,8 +42,14 @@ namespace OpenRPA.JavaBridge
                 pipe = new NamedPipeServer<JavaEvent>(SessionId + "_openrpa_javabridge");
                 pipe.ClientMessage += Server_OnReceivedMessage;
                 pipe.Start();
-
-                hook = new JavaHook();
+                if (IntPtr.Size == 4)
+                {
+                    hook = new JavaHook_32();
+                }
+                else
+                {
+                    hook = new JavaHook_64();
+                }
                 hook.OnJavaShutDown += OnJavaShutDown;
                 hook.OnMouseClicked += OnMouseClicked;
                 hook.OnMouseEntered += OnMouseEntered;

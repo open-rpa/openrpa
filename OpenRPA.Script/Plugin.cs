@@ -77,6 +77,8 @@ namespace OpenRPA.Script
         {
             _ = PluginConfig.csharp_intellisense;
             _ = PluginConfig.vb_intellisense;
+            _ = PluginConfig.use_embedded_python;
+            _ = PluginConfig.py_create_no_window;
 
             //System.Diagnostics.Debugger.Launch();
             //System.Diagnostics.Debugger.Break();

@@ -402,7 +402,7 @@ namespace WindowsAccessBridgeInterop
             AddTopLevelWindowProperties(list, options);
             AddActiveDescendentProperties(list, options);
             AddSelectionProperties(list, options);
-            AddKeyBindingsProperties(list, options);
+            // AddKeyBindingsProperties(list, options);
             AddIconsProperties(list, options);
             AddActionProperties(list, options);
             AddVisibleChildrenProperties(list, options);

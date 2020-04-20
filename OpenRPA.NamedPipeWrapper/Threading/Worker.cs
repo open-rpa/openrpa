@@ -32,14 +32,16 @@ namespace OpenRPA.NamedPipeWrapper.Threading
         {
             _callbackThread = callbackThread;
         }
-
-        public void DoWork(Action action)
+        private string ThreadName = "";
+        public void DoWork(Action action, string ThreadName)
         {
+            this.ThreadName = ThreadName;
             new Task(DoWorkImpl, action, CancellationToken.None, TaskCreationOptions.LongRunning).Start();
         }
 
         private void DoWorkImpl(object oAction)
         {
+            System.Threading.Thread.CurrentThread.Name = ThreadName;
             var action = (Action) oAction;
             try
             {

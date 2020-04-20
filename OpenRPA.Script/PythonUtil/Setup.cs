@@ -180,21 +180,70 @@ namespace OpenRPA.Script.PythonUtil
             {
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
                 System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.RedirectStandardOutput = true;
-                startInfo.RedirectStandardError = true;
+                if(PluginConfig.py_create_no_window)
+                {
+                    startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                    startInfo.RedirectStandardOutput = true;
+                    startInfo.RedirectStandardError = true;
+                    startInfo.CreateNoWindow = PluginConfig.py_create_no_window;
+                }
                 startInfo.FileName = exec;
                 startInfo.Arguments = arguments;
                 startInfo.UseShellExecute = false;
-                startInfo.CreateNoWindow = true;
                 startInfo.WorkingDirectory = path;
                 process.StartInfo = startInfo;
                 process.Start();
-                string error = process.StandardError.ReadToEnd();
-                if (!string.IsNullOrWhiteSpace(error))
-                    throw new Exception(error);
+                if (PluginConfig.py_create_no_window)
+                {
+                    string error = process.StandardError.ReadToEnd();
+                    if (!string.IsNullOrWhiteSpace(error))
+                        throw new Exception(error);
 
-                return process.StandardOutput.ReadToEnd();
+                    return process.StandardOutput.ReadToEnd();
+                } else
+                {
+                    process.WaitForExit();
+                    return "";
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Debug(ex.ToString());
+                throw;
+            }
+        }
+        public static string RunCommand2(string path, string command)
+        {
+            try
+            {
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                if (PluginConfig.py_create_no_window)
+                {
+                    startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                    startInfo.RedirectStandardOutput = true;
+                    startInfo.RedirectStandardError = true;
+                    startInfo.CreateNoWindow = PluginConfig.py_create_no_window;
+                }
+                startInfo.FileName = "cmd.exe";
+                startInfo.Arguments = "/c " + command + " 2>&1";
+                startInfo.UseShellExecute = false;
+                startInfo.WorkingDirectory = path;
+                process.StartInfo = startInfo;
+                process.Start();
+                if (PluginConfig.py_create_no_window)
+                {
+                    string error = process.StandardError.ReadToEnd();
+                    if (!string.IsNullOrWhiteSpace(error))
+                        throw new Exception(error);
+
+                    return process.StandardOutput.ReadToEnd();
+                }
+                else
+                {
+                    process.WaitForExit();
+                    return "";
+                }
             }
             catch (Exception ex)
             {

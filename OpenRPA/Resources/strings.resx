@@ -144,6 +144,12 @@
   <data name="activity_checkrunning_help" xml:space="preserve">
     <value>Check if application is already running using the selector, if set to false, will launch a new application no matter what</value>
   </data>
+  <data name="activity_clickdelay" xml:space="preserve">
+    <value>Click Delay</value>
+  </data>
+  <data name="activity_clickdelay_help" xml:space="preserve">
+    <value>Delay between each keystroke</value>
+  </data>
   <data name="activity_clickelement" xml:space="preserve">
     <value>Click Element</value>
   </data>

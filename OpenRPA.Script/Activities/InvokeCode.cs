@@ -80,243 +80,262 @@ namespace OpenRPA.Script.Activities
         }
         protected override void Execute(CodeActivityContext context)
         {
-            var code = Code.Get(context);
-            var language = Language.Get(context);
-            var variables = new Dictionary<string, Type>();
-            var variablevalues = new Dictionary<string, object>();
-            var vars = context.DataContext.GetProperties();
-            foreach (dynamic v in vars)
+            string currentdir = System.IO.Directory.GetCurrentDirectory();
+            try
             {
-                Type rtype = v.PropertyType as Type;
-                var value = v.GetValue(context.DataContext);
+                System.IO.Directory.SetCurrentDirectory(Interfaces.Extensions.ProjectsDirectory);
 
-                if (rtype == null && value != null) rtype = value.GetType();
-                if (rtype == null) continue;
-                variables.Add(v.DisplayName, rtype);
-                variablevalues.Add(v.DisplayName, value);
-            }
-            string sourcecode = code;
-            if(namespaces == null)
-            {
-                throw new Exception("InvokeCode is missing namespaces, please open workflow in designer and save changes");
-            }
-            if (language == "VB")
-            {
-                var header = GetVBHeaderText(variables, "Expression", namespaces);
-                sourcecode = header + code + GetVBFooterText();
-                int numLines = header.Split('\n').Length;
-                Log.Debug("Header (add to line numbers): " + numLines);
-            }
-            if (language == "C#")
-            {
-                var header = GetCSharpHeaderText(variables, "Expression", namespaces);
-                sourcecode = header + code + GetCSharpFooterText();
-                int numLines = header.Split('\n').Length;
-                Log.Debug("Header (add to line numbers): " + numLines);
-            }
-            if (language == "PowerShell")
-            {
 
-                if (runspace == null)
+                var code = Code.Get(context);
+                var language = Language.Get(context);
+                var variables = new Dictionary<string, Type>();
+                var variablevalues = new Dictionary<string, object>();
+                var vars = context.DataContext.GetProperties();
+                foreach (dynamic v in vars)
                 {
-                    runspace = RunspaceFactory.CreateRunspace();
-                    runspace.Open();
+                    Type rtype = v.PropertyType as Type;
+                    var value = v.GetValue(context.DataContext);
+
+                    if (rtype == null && value != null) rtype = value.GetType();
+                    if (rtype == null) continue;
+                    variables.Add(v.DisplayName, rtype);
+                    variablevalues.Add(v.DisplayName, value);
                 }
-
-                using (var pipeline = runspace.CreatePipeline())
+                string sourcecode = code;
+                if (namespaces == null)
                 {
-                    Command cmd = new Command(sourcecode, true);
-                    foreach (var parameter in variablevalues)
+                    throw new Exception("InvokeCode is missing namespaces, please open workflow in designer and save changes");
+                }
+                if (language == "VB")
+                {
+                    var header = GetVBHeaderText(variables, "Expression", namespaces);
+                    sourcecode = header + code + GetVBFooterText();
+                    int numLines = header.Split('\n').Length;
+                    Log.Debug("Header (add to line numbers): " + numLines);
+                }
+                if (language == "C#")
+                {
+                    var header = GetCSharpHeaderText(variables, "Expression", namespaces);
+                    sourcecode = header + code + GetCSharpFooterText();
+                    int numLines = header.Split('\n').Length;
+                    Log.Debug("Header (add to line numbers): " + numLines);
+                }
+                if (language == "PowerShell")
+                {
+
+                    if (runspace == null)
                     {
-                        // cmd.Parameters.Add(parameter.Key, parameter.Value);
-                        runspace.SessionStateProxy.SetVariable(parameter.Key, parameter.Value);
+                        runspace = RunspaceFactory.CreateRunspace();
+                        runspace.Open();
                     }
-                    pipeline.Commands.Add(cmd);
-                    var res = pipeline.Invoke();
-                    foreach (var o in res)
+
+                    using (var pipeline = runspace.CreatePipeline())
                     {
-                        if (o != null) Log.Output(o.ToString());
-                    }
-                    foreach (dynamic v in vars)
-                    {
-                        var value = runspace.SessionStateProxy.GetVariable(v.DisplayName);
-                        var myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
-                        try
+                        Command cmd = new Command(sourcecode, true);
+                        foreach (var parameter in variablevalues)
                         {
+                            // cmd.Parameters.Add(parameter.Key, parameter.Value);
+                            runspace.SessionStateProxy.SetVariable(parameter.Key, parameter.Value);
+                        }
+                        pipeline.Commands.Add(cmd);
+                        var res = pipeline.Invoke();
+                        foreach (var o in res)
+                        {
+                            if (o != null) Log.Output(o.ToString());
+                        }
+                        foreach (dynamic v in vars)
+                        {
+                            var value = runspace.SessionStateProxy.GetVariable(v.DisplayName);
+                            var myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
+                            try
+                            {
+                                if (myVar != null && value != null)
+                                {
+                                    //var myValue = myVar.GetValue(context.DataContext);
+                                    myVar.SetValue(context.DataContext, value);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex.ToString());
+                            }
+                        }
+                        PipelineOutput.Set(context, res);
+                    }
+
+                    return;
+                }
+                if (language == "AutoHotkey")
+                {
+                    AppDomain Temporary = null;
+                    try
+                    {
+                        AppDomainSetup domaininfo = new AppDomainSetup();
+                        domaininfo.ApplicationBase = global.CurrentDirectory;
+                        System.Security.Policy.Evidence adevidence = AppDomain.CurrentDomain.Evidence;
+                        Temporary = AppDomain.CreateDomain("Temporary", adevidence, domaininfo);
+                        Temporary.AssemblyResolve += AHKProxy.CurrentDomain_AssemblyResolve;
+
+                        //var ahk = (AutoHotkey.Interop.AutoHotkeyEngine)Temporary.CreateInstanceAndUnwrap("sharpAHK, Version=1.0.0.5, Culture=neutral, PublicKeyToken=null", "AutoHotkey.Interop.AutoHotkeyEngine");
+
+                        Type type = typeof(AHKProxy);
+                        var ahk = (AHKProxy)Temporary.CreateInstanceAndUnwrap(type.Assembly.FullName, type.FullName);
+
+                        foreach (var parameter in variablevalues)
+                        {
+                            if (parameter.Value == null) continue;
+                            ahk.SetVar(parameter.Key, parameter.Value.ToString());
+                        }
+                        ahk.ExecRaw(code);
+                        foreach (dynamic v in vars)
+                        {
+                            var value = ahk.GetVar(v.DisplayName);
+                            PropertyDescriptor myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
                             if (myVar != null && value != null)
                             {
-                                //var myValue = myVar.GetValue(context.DataContext);
-                                myVar.SetValue(context.DataContext, value);
+                                if (myVar.PropertyType == typeof(string))
+                                    myVar.SetValue(context.DataContext, value);
+                                else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(value.ToString()));
+                                else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(value.ToString()));
+                                else Log.Information("Ignorering variable " + v.DisplayName + " of type " + myVar.PropertyType.FullName);
                             }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                        throw;
+                    }
+                    finally
+                    {
+                        if (Temporary != null) AppDomain.Unload(Temporary);
+                    }
+                    return;
+                }
+                if (language == "Python")
+                {
+                    try
+                    {
+                        GenericTools.RunUI(() =>
+                        {
+                            if (PluginConfig.use_embedded_python)
+                            {
+                                System.IO.Directory.SetCurrentDirectory(Python.Included.Installer.EmbeddedPythonHome);
+                            }
+
+                            IntPtr lck = IntPtr.Zero;
+                            try
+                            {
+                                lck = PythonEngine.AcquireLock();
+                                using (var scope = Py.CreateScope())
+                                {
+                                    foreach (var parameter in variablevalues)
+                                    {
+                                        PyObject pyobj = parameter.Value.ToPython();
+                                        scope.Set(parameter.Key, pyobj);
+                                    }
+                                    try
+                                    {
+
+                                        PythonOutput output = new PythonOutput();
+                                        dynamic sys = Py.Import("sys");
+                                        sys.stdout = output;
+                                        sys.stderr = output;
+
+                                        //                                    PythonEngine.RunSimpleString(@"
+                                        //import sys
+                                        //from System import Console
+                                        //class output(object):
+                                        //    def write(self, msg):
+                                        //        Console.Out.Write(msg)
+                                        //    def writelines(self, msgs):
+                                        //        for msg in msgs:
+                                        //            Console.Out.Write(msg)
+                                        //    def flush(self):
+                                        //        pass
+                                        //    def close(self):
+                                        //        pass
+                                        //sys.stdout = sys.stderr = output()
+                                        //");
+
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Log.Debug(ex.ToString());
+                                    }
+                                    scope.Exec(code);
+                                    foreach (var parameter in variablevalues)
+                                    {
+                                        PyObject pyobj = scope.Get(parameter.Key);
+                                        if (pyobj == null) continue;
+                                        PropertyDescriptor myVar = context.DataContext.GetProperties().Find(parameter.Key, true);
+                                        if (myVar.PropertyType == typeof(string))
+                                            myVar.SetValue(context.DataContext, pyobj.ToString());
+                                        else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(pyobj.ToString()));
+                                        else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(pyobj.ToString()));
+                                        else Log.Information("Ignorering variable " + parameter.Key + " of type " + myVar.PropertyType.FullName);
+                                    }
+                                }
+                                //lck = PythonEngine.AcquireLock();
+                                //PythonEngine.Exec(code);
+                            }
+                            catch (Exception ex)
+                            {
+                                //Log.Error(ex.ToString());
+                                throw;
+                            }
+                            finally
+                            {
+                                PythonEngine.ReleaseLock(lck);
+                            }
+                        });
+                        //using (Python.Runtime.Py.GIL())
+                        //{
+                        //    IntPtr lck = Python.Runtime.PythonEngine.AcquireLock();
+                        //    Python.Runtime.PythonEngine.Exec(code);
+                        //    Python.Runtime.PythonEngine.ReleaseLock(lck);
+                        //    //// create a Python scope
+                        //    //using (var scope = Python.Runtime.Py.CreateScope())
+                        //    //{
+                        //    //    //// convert the Person object to a PyObject
+                        //    //    //PyObject pyPerson = person.ToPython();
+
+                        //    //    // create a Python variable "person"
+                        //    //    // scope.Set("person", pyPerson);
+
+                        //    //    // the person object may now be used in Python
+                        //    //    // string code = "fullName = person.FirstName + ' ' + person.LastName";
+                        //    //    scope.Exec(code);
+                        //    //}
+                        //}
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                    finally
+                    {
+                        try
+                        {
+                            // Python.Runtime.PythonEngine.Shutdown();
                         }
                         catch (Exception ex)
                         {
                             Log.Error(ex.ToString());
                         }
                     }
-                    PipelineOutput.Set(context, res);
+                    return;
                 }
+                var assemblyLocations = GetAssemblyLocations();
+                CompileAndRun(language, sourcecode, assemblyLocations.ToArray(), variablevalues, context);
 
-                return;
+
+
             }
-            if (language == "AutoHotkey")
+            finally
             {
-                AppDomain Temporary = null;
-                try
-                {
-                    AppDomainSetup domaininfo = new AppDomainSetup();
-                    domaininfo.ApplicationBase = global.CurrentDirectory;
-                    System.Security.Policy.Evidence adevidence = AppDomain.CurrentDomain.Evidence;
-                    Temporary = AppDomain.CreateDomain("Temporary", adevidence, domaininfo);
-                    Temporary.AssemblyResolve += AHKProxy.CurrentDomain_AssemblyResolve;
-
-                    //var ahk = (AutoHotkey.Interop.AutoHotkeyEngine)Temporary.CreateInstanceAndUnwrap("sharpAHK, Version=1.0.0.5, Culture=neutral, PublicKeyToken=null", "AutoHotkey.Interop.AutoHotkeyEngine");
-
-                    Type type = typeof(AHKProxy);
-                    var ahk = (AHKProxy)Temporary.CreateInstanceAndUnwrap(type.Assembly.FullName, type.FullName);
-
-                    foreach (var parameter in variablevalues)
-                    {
-                        if (parameter.Value == null) continue;
-                        ahk.SetVar(parameter.Key, parameter.Value.ToString());
-                    }
-                    ahk.ExecRaw(code);
-                    foreach (dynamic v in vars)
-                    {
-                        var value = ahk.GetVar(v.DisplayName);
-                        PropertyDescriptor myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
-                        if (myVar != null && value != null)
-                        {
-                            if (myVar.PropertyType == typeof(string))
-                                myVar.SetValue(context.DataContext, value);
-                            else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(value.ToString()));
-                            else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(value.ToString()));
-                            else Log.Information("Ignorering variable " + v.DisplayName + " of type " + myVar.PropertyType.FullName);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                    throw;
-                }
-                finally
-                {
-                    if(Temporary!=null) AppDomain.Unload(Temporary);
-                }
-                return;
+                System.IO.Directory.SetCurrentDirectory(currentdir);
             }
-            if (language == "Python")
-            {
-                try
-                {
-                    GenericTools.RunUI(() =>
-                    {
-                        IntPtr lck = IntPtr.Zero;
-                        try
-                        {
-                            lck = PythonEngine.AcquireLock();
-                            using (var scope = Py.CreateScope())
-                            {
-                                foreach (var parameter in variablevalues)
-                                {
-                                    PyObject pyobj = parameter.Value.ToPython();
-                                    scope.Set(parameter.Key, pyobj);
-                                }
-                                try
-                                {
-
-                                    PythonOutput output = new PythonOutput();
-                                    dynamic sys = Py.Import("sys");
-                                    sys.stdout = output;
-                                    sys.stderr = output;
-
-//                                    PythonEngine.RunSimpleString(@"
-//import sys
-//from System import Console
-//class output(object):
-//    def write(self, msg):
-//        Console.Out.Write(msg)
-//    def writelines(self, msgs):
-//        for msg in msgs:
-//            Console.Out.Write(msg)
-//    def flush(self):
-//        pass
-//    def close(self):
-//        pass
-//sys.stdout = sys.stderr = output()
-//");
-
-                                }
-                                catch (Exception ex)
-                                {
-                                    Log.Debug(ex.ToString());
-                                }
-                                scope.Exec(code);
-                                foreach (var parameter in variablevalues)
-                                {
-                                    PyObject pyobj = scope.Get(parameter.Key);
-                                    if (pyobj == null) continue;
-                                    PropertyDescriptor myVar = context.DataContext.GetProperties().Find(parameter.Key, true);
-                                    if (myVar.PropertyType == typeof(string))
-                                        myVar.SetValue(context.DataContext, pyobj.ToString());
-                                    else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(pyobj.ToString()));
-                                    else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(pyobj.ToString()));
-                                    else Log.Information("Ignorering variable " + parameter.Key + " of type " + myVar.PropertyType.FullName);
-                                }
-                            }
-                            //lck = PythonEngine.AcquireLock();
-                            //PythonEngine.Exec(code);
-                        }
-                        catch (Exception ex)
-                        {
-                            //Log.Error(ex.ToString());
-                            throw;
-                        }
-                        finally
-                        {
-                            PythonEngine.ReleaseLock(lck);
-                        }
-                    });
-                    //using (Python.Runtime.Py.GIL())
-                    //{
-                    //    IntPtr lck = Python.Runtime.PythonEngine.AcquireLock();
-                    //    Python.Runtime.PythonEngine.Exec(code);
-                    //    Python.Runtime.PythonEngine.ReleaseLock(lck);
-                    //    //// create a Python scope
-                    //    //using (var scope = Python.Runtime.Py.CreateScope())
-                    //    //{
-                    //    //    //// convert the Person object to a PyObject
-                    //    //    //PyObject pyPerson = person.ToPython();
-
-                    //    //    // create a Python variable "person"
-                    //    //    // scope.Set("person", pyPerson);
-
-                    //    //    // the person object may now be used in Python
-                    //    //    // string code = "fullName = person.FirstName + ' ' + person.LastName";
-                    //    //    scope.Exec(code);
-                    //    //}
-                    //}
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-                finally
-                {
-                    try
-                    {
-                        // Python.Runtime.PythonEngine.Shutdown();
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.ToString());
-                    }
-                }
-                return;
-            }
-            var assemblyLocations = GetAssemblyLocations();
-            CompileAndRun(language, sourcecode, assemblyLocations.ToArray(), variablevalues, context);
         }
         public static string[] GetAssemblyLocations()
         {

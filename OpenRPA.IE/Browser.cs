@@ -148,7 +148,7 @@ namespace OpenRPA.IE
                 {
                 }
             }
-            if(wbs.Count == 0)
+            if (wbs.Count == 0)
             {
                 wBrowser = null;
                 Document = null;

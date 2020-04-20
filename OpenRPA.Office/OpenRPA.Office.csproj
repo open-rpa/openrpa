@@ -7,8 +7,9 @@
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office, created for OpenRPA robot</Description>
-    <Version>1.0.20</Version>
-    <PackageReleaseNotes>1.0.20 Bump to framework 4.7.2, Add Invoke Excel Macro
+    <Version>1.0.21</Version>
+    <PackageReleaseNotes>1.0.21 Improve performance in writerange 
+1.0.20 Bump to framework 4.7.2, Add Invoke Excel Macro
 1.0.19 Add RunSlideShow, fix pia references
 1.0.18 Add langauges and bug fixes
 1.0.17 Fix excel loop snippet after moving download to OpenRPA.Utilities
@@ -20,15 +21,25 @@
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <PackageTags>OpenRPA</PackageTags>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <OutputPath>..\debug86</OutputPath>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\dist</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <OutputPath>..\dist</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">
     <OutputPath></OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|x86'">
+    <OutputPath />
   </PropertyGroup>
   <ItemGroup>
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />

@@ -140,12 +140,12 @@ namespace OpenRPA.Views
                 if (!tab.IsSelected) return;
                 if (e.Key == Input.KeyboardKey.F10 || e.Key == Input.KeyboardKey.F11)
                 {
-                    if (!IsRunnning)
-                    {
                         if (currentprocessid == 0) currentprocessid = System.Diagnostics.Process.GetCurrentProcess().Id;
                         var element = AutomationHelper.GetFromFocusedElement();
                         if (element.ProcessId != currentprocessid) return;
-                    }
+                    //if (!IsRunnning)
+                    //{
+                    //}
                     if (e.AltKey || e.CtrlKey || e.ShiftKey || e.WinKey) return;
                     if (Workflow.Activity == null) return;
                     Singlestep = true;
@@ -174,7 +174,7 @@ namespace OpenRPA.Views
             if(e.Key == Key.F2)
             {
                 Task.Run(() => {
-                    if (MainWindow.instance.Minimize) GenericTools.Minimize(GenericTools.MainWindow);
+                    if (MainWindow.instance.Minimize) GenericTools.Minimize();
                     System.Threading.Thread.Sleep(2000);
                     MainWindow.instance.OnRecord(null);
                 });
@@ -812,7 +812,6 @@ namespace OpenRPA.Views
         }
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-
             Input.InputDriver.Instance.OnKeyUp -= OnKeyUp;
         }
         public Argument GetArgument(string Name, bool add, Type type)
@@ -1144,7 +1143,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
             }
             if (instance.state == "idle" && Singlestep == true)
             {
-                GenericTools.Minimize(GenericTools.MainWindow);
+                GenericTools.Minimize();
                 //GenericTools.RunUI(() =>
                 //{
                 //    SetDebugLocation(null);
@@ -1163,7 +1162,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
             {
                 GenericTools.RunUI(() =>
                 {
-                    GenericTools.Restore(GenericTools.MainWindow);
+                    GenericTools.Restore();
                 });
             }
 
@@ -1283,7 +1282,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 {
                     Singlestep = false;
                     BreakPointhit = false;
-                    if (!VisualTracking && Config.local.minimize) GenericTools.Minimize(GenericTools.MainWindow);
+                    if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
                     if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
                     return;
                 }
@@ -1347,7 +1346,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     }
                 }
                 ReadOnly = true;
-                if (!VisualTracking && Config.local.minimize) GenericTools.Minimize(GenericTools.MainWindow);
+                if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
             });
             if(instance!=null) instance.Run();
         }
@@ -1657,7 +1656,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 {
                     Singlestep = false;
                     BreakPointhit = false;
-                    if (!VisualTracking && Config.local.minimize) GenericTools.Minimize(GenericTools.MainWindow);
+                    if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
                     if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
                     return;
                 }
@@ -1686,7 +1685,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     }
                 }
                 ReadOnly = true;
-                if (!VisualTracking && Config.local.minimize) GenericTools.Minimize(GenericTools.MainWindow);
+                if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
 
                 if (!_activityIdMapping.ContainsKey(id))
                 {
@@ -1725,7 +1724,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 {
                     Singlestep = false;
                     BreakPointhit = false;
-                    if (!VisualTracking && Config.local.minimize) GenericTools.Minimize(GenericTools.MainWindow);
+                    if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
                     if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
                     return;
                 }
@@ -1754,7 +1753,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     }
                 }
                 ReadOnly = true;
-                if (!VisualTracking && Config.local.minimize) GenericTools.Minimize(GenericTools.MainWindow);
+                if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
 
                 // if (instance != null) instance.Run();
 

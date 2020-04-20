@@ -1495,8 +1495,9 @@ namespace OpenRPA
             try
             {
 
-                var hits = System.Diagnostics.Process.GetProcessesByName("OpenRPA.Updater");
-                return hits.Count() == 0;
+                //var hits = System.Diagnostics.Process.GetProcessesByName("OpenRPA.Updater");
+                //return hits.Count() == 0;
+                return true;
             }
             catch (Exception ex)
             {
@@ -2321,7 +2322,7 @@ namespace OpenRPA
                 }
                 try
                 {
-                    if (this.Minimize) GenericTools.Minimize(GenericTools.MainWindow);
+                    if (this.Minimize) GenericTools.Minimize();
                     IWorkflowInstance instance;
                     var param = new Dictionary<string, object>();
                     if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) is Views.WFDesigner designer)
@@ -2344,11 +2345,11 @@ namespace OpenRPA
                 if (Config.local.notify_on_workflow_end && !string.IsNullOrEmpty(errormessage))
                 {
                     App.notifyIcon.ShowBalloonTip(1000, "", errormessage, System.Windows.Forms.ToolTipIcon.Error);
-                    GenericTools.Restore(GenericTools.MainWindow);
+                    GenericTools.Restore();
                 }
                 else if (!string.IsNullOrEmpty(errormessage))
                 {
-                    GenericTools.Restore(GenericTools.MainWindow);
+                    GenericTools.Restore();
                     MessageBox.Show("onPlay " + errormessage);
                 }
                 Log.FunctionOutdent("MainWindow", "OnPlay");
@@ -2372,10 +2373,10 @@ namespace OpenRPA
             if (Config.local.notify_on_workflow_end && !string.IsNullOrEmpty(errormessage))
             {
                 App.notifyIcon.ShowBalloonTip(1000, "", errormessage, System.Windows.Forms.ToolTipIcon.Error);
-                GenericTools.Restore(GenericTools.MainWindow);
+                GenericTools.Restore();
             } else if (!string.IsNullOrEmpty(errormessage))
             {
-                GenericTools.Restore(GenericTools.MainWindow);
+                GenericTools.Restore();
                 MessageBox.Show("onPlay " + errormessage);
             }
             Log.FunctionOutdent("MainWindow", "OnPlay");
@@ -2599,7 +2600,7 @@ namespace OpenRPA
                     InputDriver.Instance.CallNext = true;
                     InputDriver.Instance.OnKeyDown -= OnKeyDown;
                     InputDriver.Instance.OnKeyUp -= OnKeyUp;
-                    GenericTools.Restore(GenericTools.MainWindow);
+                    GenericTools.Restore();
                     designer.EndRecording();
                 }
             }
@@ -2646,7 +2647,7 @@ namespace OpenRPA
             InputDriver.Instance.CallNext = true;
             InputDriver.Instance.OnKeyDown -= OnKeyDown;
             InputDriver.Instance.OnKeyUp -= OnKeyUp;
-            GenericTools.Restore(GenericTools.MainWindow);
+            GenericTools.Restore();
             CommandManager.InvalidateRequerySuggested();
         }
         private bool CanAllways(object _item)
@@ -2968,7 +2969,7 @@ namespace OpenRPA
                 InputDriver.Instance.OnKeyUp += OnKeyUp;
                 StartRecordPlugins();
                 InputDriver.Instance.CallNext = false;
-                if (this.Minimize) GenericTools.Minimize(GenericTools.MainWindow);
+                if (this.Minimize) GenericTools.Minimize();
             }
             catch (Exception ex)
             {
@@ -3033,7 +3034,7 @@ namespace OpenRPA
                     CommandManager.InvalidateRequerySuggested();
                     if (string.IsNullOrEmpty(instance.queuename) && string.IsNullOrEmpty(instance.correlationId) && string.IsNullOrEmpty(instance.caller) && instance.isCompleted)
                     {
-                        if (this.Minimize) GenericTools.Restore(GenericTools.MainWindow);
+                        if (this.Minimize) GenericTools.Restore();
                     }
                 }
                 catch (Exception ex)

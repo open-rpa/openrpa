@@ -73,15 +73,6 @@ namespace OpenRPA.Forms.Activities
             if (notificationType == "Success") notifier.ShowSuccess(message);
             if (notificationType == "Warning") notifier.ShowWarning(message);
             if (notificationType == "Error") notifier.ShowError(message);
-
-            //Notifications.Wpf.NotificationType nt = Notifications.Wpf.NotificationType.Information;
-            //nt = (Notifications.Wpf.NotificationType)Enum.Parse(typeof(Notifications.Wpf.NotificationType), notificationType);
-            //GenericTools.notificationManager.Show(new NotificationContent
-            //{
-            //    Title = title,
-            //    Message = message,
-            //    Type = nt
-            //}, expirationTime: duration);
         }
         class SelectNotificationTypeEditor : CustomSelectEditor
         {

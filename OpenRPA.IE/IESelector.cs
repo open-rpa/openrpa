@@ -303,9 +303,6 @@ namespace OpenRPA.IE
                     catch (Exception)
                     {
                     }
-                //GenericTools.MainWindow.Dispatcher.Invoke(() =>
-                //{
-                //});
                 Log.Selector(string.Format("GetElementsWithuiSelector::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                 return _results.ToArray();
             }

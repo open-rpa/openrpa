@@ -142,9 +142,9 @@ namespace OpenRPA.Interfaces.Selector
         private void Select_Click(object sender, RoutedEventArgs e)
         {
             vm.Plugin.Start();
-            GenericTools.Minimize(GenericTools.MainWindow);
+            GenericTools.Minimize();
             GenericTools.Minimize(this);
-            OpenRPA.Input.InputDriver.Instance.CallNext = false;
+            // OpenRPA.Input.InputDriver.Instance.CallNext = false;
 
             OpenRPA.Input.InputDriver.Instance.onCancel += OnCancel;
             StartOverlay();
@@ -191,7 +191,7 @@ namespace OpenRPA.Interfaces.Selector
             CancelOverlay();
             vm.Plugin.Stop();
             OpenRPA.Input.InputDriver.Instance.onCancel -= OnCancel;
-            OpenRPA.Input.InputDriver.Instance.CallNext = true;
+            // OpenRPA.Input.InputDriver.Instance.CallNext = true;
             GenericTools.Restore(this);
         }
         private void Plugin_OnUserAction(IRecordPlugin sender, IRecordEvent e)
@@ -199,9 +199,8 @@ namespace OpenRPA.Interfaces.Selector
             CancelOverlay();
             vm.Plugin.Stop();
             OpenRPA.Input.InputDriver.Instance.onCancel -= OnCancel;
-            OpenRPA.Input.InputDriver.Instance.CallNext = true;
+            // OpenRPA.Input.InputDriver.Instance.CallNext = true;
             e.ClickHandled = true;
-            // GenericTools.restore(GenericTools.mainWindow);
             GenericTools.Restore(this);
             vm.Selector = e.Selector;
             vm.FocusElement(e.Selector);
@@ -333,7 +332,7 @@ namespace OpenRPA.Interfaces.Selector
         private void Window_Closed(object sender, EventArgs e)
         {
             vm.Plugin.OnUserAction -= Plugin_OnUserAction;
-            GenericTools.Restore(GenericTools.MainWindow);
+            GenericTools.Restore();
         }
         private void Ok_Click(object sender, RoutedEventArgs e)
         {

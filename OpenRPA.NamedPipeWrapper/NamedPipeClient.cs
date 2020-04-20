@@ -100,7 +100,7 @@ namespace OpenRPA.NamedPipeWrapper
             _closedExplicitly = false;
             var worker = new Worker();
             worker.Error += OnError;
-            worker.DoWork(ListenSync);
+            worker.DoWork(ListenSync, "PIPE " + _pipeName);
         }
 
         /// <summary>

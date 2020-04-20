@@ -42,8 +42,18 @@ namespace OpenRPA.Script
                     if(!exists) exists = System.IO.Directory.Exists(str2) && System.IO.File.Exists(System.IO.Path.Combine(str2, "__init__.py"));
                     if(!exists || force)
                     {                        
-                        Log.Information("Installing python module '" + module + "'");
-                        PythonUtil.Setup.RunCommand(path, System.IO.Path.Combine(path, "Scripts", "pip"), " install  --no-warn-script-location --user " + module + (force ? " --force-reinstall" : ""));
+                        Log.Information("Installing python module '" + module + "' into '" + str2 + "'");
+                        Log.Information("run from '" + path + "'");
+                        var cmd = System.IO.Path.Combine(path, "Scripts", "pip");
+                        // var arg = " install  --no-warn-script-location --user " + module + (force ? " --force-reinstall" : "");
+                        var arg = " install  --no-warn-script-location  " + module + (force ? " --force-reinstall" : "");
+
+                        Log.Information(cmd + " " + arg);
+                        var allcmd = "cd \"" + path + "\"" + Environment.NewLine + cmd + " " + arg;
+                        System.IO.File.WriteAllText(System.IO.Path.Combine(path, "dopip.bat"), allcmd);
+                        // PythonUtil.Setup.RunCommand2(path, allcmd);
+                        PythonUtil.Setup.RunCommand(path, "dopip.bat", "");
+                        // PythonUtil.Setup.RunCommand(path, allcmd, "");
                         //Python.Included.Installer.PipInstallModule(module);
                     }
                 }

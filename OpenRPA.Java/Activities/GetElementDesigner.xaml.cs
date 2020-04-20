@@ -114,7 +114,7 @@ namespace OpenRPA.Java
                 var res = JavaSelector.GetElementsWithuiSelector(selector, null, maxresults);
                 elements.AddRange(res);
             }
-
+            if (elements.Count() > maxresults) elements = elements.ToList().Take(maxresults).ToList();
             if (elements.Count() > 0)
             {
                 HighlightImage = Extensions.GetImageSourceFromResource("check.png");

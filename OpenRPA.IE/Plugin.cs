@@ -81,21 +81,27 @@ namespace OpenRPA.IE
         }
         public void Start()
         {
+            OpenRPA.Input.InputDriver.Instance.CallNext = false;
             InputDriver.Instance.OnMouseUp += OnMouseUp;
         }
         public void Stop()
         {
+            OpenRPA.Input.InputDriver.Instance.CallNext = true;
             InputDriver.Instance.OnMouseUp -= OnMouseUp;
         }
-        private void OnMouseUp(InputEventArgs e)
+        private void ParseMouseUp(InputEventArgs e)
         {
             try
             {
+                // if(string.IsNullOrEmpty(Thread.CurrentThread.Name)) Thread.CurrentThread.Name = "IE.Plugin.OnMouseUP";
                 Log.Debug(string.Format("IE.Recording::OnMouseUp::begin"));
                 var re = new RecordEvent
                 {
                     Button = e.Button
                 }; var a = new GetElement { DisplayName = (e.Element.Name).Replace(Environment.NewLine, "").Trim() };
+
+                var p = System.Diagnostics.Process.GetProcessById(e.Element.ProcessId);
+                if (p.ProcessName != "iexplore" && p.ProcessName != "iexplore.exe") return;
 
                 var browser = new Browser(e.Element.RawElement);
                 var htmlelement = browser.ElementFromPoint(e.X, e.Y);
@@ -122,7 +128,7 @@ namespace OpenRPA.IE
                 Log.Debug(e.Element.SupportInput + " / " + e.Element.ControlType);
                 re.a = new GetElementResult(a);
                 //if (htmlelement.tagName.ToLower() == "input" && htmlelement.tagName.ToLower() == "select")
-                if (htmlelement.tagName.ToLower() == "input" )
+                if (htmlelement.tagName.ToLower() == "input")
                 {
                     MSHTML.IHTMLInputElement inputelement = (MSHTML.IHTMLInputElement)htmlelement;
                     re.SupportInput = (inputelement.type.ToLower() == "text" || inputelement.type.ToLower() == "password");
@@ -135,11 +141,15 @@ namespace OpenRPA.IE
             {
                 Log.Error(ex.ToString());
             }
-            //var thread = new Thread(new ThreadStart(() =>
-            //{
-            //}));
-            //thread.IsBackground = true;
-            //thread.Start();
+        }
+        private void OnMouseUp(InputEventArgs e)
+        {
+            var thread = new Thread(new ThreadStart(() =>
+            {
+                ParseMouseUp(e);
+            }));
+            thread.IsBackground = true;
+            thread.Start();
         }
         public bool ParseUserAction(ref IRecordEvent e) {
             if (e.UIElement == null) return false;

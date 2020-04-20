@@ -76,12 +76,12 @@ namespace OpenRPA.NamedPipeWrapper
             var readWorker = new Worker();
             readWorker.Succeeded += OnSucceeded;
             readWorker.Error += OnError;
-            readWorker.DoWork(ReadPipe);
+            readWorker.DoWork(ReadPipe, "PIPE " + Name);
 
             var writeWorker = new Worker();
             writeWorker.Succeeded += OnSucceeded;
             writeWorker.Error += OnError;
-            writeWorker.DoWork(WritePipe);
+            writeWorker.DoWork(WritePipe, "PIPE " + Name);
         }
 
         /// <summary>

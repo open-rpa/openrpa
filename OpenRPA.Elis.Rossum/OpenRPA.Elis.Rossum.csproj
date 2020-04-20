@@ -15,9 +15,13 @@
 1.0.1 added a few more fields</PackageReleaseNotes>
     <PackageTags>OpenRPA</PackageTags>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <OutputPath>..\debug86</OutputPath>
   </PropertyGroup>
   <Target Name="SetNuspecProperties" BeforeTargets="GenerateNuspec">
     <PropertyGroup>

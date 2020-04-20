@@ -3,6 +3,7 @@ using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using WindowsAccessBridgeInterop;
@@ -117,14 +118,49 @@ namespace OpenRPA.Java
                 AccessibleTextItemsInfo textItems;
                 if (_accessBridge.Functions.GetAccessibleTextItems(JvmId, _ac, out textItems, 0))
                 {
+                    AccessibleActions _actions;
+                    var actions = new Dictionary<string, object>();
+                    if (_accessBridge.Functions.GetAccessibleActions(ac.JvmId, _ac, out _actions))
+                    {
+                        if (_actions.actionsCount > 0)
+                        {
+                            foreach (var a in _actions.actionInfo)
+                            {
+                                if (actions.Count >= _actions.actionsCount) continue;
+                                if (!string.IsNullOrEmpty(a.name))
+                                {
+                                    if (!actions.ContainsKey(a.name))
+                                    {
+                                        actions.Add(a.name, a);
+                                        Console.WriteLine(a.name);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     if (!_accessBridge.Functions.SetTextContents(JvmId, _ac, value))
                     {
                         throw new Exception("Error setting text");
+                        //setTextContents(JvmId, new IntPtr(_ac.Handle.Value), value);
+                        //if (!setTextContents(JvmId, new IntPtr(_ac.Handle.Value), value))
+                        //{
+
+                        //    throw new Exception("Error setting text");
+                        //}
+                        //  throw new Exception("Error setting text");
                     }
                 }
 
             }
         }
+        //[return: MarshalAs(UnmanagedType.Bool)]
+        //[DllImport("WindowsAccessBridge-32.dll", CallingConvention = CallingConvention.Cdecl, ThrowOnUnmappableChar = true, CharSet = CharSet.Unicode)]
+        //public extern static bool setTextContents(Int32 vmID, IntPtr accessibleContext, string text);
+        //[DllImport("WindowsAccessBridge-32.dll", SetLastError = true, ThrowOnUnmappableChar = true, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)]
+        //public extern static void setTextContents(Int32 vmID, IntPtr ac, [MarshalAs(UnmanagedType.LPWStr)] string text);
+        //[DllImport("windowsaccessbridge.dll", SetLastError = true, ThrowOnUnmappableChar = true, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)]
+        //public extern static void setTextContents(Int32 vmID, IntPtr ac, [MarshalAs(UnmanagedType.LPWStr)] string text);
         public JavaElement(AccessibleNode c)
         {
             this.c = c;

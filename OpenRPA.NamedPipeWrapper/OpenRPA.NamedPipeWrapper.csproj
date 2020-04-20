@@ -8,7 +8,8 @@
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <PackageId>OpenRPA.NamedPipeWrapper</PackageId>
     <Version>1.0.17</Version>
-    <PackageReleaseNotes>1.0.17 bump version
+    <PackageReleaseNotes>1.0.18 Add thread names to improve debugging
+1.0.17 bump version
 1.0.15 update interfaces reference
 1.0.12 update reference
 1.0.11 update interfaces reference</PackageReleaseNotes>
@@ -16,11 +17,18 @@
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <PackageTags></PackageTags>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath></OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <OutputPath />
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">
+    <OutputPath />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|x86'">
     <OutputPath />
   </PropertyGroup>
   <ItemGroup>

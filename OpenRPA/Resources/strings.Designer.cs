@@ -151,6 +151,24 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Click Delay.
+        /// </summary>
+        public static string activity_clickdelay {
+            get {
+                return ResourceManager.GetString("activity_clickdelay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delay between each keystroke.
+        /// </summary>
+        public static string activity_clickdelay_help {
+            get {
+                return ResourceManager.GetString("activity_clickdelay_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Click Element.
         /// </summary>
         public static string activity_clickelement {

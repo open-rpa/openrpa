@@ -42,7 +42,7 @@ namespace WindowsAccessBridgeInterop {
     public AccessBridgeFunctions Functions {
       get {
         ThrowIfDisposed();
-        Initialize();
+        Initialize(false);
         return _functions;
       }
     }
@@ -50,7 +50,7 @@ namespace WindowsAccessBridgeInterop {
     public AccessBridgeEvents Events {
       get {
         ThrowIfDisposed();
-        Initialize();
+        Initialize(false);
         return _events;
       }
     }
@@ -64,7 +64,7 @@ namespace WindowsAccessBridgeInterop {
     public FileVersionInfo LibraryVersion {
       get {
         ThrowIfDisposed();
-        Initialize();
+        Initialize(false);
         return _library.Version;
       }
     }
@@ -72,7 +72,7 @@ namespace WindowsAccessBridgeInterop {
     public bool IsLegacy {
       get {
         ThrowIfDisposed();
-        Initialize();
+        Initialize(false);
         return _library.IsLegacy;
       }
     }
@@ -85,12 +85,12 @@ namespace WindowsAccessBridgeInterop {
     public event EventHandler Initilized;
     public event EventHandler Disposed;
 
-    public void Initialize() {
+    public void Initialize(bool ForceLegacy) {
       ThrowIfDisposed();
       if (_library != null)
         return;
 
-      var library = LoadLibrary();
+      var library = LoadLibrary(ForceLegacy);
       if (library.IsLegacy) {
         var libraryFunctions = LoadEntryPointsLegacy(library);
         var functions = new AccessBridgeNativeFunctionsLegacy(libraryFunctions);
@@ -179,7 +179,9 @@ namespace WindowsAccessBridgeInterop {
 
       int vmId;
       JavaObjectHandle ac;
-      if (!Functions.GetAccessibleContextFromHWND(hwnd, out vmId, out ac))
+            Console.WriteLine("Value : {0:X}", hwnd);
+            Console.WriteLine("Value : {0:X}", hwnd.ToInt64());
+            if (!Functions.GetAccessibleContextFromHWND(hwnd, out vmId, out ac))
         return null;
 
       return new AccessibleWindow(this, hwnd, ac);
@@ -192,10 +194,15 @@ namespace WindowsAccessBridgeInterop {
       public bool IsLegacy { get; set; }
     }
 
-    private static AccessBridgeLibrary LoadLibrary() {
+    private static AccessBridgeLibrary LoadLibrary(bool ForceLegacy) {
       try {
         AccessBridgeLibrary library;
-        if (IntPtr.Size == 4) {
+                if(ForceLegacy)
+                {
+                library = new AccessBridgeLibrary("WindowsAccessBridge.dll");
+                library.IsLegacy = true;
+                }
+                else if (IntPtr.Size == 4) {
           try {
             library = new AccessBridgeLibrary("WindowsAccessBridge-32.dll");
           } catch {

@@ -20,6 +20,8 @@ namespace OpenRPA.Activities
     {
         [RequiredArgument, LocalizedDisplayName("activity_text", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
         public InArgument<string> Text { get; set; }
+        [LocalizedDisplayName("activity_clickdelay", typeof(Resources.strings)), LocalizedDescription("activity_clickdelay_help", typeof(Resources.strings))]
+        public InArgument<TimeSpan> ClickDelay { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             var disposes = new List<IDisposable>();
@@ -27,11 +29,12 @@ namespace OpenRPA.Activities
             var text = Text.Get<string>(context);
             if (string.IsNullOrEmpty(text)) return;
 
-            //var clickdelay = ClickDelay.Get(context);
+            var clickdelay = ClickDelay.Get(context);
+            if (clickdelay.TotalMilliseconds < 10) clickdelay = TimeSpan.FromMilliseconds(10);
             //var linedelay = LineDelay.Get(context);
             //var predelay = PreDelay.Get(context);
             //var postdelay = PostDelay.Get(context);
-            var clickdelay = TimeSpan.FromMilliseconds(5);
+            // var clickdelay = TimeSpan.FromMilliseconds(5);
             var linedelay = TimeSpan.FromMilliseconds(5);
             var predelay = TimeSpan.FromMilliseconds(0);
             var postdelay = TimeSpan.FromMilliseconds(100);

@@ -23,11 +23,18 @@
 1.0.1 Add langauges and bug fixes</PackageReleaseNotes>
     <PackageTags>OpenRPA</PackageTags>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <OutputPath>..\debug86</OutputPath>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\dist</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <OutputPath>..\dist</OutputPath>
   </PropertyGroup>
   <ItemGroup>

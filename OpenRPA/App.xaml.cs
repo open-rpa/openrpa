@@ -149,7 +149,7 @@ namespace OpenRPA
         {
             MainWindow.Visibility = Visibility.Visible;
             // notifyIcon.Visible = false;
-            Interfaces.GenericTools.Restore(Interfaces.GenericTools.MainWindow);
+            Interfaces.GenericTools.Restore();
         }
         private void Application_Exit(object sender, ExitEventArgs e)
         {
@@ -173,6 +173,7 @@ namespace OpenRPA
             splash.Show();
             splash.BusyContent = "Loading main window";
             AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
+            System.Threading.Thread.CurrentThread.Name = "UIThread";
             if (!Config.local.isagent)
             {
                 RobotInstance.instance.MainWindow = new MainWindow();
@@ -211,7 +212,7 @@ namespace OpenRPA
         {
             try
             {
-                Log.Information(message);
+                Log.Debug(message);
                 // notifyIcon.ShowBalloonTip(5000, "Title", message, System.Windows.Forms.ToolTipIcon.Info);
                 if (splash!=null) splash.BusyContent = message;
             }

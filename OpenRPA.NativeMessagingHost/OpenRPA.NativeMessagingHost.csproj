@@ -6,11 +6,12 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.16</Version>
+    <Version>1.0.18</Version>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
     <StartupObject />
-    <PackageReleaseNotes>1.0.16 Fix terminal server name pipe issue
+    <PackageReleaseNotes>1.0.18 temporary, workaround for iframes late loading
+1.0.16 Fix terminal server name pipe issue
 1.0.15 Change target framework to 4.7.2
 1.0.14 Add IsVisible, Display, isVisibleOnScreen and Disabled to GetDOM
 1.0.11 update interfaces reference
@@ -20,15 +21,25 @@
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <PackageTags />
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <OutputPath>..\debug86</OutputPath>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\dist</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <OutputPath>..\dist</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">
     <OutputPath></OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|x86'">
+    <OutputPath />
   </PropertyGroup>
   <ItemGroup>
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />

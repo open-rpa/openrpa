@@ -21,6 +21,7 @@ namespace OpenRPA.Java
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<JavaElement> Body { get; set; }
         public InArgument<int> MaxResults { get; set; }
+        public InArgument<int> MinResults { get; set; }
         [RequiredArgument]
         public InArgument<string> Selector { get; set; }
         public InArgument<JavaElement> From { get; set; }
@@ -36,6 +37,7 @@ namespace OpenRPA.Java
             var sel = new JavaSelector(SelectorString);
             var timeout = TimeSpan.FromSeconds(3);
             var maxresults = MaxResults.Get(context);
+            var minresults = MinResults.Get(context);
             var from = From.Get(context);
             if (maxresults < 1) maxresults = 1;
 
@@ -49,6 +51,12 @@ namespace OpenRPA.Java
 
             } while (elements.Count() == 0 && sw.Elapsed < timeout);
             Log.Debug(string.Format("OpenRPA.Java::GetElement::found {1} elements in {0:mm\\:ss\\.fff}", sw.Elapsed, elements.Count()));
+            if (elements.Count() > maxresults) elements = elements.Take(maxresults).ToArray();
+            if (elements.Count() < minresults)
+            {
+                Log.Selector(string.Format("Windows.GetElement::Failed locating " + minresults + " item(s) {0:mm\\:ss\\.fff}", sw.Elapsed));
+                throw new ElementNotFoundException("Failed locating " + minresults + " item(s)");
+            }
             context.SetValue(Elements, elements);
             IEnumerator<JavaElement> _enum = elements.ToList().GetEnumerator();
             context.SetValue(_elements, _enum);

@@ -82,7 +82,15 @@ namespace OpenRPA.Java
                         Log.Information("javahook._accessBridge.Initilized");
                         OnInitilized?.Invoke(accessBridge);
                     };
-                    accessBridge.Initialize();
+                    if (IntPtr.Size == 4)
+                    {
+                        // accessBridge.Initialize(true);
+                        accessBridge.Initialize(false);
+                    } else
+                    {
+                        accessBridge.Initialize(false);
+                    }
+                        
                     refreshJvms(200);
                 });
             }

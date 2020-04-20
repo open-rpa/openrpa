@@ -15,9 +15,13 @@
     <PackageTags></PackageTags>
     <Version>1.0.1</Version>
     <PackageReleaseNotes>1.0.1 Change target framework to 4.7.2</PackageReleaseNotes>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <OutputPath></OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />

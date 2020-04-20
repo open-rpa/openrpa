@@ -17,11 +17,14 @@ namespace OpenRPA.Office.Activities
     [LocalizedDisplayName("activity_addparagraph", typeof(Resources.strings))]
     public class AddParagraph : CodeActivity
     {
-        [System.ComponentModel.Category("Input")]
+        [Category("Input")]
+        [LocalizedDisplayName("activity_addparagraph_filename", typeof(Resources.strings)), LocalizedDescription("activity_addparagraph_filename_help", typeof(Resources.strings))]
         public InArgument<string> Filename { get; set; }
-        [System.ComponentModel.Category("Input")]
+        [Category("Input")]
+        [LocalizedDisplayName("activity_addparagraph_index", typeof(Resources.strings)), LocalizedDescription("activity_addparagraph_index_help", typeof(Resources.strings))]
         public InArgument<int> Index { get; set; }
-        [System.ComponentModel.Category("Input")]
+        [Category("Input")]
+        [LocalizedDisplayName("activity_addparagraph_text", typeof(Resources.strings)), LocalizedDescription("activity_addparagraph_text_help", typeof(Resources.strings))]
         public InArgument<string> Text { get; set; }
         protected override void Execute(CodeActivityContext context)
         {

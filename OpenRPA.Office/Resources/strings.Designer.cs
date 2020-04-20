@@ -70,6 +70,60 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filename.
+        /// </summary>
+        public static string activity_addparagraph_filename {
+            get {
+                return ResourceManager.GetString("activity_addparagraph_filename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full path and filename of Microsoft Word document to work with.
+        /// </summary>
+        public static string activity_addparagraph_filename_help {
+            get {
+                return ResourceManager.GetString("activity_addparagraph_filename_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index.
+        /// </summary>
+        public static string activity_addparagraph_index {
+            get {
+                return ResourceManager.GetString("activity_addparagraph_index", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add the new paragraph at this index (zero indexed) Leave blank to add at the end of the document.
+        /// </summary>
+        public static string activity_addparagraph_index_help {
+            get {
+                return ResourceManager.GetString("activity_addparagraph_index_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text.
+        /// </summary>
+        public static string activity_addparagraph_text {
+            get {
+                return ResourceManager.GetString("activity_addparagraph_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The text to add.
+        /// </summary>
+        public static string activity_addparagraph_text_help {
+            get {
+                return ResourceManager.GetString("activity_addparagraph_text_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add a new Paragraph to a Microsoft Word document.
         /// </summary>
         public static string activity_addparagraph_tooltip {
@@ -84,6 +138,42 @@ namespace OpenRPA.Office.Resources {
         public static string activity_closedocument {
             get {
                 return ResourceManager.GetString("activity_closedocument", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filename.
+        /// </summary>
+        public static string activity_closedocument_filename {
+            get {
+                return ResourceManager.GetString("activity_closedocument_filename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full path and filename of Microsoft Word document to work with.
+        /// </summary>
+        public static string activity_closedocument_filename_help {
+            get {
+                return ResourceManager.GetString("activity_closedocument_filename_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Changes.
+        /// </summary>
+        public static string activity_closedocument_savechanges {
+            get {
+                return ResourceManager.GetString("activity_closedocument_savechanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set to true, to save the word file, set to false to discard any changces made.
+        /// </summary>
+        public static string activity_closedocument_savechanges_help {
+            get {
+                return ResourceManager.GetString("activity_closedocument_savechanges_help", resourceCulture);
             }
         }
         
@@ -106,11 +196,65 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filename.
+        /// </summary>
+        public static string activity_closeworkbook_filename {
+            get {
+                return ResourceManager.GetString("activity_closeworkbook_filename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full path and filename of Microsoft Excel workbook to work with.
+        /// </summary>
+        public static string activity_closeworkbook_filename_help {
+            get {
+                return ResourceManager.GetString("activity_closeworkbook_filename_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Changes.
+        /// </summary>
+        public static string activity_closeworkbook_savechanges {
+            get {
+                return ResourceManager.GetString("activity_closeworkbook_savechanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set to true, to save the excel file, set to false to discard any changces made.
+        /// </summary>
+        public static string activity_closeworkbook_savechanges_help {
+            get {
+                return ResourceManager.GetString("activity_closeworkbook_savechanges_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close a Workbook if open, will also closes excel if no more workbooks are open.
         /// </summary>
         public static string activity_closeworkbook_tooltip {
             get {
                 return ResourceManager.GetString("activity_closeworkbook_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workbook.
+        /// </summary>
+        public static string activity_closeworkbook_workbook {
+            get {
+                return ResourceManager.GetString("activity_closeworkbook_workbook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use a Microsoft Excel workbook variable to work with.
+        /// </summary>
+        public static string activity_closeworkbook_workbook_help {
+            get {
+                return ResourceManager.GetString("activity_closeworkbook_workbook_help", resourceCulture);
             }
         }
         
@@ -156,6 +300,96 @@ namespace OpenRPA.Office.Resources {
         public static string activity_getparagraph {
             get {
                 return ResourceManager.GetString("activity_getparagraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        public static string activity_getparagraph_count {
+            get {
+                return ResourceManager.GetString("activity_getparagraph_count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Returns the number of paragraphs in the Microsoft Word document.
+        /// </summary>
+        public static string activity_getparagraph_count_help {
+            get {
+                return ResourceManager.GetString("activity_getparagraph_count_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filename.
+        /// </summary>
+        public static string activity_getparagraph_filename {
+            get {
+                return ResourceManager.GetString("activity_getparagraph_filename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full path and filename of Microsoft Word document to work with.
+        /// </summary>
+        public static string activity_getparagraph_filename_help {
+            get {
+                return ResourceManager.GetString("activity_getparagraph_filename_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index.
+        /// </summary>
+        public static string activity_getparagraph_index {
+            get {
+                return ResourceManager.GetString("activity_getparagraph_index", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get all the content of the paragraph with this index and a MaxResults more. Leave this field blank to get the entire word document.
+        /// </summary>
+        public static string activity_getparagraph_index_help {
+            get {
+                return ResourceManager.GetString("activity_getparagraph_index_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Results.
+        /// </summary>
+        public static string activity_getparagraph_maxresults {
+            get {
+                return ResourceManager.GetString("activity_getparagraph_maxresults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Limit the amount of paragraphs to get, leave blank or at 0 to get all from Index and onward.
+        /// </summary>
+        public static string activity_getparagraph_maxresults_help {
+            get {
+                return ResourceManager.GetString("activity_getparagraph_maxresults_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text.
+        /// </summary>
+        public static string activity_getparagraph_text {
+            get {
+                return ResourceManager.GetString("activity_getparagraph_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save the read paragrahs to this variable.
+        /// </summary>
+        public static string activity_getparagraph_text_help {
+            get {
+                return ResourceManager.GetString("activity_getparagraph_text_help", resourceCulture);
             }
         }
         
@@ -214,11 +448,47 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear Formats.
+        /// </summary>
+        public static string activity_readrange_clearformats {
+            get {
+                return ResourceManager.GetString("activity_readrange_clearformats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set to true to remove all formatting from the select worksheet.
+        /// </summary>
+        public static string activity_readrange_clearformats_help {
+            get {
+                return ResourceManager.GetString("activity_readrange_clearformats_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Read a range from a Microsoft Excel sheet.
         /// </summary>
         public static string activity_readrange_tooltip {
             get {
                 return ResourceManager.GetString("activity_readrange_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Header Row.
+        /// </summary>
+        public static string activity_readrange_useheaderrow {
+            get {
+                return ResourceManager.GetString("activity_readrange_useheaderrow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If select range also contains a header row with column names, set this to true, else leave blank ( then all cloumns will have no name ).
+        /// </summary>
+        public static string activity_readrange_useheaderrow_help {
+            get {
+                return ResourceManager.GetString("activity_readrange_useheaderrow_help", resourceCulture);
             }
         }
         
@@ -295,6 +565,60 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filename.
+        /// </summary>
+        public static string activity_setparagraph_filename {
+            get {
+                return ResourceManager.GetString("activity_setparagraph_filename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full path and filename of Microsoft Word document to work with.
+        /// </summary>
+        public static string activity_setparagraph_filename_help {
+            get {
+                return ResourceManager.GetString("activity_setparagraph_filename_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index.
+        /// </summary>
+        public static string activity_setparagraph_index {
+            get {
+                return ResourceManager.GetString("activity_setparagraph_index", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Overwrite content in the paragraph with this index, set 0 to overwrite the entire word document.
+        /// </summary>
+        public static string activity_setparagraph_index_help {
+            get {
+                return ResourceManager.GetString("activity_setparagraph_index_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text.
+        /// </summary>
+        public static string activity_setparagraph_text {
+            get {
+                return ResourceManager.GetString("activity_setparagraph_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The text to set.
+        /// </summary>
+        public static string activity_setparagraph_text_help {
+            get {
+                return ResourceManager.GetString("activity_setparagraph_text_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set content of a paragraph in side a Microsoft Word document.
         /// </summary>
         public static string activity_setparagraph_tooltip {
@@ -331,11 +655,65 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cells.
+        /// </summary>
+        public static string activity_writerange_cells {
+            get {
+                return ResourceManager.GetString("activity_writerange_cells", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set the first cell to start writing from, leave blank to start at last empty row in column A.
+        /// </summary>
+        public static string activity_writerange_cells_help {
+            get {
+                return ResourceManager.GetString("activity_writerange_cells_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DataTable.
+        /// </summary>
+        public static string activity_writerange_datatable {
+            get {
+                return ResourceManager.GetString("activity_writerange_datatable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The datatable containing the data to add to Excel.
+        /// </summary>
+        public static string activity_writerange_datatable_help {
+            get {
+                return ResourceManager.GetString("activity_writerange_datatable_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Write all data from a DataTable to at a range inside a Microsoft Excel sheet.
         /// </summary>
         public static string activity_writerange_tooltip {
             get {
                 return ResourceManager.GetString("activity_writerange_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Header Row.
+        /// </summary>
+        public static string activity_writerange_useheaderrow {
+            get {
+                return ResourceManager.GetString("activity_writerange_useheaderrow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If set to true, will also add a header row with column names as the first row, set to false to only add the data.
+        /// </summary>
+        public static string activity_writerange_useheaderrow_help {
+            get {
+                return ResourceManager.GetString("activity_writerange_useheaderrow_help", resourceCulture);
             }
         }
     }

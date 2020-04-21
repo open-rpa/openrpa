@@ -13,6 +13,7 @@ if (true == false) {
     document.openrpautil = {};
 } else {
     if (window.openrpautil_contentlistner === null || window.openrpautil_contentlistner === undefined) {
+
         var runtimeOnMessage = function (sender, message, fnResponse) {
             try {
                 if (openrpautil == undefined) return;
@@ -280,10 +281,27 @@ if (true == false) {
                         ele = cssEle;
                     }
                     if (ele) {
+                        ele.focus();
                         ele.value = message.data;
-                        var evt = document.createEvent("HTMLEvents");
-                        evt.initEvent("change", false, true);
-                        ele.dispatchEvent(evt);
+                        try {
+                            var evt = document.createEvent("HTMLEvents");
+                            evt.initEvent("change", true, true);
+                            ele.dispatchEvent(evt);
+                        } catch (e) {
+                            console.error(e);
+                        }
+                        try {
+                            var evt = document.createEvent("HTMLEvents");
+                            evt.initEvent("input", true, true);
+                            ele.dispatchEvent(evt);
+                        } catch (e) {
+                            console.error(e);
+                        }
+                        //ele.blur();
+                        //var events = ["keydown", "keyup", "keypress"];
+                        //for (var i = 0; i < events.length; ++i) {
+                        //    simulate(ele, events[i]);
+                        //}
                     }
                     var test = JSON.parse(JSON.stringify(message));
                     return test;
@@ -1048,3 +1066,4 @@ if (true == false) {
         }
     }
 }
+

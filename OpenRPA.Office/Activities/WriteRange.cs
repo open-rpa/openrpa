@@ -39,20 +39,29 @@ namespace OpenRPA.Office.Activities
             Microsoft.Office.Interop.Excel.Range xlRange = null;
             if (string.IsNullOrEmpty(cells))
             {
-                //xlRange = base.worksheet.UsedRange;
+                xlRange = base.worksheet.UsedRange;
                 // Find the last real row
-                var nInLastRow = base.worksheet.Cells.Find("*", System.Reflection.Missing.Value,
-                System.Reflection.Missing.Value, System.Reflection.Missing.Value, XlSearchOrder.xlByRows, XlSearchDirection.xlPrevious, false, System.Reflection.Missing.Value, System.Reflection.Missing.Value).Row;
+                if(xlRange.Count > 1)
+                {
+                    try
+                    {
+                        var nInLastRow = base.worksheet.Cells.Find("*", System.Reflection.Missing.Value,
+    System.Reflection.Missing.Value, System.Reflection.Missing.Value, XlSearchOrder.xlByRows, XlSearchDirection.xlPrevious, false, System.Reflection.Missing.Value, System.Reflection.Missing.Value).Row;
 
-                //// Find the last real column
-                var nInLastCol = base.worksheet.Cells.Find("*", System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, XlSearchOrder.xlByColumns, XlSearchDirection.xlPrevious, false, System.Reflection.Missing.Value, System.Reflection.Missing.Value).Column;
+                        //// Find the last real column
+                        var nInLastCol = base.worksheet.Cells.Find("*", System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, XlSearchOrder.xlByColumns, XlSearchDirection.xlPrevious, false, System.Reflection.Missing.Value, System.Reflection.Missing.Value).Column;
 
-                // var o = base.worksheet.Cells[nInLastRow, nInLastCol];
-                var o = base.worksheet.Cells[nInLastRow + 1, 1];
-                xlRange = o as Range;
+                        // var o = base.worksheet.Cells[nInLastRow, nInLastCol];
+                        var o = base.worksheet.Cells[nInLastRow + 1, 1];
+                        xlRange = o as Range;
 
-                // Range last = base.worksheet.Cells.SpecialCells(XlCellType.xlCellTypeLastCell, Type.Missing);
-                // xlRange = base.worksheet.get_Range("A1", last);
+                        // Range last = base.worksheet.Cells.SpecialCells(XlCellType.xlCellTypeLastCell, Type.Missing);
+                        // xlRange = base.worksheet.get_Range("A1", last);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
             }
             else
             {
@@ -85,7 +94,7 @@ namespace OpenRPA.Office.Activities
                 }
             }
             // Microsoft.Office.Interop.Excel.Range c1 = (Microsoft.Office.Interop.Excel.Range)worksheet.Cells[topRow, 1];
-            Microsoft.Office.Interop.Excel.Range c2 = (Microsoft.Office.Interop.Excel.Range)worksheet.Cells[xlRange.Row + dt.Rows.Count - 1, xlRange.Column + dt.Columns.Count];
+            Microsoft.Office.Interop.Excel.Range c2 = (Microsoft.Office.Interop.Excel.Range)worksheet.Cells[xlRange.Row + dt.Rows.Count - 1, (xlRange.Column + dt.Columns.Count ) - 1];
             Microsoft.Office.Interop.Excel.Range range = worksheet.get_Range(xlRange, c2);
             //range.Value = arr;
             range.set_Value(Microsoft.Office.Interop.Excel.XlRangeValueDataType.xlRangeValueDefault, arr);

@@ -179,8 +179,8 @@ namespace WindowsAccessBridgeInterop {
 
       int vmId;
       JavaObjectHandle ac;
-            Console.WriteLine("Value : {0:X}", hwnd);
-            Console.WriteLine("Value : {0:X}", hwnd.ToInt64());
+            //Console.WriteLine("Value : {0:X}", hwnd);
+            //Console.WriteLine("Value : {0:X}", hwnd.ToInt64());
             if (!Functions.GetAccessibleContextFromHWND(hwnd, out vmId, out ac))
         return null;
 

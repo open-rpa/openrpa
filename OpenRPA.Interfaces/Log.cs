@@ -12,7 +12,7 @@ namespace OpenRPA.Interfaces
         // public static object loglock = new object();
         private static NLog.Logger nlog = null;
         public static int Indent = 0;
-        public static Stack<string> functions = new Stack<string>();
+        public static System.Collections.Concurrent.ConcurrentStack<string> functions = new System.Collections.Concurrent.ConcurrentStack<string>();
         public static void FunctionIndent(string cls, string func, string message = "")
         {
             Indent++;
@@ -46,7 +46,8 @@ namespace OpenRPA.Interfaces
                 }
             }
             Indent--;
-            functions.Pop();
+            string dummy = "";
+            functions.TryPop(out dummy);
         }
         public static void Function(string cls, string func, string message = "")
         {

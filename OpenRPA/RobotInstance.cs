@@ -287,7 +287,7 @@ namespace OpenRPA
                 }
                 else
                 {
-                    Log.Information("Reloading server data");
+                    Log.Debug("Reloading server data");
                     SetStatus("Fetching projects");
                     var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}", top: 5000);
                     SetStatus("Fetching workflows");

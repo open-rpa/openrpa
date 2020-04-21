@@ -3,6 +3,7 @@ console.log('openrpa extension begin');
 var openrpautil_script = '';
 var portname = 'com.openrpa.msg';
 var lastwindowId = 1;
+var openrpadebug = false;
 
 // Opera 8.0+ (tested on Opera 42.0)
 var isOpera = !!window.opr && !!opr.addons || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
@@ -194,6 +195,7 @@ async function OnPortMessage(message) {
         var tab = tabsList[0];
         message.windowId = windowId;
         message.tabid = tab.id;
+        openrpadebug = message.debug;
         message = await SendToTab(windowId, message);
 
     } catch (e) {
@@ -327,7 +329,11 @@ function tabsOnRemoved(tabId) {
     port.postMessage(JSON.parse(JSON.stringify(message)));
 }
 async function tabsOnUpdated(tabId, changeInfo, tab) {
-    if (!allowExecuteScript(tab)) return;
+    if (!allowExecuteScript(tab)) {
+        console.log('tabsOnUpdated, skipped, not allowExecuteScript');
+        return;
+    }
+    if (openrpadebug) console.log(changeInfo);
     try {
         console.log("tabsOnUpdated: " + changeInfo.status)
         await tabsexecuteScript(tab.id, { code: openrpautil_script, allFrames: true });
@@ -335,21 +341,6 @@ async function tabsOnUpdated(tabId, changeInfo, tab) {
         console.log(e);
         console.log(tab);
     }
-    // delay hack, for slow loading iframes
-    var counter = 0;
-    var timeid = setInterval(async () =>{
-        try {
-            counter++;
-            console.log("tabsexecuteScript" + changeInfo.tabid);
-            await tabsexecuteScript(tab.id, { code: openrpautil_script, allFrames: true });
-        } catch (e) {
-            console.log(e);
-            console.log(tab);
-        }
-        if (counter > 10) {
-            clearTimeout(timeid);
-        }
-    }, 1000);
     var message = { functionName: "tabupdated", tabid: tabId, tab: tab };
     if (isChrome) message.browser = "chrome";
     if (isFirefox) message.browser = "ff";
@@ -596,6 +587,12 @@ chrome.tabs.onCreated.addListener(tabsOnCreated);
 chrome.tabs.onRemoved.addListener(tabsOnRemoved);
 chrome.tabs.onUpdated.addListener(tabsOnUpdated);
 chrome.tabs.onActivated.addListener(tabsOnActivated);
+chrome.extension.onRequest.addListener(function (response) {
+    if (response.type === "urlUpdate") {
+        document.getElementById("addressBar").value = response.url;
+    }
+});
+
 chrome.runtime.onMessage.addListener((msg, sender, fnResponse) => {
     if (msg === "loadscript") {
         if (openrpautil_script !== null && openrpautil_script !== undefined && openrpautil_script !== '') {

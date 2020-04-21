@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.99</Version>
-    <PackageReleaseNotes>1.0.99 Improve log performance, bug fixes
+    <Version>1.0.100</Version>
+    <PackageReleaseNotes>1.0.100 Move server refresh message to from info to debug
+1.0.99 Improve log performance, bug fixes
 1.0.98 Fix highlight button on Take Screenshot when used inside windows.getelement
 Add toggle between embedded and locally installed python, Add PipInstall activity
 1.0.97 Add instance log window with last 10 runs

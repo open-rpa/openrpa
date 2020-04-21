@@ -6,11 +6,12 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.18</Version>
+    <Version>1.0.19</Version>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
     <StartupObject />
-    <PackageReleaseNotes>1.0.18 temporary, workaround for iframes late loading
+    <PackageReleaseNotes>1.0.19 Remove irrelevant error logging, improve iframe injection
+1.0.18 temporary, workaround for iframes late loading
 1.0.16 Fix terminal server name pipe issue
 1.0.15 Change target framework to 4.7.2
 1.0.14 Add IsVisible, Display, isVisibleOnScreen and Disabled to GetDOM
@@ -58,10 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="chromemanifest.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ffmanifest.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

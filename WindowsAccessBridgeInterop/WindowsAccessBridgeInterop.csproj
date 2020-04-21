@@ -8,10 +8,11 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes>1.1.7 bump version
+    <PackageReleaseNotes>1.1.9 Remove debug info message
+1.1.7 bump version
 1.1.5 update interfaces reference</PackageReleaseNotes>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.1.8</Version>
+    <Version>1.1.9</Version>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <PackageTags></PackageTags>

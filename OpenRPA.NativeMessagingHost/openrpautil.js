@@ -858,6 +858,9 @@ if (true == false) {
                     return null; // Error.
                 switch (node.nodeType) {
                     case Node.ELEMENT_NODE:
+                        // 
+                        if (optimized && node.getAttribute("ng-model"))
+                            return new UTILS.DOMNodePathStep("//*[@ng-model=\"" + node.getAttribute("ng-model") + "\"]", true);
                         if (optimized && node.getAttribute("ng-reflect-name"))
                             return new UTILS.DOMNodePathStep("//*[@ng-reflect-name=\"" + node.getAttribute("ng-reflect-name") + "\"]", true);
                         if (optimized && node.getAttribute("aria-label"))

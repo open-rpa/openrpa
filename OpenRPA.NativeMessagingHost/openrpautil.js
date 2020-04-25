@@ -860,6 +860,8 @@ if (true == false) {
                     case Node.ELEMENT_NODE:
                         if (optimized && node.getAttribute("ng-reflect-name"))
                             return new UTILS.DOMNodePathStep("//*[@ng-reflect-name=\"" + node.getAttribute("ng-reflect-name") + "\"]", true);
+                        if (optimized && node.getAttribute("aria-label"))
+                            return new UTILS.DOMNodePathStep("//*[@aria-label=\"" + node.getAttribute("aria-label") + "\"]", true);
                         if (optimized && node.getAttribute("id"))
                             return new UTILS.DOMNodePathStep("//*[@id=\"" + node.getAttribute("id") + "\"]", true);
                         ownValue = node.localName;

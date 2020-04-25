@@ -97,7 +97,14 @@ namespace OpenRPA.NM
                 if(c!=null)
                     foreach (var kp in c )
                     {
-                        chromeelement.Add(kp.Key.ToLower(), kp.Value);
+                        if(chromeelement.ContainsKey(kp.Key.ToLower()))
+                        {
+                            chromeelement[kp.Key.ToLower()] = kp.Value;
+                        } else
+                        {
+                            chromeelement.Add(kp.Key.ToLower(), kp.Value);
+                        }
+                        
                     }
                 //if (chromeelement.ContainsKey("attributes"))
                 //{

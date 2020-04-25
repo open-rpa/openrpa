@@ -117,20 +117,27 @@ namespace OpenRPA.Views
         }
         private void OnCancel()
         {
-            GenericTools.RunUI(() =>
-            {
-                if (tab == null) return;
-                if (!tab.IsSelected) return;
-                foreach (var i in WorkflowInstance.Instances)
-                {
-                    if (i.WorkflowId == Workflow._id && !i.isCompleted)
-                    {
-                        i.Abort("User canceled workflow with cancel key");
-                    }
-                }
-                if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
+            //GenericTools.RunUI(() =>
+            //{
+            //    if (tab == null) return;
+            //    if (!tab.IsSelected) return;
+            //    foreach (var i in WorkflowInstance.Instances)
+            //    {
+            //        if (i.WorkflowId == Workflow._id && !i.isCompleted)
+            //        {
+            //            i.Abort("User canceled workflow with cancel key");
+            //        }
+            //    }
+            //    if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
 
-            });
+            //});
+            foreach (var i in WorkflowInstance.Instances)
+            {
+                if (i.WorkflowId == Workflow._id && !i.isCompleted)
+                {
+                    i.Abort("User canceled workflow with cancel key");
+                }
+            }
         }
         private void OnKeyUp(Input.InputEventArgs e)
         {

@@ -426,6 +426,18 @@ namespace OpenRPA
             NotifyPropertyChanged("Minimize");
             NotifyPropertyChanged("SelectedContent");
             NotifyPropertyChanged("CurrentWorkflow");
+            NotifyPropertyChanged("LastDesigner");
+        }
+        private Views.WFDesigner _LastDesigner;
+        public Views.WFDesigner LastDesigner
+        {
+            get
+            {
+                if (Designer != null) _LastDesigner = Designer;
+                if (SelectedContent is Views.OpenProject) _LastDesigner = null;
+                if (SelectedContent is Views.DetectorsView) _LastDesigner = null;
+                return _LastDesigner;
+            }
         }
         public object SelectedContent
         {

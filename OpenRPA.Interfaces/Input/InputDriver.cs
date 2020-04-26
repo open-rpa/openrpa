@@ -36,12 +36,18 @@ namespace OpenRPA.Input
         private NativeMethods.LLProc keyboardProc;
         private IntPtr mouseHook;
         private NativeMethods.LLProc mouseProc;
-        public event InputEventHandler OnKeyUp = delegate { };
-        public event InputEventHandler OnKeyDown = delegate { };
-        public event InputEventHandler OnMouseUp = delegate { };
-        public event InputEventHandler OnMouseDown = delegate { };
-        public event InputEventHandler OnMouseMove = delegate { };
-        public event CancelEventHandler onCancel = delegate { };
+        //public event InputEventHandler OnKeyUp = delegate { };
+        //public event InputEventHandler OnKeyDown = delegate { };
+        //public event InputEventHandler OnMouseUp = delegate { };
+        //public event InputEventHandler OnMouseDown = delegate { };
+        //public event InputEventHandler OnMouseMove = delegate { };
+        //public event CancelEventHandler onCancel = delegate { };
+        public event InputEventHandler OnKeyUp;
+        public event InputEventHandler OnKeyDown;
+        public event InputEventHandler OnMouseUp;
+        public event InputEventHandler OnMouseDown;
+        public event InputEventHandler OnMouseMove;
+        public event CancelEventHandler onCancel;
         public delegate void CancelEventHandler();
         public void KeyUp(KeyboardKey key) => SetInputState(new InputEventArgs() { Type = InputEventType.KeyUp, Key = key });
         public void KeyDown(KeyboardKey key) => SetInputState(new InputEventArgs() { Type = InputEventType.KeyDown, Key = key });
@@ -350,7 +356,6 @@ namespace OpenRPA.Input
             catch (Exception)
             {
             }
-
             try
             {
                 e.Element = Element;

@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.42</Version>
-    <PackageReleaseNotes>1.0.42 Fix bug when selecting object in selector UI
+    <Version>1.0.43</Version>
+    <PackageReleaseNotes>1.0.43 Skip ui lookup on click, when noone is listening
+1.0.42 Fix bug when selecting object in selector UI
 1.0.41 Fix terminal server name pipe issue and add more logging features
 1.0.40 Add more settings
 1.0.39 fix small issue with maxresult when highlighting

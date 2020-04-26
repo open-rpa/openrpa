@@ -7,8 +7,9 @@
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office, created for OpenRPA robot</Description>
-    <Version>1.0.21</Version>
-    <PackageReleaseNotes>1.0.21 Improve performance in writerange 
+    <Version>1.0.22</Version>
+    <PackageReleaseNotes>1.0.22 Hide the Hide property
+1.0.21 Improve performance in writerange 
 1.0.20 Bump to framework 4.7.2, Add Invoke Excel Macro
 1.0.19 Add RunSlideShow, fix pia references
 1.0.18 Add langauges and bug fixes

@@ -236,7 +236,8 @@ namespace OpenRPA.Office.Activities
         }
         [RequiredArgument]
         public InArgument<string> Filename { get; set; }
-        [RequiredArgument]
+        //[RequiredArgument]
+        [System.ComponentModel.Browsable(false)]
         public InArgument<bool> Visible { get; set; }
         public InArgument<string> Worksheet { get; set; }
         public InOutArgument<Microsoft.Office.Interop.Excel.Workbook> Workbook { get; set; }
@@ -250,7 +251,8 @@ namespace OpenRPA.Office.Activities
         protected override void Execute(NativeActivityContext context)
         {
             filename = Filename.Get(context);
-            officewrap.application.Visible = Visible.Get(context);
+            officewrap.application.Visible = true;
+            // officewrap.application.Visible = Visible.Get(context);
             if (!string.IsNullOrEmpty(filename)) filename = Environment.ExpandEnvironmentVariables(filename);
 
             workbook = (Workbook != null ? Workbook.Get(context) : null);

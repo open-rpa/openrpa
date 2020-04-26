@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.103</Version>
-    <PackageReleaseNotes>1.0.103 Readd current designer for property dialog
+    <Version>1.0.104</Version>
+    <PackageReleaseNotes>1.0.104 Skip ui lookup on click, when noone is listening
+1.0.103 Readd current designer for property dialog
 1.0.102 Fix weak reference in oncancel
 1.0.101 Improve input updates in nm
 1.0.100 Move server refresh message to from info to debug

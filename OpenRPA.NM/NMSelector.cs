@@ -32,6 +32,7 @@ namespace OpenRPA.NM
             Log.Selector(string.Format("NMselector::AutomationElement::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
             Log.Selector(string.Format("NMselector::GetControlVNMwWalker::end {0:mm\\:ss\\.fff}", sw.Elapsed));
 
+
             NMSelectorItem item;
             if (anchor == null)
             {

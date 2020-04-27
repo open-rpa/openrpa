@@ -9,7 +9,8 @@
     <Product>OpenRPA</Product>
     <Description>Recorder plugin and Activities for interacting with Chrome/Firefox and Edge, created for OpenRPA robot</Description>
     <Version>1.0.26</Version>
-    <PackageReleaseNotes>1.0.26 add ng-model as a prefered id element
+    <PackageReleaseNotes>1.0.27 Improve iframe support
+1.0.26 add ng-model as a prefered id element
 1.0.25 Fix terminal server name pipe issue
 1.0.24 Improve nmelement.value parsing
 1.0.23 Change target framework to 4.7.2

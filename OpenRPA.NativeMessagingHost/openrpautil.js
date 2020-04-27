@@ -536,9 +536,9 @@ if (true == false) {
                             return;
                         }
                         if (action === 'mousemove') {
-                            if (last_mousemove === targetElement) {
-                                return;
-                            }
+                            //if (last_mousemove === targetElement) {
+                            //    return;
+                            //}
                             last_mousemove = targetElement;
                         }
                         try {
@@ -564,7 +564,7 @@ if (true == false) {
                             message.uix += currentFramePosition.x;
                             message.uiy += currentFramePosition.y;
                         }
-                        console.log('inIframe: ' + inIframe());
+                        // console.log('inIframe: ' + inIframe());
                         message.cssPath = UTILS.cssPath(targetElement);
                         message.xPath = UTILS.xPath(targetElement, true);
                         message.zn_id = openrpautil.getuniqueid(targetElement);
@@ -573,7 +573,7 @@ if (true == false) {
                         //if (targetElement.tagName == "IFRAME" || targetElement.tagName == "FRAME") {
                         message.xpaths.push(message.xPath);
                         //if (document.openrpadebug)
-                        console.log({ uix: message.uix, uiy: message.uiy, parent: message.parents })
+                        // console.log({ uix: message.uix, uiy: message.uiy, parent: message.parents })
                         //console.log({ x: message.x, y: message.y, uix: message.uix, uiy: message.uiy, parent: message.parents })
 
                         // console.log(targetElement.tagName + ' ' + message.xPath);

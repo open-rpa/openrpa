@@ -1,18 +1,101 @@
 document.openrpadebug = false;
 function inIframe() {
+    var result = true;
     try {
-        return window.self !== window.top;
+        if (window.self === window.top) return false;
+        if (parent) {
+        }
+
     } catch (e) {
-        return true;
     }
+    return result;
 }
 
-// if (inIframe() == true) {
 if (true == false) {
     console.debug('skip declaring openrpautil class');
     document.openrpautil = {};
 } else {
     if (window.openrpautil_contentlistner === null || window.openrpautil_contentlistner === undefined) {
+        function remotePushEvent(evt) {
+            if (evt.data.functionName == "mousemove") {
+                console.log(evt.data);
+                openrpautil.parent = evt.data;
+                try {
+                    notifyFrames();
+                } catch (e) {
+                }
+            }
+        }
+        if (window.addEventListener) {
+            window.addEventListener("message", remotePushEvent, false);
+        } else {
+            window.attachEvent("onmessage", remotePushEvent);
+        }
+        var notifyFrames = (event) => {
+            for (let targetElement of document.getElementsByTagName('iframe')) {
+                var message = { functionName: 'mousemove', parents: 0, xpaths: [] };
+                try {
+                    openrpautil.applyPhysicalCords(message, targetElement);
+                } catch (e) {
+                    console.error(e);
+                }
+                if (openrpautil.parent != null) {
+                    message.parents = openrpautil.parent.parents + 1;
+                    message.uix += openrpautil.parent.uix;
+                    message.uiy += openrpautil.parent.uiy;
+                }
+                console.log(targetElement);
+                //console.log(getComputedStyle(targetElement, null).getPropertyValue('border-left-width'))
+                //console.log()
+                var width = getComputedStyle(targetElement, null).getPropertyValue('border-width');
+                width = parseInt(width.replace('px', '')) * 0.85;
+                message.uix += (width | 0);
+                var height = getComputedStyle(targetElement, null).getPropertyValue('border-height');
+                height = parseInt(height.replace('px', '')) * 0.85;
+                message.uiy += (height | 0);
+
+                message.cssPath = UTILS.cssPath(targetElement);
+                message.xPath = UTILS.xPath(targetElement, true);
+                console.log('postMessage to', targetElement, { uix: message.uix, uiy: message.uiy });
+                targetElement.contentWindow.postMessage(message, '*');
+            }
+            var doFrames = () => {
+                try {
+                    for (let targetElement of document.getElementsByTagName('frame')) {
+                        var message = { functionName: 'mousemove', parents: 0, xpaths: [] };
+                        try {
+                            openrpautil.applyPhysicalCords(message, targetElement);
+                        } catch (e) {
+                            console.error(e);
+                        }
+                        if (openrpautil.parent != null) {
+                            message.parents = openrpautil.parent.parents + 1;
+                            message.uix += openrpautil.parent.uix;
+                            message.uiy += openrpautil.parent.uiy;
+                        }
+                        console.log(targetElement);
+                        //console.log(getComputedStyle(targetElement, null).getPropertyValue('border-left-width'))
+                        //console.log()
+                        var width = getComputedStyle(targetElement, null).getPropertyValue('border-width');
+                        width = parseInt(width.replace('px', '')) * 0.85;
+                        message.uix += width;
+                        var height = getComputedStyle(targetElement, null).getPropertyValue('border-height');
+                        height = parseInt(height.replace('px', '')) * 0.85;
+                        message.uiy += (height | 0);
+
+                        message.cssPath = UTILS.cssPath(targetElement);
+                        message.xPath = UTILS.xPath(targetElement, true);
+                        console.log('postMessage');
+                        // targetElement.contentWindow.postMessage(message, '*');
+                        targetElement.contentDocument.openrpautil.parent = message;
+                    }
+                } catch (e) {
+                    setTimeout(doFrames, 500);
+                }
+            };
+            doFrames();
+        }
+        window.addEventListener('load', notifyFrames);
 
         var runtimeOnMessage = function (sender, message, fnResponse) {
             try {
@@ -47,15 +130,17 @@ if (true == false) {
             var cache = {};
             var cachecount = 0;
             var openrpautil = {
+                parent: null,
                 ping: function () {
                     return "pong";
                 },
                 init: function () {
+                    document.addEventListener('mousemove', function (e) { openrpautil.pushEvent('mousemove', e); }, true);
+                    if (inIframe()) return;
                     document.addEventListener('click', function (e) { openrpautil.pushEvent('click', e); }, true);
                     document.addEventListener('keydown', function (e) { openrpautil.pushEvent('keydown', e); }, true);
                     document.addEventListener('keypress', function (e) { openrpautil.pushEvent('keyup', e); }, true);
                     document.addEventListener('mousedown', function (e) { openrpautil.pushEvent('mousedown', e); }, true);
-                    document.addEventListener('mousemove', function (e) { openrpautil.pushEvent('mousemove', e); }, true);
                 },
                 findform: function (element) {
                     try {
@@ -103,7 +188,7 @@ if (true == false) {
                             }
                         }
                     } catch (e) {
-                        console.log(e);
+                        console.error(e);
                         message.error = e;
                     }
                     var test = JSON.parse(JSON.stringify(message));
@@ -176,9 +261,11 @@ if (true == false) {
                         }
                         var base = Object.assign({}, message);
                         message.results = [];
+                        notifyFrames();
                         if (ele.length > 0) {
                             try {
                                 for (var i = 0; i < ele.length; i++) {
+                                    console.log(ele[i]);
                                     var result = Object.assign({}, base);
                                     if (message.data === 'getdom') {
                                         result.result = openrpautil.mapDOM(ele[i], false, true);
@@ -192,6 +279,24 @@ if (true == false) {
                                         console.error(e);
                                     }
                                     result.zn_id = openrpautil.getuniqueid(ele[i]);
+
+                                    // console.log('parent: ' + (openrpautil.parent != null) + ' inIframe: ' + inIframe());
+                                    if (openrpautil.parent != null) {
+                                        console.log({ uix: openrpautil.parent.uix, uiy: openrpautil.parent.uiy});
+                                        result.parents = openrpautil.parent.parents + 1;
+                                        result.uix += openrpautil.parent.uix;
+                                        result.uiy += openrpautil.parent.uiy;
+                                        result.xpaths = openrpautil.parent.xpaths.slice(0);
+                                        console.log({ uix: openrpautil.parent.uix, uiy: openrpautil.parent.uiy });
+                                    } else if (inIframe()) {
+                                        console.log("fuck!");
+                                        return;
+                                        var currentFramePosition = openrpautil.currentFrameAbsolutePosition();
+                                        console.log({ uix: result.uix, uiy: result.uiy, parent: result.parents }, currentFramePosition);
+                                        result.uix += currentFramePosition.x;
+                                        result.uiy += currentFramePosition.y;
+                                    }
+
                                     message.results.push(result);
                                 }
                             } catch (e) {
@@ -316,51 +421,72 @@ if (true == false) {
                     message.height = Math.floor(ele.offsetHeight);
                     message.uiwidth = Math.round(ele.offsetWidth * devicePixelRatio);
                     message.uiheight = Math.round(ele.offsetHeight * devicePixelRatio);
-                    message.uix = Math.round((ClientRect.left - scrollLeft) * devicePixelRatio);
-                    message.uiy = Math.round((ClientRect.top * devicePixelRatio) + (window.outerHeight - (window.innerHeight * devicePixelRatio))); //+ (window.outerHeight - window.innerHeight));
-                    var isAtMaxWidth = screen.availWidth - window.innerWidth === 0;
-                    if (isAtMaxWidth) {
-                        var isFirefox = typeof InstallTrigger !== 'undefined';
-                        if (isFirefox) {
-                            message.uix += 8;
-                            message.uiy -= 7;
-                        } else {
-                            message.uix += 8;
-                            message.uiy += 8;
-                        }
+                    if (window.self === window.top) {
+                        message.uix = Math.round((ClientRect.left - scrollLeft) * devicePixelRatio);
+                        message.uiy = Math.round((ClientRect.top * devicePixelRatio) + (window.outerHeight - (window.innerHeight * devicePixelRatio)));
                     } else {
-                        message.uix += 7;
-                        message.uiy -= 7;
+                        message.uix = Math.round(ClientRect.left * devicePixelRatio);
+                        message.uiy = Math.round(ClientRect.top * devicePixelRatio);
                     }
-                    // https://blog.crimx.com/2017/04/06/position-and-drag-iframe-en/
-                    var currentFramePosition = openrpautil.currentFrameAbsolutePosition();
-                    message.uix += currentFramePosition.x;
-                    message.uiy += currentFramePosition.y;
-                    message.buble = currentFramePosition.buble;
-
+                    if (inIframe() == false) {
+                        var isAtMaxWidth = screen.availWidth - window.innerWidth === 0;
+                        if (isAtMaxWidth) {
+                            var isFirefox = typeof InstallTrigger !== 'undefined';
+                            if (isFirefox) {
+                                message.uix += 8;
+                                message.uiy -= 7;
+                            } else {
+                                message.uix += 8;
+                                message.uiy += 8;
+                            }
+                        } else {
+                            message.uix += 7;
+                            message.uiy -= 7;
+                        }
+                    //} else {
+                    //    message.uix += 1;
+                    //    message.uiy += 1;
+                    }
                 },
+                // https://stackoverflow.com/questions/53056796/getboundingclientrect-from-within-iframe
                 currentFrameAbsolutePosition: function () {
                     let currentWindow = window;
                     let currentParentWindow;
                     let positions = [];
                     let rect;
+                    if (inIframe()) {
+                    }
+                    currentParentWindow = parent;
                     while (currentWindow !== window.top) {
-                        currentParentWindow = currentWindow.parent;
                         for (let idx = 0; idx < currentParentWindow.frames.length; idx++)
                             if (currentParentWindow.frames[idx] === currentWindow) {
                                 // for (let frameElement of currentParentWindow.document.getElementsByTagName('iframe')) {
                                 for (let t = 0; t < currentParentWindow.frames.length; t++) {
                                     try {
                                         let frameElement = currentParentWindow.frames[t];
-                                        if (frameElement.contentWindow === currentWindow) {
+
+                                        if (typeof frameElement.getBoundingClientRect === "function") {
                                             rect = frameElement.getBoundingClientRect();
+
+                                            positions.push({ x: rect.x, y: rect.y });
+                                        } else if (frameElement.frameElement != null && typeof frameElement.frameElement.getBoundingClientRect === "function") {
+                                            rect = frameElement.frameElement.getBoundingClientRect();
+                                            positions.push({ x: rect.x, y: rect.y });
+                                        } else if (frameElement.window != null && typeof frameElement.window.getBoundingClientRect === "function") {
+                                            rect = frameElement.window.getBoundingClientRect();
+                                            positions.push({ x: rect.x, y: rect.y });
+                                        } else if (frameElement.contentWindow === currentWindow) {
+                                            rect = frameElement.getBoundingClientRect();
+
                                             positions.push({ x: rect.x, y: rect.y });
                                         } else if (frameElement.window === currentWindow) {
                                             if (typeof frameElement.getBoundingClientRect === "function") {
                                                 rect = frameElement.getBoundingClientRect();
+
                                                 positions.push(rect);
                                             } else if (frameElement.frameElement != null && typeof frameElement.frameElement.getBoundingClientRect === "function") {
                                                 rect = frameElement.frameElement.getBoundingClientRect();
+
                                                 positions.push(rect);
                                             } else {
                                                 positions.push({ x: 0, y: 0 });
@@ -377,15 +503,18 @@ if (true == false) {
                                 //}
 
                                 currentWindow = currentParentWindow;
+                                currentParentWindow = currentWindow.parent;
                                 break;
                             }
                     }
-                    return positions.reduce((accumulator, currentValue) => {
+                    
+                    var result = positions.reduce((accumulator, currentValue) => {
                         return {
-                            x: accumulator.x + currentValue.x,
-                            y: accumulator.y + currentValue.y
+                            x: (accumulator.x + currentValue.x) | 0,
+                            y: (accumulator.y + currentValue.y) | 0
                         };
                     }, { x: 0, y: 0 });
+                    return result;
                 },
                 getOffset: function (el) {
                     var _x = 0;
@@ -400,12 +529,6 @@ if (true == false) {
                 pushEvent: function (action, event) {
                     let frame = -1;
                     if (window.frameElement) frame = window.frameElement.id;
-                    //let frame = openrpautil.getFrameName(self);
-                    if (inIframe()) {
-
-
-                    }
-
                     if (action === 'keydown') {
                         chrome.runtime.sendMessage({ functionName: action, key: String.fromCharCode(event.which) });
                     }
@@ -417,28 +540,62 @@ if (true == false) {
 
                         // https://stackoverflow.com/questions/3437786/get-the-size-of-the-screen-current-web-page-and-browser-window
 
-                        var message = { functionName: action, frame: frame };
-                        var targetElement = event.target || event.srcElement;
+                        var message = { functionName: action, frame: frame, parents: 0, xpaths: [] };
+                        var targetElement = null;
+                        targetElement = event.target || event.srcElement;
+                        if (targetElement == null) {
+                            console.log('targetElement == null');
+                            return;
+                        }
                         if (action === 'mousemove') {
-                            //https://stackoverflow.com/questions/49798103/google-chrome-mouseover-event
-                            if (targetElement === last_mousemove) return;
+                            if (last_mousemove === targetElement) {
+                                return;
+                            }
                             last_mousemove = targetElement;
-                            //if (targetElement !== null) {
-                            //    var dom = openrpautil.mapDOM(targetElement, true);
-                            //    message.result = dom;
-                            //}
                         }
                         try {
                             openrpautil.applyPhysicalCords(message, targetElement);
                         } catch (e) {
                             console.error(e);
                         }
-                        //xPath: UTILS.xPath(targetElement, true), cssPath: UTILS.cssPath(targetElement)
+                        // console.log(openrpautil.parent);
+                        if (openrpautil.parent != null) {
+                            message.parents = openrpautil.parent.parents + 1;
+                            message.uix += openrpautil.parent.uix;
+                            message.uiy += openrpautil.parent.uiy;
+                            message.xpaths = openrpautil.parent.xpaths.slice(0);
+                            //message.x += parent.uix;
+                            //message.y += parent.uiy;
+                            //message.width += parent.width;
+                            //message.height += parent.height;
+                        } else if (inIframe()) {
+                            console.log("fuck!");
+                            return;
+                            var currentFramePosition = openrpautil.currentFrameAbsolutePosition();
+                            console.log({ uix: message.uix, uiy: message.uiy, parent: message.parents }, currentFramePosition);
+                            message.uix += currentFramePosition.x;
+                            message.uiy += currentFramePosition.y;
+                        }
+                        console.log('inIframe: ' + inIframe());
                         message.cssPath = UTILS.cssPath(targetElement);
                         message.xPath = UTILS.xPath(targetElement, true);
                         message.zn_id = openrpautil.getuniqueid(targetElement);
                         message.c = targetElement.childNodes.length;
                         message.result = openrpautil.mapDOM(targetElement, true);
+                        //if (targetElement.tagName == "IFRAME" || targetElement.tagName == "FRAME") {
+                        message.xpaths.push(message.xPath);
+                        //if (document.openrpadebug)
+                        console.log({ uix: message.uix, uiy: message.uiy, parent: message.parents })
+                        //console.log({ x: message.x, y: message.y, uix: message.uix, uiy: message.uiy, parent: message.parents })
+
+                        // console.log(targetElement.tagName + ' ' + message.xPath);
+                        if (targetElement.contentWindow) {
+                            var iframeWin = targetElement.contentWindow;
+                            iframeWin.postMessage(message, '*');
+                            console.log('targetElement.tagName == iframe or frame');
+                            return;
+                        }
+
                         chrome.runtime.sendMessage(message);
                     }
                 },

@@ -329,6 +329,7 @@ function tabsOnRemoved(tabId) {
     port.postMessage(JSON.parse(JSON.stringify(message)));
 }
 async function tabsOnUpdated(tabId, changeInfo, tab) {
+    console.log('tabsOnUpdated');
     if (!allowExecuteScript(tab)) {
         console.log('tabsOnUpdated, skipped, not allowExecuteScript');
         return;
@@ -626,11 +627,12 @@ async function runtimeOnMessage(msg, sender, fnResponse) {
         msg.uiy += currentWindow.top;
 
         // https://docs.microsoft.com/en-us/dotnet/framework/winforms/controls/how-to-size-a-windows-forms-label-control-to-fit-its-contents
-        if (msg.functionName !== "mousemove" && msg.functionName !== "mousedown" && msg.functionName !== "click") console.log("[send]" + msg.functionName);
+        // if (msg.functionName !== "mousemove" && msg.functionName !== "mousedown" && msg.functionName !== "click") console.log("[send]" + msg.functionName);
+        if (msg.functionName !== "mousemove") console.log("[send]" + msg.functionName + " (" + msg.uix + "," + msg.uiy + ")");
         port.postMessage(JSON.parse(JSON.stringify(msg)));
     }
     else {
-        if (msg.functionName !== "keydown" && msg.functionName !== "keyup") console.log("[send]" + msg.functionName);        
+        if (msg.functionName !== "keydown" && msg.functionName !== "keyup") console.log("[send]" + msg.functionName);
         port.postMessage(JSON.parse(JSON.stringify(msg)));
     }
 }

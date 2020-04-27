@@ -35,7 +35,6 @@ namespace OpenRPA.NM
             }
             if (!string.IsNullOrEmpty(element.xpath)) Properties.Add(new SelectorItemProperty("xpath", element.xpath) { Enabled = !hasAnchor });
             if (!string.IsNullOrEmpty(element.cssselector)) Properties.Add(new SelectorItemProperty("cssselector", element.cssselector) { Enabled = hasAnchor });
-
             if (!string.IsNullOrEmpty(element.id)) Properties.Add(new SelectorItemProperty("id", element.id) { Enabled = false });
             if (!string.IsNullOrEmpty(element.Name)) Properties.Add(new SelectorItemProperty("Name", element.Name) { Enabled = false });
             if (!string.IsNullOrEmpty(element.type)) Properties.Add(new SelectorItemProperty("type", element.type) { Enabled = false });

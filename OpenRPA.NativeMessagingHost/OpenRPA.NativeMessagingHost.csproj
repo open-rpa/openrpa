@@ -6,11 +6,12 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.21</Version>
+    <Version>1.0.22</Version>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
     <StartupObject />
-    <PackageReleaseNotes>1.0.21 add ng-model as a prefered id element
+    <PackageReleaseNotes>1.0.22 improve iframe support / update browser extenstion
+1.0.21 add ng-model as a prefered id element
 1.0.20 Improve input updates
 1.0.19 Remove irrelevant error logging, improve iframe injection
 1.0.18 temporary, workaround for iframes late loading

@@ -44,9 +44,6 @@ if (true == false) {
                     message.uix += openrpautil.parent.uix;
                     message.uiy += openrpautil.parent.uiy;
                 }
-                console.log(targetElement);
-                //console.log(getComputedStyle(targetElement, null).getPropertyValue('border-left-width'))
-                //console.log()
                 var width = getComputedStyle(targetElement, null).getPropertyValue('border-width');
                 width = parseInt(width.replace('px', '')) * 0.85;
                 message.uix += (width | 0);
@@ -56,7 +53,7 @@ if (true == false) {
 
                 message.cssPath = UTILS.cssPath(targetElement);
                 message.xPath = UTILS.xPath(targetElement, true);
-                console.log('postMessage to', targetElement, { uix: message.uix, uiy: message.uiy });
+                //console.log('postMessage to', targetElement, { uix: message.uix, uiy: message.uiy });
                 targetElement.contentWindow.postMessage(message, '*');
             }
             var doFrames = () => {
@@ -73,9 +70,6 @@ if (true == false) {
                             message.uix += openrpautil.parent.uix;
                             message.uiy += openrpautil.parent.uiy;
                         }
-                        console.log(targetElement);
-                        //console.log(getComputedStyle(targetElement, null).getPropertyValue('border-left-width'))
-                        //console.log()
                         var width = getComputedStyle(targetElement, null).getPropertyValue('border-width');
                         width = parseInt(width.replace('px', '')) * 0.85;
                         message.uix += width;
@@ -85,8 +79,6 @@ if (true == false) {
 
                         message.cssPath = UTILS.cssPath(targetElement);
                         message.xPath = UTILS.xPath(targetElement, true);
-                        console.log('postMessage');
-                        // targetElement.contentWindow.postMessage(message, '*');
                         targetElement.contentDocument.openrpautil.parent = message;
                     }
                 } catch (e) {
@@ -265,7 +257,6 @@ if (true == false) {
                         if (ele.length > 0) {
                             try {
                                 for (var i = 0; i < ele.length; i++) {
-                                    console.log(ele[i]);
                                     var result = Object.assign({}, base);
                                     if (message.data === 'getdom') {
                                         result.result = openrpautil.mapDOM(ele[i], false, true);
@@ -280,19 +271,16 @@ if (true == false) {
                                     }
                                     result.zn_id = openrpautil.getuniqueid(ele[i]);
 
-                                    // console.log('parent: ' + (openrpautil.parent != null) + ' inIframe: ' + inIframe());
                                     if (openrpautil.parent != null) {
-                                        console.log({ uix: openrpautil.parent.uix, uiy: openrpautil.parent.uiy});
                                         result.parents = openrpautil.parent.parents + 1;
                                         result.uix += openrpautil.parent.uix;
                                         result.uiy += openrpautil.parent.uiy;
                                         result.xpaths = openrpautil.parent.xpaths.slice(0);
-                                        console.log({ uix: openrpautil.parent.uix, uiy: openrpautil.parent.uiy });
                                     } else if (inIframe()) {
-                                        console.log("fuck!");
-                                        return;
+                                        // TODO: exit?
+                                        //return;
                                         var currentFramePosition = openrpautil.currentFrameAbsolutePosition();
-                                        console.log({ uix: result.uix, uiy: result.uiy, parent: result.parents }, currentFramePosition);
+                                        // console.log({ uix: result.uix, uiy: result.uiy, parent: result.parents }, currentFramePosition);
                                         result.uix += currentFramePosition.x;
                                         result.uiy += currentFramePosition.y;
                                     }
@@ -569,8 +557,8 @@ if (true == false) {
                             //message.width += parent.width;
                             //message.height += parent.height;
                         } else if (inIframe()) {
-                            console.log("fuck!");
-                            return;
+                            // TODO: exit?
+                            //return;
                             var currentFramePosition = openrpautil.currentFrameAbsolutePosition();
                             console.log({ uix: message.uix, uiy: message.uiy, parent: message.parents }, currentFramePosition);
                             message.uix += currentFramePosition.x;

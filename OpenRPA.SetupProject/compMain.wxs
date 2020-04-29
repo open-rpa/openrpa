@@ -4,6 +4,7 @@
 
     <ComponentGroup Id="MainComponents"  >
       <Component Id='OpenRPA.exe' Guid='7EBC5B95-EB7B-4F16-B65B-E1244403E7BF' Win64='yes' Directory="INSTALLDIR">
+        <!-- HKMU -->
         <RegistryValue Root='HKCU' Key='Software\OpenRPA'
                    Name='InstallFolder'
                    Value='[INSTALLDIR]'
@@ -134,6 +135,7 @@
         <File Id="filC9308A93852388F958DCE84F682053A6" Source="!(wix.MainSource)\x64\swiftshader\libEGL.dll" />
         <File Id="fil8FF6AC89C5907A8A5363662784AB3F58" Source="!(wix.MainSource)\x64\swiftshader\libGLESv2.dll" />
       </Component>
+    
     </ComponentGroup>
 
     <DirectoryRef Id="INSTALLDIR">

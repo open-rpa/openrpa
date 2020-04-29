@@ -10,7 +10,7 @@
 
   <!-- The URL for add/remove programs -->
   <?define InfoURL="https://openrpa.dk/" ?>
-  
+
   <?define Win64 = "yes" ?>
   <!-- 32-bit / 64-bit variables -->
   <?if $(var.Platform) = x64 ?>
@@ -22,16 +22,13 @@
   <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
   <?define openrpaExeSourcePath = "$(var.ProjectDir)..\OpenRPA\bin\PrepInstaller\net472\OpenRPA.exe" ?>
   <?endif ?>
-  <Product Id="*" Name="!(loc.ApplicationName)" Language="!(loc.Language)" Version="$(var.VersionNumber)" Manufacturer="!(loc.ManufacturerFullName)" 
+  <Product Id="*" Name="!(loc.ApplicationName)" Language="!(loc.Language)" Version="$(var.VersionNumber)" Manufacturer="!(loc.ManufacturerFullName)"
            UpgradeCode="$(var.UpgradeCode)"  >
-		<Package InstallerVersion="200" Compressed="yes"  Platform="x64"/>
+    <Package InstallerVersion="200" Compressed="yes"  Platform="x64" />
     <!-- InstallScope="perMachine" -->
 
-    <Property Id='ALLUSERS' Value='2' />
-    <Property Id='MSIINSTALLPERUSER' Value='1' />
-
     <MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-		<MediaTemplate EmbedCab="yes" />
+    <MediaTemplate EmbedCab="yes" />
 
     <Icon Id="open_rpa.ico" SourceFile="open_rpa.ico"/>
     <Property Id="ARPPRODUCTICON" Value="open_rpa.ico" />
@@ -112,9 +109,9 @@
       <ComponentGroupRef Id="PDPluginComponents" />
     </Feature>
 
-
-
-    <!--<Property Id="ALLUSERS" Value="2" />
+    <!--<Property Id="ALLUSERS" Value="2" />-->
+    <!--<Property Id="InstallFolder" Value="0" />
+    <Property Id='ALLUSERS' Value='2' />
     <Property Id='MSIINSTALLPERUSER' Value='1' />-->
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
 
@@ -131,56 +128,86 @@
         <RegistryValue Root="HKCU" Key="Software\OpenRPA" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
       </Component>
     </DirectoryRef>
+
+
+    <!--
+    https://stackoverflow.com/questions/43043088/wix-install-feature-conditionally
     
+    https://codingbee.net/wix/wix-the-installation-sequence
+    -->
+
+
+
     <Binary Id="HasExcelBinary" SourceFile="$(var.OpenRPA.SetupActions.TargetDir)$(var.OpenRPA.SetupActions.TargetName).CA.dll" />
+    <!--<CustomAction Id="SetProperty" Return="check" Property="FixPaths" Value="[INSTALLDIR]"></CustomAction>-->
+    <!--<CustomAction Id="FixPaths" BinaryKey="HasExcelBinary" DllEntry="FixPaths" Execute="deferred" Impersonate="no" />-->
     <CustomAction Id="HasExcel" BinaryKey="HasExcelBinary" DllEntry="HasExcel" Execute="immediate" Return="check" />
+    <CustomAction Id="RunFindRelatedProducts" BinaryKey="HasExcelBinary" DllEntry="RunFindRelatedProducts" Execute="immediate" Return="check" />
 
     <CustomAction Id="FixPaths"
                 BinaryKey="HasExcelBinary"
                 DllEntry="FixPaths"
                 Execute="deferred"
-                Return="check" 
+                Return="check"
                 Impersonate="no" />
     <CustomAction Id="SetCustomActionDataValue" Return="check"
                  Property="FixPaths" Value="INSTALLDIR=[INSTALLDIR]" />
-
-
 
     <CustomAction Id="test_command2" Script="vbscript">
       <![CDATA[          
           MsgBox(Session.Property("INSTALLOFFICEFEATURE"))
       ]]>
     </CustomAction>
+
     <InstallUISequence>
       <Custom Action='HasExcel'  Before='AppSearch' />
+      <!--<Custom Action="test_command2" After="HasExcel">NOT Installed</Custom>-->
     </InstallUISequence>
-
     <InstallExecuteSequence>
       <Custom Action="SetCustomActionDataValue" Before="FixPaths" />
       <Custom Action="FixPaths" Before="InstallFinalize" />
     </InstallExecuteSequence>
+   
+    <!-- 
+    https://wixtoolset.org/documentation/manual/v3/xsd/wix/installuisequence.html
+    https://wixtoolset.org/documentation/manual/v3/xsd/wix/installexecutesequence.html
+    FindRelatedProducts
+    AppSearch
+    -->
+    <InstallUISequence>
+      <FindRelatedProducts>0</FindRelatedProducts>
+      <Custom Action="RunFindRelatedProducts" Before='FindRelatedProducts'>NOT Installed</Custom>
+    </InstallUISequence>
 
+    <InstallExecuteSequence>
+      <FindRelatedProducts>0</FindRelatedProducts>
+      <Custom Action="RunFindRelatedProducts" Before='FindRelatedProducts'>NOT Installed</Custom>
+    </InstallExecuteSequence>
 
-
-    
   </Product>
 
-	<Fragment>
-		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="ProgramFiles64Folder">
-				<Directory Id="INSTALLDIR" Name="OpenRPA" />
-			</Directory>
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="LocalAppDataFolder">
+        <!--<Directory Id="INSTALLDIR2" Name="OpenRPA" />-->
+        <!--<Component Id="MainFeature" Guid="*">
+        </Component>-->
+
+      </Directory>
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLDIR" Name="OpenRPA" />
+      </Directory>
 
       <Directory Id="ProgramMenuFolder">
         <Directory Id="ApplicationProgramsFolder" Name="OpenRPA"/>
       </Directory>
     </Directory>
 
-    
-	</Fragment>
 
-  
-  
+  </Fragment>
+
+
+
 
 
 </Wix>

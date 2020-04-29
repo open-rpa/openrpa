@@ -24,7 +24,8 @@
       <DialogRef Id="BrowseDlg" />
       <!--<DialogRef Id="FeaturesDlg"/>-->
 
-      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallScopeDlg">1</Publish>
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallScopeDlg">NOT WIX_UPGRADE_DETECTED</Publish>
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="FeatureTreeDlg">WIX_UPGRADE_DETECTED</Publish>
       <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
 
       <Publish Dialog="InstallScopeDlg" Control="Next" Property="ALLUSERS" Value="{}" Order="2">
@@ -42,7 +43,9 @@
       <Publish Dialog="InstallScopeDlg" Control="Next" Event="NewDialog" Value="FeatureTreeDlg" Order="3">1</Publish>
       <Publish Dialog="InstallScopeDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
 
-      <Publish Dialog="FeatureTreeDlg" Control="Back" Event="NewDialog" Value="InstallScopeDlg"  Order="15">WixUI_InstallMode = "Change"</Publish>
+      
+      
+      <Publish Dialog="FeatureTreeDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg"  Order="15">WixUI_InstallMode = "Change"</Publish>
       <Publish Dialog="FeatureTreeDlg" Control="Back" Event="NewDialog" Value="InstallScopeDlg"  Order="16">NOT WixUI_InstallMode = "Change"</Publish>
       <Publish Dialog="FeatureTreeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="20">WixUI_InstallMode = "Change"</Publish>
       <Publish Dialog="FeatureTreeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="21">NOT WixUI_InstallMode = "Change"</Publish>
@@ -62,14 +65,47 @@
     </UI>
 
     <UIRef Id="WixUI_Common" />
-
-    
     <WixVariable Id="WixUISupportPerUser" Value="1" Overridable="yes" />
     <WixVariable Id="WixUISupportPerMachine" Value="1" Overridable="yes" />
-    <Property Id="ApplicationFolderName" Value="My Application Folder" />
     <Property Id="WixAppFolder" Value="WixPerUserFolder" />
-    <!--<Property Id="WixAppFolder" Value="WixPerMachineFolder" />-->
-
-
   </Fragment>
+
+
+
+
+  <!--<Fragment>
+    <UI>
+      <Dialog Id="CustomInstallScopeDlg" Width="370" Height="270" Title="!(loc.InstallScopeDlg_Title)" KeepModeless="yes">
+        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="!(loc.InstallScopeDlgBannerBitmap)" />
+        <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+        <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+        <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="20" Transparent="yes" NoPrefix="yes" Text="!(loc.InstallScopeDlgDescription)" />
+        <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.InstallScopeDlgTitle)" />
+        <Control Id="BothScopes" Type="RadioButtonGroup" X="20" Y="55" Width="330" Height="120" Property="WixAppFolder" Hidden="yes">
+          <RadioButtonGroup Property="WixAppFolder">
+            <RadioButton Value="WixPerUserFolder" X="0" Y="0" Width="295" Height="16" Text="!(loc.InstallScopeDlgPerUser)" />
+            <RadioButton Value="WixPerMachineFolder" X="0" Y="60" Width="295" Height="16" Text="!(loc.InstallScopeDlgPerMachine)" />
+          </RadioButtonGroup>
+          <Condition Action="show">Privileged AND (!(wix.WixUISupportPerUser) AND !(wix.WixUISupportPerMachine))</Condition>
+        </Control>
+        <Control Id="PerUserDescription" Type="Text" X="33" Y="70" Width="300" Height="36" Hidden="yes" NoPrefix="yes" Text="!(loc.InstallScopeDlgPerUserDescription)">
+          <Condition Action="show">!(wix.WixUISupportPerUser)</Condition>
+        </Control>
+        <Control Id="NoPerUserDescription" Type="Text" X="33" Y="70" Width="300" Height="36" Hidden="yes" NoPrefix="yes" Text="!(loc.InstallScopeDlgNoPerUserDescription)">
+          <Condition Action="show">NOT !(wix.WixUISupportPerUser)</Condition>
+        </Control>
+        <Control Id="PerMachineDescription" Type="Text" X="33" Y="131" Width="300" Height="36" Hidden="yes" NoPrefix="yes" Text="!(loc.InstallScopeDlgPerMachineDescription)">
+          <Condition Action="show">Privileged</Condition>
+        </Control>
+        <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+        <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)" >
+          <Publish Event="DoAction" Value="FindRelatedProducts">1</Publish>
+        </Control>
+        <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+          <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+        </Control>
+      </Dialog>
+    </UI>
+  </Fragment>-->
+
 </Wix>

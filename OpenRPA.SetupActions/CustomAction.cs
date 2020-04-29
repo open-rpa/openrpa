@@ -106,5 +106,106 @@ namespace OpenRPA.SetupActions
             return ActionResult.Success;
         }
 
+
+
+
+        // https://stackoverflow.com/questions/678002/how-do-i-fix-the-upgrade-logic-of-a-wix-setup-after-changing-installscope-to-pe
+        [CustomAction]
+        public static ActionResult RunFindRelatedProducts(Session session)
+        {
+            var INSTALLDIR = session["INSTALLDIR"];
+            var MSIINSTALLPERUSER = session["MSIINSTALLPERUSER"];
+            var ALLUSERS = session["ALLUSERS"];
+            var WIX_UPGRADE_DETECTED = session["WIX_UPGRADE_DETECTED"];
+            // System.Diagnostics.Debugger.Launch();
+            bool peruser = false;
+            if (string.IsNullOrEmpty(WIX_UPGRADE_DETECTED) && string.IsNullOrEmpty(INSTALLDIR))
+            {
+                session["ALLUSERS"] = "1";
+                session["MSIINSTALLPERUSER"] = "";
+                session.DoAction("FindRelatedProducts");
+                WIX_UPGRADE_DETECTED = session["WIX_UPGRADE_DETECTED"];
+                if (string.IsNullOrEmpty(WIX_UPGRADE_DETECTED))
+                {
+                    session["ALLUSERS"] = "";
+                    session["MSIINSTALLPERUSER"] = "1";
+                    session.DoAction("FindRelatedProducts");
+                    WIX_UPGRADE_DETECTED = session["WIX_UPGRADE_DETECTED"];
+                    if (string.IsNullOrEmpty(WIX_UPGRADE_DETECTED))
+                    {
+                        session["ALLUSERS"] = ALLUSERS;
+                        session["MSIINSTALLPERUSER"] = MSIINSTALLPERUSER;
+                    }
+                    else
+                    {
+                        peruser = true;
+                        //session.DoAction("AppSearch");
+                        //session.DoAction("CCPSearch");
+                        //session.DoAction("CostFinalize");
+                        //session.DoAction("CostInitialize");
+                        //session.DoAction("ResolveSource");
+                        //session.DoAction("ResolveSource");
+                        //session.DoAction("CostInitialize");
+                        //session.DoAction("CostFinalize");
+                    }
+
+                }
+                else
+                {
+                    peruser = false;
+                    session["WixAppFolder"] = "WixPerMachineFolder";
+                }
+            }
+
+            if(string.IsNullOrWhiteSpace(session["MSIINSTALLPERUSER"]))
+            {
+                session["WixAppFolder"] = "WixPerMachineFolder";
+
+            }
+            else
+            {
+                session["WixAppFolder"] = "WixPerUserFolder";
+            }
+
+            INSTALLDIR = session["INSTALLDIR"];
+            if(string.IsNullOrEmpty(INSTALLDIR))
+            {
+
+                try
+                {
+                    Microsoft.Win32.RegistryKey key;
+                    if (peruser)
+                    {
+                        key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\OpenRPA");
+                    } else
+                    {
+                        key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\OpenRPA");
+                    }
+                    if(key== null)
+                    {
+                        key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\OpenRPA");
+                    }
+                    if (key != null)
+                    {
+                        if(peruser)
+                        {
+                            session["MSIUSEREALADMINDETECTION"] = "1";
+                        }
+                        INSTALLDIR = key.GetValue("InstallFolder") as string;
+                        key.Close();
+                        if(!string.IsNullOrEmpty(INSTALLDIR))
+                        {
+                            session["INSTALLDIR"] = INSTALLDIR;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+            // WIX_UPGRADE_DETECTED = session["WIX_UPGRADE_DETECTED"];
+            return ActionResult.Success;
+        }
+
     }
 }

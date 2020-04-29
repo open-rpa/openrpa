@@ -28,7 +28,7 @@ namespace OpenRPA
         }
         [JsonIgnore]
         // public DateTime LastUpdated { get { return GetProperty<DateTime>(); } set { SetProperty(value); } } 
-        public static List<WorkflowInstance> Instances = new List<WorkflowInstance>();
+        internal static List<WorkflowInstance> Instances = new List<WorkflowInstance>();
         public event VisualTrackingHandler OnVisualTracking;
         public event idleOrComplete OnIdleOrComplete;
         public Dictionary<string, object> Parameters { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
@@ -52,9 +52,53 @@ namespace OpenRPA
         public string errorsource { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [JsonIgnore]
         public Exception Exception { get { return GetProperty<Exception>(); } set { SetProperty(value); } }
-        public bool isCompleted { get { return GetProperty<bool>(); } set { SetProperty(value); } }
+        public bool isCompleted { 
+            get {
+                var value = GetProperty<bool>();
+                if (!value && wfApp != null)
+                {
+                    try
+                    {
+                        var _state = typeof(System.Activities.WorkflowApplication).GetField("state", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(wfApp);
+                        if (_state.ToString() == "Aborted" && _state.ToString() == "Unloaded")
+                        {
+                            value = true;
+                            SetProperty(value);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        value = true;
+                    }
+                }
+                return value;
+            }
+            set 
+            { 
+                SetProperty(value); 
+            }
+        }
         public bool hasError { get { return GetProperty<bool>(); } set { SetProperty(value); } }
-        public string state { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string state { 
+            get {
+                var value = GetProperty<string>();
+                if (isCompleted && (value == "loaded" || value == "running" || value == "idle" || value == "unloaded"))
+                {
+                    try
+                    {
+                        value = "completed";
+                        SetProperty(value);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                return value;
+            } 
+            set { 
+                SetProperty(value); 
+            } 
+        }
         [JsonIgnore]
         public Workflow Workflow { get { return GetProperty<Workflow>(); } set { SetProperty(value); } }
         [JsonIgnore]
@@ -102,10 +146,10 @@ namespace OpenRPA
             result.host = Environment.MachineName.ToLower();
             result.fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
             result.createApp(Workflow.Activity);
-            Instances.Add(result);
+            lock (Instances) Instances.Add(result);
             foreach (var i in Instances.ToList())
             {
-                if (i.isCompleted) Instances.Remove(i);
+                if (i.isCompleted) lock (Instances) Instances.Remove(i);
             }
             return result;
         }
@@ -812,7 +856,7 @@ namespace OpenRPA
                         i.Workflow = workflow;
                         //if (idleOrComplete != null) i.OnIdleOrComplete += idleOrComplete;
                         //if (VisualTracking != null) i.OnVisualTracking += VisualTracking;
-                        WorkflowInstance.Instances.Add(i);
+                        lock (Instances) Instances.Add(i);
                         var _ref = (i as IWorkflowInstance);
                         foreach (var runner in Plugins.runPlugins)
                         {

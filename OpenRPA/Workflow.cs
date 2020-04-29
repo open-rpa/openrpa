@@ -324,7 +324,7 @@ namespace OpenRPA
                                 {
                                     if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
                                 }
-                                WorkflowInstance.Instances.Add(i);
+                                lock(WorkflowInstance.Instances) WorkflowInstance.Instances.Add(i);
                                 i.createApp(Activity);
                                 i.Run();
                             }

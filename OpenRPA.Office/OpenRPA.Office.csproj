@@ -3,12 +3,13 @@
     <TargetFramework>net472</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
-    <Authors>OpenRPA</Authors>
+    <Authors>Allan Zimmermann</Authors>
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office, created for OpenRPA robot</Description>
     <Version>1.0.22</Version>
-    <PackageReleaseNotes>1.0.22 Hide the Hide property
+    <PackageReleaseNotes>1.0.23 Add Move MailItem
+1.0.22 Hide the Hide property
 1.0.21 Improve performance in writerange 
 1.0.20 Bump to framework 4.7.2, Add Invoke Excel Macro
 1.0.19 Add RunSlideShow, fix pia references
@@ -23,6 +24,7 @@
     <PackageTags>OpenRPA</PackageTags>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <Platforms>AnyCPU;x86</Platforms>
+    <Company>OpenIAP</Company>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
@@ -51,6 +53,7 @@
     <None Remove="Activities\CloseWorkbookDesigner.xaml" />
     <None Remove="Activities\GetMailsDesigner.xaml" />
     <None Remove="Activities\GetParagraphDesigner.xaml" />
+    <None Remove="Activities\MoveMailItemDesigner.xaml" />
     <None Remove="Activities\NewMailItemDesigner.xaml" />
     <None Remove="Activities\ReadCellDesigner.xaml" />
     <None Remove="Activities\ReadRangeDesigner.xaml" />
@@ -83,6 +86,9 @@
     <EmbeddedResource Include="Resources\toolbox\writeexcel.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\MoveMailItemDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\RunExcelMacroDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

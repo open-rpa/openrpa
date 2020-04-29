@@ -3,8 +3,8 @@
     <TargetFramework>net472</TargetFramework>
     <Configurations>Debug;Release;PrepInstaller;ReleaseNuget</Configurations>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>OpenRPA</Authors>
-    <Company>OpenRPA</Company>
+    <Authors>Allan Zimmermann</Authors>
+    <Company>OpenIAP</Company>
     <Product>OpenRPA</Product>
     <Description>Collection af handy activities</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>

@@ -168,10 +168,12 @@ namespace OpenRPA
         public static Views.SplashScreen splash { get; set; }
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
-
-            splash = new Views.SplashScreen();
-            splash.Show();
-            splash.BusyContent = "Loading main window";
+            if(Config.local.showloadingscreen)
+            {
+                splash = new Views.SplashScreen();
+                splash.Show();
+                splash.BusyContent = "Loading main window";
+            }
             AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
             System.Threading.Thread.CurrentThread.Name = "UIThread";
             if (!Config.local.isagent)
@@ -182,6 +184,7 @@ namespace OpenRPA
                 RobotInstance.instance.MainWindow.Status += RobotInstance.instance.MainWindowStatus;
                 GenericTools.MainWindow = RobotInstance.instance.MainWindow;
                 MainWindow = RobotInstance.instance.MainWindow;
+                if(!Config.local.showloadingscreen) notifyIcon.Visible = true;
             } else
             {
                 RobotInstance.instance.AgentWindow = new AgentWindow();
@@ -190,6 +193,7 @@ namespace OpenRPA
                 RobotInstance.instance.AgentWindow.Status += RobotInstance.instance.MainWindowStatus;
                 GenericTools.MainWindow = RobotInstance.instance.AgentWindow;
                 MainWindow = RobotInstance.instance.AgentWindow;
+                notifyIcon.Visible = true;
             }
             RobotInstance.instance.Status += App_Status;
             Input.InputDriver.Instance.initCancelKey(Config.local.cancelkey);
@@ -197,9 +201,9 @@ namespace OpenRPA
             {
                 try
                 {
-                    splash.BusyContent = "loading plugins";
+                    if (Config.local.showloadingscreen) splash.BusyContent = "loading plugins";
                     Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.PluginsDirectory);
-                    splash.BusyContent = "Initialize main window";
+                    if (Config.local.showloadingscreen) splash.BusyContent = "Initialize main window";
                     RobotInstance.instance.init();
                 }
                 catch (Exception ex)

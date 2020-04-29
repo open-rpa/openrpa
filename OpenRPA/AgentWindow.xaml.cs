@@ -81,6 +81,7 @@ namespace OpenRPA
                         Log.Error(ex.ToString());
                     }
                 }
+                WindowState = WindowState.Minimized;
             }
             catch (Exception ex)
             {

@@ -403,6 +403,24 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Move MailItem.
+        /// </summary>
+        public static string activity_movemailitem {
+            get {
+                return ResourceManager.GetString("activity_movemailitem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move a mail gotten with GetEmails to a different folder.
+        /// </summary>
+        public static string activity_movemailitem_tooltip {
+            get {
+                return ResourceManager.GetString("activity_movemailitem_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New MailItem.
         /// </summary>
         public static string activity_newmailitem {

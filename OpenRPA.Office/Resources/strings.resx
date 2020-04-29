@@ -231,6 +231,12 @@
   <data name="activity_getparagraph_tooltip" xml:space="preserve">
     <value>Get one or more paragraphs from a Microsoft Word document</value>
   </data>
+  <data name="activity_movemailitem" xml:space="preserve">
+    <value>Move MailItem</value>
+  </data>
+  <data name="activity_movemailitem_tooltip" xml:space="preserve">
+    <value>Move a mail gotten with GetEmails to a different folder</value>
+  </data>
   <data name="activity_newmailitem" xml:space="preserve">
     <value>New MailItem</value>
   </data>

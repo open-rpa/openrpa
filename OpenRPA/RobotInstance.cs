@@ -106,7 +106,7 @@ namespace OpenRPA
                         App.splash.Close();
                         App.splash = null;
                     }
-                    Show();
+                    if(!Config.local.isagent) Show();
                     ReadyForAction?.Invoke();
                     Input.InputDriver.Instance.Initialize();
 
@@ -650,7 +650,7 @@ namespace OpenRPA
                             App.splash.Close();
                             App.splash = null;
                         }
-                        Show();
+                        if(!Config.local.isagent) Show();
                         ReadyForAction?.Invoke();
                     });
 
@@ -820,8 +820,6 @@ namespace OpenRPA
                         }
                     }
                 }
-                Show();
-
                 await LoadServerData();
                 try
                 {
@@ -903,7 +901,7 @@ namespace OpenRPA
                             App.splash.Close();
                             App.splash = null;
                         }
-                        Show();
+                        if(!Config.local.isagent) Show();
                         ReadyForAction?.Invoke();
                     }
                     catch (Exception ex)

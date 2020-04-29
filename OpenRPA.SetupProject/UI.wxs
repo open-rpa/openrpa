@@ -2,7 +2,7 @@
 <?include $(sys.CURRENTDIR)lanEN.wxi ?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Fragment>
+  <Fragment>
     <UI Id="UI_OPENRPA">
 
       <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
@@ -24,12 +24,26 @@
       <DialogRef Id="BrowseDlg" />
       <!--<DialogRef Id="FeaturesDlg"/>-->
 
-      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="FeatureTreeDlg">1</Publish>
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallScopeDlg">1</Publish>
       <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
-      
 
-      <Publish Dialog="FeatureTreeDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg"  Order="15">WixUI_InstallMode = "Change"</Publish>
-      <Publish Dialog="FeatureTreeDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg"  Order="16">NOT WixUI_InstallMode = "Change"</Publish>
+      <Publish Dialog="InstallScopeDlg" Control="Next" Property="ALLUSERS" Value="{}" Order="2">
+        WixAppFolder = "WixPerUserFolder"
+      </Publish>
+      <Publish Dialog="InstallScopeDlg" Control="Next" Property="ALLUSERS" Value="1" Order="3">
+        WixAppFolder = "WixPerMachineFolder"
+      </Publish>
+      <Publish Dialog="InstallScopeDlg" Control="Next" Property="MSIINSTALLPERUSER" Value="1" Order="3">
+        WixAppFolder = "WixPerUserFolder"
+      </Publish>
+      <Publish Dialog="InstallScopeDlg" Control="Next" Property="MSIINSTALLPERUSER" Value="{}" Order="2">
+        WixAppFolder = "WixPerMachineFolder"
+      </Publish>
+      <Publish Dialog="InstallScopeDlg" Control="Next" Event="NewDialog" Value="FeatureTreeDlg" Order="3">1</Publish>
+      <Publish Dialog="InstallScopeDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
+
+      <Publish Dialog="FeatureTreeDlg" Control="Back" Event="NewDialog" Value="InstallScopeDlg"  Order="15">WixUI_InstallMode = "Change"</Publish>
+      <Publish Dialog="FeatureTreeDlg" Control="Back" Event="NewDialog" Value="InstallScopeDlg"  Order="16">NOT WixUI_InstallMode = "Change"</Publish>
       <Publish Dialog="FeatureTreeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="20">WixUI_InstallMode = "Change"</Publish>
       <Publish Dialog="FeatureTreeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="21">NOT WixUI_InstallMode = "Change"</Publish>
 
@@ -48,6 +62,14 @@
     </UI>
 
     <UIRef Id="WixUI_Common" />
+
+    
+    <WixVariable Id="WixUISupportPerUser" Value="1" Overridable="yes" />
+    <WixVariable Id="WixUISupportPerMachine" Value="1" Overridable="yes" />
+    <Property Id="ApplicationFolderName" Value="My Application Folder" />
+    <Property Id="WixAppFolder" Value="WixPerUserFolder" />
+    <!--<Property Id="WixAppFolder" Value="WixPerMachineFolder" />-->
+
 
   </Fragment>
 </Wix>

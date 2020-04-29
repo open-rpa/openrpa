@@ -122,7 +122,8 @@ Setting MinResults to 0, effectively means your only checking if an object exist
 
 **What:** Comment out parts of a workflow, so it will no longer be executed
 
-**How:** Either drag'n'drop or copy'n'paste activities inside, or use the right click menu for commenting out parts of a workflow. ( only works inside sequences )
+**How:** Either drag'n'drop or copy'n'paste activities inside, or use the right click menu for commenting out parts of a workflow. ( only works inside sequences ) 
+To Comment out multiple activites: Mark the activities and choose "Comment out" This will move the two activities into a new sequence that can later be "Uncommented"
 
 **Why:** Useful when you want to save parts of a workflow but don't want it to run.
 

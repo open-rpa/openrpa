@@ -69,23 +69,12 @@ namespace OpenRPA.Activities
                     }
                     else
                     {
-                        instance = workflow.CreateInstance(param, null, null, MainWindow.instance.IdleOrComplete,  null);
+                        instance = workflow.CreateInstance(param, null, null, RobotInstance.instance.Window.IdleOrComplete,  null);
                     }
                     instance.caller = WorkflowInstanceId;
                 });
                 Log.Verbose("InvokeOpenRPA: Run Instance ID " + instance._id);
                 if (waitforcompleted) context.CreateBookmark(instance._id, new BookmarkCallback(OnBookmarkCallback));
-                //GenericTools.RunUI(() =>
-                //{
-                //    if (designer != null)
-                //    {
-                //        designer.Run(MainWindow.instance.VisualTracking, MainWindow.instance.SlowMotion, instance);
-                //    }
-                //    else
-                //    {
-                //        instance.Run();
-                //    }
-                //});
                 if (designer != null)
                 {
                     designer.Run(designer.VisualTracking, designer.SlowMotion, instance);

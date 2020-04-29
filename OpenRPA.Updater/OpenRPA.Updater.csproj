@@ -5,7 +5,7 @@
     <ApplicationIcon>Resources\package.ico</ApplicationIcon>
     <StartupObject />
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>OpenRPA</Authors>
+    <Authors>Allan Zimmermann</Authors>
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
@@ -33,6 +33,7 @@
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <PackageTags>OpenRPAcore</PackageTags>
     <Platforms>AnyCPU;x86</Platforms>
+    <Company>OpenIAP</Company>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\dist\updater</OutputPath>

@@ -6,7 +6,7 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <PackageIconUrl />
-    <Authors>OpenRPA</Authors>
+    <Authors>Allan Zimmerman</Authors>
     <Product>OpenRPA</Product>
     <Description>Code Edtior with syntax Coloring and intellisense for Microsoft Workflow Foundation, specifically tested and created for OpenRPA robot</Description>
     <Version>1.0.3</Version>
@@ -17,6 +17,7 @@
     <PackageTags></PackageTags>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <Platforms>AnyCPU;x86</Platforms>
+    <Company>OpenIAP</Company>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />

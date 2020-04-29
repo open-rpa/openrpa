@@ -3,7 +3,7 @@
     <TargetFramework>net472</TargetFramework>
     <Configurations>Debug;Release;PrepInstaller;ReleaseNuget</Configurations>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>OpenRPA</Authors>
+    <Authors>Allan Zimmermann</Authors>
     <Product>OpenRPA</Product>
     <Description>A collection of activities to work with a database using OleDB / ADO, specifically tested and created for OpenRPA robot</Description>
     <PackageReleaseNotes>1.0.0 Initial push</PackageReleaseNotes>
@@ -12,6 +12,7 @@
     <PackageIcon>open_rpa128.png</PackageIcon>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <Platforms>AnyCPU;x86</Platforms>
+    <Company>OpenIAP</Company>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>

@@ -181,7 +181,7 @@ namespace OpenRPA.Views
             if(e.Key == Key.F2)
             {
                 Task.Run(() => {
-                    if (MainWindow.instance.Minimize) GenericTools.Minimize();
+                    if (Config.local.minimize) GenericTools.Minimize();
                     System.Threading.Thread.Sleep(2000);
                     MainWindow.instance.OnRecord(null);
                 });

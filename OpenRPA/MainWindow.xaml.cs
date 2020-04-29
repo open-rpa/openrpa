@@ -34,7 +34,6 @@ namespace OpenRPA
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged, IMainWindow
     {
-        public static MainWindow instance = null;
         public MainWindow()
         {
             Log.FunctionIndent("MainWindow", "MainWindow");
@@ -51,7 +50,6 @@ namespace OpenRPA
             {
             }
             SetStatus("Initializing events");
-            instance = this;
             DataContext = this;
             System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Critical;
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -68,6 +66,7 @@ namespace OpenRPA
             NotifyPropertyChanged("Toolbox");
             lblVersion.Text = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
             Log.FunctionOutdent("MainWindow", "MainWindow");
+            instance = this;
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -112,7 +111,7 @@ namespace OpenRPA
             }
             Log.FunctionOutdent("MainWindow", "Window_Loaded");
         }
-
+        internal static MainWindow instance;
         private bool first_connect = true;
         public void MainWindow_WebSocketClient_OnOpen()
         {
@@ -2947,7 +2946,7 @@ namespace OpenRPA
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
-                    this.Show();
+                    Show();
                     Log.Error(ex.ToString());
                 }
             }, null);

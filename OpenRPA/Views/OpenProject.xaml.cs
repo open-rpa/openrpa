@@ -67,23 +67,23 @@ namespace OpenRPA.Views
         }
         private void ListWorkflows_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            //Log.FunctionIndent("OpenProject", "ListWorkflows_MouseDoubleClick");
-            //try
-            //{
-            //    if (listWorkflows.SelectedItem is Workflow f)
-            //    {
-            //        onOpenWorkflow?.Invoke(f);
-            //        return;
-            //    }
-            //    var p = (Project)listWorkflows.SelectedItem;
-            //    if (p == null) return;
-            //    onOpenProject?.Invoke(p);
-            //}
-            //catch (Exception ex)
-            //{
-            //    Log.Error(ex.ToString());
-            //}
-            //Log.FunctionOutdent("OpenProject", "ListWorkflows_MouseDoubleClick");
+            Log.FunctionIndent("OpenProject", "ListWorkflows_MouseDoubleClick");
+            try
+            {
+                if (listWorkflows.SelectedItem is Workflow f)
+                {
+                    onOpenWorkflow?.Invoke(f);
+                    return;
+                }
+                //var p = (Project)listWorkflows.SelectedItem;
+                //if (p == null) return;
+                //onOpenProject?.Invoke(p);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("OpenProject", "ListWorkflows_MouseDoubleClick");
         }
         private async void ButtonEditXAML(object sender, RoutedEventArgs e)
         {

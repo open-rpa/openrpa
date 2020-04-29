@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Outlook;
+using OpenRPA.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,6 +37,54 @@ namespace OpenRPA.Office.Activities
             {
                 if (!a.SaveTo(Path)) return false;
             }
+            return true;
+        }
+        private Microsoft.Office.Interop.Outlook.Application CreateOutlookInstance()
+        {
+            var outlookApplication = new Microsoft.Office.Interop.Outlook.Application();
+            if (outlookApplication.ActiveExplorer() == null)
+            {
+                // mOutlookExplorer = mOutlookApplication.Session.GetDefaultFolder(OlDefaultFolders.olFolderCalendar).GetExplorer();
+                var mOutlookExplorer = outlookApplication.Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox).GetExplorer();
+                mOutlookExplorer.Activate();
+            }
+            return outlookApplication;
+        }
+        public MAPIFolder GetFolder(MAPIFolder folder, string FullFolderPath)
+        {
+            if (folder.Folders.Count == 0)
+            {
+                if (folder.FullFolderPath == FullFolderPath)
+                {
+                    return folder;
+                }
+            }
+            else
+            {
+                foreach (MAPIFolder subFolder in folder.Folders)
+                {
+                    if (folder.FullFolderPath == FullFolderPath)
+                    {
+                        return folder;
+                    }
+                    var temp = GetFolder(subFolder, FullFolderPath);
+                    if (temp != null) return temp;
+                }
+            }
+            return null;
+        }
+        public bool Move(string folder)
+        {
+            var outlookApplication = CreateOutlookInstance();
+            if (outlookApplication.ActiveExplorer() == null)
+            {
+                Log.Warning("Outlook not running!");
+                return false;
+            }
+            MAPIFolder inBox = (MAPIFolder)outlookApplication.ActiveExplorer().Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox);
+            MAPIFolder folderbase = inBox.Store.GetRootFolder();
+            MAPIFolder mfolder = GetFolder(folderbase, folder);
+            mailItem.Move(mfolder);
             return true;
         }
         public string BillingInformation { get { return mailItem.BillingInformation; } set { mailItem.BillingInformation = value; } }

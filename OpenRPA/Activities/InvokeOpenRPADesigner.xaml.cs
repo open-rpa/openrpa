@@ -58,7 +58,7 @@ namespace OpenRPA.Activities
                 string workflowid = (string)ModelItem.Properties["workflow"].Value.GetCurrentValue();
                 if (string.IsNullOrEmpty(workflowid)) throw new ArgumentException("workflow property is null");
                 var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
-                var designer = MainWindow.instance.Designer;
+                var designer = RobotInstance.instance.Window.Designer;
                 if (string.IsNullOrEmpty(workflowid)) throw new ArgumentException("workflow is null, not found");
                 if (string.IsNullOrEmpty(workflowid)) throw new ArgumentException("designer is null, cannot find current designer");
                 foreach (var p in workflow.Parameters)

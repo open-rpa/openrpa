@@ -16,6 +16,8 @@
     <Version>1.0.1</Version>
     <PackageReleaseNotes>1.0.1 Change target framework to 4.7.2</PackageReleaseNotes>
     <Platforms>AnyCPU;x86</Platforms>
+    <Authors>Allan Zimmermann</Authors>
+    <Company>OpenIAP</Company>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug\</OutputPath>

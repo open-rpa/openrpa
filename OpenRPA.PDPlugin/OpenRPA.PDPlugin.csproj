@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>OpenRPA</Authors>
+    <Authors>Allan Zimmermann</Authors>
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
@@ -15,6 +15,7 @@
     <Version>1.0.1</Version>
     <PackageReleaseNotes>1.0.1 Change target framework to 4.7.2</PackageReleaseNotes>
     <Platforms>AnyCPU;x86</Platforms>
+    <Company>OpenIAP</Company>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Views\PluginView.xaml" />

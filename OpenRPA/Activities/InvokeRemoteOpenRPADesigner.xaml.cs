@@ -69,7 +69,7 @@ namespace OpenRPA.Activities
                 if (ModelItem.Properties["workflow"].Value == null) return;
                 string workflowid = (string)ModelItem.Properties["workflow"].Value.GetCurrentValue();
                 var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
-                var designer = MainWindow.instance.Designer;
+                var designer = RobotInstance.instance.Window.Designer;
                 foreach(var p in workflow.Parameters)
                 {
                     Type t = Type.GetType(p.type);

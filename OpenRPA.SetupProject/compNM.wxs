@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
-
     <ComponentGroup Id="NMComponents">
       <Component Id='NMComponent' Guid='{6E9CAB91-700B-4D22-80AB-0FCE0B90D3D6}' Win64='yes' Directory="INSTALLDIR">
         <File Id="OpenRPA.NM.dll" Source="!(wix.NMSource)\OpenRPA.NM.dll" />
@@ -28,8 +27,8 @@
       <Component Id='NMComponentru' Win64='yes' Directory="NMru" Guid='{D48F61C4-3E51-44CC-849E-0AEC6CA19D96}'>
         <File Id="OpenRPA.NM.resources.dll_ru" Source="!(wix.NMSource)\ru\OpenRPA.NM.resources.dll" />
       </Component>
-
     </ComponentGroup>
+    
     <DirectoryRef Id="INSTALLDIR">
       <Directory Id="NMde" Name="de">
       </Directory>
@@ -44,6 +43,5 @@
       <Directory Id="NMru" Name="ru">
       </Directory>
     </DirectoryRef>
-
   </Fragment>
 </Wix>

@@ -75,7 +75,6 @@ namespace OpenRPA.Views
             }
             finally
             {
-                // Show();
             }
 
 

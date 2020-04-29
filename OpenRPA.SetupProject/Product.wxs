@@ -24,10 +24,13 @@
   <?endif ?>
   <Product Id="*" Name="!(loc.ApplicationName)" Language="!(loc.Language)" Version="$(var.VersionNumber)" Manufacturer="!(loc.ManufacturerFullName)" 
            UpgradeCode="$(var.UpgradeCode)"  >
-		<Package InstallerVersion="200" Compressed="yes"  Platform="x64" InstallScope="perMachine" />
+		<Package InstallerVersion="200" Compressed="yes"  Platform="x64"/>
     <!-- InstallScope="perMachine" -->
 
-		<MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <Property Id='ALLUSERS' Value='2' />
+    <Property Id='MSIINSTALLPERUSER' Value='1' />
+
+    <MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 		<MediaTemplate EmbedCab="yes" />
 
     <Icon Id="open_rpa.ico" SourceFile="open_rpa.ico"/>
@@ -111,9 +114,7 @@
 
 
 
-    <!--<Property Id="ALLUSERS" Value="2" />-->
-    <!--<Property Id="InstallFolder" Value="0" />
-    <Property Id='ALLUSERS' Value='2' />
+    <!--<Property Id="ALLUSERS" Value="2" />
     <Property Id='MSIINSTALLPERUSER' Value='1' />-->
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
 
@@ -130,19 +131,8 @@
         <RegistryValue Root="HKCU" Key="Software\OpenRPA" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
       </Component>
     </DirectoryRef>
-
-
-    <!--
-    https://stackoverflow.com/questions/43043088/wix-install-feature-conditionally
-    
-    https://codingbee.net/wix/wix-the-installation-sequence
-    -->
-
-
     
     <Binary Id="HasExcelBinary" SourceFile="$(var.OpenRPA.SetupActions.TargetDir)$(var.OpenRPA.SetupActions.TargetName).CA.dll" />
-    <!--<CustomAction Id="SetProperty" Return="check" Property="FixPaths" Value="[INSTALLDIR]"></CustomAction>-->
-    <!--<CustomAction Id="FixPaths" BinaryKey="HasExcelBinary" DllEntry="FixPaths" Execute="deferred" Impersonate="no" />-->
     <CustomAction Id="HasExcel" BinaryKey="HasExcelBinary" DllEntry="HasExcel" Execute="immediate" Return="check" />
 
     <CustomAction Id="FixPaths"
@@ -163,7 +153,6 @@
     </CustomAction>
     <InstallUISequence>
       <Custom Action='HasExcel'  Before='AppSearch' />
-      <!--<Custom Action="test_command2" After="HasExcel">NOT Installed</Custom>-->
     </InstallUISequence>
 
     <InstallExecuteSequence>
@@ -178,12 +167,6 @@
 
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="LocalAppDataFolder">
-        <!--<Directory Id="INSTALLDIR2" Name="OpenRPA" />-->
-        <!--<Component Id="MainFeature" Guid="*">
-        </Component>-->
-
-      </Directory>
 			<Directory Id="ProgramFiles64Folder">
 				<Directory Id="INSTALLDIR" Name="OpenRPA" />
 			</Directory>

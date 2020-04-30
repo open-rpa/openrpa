@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.NativeMessagingHost
 {
-    public class messagehandler
+   public class messagehandler
     {
         public event Action<NativeMessagingMessage> onMessage;
         private System.Threading.AutoResetEvent autoReset = null;

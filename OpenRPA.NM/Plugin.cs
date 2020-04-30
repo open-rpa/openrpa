@@ -63,7 +63,7 @@ namespace OpenRPA.NM
             {
                 browser = browser,
                 xPath = "/html",
-                frameId = 0
+                frameId = -1
             };
             if (anchor != null && anchor.Count > 1)
             {

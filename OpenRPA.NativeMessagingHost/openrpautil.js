@@ -341,6 +341,22 @@ if (true == false) {
                                 message.result = openrpautil.mapDOM(ele, true);
                             }
                             message.zn_id = openrpautil.getuniqueid(ele);
+
+
+
+                            if (openrpautil.parent != null) {
+                                message.parents = openrpautil.parent.parents + 1;
+                                message.uix += openrpautil.parent.uix;
+                                message.uiy += openrpautil.parent.uiy;
+                                message.xpaths = openrpautil.parent.xpaths.slice(0);
+                            } else if (inIframe()) {
+                                // TODO: exit?
+                                //return;
+                                var currentFramePosition = openrpautil.currentFrameAbsolutePosition();
+                                message.uix += currentFramePosition.x;
+                                message.uiy += currentFramePosition.y;
+                            }
+
                         }
 
                     } catch (e) {

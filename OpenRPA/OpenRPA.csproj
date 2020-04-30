@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.107</Version>
-    <PackageReleaseNotes>1.0.107 Fix issue with multiple frames and selector
+    <Version>1.0.108</Version>
+    <PackageReleaseNotes>1.0.108 Load all frames again, and add cords on getelement
+1.0.107 Fix issue with multiple frames and selector
 1.0.106 Add support for single user install / fix issue with invokeopenrpa in agent mode / Add Move MailItem
 1.0.105 Improve iframe support / update browser extenstion
 1.0.104 Skip ui lookup on click, when noone is listening

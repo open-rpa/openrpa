@@ -59,10 +59,11 @@ namespace OpenRPA.NM
             //}
             //if (NMHook.tabs.Count == 0) { return rootelements.ToArray(); }
             //// getelement.data = "getdom";
-            var getelement = new NativeMessagingMessage("getelement", PluginConfig.debug_console_output)
+            var getelement = new NativeMessagingMessage("getelements", PluginConfig.debug_console_output)
             {
                 browser = browser,
-                xPath = "/html"
+                xPath = "/html",
+                frameId = 0
             };
             if (anchor != null && anchor.Count > 1)
             {
@@ -92,6 +93,7 @@ namespace OpenRPA.NM
                 {
                     if (res.result != null)
                     {
+                        if(res.tab == null) { res.tab = NMHook.tabs.Where(x => x.browser == res.browser && x.id == res.tabid).FirstOrDefault(); }
                         var html = new NMElement(res);
                         rootelements.Add(new NMTreeElement(null, true, html));
                         //var html = new HtmlElement(getelement.xPath, getelement.cssPath, res.tabid, res.frameId, res.result);

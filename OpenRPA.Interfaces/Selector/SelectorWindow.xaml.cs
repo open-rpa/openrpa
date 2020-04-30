@@ -318,6 +318,7 @@ namespace OpenRPA.Interfaces.Selector
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            vm.Directories.Add(new treeelement(null) { Name = "Loading" });
             Task.Run(() =>
             {
                 var treeelements = vm.Plugin.GetRootElements(vm.Anchor);

@@ -436,13 +436,14 @@ namespace OpenRPA.NM
                 //return;
             }
         }
-        public static NMElement[] getElement(int tabid, string browser, string xPath, TimeSpan timeout)
+        public static NMElement[] getElement(int tabid, long frameId, string browser, string xPath, TimeSpan timeout)
         {
             var results = new List<NMElement>();
             var getelement = new NativeMessagingMessage("getelement", PluginConfig.debug_console_output);
             getelement.browser = browser;
             getelement.tabid = tabid;
             getelement.xPath = xPath;
+            getelement.frameId = frameId;
             NativeMessagingMessage result = null;
             try
             {

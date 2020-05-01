@@ -277,11 +277,38 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reload.
+        /// </summary>
+        public static string activity_getemails_reload {
+            get {
+                return ResourceManager.GetString("activity_getemails_reload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Get Mails.
         /// </summary>
         public static string activity_getmails {
             get {
                 return ResourceManager.GetString("activity_getmails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter.
+        /// </summary>
+        public static string activity_getmails_filter {
+            get {
+                return ResourceManager.GetString("activity_getmails_filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter emails by query.
+        /// </summary>
+        public static string activity_getmails_filter_hint {
+            get {
+                return ResourceManager.GetString("activity_getmails_filter_hint", resourceCulture);
             }
         }
         
@@ -399,6 +426,24 @@ namespace OpenRPA.Office.Resources {
         public static string activity_getparagraph_tooltip {
             get {
                 return ResourceManager.GetString("activity_getparagraph_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mail.
+        /// </summary>
+        public static string activity_movemail_mail {
+            get {
+                return ResourceManager.GetString("activity_movemail_mail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mail item to move.
+        /// </summary>
+        public static string activity_movemail_mail_hint {
+            get {
+                return ResourceManager.GetString("activity_movemail_mail_hint", resourceCulture);
             }
         }
         

@@ -23,17 +23,21 @@ namespace OpenRPA.Office.Activities
             UnreadOnly = false;
         }
         [RequiredArgument]
-        [System.ComponentModel.Category("Input")]
+        [Category("Input")]
         public InArgument<bool> UnreadOnly { get; set; }
         [RequiredArgument]
-        [System.ComponentModel.Category("Input")]
+        [Category("Input")]
         public InArgument<string> Folder { get; set; }
-        [System.ComponentModel.Category("Output")]
+        [Category("Input")]
+        public InArgument<int> MaxResults { get; set; }
+        [Category("Input")]
+        public InArgument<string> Filter { get; set; }
+        [Category("Output")]
         public OutArgument<System.Collections.Generic.IEnumerable<email>> Emails { get; set; }
-        [System.ComponentModel.Browsable(false)]
+        [Browsable(false)]
         public ActivityAction<email> Body { get; set; }
         private readonly Variable<IEnumerator<email>> _elements = new Variable<IEnumerator<email>>("_elements");
-        private Microsoft.Office.Interop.Outlook.Application CreateOutlookInstance()
+        private Application CreateOutlookInstance()
         {
             var outlookApplication = new Microsoft.Office.Interop.Outlook.Application();
             if (outlookApplication.ActiveExplorer() == null)
@@ -47,6 +51,8 @@ namespace OpenRPA.Office.Activities
         protected override void Execute(NativeActivityContext context)
         {
             var folder = Folder.Get(context);
+            var maxresults = MaxResults.Get(context);
+            var filter = Filter.Get(context);
             if (string.IsNullOrEmpty(folder)) return;
             var outlookApplication = CreateOutlookInstance();
             if (outlookApplication.ActiveExplorer() == null) {
@@ -59,31 +65,39 @@ namespace OpenRPA.Office.Activities
 
             Items Items = mfolder.Items;
             var unreadonly = UnreadOnly.Get(context);
+            
             if (unreadonly)
             {
-                var Filter = "[Unread]=true";
+                if (string.IsNullOrEmpty(filter)) filter = "";
+                if (!filter.ToLower().Contains("[unread]") && filter.ToLower().Contains("httpmail:read"))
+                {
+                    if (string.IsNullOrEmpty(filter))
+                    {
+                        filter = "[Unread]=true";
+                    } else
+                    {
+                        filter += "and [Unread]=true";
+                    }
+                }
                 // var Filter = "@SQL=" + (char)34 + "urn:schemas:httpmail:hasattachment" + (char)34 + "=1 AND " +
                 // var Filter = "@SQL=" + (char)34 + "urn:schemas:httpmail:read" + (char)34 + "=0";
-                Items.Restrict(Filter);
             }
+            if (!string.IsNullOrEmpty(filter))
+            {
+                Items = Items.Restrict(filter);
+
+            }
+
             var result = new List<email>();
-            foreach(var folderItem in Items)
+            foreach (var folderItem in Items)
             {
 
-                Microsoft.Office.Interop.Outlook.MailItem mailItem = folderItem as Microsoft.Office.Interop.Outlook.MailItem;
+                MailItem mailItem = folderItem as MailItem;
                 if (mailItem != null)
                 {
                     var _e = new email(mailItem);
-                    if(unreadonly)
-                    {
-                        if (_e.UnRead) result.Add(_e);
-                    }
-                    else
-                    {
-                        result.Add(_e);
-                    }
-                    
-                    
+                    result.Add(_e);
+                    if (result.Count == maxresults) break;                    
                 }
             }
             Emails.Set(context, result);

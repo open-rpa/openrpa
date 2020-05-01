@@ -7,8 +7,9 @@
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office, created for OpenRPA robot</Description>
-    <Version>1.0.22</Version>
-    <PackageReleaseNotes>1.0.23 Add Move MailItem
+    <Version>1.0.24</Version>
+    <PackageReleaseNotes>1.0.24 Add query and MaxResults to GetMails
+1.0.23 Add Move MailItem
 1.0.22 Hide the Hide property
 1.0.21 Improve performance in writerange 
 1.0.20 Bump to framework 4.7.2, Add Invoke Excel Macro
@@ -68,6 +69,7 @@
     <None Remove="Resources\designer\newemail.png" />
     <None Remove="Resources\designer\outlook.png" />
     <None Remove="Resources\designer\readexcel.png" />
+    <None Remove="Resources\designer\refresh.png" />
     <None Remove="Resources\designer\writeexcel.png" />
     <None Remove="Resources\toolbox\closeworkbook.png" />
     <None Remove="Resources\toolbox\commentout.png" />
@@ -168,6 +170,7 @@
     <Resource Include="Resources\designer\newemail.png" />
     <Resource Include="Resources\designer\outlook.png" />
     <Resource Include="Resources\designer\readexcel.png" />
+    <Resource Include="Resources\designer\refresh.png" />
     <Resource Include="Resources\designer\writeexcel.png" />
     <Resource Include="Snippets\ExcelLoop.xaml">
       <SubType>Designer</SubType>

@@ -29,39 +29,53 @@
     </sap:ActivityDesigner.Icon>
 
     <sap:ActivityDesigner.Resources>
-        <ResourceDictionary x:Uid="ResourceDictionary_1" >
-            <DataTemplate x:Uid="DataTemplate_1" x:Key="ExpandedCommentOutTemplate">
-                <Border x:Uid="Border_1" BorderThickness ="1">
-                    <StackPanel>
-                    <ComboBox
-                    ItemsSource="{Binding Path=folders}"
-                    DisplayMemberPath="name"
-                    SelectedValuePath="_id"
-                    SelectedValue="{Binding Path=ModelItem.Folder, Mode=TwoWay, Converter={rpaoffice:InArgumentStringConverter}}"
-                    >
-                    </ComboBox>
-                            <Button Click="Button_Click">Reload</Button>
-                    <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
-                                    HintText="{x:Static or:strings.activity_drop_hint}" AllowedItemType="sa:Activity"
-                                      Grid.Row="1" />
+        <Converters:ArgumentToExpressionConverter x:Key="ArgumentToExpressionConverter" />
+        <DataTemplate x:Key="ExpandedCommentOutTemplate">
+            <Border x:Uid="Border_1" BorderThickness ="1">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="25" />
+                        </Grid.ColumnDefinitions>
+                        <ComboBox ItemsSource="{Binding Path=folders}" DisplayMemberPath="name" Grid.Column="0"
+                            SelectedValuePath="_id" SelectedValue="{Binding Path=ModelItem.Folder, Mode=TwoWay, Converter={rpaoffice:InArgumentStringConverter}}" >
+                        </ComboBox>
+                        <Button Click="Button_Click" Width="25" Grid.Column="1">
+                            <StackPanel Orientation="Horizontal" >
+                                <Image Height="16" Width="16" Source="/OpenRPA.Office;component/Resources/designer/refresh.png" />
+                                <!--<TextBlock Text="{x:Static or:strings.activity_getemails_reload}"></TextBlock>-->
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                    <DockPanel Height="Auto" Width="Auto" LastChildFill="True">
+                        <TextBlock Text="{x:Static or:strings.activity_getmails_filter}" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" />
+                        <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_getmails_filter_hint}" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="5"
+                            OwnerActivity="{Binding Path=ModelItem}"
+                            Expression="{Binding Path=ModelItem.Filter, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
+                            ExpressionType="s:String" HorizontalAlignment="Stretch" />
+                    </DockPanel>
 
-                    </StackPanel>
-                </Border>
-            </DataTemplate>
-            <DataTemplate x:Uid="DataTemplate_6" x:Key="CollapsedActivityViewTemplate">
-            </DataTemplate>
-            <Style x:Uid="Style_1" x:Key="CommentOutStyle" TargetType="{x:Type ContentPresenter}">
-                <Setter x:Uid="Setter_1" Property="ContentTemplate" Value="{DynamicResource ExpandedCommentOutTemplate}" />
-                <Style.Triggers>
-                    <DataTrigger x:Uid="DataTrigger_1" Binding="{Binding Path=ShowExpanded}" Value="false">
-                        <Setter x:Uid="Setter_2" Property="ContentTemplate" Value="{DynamicResource CollapsedActivityViewTemplate}" />
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </ResourceDictionary>
+                    <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
+                                HintText="{x:Static or:strings.activity_drop_hint}" AllowedItemType="sa:Activity"
+                                    Grid.Row="1" />
+
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="CollapsedActivityViewTemplate">
+        </DataTemplate>
+        <Style x:Key="CommentOutStyle" TargetType="{x:Type ContentPresenter}">
+            <Setter x:Uid="Setter_1" Property="ContentTemplate" Value="{DynamicResource ExpandedCommentOutTemplate}" />
+            <Style.Triggers>
+                <DataTrigger x:Uid="DataTrigger_1" Binding="{Binding Path=ShowExpanded}" Value="false">
+                    <Setter x:Uid="Setter_2" Property="ContentTemplate" Value="{DynamicResource CollapsedActivityViewTemplate}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </sap:ActivityDesigner.Resources>
     <ContentPresenter x:Uid="ContentPresenter_1" Style="{DynamicResource CommentOutStyle}" Content="{Binding}" />
 
-    
-    
+
+
 </sap:ActivityDesigner>

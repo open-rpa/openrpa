@@ -327,6 +327,22 @@ namespace OpenRPA.Interfaces
             }
             return result;
         }
+        public static void SetValue<T>(this System.Activities.Presentation.Model.ModelItem model, string name, T value)
+        {
+            if (model.Properties[name] != null)
+            {
+                model.Properties[name].SetValue(value);
+            }
+        }
+        public static void SetValueInArg<T>(this System.Activities.Presentation.Model.ModelItem model, string name, T value)
+        {
+            model.SetValue(name, new System.Activities.InArgument<T>() { Expression = new System.Activities.Expressions.Literal<T>(value) });
+        }
+        public static void SetValueOutArg<T>(this System.Activities.Presentation.Model.ModelItem model, string name, string value)
+        {
+            model.SetValue(name, new System.Activities.OutArgument<T>() { Expression = new Microsoft.VisualBasic.Activities.VisualBasicReference<T>(value) });
+            // model.SetValue(name, new System.Activities.OutArgument<T>() { Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<T>(value) });
+        }
         public static ProcessInfo GetProcessInfo(this AutomationElement element)
         {
             if (!element.Properties.ProcessId.IsSupported) return null;

@@ -41,6 +41,9 @@ namespace OpenRPA.NM
             Element = element;
             Name = element.Name;
             Name = element.ToString();
+            if (parent == null) {
+                if (element.message != null && element.message.frameId > 0) Name += " (" + element.message.frameId + ")";
+            }
         }
         private bool NeedsReload { get; set; } = true;
         public override void AddSubElements()

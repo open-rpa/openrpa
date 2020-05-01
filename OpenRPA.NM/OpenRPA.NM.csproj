@@ -8,8 +8,9 @@
     <Company>OpenIAP</Company>
     <Product>OpenRPA</Product>
     <Description>Recorder plugin and Activities for interacting with Chrome/Firefox and Edge, created for OpenRPA robot</Description>
-    <Version>1.0.29</Version>
-    <PackageReleaseNotes>1.0.29 Load all frames again, and add cords on getelement
+    <Version>1.0.30</Version>
+    <PackageReleaseNotes>1.0.30 Add frame id to treeview item
+1.0.29 Load all frames again, and add cords on getelement
 1.0.28 Fix issue with multiple frames and selector
 1.0.27 Improve iframe support
 1.0.26 add ng-model as a prefered id element

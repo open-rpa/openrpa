@@ -189,8 +189,17 @@
   <data name="activity_filename" xml:space="preserve">
     <value>Filename</value>
   </data>
+  <data name="activity_getemails_reload" xml:space="preserve">
+    <value>Reload</value>
+  </data>
   <data name="activity_getmails" xml:space="preserve">
     <value>Get Mails</value>
+  </data>
+  <data name="activity_getmails_filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="activity_getmails_filter_hint" xml:space="preserve">
+    <value>Filter emails by query</value>
   </data>
   <data name="activity_getmails_tooltip" xml:space="preserve">
     <value>Get all emails from a Microsoft Outlook folder</value>
@@ -236,6 +245,12 @@
   </data>
   <data name="activity_movemailitem_tooltip" xml:space="preserve">
     <value>Move a mail gotten with GetEmails to a different folder</value>
+  </data>
+  <data name="activity_movemail_mail" xml:space="preserve">
+    <value>Mail</value>
+  </data>
+  <data name="activity_movemail_mail_hint" xml:space="preserve">
+    <value>Mail item to move</value>
   </data>
   <data name="activity_newmailitem" xml:space="preserve">
     <value>New MailItem</value>

@@ -20,7 +20,7 @@ namespace OpenRPA.Office.Activities
         public GetMailsDesigner()
         {
             folders = new ObservableCollection<outlookfolder>();
-            folders.Add(new outlookfolder() { name = "", _id = "" });
+            // folders.Add(new outlookfolder() { name = "", _id = "" });
             InitializeComponent();
         }
         private Microsoft.Office.Interop.Outlook.Application CreateOutlookInstance()
@@ -36,8 +36,13 @@ namespace OpenRPA.Office.Activities
         }
         private void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
         {
+        }
+        public void Reload()
+        {
             try
             {
+                var curfolder = ModelItem.GetValue<string>("Folder");
+                folders.Clear();
                 var outlookApplication = CreateOutlookInstance();
                 MAPIFolder inBox = (MAPIFolder)outlookApplication.ActiveExplorer().Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox);
                 MAPIFolder folderbase = inBox.Store.GetRootFolder();
@@ -45,11 +50,13 @@ namespace OpenRPA.Office.Activities
                 {
                     GetFolders(folder, 0);
                 }
+                ModelItem.SetValueInArg("Folder", curfolder);
             }
             catch (System.Exception ex)
             {
                 Log.Error(ex.ToString());
             }
+
         }
         public void GetFolders(MAPIFolder folder, int ident)
         {
@@ -77,8 +84,7 @@ namespace OpenRPA.Office.Activities
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            folders.Clear();
-            ActivityDesigner_Loaded(null, null);
+            Reload();
         }
     }
 }

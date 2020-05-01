@@ -18,7 +18,6 @@ if (true == false) {
     if (window.openrpautil_contentlistner === null || window.openrpautil_contentlistner === undefined) {
         function remotePushEvent(evt) {
             if (evt.data.functionName == "mousemove") {
-                console.log(evt.data);
                 openrpautil.parent = evt.data;
                 try {
                     notifyFrames();

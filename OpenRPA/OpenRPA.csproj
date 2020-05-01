@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.109</Version>
-    <PackageReleaseNotes>1.0.109 Add query and MaxResults to GetMails
+    <Version>1.0.110</Version>
+    <PackageReleaseNotes>1.0.110 Add support for nested getelement, when using xpath / better edit of json in selector
+1.0.109 Add query and MaxResults to GetMails
 1.0.108 Load all frames again, and add cords on getelement
 1.0.107 Fix issue with multiple frames and selector
 1.0.106 Add support for single user install / fix issue with invokeopenrpa in agent mode / Add Move MailItem

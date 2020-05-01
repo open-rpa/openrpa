@@ -160,10 +160,25 @@ namespace OpenRPA.IE
             using (var automation = Interfaces.AutomationUtil.getAutomation())
             {
                 var _ele = automation.FromHandle(new IntPtr(wBrowser.HWND));
-
                 panel = _ele.FindFirst(TreeScope.Descendants,
                     new AndCondition(new PropertyCondition(automation.PropertyLibrary.Element.ControlType, ControlType.Pane),
                     new PropertyCondition(automation.PropertyLibrary.Element.ClassName, "TabWindowClass"))); // Frame Tab
+                if(panel==null)
+                {
+                    var win = _ele.AsWindow();
+                    GenericTools.Restore(new IntPtr(wBrowser.HWND));
+                    win.SetForeground();
+
+                    var sw = new Stopwatch(); sw.Start();
+
+                    while (panel == null && sw.Elapsed < TimeSpan.FromSeconds(5))
+                    {
+                        panel = _ele.FindFirst(TreeScope.Descendants,
+                        new AndCondition(new PropertyCondition(automation.PropertyLibrary.Element.ControlType, ControlType.Pane),
+                        new PropertyCondition(automation.PropertyLibrary.Element.ClassName, "TabWindowClass"))); // Frame Tab
+                    }
+                }
+                if (panel == null) throw new Exception("Failed tab inside IE window " + wBrowser.HWND.ToString());
                 elementx = Convert.ToInt32(panel.BoundingRectangle.X);
                 elementy = Convert.ToInt32(panel.BoundingRectangle.Y);
             }

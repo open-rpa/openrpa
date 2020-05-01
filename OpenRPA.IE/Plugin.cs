@@ -217,10 +217,17 @@ namespace OpenRPA.IE
                 browser.Show();
                 var sw = new System.Diagnostics.Stopwatch();
                 sw.Start();
-                while (sw.Elapsed < timeout && doc.readyState != "complete" && doc.readyState != "interactive")
+                while (sw.Elapsed < timeout)
                 {
-                    Log.Debug("pending complete, readyState: " + doc.readyState);
-                    Thread.Sleep(100);
+                    try
+                    {
+                        Log.Debug("pending complete, readyState: " + doc.readyState);
+                        Thread.Sleep(100);
+                        if (doc.readyState != "complete" && doc.readyState != "interactive") break;
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
             });
 

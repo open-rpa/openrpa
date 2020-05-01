@@ -24,7 +24,7 @@ namespace OpenRPA.Interfaces.Selector
                 //{
                 //    _json = Selector.ToString();
                 //}
-                _json = Selector.ToString();
+                if(_json==null) _json = Selector.ToString();
                 return _json;
             }
             set
@@ -36,7 +36,13 @@ namespace OpenRPA.Interfaces.Selector
                 //    Selector = new Selector(_json);
                 //    OnPropertyChanged("Selector");
                 //}
-                Selector = new Selector(_json);
+                try
+                {
+                    Selector = new Selector(_json);
+                }
+                catch (Exception)
+                {
+                }
                 OnPropertyChanged("json");
             }
         }
@@ -190,7 +196,19 @@ namespace OpenRPA.Interfaces.Selector
             {
                 try
                 {
-                    var selector = Plugin.GetSelector(Anchor, item);
+                    Selector s = null; treeelement parent;
+                    if(Anchor!=null)
+                    {
+                        parent = item.Parent;
+                        while (parent != null && parent.Parent != null) parent = parent.Parent;
+                        if (parent == null)
+                        {
+                            System.Windows.MessageBox.Show("Cannot select self");
+                            return;
+                        }
+                        s = Plugin.GetSelector(null, parent);  
+                    }
+                    var selector = Plugin.GetSelector(s, item);
                     Selector = selector;
 
                     OnPropertyChanged("Selector");

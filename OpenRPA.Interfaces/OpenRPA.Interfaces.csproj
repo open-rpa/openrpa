@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.46</Version>
-    <PackageReleaseNotes>1.046 Add SetValue extension
+    <Version>1.0.47</Version>
+    <PackageReleaseNotes>1.0.47 Allow enter in selector, to allow copy n paste
+1.0.46 Add SetValue extension
 1.0.45 update settings with showloadingscreen
 1.0.44 extend NMElement
 1.0.43 Skip ui lookup on click, when noone is listening

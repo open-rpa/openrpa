@@ -11,7 +11,12 @@ namespace OpenRPA.IE
 {
     class XPath
     {
-        public static string getXPath(MSHTML.IHTMLElement element)
+        public static string GetUniqueID(MSHTML.IHTMLElement RawElement)
+        {
+            MSHTML.IHTMLUniqueName id = RawElement as MSHTML.IHTMLUniqueName;
+            return id.uniqueID;
+        }
+        public static string getXPath(MSHTML.IHTMLElement element, MSHTML.IHTMLElement parent)
         {
             if (element == null)
                 return "";
@@ -29,6 +34,7 @@ namespace OpenRPA.IE
                         break;
                 }
                 currentNode = currentNode.parentElement;
+                if (parent != null && GetUniqueID(parent) == GetUniqueID(currentNode)) break;
             }
             path.Reverse();
             return join(path, "/");

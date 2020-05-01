@@ -72,7 +72,7 @@ namespace OpenRPA.IE
             sw.Start();
             do
             {
-                elements = IESelector.GetElementsWithuiSelector(sel, from);
+                elements = IESelector.GetElementsWithuiSelector(sel, from, maxresults);
             } while (elements .Count() == 0 && sw.Elapsed < timeout);
             if (elements.Count() > maxresults) elements = elements.Take(maxresults).ToArray();  
             context.SetValue(Elements, elements);

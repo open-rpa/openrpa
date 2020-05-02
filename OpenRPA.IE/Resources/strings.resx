@@ -147,6 +147,12 @@
   <data name="activity_waitforready_help" xml:space="preserve">
     <value>Wait for page page to be ready / is not loading</value>
   </data>
+  <data name="enable_caching_browser" xml:space="preserve">
+    <value>Caching browser object</value>
+  </data>
+  <data name="enable_caching_browser_help" xml:space="preserve">
+    <value>Save browser object, instead of searching for the window doing each call</value>
+  </data>
   <data name="enable_xpath_support" xml:space="preserve">
     <value>Enable XPath</value>
   </data>

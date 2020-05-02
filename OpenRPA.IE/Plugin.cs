@@ -20,7 +20,7 @@ namespace OpenRPA.IE
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         public static treeelement[] _GetRootElements(Selector anchor)
         {
-            var browser = Browser.GetBrowser();
+            var browser = Browser.GetBrowser(true);
             if (browser == null)
             {
                 Log.Warning("Failed locating an Internet Explore instance");
@@ -211,7 +211,7 @@ namespace OpenRPA.IE
             if (string.IsNullOrEmpty(url)) return null;
             GenericTools.RunUI(() =>
             {
-                var browser = Browser.GetBrowser(url);
+                var browser = Browser.GetBrowser(true, url);
                 var doc = browser.Document;
                 if (url != doc.url) doc.url = url;
                 browser.Show();

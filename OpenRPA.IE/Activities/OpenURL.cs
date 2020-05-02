@@ -23,7 +23,7 @@ namespace OpenRPA.IE
         protected override void Execute(NativeActivityContext context)
         {
             var url = Url.Get(context);
-            var browser = Browser.GetBrowser(url);
+            var browser = Browser.GetBrowser(true, url);
             var timeout = TimeSpan.FromSeconds(3);
             var doc = browser.Document;
             if (!string.IsNullOrEmpty(url))
@@ -33,8 +33,18 @@ namespace OpenRPA.IE
             if(FocusBrowser.Get(context)) browser.Show();
             var sw = new Stopwatch();
             sw.Start();
-            while (sw.Elapsed < timeout && doc.readyState != "complete" && doc.readyState != "interactive")
+            var readyState = "";
+            while (sw.Elapsed < timeout && readyState != "complete" && readyState != "interactive")
             {
+                try
+                {
+                    readyState = doc.readyState;
+                }
+                catch (Exception)
+                {
+                    browser = Browser.GetBrowser(true, url);
+                    doc = browser.Document;
+                }
                 Log.Debug("pending complete, readyState: " + doc.readyState);
                 System.Threading.Thread.Sleep(100);
             }

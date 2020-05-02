@@ -33,10 +33,12 @@ namespace OpenRPA.IE.Views
             InitializeComponent();
             DataContext = this;
             enable_xpath_support.IsChecked = PluginConfig.enable_xpath_support;
+            enable_caching_browser.IsChecked = PluginConfig.enable_caching_browser;
         }
         private void value_Changed(object sender, RoutedEventArgs e)
         {
             PluginConfig.enable_xpath_support = enable_xpath_support.IsChecked.Value;
+            PluginConfig.enable_caching_browser = enable_caching_browser.IsChecked.Value;
             Config.Save();
         }
     }

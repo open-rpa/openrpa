@@ -113,7 +113,7 @@ namespace OpenRPA.NM
             //}
             NativeMessagingMessage subresult = null;
 
-            var getelement = new NativeMessagingMessage("getelements", PluginConfig.debug_console_output);
+            var getelement = new NativeMessagingMessage("getelements", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids);
             getelement.browser = browser;
             getelement.xPath = xpath;
             getelement.cssPath = cssselector;

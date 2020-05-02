@@ -57,20 +57,20 @@ namespace OpenRPA.NativeMessagingHost
 
                             if (msg.functionName == "openrpautilscript")
                             {
-                                var r2 = new NativeMessagingMessage(msg.functionName, msg.debug);
+                                var r2 = new NativeMessagingMessage(msg.functionName, msg.debug, null);
                                 loadscript(ref r2, "openrpautil");
                                 sendMessage(r2);
                             }
                             if (msg.functionName == "contentscript")
                             {
-                            var r2 = new NativeMessagingMessage(msg.functionName, msg.debug);
+                            var r2 = new NativeMessagingMessage(msg.functionName, msg.debug, null);
                                 loadscript(ref r2, "content");
                                 sendMessage(r2);
                             }
 
                             if (msg.functionName == "backgroundscript")
                             {
-                                var r2 = new NativeMessagingMessage(msg.functionName, msg.debug);
+                                var r2 = new NativeMessagingMessage(msg.functionName, msg.debug, null);
                                 loadscript(ref r2, "background");
                                 sendMessage(r2);
                             }

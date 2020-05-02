@@ -56,12 +56,21 @@ namespace OpenRPA.IE
 
             if (WaitForReady.Get(context))
             {
-                var browser = Browser.GetBrowser();
+                var browser = Browser.GetBrowser(false);
                 MSHTML.HTMLDocument doc = browser.Document;
                 var sw2 = new Stopwatch();
                 sw2.Start();
-                while (sw2.Elapsed < timeout && doc.readyState != "complete" && doc.readyState != "interactive")
+                string readyState = "";
+                while (sw2.Elapsed < timeout && readyState != "complete" && readyState != "interactive")
                 {
+                    try
+                    {
+                        readyState = doc.readyState;
+                    }
+                    catch (Exception)
+                    {
+                        browser = Browser.GetBrowser(true);
+                    }
                     // Log.Debug("pending complete, readyState: " + doc.readyState);
                     System.Threading.Thread.Sleep(100);
                 }

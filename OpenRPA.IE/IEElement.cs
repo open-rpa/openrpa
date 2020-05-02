@@ -281,7 +281,11 @@ namespace OpenRPA.IE
             {
                 if (RawElement.tagName.ToLower() == "input")
                 {
-                    var ele = (MSHTML.IHTMLInputElement)RawElement;
+                    var ele = (MSHTML.HTMLInputElement)RawElement;
+                    var name = (string)RawElement.getAttribute("Name");
+                    var id = (string)RawElement.id;
+                    Log.Verbose("IEElement: tagName: " + RawElement.tagName + " name: " + name + " id: " + id);
+                    Log.Verbose("IE update value from '" + ele.value + "' => '" + value + "'");
                     ele.value = value;
                 }
                 if (RawElement.tagName.ToLower() == "select")
@@ -299,6 +303,7 @@ namespace OpenRPA.IE
                         }
                     }
                 }
+                if (Value != value) throw new Exception("Failed updating value!");
             }
         }
         public override string ToString()

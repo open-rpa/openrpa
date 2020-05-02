@@ -21,7 +21,7 @@ namespace OpenRPA.IE
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var browser = Browser.GetBrowser();
+            var browser = Browser.GetBrowser(true);
             if (browser == null) return;
             ModelItem.Properties["Url"].SetValue(new InArgument<string>(browser.wBrowser.LocationURL));
         }

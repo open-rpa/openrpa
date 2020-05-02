@@ -240,7 +240,7 @@ namespace OpenRPA.NM
         public static void enumwindows()
         {
             windows.Clear();
-            NativeMessagingMessage message = new NativeMessagingMessage("enumwindows", PluginConfig.debug_console_output);
+            NativeMessagingMessage message = new NativeMessagingMessage("enumwindows", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids);
             if (chromeconnected)
             {
                 var result = sendMessageChromeResult(message, true, TimeSpan.FromSeconds(3));
@@ -263,7 +263,7 @@ namespace OpenRPA.NM
         public static void enumtabs()
         {
             tabs.Clear();
-            NativeMessagingMessage message = new NativeMessagingMessage("enumtabs", PluginConfig.debug_console_output);
+            NativeMessagingMessage message = new NativeMessagingMessage("enumtabs", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids);
 
             if (chromeconnected)
             {
@@ -289,21 +289,9 @@ namespace OpenRPA.NM
             enumwindows();
             enumtabs();
         }
-        //public static void UpdateTab(NativeMessagingMessageTab tab)
-        //{
-        //    NativeMessagingMessage message = new NativeMessagingMessage("updatetab", PluginConfig.debug_console_output);
-        //    NativeMessagingMessage result = null;
-        //    message.browser = tab.browser; message.tabid = tab.id; message.tab = tab;
-        //    message.windowId = tab.windowId;
-        //    if (connected)
-        //    {
-        //        result = sendMessageResult(message, true, TimeSpan.FromSeconds(2));
-        //          (result.tabid, result.browser, TimeSpan.FromSeconds(5));
-        //    }
-        //}
         public static void CloseTab(NativeMessagingMessageTab tab)
         {
-            NativeMessagingMessage message = new NativeMessagingMessage("closetab", PluginConfig.debug_console_output);
+            NativeMessagingMessage message = new NativeMessagingMessage("closetab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids);
             NativeMessagingMessage result = null;
             message.browser = tab.browser; message.tabid = tab.id; message.tab = tab;
             message.windowId = tab.windowId;
@@ -365,7 +353,7 @@ namespace OpenRPA.NM
         {
             if (ffconnected)
             {
-                NativeMessagingMessage message = new NativeMessagingMessage("openurl", PluginConfig.debug_console_output) { data = url };
+                NativeMessagingMessage message = new NativeMessagingMessage("openurl", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { data = url };
                 message.xPath = forceNew.ToString().ToLower();
                 var result = ffpipe.Message(message, true, TimeSpan.FromSeconds(2));
                 if (result != null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
@@ -402,7 +390,7 @@ namespace OpenRPA.NM
         {
             if (chromeconnected)
             {
-                NativeMessagingMessage message = new NativeMessagingMessage("openurl", PluginConfig.debug_console_output) { data = url };
+                NativeMessagingMessage message = new NativeMessagingMessage("openurl", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { data = url };
                 message.xPath = forceNew.ToString().ToLower();
                 var result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
                 if(result!=null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
@@ -439,7 +427,7 @@ namespace OpenRPA.NM
         public static NMElement[] getElement(int tabid, long frameId, string browser, string xPath, TimeSpan timeout)
         {
             var results = new List<NMElement>();
-            var getelement = new NativeMessagingMessage("getelement", PluginConfig.debug_console_output);
+            var getelement = new NativeMessagingMessage("getelement", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids);
             getelement.browser = browser;
             getelement.tabid = tabid;
             getelement.xPath = xPath;

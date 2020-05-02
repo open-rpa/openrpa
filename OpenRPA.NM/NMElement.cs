@@ -187,26 +187,6 @@ namespace OpenRPA.NM
                             }
                         }
                     }
-                    //var tab = NMHook.tabs.Where(x => x.id == message.tabid).FirstOrDefault();
-                    //if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
-                    //// NMHook.HighlightTab(tab);
-                    //var updateelement = new NativeMessagingMessage("updateelementtext", PluginConfig.debug_console_output)
-                    //{
-                    //    browser = message.browser,
-                    //    cssPath = cssselector,
-                    //    xPath = xpath,
-                    //    tabid = message.tabid,
-                    //    frameId = message.frameId,
-                    //    data = value
-                    //};
-                    //var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(3));
-                    //if (subsubresult == null) throw new Exception("Failed setting html element value");
-                    ////System.Threading.Thread.Sleep(500);
-                    //if (PluginConfig.wait_for_tab_after_set_value)
-                    //{
-                    //    NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
-                    //}
-                    //return;
                 }
             }
         }
@@ -228,7 +208,7 @@ namespace OpenRPA.NM
                     if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
                     // NMHook.HighlightTab(tab);
 
-                    var updateelement = new NativeMessagingMessage("updateelementvalue", PluginConfig.debug_console_output)
+                    var updateelement = new NativeMessagingMessage("updateelementvalue", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
                     {
                         browser = message.browser,
                         cssPath = cssselector,
@@ -261,6 +241,7 @@ namespace OpenRPA.NM
                 {
                     NativeMethods.SetCursorPos(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
                 }
+                Log.Debug("Click at  " + OffsetX + "," + OffsetY + " in area " + Rectangle.ToString());
                 Input.InputDriver.Click(Button);
                 if (DoubleClick) Input.InputDriver.Click(Button);
                 return;
@@ -271,7 +252,7 @@ namespace OpenRPA.NM
             {
                 if (virtualClick)
                 {
-                    var getelement2 = new NativeMessagingMessage("clickelement", PluginConfig.debug_console_output)
+                    var getelement2 = new NativeMessagingMessage("clickelement", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
                     {
                         browser = message.browser,
                         //cssPath = cssselector,
@@ -290,7 +271,7 @@ namespace OpenRPA.NM
                     return;
                 }
                 NativeMessagingMessage subresult = null;
-                var getelement = new NativeMessagingMessage("getelement", PluginConfig.debug_console_output)
+                var getelement = new NativeMessagingMessage("getelement", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
                 {
                     browser = message.browser,
                     zn_id = zn_id,
@@ -334,7 +315,7 @@ namespace OpenRPA.NM
         {
             try
             {
-                var getelement = new NativeMessagingMessage("getelement", PluginConfig.debug_console_output)
+                var getelement = new NativeMessagingMessage("getelement", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
                 {
                     browser = browser,
                     cssPath = cssselector,
@@ -381,6 +362,7 @@ namespace OpenRPA.NM
                 _overlayWindow.Visible = true;
                 _overlayWindow.SetTimeout(Duration);
                 _overlayWindow.Bounds = Rectangle;
+                Log.Debug("Highlight area " + Rectangle.ToString());
                 var sw = new System.Diagnostics.Stopwatch();
                 sw.Start();
                 do

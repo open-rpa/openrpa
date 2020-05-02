@@ -151,6 +151,24 @@ namespace OpenRPA.IE.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Caching browser object.
+        /// </summary>
+        public static string enable_caching_browser {
+            get {
+                return ResourceManager.GetString("enable_caching_browser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save browser object, instead of searching for the window doing each call.
+        /// </summary>
+        public static string enable_caching_browser_help {
+            get {
+                return ResourceManager.GetString("enable_caching_browser_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enable XPath.
         /// </summary>
         public static string enable_xpath_support {

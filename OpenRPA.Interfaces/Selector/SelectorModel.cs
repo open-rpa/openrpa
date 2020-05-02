@@ -210,6 +210,7 @@ namespace OpenRPA.Interfaces.Selector
                     }
                     var selector = Plugin.GetSelector(s, item);
                     Selector = selector;
+                    _json = selector.ToString();
 
                     OnPropertyChanged("Selector");
                     OnPropertyChanged("json");

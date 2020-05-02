@@ -36,8 +36,9 @@ namespace OpenRPA.IE
         private static Browser browser;
         private static DateTime browser_at;
         private static TimeSpan browser_for = TimeSpan.FromSeconds(5);
-        public static Browser GetBrowser(string url = null)
+        public static Browser GetBrowser(bool forcenew, string url = null)
         {
+            if (!PluginConfig.enable_caching_browser) browser = null;
             var sw = new Stopwatch(); sw.Start();
             if (browser != null)
             {

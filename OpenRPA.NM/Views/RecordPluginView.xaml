@@ -31,5 +31,10 @@
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,90,0,0" VerticalAlignment="Top" Width="222" x:Name="debug_console_output" 
             Checked="value_Changed" Unchecked="value_Changed" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,90,0,0" Text="{x:Static or:strings.debug_console_output_help}" VerticalAlignment="Top" />
+
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,120,0,0" Text="{x:Static or:strings.unique_xpath_ids}" VerticalAlignment="Top" Width="110" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="151,150,0,0" VerticalAlignment="Top" Width="222" x:Name="unique_xpath_ids" 
+            TextChanged="unique_xpath_ids_TextChanged" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,120,0,0" Text="{x:Static or:strings.unique_xpath_ids_help}" VerticalAlignment="Top" />
     </Grid>
 </UserControl>

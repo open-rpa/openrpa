@@ -248,7 +248,7 @@ namespace OpenRPA.IE
             }
             else
             {
-                browser = Browser.GetBrowser();
+                browser = Browser.GetBrowser(false);
             }
             if (browser == null)
             {
@@ -276,14 +276,14 @@ namespace OpenRPA.IE
 
                 try
                 {
-                    //
+                    string body = null;
                     Log.Selector(string.Format("Create IHTMLDocument3 {0:mm\\:ss\\.fff}", sw.Elapsed));
                     MSHTML.IHTMLDocument3 sourceDoc = (MSHTML.IHTMLDocument3)browser.Document;
-                    string documentContents = sourceDoc.documentElement.outerHTML;
+                    body = sourceDoc.documentElement.outerHTML;
 
                     HtmlAgilityPack.HtmlDocument targetDoc = new HtmlAgilityPack.HtmlDocument();
                     Log.SelectorVerbose(string.Format("targetDoc.LoadHtml {0:mm\\:ss\\.fff}", sw.Elapsed));
-                    targetDoc.LoadHtml(documentContents);
+                    targetDoc.LoadHtml(body);
 
 
                     if (fromElement != null && fromElement is IEElement fromie)
@@ -321,14 +321,11 @@ namespace OpenRPA.IE
                                 if (_results.Count >= maxresults) break;
                             }
                         }
-
                     }
-
-
-
                 }
                 catch (Exception)
                 {
+                    browser = Browser.GetBrowser(true);
                 }
                 Log.Selector(string.Format("GetElementsWithuiSelector::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                 return _results.ToArray();

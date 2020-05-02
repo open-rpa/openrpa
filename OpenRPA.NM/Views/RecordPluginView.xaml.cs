@@ -36,6 +36,7 @@ namespace OpenRPA.NM.Views
             wait_for_tab_click.IsChecked = PluginConfig.wait_for_tab_click;
             compensate_for_old_addon.IsChecked = PluginConfig.compensate_for_old_addon;
             debug_console_output.IsChecked = PluginConfig.debug_console_output;
+            unique_xpath_ids.Text = string.Join(",", PluginConfig.unique_xpath_ids);
         }
         private void value_Changed(object sender, RoutedEventArgs e)
         {
@@ -44,6 +45,12 @@ namespace OpenRPA.NM.Views
             PluginConfig.wait_for_tab_click = wait_for_tab_click.IsChecked.Value;
             PluginConfig.compensate_for_old_addon = compensate_for_old_addon.IsChecked.Value;
             PluginConfig.debug_console_output = debug_console_output.IsChecked.Value;
+            Config.Save();
+        }
+
+        private void unique_xpath_ids_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            PluginConfig.unique_xpath_ids = unique_xpath_ids.Text.Split(',');
             Config.Save();
         }
     }

@@ -24,7 +24,7 @@ namespace OpenRPA.NativeMessagingHost
             try
             {
                 aTimer.Interval = 5000;
-                var r2 = new NativeMessagingMessage("ping", false);
+                var r2 = new NativeMessagingMessage("ping", false, null);
                 handler.sendMessage(r2);
                 aTimer.Start();
             }

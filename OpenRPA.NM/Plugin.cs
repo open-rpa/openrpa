@@ -59,7 +59,7 @@ namespace OpenRPA.NM
             //}
             //if (NMHook.tabs.Count == 0) { return rootelements.ToArray(); }
             //// getelement.data = "getdom";
-            var getelement = new NativeMessagingMessage("getelements", PluginConfig.debug_console_output)
+            var getelement = new NativeMessagingMessage("getelements", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
             {
                 browser = browser,
                 xPath = "/html",
@@ -131,6 +131,7 @@ namespace OpenRPA.NM
             NMHook.onMessage += OnMessage;
             NMHook.Connected += OnConnected;
             NMHook.onDisconnected += OnDisconnected;
+            _ = PluginConfig.unique_xpath_ids;
             _ = PluginConfig.debug_console_output;
             _ = PluginConfig.wait_for_tab_after_set_value;
             _ = PluginConfig.wait_for_tab_click;
@@ -327,6 +328,7 @@ namespace OpenRPA.NM
             if (e.UIElement.ProcessId < 1) return false;
             var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
             if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox") return false;
+            if(LastElement==null) return false;
             e.Element = LastElement;
             e.OffsetX = e.X - LastElement.Rectangle.X;
             e.OffsetY = e.Y - LastElement.Rectangle.Y;

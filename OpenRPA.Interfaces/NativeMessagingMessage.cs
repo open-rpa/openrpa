@@ -14,10 +14,11 @@ namespace OpenRPA.Interfaces
         private  NativeMessagingMessage() : base()
         {
         }
-        public NativeMessagingMessage(string functionName, bool debug) : base()
+        public NativeMessagingMessage(string functionName, bool debug, string[] unique_xpath_ids) : base()
         {
             this.functionName = functionName;
             this.debug = debug;
+            this.uniquexpathids = unique_xpath_ids;
         }
         public NativeMessagingMessage(NativeMessagingMessage e) : base(e)
         {
@@ -28,6 +29,7 @@ namespace OpenRPA.Interfaces
         }
         public string browser { get; set; }
         public bool debug { get; set; }
+        public string[] uniquexpathids { get; set; }
         public int windowId { get; set; } = -1;
         public string functionName { get; set; } = "ping";
         public string script { get; set; }

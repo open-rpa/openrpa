@@ -177,6 +177,12 @@
   <data name="register_old_portname_help" xml:space="preserve">
     <value>Register old browser extension port names </value>
   </data>
+  <data name="unique_xpath_ids" xml:space="preserve">
+    <value>unique ids</value>
+  </data>
+  <data name="unique_xpath_ids_help" xml:space="preserve">
+    <value>Use on of these attributes as unique id's when creating xpath selectors</value>
+  </data>
   <data name="wait_for_tab_click" xml:space="preserve">
     <value>wait for tab</value>
   </data>

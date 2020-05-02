@@ -241,6 +241,24 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to unique ids.
+        /// </summary>
+        public static string unique_xpath_ids {
+            get {
+                return ResourceManager.GetString("unique_xpath_ids", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use on of these attributes as unique id&apos;s when creating xpath selectors.
+        /// </summary>
+        public static string unique_xpath_ids_help {
+            get {
+                return ResourceManager.GetString("unique_xpath_ids_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to wait for tab.
         /// </summary>
         public static string wait_for_tab_click {

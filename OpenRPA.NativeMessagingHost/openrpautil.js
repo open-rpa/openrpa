@@ -1,4 +1,5 @@
 document.openrpadebug = false;
+document.openrpauniquexpathids = ['ng-model', 'ng-reflect-name']; // aria-label
 function inIframe() {
     var result = true;
     try {
@@ -155,6 +156,7 @@ if (true == false) {
                 },
                 clickelement: function (message) {
                     document.openrpadebug = message.debug;
+                    if (message.uniquexpathids) document.openrpauniquexpathids = message.uniquexpathids;
                     var ele = null;
                     if (ele === null && message.zn_id !== null && message.zn_id !== undefined && message.zn_id > -1) {
                         message.xPath = '//*[@zn_id="' + message.zn_id + '"]';
@@ -189,6 +191,7 @@ if (true == false) {
                 getelements: function (message) {
                     try {
                         document.openrpadebug = message.debug;
+                        if (message.uniquexpathids) document.openrpauniquexpathids = message.uniquexpathids;
                         var fromele = null;
                         if (message.fromxPath != null && message.fromxPath != "") {
                             if (message.fromxPath != null && message.fromxPath != "") {
@@ -302,6 +305,7 @@ if (true == false) {
                 },
                 getelement: function (message) {
                     document.openrpadebug = message.debug;
+                    if (message.uniquexpathids) document.openrpauniquexpathids = message.uniquexpathids;
                     try {
                         var ele = null;
                         if (ele === null && message.zn_id !== null && message.zn_id !== undefined && message.zn_id > -1) {
@@ -1018,16 +1022,22 @@ if (true == false) {
                     return null; // Error.
                 switch (node.nodeType) {
                     case Node.ELEMENT_NODE:
-                        // 
-                        if (optimized && node.getAttribute("ng-model"))
-                            return new UTILS.DOMNodePathStep("//*[@ng-model=\"" + node.getAttribute("ng-model") + "\"]", true);
-                        if (optimized && node.getAttribute("ng-reflect-name"))
-                            return new UTILS.DOMNodePathStep("//*[@ng-reflect-name=\"" + node.getAttribute("ng-reflect-name") + "\"]", true);
-                        if (optimized && node.getAttribute("aria-label"))
-                            return new UTILS.DOMNodePathStep("//*[@aria-label=\"" + node.getAttribute("aria-label") + "\"]", true);
-                        if (optimized && node.getAttribute("id"))
-                            return new UTILS.DOMNodePathStep("//*[@id=\"" + node.getAttribute("id") + "\"]", true);
                         ownValue = node.localName;
+                        if (optimized) {
+                            
+                            for (var i = 0; i < document.openrpauniquexpathids.length; i++) {
+                                var id = document.openrpauniquexpathids[i].toLowerCase();
+                                console.log(id + " " + node.getAttribute(id));
+                                if (node.getAttribute(id))
+                                    return new UTILS.DOMNodePathStep("//" + ownValue + "[@" + id + "=\"" + node.getAttribute(id) + "\"]", true);
+                                id = id.toUpperCase();
+                                console.log(id + " " + node.getAttribute(id));
+                                if (node.getAttribute(id))
+                                    return new UTILS.DOMNodePathStep("//" + ownValue + "[@" + id + "=\"" + node.getAttribute(id) + "\"]", true);
+                            }
+                        }
+                        if (optimized && node.getAttribute("id"))
+                            return new UTILS.DOMNodePathStep("//" + ownValue + "[@id=\"" + node.getAttribute("id") + "\"]", true);
                         break;
                     case Node.ATTRIBUTE_NODE:
                         ownValue = "@" + node.nodename;

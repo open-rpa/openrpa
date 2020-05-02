@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.47</Version>
-    <PackageReleaseNotes>1.0.47 Allow enter in selector, to allow copy n paste
+    <Version>1.0.48</Version>
+    <PackageReleaseNotes>1.0.48 Allow custom unique ids for xpath generation in nm
+1.0.47 Allow enter in selector, to allow copy n paste
 1.0.46 Add SetValue extension
 1.0.45 update settings with showloadingscreen
 1.0.44 extend NMElement

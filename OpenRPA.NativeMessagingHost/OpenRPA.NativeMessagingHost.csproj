@@ -6,11 +6,12 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.24</Version>
+    <Version>1.0.25</Version>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
     <StartupObject />
-    <PackageReleaseNotes>1.0.24 Add cords for GetElement
+    <PackageReleaseNotes>1.0.25 Allow custom unique ids for xpath generation in nm
+1.0.24 Add cords for GetElement
 1.0.23 Fix issue with multiple frames and selector
 1.0.22 improve iframe support / update browser extenstion
 1.0.21 add ng-model as a prefered id element

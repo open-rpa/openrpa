@@ -162,7 +162,13 @@ namespace OpenRPA
                         {
                             return (T)(object)ts;
                         }
-
+                    }
+                    if (typeof(T) == typeof(string[]) && value != null)
+                    {
+                        object o = null;
+                        if (value.GetType() == typeof(string[])) o = value;
+                        if (value.GetType() == typeof(Newtonsoft.Json.Linq.JArray)) o = ((Newtonsoft.Json.Linq.JArray)value).ToObject<string[]>();
+                        return (T)o;
                     }
                     return (T)value;
                 }

@@ -1027,11 +1027,9 @@ if (true == false) {
                             
                             for (var i = 0; i < document.openrpauniquexpathids.length; i++) {
                                 var id = document.openrpauniquexpathids[i].toLowerCase();
-                                console.log(id + " " + node.getAttribute(id));
                                 if (node.getAttribute(id))
                                     return new UTILS.DOMNodePathStep("//" + ownValue + "[@" + id + "=\"" + node.getAttribute(id) + "\"]", true);
                                 id = id.toUpperCase();
-                                console.log(id + " " + node.getAttribute(id));
                                 if (node.getAttribute(id))
                                     return new UTILS.DOMNodePathStep("//" + ownValue + "[@" + id + "=\"" + node.getAttribute(id) + "\"]", true);
                             }

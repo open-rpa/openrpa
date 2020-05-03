@@ -806,7 +806,7 @@ namespace OpenRPA.Views
         {
             ModelItem parent = from;
 
-            while (parent != null && parent.Properties["Activities"] == null && parent.Properties["Nodes"] == null)
+            while (parent != null && parent.Properties["Activities"] == null && parent.Properties["Handler"] == null && parent.Properties["Nodes"] == null)
             {
                 parent = parent.Parent;
             }
@@ -1465,7 +1465,9 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
             var thisselection = selection;
             var comment = SelectedActivity;
             var currentSequence = SelectedActivity.Properties["Body"].Value;
-            var newSequence = GetActivitiesScope(SelectedActivity.Parent.Parent);
+            if (currentSequence == null) return;
+            //var newSequence = GetActivitiesScope(SelectedActivity.Parent.Parent);
+            var newSequence = GetActivitiesScope(SelectedActivity.Parent);
             ModelItemCollection currentActivities = null;
             if (currentSequence.Properties["Activities"] != null)
             {
@@ -1524,6 +1526,11 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 }
                 newActivities.Remove(comment);
             }
+            if (currentActivities != null && currentActivities.Count == 1 && comment.Parent.Properties["Handler"] != null)
+            {
+                var handler = comment.Parent.Properties["Handler"];
+                handler.SetValue(currentActivities.First());
+            }
             else if (currentActivities == null && newActivities != null)
             {
                 var index = newActivities.IndexOf(comment);
@@ -1538,42 +1545,70 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     var body = newSequence.Properties["Body"];
                     var handler = body.Value.Properties["Handler"];
                     handler.SetValue(handler.Value.Properties["Body"].Value);
+                } else if (newSequence.Properties["Handler"] != null)
+                {
+                    var handler = newSequence.Properties["Handler"];
+                    handler.SetValue(currentSequence);
                 }
+            }
+            else if (currentSequence != null && comment.Parent.Properties["Handler"] != null)
+            {
+                var handler = comment.Parent.Properties["Handler"];
+                handler.SetValue(currentSequence);
             }
         }
         private void OnComment(object sender, RoutedEventArgs e)
         {
             var thisselection = selection;
+            var pri = thisselection.PrimarySelection;
+            if (pri == null) return;
             //var movethis = selectedActivity;
             var lastSequence = GetActivitiesScope(SelectedActivity.Parent);
             if (lastSequence == null) lastSequence = GetActivitiesScope(SelectedActivity);
-            ModelItemCollection Activities;
+            ModelItemCollection Activities = null;
             if (lastSequence.Properties["Activities"] != null)
             {
                 Activities = lastSequence.Properties["Activities"].Collection;
             }
-            else
+            else if (lastSequence.Properties["Nodes"] != null)
             {
                 Activities = lastSequence.Properties["Nodes"].Collection;
             }
 
-            if (thisselection.SelectionCount > 1)
+            if (thisselection.SelectionCount > 1 || thisselection.PrimarySelection.ItemType == typeof(Sequence))
             {
                 if (lastSequence.Properties["Nodes"] != null) return;
                 var co = new Activities.CommentOut
                 {
                     Body = new Sequence()
                 };
-                AddActivity(co);
-                var newActivities = SelectedActivity.Properties["Body"].Value.Properties["Activities"].Collection;
-                foreach (var sel in thisselection.SelectedObjects)
+                if(Activities== null)
                 {
-                    Activities.Remove(sel);
-                    var index = newActivities.Count;
-                    Log.Debug("insert at " + index);
-                    newActivities.Insert(0, sel);
-                    //newActivities.Add(sel);
+                    var item = thisselection.PrimarySelection.Parent.Properties["Handler"].SetValue(co);
+                    var newActivities = item.Properties["Body"].Value.Properties["Activities"].Collection;
+                    foreach (var sel in thisselection.SelectedObjects)
+                    {
+                        if (Activities != null) Activities.Remove(sel);
+                        var index = newActivities.Count;
+                        Log.Debug("insert at " + index);
+                        newActivities.Insert(0, sel);
+                        //newActivities.Add(sel);
+                    }
                 }
+                else
+                {
+                    AddActivity(co);
+                    var newActivities = SelectedActivity.Properties["Body"].Value.Properties["Activities"].Collection;
+                    foreach (var sel in thisselection.SelectedObjects)
+                    {
+                        if (Activities != null) Activities.Remove(sel);
+                        var index = newActivities.Count;
+                        Log.Debug("insert at " + index);
+                        newActivities.Insert(0, sel);
+                        //newActivities.Add(sel);
+                    }
+                }
+
             }
             else
             {

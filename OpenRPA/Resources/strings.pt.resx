@@ -136,25 +136,25 @@
     <value>Selecionar Elemento</value>
   </data>
 	<data name="animatemouse" xml:space="preserve">
-    <value>Usar Mouse Animado</value>
+    <value>Use Animate mouse</value>
   </data>
 	<data name="browseraddons" xml:space="preserve">
-    <value>Complementos do navegador</value>
+    <value>complementos do navegador</value>
   </data>
 	<data name="button_ok" xml:space="preserve">
     <value>Ok</value>
   </data>
 	<data name="cancelkey" xml:space="preserve">
-    <value>Tecla cancelar</value>
+    <value>tecla cancelar</value>
   </data>
 	<data name="chrome" xml:space="preserve">
-    <value>Chrome</value>
+    <value>cromada</value>
   </data>
 	<data name="clickpostwait" xml:space="preserve">
-    <value>Definir Clique em espera</value>
+    <value>Set Clique PostWait</value>
   </data>
 	<data name="copy" xml:space="preserve">
-    <value>Copiar</value>
+    <value>cópia de</value>
   </data>
 	<data name="debug" xml:space="preserve">
     <value>Depurar</value>
@@ -163,7 +163,7 @@
     <value>Deletar</value>
   </data>
 	<data name="details" xml:space="preserve">
-    <value>Detalhes</value>
+    <value>detalhes</value>
   </data>
 	<data name="detectors" xml:space="preserve">
     <value>Detectores</value>
@@ -379,211 +379,211 @@
     <value>Atenção</value>
   </data>
 	<data name="activity_animatemouse" xml:space="preserve">
-		<value>Animate Mouse</value>
+		<value>Animate mouse</value>
 	</data>
 	<data name="activity_animatemouse_help" xml:space="preserve">
-		<value>Halatang ilipat ang mouse, sa halip na agad na ilipat ito sa patutunguhan</value>
+		<value>Visivelmente mover o mouse, em vez de imediatamente movê-lo para o destino</value>
 	</data>
 	<data name="activity_animatemove" xml:space="preserve">
-		<value>Animate Move</value>
+		<value>Animate Mover</value>
 	</data>
 	<data name="activity_animatemove_help" xml:space="preserve">
-		<value>Malinaw na ilipat ang window, sa halip na agad na ilipat ito sa patutunguhan</value>
+		<value>Visivelmente mover a janela, em vez de imediatamente movê-lo para o destino</value>
 	</data>
 	<data name="activity_blocking" xml:space="preserve">
-		<value>Paghaharang</value>
+		<value>Bloqueio</value>
 	</data>
 	<data name="activity_blocking_help" xml:space="preserve">
-		<value>I-block ang pagpapatupad hanggang sa kumpleto na</value>
+		<value>Bloquear a execução até a completa</value>
 	</data>
 	<data name="activity_checkrunning" xml:space="preserve">
-		<value>Suriin ang Tumatakbo</value>
+		<value>verificação de duração</value>
 	</data>
 	<data name="activity_checkrunning_help" xml:space="preserve">
-		<value>Suriin kung ang application ay tumatakbo gamit ang tagapili, kung nakatakda sa maling, ilulunsad ang isang bagong aplikasyon kahit ano pa man</value>
+		<value>Verifique se o aplicativo já está em execução usando o seletor, se estiver definida como falsa, vai lançar uma nova aplicação não importa o que</value>
 	</data>
 	<data name="activity_clickelement_tooltip" xml:space="preserve">
-		<value>Mag-click sa isang elemento na natagpuan sa GetElement</value>
+		<value>Clique em um elemento encontrado com GetElement</value>
 	</data>
 	<data name="activity_closeapplication_tooltip" xml:space="preserve">
-		<value>Maghanap ng application batay sa isang tagapili ng UI at isasara ang Application</value>
+		<value>Encontrar aplicativo com base em um seletor de interface do usuário e, em seguida, fecha o aplicativo</value>
 	</data>
 	<data name="activity_commentout_tooltip" xml:space="preserve">
-		<value>Huwag pansinin ang lahat sa loob ng Acitvity na ito, madaling gamitin para sa mabilis na pagsasalita ng isang bagay</value>
+		<value>Ignorar tudo dentro deste acitvity, útil para rapidamente observando algo fora</value>
 	</data>
 	<data name="activity_copyclipboard_tooltip" xml:space="preserve">
-		<value>Kopyahin ang nilalaman ng Clipboard sa isang variable</value>
+		<value>Copie o conteúdo da área de transferência em uma variável</value>
 	</data>
 	<data name="activity_datatable" xml:space="preserve">
-		<value>Talaan ng mga impormasyon</value>
+		<value>Tabela de dados</value>
 	</data>
 	<data name="activity_datatable_help" xml:space="preserve">
-		<value>Ang DataTable upang gumana sa</value>
+		<value>O DataTable para trabalhar com</value>
 	</data>
 	<data name="activity_dataview" xml:space="preserve">
-		<value>View ng Data</value>
+		<value>Exibição de dados</value>
 	</data>
 	<data name="activity_dataview_help" xml:space="preserve">
-		<value>Ang DateView upang gumana sa</value>
+		<value>O DateView ao trabalho com</value>
 	</data>
 	<data name="activity_detector" xml:space="preserve">
-		<value>Detector</value>
+		<value>detetor</value>
 	</data>
 	<data name="activity_detector_help" xml:space="preserve">
-		<value>Maghihintay ba na mag-trigger ang detektor na ito, pagkatapos ay magpapatuloy ang daloy ng trabaho</value>
+		<value>Vai esperar para este detector de gatilho, em seguida, o fluxo de trabalho continuará</value>
 	</data>
 	<data name="activity_detector_tooltip" xml:space="preserve">
-		<value>Naglalagay ng daloy ng trabaho sa idle mode, naghihintay sa napiling detektor na mag-trigger</value>
+		<value>Puts fluxo de trabalho no modo ocioso, esperando detector selecionado para gatilho</value>
 	</data>
 	<data name="activity_displayname" xml:space="preserve">
-		<value>Pangalan</value>
+		<value>Nome em Exibição</value>
 	</data>
 	<data name="activity_displayname_help" xml:space="preserve">
-		<value>Displayname sa loob ng taga-disenyo ng daloy ng trabaho</value>
+		<value>Displayname dentro do designer de fluxo de trabalho</value>
 	</data>
 	<data name="activity_doubleclick" xml:space="preserve">
-		<value>Double-click</value>
+		<value>Duplo click</value>
 	</data>
 	<data name="activity_doubleclick_help" xml:space="preserve">
-		<value>Gumawa ng isang dobleng pag-click sa halip na solong pag-click</value>
+		<value>Faça um duplo clique em vez de único clique</value>
 	</data>
 	<data name="activity_duration" xml:space="preserve">
-		<value>Tagal</value>
+		<value>Duração</value>
 	</data>
 	<data name="activity_duration_help" xml:space="preserve">
-		<value>Ay tatakbo para sa tagal</value>
+		<value>Funcionará para a duração</value>
 	</data>
 	<data name="activity_element" xml:space="preserve">
 		<value>Elemento</value>
 	</data>
 	<data name="activity_element_help" xml:space="preserve">
-		<value>Mag-click sa elementong ito, ang uri ng pagbabalik ng lahat ng mga activite ng GetElement at ilang iba pa</value>
+		<value>Clique neste elemento, o tipo de retorno de todos GetElement atividades e alguns outros</value>
 	</data>
 	<data name="activity_force" xml:space="preserve">
 		<value>Puwersa</value>
 	</data>
 	<data name="activity_force_help" xml:space="preserve">
-		<value>Kusang gawin ang aksyon</value>
+		<value>Vigorosamente fazer a ação</value>
 	</data>
 	<data name="activity_foreachdatarow_tooltip" xml:space="preserve">
-		<value>Palakihin ang bawat hilera sa loob ng isang DataTable</value>
+		<value>Enumerar cada linha dentro de um DataTable</value>
 	</data>
 	<data name="activity_height" xml:space="preserve">
-		<value>Taas</value>
+		<value>Altura</value>
 	</data>
 	<data name="activity_height_help" xml:space="preserve">
-		<value>Kung nakatakda, ililipat ang window sa lokasyon na ito</value>
+		<value>Se definido, irá mover a janela para este local</value>
 	</data>
 	<data name="activity_highlightelement_tooltip" xml:space="preserve">
-		<value>I-highlight ang isang elemento na natagpuan sa GetElement</value>
+		<value>Realce um elemento encontrado com GetElement</value>
 	</data>
 	<data name="activity_ignoreerrors" xml:space="preserve">
-		<value>Huwag pansinin ang Mga Mali</value>
+		<value>ignorar Erros</value>
 	</data>
 	<data name="activity_ignoreerrors_help" xml:space="preserve">
-		<value>Kung naganap ang isang pagkakamali, hindi papansinin ito na magpapatuloy</value>
+		<value>Se ocorrer um erro, irá ignorá-lo um continuar</value>
 	</data>
 	<data name="activity_imageresult" xml:space="preserve">
-		<value>Resulta ng Imahe</value>
+		<value>Resultado imagem</value>
 	</data>
 	<data name="activity_imageresult_help" xml:space="preserve">
-		<value>Ibalik ang resulta bilang isang imahe</value>
+		<value>Retornar o resultado como uma imagem</value>
 	</data>
 	<data name="activity_insertclipboard_tooltip" xml:space="preserve">
-		<value>Ipasok ang bagong nilalaman sa mga gumagamit ng Clipboard buffer</value>
+		<value>Inserir novos conteúdos para os usuários prancheta tampão</value>
 	</data>
 	<data name="activity_invokeopenflow_tooltip" xml:space="preserve">
-		<value>Mag-imbita ng isang daloy ng trabaho sa node na nakarehistro para sa paggamit ng RPA sa loob ng OpenFlow</value>
+		<value>Invocar um fluxo de trabalho no nó registrado para uso RPA dentro OpenFlow</value>
 	</data>
 	<data name="activity_invokeopenrpa_tooltip" xml:space="preserve">
-		<value>Mag-imbita ng isang lokal na OpenRPA Workflow</value>
+		<value>Invocar um OpenRPA fluxo de trabalho locais</value>
 	</data>
 	<data name="activity_invokeremoteopenrpa_tooltip" xml:space="preserve">
-		<value>Mag-imbita ng isang OpenRPA Workflow sa isang malayong Robot</value>
+		<value>Invocar um OpenRPA fluxo de trabalho em um robô à distância</value>
 	</data>
 	<data name="activity_keymodifiers" xml:space="preserve">
-		<value>Mga pangunahing Modifier</value>
+		<value>Modifiers-chave</value>
 	</data>
 	<data name="activity_keymodifiers_help" xml:space="preserve">
-		<value>Itago ang key na ito, habang ang pag-click, gagana lamang kung ang Virtual na pag-click ay hindi pinagana</value>
+		<value>Mantenha essa tecla pressionada, enquanto clica, só funciona se clique Virtual é desativado</value>
 	</data>
 	<data name="activity_mousebutton" xml:space="preserve">
-		<value>Button ng mouse</value>
+		<value>Botão do rato</value>
 	</data>
 	<data name="activity_mousebutton_help" xml:space="preserve">
-		<value>Pindutan ng mouse upang mag-click sa</value>
+		<value>Botão do mouse para clicar com</value>
 	</data>
 	<data name="activity_movemouse_tooltip" xml:space="preserve">
-		<value>Ilipat ang cursor ng mouse sa isang lokasyon na nauugnay sa isang elemento na natagpuan gamit ang GetElement (o desktop kung walang sangkap na naibigay)</value>
+		<value>Mover o cursor do rato para um local relativo a um elemento encontrado com GetElement (ou área de trabalho, se nenhum elemento fornecido)</value>
 	</data>
 	<data name="activity_offsetx" xml:space="preserve">
-		<value>X Offset</value>
+		<value>X offset</value>
 	</data>
 	<data name="activity_offsetx_help" xml:space="preserve">
-		<value>Mag-click sa offset na ito sa loob ng elemento</value>
+		<value>Clique com este deslocamento dentro do elemento</value>
 	</data>
 	<data name="activity_offsety" xml:space="preserve">
-		<value>Y Offset</value>
+		<value>Y offset</value>
 	</data>
 	<data name="activity_offsety_help" xml:space="preserve">
 		<value>Mag-click sa offset na ito sa loob ng elemento</value>
 	</data>
 	<data name="activity_openapplication_tooltip" xml:space="preserve">
-		<value>Maghanap ng elemento ng Windows batay sa isang pumipili, at bigyan ito ng pokus, kung hindi natagpuan simulan ang application</value>
+		<value>Procurar elemento do Windows com base em um seletor, e dar-lhe concentrar-se, se não for encontrado iniciar a aplicação</value>
 	</data>
 	<data name="activity_postwait" xml:space="preserve">
-		<value>Mag-post ng Maghintay</value>
+		<value>pós Wait</value>
 	</data>
 	<data name="activity_postwait_help" xml:space="preserve">
-		<value>Hintayin ang halagang ito ng oras, pagkatapos gawin ang pag-click, tulungan ang buong isang application na maaaring maging napakabagal upang umepekto sa mga pag-click</value>
+		<value>Espere este período de tempo, depois de fazer o clique, ajuda um aplicativos completos que podem ser muito lentos a reagir em cliques</value>
 	</data>
 	<data name="activity_result" xml:space="preserve">
 		<value>Resulta</value>
 	</data>
 	<data name="activity_result_help" xml:space="preserve">
-		<value>I-save ang resulta sa variable na ito</value>
+		<value>Salvar o resultado em esta variável</value>
 	</data>
 	<data name="activity_selector" xml:space="preserve">
 		<value>Pinili</value>
 	</data>
 	<data name="activity_selector_help" xml:space="preserve">
-		<value>Ang piniling ginamit upang mahanap ang mga (mga) elemento, ay sumusuporta sa mga variable ng daloy ng trabaho sa pamamagitan ng paggamit ng {{variablename}}</value>
+		<value>O selector usada para localizar o elemento (s), mapeamento do fluxo de trabalho apoios variáveis ​​utilizando {{variablename}}</value>
 	</data>
 	<data name="activity_sendctrlc" xml:space="preserve">
-		<value>Magpadala ng Ctrl + C</value>
+		<value>Enviar Ctrl + C</value>
 	</data>
 	<data name="activity_sendctrlc_help" xml:space="preserve">
-		<value>Magpadala ng Ctrl + C bago subukang kopyahin ang Nilalaman ng Clipboard</value>
+		<value>Enviar Ctrl + C antes de tentar copiar o conteúdo da área de transferência</value>
 	</data>
 	<data name="activity_stringresult" xml:space="preserve">
-		<value>Resulta ng String</value>
+		<value>Resultado corda</value>
 	</data>
 	<data name="activity_stringresult_help" xml:space="preserve">
-		<value>Ibalik ang resulta bilang isang string</value>
+		<value>Retornar o resultado como uma string</value>
 	</data>
 	<data name="activity_target" xml:space="preserve">
-		<value>Target</value>
+		<value>Alvo</value>
 	</data>
 	<data name="activity_target_help" xml:space="preserve">
-		<value>Ang target na gumagamit o papel</value>
+		<value>O usuário de destino ou função</value>
 	</data>
 	<data name="activity_text" xml:space="preserve">
 		<value>Teksto</value>
 	</data>
 	<data name="activity_timeout" xml:space="preserve">
-		<value>Oras</value>
+		<value>Tempo esgotado</value>
 	</data>
 	<data name="activity_timeout_help" xml:space="preserve">
-		<value>Maghintay ito ng matagal bago sumuko at alinman sa pagkabigo o magpatuloy depende sa iba pang mga setting</value>
+		<value>Esperar tanto tempo antes de desistir e falhando ou continuar dependendo de outras configurações</value>
 	</data>
 	<data name="activity_typetext_tooltip" xml:space="preserve">
-		<value>Magpadala ng mga stroke ng keyboard sa kung ano ang mayroon na nakatuon, dapat lamang gamitin ng recorder</value>
+		<value>Enviar golpes de teclado para que sempre que tem o foco, só deve ser usado por recorder</value>
 	</data>
 	<data name="activity_virtualclick" xml:space="preserve">
-		<value>Virtual I-click</value>
+		<value>Virtual Clique</value>
 	</data>
 	<data name="activity_virtualclick_help" xml:space="preserve">
-		<value>Subukan at gumawa ng isang Virtual na pag-click sa halip na gamitin ang mouse, hindi lahat ng mga elemento ay sumusuporta dito</value>
+		<value>Tentar fazer um clique virtual em vez de usar o mouse, nem todos os elementos suportar esta</value>
 	</data>
 	<data name="activity_waitforcompleted" xml:space="preserve">
 		<value>Maghintay hanggang Nakumpleto</value>
@@ -592,16 +592,16 @@
 		<value>Maghintay para sa Pagkumpleto bago magpatuloy sa daloy ng trabaho</value>
 	</data>
 	<data name="activity_width" xml:space="preserve">
-		<value>Lapad</value>
+		<value>Largura</value>
 	</data>
 	<data name="activity_width_help" xml:space="preserve">
 		<value>Kung nakatakda, ililipat ang window sa lokasyon na ito</value>
 	</data>
 	<data name="activity_workflow" xml:space="preserve">
-		<value>Daloy ng trabaho</value>
+		<value>Fluxo de Trabalho</value>
 	</data>
 	<data name="activity_workflow_help" xml:space="preserve">
-		<value>Gumamit ng daloy ng daloy na ito</value>
+		<value>Utilize este fluxo de trabalho</value>
 	</data>
 	<data name="activity_x" xml:space="preserve">
 		<value>X</value>
@@ -616,75 +616,99 @@
 		<value>Kung nakatakda, ililipat ang window sa lokasyon na ito</value>
 	</data>
 	<data name="copyid" xml:space="preserve">
-		<value>Kopyahin ang ID</value>
+		<value>cópia ID</value>
 	</data>
 	<data name="copyrelativefilename" xml:space="preserve">
-		<value>Kopyahin ang Relative Filename</value>
+		<value>Copie Matrícula Relativa</value>
 	</data>
 	<data name="rename" xml:space="preserve">
-		<value>Palitan ang pangalan</value>
+		<value>Rename</value>
 	</data>
 	<data name="ribbon_search" xml:space="preserve">
 		<value>Paghahanap</value>
 	</data>
 	<data name="tools_swap_animate" xml:space="preserve">
-		<value>Ipagpalit</value>
+		<value>Animate Swap</value>
 	</data>
 	<data name="uilanguage" xml:space="preserve">
-		<value>Wika ng UI</value>
+		<value>UI Idioma</value>
 	</data>
 	<data name="version" xml:space="preserve">
 		<value>Bersyon</value>
 	</data>
 	<data name="activity_clickelement" xml:space="preserve">
-		<value>I-click ang Elemento</value>
+		<value>Clique Elemento</value>
 	</data>
 	<data name="activity_closeapplication" xml:space="preserve">
-		<value>Isara ang Application</value>
+		<value>Fechar aplicação</value>
 	</data>
 	<data name="activity_commentout" xml:space="preserve">
-		<value>Mag-Komento Out</value>
+		<value>comente</value>
 	</data>
 	<data name="activity_copyclipboard" xml:space="preserve">
-		<value>Kopyahin ang clipboard</value>
+		<value>cópia da área de transferência</value>
 	</data>
 	<data name="activity_foreachdatarow" xml:space="preserve">
-		<value>Magpakailanman ng DataRow</value>
+		<value>foreach DataRow</value>
 	</data>
 	<data name="activity_highlightelement" xml:space="preserve">
-		<value>I-highlight ang Elemento</value>
+		<value>Destaque Elemento</value>
 	</data>
 	<data name="activity_insertclipboard" xml:space="preserve">
-		<value>Ipasok ang Clipboard</value>
+		<value>Inserir Clipboard</value>
 	</data>
 	<data name="activity_invokeopenflow" xml:space="preserve">
-		<value>Imbitahan ang OpenFlow</value>
+		<value>Invoke OpenFlow</value>
 	</data>
 	<data name="activity_invokeopenrpa" xml:space="preserve">
-		<value>Imbitahan ang OpenRPA</value>
+		<value>Invoke OpenRPA</value>
 	</data>
 	<data name="activity_invokeremoteopenrpa" xml:space="preserve">
-		<value>Imbitahan ang Remote OpenRPA</value>
+		<value>Chamar OpenRPA remoto</value>
 	</data>
 	<data name="activity_movemouse" xml:space="preserve">
-		<value>Ilipat Mouse</value>
+		<value>Movimento mouse</value>
 	</data>
 	<data name="activity_openapplication" xml:space="preserve">
-		<value>Buksan ang Application</value>
+		<value>Aplicação Open</value>
 	</data>
 	<data name="activity_typetext" xml:space="preserve">
-		<value>Uri ng Teksto</value>
+		<value>tipo de texto</value>
 	</data>
 	<data name="designer_menu_commentout" xml:space="preserve">
-		<value>Mag-Komento Out</value>
+		<value>comente</value>
 	</data>
 	<data name="designer_menu_runfromhere" xml:space="preserve">
-		<value>Tumakbo mula dito</value>
+		<value>Executar a partir daqui</value>
 	</data>
 	<data name="designer_menu_runthis" xml:space="preserve">
-		<value>Patakbuhin ang aktibidad na ito</value>
+		<value>Executar esta atividade</value>
 	</data>
 	<data name="designer_menu_uncomment" xml:space="preserve">
 		<value>Uncomment</value>
+	</data>
+	<data name="activity_clickdelay" xml:space="preserve">
+		<value>Clique Delay</value>
+	</data>
+	<data name="activity_clickdelay_help" xml:space="preserve">
+		<value>Atraso entre cada keystroke</value>
+	</data>
+	<data name="activity_showballontop_message_hint" xml:space="preserve">
+		<value>Mensagem a mostrar</value>
+	</data>
+	<data name="activity_showballontop_title" xml:space="preserve">
+		<value>Título</value>
+	</data>
+	<data name="activity_showballontop_title_hint" xml:space="preserve">
+		<value>Título em bollanmessage</value>
+	</data>
+	<data name="activity_showballoontip" xml:space="preserve">
+		<value>Mostrar dica de balão</value>
+	</data>
+	<data name="activity_showballoontip_tooltip" xml:space="preserve">
+		<value>Mostrar um pequeno ballontip perto bandeja do sistema, respeitará as configurações do centro de mensagens do sistema operacional</value>
+	</data>
+	<data name="dock_workflowinstances" xml:space="preserve">
+		<value>Instâncias de fluxo de trabalho</value>
 	</data>
 </root>

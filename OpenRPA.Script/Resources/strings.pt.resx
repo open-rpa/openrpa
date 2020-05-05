@@ -127,18 +127,42 @@
 		<value>C# Intellisense</value>
 	</data>
 	<data name="plugin_csharp_intellisense_help" xml:space="preserve">
-		<value>Paganahin ang katalinuhan para sa mga C# script</value>
+		<value>Ativar IntelliSense para C roteiros #</value>
 	</data>
 	<data name="plugin_vb_intellisense" xml:space="preserve">
 		<value>VB Intellisense</value>
 	</data>
 	<data name="plugin_vb_intellisense_help" xml:space="preserve">
-		<value>Paganahin ang intelektuwal para sa Visual Basic script</value>
+		<value>Ativar IntelliSense para scripts do Visual Basic</value>
 	</data>
 	<data name="activity_invokecode" xml:space="preserve">
-		<value>Invoke Code</value>
+		<value>Código Invoke</value>
 	</data>
 	<data name="activity_invokecode_tooltip" xml:space="preserve">
-		<value>Isulat ang code na nakasulat sa isa sa ilang mga wika</value>
+		<value>código Invoke escrito em um dos vários idiomas</value>
+	</data>
+	<data name="activity_pipinstall" xml:space="preserve">
+		<value>PIP Instalar</value>
+	</data>
+	<data name="activity_pipinstall_force" xml:space="preserve">
+		<value>Força</value>
+	</data>
+	<data name="activity_pipinstall_force_help" xml:space="preserve">
+		<value>Força reinstalar do módulo, se já existe</value>
+	</data>
+	<data name="activity_pipinstall_modules" xml:space="preserve">
+		<value>módulos</value>
+	</data>
+	<data name="activity_pipinstall_modules_help" xml:space="preserve">
+		<value>Lista de python módulos para instalar</value>
+	</data>
+	<data name="activity_pipinstall_tooltip" xml:space="preserve">
+		<value>Instalar um ou mais módulos de pitão no envoriment pitão actualmente seleccionado</value>
+	</data>
+	<data name="plugin_use_embedded_python" xml:space="preserve">
+		<value>Use python incorporado</value>
+	</data>
+	<data name="plugin_use_embedded_python_help" xml:space="preserve">
+		<value>OpenRPA vem com python incorporado, mas vai usar o python sistema padrão se desativado</value>
 	</data>
 </root>

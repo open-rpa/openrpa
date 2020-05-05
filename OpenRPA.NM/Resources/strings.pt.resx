@@ -133,45 +133,57 @@
 		<value>Kumuha ng Elemento</value>
 	</data>
 	<data name="activity_getelement_tooltip" xml:space="preserve">
-		<value>Maghanap ng isang elemento ng browser batay sa pumipili</value>
+		<value>Encontrar um elemento navegador baseado no selector</value>
 	</data>
 	<data name="activity_getelement_tooltip1" xml:space="preserve">
-		<value>Maghanap ng isang elemento ng Windows UI batay sa pumipili</value>
+		<value>Encontre um elemento de interface do usuário do Windows com base no seletor</value>
 	</data>
 	<data name="activity_openurl" xml:space="preserve">
 		<value>Buksan ang URL</value>
 	</data>
 	<data name="activity_openurl_tooltip" xml:space="preserve">
-		<value>Buksan ang tinukoy na url sa napiling browser</value>
+		<value>Abra a url specefied no navegador selecionado</value>
 	</data>
 	<data name="compensate_for_old_addon" xml:space="preserve">
-		<value>Magbayad para sa lumang pagpapalawak</value>
+		<value>Compensar a extensão de idade</value>
 	</data>
 	<data name="compensate_for_old_addon_help" xml:space="preserve">
-		<value>Magdagdag ng kabayaran sa pixel para sa matandang dagdag</value>
+		<value>Adicionar compensação de pixel para o velho add</value>
 	</data>
 	<data name="debug_console_output" xml:space="preserve">
-		<value>Debug Console</value>
+		<value>Console de depuração</value>
 	</data>
 	<data name="debug_console_output_help" xml:space="preserve">
-		<value>Sumulat ng impormasyon sa pag-debug sa console ng browser</value>
+		<value>informtation depuração de escrita para console do navegador</value>
 	</data>
 	<data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
-		<value>Maghintay pagkatapos ng itinakdang halaga</value>
+		<value>Esperar depois valor definido</value>
 	</data>
 	<data name="plugin_wait_for_tab_after_set_value_help" xml:space="preserve">
-		<value>Maghintay na maging handa ang katayuan ng tab pagkatapos maglagay ng isang halaga</value>
+		<value>Espera para o status de guia para estar em estado de prontidão depois de definir um valor</value>
 	</data>
 	<data name="register_old_portname" xml:space="preserve">
-		<value>magparehistro ng lumang portname</value>
+		<value>registar portname velho</value>
 	</data>
 	<data name="register_old_portname_help" xml:space="preserve">
-		<value>Magrehistro ng mga lumang pangalan ng port ng extension ng browser</value>
+		<value>Registrar nomes de porta de extensão do navegador velhos</value>
 	</data>
 	<data name="wait_for_tab_click" xml:space="preserve">
-		<value>maghintay para sa tab</value>
+		<value>esperar por guia</value>
 	</data>
 	<data name="wait_for_tab_click_help" xml:space="preserve">
-		<value>Maghintay para sa katayuan ng tab na maging handa nang matapos matapos ang pag-click sa isang pindutan</value>
+		<value>Espera para o status de guia para estar em estado de prontidão depois de clicar um botão</value>
+	</data>
+	<data name="activity_getelement_loopaction" xml:space="preserve">
+		<value>Ação de loop</value>
+	</data>
+	<data name="activity_getelement_loopaction_tooltop" xml:space="preserve">
+		<value>Fazer isso, uma vez feito o processamento de cada resultado, em seguida, executa novamente o selector e procura por novos itens</value>
+	</data>
+	<data name="unique_xpath_ids" xml:space="preserve">
+		<value>ids únicos</value>
+	</data>
+	<data name="unique_xpath_ids_help" xml:space="preserve">
+		<value>Use em um desses atributos como id único está ao criar seletores XPath</value>
 	</data>
 </root>

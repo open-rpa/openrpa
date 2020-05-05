@@ -133,7 +133,7 @@
     <value>Seleciona arquivo excel para escrever nele</value>
   </data>
 	<data name="activity_converter_datatable" xml:space="preserve">
-		<value>Talaan ng mga impormasyon</value>
+		<value>Tabela de dados</value>
 	</data>
 	<data name="activity_converter_jarray" xml:space="preserve">
 		<value>JArray</value>
@@ -142,12 +142,27 @@
 		<value>Descartar atividade</value>
 	</data>
 	<data name="activity_match_compiled" xml:space="preserve">
-		<value>Pinagsama-sama</value>
+		<value>compilado</value>
 	</data>
 	<data name="activity_match_input" xml:space="preserve">
-		<value>Ang string string upang tumugma laban</value>
+		<value>A cadeia de entrada para o jogo contra</value>
 	</data>
 	<data name="activity_match_pattern" xml:space="preserve">
-		<value>Ang regular na expression upang tumugma</value>
+		<value>A expressão regular para corresponder</value>
+	</data>
+	<data name="activity_adddatarow_datatable" xml:space="preserve">
+		<value>DataTable para inserir</value>
+	</data>
+	<data name="activity_datatable_columnnames" xml:space="preserve">
+		<value>Matriz de colunas DataTable</value>
+	</data>
+	<data name="activity_datatable_newcolumnname" xml:space="preserve">
+		<value>Novas colunas Nome</value>
+	</data>
+	<data name="activity_new_datatable" xml:space="preserve">
+		<value>variável nova DataTable</value>
+	</data>
+	<data name="activity_writecsv_hint" xml:space="preserve">
+		<value>Selecione o arquivo CSV para escrever a</value>
 	</data>
 </root>

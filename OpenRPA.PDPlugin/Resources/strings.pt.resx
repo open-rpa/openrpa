@@ -98,21 +98,21 @@
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
 	<data name="plugin_collectionname" xml:space="preserve">
-		<value>Pangalan ng Koleksyon</value>
+		<value>collectionname</value>
 	</data>
 	<data name="plugin_collectionname_help" xml:space="preserve">
-		<value>I-save ang mga kaganapan sa koleksyon na ito</value>
+		<value>Salvar eventos para esta coleção</value>
 	</data>
 	<data name="plugin_enabled_keyboard_recording" xml:space="preserve">
-		<value>Nakuha ang keyboard</value>
+		<value>teclado de captura</value>
 	</data>
 	<data name="plugin_enabled_keyboard_recording_help" xml:space="preserve">
-		<value>Itala ang lahat ng mga kaganapan sa keyboard</value>
+		<value>Grave todos os eventos de teclado</value>
 	</data>
 	<data name="plugin_enabled_mouse_recording" xml:space="preserve">
-		<value>Nakuha ang mouse</value>
+		<value>rato captura</value>
 	</data>
 	<data name="plugin_enabled_mouse_recording_help" xml:space="preserve">
-		<value>Itala ang lahat ng mga pag-click sa mouse</value>
+		<value>Grave todos os cliques do mouse</value>
 	</data>
 </root>

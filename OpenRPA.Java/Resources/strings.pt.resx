@@ -145,15 +145,15 @@
 		<value>Kumuha ng Elemento</value>
 	</data>
 	<data name="activity_getelement_tooltip" xml:space="preserve">
-		<value>Maghanap ng isang elemento ng Windows Java batay sa pumipili</value>
+		<value>Encontre um elemento Java do Windows com base no seletor</value>
 	</data>
 	<data name="plugin_auto_launch_java_bridge" xml:space="preserve">
-		<value>Paglunsad ng auto</value>
+		<value>Iniciar automaticamente</value>
 	</data>
 	<data name="plugin_auto_launch_java_bridge_help" xml:space="preserve">
-		<value>Auto ilunsad ang java bridge application kapag tumatakbo ang robot</value>
+		<value>Iniciar automaticamente a aplicação java bridge quando o robô estiver em execução</value>
 	</data>
 	<data name="plugin_launch_java_bridge" xml:space="preserve">
-		<value>Ilunsad ang java bridge</value>
+		<value>Iniciar java bridge</value>
 	</data>
 </root>

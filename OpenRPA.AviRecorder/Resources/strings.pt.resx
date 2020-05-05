@@ -145,21 +145,21 @@
     <value>Salvar na pasta</value>
   </data>
 	<data name="activity_playrecording" xml:space="preserve">
-		<value>Pag-record ng Play</value>
+		<value>Play</value>
 	</data>
 	<data name="activity_playrecording_tooltip" xml:space="preserve">
-		<value>I-playback ang isang pag-record ng video</value>
+		<value>Playback em video gravado</value>
 	</data>
 	<data name="activity_startrecording" xml:space="preserve">
-		<value>Simulan ang recording</value>
+		<value>Iniciar Gravação</value>
 	</data>
 	<data name="activity_startrecording_tooltip" xml:space="preserve">
-		<value>Simulan ang pagrekord ng screen sa isang file</value>
+		<value>Iniciar Gravação da tela para um arquivo</value>
 	</data>
 	<data name="activity_stoprecording" xml:space="preserve">
-		<value>Itigil ang Pag-record</value>
+		<value>Parar Gravação</value>
 	</data>
 	<data name="activity_stoprecording_tooltip" xml:space="preserve">
-		<value>Itigil ang isang tumatakbo na pag-record ng screen at i-save upang mag-file</value>
+		<value>Parar a gravação em andamento e salvar em um arquivo</value>
 	</data>
 </root>

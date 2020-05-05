@@ -148,6 +148,6 @@
     <value>Selecionar Elemento</value>
   </data>
 	<data name="selector_buttons_cancel" xml:space="preserve">
-		<value>Pagkansela</value>
+		<value>Cancelar</value>
 	</data>
 </root>

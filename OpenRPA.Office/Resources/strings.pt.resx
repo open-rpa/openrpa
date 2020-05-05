@@ -124,81 +124,195 @@
     <value>Nome do Arquivo</value>
   </data>
 	<data name="activity_addparagraph" xml:space="preserve">
-		<value>Magdagdag ng Talata</value>
+		<value>add Parágrafo</value>
 	</data>
 	<data name="activity_addparagraph_tooltip" xml:space="preserve">
-		<value>Magdagdag ng isang bagong Talata sa isang dokumento ng Microsoft Word</value>
+		<value>Adicionar um novo parágrafo para um documento do Microsoft Word</value>
 	</data>
 	<data name="activity_closedocument" xml:space="preserve">
-		<value>Isara ang Dokumento</value>
+		<value>Fechar Document</value>
 	</data>
 	<data name="activity_closedocument_tooltip" xml:space="preserve">
-		<value>Isara ang isang dokumento ng Microsoft Word kung bukas, ay magsasara din ng salita kung wala nang bukas ang mga dokumento</value>
+		<value>Fechar um documento Microsoft Word, se aberta, vai também fecha palavra se há mais documentos estão abertos</value>
 	</data>
 	<data name="activity_closeworkbook" xml:space="preserve">
-		<value>Isara ang Workbook</value>
+		<value>Fechar pasta de trabalho</value>
 	</data>
 	<data name="activity_closeworkbook_tooltip" xml:space="preserve">
-		<value>Isara ang isang Workbook kung bukas, ay magsasara din ng excel kung wala nang buksan ang mga workbook</value>
+		<value>Fechar um livro, se aberta, vai também fecha excel se não mais livros estão abertos</value>
 	</data>
 	<data name="activity_getmails" xml:space="preserve">
-		<value>Kumuha ng mga Mail</value>
+		<value>obter e-mails</value>
 	</data>
 	<data name="activity_getmails_tooltip" xml:space="preserve">
-		<value>Kunin ang lahat ng mga email mula sa isang folder ng Microsoft Outlook</value>
+		<value>Obter todos os e-mails de uma pasta do Microsoft Outlook</value>
 	</data>
 	<data name="activity_getparagraph" xml:space="preserve">
-		<value>Kumuha ng Talata</value>
+		<value>obter Parágrafo</value>
 	</data>
 	<data name="activity_getparagraph_tooltip" xml:space="preserve">
-		<value>Kumuha ng isa o higit pang mga talata mula sa isang dokumento ng Microsoft Word</value>
+		<value>Obter um ou mais parágrafos de um documento do Microsoft Word</value>
 	</data>
 	<data name="activity_newmailitem" xml:space="preserve">
-		<value>Bagong MailItem</value>
+		<value>New MailItem</value>
 	</data>
 	<data name="activity_newmailitem_tooltip" xml:space="preserve">
-		<value>Lumikha ng isang bagong Microsoft Outlook Mailitem</value>
+		<value>Criar um novo Microsoft Outlook MailItem</value>
 	</data>
 	<data name="activity_readcell" xml:space="preserve">
-		<value>Basahin ang Cell</value>
+		<value>Leia celular</value>
 	</data>
 	<data name="activity_readcell_tooltip" xml:space="preserve">
-		<value>Basahin ang nilalaman ng isang solong cell sa Microsoft Excel</value>
+		<value>Leia o conteúdo de uma única célula no Microsoft Excel</value>
 	</data>
 	<data name="activity_readrange" xml:space="preserve">
-		<value>Basahin ang Saklaw</value>
+		<value>alcance de leitura</value>
 	</data>
 	<data name="activity_readrange_tooltip" xml:space="preserve">
-		<value>Basahin ang isang saklaw mula sa isang sheet ng Microsoft Excel</value>
+		<value>Leia um intervalo de uma folha de Microsoft Excel</value>
 	</data>
 	<data name="activity_runslideshow" xml:space="preserve">
-		<value>Patakbuhin ang Slideshow</value>
+		<value>Run Slideshow</value>
 	</data>
 	<data name="activity_runslideshow_tooltip" xml:space="preserve">
-		<value>Magbukas ng Microsoft Powerpoint Presentation at simulan ang slide show</value>
+		<value>Abrir uma apresentação PowerPoint Microsoft e começar a apresentação de slides</value>
 	</data>
 	<data name="activity_savemailitem" xml:space="preserve">
-		<value>I-save ang MailItem</value>
+		<value>Salvar MailItem</value>
 	</data>
 	<data name="activity_savemailitem_tooltip" xml:space="preserve">
-		<value>I-save ang item ng Microsoft Outlook Mail bilang isang file</value>
+		<value>Salvar um item do Microsoft Outlook Mail como um arquivo</value>
 	</data>
 	<data name="activity_setparagraph" xml:space="preserve">
-		<value>Itakda ang Talata</value>
+		<value>Parágrafo Set</value>
 	</data>
 	<data name="activity_setparagraph_tooltip" xml:space="preserve">
-		<value>Itakda ang nilalaman ng isang talata sa tabi ng isang dokumento ng Microsoft Word</value>
+		<value>Definir o conteúdo de um parágrafo no lado um documento Microsoft Word</value>
 	</data>
 	<data name="activity_writecell" xml:space="preserve">
-		<value>Sumulat ng Cell</value>
+		<value>Escrever celular</value>
 	</data>
 	<data name="activity_writecell_tooltip" xml:space="preserve">
-		<value>Magtakda ng isang halaga o pormal sa isang solong cell sa Microsoft Excel</value>
+		<value>Defina um valor ou formular a uma única célula no Microsoft Excel</value>
 	</data>
 	<data name="activity_writerange" xml:space="preserve">
-		<value>Sumulat ng Saklaw</value>
+		<value>Escrever Gama</value>
 	</data>
 	<data name="activity_writerange_tooltip" xml:space="preserve">
-		<value>Isulat ang lahat ng data mula sa isang DataTable hanggang sa isang saklaw sa loob ng sheet ng Microsoft Excel</value>
+		<value>Escreve todos os dados de um DataTable para em uma faixa dentro de uma folha de Microsoft Excel</value>
+	</data>
+	<data name="activity_addparagraph_filename_help" xml:space="preserve">
+		<value>Caminho completo e nome do documento do Microsoft Word para trabalhar com</value>
+	</data>
+	<data name="activity_addparagraph_index" xml:space="preserve">
+		<value>Índice</value>
+	</data>
+	<data name="activity_addparagraph_index_help" xml:space="preserve">
+		<value>Adicione o novo parágrafo neste índice (zero indexada) Deixe em branco para adicionar no final do documento</value>
+	</data>
+	<data name="activity_addparagraph_text" xml:space="preserve">
+		<value>Texto</value>
+	</data>
+	<data name="activity_addparagraph_text_help" xml:space="preserve">
+		<value>O texto para adicionar</value>
+	</data>
+	<data name="activity_closedocument_savechanges" xml:space="preserve">
+		<value>Salvar alterações</value>
+	</data>
+	<data name="activity_closedocument_savechanges_help" xml:space="preserve">
+		<value>Definido como verdadeiro, para salvar o arquivo de texto, conjunto para false para descartar qualquer changces feitas</value>
+	</data>
+	<data name="activity_closeworkbook_filename_help" xml:space="preserve">
+		<value>caminho completo eo nome do arquivo do Microsoft Excel pasta de trabalho para trabalhar com</value>
+	</data>
+	<data name="activity_closeworkbook_savechanges_help" xml:space="preserve">
+		<value>Definido como verdadeiro, para salvar o arquivo excel, conjunto para false para descartar qualquer changces feitas</value>
+	</data>
+	<data name="activity_closeworkbook_workbook" xml:space="preserve">
+		<value>livro</value>
+	</data>
+	<data name="activity_closeworkbook_workbook_help" xml:space="preserve">
+		<value>Use variável a Microsoft Excel pasta de trabalho para o trabalho com</value>
+	</data>
+	<data name="activity_getemails_reload" xml:space="preserve">
+		<value>recarregar</value>
+	</data>
+	<data name="activity_getmails_filter" xml:space="preserve">
+		<value>Filtro</value>
+	</data>
+	<data name="activity_getmails_filter_hint" xml:space="preserve">
+		<value>Filtro de e-mails por consulta</value>
+	</data>
+	<data name="activity_getparagraph_count" xml:space="preserve">
+		<value>Contagem</value>
+	</data>
+	<data name="activity_getparagraph_count_help" xml:space="preserve">
+		<value>Retorna o número de parágrafos no documento Microsoft Word</value>
+	</data>
+	<data name="activity_getparagraph_index_help" xml:space="preserve">
+		<value>Obter todo o conteúdo do parágrafo com este indicador e um maxResults mais. Deixe este campo em branco para obter o documento inteiro palavra</value>
+	</data>
+	<data name="activity_getparagraph_maxresults" xml:space="preserve">
+		<value>resultados Max</value>
+	</data>
+	<data name="activity_getparagraph_maxresults_help" xml:space="preserve">
+		<value>Limitar a quantidade de parágrafos para obter, em branco licença ou de 0 a começar tudo do Índice em diante</value>
+	</data>
+	<data name="activity_getparagraph_text_help" xml:space="preserve">
+		<value>Salvar os paragrahs de leitura para esta variável</value>
+	</data>
+	<data name="activity_movemailitem" xml:space="preserve">
+		<value>mover MailItem</value>
+	</data>
+	<data name="activity_movemailitem_tooltip" xml:space="preserve">
+		<value>Mover um e-mail recebido com GetEmails para uma pasta diferente</value>
+	</data>
+	<data name="activity_movemail_mail" xml:space="preserve">
+		<value>Enviar</value>
+	</data>
+	<data name="activity_movemail_mail_hint" xml:space="preserve">
+		<value>item de correio para mover</value>
+	</data>
+	<data name="activity_readrange_clearformats" xml:space="preserve">
+		<value>Limpar Formatos</value>
+	</data>
+	<data name="activity_readrange_clearformats_help" xml:space="preserve">
+		<value>Defina como true para remover toda a formatação da planilha selecione</value>
+	</data>
+	<data name="activity_readrange_useheaderrow" xml:space="preserve">
+		<value>Use linha de cabeçalho</value>
+	</data>
+	<data name="activity_readrange_useheaderrow_help" xml:space="preserve">
+		<value>Se seleciona gama também contém uma linha de cabeçalho com os nomes das colunas, defina como verdadeiro, em branco licença mais (então todos cloumns não terá nenhum nome)</value>
+	</data>
+	<data name="activity_runexcelmacro" xml:space="preserve">
+		<value>Macro Run Excel</value>
+	</data>
+	<data name="activity_runexcelmacro_name_hint" xml:space="preserve">
+		<value>Nome macro</value>
+	</data>
+	<data name="activity_runexcelmacro_tooltip" xml:space="preserve">
+		<value>Executar uma macro dentro de um livro do Excel. As necessidades de ficheiro de livro a ser habilitado para macros</value>
+	</data>
+	<data name="activity_setparagraph_index_help" xml:space="preserve">
+		<value>conteúdo Substituir na parágrafo com este índice, definir 0 para substituir todo o documento do Word</value>
+	</data>
+	<data name="activity_setparagraph_text_help" xml:space="preserve">
+		<value>O texto a ser definido</value>
+	</data>
+	<data name="activity_writerange_cells" xml:space="preserve">
+		<value>células</value>
+	</data>
+	<data name="activity_writerange_cells_help" xml:space="preserve">
+		<value>Defina a primeira célula para começar a escrever a partir de, em branco licença para começar a última linha vazia na coluna A</value>
+	</data>
+	<data name="activity_writerange_datatable" xml:space="preserve">
+		<value>Tabela de dados</value>
+	</data>
+	<data name="activity_writerange_datatable_help" xml:space="preserve">
+		<value>A tabela de dados contendo os dados para adicionar ao Excel</value>
+	</data>
+	<data name="activity_writerange_useheaderrow_help" xml:space="preserve">
+		<value>Se definido como verdadeiro, também irá adicionar uma linha de cabeçalho com os nomes das colunas como a primeira linha, definido como falso para adicionar apenas os dados</value>
 	</data>
 </root>

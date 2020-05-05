@@ -196,49 +196,49 @@
     <value>Status de Espera por</value>
   </data>
 	<data name="activity_auth" xml:space="preserve">
-		<value>May-akda</value>
+		<value>Autorização</value>
 	</data>
 	<data name="activity_auth_tooltip" xml:space="preserve">
-		<value>Patunayan laban sa serbisyo ng Rossum at makakuha ng isang Token / Key back</value>
+		<value>Autentique-se ao serviço Rossum e obtenha seu Token/Chave</value>
 	</data>
 	<data name="activity_exportfiledata" xml:space="preserve">
-		<value>I-export ang Data ng File</value>
+		<value>Exportar arquivo de dados</value>
 	</data>
 	<data name="activity_exportfiledata_tooltip" xml:space="preserve">
-		<value>Mag-date ang nakuha na data mula sa isang invoice, gumagana lamang sa sandaling ang katayuan ng file ay na-export sa katayuan</value>
+		<value>Obter dados a partir de uma nota fiscal, só funciona a partir do momento em que o status do arquivo for Exportado</value>
 	</data>
 	<data name="activity_getfilestatus" xml:space="preserve">
-		<value>Kumuha ng Katayuan ng File</value>
+		<value>Obter Status do Arquivo</value>
 	</data>
 	<data name="activity_getfilestatus_tooltip" xml:space="preserve">
-		<value>Kumuha ng katayuan ng isang file sa pila, maaaring maging alinman
-pag-import - Ang dokumento ay pinoproseso ng AI Core Engine para sa pagkuha ng data; paunang estado ng dokumento.
-failed_import - Nabigo ang pag-import e.g. dahil sa isang hindi mabagong dokumento ng dokumento.
-to_review - Ang paunang hakbang ng pagkuha ay tapos na at naghihintay ang dokumento para sa pagpapatunay ng gumagamit.
-pagsusuri - Ang dokumento ay sumasailalim sa pagpapatunay sa interface ng gumagamit.
-pag-export - Ang dokumento ay napatunayan at naghihintay ngayon sa pagkumpleto ng tawag sa konektor na nag-save.
-nai-export - Ang dokumento ay napatunayan at matagumpay na naipasa ang lahat ng mga kawit; ito ang tipikal na estado ng terminal ng isang dokumento.
-failed_export - Kapag ang konektor ay nagbalik ng isang error.
-ipinagpaliban - Pinili ng Operator na ipagpaliban ang dokumento sa halip na i-export ito.
-tinanggal - Kapag tinanggal ang dokumento ng gumagamit.
-purged - Tanging ang metadata ay natipid pagkatapos ng isang pagtanggal.</value>
+		<value>"Obter status de um arquivo na fila, pode ser:
+importando - O documento está sendo processado pelo AI Core Engine para extração de dados; estado inicial do documento.
+importação_falhou - Falha na importação, devido a um arquivo de documento malformado por exemplo.
+aguardando_validação - A etapa de extração inicial foi concluída e o documento está aguardando a validação do usuário.
+revisão - O documento está sendo validado na interface do usuário.
+exportando - O documento está validado e agora aguarda a conclusão do salvamento do conector.
+exportado - o documento é validado e passou com êxito em todos os ganchos; esse é o estado terminal típico de um documento.
+exportação_falhou - Quando o conector retornou um erro.
+adiado - o operador optou por adiar o documento em vez de exportá-lo.
+excluído - Quando o documento foi excluído pelo usuário.
+eliminado completamente - Somente os metadados foram preservados após a exclusão ".</value>
 	</data>
 	<data name="activity_getqueues" xml:space="preserve">
-		<value>Kumuha ng mga Queue</value>
+		<value>Obter filas</value>
 	</data>
 	<data name="activity_getqueues_tooltip" xml:space="preserve">
-		<value>Kumuha ng isang listahan ng mga pila mula sa rossum, dapat na mai-upload ang isang file sa isang pila na may mga setting ng pagkakaiba-iba ng mga setting kahit na ang website</value>
+		<value>Para obter uma lista de filas do rossum, é necessário fazer o upload de um arquivo para uma fila com configurações variadas definidas no site</value>
 	</data>
 	<data name="activity_uploadfile" xml:space="preserve">
-		<value>Mag-upload ng File</value>
+		<value>Envio de arquivo</value>
 	</data>
 	<data name="activity_uploadfile_tooltip" xml:space="preserve">
-		<value>Nag-upload ng file sa isang Rossum pila</value>
+		<value>Enviar arquivo para uma fila do Rossum</value>
 	</data>
 	<data name="activity_waitforfilestatus" xml:space="preserve">
-		<value>Maghintay Para sa Katayuan ng File</value>
+		<value>Aguarde pelo status do arquivo</value>
 	</data>
 	<data name="activity_waitforfilestatus_tooltip" xml:space="preserve">
-		<value>Gawing idlip ang workflow habang naghihintay para sa file na mapunta sa tinukoy na katayuan</value>
+		<value>Tornar o fluxo de trabalho ocioso enquanto aguarda o arquivo entrar no status especificado</value>
 	</data>
 </root>

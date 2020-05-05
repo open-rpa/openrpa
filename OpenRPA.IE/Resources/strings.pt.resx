@@ -130,15 +130,33 @@
     <value>Obter atual</value>
   </data>
 	<data name="activity_getelement" xml:space="preserve">
-		<value>Kumuha ng Elemento</value>
+		<value>Pegar Elemento</value>
 	</data>
 	<data name="activity_getelement_tooltip" xml:space="preserve">
-		<value>Maghanap ng isang elemento ng Windows UI batay sa pumipili</value>
+		<value>Encontre um elemento de interface do usuário do Windows com base no seletor</value>
 	</data>
 	<data name="activity_openurl" xml:space="preserve">
-		<value>Buksan ang URL</value>
+		<value>Abrir URL</value>
 	</data>
 	<data name="activity_openurl_tooltip" xml:space="preserve">
-		<value>Buksan ang tinukoy na url sa Internet Explorer</value>
+		<value>Abrir URL específica no Internet Explorer</value>
+	</data>
+	<data name="activity_waitforready" xml:space="preserve">
+		<value>Aguarde</value>
+	</data>
+	<data name="activity_waitforready_help" xml:space="preserve">
+		<value>Aguarde até que a pagina fique pronta / não carregando</value>
+	</data>
+	<data name="enable_caching_browser" xml:space="preserve">
+		<value>Armazenando em cache o objeto do navegador</value>
+	</data>
+	<data name="enable_caching_browser_help" xml:space="preserve">
+		<value>Salve o objeto do navegador, em vez de procurar a janela fazendo cada chamada</value>
+	</data>
+	<data name="enable_xpath_support" xml:space="preserve">
+		<value>Ativar XPath</value>
+	</data>
+	<data name="enable_xpath_support_help" xml:space="preserve">
+		<value>Ativar suporte experimental no IE para XPath</value>
 	</data>
 </root>

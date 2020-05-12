@@ -50,6 +50,7 @@ namespace OpenRPA
                     if (name.StartsWith("/")) name = name.Substring(1);
                     name = name.ToLower();
                     // expando[args[i]] = args[i + 1];
+                    if ((i + 1) >= args.Count) throw new ArgumentOutOfRangeException("Uneven amounts of parameters, each parameter must be a key value pair");
                     expando.Add(name, args[i + 1]);
                 }
             }

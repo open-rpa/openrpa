@@ -544,24 +544,33 @@ namespace OpenRPA
             AutomationHelper.syncContext.Post(o =>
             {
                 Log.FunctionIndent("RobotInstance", "ParseCommandLineArgs");
-                CommandLineParser parser = new CommandLineParser();
-                // parser.Parse(string.Join(" ", args), true);
-                var options = parser.Parse(args, true);
-                if (options.ContainsKey("workflowid"))
+                try
                 {
-                    IWorkflow workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(options["workflowid"].ToString());
-                    if (workflow == null) { Log.Error("Unknown workflow " + options["workflowid"].ToString()); return; }
-                    if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(options["workflowid"].ToString()) is Views.WFDesigner designer)
+                    CommandLineParser parser = new CommandLineParser();
+                    // parser.Parse(string.Join(" ", args), true);
+                    var options = parser.Parse(args, true);
+                    if (options.ContainsKey("workflowid"))
                     {
-                        designer.BreakpointLocations = null;
-                        var instance = workflow.CreateInstance(options, "", "", designer.IdleOrComplete, designer.OnVisualTracking);
-                        designer.Run(MainWindow.VisualTracking, MainWindow.SlowMotion, instance);
+                        IWorkflow workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(options["workflowid"].ToString());
+                        if (workflow == null) { Log.Error("Unknown workflow " + options["workflowid"].ToString()); return; }
+                        if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(options["workflowid"].ToString()) is Views.WFDesigner designer)
+                        {
+                            designer.BreakpointLocations = null;
+                            var instance = workflow.CreateInstance(options, "", "", designer.IdleOrComplete, designer.OnVisualTracking);
+                            instance.caller = "commandline"; // To stop maximizing
+                            designer.Run(MainWindow.VisualTracking, MainWindow.SlowMotion, instance);
+                        }
+                        else
+                        {
+                            var instance = workflow.CreateInstance(options, "", "", Window.IdleOrComplete, null);
+                            instance.caller = "commandline"; // To stop maximizing
+                            instance.Run();
+                        }
                     }
-                    else
-                    {
-                        var instance = workflow.CreateInstance(options, "", "", Window.IdleOrComplete, null);
-                        instance.Run();
-                    }
+                }
+                catch (Exception ex)
+                {
+                    App.notifyIcon.ShowBalloonTip(1000, "", ex.Message, System.Windows.Forms.ToolTipIcon.Error);
                 }
                 Log.FunctionOutdent("RobotInstance", "ParseCommandLineArgs");
             }, null);

@@ -28,7 +28,16 @@ namespace OpenRPA
         }
         [JsonIgnore]
         // public DateTime LastUpdated { get { return GetProperty<DateTime>(); } set { SetProperty(value); } } 
-        internal static List<WorkflowInstance> Instances = new List<WorkflowInstance>();
+        private static List<WorkflowInstance> _Instances = new List<WorkflowInstance>();
+        public static List<WorkflowInstance> Instances
+        {
+            get
+            {
+                return _Instances;
+                // return _Instances.Where(x => x.state != "loaded").ToList();
+            }
+        }
+
         public event VisualTrackingHandler OnVisualTracking;
         public event idleOrComplete OnIdleOrComplete;
         public Dictionary<string, object> Parameters { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
@@ -105,6 +114,20 @@ namespace OpenRPA
         public System.Activities.WorkflowApplication wfApp { get; set; }
         [JsonIgnore]
         public WorkflowTrackingParticipant TrackingParticipant { get; set; }
+        private void NotifyState()
+        {
+            GenericTools.RunUI(() =>
+            {
+                try
+                {
+                    Workflow.NotifyPropertyChanged("State");
+                    Workflow.NotifyPropertyChanged("StateImage");
+                }
+                catch (Exception)
+                {
+                }
+            });
+        }
         private void NotifyCompleted()
         {
             var _ref = (this as IWorkflowInstance);
@@ -112,6 +135,7 @@ namespace OpenRPA
             {
                 runner.onWorkflowCompleted(ref _ref);
             }
+            NotifyState();
         }
         private void NotifyIdle()
         {
@@ -120,6 +144,7 @@ namespace OpenRPA
             {
                 runner.onWorkflowIdle(ref _ref);
             }
+            NotifyState();
         }
         private void NotifyAborted()
         {
@@ -128,6 +153,7 @@ namespace OpenRPA
             {
                 runner.onWorkflowAborted(ref _ref);
             }
+            NotifyState();
         }
         public static WorkflowInstance Create(Workflow Workflow, Dictionary<string, object> Parameters)
         {
@@ -653,6 +679,7 @@ namespace OpenRPA
             wfApp.Completed = delegate (System.Activities.WorkflowApplicationCompletedEventArgs e)
             {
                 isCompleted = true;
+                _ = Workflow.State;
                 if (e.CompletionState == System.Activities.ActivityInstanceState.Faulted)
                 {
                 }

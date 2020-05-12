@@ -211,8 +211,12 @@ namespace OpenRPA.NM
                     var updateelement = new NativeMessagingMessage("updateelementvalue", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
                     {
                         browser = message.browser,
-                        cssPath = cssselector,
-                        xPath = xpath,
+                        //cssPath = cssselector,
+                        //xPath = xpath,
+                        //tabid = message.tabid,
+                        //frameId = message.frameId,
+                        //data = value
+                        zn_id = zn_id,
                         tabid = message.tabid,
                         frameId = message.frameId,
                         data = value

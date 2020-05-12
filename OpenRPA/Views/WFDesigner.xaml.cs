@@ -1134,6 +1134,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
         }
         internal void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
         {
+
             if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
             {
                 Interfaces.mq.RobotCommand command = new Interfaces.mq.RobotCommand();

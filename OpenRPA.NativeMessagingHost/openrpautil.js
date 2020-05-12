@@ -261,6 +261,7 @@ if (true == false) {
                                 for (var i = 0; i < ele.length; i++) {
                                     var result = Object.assign({}, base);
                                     if (message.data === 'getdom') {
+                                        console.log('getdom');
                                         result.result = openrpautil.mapDOM(ele[i], false, true);
                                     }
                                     else {
@@ -579,7 +580,7 @@ if (true == false) {
                             // TODO: exit?
                             //return;
                             var currentFramePosition = openrpautil.currentFrameAbsolutePosition();
-                            console.log({ uix: message.uix, uiy: message.uiy, parent: message.parents }, currentFramePosition);
+                            // console.log({ uix: message.uix, uiy: message.uiy, parent: message.parents }, currentFramePosition);
                             message.uix += currentFramePosition.x;
                             message.uiy += currentFramePosition.y;
                         }

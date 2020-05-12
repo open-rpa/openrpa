@@ -92,7 +92,7 @@ namespace OpenRPA
                 var instace = Instances;
                 if (instace.Count() > 0)
                 {
-                    var running = instace.Where(x => x.isCompleted == false);
+                    var running = instace.Where(x => x.isCompleted == false).ToList();
                     if (running.Count() > 0)
                     {
                         state = "running";

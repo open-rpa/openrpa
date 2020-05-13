@@ -160,6 +160,15 @@ namespace OpenRPA.Utilities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Replace with this string.
+        /// </summary>
+        public static string activity_match_replacement {
+            get {
+                return ResourceManager.GetString("activity_match_replacement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New DataTable variable.
         /// </summary>
         public static string activity_new_datatable {

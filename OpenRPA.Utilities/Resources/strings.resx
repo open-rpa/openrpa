@@ -150,6 +150,9 @@
   <data name="activity_match_pattern" xml:space="preserve">
     <value>The regular expression to match</value>
   </data>
+  <data name="activity_match_replacement" xml:space="preserve">
+    <value>Replace with this string</value>
+  </data>
   <data name="activity_new_datatable" xml:space="preserve">
     <value>New DataTable variable</value>
   </data>

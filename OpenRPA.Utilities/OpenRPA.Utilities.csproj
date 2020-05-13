@@ -10,8 +10,9 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.0.10</Version>
-    <PackageReleaseNotes>1.0.10 Fix hint text in WriteCSV activity
+    <Version>1.0.11</Version>
+    <PackageReleaseNotes>1.0.11 Add Replace Activity
+1.0.10 Fix hint text in WriteCSV activity
 1.0.9 Add DeleteAllRows
 1.0.8 Add AddDataColumn, AddDataRow and CreateDataTable
 1.0.7 Change target framework to 4.7.2
@@ -54,6 +55,7 @@
     <None Remove="Activities\ReadExcelDesigner.xaml" />
     <None Remove="Activities\ReadJSONDesigner.xaml" />
     <None Remove="Activities\ReadPDFDesigner.xaml" />
+    <None Remove="Activities\ReplaceDesigner.xaml" />
     <None Remove="Activities\SetAutoLoginDesigner.xaml" />
     <None Remove="Activities\SetCredentialsDesigner.xaml" />
     <None Remove="Activities\WriteCSVDesigner.xaml" />
@@ -151,6 +153,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\CreateDataTableDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\ReplaceDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

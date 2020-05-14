@@ -304,7 +304,7 @@ namespace OpenRPA.NM
             e.Selector = selector;
             e.a = new GetElementResult(a);
             e.SupportInput = LastElement.SupportInput;
-            e.SupportSelect = false;
+            e.SupportSelect = LastElement.tagname.ToLower() == "select";
             e.OffsetX = e.X - LastElement.Rectangle.X;
             e.OffsetY = e.Y - LastElement.Rectangle.Y;
             e.ClickHandled = false;

@@ -27,6 +27,11 @@ namespace OpenRPA.IE
             catch (Exception)
             {
             }
+            if(TagName == "option")
+            {
+                var option = Element as MSHTML.IHTMLOptionElement;
+                Name = option.text;
+            }
             if (TagName == "input")
             {
                 MSHTML.IHTMLInputElement inputelement = Element as MSHTML.IHTMLInputElement;
@@ -271,6 +276,16 @@ namespace OpenRPA.IE
                     var ele = (MSHTML.IHTMLInputElement)RawElement;
                     return ele.value;
                 }
+                else if (RawElement.tagName.ToLower() == "select")
+                {
+                    var ele = (MSHTML.IHTMLSelectElement)RawElement;
+                    return ele.value;
+                }
+                if (RawElement.tagName.ToLower() == "option")
+                {
+                    var ele = (MSHTML.IHTMLOptionElement)RawElement;
+                    return ele.value;
+                }
                 else
                 {
                     return RawElement.innerText;
@@ -303,7 +318,88 @@ namespace OpenRPA.IE
                         }
                     }
                 }
+                if (RawElement.tagName.ToLower() == "option")
+                {
+                    var ele = (MSHTML.IHTMLOptionElement)RawElement;
+                    ele.value = value;
+                }
                 if (Value != value) throw new Exception("Failed updating value!");
+            }
+        }
+        public string Text
+        {
+            get
+            {
+                if (RawElement.tagName.ToLower() == "input")
+                {
+                    var ele = (MSHTML.IHTMLInputElement)RawElement;
+                    return ele.value;
+                }
+                else if (RawElement.tagName.ToLower() == "select")
+                {
+                    try
+                    {
+                        var ele = (MSHTML.IHTMLSelectElement)RawElement;
+                        foreach (MSHTML.IHTMLOptionElement e in (dynamic)((dynamic)ele.options))
+                        {
+                            if (e.value == ele.value)
+                            {
+                                return e.text;
+                            }
+                            else if (e.text == ele.value)
+                            {
+                                return e.text;
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    return null;
+                }
+                if (RawElement.tagName.ToLower() == "option")
+                {
+                    var ele = (MSHTML.IHTMLOptionElement)RawElement;
+                    return ele.text;
+                }
+                else
+                {
+                    return RawElement.innerText;
+                }
+                // return null;
+            }
+            set
+            {
+                if (RawElement.tagName.ToLower() == "input")
+                {
+                    var ele = (MSHTML.HTMLInputElement)RawElement;
+                    var name = (string)RawElement.getAttribute("Name");
+                    var id = (string)RawElement.id;
+                    Log.Verbose("IEElement: tagName: " + RawElement.tagName + " name: " + name + " id: " + id);
+                    Log.Verbose("IE update value from '" + ele.value + "' => '" + value + "'");
+                    ele.value = value;
+                }
+                if (RawElement.tagName.ToLower() == "select")
+                {
+                    var ele = (MSHTML.IHTMLSelectElement)RawElement;
+                    foreach (MSHTML.IHTMLOptionElement e in (dynamic)((dynamic)ele.options))
+                    {
+                        if (e.text == value)
+                        {
+                            ele.value = e.value;
+                        }
+                        else if (e.text == value)
+                        {
+                            ele.value = e.value;
+                        }
+                    }
+                }
+                if (RawElement.tagName.ToLower() == "option")
+                {
+                    var ele = (MSHTML.IHTMLOptionElement)RawElement;
+                    ele.text = value;
+                }
+                if (Text != value) throw new Exception("Failed updating value!");
             }
         }
         public override string ToString()
@@ -368,6 +464,11 @@ namespace OpenRPA.IE
                 var result = new List<IElement>();
                 if (RawElement.tagName.ToLower() == "select")
                 {
+                    var ele = (MSHTML.IHTMLSelectElement)RawElement;
+                    foreach (MSHTML.IHTMLOptionElement e in (dynamic)((dynamic)ele.options))
+                    {
+                        result.Add(new IEElement(Browser, e as MSHTML.IHTMLElement));
+                    }
 
                 }
                 return result.ToArray();

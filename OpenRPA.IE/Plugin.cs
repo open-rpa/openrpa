@@ -188,7 +188,7 @@ namespace OpenRPA.IE
                 MSHTML.IHTMLInputElement inputelement = (MSHTML.IHTMLInputElement)htmlelement;
                 e.SupportInput = (inputelement.type.ToLower() == "text" || inputelement.type.ToLower() == "password");
             }
-            e.SupportSelect = false;
+            e.SupportSelect = htmlelement.tagName.ToLower() == "select";
             return true;
         }
         public void Initialize(IOpenRPAClient client)

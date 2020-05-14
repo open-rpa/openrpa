@@ -163,12 +163,19 @@ namespace OpenRPA.NM
             }
         }
         object IElement.RawElement { get => message; set => message = value as NativeMessagingMessage; }
+
         public string Text
         {
             get
             {
                 if (chromeelement.ContainsKey("text")) return chromeelement["text"].ToString();
                 if (chromeelement.ContainsKey("innertext")) return chromeelement["innertext"].ToString();
+                if(!hasRefreshed)
+                {
+                    Refresh();
+                    if (chromeelement.ContainsKey("text")) return chromeelement["text"].ToString();
+                    if (chromeelement.ContainsKey("innertext")) return chromeelement["innertext"].ToString();
+                }
                 return null;
             }
             set
@@ -315,6 +322,7 @@ namespace OpenRPA.NM
 
             }
         }
+        private bool hasRefreshed = false;
         public bool Refresh()
         {
             try
@@ -346,6 +354,7 @@ namespace OpenRPA.NM
                 Y = message.uiy;
                 Width = message.uiwidth;
                 Height = message.uiheight;
+                hasRefreshed = true;
                 return true;
             }
             catch (Exception ex)

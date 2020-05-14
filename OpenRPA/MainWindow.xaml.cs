@@ -2896,7 +2896,34 @@ namespace OpenRPA
                             VirtualClick = VirtualClick,
                             AnimateMouse = Config.local.use_animate_mouse
                         }, "item");
-                        if (e.SupportInput)
+                        if (e.SupportSelect)
+                        {
+                            var win = new Views.InsertSelect(e.Element)
+                            {
+                                Topmost = true
+                            };
+                            isRecording = false;
+                            InputDriver.Instance.CallNext = true;
+                            if (win.ShowDialog() == true)
+                            {
+                                e.ClickHandled = true;
+                                if(!string.IsNullOrEmpty(win.SelectedItem.Value))
+                                {
+                                    e.a.AddInput(win.SelectedItem.Value, e.Element);
+                                } else
+                                {
+                                    e.a.AddInput(win.SelectedItem.Name, e.Element);
+                                }
+                                
+                            }
+                            else
+                            {
+                                e.SupportSelect = false;
+                            }
+                            InputDriver.Instance.CallNext = false;
+                            isRecording = true;
+                        }
+                        else if (e.SupportInput)
                         {
                             var win = new Views.InsertText
                             {
@@ -2910,26 +2937,7 @@ namespace OpenRPA
                             else { e.SupportInput = false; }
                             isRecording = true;
                         }
-                        else if (e.SupportSelect)
-                        {
-                            var win = new Views.InsertSelect(e.Element)
-                            {
-                                Topmost = true
-                            };
-                            isRecording = false;
-                            InputDriver.Instance.CallNext = true;
-                            if (win.ShowDialog() == true)
-                            {
-                                e.ClickHandled = true;
-                                e.a.AddInput(win.SelectedItem.Name, e.Element);
-                            }
-                            else
-                            {
-                                e.SupportSelect = false;
-                            }
-                            InputDriver.Instance.CallNext = false;
-                            isRecording = true;
-                        }
+
                         view.ReadOnly = false;
                         view.Lastinserted = e.a.Activity;
                         view.Lastinsertedmodel = view.AddRecordingActivity(e.a.Activity);

@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.116</Version>
-    <PackageReleaseNotes>1.0.116 Fix select value for IE, add SupportSelect for ie and nm
+    <Version>1.0.117</Version>
+    <PackageReleaseNotes>1.0.117 Fix updating json, when using select button in selector
+1.0.116 Fix select value for IE, add SupportSelect for ie and nm
 1.0.115 Add Replace Activity
 1.0.114 Better error handlign when called form commandline. Fix UI bug that could sometimes make workflow list as running when not running
 1.0.112 Improve comment/uncomment rightclick menu

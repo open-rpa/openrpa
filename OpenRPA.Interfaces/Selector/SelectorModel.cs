@@ -57,11 +57,14 @@ namespace OpenRPA.Interfaces.Selector
             foreach (var te in treeelements) Directories.Add(te);
             foreach (var te in Directories) te.PropertyChanged += (sender, e) =>
                 {
+                    _json = Selector.ToString();
                     OnPropertyChanged("json");
+                    
                 };
 
             Selector.ItemPropertyChanged += (sender, e) =>
             {
+                _json = Selector.ToString();
                 OnPropertyChanged("json");
             };
             //Selector.ElementPropertyChanged += (sender, e) =>
@@ -76,6 +79,7 @@ namespace OpenRPA.Interfaces.Selector
             this.window = window;
             Directories.ItemPropertyChanged += (sender, e) =>
             {
+                _json = Selector.ToString();
                 NotifyPropertyChanged("json");
             };
 
@@ -89,6 +93,7 @@ namespace OpenRPA.Interfaces.Selector
             this.window = window;
             Directories.ItemPropertyChanged += (sender, e) =>
             {
+                _json = Selector.ToString();
                 NotifyPropertyChanged("json");
             };
         }

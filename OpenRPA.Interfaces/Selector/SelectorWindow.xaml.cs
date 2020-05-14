@@ -203,6 +203,7 @@ namespace OpenRPA.Interfaces.Selector
             e.ClickHandled = true;
             GenericTools.Restore(this);
             vm.Selector = e.Selector;
+            vm.json = vm.Selector.ToString();
             vm.FocusElement(e.Selector);
             vm.NotifyPropertyChanged("json");
             // e.Element

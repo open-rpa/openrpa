@@ -2,7 +2,7 @@
   <PropertyGroup>
     <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <ApplicationIcon>Resources\open_rpa.ico</ApplicationIcon>
     <StartupObject />
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.117</Version>
-    <PackageReleaseNotes>1.0.117 Fix updating json, when using select button in selector
+    <Version>1.0.118</Version>
+    <PackageReleaseNotes>1.0.118 downgrade for win7 support
+1.0.117 Fix updating json, when using select button in selector
 1.0.116 Fix select value for IE, add SupportSelect for ie and nm
 1.0.115 Add Replace Activity
 1.0.114 Better error handlign when called form commandline. Fix UI bug that could sometimes make workflow list as running when not running

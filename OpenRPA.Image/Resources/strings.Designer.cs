@@ -61,7 +61,61 @@ namespace OpenRPA.Image.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Find an image on the screen or inside a specific application window.
+        ///   Looks up a localized string similar to Displayname.
+        /// </summary>
+        public static string activity_displayname {
+            get {
+                return ResourceManager.GetString("activity_displayname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displayname inside the workflow designer.
+        /// </summary>
+        public static string activity_displayname_help {
+            get {
+                return ResourceManager.GetString("activity_displayname_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Element.
+        /// </summary>
+        public static string activity_element {
+            get {
+                return ResourceManager.GetString("activity_element", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Work on this element, the return type of all GetElement activites and some others.
+        /// </summary>
+        public static string activity_element_help {
+            get {
+                return ResourceManager.GetString("activity_element_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Color.
+        /// </summary>
+        public static string activity_getcolor {
+            get {
+                return ResourceManager.GetString("activity_getcolor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get color at specefied cordinates. .
+        /// </summary>
+        public static string activity_getcolor_tooltip {
+            get {
+                return ResourceManager.GetString("activity_getcolor_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Element.
         /// </summary>
         public static string activity_getelement {
             get {
@@ -106,7 +160,7 @@ namespace OpenRPA.Image.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Get Element.
+        ///   Looks up a localized string similar to Find an image on the screen or inside a specific application window.
         /// </summary>
         public static string activity_getelement_tooltip {
             get {
@@ -115,7 +169,7 @@ namespace OpenRPA.Image.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Get an image of the screen relative from another image or element found with GetElement.
+        ///   Looks up a localized string similar to Get Image.
         /// </summary>
         public static string activity_getimage {
             get {
@@ -151,7 +205,7 @@ namespace OpenRPA.Image.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Get Image.
+        ///   Looks up a localized string similar to Get an image of the screen relative from another image or element found with GetElement.
         /// </summary>
         public static string activity_getimage_tooltip {
             get {
@@ -246,6 +300,42 @@ namespace OpenRPA.Image.Resources {
         public static string activity_loadfromfile_tooltip {
             get {
                 return ResourceManager.GetString("activity_loadfromfile_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X Offset.
+        /// </summary>
+        public static string activity_offsetx {
+            get {
+                return ResourceManager.GetString("activity_offsetx", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click with this offset inside the element.
+        /// </summary>
+        public static string activity_offsetx_help {
+            get {
+                return ResourceManager.GetString("activity_offsetx_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y Offset.
+        /// </summary>
+        public static string activity_offsety {
+            get {
+                return ResourceManager.GetString("activity_offsety", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click with this offset inside the element.
+        /// </summary>
+        public static string activity_offsety_help {
+            get {
+                return ResourceManager.GetString("activity_offsety_help", resourceCulture);
             }
         }
         

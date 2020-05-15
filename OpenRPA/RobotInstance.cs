@@ -33,7 +33,7 @@ namespace OpenRPA
         public event DisconnectedEventHandler Disconnected;
         public event ReadyForActionEventHandler ReadyForAction;
         private static RobotInstance _instance = null;
-        readonly Updates updater = new Updates();
+        // readonly Updates updater = new Updates();
         public static RobotInstance instance
         {
             get
@@ -160,35 +160,35 @@ namespace OpenRPA
             Log.Function("RobotInstance", "CheckForUpdatesAsync");
             if (!Config.local.doupdatecheck) return;
             if ((DateTime.Now - Config.local.lastupdatecheck) < Config.local.updatecheckinterval) return;
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
                 Log.FunctionIndent("RobotInstance", "CheckForUpdatesAsync");
                 try
                 {
-                    if (Config.local.autoupdateupdater)
-                    {
-                        if (await updater.UpdaterNeedsUpdate() == true)
-                        {
-                            await updater.UpdateUpdater();
-                        }
-                    }
-                    var newversion = await updater.OpenRPANeedsUpdate();
-                    if (!string.IsNullOrEmpty(newversion))
-                    {
-                        if (newversion.EndsWith(".0")) newversion = newversion.Substring(0, newversion.Length - 2);
-                        var assembly = System.Reflection.Assembly.GetExecutingAssembly();
-                        var fileVersionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-                        string version = fileVersionInfo.ProductVersion;
-                        if (version.EndsWith(".0")) version = version.Substring(0, version.Length - 2);
-                        var dialogResult = System.Windows.MessageBox.Show("A new version " + newversion + " is ready for download, current version is " + version, "Update available", System.Windows.MessageBoxButton.YesNo);
-                        if (dialogResult == System.Windows.MessageBoxResult.Yes)
-                        {
-                            //OnManagePackages(null);
-                            // System.Diagnostics.Process.Start("https://github.com/open-rpa/openrpa/releases/download/" + newversion + "/OpenRPA.exe");
-                            System.Diagnostics.Process.Start("https://github.com/open-rpa/openrpa/releases/download/" + newversion + "/OpenRPA.msi");
-                            System.Windows.Application.Current.Shutdown();
-                        }
-                    }
+                    //if (Config.local.autoupdateupdater)
+                    //{
+                    //    if (await updater.UpdaterNeedsUpdate() == true)
+                    //    {
+                    //        await updater.UpdateUpdater();
+                    //    }
+                    //}
+                    //var newversion = await updater.OpenRPANeedsUpdate();
+                    //if (!string.IsNullOrEmpty(newversion))
+                    //{
+                    //    if (newversion.EndsWith(".0")) newversion = newversion.Substring(0, newversion.Length - 2);
+                    //    var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+                    //    var fileVersionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+                    //    string version = fileVersionInfo.ProductVersion;
+                    //    if (version.EndsWith(".0")) version = version.Substring(0, version.Length - 2);
+                    //    var dialogResult = System.Windows.MessageBox.Show("A new version " + newversion + " is ready for download, current version is " + version, "Update available", System.Windows.MessageBoxButton.YesNo);
+                    //    if (dialogResult == System.Windows.MessageBoxResult.Yes)
+                    //    {
+                    //        //OnManagePackages(null);
+                    //        // System.Diagnostics.Process.Start("https://github.com/open-rpa/openrpa/releases/download/" + newversion + "/OpenRPA.exe");
+                    //        System.Diagnostics.Process.Start("https://github.com/open-rpa/openrpa/releases/download/" + newversion + "/OpenRPA.msi");
+                    //        System.Windows.Application.Current.Shutdown();
+                    //    }
+                    //}
                 }
                 catch (Exception ex)
                 {
@@ -1027,11 +1027,11 @@ namespace OpenRPA
                             {
                                 if (i.Workflow != null)
                                 {
-                                    Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
+                                    if(Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
                                 }
                                 else
                                 {
-                                    Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
+                                    if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
                                 }
                                 e.isBusy = true; return;
                             }
@@ -1039,11 +1039,11 @@ namespace OpenRPA
                             {
                                 if (i.Workflow != null)
                                 {
-                                    Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
+                                    if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
                                 }
                                 else
                                 {
-                                    Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
+                                    if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
                                 }
                                 e.isBusy = true; return;
                             }

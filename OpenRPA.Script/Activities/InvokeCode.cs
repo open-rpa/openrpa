@@ -279,7 +279,7 @@ namespace OpenRPA.Script.Activities
                                 //lck = PythonEngine.AcquireLock();
                                 //PythonEngine.Exec(code);
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 //Log.Error(ex.ToString());
                                 throw;

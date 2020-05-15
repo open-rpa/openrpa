@@ -393,7 +393,6 @@ namespace OpenRPA.Net
                             {
                                 msg.command = "error";
                                 msg.data = "Sorry, I'm bussy";
-                                Log.Warning("Cannot invoke, I'm busy.");
                                 msg.SendMessage(this);
                                 return;
                             }

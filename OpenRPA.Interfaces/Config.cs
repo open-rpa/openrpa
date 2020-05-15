@@ -61,6 +61,7 @@ namespace OpenRPA
         public bool notify_on_workflow_remote_start = true;
         public bool notify_on_workflow_end = true;
         public bool notify_on_workflow_remote_end = false;
+        public bool log_busy_warning = true;
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)

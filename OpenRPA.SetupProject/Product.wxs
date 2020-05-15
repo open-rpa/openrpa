@@ -10,17 +10,19 @@
 
   <!-- The URL for add/remove programs -->
   <?define InfoURL="https://openrpa.dk/" ?>
+  
+  <?define netver_old="net472" ?>
+  <?define netver="net462" ?>
 
-  <?define Win64 = "yes" ?>
   <!-- 32-bit / 64-bit variables -->
   <?if $(var.Platform) = x64 ?>
   <?define Win64 = "yes" ?>
   <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
-  <?define openrpaExeSourcePath = "$(var.ProjectDir)..\OpenRPA\bin\PrepInstaller\net472\OpenRPA.exe" ?>
+  <?define openrpaExeSourcePath = "$(var.ProjectDir)..\OpenRPA\bin\PrepInstaller\$(var.netver)\OpenRPA.exe" ?>
   <?else ?>
   <?define Win64 = "no" ?>
   <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
-  <?define openrpaExeSourcePath = "$(var.ProjectDir)..\OpenRPA\bin\PrepInstaller\net472\OpenRPA.exe" ?>
+  <?define openrpaExeSourcePath = "$(var.ProjectDir)..\OpenRPA\bin\PrepInstaller\$(var.netver)\OpenRPA.exe" ?>
   <?endif ?>
   <Product Id="*" Name="!(loc.ApplicationName)" Language="!(loc.Language)" Version="$(var.VersionNumber)" Manufacturer="!(loc.ManufacturerFullName)"
            UpgradeCode="$(var.UpgradeCode)"  >
@@ -36,24 +38,24 @@
 
     <Property Id="INSTALLOFFICEFEATURE" Value="TRUE" />
 
-    <WixVariable Id="MainSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA\bin\PrepInstaller\net472"/>
-    <WixVariable Id="MainSource2" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.NativeMessagingHost\bin\PrepInstaller\net472"/>
-    <WixVariable Id="OfficeSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Office\bin\PrepInstaller\net472"/>
-    <WixVariable Id="FormsSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Forms\bin\PrepInstaller\net472"/>
-    <WixVariable Id="IESource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.IE\bin\PrepInstaller\net472"/>
-    <WixVariable Id="NMSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.NM\bin\PrepInstaller\net472"/>
-    <WixVariable Id="ImageSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Image\bin\PrepInstaller\net472"/>
-    <WixVariable Id="JavaSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Java\bin\PrepInstaller\net472"/>
-    <WixVariable Id="ScriptSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Script\bin\PrepInstaller\net472"/>
-    <WixVariable Id="AviRecorderSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.AviRecorder\bin\PrepInstaller\net472"/>
-    <WixVariable Id="OpenFlowDBSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.OpenFlowDB\bin\PrepInstaller\net472"/>
-    <WixVariable Id="RDServicePluginSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.RDServicePlugin\bin\PrepInstaller\net472"/>
-    <WixVariable Id="FileWatcherSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.FileWatcher\bin\PrepInstaller\net472"/>
-    <WixVariable Id="ElisRossumSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Elis.Rossum\bin\PrepInstaller\net472"/>
-    <WixVariable Id="PDPluginSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.PDPlugin\bin\PrepInstaller\net472"/>
-    <WixVariable Id="UtilitiesSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Utilities\bin\PrepInstaller\net472"/>
-    <WixVariable Id="UpdaterSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Updater\bin\PrepInstaller\net472"/>
-    <WixVariable Id="DatabaseSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Database\bin\PrepInstaller\net472"/>
+    <WixVariable Id="MainSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="MainSource2" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.NativeMessagingHost\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="OfficeSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Office\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="FormsSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Forms\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="IESource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.IE\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="NMSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.NM\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="ImageSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Image\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="JavaSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Java\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="ScriptSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Script\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="AviRecorderSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.AviRecorder\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="OpenFlowDBSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.OpenFlowDB\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="RDServicePluginSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.RDServicePlugin\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="FileWatcherSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.FileWatcher\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="ElisRossumSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Elis.Rossum\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="PDPluginSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.PDPlugin\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="UtilitiesSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Utilities\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="UpdaterSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Updater\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="DatabaseSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Database\bin\PrepInstaller\$(var.netver)"/>
 
 
 

@@ -294,6 +294,9 @@
   <data name="activity_keymodifiers_help" xml:space="preserve">
     <value>Hold this key down, while clicking, only works if Virtual click is disabled</value>
   </data>
+  <data name="activity_map_variables" xml:space="preserve">
+    <value>Map Variables</value>
+  </data>
   <data name="activity_mousebutton" xml:space="preserve">
     <value>Mouse Button</value>
   </data>

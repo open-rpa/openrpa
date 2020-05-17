@@ -36,6 +36,7 @@ namespace OpenRPA.Activities
             {
                 dv = DataView.Get(context);
             }
+            if (dv == null) return;
              
             var elements = (from row in dv.Cast<System.Data.DataRowView>() select row).ToList();
             IEnumerator<System.Data.DataRowView> _enum = elements.GetEnumerator();

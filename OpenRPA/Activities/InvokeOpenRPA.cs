@@ -22,38 +22,79 @@ namespace OpenRPA.Activities
         public string workflow { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_waitforcompleted", typeof(Resources.strings)), LocalizedDescription("activity_waitforcompleted_help", typeof(Resources.strings))]
         public InArgument<bool> WaitForCompleted { get; set; } = true;
+        [Category("Input")]
+        public Dictionary<string, Argument> Arguments { get; set; } = new Dictionary<string, Argument>();
         protected override void Execute(NativeActivityContext context)
         {
             bool waitforcompleted = WaitForCompleted.Get(context);
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
             // IDictionary<string, object> _payload = new System.Dynamic.ExpandoObject();
             var param = new Dictionary<string, object>();
-            var vars = context.DataContext.GetProperties();
-            foreach (dynamic v in vars)
+            if(Arguments == null || Arguments.Count == 0)
             {
-                var value = v.GetValue(context.DataContext);
-                if (value != null)
+                var vars = context.DataContext.GetProperties();
+                foreach (dynamic v in vars)
                 {
-                    //_payload.Add(v.DisplayName, value);
-                    try
+                    var value = v.GetValue(context.DataContext);
+                    if (value != null)
                     {
-                        var test = new { value = value };
-                        if (value.GetType() == typeof(System.Data.DataTable)) continue;
-                        if (value.GetType() == typeof(System.Data.DataView)) continue;
-                        if (value.GetType() == typeof(System.Data.DataRowView)) continue;
-                        //
-                        var asjson = JObject.FromObject(test);
+                        //_payload.Add(v.DisplayName, value);
+                        try
+                        {
+                            var test = new { value };
+                            if (value.GetType() == typeof(System.Data.DataView)) continue;
+                            if (value.GetType() == typeof(System.Data.DataRowView)) continue;
+                            //if (value.GetType() == typeof(System.Data.DataTable))
+                            //{
+                            //    if (value != null) param[v.DisplayName] = ((System.Data.DataTable)value).ToJArray();
+                            //}
+                            //else
+                            //{
+                            //    var asjson = JObject.FromObject(test);
+                            //    param[v.DisplayName] = value;
+                            //}
+                            //
+                            var asjson = JObject.FromObject(test);
+                            param[v.DisplayName] = value;
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                    else
+                    {
                         param[v.DisplayName] = value;
                     }
-                    catch (Exception)
+                }
+            } 
+            else
+            {
+                Dictionary<string, object> arguments = (from argument in Arguments
+                                                          where argument.Value.Direction != ArgumentDirection.Out
+                                                          select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));
+                foreach(var a in arguments)
+                {
+                    var value = a.Value;
+                    if(value!=null)
                     {
+                        if (value.GetType() == typeof(System.Data.DataView)) continue;
+                        if (value.GetType() == typeof(System.Data.DataRowView)) continue;
+                        //if (value.GetType() == typeof(System.Data.DataTable))
+                        //{
+                        //    if (value != null) param[a.Key] = ((System.Data.DataTable)value).ToJArray();
+                        //}
+                        //else
+                        //{
+                        //    param[a.Key] = a.Value;
+                        //}
+                        param[a.Key] = a.Value;
+                    } else
+                    {
+                        param[a.Key] = null;
                     }
                 }
-                else
-                {
-                    param[v.DisplayName] = value;
-                }
             }
+
             try
             {
                 var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(this.workflow);
@@ -74,7 +115,13 @@ namespace OpenRPA.Activities
                     instance.caller = WorkflowInstanceId;
                 });
                 Log.Verbose("InvokeOpenRPA: Run Instance ID " + instance._id);
-                if (waitforcompleted) context.CreateBookmark(instance._id, new BookmarkCallback(OnBookmarkCallback));
+                if (waitforcompleted)
+                {
+                    context.CreateBookmark(instance._id, new BookmarkCallback(OnBookmarkCallback));
+                    if (instance.Bookmarks == null) instance.Bookmarks = new Dictionary<string, object>();
+                    instance.Bookmarks.Add(instance._id, null);
+                    //((WorkflowInstance)instance).wfApp.Persist();
+                }
                 if (designer != null)
                 {
                     designer.Run(designer.VisualTracking, designer.SlowMotion, instance);
@@ -102,18 +149,72 @@ namespace OpenRPA.Activities
                 if (instance == null) throw new Exception("Bookmark returned a non WorkflowInstance");
                 if (instance.Exception != null) throw instance.Exception;
                 if (instance.hasError) throw new Exception(instance.errormessage);
-                foreach (var prop in instance.Parameters)
+
+                if (Arguments == null || Arguments.Count == 0)
                 {
-                    var myVar = context.DataContext.GetProperties().Find(prop.Key, true);
-                    if (myVar != null)
+                    foreach (var prop in instance.Parameters)
                     {
-                        //var myValue = myVar.GetValue(context.DataContext);
-                        myVar.SetValue(context.DataContext, prop.Value);
+                        var myVar = context.DataContext.GetProperties().Find(prop.Key, true);
+                        if (myVar != null)
+                        {
+                            if (myVar.PropertyType.Name == "DataTable")
+                            {
+                                var json = prop.ToString();
+                                if(!string.IsNullOrEmpty(json))
+                                {
+                                    var jarray = JArray.Parse(json);
+                                    myVar.SetValue(context.DataContext, jarray.ToDataTable());
+                                } 
+                                else
+                                {
+                                    myVar.SetValue(context.DataContext, null);
+                                }
+                            }
+                            else
+                            {
+                                //var myValue = myVar.GetValue(context.DataContext);
+                                myVar.SetValue(context.DataContext, prop.Value);
+                            }
+                        }
+                        else
+                        {
+                            Log.Debug("Recived property " + prop.Key + " but no variable exists to save the value in " + prop.Value);
+                        }
                     }
-                    else
+                }
+                else
+                {
+                    Dictionary<string, object> arguments = (from argument in Arguments
+                                                               where argument.Value.Direction != ArgumentDirection.In
+                                                               select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));
+                    foreach (var a in arguments)
                     {
-                        Log.Debug("Recived property " + prop.Key + " but no variable exists to save the value in " + prop.Value);
+                        if(instance.Parameters.ContainsKey(a.Key))
+                        {
+                            Arguments[a.Key].Set(context, instance.Parameters[a.Key]);
+
+                        }
+                        else
+                        {
+                            try
+                            {
+                                if (Arguments[a.Key].ArgumentType.IsValueType)
+                                {
+                                    Arguments[a.Key].Set(context, Activator.CreateInstance(Arguments[a.Key].ArgumentType));
+                                }
+                                else
+                                {
+                                    Arguments[a.Key].Set(context, null);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error("Error setting " + a.Key + ": " + ex.Message);
+                            }
+                        }
+
                     }
+
                 }
 
             }
@@ -122,24 +223,6 @@ namespace OpenRPA.Activities
                 Log.Error(ex.ToString());
                 throw;
             }
-
-            //var payload = JObject.Parse(obj.ToString());
-            //List<string> keys = payload.Properties().Select(p => p.Name).ToList();
-            //foreach (var key in keys)
-            //{
-            //    var myVar = context.DataContext.GetProperties().Find(key, true);
-            //    if (myVar != null)
-            //    {
-            //        //var myValue = myVar.GetValue(context.DataContext);
-            //        myVar.SetValue(context.DataContext, payload[key].ToString());
-            //    }
-            //    else
-            //    {
-            //        Log.Debug("Recived property " + key + " but no variable exists to save the value in " + payload[key]);
-            //    }
-            //    //action.setvariable(key, payload[key]);
-
-            //}
         }
         protected override bool CanInduceIdle
         {

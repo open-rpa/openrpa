@@ -34,6 +34,7 @@ namespace OpenRPA.Activities
         {
             try
             {
+                if (workflows.Count > 0) return;
                 var _workflows = await global.webSocketClient.Query<openflowworkflow>("workflow", "{_type: 'workflow', rpa: true}");
                 _workflows = _workflows.OrderBy(x => x.name).ToArray();
                 workflows.Clear();
@@ -45,6 +46,22 @@ namespace OpenRPA.Activities
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
+            }
+        }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ModelItemDictionary dictionary = base.ModelItem.Properties["Arguments"].Dictionary;
+            var options = new System.Activities.Presentation.DynamicArgumentDesignerOptions() { Title = "Map Arguments" };
+            using (ModelEditingScope modelEditingScope = dictionary.BeginEdit())
+            {
+                if (System.Activities.Presentation.DynamicArgumentDialog.ShowDialog(base.ModelItem, dictionary, base.Context, base.ModelItem.View, options))
+                {
+                    modelEditingScope.Complete();
+                }
+                else
+                {
+                    modelEditingScope.Revert();
+                }
             }
         }
     }

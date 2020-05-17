@@ -13,5 +13,6 @@ namespace OpenRPA.Interfaces
         System.Activities.DynamicActivityProperty GetArgumentOf<T>(string Name, bool add);
         System.Activities.Variable GetVariable(string Name, Type type);
         System.Activities.Variable<T> GetVariableOf<T>(string Name);
+        IWorkflow Workflow { get; set; }
     }
 }

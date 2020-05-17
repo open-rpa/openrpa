@@ -57,7 +57,7 @@ namespace OpenRPA.Views
         {
             get
             {
-                foreach (var i in WorkflowInstance.Instances)
+                foreach (var i in WorkflowInstance.Instances.ToList())
                 {
                     if (!string.IsNullOrEmpty(Workflow._id) && i.WorkflowId == Workflow._id)
                     {
@@ -131,7 +131,7 @@ namespace OpenRPA.Views
             //    if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
 
             //});
-            foreach (var i in WorkflowInstance.Instances)
+            foreach (var i in WorkflowInstance.Instances.ToList())
             {
                 if (i.WorkflowId == Workflow._id && !i.isCompleted)
                 {
@@ -703,6 +703,9 @@ namespace OpenRPA.Views
                 return false;
             }
         }
+
+        IWorkflow IDesigner.Workflow { get => Workflow; set { } }
+
         List<Activity> recording = null;
         public void BeginRecording()
         {
@@ -1267,7 +1270,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
             }
             if (instance.hasError || instance.isCompleted)
             {
-                foreach (var wi in WorkflowInstance.Instances)
+                foreach (var wi in WorkflowInstance.Instances.ToList())
                 {
                     if (wi.isCompleted) continue;
                     if (wi.Bookmarks == null) continue;
@@ -1863,5 +1866,6 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
             wfDesigner.Flush();
             return wfDesigner.Text;
         }
+
     }
 }

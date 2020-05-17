@@ -71,6 +71,10 @@ namespace OpenRPA
                 //Perform dependency check to make sure all relevant resources are in our output directory.
                 var settings = new CefSharp.Wpf.CefSettings();
                 settings.CachePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CefSharp\\Cache");
+                if(!System.IO.Directory.Exists(settings.CachePath))
+                {
+                    System.IO.Directory.CreateDirectory(settings.CachePath);
+                }
                 // We need to update useragent to be of one of the supported browsers on googles signin page
                 settings.UserAgent = Config.local.cef_useragent;
                 if (string.IsNullOrEmpty(Config.local.cef_useragent))

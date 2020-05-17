@@ -46,7 +46,8 @@
                 SelectedValue="{Binding Path=ModelItem.workflow, Mode=TwoWay}"
                 >
                 </ComboBox>
-                <Button Click="Button_Click" Content="{x:Static or:strings.activity_add_variables}"></Button>
+                <!--<Button Click="Button_Click" Content="{x:Static or:strings.activity_add_variables}"></Button>-->
+                <Button Click="Button_Click_1" Content="{x:Static or:strings.activity_map_variables}"></Button>
             </StackPanel>
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">

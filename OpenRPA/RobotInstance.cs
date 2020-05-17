@@ -1012,6 +1012,10 @@ namespace OpenRPA
                     {
                         int RunningCount = 0;
                         int RemoteRunningCount = 0;
+                        foreach (var i in WorkflowInstance.Instances.ToList())
+                        {
+                            if (i.isCompleted) lock (WorkflowInstance.Instances) WorkflowInstance.Instances.Remove(i);
+                        }
                         foreach (var i in WorkflowInstance.Instances)
                         {
                             if (!string.IsNullOrEmpty(i.correlationId) && !i.isCompleted)
@@ -1059,6 +1063,7 @@ namespace OpenRPA
                                 case JTokenType.Boolean: param.Add(k.Key, k.Value.Value<bool>()); break;
                                 case JTokenType.Date: param.Add(k.Key, k.Value.Value<DateTime>()); break;
                                 case JTokenType.TimeSpan: param.Add(k.Key, k.Value.Value<TimeSpan>()); break;
+                                case JTokenType.Array: param.Add(k.Key, k.Value.Value<JArray>()); break;
                                 default:
                                     try
                                     {
@@ -1071,6 +1076,21 @@ namespace OpenRPA
                                     break;
 
                                     // default: param.Add(k.Key, k.Value.Value<string>()); break;
+                            }
+                        }
+                        foreach(var p in workflow.Parameters)
+                        {
+                            if(param.ContainsKey(p.name))
+                            {
+                                var value = param[p.name];
+                                if (p.type == "System.Data.DataTable" && value != null)
+                                {
+                                    if(value is JArray)
+                                    {
+                                        param[p.name] = ((JArray)value).ToDataTable();
+                                    }
+
+                                }
                             }
                         }
                         Log.Information("Create instance of " + workflow.name);

@@ -37,6 +37,38 @@ namespace OpenRPA.Interfaces
     }
     public static class Extensions
     {
+        public static System.Data.DataTable ToDataTable(this Newtonsoft.Json.Linq.JArray jArray)
+        {
+            var result = new System.Data.DataTable();
+            foreach (var row in jArray)
+            {
+                foreach (var jToken in row)
+                {
+                    var jproperty = jToken as Newtonsoft.Json.Linq.JProperty;
+                    if (jproperty == null) continue;
+                    if (result.Columns[jproperty.Name] == null)
+                        result.Columns.Add(jproperty.Name, typeof(string));
+                }
+            }
+            foreach (var row in jArray)
+            {
+                var datarow = result.NewRow();
+                foreach (var jToken in row)
+                {
+                    var jProperty = jToken as Newtonsoft.Json.Linq.JProperty;
+                    if (jProperty == null) continue;
+                    datarow[jProperty.Name] = jProperty.Value.ToString();
+                }
+                result.Rows.Add(datarow);
+            }
+
+            return result;
+        }
+        public static Newtonsoft.Json.Linq.JArray ToJArray(this System.Data.DataTable dt)
+        {
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(dt);
+            return Newtonsoft.Json.Linq.JArray.Parse(json);
+        }
         public static IEnumerable<T> GetMyCustomAttributes<T>(this Type type, bool inherit)
         {
             return type
@@ -307,7 +339,7 @@ namespace OpenRPA.Interfaces
         }
         public static T TryCast<T>(this object obj)
         {
-            if (TryCast<T>(obj, out T result))
+            if (TryCast(obj, out T result))
                 return result;
             return result;
         }

@@ -26,7 +26,6 @@ namespace OpenRPA.Net
         private List<SocketMessage> _receiveQueue = new List<SocketMessage>();
         private List<SocketMessage> _sendQueue = new List<SocketMessage>();
         private List<QueuedMessage> _messageQueue = new List<QueuedMessage>();
-        // public delegate void QueueMessageDelegate(IQueueMessage message, QueueMessageEventArgs e);
         public event Action OnOpen;
         public event Action<string> OnClose;
         public event QueueMessageDelegate OnQueueMessage;
@@ -223,7 +222,6 @@ namespace OpenRPA.Net
         {
             try
             {
-                //await ReceiveSemaphore.WaitAsync();
                 await ProcessingSemaphore.WaitAsync();
                 if (_receiveQueue == null) return;
                 List<string> ids = new List<string>();
@@ -264,7 +262,6 @@ namespace OpenRPA.Net
             }
             finally
             {
-                //ReceiveSemaphore.Release();
             }
 
             try
@@ -274,7 +271,6 @@ namespace OpenRPA.Net
                 {
                     templist = _sendQueue.ToList();
                 }
-                // await SendSemaphore.WaitAsync();
                 foreach (var msg in templist)
                 {
                     if (await SendString(JsonConvert.SerializeObject(msg), src.Token))
@@ -285,7 +281,6 @@ namespace OpenRPA.Net
             }
             finally
             {
-                //SendSemaphore.Release();
                 ProcessingSemaphore.Release();
             }
         }
@@ -293,17 +288,16 @@ namespace OpenRPA.Net
         private async Task<bool> SendString(string data, CancellationToken cancellation)
         {
             if (ws == null) { return false; }
-            if (ws.State != System.Net.WebSockets.WebSocketState.Open) { return false; }
+            if (ws.State != WebSocketState.Open) { return false; }
             var encoded = Encoding.UTF8.GetBytes(data);
             var buffer = new ArraySegment<Byte>(encoded, 0, encoded.Length);
             try
             {
                 await SendStringSemaphore.WaitAsync();
-                //await ws.SendAsync(buffer, WebSocketMessageType.Text, true, cancellation);
-                await ws.SendAsync(buffer, System.Net.WebSockets.WebSocketMessageType.Text, true, cancellation);
+                await ws.SendAsync(buffer, WebSocketMessageType.Text, true, cancellation);
                 return true;
             }
-            catch (System.Net.WebSockets.WebSocketException ex)
+            catch (WebSocketException ex)
             {
                 Log.Error(ex, "");
                 _ = Close();
@@ -554,15 +548,6 @@ namespace OpenRPA.Net
             q = await q.SendMessage<DeleteOneMessage>(this);
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
         }
-        //public async Task UpdateOne(string collectionname, string query, int w, bool j, JObject UpdateDoc)
-        //{
-        //    UpdateOneMessage<JObject> q = new UpdateOneMessage<JObject>();
-        //    q.w = w; q.j = j; q.query = query;
-        //    q.collectionname = collectionname; q.item = UpdateDoc;
-        //    q = await q.SendMessage<UpdateOneMessage<JObject>>(this);
-        //    if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
-        //    // return q.result;
-        //}
         public async Task<string> UploadFile(string filepath, string path, metadata metadata)
         {
             if (string.IsNullOrEmpty(path)) path = "";

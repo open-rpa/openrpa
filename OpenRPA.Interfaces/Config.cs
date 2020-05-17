@@ -12,7 +12,7 @@ namespace OpenRPA
 {
     public class Config : AppSettings<Config>
     {
-        public string wsurl = "wss://demo1.openrpa.dk/";
+        public string wsurl = "wss://app.openiap.io/";
         public string username = "";
         public byte[] jwt;
         public byte[] password;
@@ -125,6 +125,10 @@ namespace OpenRPA
                         filename = System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json");
                     }
                     _local = Load(filename);
+                    if(_local.wsurl == "wss://demo1.openrpa.dk/" || _local.wsurl == "wss://demo1.openrpa.dk")
+                    {
+                        _local.wsurl = "wss://app.openiap.io/";
+                    }
                 }
                 return _local;
             }

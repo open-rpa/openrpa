@@ -703,6 +703,9 @@ namespace OpenRPA.Views
                 return false;
             }
         }
+
+        IWorkflow IDesigner.Workflow { get => Workflow; set { } }
+
         List<Activity> recording = null;
         public void BeginRecording()
         {
@@ -1863,5 +1866,6 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
             wfDesigner.Flush();
             return wfDesigner.Text;
         }
+
     }
 }

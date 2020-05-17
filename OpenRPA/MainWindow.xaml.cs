@@ -2327,6 +2327,7 @@ namespace OpenRPA
                     {
                         designer.BreakpointLocations = null;
                         instance = workflow.CreateInstance(param, null, null, new idleOrComplete(designer.IdleOrComplete), designer.OnVisualTracking);
+                        designer.SetDebugLocation(null);
                         designer.Run(VisualTracking, SlowMotion, instance);
                     }
                     else

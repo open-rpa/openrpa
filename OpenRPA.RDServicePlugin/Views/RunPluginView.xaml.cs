@@ -204,9 +204,8 @@ namespace OpenRPA.RDServicePlugin.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show("UserControl_Loaded: " + ex.Message);
+                Log.Information("UserControl_Loaded: " + ex.Message);
             }
-
         }
         private async void AddcurrentuserButtonClick(object sender, RoutedEventArgs e)
         {
@@ -265,23 +264,44 @@ namespace OpenRPA.RDServicePlugin.Views
         }
         private void chkUseFreeRDP_IsEnabledChanged(object sender, RoutedEventArgs e)
         {
-            if (chkUseFreeRDP.IsChecked == null) return;
-            RDService.PluginConfig.usefreerdp = chkUseFreeRDP.IsChecked.Value;
-            RDService.PluginConfig.Save();
+            try
+            {
+                if (chkUseFreeRDP.IsChecked == null) return;
+                RDService.PluginConfig.usefreerdp = chkUseFreeRDP.IsChecked.Value;
+                RDService.PluginConfig.Save();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         private void chkUseFreeRDP_Click(object sender, RoutedEventArgs e)
         {
-            if (chkUseFreeRDP.IsChecked == null) return;
-            RDService.PluginConfig.usefreerdp = chkUseFreeRDP.IsChecked.Value;
-            RDService.PluginConfig.Save();
+            try
+            {
+                if (chkUseFreeRDP.IsChecked == null) return;
+                RDService.PluginConfig.usefreerdp = chkUseFreeRDP.IsChecked.Value;
+                RDService.PluginConfig.Save();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         private void txtreloadinterval_TextChanged(object sender, TextChangedEventArgs e)
         {
-            TimeSpan ts = TimeSpan.Zero;
-            if(TimeSpan.TryParse(txtreloadinterval.Text, out ts))
+            try
             {
-                RDService.PluginConfig.reloadinterval = ts;
-                RDService.PluginConfig.Save();
+                TimeSpan ts = TimeSpan.Zero;
+                if (TimeSpan.TryParse(txtreloadinterval.Text, out ts))
+                {
+                    RDService.PluginConfig.reloadinterval = ts;
+                    RDService.PluginConfig.Save();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
             }
         }
         private async void chkautosignout_Checked(object sender, RoutedEventArgs e)

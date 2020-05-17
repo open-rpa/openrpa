@@ -16,10 +16,9 @@ namespace OpenRPA.Net
 {
     public class WebSocketClient : IWebSocketClient
     {
-        // private ClientWebSocket ws = (ClientWebSocket)SystemClientWebSocket.CreateClientWebSocket();  // new ClientWebSocket(); // WebSocket
-        // private System.Net.WebSockets.Managed.ClientWebSocket ws = new System.Net.WebSockets.Managed.ClientWebSocket();  // new ClientWebSocket(); // WebSocket
-        // private System.Net.WebSockets.Managed.ClientWebSocket ws = null;  // new ClientWebSocket(); // WebSocket
-        private WebSocket ws = null;  // new ClientWebSocket(); // WebSocket
+        static SemaphoreSlim ProcessingSemaphore = new SemaphoreSlim(1, 1);
+        static SemaphoreSlim SendStringSemaphore = new SemaphoreSlim(1, 1);
+        private WebSocket ws = null;
         public int websocket_package_size = 4096;
         public string url { get; set; }
         private CancellationTokenSource src = new CancellationTokenSource();
@@ -217,7 +216,6 @@ namespace OpenRPA.Net
                 msg.SendMessage(this);
             }
         }
-        static SemaphoreSlim ProcessingSemaphore = new SemaphoreSlim(1, 1);
         public async Task ProcessQueue()
         {
             try
@@ -284,7 +282,6 @@ namespace OpenRPA.Net
                 ProcessingSemaphore.Release();
             }
         }
-        static SemaphoreSlim SendStringSemaphore = new SemaphoreSlim(1, 1);
         private async Task<bool> SendString(string data, CancellationToken cancellation)
         {
             if (ws == null) { return false; }
@@ -318,6 +315,7 @@ namespace OpenRPA.Net
             {
                 _sendQueue.Add(msg);
             }
+            _ = ProcessQueue();
         }
         private void Process(Message msg)
         {

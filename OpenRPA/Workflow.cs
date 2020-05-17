@@ -141,7 +141,7 @@ namespace OpenRPA
         {
             get
             {
-                foreach (var i in WorkflowInstance.Instances)
+                foreach (var i in WorkflowInstance.Instances.ToList())
                 {
                     if (!string.IsNullOrEmpty(_id) && i.WorkflowId == _id)
                     {

@@ -2990,7 +2990,7 @@ namespace OpenRPA
             try
             {
                 Log.Information("Detector " + plugin.Entity.name + " was triggered, with id " + plugin.Entity._id);
-                foreach (var wi in WorkflowInstance.Instances)
+                foreach (var wi in WorkflowInstance.Instances.ToList())
                 {
                     if (wi.isCompleted) continue;
                     if (wi.Bookmarks != null)
@@ -3092,7 +3092,7 @@ namespace OpenRPA
                         }                        
                     }
                     System.Threading.Thread.Sleep(200);
-                    foreach (var wi in WorkflowInstance.Instances)
+                    foreach (var wi in WorkflowInstance.Instances.ToList())
                     {
                         if (wi.isCompleted) continue;
                         if (wi.Bookmarks == null) continue;

@@ -973,7 +973,7 @@ namespace OpenRPA
                     if (!string.IsNullOrEmpty(message.correlationId))
                     {
                         Log.Function("RobotInstance", "WebSocketClient_OnQueueMessage", "loop instances");
-                        foreach (var wi in WorkflowInstance.Instances)
+                        foreach (var wi in WorkflowInstance.Instances.ToList())
                         {
                             if (wi.isCompleted) continue;
                             if (wi.Bookmarks == null) continue;
@@ -1016,7 +1016,7 @@ namespace OpenRPA
                         {
                             if (i.isCompleted) lock (WorkflowInstance.Instances) WorkflowInstance.Instances.Remove(i);
                         }
-                        foreach (var i in WorkflowInstance.Instances)
+                        foreach (var i in WorkflowInstance.Instances.ToList())
                         {
                             if (!string.IsNullOrEmpty(i.correlationId) && !i.isCompleted)
                             {

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.RDService
 {
+    using FlaUI.UIA3.Patterns;
     using OpenRPA.Interfaces;
     using System.IO.Pipes;
     class Program
@@ -114,17 +115,24 @@ namespace OpenRPA.RDService
             if (autoReconnect)
             {
                 autoReconnect = false;
-                global.webSocketClient.OnOpen -= WebSocketClient_OnOpen;
-                global.webSocketClient.OnClose -= WebSocketClient_OnClose;
-                global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
-                global.webSocketClient = null;
+                try
+                {
+                    global.webSocketClient.OnOpen -= WebSocketClient_OnOpen;
+                    global.webSocketClient.OnClose -= WebSocketClient_OnClose;
+                    global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
+                    global.webSocketClient = null;
 
-                global.webSocketClient = new WebSocketClient(PluginConfig.wsurl);
-                global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
-                global.webSocketClient.OnClose += WebSocketClient_OnClose;
-                global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
-                await global.webSocketClient.Connect();
-                autoReconnect = true;
+                    global.webSocketClient = new WebSocketClient(PluginConfig.wsurl);
+                    global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
+                    global.webSocketClient.OnClose += WebSocketClient_OnClose;
+                    global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
+                    await global.webSocketClient.Connect();
+                    autoReconnect = true;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
             }
         }
         public static byte[] Base64Decode(string base64EncodedData)
@@ -216,8 +224,8 @@ namespace OpenRPA.RDService
                         }
                         reloadTimer.Start();
                     };
-                    reloadTimer.Start();
                 }
+                reloadTimer.Start();
             }
             catch (Exception ex)
             {

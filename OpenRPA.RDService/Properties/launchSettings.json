@@ -1,8 +1,7 @@
 {
   "profiles": {
     "OpenRPA.RDService": {
-      "commandName": "Project",
-      "commandLineArgs": "auth"
+      "commandName": "Project"
     }
   }
 }

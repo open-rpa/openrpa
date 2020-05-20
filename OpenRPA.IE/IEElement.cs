@@ -192,11 +192,15 @@ namespace OpenRPA.IE
                         {
                             //csspath = CSSPath.getCSSPath(node, true);
                             csspath = CSSPath.getCSSPath(node, false);
-                            while (_RawElement == null)
+                            while (_RawElement == null && sw.Elapsed < TimeSpan.FromSeconds(5))
                             {
                                 try
                                 {
                                     _RawElement = Browser.Document.querySelector(csspath);
+                                }
+                                catch (ArgumentException)
+                                {
+                                    Log.Error("IE reported argument excepting. Is either a bad CSS Selector or page is targeting an old version of IE that does not support css selectors");
                                 }
                                 catch (Exception)
                                 {

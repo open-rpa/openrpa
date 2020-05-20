@@ -6,11 +6,12 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.25</Version>
+    <Version>1.0.26</Version>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
     <StartupObject />
-    <PackageReleaseNotes>1.0.25 Allow custom unique ids for xpath generation in nm
+    <PackageReleaseNotes>1.0.26 Filter out google sheet in chrome extension
+1.0.25 Allow custom unique ids for xpath generation in nm
 1.0.24 Add cords for GetElement
 1.0.23 Fix issue with multiple frames and selector
 1.0.22 improve iframe support / update browser extenstion

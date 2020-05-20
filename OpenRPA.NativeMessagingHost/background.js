@@ -361,15 +361,19 @@ function tabsOnActivated(activeInfo) {
 //window.addEventListener("load", OnPageLoad, false);
 
 var allowExecuteScript = function (tab){
-    if (port == null) return;
+    if (port == null) return false;
     if (isFirefox) {
-        if (tab.url.startsWith("about:")) return;
-        if (tab.url.startsWith("https://support.mozilla.org")) return;
+        if (tab.url.startsWith("about:")) return false;
+        if (tab.url.startsWith("https://support.mozilla.org")) return false;
     }
     // ff uses chrome:// when debugging ?
-    if (tab.url.startsWith("chrome://")) return;
+    if (tab.url.startsWith("chrome://")) return false;
     if (isChrome) {
-        if (tab.url.startsWith("https://chrome.google.com")) return;
+        if (tab.url.startsWith("https://chrome.google.com")) return false;
+    }
+    if (tab.url.startsWith("https://docs.google.com/spreadsheets/d")) {
+        console.log("skip google docs");
+        return false;
     }
     return true;
 }

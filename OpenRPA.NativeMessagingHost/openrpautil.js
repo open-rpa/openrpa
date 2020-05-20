@@ -11,14 +11,13 @@ function inIframe() {
     }
     return result;
 }
-
 if (true == false) {
     console.debug('skip declaring openrpautil class');
     document.openrpautil = {};
 } else {
     if (window.openrpautil_contentlistner === null || window.openrpautil_contentlistner === undefined) {
         function remotePushEvent(evt) {
-            if (evt.data.functionName == "mousemove") {
+            if (evt.data != null && evt.data.functionName == "mousemove") {
                 openrpautil.parent = evt.data;
                 try {
                     notifyFrames();
@@ -87,7 +86,12 @@ if (true == false) {
             };
             doFrames();
         }
-        window.addEventListener('load', notifyFrames);
+        if (!document.URL.startsWith("https://docs.google.com/spreadsheets/d")) {
+            window.addEventListener('load', notifyFrames);
+        } else {
+            console.log("skip google docs");
+        }
+
 
         var runtimeOnMessage = function (sender, message, fnResponse) {
             try {
@@ -127,6 +131,10 @@ if (true == false) {
                     return "pong";
                 },
                 init: function () {
+                    if (document.URL.startsWith("https://docs.google.com/spreadsheets/d")) {
+                        console.log("skip google docs");
+                        return;
+                    }
                     document.addEventListener('mousemove', function (e) { openrpautil.pushEvent('mousemove', e); }, true);
                     if (inIframe()) return;
                     document.addEventListener('click', function (e) { openrpautil.pushEvent('click', e); }, true);

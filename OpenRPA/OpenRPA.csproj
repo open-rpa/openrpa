@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.119</Version>
-    <PackageReleaseNotes>1.0.119 Add argument mapping dialog to Invoke Activities
+    <Version>1.0.120</Version>
+    <PackageReleaseNotes>1.0.120 Fix endless loop bug in IE, filter out google sheet in chrome extension
+1.0.119 Add argument mapping dialog to Invoke Activities
 1.0.118 downgrade for win7 support / Add GetColor Activity
 1.0.117 Fix updating json, when using select button in selector
 1.0.116 Fix select value for IE, add SupportSelect for ie and nm

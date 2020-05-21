@@ -7,8 +7,9 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.24</Version>
-    <PackageReleaseNotes>1.0.24 Add GetColor Activity
+    <Version>1.0.25</Version>
+    <PackageReleaseNotes>1.0.25 Add support for finding nested windows
+1.0.24 Add GetColor Activity
 1.0.23 Improve design expereince with image activites
 1.0.22 Change target framework to 4.7.2
 1.0.21 Remove debug info

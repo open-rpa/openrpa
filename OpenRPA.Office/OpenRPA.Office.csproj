@@ -8,7 +8,7 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office, created for OpenRPA robot</Description>
     <Version>1.0.25</Version>
-    <PackageReleaseNotes>1.0.25 Fix index error in readrange when HeaderRows is false
+    <PackageReleaseNotes>1.0.25 Fix index error in readrange when HeaderRows is false, add range check in readrange
 1.0.24 Add query and MaxResults to GetMails
 1.0.23 Add Move MailItem
 1.0.22 Hide the Hide property

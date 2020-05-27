@@ -63,6 +63,7 @@ namespace OpenRPA.Office.Activities
             }
             else
             {
+                if (!cells.Contains(":")) throw new ArgumentException("Cell should contain a range dedenition, meaning it should contain a colon :");
                 range = base.worksheet.get_Range(cells);
             }
             //object[,] valueArray = (object[,])range.Value;

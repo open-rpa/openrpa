@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <Platforms>AnyCPU;x86</Platforms>
     <ApplicationIcon>OpenRPA.ico</ApplicationIcon>
+    <Configurations>Debug;Release;PrepInstaller</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>

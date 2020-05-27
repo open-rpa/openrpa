@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="SAPComponents">
+      <Component Id='SAPComponent' Guid='{D7DA4D4F-660D-46B9-BA6F-BD1D8743BD57}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="Interop.SAPFEWSELib.dll" Source="!(wix.SAPSource)\Interop.SAPFEWSELib.dll" />
+        <File Id="Interop.SapROTWr.dll" Source="!(wix.SAPSource)\Interop.SapROTWr.dll" />
+        <File Id="OpenRPA.SAPBridge.exe" Source="!(wix.SAPSource)\OpenRPA.SAPBridge.exe" />
+        <File Id="OpenRPA.SAPBridge.exe.config" Source="!(wix.SAPSource)\OpenRPA.SAPBridge.exe.config" />
+        <File Id="OpenRPA.SAP.dll" Source="!(wix.SAPSource)\OpenRPA.SAP.dll" />
+      </Component>
+      
+      <!--<Component Id='SAPComponentde' Win64='yes' Directory="SAPde" Guid='{37484DAA-A9A1-41E0-9C17-16BDC5E83A95}'>
+        <File Id="OpenRPA.SAP.resources.dll_de" Source="!(wix.SAPSource)\de\OpenRPA.SAP.resources.dll" />
+      </Component>
+      <Component Id='SAPComponentda' Win64='yes' Directory="SAPda" Guid='{01CC08A5-1E01-48B9-A50F-DC1969E66C2D}'>
+        <File Id="OpenRPA.SAP.resources.dll_da" Source="!(wix.SAPSource)\da\OpenRPA.SAP.resources.dll" />
+      </Component>
+      <Component Id='SAPComponentes' Win64='yes' Directory="SAPes" Guid='{E0B8F7D1-8632-45D9-8887-03A44926FE77}'>
+        <File Id="OpenRPA.SAP.resources.dll_es" Source="!(wix.SAPSource)\es\OpenRPA.SAP.resources.dll" />
+      </Component>
+      <Component Id='SAPComponentpt' Win64='yes' Directory="SAPpt" Guid='{59410E80-F659-47E7-96D6-89A1D57082F1}'>
+        <File Id="OpenRPA.SAP.resources.dll_pt" Source="!(wix.SAPSource)\pt\OpenRPA.SAP.resources.dll" />
+      </Component>
+      <Component Id='SAPComponentro' Win64='yes' Directory="SAPro" Guid='{01F7A9D7-229A-47A1-988B-30C9EC89B6A8}'>
+        <File Id="OpenRPA.SAP.resources.dll_ro" Source="!(wix.SAPSource)\ro\OpenRPA.SAP.resources.dll" />
+      </Component>
+      <Component Id='SAPComponentru' Win64='yes' Directory="SAPru" Guid='{F48EDDEB-B100-4612-9BE8-46BC6C816530}'>
+        <File Id="OpenRPA.SAP.resources.dll_ru" Source="!(wix.SAPSource)\ru\OpenRPA.SAP.resources.dll" />
+      </Component>-->
+
+    </ComponentGroup>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="SAPde" Name="de">
+      </Directory>
+      <Directory Id="SAPda" Name="da">
+      </Directory>
+      <Directory Id="SAPes" Name="es">
+      </Directory>
+      <Directory Id="SAPpt" Name="pt">
+      </Directory>
+      <Directory Id="SAPro" Name="ro">
+      </Directory>
+      <Directory Id="SAPru" Name="ru">
+      </Directory>
+    </DirectoryRef>
+
+  </Fragment>
+</Wix>

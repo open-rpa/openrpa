@@ -182,8 +182,11 @@ namespace OpenRPA.RDService
                             return;
                         }
 
+                        Log.Information("Increment ConnectionAttempts");
                         ConnectionAttempts++;
+                        Log.Information("Get HostName");
                         var hostname = NativeMethods.GetHostName().ToLower();
+                        Log.Information("hostname is: " + hostname);
                         Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowslogin);
                         // Task.Run(()=>rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername.Substring(hostname.Length + 1), client.windowspassword));
                         if (string.IsNullOrEmpty(client.windowslogin))

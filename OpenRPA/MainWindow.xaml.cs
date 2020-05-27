@@ -2594,7 +2594,7 @@ namespace OpenRPA
                 if (isRecording)
                 {
                     StartDetectorPlugins();
-                    StopRecordPlugins();
+                    StopRecordPlugins(true);
                     designer.ReadOnly = false;
                     InputDriver.Instance.CallNext = true;
                     InputDriver.Instance.OnKeyDown -= OnKeyDown;
@@ -2637,7 +2637,7 @@ namespace OpenRPA
         {
             if (!isRecording) return;
             StartDetectorPlugins();
-            StopRecordPlugins();
+            StopRecordPlugins(true);
             if (SelectedContent is Views.WFDesigner view)
             {
                 view.ReadOnly = false;
@@ -2661,12 +2661,24 @@ namespace OpenRPA
         {
             System.Diagnostics.Process.Start("firefox.exe", "https://addons.mozilla.org/en-US/firefox/addon/openrpa/");
         }
+        private int lastsapprocessid = -1;
         private void OnKeyDown(Input.InputEventArgs e)
         {
             if (!isRecording) return;
             // if (e.Key == KeyboardKey. 255) return;
             try
             {
+                var element = AutomationUtil.getAutomation().FocusedElement();
+                if(element != null && element.Properties.ProcessId.IsSupported)
+                {
+                    if (element.Properties.ProcessId == lastsapprocessid) return;
+                    var p = System.Diagnostics.Process.GetProcessById(element.Properties.ProcessId);
+                    if (p.ProcessName.ToLower() == "saplogon")
+                    {
+                        lastsapprocessid = element.Properties.ProcessId;
+                        return;
+                    }
+                }
                 var cancelkey = InputDriver.Instance.cancelKeys.Where(x => x.KeyValue == e.KeyValue).ToList();
                 if (cancelkey.Count > 0) return;
                 if (SelectedContent is Views.WFDesigner view)
@@ -2701,6 +2713,18 @@ namespace OpenRPA
             // if (e.KeyValue == 255) return;
             try
             {
+                var element = AutomationUtil.getAutomation().FocusedElement();
+                if (element != null && element.Properties.ProcessId.IsSupported)
+                {
+                    if (element.Properties.ProcessId == lastsapprocessid) return;
+                    var p = System.Diagnostics.Process.GetProcessById(element.Properties.ProcessId);
+                    if (p.ProcessName.ToLower() == "saplogon")
+                    {
+                        lastsapprocessid = element.Properties.ProcessId;
+                        return;
+                    }
+                }
+
                 if (SelectedContent is Views.WFDesigner view)
                 {
                     if (view.Lastinserted != null && view.Lastinserted is Activities.TypeText)
@@ -2746,7 +2770,7 @@ namespace OpenRPA
             Log.FunctionOutdent("MainWindow", "StopDetectorPlugins");
         }
         Interfaces.Overlay.OverlayWindow _overlayWindow = null;
-        private void StartRecordPlugins()
+        private void StartRecordPlugins(bool all)
         {
             Log.FunctionIndent("MainWindow", "StartRecordPlugins");
             try
@@ -2765,6 +2789,15 @@ namespace OpenRPA
                         TopMost = true
                     };
                 }
+
+                p = Plugins.recordPlugins.Where(x => x.Name == "SAP").First();
+                if(p != null && (all == true || all == false))
+                {
+                    p.OnUserAction += OnUserAction;
+                    if (Config.local.record_overlay) p.OnMouseMove += OnMouseMove;
+                    p.Start();
+                }
+
             }
             catch (Exception ex)
             {
@@ -2772,7 +2805,7 @@ namespace OpenRPA
             }
             Log.FunctionOutdent("MainWindow", "StartRecordPlugins");
         }
-        private void StopRecordPlugins()
+        private void StopRecordPlugins(bool all)
         {
             Log.FunctionIndent("MainWindow", "StopRecordPlugins");
             try
@@ -2782,6 +2815,14 @@ namespace OpenRPA
                 p.OnUserAction -= OnUserAction;
                 if (Config.local.record_overlay) p.OnMouseMove -= OnMouseMove;
                 p.Stop();
+
+                p = Plugins.recordPlugins.Where(x => x.Name == "SAP").First();
+                if (p != null && (all == true || all == false))
+                {
+                    p.OnUserAction -= OnUserAction;
+                    p.Stop();
+                }
+
                 if (_overlayWindow != null)
                 {
                     GenericTools.RunUI(_overlayWindow, () =>
@@ -2812,7 +2853,7 @@ namespace OpenRPA
             {
                 if (p.Name != sender.Name)
                 {
-                    if (p.ParseMouseMoveAction(ref e)) continue;
+                    if (p.ParseMouseMoveAction(ref e)) break;
                 }
             }
 
@@ -2849,29 +2890,32 @@ namespace OpenRPA
         public void OnUserAction(IRecordPlugin sender, IRecordEvent e)
         {
             Log.FunctionIndent("MainWindow", "OnUserAction");
-            StopRecordPlugins();
+            if (sender.Name == "Windows") StopRecordPlugins(false);
             AutomationHelper.syncContext.Post(o =>
             {
                 try
                 {
-                    // TODO: Add priotrity, we could create an ordered list in config ?
-                    foreach (var p in Plugins.recordPlugins)
+                    if(sender.Name == "Windows")
                     {
-                        if (p.Name != sender.Name)
+                        // TODO: Add priotrity, we could create an ordered list in config ?
+                        foreach (var p in Plugins.recordPlugins)
                         {
-                            try
+                            if (p.Name != sender.Name)
                             {
-                                if (p.ParseUserAction(ref e)) continue;
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.Error(ex.ToString());
+                                try
+                                {
+                                    if (p.ParseUserAction(ref e)) break;
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.Error(ex.ToString());
+                                }
                             }
                         }
                     }
                     if (e.a == null)
                     {
-                        StartRecordPlugins();
+                        if (sender.Name == "Windows") StartRecordPlugins(false);
                         if (e.ClickHandled == false)
                         {
                             NativeMethods.SetCursorPos(e.X, e.Y);
@@ -2950,7 +2994,7 @@ namespace OpenRPA
                         }
                         System.Threading.Thread.Sleep(500);
                     }
-                    StartRecordPlugins();
+                    if (sender.Name == "Windows") StartRecordPlugins(false);
                 }
                 catch (Exception ex)
                 {
@@ -2974,7 +3018,7 @@ namespace OpenRPA
                 StopDetectorPlugins();
                 InputDriver.Instance.OnKeyDown += OnKeyDown;
                 InputDriver.Instance.OnKeyUp += OnKeyUp;
-                StartRecordPlugins();
+                StartRecordPlugins(true);
                 InputDriver.Instance.CallNext = false;
                 if (this.Minimize) GenericTools.Minimize();
             }

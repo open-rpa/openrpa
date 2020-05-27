@@ -21,6 +21,6 @@ namespace OpenRPA.SAP
                 return _globallocal;
             }
         }
-        // public static bool auto_launch_java_bridge { get { return globallocal.GetProperty(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }
+        public static bool auto_launch_sap_bridge { get { return globallocal.GetProperty(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }
     }
 }

@@ -32,13 +32,17 @@ namespace OpenRPA.SAP.Views
         {
             InitializeComponent();
             DataContext = this;
-            // auto_launch_SAP_bridge.IsChecked = PluginConfig.auto_launch_SAP_bridge;
+            auto_launch_sap_bridge.IsChecked = PluginConfig.auto_launch_sap_bridge;
         }
         private void auto_launch_SAP_bridge_Checked(object sender, RoutedEventArgs e)
         {
-            //if (auto_launch_SAP_bridge.IsChecked == null) return;
-            //PluginConfig.auto_launch_SAP_bridge = auto_launch_SAP_bridge.IsChecked.Value;
+            if (auto_launch_sap_bridge.IsChecked == null) return;
+            PluginConfig.auto_launch_sap_bridge = auto_launch_sap_bridge.IsChecked.Value;
             Config.Save();
+        }
+        private void launch_SAP_bridge_Click(object sender, RoutedEventArgs e)
+        {
+            SAPhook.EnsureSAPBridge();
         }
     }
 }

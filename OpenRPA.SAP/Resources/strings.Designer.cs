@@ -104,5 +104,347 @@ namespace OpenRPA.SAP.Resources {
                 return ResourceManager.GetString("activity_getelement_tooltip", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoke Method.
+        /// </summary>
+        public static string activity_invokemethod {
+            get {
+                return ResourceManager.GetString("activity_invokemethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Action Name.
+        /// </summary>
+        public static string activity_invokemethod_actionname {
+            get {
+                return ResourceManager.GetString("activity_invokemethod_actionname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Action to perform on object.
+        /// </summary>
+        public static string activity_invokemethod_actionname_help {
+            get {
+                return ResourceManager.GetString("activity_invokemethod_actionname_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameters.
+        /// </summary>
+        public static string activity_invokemethod_parameters {
+            get {
+                return ResourceManager.GetString("activity_invokemethod_parameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Patameters for Action.
+        /// </summary>
+        public static string activity_invokemethod_parameters_help {
+            get {
+                return ResourceManager.GetString("activity_invokemethod_parameters_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path.
+        /// </summary>
+        public static string activity_invokemethod_path {
+            get {
+                return ResourceManager.GetString("activity_invokemethod_path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path to object.
+        /// </summary>
+        public static string activity_invokemethod_path_help {
+            get {
+                return ResourceManager.GetString("activity_invokemethod_path_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System Name.
+        /// </summary>
+        public static string activity_invokemethod_systemname {
+            get {
+                return ResourceManager.GetString("activity_invokemethod_systemname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System Name to send command to.
+        /// </summary>
+        public static string activity_invokemethod_systemname_help {
+            get {
+                return ResourceManager.GetString("activity_invokemethod_systemname_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoke SAP UI Method.
+        /// </summary>
+        public static string activity_invokemethod_tooltip {
+            get {
+                return ResourceManager.GetString("activity_invokemethod_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login.
+        /// </summary>
+        public static string activity_login {
+            get {
+                return ResourceManager.GetString("activity_login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Client.
+        /// </summary>
+        public static string activity_login_client {
+            get {
+                return ResourceManager.GetString("activity_login_client", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SAP Client to use.
+        /// </summary>
+        public static string activity_login_client_help {
+            get {
+                return ResourceManager.GetString("activity_login_client_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Host.
+        /// </summary>
+        public static string activity_login_host {
+            get {
+                return ResourceManager.GetString("activity_login_host", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server IP or hostname.
+        /// </summary>
+        public static string activity_login_host_help {
+            get {
+                return ResourceManager.GetString("activity_login_host_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Language.
+        /// </summary>
+        public static string activity_login_language {
+            get {
+                return ResourceManager.GetString("activity_login_language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Language of client.
+        /// </summary>
+        public static string activity_login_language_help {
+            get {
+                return ResourceManager.GetString("activity_login_language_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        public static string activity_login_password {
+            get {
+                return ResourceManager.GetString("activity_login_password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password for user to login with.
+        /// </summary>
+        public static string activity_login_password_help {
+            get {
+                return ResourceManager.GetString("activity_login_password_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System Name.
+        /// </summary>
+        public static string activity_login_systemname {
+            get {
+                return ResourceManager.GetString("activity_login_systemname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected System Name, will search for a session to this system, and only login if non is found. Leave empty to always login to a new session.
+        /// </summary>
+        public static string activity_login_systemname_help {
+            get {
+                return ResourceManager.GetString("activity_login_systemname_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login to sap using the credentials, unless a session with the given name exists.
+        /// </summary>
+        public static string activity_login_tooltip {
+            get {
+                return ResourceManager.GetString("activity_login_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username.
+        /// </summary>
+        public static string activity_login_username {
+            get {
+                return ResourceManager.GetString("activity_login_username", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username to login with.
+        /// </summary>
+        public static string activity_login_username_help {
+            get {
+                return ResourceManager.GetString("activity_login_username_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map variables.
+        /// </summary>
+        public static string activity_map_variables {
+            get {
+                return ResourceManager.GetString("activity_map_variables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Property.
+        /// </summary>
+        public static string activity_setproperty {
+            get {
+                return ResourceManager.GetString("activity_setproperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Action Name.
+        /// </summary>
+        public static string activity_setproperty_actionname {
+            get {
+                return ResourceManager.GetString("activity_setproperty_actionname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Action to perform on object.
+        /// </summary>
+        public static string activity_setproperty_actionname_help {
+            get {
+                return ResourceManager.GetString("activity_setproperty_actionname_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameters.
+        /// </summary>
+        public static string activity_setproperty_parameters {
+            get {
+                return ResourceManager.GetString("activity_setproperty_parameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Patameters for Action.
+        /// </summary>
+        public static string activity_setproperty_parameters_help {
+            get {
+                return ResourceManager.GetString("activity_setproperty_parameters_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path.
+        /// </summary>
+        public static string activity_setproperty_path {
+            get {
+                return ResourceManager.GetString("activity_setproperty_path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path to object.
+        /// </summary>
+        public static string activity_setproperty_path_help {
+            get {
+                return ResourceManager.GetString("activity_setproperty_path_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System Name to send command to.
+        /// </summary>
+        public static string activity_setproperty_systemname {
+            get {
+                return ResourceManager.GetString("activity_setproperty_systemname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System Name.
+        /// </summary>
+        public static string activity_setproperty_systemname_help {
+            get {
+                return ResourceManager.GetString("activity_setproperty_systemname_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set the property value of an SAP UI Element.
+        /// </summary>
+        public static string activity_setproperty_tooltip {
+            get {
+                return ResourceManager.GetString("activity_setproperty_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto launch.
+        /// </summary>
+        public static string plugin_auto_launch_sap_bridge {
+            get {
+                return ResourceManager.GetString("plugin_auto_launch_sap_bridge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto launch SAP bridge when robot is running.
+        /// </summary>
+        public static string plugin_auto_launch_sap_bridge_help {
+            get {
+                return ResourceManager.GetString("plugin_auto_launch_sap_bridge_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launch SAP bridge.
+        /// </summary>
+        public static string plugin_launch_sap_bridge {
+            get {
+                return ResourceManager.GetString("plugin_launch_sap_bridge", resourceCulture);
+            }
+        }
     }
 }

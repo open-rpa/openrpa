@@ -132,4 +132,118 @@
   <data name="activity_getelement_tooltip" xml:space="preserve">
     <value>Find an SAP element based on selector</value>
   </data>
+  <data name="activity_invokemethod" xml:space="preserve">
+    <value>Invoke Method</value>
+  </data>
+  <data name="activity_invokemethod_actionname" xml:space="preserve">
+    <value>Action Name</value>
+  </data>
+  <data name="activity_invokemethod_actionname_help" xml:space="preserve">
+    <value>Action to perform on object</value>
+  </data>
+  <data name="activity_invokemethod_parameters" xml:space="preserve">
+    <value>Parameters</value>
+  </data>
+  <data name="activity_invokemethod_parameters_help" xml:space="preserve">
+    <value>Patameters for Action</value>
+  </data>
+  <data name="activity_invokemethod_path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="activity_invokemethod_path_help" xml:space="preserve">
+    <value>Path to object</value>
+  </data>
+  <data name="activity_invokemethod_systemname" xml:space="preserve">
+    <value>System Name</value>
+  </data>
+  <data name="activity_invokemethod_systemname_help" xml:space="preserve">
+    <value>System Name to send command to</value>
+  </data>
+  <data name="activity_invokemethod_tooltip" xml:space="preserve">
+    <value>Invoke SAP UI Method</value>
+  </data>
+  <data name="activity_login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="activity_login_client" xml:space="preserve">
+    <value>Client</value>
+  </data>
+  <data name="activity_login_client_help" xml:space="preserve">
+    <value>SAP Client to use</value>
+  </data>
+  <data name="activity_login_host" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="activity_login_host_help" xml:space="preserve">
+    <value>Server IP or hostname</value>
+  </data>
+  <data name="activity_login_language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="activity_login_language_help" xml:space="preserve">
+    <value>Set Language of client</value>
+  </data>
+  <data name="activity_login_password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="activity_login_password_help" xml:space="preserve">
+    <value>Password for user to login with</value>
+  </data>
+  <data name="activity_login_systemname" xml:space="preserve">
+    <value>System Name</value>
+  </data>
+  <data name="activity_login_systemname_help" xml:space="preserve">
+    <value>Expected System Name, will search for a session to this system, and only login if non is found. Leave empty to always login to a new session</value>
+  </data>
+  <data name="activity_login_tooltip" xml:space="preserve">
+    <value>Login to sap using the credentials, unless a session with the given name exists</value>
+  </data>
+  <data name="activity_login_username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="activity_login_username_help" xml:space="preserve">
+    <value>Username to login with</value>
+  </data>
+  <data name="activity_map_variables" xml:space="preserve">
+    <value>Map variables</value>
+  </data>
+  <data name="activity_setproperty" xml:space="preserve">
+    <value>Set Property</value>
+  </data>
+  <data name="activity_setproperty_actionname" xml:space="preserve">
+    <value>Action Name</value>
+  </data>
+  <data name="activity_setproperty_actionname_help" xml:space="preserve">
+    <value>Action to perform on object</value>
+  </data>
+  <data name="activity_setproperty_parameters" xml:space="preserve">
+    <value>Parameters</value>
+  </data>
+  <data name="activity_setproperty_parameters_help" xml:space="preserve">
+    <value>Patameters for Action</value>
+  </data>
+  <data name="activity_setproperty_path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="activity_setproperty_path_help" xml:space="preserve">
+    <value>Path to object</value>
+  </data>
+  <data name="activity_setproperty_systemname" xml:space="preserve">
+    <value>System Name to send command to</value>
+  </data>
+  <data name="activity_setproperty_systemname_help" xml:space="preserve">
+    <value>System Name</value>
+  </data>
+  <data name="activity_setproperty_tooltip" xml:space="preserve">
+    <value>Set the property value of an SAP UI Element</value>
+  </data>
+  <data name="plugin_auto_launch_sap_bridge" xml:space="preserve">
+    <value>Auto launch</value>
+  </data>
+  <data name="plugin_auto_launch_sap_bridge_help" xml:space="preserve">
+    <value>Auto launch SAP bridge when robot is running</value>
+  </data>
+  <data name="plugin_launch_sap_bridge" xml:space="preserve">
+    <value>Launch SAP bridge</value>
+  </data>
 </root>

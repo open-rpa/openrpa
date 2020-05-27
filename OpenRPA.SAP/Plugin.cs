@@ -5,6 +5,7 @@ using System;
 using System.Activities;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Instrumentation;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,19 +17,10 @@ namespace OpenRPA.SAP
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         public static treeelement[] _GetRootElements(Selector anchor)
         {
+            SAPhook.Instance.RefreshConnections();
             var result = new List<treeelement>();
-            SAPhook.Instance.RefreshSessions();
             if (anchor != null)
             {
-                if (!(anchor is SAPSelector SAPselector)) { SAPselector = new SAPSelector(anchor.ToString()); }
-                var elements = SAPSelector.GetElementsWithuiSelector(SAPselector, null, 1);
-                foreach (var _ele in elements)
-                {
-                    var e = new SAPTreeElement(null, true, _ele);
-                    result.Add(e);
-
-                }
-                return result.ToArray();
             }
             else
             {
@@ -61,8 +53,14 @@ namespace OpenRPA.SAP
         }
         public string Name { get => "SAP"; }
         // public string Status => (hook!=null && hook.jvms.Count>0 ? "online":"offline");
-        private string _Status = "";
+        private string _Status = "Offline";
         public string Status { get => _Status; }
+        private void SetStatus(string status)
+        {
+            _Status = status;
+            NotifyPropertyChanged("Status");
+        }
+        private System.Timers.Timer timer;
         // public SAPhook hook { get; set; } = new SAPhook();
         private Views.RecordPluginView view;
         public System.Windows.Controls.UserControl editor
@@ -76,63 +74,75 @@ namespace OpenRPA.SAP
                 return view;
             }
         }
+        public void Initialize(IOpenRPAClient client)
+        {
+            try
+            {
+                // SAPhook.Instance.OnRecordEvent += OnRecordEvent;
+                SAPhook.Instance.Connected += () => { SetStatus("Online"); };
+                SAPhook.Instance.Disconnected += () => { SetStatus("Offline"); };
+                timer = new System.Timers.Timer(5000);
+                timer.Elapsed += Timer_Elapsed;
+                timer.Start();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+            }
+        }
+        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            timer.Stop();
+            try
+            {
+                SAPhook.Instance.RefreshConnections();
+                if(SAPhook.Instance.isSapRunning)
+                {
+                    SetStatus("Online(-1)");
+                } 
+                else
+                {
+                    SetStatus("Online(" + SAPhook.Instance.Connections.Length + ")");
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error getting sap sessions: " + ex.Message);
+            }
+            timer.Interval = TimeSpan.FromMinutes(5).TotalMilliseconds;
+            timer.Start();
+        }
+
+        public static Plugin Instance { get; set; }
         public void Start()
         {
-            SAPhook.Instance.BeginRecord();
-            //SAPhook.Instance.OnMouseClicked += Hook_OnMouseClicked;
+            Instance = this;
+            var e = new SAPToogleRecordingEvent(); e.overlay = Config.local.record_overlay;
+            var msg = new SAPEvent("beginrecord"); msg.Set(e);
+            SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(5));
         }
         public void Stop()
         {
-            // SAPhook.Instance.OnMouseClicked -= Hook_OnMouseClicked;
+            SAPhook.Instance.SendMessage(new SAPEvent("endrecord"), TimeSpan.FromSeconds(5));
         }
         // public SAPElement LastElement { get; set; }
         private IRecordEvent LastRecorderEvent;
         public bool ParseUserAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) return false;
-
-            string Processname = "";
             if (e.UIElement.ProcessId > 0)
             {
                 var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
                 if (p.ProcessName.ToLower() != "saplogon") return false;
-                Processname = p.ProcessName;
             } else { return false; }
             LastRecorderEvent = e;
-
+            e.a = null;
+            e.ClickHandled = false;
             return true;
         }
-        public void Initialize(IOpenRPAClient client)
+        public void RaiseUserAction(RecordEvent r)
         {
-            try
-            {
-                SAPhook.Instance.OnRecordEvent += OnRecordEvent;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "");
-            }
-
-        }
-        public void OnRecordEvent(SAPElement Element)
-        {
-            var r = new RecordEvent();
-            MouseButton button = MouseButton.Left;
-
-            var selector = new SAPSelector(Element, null, true);
-            var a = new GetElement { DisplayName = Element.id + " " + Element.Role + " " + Element.Name };
-            a.Selector = selector.ToString();
-            a.Image = Element.ImageString();
-            a.MaxResults = 1;
-
-            r.a = new GetElementResult(a);
-            r.SupportInput = Element.SupportInput;
-            r.ClickHandled = true;
-            r.Selector = selector;
-            r.Element = Element;
-            if (LastRecorderEvent != null) button = LastRecorderEvent.Button;
-
-            // Element.Click(true,  e.Button, 0, 0, false, false);
             OnUserAction?.Invoke(this, r);
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
@@ -154,18 +164,19 @@ namespace OpenRPA.SAP
             //return SAPSelectorItem.Match(item, el);
             return false;
         }
+        private int lastid = -1;
         public bool ParseMouseMoveAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) return false;
-
-            if (e.UIElement.ClassName == null || !e.UIElement.ClassName.StartsWith("SunAwt"))
+            if (e.UIElement.ProcessId < 1) return false;
+            if(e.UIElement.ProcessId != lastid)
             {
-                if (e.UIElement.ProcessId < 1) return false;
                 var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-                if (p.ProcessName.ToLower() != "SAP") return false;
-            }
-            e.a = null;
-            e.ClickHandled = false;
+                if (p.ProcessName.ToLower() != "saplogon") return false;
+                lastid = e.UIElement.ProcessId;
+            }            
+            e.Element = null;
+            e.UIElement = null;
             return true;
         }
     }
@@ -175,17 +186,28 @@ namespace OpenRPA.SAP
         {
             Activity = activity;
         }
+        public GetElementResult(InvokeMethod activity)
+        {
+            Activity = activity;
+        }
+        public GetElementResult(SetProperty activity)
+        {
+            Activity = activity;
+        }
         public Activity Activity { get; set; }
         public void AddActivity(Activity a, string Name)
         {
-            var aa = new ActivityAction<SAPElement>();
-            var da = new DelegateInArgument<SAPElement>
+            if(Activity is GetElement)
             {
-                Name = Name
-            };
-            aa.Handler = a;
-            ((GetElement)Activity).Body = aa;
-            aa.Argument = da;
+                var aa = new ActivityAction<SAPElement>();
+                var da = new DelegateInArgument<SAPElement>
+                {
+                    Name = Name
+                };
+                aa.Handler = a;
+                ((GetElement)Activity).Body = aa;
+                aa.Argument = da;
+            }
         }
         public void AddInput(string value, IElement element)
         {

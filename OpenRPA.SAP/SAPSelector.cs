@@ -1,6 +1,5 @@
 ﻿using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.Selector;
-using SAPFEWSELib;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -97,7 +96,7 @@ namespace OpenRPA.SAP
         {
             return SAPSelector.GetElementsWithuiSelector(this, fromElement, maxresults);
         }
-        private static SAPElement[] GetElementsWithuiSelector(GuiSession session, SAPSelector selector, IElement fromElement, int maxresults)
+        private static SAPElement[] GetElementsWithuiSelector(SAPSession session, SAPSelector selector, IElement fromElement, int maxresults)
         {
             SAPElement[] result = null;
             SAPElement _fromElement = fromElement as SAPElement;
@@ -158,7 +157,6 @@ namespace OpenRPA.SAP
         }
         public static SAPElement[] GetElementsWithuiSelector( SAPSelector selector, IElement fromElement = null, int maxresults = 1)
         {
-            SAPhook.Instance.RefreshSessions();
             SAPElement[] result = null;
             foreach (var session in SAPhook.Instance.Sessions)
             {

@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using OpenRPA.Interfaces;
-using SAPFEWSELib;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Design;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -12,35 +12,41 @@ namespace OpenRPA.SAP
 {
     public class SAPElement : IElement
     {
-        object IElement.RawElement { get => Component; set => Component = value as GuiComponent; }
-        private GuiComponent Component;
+        object IElement.RawElement { get => raw; set => raw = value as object; }
+        private object raw;
         public SAPElement()
         {
         }
-        public SAPElement(GuiComponent Component)
+        public SAPElement(SAPConnection connection)
         {
-            this.Component = Component;
-            id = Component.Id;
-            Name = Component.Name;
-            Role = Component.GetDetailType();
-            if (Component is GuiVComponent)
+            Name = connection.Name;
+            id = connection.Id;
+            ContainerType = true;
+            Role = "GuiConnection";
+        }
+        public SAPElement(SAPSession session)
+        {
+            Name = session.Info.SystemName;
+            id = session.Id;
+            SystemName = session.Info.SystemName;
+            ContainerType = true;
+            Role = "GUISession";
+        }
+        public SAPElement(SAPElement Parent, SAPEventElement Element)
+        {
+            if(Parent!=null)
             {
-                var vc = Component as GuiVComponent;
-                try
-                {
-                    Tip = vc.DefaultTooltip == "" ? vc.Tooltip : vc.DefaultTooltip;
-                }
-                catch
-                {
-
-                }
+                RefreshParent = false;
+                _Parent = Parent;
             }
-        }
+            
+            Name = Element.Name;
+            id = Element.Id;
+            SystemName = Element.SystemName;
+            ContainerType = Element.ContainerType;
+            Role = Element.type;
 
-        public SAPElement(GuiSession session)
-        {
         }
-
         public System.Drawing.Rectangle Rectangle
         {
             get
@@ -51,7 +57,9 @@ namespace OpenRPA.SAP
         }
         public string Name { get; set; }
         public string Role { get; set; }
+        public bool ContainerType { get; set; }
         public string id { get; set; }
+        public string SystemName { get; set; }        
         public string Tip { get; set; }
         public int Action { get; set; }
         public int X { get; set; }
@@ -78,27 +86,65 @@ namespace OpenRPA.SAP
             {
             }
         }
-
+        private bool RefreshParent = true;
+        private SAPElement _Parent = null;
         [JsonIgnore]
         public SAPElement Parent
         {
             get
             {
-                //return new SAPElement(_parent);
-                return null;
+                if (!RefreshParent) return _Parent;
+                try
+                {
+                    var msg = new SAPEvent("getitem");
+                    msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName });
+                    msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(5));
+                    if (msg != null)
+                    {
+                        var res = msg.Get<SAPEventElement>();
+                        _Parent = new SAPElement(null, res);
+                    }
+                    RefreshParent = false;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+                return _Parent;
             }
         }
+        private bool RefreshChildren = true;
+        private SAPElement[] _Children = new SAPElement[] { };
         [JsonIgnore]
         public SAPElement[] Children
         {
             get
             {
+                if (!RefreshChildren) return _Children;
+                if(!ContainerType) return _Children;
                 var result = new List<SAPElement>();
-                //foreach (var c in this.c.GetChildren())
-                //{
-                //    result.Add(new SAPElement(c));
-                //}
-                return result.ToArray();
+                try
+                {
+                    var msg = new SAPEvent("getitem");
+                    msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName });
+                    msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(5));
+                    if(msg!=null)
+                    {
+                        var ele = msg.Get<SAPEventElement>();
+                        var Parent = new SAPElement(null, ele);
+                        foreach (var c in ele.Children)
+                        {
+                            result.Add(new SAPElement(Parent, c));
+                        }
+                    }
+                    RefreshChildren = false;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+                _Children = result.ToArray();
+                return _Children;
             }
         }
         public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse)

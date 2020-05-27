@@ -150,14 +150,20 @@ namespace OpenRPA.Net
                     if (TryParseJSON(json))
                     {
                         var message = JsonConvert.DeserializeObject<SocketMessage>(json);
-                        if (message != null) _receiveQueue.Add(message);
+                        lock (_receiveQueue)
+                        {
+                            if (message != null) _receiveQueue.Add(message);
+                        }
                     } else
                     {
                         
                         if (TryParseJSON(tempbuffer + json))
                         {
                             var message = JsonConvert.DeserializeObject<SocketMessage>(tempbuffer + json);
-                            if (message != null) _receiveQueue.Add(message);
+                            lock (_receiveQueue)
+                            {
+                                if (message != null) _receiveQueue.Add(message);
+                            }
                             tempbuffer = null;
                         } 
                         else
@@ -223,14 +229,18 @@ namespace OpenRPA.Net
                 await ProcessingSemaphore.WaitAsync();
                 if (_receiveQueue == null) return;
                 List<string> ids = new List<string>();
-                for(var i = 0; i < _receiveQueue.Count; i++)
+                lock (_receiveQueue)
                 {
-                    if(_receiveQueue[i]!=null)
+                    for (var i = 0; i < _receiveQueue.Count; i++)
                     {
-                        string id = _receiveQueue[i].id;
-                        if (!ids.Contains(id)) ids.Add(id);
+                        if (_receiveQueue[i] != null)
+                        {
+                            string id = _receiveQueue[i].id;
+                            if (!ids.Contains(id)) ids.Add(id);
+                        }
                     }
                 }
+
                 // ids = (from m in _receiveQueue group m by new { m.id } into mygroup select mygroup.Key.id).ToList();
                 foreach (var id in ids)
                 {
@@ -251,9 +261,12 @@ namespace OpenRPA.Net
                         }
                         var result = new Message(first, data);
                         Process(result);
-                        foreach (var m in msgs.OrderBy((y) => y.index).ToList())
+                        lock (_receiveQueue)
                         {
-                            _receiveQueue.Remove(m);
+                            foreach (var m in msgs.OrderBy((y) => y.index).ToList())
+                            {
+                                _receiveQueue.Remove(m);
+                            }
                         }
                     }
                 }

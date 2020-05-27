@@ -21,6 +21,10 @@ namespace OpenRPA.Java
         public event MouseClickedDelegate OnMouseClicked;
         public delegate void MouseEnteredDelegate(int vmID, AccessibleContextNode ac);
         public event MouseEnteredDelegate OnMouseEntered;
+        public delegate void JavaHandler();
+        public event JavaHandler Connected;
+        public event JavaHandler Disconnected;
+
         public NamedPipeClient<JavaEvent> pipeclient = null;
         private HwndCache _windowCache = null;
         private  SingleDelayedTask _delayedRefresh = new SingleDelayedTask();
@@ -67,6 +71,8 @@ namespace OpenRPA.Java
                     var SessionId = System.Diagnostics.Process.GetCurrentProcess().SessionId;
                     pipeclient = new NamedPipeClient<JavaEvent>(SessionId + "_openrpa_javabridge");
                     pipeclient.ServerMessage += Pipeclient_ServerMessage;
+                    pipeclient.Connected += Pipeclient_Connected;
+                    pipeclient.Disconnected += Pipeclient_Disconnected;
                     pipeclient.AutoReconnect = true;
                     pipeclient.Start();
                 }
@@ -98,6 +104,14 @@ namespace OpenRPA.Java
             {
                 Log.Error(ex.ToString());
             }
+        }
+        private void Pipeclient_Disconnected(NamedPipeConnection<JavaEvent, JavaEvent> connection)
+        {
+            Disconnected?.Invoke();
+        }
+        private void Pipeclient_Connected(NamedPipeConnection<JavaEvent, JavaEvent> connection)
+        {
+            Connected?.Invoke();
         }
         public static void EnsureJavaBridge()
         {

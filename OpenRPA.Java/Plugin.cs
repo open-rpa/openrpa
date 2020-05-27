@@ -63,7 +63,11 @@ namespace OpenRPA.Java
         // public string Status => (hook!=null && hook.jvms.Count>0 ? "online":"offline");
         private string _Status = "";
         public string Status { get => _Status; }
-        // public Javahook hook { get; set; } = new Javahook();
+        private void SetStatus(string status)
+        {
+            _Status = status;
+            NotifyPropertyChanged("Status");
+        }
         private Views.RecordPluginView view;
         public System.Windows.Controls.UserControl editor
         {
@@ -80,6 +84,8 @@ namespace OpenRPA.Java
         {
             Javahook.Instance.init();
             Javahook.Instance.OnMouseClicked += Hook_OnMouseClicked;
+            Javahook.Instance.Connected += () => { SetStatus("Online"); };
+            Javahook.Instance.Disconnected += () => { SetStatus("Offline"); };
         }
         public void Stop()
         {

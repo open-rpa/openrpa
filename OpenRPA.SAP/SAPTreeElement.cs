@@ -1,4 +1,5 @@
 ﻿using FlaUI.Core.Definitions;
+using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.Selector;
 using System;
 using System.Collections.Generic;
@@ -44,16 +45,13 @@ namespace OpenRPA.SAP
 
         public override void AddSubElements()
         {
-            foreach(var elementNode in SAPElement.Children)
+            foreach (var elementNode in SAPElement.Children)
             {
                 var ele = elementNode;
-                //Children.Add(new SAPTreeElement(this, false, ele));
                 bool exists = false;
                 foreach (var c in Children) { if (c.Element.Equals(ele)) exists = true; }
-                //var exists = Children.Where(x => !ele.Equals( ((SAPTreeElement)x).Element) ).FirstOrDefault();
                 if (!exists)
                 {
-                    Interfaces.Log.Debug("Adding " + ele.ToString());
                     Children.Add(new SAPTreeElement(this, false, ele));
                 }
             }

@@ -187,6 +187,7 @@ if (true == false) {
                             for (var i = 0; i < events.length; ++i) {
                                 simulate(ele, events[i]);
                             }
+                            ele.click();
                         }
                     } catch (e) {
                         console.error(e);

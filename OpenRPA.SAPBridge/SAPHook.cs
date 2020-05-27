@@ -39,7 +39,7 @@ namespace OpenRPA.SAPBridge
                         _app = null;
                     }
                 }
-                if(_app == null) _app = GetSAPGuiApp();
+                if(_app == null) _app = GetSAPGuiApp(0);
                 return _app;
             }
         }
@@ -51,6 +51,12 @@ namespace OpenRPA.SAPBridge
         public SAPConnection[] Connections { get; private set; }
         public void RefreshSessions()
         {
+            if(app == null)
+            {
+                Sessions = new SAPSession[] { };
+                Connections = new SAPConnection[] { };
+                return;
+            }
             var connections = new List<SAPConnection>();
             var sessions = new List<SAPSession>();
             for (int i = 0; i < app.Children.Count; i++)
@@ -118,11 +124,11 @@ namespace OpenRPA.SAPBridge
         public bool Recording { get; private set; } = false;
         public void BeginRecord(bool VisualizationEnabled)
         {
-            var application = app;
+            if (app == null) return;
             if (app.Connections.Count == 0) return;
             for (int i = 0; i < app.Children.Count; i++)
             {
-                var con = application.Children.ElementAt(i) as GuiConnection;
+                var con = app.Children.ElementAt(i) as GuiConnection;
                 if (con.Sessions.Count == 0) continue;
 
                 for (int j = 0; j < con.Sessions.Count; j++)
@@ -210,11 +216,11 @@ namespace OpenRPA.SAPBridge
         }
         public void EndRecord()
         {
-            var application = app;
+            if (app == null) return;
             if (app.Connections.Count == 0) return;
             for (int i = 0; i < app.Children.Count; i++)
             {
-                var con = application.Children.ElementAt(i) as GuiConnection;
+                var con = app.Children.ElementAt(i) as GuiConnection;
                 if (con.Sessions.Count == 0) continue;
 
                 for (int j = 0; j < con.Sessions.Count; j++)
@@ -374,8 +380,14 @@ namespace OpenRPA.SAPBridge
             {
                 if (SapGuilRot == null)
                 {
-                    System.Threading.Thread.Sleep(1000);
-                    return getSAPGuiApp(sapROTWrapper, secondsOfTimeout - 1);
+                    if(secondsOfTimeout > 0)
+                    {
+                        System.Threading.Thread.Sleep(1000);
+                        return getSAPGuiApp(sapROTWrapper, secondsOfTimeout - 1);
+                    } else
+                    {
+                        return null;
+                    }
                 }
                 else
                 {

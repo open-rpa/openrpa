@@ -117,10 +117,12 @@ namespace OpenRPA.SAP
         public static Plugin Instance { get; set; }
         public void Start()
         {
+            Console.WriteLine("Send beginrecord");
             Instance = this;
             var e = new SAPToogleRecordingEvent(); e.overlay = Config.local.record_overlay;
             var msg = new SAPEvent("beginrecord"); msg.Set(e);
             SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(5));
+            Console.WriteLine("End beginrecord");
         }
         public void Stop()
         {
@@ -171,6 +173,7 @@ namespace OpenRPA.SAP
             if (e.UIElement.ProcessId < 1) return false;
             if(e.UIElement.ProcessId != lastid)
             {
+                Console.WriteLine("Get Process");
                 var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
                 if (p.ProcessName.ToLower() != "saplogon") return false;
                 lastid = e.UIElement.ProcessId;

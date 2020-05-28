@@ -46,9 +46,18 @@ namespace OpenRPA.SAPBridge
         {
             try
             {
+                try
+                {
+                    _ = SAPGuiApiAssembly;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
                 form = new MainWindow();
                 var SessionId = System.Diagnostics.Process.GetCurrentProcess().SessionId;
                 pipe = new NamedPipeServer<SAPEvent>(SessionId + "_openrpa_sapbridge");
+                pipe.ClientConnected += Pipe_ClientConnected;
                 pipe.ClientMessage += Server_OnReceivedMessage;
                 pipe.Start();
                 // SAPHook.Instance.
@@ -60,6 +69,12 @@ namespace OpenRPA.SAPBridge
                 log(ex.ToString());
             }
         }
+
+        private static void Pipe_ClientConnected(NamedPipeConnection<SAPEvent, SAPEvent> connection)
+        {
+            log("Client Connected");
+        }
+
         private static string _prefix = "SAPFEWSELib.";
         private static System.Reflection.Assembly _sapGuiApiAssembly = null;
         public static System.Reflection.Assembly SAPGuiApiAssembly 

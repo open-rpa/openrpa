@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-- name: 🤷💻🤦 MatterMost
+- name: 💬🤷💻🤦 MatterMost
   url: https://mm.openiap.io/
-  about: Please ask typical Q&A here
+  about: Please go here for usage help and general questions, use only github is only for bug reports.
 - name: 🤷💻🤦 Slack
   url: https://slack.openrpa.dk/
-  about: Please ask typical Q&A here
+  about: Please go here for usage help and general questions, use only github is only for bug reports.

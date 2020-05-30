@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace OpenRPA.SAPBridge
 {
     class Program
@@ -69,12 +68,10 @@ namespace OpenRPA.SAPBridge
                 log(ex.ToString());
             }
         }
-
         private static void Pipe_ClientConnected(NamedPipeConnection<SAPEvent, SAPEvent> connection)
         {
             log("Client Connected");
         }
-
         private static string _prefix = "SAPFEWSELib.";
         private static System.Reflection.Assembly _sapGuiApiAssembly = null;
         public static System.Reflection.Assembly SAPGuiApiAssembly 
@@ -137,7 +134,19 @@ namespace OpenRPA.SAPBridge
                 {
                     try
                     {
-                        SAPHook.Instance.Login(message.Get<SAPLoginEvent>());
+                        var login = message.Get<SAPLoginEvent>();
+                        if(SAPHook.Instance.Login(login))
+                        {
+                            var session = SAPHook.Instance.GetSession(login.SystemName);
+                            if (session == null)
+                            {
+                                message.error = "Login failed";
+                            }
+                        } 
+                        else
+                        {
+                            message.error = "Login failed";
+                        }
                         form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                     }
@@ -173,57 +182,64 @@ namespace OpenRPA.SAPBridge
                         var msg = message.Get<SAPEventElement>();
                         if (string.IsNullOrEmpty(msg.SystemName)) throw new ArgumentException("System Name is mandatory right now!");
                         var session = SAPHook.Instance.GetSession(msg.SystemName);
-                        GuiComponent comp = session.GetSAPComponentById<GuiComponent>(msg.Id);
-                        if (comp is null) throw new ArgumentException("Item with id " + msg.Id + " was not found");
-
-                        msg.Id = comp.Id; msg.Name = comp.Name;
-                        msg.SystemName = session.Info.SystemName;
-                        msg.ContainerType = comp.ContainerType; msg.type = comp.Type;
-                        var p = comp.Parent as GuiComponent;
-                        string parent = (p != null) ? p.Id : null;
-                        msg.Parent = parent;
-                        var children = new List<SAPEventElement>();
-                        if (comp.ContainerType)
+                        if (session != null)
                         {
-                            var cont = comp as GuiVContainer;
+                            GuiComponent comp = session.GetSAPComponentById<GuiComponent>(msg.Id);
+                            if (comp is null) throw new ArgumentException("Item with id " + msg.Id + " was not found");
 
-                            if (comp is GuiVContainer vcon)
+                            msg.Id = comp.Id; msg.Name = comp.Name;
+                            msg.SystemName = session.Info.SystemName;
+                            msg.ContainerType = comp.ContainerType; msg.type = comp.Type;
+                            var p = comp.Parent as GuiComponent;
+                            string parent = (p != null) ? p.Id : null;
+                            msg.Parent = parent;
+                            var children = new List<SAPEventElement>();
+                            if (comp.ContainerType)
                             {
-                                for (var i = 0; i < vcon.Children.Count; i++)
+                                var cont = comp as GuiVContainer;
+
+                                if (comp is GuiVContainer vcon)
                                 {
-                                    GuiComponent Element = vcon.Children.ElementAt(i);
-                                    p = Element.Parent as GuiComponent;
-                                    parent = (p != null) ? p.Id : null;
-                                    children.Add(new SAPEventElement() { Id = Element.Id, Name = Element.Name, SystemName = session.Info.SystemName, ContainerType = Element.ContainerType, type = Element.Type, Parent = parent });
+                                    for (var i = 0; i < vcon.Children.Count; i++)
+                                    {
+                                        GuiComponent Element = vcon.Children.ElementAt(i);
+                                        p = Element.Parent as GuiComponent;
+                                        parent = (p != null) ? p.Id : null;
+                                        children.Add(new SAPEventElement() { Id = Element.Id, Name = Element.Name, SystemName = session.Info.SystemName, ContainerType = Element.ContainerType, type = Element.Type, Parent = parent });
+                                    }
+                                }
+                                else if (comp is GuiContainer con)
+                                {
+                                    for (var i = 0; i < con.Children.Count; i++)
+                                    {
+                                        GuiComponent Element = con.Children.ElementAt(i);
+                                        p = Element.Parent as GuiComponent;
+                                        parent = (p != null) ? p.Id : null;
+                                        children.Add(new SAPEventElement() { Id = Element.Id, Name = Element.Name, SystemName = session.Info.SystemName, ContainerType = Element.ContainerType, type = Element.Type, Parent = parent });
+                                    }
+                                }
+                                else if (comp is GuiStatusbar sbar)
+                                {
+                                    for (var i = 0; i < sbar.Children.Count; i++)
+                                    {
+                                        GuiComponent Element = sbar.Children.ElementAt(i);
+                                        p = Element.Parent as GuiComponent;
+                                        parent = (p != null) ? p.Id : null;
+                                        children.Add(new SAPEventElement() { Id = Element.Id, Name = Element.Name, SystemName = session.Info.SystemName, ContainerType = Element.ContainerType, type = Element.Type, Parent = parent });
+                                    }
+                                }
+                                else
+                                {
+                                    throw new Exception("Unknown container type " + comp.Type + "!");
                                 }
                             }
-                            else if (comp is GuiContainer con)
-                            {
-                                for (var i = 0; i < con.Children.Count; i++)
-                                {
-                                    GuiComponent Element = con.Children.ElementAt(i);
-                                    p = Element.Parent as GuiComponent;
-                                    parent = (p != null) ? p.Id : null;
-                                    children.Add(new SAPEventElement() { Id = Element.Id, Name = Element.Name, SystemName = session.Info.SystemName, ContainerType = Element.ContainerType, type = Element.Type, Parent = parent });
-                                }
-                            }
-                            else if (comp is GuiStatusbar sbar)
-                            {
-                                for (var i = 0; i < sbar.Children.Count; i++)
-                                {
-                                    GuiComponent Element = sbar.Children.ElementAt(i);
-                                    p = Element.Parent as GuiComponent;
-                                    parent = (p != null) ? p.Id : null;
-                                    children.Add(new SAPEventElement() { Id = Element.Id, Name = Element.Name, SystemName = session.Info.SystemName, ContainerType = Element.ContainerType, type = Element.Type, Parent = parent });
-                                }
-                            }
-                            else
-                            {
-                                throw new Exception("Unknown container type " + comp.Type + "!");
-                            }
+
+                            msg.Children = children.ToArray();
                         }
-
-                        msg.Children = children.ToArray();
+                        else
+                        {
+                            message.error = "SAP not running, or session " + msg.SystemName + " not found.";
+                        }
                         message.Set(msg);
                         form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
@@ -242,24 +258,31 @@ namespace OpenRPA.SAPBridge
                         var step = message.Get<SAPInvokeMethod>();
                         if (step != null)
                         {
-                            var sesion = SAPHook.Instance.GetSession(step.SystemName);
-                            GuiComponent comp = sesion.GetSAPComponentById<GuiComponent>(step.Id);
-                            if(comp == null)
+                            var session = SAPHook.Instance.GetSession(step.SystemName);
+                            if(session != null)
                             {
-                                if(step.Id.Contains("/tbar[1]/"))
+                                GuiComponent comp = session.GetSAPComponentById<GuiComponent>(step.Id);
+                                if (comp == null)
                                 {
-                                    comp = sesion.GetSAPComponentById<GuiComponent>(step.Id.Replace("/tbar[1]/", "/tbar[0]/"));
+                                    if (step.Id.Contains("/tbar[1]/"))
+                                    {
+                                        comp = session.GetSAPComponentById<GuiComponent>(step.Id.Replace("/tbar[1]/", "/tbar[0]/"));
+                                    }
                                 }
-                            }
-                            if (comp == null) throw new Exception(string.Format("Can't find component using id {0}", step.Id));
-                            string typeName = _prefix + comp.Type;
-                            Type t = SAPGuiApiAssembly.GetType(typeName);
-                            if (t == null)
-                                throw new Exception(string.Format("Can't find type {0}", typeName));
-                            var Parameters = Newtonsoft.Json.JsonConvert.DeserializeObject<object[]>(step.Parameters);
+                                if (comp == null) throw new Exception(string.Format("Can't find component using id {0}", step.Id));
+                                string typeName = _prefix + comp.Type;
+                                Type t = SAPGuiApiAssembly.GetType(typeName);
+                                if (t == null)
+                                    throw new Exception(string.Format("Can't find type {0}", typeName));
+                                var Parameters = Newtonsoft.Json.JsonConvert.DeserializeObject<object[]>(step.Parameters);
 
-                            if(message.action == "invokemethod") step.Result = t.InvokeMember(step.ActionName, System.Reflection.BindingFlags.InvokeMethod, null, comp, Parameters);
-                            if (message.action == "setproperty") step.Result = t.InvokeMember(step.ActionName, System.Reflection.BindingFlags.SetProperty, null, comp, Parameters);
+                                if (message.action == "invokemethod") step.Result = t.InvokeMember(step.ActionName, System.Reflection.BindingFlags.InvokeMethod, null, comp, Parameters);
+                                if (message.action == "setproperty") step.Result = t.InvokeMember(step.ActionName, System.Reflection.BindingFlags.SetProperty, null, comp, Parameters);
+                            }
+                            else
+                            {
+                                message.error = "SAP not running, or session " + step.SystemName + " not found.";
+                            }
                             message.Set(step);
                         }
                         form.AddText("[send] " + message.action);
@@ -280,7 +303,5 @@ namespace OpenRPA.SAPBridge
                 form.AddText(ex.ToString());
             }
         }
-
-
     }
 }

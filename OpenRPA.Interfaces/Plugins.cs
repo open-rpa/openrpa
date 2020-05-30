@@ -83,6 +83,8 @@ namespace OpenRPA.Interfaces
                     if (dllFile.Contains("Xceed.Wpf.")) continue;
                     if (dllFile.Contains("ControlzEx.")) continue;
                     if (dllFile.Contains("MahApps.")) continue;
+                    if (dllFile.Contains("Interop.SAPFEWSELib")) continue;
+                    if (dllFile.Contains("Interop.SapROTWr")) continue;
                     AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
                     Assembly assembly = Assembly.Load(an);
                     assemblies.Add(assembly);

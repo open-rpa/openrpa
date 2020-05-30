@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace OpenRPA.SAPBridge
 {
     public class SAPHook
@@ -158,13 +157,18 @@ namespace OpenRPA.SAPBridge
                 }
             }
         }
-        internal void Login(SAPLoginEvent message)
+        internal bool Login(SAPLoginEvent message)
         {
             SAPLogon l = new SAPLogon();
             l.StartProcess();
             GuiSession session = null;
             try
             {
+                if(app == null)
+                {
+                    _app = GetSAPGuiApp(10);
+                }
+                if (app == null) throw new Exception("Failed launching SAP");
                 if (app.Connections.Count != 0)
                 {
                     for (int i = 0; i < app.Children.Count; i++)
@@ -177,13 +181,13 @@ namespace OpenRPA.SAPBridge
                             var ses = con.Children.ElementAt(j) as GuiSession;
                             if (ses.Info.SystemName.ToLower() == message.SystemName.ToLower())
                             {
-                                session = ses; break;
+                                session = ses;
+                                return true;
                             }
                         }
                         if (session != null) break;
                     }
                 }
-
                 // SAPTestHelper.Current.CloseAllConnections();
                 // SAPTestHelper.Current.SetSession();
             }
@@ -194,12 +198,14 @@ namespace OpenRPA.SAPBridge
             if (app == null || session == null)
             {
                 l.OpenConnection(message.Host);
-                l.Login(message.Username, message.Password, message.Client, message.Language);
+                return l.Login(message.Username, message.Password, message.Client, message.Language);
             }
+            return false;
         }
         public GuiSession GetSession(string SystemName)
         {
             var application = app;
+            if (app == null) return null;
             if (app.Connections.Count == 0) return null;
             for (int i = 0; i < app.Children.Count; i++)
             {

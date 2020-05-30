@@ -13,20 +13,23 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <OutputPath>..\debug86</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\Interop.SAPFEWSELib.dll" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="SapROTWr.dll">
-      <Guid>e2779c61-f87e-4038-98a0-1d9e71334706</Guid>
+    <COMReference Include="SAPFEWSELib.dll">
+      <Guid>5ea428a0-f2b8-45e7-99fa-0e994e82b5bc</Guid>
       <VersionMajor>1</VersionMajor>
       <VersionMinor>0</VersionMinor>
       <WrapperTool>tlbimp</WrapperTool>
       <Lcid>0</Lcid>
       <Isolated>false</Isolated>
     </COMReference>
-    <COMReference Include="SAPFEWSELib.dll">
-      <Guid>5ea428a0-f2b8-45e7-99fa-0e994e82b5bc</Guid>
+    <COMReference Include="SapROTWr.dll">
+      <Guid>e2779c61-f87e-4038-98a0-1d9e71334706</Guid>
       <VersionMajor>1</VersionMajor>
       <VersionMinor>0</VersionMinor>
       <WrapperTool>tlbimp</WrapperTool>

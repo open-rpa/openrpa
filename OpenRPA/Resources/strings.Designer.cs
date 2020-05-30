@@ -385,6 +385,24 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Focus Element.
+        /// </summary>
+        public static string activity_focuselement {
+            get {
+                return ResourceManager.GetString("activity_focuselement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Give element focus.
+        /// </summary>
+        public static string activity_focuselement_tooltip {
+            get {
+                return ResourceManager.GetString("activity_focuselement_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Force.
         /// </summary>
         public static string activity_force {

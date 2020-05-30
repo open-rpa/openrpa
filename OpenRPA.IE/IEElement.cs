@@ -1,4 +1,5 @@
-﻿using OpenRPA.Interfaces;
+﻿using MSHTML;
+using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -242,6 +243,10 @@ namespace OpenRPA.IE
         }
         public void Focus()
         {
+            // Browser.Document.parentWindow.execScript
+            RawElement.scrollIntoView();
+            var ele = RawElement as IHTMLElement2;
+            if(ele != null) ele.focus();
         }
         public Task Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
         {

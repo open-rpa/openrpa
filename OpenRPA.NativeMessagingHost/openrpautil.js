@@ -187,7 +187,52 @@ if (true == false) {
                             for (var i = 0; i < events.length; ++i) {
                                 simulate(ele, events[i]);
                             }
-                            ele.click();
+                        }
+                    } catch (e) {
+                        console.error(e);
+                        message.error = e;
+                    }
+                    var test = JSON.parse(JSON.stringify(message));
+                    if (document.openrpadebug) console.log(test);
+                    return test;
+                },
+                focuselement: function (message) {
+                    document.openrpadebug = message.debug;
+                    if (message.uniquexpathids) document.openrpauniquexpathids = message.uniquexpathids;
+                    var ele = null;
+                    if (ele === null && message.zn_id !== null && message.zn_id !== undefined && message.zn_id > -1) {
+                        message.xPath = '//*[@zn_id="' + message.zn_id + '"]';
+                    }
+                    if (message.xPath) {
+                        var xpathEle = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+                        if (xpathEle === null) message.xPath = 'false';
+                        if (xpathEle !== null) message.xPath = 'true';
+                        ele = xpathEle;
+                    }
+                    if (message.cssPath && ele === null) {
+                        var cssEle = document.querySelector(message.cssPath);
+                        if (cssEle === null) message.cssPath = 'false';
+                        if (cssEle !== null) message.cssPath = 'true';
+                        ele = cssEle;
+                    }
+                    try {
+                        if (ele !== null && ele !== undefined) {
+                            ele.scrollIntoView({ block: "center", behaviour: "smooth" });
+                            var eventType = "onfocusin" in ele ? "focusin" : "focus",
+                                bubbles = "onfocusin" in ele,
+                                event;
+
+                            if ("createEvent" in document) {
+                                event = document.createEvent("Event");
+                                event.initEvent(eventType, bubbles, true);
+                            }
+                            else if ("Event" in window) {
+                                event = new Event(eventType, { bubbles: bubbles, cancelable: true });
+                            }
+
+                            ele.focus();
+                            ele.dispatchEvent(event);
+                            getelement(message);
                         }
                     } catch (e) {
                         console.error(e);

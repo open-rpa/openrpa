@@ -168,6 +168,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Activities\CommentOutDesigner.xaml" />
     <None Remove="Activities\CopyClipboardDesigner.xaml" />
     <None Remove="Activities\DetectorDesigner.xaml" />
+    <None Remove="Activities\FocusElementDesigner.xaml" />
     <None Remove="Activities\ForEachDataRowDesigner.xaml" />
     <None Remove="Activities\HighlightElementDesigner.xaml" />
     <None Remove="Activities\InsertClipboardDesigner.xaml" />
@@ -402,6 +403,9 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Views\WorkflowInstances.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\FocusElementDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\ShowBalloonTipDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

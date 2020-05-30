@@ -106,7 +106,9 @@ namespace OpenRPA.Image
                     foreach (var p in ps)
                     {
                         var rects = new List<Rectangle>();
-                        var allChildWindows = new WindowHandleInfo(p.MainWindowHandle).GetAllChildHandles();
+
+                        var allChildWindows = MyEnumWindows.GetWindows(true, p.Id);
+                        // var allChildWindows = new WindowHandleInfo(p.MainWindowHandle).GetAllChildHandles();
                         allChildWindows.Add(p.MainWindowHandle);
                         foreach (var window in allChildWindows)
                         {

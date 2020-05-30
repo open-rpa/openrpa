@@ -63,6 +63,7 @@ namespace OpenRPA.Office.Activities
             }
             else
             {
+                if (!cells.Contains(":")) throw new ArgumentException("Cell should contain a range dedenition, meaning it should contain a colon :");
                 range = base.worksheet.get_Range(cells);
             }
             //object[,] valueArray = (object[,])range.Value;
@@ -147,12 +148,14 @@ namespace OpenRPA.Office.Activities
         private System.Data.DataTable ProcessObjects(bool useHeaderRow, bool ignoreEmptyRows, object[,] valueArray)
         {
             System.Data.DataTable dt = new System.Data.DataTable();
+            var beginat = 1;
             if(useHeaderRow)
             {
                 for (int k = 1; k <= valueArray.GetLength(1); k++)
                 {
                     dt.Columns.Add((string)valueArray[1, k]);  //add columns to the data table.
                 }
+                beginat = 2;
             }
             else
             {
@@ -160,11 +163,11 @@ namespace OpenRPA.Office.Activities
                 {
                     dt.Columns.Add(k.ToString());  //add columns to the data table.
                 }
-
+                beginat = 1;
             }
             object[] singleDValue = new object[valueArray.GetLength(1)];
             //value array first row contains column names. so loop starts from 2 instead of 1
-            for (int i = 2; i <= valueArray.GetLength(0); i++)
+            for (int i = beginat; i <= valueArray.GetLength(0); i++)
             {
                 bool hasValue = false;
                 for (int j = 0; j < valueArray.GetLength(1); j++)

@@ -163,7 +163,6 @@ namespace OpenRPA.NM
             }
         }
         object IElement.RawElement { get => message; set => message = value as NativeMessagingMessage; }
-
         public string Text
         {
             get
@@ -365,6 +364,27 @@ namespace OpenRPA.NM
         }
         public void Focus()
         {
+            var tab = NMHook.tabs.Where(x => x.id == message.tabid).FirstOrDefault();
+            if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
+            var updateelement = new NativeMessagingMessage("focuselement", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
+            {
+                browser = message.browser,
+                //cssPath = cssselector,
+                //xPath = xpath,
+                //tabid = message.tabid,
+                //frameId = message.frameId,
+                //data = value
+                zn_id = zn_id,
+                tabid = message.tabid,
+                frameId = message.frameId
+            };
+            var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(3));
+            if (subsubresult == null) throw new Exception("Failed setting html element value");
+            //System.Threading.Thread.Sleep(500);
+            if (PluginConfig.wait_for_tab_after_set_value)
+            {
+                NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
+            }
         }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         public Task _Highlight(System.Drawing.Color Color, TimeSpan Duration)

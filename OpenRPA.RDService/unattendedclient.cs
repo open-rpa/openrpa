@@ -11,6 +11,7 @@ namespace OpenRPA.RDService
     {
         public unattendedclient() { _type = "unattendedclient"; _encrypt = new string[] { "windowspassword" }; }
         public string windowsusername { get; set; }
+        public string windowslogin { get; set; }        
         public string windowspassword { get; set; }
         public string computername { get; set; }
         public string computerfqdn { get; set; }

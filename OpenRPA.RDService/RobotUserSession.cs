@@ -119,21 +119,34 @@ namespace OpenRPA.RDService
 
                         var windowsusername = client.windowsusername.Substring(client.windowsusername.IndexOf("\\") + 1);
                         var windowsdomain = client.windowsusername.Substring(0, client.windowsusername.IndexOf("\\"));
+                        if(string.IsNullOrEmpty(client.windowslogin))
+                        {
+                            if (client.windowsusername.StartsWith(hostname + @"\"))
+                            {
+                                client.windowslogin = windowsusername;
+                            }
+                            else
+                            {
+                                client.windowslogin = client.windowsusername;
+                            }
+                        }
 
                         using (var imp = new Impersonator(windowsusername, windowsdomain, client.windowspassword))
                         {
                             ConnectionAttempts++;
-                            if (client.windowsusername.StartsWith(hostname + @"\"))
-                            {
-                                // var windowsusername = client.windowsusername.Substring(hostname.Length + 1);
-                                Log.Information("Connecting RDP connection to " + rdpip + " for " + windowsusername);
-                                freerdp.Connect(rdpip, "", windowsusername, client.windowspassword);
-                            }
-                            else
-                            {
-                                Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowsusername);
-                                freerdp.Connect(rdpip, "", client.windowsusername, client.windowspassword);
-                            }
+                            Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowslogin);
+                            freerdp.Connect(rdpip, "", client.windowslogin, client.windowspassword);
+                            //if (client.windowsusername.StartsWith(hostname + @"\"))
+                            //{
+                            //    // var windowsusername = client.windowsusername.Substring(hostname.Length + 1);
+                            //    Log.Information("Connecting RDP connection to " + rdpip + " for " + windowsusername);
+                            //    freerdp.Connect(rdpip, "", windowsusername, client.windowspassword);
+                            //}
+                            //else
+                            //{
+                            //    Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowsusername);
+                            //    freerdp.Connect(rdpip, "", client.windowsusername, client.windowspassword);
+                            //}
                         }
                         created = DateTime.Now;
                         return;
@@ -169,23 +182,42 @@ namespace OpenRPA.RDService
                             return;
                         }
 
+                        Log.Information("Increment ConnectionAttempts");
                         ConnectionAttempts++;
+                        Log.Information("Get HostName");
                         var hostname = NativeMethods.GetHostName().ToLower();
-                        if (client.windowsusername.StartsWith(hostname + @"\"))
+                        Log.Information("hostname is: " + hostname);
+                        Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowslogin);
+                        // Task.Run(()=>rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername.Substring(hostname.Length + 1), client.windowspassword));
+                        if (string.IsNullOrEmpty(client.windowslogin))
                         {
-                            var windowsusername = client.windowsusername.Substring(hostname.Length + 1);
-                            Log.Information("Connecting RDP connection to " + rdpip + " for " + windowsusername);
-                            // Task.Run(()=>rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername.Substring(hostname.Length + 1), client.windowspassword));
-                            rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername.Substring(hostname.Length + 1), client.windowspassword);
-                            Log.Information("Connection initialized");
+                            if (client.windowsusername.StartsWith(hostname + @"\"))
+                            {
+                                var windowsusername = client.windowsusername.Substring(hostname.Length + 1);
+                                client.windowslogin = windowsusername;
+                            }
+                            else
+                            {
+                                client.windowslogin = client.windowsusername;
+                            }
                         }
-                        else
-                        {
-                            Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowsusername);
-                            // Task.Run(() => rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername, client.windowspassword));
-                            rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername, client.windowspassword);
-                            Log.Information("Connection initialized");
-                        }
+                        rdp.CreateRdpConnectionasync(rdpip, "", client.windowslogin, client.windowspassword);
+                        Log.Information("Connection initialized");
+                        //if (client.windowsusername.StartsWith(hostname + @"\"))
+                        //{
+                        //    var windowsusername = client.windowsusername.Substring(hostname.Length + 1);
+                        //    Log.Information("Connecting RDP connection to " + rdpip + " for " + windowsusername);
+                        //    // Task.Run(()=>rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername.Substring(hostname.Length + 1), client.windowspassword));
+                        //    rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername.Substring(hostname.Length + 1), client.windowspassword);
+                        //    Log.Information("Connection initialized");
+                        //}
+                        //else
+                        //{
+                        //    Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowsusername);
+                        //    // Task.Run(() => rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername, client.windowspassword));
+                        //    rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername, client.windowspassword);
+                        //    Log.Information("Connection initialized");
+                        //}
                         created = DateTime.Now;
                     }
                     if (rdp == null || rdp.Connected == false) return;

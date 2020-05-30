@@ -56,6 +56,7 @@
     <WixVariable Id="UtilitiesSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Utilities\bin\PrepInstaller\$(var.netver)"/>
     <WixVariable Id="UpdaterSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Updater\bin\PrepInstaller\$(var.netver)"/>
     <WixVariable Id="DatabaseSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Database\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="SAPSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.SAP\bin\PrepInstaller\$(var.netver)"/>
 
 
 
@@ -94,6 +95,9 @@
     </Feature>
     <Feature Id="DatabaseFeature" Title="Microsoft ADO/Database Integration" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
       <ComponentGroupRef Id="DatabaseComponents" />
+    </Feature>
+    <Feature Id="SAPFeature" Title="SAP NetWeaver Plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
+      <ComponentGroupRef Id="SAPComponents" />
     </Feature>
     <Feature Id="FileWatcherFeature" Title="File Watcher run plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
       <ComponentGroupRef Id="FileWatcherComponents" />

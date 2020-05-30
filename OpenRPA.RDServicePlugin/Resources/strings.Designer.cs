@@ -160,6 +160,15 @@ namespace OpenRPA.RDServicePlugin.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Login Username.
+        /// </summary>
+        public static string plugin_windows_login {
+            get {
+                return ResourceManager.GetString("plugin_windows_login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Windows Password.
         /// </summary>
         public static string plugin_windows_password {

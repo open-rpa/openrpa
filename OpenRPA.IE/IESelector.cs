@@ -231,6 +231,7 @@ namespace OpenRPA.IE
                         if (p == null) return null;
                     }
                 }
+                if (p == null) return null;
                 return p.Value;
             }
         }

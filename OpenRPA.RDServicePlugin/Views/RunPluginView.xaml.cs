@@ -36,6 +36,7 @@ namespace OpenRPA.RDServicePlugin.Views
             DataContext = this;
             this.plugin = plugin;
             lblWindowsusername.Text = NativeMethods.GetProcessUserName(System.Diagnostics.Process.GetCurrentProcess().Id);
+            lblWindowsLogin.Text = NativeMethods.GetProcessUserName(System.Diagnostics.Process.GetCurrentProcess().Id);
         }
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
@@ -176,6 +177,7 @@ namespace OpenRPA.RDServicePlugin.Views
                     client = clients.First();
                     AddcurrentuserButton.Content = "Update current user";
                     chkautosignout.IsChecked = client.autosignout;
+                    lblWindowsLogin.Text = client.windowslogin;
                 }
                 txtreloadinterval.Text = RDService.PluginConfig.reloadinterval.ToString();
                 chkUseFreeRDP.IsChecked = RDService.PluginConfig.usefreerdp;
@@ -220,6 +222,7 @@ namespace OpenRPA.RDServicePlugin.Views
                 if (client == null)
                 {
                     client = new RDService.unattendedclient() { computername = computername, computerfqdn = computerfqdn, windowsusername = windowsusername, name = computername + " " + windowsusername, openrpapath = path };
+                    client.windowslogin = lblWindowsLogin.Text;
                     client._acl = server._acl;
                     client = await global.webSocketClient.InsertOne("openrpa", 1, false, client);
                 }
@@ -230,6 +233,7 @@ namespace OpenRPA.RDServicePlugin.Views
                 client.windowsusername = windowsusername;
                 client.name = computername + " " + windowsusername;
                 client.openrpapath = path;
+                client.windowslogin = lblWindowsLogin.Text;
                 client = await global.webSocketClient.UpdateOne("openrpa", 1, false, client);
                 windowspassword.Clear();
                 plugin.ReloadConfig();

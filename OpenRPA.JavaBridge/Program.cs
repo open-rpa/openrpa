@@ -153,11 +153,7 @@ namespace OpenRPA.JavaBridge
         {
             try
             {
-                if (message == null)
-                {
-                    form.AddText(message.action);
-                    return;
-                }
+                if (message == null) return;
                 form.AddText(message.action);
             }
             catch (Exception ex)

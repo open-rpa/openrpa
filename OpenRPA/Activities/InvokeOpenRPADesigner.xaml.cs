@@ -94,6 +94,7 @@ namespace OpenRPA.Activities
 
                     //Log.Information("Checking for variable " + p.name + " of type " + p.type);
                     //designer.GetVariable(p.name, t);
+
                     Argument a = null;
                     if (p.direction == workflowparameterdirection.@in) a = Argument.Create(t, ArgumentDirection.In);
                     if (p.direction == workflowparameterdirection.inout) a = Argument.Create(t, ArgumentDirection.InOut);

@@ -18,6 +18,8 @@ namespace OpenRPA
     /// </summary>
     public partial class App : Application, ISingleInstanceApp
     {
+
+
         [STAThread]
         public static void Main()
         {

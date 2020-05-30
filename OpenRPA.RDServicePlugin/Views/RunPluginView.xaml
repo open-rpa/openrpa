@@ -19,24 +19,27 @@
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,92,0,0" Text="{x:Static or:strings.plugin_windows_username}" VerticalAlignment="Top" Width="110" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="139,92,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="lblWindowsusername" />
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,121,0,0" Text="{x:Static or:strings.plugin_windows_password}" VerticalAlignment="Top" Width="110" />
-        <PasswordBox Height="23" HorizontalAlignment="Left" Margin="139,121,0,0" VerticalAlignment="Top" Width="222" x:Name="windowspassword" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,121,0,0" Text="{x:Static or:strings.plugin_windows_login}" VerticalAlignment="Top" Width="110" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="139,121,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="lblWindowsLogin" />
 
-        <Button Height="23" HorizontalAlignment="Left" Margin="139,149,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_add_user}" Click="AddcurrentuserButtonClick" x:Name="AddcurrentuserButton"></Button>
-        <Button Height="23" HorizontalAlignment="Left" Margin="139,177,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_remove_user}" Click="RemovecurrentuserClick" x:Name="RemovecurrentuserButton"></Button>
-        <Button Height="23" HorizontalAlignment="Left" Margin="139,205,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_reauth}" Click="ReauthenticateButtonClick" x:Name="ReauthenticateButton"></Button>
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,149,0,0" Text="{x:Static or:strings.plugin_windows_password}" VerticalAlignment="Top" Width="110" />
+        <PasswordBox Height="23" HorizontalAlignment="Left" Margin="139,149,0,0" VerticalAlignment="Top" Width="222" x:Name="windowspassword" />
 
-        <Button Height="23" HorizontalAlignment="Left" Margin="139,233,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_start_service}" Click="StartServiceButtonClick" x:Name="StartServiceButton"></Button>
-        <Button Height="23" HorizontalAlignment="Left" Margin="139,261,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_stop_service}" Click="StopServiceButtonClick" x:Name="StopServiceButton"></Button>
+        <Button Height="23" HorizontalAlignment="Left" Margin="139,177,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_add_user}" Click="AddcurrentuserButtonClick" x:Name="AddcurrentuserButton"></Button>
+        <Button Height="23" HorizontalAlignment="Left" Margin="139,205,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_remove_user}" Click="RemovecurrentuserClick" x:Name="RemovecurrentuserButton"></Button>
+        <Button Height="23" HorizontalAlignment="Left" Margin="139,233,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_reauth}" Click="ReauthenticateButtonClick" x:Name="ReauthenticateButton"></Button>
 
-        <Button Height="23" HorizontalAlignment="Left" Margin="139,308,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_install_service}" Click="InstallServiceButtonClick" x:Name="InstallServiceButton"></Button>
-        <Button Height="23" HorizontalAlignment="Left" Margin="139,338,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_uninstall_service}" Click="UninstallServiceButtonClick" x:Name="UninstallServiceButton"></Button>
+        <Button Height="23" HorizontalAlignment="Left" Margin="139,261,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_start_service}" Click="StartServiceButtonClick" x:Name="StartServiceButton"></Button>
+        <Button Height="23" HorizontalAlignment="Left" Margin="139,308,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_stop_service}" Click="StopServiceButtonClick" x:Name="StopServiceButton"></Button>
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,368,0,0" Text="{x:Static or:strings.plugin_reload_interval}" VerticalAlignment="Top" Width="110" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="139,368,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="txtreloadinterval" TextChanged="txtreloadinterval_TextChanged" />
+        <Button Height="23" HorizontalAlignment="Left" Margin="139,338,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_install_service}" Click="InstallServiceButtonClick" x:Name="InstallServiceButton"></Button>
+        <Button Height="23" HorizontalAlignment="Left" Margin="139,368,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_uninstall_service}" Click="UninstallServiceButtonClick" x:Name="UninstallServiceButton"></Button>
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,398,0,0" Text="{x:Static or:strings.plugin_auto_signout}" VerticalAlignment="Top" Width="110" />
-        <CheckBox Height="23" HorizontalAlignment="Left" Margin="139,398,0,0" VerticalAlignment="Top" Width="222" x:Name="chkautosignout" 
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,398,0,0" Text="{x:Static or:strings.plugin_reload_interval}" VerticalAlignment="Top" Width="110" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="139,398,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="txtreloadinterval" TextChanged="txtreloadinterval_TextChanged" />
+
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,428,0,0" Text="{x:Static or:strings.plugin_auto_signout}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="139,428,0,0" VerticalAlignment="Top" Width="222" x:Name="chkautosignout" 
                   Checked="chkautosignout_Checked" Unchecked="chkautosignout_Checked" Click="chkautosignout_Click" />
         
 

@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.120</Version>
-    <PackageReleaseNotes>1.0.120 Fix endless loop bug in IE, filter out google sheet in chrome extension
+    <Version>1.0.121</Version>
+    <PackageReleaseNotes>1.0.121 Fix index error in readrange when HeaderRows is false / prepare recorder for SAP recording
+1.0.120 Fix endless loop bug in IE, filter out google sheet in chrome extension
 1.0.119 Add argument mapping dialog to Invoke Activities
 1.0.118 downgrade for win7 support / Add GetColor Activity
 1.0.117 Fix updating json, when using select button in selector
@@ -167,6 +168,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Activities\CommentOutDesigner.xaml" />
     <None Remove="Activities\CopyClipboardDesigner.xaml" />
     <None Remove="Activities\DetectorDesigner.xaml" />
+    <None Remove="Activities\FocusElementDesigner.xaml" />
     <None Remove="Activities\ForEachDataRowDesigner.xaml" />
     <None Remove="Activities\HighlightElementDesigner.xaml" />
     <None Remove="Activities\InsertClipboardDesigner.xaml" />
@@ -401,6 +403,9 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Views\WorkflowInstances.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\FocusElementDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\ShowBalloonTipDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

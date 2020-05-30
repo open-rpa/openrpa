@@ -22,6 +22,10 @@ namespace OpenRPA.Image
 
         private static List<string> windowTitles = new List<string>();
         private static List<IntPtr> windows = new List<IntPtr>();
+        [DllImport("user32.dll", SetLastError = true)]
+        //public static extern int GetWindowThreadProcessId(HandleRef handle, out int processId);
+        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
 
         public static List<string> GetWindowTitles(bool includeChildren)
         {
@@ -33,6 +37,18 @@ namespace OpenRPA.Image
         {
             windows.Clear();
             EnumWindows(EnumWindowsCallback, includeChildren ? (IntPtr)1 : IntPtr.Zero);
+            return windows;
+        }
+        public static List<IntPtr> GetWindows(bool includeChildren, int processId)
+        {
+            windows.Clear();
+            EnumWindows(EnumWindowsCallback, includeChildren ? (IntPtr)1 : IntPtr.Zero);
+            foreach (var h in windows.ToList())
+            {
+                uint _processId = 0;
+                GetWindowThreadProcessId(h, out _processId);
+                if (_processId != processId) windows.Remove(h);
+            }
             return windows;
         }
 

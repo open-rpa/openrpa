@@ -1,0 +1,63 @@
+﻿<sap:ActivityDesigner x:Class="OpenRPA.SAP.GetElementDesigner"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
+    xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
+    xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
+    xmlns:or="clr-namespace:OpenRPA.SAP.Resources"
+    >
+
+
+    <sap:ActivityDesigner.Icon>
+        <DrawingBrush>
+            <DrawingBrush.Drawing>
+                <ImageDrawing>
+                    <ImageDrawing.Rect>
+                        <Rect Location="0,0" Size="16,16" ></Rect>
+                    </ImageDrawing.Rect>
+                    <ImageDrawing.ImageSource>
+                        <BitmapImage UriSource="/OpenRPA.SAP;component/Resources/designer/SAP_logo_small2.png" ></BitmapImage>
+                    </ImageDrawing.ImageSource>
+                </ImageDrawing>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+    </sap:ActivityDesigner.Icon>
+
+
+    
+    <sap:ActivityDesigner.Resources>
+        <DataTemplate x:Key="Collapsed">
+            <StackPanel>
+                <Image Source="{Binding Image}"></Image>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="Expanded">
+            <StackPanel>
+                <!-- <Button Content="Select element" /> -->
+                <Button Content="{x:Static or:strings.activity_getelement_open_selector}" Click="Open_Selector"  />
+                <Button Click="Highlight_Click" >
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding HighlightImage}" Height="16" Width="16" />
+                        <TextBlock Text="{x:Static or:strings.activity_getelement_highlight}"></TextBlock>
+                    </StackPanel>
+                </Button>
+
+                <Image Source="{Binding Image}"></Image>
+                <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
+                                    HintText="{x:Static or:strings.activity_getelement_drop_hint}" AllowedItemType="sa:Activity"
+                                      Grid.Row="1" />
+            </StackPanel>
+        </DataTemplate>
+        <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
+            <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="false">
+                    <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </sap:ActivityDesigner.Resources>
+    <Grid>
+        <ContentPresenter Style="{DynamicResource ExpandOrCollapsedStyle}" Content="{Binding}" />
+    </Grid>
+</sap:ActivityDesigner>

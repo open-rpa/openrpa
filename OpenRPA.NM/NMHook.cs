@@ -68,6 +68,28 @@ namespace OpenRPA.NM
                 ffpipe.Start();
             }
         }
+        public static object ExecuteScript(string browser, int frameid, int tabid, string script, TimeSpan timeout)
+        {
+            NativeMessagingMessage message = new NativeMessagingMessage("executescript", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids);
+            NativeMessagingMessage result = null;
+            NativeMessagingMessageTab tab = null;
+            if (browser != "chrome" && browser != "ff") browser = "chrome";
+            if (tabid > -1) tab = tabs.Where(x => x.id == tabid && x.browser == browser).FirstOrDefault();
+            if(tab==null)
+            {
+                if (browser == "chrome") tab = CurrentChromeTab;
+                if (browser == "ff") tab = CurrentFFTab;
+            } 
+            message.tab = tab; message.windowId = tab.windowId; message.tabid = tab.id;
+            message.browser = browser; message.frameId = frameid;
+            message.script = script;
+            result = sendMessageResult(message, false, timeout);
+            if(result!=null)
+            {
+                return result.result;
+            }
+            return null;
+        }
         public static List<NativeMessagingMessageWindow> windows = new List<NativeMessagingMessageWindow>();
         public static List<NativeMessagingMessageTab> tabs = new List<NativeMessagingMessageTab>();
         public static NativeMessagingMessageWindow CurrentChromeWindow

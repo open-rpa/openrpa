@@ -55,6 +55,8 @@
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Activities\Editor.xaml" />
+    <None Remove="Activities\ExecuteScriptDesigner.xaml" />
     <None Remove="Activities\GetElementDesigner.xaml" />
     <None Remove="Activities\OpenURLDesigner.xaml" />
     <None Remove="Resources\designer\gethtmlelement.png" />
@@ -67,7 +69,16 @@
     <EmbeddedResource Include="Resources\toolbox\gethtmlelement.png" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AvalonEdit" Version="6.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Activities\Editor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\GetElementDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\ExecuteScriptDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\OpenURLDesigner.xaml">

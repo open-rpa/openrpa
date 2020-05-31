@@ -87,7 +87,7 @@
     <EmbeddedResource Include="Resources\toolbox\prompt.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AvalonEdit" Version="6.0.0" />
+    <PackageReference Include="AvalonEdit" Version="6.0.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="3.4.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="3.4.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="3.4.0" />

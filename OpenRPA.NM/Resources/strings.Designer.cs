@@ -124,6 +124,15 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open Editor.
+        /// </summary>
+        public static string activity_open_editor {
+            get {
+                return ResourceManager.GetString("activity_open_editor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open URL.
         /// </summary>
         public static string activity_openurl {

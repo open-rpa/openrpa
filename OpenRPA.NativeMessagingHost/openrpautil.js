@@ -674,7 +674,20 @@ if (true == false) {
                     element.setAttribute('zn_id', cachecount);
                     return cachecount;
                 },
-
+                executescript: function (message) {
+                    try {
+                        if (document.openrpadebug) console.log('script', message.script);
+                        message.result = eval(message.script);
+                        if (document.openrpadebug) console.log('result', message.result);
+                    } catch (e) {
+                        console.error(e);
+                        message.error = e;
+                    }
+                    delete message.script;
+                    var test = JSON.parse(JSON.stringify(message));
+                    if (document.openrpadebug) console.log(test);
+                    return test;                    
+                },
                 fullPath: function (el) {
                     var names = [];
                     while (el.parentNode) {

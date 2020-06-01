@@ -366,6 +366,7 @@ namespace OpenRPA.SAPBridge
             GuiApplication result = null;
             try
             {
+                // https://answers.sap.com/questions/12487790/what-are-the-differences-in-vba-methods-to-connect.html?childToView=12494892
                 SapROTWr.CSapROTWrapper sapROTWrapper = new SapROTWr.CSapROTWrapper();
                 result = getSAPGuiApp(sapROTWrapper, secondsOfTimeout);
             }

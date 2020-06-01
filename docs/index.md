@@ -7,7 +7,7 @@ description: First Open Source full Robotic Process Automation solution
 
 ![OpenRPA](img/OpenRPA-logo.png)Open Source Robotic Process Automation Software
 
-Join slack for for help or giving feedback [#openrpa](https://slack.openrpa.dk)
+Join our [💬 community](https://rocket.openiap.io/) for for help or giving feedback 
 
 Check out the documentation on our [wiki pages](https://github.com/open-rpa/openrpa/wiki)
 
@@ -45,6 +45,10 @@ Chrome/Firefox
 
 ![1558724619238](img/SelectorNative.png)
 
+Automating SAP
+
+![image-20200601135646313](img/image-20200601135646313.png)
+
 Images and OCR
 
 ![1564859912607](img/1564859912607.png)
@@ -55,7 +59,9 @@ World class security using Access Control Lists and on-the-fly encryption for al
 
 ![1563285778264](img/1563285778264.png)
 
-Join slack for for help or giving feedback [#openrpa](https://slack.openrpa.dk)
+
+
+Join our [💬 community](https://rocket.openiap.io/) for for help or giving feedback 
 
 Check out the documentation on our [wiki pages](https://github.com/open-rpa/openrpa/wiki)
 

@@ -2,7 +2,7 @@ blank_issues_enabled: false
 contact_links:
 - name: 💬🤷💻🤦 RocketChat
   url: https://rocket.openiap.io
-  about: Please go here for usage help and general questions and to meet everyone, use only github is only for bug reports.
+  about: Please go here for usage help and general questions and to meet everyone, use github only for bug reports.
 #- name: 🤷💻🤦 Slack
 #  url: https://slack.openrpa.dk/
 #  about: Please go here for usage help and general questions, use only github is only for bug reports.

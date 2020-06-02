@@ -19,6 +19,8 @@ namespace OpenRPA.SAP
 
         public Action<SAPElement> OnRecordEvent;
         private static SAPhook _instance = null;
+        private SAPEventElement LastEventElement = null;
+        public SAPElement LastElement = null;
         public static SAPhook Instance
         {
             get
@@ -159,7 +161,16 @@ namespace OpenRPA.SAP
                         Plugin.Instance.RaiseUserAction(r);
                     }
                 }
-
+                if (message.action == "mousedown")
+                {
+                    LastEventElement = message.Get<SAPEventElement>();
+                    LastElement = new SAPElement(null, LastEventElement);
+                }
+                if (message.action == "mousemove")
+                {
+                    LastEventElement = message.Get<SAPEventElement>();
+                    LastElement = new SAPElement(null, LastEventElement);
+                }
             }
             catch (Exception ex)
             {

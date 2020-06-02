@@ -96,7 +96,6 @@ namespace OpenRPA.SAP
                     if (p.Name == "Height") Height = int.Parse(p.Value);
                     if (p.Name == "Name") Name = p.Value;
                     if (p.Name == "Type") Role = p.Value;
-                    if (p.Name == "Text") Value = p.Value;
                 }
         }
         public System.Drawing.Rectangle Rectangle
@@ -192,7 +191,7 @@ namespace OpenRPA.SAP
                             result.Add(new SAPElement(Parent, c));
                         }
                     }
-                    RefreshChildren = false;
+                    // RefreshChildren = false;
                 }
                 catch (Exception ex)
                 {

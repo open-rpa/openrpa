@@ -90,33 +90,6 @@ namespace OpenRPA.SAPBridge
         }
         public static bool recordstarting = false;
         public static GuiVComponent _lastHighlight = null;
-        public static string GetDetailType(GuiComponent comp)
-        {
-            if (comp.Type == "GuiSplitterShell")
-            {
-                return "GuiSplit";
-            }
-            else if (comp is GuiShell)
-            {
-                string type = "Gui" + (comp as GuiShell).SubType;
-                if (type == "GuiTextEdit")
-                    type = "GuiTextedit";
-                if (type == "GuiToolbar")
-                    type = "GuiToolbarControl";
-                return type;
-            }
-            else
-            {
-                return comp.Type;
-            }
-        }
-        public static Type GetSAPTypeInfo(string typeName)
-        {
-            if (_sapGuiApiAssembly == null)
-                throw new ArgumentNullException("No SAP Library found, please mark sure you load the lib named Interop.SAPFEWSELib.dll");
-            Type t = _sapGuiApiAssembly.GetType(_prefix + typeName).GetInterfaces()[0];
-            return t;
-        }
         private static void Server_OnReceivedMessage(NamedPipeConnection<SAPEvent, SAPEvent> connection, SAPEvent message)
         {
             try
@@ -226,26 +199,8 @@ namespace OpenRPA.SAPBridge
                             var p = comp.Parent as GuiComponent;
                             string parent = (p != null) ? p.Id : null;
                             msg.Parent = parent;
-
-                            string type = GetDetailType(comp);
-                            Type t = GetSAPTypeInfo(type);
-                            var props = new List<SAPElementProperty>();
-                            foreach (var _p in t.GetProperties().Where(x => x.IsSpecialName == false))
-                            {
-                                SAPElementProperty prop = new SAPElementProperty();
-                                prop.Name = _p.Name;
-                                prop.IsReadOnly = !_p.CanWrite;
-                                try
-                                {
-                                    prop.Value = _p.GetValue(comp).ToString();
-                                }
-                                catch
-                                {
-                                    prop.Value = "";
-                                }
-                                props.Add(prop);
-                            }
-                            msg.Properties = props.ToArray();
+                            // msg.LoadProperties(comp, true);
+                            msg.LoadProperties(comp, false);
                             var children = new List<SAPEventElement>();
                             if (comp.ContainerType)
                             {
@@ -258,28 +213,7 @@ namespace OpenRPA.SAPBridge
                                         GuiComponent Element = vcon.Children.ElementAt(i);
                                         p = Element.Parent as GuiComponent;
                                         parent = (p != null) ? p.Id : null;
-                                        var _newchild = new SAPEventElement() { Id = Element.Id, Name = Element.Name, SystemName = session.Info.SystemName, ContainerType = Element.ContainerType, type = Element.Type, Parent = parent };
-
-                                        type = GetDetailType(Element);
-                                        t = GetSAPTypeInfo(type);
-                                        props = new List<SAPElementProperty>();
-                                        foreach (var _p in t.GetProperties().Where(x => x.IsSpecialName == false))
-                                        {
-                                            SAPElementProperty prop = new SAPElementProperty();
-                                            prop.Name = _p.Name;
-                                            prop.IsReadOnly = !_p.CanWrite;
-                                            try
-                                            {
-                                                prop.Value = _p.GetValue(Element).ToString();
-                                            }
-                                            catch
-                                            {
-                                                prop.Value = "";
-                                            }
-                                            props.Add(prop);
-                                        }
-                                        _newchild.Properties = props.ToArray();
-
+                                        var _newchild = new SAPEventElement(Element, session.Info.SystemName, parent, false);
                                         children.Add(_newchild);
                                     }
                                 }
@@ -290,7 +224,7 @@ namespace OpenRPA.SAPBridge
                                         GuiComponent Element = con.Children.ElementAt(i);
                                         p = Element.Parent as GuiComponent;
                                         parent = (p != null) ? p.Id : null;
-                                        children.Add(new SAPEventElement() { Id = Element.Id, Name = Element.Name, SystemName = session.Info.SystemName, ContainerType = Element.ContainerType, type = Element.Type, Parent = parent });
+                                        children.Add(new SAPEventElement(Element, session.Info.SystemName, parent, false));
                                     }
                                 }
                                 else if (comp is GuiStatusbar sbar)
@@ -300,7 +234,7 @@ namespace OpenRPA.SAPBridge
                                         GuiComponent Element = sbar.Children.ElementAt(i);
                                         p = Element.Parent as GuiComponent;
                                         parent = (p != null) ? p.Id : null;
-                                        children.Add(new SAPEventElement() { Id = Element.Id, Name = Element.Name, SystemName = session.Info.SystemName, ContainerType = Element.ContainerType, type = Element.Type, Parent = parent });
+                                        children.Add(new SAPEventElement(Element, session.Info.SystemName, parent, false));
                                     }
                                 }
                                 else

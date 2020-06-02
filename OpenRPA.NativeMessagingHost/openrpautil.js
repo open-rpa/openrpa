@@ -183,9 +183,20 @@ if (true == false) {
                     }
                     try {
                         if (ele !== null && ele !== undefined) {
-                            var events = ["mousedown", "mouseup", "click"];
-                            for (var i = 0; i < events.length; ++i) {
-                                simulate(ele, events[i]);
+                            var tagname = ele.tagName;
+                            var tagtype = ele.getAttribute("type");
+                            if (tagname) tagname = tagname.toLowerCase();
+                            if (tagtype) tagtype = tagtype.toLowerCase();
+                            if (tagname == "input" || tagtype == "type") {
+                                var events = ["mousedown", "mouseup", "click", "submit"];
+                                for (var i = 0; i < events.length; ++i) {
+                                    simulate(ele, events[i]);
+                                }
+                            } else {
+                                var events = ["mousedown", "mouseup", "click"];
+                                for (var i = 0; i < events.length; ++i) {
+                                    simulate(ele, events[i]);
+                                }
                             }
                         }
                     } catch (e) {

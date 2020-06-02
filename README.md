@@ -3,7 +3,7 @@ Open Source Robotic Process Automation Software
 
 [![GitHub issues](https://img.shields.io/github/issues/open-rpa/openrpa.svg)](https://github.com/open-rpa/openrpa/issues) [![GitHub forks](https://img.shields.io/github/forks/open-rpa/openrpa.svg)](https://github.com/open-rpa/openrpa/network) [![GitHub license](https://img.shields.io/github/license/open-rpa/openrpa.svg)](https://github.com/open-rpa/openrpa/blob/master/LICENSE) [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/open-rpa/openrpa/graphs/commit-activity) 
 
-Join slack for for help or giving feedback [#openrpa](https://slack.openrpa.dk)
+Join our [💬 community](https://rocket.openiap.io/) for for help or giving feedback 
 
 Check out the documentation on our [wiki pages](https://github.com/open-rpa/openrpa/wiki)
 

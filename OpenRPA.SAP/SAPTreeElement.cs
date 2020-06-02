@@ -34,7 +34,6 @@ namespace OpenRPA.SAP
                 return ControlType.Custom;
             }
         }
-
         public SAPTreeElement(treeelement parent, bool expanded, SAPElement element) : base(parent)
         {
             SAPElement = element;
@@ -42,7 +41,6 @@ namespace OpenRPA.SAP
             Element = element;
             Name = element.Name;
         }
-
         public override void AddSubElements()
         {
             foreach (var elementNode in SAPElement.Children)
@@ -57,5 +55,4 @@ namespace OpenRPA.SAP
             }
         }
     }
-
 }

@@ -89,6 +89,34 @@ namespace OpenRPA.SAPBridge
             } 
         }
         public static bool recordstarting = false;
+        public static GuiVComponent _lastHighlight = null;
+        public static string GetDetailType(GuiComponent comp)
+        {
+            if (comp.Type == "GuiSplitterShell")
+            {
+                return "GuiSplit";
+            }
+            else if (comp is GuiShell)
+            {
+                string type = "Gui" + (comp as GuiShell).SubType;
+                if (type == "GuiTextEdit")
+                    type = "GuiTextedit";
+                if (type == "GuiToolbar")
+                    type = "GuiToolbarControl";
+                return type;
+            }
+            else
+            {
+                return comp.Type;
+            }
+        }
+        public static Type GetSAPTypeInfo(string typeName)
+        {
+            if (_sapGuiApiAssembly == null)
+                throw new ArgumentNullException("No SAP Library found, please mark sure you load the lib named Interop.SAPFEWSELib.dll");
+            Type t = _sapGuiApiAssembly.GetType(_prefix + typeName).GetInterfaces()[0];
+            return t;
+        }
         private static void Server_OnReceivedMessage(NamedPipeConnection<SAPEvent, SAPEvent> connection, SAPEvent message)
         {
             try
@@ -175,7 +203,12 @@ namespace OpenRPA.SAPBridge
                         pipe.PushMessage(message);
                     }
                 }
-                if(message.action == "getitem")
+
+                if (message.action == "getitems")
+                {
+
+                }
+                if (message.action == "getitem")
                 {
                     try
                     {
@@ -193,6 +226,26 @@ namespace OpenRPA.SAPBridge
                             var p = comp.Parent as GuiComponent;
                             string parent = (p != null) ? p.Id : null;
                             msg.Parent = parent;
+
+                            string type = GetDetailType(comp);
+                            Type t = GetSAPTypeInfo(type);
+                            var props = new List<SAPElementProperty>();
+                            foreach (var _p in t.GetProperties().Where(x => x.IsSpecialName == false))
+                            {
+                                SAPElementProperty prop = new SAPElementProperty();
+                                prop.Name = _p.Name;
+                                prop.IsReadOnly = !_p.CanWrite;
+                                try
+                                {
+                                    prop.Value = _p.GetValue(comp).ToString();
+                                }
+                                catch
+                                {
+                                    prop.Value = "";
+                                }
+                                props.Add(prop);
+                            }
+                            msg.Properties = props.ToArray();
                             var children = new List<SAPEventElement>();
                             if (comp.ContainerType)
                             {
@@ -205,7 +258,29 @@ namespace OpenRPA.SAPBridge
                                         GuiComponent Element = vcon.Children.ElementAt(i);
                                         p = Element.Parent as GuiComponent;
                                         parent = (p != null) ? p.Id : null;
-                                        children.Add(new SAPEventElement() { Id = Element.Id, Name = Element.Name, SystemName = session.Info.SystemName, ContainerType = Element.ContainerType, type = Element.Type, Parent = parent });
+                                        var _newchild = new SAPEventElement() { Id = Element.Id, Name = Element.Name, SystemName = session.Info.SystemName, ContainerType = Element.ContainerType, type = Element.Type, Parent = parent };
+
+                                        type = GetDetailType(Element);
+                                        t = GetSAPTypeInfo(type);
+                                        props = new List<SAPElementProperty>();
+                                        foreach (var _p in t.GetProperties().Where(x => x.IsSpecialName == false))
+                                        {
+                                            SAPElementProperty prop = new SAPElementProperty();
+                                            prop.Name = _p.Name;
+                                            prop.IsReadOnly = !_p.CanWrite;
+                                            try
+                                            {
+                                                prop.Value = _p.GetValue(Element).ToString();
+                                            }
+                                            catch
+                                            {
+                                                prop.Value = "";
+                                            }
+                                            props.Add(prop);
+                                        }
+                                        _newchild.Properties = props.ToArray();
+
+                                        children.Add(_newchild);
                                     }
                                 }
                                 else if (comp is GuiContainer con)
@@ -251,7 +326,7 @@ namespace OpenRPA.SAPBridge
                         pipe.PushMessage(message);
                     }
                 }
-                if (message.action == "invokemethod" || message.action == "setproperty")
+                if (message.action == "invokemethod" || message.action == "setproperty" || message.action == "getproperty" || message.action == "highlight")
                 {
                     try
                     {
@@ -278,6 +353,22 @@ namespace OpenRPA.SAPBridge
 
                                 if (message.action == "invokemethod") step.Result = t.InvokeMember(step.ActionName, System.Reflection.BindingFlags.InvokeMethod, null, comp, Parameters);
                                 if (message.action == "setproperty") step.Result = t.InvokeMember(step.ActionName, System.Reflection.BindingFlags.SetProperty, null, comp, Parameters);
+                                if (message.action == "getproperty") step.Result = t.InvokeMember(step.ActionName, System.Reflection.BindingFlags.GetProperty, null, comp, Parameters);
+                                var vcomp = comp as GuiVComponent;
+                                
+                                if (message.action == "highlight" && vcomp != null)
+                                {
+                                    try
+                                    {
+                                        if (_lastHighlight != null) _lastHighlight.Visualize(false);
+                                    }
+                                    catch (Exception)
+                                    {
+                                    }
+                                    _lastHighlight = null;
+                                    _lastHighlight = comp as GuiVComponent;
+                                    _lastHighlight.Visualize(true);
+                                }
                             }
                             else
                             {

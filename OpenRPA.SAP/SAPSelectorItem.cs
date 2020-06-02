@@ -26,14 +26,15 @@ namespace OpenRPA.SAP
             if (isRoot)
             {
                 Properties.Add(new SelectorItemProperty("Selector", "SAP"));
+                if (!string.IsNullOrEmpty(element.SystemName)) Properties.Add(new SelectorItemProperty("SystemName", element.SystemName));
                 Enabled = true;
                 canDisable = false;
                 return;
             }
             if (!string.IsNullOrEmpty(element.id)) Properties.Add(new SelectorItemProperty("id", element.id));
-            if (!string.IsNullOrEmpty(element.Name)) Properties.Add(new SelectorItemProperty("Name", element.Name));
-            if (!string.IsNullOrEmpty(element.Role)) Properties.Add(new SelectorItemProperty("Role", element.Role));
-            if (!string.IsNullOrEmpty(element.Tip)) Properties.Add(new SelectorItemProperty("Tip", element.Tip));
+            //if (!string.IsNullOrEmpty(element.Name)) Properties.Add(new SelectorItemProperty("Name", element.Name));
+            //if (!string.IsNullOrEmpty(element.Role)) Properties.Add(new SelectorItemProperty("Role", element.Role));
+            //if (!string.IsNullOrEmpty(element.Tip)) Properties.Add(new SelectorItemProperty("Tip", element.Tip));
             Enabled = (Properties.Count > 1);
             foreach (var p in Properties)
             {
@@ -56,42 +57,51 @@ namespace OpenRPA.SAP
                 return e.Value;
             }
         }
-        public string Name
+        public string SystemName
         {
             get
             {
-                var e = Properties.Where(x => x.Name == "Name").FirstOrDefault();
+                var e = Properties.Where(x => x.Name == "SystemName").FirstOrDefault();
                 if (e == null) return null;
                 return e.Value;
             }
         }
-        public string Role
-        {
-            get
-            {
-                var e = Properties.Where(x => x.Name == "Role").FirstOrDefault();
-                if (e == null) return null;
-                return e.Value;
-            }
-        }
-        public string Tip
-        {
-            get
-            {
-                var e = Properties.Where(x => x.Name == "Tip").FirstOrDefault();
-                if (e == null) return null;
-                return e.Value;
-            }
-        }
-        public string IndexInParent
-        {
-            get
-            {
-                var e = Properties.Where(x => x.Name == "IndexInParent").FirstOrDefault();
-                if (e == null) return null;
-                return e.Value;
-            }
-        }
+        //public string Name
+        //{
+        //    get
+        //    {
+        //        var e = Properties.Where(x => x.Name == "Name").FirstOrDefault();
+        //        if (e == null) return null;
+        //        return e.Value;
+        //    }
+        //}
+        //public string Role
+        //{
+        //    get
+        //    {
+        //        var e = Properties.Where(x => x.Name == "Role").FirstOrDefault();
+        //        if (e == null) return null;
+        //        return e.Value;
+        //    }
+        //}
+        //public string Tip
+        //{
+        //    get
+        //    {
+        //        var e = Properties.Where(x => x.Name == "Tip").FirstOrDefault();
+        //        if (e == null) return null;
+        //        return e.Value;
+        //    }
+        //}
+        //public string IndexInParent
+        //{
+        //    get
+        //    {
+        //        var e = Properties.Where(x => x.Name == "IndexInParent").FirstOrDefault();
+        //        if (e == null) return null;
+        //        return e.Value;
+        //    }
+        //}
         public SAPSelectorItem(SAPElement element)
         {
             this.Element = element;
@@ -195,8 +205,10 @@ namespace OpenRPA.SAP
         }
         public override string ToString()
         {
-            if (!string.IsNullOrEmpty(Tip)) return Tip;
-            return "id:" + id + " Role:" + Role + " Name: " + Name;
+            // if (!string.IsNullOrEmpty(Tip)) return Tip;
+            // return "id:" + id + " Role:" + Role + " Name: " + Name;
+            if (!string.IsNullOrEmpty(SystemName)) return SystemName;
+            return "id:" + id;
         }
         public bool Match(SAPElement m)
         {

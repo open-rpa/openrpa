@@ -24,7 +24,7 @@ namespace OpenRPA.SAPBridge
         public event LoginHandler AfterLogin;
         public GuiSession Session { get; private set; }
         public GuiConnection Connection { get; private set; }
-        public GuiApplication Application { get; private set; }
+        // public GuiApplication Application { get; private set; }
         public SAPLogon() { }
         public void StartProcess(string processPath = "saplogon.exe")
         {
@@ -35,11 +35,13 @@ namespace OpenRPA.SAPBridge
         {
             lock (_lockObj)
             {
-                Application = GetSAPGuiApp(secondsOfTimeout);
+
+                var Application = SAPHook.Instance.app;
                 Application.OpenConnectionByConnectionString(server);
                 var index = Application.Connections.Count - 1;
                 this.Connection = Application.Children.ElementAt(index) as GuiConnection;
                 index = Connection.Sessions.Count - 1;
+                if (Connection.Sessions.Count == 0) throw new Exception("New session not found, did you forget to enable scripting on the server side ?");
                 this.Session = Connection.Children.Item(index) as GuiSession;
             }
 

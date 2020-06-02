@@ -25,6 +25,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Activities\GetElementDesigner.xaml" />
+    <None Remove="Activities\GetPropertyDesigner.xaml" />
     <None Remove="Activities\InvokeMethodDesigner.xaml" />
     <None Remove="Activities\LoginDesigner.xaml" />
     <None Remove="Activities\SetPropertyDesigner.xaml" />
@@ -46,6 +47,10 @@
     <ProjectReference Include="..\OpenRPA.SAPBridge\OpenRPA.SAPBridge.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\GetPropertyDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\SetPropertyDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

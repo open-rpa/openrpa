@@ -170,7 +170,18 @@ namespace OpenRPA.SAP
         public bool DisabledByServer { get; set; }
         public SAPSession[] sessions { get; set; }
     }
-
+    [Serializable]
+    public class SAPElementProperty
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
+        public bool IsReadOnly { get; set; }
+        public override string ToString()
+        {
+            if(IsReadOnly) return "*" + Name + " " + Value;
+            return Name + " " + Value;
+        }
+    }
     [Serializable]
     public class SAPEventElement
     {
@@ -181,5 +192,6 @@ namespace OpenRPA.SAP
         public bool ContainerType { get; set; }
         public string type { get; set; }
         public SAPEventElement[] Children { get; set; }
+        public SAPElementProperty[] Properties { get; set; }
     }
 }

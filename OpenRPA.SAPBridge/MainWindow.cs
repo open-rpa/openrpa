@@ -28,12 +28,30 @@ namespace OpenRPA.SAPBridge
         {
             this.allowshowdisplay = true;
             this.Visible = !this.Visible;
+            if (this.Visible)
+            {
+                this.BringToFront();
+                this.Focus();
+                this.Activate();
+            }
+        }
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == /*WM_SIZE*/ 0x0005)
+            {
+                if (WindowState == FormWindowState.Minimized)
+                {
+                    allowshowdisplay = true;
+                    Visible = false;
+                }
+            }
+            base.WndProc(ref m);
         }
         public void AddText(string message)
         {
-
             SafeInvoke(textBox1, () =>
             {
+                System.Diagnostics.Trace.WriteLine(message);
                 if (!message.EndsWith(Environment.NewLine)) message += Environment.NewLine;
                 var timestring = DateTime.Now.ToString("[HH:mm:ss] ");
                 textBox1.Text = (timestring + message) + textBox1.Text;

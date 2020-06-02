@@ -193,5 +193,9 @@ namespace OpenRPA.SAP
         public string type { get; set; }
         public SAPEventElement[] Children { get; set; }
         public SAPElementProperty[] Properties { get; set; }
+        public override string ToString()
+        {
+            return Name + " " + Id;
+        }
     }
 }

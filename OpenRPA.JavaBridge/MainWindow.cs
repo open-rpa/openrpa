@@ -26,8 +26,26 @@ namespace OpenRPA.JavaBridge
         }
         private void NotifyIcon1_MouseClick(object sender, MouseEventArgs e)
         {
-            this.allowshowdisplay = true;
-            this.Visible = !this.Visible;
+            allowshowdisplay = true;
+            Visible = !Visible;
+            if (Visible)
+            {
+                BringToFront();
+                Focus();
+                Activate();
+            }
+        }
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == /*WM_SIZE*/ 0x0005)
+            {
+                if (WindowState == FormWindowState.Minimized)
+                {
+                    allowshowdisplay = true;
+                    Visible = false;
+                }
+            }
+            base.WndProc(ref m);
         }
         public void AddText(string message)
         {

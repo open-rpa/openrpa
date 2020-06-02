@@ -179,8 +179,9 @@ namespace OpenRPA.SAPBridge
         public bool IsReadOnly { get; set; }
     }
     [Serializable]
-    public class SAPEventElement
+    public partial class SAPEventElement
     {
+        public SAPEventElement() { }
         public string Id { get; set; }
         public string Name { get; set; }
         public string Parent { get; set; }

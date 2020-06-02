@@ -158,15 +158,13 @@ namespace OpenRPA.Java
         public static JavaElement[] GetElementsWithuiSelector( JavaSelector selector, IElement fromElement = null, int maxresults = 1)
         {
             Javahook.Instance.refreshJvms();
-            JavaElement[] result = null;
+            var result = new List<JavaElement>();
             foreach (var jvm in Javahook.Instance.jvms)
             {
-                result = GetElementsWithuiSelector(jvm, selector, fromElement, maxresults);
-                if (result.Count() > 0) return result;
+                result.AddRange(GetElementsWithuiSelector(jvm, selector, fromElement, maxresults));
+                if(result.Count > maxresults) return result.ToArray();
             }
-
-            if (result == null) return new JavaElement[] { };
-            return result;
+            return result.ToArray();
         }
     }
 }

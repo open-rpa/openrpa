@@ -170,10 +170,11 @@ namespace OpenRPA.Script.Activities
 
                     if (compile.Errors.HasErrors)
                     {
-                        string text = "Compile error: ";
+                        string text = "";
                         foreach (System.CodeDom.Compiler.CompilerError ce in compile.Errors)
                         {
-                            text += "rn" + ce.ToString();
+                            if(!ce.IsWarning) text += ce.ToString();
+                            Log.Error(ce.ToString());
                         }
                         error = text;
                     }

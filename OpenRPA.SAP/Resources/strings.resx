@@ -132,6 +132,30 @@
   <data name="activity_getelement_tooltip" xml:space="preserve">
     <value>Find an SAP element based on selector</value>
   </data>
+  <data name="activity_getproperty" xml:space="preserve">
+    <value>Get Property</value>
+  </data>
+  <data name="activity_getproperty_actionname" xml:space="preserve">
+    <value>Property Name</value>
+  </data>
+  <data name="activity_getproperty_actionname_help" xml:space="preserve">
+    <value>Name of property to Get</value>
+  </data>
+  <data name="activity_getproperty_path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="activity_getproperty_path_help" xml:space="preserve">
+    <value>Path to object</value>
+  </data>
+  <data name="activity_getproperty_systemname" xml:space="preserve">
+    <value>System Name</value>
+  </data>
+  <data name="activity_getproperty_systemname_help" xml:space="preserve">
+    <value>System Name to send command to</value>
+  </data>
+  <data name="activity_getproperty_tooltip" xml:space="preserve">
+    <value>Get SAP UI Element property value</value>
+  </data>
   <data name="activity_invokemethod" xml:space="preserve">
     <value>Invoke Method</value>
   </data>
@@ -211,10 +235,10 @@
     <value>Set Property</value>
   </data>
   <data name="activity_setproperty_actionname" xml:space="preserve">
-    <value>Action Name</value>
+    <value>Property Name</value>
   </data>
   <data name="activity_setproperty_actionname_help" xml:space="preserve">
-    <value>Action to perform on object</value>
+    <value>Name of property to Set</value>
   </data>
   <data name="activity_setproperty_parameters" xml:space="preserve">
     <value>Parameters</value>
@@ -229,10 +253,10 @@
     <value>Path to object</value>
   </data>
   <data name="activity_setproperty_systemname" xml:space="preserve">
-    <value>System Name to send command to</value>
+    <value>System Name</value>
   </data>
   <data name="activity_setproperty_systemname_help" xml:space="preserve">
-    <value>System Name</value>
+    <value>System Name to send command to</value>
   </data>
   <data name="activity_setproperty_tooltip" xml:space="preserve">
     <value>Set the property value of an SAP UI Element</value>

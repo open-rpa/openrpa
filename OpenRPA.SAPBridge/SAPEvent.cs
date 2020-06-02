@@ -172,6 +172,13 @@ namespace OpenRPA.SAPBridge
         public SAPSession[] sessions { get; set; }
     }
     [Serializable]
+    public class SAPElementProperty
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
+        public bool IsReadOnly { get; set; }
+    }
+    [Serializable]
     public class SAPEventElement
     {
         public string Id { get; set; }
@@ -181,6 +188,7 @@ namespace OpenRPA.SAPBridge
         public bool ContainerType { get; set; }
         public string type { get; set; }
         public SAPEventElement[] Children { get; set; }
+        public SAPElementProperty[] Properties { get; set; }
     }
 
 }

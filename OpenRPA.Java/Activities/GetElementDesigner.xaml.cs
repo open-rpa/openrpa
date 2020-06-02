@@ -96,6 +96,7 @@ namespace OpenRPA.Java
             NotifyPropertyChanged("HighlightImage");
             string SelectorString = ModelItem.GetValue<string>("Selector");
             int maxresults = ModelItem.GetValue<int>("MaxResults");
+            if (maxresults < 1) maxresults = 1;
             var selector = new JavaSelector(SelectorString);
 
             var elements = new List<JavaElement>();

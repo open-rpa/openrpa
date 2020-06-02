@@ -408,12 +408,15 @@ namespace OpenRPA.Script.Activities
 
                 if (compile.Errors.HasErrors)
                 {
-                    string text = "Compile error: ";
+                    string text = "";
                     foreach (CompilerError ce in compile.Errors)
                     {
-                        text += "rn" + ce.ToString();
+                        if (!ce.IsWarning)
+                        {
+                            text += ce.ToString();
+                            Log.Error(ce.ToString());
+                        }
                     }
-                    Log.Error(text);
                     throw new Exception(text);
                 }
                 cache.Add(code, compile);

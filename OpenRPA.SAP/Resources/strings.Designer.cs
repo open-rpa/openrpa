@@ -106,6 +106,78 @@ namespace OpenRPA.SAP.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get Property.
+        /// </summary>
+        public static string activity_getproperty {
+            get {
+                return ResourceManager.GetString("activity_getproperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property Name.
+        /// </summary>
+        public static string activity_getproperty_actionname {
+            get {
+                return ResourceManager.GetString("activity_getproperty_actionname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name of property to Get.
+        /// </summary>
+        public static string activity_getproperty_actionname_help {
+            get {
+                return ResourceManager.GetString("activity_getproperty_actionname_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path.
+        /// </summary>
+        public static string activity_getproperty_path {
+            get {
+                return ResourceManager.GetString("activity_getproperty_path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path to object.
+        /// </summary>
+        public static string activity_getproperty_path_help {
+            get {
+                return ResourceManager.GetString("activity_getproperty_path_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System Name.
+        /// </summary>
+        public static string activity_getproperty_systemname {
+            get {
+                return ResourceManager.GetString("activity_getproperty_systemname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System Name to send command to.
+        /// </summary>
+        public static string activity_getproperty_systemname_help {
+            get {
+                return ResourceManager.GetString("activity_getproperty_systemname_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get SAP UI Element property value.
+        /// </summary>
+        public static string activity_getproperty_tooltip {
+            get {
+                return ResourceManager.GetString("activity_getproperty_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invoke Method.
         /// </summary>
         public static string activity_invokemethod {
@@ -340,7 +412,7 @@ namespace OpenRPA.SAP.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Action Name.
+        ///   Looks up a localized string similar to Property Name.
         /// </summary>
         public static string activity_setproperty_actionname {
             get {
@@ -349,7 +421,7 @@ namespace OpenRPA.SAP.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Action to perform on object.
+        ///   Looks up a localized string similar to Name of property to Set.
         /// </summary>
         public static string activity_setproperty_actionname_help {
             get {
@@ -394,7 +466,7 @@ namespace OpenRPA.SAP.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to System Name to send command to.
+        ///   Looks up a localized string similar to System Name.
         /// </summary>
         public static string activity_setproperty_systemname {
             get {
@@ -403,7 +475,7 @@ namespace OpenRPA.SAP.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to System Name.
+        ///   Looks up a localized string similar to System Name to send command to.
         /// </summary>
         public static string activity_setproperty_systemname_help {
             get {

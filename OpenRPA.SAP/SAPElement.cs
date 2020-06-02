@@ -10,6 +10,44 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.SAP
 {
+    public class SAPElementUpdatableProperty
+    {
+        [JsonIgnore]
+        public SAPElement Element { get; set; }
+        public string Name { get; set; }
+        public string _Value;
+
+        public SAPElementUpdatableProperty(SAPElement Element, SAPElementProperty p)
+        {
+            this.Element = Element;
+            IsReadOnly = p.IsReadOnly;
+            Name = p.Name;
+            _Value = p.Value;
+        }
+
+        public string Value { 
+            get 
+            {
+                return _Value;
+            } 
+            set 
+            {
+                if (IsReadOnly) throw new ArgumentException("Cannot update " + Name + ", the field is readonly");
+                object[] _parameters = new object[] { value };
+                var data = new SAPInvokeMethod(Element.SystemName, Element.id, Name, _parameters);
+                var message = new SAPEvent("setproperty");
+                message.Set(data);
+                var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+
+            }
+        }
+        public bool IsReadOnly { get; set; }
+        public override string ToString()
+        {
+            if (IsReadOnly) return "*" + Name + " " + Value;
+            return Name + " " + Value;
+        }
+    }
     public class SAPElement : IElement
     {
         object IElement.RawElement { get => raw; set => raw = value as object; }
@@ -45,7 +83,21 @@ namespace OpenRPA.SAP
             SystemName = Element.SystemName;
             ContainerType = Element.ContainerType;
             Role = Element.type;
-
+            if (Properties == null) Properties = new Dictionary<string, SAPElementUpdatableProperty>();
+            if(Element.Properties!=null)
+                foreach (var p in Element.Properties)
+                {
+                    Properties.Add(p.Name, new SAPElementUpdatableProperty(this,p));
+                    //if (p.Name == "Left") X = int.Parse(p.Value);
+                    //if (p.Name == "Top")  Y = int.Parse(p.Value);
+                    if (p.Name == "ScreenLeft") X = int.Parse(p.Value);
+                    if (p.Name == "ScreenTop") Y = int.Parse(p.Value);
+                    if (p.Name == "Width") Width = int.Parse(p.Value);
+                    if (p.Name == "Height") Height = int.Parse(p.Value);
+                    if (p.Name == "Name") Name = p.Value;
+                    if (p.Name == "Type") Role = p.Value;
+                    if (p.Name == "Text") Value = p.Value;
+                }
         }
         public System.Drawing.Rectangle Rectangle
         {
@@ -66,8 +118,7 @@ namespace OpenRPA.SAP
         public int Y { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-        public bool IsVisible { get; set; }
-        public Dictionary<string, object> properties { get; set; }
+        public Dictionary<string, SAPElementUpdatableProperty> Properties { get; set; }
         public bool SupportInput
         {
             get
@@ -80,10 +131,14 @@ namespace OpenRPA.SAP
         {
             get
             {
+                if(Properties==null) return null;
+                if (Properties.ContainsKey("Text")) return Properties["Text"].Value;
                 return null;
             }
             set
             {
+                if (Properties == null) return;
+                if (Properties.ContainsKey("Text")) Properties["Text"].Value = value;
             }
         }
         private bool RefreshParent = true;
@@ -180,6 +235,11 @@ namespace OpenRPA.SAP
         }
         public Task _Highlight(System.Drawing.Color Color, TimeSpan Duration)
         {
+            //var data = new SAPInvokeMethod(SystemName, id, null, null);
+            //var message = new SAPEvent("highlight");
+            //message.Set(data);
+            //var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+
             using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow(true))
             {
                 _overlayWindow.BackColor = Color;

@@ -96,6 +96,7 @@ namespace OpenRPA.SAP
             NotifyPropertyChanged("HighlightImage");
             string SelectorString = ModelItem.GetValue<string>("Selector");
             int maxresults = ModelItem.GetValue<int>("MaxResults");
+            if (maxresults < 1) maxresults = 1;
             var selector = new SAPSelector(SelectorString);
 
             var elements = new List<SAPElement>();
@@ -114,7 +115,7 @@ namespace OpenRPA.SAP
                 var res = SAPSelector.GetElementsWithuiSelector(selector, null, maxresults);
                 elements.AddRange(res);
             }
-            if (elements.Count() > maxresults) elements = elements.ToList().Take(maxresults).ToList();
+            if (elements.Count() > maxresults && maxresults > 0) elements = elements.ToList().Take(maxresults).ToList();
             if (elements.Count() > 0)
             {
                 HighlightImage = Interfaces.Extensions.GetImageSourceFromResource("check.png");

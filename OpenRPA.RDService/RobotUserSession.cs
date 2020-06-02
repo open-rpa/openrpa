@@ -131,22 +131,32 @@ namespace OpenRPA.RDService
                             }
                         }
 
-                        using (var imp = new Impersonator(windowsusername, windowsdomain, client.windowspassword))
+                        Log.Information("Impersonate " + client.windowslogin);
+                        try
                         {
-                            ConnectionAttempts++;
-                            Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowslogin);
-                            freerdp.Connect(rdpip, "", client.windowslogin, client.windowspassword);
-                            //if (client.windowsusername.StartsWith(hostname + @"\"))
-                            //{
-                            //    // var windowsusername = client.windowsusername.Substring(hostname.Length + 1);
-                            //    Log.Information("Connecting RDP connection to " + rdpip + " for " + windowsusername);
-                            //    freerdp.Connect(rdpip, "", windowsusername, client.windowspassword);
-                            //}
-                            //else
-                            //{
-                            //    Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowsusername);
-                            //    freerdp.Connect(rdpip, "", client.windowsusername, client.windowspassword);
-                            //}
+                            using (var imp = new Impersonator(windowsusername, windowsdomain, client.windowspassword))
+                            {
+                                ConnectionAttempts++;
+                                Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowslogin);
+                                freerdp.Connect(rdpip, "", client.windowslogin, client.windowspassword);
+                                //if (client.windowsusername.StartsWith(hostname + @"\"))
+                                //{
+                                //    // var windowsusername = client.windowsusername.Substring(hostname.Length + 1);
+                                //    Log.Information("Connecting RDP connection to " + rdpip + " for " + windowsusername);
+                                //    freerdp.Connect(rdpip, "", windowsusername, client.windowspassword);
+                                //}
+                                //else
+                                //{
+                                //    Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowsusername);
+                                //    freerdp.Connect(rdpip, "", client.windowsusername, client.windowspassword);
+                                //}
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error("Login failed, waiting 10 seconds: " + ex.Message);
+                            System.Threading.Thread.Sleep(10 * 1000);
+                            throw;
                         }
                         created = DateTime.Now;
                         return;

@@ -129,7 +129,74 @@ async function OnPortMessage(message) {
         }
         if (message.functionName === "enumtabs") {
             await EnumTabs(message);
-            console.log("[send][" + message.messageid + "]" + message.functionName + " results: " + message.results.length);
+            var _result = "";
+            for (var i = 0; i < message.results.length; i++) {
+                var _tab = message.results[i].tab;
+                _result += "(tabid " + _tab.id + "/index:" + _tab.index + ") ";
+            }
+            console.log("[send][" + message.messageid + "]" + message.functionName + " results: " + message.results.length + " " + _result);
+            port.postMessage(JSON.parse(JSON.stringify(message)));
+            return;
+        }
+        if (message.functionName === "selecttab") {
+            var tab = null;
+            var tabsList = await tabsquery();
+            if (tabsList.length == 0) {
+                message.error = "No tabs found!";
+                port.postMessage(JSON.parse(JSON.stringify(message)));
+                return;
+            }
+            for (var i = 0; i < tabsList.length; i++) {
+                if (tabsList[i].id == message.tabid) {
+                    tab = tabsList[i];
+                }
+            }
+            if (tab == null) {
+                message.error = "Tab " + message.tabid + " not found!";
+                port.postMessage(JSON.parse(JSON.stringify(message)));
+                return;
+            }
+            await tabshighlight(tab.index);
+            message.tab = tab;
+            // message.tab = await tabsupdate(message.tabid, { highlighted: true });
+            console.log("[send][" + message.messageid + "]" + message.functionName + " " + message.tab.url);
+            port.postMessage(JSON.parse(JSON.stringify(message)));
+            return;
+        }
+        if (message.functionName === "updatetab") {
+            var tabsList = await tabsquery();
+            if (tabsList.length == 0) {
+                message.error = "No tabs found!";
+                port.postMessage(JSON.parse(JSON.stringify(message)));
+                return;
+            }
+            for (var i = 0; i < tabsList.length; i++) {
+                if (tabsList[i].id == message.tabid) {
+                    if (tabsList[i].url == message.tab.url) {
+                        delete message.tab.url;
+                    }
+                }
+            }
+
+            delete message.tab.browser;
+            delete message.tab.audible;
+            delete message.tab.discarded;
+            delete message.tab.favIconUrl;
+            delete message.tab.height;
+            delete message.tab.id;
+            delete message.tab.incognito;
+            delete message.tab.status;
+            delete message.tab.title;
+            delete message.tab.width;
+            delete message.tab.index;
+            delete message.tab.windowId;
+            message.tab = await tabsupdate(message.tabid, message.tab);
+            console.log("[send][" + message.messageid + "]" + message.functionName + " " + message.tab.url);
+            port.postMessage(JSON.parse(JSON.stringify(message)));
+            return;
+        }
+        if (message.functionName === "closetab") {
+            chrome.tabs.remove(message.tabid);
             port.postMessage(JSON.parse(JSON.stringify(message)));
             return;
         }
@@ -329,14 +396,13 @@ function tabsOnRemoved(tabId) {
     port.postMessage(JSON.parse(JSON.stringify(message)));
 }
 async function tabsOnUpdated(tabId, changeInfo, tab) {
-    console.log('tabsOnUpdated');
     if (!allowExecuteScript(tab)) {
-        console.log('tabsOnUpdated, skipped, not allowExecuteScript');
+        console.debug('tabsOnUpdated, skipped, not allowExecuteScript');
         return;
     }
     if (openrpadebug) console.log(changeInfo);
     try {
-        console.log("tabsOnUpdated: " + changeInfo.status)
+        console.debug("tabsOnUpdated: " + changeInfo.status)
         await tabsexecuteScript(tab.id, { code: openrpautil_script, allFrames: true });
     } catch (e) {
         console.log(e);
@@ -456,6 +522,22 @@ var tabsupdate = function (tabid, updateoptions) {
         }
     });
 };
+var tabshighlight = function (index) {
+    return new Promise(function (resolve, reject) {
+        try {
+            chrome.tabs.highlight({ 'tabs': index }, () => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError.message);
+                    return;
+                }
+                resolve();
+            });
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
 var tabssendMessage = function (tabid, message) {
     return new Promise(async function (resolve, reject) {
         try {

@@ -37,6 +37,8 @@ namespace OpenRPA.SAPBridge
                     prop.IsReadOnly = !_p.CanWrite;
                     try
                     {
+                        if (type == "GuiButton" && _p.Name == "Modified") continue;
+                        if (type == "GuiTitlebar" && _p.Name == "Changeable") continue;
                         prop.Value = _p.GetValue(Element).ToString();
                         props.Add(prop);
                         if (_p.Name == "ScreenLeft") X = int.Parse(prop.Value);
@@ -47,7 +49,7 @@ namespace OpenRPA.SAPBridge
                     }
                     catch
                     {
-                        if (!all) Program.log("*" + _p.Name);
+                        // if (!all) Program.log("*" + _p.Name);
                         prop.Value = "";
                     }
                 }

@@ -239,7 +239,7 @@ namespace OpenRPA
                         d.Path = Interfaces.Extensions.ProjectsDirectory;
                         dp = Plugins.AddDetector(this, d);
                         if (dp != null) dp.OnDetector += Window.OnDetector;
-                        if (dp == null) Log.Error("Detector not loaded!");
+                        if (dp == null) Log.Error("Detector " + d.name + " not loaded! (plugin: " + d.Plugin + ")");
                     }
                     var folders = new List<string>();
                     foreach (var p in projects)

@@ -63,9 +63,6 @@ namespace OpenRPA.SAP
         }
         private void Pipeclient_ServerMessage(NamedPipeConnection<SAPEvent, SAPEvent> connection, SAPEvent message)
         {
-            //if (message.action == "SAPShutDown") OnSAPShutDown?.Invoke(message.vmID);
-            //if (message.action == "MouseClicked") OnMouseClicked?.Invoke(message.vmID, new AccessibleContextNode(accessBridge, new SAPObjectHandle(message.vmID, new JOBJECT64(message.ac))));
-            //if (message.action == "MouseEntered") OnMouseEntered?.Invoke(message.vmID, new AccessibleContextNode(accessBridge, new SAPObjectHandle(message.vmID, new JOBJECT64(message.ac))));
             try
             {
                 if (message.action == "recorderevent")
@@ -94,49 +91,8 @@ namespace OpenRPA.SAP
                             for (var i = 0; i < data.Parameters.Length; i++)
                             {
                                 var name = "param" + i.ToString();
-
-                                //Type t = Type.GetType(data.Parameters[i].ValueType);
-                                //if (data.Parameters[i].ValueType == "System.Data.DataTable") t = typeof(System.Data.DataTable);
-                                //if (t == null) throw new ArgumentException("Failed resolving type '" + data.Parameters[i].ValueType + "'");
-
-                                //object o = null;
-                                //var expression = data.Parameters[i].Value as System.Activities.ActivityWithResult;
-                                //var valueExpressionModelItem = data.Parameters[i].Value as System.Activities.Presentation.Model.ModelItem;
-
-                                //if (data.Parameters[i].ValueType == "System.Int32") {
-                                //    int _int = 0;
-                                //    if(int.TryParse(data.Parameters[i].Value.ToString(), out _int))
-                                //    {
-                                //        o = new System.Activities.Expressions.Literal<int>(_int);
-                                //    } else
-                                //    {
-                                //        throw new Exception("Failed converting " + data.Parameters[i].Value.ToString() + " to " + data.Parameters[i].ValueType);
-                                //    }
-                                //}
-                                //if (data.Parameters[i].ValueType == "System.Boolean") o = new System.Activities.Expressions.Literal<bool>((bool)data.Parameters[i].Value);
-                                //if (data.Parameters[i].ValueType == "System.String") o = new System.Activities.Expressions.Literal<string>((string)data.Parameters[i].Value);
-                                //if(o == null)
-                                //{
-                                //    //new Literal<string>(selectors.vm.json)
-                                //    Type atype = typeof(System.Activities.Expressions.Literal<>);
-                                //    Type constructed = atype.MakeGenericType(t);
-                                //    o = Activator.CreateInstance(constructed, data.Parameters[i].Value);
-                                //}
-
-                                //var aaa = new DynamicActivity() { Implementation = () => o as Activity };
-
-                                //var aa = new System.Activities.Expressions.ArgumentValue<int>(name);
-                                //aa.Result = 10;
-                                //o = 
-
-                                //var o = WFHelper.TryCreateLiteral(t, data.Parameters[i].Value.ToString());
-
-                                //var arg = System.Activities.Argument.Create(t, System.Activities.ArgumentDirection.InOut);
-                                //arg.GetType().GetProperties().Where(x => x.Name == "Expression").Last().SetValue(arg, o);
-                                //a.Arguments.Add(name, arg);
                             }
                         }
-                        // a.Parameters = data.Parameters;
                         r.a = new GetElementResult(a);
                     }
                     if (data.Action == "SetProperty")
@@ -152,10 +108,8 @@ namespace OpenRPA.SAP
 
                             }
                         }
-                        // a.Parameters = data.Parameters;
                         r.a = new GetElementResult(a);
                     }
-                    // if (data.ActionName != "ResizeWorkingPane" )
                     if(r != null)
                     {
                         Plugin.Instance.RaiseUserAction(r);
@@ -165,11 +119,13 @@ namespace OpenRPA.SAP
                 {
                     LastEventElement = message.Get<SAPEventElement>();
                     LastElement = new SAPElement(null, LastEventElement);
+                    Log.Output("SAP mousedown on " + LastElement.id);
                 }
                 if (message.action == "mousemove")
                 {
                     LastEventElement = message.Get<SAPEventElement>();
                     LastElement = new SAPElement(null, LastEventElement);
+                    Log.Output("SAP mousemove on " + LastElement.id);
                 }
             }
             catch (Exception ex)
@@ -244,8 +200,17 @@ namespace OpenRPA.SAP
                 Connections = new SAPConnection[] { };
             }
         }
+        public bool isConnected
+        {
+            get
+            {
+                if (pipeclient == null) return false;
+                return pipeclient.isConnected;
+            }
+        }
         public SAPEvent SendMessage(SAPEvent message, TimeSpan timeout)
         {
+            if (!isConnected) throw new Exception("Pipe not connected to SAP bridge");
             if (string.IsNullOrEmpty(message.messageid)) throw new ArgumentException("message id is mandatory", "messageid");
             if (replyqueue.ContainsKey(message.messageid)) throw new Exception("Already waiting on message with id " + message.messageid);
             var e = new replyqueueitem(message);

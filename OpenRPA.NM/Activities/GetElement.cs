@@ -1,4 +1,5 @@
-﻿using OpenRPA.Interfaces;
+﻿using FlaUI.Core.AutomationElements;
+using OpenRPA.Interfaces;
 using System;
 using System.Activities;
 using System.Activities.Presentation.PropertyEditing;
@@ -60,9 +61,10 @@ namespace OpenRPA.NM
             NMElement[] elements = { };
             var sw = new Stopwatch();
             sw.Start();
+            string browser = sel.browser;
             if (WaitForReady.Get(context))
             {
-                string browser = sel.browser;
+                
                 if (from != null) browser = from.browser;
                 if (!string.IsNullOrEmpty(browser))
                 {
@@ -77,6 +79,19 @@ namespace OpenRPA.NM
                     }
                 }
             }
+            var s = new NMSelectorItem(sel[0]);
+            if(!string.IsNullOrEmpty(s.url))
+            {
+                var tab = NMHook.tabs.Where(x => x.browser == browser && x.url.ToLower().StartsWith(s.url.ToLower())).FirstOrDefault();
+                if(tab != null)
+                {
+                    if (!tab.highlighted || !tab.selected)
+                    {
+                        var _tab = NMHook.selecttab(browser, tab.id);
+                    }
+                }
+            }
+            
             do
             {
                 elements = NMSelector.GetElementsWithuiSelector(sel, from, maxresults);

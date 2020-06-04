@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="activity_closetab" xml:space="preserve">
+    <value>Close Tab</value>
+  </data>
+  <data name="activity_closetab_tooltip" xml:space="preserve">
+    <value>Close the current tab, or close all tabs</value>
+  </data>
+  <data name="activity_executescript" xml:space="preserve">
+    <value>Execute Script</value>
+  </data>
+  <data name="activity_executescript_tooltip" xml:space="preserve">
+    <value>Execute script in the browser, targeting current tab and default frame</value>
+  </data>
   <data name="activity_getelement" xml:space="preserve">
     <value>Get Element</value>
   </data>

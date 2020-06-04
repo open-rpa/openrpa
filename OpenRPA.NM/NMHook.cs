@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlaUI.Core.AutomationElements;
 
 namespace OpenRPA.NM
 {
@@ -604,6 +605,98 @@ namespace OpenRPA.NM
                 Log.Error(ex.ToString());
             }
         }
-
+        public static NativeMessagingMessageTab updatetab(string browser, NativeMessagingMessageTab tab)
+        {
+            if (browser == "chrome")
+            {
+                if (chromeconnected)
+                {
+                    return chromeupdatetab(tab);
+                }
+            }
+            else
+            {
+                if (ffconnected)
+                {
+                    return ffupdatetab(tab);
+                }
+            }
+            return null;
+        }
+        internal static NativeMessagingMessageTab ffupdatetab(NativeMessagingMessageTab tab)
+        {
+            NativeMessagingMessage message = new NativeMessagingMessage("updatetab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tab.id, tab = tab };
+            NativeMessagingMessage result = ffpipe.Message(message, true, TimeSpan.FromSeconds(2));
+            WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
+            return tabs.Where(x => x.browser == "ff" && x.id == tab.id).FirstOrDefault();
+        }
+        internal static NativeMessagingMessageTab chromeupdatetab(NativeMessagingMessageTab tab)
+        {
+            NativeMessagingMessage message = new NativeMessagingMessage("updatetab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tab.id, tab = tab };
+            NativeMessagingMessage result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
+            WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
+            return tabs.Where(x => x.browser == "chrome" && x.id == tab.id).FirstOrDefault();
+        }
+        public static NativeMessagingMessageTab selecttab(string browser, int tabid)
+        {
+            if (browser == "chrome")
+            {
+                if (chromeconnected)
+                {
+                    return chromeselecttab(tabid);
+                }
+            }
+            else
+            {
+                if (ffconnected)
+                {
+                    return ffselecttab(tabid);
+                }
+            }
+            return null;
+        }
+        internal static NativeMessagingMessageTab ffselecttab(int tabid)
+        {
+            NativeMessagingMessage message = new NativeMessagingMessage("selecttab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tabid };
+            NativeMessagingMessage result = ffpipe.Message(message, true, TimeSpan.FromSeconds(2));
+            WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
+            return tabs.Where(x => x.browser == "ff" && x.id == tabid).FirstOrDefault();
+        }
+        internal static NativeMessagingMessageTab chromeselecttab(int tabid)
+        {
+            NativeMessagingMessage message = new NativeMessagingMessage("selecttab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tabid };
+            NativeMessagingMessage result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
+            WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
+            return tabs.Where(x => x.browser == "chrome" && x.id == tabid).FirstOrDefault();
+        }
+        public static void closetab(string browser, int tabid)
+        {
+            if (browser == "chrome")
+            {
+                if (chromeconnected)
+                {
+                    chromeclosetab(tabid);
+                }
+            }
+            else
+            {
+                if (ffconnected)
+                {
+                    ffclosetab(tabid);
+                }
+            }
+        }
+        internal static void ffclosetab(int tabid)
+        {
+            NativeMessagingMessage message = new NativeMessagingMessage("closetab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tabid };
+            NativeMessagingMessage result = ffpipe.Message(message, true, TimeSpan.FromSeconds(2));
+            WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
+        }
+        internal static void chromeclosetab(int tabid)
+        {
+            NativeMessagingMessage message = new NativeMessagingMessage("closetab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tabid };
+            NativeMessagingMessage result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
+            WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
+        }
     }
 }

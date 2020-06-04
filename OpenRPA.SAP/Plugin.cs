@@ -116,6 +116,7 @@ namespace OpenRPA.SAP
         public static Plugin Instance { get; set; }
         public void Start()
         {
+            if (!SAPhook.Instance.isConnected) return;
             Console.WriteLine("Send beginrecord");
             Instance = this;
             var e = new SAPToogleRecordingEvent();
@@ -128,6 +129,7 @@ namespace OpenRPA.SAP
         }
         public void Stop()
         {
+            if (!SAPhook.Instance.isConnected) return;
             SAPhook.Instance.SendMessage(new SAPEvent("endrecord"), TimeSpan.FromSeconds(5));
         }
         // public SAPElement LastElement { get; set; }

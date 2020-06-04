@@ -71,6 +71,15 @@ namespace OpenRPA.NM
                 return e.Value;
             }
         }
+        public string url
+        {
+            get
+            {
+                var e = Properties.Where(x => x.Name == "url").FirstOrDefault();
+                if (e == null) return null;
+                return e.Value;
+            }
+        }
         public string type
         {
             get

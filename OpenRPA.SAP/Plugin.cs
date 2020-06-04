@@ -113,25 +113,30 @@ namespace OpenRPA.SAP
             timer.Interval = TimeSpan.FromMinutes(5).TotalMilliseconds;
             timer.Start();
         }
-
         public static Plugin Instance { get; set; }
         public void Start()
         {
+            if (!SAPhook.Instance.isConnected) return;
             Console.WriteLine("Send beginrecord");
             Instance = this;
-            var e = new SAPToogleRecordingEvent(); e.overlay = Config.local.record_overlay;
+            var e = new SAPToogleRecordingEvent();
+            // e.overlay = Config.local.record_overlay;
+            e.overlay = false;
+            e.mousemove = Config.local.record_overlay;
             var msg = new SAPEvent("beginrecord"); msg.Set(e);
             SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(5));
             Console.WriteLine("End beginrecord");
         }
         public void Stop()
         {
+            if (!SAPhook.Instance.isConnected) return;
             SAPhook.Instance.SendMessage(new SAPEvent("endrecord"), TimeSpan.FromSeconds(5));
         }
         // public SAPElement LastElement { get; set; }
         private IRecordEvent LastRecorderEvent;
         public bool ParseUserAction(ref IRecordEvent e)
         {
+            if (SAPhook.Instance.LastElement == null) return false;
             if (e.UIElement == null) return false;
             if (e.UIElement.ProcessId > 0)
             {
@@ -139,8 +144,25 @@ namespace OpenRPA.SAP
                 if (p.ProcessName.ToLower() != "saplogon") return false;
             } else { return false; }
             LastRecorderEvent = e;
-            e.a = null;
             e.ClickHandled = false;
+            var LastElement = SAPhook.Instance.LastElement;
+
+            var selector = new SAPSelector(LastElement, null, true);
+            var a = new GetElement { DisplayName = LastElement.Role + " " + LastElement.Name };
+            a.Selector = selector.ToString();
+            a.Image = LastElement.ImageString();
+            a.MaxResults = 1;
+
+            e.Element = LastElement;
+            e.Selector = selector;
+            e.a = new GetElementResult(a);
+            e.SupportInput = LastElement.SupportInput;
+            // e.SupportSelect = LastElement.tagname.ToLower() == "select";
+            e.OffsetX = e.X - LastElement.Rectangle.X;
+            e.OffsetY = e.Y - LastElement.Rectangle.Y;
+            e.ClickHandled = false;
+            //e.ClickHandled = true;
+            //LastElement.Click(true, e.Button, e.X, e.Y, false, false);
             return true;
         }
         public void RaiseUserAction(RecordEvent r)
@@ -169,15 +191,17 @@ namespace OpenRPA.SAP
         private int lastid = -1;
         public bool ParseMouseMoveAction(ref IRecordEvent e)
         {
+            if (SAPhook.Instance.LastElement == null) return false;
             if (e.UIElement == null) return false;
             if (e.UIElement.ProcessId < 1) return false;
-            if(e.UIElement.ProcessId != lastid)
+            if (e.UIElement.ProcessId != lastid)
             {
                 Console.WriteLine("Get Process");
                 var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
                 if (p.ProcessName.ToLower() != "saplogon") return false;
                 lastid = e.UIElement.ProcessId;
-            }            
+            }
+            e.Element = SAPhook.Instance.LastElement;
             e.Element = null;
             e.UIElement = null;
             return true;

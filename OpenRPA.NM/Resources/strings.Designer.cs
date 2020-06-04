@@ -61,6 +61,42 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close Tab.
+        /// </summary>
+        public static string activity_closetab {
+            get {
+                return ResourceManager.GetString("activity_closetab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close the current tab, or close all tabs.
+        /// </summary>
+        public static string activity_closetab_tooltip {
+            get {
+                return ResourceManager.GetString("activity_closetab_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Execute Script.
+        /// </summary>
+        public static string activity_executescript {
+            get {
+                return ResourceManager.GetString("activity_executescript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Execute script in the browser, targeting current tab and default frame.
+        /// </summary>
+        public static string activity_executescript_tooltip {
+            get {
+                return ResourceManager.GetString("activity_executescript_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Get Element.
         /// </summary>
         public static string activity_getelement {

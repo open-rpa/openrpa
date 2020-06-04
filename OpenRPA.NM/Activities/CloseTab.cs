@@ -11,40 +11,45 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.NM
 {
-    [System.ComponentModel.Designer(typeof(OpenURLDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(OpenURL), "Resources.toolbox.gethtmlelement.png")]
+    [System.ComponentModel.Designer(typeof(CloseTabDesigner), typeof(System.ComponentModel.Design.IDesigner))]
+    [System.Drawing.ToolboxBitmap(typeof(CloseTab), "Resources.toolbox.gethtmlelement.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
-    [LocalizedToolboxTooltip("activity_openurl_tooltip", typeof(Resources.strings))]
-    [LocalizedDisplayName("activity_openurl", typeof(Resources.strings))]
-    public class OpenURL : NativeActivity
+    [LocalizedToolboxTooltip("activity_closetab_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_closetab", typeof(Resources.strings))]
+    public class CloseTab : NativeActivity
     {
-        [RequiredArgument]
-        public InArgument<string> Url { get; set; }
         public InArgument<string> Browser { get; set; }
-        public InArgument<bool> NewTab { get; set; }
-        public OpenURL()
-        {
-        }
+        public InArgument<bool> CloseAll { get; set; }
         protected override void Execute(NativeActivityContext context)
         {
-            var url = Url.Get(context);
+            var closeall = CloseAll.Get(context);
             var browser = Browser.Get(context);
             var timeout = TimeSpan.FromSeconds(3);
-            var newtab = NewTab.Get(context);
             if (browser != "chrome" && browser != "ff") browser = "chrome";
-            if (!string.IsNullOrEmpty(url))
+            if (closeall)
             {
                 NMHook.enumtabs();
-                var tab = NMHook.tabs.Where(x => x.browser == browser && x.url.ToLower().StartsWith(url.ToLower())).FirstOrDefault();
-                if (tab != null)
+                foreach(var tab in NMHook.tabs.Where(x=> x.browser == browser).ToList())
                 {
-                    if (!tab.highlighted || !tab.selected)
+                    NMHook.closetab(browser, tab.id);
+                }
+            } else
+            {
+                if (browser == "chrome")
+                {
+                    if (NMHook.CurrentChromeTab != null)
                     {
-                        var _tab = NMHook.selecttab(browser, tab.id);
+                        NMHook.closetab(browser, NMHook.CurrentChromeTab.id);
+                    }
+                }
+                if (browser == "ff")
+                {
+                    if (NMHook.CurrentFFTab != null)
+                    {
+                        NMHook.closetab(browser, NMHook.CurrentFFTab.id);
                     }
                 }
             }
-            NMHook.openurl(browser, url, newtab);
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {

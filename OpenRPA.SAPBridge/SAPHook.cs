@@ -46,8 +46,60 @@ namespace OpenRPA.SAPBridge
         {
             _ = app;
         }
-        public SAPSession[] Sessions { get; private set; }
-        public SAPConnection[] Connections { get; private set; }
+        public SAPEventElement[] UIElements = new SAPEventElement[] { };
+        private void GetUIElements(List<SAPEventElement> list, string SystemName, string Parent, GuiComponent Element)
+        {
+            list.Add(new SAPEventElement(Element, SystemName, Parent, false));
+            if (Element.ContainerType)
+            {
+                if (Element is GuiVContainer vcon)
+                {
+                    for (var i = 0; i < vcon.Children.Count; i++)
+                    {
+                        GetUIElements(list, SystemName, Element.Id, vcon.Children.ElementAt(i));
+                    }
+                }
+                else if (Element is GuiContainer con)
+                {
+                    for (var i = 0; i < con.Children.Count; i++)
+                    {
+                        GetUIElements(list, SystemName, Element.Id, con.Children.ElementAt(i));
+                    }
+                }
+                else if (Element is GuiStatusbar sbar)
+                {
+                    for (var i = 0; i < sbar.Children.Count; i++)
+                    {
+                        GetUIElements(list, SystemName, Element.Id, sbar.Children.ElementAt(i));
+                    }
+                }
+            }
+        }
+        public void RefreshUIElements()
+        {
+            if(app==null) UIElements = new SAPEventElement[] { };
+            var result = new List<SAPEventElement>();
+            for (int x = 0; x < app.Children.Count; x++)
+            {
+                var con = app.Children.ElementAt(x) as GuiConnection;
+                if (con.Sessions.Count == 0) continue;
+
+                for (int j = 0; j < con.Sessions.Count; j++)
+                {
+                    var session = con.Children.ElementAt(j) as GuiSession;
+                    for (var i = 0; i < session.Children.Count; i++)
+                    {
+                        GetUIElements(result, session.Info.SystemName, session.Id, session.Children.ElementAt(i));
+                    }
+                }
+            }
+            lock(UIElements)
+            {
+                UIElements = result.ToArray();
+            }
+        }
+        public SAPSession[] Sessions { get; private set; } = new SAPSession[] { };
+        public SAPConnection[] Connections { get; private set; } = new SAPConnection[] { };
         public void RefreshSessions()
         {
             if(app == null)

@@ -35,6 +35,7 @@ namespace OpenRPA.SAP
     public class SAPToogleRecordingEvent
     {
         public bool overlay { get; set; }
+        public bool mousemove { get; set; }
     }
     [Serializable]
     public class SAPInvokeMethod

@@ -14,8 +14,8 @@ namespace OpenRPA.NM
     [System.ComponentModel.Designer(typeof(ExecuteScriptDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ExecuteScript), "Resources.toolbox.gethtmlelement.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
-    [LocalizedToolboxTooltip("activity_ExecuteScript_tooltip", typeof(Resources.strings))]
-    [LocalizedDisplayName("activity_ExecuteScript", typeof(Resources.strings))]
+    [LocalizedToolboxTooltip("activity_executescript_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_executescript", typeof(Resources.strings))]
     public class ExecuteScript : NativeActivity
     {
         [RequiredArgument]

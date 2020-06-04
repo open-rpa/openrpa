@@ -19,8 +19,6 @@ namespace OpenRPA.SAPBridge
             }
             catch (Exception)
             {
-
-                throw;
             }
             try
             {
@@ -48,6 +46,7 @@ namespace OpenRPA.SAPBridge
                 try
                 {
                     _ = SAPGuiApiAssembly;
+                    InputDriver.Instance.OnMouseDown -= OnMouseDown;
                 }
                 catch (Exception)
                 {
@@ -68,6 +67,123 @@ namespace OpenRPA.SAPBridge
                 log(ex.ToString());
             }
         }
+        public static void StartMonitorMouse(bool MouseMove)
+        {
+            Task.Run(() =>
+            {
+                SAPHook.Instance.RefreshSessions();
+                SAPHook.Instance.RefreshUIElements();
+                isMoving = false;
+
+                if (MouseMove)
+                {
+                    Program.log("hook OnMouseMove");
+                    InputDriver.Instance.OnMouseMove += OnMouseMove;
+                }
+                Program.log("hook OnMouseDown");
+                InputDriver.Instance.OnMouseDown += OnMouseDown;
+            });
+        }
+        public static void StopMonitorMouse()
+        {
+            Program.log("unhook OnMouseMove");
+            InputDriver.Instance.OnMouseMove -= OnMouseMove;
+            Program.log("unhook OnMouseDown");
+            InputDriver.Instance.OnMouseDown -= OnMouseDown;
+        }
+        private static void OnMouseMove(InputEventArgs e)
+        {
+            System.Diagnostics.Trace.WriteLine("OnMouseMove: " + isMoving);
+            if (isMoving) return;
+            isMoving = true;
+            try
+            {
+                if (SAPHook.Instance.Connections.Count() == 0) return;
+                if (SAPHook.Instance.UIElements.Count() == 0) return;
+                var Element = System.Windows.Automation.AutomationElement.FromPoint(new System.Windows.Point(e.X, e.Y));
+                if (Element != null)
+                {
+                    var ProcessId = Element.Current.ProcessId;
+                    if (ProcessId < 1) return;
+                    if (SAPProcessId > 0 && SAPProcessId != ProcessId) return;
+                    if (SAPProcessId != ProcessId)
+                    {
+                        var p = System.Diagnostics.Process.GetProcessById(ProcessId);
+                        if (p.ProcessName.ToLower() == "saplogon") SAPProcessId = p.Id;
+                        if (p.ProcessName.ToLower() != "saplogon") return;
+                    }
+                    LastElement = Element;
+                    if (SAPHook.Instance.Connections.Count() == 0) SAPHook.Instance.RefreshSessions();
+                    if (SAPHook.Instance.UIElements.Count() == 0) SAPHook.Instance.RefreshUIElements();
+                    SAPEventElement[] elements = new SAPEventElement[] { };
+                    lock (SAPHook.Instance.UIElements)
+                    {
+                        elements = SAPHook.Instance.UIElements.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
+                    }
+                    if (elements.Count() > 0)
+                    {
+                        var last = elements.OrderBy(x => x.Id.Length).Last();
+                        SAPEvent message = new SAPEvent("mousemove");
+                        message.Set(last);
+                        form.AddText("[send] " + message.action + " " + last.Id);
+                        pipe.PushMessage(message);
+                    }
+                    else
+                    {
+                        log("Mouseover " + e.X + "," + e.Y + " not found in UI List");
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            isMoving = false;
+        }
+        private static void OnMouseDown(InputEventArgs e)
+        {
+            try
+            {
+                if (SAPHook.Instance.Connections.Count() == 0) return;
+                if (SAPHook.Instance.UIElements.Count() == 0) return;
+                var Element = System.Windows.Automation.AutomationElement.FromPoint(new System.Windows.Point(e.X, e.Y));
+                if (Element != null)
+                {
+                    var ProcessId = Element.Current.ProcessId;
+                    if (ProcessId < 1) return;
+                    if (SAPProcessId > 0 && SAPProcessId != ProcessId) return;
+                    if (SAPProcessId != ProcessId)
+                    {
+                        var p = System.Diagnostics.Process.GetProcessById(ProcessId);
+                        if (p.ProcessName.ToLower() == "saplogon") SAPProcessId = p.Id;
+                        if (p.ProcessName.ToLower() != "saplogon") return;
+                    }
+                    LastElement = Element;
+                    SAPEventElement[] elements = new SAPEventElement[] { };
+                    lock (SAPHook.Instance.UIElements)
+                    {
+                        elements = SAPHook.Instance.UIElements.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
+                    }
+                    if (elements.Count() > 0)
+                    {
+                        var last = elements.OrderBy(x => x.Id.Length).Last();
+                        SAPEvent message = new SAPEvent("mousedown");
+                        message.Set(last);
+                        form.AddText("[send] " + message.action + " " + last.Id);
+                        pipe.PushMessage(message);
+                    }
+                    else
+                    {
+                        log("OnMouseDown " + e.X + "," + e.Y + " not found in UI List");
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+        private static System.Windows.Automation.AutomationElement LastElement;
+        private static int SAPProcessId = -1;
+        private static bool isMoving = false;
         private static void Pipe_ClientConnected(NamedPipeConnection<SAPEvent, SAPEvent> connection)
         {
             log("Client Connected");
@@ -103,7 +219,11 @@ namespace OpenRPA.SAPBridge
                         recordstarting = true;
                         var recinfo = message.Get<SAPToogleRecordingEvent>();
                         var overlay = false;
-                        if (recinfo != null) overlay = recinfo.overlay;
+                        if (recinfo != null)
+                        {
+                            overlay = recinfo.overlay;
+                            StartMonitorMouse(recinfo.mousemove);
+                        }                        
                         SAPHook.Instance.BeginRecord(overlay);
                         form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
@@ -120,6 +240,7 @@ namespace OpenRPA.SAPBridge
                 {
                     try
                     {
+                        StopMonitorMouse();
                         SAPHook.Instance.EndRecord();
                         form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);

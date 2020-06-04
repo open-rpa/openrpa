@@ -55,6 +55,7 @@
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Activities\CloseTabDesigner .xaml" />
     <None Remove="Activities\Editor.xaml" />
     <None Remove="Activities\ExecuteScriptDesigner.xaml" />
     <None Remove="Activities\GetElementDesigner.xaml" />
@@ -79,6 +80,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\ExecuteScriptDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\CloseTabDesigner .xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\OpenURLDesigner.xaml">

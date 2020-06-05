@@ -28,11 +28,13 @@ namespace OpenRPA.NM
         {
             if(NMHook.connected)
             {
+                NMHook.enumwindowandtabs();
                 if (NMHook.chromeconnected)
                 {
                     var tab = NMHook.CurrentChromeTab;
                     if (tab != null)
                     {
+                        ModelItem.Properties["Browser"].SetValue(new InArgument<string>("chrome"));
                         ModelItem.Properties["Url"].SetValue(new InArgument<string>(tab.url));
                     }
                 }
@@ -41,6 +43,16 @@ namespace OpenRPA.NM
                     var tab = NMHook.CurrentFFTab;
                     if (tab != null)
                     {
+                        ModelItem.Properties["Browser"].SetValue(new InArgument<string>("ff"));
+                        ModelItem.Properties["Url"].SetValue(new InArgument<string>(tab.url));
+                    }
+                }
+                if (NMHook.edgeconnected)
+                {
+                    var tab = NMHook.CurrentEdgeTab;
+                    if (tab != null)
+                    {
+                        ModelItem.Properties["Browser"].SetValue(new InArgument<string>("edge"));
                         ModelItem.Properties["Url"].SetValue(new InArgument<string>(tab.url));
                     }
                 }

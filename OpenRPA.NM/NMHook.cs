@@ -19,6 +19,7 @@ namespace OpenRPA.NM
         public static event Action<string> Connected;
         private static NamedPipeClientAsync<NativeMessagingMessage> chromepipe = null;
         private static NamedPipeClientAsync<NativeMessagingMessage> ffpipe = null;
+        private static NamedPipeClientAsync<NativeMessagingMessage> edgepipe = null;
         public const string PIPE_NAME = "openrpa_nativebridge";
         public static bool chromeconnected
         {
@@ -36,15 +37,23 @@ namespace OpenRPA.NM
                 return ffpipe.isConnected;
             }
         }
+        public static bool edgeconnected
+        {
+            get
+            {
+                if (edgepipe == null) return false;
+                return edgepipe.isConnected;
+            }
+        }
         public static bool connected
         {
             get
             {
-                if (chromeconnected || ffconnected) return true;
+                if (chromeconnected || ffconnected || edgeconnected) return true;
                 return false;
             }
         }
-        public static void checkForPipes(bool chrome, bool ff)
+        public static void checkForPipes(bool chrome, bool ff, bool edge)
         {
             //registreChromeNativeMessagingHost(false);
             //registreffNativeMessagingHost(false);
@@ -68,13 +77,23 @@ namespace OpenRPA.NM
                 ffpipe.Error += (e) => { Log.Debug(e.ToString()); };
                 ffpipe.Start();
             }
+            if (edgepipe == null && chrome)
+            {
+                var SessionId = System.Diagnostics.Process.GetCurrentProcess().SessionId;
+                edgepipe = new NamedPipeClientAsync<NativeMessagingMessage>(SessionId + "_" + PIPE_NAME + "_edge");
+                edgepipe.ServerMessage += Client_OnReceivedMessage;
+                edgepipe.Disconnected += () => { onDisconnected?.Invoke("edge"); };
+                edgepipe.Connected += () => { Connected?.Invoke("edge"); Task.Run(() => enumwindowandtabs()); };
+                edgepipe.Error += (e) => { Log.Debug(e.ToString()); };
+                edgepipe.Start();
+            }
         }
         public static object ExecuteScript(string browser, int frameid, int tabid, string script, TimeSpan timeout)
         {
             NativeMessagingMessage message = new NativeMessagingMessage("executescript", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids);
             NativeMessagingMessage result = null;
             NativeMessagingMessageTab tab = null;
-            if (browser != "chrome" && browser != "ff") browser = "chrome";
+            if (browser != "chrome" && browser != "ff" && browser != "edge") browser = "chrome";
             if (tabid > -1) tab = tabs.Where(x => x.id == tabid && x.browser == browser).FirstOrDefault();
             if(tab==null)
             {
@@ -117,6 +136,18 @@ namespace OpenRPA.NM
                 return win;
             }
         }
+        public static NativeMessagingMessageWindow CurrentEdgeWindow
+        {
+            get
+            {
+                var win = windows.Where(x => x.browser == "edge" && x.focused).FirstOrDefault();
+                if (win != null) return win;
+                win = windows.Where(x => x.browser == "edge" && x.id == 1).FirstOrDefault();
+                if (win != null) return win;
+                win = windows.Where(x => x.browser == "edge").FirstOrDefault();
+                return win;
+            }
+        }
         public static NativeMessagingMessageTab CurrentChromeTab
         {
             get
@@ -133,6 +164,15 @@ namespace OpenRPA.NM
                 var win = CurrentFFWindow;
                 if (win == null) return null;
                 return tabs.Where(x => x.browser == "ff" && x.windowId == win.id && (x.selected || x.highlighted)).FirstOrDefault();
+            }
+        }
+        public static NativeMessagingMessageTab CurrentEdgeTab
+        {
+            get
+            {
+                var win = CurrentEdgeWindow;
+                if (win == null) return null;
+                return tabs.Where(x => x.browser == "edge" && x.windowId == win.id && (x.selected || x.highlighted)).FirstOrDefault();
             }
         }
         private static void windowcreated(NativeMessagingMessage msg)
@@ -250,6 +290,14 @@ namespace OpenRPA.NM
                     result = ffpipe.Message(message, throwError, timeout);
                 }
             }
+            else if (message.browser == "edge")
+            {
+                if (edgeconnected)
+                {
+                    // Log.Debug("Send and queue message " + message.functionName);
+                    result = edgepipe.Message(message, throwError, timeout);
+                }
+            }
             else
             {
                 if (chromeconnected)
@@ -282,6 +330,15 @@ namespace OpenRPA.NM
                         if (msg.functionName == "windowcreated") windowcreated(msg);
                     }
             }
+            if (edgeconnected)
+            {
+                var result = sendMessageEdgeResult(message, true, TimeSpan.FromSeconds(3));
+                if (result != null && result.results != null)
+                    foreach (var msg in result.results)
+                    {
+                        if (msg.functionName == "windowcreated") windowcreated(msg);
+                    }
+            }
         }
         public static void enumtabs()
         {
@@ -300,6 +357,15 @@ namespace OpenRPA.NM
             if (ffconnected)
             {
                 var result = sendMessageFFResult(message, true, TimeSpan.FromSeconds(3));
+                if (result != null && result.results != null)
+                    foreach (var msg in result.results)
+                    {
+                        if (msg.functionName == "tabcreated") tabcreated(msg);
+                    }
+            }
+            if (edgeconnected)
+            {
+                var result = sendMessageEdgeResult(message, true, TimeSpan.FromSeconds(3));
                 if (result != null && result.results != null)
                     foreach (var msg in result.results)
                     {
@@ -335,7 +401,7 @@ namespace OpenRPA.NM
         {
             if (browser == "chrome")
             {
-                if (!chromeconnected || tabs.Where(x=> x.browser == "chrome").Count() == 0)
+                if (!chromeconnected || tabs.Where(x => x.browser == "chrome").Count() == 0)
                 {
                     System.Diagnostics.Process.Start("chrome.exe", url);
                     var sw = new System.Diagnostics.Stopwatch();
@@ -349,6 +415,24 @@ namespace OpenRPA.NM
                 else
                 {
                     chromeopenurl(url, newtab);
+                }
+            }
+            else if (browser == "edge")
+            {
+                if (!edgeconnected || tabs.Where(x => x.browser == "edge").Count() == 0)
+                {
+                    System.Diagnostics.Process.Start("msedge.exe", url);
+                    var sw = new System.Diagnostics.Stopwatch();
+                    sw.Start();
+                    do
+                    {
+                        System.Threading.Thread.Sleep(500);
+                        Console.WriteLine("pending edge addon to connect");
+                    } while (sw.Elapsed < TimeSpan.FromSeconds(20) && !edgeconnected);
+                }
+                else
+                {
+                    edgeopenurl(url, newtab);
                 }
             }
             else
@@ -447,6 +531,16 @@ namespace OpenRPA.NM
                 //return;
             }
         }
+        internal static void edgeopenurl(string url, bool forceNew)
+        {
+            if (edgeconnected)
+            {
+                NativeMessagingMessage message = new NativeMessagingMessage("openurl", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { data = url };
+                message.xPath = forceNew.ToString().ToLower();
+                var result = edgepipe.Message(message, true, TimeSpan.FromSeconds(2));
+                if (result != null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
+            }
+        }
         public static NMElement[] getElement(int tabid, long frameId, string browser, string xPath, TimeSpan timeout)
         {
             var results = new List<NMElement>();
@@ -523,6 +617,15 @@ namespace OpenRPA.NM
             }
             return result;
         }
+        public static NativeMessagingMessage sendMessageEdgeResult(NativeMessagingMessage message, bool throwError, TimeSpan timeout)
+        {
+            NativeMessagingMessage result = null;
+            if (edgeconnected)
+            {
+                result = edgepipe.Message(message, throwError, timeout);
+            }
+            return result;
+        }
         public static void registreChromeNativeMessagingHost(bool localMachine)
         {
             try
@@ -559,6 +662,77 @@ namespace OpenRPA.NM
                 if (localMachine) Chrome = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Google\\Chrome\\NativeMessagingHosts\\com.openrpa.msg", true);
                 if (!localMachine) Chrome = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\Google\\Chrome\\NativeMessagingHosts\\com.openrpa.msg", true);
                 Chrome.SetValue("", filename);
+
+
+                if (localMachine)
+                {
+                    if (!hklmExists(@"SOFTWARE\Policies")) return;
+                    if (!hklmExists(@"SOFTWARE\Policies\Google")) hklmCreate(@"SOFTWARE\Policies\Google");
+                    if (!hklmExists(@"SOFTWARE\Policies\Google\Chrome")) hklmCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts");
+                    if (!hklmExists(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist")) hklmCreate(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist");
+                    if (!hklmExists(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist")) hklmCreate(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist");
+
+                    Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist", true);
+                    var names = rk.GetSubKeyNames();
+                    string id = null;
+                    foreach (var name in names)
+                    {
+                        var value = rk.GetValue(name);
+                        if (value != null && value.ToString() == "hpnihnhlcnfejboocnckgchjdofeaphe") id = name;
+                    }
+                    if (string.IsNullOrEmpty(id))
+                    {
+                        rk.SetValue((names.Length + 1).ToString(), "hpnihnhlcnfejboocnckgchjdofeaphe");
+                    }
+                    rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist", true);
+                    names = rk.GetSubKeyNames();
+                    id = null;
+                    foreach (var name in names)
+                    {
+                        var value = rk.GetValue(name);
+                        if (value != null && value.ToString() == "hpnihnhlcnfejboocnckgchjdofeaphe") id = name;
+                    }
+                    if (string.IsNullOrEmpty(id))
+                    {
+                        rk.SetValue((names.Length + 1).ToString(), "hpnihnhlcnfejboocnckgchjdofeaphe");
+                    }
+
+                }
+                else
+                {
+                    if (!hkcuExists(@"SOFTWARE\Policies")) return;
+                    if (!hkcuExists(@"SOFTWARE\Policies\Google")) hkcuCreate(@"SOFTWARE\Policies\Google");
+                    if (!hkcuExists(@"SOFTWARE\Policies\Google\Chrome")) hkcuCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts");
+                    if (!hkcuExists(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist")) hkcuCreate(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist");
+                    if (!hkcuExists(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist")) hkcuCreate(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist");
+
+                    Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist", true);
+                    var names = rk.GetSubKeyNames();
+                    string id = null;
+                    foreach (var name in names)
+                    {
+                        var value = rk.GetValue(name);
+                        if (value != null && value.ToString() == "hpnihnhlcnfejboocnckgchjdofeaphe") id = name;
+                    }
+                    if (string.IsNullOrEmpty(id))
+                    {
+                        rk.SetValue((names.Length + 1).ToString(), "hpnihnhlcnfejboocnckgchjdofeaphe");
+                    }
+                    rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist", true);
+                    names = rk.GetSubKeyNames();
+                    id = null;
+                    foreach (var name in names)
+                    {
+                        var value = rk.GetValue(name);
+                        if (value != null && value.ToString() == "hpnihnhlcnfejboocnckgchjdofeaphe") id = name;
+                    }
+                    if (string.IsNullOrEmpty(id))
+                    {
+                        rk.SetValue((names.Length + 1).ToString(), "hpnihnhlcnfejboocnckgchjdofeaphe");
+                    }
+
+                }
+
             }
             catch (Exception ex)
             {
@@ -614,6 +788,13 @@ namespace OpenRPA.NM
                     return chromeupdatetab(tab);
                 }
             }
+            else if (browser == "edge")
+            {
+                if (edgeconnected)
+                {
+                    return edgeupdatetab(tab);
+                }
+            }
             else
             {
                 if (ffconnected)
@@ -637,6 +818,13 @@ namespace OpenRPA.NM
             WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
             return tabs.Where(x => x.browser == "chrome" && x.id == tab.id).FirstOrDefault();
         }
+        internal static NativeMessagingMessageTab edgeupdatetab(NativeMessagingMessageTab tab)
+        {
+            NativeMessagingMessage message = new NativeMessagingMessage("updatetab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tab.id, tab = tab };
+            NativeMessagingMessage result = edgepipe.Message(message, true, TimeSpan.FromSeconds(2));
+            WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
+            return tabs.Where(x => x.browser == "edge" && x.id == tab.id).FirstOrDefault();
+        }
         public static NativeMessagingMessageTab selecttab(string browser, int tabid)
         {
             if (browser == "chrome")
@@ -644,6 +832,13 @@ namespace OpenRPA.NM
                 if (chromeconnected)
                 {
                     return chromeselecttab(tabid);
+                }
+            }
+            else if (browser == "edge")
+            {
+                if (edgeconnected)
+                {
+                    return edgeselecttab(tabid);
                 }
             }
             else
@@ -669,6 +864,13 @@ namespace OpenRPA.NM
             WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
             return tabs.Where(x => x.browser == "chrome" && x.id == tabid).FirstOrDefault();
         }
+        internal static NativeMessagingMessageTab edgeselecttab(int tabid)
+        {
+            NativeMessagingMessage message = new NativeMessagingMessage("selecttab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tabid };
+            NativeMessagingMessage result = edgepipe.Message(message, true, TimeSpan.FromSeconds(2));
+            WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
+            return tabs.Where(x => x.browser == "edge" && x.id == tabid).FirstOrDefault();
+        }
         public static void closetab(string browser, int tabid)
         {
             if (browser == "chrome")
@@ -676,6 +878,13 @@ namespace OpenRPA.NM
                 if (chromeconnected)
                 {
                     chromeclosetab(tabid);
+                }
+            }
+            else if (browser == "edge")
+            {
+                if (edgeconnected)
+                {
+                    edgeclosetab(tabid);
                 }
             }
             else
@@ -696,6 +905,12 @@ namespace OpenRPA.NM
         {
             NativeMessagingMessage message = new NativeMessagingMessage("closetab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tabid };
             NativeMessagingMessage result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
+            WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
+        }
+        internal static void edgeclosetab(int tabid)
+        {
+            NativeMessagingMessage message = new NativeMessagingMessage("closetab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tabid };
+            NativeMessagingMessage result = edgepipe.Message(message, true, TimeSpan.FromSeconds(2));
             WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
         }
     }

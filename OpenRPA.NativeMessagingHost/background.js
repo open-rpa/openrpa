@@ -18,6 +18,7 @@ var isIE = /*@cc_on!@*/false || !!document.documentMode;
 // Edge 20+ (tested on Edge 38.14393.0.0)
 var isEdge = !isIE && !!window.StyleMedia;
 var isChromeEdge = navigator.appVersion.indexOf('Edge') > -1;
+if (!isChromeEdge) isChromeEdge = navigator.appVersion.indexOf('Edg') > -1;
 
 // Chrome 1+ (tested on Chrome 55.0.2883.87)
 // This does not work in an extension:

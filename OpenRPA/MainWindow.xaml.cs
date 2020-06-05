@@ -723,6 +723,7 @@ namespace OpenRPA
         public ICommand LinkNodeREDCommand { get { return new RelayCommand<object>(OnlinkNodeRED, CanlinkNodeRED); } }
         public ICommand OpenChromePageCommand { get { return new RelayCommand<object>(OnOpenChromePage, CanAllways); } }
         public ICommand OpenFirefoxPageCommand { get { return new RelayCommand<object>(OnOpenFirefoxPageCommand, CanAllways); } }
+        public ICommand OpenEdgePageCommand { get { return new RelayCommand<object>(OnOpenEdgePageCommand, CanAllways); } }
         public ICommand SwapSendKeysCommand { get { return new RelayCommand<object>(OnSwapSendKeys, CanSwapSendKeys); } }
         private bool CanSwapSendKeys(object _item)
         {
@@ -2661,6 +2662,11 @@ namespace OpenRPA
         {
             System.Diagnostics.Process.Start("firefox.exe", "https://addons.mozilla.org/en-US/firefox/addon/openrpa/");
         }
+        private void OnOpenEdgePageCommand(object _item)
+        {
+            System.Diagnostics.Process.Start("msedge.exe", "https://chrome.google.com/webstore/detail/openrpa/hpnihnhlcnfejboocnckgchjdofeaphe");
+        }
+        
         private int lastsapprocessid = -1;
         private void OnKeyDown(Input.InputEventArgs e)
         {

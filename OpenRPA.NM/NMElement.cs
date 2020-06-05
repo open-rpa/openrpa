@@ -257,7 +257,7 @@ namespace OpenRPA.NM
                 return;
             }
             bool virtualClick = true;
-            NMHook.checkForPipes(true, true);
+            NMHook.checkForPipes(true, true, true);
             if (NMHook.connected)
             {
                 if (virtualClick)

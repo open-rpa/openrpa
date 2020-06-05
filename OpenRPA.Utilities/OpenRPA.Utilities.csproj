@@ -10,8 +10,9 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.0.11</Version>
-    <PackageReleaseNotes>1.0.11 Add Replace Activity
+    <Version>1.0.12</Version>
+    <PackageReleaseNotes>1.0.12 Add Start Process
+1.0.11 Add Replace Activity
 1.0.10 Fix hint text in WriteCSV activity
 1.0.9 Add DeleteAllRows
 1.0.8 Add AddDataColumn, AddDataRow and CreateDataTable
@@ -58,6 +59,7 @@
     <None Remove="Activities\ReplaceDesigner.xaml" />
     <None Remove="Activities\SetAutoLoginDesigner.xaml" />
     <None Remove="Activities\SetCredentialsDesigner.xaml" />
+    <None Remove="Activities\StartProcessDesigner.xaml" />
     <None Remove="Activities\WriteCSVDesigner.xaml" />
     <None Remove="Activities\WriteExcelDesigner.xaml" />
     <None Remove="Resources\designer\closeworkbook.png" />
@@ -67,6 +69,7 @@
     <None Remove="Resources\designer\entity.png" />
     <None Remove="Resources\designer\newemail.png" />
     <None Remove="Resources\designer\outlook.png" />
+    <None Remove="Resources\designer\play.png" />
     <None Remove="Resources\designer\readexcel.png" />
     <None Remove="Resources\designer\readfile.png" />
     <None Remove="Resources\designer\readjson.png" />
@@ -81,6 +84,7 @@
     <None Remove="Resources\toolbox\entity.png" />
     <None Remove="Resources\toolbox\newemail.png" />
     <None Remove="Resources\toolbox\outlook.png" />
+    <None Remove="Resources\toolbox\play.png" />
     <None Remove="Resources\toolbox\readexcel.png" />
     <None Remove="Resources\toolbox\readfile.png" />
     <None Remove="Resources\toolbox\readjson.png" />
@@ -93,6 +97,7 @@
     <Resource Include="Resources\designer\database.png" />
     <EmbeddedResource Include="Resources\toolbox\closeworkbook.png" />
     <EmbeddedResource Include="Resources\toolbox\commentout.png" />
+    <EmbeddedResource Include="Resources\toolbox\play.png" />
     <EmbeddedResource Include="Resources\toolbox\readjson.png" />
     <EmbeddedResource Include="Resources\toolbox\newemail.png" />
     <EmbeddedResource Include="Resources\toolbox\outlook.png" />
@@ -118,6 +123,7 @@
     <Resource Include="Resources\designer\entity.png" />
     <Resource Include="Resources\designer\newemail.png" />
     <Resource Include="Resources\designer\outlook.png" />
+    <Resource Include="Resources\designer\play.png" />
     <Resource Include="Resources\designer\readexcel.png" />
     <Resource Include="Resources\designer\readfile.png" />
     <Resource Include="Resources\designer\readjson.png" />
@@ -153,6 +159,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\CreateDataTableDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\StartProcessDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

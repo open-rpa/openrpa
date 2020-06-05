@@ -205,6 +205,24 @@ namespace OpenRPA.Utilities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Arguments to be parsed the the executable.
+        /// </summary>
+        public static string activity_startprocess_arguments_hint {
+            get {
+                return ResourceManager.GetString("activity_startprocess_arguments_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The full filename and path to the executable to start.
+        /// </summary>
+        public static string activity_startprocess_filename_hint {
+            get {
+                return ResourceManager.GetString("activity_startprocess_filename_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select CSV file to write to.
         /// </summary>
         public static string activity_writecsv_hint {

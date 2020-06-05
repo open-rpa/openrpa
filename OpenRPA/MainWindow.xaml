@@ -191,6 +191,8 @@
                                   Command="{Binding Data.OpenChromePageCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                     <RibbonButton Label="{x:Static or:strings.firefox}" LargeImageSource="/OpenRPA;component/Resources/Buttons/OpenFirefox.png" 
                                   Command="{Binding Data.OpenFirefoxPageCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                    <RibbonButton Label="{x:Static or:strings.firefox}" LargeImageSource="/OpenRPA;component/Resources/Buttons/edge.png" 
+                                  Command="{Binding Data.OpenEdgePageCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
 
                 </RibbonGroup>
                 <RibbonGroup Header="{x:Static or:strings.plugins}">

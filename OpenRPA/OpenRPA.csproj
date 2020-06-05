@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.123</Version>
-    <PackageReleaseNotes>1.0.123 Add CloseTab. Make OpenURL and GetElement auto shift to tab with same url as in selector, if one exists
+    <Version>1.0.124</Version>
+    <PackageReleaseNotes>1.0.124 Add Start Process
+1.0.123 Add CloseTab. Make OpenURL and GetElement auto shift to tab with same url as in selector, if one exists
 1.0.122 Improve edit in InvokeCode, Add more SAP Stuff
 1.0.121 Fix index error in readrange when HeaderRows is false / prepare recorder for SAP recording
 1.0.120 Fix endless loop bug in IE, filter out google sheet in chrome extension
@@ -197,6 +198,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Resources\Buttons\Delete.png" />
     <None Remove="Resources\Buttons\Delete_2.png" />
     <None Remove="Resources\Buttons\Delete_color.png" />
+    <None Remove="Resources\Buttons\edge.png" />
     <None Remove="Resources\Buttons\Export.png" />
     <None Remove="Resources\Buttons\GetHTMLText.png" />
     <None Remove="Resources\Buttons\ImageClick.png" />
@@ -494,6 +496,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <Resource Include="Resources\Buttons\Button.png" />
     <Resource Include="Resources\Buttons\Clear.png" />
     <Resource Include="Resources\Buttons\CloseWebdriver.png" />
+    <Resource Include="Resources\Buttons\edge.png" />
     <Resource Include="Resources\Buttons\Mouse.png" />
     <Resource Include="Resources\Buttons\OpenBrowser.png" />
     <Resource Include="Resources\Buttons\OpenFirefox.png" />

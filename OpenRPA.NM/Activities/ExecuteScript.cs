@@ -30,7 +30,7 @@ namespace OpenRPA.NM
             var browser = Browser.Get(context);
             var timeout = TimeSpan.FromSeconds(3);
             script = Interfaces.Selector.Selector.ReplaceVariables(script, context.DataContext);
-            if (browser != "chrome" && browser != "ff") browser = "chrome";
+            if (browser != "chrome" && browser != "ff" && browser != "edge") browser = "chrome";
             var result = NMHook.ExecuteScript(browser, frameid, -1, script, timeout);
             Result.Set(context, result);
         }

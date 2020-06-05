@@ -165,6 +165,12 @@
   <data name="activity_readpdf_hint" xml:space="preserve">
     <value>Select PDF file to read</value>
   </data>
+  <data name="activity_startprocess_arguments_hint" xml:space="preserve">
+    <value>Arguments to be parsed the the executable</value>
+  </data>
+  <data name="activity_startprocess_filename_hint" xml:space="preserve">
+    <value>The full filename and path to the executable to start</value>
+  </data>
   <data name="activity_writecsv_hint" xml:space="preserve">
     <value>Select CSV file to write to</value>
   </data>

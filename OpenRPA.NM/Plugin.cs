@@ -48,7 +48,8 @@ namespace OpenRPA.NM
             var browser = "";
             if (NMHook.chromeconnected) browser = "chrome";
             if (NMHook.ffconnected) browser = "ff";
-            if(string.IsNullOrEmpty(browser)) return rootelements.ToArray();
+            if (NMHook.edgeconnected) browser = "edge";
+            if (string.IsNullOrEmpty(browser)) return rootelements.ToArray();
             //NMHook.enumtabs();
             //// var tab = NMHook.tabs.Where(x => x.highlighted == true && x.browser == "chrome").FirstOrDefault();
             //var tab = NMHook.tabs.Where(x => x.highlighted == true).FirstOrDefault();
@@ -127,7 +128,7 @@ namespace OpenRPA.NM
         {
             NMHook.registreChromeNativeMessagingHost(false);
             NMHook.registreffNativeMessagingHost(false);
-            NMHook.checkForPipes(true, true);
+            NMHook.checkForPipes(true, true, true );
             NMHook.onMessage += OnMessage;
             NMHook.Connected += OnConnected;
             NMHook.onDisconnected += OnDisconnected;
@@ -276,11 +277,16 @@ namespace OpenRPA.NM
 
             if (e.UIElement.ProcessId < 1) return false;
             var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-            if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox") return false;
+            if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox" && p.ProcessName.ToLower() != "msedge") return false;
 
             if (p.ProcessName.ToLower() == "chrome" && !NMHook.chromeconnected)
             {
                 System.Windows.MessageBox.Show("You clicked inside Chrome, but it looks like you dont have the OpenRPA plugin installed");
+                return false;
+            }
+            if (p.ProcessName.ToLower() == "msedge" && !NMHook.edgeconnected)
+            {
+                System.Windows.MessageBox.Show("You clicked inside Edge, but it looks like you dont have the OpenRPA plugin installed");
                 return false;
             }
             if (p.ProcessName.ToLower() == "firefox" && !NMHook.ffconnected)

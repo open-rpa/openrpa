@@ -25,7 +25,7 @@ namespace OpenRPA.NM
             var closeall = CloseAll.Get(context);
             var browser = Browser.Get(context);
             var timeout = TimeSpan.FromSeconds(3);
-            if (browser != "chrome" && browser != "ff") browser = "chrome";
+            if (browser != "chrome" && browser != "ff" && browser != "edge") browser = "chrome";
             if (closeall)
             {
                 NMHook.enumtabs();

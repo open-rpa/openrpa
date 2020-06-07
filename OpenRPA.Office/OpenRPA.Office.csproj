@@ -7,8 +7,9 @@
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office, created for OpenRPA robot</Description>
-    <Version>1.0.25</Version>
-    <PackageReleaseNotes>1.0.25 Fix index error in readrange when HeaderRows is false, add range check in readrange
+    <Version>1.0.26</Version>
+    <PackageReleaseNotes>1.0.26 Add GetSelectedRange
+1.0.25 Fix index error in readrange when HeaderRows is false, add range check in readrange
 1.0.24 Add query and MaxResults to GetMails
 1.0.23 Add Move MailItem
 1.0.22 Hide the Hide property
@@ -55,6 +56,7 @@
     <None Remove="Activities\CloseWorkbookDesigner.xaml" />
     <None Remove="Activities\GetMailsDesigner.xaml" />
     <None Remove="Activities\GetParagraphDesigner.xaml" />
+    <None Remove="Activities\GetSelectedRangeDesigner.xaml" />
     <None Remove="Activities\MoveMailItemDesigner.xaml" />
     <None Remove="Activities\NewMailItemDesigner.xaml" />
     <None Remove="Activities\ReadCellDesigner.xaml" />
@@ -90,6 +92,9 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\MoveMailItemDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\GetSelectedRangeDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\RunExcelMacroDesigner.xaml">

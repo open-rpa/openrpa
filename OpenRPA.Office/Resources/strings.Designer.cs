@@ -430,6 +430,24 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get Selected Range.
+        /// </summary>
+        public static string activity_getselectedrange {
+            get {
+                return ResourceManager.GetString("activity_getselectedrange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get the currently selected cells in the specefied worksheet.
+        /// </summary>
+        public static string activity_getselectedrange_tooltip {
+            get {
+                return ResourceManager.GetString("activity_getselectedrange_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mail.
         /// </summary>
         public static string activity_movemail_mail {

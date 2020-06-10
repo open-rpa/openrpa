@@ -664,74 +664,74 @@ namespace OpenRPA.NM
                 Chrome.SetValue("", filename);
 
 
-                if (localMachine)
-                {
-                    if (!hklmExists(@"SOFTWARE\Policies")) return;
-                    if (!hklmExists(@"SOFTWARE\Policies\Google")) hklmCreate(@"SOFTWARE\Policies\Google");
-                    if (!hklmExists(@"SOFTWARE\Policies\Google\Chrome")) hklmCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts");
-                    if (!hklmExists(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist")) hklmCreate(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist");
-                    if (!hklmExists(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist")) hklmCreate(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist");
+                //if (localMachine)
+                //{
+                //    if (!hklmExists(@"SOFTWARE\Policies")) return;
+                //    if (!hklmExists(@"SOFTWARE\Policies\Google")) hklmCreate(@"SOFTWARE\Policies\Google");
+                //    if (!hklmExists(@"SOFTWARE\Policies\Google\Chrome")) hklmCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts");
+                //    if (!hklmExists(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist")) hklmCreate(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist");
+                //    if (!hklmExists(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist")) hklmCreate(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist");
 
-                    Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist", true);
-                    var names = rk.GetSubKeyNames();
-                    string id = null;
-                    foreach (var name in names)
-                    {
-                        var value = rk.GetValue(name);
-                        if (value != null && value.ToString() == "hpnihnhlcnfejboocnckgchjdofeaphe") id = name;
-                    }
-                    if (string.IsNullOrEmpty(id))
-                    {
-                        rk.SetValue((names.Length + 1).ToString(), "hpnihnhlcnfejboocnckgchjdofeaphe");
-                    }
-                    rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist", true);
-                    names = rk.GetSubKeyNames();
-                    id = null;
-                    foreach (var name in names)
-                    {
-                        var value = rk.GetValue(name);
-                        if (value != null && value.ToString() == "hpnihnhlcnfejboocnckgchjdofeaphe") id = name;
-                    }
-                    if (string.IsNullOrEmpty(id))
-                    {
-                        rk.SetValue((names.Length + 1).ToString(), "hpnihnhlcnfejboocnckgchjdofeaphe");
-                    }
+                //    Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist", true);
+                //    var names = rk.GetSubKeyNames();
+                //    string id = null;
+                //    foreach (var name in names)
+                //    {
+                //        var value = rk.GetValue(name);
+                //        if (value != null && value.ToString() == "hpnihnhlcnfejboocnckgchjdofeaphe") id = name;
+                //    }
+                //    if (string.IsNullOrEmpty(id))
+                //    {
+                //        rk.SetValue((names.Length + 1).ToString(), "hpnihnhlcnfejboocnckgchjdofeaphe");
+                //    }
+                //    rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist", true);
+                //    names = rk.GetSubKeyNames();
+                //    id = null;
+                //    foreach (var name in names)
+                //    {
+                //        var value = rk.GetValue(name);
+                //        if (value != null && value.ToString() == "hpnihnhlcnfejboocnckgchjdofeaphe") id = name;
+                //    }
+                //    if (string.IsNullOrEmpty(id))
+                //    {
+                //        rk.SetValue((names.Length + 1).ToString(), "hpnihnhlcnfejboocnckgchjdofeaphe");
+                //    }
 
-                }
-                else
-                {
-                    if (!hkcuExists(@"SOFTWARE\Policies")) return;
-                    if (!hkcuExists(@"SOFTWARE\Policies\Google")) hkcuCreate(@"SOFTWARE\Policies\Google");
-                    if (!hkcuExists(@"SOFTWARE\Policies\Google\Chrome")) hkcuCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts");
-                    if (!hkcuExists(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist")) hkcuCreate(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist");
-                    if (!hkcuExists(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist")) hkcuCreate(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist");
+                //}
+                //else
+                //{
+                //    if (!hkcuExists(@"SOFTWARE\Policies")) return;
+                //    if (!hkcuExists(@"SOFTWARE\Policies\Google")) hkcuCreate(@"SOFTWARE\Policies\Google");
+                //    if (!hkcuExists(@"SOFTWARE\Policies\Google\Chrome")) hkcuCreate(@"SOFTWARE\Google\Chrome\NativeMessagingHosts");
+                //    if (!hkcuExists(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist")) hkcuCreate(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist");
+                //    if (!hkcuExists(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist")) hkcuCreate(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist");
 
-                    Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist", true);
-                    var names = rk.GetSubKeyNames();
-                    string id = null;
-                    foreach (var name in names)
-                    {
-                        var value = rk.GetValue(name);
-                        if (value != null && value.ToString() == "hpnihnhlcnfejboocnckgchjdofeaphe") id = name;
-                    }
-                    if (string.IsNullOrEmpty(id))
-                    {
-                        rk.SetValue((names.Length + 1).ToString(), "hpnihnhlcnfejboocnckgchjdofeaphe");
-                    }
-                    rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist", true);
-                    names = rk.GetSubKeyNames();
-                    id = null;
-                    foreach (var name in names)
-                    {
-                        var value = rk.GetValue(name);
-                        if (value != null && value.ToString() == "hpnihnhlcnfejboocnckgchjdofeaphe") id = name;
-                    }
-                    if (string.IsNullOrEmpty(id))
-                    {
-                        rk.SetValue((names.Length + 1).ToString(), "hpnihnhlcnfejboocnckgchjdofeaphe");
-                    }
+                //    Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist", true);
+                //    var names = rk.GetSubKeyNames();
+                //    string id = null;
+                //    foreach (var name in names)
+                //    {
+                //        var value = rk.GetValue(name);
+                //        if (value != null && value.ToString() == "hpnihnhlcnfejboocnckgchjdofeaphe") id = name;
+                //    }
+                //    if (string.IsNullOrEmpty(id))
+                //    {
+                //        rk.SetValue((names.Length + 1).ToString(), "hpnihnhlcnfejboocnckgchjdofeaphe");
+                //    }
+                //    rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist", true);
+                //    names = rk.GetSubKeyNames();
+                //    id = null;
+                //    foreach (var name in names)
+                //    {
+                //        var value = rk.GetValue(name);
+                //        if (value != null && value.ToString() == "hpnihnhlcnfejboocnckgchjdofeaphe") id = name;
+                //    }
+                //    if (string.IsNullOrEmpty(id))
+                //    {
+                //        rk.SetValue((names.Length + 1).ToString(), "hpnihnhlcnfejboocnckgchjdofeaphe");
+                //    }
 
-                }
+                //}
 
             }
             catch (Exception ex)

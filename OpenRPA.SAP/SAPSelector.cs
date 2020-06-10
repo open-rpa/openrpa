@@ -28,11 +28,12 @@ namespace OpenRPA.SAP
                 // Break on circular relationship (should not happen?)
                 //if (pathToRoot.Contains(element) || element.Equals(_rootElement)) { break; }
                 if (pathToRoot.Contains(element)) { break; }
-                if (element.Parent != null) pathToRoot.Add(element);
-                if (element.Parent == null) root = element;
+                var Parent = element.Parent;
+                if (Parent != null) pathToRoot.Add(element);
+                if (Parent == null) root = element;
                 try
                 {
-                    element = element.Parent;
+                    element = Parent;
                     root = element.Parent;
                 }
                 catch (Exception ex)
@@ -109,9 +110,10 @@ namespace OpenRPA.SAP
             var sel = new SAPSelectorItem(selector[1]);
             var SystemName = root.SystemName;
             var id = sel.id;
+            var path = sel.path;
 
             var msg = new SAPEvent("getitem");
-            msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName });
+            msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, GetAllProperties = true, Path = path });
             msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(5));
             if (msg != null)
             {

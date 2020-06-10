@@ -33,11 +33,13 @@ namespace OpenRPA.SAP.Views
             InitializeComponent();
             DataContext = this;
             auto_launch_sap_bridge.IsChecked = PluginConfig.auto_launch_sap_bridge;
+            record_with_get_element.IsChecked = PluginConfig.record_with_get_element;
         }
         private void auto_launch_SAP_bridge_Checked(object sender, RoutedEventArgs e)
         {
             if (auto_launch_sap_bridge.IsChecked == null) return;
             PluginConfig.auto_launch_sap_bridge = auto_launch_sap_bridge.IsChecked.Value;
+            PluginConfig.record_with_get_element = record_with_get_element.IsChecked.Value;
             Config.Save();
         }
         private void launch_SAP_bridge_Click(object sender, RoutedEventArgs e)

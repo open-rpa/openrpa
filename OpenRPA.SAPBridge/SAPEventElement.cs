@@ -10,6 +10,10 @@ namespace OpenRPA.SAPBridge
 {
     public partial class SAPEventElement
     {
+        public override string ToString()
+        {
+            return type + " " + Id;
+        }
         public SAPEventElement(SAPFEWSELib.GuiComponent Element, string SystemName, string Parent, bool all)
         {
             Id = Element.Id;
@@ -19,6 +23,137 @@ namespace OpenRPA.SAPBridge
             type = Element.Type;
             this.Parent = Parent;
             LoadProperties(Element, all);
+        }
+        public SAPEventElement(SAPEventElement msg, SAPFEWSELib.GuiTree tree, string parentpath, string key, string SystemName)
+        {
+            Id = tree.Id;
+            // Path = parentpath + "/" + key;
+            Path = key;
+            if (string.IsNullOrEmpty(parentpath)) Path = key;
+            this.SystemName = SystemName;
+            ContainerType = false;
+            type = "GuiTreeNode";
+            Parent = tree.Id;
+            Name = key;
+            if(string.IsNullOrEmpty(Path))
+            {
+                var p = new List<SAPElementProperty>();
+                p.Add(new SAPElementProperty("Left", tree.Left.ToString(), true));
+                p.Add(new SAPElementProperty("Top", tree.Top.ToString(), true));
+                p.Add(new SAPElementProperty("ScreenLeft", tree.ScreenLeft.ToString(), true));
+                p.Add(new SAPElementProperty("ScreenTop", tree.ScreenTop.ToString(), true));
+                p.Add(new SAPElementProperty("Width", tree.Width.ToString(), true));
+                p.Add(new SAPElementProperty("Height", tree.Height.ToString(), true));
+
+                _Rectangle = new Rectangle(tree.ScreenLeft, tree.ScreenTop, tree.Width, tree.Height);
+                Properties = p.ToArray();
+            } else
+            {
+                int Left = tree.GetNodeLeft(key);
+                int Top = tree.GetNodeTop(key);
+                int Width = tree.GetNodeWidth(key);
+                int Height = tree.GetNodeHeight(key);
+                var ScreenLeft = Left + msg.Rectangle.X;
+                var ScreenTop = Top + msg.Rectangle.Y;
+                var p = new List<SAPElementProperty>();
+                p.Add(new SAPElementProperty("Left", Left.ToString(), true));
+                p.Add(new SAPElementProperty("Top", Top.ToString(), true));
+                p.Add(new SAPElementProperty("ScreenLeft", ScreenLeft.ToString(), true));
+                p.Add(new SAPElementProperty("ScreenTop", ScreenTop.ToString(), true));
+                p.Add(new SAPElementProperty("Width", Width.ToString(), true));
+                p.Add(new SAPElementProperty("Height", Height.ToString(), true));
+                _Rectangle = new Rectangle(ScreenLeft, ScreenTop, Width, Height);
+                Properties = p.ToArray();
+
+            }
+
+
+            // SAPFEWSELib.GuiCollection keys = tree.GetColumnNames() as SAPFEWSELib.GuiCollection;
+            // SAPFEWSELib.GuiCollection keys = tree.GetColumnTitles() as SAPFEWSELib.GuiCollection;
+            SAPFEWSELib.GuiCollection keys = tree.GetColumnHeaders() as SAPFEWSELib.GuiCollection;
+            var children = new List<SAPEventElement>();
+            //foreach (string _key in keys)
+            for(var i = 1; i <= keys.Count; i++)
+            {
+                string _key = i.ToString();
+                var column = new SAPEventElement();
+                column.Name = tree.GetItemText(key, _key);
+                column.Id = Id;
+                column.Path = Path;
+                if (string.IsNullOrEmpty(column.Name)) column.Name = _key;      
+
+                int Left = tree.GetItemLeft(key, _key);
+                int Top = tree.GetItemTop(key, _key);
+                int Width = tree.GetItemWidth(key, _key);
+                int Height = tree.GetItemHeight(key, _key);
+                var ScreenLeft = Left + msg.Rectangle.X;
+                var ScreenTop = Top + msg.Rectangle.Y;
+                column._Rectangle = new Rectangle(ScreenLeft, ScreenTop, Width, Height);
+                var _p = new List<SAPElementProperty>();
+                _p.Add(new SAPElementProperty("Left", Left.ToString(), true));
+                _p.Add(new SAPElementProperty("Top", Top.ToString(), true));
+                _p.Add(new SAPElementProperty("ScreenLeft", ScreenLeft.ToString(), true));
+                _p.Add(new SAPElementProperty("ScreenTop", ScreenTop.ToString(), true));
+                _p.Add(new SAPElementProperty("Width", Width.ToString(), true));
+                _p.Add(new SAPElementProperty("Height", Height.ToString(), true));
+                column.Properties = _p.ToArray();
+                children.Add(column);
+            }
+            Children = children.ToArray();
+
+        }
+        public SAPEventElement(SAPEventElement msg, SAPFEWSELib.GuiGridView grid, string parentpath, int Row, string SystemName)
+        {
+            Id = grid.Id;
+            // Path = parentpath + "/" + key;
+            Path = Row.ToString();
+            if (string.IsNullOrEmpty(parentpath)) Path = Row.ToString();
+            this.SystemName = SystemName;
+            ContainerType = false;
+            type = "GuiGridView";
+            Parent = grid.Id;
+            Name = Row.ToString();
+
+
+            var p = new List<SAPElementProperty>();
+            p.Add(new SAPElementProperty("Left", grid.Left.ToString(), true));
+            p.Add(new SAPElementProperty("Top", grid.Top.ToString(), true));
+            p.Add(new SAPElementProperty("ScreenLeft", grid.ScreenLeft.ToString(), true));
+            p.Add(new SAPElementProperty("ScreenTop", grid.ScreenTop.ToString(), true));
+            p.Add(new SAPElementProperty("Width", grid.Width.ToString(), true));
+            p.Add(new SAPElementProperty("Height", grid.Height.ToString(), true));
+
+            _Rectangle = new Rectangle(grid.ScreenLeft, grid.ScreenTop, grid.Width, grid.Height);
+
+            var keys = grid.ColumnOrder as SAPFEWSELib.GuiCollection;
+            var children = new List<SAPEventElement>();
+            foreach (string key in keys)
+            {
+                var column = new SAPEventElement();
+                column.Name = key;
+                int Left = grid.GetCellLeft(Row, key);
+                int Top = grid.GetCellTop(Row, key);
+                int Width = grid.GetCellWidth(Row, key);
+                int Height = grid.GetCellHeight(Row, key);
+                var ScreenLeft = Left + msg.Rectangle.X;
+                var ScreenTop = Top + msg.Rectangle.Y;
+
+                string Value = grid.GetCellValue(Row, key);
+
+                var properties = new List<SAPElementProperty>();
+                properties.Add(new SAPElementProperty("Left", Left.ToString(), true));
+                properties.Add(new SAPElementProperty("Top", Top.ToString(), true));
+                properties.Add(new SAPElementProperty("ScreenLeft", ScreenLeft.ToString(), true));
+                properties.Add(new SAPElementProperty("ScreenTop", ScreenTop.ToString(), true));
+                properties.Add(new SAPElementProperty("Width", Width.ToString(), true));
+                properties.Add(new SAPElementProperty("Height", Height.ToString(), true));
+                properties.Add(new SAPElementProperty("Value", Value, false));
+                column._Rectangle = new Rectangle(ScreenLeft, ScreenTop, Width, Height);
+                column.Properties = properties.ToArray();
+                children.Add(column);
+            }
+            Children = children.ToArray();
+
         }
         private static string[] limitedProperties = { "Changeable", "Modified", "Text", "ScreenTop", "ScreenLeft", "Height", "Width", "Top", "Left", };
         public void LoadProperties(SAPFEWSELib.GuiComponent Element, bool all)
@@ -39,7 +174,9 @@ namespace OpenRPA.SAPBridge
                     {
                         if (type == "GuiButton" && _p.Name == "Modified") continue;
                         if (type == "GuiTitlebar" && _p.Name == "Changeable") continue;
-                        prop.Value = _p.GetValue(Element).ToString();
+                        var value = _p.GetValue(Element);
+                        if(value != null) prop.Value = value.ToString();
+                        if (value == null) prop.Value = "";
                         props.Add(prop);
                         if (_p.Name == "ScreenLeft") X = int.Parse(prop.Value);
                         if (_p.Name == "ScreenTop") Y = int.Parse(prop.Value);

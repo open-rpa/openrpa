@@ -31,7 +31,11 @@ namespace OpenRPA.SAPBridge
                 {
                     try
                     {
-                        _ = _app.Children.Count;
+                        int count = _app.Children.Count;
+                        if(count == 0)
+                        {
+                            _app = null;
+                        }
                     }
                     catch (Exception)
                     {
@@ -47,30 +51,60 @@ namespace OpenRPA.SAPBridge
             _ = app;
         }
         public SAPEventElement[] UIElements = new SAPEventElement[] { };
-        private void GetUIElements(List<SAPEventElement> list, string SystemName, string Parent, GuiComponent Element)
+
+
+        private void GetUIElements(List<SAPEventElement> list, GuiSession session, string Parent, GuiComponent Element)
         {
-            list.Add(new SAPEventElement(Element, SystemName, Parent, false));
+            var msg = new SAPEventElement(Element, session.Info.SystemName, Parent, false);
+            list.Add(msg);
             if (Element.ContainerType)
             {
                 if (Element is GuiVContainer vcon)
                 {
                     for (var i = 0; i < vcon.Children.Count; i++)
                     {
-                        GetUIElements(list, SystemName, Element.Id, vcon.Children.ElementAt(i));
+                        GetUIElements(list, session, Element.Id, vcon.Children.ElementAt(i));
                     }
                 }
                 else if (Element is GuiContainer con)
                 {
                     for (var i = 0; i < con.Children.Count; i++)
                     {
-                        GetUIElements(list, SystemName, Element.Id, con.Children.ElementAt(i));
+                        GetUIElements(list, session, Element.Id, con.Children.ElementAt(i));
                     }
                 }
                 else if (Element is GuiStatusbar sbar)
                 {
                     for (var i = 0; i < sbar.Children.Count; i++)
                     {
-                        GetUIElements(list, SystemName, Element.Id, sbar.Children.ElementAt(i));
+                        GetUIElements(list, session, Element.Id, sbar.Children.ElementAt(i));
+                    }
+                }
+            }
+            if (Element is GuiTree tree)
+            {
+                msg.type = "GuiTree";
+                GuiCollection keys = null;
+                if (string.IsNullOrEmpty(msg.Path))
+                {
+                    keys = tree.GetNodesCol() as GuiCollection;
+                }
+                else
+                {
+                    keys = tree.GetSubNodesCol(msg.Path) as GuiCollection;
+                }
+                if (keys != null)
+                {
+                    foreach (string key in keys)
+                    {
+                        var _msg = new SAPEventElement(msg, tree, msg.Path, key, session.Info.SystemName);
+                        _msg.type = "GuiTreeNode";
+                        list.Add(_msg);
+                        System.Diagnostics.Trace.WriteLine(_msg.ToString());
+                        if (msg.MaxItem > 0)
+                        {
+                            if (list.Count >= msg.MaxItem) break;
+                        }
                     }
                 }
             }
@@ -89,7 +123,7 @@ namespace OpenRPA.SAPBridge
                     var session = con.Children.ElementAt(j) as GuiSession;
                     for (var i = 0; i < session.Children.Count; i++)
                     {
-                        GetUIElements(result, session.Info.SystemName, session.Id, session.Children.ElementAt(i));
+                        GetUIElements(result, session, session.Id, session.Children.ElementAt(i));
                     }
                 }
             }

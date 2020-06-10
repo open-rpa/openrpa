@@ -13,7 +13,12 @@
             Checked="auto_launch_SAP_bridge_Checked" Unchecked="auto_launch_SAP_bridge_Checked" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,10,0,0" Text="{x:Static or:strings.plugin_auto_launch_sap_bridge_help}" VerticalAlignment="Top" />
 
-        <Button Height="23" HorizontalAlignment="Left" Margin="151,30,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_launch_sap_bridge}" Click="launch_SAP_bridge_Click" ></Button>
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,30,0,0" Text="{x:Static or:strings.plugin_record_with_get_element}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,30,0,0" VerticalAlignment="Top" Width="222" x:Name="record_with_get_element" 
+            Checked="auto_launch_SAP_bridge_Checked" Unchecked="auto_launch_SAP_bridge_Checked" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,30,0,0" Text="{x:Static or:strings.plugin_record_with_get_element_help}" VerticalAlignment="Top" />
+
+        <Button Height="23" HorizontalAlignment="Left" Margin="151,50,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_launch_sap_bridge}" Click="launch_SAP_bridge_Click" ></Button>
 
     </Grid>
 </UserControl>

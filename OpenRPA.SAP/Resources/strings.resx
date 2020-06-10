@@ -270,4 +270,10 @@
   <data name="plugin_launch_sap_bridge" xml:space="preserve">
     <value>Launch SAP bridge</value>
   </data>
+  <data name="plugin_record_with_get_element" xml:space="preserve">
+    <value>Record Get Element</value>
+  </data>
+  <data name="plugin_record_with_get_element_help" xml:space="preserve">
+    <value>When recording use GetElement instead of SetProperty</value>
+  </data>
 </root>

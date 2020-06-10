@@ -186,7 +186,10 @@ namespace OpenRPA.SAP
     [Serializable]
     public class SAPEventElement
     {
+        public bool GetAllProperties { get; set; }
+        public int MaxItem { get; set; }
         public string Id { get; set; }
+        public string Path { get; set; }
         public string Name { get; set; }
         public string Parent { get; set; }
         public string SystemName { get; set; }

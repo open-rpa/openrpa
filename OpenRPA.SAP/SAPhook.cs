@@ -65,6 +65,25 @@ namespace OpenRPA.SAP
         {
             try
             {
+                if (replyqueue.ContainsKey(message.messageid))
+                {
+                    lock (replyqueue)
+                    {
+                        var e = replyqueue[message.messageid];
+                        e.reply = message;
+                        if (e.reset != null) e.reset.Set();
+                        replyqueue.Remove(message.messageid);
+                        return;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            try
+            {
                 if (message.action == "recorderevent")
                 {
                     var data = message.Get<SAPRecordingEvent>();
@@ -115,36 +134,22 @@ namespace OpenRPA.SAP
                         Plugin.Instance.RaiseUserAction(r);
                     }
                 }
-                if (message.action == "mousedown")
+                else if (message.action == "mousedown")
                 {
                     LastEventElement = message.Get<SAPEventElement>();
                     LastElement = new SAPElement(null, LastEventElement);
-                    Log.Output("SAP mousedown on " + LastElement.id);
+                    Log.Output("SAP " + message.action + " " + LastElement.id);
                 }
-                if (message.action == "mousemove")
+                else if (message.action == "mousemove")
                 {
                     LastEventElement = message.Get<SAPEventElement>();
                     LastElement = new SAPElement(null, LastEventElement);
-                    Log.Output("SAP mousemove on " + LastElement.id);
+                    Log.Output("SAP " + message.action + " " + LastElement.id);
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-            }
-            try
-            {
-                if (replyqueue.ContainsKey(message.messageid))
+                else
                 {
-                    lock (replyqueue)
-                    {
-                        var e = replyqueue[message.messageid];
-                        e.reply = message;
-                        if (e.reset != null) e.reset.Set();
-                        replyqueue.Remove(message.messageid);
-                    }
+                    Log.Output("SAP " + message.action);
                 }
-
             }
             catch (Exception ex)
             {

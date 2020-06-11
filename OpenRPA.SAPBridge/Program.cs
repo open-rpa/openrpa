@@ -5,10 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+
 namespace OpenRPA.SAPBridge
 {
     class Program
     {
+        private static SAPEventElement LastElement;
         private static MainWindow form;
         public static NamedPipeServer<SAPEvent> pipe;
         public static void log(string message)
@@ -71,17 +74,24 @@ namespace OpenRPA.SAPBridge
         {
             Task.Run(() =>
             {
-                SAPHook.Instance.RefreshSessions();
-                SAPHook.Instance.RefreshUIElements();
-                isMoving = false;
-
-                if (MouseMove)
+                try
                 {
-                    Program.log("hook OnMouseMove");
-                    InputDriver.Instance.OnMouseMove += OnMouseMove;
+                    SAPHook.Instance.RefreshSessions();
+                    SAPHook.Instance.RefreshUIElements();
+                    isMoving = false;
+
+                    if (MouseMove)
+                    {
+                        Program.log("hook OnMouseMove");
+                        InputDriver.Instance.OnMouseMove += OnMouseMove;
+                    }
+                    Program.log("hook OnMouseDown");
+                    InputDriver.Instance.OnMouseDown += OnMouseDown;
                 }
-                Program.log("hook OnMouseDown");
-                InputDriver.Instance.OnMouseDown += OnMouseDown;
+                catch (Exception ex)
+                {
+                    Program.log(ex.ToString());
+                }
             });
         }
         public static void StopMonitorMouse()
@@ -91,28 +101,57 @@ namespace OpenRPA.SAPBridge
             Program.log("unhook OnMouseDown");
             InputDriver.Instance.OnMouseDown -= OnMouseDown;
         }
+        private static object _lock = new object();
         private static void OnMouseMove(InputEventArgs e)
         {
-            System.Diagnostics.Trace.WriteLine("OnMouseMove: " + isMoving);
-            if (isMoving) return;
-            isMoving = true;
+            lock(_lock)
+            {
+                if (isMoving) return;
+                isMoving = true;
+            }
             try
             {
-                if (SAPHook.Instance.Connections.Count() == 0) return;
-                if (SAPHook.Instance.UIElements.Count() == 0) return;
+                if (SAPHook.Instance.Connections.Count() == 0 || SAPHook.Instance.UIElements.Count() == 0)
+                {
+                    lock (_lock)
+                    {
+                        isMoving = false;
+                    }
+                    return;
+                }
                 var Element = System.Windows.Automation.AutomationElement.FromPoint(new System.Windows.Point(e.X, e.Y));
                 if (Element != null)
                 {
                     var ProcessId = Element.Current.ProcessId;
-                    if (ProcessId < 1) return;
-                    if (SAPProcessId > 0 && SAPProcessId != ProcessId) return;
+                    if (ProcessId < 1)
+                    {
+                        lock (_lock)
+                        {
+                            isMoving = false;
+                        }
+                        return;
+                    }
+                    if (SAPProcessId > 0 && SAPProcessId != ProcessId)
+                    {
+                        lock (_lock)
+                        {
+                            isMoving = false;
+                        }
+                        return;
+                    }
                     if (SAPProcessId != ProcessId)
                     {
                         var p = System.Diagnostics.Process.GetProcessById(ProcessId);
                         if (p.ProcessName.ToLower() == "saplogon") SAPProcessId = p.Id;
-                        if (p.ProcessName.ToLower() != "saplogon") return;
+                        if (p.ProcessName.ToLower() != "saplogon")
+                        {
+                            lock (_lock)
+                            {
+                                isMoving = false;
+                            }
+                            return;
+                        }
                     }
-                    LastElement = Element;
                     if (SAPHook.Instance.Connections.Count() == 0) SAPHook.Instance.RefreshSessions();
                     if (SAPHook.Instance.UIElements.Count() == 0) SAPHook.Instance.RefreshUIElements();
                     SAPEventElement[] elements = new SAPEventElement[] { };
@@ -122,10 +161,20 @@ namespace OpenRPA.SAPBridge
                     }
                     if (elements.Count() > 0)
                     {
-                        var last = elements.OrderBy(x => x.Id.Length).Last();
+                        var found = elements.OrderBy(x => x.Id.Length).Last();
+                        if (LastElement != null && (found.Id == LastElement.Id  && found.Path == LastElement.Path))
+                        {
+                            form.AddText("[SKIP] mousemove " + LastElement.Id);
+                            lock (_lock)
+                            {
+                                isMoving = false;
+                            }
+                            return;
+                        }
+                        LastElement = found;
                         SAPEvent message = new SAPEvent("mousemove");
-                        message.Set(last);
-                        form.AddText("[send] " + message.action + " " + last.Id);
+                        message.Set(LastElement);
+                        form.AddText("[send] " + message.action + " " + LastElement.Id);
                         pipe.PushMessage(message);
                     }
                     else
@@ -137,7 +186,10 @@ namespace OpenRPA.SAPBridge
             catch (Exception)
             {
             }
-            isMoving = false;
+            lock (_lock)
+            {
+                isMoving = false;
+            }
         }
         private static void OnMouseDown(InputEventArgs e)
         {
@@ -157,7 +209,6 @@ namespace OpenRPA.SAPBridge
                         if (p.ProcessName.ToLower() == "saplogon") SAPProcessId = p.Id;
                         if (p.ProcessName.ToLower() != "saplogon") return;
                     }
-                    LastElement = Element;
                     SAPEventElement[] elements = new SAPEventElement[] { };
                     lock (SAPHook.Instance.UIElements)
                     {
@@ -181,7 +232,6 @@ namespace OpenRPA.SAPBridge
             {
             }
         }
-        private static System.Windows.Automation.AutomationElement LastElement;
         private static int SAPProcessId = -1;
         private static bool isMoving = false;
         private static void Pipe_ClientConnected(NamedPipeConnection<SAPEvent, SAPEvent> connection)
@@ -222,8 +272,9 @@ namespace OpenRPA.SAPBridge
                         if (recinfo != null)
                         {
                             overlay = recinfo.overlay;
-                            StartMonitorMouse(recinfo.mousemove);
-                        }                        
+                            //StartMonitorMouse(recinfo.mousemove);
+                            StartMonitorMouse(true);
+                        }
                         SAPHook.Instance.BeginRecord(overlay);
                         form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
@@ -321,7 +372,7 @@ namespace OpenRPA.SAPBridge
                             string parent = (p != null) ? p.Id : null;
                             msg.Parent = parent;
                             // msg.LoadProperties(comp, true);
-                            msg.LoadProperties(comp, false);
+                            msg.LoadProperties(comp, msg.GetAllProperties);
                             var children = new List<SAPEventElement>();
                             if (comp.ContainerType)
                             {
@@ -336,6 +387,11 @@ namespace OpenRPA.SAPBridge
                                         parent = (p != null) ? p.Id : null;
                                         var _newchild = new SAPEventElement(Element, session.Info.SystemName, parent, false);
                                         children.Add(_newchild);
+                                        if (msg.MaxItem > 0)
+                                        {
+                                            if (children.Count >= msg.MaxItem) break;
+                                        }
+
                                     }
                                 }
                                 else if (comp is GuiContainer con)
@@ -346,16 +402,25 @@ namespace OpenRPA.SAPBridge
                                         p = Element.Parent as GuiComponent;
                                         parent = (p != null) ? p.Id : null;
                                         children.Add(new SAPEventElement(Element, session.Info.SystemName, parent, false));
+                                        if (msg.MaxItem > 0)
+                                        {
+                                            if (children.Count >= msg.MaxItem) break;
+                                        }
                                     }
                                 }
                                 else if (comp is GuiStatusbar sbar)
                                 {
+                                    msg.type = "GuiStatusbar";
                                     for (var i = 0; i < sbar.Children.Count; i++)
                                     {
                                         GuiComponent Element = sbar.Children.ElementAt(i);
                                         p = Element.Parent as GuiComponent;
                                         parent = (p != null) ? p.Id : null;
                                         children.Add(new SAPEventElement(Element, session.Info.SystemName, parent, false));
+                                        if (msg.MaxItem > 0)
+                                        {
+                                            if (children.Count >= msg.MaxItem) break;
+                                        }
                                     }
                                 }
                                 else
@@ -363,7 +428,86 @@ namespace OpenRPA.SAPBridge
                                     throw new Exception("Unknown container type " + comp.Type + "!");
                                 }
                             }
+                            if (comp is GuiTree tree)
+                            {
+                                msg.type = "GuiTree";
+                                GuiCollection keys = null;
+                                if (string.IsNullOrEmpty( msg.Path))
+                                {
+                                    keys = tree.GetNodesCol() as GuiCollection;
+                                } else
+                                {
+                                    msg = new SAPEventElement(msg, tree, "", msg.Path, session.Info.SystemName);
+                                    keys = tree.GetSubNodesCol(msg.Path) as GuiCollection;
+                                }
+                                if (keys!=null)
+                                {
 
+                                    foreach (string key in keys)
+                                    {
+                                        var _msg = new SAPEventElement(msg, tree, msg.Path, key, session.Info.SystemName);
+                                        _msg.type = "GuiTreeNode";
+                                        children.Add(_msg);
+                                        System.Diagnostics.Trace.WriteLine(_msg.ToString());
+                                        if (msg.MaxItem > 0)
+                                        {
+                                            if (children.Count >= msg.MaxItem) break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (comp is GuiTableControl table)
+                            {
+                                msg.type = "GuiTable";
+                                if(string.IsNullOrEmpty(msg.Path))
+                                {
+                                    msg.type = "GuiTable";
+                                } 
+                                else
+                                {
+
+                                }
+                                var columns = new List<string>();
+                                for (var i = 0; i < table.Columns.Count; i++)
+                                {
+                                    columns.Add(table.Columns.ElementAt(i).ToString());
+                                }
+                                for (var i = 0; i < table.RowCount; i++)
+                                {
+                                    var row = table.Rows.ElementAt(i) as GuiTableRow;
+                                    // var _msg = new SAPEventElement(msg, tree, msg.Path, key, session.Info.SystemName);
+                                    // children.Add(_msg);
+                                    // System.Diagnostics.Trace.WriteLine(_msg.ToString());
+                                    System.Diagnostics.Trace.WriteLine(row.ToString());
+                                    if (msg.MaxItem > 0)
+                                    {
+                                        if (i >= msg.MaxItem) break;
+                                    }
+
+                                }
+                            }
+                            if (comp is GuiGridView grid)
+                            {
+                                msg.type = "GuiGrid";
+                                if (string.IsNullOrEmpty(msg.Path))
+                                {
+                                    for (var i = 0; i < grid.RowCount; i++)
+                                    {
+                                        var _msg = new SAPEventElement(msg, grid, msg.Path, i, session.Info.SystemName);
+                                        _msg.type = "GuiGridNode";
+                                        children.Add(_msg);
+                                        System.Diagnostics.Trace.WriteLine(_msg.ToString());
+                                        if(msg.MaxItem > 0)
+                                        {
+                                            if (i >= msg.MaxItem) break;
+                                        }
+                                    }
+                                } 
+                                else
+                                {
+                                    msg = new SAPEventElement(msg, grid, msg.Path, int.Parse(msg.Path), session.Info.SystemName);
+                                }
+                            }
                             msg.Children = children.ToArray();
                         }
                         else

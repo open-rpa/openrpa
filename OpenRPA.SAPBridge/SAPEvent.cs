@@ -175,6 +175,8 @@ namespace OpenRPA.SAPBridge
     [Serializable]
     public class SAPElementProperty
     {
+        public SAPElementProperty() { }
+        public SAPElementProperty(string Name, string Value, bool IsReadOnly) { this.Name = Name; this.Value = Value; this.IsReadOnly = IsReadOnly; }
         public string Name { get; set; }
         public string Value { get; set; }
         public bool IsReadOnly { get; set; }
@@ -182,8 +184,11 @@ namespace OpenRPA.SAPBridge
     [Serializable]
     public partial class SAPEventElement
     {
+        public bool GetAllProperties { get; set; }
         public SAPEventElement() { }
+        public int MaxItem { get; set; }
         public string Id { get; set; }
+        public string Path { get; set; }
         public string Name { get; set; }
         public string Parent { get; set; }
         public string SystemName { get; set; }

@@ -77,12 +77,17 @@ namespace OpenRPA.SAP
                 RefreshParent = false;
                 _Parent = Parent;
             }
-            
+            if (!string.IsNullOrEmpty(Element.Path))
+            {
+                var b = true;
+            }
+
             Name = Element.Name;
             id = Element.Id;
             SystemName = Element.SystemName;
             ContainerType = Element.ContainerType;
             Role = Element.type;
+            Path = Element.Path;
             if (Properties == null) Properties = new Dictionary<string, SAPElementUpdatableProperty>();
             if(Element.Properties!=null)
                 foreach (var p in Element.Properties)
@@ -110,6 +115,7 @@ namespace OpenRPA.SAP
         public string Role { get; set; }
         public bool ContainerType { get; set; }
         public string id { get; set; }
+        public string Path { get; set; }
         public string SystemName { get; set; }        
         public string Tip { get; set; }
         public int Action { get; set; }
@@ -151,8 +157,8 @@ namespace OpenRPA.SAP
                 try
                 {
                     var msg = new SAPEvent("getitem");
-                    msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName });
-                    msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(5));
+                    msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, Path = Path });
+                    msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(60));
                     if (msg != null)
                     {
                         var res = msg.Get<SAPEventElement>();
@@ -175,22 +181,30 @@ namespace OpenRPA.SAP
             get
             {
                 if (!RefreshChildren) return _Children;
-                if(!ContainerType) return _Children;
+                if(!ContainerType && this.Role != "GuiTree" && this.Role != "GuiTable" && this.Role != "GuiGrid" && this.Role != "GuiTreeNode")
+                {
+                    System.Diagnostics.Trace.WriteLine(this.Role);
+                    return _Children;
+                }
                 var result = new List<SAPElement>();
                 try
                 {
                     var msg = new SAPEvent("getitem");
-                    msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName });
-                    msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(5));
+                    if(!string.IsNullOrEmpty(Path) || Role == "GuiGridView")
+                    {
+                        var b = true;
+                    }
+                    msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, Path = Path, MaxItem = 50 });
+                    msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(60));
                     if(msg!=null)
                     {
                         var ele = msg.Get<SAPEventElement>();
-                        var Parent = new SAPElement(null, ele);
+                        // var Parent = new SAPElement(this, ele);
                         foreach (var c in ele.Children)
                         {
-                            result.Add(new SAPElement(Parent, c));
+                            result.Add(new SAPElement(this, c));
                         }
-                    }
+                    } 
                     // RefreshChildren = false;
                 }
                 catch (Exception ex)
@@ -217,7 +231,25 @@ namespace OpenRPA.SAP
                 Input.InputDriver.Click(Button);
                 if (DoubleClick) Input.InputDriver.Click(Button);
                 return;
-            } 
+            }  
+            else
+            {
+                var Action = "";
+                if (Role == "GuiButton")
+                {
+                    Action = "Press";
+                }
+                Action = "Press";
+                if (!string.IsNullOrEmpty(Action))
+                {
+                    object[] _parameters = new object[] { };
+                    var data = new SAPInvokeMethod(SystemName, id, Action, _parameters);
+                    var message = new SAPEvent("invokemethod");
+                    message.Set(data);
+                    var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+                }
+                throw new Exception("Unknown click type " + Role);
+            }
         }
         public void Focus()
         {
@@ -238,7 +270,7 @@ namespace OpenRPA.SAP
             //var message = new SAPEvent("highlight");
             //message.Set(data);
             //var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
-
+            Log.Output(Rectangle.ToString());
             using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow(true))
             {
                 _overlayWindow.BackColor = Color;

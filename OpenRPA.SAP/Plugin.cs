@@ -78,6 +78,8 @@ namespace OpenRPA.SAP
         {
             try
             {
+                _ = PluginConfig.auto_launch_sap_bridge;
+                _ = PluginConfig.record_with_get_element;
                 // SAPhook.Instance.OnRecordEvent += OnRecordEvent;
                 SAPhook.Instance.Connected += () => { SetStatus("Online"); };
                 SAPhook.Instance.Disconnected += () => { SetStatus("Offline"); };
@@ -117,7 +119,6 @@ namespace OpenRPA.SAP
         public void Start()
         {
             if (!SAPhook.Instance.isConnected) return;
-            Console.WriteLine("Send beginrecord");
             Instance = this;
             var e = new SAPToogleRecordingEvent();
             // e.overlay = Config.local.record_overlay;
@@ -125,7 +126,6 @@ namespace OpenRPA.SAP
             e.mousemove = Config.local.record_overlay;
             var msg = new SAPEvent("beginrecord"); msg.Set(e);
             SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(5));
-            Console.WriteLine("End beginrecord");
         }
         public void Stop()
         {
@@ -136,38 +136,52 @@ namespace OpenRPA.SAP
         private IRecordEvent LastRecorderEvent;
         public bool ParseUserAction(ref IRecordEvent e)
         {
-            if (SAPhook.Instance.LastElement == null) return false;
-            if (e.UIElement == null) return false;
+            if (e.UIElement == null) { Log.Output("UIElement is null"); return false; }
             if (e.UIElement.ProcessId > 0)
             {
                 var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-                if (p.ProcessName.ToLower() != "saplogon") return false;
-            } else { return false; }
+                if (p.ProcessName.ToLower() != "saplogon") { Log.Output("p.ProcessName is not saplogon but " + p.ProcessName); return false; }
+            } else {
+                Log.Output("e.UIElement.ProcessId is " + (e.UIElement.ProcessId.ToString()));
+                return false; 
+            }
             LastRecorderEvent = e;
             e.ClickHandled = false;
-            var LastElement = SAPhook.Instance.LastElement;
 
-            var selector = new SAPSelector(LastElement, null, true);
-            var a = new GetElement { DisplayName = LastElement.Role + " " + LastElement.Name };
-            a.Selector = selector.ToString();
-            a.Image = LastElement.ImageString();
-            a.MaxResults = 1;
+            if (PluginConfig.record_with_get_element)
+            {
+                var LastElement = SAPhook.Instance.LastElement;
+                var selector = new SAPSelector(LastElement, null, true);
+                var a = new GetElement { DisplayName = LastElement.Role + " " + LastElement.Name };
+                a.Selector = selector.ToString();
+                a.Image = LastElement.ImageString();
+                a.MaxResults = 1;
 
-            e.Element = LastElement;
-            e.Selector = selector;
-            e.a = new GetElementResult(a);
-            e.SupportInput = LastElement.SupportInput;
-            // e.SupportSelect = LastElement.tagname.ToLower() == "select";
-            e.OffsetX = e.X - LastElement.Rectangle.X;
-            e.OffsetY = e.Y - LastElement.Rectangle.Y;
-            e.ClickHandled = false;
-            //e.ClickHandled = true;
-            //LastElement.Click(true, e.Button, e.X, e.Y, false, false);
+                e.Element = LastElement;
+                e.Selector = selector;
+                e.a = new GetElementResult(a);
+                e.SupportInput = LastElement.SupportInput;
+                // e.SupportSelect = LastElement.tagname.ToLower() == "select";
+                e.OffsetX = e.X - LastElement.Rectangle.X;
+                e.OffsetY = e.Y - LastElement.Rectangle.Y;
+                //e.ClickHandled = true;
+                //LastElement.Click(true, e.Button, e.X, e.Y, false, false);
+            } 
+            else
+            {
+                Log.Output("Set a = null");
+                e.a = null;
+
+            }
+
             return true;
         }
         public void RaiseUserAction(RecordEvent r)
         {
-            OnUserAction?.Invoke(this, r);
+            if (!PluginConfig.record_with_get_element)
+            {
+                OnUserAction?.Invoke(this, r);
+            }
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
@@ -202,8 +216,7 @@ namespace OpenRPA.SAP
                 lastid = e.UIElement.ProcessId;
             }
             e.Element = SAPhook.Instance.LastElement;
-            e.Element = null;
-            e.UIElement = null;
+            if(e.Element == null) e.UIElement = null;
             return true;
         }
     }

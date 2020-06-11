@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.124</Version>
-    <PackageReleaseNotes>1.0.124 Add Start Process
+    <Version>1.0.125</Version>
+    <PackageReleaseNotes>1.0.125 Fix missing dll on newer systems, improve sap
+1.0.124 Add Start Process
 1.0.123 Add CloseTab. Make OpenURL and GetElement auto shift to tab with same url as in selector, if one exists
 1.0.122 Improve edit in InvokeCode, Add more SAP Stuff
 1.0.121 Fix index error in readrange when HeaderRows is false / prepare recorder for SAP recording

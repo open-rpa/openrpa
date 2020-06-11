@@ -518,5 +518,23 @@ namespace OpenRPA.SAP.Resources {
                 return ResourceManager.GetString("plugin_launch_sap_bridge", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Record Get Element.
+        /// </summary>
+        public static string plugin_record_with_get_element {
+            get {
+                return ResourceManager.GetString("plugin_record_with_get_element", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When recording use GetElement instead of SetProperty.
+        /// </summary>
+        public static string plugin_record_with_get_element_help {
+            get {
+                return ResourceManager.GetString("plugin_record_with_get_element_help", resourceCulture);
+            }
+        }
     }
 }

@@ -118,8 +118,8 @@ namespace OpenRPA.SAP
             if (msg != null)
             {
                 var ele = msg.Get<SAPEventElement>();
-                var Parent = new SAPElement(null, ele);
-                result.Add(Parent);
+                var _element = new SAPElement(null, ele);
+                result.Add(_element);
             }
             return result.ToArray();
         }

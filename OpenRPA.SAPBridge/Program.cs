@@ -79,6 +79,8 @@ namespace OpenRPA.SAPBridge
                     SAPHook.Instance.RefreshSessions();
                     SAPHook.Instance.RefreshUIElements();
                     isMoving = false;
+                    InputDriver.Instance.OnMouseMove -= OnMouseMove;
+                    InputDriver.Instance.OnMouseDown -= OnMouseDown;
 
                     if (MouseMove)
                     {
@@ -162,6 +164,16 @@ namespace OpenRPA.SAPBridge
                     if (elements.Count() > 0)
                     {
                         var found = elements.OrderBy(x => x.Id.Length).Last();
+
+                        if(found.Items != null && found.Items.Length > 0)
+                        {
+                            var found2 = found.Items.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
+                            if(found2.Length > 0)
+                            {
+                                found = found2.First();
+                            }
+                        }
+                        
                         if (LastElement != null && (found.Id == LastElement.Id  && found.Path == LastElement.Path))
                         {
                             form.AddText("[SKIP] mousemove " + LastElement.Id);
@@ -373,13 +385,13 @@ namespace OpenRPA.SAPBridge
                             msg.Parent = parent;
                             // msg.LoadProperties(comp, true);
                             msg.LoadProperties(comp, msg.GetAllProperties);
-                            var children = new List<SAPEventElement>();
                             if (comp.ContainerType)
                             {
                                 var cont = comp as GuiVContainer;
 
                                 if (comp is GuiVContainer vcon)
                                 {
+                                    var children = new List<SAPEventElement>();
                                     for (var i = 0; i < vcon.Children.Count; i++)
                                     {
                                         GuiComponent Element = vcon.Children.ElementAt(i);
@@ -391,11 +403,12 @@ namespace OpenRPA.SAPBridge
                                         {
                                             if (children.Count >= msg.MaxItem) break;
                                         }
-
                                     }
+                                    msg.Children = children.ToArray();
                                 }
                                 else if (comp is GuiContainer con)
                                 {
+                                    var children = new List<SAPEventElement>();
                                     for (var i = 0; i < con.Children.Count; i++)
                                     {
                                         GuiComponent Element = con.Children.ElementAt(i);
@@ -407,9 +420,11 @@ namespace OpenRPA.SAPBridge
                                             if (children.Count >= msg.MaxItem) break;
                                         }
                                     }
+                                    msg.Children = children.ToArray();
                                 }
                                 else if (comp is GuiStatusbar sbar)
                                 {
+                                    var children = new List<SAPEventElement>();
                                     msg.type = "GuiStatusbar";
                                     for (var i = 0; i < sbar.Children.Count; i++)
                                     {
@@ -422,6 +437,7 @@ namespace OpenRPA.SAPBridge
                                             if (children.Count >= msg.MaxItem) break;
                                         }
                                     }
+                                    msg.Children = children.ToArray();
                                 }
                                 else
                                 {
@@ -442,7 +458,7 @@ namespace OpenRPA.SAPBridge
                                 }
                                 if (keys!=null)
                                 {
-
+                                    var children = new List<SAPEventElement>();
                                     foreach (string key in keys)
                                     {
                                         var _msg = new SAPEventElement(msg, tree, msg.Path, key, session.Info.SystemName);
@@ -454,6 +470,7 @@ namespace OpenRPA.SAPBridge
                                             if (children.Count >= msg.MaxItem) break;
                                         }
                                     }
+                                    msg.Children = children.ToArray();
                                 }
                             }
                             if (comp is GuiTableControl table)
@@ -491,6 +508,7 @@ namespace OpenRPA.SAPBridge
                                 msg.type = "GuiGrid";
                                 if (string.IsNullOrEmpty(msg.Path))
                                 {
+                                    var children = new List<SAPEventElement>();
                                     for (var i = 0; i < grid.RowCount; i++)
                                     {
                                         var _msg = new SAPEventElement(msg, grid, msg.Path, i, session.Info.SystemName);
@@ -502,13 +520,13 @@ namespace OpenRPA.SAPBridge
                                             if (i >= msg.MaxItem) break;
                                         }
                                     }
+                                    msg.Children = children.ToArray();
                                 } 
                                 else
                                 {
                                     msg = new SAPEventElement(msg, grid, msg.Path, int.Parse(msg.Path), session.Info.SystemName);
                                 }
                             }
-                            msg.Children = children.ToArray();
                         }
                         else
                         {

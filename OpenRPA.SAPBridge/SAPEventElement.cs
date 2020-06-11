@@ -71,9 +71,20 @@ namespace OpenRPA.SAPBridge
             // SAPFEWSELib.GuiCollection keys = tree.GetColumnNames() as SAPFEWSELib.GuiCollection;
             // SAPFEWSELib.GuiCollection keys = tree.GetColumnTitles() as SAPFEWSELib.GuiCollection;
             SAPFEWSELib.GuiCollection keys = tree.GetColumnHeaders() as SAPFEWSELib.GuiCollection;
-            var children = new List<SAPEventElement>();
+            if (keys == null) keys = tree.GetColumnTitles() as SAPFEWSELib.GuiCollection;
+            if (keys == null) keys = tree.GetColumnNames() as SAPFEWSELib.GuiCollection;
+            var items = new List<SAPEventElement>();
+
+
+            var temp = tree.GetNodeItemHeaders(key);
+            var temp2 = temp as SAPFEWSELib.GuiCollection;
+            if(temp2!=null)
+            {
+                keys = temp2;
+            }
+
             //foreach (string _key in keys)
-            if(keys != null)
+            if (keys != null)
             for(var i = 1; i <= keys.Count; i++)
             {
                 string _key = i.ToString();
@@ -81,7 +92,7 @@ namespace OpenRPA.SAPBridge
                 column.Name = tree.GetItemText(key, _key);
                 column.Id = Id;
                 column.Path = Path;
-                if (string.IsNullOrEmpty(column.Name)) column.Name = _key;      
+                if (string.IsNullOrEmpty(column.Name)) column.Name = _key;
 
                 int Left = tree.GetItemLeft(key, _key);
                 int Top = tree.GetItemTop(key, _key);
@@ -91,6 +102,7 @@ namespace OpenRPA.SAPBridge
                 var ScreenTop = Top + msg.Rectangle.Y;
                 column._Rectangle = new Rectangle(ScreenLeft, ScreenTop, Width, Height);
                 var _p = new List<SAPElementProperty>();
+                _p.Add(new SAPElementProperty("Key", _key, true));
                 _p.Add(new SAPElementProperty("Left", Left.ToString(), true));
                 _p.Add(new SAPElementProperty("Top", Top.ToString(), true));
                 _p.Add(new SAPElementProperty("ScreenLeft", ScreenLeft.ToString(), true));
@@ -98,9 +110,9 @@ namespace OpenRPA.SAPBridge
                 _p.Add(new SAPElementProperty("Width", Width.ToString(), true));
                 _p.Add(new SAPElementProperty("Height", Height.ToString(), true));
                 column.Properties = _p.ToArray();
-                children.Add(column);
+                    items.Add(column);
             }
-            Children = children.ToArray();
+            Items = items.ToArray();
 
         }
         public SAPEventElement(SAPEventElement msg, SAPFEWSELib.GuiGridView grid, string parentpath, int Row, string SystemName)
@@ -127,7 +139,7 @@ namespace OpenRPA.SAPBridge
             _Rectangle = new Rectangle(grid.ScreenLeft, grid.ScreenTop, grid.Width, grid.Height);
 
             var keys = grid.ColumnOrder as SAPFEWSELib.GuiCollection;
-            var children = new List<SAPEventElement>();
+            var items = new List<SAPEventElement>();
             foreach (string key in keys)
             {
                 var column = new SAPEventElement();
@@ -151,9 +163,9 @@ namespace OpenRPA.SAPBridge
                 properties.Add(new SAPElementProperty("Value", Value, false));
                 column._Rectangle = new Rectangle(ScreenLeft, ScreenTop, Width, Height);
                 column.Properties = properties.ToArray();
-                children.Add(column);
+                items.Add(column);
             }
-            Children = children.ToArray();
+            Items = items.ToArray();
 
         }
         private static string[] limitedProperties = { "Changeable", "Modified", "Text", "ScreenTop", "ScreenLeft", "Height", "Width", "Top", "Left", };

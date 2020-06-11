@@ -195,6 +195,7 @@ namespace OpenRPA.SAPBridge
         public bool ContainerType { get; set; }
         public string type { get; set; }
         public SAPEventElement[] Children { get; set; }
+        public SAPEventElement[] Items { get; set; }
         public SAPElementProperty[] Properties { get; set; }
     }
 

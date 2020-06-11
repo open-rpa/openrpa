@@ -102,6 +102,12 @@ namespace OpenRPA.SAP
                     if (p.Name == "Name") Name = p.Value;
                     if (p.Name == "Type") Role = p.Value;
                 }
+            if(Element.Items != null)
+            {
+                var items = new List<IElement>();
+                foreach (var item in Element.Items) items.Add( new SAPElement(this, item));
+                if (Element.Items != null) _items = items.ToArray();
+            }
         }
         public System.Drawing.Rectangle Rectangle
         {
@@ -200,10 +206,11 @@ namespace OpenRPA.SAP
                     {
                         var ele = msg.Get<SAPEventElement>();
                         // var Parent = new SAPElement(this, ele);
-                        foreach (var c in ele.Children)
-                        {
-                            result.Add(new SAPElement(this, c));
-                        }
+                        if(ele.Children != null)
+                            foreach (var c in ele.Children)
+                            {
+                                result.Add(new SAPElement(this, c));
+                            }
                     } 
                     // RefreshChildren = false;
                 }
@@ -320,12 +327,12 @@ namespace OpenRPA.SAP
                 return Interfaces.Image.Util.Bitmap2Base64(image);
             }
         }
+        IElement[] _items = new IElement[] { };
         public IElement[] Items
         {
             get
             {
-                var result = new List<IElement>();
-                return result.ToArray();
+                return _items;
             }
         }
 

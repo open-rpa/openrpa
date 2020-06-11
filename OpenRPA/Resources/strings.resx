@@ -516,6 +516,9 @@
   <data name="download" xml:space="preserve">
     <value>Download</value>
   </data>
+  <data name="edge" xml:space="preserve">
+    <value>Edge</value>
+  </data>
   <data name="exitapplication" xml:space="preserve">
     <value>Exit Application</value>
   </data>

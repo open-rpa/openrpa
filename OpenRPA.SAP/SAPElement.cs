@@ -231,7 +231,25 @@ namespace OpenRPA.SAP
                 Input.InputDriver.Click(Button);
                 if (DoubleClick) Input.InputDriver.Click(Button);
                 return;
-            } 
+            }  
+            else
+            {
+                var Action = "";
+                if (Role == "GuiButton")
+                {
+                    Action = "Press";
+                }
+                Action = "Press";
+                if (!string.IsNullOrEmpty(Action))
+                {
+                    object[] _parameters = new object[] { };
+                    var data = new SAPInvokeMethod(SystemName, id, Action, _parameters);
+                    var message = new SAPEvent("invokemethod");
+                    message.Set(data);
+                    var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+                }
+                throw new Exception("Unknown click type " + Role);
+            }
         }
         public void Focus()
         {

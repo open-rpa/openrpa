@@ -73,6 +73,7 @@ namespace OpenRPA.SAPBridge
             SAPFEWSELib.GuiCollection keys = tree.GetColumnHeaders() as SAPFEWSELib.GuiCollection;
             var children = new List<SAPEventElement>();
             //foreach (string _key in keys)
+            if(keys != null)
             for(var i = 1; i <= keys.Count; i++)
             {
                 string _key = i.ToString();

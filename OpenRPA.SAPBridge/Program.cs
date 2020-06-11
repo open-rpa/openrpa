@@ -437,10 +437,12 @@ namespace OpenRPA.SAPBridge
                                     keys = tree.GetNodesCol() as GuiCollection;
                                 } else
                                 {
+                                    msg = new SAPEventElement(msg, tree, "", msg.Path, session.Info.SystemName);
                                     keys = tree.GetSubNodesCol(msg.Path) as GuiCollection;
                                 }
                                 if (keys!=null)
                                 {
+
                                     foreach (string key in keys)
                                     {
                                         var _msg = new SAPEventElement(msg, tree, msg.Path, key, session.Info.SystemName);
@@ -457,6 +459,14 @@ namespace OpenRPA.SAPBridge
                             if (comp is GuiTableControl table)
                             {
                                 msg.type = "GuiTable";
+                                if(string.IsNullOrEmpty(msg.Path))
+                                {
+                                    msg.type = "GuiTable";
+                                } 
+                                else
+                                {
+
+                                }
                                 var columns = new List<string>();
                                 for (var i = 0; i < table.Columns.Count; i++)
                                 {

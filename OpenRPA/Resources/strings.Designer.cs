@@ -1258,6 +1258,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edge.
+        /// </summary>
+        public static string edge {
+            get {
+                return ResourceManager.GetString("edge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exit Application.
         /// </summary>
         public static string exitapplication {

@@ -84,31 +84,32 @@ namespace OpenRPA.SAPBridge
             if (Element is GuiTree tree)
             {
                 msg.type = "GuiTree";
-                GuiCollection keys = null;
-                if (string.IsNullOrEmpty(msg.Path))
-                {
-                    keys = tree.GetNodesCol() as GuiCollection;
-                }
-                else
-                {
-                    keys = tree.GetSubNodesCol(msg.Path) as GuiCollection;
-                }
-                if (keys != null)
-                {
-                    foreach (string key in keys)
-                    {
-                        var _msg = new SAPEventElement(msg, tree, msg.Path, key, session.Info.SystemName);
-                        _msg.type = "GuiTreeNode";
-                        list.Add(_msg);
-                        System.Diagnostics.Trace.WriteLine(_msg.ToString());
-                        if (msg.MaxItem > 0)
-                        {
-                            if (list.Count >= msg.MaxItem) break;
-                        }
-                    }
-                }
+                GetUIElements(list, msg, tree, msg.Path, session.Info.SystemName);
             }
         }
+
+        private void GetUIElements(List<SAPEventElement> list, SAPEventElement msg, GuiTree tree, string path, string SystemName)
+        {
+            GuiCollection keys = null;
+            if (string.IsNullOrEmpty(path))
+            {
+                keys = tree.GetNodesCol() as GuiCollection;
+            }
+            else
+            {
+                keys = tree.GetSubNodesCol(path) as GuiCollection;
+            }
+            if(keys!=null)
+            foreach (string key in keys)
+            {
+                var _msg = new SAPEventElement(msg, tree, msg.Path, key, SystemName);
+                _msg.type = "GuiTreeNode";
+                list.Add(_msg);
+                System.Diagnostics.Trace.WriteLine(_msg.ToString());
+                GetUIElements(list, msg, tree, key, SystemName);
+            }
+        }
+
         public void RefreshUIElements()
         {
             if(app==null) UIElements = new SAPEventElement[] { };

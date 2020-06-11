@@ -55,7 +55,6 @@ namespace OpenRPA
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             AppDomain currentDomain = AppDomain.CurrentDomain;
             System.Windows.Forms.Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             System.Diagnostics.Trace.Listeners.Add(Tracing);
             //Console.SetOut(new DebugTextWriter());
             Console.SetOut(new ConsoleDecorator(Console.Out));
@@ -1334,20 +1333,6 @@ namespace OpenRPA
             try
             {
                 Log.Error(e.Exception, "");
-            }
-            catch (Exception)
-            {
-            }
-        }
-        static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs args)
-        {
-            Log.Function("MainWindow", "CurrentDomain_UnhandledException");
-            try
-            {
-                Exception ex = (Exception)args.ExceptionObject;
-                Log.Error(ex, "");
-                Log.Error("MyHandler caught : " + ex.Message);
-                Log.Error("Runtime terminating: {0}", (args.IsTerminating).ToString());
             }
             catch (Exception)
             {

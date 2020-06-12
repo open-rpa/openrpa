@@ -344,7 +344,7 @@ namespace OpenRPA.SAPBridge
         }
         private void Session_Change(GuiSession Session, GuiComponent Component, object CommandArray)
         {
-            if (Program.recordstarting) return;
+            // if (Program.recordstarting) return;
             object[] objs = CommandArray as object[];
             objs = objs[0] as object[];
             var Action = "SetProperty";
@@ -359,7 +359,7 @@ namespace OpenRPA.SAPBridge
             }
             var ActionName = objs[1].ToString();
             upperFirstChar(ref ActionName);
-
+            if (ActionName == "ResizeWorkingPane") return;
 
             string id = Component.Id;
             var pathToRoot = new List<GuiComponent>();

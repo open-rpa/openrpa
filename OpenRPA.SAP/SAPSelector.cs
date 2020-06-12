@@ -20,61 +20,12 @@ namespace OpenRPA.SAP
             Log.Selector(string.Format("SAPselector::AutomationElement::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
             Log.Selector(string.Format("SAPselector::GetControlVSAPwWalker::end {0:mm\\:ss\\.fff}", sw.Elapsed));
 
-            SAPElement root = null;
-            SAPElement baseElement = null;
-            var pathToRoot = new List<SAPElement>();
-            while (element != null)
-            {
-                // Break on circular relationship (should not happen?)
-                //if (pathToRoot.Contains(element) || element.Equals(_rootElement)) { break; }
-                if (pathToRoot.Contains(element)) { break; }
-                var Parent = element.Parent;
-                if (Parent != null) pathToRoot.Add(element);
-                if (Parent == null) root = element;
-                try
-                {
-                    element = Parent;
-                    root = element.Parent;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "");
-                    return;
-                }
-            }
-            pathToRoot.Reverse();
-
-            if (anchor != null)
-            {
-                var anchorlist = anchor.Where(x => x.Enabled && x.Selector == null).ToList();
-                for (var i = 0; i < anchorlist.Count; i++)
-                {
-                    //if (((SAPSelectorItem)anchorlist[i]).Match(pathToRoot[0]))
-                    if (SAPSelectorItem.Match(anchorlist[i], pathToRoot[0]))
-                    {
-                        pathToRoot.Remove(pathToRoot[0]);
-                    }
-                    else
-                    {
-                        Log.Warning("Element does not match the anchor path");
-                        return;
-                    }
-                }
-            }
-            if (pathToRoot.Count == 0)
-            {
-                Log.Error("Element is same as annchor");
-                return;
-            }
-
-            baseElement = pathToRoot.First();
-            element = pathToRoot.Last();
             Clear();
             SAPSelectorItem item;
             if (anchor == null)
             {
 
-                item = new SAPSelectorItem(root, true);
+                item = new SAPSelectorItem(element, true);
                 item.Enabled = true;
                 item.canDisable = false;
                 Items.Add(item);

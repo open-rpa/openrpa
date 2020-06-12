@@ -164,12 +164,12 @@ namespace OpenRPA.SAP
                 // e.SupportSelect = LastElement.tagname.ToLower() == "select";
                 e.OffsetX = e.X - LastElement.Rectangle.X;
                 e.OffsetY = e.Y - LastElement.Rectangle.Y;
-                //e.ClickHandled = true;
-                //LastElement.Click(true, e.Button, e.X, e.Y, false, false);
+                e.ClickHandled = true;
+                LastElement.Click(true, e.Button, e.X, e.Y, false, false);
             } 
             else
             {
-                Log.Output("Set a = null");
+                Log.Output("Skip adding activity, record_with_get_element is false");
                 e.a = null;
 
             }

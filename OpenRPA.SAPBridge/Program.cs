@@ -185,6 +185,10 @@ namespace OpenRPA.SAPBridge
                         }
                         LastElement = found;
                         SAPEvent message = new SAPEvent("mousemove");
+                        if(string.IsNullOrEmpty(LastElement.SystemName))
+                        {
+                            var b = true;
+                        }
                         message.Set(LastElement);
                         form.AddText("[send] " + message.action + " " + LastElement.Id);
                         pipe.PushMessage(message);
@@ -599,6 +603,10 @@ namespace OpenRPA.SAPBridge
                     catch (Exception ex)
                     {
                         message.error = ex.Message;
+                        if (ex.InnerException!=null)
+                        {
+                            message.error = ex.InnerException.Message;
+                        }
                         form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                     }

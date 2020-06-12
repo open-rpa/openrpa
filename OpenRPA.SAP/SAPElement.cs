@@ -52,11 +52,13 @@ namespace OpenRPA.SAP
     {
         object IElement.RawElement { get => raw; set => raw = value as object; }
         private object raw;
+        private SAPEventElement sapelement;
         public SAPElement()
         {
         }
         public SAPElement(SAPConnection connection)
         {
+            raw = connection;
             Name = connection.Name;
             id = connection.Id;
             ContainerType = true;
@@ -64,6 +66,7 @@ namespace OpenRPA.SAP
         }
         public SAPElement(SAPSession session)
         {
+            raw = session;
             Name = session.Info.SystemName;
             id = session.Id;
             SystemName = session.Info.SystemName;
@@ -72,7 +75,9 @@ namespace OpenRPA.SAP
         }
         public SAPElement(SAPElement Parent, SAPEventElement Element)
         {
-            if(Parent!=null)
+            raw = Element;
+            sapelement = Element;
+            if (Parent!=null)
             {
                 RefreshParent = false;
                 _Parent = Parent;
@@ -241,26 +246,98 @@ namespace OpenRPA.SAP
             }  
             else
             {
+                object[] _parameters = new object[] { };
+                // var Action = "Press";
                 var Action = "";
                 if (Role == "GuiButton")
                 {
                     Action = "Press";
+                } 
+                else if(Role == "GuiTreeNode" || Role == "GuiTreeItem")
+                {
+                    // Action = "ExpandNode";
+                    Action = "DoubleClickNode";
+                    _parameters = new object[] { Path };
                 }
-                Action = "Press";
                 if (!string.IsNullOrEmpty(Action))
                 {
-                    object[] _parameters = new object[] { };
                     var data = new SAPInvokeMethod(SystemName, id, Action, _parameters);
                     var message = new SAPEvent("invokemethod");
                     message.Set(data);
                     var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+                } 
+                else
+                {
+                    throw new Exception("Unknown click type " + Role);
                 }
-                throw new Exception("Unknown click type " + Role);
             }
+        }
+        public void EnsureVisible()
+        {
+            object[] _parameters = new object[] { };
+            SAPInvokeMethod data = null;
+            SAPEvent message;
+            SAPEvent result;
+            if (Items.Length > 0)
+            {
+                _parameters = new object[] { Path, Items[0].Name };
+                data = new SAPInvokeMethod(SystemName, id, "ensureVisibleHorizontalItem", _parameters);
+                message = new SAPEvent("invokemethod");
+                message.Set(data);
+                result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+            }
+            _parameters = new object[] { };
+            data = new SAPInvokeMethod(SystemName, id, "SetFocus", _parameters);
+            message = new SAPEvent("invokemethod");
+            message.Set(data);
+            result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+
         }
         public void Focus()
         {
-            throw new NotImplementedException();
+            //REM start transaction
+            //session.findById("wnd[0]/tbar[0]/okcd").text = "/nrsa1"
+            //session.findById("wnd[0]").sendVKey 0
+            //REM Search in the tree for object "ZCSG01"
+            //session.findById("wnd[0]/shellcont[0]/shell/shellcont[1]/shell/shellcont[1]/shell").topNode = " 1"
+            //session.findById("wnd[0]/shellcont[1]/shell/shellcont[0]/shell/shellcont[1]/shell/shellcont[1]/shell").topNode = " 1"
+            //session.findById("wnd[0]/shellcont[1]/shell/shellcont[0]/shell/shellcont[1]/shell/shellcont[0]/shell").pressButton "%AWB_TREE_SEARCH"
+            //session.findById("wnd[1]/usr/txtRSAWBN_S_DYNPRO_0500-SEARCH_TERM").text = "ZCSG01"
+            //session.findById("wnd[1]/usr/txtRSAWBN_S_DYNPRO_0500-SEARCH_TERM").caretPosition = 6
+            //session.findById("wnd[1]").sendVKey 0
+            //REM "ZCSG01" is found as node 37
+            //Dim strKey
+            //Dim strTxt1, strTxt2
+            //strKey = session.findById("wnd[0]/shellcont[1]/shell/shellcont[0]/shell/shellcont[1]/shell/shellcont[1]/shell").GetFocusedNodeKey
+            //strTxt1 = Right(" " & Cstr(strKey), 11)
+            //strTxt2 = Right(" " & Cstr(strKey + 1), 11)
+            //session.findById("wnd[0]/shellcont[1]/shell/shellcont[0]/shell/shellcont[1]/shell/shellcont[1]/shell").expandNode strTxt1
+            //session.findById("wnd[0]/shellcont[1]/shell/shellcont[0]/shell/shellcont[1]/shell/shellcont[1]/shell").topNode = " 1"
+            //session.findById("wnd[0]/shellcont[1]/shell/shellcont[0]/shell/shellcont[1]/shell/shellcont[1]/shell").selectItem strTxt2,"COL1"
+            //session.findById("wnd[0]/shellcont[1]/shell/shellcont[0]/shell/shellcont[1]/shell/shellcont[1]/shell").ensureVisibleHorizontalItem strTxt2,"COL1"
+
+            //object[] _parameters = new object[] { };
+            //var Action = "";
+            //if (Role == "GuiButton")
+            //{
+            //    Action = "ensureVisibleHorizontalItem";
+            //}
+            //else if (Role == "GuiTreeNode" || Role == "GuiTreeItem")
+            //{
+            //    EnsureVisible();
+            //}
+            //if (!string.IsNullOrEmpty(Action))
+            //{
+            //    var data = new SAPInvokeMethod(SystemName, id, Action, _parameters);
+            //    var message = new SAPEvent("invokemethod");
+            //    message.Set(data);
+            //    var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+            //}
+            //else
+            //{
+            //    throw new Exception("Unknown focus type " + Role);
+            //}
+            EnsureVisible();
         }
         public Task Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
         {

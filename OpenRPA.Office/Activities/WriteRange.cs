@@ -35,6 +35,7 @@ namespace OpenRPA.Office.Activities
             var useHeaderRow = (UseHeaderRow != null ? UseHeaderRow.Get(context) : false);
             base.Execute(context);
             var dt = DataTable.Get(context);
+            if (dt == null) throw new ArgumentException("DataTable is null", "DataTable");
             var cells = Cells.Get(context);
             Microsoft.Office.Interop.Excel.Range xlRange = null;
             if (string.IsNullOrEmpty(cells))

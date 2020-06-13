@@ -18,13 +18,25 @@ namespace OpenRPA.SAP
     [LocalizedDisplayName("activity_getelement", typeof(Resources.strings))]
     public class GetElement : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {
+        public GetElement()
+        {
+            MaxResults = 1;
+            MinResults = 1;
+            Timeout = new InArgument<TimeSpan>()
+            {
+                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromSeconds(3)")
+            };
+        }
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<SAPElement> Body { get; set; }
         public InArgument<int> MaxResults { get; set; }
         public InArgument<int> MinResults { get; set; }
+        public InArgument<TimeSpan> Timeout { get; set; }
         [RequiredArgument]
         public InArgument<string> Selector { get; set; }
+        [Browsable(false)]
         public InArgument<SAPElement> From { get; set; }
+        public InArgument<bool> FlatternGuiTree { get; set; }
         public OutArgument<SAPElement[]> Elements { get; set; }
         [Browsable(false)]
         public string Image { get; set; }
@@ -35,10 +47,12 @@ namespace OpenRPA.SAP
             var SelectorString = Selector.Get(context);
             SelectorString = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(SelectorString, context.DataContext);
             var sel = new SAPSelector(SelectorString);
-            var timeout = TimeSpan.FromSeconds(3);
+            var timeout = Timeout.Get(context);
             var maxresults = MaxResults.Get(context);
             var minresults = MinResults.Get(context);
-            var from = From.Get(context);
+            var flatternguitree = FlatternGuiTree.Get(context);
+            //var from = From.Get(context);
+            SAPElement from = null;
             if (maxresults < 1) maxresults = 1;
 
             SAPElement[] elements = { };
@@ -47,7 +61,7 @@ namespace OpenRPA.SAP
             do
             {
                 var selector = new SAPSelector(SelectorString);
-                elements = SAPSelector.GetElementsWithuiSelector(selector, from, maxresults);
+                elements = SAPSelector.GetElementsWithuiSelector(selector, from, 0, maxresults, flatternguitree);
 
             } while (elements.Count() == 0 && sw.Elapsed < timeout);
             Log.Debug(string.Format("OpenRPA.SAP::GetElement::found {1} elements in {0:mm\\:ss\\.fff}", sw.Elapsed, elements.Count()));
@@ -64,10 +78,6 @@ namespace OpenRPA.SAP
             if (more)
             {
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
-            }
-            else
-            {
-                throw new Interfaces.ElementNotFoundException("Failed locating item");
             }
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
@@ -94,7 +104,8 @@ namespace OpenRPA.SAP
         {
             metadata.AddDelegate(Body);
             Interfaces.Extensions.AddCacheArgument(metadata, "Selector", Selector);
-            Interfaces.Extensions.AddCacheArgument(metadata, "From", From);
+            //Interfaces.Extensions.AddCacheArgument(metadata, "From", From);
+            Interfaces.Extensions.AddCacheArgument(metadata, "FlatternGuiTree", FlatternGuiTree);
             Interfaces.Extensions.AddCacheArgument(metadata, "Elements", Elements);
             Interfaces.Extensions.AddCacheArgument(metadata, "MaxResults", MaxResults);
             metadata.AddImplementationVariable(_elements);

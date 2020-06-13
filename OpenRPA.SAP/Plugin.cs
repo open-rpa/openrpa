@@ -151,6 +151,12 @@ namespace OpenRPA.SAP
             if (PluginConfig.record_with_get_element)
             {
                 var LastElement = SAPhook.Instance.LastElement;
+                if (LastElement == null)
+                {
+                    Log.Output("Skip adding activity, LastElement is null ( wait a little to sap bridge to load ui tree )");
+                    e.a = null;
+                    return true;
+                }
                 var selector = new SAPSelector(LastElement, null, true);
                 var a = new GetElement { DisplayName = LastElement.Role + " " + LastElement.Name };
                 a.Selector = selector.ToString();
@@ -185,7 +191,7 @@ namespace OpenRPA.SAP
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
-            var result = SAPSelector.GetElementsWithuiSelector(selector as SAPSelector, fromElement, maxresults);
+            var result = SAPSelector.GetElementsWithuiSelector(selector as SAPSelector, fromElement, 0, maxresults, false);
             return result;
         }
         public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)

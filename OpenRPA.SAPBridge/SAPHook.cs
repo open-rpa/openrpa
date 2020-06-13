@@ -81,35 +81,7 @@ namespace OpenRPA.SAPBridge
                     }
                 }
             }
-            if (Element is GuiTree tree)
-            {
-                msg.type = "GuiTree";
-                GetUIElements(list, msg, tree, msg.Path, session.Info.SystemName);
-            }
         }
-
-        private void GetUIElements(List<SAPEventElement> list, SAPEventElement msg, GuiTree tree, string path, string SystemName)
-        {
-            GuiCollection keys = null;
-            if (string.IsNullOrEmpty(path))
-            {
-                keys = tree.GetNodesCol() as GuiCollection;
-            }
-            else
-            {
-                keys = tree.GetSubNodesCol(path) as GuiCollection;
-            }
-            if(keys!=null)
-            foreach (string key in keys)
-            {
-                var _msg = new SAPEventElement(msg, tree, msg.Path, key, SystemName);
-                _msg.type = "GuiTreeNode";
-                list.Add(_msg);
-                System.Diagnostics.Trace.WriteLine(_msg.ToString());
-                GetUIElements(list, msg, tree, key, SystemName);
-            }
-        }
-
         public void RefreshUIElements()
         {
             if(app==null) UIElements = new SAPEventElement[] { };
@@ -289,6 +261,7 @@ namespace OpenRPA.SAPBridge
             }
             return false;
         }
+        public GuiSession GetSession() { return GetSession(""); }
         public GuiSession GetSession(string SystemName)
         {
             var application = app;
@@ -302,7 +275,7 @@ namespace OpenRPA.SAPBridge
                 for (int j = 0; j < con.Sessions.Count; j++)
                 {
                     var session = con.Children.ElementAt(j) as GuiSession;
-                    if (session.Info.SystemName.ToLower() == SystemName.ToLower()) return session;
+                    if (string.IsNullOrEmpty(SystemName) || session.Info.SystemName.ToLower() == SystemName.ToLower()) return session;
                 }
             }
             return null;

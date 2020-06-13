@@ -50,9 +50,9 @@ namespace OpenRPA.SAP
         }
         public override IElement[] GetElements(IElement fromElement = null, int maxresults = 1)
         {
-            return SAPSelector.GetElementsWithuiSelector(this, fromElement, maxresults);
+            return SAPSelector.GetElementsWithuiSelector(this, fromElement, 0, maxresults, false);
         }
-        private static SAPElement[] GetElementsWithuiSelector(SAPSession session, SAPSelector selector, IElement fromElement, int maxresults)
+        private static SAPElement[] GetElementsWithuiSelector(SAPSession session, SAPSelector selector, IElement fromElement, int skip, int maxresults, bool FlatternGuiTree)
         {
             var result = new List<SAPElement>();
             SAPElement _fromElement = fromElement as SAPElement;
@@ -64,26 +64,33 @@ namespace OpenRPA.SAP
             var path = sel.path;
 
             var msg = new SAPEvent("getitem");
-            msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, GetAllProperties = true, Path = path });
+            msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, GetAllProperties = true, Path = path, Skip = skip, MaxItem = maxresults, Flat = FlatternGuiTree });
             msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(5));
             if (msg != null)
             {
                 var ele = msg.Get<SAPEventElement>();
-                var _element = new SAPElement(null, ele);
-                result.Add(_element);
+                if(!string.IsNullOrEmpty(ele.Id))
+                {
+                    var _element = new SAPElement(null, ele);
+                    result.Add(_element);
+                }
             }
             return result.ToArray();
         }
-        public static SAPElement[] GetElementsWithuiSelector( SAPSelector selector, IElement fromElement = null, int maxresults = 1)
+        public static SAPElement[] GetElementsWithuiSelector( SAPSelector selector, IElement fromElement, int skip, int maxresults, bool FlatternGuiTree)
         {
             var result = new List<SAPElement>();
             var root = new SAPSelectorItem(selector[0]);
             var SystemName = root.SystemName;
+            if(SAPhook.Instance.Sessions.Length == 0)
+            {
+                SAPhook.Instance.RefreshConnections();
+            }
             foreach (var session in SAPhook.Instance.Sessions)
             {
                 if(string.IsNullOrEmpty(SystemName) || (SystemName == session.Info.SystemName))
                 {
-                    result.AddRange(GetElementsWithuiSelector(session, selector, fromElement, maxresults));
+                    result.AddRange(GetElementsWithuiSelector(session, selector, fromElement, skip, maxresults, FlatternGuiTree));
                     if (result.Count > maxresults) return result.ToArray();
                 }
             }

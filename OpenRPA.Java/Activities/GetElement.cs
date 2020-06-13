@@ -65,10 +65,6 @@ namespace OpenRPA.Java
             {
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
-            else
-            {
-                throw new Interfaces.ElementNotFoundException("Failed locating item");
-            }
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {

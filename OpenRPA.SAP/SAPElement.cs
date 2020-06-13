@@ -2,12 +2,12 @@
 using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing.Design;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace OpenRPA.SAP
 {
     public class SAPElementUpdatableProperty
@@ -16,7 +16,6 @@ namespace OpenRPA.SAP
         public SAPElement Element { get; set; }
         public string Name { get; set; }
         public string _Value;
-
         public SAPElementUpdatableProperty(SAPElement Element, SAPElementProperty p)
         {
             this.Element = Element;
@@ -24,7 +23,6 @@ namespace OpenRPA.SAP
             Name = p.Name;
             _Value = p.Value;
         }
-
         public string Value { 
             get 
             {
@@ -82,11 +80,6 @@ namespace OpenRPA.SAP
                 RefreshParent = false;
                 _Parent = Parent;
             }
-            if (!string.IsNullOrEmpty(Element.Path))
-            {
-                var b = true;
-            }
-
             Name = Element.Name;
             id = Element.Id;
             SystemName = Element.SystemName;
@@ -112,6 +105,16 @@ namespace OpenRPA.SAP
                 var items = new List<IElement>();
                 foreach (var item in Element.Items) items.Add( new SAPElement(this, item));
                 if (Element.Items != null) _items = items.ToArray();
+            }
+            if(Element.Children != null)
+            {
+                var children = new List<SAPElement>();
+                foreach (var c in Element.Children)
+                {
+                    children.Add(new SAPElement(this, c));
+                }
+                _Children = children.ToArray();
+                RefreshChildren = false;
             }
         }
         public System.Drawing.Rectangle Rectangle
@@ -148,6 +151,7 @@ namespace OpenRPA.SAP
             get
             {
                 if(Properties==null) return null;
+                if (Properties.ContainsKey("Value")) return Properties["Value"].Value;
                 if (Properties.ContainsKey("Text")) return Properties["Text"].Value;
                 return null;
             }
@@ -173,7 +177,7 @@ namespace OpenRPA.SAP
                     if (msg != null)
                     {
                         var res = msg.Get<SAPEventElement>();
-                        _Parent = new SAPElement(null, res);
+                        if(!string.IsNullOrEmpty(res.Id)) _Parent = new SAPElement(null, res);
                     }
                     RefreshParent = false;
                 }
@@ -201,23 +205,19 @@ namespace OpenRPA.SAP
                 try
                 {
                     var msg = new SAPEvent("getitem");
-                    if(!string.IsNullOrEmpty(Path) || Role == "GuiGridView")
-                    {
-                        var b = true;
-                    }
                     msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, Path = Path, MaxItem = 50 });
                     msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(60));
                     if(msg!=null)
                     {
                         var ele = msg.Get<SAPEventElement>();
                         // var Parent = new SAPElement(this, ele);
-                        if(ele.Children != null)
+                        if (ele !=null && !string.IsNullOrEmpty(ele.Id) && ele.Children != null)
                             foreach (var c in ele.Children)
                             {
                                 result.Add(new SAPElement(this, c));
                             }
                     } 
-                    // RefreshChildren = false;
+                    RefreshChildren = false;
                 }
                 catch (Exception ex)
                 {
@@ -374,7 +374,11 @@ namespace OpenRPA.SAP
         public override string ToString()
         {
             if (!string.IsNullOrEmpty(Tip)) return Tip;
-            return "id:" + id + " Role:" + Role + " Name: " + Name;
+            var name = Name;
+            if (Properties.ContainsKey("Key")) name = Properties["Key"].Value;
+            if (Properties.ContainsKey("Cell")) name = Properties["Cell"].Value;
+
+            return "id:" + id + " Role:" + Role + " Name: " + name;
         }
         public override bool Equals(object obj)
         {
@@ -412,6 +416,61 @@ namespace OpenRPA.SAP
                 return _items;
             }
         }
-
+        public DataTable ToDatatable()
+        {
+            var name = Name;
+            if (string.IsNullOrEmpty(name)) name = "Table1";
+            var result = new DataTable(name);
+            if (Children == null || Children.Length == 0)
+            {
+                if(Items != null && Items.Length > 0)
+                {
+                    foreach(var item in Items)
+                    {
+                        var ele = item as SAPElement;
+                        var _name = item.Name;
+                        if (ele.Properties.ContainsKey("Key")) _name = ele.Properties["Key"].Value;
+                        result.Columns.Add(_name);
+                    }
+                    result.Rows.Add(ToDataRow(result));
+                    return result;
+                }
+                return null;
+            }
+            var _c = Children[0];
+            var cc = Children[0].Children;
+            var ci = Children[0].Items;
+            if (Children[0].Items == null || Children[0].Items.Length == 0) return null;
+            foreach (var item in Children[0].Items)
+            {
+                var ele = item as SAPElement;
+                var _name = item.Name;
+                if (ele.Properties.ContainsKey("Key")) _name = ele.Properties["Key"].Value;
+                if (ele.Properties.ContainsKey("Cell")) _name = ele.Properties["Cell"].Value;
+                result.Columns.Add(_name);
+            }
+            foreach (var c in Children)
+            {
+                var row = c.ToDataRow(result);
+                if(row!=null) result.Rows.Add(row);
+            }
+            return result;
+        }
+        public DataRow ToDataRow(DataTable dt)
+        {
+            if (Items == null) return null;
+            var result = dt.NewRow();
+            var list = new List<SAPElement>();
+            foreach (var i in Items) list.Add((SAPElement)i);
+            foreach(var item in list)
+            {
+                var ele = item as SAPElement;
+                var name = item.Name;
+                if (ele.Properties.ContainsKey("Key")) name = ele.Properties["Key"].Value;
+                if (ele.Properties.ContainsKey("Cell")) name = ele.Properties["Cell"].Value;
+                result[name] = item.Value;
+            }
+            return result;
+        }
     }
 }

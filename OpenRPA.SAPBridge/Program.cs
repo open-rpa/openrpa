@@ -272,6 +272,27 @@ namespace OpenRPA.SAPBridge
         }
         public static bool recordstarting = false;
         public static GuiVComponent _lastHighlight = null;
+
+        public static string StripSession(string id)
+        {
+            // /app/con[0]/ses[0]/wnd
+            if (id.StartsWith("/app")) id = id.Substring(id.IndexOf("/", 1));
+            if (id.StartsWith("/con[")) id = id.Substring(id.IndexOf("]") + 1);
+            if (id.StartsWith("/ses[")) id = id.Substring(id.IndexOf("]") + 1);
+            if (id.StartsWith("/")) id = id.Substring(1);
+            return id;
+        }
+        public static int ExtractIndex(ref string part)
+        {
+            if(part.Contains("["))
+            {
+                var strindex = part.Substring(part.IndexOf("[") + 1);
+                strindex = strindex.Substring(0, strindex.IndexOf("]"));
+                part = part.Substring(0, part.IndexOf("["));
+                return int.Parse(strindex);
+            }
+            return -1;
+        }
         private static void Server_OnReceivedMessage(NamedPipeConnection<SAPEvent, SAPEvent> connection, SAPEvent message)
         {
             try
@@ -367,175 +388,63 @@ namespace OpenRPA.SAPBridge
 
                 if (message.action == "getitems")
                 {
-
+                    try
+                    {
+                        var msg = message.Get<SAPEventElement>();
+                        var session = SAPHook.Instance.GetSession(msg.SystemName);
+                        var sapelements = new List<GuiComponent>();
+                        msg.Id = StripSession(msg.Id);
+                        var paths = msg.Id.Split(new string[] { "/"}, StringSplitOptions.None);
+                        for(var i = 0; i < paths.Length; i++)
+                        {
+                            string part = paths[i];
+                            int index = ExtractIndex(ref part);
+                            if (i == 0)
+                            {
+                                if (index > -1) sapelements.Add(session.Children.ElementAt(index));
+                                if(index == -1)
+                                {
+                                    for(var x = 0; x < session.Children.Count; x++)
+                                    {
+                                        sapelements.Add(session.Children.ElementAt(x));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        message.error = ex.Message;
+                        form.AddText("[send] " + message.action);
+                        pipe.PushMessage(message);
+                    }
                 }
                 if (message.action == "getitem")
                 {
                     try
                     {
                         var msg = message.Get<SAPEventElement>();
-                        if (string.IsNullOrEmpty(msg.SystemName)) throw new ArgumentException("System Name is mandatory right now!");
+                        // if (string.IsNullOrEmpty(msg.SystemName)) throw new ArgumentException("System Name is mandatory right now!");
                         var session = SAPHook.Instance.GetSession(msg.SystemName);
-                        if (session != null)
+                        if (session == null)
                         {
-                            GuiComponent comp = session.GetSAPComponentById<GuiComponent>(msg.Id);
-                            if (comp is null) throw new ArgumentException("Item with id " + msg.Id + " was not found");
-
-                            msg.Id = comp.Id; msg.Name = comp.Name;
-                            msg.SystemName = session.Info.SystemName;
-                            msg.ContainerType = comp.ContainerType; msg.type = comp.Type;
-                            var p = comp.Parent as GuiComponent;
-                            string parent = (p != null) ? p.Id : null;
-                            msg.Parent = parent;
-                            // msg.LoadProperties(comp, true);
-                            msg.LoadProperties(comp, msg.GetAllProperties);
-                            if (comp.ContainerType)
-                            {
-                                var cont = comp as GuiVContainer;
-
-                                if (comp is GuiVContainer vcon)
-                                {
-                                    var children = new List<SAPEventElement>();
-                                    for (var i = 0; i < vcon.Children.Count; i++)
-                                    {
-                                        GuiComponent Element = vcon.Children.ElementAt(i);
-                                        p = Element.Parent as GuiComponent;
-                                        parent = (p != null) ? p.Id : null;
-                                        var _newchild = new SAPEventElement(Element, session.Info.SystemName, parent, false);
-                                        children.Add(_newchild);
-                                        if (msg.MaxItem > 0)
-                                        {
-                                            if (children.Count >= msg.MaxItem) break;
-                                        }
-                                    }
-                                    msg.Children = children.ToArray();
-                                }
-                                else if (comp is GuiContainer con)
-                                {
-                                    var children = new List<SAPEventElement>();
-                                    for (var i = 0; i < con.Children.Count; i++)
-                                    {
-                                        GuiComponent Element = con.Children.ElementAt(i);
-                                        p = Element.Parent as GuiComponent;
-                                        parent = (p != null) ? p.Id : null;
-                                        children.Add(new SAPEventElement(Element, session.Info.SystemName, parent, false));
-                                        if (msg.MaxItem > 0)
-                                        {
-                                            if (children.Count >= msg.MaxItem) break;
-                                        }
-                                    }
-                                    msg.Children = children.ToArray();
-                                }
-                                else if (comp is GuiStatusbar sbar)
-                                {
-                                    var children = new List<SAPEventElement>();
-                                    msg.type = "GuiStatusbar";
-                                    for (var i = 0; i < sbar.Children.Count; i++)
-                                    {
-                                        GuiComponent Element = sbar.Children.ElementAt(i);
-                                        p = Element.Parent as GuiComponent;
-                                        parent = (p != null) ? p.Id : null;
-                                        children.Add(new SAPEventElement(Element, session.Info.SystemName, parent, false));
-                                        if (msg.MaxItem > 0)
-                                        {
-                                            if (children.Count >= msg.MaxItem) break;
-                                        }
-                                    }
-                                    msg.Children = children.ToArray();
-                                }
-                                else
-                                {
-                                    throw new Exception("Unknown container type " + comp.Type + "!");
-                                }
-                            }
-                            if (comp is GuiTree tree)
-                            {
-                                msg.type = "GuiTree";
-                                GuiCollection keys = null;
-                                if (string.IsNullOrEmpty( msg.Path))
-                                {
-                                    keys = tree.GetNodesCol() as GuiCollection;
-                                } else
-                                {
-                                    msg = new SAPEventElement(msg, tree, "", msg.Path, session.Info.SystemName);
-                                    keys = tree.GetSubNodesCol(msg.Path) as GuiCollection;
-                                }
-                                if (keys!=null)
-                                {
-                                    var children = new List<SAPEventElement>();
-                                    foreach (string key in keys)
-                                    {
-                                        var _msg = new SAPEventElement(msg, tree, msg.Path, key, session.Info.SystemName);
-                                        _msg.type = "GuiTreeNode";
-                                        children.Add(_msg);
-                                        System.Diagnostics.Trace.WriteLine(_msg.ToString());
-                                        if (msg.MaxItem > 0)
-                                        {
-                                            if (children.Count >= msg.MaxItem) break;
-                                        }
-                                    }
-                                    msg.Children = children.ToArray();
-                                }
-                            }
-                            if (comp is GuiTableControl table)
-                            {
-                                msg.type = "GuiTable";
-                                if(string.IsNullOrEmpty(msg.Path))
-                                {
-                                    msg.type = "GuiTable";
-                                } 
-                                else
-                                {
-
-                                }
-                                var columns = new List<string>();
-                                for (var i = 0; i < table.Columns.Count; i++)
-                                {
-                                    columns.Add(table.Columns.ElementAt(i).ToString());
-                                }
-                                for (var i = 0; i < table.RowCount; i++)
-                                {
-                                    var row = table.Rows.ElementAt(i) as GuiTableRow;
-                                    // var _msg = new SAPEventElement(msg, tree, msg.Path, key, session.Info.SystemName);
-                                    // children.Add(_msg);
-                                    // System.Diagnostics.Trace.WriteLine(_msg.ToString());
-                                    System.Diagnostics.Trace.WriteLine(row.ToString());
-                                    if (msg.MaxItem > 0)
-                                    {
-                                        if (i >= msg.MaxItem) break;
-                                    }
-
-                                }
-                            }
-                            if (comp is GuiGridView grid)
-                            {
-                                msg.type = "GuiGrid";
-                                if (string.IsNullOrEmpty(msg.Path))
-                                {
-                                    var children = new List<SAPEventElement>();
-                                    for (var i = 0; i < grid.RowCount; i++)
-                                    {
-                                        var _msg = new SAPEventElement(msg, grid, msg.Path, i, session.Info.SystemName);
-                                        _msg.type = "GuiGridNode";
-                                        children.Add(_msg);
-                                        System.Diagnostics.Trace.WriteLine(_msg.ToString());
-                                        if(msg.MaxItem > 0)
-                                        {
-                                            if (i >= msg.MaxItem) break;
-                                        }
-                                    }
-                                    msg.Children = children.ToArray();
-                                } 
-                                else
-                                {
-                                    msg = new SAPEventElement(msg, grid, msg.Path, int.Parse(msg.Path), session.Info.SystemName);
-                                }
-                            }
+                            msg.Id = null;
+                            message.Set(msg);
+                            form.AddText("[send] " + message.action);
+                            pipe.PushMessage(message);
+                            return;
                         }
-                        else
+                        // msg.Id = StripSession(msg.Id);
+                        GuiComponent comp = session.GetSAPComponentById<GuiComponent>(msg.Id);
+                        if (comp is null) 
                         {
-                            message.error = "SAP not running, or session " + msg.SystemName + " not found.";
+                            msg.Id = null;
+                            message.Set(msg);
+                            form.AddText("[send] " + message.action);
+                            pipe.PushMessage(message);
+                            return;
                         }
+                        msg = new SAPEventElement(comp, session.Info.SystemName, msg.GetAllProperties, msg.Path, null, msg.Flat, true, msg.MaxItem);
                         message.Set(msg);
                         form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);

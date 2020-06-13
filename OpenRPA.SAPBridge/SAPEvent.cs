@@ -180,6 +180,11 @@ namespace OpenRPA.SAPBridge
         public string Name { get; set; }
         public string Value { get; set; }
         public bool IsReadOnly { get; set; }
+        public override string ToString()
+        {
+            if (IsReadOnly) return "*" + Name + " " + Value;
+            return Name + " " + Value;
+        }
     }
     [Serializable]
     public partial class SAPEventElement
@@ -187,8 +192,11 @@ namespace OpenRPA.SAPBridge
         public bool GetAllProperties { get; set; }
         public SAPEventElement() { }
         public int MaxItem { get; set; }
+        public int Skip { get; set; }
+        public bool Flat { get; set; }
         public string Id { get; set; }
         public string Path { get; set; }
+        public string Cell { get; set; }
         public string Name { get; set; }
         public string Parent { get; set; }
         public string SystemName { get; set; }
@@ -197,6 +205,10 @@ namespace OpenRPA.SAPBridge
         public SAPEventElement[] Children { get; set; }
         public SAPEventElement[] Items { get; set; }
         public SAPElementProperty[] Properties { get; set; }
+        public override string ToString()
+        {
+            return Name + " " + Id;
+        }
     }
 
 }

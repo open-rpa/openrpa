@@ -10,9 +10,278 @@ namespace OpenRPA.SAPBridge
 {
     public partial class SAPEventElement
     {
-        public override string ToString()
+        public SAPEventElement(SAPFEWSELib.GuiComponent comp, string SystemName, bool all, string Path, string Cell, bool flat, bool loadChildren, int MaxItem)
         {
-            return type + " " + Id;
+            this.Path = Path;
+            this.Cell = Cell;
+            this.Flat = flat;
+            this.MaxItem = MaxItem;
+            Id = comp.Id;
+            this.SystemName = SystemName;
+            if (comp.Parent != null) Parent = ((SAPFEWSELib.GuiComponent)comp.Parent).Id;
+            ContainerType = comp.ContainerType; 
+            type = comp.Type;
+            LoadProperties(comp, all);
+            if (comp is SAPFEWSELib.GuiTree tree)
+            {
+                type = "GuiTree";
+                SAPFEWSELib.GuiCollection keys = null;
+
+                if (string.IsNullOrEmpty(Path))
+                {
+                    var p = new List<SAPElementProperty>();
+                    p.Add(new SAPElementProperty("Left", tree.Left.ToString(), true));
+                    p.Add(new SAPElementProperty("Top", tree.Top.ToString(), true));
+                    p.Add(new SAPElementProperty("ScreenLeft", tree.ScreenLeft.ToString(), true));
+                    p.Add(new SAPElementProperty("ScreenTop", tree.ScreenTop.ToString(), true));
+                    p.Add(new SAPElementProperty("Width", tree.Width.ToString(), true));
+                    p.Add(new SAPElementProperty("Height", tree.Height.ToString(), true));
+
+                    _Rectangle = new Rectangle(tree.ScreenLeft, tree.ScreenTop, tree.Width, tree.Height);
+                    Properties = p.ToArray();
+                    if (Flat)
+                    {
+                        keys = tree.GetAllNodeKeys() as SAPFEWSELib.GuiCollection;
+                    }
+                    else
+                    {
+                        keys = tree.GetNodesCol() as SAPFEWSELib.GuiCollection;
+                    }
+                    if (keys != null && loadChildren)
+                    {
+                        var _keys = new List<string>();
+                        foreach (string key in keys) _keys.Add(key);
+                        var children = new List<SAPEventElement>();
+                        foreach (string key in keys)
+                        {
+                            var _msg = new SAPEventElement(comp, SystemName, all, key, null, Flat, true, MaxItem);
+                            children.Add(_msg);
+                            if (MaxItem > 0)
+                            {
+                                if (children.Count >= MaxItem) break;
+                            }
+                        }
+                        Children = children.ToArray();
+                    }
+
+                }
+                else 
+                {
+                    ContainerType = false;
+                    type = "GuiTreeNode";
+                    int Left = tree.GetNodeLeft(Path);
+                    int Top = tree.GetNodeTop(Path);
+                    int Width = tree.GetNodeWidth(Path);
+                    int Height = tree.GetNodeHeight(Path);
+                    var ScreenLeft = Left + tree.ScreenLeft;
+                    var ScreenTop = Top + tree.ScreenTop;
+                    var p = new List<SAPElementProperty>();
+                    var text = tree.GetNodeTextByKey(Path);
+
+                    p.Add(new SAPElementProperty("Left", Left.ToString(), true));
+                    p.Add(new SAPElementProperty("Top", Top.ToString(), true));
+                    p.Add(new SAPElementProperty("ScreenLeft", ScreenLeft.ToString(), true));
+                    p.Add(new SAPElementProperty("ScreenTop", ScreenTop.ToString(), true));
+                    p.Add(new SAPElementProperty("Width", Width.ToString(), true));
+                    p.Add(new SAPElementProperty("Height", Height.ToString(), true));
+                    p.Add(new SAPElementProperty("Key", Path, true));
+                    if(!string.IsNullOrEmpty(Cell)) p.Add(new SAPElementProperty("Cell", Cell, true));
+                    p.Add(new SAPElementProperty("Text", text, true));
+                    Properties = p.ToArray();
+                    _Rectangle = new Rectangle(ScreenLeft, ScreenTop, Width, Height);
+                    if (string.IsNullOrEmpty(Cell))
+                    {
+                        keys = tree.GetColumnHeaders() as SAPFEWSELib.GuiCollection;
+                        if (keys == null)
+                        {
+                            keys = tree.GetNodeItemHeaders(Path) as SAPFEWSELib.GuiCollection;
+                        }
+                        if (keys != null)
+                        {
+                            var children = new List<SAPEventElement>();
+                            foreach (string key in keys)
+                            {
+                                var _msg = new SAPEventElement(comp, SystemName, all, Path, key, Flat, true, MaxItem);
+                                children.Add(_msg);
+                                if (MaxItem > 0)
+                                {
+                                    if (children.Count >= MaxItem) break;
+                                }
+                            }
+                            Items = children.ToArray();
+                        }
+
+                    }
+                    if (!flat && loadChildren)
+                    {
+                        keys = tree.GetSubNodesCol(Path) as SAPFEWSELib.GuiCollection;
+                        if (keys != null && loadChildren)
+                        {
+                            var children = new List<SAPEventElement>();
+                            foreach (string key in keys)
+                            {
+                                var _msg = new SAPEventElement(comp, SystemName, all, Path, key, Flat, false, MaxItem);
+                                children.Add(_msg);
+                                if (MaxItem > 0)
+                                {
+                                    if (children.Count >= MaxItem) break;
+                                }
+                            }
+                            Children = children.ToArray();
+                        }
+                    }
+
+                }
+            }
+            else if (comp is SAPFEWSELib.GuiTableControl table)
+            {
+                type = "GuiTable";
+                throw new Exception("Unknown role type GuiTable");
+            }
+            else if (comp is SAPFEWSELib.GuiGridView grid)
+            {
+                type = "GuiGrid";
+                if (string.IsNullOrEmpty(Path))
+                {
+                    var p = new List<SAPElementProperty>();
+                    p.Add(new SAPElementProperty("Left", grid.Left.ToString(), true));
+                    p.Add(new SAPElementProperty("Top", grid.Top.ToString(), true));
+                    p.Add(new SAPElementProperty("ScreenLeft", grid.ScreenLeft.ToString(), true));
+                    p.Add(new SAPElementProperty("ScreenTop", grid.ScreenTop.ToString(), true));
+                    p.Add(new SAPElementProperty("Width", grid.Width.ToString(), true));
+                    p.Add(new SAPElementProperty("Height", grid.Height.ToString(), true));
+                    _Rectangle = new Rectangle(grid.ScreenLeft, grid.ScreenTop, grid.Width, grid.Height);
+                    Properties = p.ToArray();
+                }
+                else if (string.IsNullOrEmpty(Cell))
+                {
+                    ContainerType = false;
+                    type = "GuiGridNode";
+                    var p = new List<SAPElementProperty>();
+                    Properties = p.ToArray();
+                }
+                else
+                {
+                    ContainerType = false;
+                    type = "GuiGridCell";
+                    var index = int.Parse(Path);
+                    int Left = grid.GetCellLeft(index, Cell);
+                    int Top = grid.GetCellTop(index, Cell);
+                    int Width = grid.GetCellWidth(index, Cell);
+                    int Height = grid.GetCellHeight(index, Cell);
+
+                    var ScreenLeft = Left + grid.ScreenLeft;
+                    var ScreenTop = Top + grid.ScreenTop;
+
+                    var tooltip = grid.GetCellTooltip(index, Cell);
+                    string Value = grid.GetCellValue(index, Cell);
+
+                    var properties = new List<SAPElementProperty>();
+                    properties.Add(new SAPElementProperty("Left", Left.ToString(), true));
+                    properties.Add(new SAPElementProperty("Top", Top.ToString(), true));
+                    properties.Add(new SAPElementProperty("ScreenLeft", ScreenLeft.ToString(), true));
+                    properties.Add(new SAPElementProperty("ScreenTop", ScreenTop.ToString(), true));
+                    properties.Add(new SAPElementProperty("Width", Width.ToString(), true));
+                    properties.Add(new SAPElementProperty("Height", Height.ToString(), true));
+                    properties.Add(new SAPElementProperty("Key", Cell, true));
+                    properties.Add(new SAPElementProperty("Index", index.ToString(), true));
+                    properties.Add(new SAPElementProperty("Value", Value, false));
+                    properties.Add(new SAPElementProperty("ToolTip", tooltip, true));
+
+                    _Rectangle = new Rectangle(ScreenLeft, ScreenTop, Width, Height);
+                    Properties = properties.ToArray();
+                }
+
+                if (string.IsNullOrEmpty(Path))
+                {
+                    var children = new List<SAPEventElement>();
+                    if (string.IsNullOrEmpty(Cell) && loadChildren)
+                    {
+                        for (var i = 0; i < grid.RowCount; i++)
+                        {
+                            var _msg = new SAPEventElement(comp, SystemName, all, i.ToString(), null, Flat, true, MaxItem);
+                            children.Add(_msg);
+                            if (MaxItem > 0)
+                            {
+                                if (children.Count >= MaxItem) break;
+                            }
+                        }
+                    }
+                    Children = children.ToArray();
+                }
+                else if (loadChildren)
+                {
+                    var children = new List<SAPEventElement>();
+                    var keys = grid.ColumnOrder as SAPFEWSELib.GuiCollection;
+                    foreach (string key in keys)
+                    {
+                        var _msg = new SAPEventElement(comp, SystemName, all, Path, key, Flat, false, MaxItem);
+                        children.Add(_msg);
+                        if (MaxItem > 0)
+                        {
+                            if (children.Count >= MaxItem) break;
+                        }
+                    }
+                    Items = children.ToArray();
+                }
+            }
+            else if (comp.ContainerType)
+            {
+                if (comp is SAPFEWSELib.GuiVContainer vcon && loadChildren)
+                {
+                    var children = new List<SAPEventElement>();
+                    for (var i = 0; i < vcon.Children.Count; i++)
+                    {
+                        SAPFEWSELib.GuiComponent Element = vcon.Children.ElementAt(i);
+                        var p = Element.Parent as SAPFEWSELib.GuiComponent;
+                        var parent = (p != null) ? p.Id : null;
+                        var _newchild = new SAPEventElement(Element, SystemName, parent, false);
+                        children.Add(_newchild);
+                        if (MaxItem > 0)
+                        {
+                            if (children.Count >= MaxItem) break;
+                        }
+                    }
+                    Children = children.ToArray();
+                }
+                else if (comp is SAPFEWSELib.GuiContainer con && loadChildren)
+                {
+                    var children = new List<SAPEventElement>();
+                    for (var i = 0; i < con.Children.Count; i++)
+                    {
+                        SAPFEWSELib.GuiComponent Element = con.Children.ElementAt(i);
+                        var p = Element.Parent as SAPFEWSELib.GuiComponent;
+                        var parent = (p != null) ? p.Id : null;
+                        children.Add(new SAPEventElement(Element, SystemName, parent, false));
+                        if (MaxItem > 0)
+                        {
+                            if (children.Count >= MaxItem) break;
+                        }
+                    }
+                    Children = children.ToArray();
+                }
+                else if (comp is SAPFEWSELib.GuiStatusbar sbar && loadChildren)
+                {
+                    var children = new List<SAPEventElement>();
+                    type = "GuiStatusbar";
+                    for (var i = 0; i < sbar.Children.Count; i++)
+                    {
+                        SAPFEWSELib.GuiComponent Element = sbar.Children.ElementAt(i);
+                        var p = Element.Parent as SAPFEWSELib.GuiComponent;
+                        var parent = (p != null) ? p.Id : null;
+                        children.Add(new SAPEventElement(Element, SystemName, parent, false));
+                        if (MaxItem > 0)
+                        {
+                            if (children.Count >= MaxItem) break;
+                        }
+                    }
+                    Children = children.ToArray();
+                }
+                //else
+                //{
+                //    throw new Exception("Unknown container type " + comp.Type + "!");
+                //}
+            }
         }
         public SAPEventElement(SAPFEWSELib.GuiComponent Element, string SystemName, string Parent, bool all)
         {
@@ -25,160 +294,58 @@ namespace OpenRPA.SAPBridge
             this.Parent = Parent;
             LoadProperties(Element, all);
         }
-        public SAPEventElement(SAPEventElement msg, SAPFEWSELib.GuiTree tree, string parentpath, string key, string SystemName)
-        {
-            if (String.IsNullOrEmpty(SystemName)) throw new ArgumentException("SystemName is mandatory");
-            Id = tree.Id;
-            // Path = parentpath + "/" + key;
-            Path = key;
-            if (string.IsNullOrEmpty(parentpath)) Path = key;
-            this.SystemName = SystemName;
-            ContainerType = false;
-            type = "GuiTreeNode";
-            Parent = tree.Id;
-            Name = key;
-            if (string.IsNullOrEmpty(Path))
-            {
-                var p = new List<SAPElementProperty>();
-                p.Add(new SAPElementProperty("Left", tree.Left.ToString(), true));
-                p.Add(new SAPElementProperty("Top", tree.Top.ToString(), true));
-                p.Add(new SAPElementProperty("ScreenLeft", tree.ScreenLeft.ToString(), true));
-                p.Add(new SAPElementProperty("ScreenTop", tree.ScreenTop.ToString(), true));
-                p.Add(new SAPElementProperty("Width", tree.Width.ToString(), true));
-                p.Add(new SAPElementProperty("Height", tree.Height.ToString(), true));
-
-                _Rectangle = new Rectangle(tree.ScreenLeft, tree.ScreenTop, tree.Width, tree.Height);
-                Properties = p.ToArray();
-            }
-            else
-            {
-                int Left = tree.GetNodeLeft(key);
-                int Top = tree.GetNodeTop(key);
-                int Width = tree.GetNodeWidth(key);
-                int Height = tree.GetNodeHeight(key);
-                var ScreenLeft = Left + msg.Rectangle.X;
-                var ScreenTop = Top + msg.Rectangle.Y;
-                var p = new List<SAPElementProperty>();
-                p.Add(new SAPElementProperty("Left", Left.ToString(), true));
-                p.Add(new SAPElementProperty("Top", Top.ToString(), true));
-                p.Add(new SAPElementProperty("ScreenLeft", ScreenLeft.ToString(), true));
-                p.Add(new SAPElementProperty("ScreenTop", ScreenTop.ToString(), true));
-                p.Add(new SAPElementProperty("Width", Width.ToString(), true));
-                p.Add(new SAPElementProperty("Height", Height.ToString(), true));
-                _Rectangle = new Rectangle(ScreenLeft, ScreenTop, Width, Height);
-                Properties = p.ToArray();
-
-            }
+        //public SAPEventElement(SAPEventElement msg, SAPFEWSELib.GuiGridView grid, string parentpath, int Row, string SystemName)
+        //{
+        //    if (String.IsNullOrEmpty(SystemName)) throw new ArgumentException("SystemName is mandatory");
+        //    Id = grid.Id;
+        //    // Path = parentpath + "/" + key;
+        //    Path = Row.ToString();
+        //    if (string.IsNullOrEmpty(parentpath)) Path = Row.ToString();
+        //    this.SystemName = SystemName;
+        //    ContainerType = false;
+        //    type = "GuiGridView";
+        //    Parent = grid.Id;
+        //    Name = Row.ToString();
 
 
-            // SAPFEWSELib.GuiCollection keys = tree.GetColumnNames() as SAPFEWSELib.GuiCollection;
-            // SAPFEWSELib.GuiCollection keys = tree.GetColumnTitles() as SAPFEWSELib.GuiCollection;
-            SAPFEWSELib.GuiCollection keys = tree.GetColumnHeaders() as SAPFEWSELib.GuiCollection;
-            if (keys == null) keys = tree.GetColumnTitles() as SAPFEWSELib.GuiCollection;
-            if (keys == null) keys = tree.GetColumnNames() as SAPFEWSELib.GuiCollection;
-            var items = new List<SAPEventElement>();
 
+        //    var keys = grid.ColumnOrder as SAPFEWSELib.GuiCollection;
+        //    var items = new List<SAPEventElement>();
+        //    foreach (string key in keys)
+        //    {
+        //        var column = new SAPEventElement();
+        //        column.SystemName = SystemName;
+        //        column.Name = key;
+        //        column.type = "GuiGridCell";
+        //        int Left = grid.GetCellLeft(Row, key);
+        //        int Top = grid.GetCellTop(Row, key);
+        //        int Width = grid.GetCellWidth(Row, key);
+        //        int Height = grid.GetCellHeight(Row, key);
+        //        var ScreenLeft = Left + msg.Rectangle.X;
+        //        var ScreenTop = Top + msg.Rectangle.Y;
 
-            var temp = tree.GetNodeItemHeaders(key);
-            var temp2 = temp as SAPFEWSELib.GuiCollection;
-            if (temp2 != null)
-            {
-                keys = temp2;
-            }
+        //        var tooltip = grid.GetCellTooltip(Row, key);
 
-            //foreach (string _key in keys)
-            if (keys != null)
-                for (var i = 1; i <= keys.Count; i++)
-                {
-                    string _key = i.ToString();
-                    string text = tree.GetItemText(key, _key);
-                    var column = new SAPEventElement();
-                    column.SystemName = SystemName;
-                    column.Id = Id;
-                    column.Path = Path;
-                    column.type = "GuiTreeItem";
-                    if (string.IsNullOrEmpty(column.Name)) column.Name = text;
-                    if (string.IsNullOrEmpty(column.Name)) column.Name = _key;
-                    if (i == 1 && !string.IsNullOrEmpty(text)) Name = text;
+        //        string Value = grid.GetCellValue(Row, key);
 
-                    int Left = tree.GetItemLeft(key, _key);
-                    int Top = tree.GetItemTop(key, _key);
-                    int Width = tree.GetItemWidth(key, _key);
-                    int Height = tree.GetItemHeight(key, _key);
-                    var ScreenLeft = Left + msg.Rectangle.X;
-                    var ScreenTop = Top + msg.Rectangle.Y;
-                    column._Rectangle = new Rectangle(ScreenLeft, ScreenTop, Width, Height);
-                    var _p = new List<SAPElementProperty>();
-                    _p.Add(new SAPElementProperty("Text", text, true));
-                    _p.Add(new SAPElementProperty("Key", _key, true));
-                    _p.Add(new SAPElementProperty("Left", Left.ToString(), true));
-                    _p.Add(new SAPElementProperty("Top", Top.ToString(), true));
-                    _p.Add(new SAPElementProperty("ScreenLeft", ScreenLeft.ToString(), true));
-                    _p.Add(new SAPElementProperty("ScreenTop", ScreenTop.ToString(), true));
-                    _p.Add(new SAPElementProperty("Width", Width.ToString(), true));
-                    _p.Add(new SAPElementProperty("Height", Height.ToString(), true));
-                    column.Properties = _p.ToArray();
-                    items.Add(column);
-                }
-            Items = items.ToArray();
+        //        var properties = new List<SAPElementProperty>();
+        //        properties.Add(new SAPElementProperty("Left", Left.ToString(), true));
+        //        properties.Add(new SAPElementProperty("Top", Top.ToString(), true));
+        //        properties.Add(new SAPElementProperty("ScreenLeft", ScreenLeft.ToString(), true));
+        //        properties.Add(new SAPElementProperty("ScreenTop", ScreenTop.ToString(), true));
+        //        properties.Add(new SAPElementProperty("Width", Width.ToString(), true));
+        //        properties.Add(new SAPElementProperty("Height", Height.ToString(), true));
+        //        properties.Add(new SAPElementProperty("Key", key, true));
+        //        properties.Add(new SAPElementProperty("Value", Value, false));
+        //        properties.Add(new SAPElementProperty("ToolTip", tooltip, true));
 
-        }
-        public SAPEventElement(SAPEventElement msg, SAPFEWSELib.GuiGridView grid, string parentpath, int Row, string SystemName)
-        {
-            if (String.IsNullOrEmpty(SystemName)) throw new ArgumentException("SystemName is mandatory");
-            Id = grid.Id;
-            // Path = parentpath + "/" + key;
-            Path = Row.ToString();
-            if (string.IsNullOrEmpty(parentpath)) Path = Row.ToString();
-            this.SystemName = SystemName;
-            ContainerType = false;
-            type = "GuiGridView";
-            Parent = grid.Id;
-            Name = Row.ToString();
+        //        column._Rectangle = new Rectangle(ScreenLeft, ScreenTop, Width, Height);
+        //        column.Properties = properties.ToArray();
+        //        items.Add(column);
+        //    }
+        //    Items = items.ToArray();
 
-
-            var p = new List<SAPElementProperty>();
-            p.Add(new SAPElementProperty("Left", grid.Left.ToString(), true));
-            p.Add(new SAPElementProperty("Top", grid.Top.ToString(), true));
-            p.Add(new SAPElementProperty("ScreenLeft", grid.ScreenLeft.ToString(), true));
-            p.Add(new SAPElementProperty("ScreenTop", grid.ScreenTop.ToString(), true));
-            p.Add(new SAPElementProperty("Width", grid.Width.ToString(), true));
-            p.Add(new SAPElementProperty("Height", grid.Height.ToString(), true));
-
-            _Rectangle = new Rectangle(grid.ScreenLeft, grid.ScreenTop, grid.Width, grid.Height);
-
-            var keys = grid.ColumnOrder as SAPFEWSELib.GuiCollection;
-            var items = new List<SAPEventElement>();
-            foreach (string key in keys)
-            {
-                var column = new SAPEventElement();
-                column.SystemName = SystemName;
-                column.Name = key;
-                column.type = "GuiGridCell";
-                int Left = grid.GetCellLeft(Row, key);
-                int Top = grid.GetCellTop(Row, key);
-                int Width = grid.GetCellWidth(Row, key);
-                int Height = grid.GetCellHeight(Row, key);
-                var ScreenLeft = Left + msg.Rectangle.X;
-                var ScreenTop = Top + msg.Rectangle.Y;
-
-                string Value = grid.GetCellValue(Row, key);
-
-                var properties = new List<SAPElementProperty>();
-                properties.Add(new SAPElementProperty("Left", Left.ToString(), true));
-                properties.Add(new SAPElementProperty("Top", Top.ToString(), true));
-                properties.Add(new SAPElementProperty("ScreenLeft", ScreenLeft.ToString(), true));
-                properties.Add(new SAPElementProperty("ScreenTop", ScreenTop.ToString(), true));
-                properties.Add(new SAPElementProperty("Width", Width.ToString(), true));
-                properties.Add(new SAPElementProperty("Height", Height.ToString(), true));
-                properties.Add(new SAPElementProperty("Value", Value, false));
-                column._Rectangle = new Rectangle(ScreenLeft, ScreenTop, Width, Height);
-                column.Properties = properties.ToArray();
-                items.Add(column);
-            }
-            Items = items.ToArray();
-
-        }
+        //}
         private static string[] limitedProperties = { "Changeable", "Modified", "Text", "ScreenTop", "ScreenLeft", "Height", "Width", "Top", "Left", };
         public void LoadProperties(SAPFEWSELib.GuiComponent Element, bool all)
         {
@@ -196,8 +363,22 @@ namespace OpenRPA.SAPBridge
                     prop.IsReadOnly = !_p.CanWrite;
                     try
                     {
+                        if (_p.Name == "Children") continue;
+                        if (_p.Name == "Items") continue;
+                        if (_p.Name == "Properties") continue;
                         if (type == "GuiButton" && _p.Name == "Modified") continue;
                         if (type == "GuiTitlebar" && _p.Name == "Changeable") continue;
+                        if(type == "GuiTitlebar" && _p.Name == "Modified") continue;
+                        if (type == "GuiShell" && _p.Name == "AccTooltip") continue;
+                        if (type == "GuiShell" && _p.Name == "AccLabelCollection") continue;
+                        if (type == "GuiShell" && _p.Name == "HierarchyHeaderWidth") continue;
+                        if (type == "GuiShell" && _p.Name == "IsSymbolFont") continue;
+                        if (type == "GuiShell" && _p.Name == "ColumnOrder") continue;
+                        if (type == "GuiStatusPane" && _p.Name == "Modified") continue;
+                        if (type == "GuiShell" && _p.Name == "Parent") continue;
+                        if (type == "GuiStatusPane" && _p.Name == "Modified") continue;
+                        if (type == "GuiStatusPane" && _p.Name == "Modified") continue;
+                        Console.WriteLine(type + " " + _p.Name);
                         var value = _p.GetValue(Element);
                         if (value != null) prop.Value = value.ToString();
                         if (value == null) prop.Value = "";
@@ -247,7 +428,6 @@ namespace OpenRPA.SAPBridge
             Type t = tt.GetInterfaces()[0];
             return t;
         }
-
         private Rectangle _Rectangle;
         [JsonIgnore]
         public Rectangle Rectangle

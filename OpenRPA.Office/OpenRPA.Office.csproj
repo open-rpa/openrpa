@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\AddParagraphDesigner.xaml" />
+    <None Remove="Activities\ClearRangeDesigner.xaml" />
     <None Remove="Activities\CloseDocumentDesigner.xaml" />
     <None Remove="Activities\CloseWorkbookDesigner.xaml" />
     <None Remove="Activities\GetMailsDesigner.xaml" />
@@ -115,6 +116,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\RunSlideShowDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\ClearRangeDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\WriteRangeDesigner.xaml">

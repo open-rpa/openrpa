@@ -49,8 +49,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="MainWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Update="MainWindow.cs" />
   </ItemGroup>
 </Project>

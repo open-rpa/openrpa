@@ -33,12 +33,8 @@
     <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="MyServiceBase.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="MyServiceControlInstaller.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Update="MyServiceBase.cs" />
+    <Compile Update="MyServiceControlInstaller.cs" />
   </ItemGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />

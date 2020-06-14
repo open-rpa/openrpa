@@ -133,6 +133,42 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string activity_clearrange {
+            get {
+                return ResourceManager.GetString("activity_clearrange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string activity_clearrange_cells {
+            get {
+                return ResourceManager.GetString("activity_clearrange_cells", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string activity_clearrange_cells_help {
+            get {
+                return ResourceManager.GetString("activity_clearrange_cells_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string activity_clearrange_tooltip {
+            get {
+                return ResourceManager.GetString("activity_clearrange_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close Document.
         /// </summary>
         public static string activity_closedocument {

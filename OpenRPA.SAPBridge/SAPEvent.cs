@@ -3,6 +3,7 @@ using OpenRPA.NamedPipeWrapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace OpenRPA.SAPBridge
@@ -216,6 +217,17 @@ namespace OpenRPA.SAPBridge
         public int Skip { get; set; }
         public bool Flat { get; set; }
         public string Id { get; set; }
+        [JsonIgnore, IgnoreDataMember]
+        public string IdPathCell { 
+            get
+            {
+                var id = Program.StripSession(Id);
+                if (!string.IsNullOrEmpty(Path)) id = id + " Path: " + Path;
+                if (!string.IsNullOrEmpty(Cell)) id = id + " Cell: " + Cell;
+                return id;
+            }
+
+        }
         public string Path { get; set; }
         public string Cell { get; set; }
         public string Name { get; set; }
@@ -228,7 +240,7 @@ namespace OpenRPA.SAPBridge
         public SAPElementProperty[] Properties { get; set; }
         public override string ToString()
         {
-            return Name + " " + Id;
+            return IdPathCell;
         }
     }
 

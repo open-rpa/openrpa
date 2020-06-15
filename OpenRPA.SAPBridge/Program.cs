@@ -163,7 +163,8 @@ namespace OpenRPA.SAPBridge
                     }
                     if (elements.Count() > 0)
                     {
-                        var found = elements.OrderBy(x => x.Id.Length).Last();
+                        Program.log("[mousemove] " + e.X + " " + e.Y);
+                        var found = elements.OrderBy(x => x.IdPathCell.Length).Last();
 
                         if(found.Items != null && found.Items.Length > 0)
                         {
@@ -176,7 +177,7 @@ namespace OpenRPA.SAPBridge
                         
                         if (LastElement != null && (found.Id == LastElement.Id  && found.Path == LastElement.Path))
                         {
-                            form.AddText("[SKIP] mousemove " + LastElement.Id);
+                            // form.AddText("[SKIP] mousemove " + LastElement.ToString());
                             lock (_lock)
                             {
                                 isMoving = false;
@@ -186,7 +187,7 @@ namespace OpenRPA.SAPBridge
                         LastElement = found;
                         SAPEvent message = new SAPEvent("mousemove");
                         message.Set(LastElement);
-                        form.AddText("[send] " + message.action + " " + LastElement.Id);
+                        form.AddText("[send] " + message.action + " " + LastElement.ToString());
                         pipe.PushMessage(message);
                     }
                     else
@@ -231,7 +232,7 @@ namespace OpenRPA.SAPBridge
                         var last = elements.OrderBy(x => x.Id.Length).Last();
                         SAPEvent message = new SAPEvent("mousedown");
                         message.Set(last);
-                        form.AddText("[send] " + message.action + " " + last.Id);
+                        form.AddText("[send] " + message.action + " " + last.ToString());
                         pipe.PushMessage(message);
                     }
                     else

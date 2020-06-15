@@ -51,36 +51,58 @@ namespace OpenRPA.SAPBridge
             _ = app;
         }
         public SAPEventElement[] UIElements = new SAPEventElement[] { };
-
-
-        private void GetUIElements(List<SAPEventElement> list, GuiSession session, string Parent, GuiComponent Element)
+        private void GetUIElements(List<SAPEventElement> list, GuiSession session, string Parent, SAPEventElement ele)
         {
-            var msg = new SAPEventElement(Element, session.Info.SystemName, Parent, false);
-            list.Add(msg);
-            if (Element.ContainerType)
+            list.Add(ele);
+            if(!string.IsNullOrEmpty(ele.Path))
             {
-                if (Element is GuiVContainer vcon)
-                {
-                    for (var i = 0; i < vcon.Children.Count; i++)
-                    {
-                        GetUIElements(list, session, Element.Id, vcon.Children.ElementAt(i));
-                    }
-                }
-                else if (Element is GuiContainer con)
-                {
-                    for (var i = 0; i < con.Children.Count; i++)
-                    {
-                        GetUIElements(list, session, Element.Id, con.Children.ElementAt(i));
-                    }
-                }
-                else if (Element is GuiStatusbar sbar)
-                {
-                    for (var i = 0; i < sbar.Children.Count; i++)
-                    {
-                        GetUIElements(list, session, Element.Id, sbar.Children.ElementAt(i));
-                    }
-                }
+                System.Diagnostics.Trace.WriteLine(ele.ToString() + " " + ele.Rectangle);
             }
+            if (ele.Children == null) ele.Load();
+            if(ele.Children != null)
+                foreach (var child in ele.Children)
+                {
+                    GetUIElements(list, session, ele.Id, child);
+                }
+        }
+        private void GetUIElements(List<SAPEventElement> list, GuiSession session, string Parent, GuiComponent Element = null)
+        {
+            var ele = new SAPEventElement(Element, session.Info.SystemName, false, null, null, false, true, 50);
+            var id = ele.Id;
+            if (!string.IsNullOrEmpty(ele.Path)) id = id + " Path: " + ele.Path;
+            if (!string.IsNullOrEmpty(ele.Cell)) id = id + " Cell: " + ele.Cell;
+            list.Add(ele);
+            foreach(var child in ele.Children)
+            {
+                GetUIElements(list, session, ele.Id, child);
+            }
+
+            //var msg = new SAPEventElement(Element, session.Info.SystemName, Parent, false);
+            //list.Add(msg);
+            //if (Element.ContainerType)
+            //{
+            //    if (Element is GuiVContainer vcon)
+            //    {
+            //        for (var i = 0; i < vcon.Children.Count; i++)
+            //        {
+            //            GetUIElements(list, session, Element.Id, vcon.Children.ElementAt(i));
+            //        }
+            //    }
+            //    else if (Element is GuiContainer con)
+            //    {
+            //        for (var i = 0; i < con.Children.Count; i++)
+            //        {
+            //            GetUIElements(list, session, Element.Id, con.Children.ElementAt(i));
+            //        }
+            //    }
+            //    else if (Element is GuiStatusbar sbar)
+            //    {
+            //        for (var i = 0; i < sbar.Children.Count; i++)
+            //        {
+            //            GetUIElements(list, session, Element.Id, sbar.Children.ElementAt(i));
+            //        }
+            //    }
+            //}
         }
         public void RefreshUIElements()
         {

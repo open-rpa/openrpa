@@ -24,34 +24,44 @@ namespace OpenRPA.SAP
         [RequiredArgument, LocalizedDisplayName("activity_invokemethod_actionname", typeof(Resources.strings)), LocalizedDescription("activity_invokemethod_actionname_help", typeof(Resources.strings))]
         public InArgument<string> ActionName { get; set; }
         [LocalizedDisplayName("activity_invokemethod_parameters", typeof(Resources.strings)), LocalizedDescription("activity_invokemethod_parameters_help", typeof(Resources.strings))]
-        // public InArgument<object[]> Parameters { get; set; }
-        // public Dictionary<string, Argument> Arguments { get; set; } = new Dictionary<string, Argument>();
         public InArgument<string> Parameters { get; set; }
+        [LocalizedDisplayName("activity_invokemethod_result", typeof(Resources.strings)), LocalizedDescription("activity_invokemethod_result_help", typeof(Resources.strings))]
+        public OutArgument<string> Result { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             string systemname = SystemName.Get(context);
             string path = Path.Get(context);
             string actionname = ActionName.Get(context);
             var parameters = Parameters.Get(context);
-            // object[] parameters = Parameters.Get(context);
-            //var _params = new List<object>();
-            //Dictionary<string, object> arguments = (from argument in Arguments
-            //                                        where argument.Value.Direction != ArgumentDirection.Out
-            //                                        select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));
-            //foreach (var a in arguments)
-            //{
-            //    _params.Add(a.Value);
-            //}
-            // var data = new SAPInvokeMethod(systemname, path, actionname, _params.ToArray());
             object[] _parameters = null;
             if(!string.IsNullOrEmpty(parameters))
             {
                 _parameters = JsonConvert.DeserializeObject<object[]>(parameters);
             }
-            var data = new SAPInvokeMethod(systemname, path, actionname, _parameters);
-            var message = new SAPEvent("invokemethod");
-            message.Set(data);
-            var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+            var result = SAPhook.Instance.InvokeMethod(systemname, path, actionname, _parameters, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
+            try
+            {
+                if(result == null)
+                {
+                    Result.Set(context, null);
+                } 
+                else
+                {
+                    var res = result as string;
+                    if(res != null)
+                    {
+                        Result.Set(context, result);
+                    } 
+                    else
+                    {
+                        Result.Set(context, result.ToString());
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                Result.Set(context, result.ToString());
+            }
         }
         [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
         public new string DisplayName

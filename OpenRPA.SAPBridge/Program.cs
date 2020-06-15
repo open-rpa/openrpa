@@ -185,10 +185,6 @@ namespace OpenRPA.SAPBridge
                         }
                         LastElement = found;
                         SAPEvent message = new SAPEvent("mousemove");
-                        if(string.IsNullOrEmpty(LastElement.SystemName))
-                        {
-                            var b = true;
-                        }
                         message.Set(LastElement);
                         form.AddText("[send] " + message.action + " " + LastElement.Id);
                         pipe.PushMessage(message);
@@ -345,17 +341,26 @@ namespace OpenRPA.SAPBridge
                     try
                     {
                         var login = message.Get<SAPLoginEvent>();
-                        if(SAPHook.Instance.Login(login))
+                        bool dologin = true;
+                        if (SAPHook.Instance.Sessions != null)
+                            foreach (var session in SAPHook.Instance.Sessions)
+                            {
+                                if (session.Info.SystemName.ToLower() == login.SystemName.ToLower()) { dologin = false; break; }
+                            }
+                        if(dologin)
                         {
-                            var session = SAPHook.Instance.GetSession(login.SystemName);
-                            if (session == null)
+                            if (SAPHook.Instance.Login(login))
+                            {
+                                var session = SAPHook.Instance.GetSession(login.SystemName);
+                                if (session == null)
+                                {
+                                    message.error = "Login failed";
+                                }
+                            }
+                            else
                             {
                                 message.error = "Login failed";
                             }
-                        } 
-                        else
-                        {
-                            message.error = "Login failed";
                         }
                         form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);

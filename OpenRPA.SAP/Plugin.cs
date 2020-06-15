@@ -80,6 +80,7 @@ namespace OpenRPA.SAP
             {
                 _ = PluginConfig.auto_launch_sap_bridge;
                 _ = PluginConfig.record_with_get_element;
+                _ = PluginConfig.bridge_timeout_seconds;
                 // SAPhook.Instance.OnRecordEvent += OnRecordEvent;
                 SAPhook.Instance.Connected += () => { SetStatus("Online"); };
                 SAPhook.Instance.Disconnected += () => { SetStatus("Offline"); };

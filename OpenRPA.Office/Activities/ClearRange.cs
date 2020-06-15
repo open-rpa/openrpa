@@ -31,34 +31,13 @@ namespace OpenRPA.Office.Activities
             if (string.IsNullOrEmpty(cells))
             {
                 xlRange = base.worksheet.UsedRange;
-                // Find the last real row
-                if(xlRange.Count > 1)
-                {
-                    try
-                    {
-                        var nInLastRow = base.worksheet.Cells.Find("*", System.Reflection.Missing.Value,
-    System.Reflection.Missing.Value, System.Reflection.Missing.Value, XlSearchOrder.xlByRows, XlSearchDirection.xlPrevious, false, System.Reflection.Missing.Value, System.Reflection.Missing.Value).Row;
-
-                        //// Find the last real column
-                        var nInLastCol = base.worksheet.Cells.Find("*", System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, XlSearchOrder.xlByColumns, XlSearchDirection.xlPrevious, false, System.Reflection.Missing.Value, System.Reflection.Missing.Value).Column;
-
-                        // var o = base.worksheet.Cells[nInLastRow, nInLastCol];
-                        var o = base.worksheet.Cells[nInLastRow + 1, 1];
-                        xlRange = o as Range;
-
-                        // Range last = base.worksheet.Cells.SpecialCells(XlCellType.xlCellTypeLastCell, Type.Missing);
-                        // xlRange = base.worksheet.get_Range("A1", last);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
             }
             else
             {
                 xlRange = base.worksheet.get_Range(cells);
             }
-            xlRange.Clear();
+            string srange = xlRange.Address[false, false, Microsoft.Office.Interop.Excel.XlReferenceStyle.xlA1, false, null];
+            worksheet.Range[srange].Clear();
         }
         public new string DisplayName
         {

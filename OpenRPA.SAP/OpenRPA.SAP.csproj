@@ -71,6 +71,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System.Activities" />
     <Reference Include="System.Activities.Core.Presentation" />
     <Reference Include="System.Activities.Presentation" />

@@ -145,6 +145,26 @@ namespace OpenRPA.SAPBridge
         public string User { get; set; }
     }
     [Serializable]
+    public class SAPWindow
+    {
+        public bool Changeable { get; set; }
+        public int Handle { get; set; }
+        public int Height { get; set; }
+        public int Width { get; set; }
+        public int Left { get; set; }
+        public int Top { get; set; }
+        public int ScreenLeft { get; set; }
+        public int ScreenTop { get; set; }
+        public bool Iconic { get; set; }
+        public string IconName { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Text { get; set; }
+        public string Tooltip { get; set; }
+        public int WorkingPaneHeight { get; set; }
+        public int WorkingPaneWidth { get; set; }
+    }
+    [Serializable]
     public class SAPSession
     {
         public bool Busy { get; set; }
@@ -161,6 +181,7 @@ namespace OpenRPA.SAPBridge
         public bool ShowDropdownKeys { get; set; }
         public bool SuppressBackendPopups { get; set; }
         public int TestToolMode { get; set; }
+        public SAPWindow ActiveWindow { get; set; }
     }
     [Serializable]
     public class SAPConnection

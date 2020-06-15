@@ -185,7 +185,7 @@ namespace OpenRPA.SAP
         public void RefreshConnections()
         {
             var msg = new SAPEvent("getconnections");
-            msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(5));
+            msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
             if (msg != null)
             {
                 isSapRunning = true;
@@ -271,6 +271,15 @@ namespace OpenRPA.SAP
                 }
             }
         }
-
+        public object InvokeMethod(string SystemName, string Id, string ActionName, object[] Parameters, TimeSpan Timeout)
+        {
+            if (Parameters == null) Parameters = new object[] { };
+            var data = new SAPInvokeMethod(SystemName, Id, ActionName, Parameters);
+            var message = new SAPEvent("invokemethod");
+            message.Set(data);
+            var reply = SAPhook.Instance.SendMessage(message, Timeout);
+            data = reply.Get<SAPInvokeMethod>();
+            return data.Result;
+        }
     }
 }

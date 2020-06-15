@@ -34,12 +34,28 @@ namespace OpenRPA.SAP.Views
             DataContext = this;
             auto_launch_sap_bridge.IsChecked = PluginConfig.auto_launch_sap_bridge;
             record_with_get_element.IsChecked = PluginConfig.record_with_get_element;
+            bridge_timeout_seconds.Text = PluginConfig.bridge_timeout_seconds.ToString();
         }
         private void auto_launch_SAP_bridge_Checked(object sender, RoutedEventArgs e)
         {
             if (auto_launch_sap_bridge.IsChecked == null) return;
             PluginConfig.auto_launch_sap_bridge = auto_launch_sap_bridge.IsChecked.Value;
             PluginConfig.record_with_get_element = record_with_get_element.IsChecked.Value;
+            if(string.IsNullOrEmpty(bridge_timeout_seconds.Text))
+            {
+                PluginConfig.bridge_timeout_seconds = 60;
+            }
+            else
+            {
+                try
+                {
+                    PluginConfig.bridge_timeout_seconds = int.Parse(bridge_timeout_seconds.Text);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+            }
             Config.Save();
         }
         private void launch_SAP_bridge_Click(object sender, RoutedEventArgs e)

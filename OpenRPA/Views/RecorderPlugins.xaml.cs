@@ -31,7 +31,19 @@ namespace OpenRPA.Views
         {
             get
             {
-                return Plugins.recordPlugins.Where(x=> x.editor!=null).ToList();
+                var result = new List<IRecordPlugin>();
+                foreach(var p in Plugins.recordPlugins)
+                {
+                    try
+                    {
+                        if (p.editor != null) result.Add(p);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Error getting ui for " + p.Name + ": " + ex, ToString());
+                    }
+                }
+                return result;
             }
         }
 

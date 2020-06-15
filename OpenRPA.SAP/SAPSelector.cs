@@ -65,7 +65,7 @@ namespace OpenRPA.SAP
 
             var msg = new SAPEvent("getitem");
             msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, GetAllProperties = true, Path = path, Skip = skip, MaxItem = maxresults, Flat = FlatternGuiTree });
-            msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(5));
+            msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
             if (msg != null)
             {
                 var ele = msg.Get<SAPEventElement>();
@@ -82,18 +82,19 @@ namespace OpenRPA.SAP
             var result = new List<SAPElement>();
             var root = new SAPSelectorItem(selector[0]);
             var SystemName = root.SystemName;
-            if(SAPhook.Instance.Sessions.Length == 0)
+            if(SAPhook.Instance.Sessions == null || SAPhook.Instance.Sessions.Length == 0)
             {
                 SAPhook.Instance.RefreshConnections();
             }
-            foreach (var session in SAPhook.Instance.Sessions)
-            {
-                if(string.IsNullOrEmpty(SystemName) || (SystemName == session.Info.SystemName))
+            if(SAPhook.Instance.Sessions!=null)
+                foreach (var session in SAPhook.Instance.Sessions)
                 {
-                    result.AddRange(GetElementsWithuiSelector(session, selector, fromElement, skip, maxresults, FlatternGuiTree));
-                    if (result.Count > maxresults) return result.ToArray();
+                    if(string.IsNullOrEmpty(SystemName) || (SystemName == session.Info.SystemName))
+                    {
+                        result.AddRange(GetElementsWithuiSelector(session, selector, fromElement, skip, maxresults, FlatternGuiTree));
+                        if (result.Count > maxresults) return result.ToArray();
+                    }
                 }
-            }
             return result.ToArray();
         }
     }

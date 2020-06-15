@@ -151,6 +151,24 @@ namespace OpenRPA.SAP.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Result.
+        /// </summary>
+        public static string activity_getproperty_result {
+            get {
+                return ResourceManager.GetString("activity_getproperty_result", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The result from getting the Property.
+        /// </summary>
+        public static string activity_getproperty_result_help {
+            get {
+                return ResourceManager.GetString("activity_getproperty_result_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to System Name.
         /// </summary>
         public static string activity_getproperty_systemname {
@@ -237,6 +255,24 @@ namespace OpenRPA.SAP.Resources {
         public static string activity_invokemethod_path_help {
             get {
                 return ResourceManager.GetString("activity_invokemethod_path_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Result.
+        /// </summary>
+        public static string activity_invokemethod_result {
+            get {
+                return ResourceManager.GetString("activity_invokemethod_result", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The return value from Invoke Method if it has one.
+        /// </summary>
+        public static string activity_invokemethod_result_help {
+            get {
+                return ResourceManager.GetString("activity_invokemethod_result_help", resourceCulture);
             }
         }
         
@@ -507,6 +543,24 @@ namespace OpenRPA.SAP.Resources {
         public static string plugin_auto_launch_sap_bridge_help {
             get {
                 return ResourceManager.GetString("plugin_auto_launch_sap_bridge_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bridge Timeout.
+        /// </summary>
+        public static string plugin_bridge_timeout_seconds {
+            get {
+                return ResourceManager.GetString("plugin_bridge_timeout_seconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to How long to wait per request to SAP bridge.
+        /// </summary>
+        public static string plugin_bridge_timeout_seconds_help {
+            get {
+                return ResourceManager.GetString("plugin_bridge_timeout_seconds_help", resourceCulture);
             }
         }
         

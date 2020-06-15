@@ -170,6 +170,23 @@ namespace OpenRPA.SAPBridge
                     sapsession.ShowDropdownKeys = session.ShowDropdownKeys;
                     // sapsession.SuppressBackendPopups = session.SuppressBackendPopups;
                     sapsession.TestToolMode = session.TestToolMode;
+                    sapsession.ActiveWindow = new SAPWindow();
+                    sapsession.ActiveWindow.Changeable = session.ActiveWindow.Changeable;
+                    sapsession.ActiveWindow.Handle = session.ActiveWindow.Handle;
+                    sapsession.ActiveWindow.Height = session.ActiveWindow.Height;
+                    sapsession.ActiveWindow.Width = session.ActiveWindow.Width;
+                    sapsession.ActiveWindow.Left = session.ActiveWindow.Left;
+                    sapsession.ActiveWindow.Top = session.ActiveWindow.Top;
+                    sapsession.ActiveWindow.ScreenLeft = session.ActiveWindow.ScreenLeft;
+                    sapsession.ActiveWindow.ScreenTop = session.ActiveWindow.ScreenTop;
+                    sapsession.ActiveWindow.Iconic = session.ActiveWindow.Iconic;
+                    sapsession.ActiveWindow.IconName = session.ActiveWindow.IconName;
+                    sapsession.ActiveWindow.Id = session.ActiveWindow.Id;
+                    sapsession.ActiveWindow.Name = session.ActiveWindow.Name;
+                    sapsession.ActiveWindow.Text = session.ActiveWindow.Text;
+                    sapsession.ActiveWindow.Tooltip = session.ActiveWindow.Tooltip;
+                    sapsession.ActiveWindow.WorkingPaneHeight = session.ActiveWindow.WorkingPaneHeight;
+                    sapsession.ActiveWindow.WorkingPaneWidth = session.ActiveWindow.WorkingPaneWidth;
                     sessions.Add(sapsession);
                     sapsessions.Add(sapsession);
                 }

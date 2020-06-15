@@ -133,7 +133,7 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Clear Range.
         /// </summary>
         public static string activity_clearrange {
             get {
@@ -142,7 +142,7 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Cells.
         /// </summary>
         public static string activity_clearrange_cells {
             get {
@@ -151,7 +151,7 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Set what cells to clear, leave blank to clear all cells.
         /// </summary>
         public static string activity_clearrange_cells_help {
             get {
@@ -160,7 +160,7 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Clears all data and formating from a range of cells.
         /// </summary>
         public static string activity_clearrange_tooltip {
             get {

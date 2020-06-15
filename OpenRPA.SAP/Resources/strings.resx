@@ -147,6 +147,12 @@
   <data name="activity_getproperty_path_help" xml:space="preserve">
     <value>Path to object</value>
   </data>
+  <data name="activity_getproperty_result" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="activity_getproperty_result_help" xml:space="preserve">
+    <value>The result from getting the Property</value>
+  </data>
   <data name="activity_getproperty_systemname" xml:space="preserve">
     <value>System Name</value>
   </data>
@@ -176,6 +182,12 @@
   </data>
   <data name="activity_invokemethod_path_help" xml:space="preserve">
     <value>Path to object</value>
+  </data>
+  <data name="activity_invokemethod_result" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="activity_invokemethod_result_help" xml:space="preserve">
+    <value>The return value from Invoke Method if it has one</value>
   </data>
   <data name="activity_invokemethod_systemname" xml:space="preserve">
     <value>System Name</value>
@@ -266,6 +278,12 @@
   </data>
   <data name="plugin_auto_launch_sap_bridge_help" xml:space="preserve">
     <value>Auto launch SAP bridge when robot is running</value>
+  </data>
+  <data name="plugin_bridge_timeout_seconds" xml:space="preserve">
+    <value>Bridge Timeout</value>
+  </data>
+  <data name="plugin_bridge_timeout_seconds_help" xml:space="preserve">
+    <value>How long to wait per request to SAP bridge</value>
   </data>
   <data name="plugin_launch_sap_bridge" xml:space="preserve">
     <value>Launch SAP bridge</value>

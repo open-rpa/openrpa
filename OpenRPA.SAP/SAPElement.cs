@@ -35,7 +35,7 @@ namespace OpenRPA.SAP
                 var data = new SAPInvokeMethod(Element.SystemName, Element.id, Name, _parameters);
                 var message = new SAPEvent("setproperty");
                 message.Set(data);
-                var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+                var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
 
             }
         }
@@ -173,7 +173,7 @@ namespace OpenRPA.SAP
                 {
                     var msg = new SAPEvent("getitem");
                     msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, Path = Path });
-                    msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(60));
+                    msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
                     if (msg != null)
                     {
                         var res = msg.Get<SAPEventElement>();
@@ -206,7 +206,7 @@ namespace OpenRPA.SAP
                 {
                     var msg = new SAPEvent("getitem");
                     msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, Path = Path, MaxItem = 50 });
-                    msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(60));
+                    msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
                     if(msg!=null)
                     {
                         var ele = msg.Get<SAPEventElement>();
@@ -264,7 +264,7 @@ namespace OpenRPA.SAP
                     var data = new SAPInvokeMethod(SystemName, id, Action, _parameters);
                     var message = new SAPEvent("invokemethod");
                     message.Set(data);
-                    var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+                    var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
                 } 
                 else
                 {
@@ -284,13 +284,13 @@ namespace OpenRPA.SAP
                 data = new SAPInvokeMethod(SystemName, id, "ensureVisibleHorizontalItem", _parameters);
                 message = new SAPEvent("invokemethod");
                 message.Set(data);
-                result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+                result = SAPhook.Instance.SendMessage(message, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
             }
             _parameters = new object[] { };
             data = new SAPInvokeMethod(SystemName, id, "SetFocus", _parameters);
             message = new SAPEvent("invokemethod");
             message.Set(data);
-            result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+            result = SAPhook.Instance.SendMessage(message, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
 
         }
         public void Focus()
@@ -331,7 +331,7 @@ namespace OpenRPA.SAP
             //    var data = new SAPInvokeMethod(SystemName, id, Action, _parameters);
             //    var message = new SAPEvent("invokemethod");
             //    message.Set(data);
-            //    var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+            //    var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
             //}
             //else
             //{
@@ -353,7 +353,7 @@ namespace OpenRPA.SAP
             //var data = new SAPInvokeMethod(SystemName, id, null, null);
             //var message = new SAPEvent("highlight");
             //message.Set(data);
-            //var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+            //var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
             Log.Output(Rectangle.ToString());
             using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow(true))
             {
@@ -416,6 +416,21 @@ namespace OpenRPA.SAP
                 return _items;
             }
         }
+        public string[] ColumnNames(IElement[] Items)
+        {
+            var result = new List<string>();
+            foreach (var item in Items)
+            {
+                var ele = item as SAPElement;
+                var _name = item.Name;
+                if (ele.Properties.ContainsKey("Key")) _name = ele.Properties["Key"].Value;
+                if (ele.Properties.ContainsKey("Cell")) _name = ele.Properties["Cell"].Value;
+                // if (ele.Properties.ContainsKey("Title")) _name = ele.Properties["Title"].Value;
+                if (result.Contains(_name) && ele.Properties.ContainsKey("Title")) _name = item.Name;
+                result.Add(_name);
+            }
+            return result.ToArray();
+        }
         public DataTable ToDatatable()
         {
             var name = Name;
@@ -441,34 +456,31 @@ namespace OpenRPA.SAP
             var cc = Children[0].Children;
             var ci = Children[0].Items;
             if (Children[0].Items == null || Children[0].Items.Length == 0) return null;
-            foreach (var item in Children[0].Items)
+            var columnNames = ColumnNames(Children[0].Items);
+            foreach (var _name in columnNames)
             {
-                var ele = item as SAPElement;
-                var _name = item.Name;
-                if (ele.Properties.ContainsKey("Key")) _name = ele.Properties["Key"].Value;
-                if (ele.Properties.ContainsKey("Cell")) _name = ele.Properties["Cell"].Value;
                 result.Columns.Add(_name);
             }
             foreach (var c in Children)
             {
-                var row = c.ToDataRow(result);
+                var row = c.ToDataRow(result, columnNames);
                 if(row!=null) result.Rows.Add(row);
             }
             return result;
         }
         public DataRow ToDataRow(DataTable dt)
         {
+            return ToDataRow(dt, ColumnNames(Items));
+        }
+        public DataRow ToDataRow(DataTable dt, string[] ColumnNames)
+        {
             if (Items == null) return null;
             var result = dt.NewRow();
-            var list = new List<SAPElement>();
-            foreach (var i in Items) list.Add((SAPElement)i);
-            foreach(var item in list)
+            for(var i = 0; i < ColumnNames.Length; i++)
             {
-                var ele = item as SAPElement;
-                var name = item.Name;
-                if (ele.Properties.ContainsKey("Key")) name = ele.Properties["Key"].Value;
-                if (ele.Properties.ContainsKey("Cell")) name = ele.Properties["Cell"].Value;
-                result[name] = item.Value;
+                var ele = Items[i] as SAPElement;
+                var name = ColumnNames[i];
+                result[name] = ele.Value;
             }
             return result;
         }

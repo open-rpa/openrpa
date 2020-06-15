@@ -52,7 +52,7 @@ namespace OpenRPA.SAP
             var data = new SAPInvokeMethod(systemname, path, actionname, _parameters);
             var message = new SAPEvent("setproperty");
             message.Set(data);
-            var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+            var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
         }
         [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
         public new string DisplayName

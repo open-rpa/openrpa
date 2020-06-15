@@ -80,6 +80,7 @@ namespace OpenRPA.SAP
             {
                 _ = PluginConfig.auto_launch_sap_bridge;
                 _ = PluginConfig.record_with_get_element;
+                _ = PluginConfig.bridge_timeout_seconds;
                 // SAPhook.Instance.OnRecordEvent += OnRecordEvent;
                 SAPhook.Instance.Connected += () => { SetStatus("Online"); };
                 SAPhook.Instance.Disconnected += () => { SetStatus("Offline"); };
@@ -151,6 +152,12 @@ namespace OpenRPA.SAP
             if (PluginConfig.record_with_get_element)
             {
                 var LastElement = SAPhook.Instance.LastElement;
+                if (LastElement == null)
+                {
+                    Log.Output("Skip adding activity, LastElement is null ( wait a little to sap bridge to load ui tree )");
+                    e.a = null;
+                    return true;
+                }
                 var selector = new SAPSelector(LastElement, null, true);
                 var a = new GetElement { DisplayName = LastElement.Role + " " + LastElement.Name };
                 a.Selector = selector.ToString();
@@ -164,12 +171,12 @@ namespace OpenRPA.SAP
                 // e.SupportSelect = LastElement.tagname.ToLower() == "select";
                 e.OffsetX = e.X - LastElement.Rectangle.X;
                 e.OffsetY = e.Y - LastElement.Rectangle.Y;
-                //e.ClickHandled = true;
-                //LastElement.Click(true, e.Button, e.X, e.Y, false, false);
+                e.ClickHandled = true;
+                LastElement.Click(true, e.Button, e.X, e.Y, false, false);
             } 
             else
             {
-                Log.Output("Set a = null");
+                Log.Output("Skip adding activity, record_with_get_element is false");
                 e.a = null;
 
             }
@@ -185,7 +192,7 @@ namespace OpenRPA.SAP
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
-            var result = SAPSelector.GetElementsWithuiSelector(selector as SAPSelector, fromElement, maxresults);
+            var result = SAPSelector.GetElementsWithuiSelector(selector as SAPSelector, fromElement, 0, maxresults, false);
             return result;
         }
         public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)

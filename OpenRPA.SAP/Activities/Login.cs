@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Markup.Localizer;
+using Microsoft.VisualBasic;
 
 namespace OpenRPA.SAP
 {
@@ -36,12 +38,38 @@ namespace OpenRPA.SAP
             string client = Client.Get(context);
             string language = Language.Get(context);
             string systemname = SystemName.Get(context);
-            var data = new SAPLoginEvent(host, username, password, client, language, systemname);
-            var message = new SAPEvent("login");
-            message.Set(data);
-            var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+            SAPhook.Instance.RefreshConnections();
+            bool dologin = true;
+            SAPSession _session = null;
+            if (SAPhook.Instance.Sessions != null)
+                foreach(var session in SAPhook.Instance.Sessions)
+                {
+                    if (session.Info.SystemName.ToLower() == systemname.ToLower()) { _session = session; dologin = false; break; }
+                }
+            if (dologin)
+            {
+                var data = new SAPLoginEvent(host, username, password, client, language, systemname);
+                var message = new SAPEvent("login");
+                message.Set(data);
+                _ = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+            }
+            if(_session==null)
+            {
+                SAPhook.Instance.RefreshConnections();
+                if (SAPhook.Instance.Sessions != null)
+                    foreach (var session in SAPhook.Instance.Sessions)
+                    {
+                        if (session.Info.SystemName.ToLower() == systemname.ToLower()) { _session = session; break; }
+                    }
+            }
+            // SAPhook.Instance.InvokeMethod(systemname, "wnd[0]", "resizeWorkingPane", new object[] { 300,200,false}, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
+            Interaction.AppActivate(_session.ActiveWindow.Text);
 
-
+            //SAPhook.Instance.InvokeMethod(systemname, "wnd[0]", "iconify", null, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
+            //SAPhook.Instance.InvokeMethod(systemname, "wnd[0]", "iconify", null, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
+            // SAPhook.Instance.InvokeMethod(systemname, "wnd[0]", "maximize", null, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
+            //session.findById("wnd[0]").iconify
+            //session.findById("wnd[0]").maximize
         }
         [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
         public new string DisplayName

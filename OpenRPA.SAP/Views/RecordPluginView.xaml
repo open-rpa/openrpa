@@ -18,7 +18,11 @@
             Checked="auto_launch_SAP_bridge_Checked" Unchecked="auto_launch_SAP_bridge_Checked" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,30,0,0" Text="{x:Static or:strings.plugin_record_with_get_element_help}" VerticalAlignment="Top" />
 
-        <Button Height="23" HorizontalAlignment="Left" Margin="151,50,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_launch_sap_bridge}" Click="launch_SAP_bridge_Click" ></Button>
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,50,0,0" Text="{x:Static or:strings.plugin_bridge_timeout_seconds}" VerticalAlignment="Top" Width="110" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="151,50,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="bridge_timeout_seconds" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,50,0,0" Text="{x:Static or:strings.plugin_bridge_timeout_seconds_help}" VerticalAlignment="Top" />
+
+        <Button Height="23" HorizontalAlignment="Left" Margin="151,80,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_launch_sap_bridge}" Click="launch_SAP_bridge_Click" ></Button>
 
     </Grid>
 </UserControl>

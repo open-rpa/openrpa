@@ -20,61 +20,12 @@ namespace OpenRPA.SAP
             Log.Selector(string.Format("SAPselector::AutomationElement::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
             Log.Selector(string.Format("SAPselector::GetControlVSAPwWalker::end {0:mm\\:ss\\.fff}", sw.Elapsed));
 
-            SAPElement root = null;
-            SAPElement baseElement = null;
-            var pathToRoot = new List<SAPElement>();
-            while (element != null)
-            {
-                // Break on circular relationship (should not happen?)
-                //if (pathToRoot.Contains(element) || element.Equals(_rootElement)) { break; }
-                if (pathToRoot.Contains(element)) { break; }
-                var Parent = element.Parent;
-                if (Parent != null) pathToRoot.Add(element);
-                if (Parent == null) root = element;
-                try
-                {
-                    element = Parent;
-                    root = element.Parent;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "");
-                    return;
-                }
-            }
-            pathToRoot.Reverse();
-
-            if (anchor != null)
-            {
-                var anchorlist = anchor.Where(x => x.Enabled && x.Selector == null).ToList();
-                for (var i = 0; i < anchorlist.Count; i++)
-                {
-                    //if (((SAPSelectorItem)anchorlist[i]).Match(pathToRoot[0]))
-                    if (SAPSelectorItem.Match(anchorlist[i], pathToRoot[0]))
-                    {
-                        pathToRoot.Remove(pathToRoot[0]);
-                    }
-                    else
-                    {
-                        Log.Warning("Element does not match the anchor path");
-                        return;
-                    }
-                }
-            }
-            if (pathToRoot.Count == 0)
-            {
-                Log.Error("Element is same as annchor");
-                return;
-            }
-
-            baseElement = pathToRoot.First();
-            element = pathToRoot.Last();
             Clear();
             SAPSelectorItem item;
             if (anchor == null)
             {
 
-                item = new SAPSelectorItem(root, true);
+                item = new SAPSelectorItem(element, true);
                 item.Enabled = true;
                 item.canDisable = false;
                 Items.Add(item);
@@ -99,9 +50,9 @@ namespace OpenRPA.SAP
         }
         public override IElement[] GetElements(IElement fromElement = null, int maxresults = 1)
         {
-            return SAPSelector.GetElementsWithuiSelector(this, fromElement, maxresults);
+            return SAPSelector.GetElementsWithuiSelector(this, fromElement, 0, maxresults, false);
         }
-        private static SAPElement[] GetElementsWithuiSelector(SAPSession session, SAPSelector selector, IElement fromElement, int maxresults)
+        private static SAPElement[] GetElementsWithuiSelector(SAPSession session, SAPSelector selector, IElement fromElement, int skip, int maxresults, bool FlatternGuiTree)
         {
             var result = new List<SAPElement>();
             SAPElement _fromElement = fromElement as SAPElement;
@@ -113,29 +64,37 @@ namespace OpenRPA.SAP
             var path = sel.path;
 
             var msg = new SAPEvent("getitem");
-            msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, GetAllProperties = true, Path = path });
-            msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(5));
+            msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, GetAllProperties = true, Path = path, Skip = skip, MaxItem = maxresults, Flat = FlatternGuiTree });
+            msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
             if (msg != null)
             {
                 var ele = msg.Get<SAPEventElement>();
-                var Parent = new SAPElement(null, ele);
-                result.Add(Parent);
+                if(!string.IsNullOrEmpty(ele.Id))
+                {
+                    var _element = new SAPElement(null, ele);
+                    result.Add(_element);
+                }
             }
             return result.ToArray();
         }
-        public static SAPElement[] GetElementsWithuiSelector( SAPSelector selector, IElement fromElement = null, int maxresults = 1)
+        public static SAPElement[] GetElementsWithuiSelector( SAPSelector selector, IElement fromElement, int skip, int maxresults, bool FlatternGuiTree)
         {
             var result = new List<SAPElement>();
             var root = new SAPSelectorItem(selector[0]);
             var SystemName = root.SystemName;
-            foreach (var session in SAPhook.Instance.Sessions)
+            if(SAPhook.Instance.Sessions == null || SAPhook.Instance.Sessions.Length == 0)
             {
-                if(string.IsNullOrEmpty(SystemName) || (SystemName == session.Info.SystemName))
-                {
-                    result.AddRange(GetElementsWithuiSelector(session, selector, fromElement, maxresults));
-                    if (result.Count > maxresults) return result.ToArray();
-                }
+                SAPhook.Instance.RefreshConnections();
             }
+            if(SAPhook.Instance.Sessions!=null)
+                foreach (var session in SAPhook.Instance.Sessions)
+                {
+                    if(string.IsNullOrEmpty(SystemName) || (SystemName == session.Info.SystemName))
+                    {
+                        result.AddRange(GetElementsWithuiSelector(session, selector, fromElement, skip, maxresults, FlatternGuiTree));
+                        if (result.Count > maxresults) return result.ToArray();
+                    }
+                }
             return result.ToArray();
         }
     }

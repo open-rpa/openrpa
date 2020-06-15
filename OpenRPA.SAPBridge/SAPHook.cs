@@ -81,35 +81,7 @@ namespace OpenRPA.SAPBridge
                     }
                 }
             }
-            if (Element is GuiTree tree)
-            {
-                msg.type = "GuiTree";
-                GetUIElements(list, msg, tree, msg.Path, session.Info.SystemName);
-            }
         }
-
-        private void GetUIElements(List<SAPEventElement> list, SAPEventElement msg, GuiTree tree, string path, string SystemName)
-        {
-            GuiCollection keys = null;
-            if (string.IsNullOrEmpty(path))
-            {
-                keys = tree.GetNodesCol() as GuiCollection;
-            }
-            else
-            {
-                keys = tree.GetSubNodesCol(path) as GuiCollection;
-            }
-            if(keys!=null)
-            foreach (string key in keys)
-            {
-                var _msg = new SAPEventElement(msg, tree, msg.Path, key, SystemName);
-                _msg.type = "GuiTreeNode";
-                list.Add(_msg);
-                System.Diagnostics.Trace.WriteLine(_msg.ToString());
-                GetUIElements(list, msg, tree, key, SystemName);
-            }
-        }
-
         public void RefreshUIElements()
         {
             if(app==null) UIElements = new SAPEventElement[] { };
@@ -198,6 +170,23 @@ namespace OpenRPA.SAPBridge
                     sapsession.ShowDropdownKeys = session.ShowDropdownKeys;
                     // sapsession.SuppressBackendPopups = session.SuppressBackendPopups;
                     sapsession.TestToolMode = session.TestToolMode;
+                    sapsession.ActiveWindow = new SAPWindow();
+                    sapsession.ActiveWindow.Changeable = session.ActiveWindow.Changeable;
+                    sapsession.ActiveWindow.Handle = session.ActiveWindow.Handle;
+                    sapsession.ActiveWindow.Height = session.ActiveWindow.Height;
+                    sapsession.ActiveWindow.Width = session.ActiveWindow.Width;
+                    sapsession.ActiveWindow.Left = session.ActiveWindow.Left;
+                    sapsession.ActiveWindow.Top = session.ActiveWindow.Top;
+                    sapsession.ActiveWindow.ScreenLeft = session.ActiveWindow.ScreenLeft;
+                    sapsession.ActiveWindow.ScreenTop = session.ActiveWindow.ScreenTop;
+                    sapsession.ActiveWindow.Iconic = session.ActiveWindow.Iconic;
+                    sapsession.ActiveWindow.IconName = session.ActiveWindow.IconName;
+                    sapsession.ActiveWindow.Id = session.ActiveWindow.Id;
+                    sapsession.ActiveWindow.Name = session.ActiveWindow.Name;
+                    sapsession.ActiveWindow.Text = session.ActiveWindow.Text;
+                    sapsession.ActiveWindow.Tooltip = session.ActiveWindow.Tooltip;
+                    sapsession.ActiveWindow.WorkingPaneHeight = session.ActiveWindow.WorkingPaneHeight;
+                    sapsession.ActiveWindow.WorkingPaneWidth = session.ActiveWindow.WorkingPaneWidth;
                     sessions.Add(sapsession);
                     sapsessions.Add(sapsession);
                 }
@@ -289,6 +278,7 @@ namespace OpenRPA.SAPBridge
             }
             return false;
         }
+        public GuiSession GetSession() { return GetSession(""); }
         public GuiSession GetSession(string SystemName)
         {
             var application = app;
@@ -302,7 +292,7 @@ namespace OpenRPA.SAPBridge
                 for (int j = 0; j < con.Sessions.Count; j++)
                 {
                     var session = con.Children.ElementAt(j) as GuiSession;
-                    if (session.Info.SystemName.ToLower() == SystemName.ToLower()) return session;
+                    if (string.IsNullOrEmpty(SystemName) || session.Info.SystemName.ToLower() == SystemName.ToLower()) return session;
                 }
             }
             return null;
@@ -344,7 +334,7 @@ namespace OpenRPA.SAPBridge
         }
         private void Session_Change(GuiSession Session, GuiComponent Component, object CommandArray)
         {
-            if (Program.recordstarting) return;
+            // if (Program.recordstarting) return;
             object[] objs = CommandArray as object[];
             objs = objs[0] as object[];
             var Action = "SetProperty";
@@ -359,7 +349,7 @@ namespace OpenRPA.SAPBridge
             }
             var ActionName = objs[1].ToString();
             upperFirstChar(ref ActionName);
-
+            if (ActionName == "ResizeWorkingPane") return;
 
             string id = Component.Id;
             var pathToRoot = new List<GuiComponent>();

@@ -102,17 +102,17 @@ namespace OpenRPA.SAP
             var elements = new List<SAPElement>();
             if (anchor != null)
             {
-                var _base = SAPSelector.GetElementsWithuiSelector(anchor, null, 10);
+                var _base = SAPSelector.GetElementsWithuiSelector(anchor, null, 0, 10, false);
                 foreach (var _e in _base)
                 {
-                    var res = SAPSelector.GetElementsWithuiSelector(selector, _e, maxresults);
+                    var res = SAPSelector.GetElementsWithuiSelector(selector, _e, 0, maxresults, false);
                     elements.AddRange(res);
                 }
 
             }
             else
             {
-                var res = SAPSelector.GetElementsWithuiSelector(selector, null, maxresults);
+                var res = SAPSelector.GetElementsWithuiSelector(selector, null, 0, maxresults, false);
                 elements.AddRange(res);
             }
             if (elements.Count() > maxresults && maxresults > 0) elements = elements.ToList().Take(maxresults).ToList();

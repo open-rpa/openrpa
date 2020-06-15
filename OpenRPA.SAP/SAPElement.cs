@@ -2,12 +2,12 @@
 using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing.Design;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace OpenRPA.SAP
 {
     public class SAPElementUpdatableProperty
@@ -16,7 +16,6 @@ namespace OpenRPA.SAP
         public SAPElement Element { get; set; }
         public string Name { get; set; }
         public string _Value;
-
         public SAPElementUpdatableProperty(SAPElement Element, SAPElementProperty p)
         {
             this.Element = Element;
@@ -24,7 +23,6 @@ namespace OpenRPA.SAP
             Name = p.Name;
             _Value = p.Value;
         }
-
         public string Value { 
             get 
             {
@@ -37,7 +35,7 @@ namespace OpenRPA.SAP
                 var data = new SAPInvokeMethod(Element.SystemName, Element.id, Name, _parameters);
                 var message = new SAPEvent("setproperty");
                 message.Set(data);
-                var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+                var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
 
             }
         }
@@ -52,11 +50,13 @@ namespace OpenRPA.SAP
     {
         object IElement.RawElement { get => raw; set => raw = value as object; }
         private object raw;
+        private SAPEventElement sapelement;
         public SAPElement()
         {
         }
         public SAPElement(SAPConnection connection)
         {
+            raw = connection;
             Name = connection.Name;
             id = connection.Id;
             ContainerType = true;
@@ -64,6 +64,7 @@ namespace OpenRPA.SAP
         }
         public SAPElement(SAPSession session)
         {
+            raw = session;
             Name = session.Info.SystemName;
             id = session.Id;
             SystemName = session.Info.SystemName;
@@ -72,16 +73,13 @@ namespace OpenRPA.SAP
         }
         public SAPElement(SAPElement Parent, SAPEventElement Element)
         {
-            if(Parent!=null)
+            raw = Element;
+            sapelement = Element;
+            if (Parent!=null)
             {
                 RefreshParent = false;
                 _Parent = Parent;
             }
-            if (!string.IsNullOrEmpty(Element.Path))
-            {
-                var b = true;
-            }
-
             Name = Element.Name;
             id = Element.Id;
             SystemName = Element.SystemName;
@@ -102,6 +100,22 @@ namespace OpenRPA.SAP
                     if (p.Name == "Name") Name = p.Value;
                     if (p.Name == "Type") Role = p.Value;
                 }
+            if(Element.Items != null)
+            {
+                var items = new List<IElement>();
+                foreach (var item in Element.Items) items.Add( new SAPElement(this, item));
+                if (Element.Items != null) _items = items.ToArray();
+            }
+            if(Element.Children != null)
+            {
+                var children = new List<SAPElement>();
+                foreach (var c in Element.Children)
+                {
+                    children.Add(new SAPElement(this, c));
+                }
+                _Children = children.ToArray();
+                RefreshChildren = false;
+            }
         }
         public System.Drawing.Rectangle Rectangle
         {
@@ -137,6 +151,7 @@ namespace OpenRPA.SAP
             get
             {
                 if(Properties==null) return null;
+                if (Properties.ContainsKey("Value")) return Properties["Value"].Value;
                 if (Properties.ContainsKey("Text")) return Properties["Text"].Value;
                 return null;
             }
@@ -158,11 +173,11 @@ namespace OpenRPA.SAP
                 {
                     var msg = new SAPEvent("getitem");
                     msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, Path = Path });
-                    msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(60));
+                    msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
                     if (msg != null)
                     {
                         var res = msg.Get<SAPEventElement>();
-                        _Parent = new SAPElement(null, res);
+                        if(!string.IsNullOrEmpty(res.Id)) _Parent = new SAPElement(null, res);
                     }
                     RefreshParent = false;
                 }
@@ -190,22 +205,19 @@ namespace OpenRPA.SAP
                 try
                 {
                     var msg = new SAPEvent("getitem");
-                    if(!string.IsNullOrEmpty(Path) || Role == "GuiGridView")
-                    {
-                        var b = true;
-                    }
                     msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, Path = Path, MaxItem = 50 });
-                    msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(60));
+                    msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
                     if(msg!=null)
                     {
                         var ele = msg.Get<SAPEventElement>();
                         // var Parent = new SAPElement(this, ele);
-                        foreach (var c in ele.Children)
-                        {
-                            result.Add(new SAPElement(this, c));
-                        }
+                        if (ele !=null && !string.IsNullOrEmpty(ele.Id) && ele.Children != null)
+                            foreach (var c in ele.Children)
+                            {
+                                result.Add(new SAPElement(this, c));
+                            }
                     } 
-                    // RefreshChildren = false;
+                    RefreshChildren = false;
                 }
                 catch (Exception ex)
                 {
@@ -234,26 +246,98 @@ namespace OpenRPA.SAP
             }  
             else
             {
+                object[] _parameters = new object[] { };
+                // var Action = "Press";
                 var Action = "";
                 if (Role == "GuiButton")
                 {
                     Action = "Press";
+                } 
+                else if(Role == "GuiTreeNode" || Role == "GuiTreeItem")
+                {
+                    // Action = "ExpandNode";
+                    Action = "DoubleClickNode";
+                    _parameters = new object[] { Path };
                 }
-                Action = "Press";
                 if (!string.IsNullOrEmpty(Action))
                 {
-                    object[] _parameters = new object[] { };
                     var data = new SAPInvokeMethod(SystemName, id, Action, _parameters);
                     var message = new SAPEvent("invokemethod");
                     message.Set(data);
-                    var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+                    var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
+                } 
+                else
+                {
+                    throw new Exception("Unknown click type " + Role);
                 }
-                throw new Exception("Unknown click type " + Role);
             }
+        }
+        public void EnsureVisible()
+        {
+            object[] _parameters = new object[] { };
+            SAPInvokeMethod data = null;
+            SAPEvent message;
+            SAPEvent result;
+            if (Items.Length > 0)
+            {
+                _parameters = new object[] { Path, Items[0].Name };
+                data = new SAPInvokeMethod(SystemName, id, "ensureVisibleHorizontalItem", _parameters);
+                message = new SAPEvent("invokemethod");
+                message.Set(data);
+                result = SAPhook.Instance.SendMessage(message, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
+            }
+            _parameters = new object[] { };
+            data = new SAPInvokeMethod(SystemName, id, "SetFocus", _parameters);
+            message = new SAPEvent("invokemethod");
+            message.Set(data);
+            result = SAPhook.Instance.SendMessage(message, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
+
         }
         public void Focus()
         {
-            throw new NotImplementedException();
+            //REM start transaction
+            //session.findById("wnd[0]/tbar[0]/okcd").text = "/nrsa1"
+            //session.findById("wnd[0]").sendVKey 0
+            //REM Search in the tree for object "ZCSG01"
+            //session.findById("wnd[0]/shellcont[0]/shell/shellcont[1]/shell/shellcont[1]/shell").topNode = " 1"
+            //session.findById("wnd[0]/shellcont[1]/shell/shellcont[0]/shell/shellcont[1]/shell/shellcont[1]/shell").topNode = " 1"
+            //session.findById("wnd[0]/shellcont[1]/shell/shellcont[0]/shell/shellcont[1]/shell/shellcont[0]/shell").pressButton "%AWB_TREE_SEARCH"
+            //session.findById("wnd[1]/usr/txtRSAWBN_S_DYNPRO_0500-SEARCH_TERM").text = "ZCSG01"
+            //session.findById("wnd[1]/usr/txtRSAWBN_S_DYNPRO_0500-SEARCH_TERM").caretPosition = 6
+            //session.findById("wnd[1]").sendVKey 0
+            //REM "ZCSG01" is found as node 37
+            //Dim strKey
+            //Dim strTxt1, strTxt2
+            //strKey = session.findById("wnd[0]/shellcont[1]/shell/shellcont[0]/shell/shellcont[1]/shell/shellcont[1]/shell").GetFocusedNodeKey
+            //strTxt1 = Right(" " & Cstr(strKey), 11)
+            //strTxt2 = Right(" " & Cstr(strKey + 1), 11)
+            //session.findById("wnd[0]/shellcont[1]/shell/shellcont[0]/shell/shellcont[1]/shell/shellcont[1]/shell").expandNode strTxt1
+            //session.findById("wnd[0]/shellcont[1]/shell/shellcont[0]/shell/shellcont[1]/shell/shellcont[1]/shell").topNode = " 1"
+            //session.findById("wnd[0]/shellcont[1]/shell/shellcont[0]/shell/shellcont[1]/shell/shellcont[1]/shell").selectItem strTxt2,"COL1"
+            //session.findById("wnd[0]/shellcont[1]/shell/shellcont[0]/shell/shellcont[1]/shell/shellcont[1]/shell").ensureVisibleHorizontalItem strTxt2,"COL1"
+
+            //object[] _parameters = new object[] { };
+            //var Action = "";
+            //if (Role == "GuiButton")
+            //{
+            //    Action = "ensureVisibleHorizontalItem";
+            //}
+            //else if (Role == "GuiTreeNode" || Role == "GuiTreeItem")
+            //{
+            //    EnsureVisible();
+            //}
+            //if (!string.IsNullOrEmpty(Action))
+            //{
+            //    var data = new SAPInvokeMethod(SystemName, id, Action, _parameters);
+            //    var message = new SAPEvent("invokemethod");
+            //    message.Set(data);
+            //    var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
+            //}
+            //else
+            //{
+            //    throw new Exception("Unknown focus type " + Role);
+            //}
+            EnsureVisible();
         }
         public Task Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
         {
@@ -269,7 +353,7 @@ namespace OpenRPA.SAP
             //var data = new SAPInvokeMethod(SystemName, id, null, null);
             //var message = new SAPEvent("highlight");
             //message.Set(data);
-            //var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromMinutes(10));
+            //var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
             Log.Output(Rectangle.ToString());
             using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow(true))
             {
@@ -290,7 +374,11 @@ namespace OpenRPA.SAP
         public override string ToString()
         {
             if (!string.IsNullOrEmpty(Tip)) return Tip;
-            return "id:" + id + " Role:" + Role + " Name: " + Name;
+            var name = Name;
+            if (Properties.ContainsKey("Key")) name = Properties["Key"].Value;
+            if (Properties.ContainsKey("Cell")) name = Properties["Cell"].Value;
+
+            return "id:" + id + " Role:" + Role + " Name: " + name;
         }
         public override bool Equals(object obj)
         {
@@ -320,14 +408,81 @@ namespace OpenRPA.SAP
                 return Interfaces.Image.Util.Bitmap2Base64(image);
             }
         }
+        IElement[] _items = new IElement[] { };
         public IElement[] Items
         {
             get
             {
-                var result = new List<IElement>();
-                return result.ToArray();
+                return _items;
             }
         }
-
+        public string[] ColumnNames(IElement[] Items)
+        {
+            var result = new List<string>();
+            foreach (var item in Items)
+            {
+                var ele = item as SAPElement;
+                var _name = item.Name;
+                if (ele.Properties.ContainsKey("Key")) _name = ele.Properties["Key"].Value;
+                if (ele.Properties.ContainsKey("Cell")) _name = ele.Properties["Cell"].Value;
+                // if (ele.Properties.ContainsKey("Title")) _name = ele.Properties["Title"].Value;
+                if (result.Contains(_name) && ele.Properties.ContainsKey("Title")) _name = item.Name;
+                result.Add(_name);
+            }
+            return result.ToArray();
+        }
+        public DataTable ToDatatable()
+        {
+            var name = Name;
+            if (string.IsNullOrEmpty(name)) name = "Table1";
+            var result = new DataTable(name);
+            if (Children == null || Children.Length == 0)
+            {
+                if(Items != null && Items.Length > 0)
+                {
+                    foreach(var item in Items)
+                    {
+                        var ele = item as SAPElement;
+                        var _name = item.Name;
+                        if (ele.Properties.ContainsKey("Key")) _name = ele.Properties["Key"].Value;
+                        result.Columns.Add(_name);
+                    }
+                    result.Rows.Add(ToDataRow(result));
+                    return result;
+                }
+                return null;
+            }
+            var _c = Children[0];
+            var cc = Children[0].Children;
+            var ci = Children[0].Items;
+            if (Children[0].Items == null || Children[0].Items.Length == 0) return null;
+            var columnNames = ColumnNames(Children[0].Items);
+            foreach (var _name in columnNames)
+            {
+                result.Columns.Add(_name);
+            }
+            foreach (var c in Children)
+            {
+                var row = c.ToDataRow(result, columnNames);
+                if(row!=null) result.Rows.Add(row);
+            }
+            return result;
+        }
+        public DataRow ToDataRow(DataTable dt)
+        {
+            return ToDataRow(dt, ColumnNames(Items));
+        }
+        public DataRow ToDataRow(DataTable dt, string[] ColumnNames)
+        {
+            if (Items == null) return null;
+            var result = dt.NewRow();
+            for(var i = 0; i < ColumnNames.Length; i++)
+            {
+                var ele = Items[i] as SAPElement;
+                var name = ColumnNames[i];
+                result[name] = ele.Value;
+            }
+            return result;
+        }
     }
 }

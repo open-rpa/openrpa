@@ -141,6 +141,18 @@
   <data name="activity_addparagraph_tooltip" xml:space="preserve">
     <value>Add a new Paragraph to a Microsoft Word document</value>
   </data>
+  <data name="activity_clearrange" xml:space="preserve">
+    <value>Clear Range</value>
+  </data>
+  <data name="activity_clearrange_cells" xml:space="preserve">
+    <value>Cells</value>
+  </data>
+  <data name="activity_clearrange_cells_help" xml:space="preserve">
+    <value>Set what cells to clear, leave blank to clear all cells</value>
+  </data>
+  <data name="activity_clearrange_tooltip" xml:space="preserve">
+    <value>Clears all data and formating from a range of cells</value>
+  </data>
   <data name="activity_closedocument" xml:space="preserve">
     <value>Close Document</value>
   </data>

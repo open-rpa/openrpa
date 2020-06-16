@@ -43,6 +43,7 @@ namespace OpenRPA.SAP
         }
         public override void AddSubElements()
         {
+            SAPElement.VisibleOnly = true;
             foreach (var elementNode in SAPElement.Children)
             {
                 var ele = elementNode;

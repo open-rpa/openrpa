@@ -51,30 +51,27 @@ namespace OpenRPA.SAPBridge
             _ = app;
         }
         public SAPEventElement[] UIElements = new SAPEventElement[] { };
-        private void GetUIElements(List<SAPEventElement> list, GuiSession session, string Parent, SAPEventElement ele)
+        private void GetUIElements(List<SAPEventElement> list, GuiSession session, string Parent, SAPEventElement ele, bool VisibleOnly)
         {
             list.Add(ele);
             if(!string.IsNullOrEmpty(ele.Path))
             {
                 System.Diagnostics.Trace.WriteLine(ele.ToString() + " " + ele.Rectangle);
             }
-            if (ele.Children == null) ele.Load();
+            if (ele.Children == null) ele.Load(VisibleOnly);
             if(ele.Children != null)
                 foreach (var child in ele.Children)
                 {
-                    GetUIElements(list, session, ele.Id, child);
+                    GetUIElements(list, session, ele.Id, child, VisibleOnly);
                 }
         }
-        private void GetUIElements(List<SAPEventElement> list, GuiSession session, string Parent, GuiComponent Element = null)
+        private void GetUIElements(List<SAPEventElement> list, GuiSession session, string Parent, GuiComponent Element, bool VisibleOnly)
         {
-            var ele = new SAPEventElement(Element, session.Info.SystemName, false, null, null, false, true, 50);
-            var id = ele.Id;
-            if (!string.IsNullOrEmpty(ele.Path)) id = id + " Path: " + ele.Path;
-            if (!string.IsNullOrEmpty(ele.Cell)) id = id + " Cell: " + ele.Cell;
+            var ele = new SAPEventElement(Element, session.Info.SystemName, false, null, null, false, true, 50, VisibleOnly);
             list.Add(ele);
             foreach(var child in ele.Children)
             {
-                GetUIElements(list, session, ele.Id, child);
+                GetUIElements(list, session, ele.Id, child, VisibleOnly);
             }
 
             //var msg = new SAPEventElement(Element, session.Info.SystemName, Parent, false);
@@ -104,7 +101,7 @@ namespace OpenRPA.SAPBridge
             //    }
             //}
         }
-        public void RefreshUIElements()
+        public void RefreshUIElements(bool VisibleOnly)
         {
             if(app==null) UIElements = new SAPEventElement[] { };
             var result = new List<SAPEventElement>();
@@ -116,10 +113,12 @@ namespace OpenRPA.SAPBridge
                 for (int j = 0; j < con.Sessions.Count; j++)
                 {
                     var session = con.Children.ElementAt(j) as GuiSession;
-                    for (var i = 0; i < session.Children.Count; i++)
-                    {
-                        GetUIElements(result, session, session.Id, session.Children.ElementAt(i));
-                    }
+                    var ele = session as GuiComponent;
+                    GetUIElements(result, session, session.Id, ele, VisibleOnly);
+                    //for (var i = 0; i < session.Children.Count; i++)
+                    //{
+                    //    GetUIElements(result, session, session.Id, session.Children.ElementAt(i), VisibleOnly);
+                    //}
                 }
             }
             lock(UIElements)

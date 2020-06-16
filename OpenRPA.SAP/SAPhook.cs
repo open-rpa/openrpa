@@ -144,7 +144,7 @@ namespace OpenRPA.SAP
                 {
                     LastEventElement = message.Get<SAPEventElement>();
                     LastElement = new SAPElement(null, LastEventElement);
-                    Log.Output("SAP " + message.action + " " + LastElement.id);
+                    Log.Output("SAP " + message.action + " " + LastElement.id + " " + LastElement.Path);
                 }
                 else
                 {

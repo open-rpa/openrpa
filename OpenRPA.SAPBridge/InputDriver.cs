@@ -60,34 +60,43 @@ namespace OpenRPA.SAPBridge
         }
         private IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            if((int)wParam== WM_MOUSEMOVE)
+            try
             {
-                var e = new InputEventArgs();
-                var pt = new POINT();
-                GetPhysicalCursorPos(ref pt);
-                e.X = pt.x;
-                e.Y = pt.y;
-                Task.Run(()=>OnMouseMove?.Invoke(e));
+                if ((int)wParam == WM_MOUSEMOVE)
+                {
+                    var e = new InputEventArgs();
+                    var pt = new POINT();
+                    GetPhysicalCursorPos(ref pt);
+                    e.X = pt.x;
+                    e.Y = pt.y;
+                    Task.Run(() => OnMouseMove?.Invoke(e));
+                }
+                else if ((int)wParam == WM_LBUTTONDOWN || (int)wParam == WM_RBUTTONDOWN)
+                {
+                    var e = new InputEventArgs();
+                    var pt = new POINT();
+                    GetPhysicalCursorPos(ref pt);
+                    e.X = pt.x;
+                    e.Y = pt.y;
+                    Task.Run(() => OnMouseDown?.Invoke(e));
+                }
+                else if ((int)wParam == WM_LBUTTONUP || (int)wParam == WM_RBUTTONUP)
+                {
+                    var e = new InputEventArgs();
+                    var pt = new POINT();
+                    GetPhysicalCursorPos(ref pt);
+                    e.X = pt.x;
+                    e.Y = pt.y;
+                    Task.Run(() => OnMouseUp?.Invoke(e));
+                }
+                return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
             }
-            else if ((int)wParam == WM_LBUTTONDOWN || (int)wParam == WM_RBUTTONDOWN)
+            catch (Exception ex)
             {
-                var e = new InputEventArgs();
-                var pt = new POINT();
-                GetPhysicalCursorPos(ref pt);
-                e.X = pt.x;
-                e.Y = pt.y;
-                Task.Run(() => OnMouseDown?.Invoke(e));
+                System.Diagnostics.Trace.WriteLine("LowLevelMouseProc: " + ex.Message);
+                return IntPtr.Zero;
             }
-            else if ((int)wParam == WM_LBUTTONUP || (int)wParam == WM_RBUTTONUP)
-            {
-                var e = new InputEventArgs();
-                var pt = new POINT();
-                GetPhysicalCursorPos(ref pt);
-                e.X = pt.x;
-                e.Y = pt.y;
-                Task.Run(() => OnMouseUp?.Invoke(e));
-            }
-            return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+
         }
     }
 }

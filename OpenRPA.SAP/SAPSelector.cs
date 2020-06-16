@@ -62,9 +62,10 @@ namespace OpenRPA.SAP
             var SystemName = root.SystemName;
             var id = sel.id;
             var path = sel.path;
+            var cell = sel.cell;
 
             var msg = new SAPEvent("getitem");
-            msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, GetAllProperties = true, Path = path, Skip = skip, MaxItem = maxresults, Flat = FlatternGuiTree });
+            msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, GetAllProperties = true, Path = path, Cell = cell, Skip = skip, MaxItem = maxresults, Flat = FlatternGuiTree });
             msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
             if (msg != null)
             {

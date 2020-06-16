@@ -77,7 +77,7 @@ namespace OpenRPA.SAPBridge
                 try
                 {
                     SAPHook.Instance.RefreshSessions();
-                    SAPHook.Instance.RefreshUIElements();
+                    SAPHook.Instance.RefreshUIElements(true);
                     isMoving = false;
                     InputDriver.Instance.OnMouseMove -= OnMouseMove;
                     InputDriver.Instance.OnMouseDown -= OnMouseDown;
@@ -155,7 +155,7 @@ namespace OpenRPA.SAPBridge
                         }
                     }
                     if (SAPHook.Instance.Connections.Count() == 0) SAPHook.Instance.RefreshSessions();
-                    if (SAPHook.Instance.UIElements.Count() == 0) SAPHook.Instance.RefreshUIElements();
+                    if (SAPHook.Instance.UIElements.Count() == 0) SAPHook.Instance.RefreshUIElements(true);
                     SAPEventElement[] elements = new SAPEventElement[] { };
                     lock (SAPHook.Instance.UIElements)
                     {
@@ -163,10 +163,21 @@ namespace OpenRPA.SAPBridge
                     }
                     if (elements.Count() > 0)
                     {
-                        Program.log("[mousemove] " + e.X + " " + e.Y);
+                        //Program.log("[mousemove] " + e.X + " " + e.Y);
+                        //foreach(var ele in elements)
+                        //{
+                        //    Program.log("[element] " + ele.ToString());
+                        //}
                         var found = elements.OrderBy(x => x.IdPathCell.Length).Last();
-
                         if(found.Items != null && found.Items.Length > 0)
+                        {
+                            elements = found.Items.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
+                            if(elements!=null && elements.Length > 0) found = elements.OrderBy(x => x.IdPathCell.Length).Last();
+
+                        }
+                        //Program.log("[element] " + found.ToString() + " " + found.Rectangle.ToString());
+
+                        if (found.Items != null && found.Items.Length > 0)
                         {
                             var found2 = found.Items.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
                             if(found2.Length > 0)
@@ -175,7 +186,7 @@ namespace OpenRPA.SAPBridge
                             }
                         }
                         
-                        if (LastElement != null && (found.Id == LastElement.Id  && found.Path == LastElement.Path))
+                        if (LastElement != null && (found.Id == LastElement.Id && found.Path == LastElement.Path && found.Cell == LastElement.Cell))
                         {
                             // form.AddText("[SKIP] mousemove " + LastElement.ToString());
                             lock (_lock)
@@ -187,7 +198,7 @@ namespace OpenRPA.SAPBridge
                         LastElement = found;
                         SAPEvent message = new SAPEvent("mousemove");
                         message.Set(LastElement);
-                        form.AddText("[send] " + message.action + " " + LastElement.ToString());
+                        form.AddText("[send] " + message.action + " " + LastElement.ToString() + " " + LastElement.Rectangle.ToString());
                         pipe.PushMessage(message);
                     }
                     else
@@ -450,7 +461,7 @@ namespace OpenRPA.SAPBridge
                             pipe.PushMessage(message);
                             return;
                         }
-                        msg = new SAPEventElement(comp, session.Info.SystemName, msg.GetAllProperties, msg.Path, null, msg.Flat, true, msg.MaxItem);
+                        msg = new SAPEventElement(comp, session.Info.SystemName, msg.GetAllProperties, msg.Path, msg.Cell, msg.Flat, true, msg.MaxItem, msg.VisibleOnly);
                         message.Set(msg);
                         form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);

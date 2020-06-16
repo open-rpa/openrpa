@@ -211,6 +211,7 @@ namespace OpenRPA.SAP
         public int MaxItem { get; set; }
         public int Skip { get; set; }
         public bool Flat { get; set; }
+        public bool VisibleOnly { get; set; }
         public string Id { get; set; }
         public string Path { get; set; }
         public string Cell { get; set; }

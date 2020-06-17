@@ -76,12 +76,13 @@ namespace OpenRPA.SAPBridge
             {
                 try
                 {
+                    Program.log("RefreshSessions::begin");
                     SAPHook.Instance.RefreshSessions();
-                    SAPHook.Instance.RefreshUIElements(true);
+                    Program.log("RefreshSessions::end");
+
                     isMoving = false;
                     InputDriver.Instance.OnMouseMove -= OnMouseMove;
                     InputDriver.Instance.OnMouseDown -= OnMouseDown;
-
                     if (MouseMove)
                     {
                         Program.log("hook OnMouseMove");
@@ -89,6 +90,11 @@ namespace OpenRPA.SAPBridge
                     }
                     Program.log("hook OnMouseDown");
                     InputDriver.Instance.OnMouseDown += OnMouseDown;
+
+                    Program.log("RefreshUIElements::begin");
+                    SAPHook.Instance.RefreshUIElements(true);
+                    Program.log("RefreshUIElements::end");
+
                 }
                 catch (Exception ex)
                 {
@@ -318,9 +324,13 @@ namespace OpenRPA.SAPBridge
                         {
                             overlay = recinfo.overlay;
                             //StartMonitorMouse(recinfo.mousemove);
+                            form.AddText("StartMonitorMouse::begin");
                             StartMonitorMouse(true);
+                            form.AddText("StartMonitorMouse::end");
                         }
+                        form.AddText("BeginRecord::begin");
                         SAPHook.Instance.BeginRecord(overlay);
+                        form.AddText("BeginRecord::end");
                         form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                         recordstarting = false;

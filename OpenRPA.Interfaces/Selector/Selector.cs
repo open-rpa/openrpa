@@ -27,7 +27,11 @@ namespace OpenRPA.Interfaces.Selector
                     var v = vars.Find(strvar, true);
                     if (v != null)
                     {
-                        selector = selector.Replace(str, (string)v.GetValue(DataContext));
+                        var value = v.GetValue(DataContext);
+                        if(value != null)
+                        {
+                            selector = selector.Replace(str, value.ToString());
+                        }
                     }
                     else
                     {

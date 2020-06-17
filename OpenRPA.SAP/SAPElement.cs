@@ -216,7 +216,7 @@ namespace OpenRPA.SAP
         {
             get
             {
-                //if (!RefreshChildren) return _Children;
+                if (!RefreshChildren) return _Children;
                 if(!ContainerType && this.Role != "GuiTree" && this.Role != "GuiTable" && this.Role != "GuiGrid" && this.Role != "GuiTreeNode")
                 {
                     System.Diagnostics.Trace.WriteLine(this.Role);
@@ -283,6 +283,10 @@ namespace OpenRPA.SAP
                 else if(Role == "GuiRadioButton")
                 {
                     Action = "Select";
+                }
+                else if (Role == "GuiOkCodeField")
+                {
+                    Action = "SetFocus";
                 }
                 if (!string.IsNullOrEmpty(Action))
                 {

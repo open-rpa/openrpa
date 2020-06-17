@@ -35,9 +35,15 @@ namespace OpenRPA.SAPBridge
         {
             lock (_lockObj)
             {
-
                 var Application = SAPHook.Instance.app;
-                Application.OpenConnectionByConnectionString(server);
+                try
+                {
+                    Application.OpenConnectionByConnectionString(server);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Open Connection Failed, is ip/fqdn correct? is server alive and running? " + ex.Message);
+                }
                 var index = Application.Connections.Count - 1;
                 this.Connection = Application.Children.ElementAt(index) as GuiConnection;
                 index = Connection.Sessions.Count - 1;

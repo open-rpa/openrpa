@@ -35,6 +35,22 @@ namespace OpenRPA.SAPBridge
 
                 if (string.IsNullOrEmpty(Path))
                 {
+                    int Left = 0;
+                    int Top = 0;
+                    int Width = 0;
+                    int Height = 0;
+                    int ScreenLeft = 0;
+                    int ScreenTop = 0;
+
+                    Height = tree.Height;
+                    if(Height>0)
+                    {
+                        Left = tree.Left;
+                        Top = tree.Top;
+                        Width = tree.Width;
+                        ScreenLeft = tree.ScreenLeft;
+                        ScreenTop = tree.ScreenTop;
+                    }
                     var p = new List<SAPElementProperty>();
                     p.Add(new SAPElementProperty("Left", tree.Left.ToString(), true));
                     p.Add(new SAPElementProperty("Top", tree.Top.ToString(), true));
@@ -42,7 +58,6 @@ namespace OpenRPA.SAPBridge
                     p.Add(new SAPElementProperty("ScreenTop", tree.ScreenTop.ToString(), true));
                     p.Add(new SAPElementProperty("Width", tree.Width.ToString(), true));
                     p.Add(new SAPElementProperty("Height", tree.Height.ToString(), true));
-
                     _Rectangle = new Rectangle(tree.ScreenLeft, tree.ScreenTop, tree.Width, tree.Height);
                     Properties = p.ToArray();
                     if (Flat)
@@ -53,7 +68,7 @@ namespace OpenRPA.SAPBridge
                     {
                         keys = tree.GetNodesCol() as SAPFEWSELib.GuiCollection;
                     }
-                    if (keys != null && LoadChildren)
+                    if (keys != null && LoadChildren && (VisibleOnly && Height>0 || !VisibleOnly))
                     {
                         var _keys = new List<string>();
                         foreach (string key in keys) _keys.Add(key);
@@ -81,6 +96,7 @@ namespace OpenRPA.SAPBridge
                     int Height = 0;
                     int ScreenLeft = 0;
                     int ScreenTop = 0;
+                    bool expanded = false;
                     if (string.IsNullOrEmpty(Cell))
                     {
                         Height = tree.GetNodeHeight(Path);
@@ -91,6 +107,7 @@ namespace OpenRPA.SAPBridge
                             Width = tree.GetNodeWidth(Path);
                             ScreenLeft = Left + tree.ScreenLeft;
                             ScreenTop = Top + tree.ScreenTop;
+                            expanded = tree.IsFolderExpanded(Path);
                         }
                     }
                     else
@@ -119,7 +136,7 @@ namespace OpenRPA.SAPBridge
                     p.Add(new SAPElementProperty("Text", text, true));
                     Properties = p.ToArray();
                     _Rectangle = new Rectangle(ScreenLeft, ScreenTop, Width, Height);
-                    if (string.IsNullOrEmpty(Cell))
+                    if (string.IsNullOrEmpty(Cell) && (VisibleOnly && Height > 0 && expanded || !VisibleOnly))
                     {
                         keys = tree.GetColumnHeaders() as SAPFEWSELib.GuiCollection;
                         if (keys == null)
@@ -142,7 +159,7 @@ namespace OpenRPA.SAPBridge
                         }
 
                     }
-                    if (!flat && LoadChildren && string.IsNullOrEmpty(Cell))
+                    if (!flat && LoadChildren && string.IsNullOrEmpty(Cell) && (VisibleOnly && Height > 0 && expanded || !VisibleOnly))
                     {
                         keys = tree.GetSubNodesCol(Path) as SAPFEWSELib.GuiCollection;
                         if (keys != null && LoadChildren)
@@ -496,7 +513,7 @@ namespace OpenRPA.SAPBridge
             }
             else
             {
-                LoadProperties(comp, all);
+                if(!VisibleOnly) LoadProperties(comp, all);
             }
             if(string.IsNullOrEmpty(Name))
             {

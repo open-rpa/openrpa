@@ -48,6 +48,22 @@ namespace OpenRPA.NM
                 Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromSeconds(3)")
             };
         }
+        private void DoWaitForReady(string browser)
+        {
+            if (!string.IsNullOrEmpty(browser))
+            {
+                NMHook.enumtabs();
+                if (browser == "chrome" && NMHook.CurrentChromeTab != null)
+                {
+                    NMHook.WaitForTab(NMHook.CurrentChromeTab.id, browser, TimeSpan.FromSeconds(10));
+                }
+                if (browser == "ff" && NMHook.CurrentFFTab != null)
+                {
+                    NMHook.WaitForTab(NMHook.CurrentFFTab.id, browser, TimeSpan.FromSeconds(10));
+                }
+            }
+
+        }
         protected override void Execute(NativeActivityContext context)
         {
             var selector = Selector.Get(context);
@@ -64,20 +80,8 @@ namespace OpenRPA.NM
             string browser = sel.browser;
             if (WaitForReady.Get(context))
             {
-                
                 if (from != null) browser = from.browser;
-                if (!string.IsNullOrEmpty(browser))
-                {
-                    NMHook.enumtabs();
-                    if (browser == "chrome" && NMHook.CurrentChromeTab != null)
-                    {
-                        NMHook.WaitForTab(NMHook.CurrentChromeTab.id, browser, TimeSpan.FromSeconds(10));
-                    }
-                    if (browser == "ff" && NMHook.CurrentFFTab != null)
-                    {
-                        NMHook.WaitForTab(NMHook.CurrentFFTab.id, browser, TimeSpan.FromSeconds(10));
-                    }
-                }
+                DoWaitForReady(browser);
             }
             var s = new NMSelectorItem(sel[0]);
             if(!string.IsNullOrEmpty(s.url))
@@ -97,7 +101,6 @@ namespace OpenRPA.NM
                 elements = NMSelector.GetElementsWithuiSelector(sel, from, maxresults);
             } while (elements .Count() == 0 && sw.Elapsed < timeout);
             if (elements.Count() > maxresults) elements = elements.Take(maxresults).ToArray();
-            context.SetValue(Elements, elements);
 
             var lastelements = context.GetValue(_lastelements);
             if (lastelements == null) lastelements = new NMElement[] { };
@@ -121,6 +124,13 @@ namespace OpenRPA.NM
                 context.SetValue(_elements, _enum);
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
+            else
+            {
+                Array.Resize(ref lastelements, lastelements.Length + elements.Length);
+                Array.Copy(elements, 0, lastelements, lastelements.Length, elements.Length);
+                context.SetValue(Elements, lastelements);
+                //context.SetValue(_lastelements, lastelements);
+            }
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
@@ -142,6 +152,15 @@ namespace OpenRPA.NM
         private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
             Execute(context);
+
+            var selector = Selector.Get(context);
+            selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
+            var sel = new NMSelector(selector);
+            var from = From.Get(context);
+            string browser = sel.browser;
+            if (from != null) browser = from.browser;
+            DoWaitForReady(browser);
+
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {

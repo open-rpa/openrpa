@@ -138,17 +138,17 @@ namespace OpenRPA.SAP
                 {
                     LastEventElement = message.Get<SAPEventElement>();
                     LastElement = new SAPElement(null, LastEventElement);
-                    Log.Output("SAP " + message.action + " " + LastElement.id);
+                    // Log.Output("SAP " + message.action + " " + LastElement.id);
                 }
                 else if (message.action == "mousemove")
                 {
                     LastEventElement = message.Get<SAPEventElement>();
                     LastElement = new SAPElement(null, LastEventElement);
-                    Log.Output("SAP " + message.action + " " + LastElement.id);
+                    // Log.Output("SAP " + message.action + " " + LastElement.id + " " + LastElement.Path);
                 }
                 else
                 {
-                    Log.Output("SAP " + message.action);
+                    // Log.Output("SAP " + message.action);
                 }
             }
             catch (Exception ex)

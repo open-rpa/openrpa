@@ -51,38 +51,57 @@ namespace OpenRPA.SAPBridge
             _ = app;
         }
         public SAPEventElement[] UIElements = new SAPEventElement[] { };
-
-
-        private void GetUIElements(List<SAPEventElement> list, GuiSession session, string Parent, GuiComponent Element)
+        private void GetUIElements(List<SAPEventElement> list, GuiSession session, string Parent, SAPEventElement ele, bool VisibleOnly)
         {
-            var msg = new SAPEventElement(Element, session.Info.SystemName, Parent, false);
-            list.Add(msg);
-            if (Element.ContainerType)
+            list.Add(ele);
+            if(!string.IsNullOrEmpty(ele.Path))
             {
-                if (Element is GuiVContainer vcon)
-                {
-                    for (var i = 0; i < vcon.Children.Count; i++)
-                    {
-                        GetUIElements(list, session, Element.Id, vcon.Children.ElementAt(i));
-                    }
-                }
-                else if (Element is GuiContainer con)
-                {
-                    for (var i = 0; i < con.Children.Count; i++)
-                    {
-                        GetUIElements(list, session, Element.Id, con.Children.ElementAt(i));
-                    }
-                }
-                else if (Element is GuiStatusbar sbar)
-                {
-                    for (var i = 0; i < sbar.Children.Count; i++)
-                    {
-                        GetUIElements(list, session, Element.Id, sbar.Children.ElementAt(i));
-                    }
-                }
+                System.Diagnostics.Trace.WriteLine(ele.ToString() + " " + ele.Rectangle);
             }
+            if (ele.Children == null) ele.Load(VisibleOnly);
+            if(ele.Children != null)
+                foreach (var child in ele.Children)
+                {
+                    GetUIElements(list, session, ele.Id, child, VisibleOnly);
+                }
         }
-        public void RefreshUIElements()
+        private void GetUIElements(List<SAPEventElement> list, GuiSession session, string Parent, GuiComponent Element, bool VisibleOnly)
+        {
+            var ele = new SAPEventElement(Element, session.Info.SystemName, false, null, null, false, true, 50, VisibleOnly);
+            list.Add(ele);
+            foreach(var child in ele.Children)
+            {
+                GetUIElements(list, session, ele.Id, child, VisibleOnly);
+            }
+
+            //var msg = new SAPEventElement(Element, session.Info.SystemName, Parent, false);
+            //list.Add(msg);
+            //if (Element.ContainerType)
+            //{
+            //    if (Element is GuiVContainer vcon)
+            //    {
+            //        for (var i = 0; i < vcon.Children.Count; i++)
+            //        {
+            //            GetUIElements(list, session, Element.Id, vcon.Children.ElementAt(i));
+            //        }
+            //    }
+            //    else if (Element is GuiContainer con)
+            //    {
+            //        for (var i = 0; i < con.Children.Count; i++)
+            //        {
+            //            GetUIElements(list, session, Element.Id, con.Children.ElementAt(i));
+            //        }
+            //    }
+            //    else if (Element is GuiStatusbar sbar)
+            //    {
+            //        for (var i = 0; i < sbar.Children.Count; i++)
+            //        {
+            //            GetUIElements(list, session, Element.Id, sbar.Children.ElementAt(i));
+            //        }
+            //    }
+            //}
+        }
+        public void RefreshUIElements(bool VisibleOnly)
         {
             if(app==null) UIElements = new SAPEventElement[] { };
             var result = new List<SAPEventElement>();
@@ -94,10 +113,12 @@ namespace OpenRPA.SAPBridge
                 for (int j = 0; j < con.Sessions.Count; j++)
                 {
                     var session = con.Children.ElementAt(j) as GuiSession;
-                    for (var i = 0; i < session.Children.Count; i++)
-                    {
-                        GetUIElements(result, session, session.Id, session.Children.ElementAt(i));
-                    }
+                    var ele = session as GuiComponent;
+                    GetUIElements(result, session, session.Id, ele, VisibleOnly);
+                    //for (var i = 0; i < session.Children.Count; i++)
+                    //{
+                    //    GetUIElements(result, session, session.Id, session.Children.ElementAt(i), VisibleOnly);
+                    //}
                 }
             }
             lock(UIElements)

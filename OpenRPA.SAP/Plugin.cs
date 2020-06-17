@@ -217,7 +217,6 @@ namespace OpenRPA.SAP
             if (e.UIElement.ProcessId < 1) return false;
             if (e.UIElement.ProcessId != lastid)
             {
-                Console.WriteLine("Get Process");
                 var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
                 if (p.ProcessName.ToLower() != "saplogon") return false;
                 lastid = e.UIElement.ProcessId;

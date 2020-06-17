@@ -228,99 +228,107 @@ namespace OpenRPA.Input
         }
         private IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            if (AllowOneClick)
+            try
             {
-                if ((int)wParam == NativeMethods.WM_LBUTTONDOWN || (int)wParam == NativeMethods.WM_RBUTTONDOWN || (int)wParam == NativeMethods.WM_MBUTTONDOWN)
+                if (AllowOneClick)
                 {
-                    return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
-                }
-                if ((int)wParam == NativeMethods.WM_LBUTTONUP || (int)wParam == NativeMethods.WM_RBUTTONUP || (int)wParam == NativeMethods.WM_MBUTTONUP)
-                {
-                    AllowOneClick = false;
-                    return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
-                }
-            }
-            if (currentprocessid == 0) currentprocessid = System.Diagnostics.Process.GetCurrentProcess().Id;
-            if (nCode >= NativeMethods.HC_ACTION)
-            {
-                var e = new InputEventArgs();
-                var pt = new NativeMethods.POINT();
-                NativeMethods.GetPhysicalCursorPos(ref pt);
-                e.X = pt.x;
-                e.Y = pt.y;
-                e.AltKey = NativeMethods.HIBYTE(NativeMethods.GetKeyState(NativeMethods.VK_LMENU) | NativeMethods.GetKeyState(NativeMethods.VK_RMENU)) != 0;
-                e.CtrlKey = NativeMethods.HIBYTE(NativeMethods.GetKeyState(NativeMethods.VK_LCONTROL) | NativeMethods.GetKeyState(NativeMethods.VK_RCONTROL)) != 0;
-                e.ShiftKey = NativeMethods.HIBYTE(NativeMethods.GetKeyState(NativeMethods.VK_LSHIFT) | NativeMethods.GetKeyState(NativeMethods.VK_RSHIFT)) != 0;
-                e.WinKey = NativeMethods.HIBYTE(NativeMethods.GetKeyState(NativeMethods.VK_LWIN) | NativeMethods.GetKeyState(NativeMethods.VK_RWIN)) != 0;
-
-                switch ((int)wParam)
-                {
-                    case NativeMethods.WM_LBUTTONUP:
-                        e.Type = InputEventType.MouseUp;
-                        e.Button = MouseButton.Left;
-                        if(!AllowOneClick) RaiseOnMouseUp(e);
-                        //OnInput(e);
-                        break;
-                    case NativeMethods.WM_RBUTTONUP:
-                        e.Type = InputEventType.MouseUp;
-                        e.Button = MouseButton.Right;
-                        if (!AllowOneClick) RaiseOnMouseUp(e);
-                        //OnInput(e);
-                        break;
-                    case NativeMethods.WM_MBUTTONUP:
-                        e.Type = InputEventType.MouseUp;
-                        e.Button = MouseButton.Middle;
-                        if (!AllowOneClick) RaiseOnMouseUp(e);
-                        //OnInput(e);
-                        break;
-                    case NativeMethods.WM_LBUTTONDOWN:
-                        e.Type = InputEventType.MouseDown;
-                        e.Button = MouseButton.Left;
-                        if (!AllowOneClick) RaiseOnMouseDown(e);
-                        //OnInput(e);
-                        break;
-                    case NativeMethods.WM_RBUTTONDOWN:
-                        e.Type = InputEventType.MouseDown;
-                        e.Button = MouseButton.Right;
-                        if (!AllowOneClick) RaiseOnMouseDown(e);
-                        //OnInput(e);
-                        break;
-                    case NativeMethods.WM_MBUTTONDOWN:
-                        e.Type = InputEventType.MouseDown;
-                        e.Button = MouseButton.Middle;
-                        if (!AllowOneClick) RaiseOnMouseDown(e);
-                        //OnInput(e);
-                        break;
-                    case NativeMethods.WM_MOUSEMOVE:
-                        e.Type = InputEventType.MouseMove;
-                        if (!AllowOneClick) RaiseOnMouseMove(e);
-                        //OnInput(e);
-                        break;
-                }
-                if (CallNext || (int)wParam == NativeMethods.WM_MOUSEMOVE || (int)wParam == NativeMethods.WM_MouseWheel)
-                {
-                    // if((int)wParam != WM_MOUSEMOVE) Log.Debug("CallNextHookEx: " + CallNext);
-                    return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
-                }
-                try
-                {
-                    if (e.Element != null && e.Element.ProcessId == currentprocessid)
+                    if ((int)wParam == NativeMethods.WM_LBUTTONDOWN || (int)wParam == NativeMethods.WM_RBUTTONDOWN || (int)wParam == NativeMethods.WM_MBUTTONDOWN)
                     {
-                        // if ((int)wParam != WM_MOUSEMOVE) Log.Debug("CallNextHookEx: " + CallNext);
+                        return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+                    }
+                    if ((int)wParam == NativeMethods.WM_LBUTTONUP || (int)wParam == NativeMethods.WM_RBUTTONUP || (int)wParam == NativeMethods.WM_MBUTTONUP)
+                    {
+                        AllowOneClick = false;
                         return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
                     }
                 }
-                catch (Exception ex)
+                if (currentprocessid == 0) currentprocessid = System.Diagnostics.Process.GetCurrentProcess().Id;
+                if (nCode >= NativeMethods.HC_ACTION)
                 {
-                    Log.Error(ex, "");
+                    var e = new InputEventArgs();
+                    var pt = new NativeMethods.POINT();
+                    NativeMethods.GetPhysicalCursorPos(ref pt);
+                    e.X = pt.x;
+                    e.Y = pt.y;
+                    e.AltKey = NativeMethods.HIBYTE(NativeMethods.GetKeyState(NativeMethods.VK_LMENU) | NativeMethods.GetKeyState(NativeMethods.VK_RMENU)) != 0;
+                    e.CtrlKey = NativeMethods.HIBYTE(NativeMethods.GetKeyState(NativeMethods.VK_LCONTROL) | NativeMethods.GetKeyState(NativeMethods.VK_RCONTROL)) != 0;
+                    e.ShiftKey = NativeMethods.HIBYTE(NativeMethods.GetKeyState(NativeMethods.VK_LSHIFT) | NativeMethods.GetKeyState(NativeMethods.VK_RSHIFT)) != 0;
+                    e.WinKey = NativeMethods.HIBYTE(NativeMethods.GetKeyState(NativeMethods.VK_LWIN) | NativeMethods.GetKeyState(NativeMethods.VK_RWIN)) != 0;
+
+                    switch ((int)wParam)
+                    {
+                        case NativeMethods.WM_LBUTTONUP:
+                            e.Type = InputEventType.MouseUp;
+                            e.Button = MouseButton.Left;
+                            if (!AllowOneClick) RaiseOnMouseUp(e);
+                            //OnInput(e);
+                            break;
+                        case NativeMethods.WM_RBUTTONUP:
+                            e.Type = InputEventType.MouseUp;
+                            e.Button = MouseButton.Right;
+                            if (!AllowOneClick) RaiseOnMouseUp(e);
+                            //OnInput(e);
+                            break;
+                        case NativeMethods.WM_MBUTTONUP:
+                            e.Type = InputEventType.MouseUp;
+                            e.Button = MouseButton.Middle;
+                            if (!AllowOneClick) RaiseOnMouseUp(e);
+                            //OnInput(e);
+                            break;
+                        case NativeMethods.WM_LBUTTONDOWN:
+                            e.Type = InputEventType.MouseDown;
+                            e.Button = MouseButton.Left;
+                            if (!AllowOneClick) RaiseOnMouseDown(e);
+                            //OnInput(e);
+                            break;
+                        case NativeMethods.WM_RBUTTONDOWN:
+                            e.Type = InputEventType.MouseDown;
+                            e.Button = MouseButton.Right;
+                            if (!AllowOneClick) RaiseOnMouseDown(e);
+                            //OnInput(e);
+                            break;
+                        case NativeMethods.WM_MBUTTONDOWN:
+                            e.Type = InputEventType.MouseDown;
+                            e.Button = MouseButton.Middle;
+                            if (!AllowOneClick) RaiseOnMouseDown(e);
+                            //OnInput(e);
+                            break;
+                        case NativeMethods.WM_MOUSEMOVE:
+                            e.Type = InputEventType.MouseMove;
+                            if (!AllowOneClick) RaiseOnMouseMove(e);
+                            //OnInput(e);
+                            break;
+                    }
+                    if (CallNext || (int)wParam == NativeMethods.WM_MOUSEMOVE || (int)wParam == NativeMethods.WM_MouseWheel)
+                    {
+                        // if((int)wParam != WM_MOUSEMOVE) Log.Debug("CallNextHookEx: " + CallNext);
+                        return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+                    }
+                    try
+                    {
+                        if (e.Element != null && e.Element.ProcessId == currentprocessid)
+                        {
+                            // if ((int)wParam != WM_MOUSEMOVE) Log.Debug("CallNextHookEx: " + CallNext);
+                            return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, "");
+                        return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+                    }
+                    // if ((int)wParam != WM_MOUSEMOVE) Log.Debug("Skip CallNextHookEx: " + CallNext);
+                    return (IntPtr)1;
+                }
+                else
+                {
                     return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
                 }
-                // if ((int)wParam != WM_MOUSEMOVE) Log.Debug("Skip CallNextHookEx: " + CallNext);
-                return (IntPtr)1;
             }
-            else
+            catch (Exception ex)
             {
-                return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+                System.Diagnostics.Trace.WriteLine("LowLevelMouseProc: " + ex.Message);
+                return IntPtr.Zero;
             }
         }
         public UIElement Element = null;

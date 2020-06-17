@@ -76,12 +76,13 @@ namespace OpenRPA.SAPBridge
             {
                 try
                 {
+                    Program.log("RefreshSessions::begin");
                     SAPHook.Instance.RefreshSessions();
-                    SAPHook.Instance.RefreshUIElements();
+                    Program.log("RefreshSessions::end");
+
                     isMoving = false;
                     InputDriver.Instance.OnMouseMove -= OnMouseMove;
                     InputDriver.Instance.OnMouseDown -= OnMouseDown;
-
                     if (MouseMove)
                     {
                         Program.log("hook OnMouseMove");
@@ -89,6 +90,11 @@ namespace OpenRPA.SAPBridge
                     }
                     Program.log("hook OnMouseDown");
                     InputDriver.Instance.OnMouseDown += OnMouseDown;
+
+                    Program.log("RefreshUIElements::begin");
+                    SAPHook.Instance.RefreshUIElements(true);
+                    Program.log("RefreshUIElements::end");
+
                 }
                 catch (Exception ex)
                 {
@@ -155,7 +161,7 @@ namespace OpenRPA.SAPBridge
                         }
                     }
                     if (SAPHook.Instance.Connections.Count() == 0) SAPHook.Instance.RefreshSessions();
-                    if (SAPHook.Instance.UIElements.Count() == 0) SAPHook.Instance.RefreshUIElements();
+                    if (SAPHook.Instance.UIElements.Count() == 0) SAPHook.Instance.RefreshUIElements(true);
                     SAPEventElement[] elements = new SAPEventElement[] { };
                     lock (SAPHook.Instance.UIElements)
                     {
@@ -163,9 +169,21 @@ namespace OpenRPA.SAPBridge
                     }
                     if (elements.Count() > 0)
                     {
-                        var found = elements.OrderBy(x => x.Id.Length).Last();
-
+                        //Program.log("[mousemove] " + e.X + " " + e.Y);
+                        //foreach(var ele in elements)
+                        //{
+                        //    Program.log("[element] " + ele.ToString());
+                        //}
+                        var found = elements.OrderBy(x => x.IdPathCell.Length).Last();
                         if(found.Items != null && found.Items.Length > 0)
+                        {
+                            elements = found.Items.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
+                            if(elements!=null && elements.Length > 0) found = elements.OrderBy(x => x.IdPathCell.Length).Last();
+
+                        }
+                        //Program.log("[element] " + found.ToString() + " " + found.Rectangle.ToString());
+
+                        if (found.Items != null && found.Items.Length > 0)
                         {
                             var found2 = found.Items.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
                             if(found2.Length > 0)
@@ -174,9 +192,9 @@ namespace OpenRPA.SAPBridge
                             }
                         }
                         
-                        if (LastElement != null && (found.Id == LastElement.Id  && found.Path == LastElement.Path))
+                        if (LastElement != null && (found.Id == LastElement.Id && found.Path == LastElement.Path && found.Cell == LastElement.Cell))
                         {
-                            form.AddText("[SKIP] mousemove " + LastElement.Id);
+                            // form.AddText("[SKIP] mousemove " + LastElement.ToString());
                             lock (_lock)
                             {
                                 isMoving = false;
@@ -186,7 +204,7 @@ namespace OpenRPA.SAPBridge
                         LastElement = found;
                         SAPEvent message = new SAPEvent("mousemove");
                         message.Set(LastElement);
-                        form.AddText("[send] " + message.action + " " + LastElement.Id);
+                        form.AddText("[send] " + message.action + " " + LastElement.ToString() + " " + LastElement.Rectangle.ToString());
                         pipe.PushMessage(message);
                     }
                     else
@@ -231,7 +249,7 @@ namespace OpenRPA.SAPBridge
                         var last = elements.OrderBy(x => x.Id.Length).Last();
                         SAPEvent message = new SAPEvent("mousedown");
                         message.Set(last);
-                        form.AddText("[send] " + message.action + " " + last.Id);
+                        form.AddText("[send] " + message.action + " " + last.ToString());
                         pipe.PushMessage(message);
                     }
                     else
@@ -306,9 +324,13 @@ namespace OpenRPA.SAPBridge
                         {
                             overlay = recinfo.overlay;
                             //StartMonitorMouse(recinfo.mousemove);
+                            form.AddText("StartMonitorMouse::begin");
                             StartMonitorMouse(true);
+                            form.AddText("StartMonitorMouse::end");
                         }
+                        form.AddText("BeginRecord::begin");
                         SAPHook.Instance.BeginRecord(overlay);
+                        form.AddText("BeginRecord::end");
                         form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                         recordstarting = false;
@@ -449,7 +471,7 @@ namespace OpenRPA.SAPBridge
                             pipe.PushMessage(message);
                             return;
                         }
-                        msg = new SAPEventElement(comp, session.Info.SystemName, msg.GetAllProperties, msg.Path, null, msg.Flat, true, msg.MaxItem);
+                        msg = new SAPEventElement(comp, session.Info.SystemName, msg.GetAllProperties, msg.Path, msg.Cell, msg.Flat, true, msg.MaxItem, msg.VisibleOnly);
                         message.Set(msg);
                         form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);

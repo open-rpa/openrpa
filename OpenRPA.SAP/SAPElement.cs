@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing.Design;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 namespace OpenRPA.SAP
@@ -86,6 +87,7 @@ namespace OpenRPA.SAP
             ContainerType = Element.ContainerType;
             Role = Element.type;
             Path = Element.Path;
+            Cell = Element.Cell;
             if (Properties == null) Properties = new Dictionary<string, SAPElementUpdatableProperty>();
             if(Element.Properties!=null)
                 foreach (var p in Element.Properties)
@@ -130,6 +132,7 @@ namespace OpenRPA.SAP
         public bool ContainerType { get; set; }
         public string id { get; set; }
         public string Path { get; set; }
+        public string Cell { get; set; }        
         public string SystemName { get; set; }        
         public string Tip { get; set; }
         public int Action { get; set; }
@@ -153,12 +156,28 @@ namespace OpenRPA.SAP
                 if(Properties==null) return null;
                 if (Properties.ContainsKey("Value")) return Properties["Value"].Value;
                 if (Properties.ContainsKey("Text")) return Properties["Text"].Value;
+                if (Properties.ContainsKey("Selected")) return Properties["Selected"].Value;
                 return null;
             }
             set
             {
                 if (Properties == null) return;
-                if (Properties.ContainsKey("Text")) Properties["Text"].Value = value;
+                if (Properties.ContainsKey("Text"))
+                {
+                    Properties["Text"].Value = value;
+                }
+                else if (Properties.ContainsKey("Value"))
+                {
+                    Properties["Value"].Value = value;
+                }
+                else if (Properties.ContainsKey("Selected"))
+                {
+                    Properties["Selected"].Value = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Don't know how to set value for type " + Role);
+                }
             }
         }
         private bool RefreshParent = true;
@@ -172,7 +191,7 @@ namespace OpenRPA.SAP
                 try
                 {
                     var msg = new SAPEvent("getitem");
-                    msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, Path = Path });
+                    msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, Path = Path, Cell = Cell });
                     msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
                     if (msg != null)
                     {
@@ -189,6 +208,8 @@ namespace OpenRPA.SAP
             }
         }
         private bool RefreshChildren = true;
+        [JsonIgnore, IgnoreDataMember]
+        public bool VisibleOnly { get; set; } = false;
         private SAPElement[] _Children = new SAPElement[] { };
         [JsonIgnore]
         public SAPElement[] Children
@@ -205,7 +226,7 @@ namespace OpenRPA.SAP
                 try
                 {
                     var msg = new SAPEvent("getitem");
-                    msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, Path = Path, MaxItem = 50 });
+                    msg.Set(new SAPEventElement() { Id = id, SystemName = SystemName, Path = Path, Cell = Cell, VisibleOnly = VisibleOnly, MaxItem = 50 });
                     msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
                     if(msg!=null)
                     {
@@ -249,7 +270,7 @@ namespace OpenRPA.SAP
                 object[] _parameters = new object[] { };
                 // var Action = "Press";
                 var Action = "";
-                if (Role == "GuiButton")
+                if (Role == "GuiButton" || Role == "GuiGridCell" || Role == "GuiGridNode")
                 {
                     Action = "Press";
                 } 
@@ -259,13 +280,21 @@ namespace OpenRPA.SAP
                     Action = "DoubleClickNode";
                     _parameters = new object[] { Path };
                 }
+                else if(Role == "GuiRadioButton")
+                {
+                    Action = "Select";
+                }
+                else if (Role == "GuiOkCodeField")
+                {
+                    Action = "SetFocus";
+                }
                 if (!string.IsNullOrEmpty(Action))
                 {
                     var data = new SAPInvokeMethod(SystemName, id, Action, _parameters);
                     var message = new SAPEvent("invokemethod");
                     message.Set(data);
                     var result = SAPhook.Instance.SendMessage(message, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
-                } 
+                }
                 else
                 {
                     throw new Exception("Unknown click type " + Role);
@@ -388,6 +417,8 @@ namespace OpenRPA.SAP
             if (e.Role != Role) return false;
             if (e.id != id) return false;
             if (e.Tip != Tip) return false;
+            if (e.Path != Path) return false;
+            if (e.ToString() != ToString()) return false;
             return true;
         }
         public override int GetHashCode()

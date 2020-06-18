@@ -37,6 +37,7 @@ namespace OpenRPA.NM
         public string Image { get; set; }
         private readonly Variable<IEnumerator<NMElement>> _elements = new Variable<IEnumerator<NMElement>>("_elements");
         private Variable<NMElement[]> _lastelements = new Variable<NMElement[]>("_lastelements");
+        private Variable<NMElement[]> _allelements = new Variable<NMElement[]>("_allelements");
         [System.ComponentModel.Browsable(false)]
         public Activity LoopAction { get; set; }
         public GetElement()
@@ -118,19 +119,24 @@ namespace OpenRPA.NM
                 var eq = new Activities.NMEqualityComparer();
 
                 more = !System.Collections.StructuralComparisons.StructuralEqualityComparer.Equals(lastelements, elements);
+
             }
             if (more)
             {
                 context.SetValue(_elements, _enum);
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
-            else
+
+            var allelements = context.GetValue(_allelements);
+            if (more)
             {
-                Array.Resize(ref lastelements, lastelements.Length + elements.Length);
-                Array.Copy(elements, 0, lastelements, lastelements.Length, elements.Length);
-                context.SetValue(Elements, lastelements);
-                //context.SetValue(_lastelements, lastelements);
+                if (allelements == null) allelements = new NMElement[] { };
+                var allelementslength = allelements.Length;
+                Array.Resize(ref allelements, allelements.Length + elements.Length);
+                Array.Copy(elements, 0, allelements, allelementslength, elements.Length);
             }
+            context.SetValue(Elements, allelements);
+            context.SetValue(_allelements, allelements);
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
@@ -151,15 +157,15 @@ namespace OpenRPA.NM
         }
         private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
-            Execute(context);
-
             var selector = Selector.Get(context);
             selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
             var sel = new NMSelector(selector);
             var from = From.Get(context);
             string browser = sel.browser;
             if (from != null) browser = from.browser;
+            System.Threading.Thread.Sleep(500);
             DoWaitForReady(browser);
+            Execute(context);
 
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
@@ -171,6 +177,7 @@ namespace OpenRPA.NM
             Interfaces.Extensions.AddCacheArgument(metadata, "MaxResults", MaxResults);
             metadata.AddImplementationVariable(_elements);
             metadata.AddImplementationVariable(_lastelements);
+            metadata.AddImplementationVariable(_allelements);
             base.CacheMetadata(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)

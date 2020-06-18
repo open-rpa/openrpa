@@ -47,14 +47,18 @@ namespace OpenRPA.Office.Activities
             else
             {
                 int workbookcount = 0;
+                bool foundit = false;
                 foreach (Microsoft.Office.Interop.Excel.Workbook w in officewrap.application.Workbooks)
                 {
                     if (w.FullName == filename || string.IsNullOrEmpty(filename))
                     {
                         try
                         {
+                            officewrap.application.DisplayAlerts = false;
                             workbook = w;
                             w.Close(saveChanges);
+                            officewrap.application.DisplayAlerts = true;
+                            foundit = true;
                             //worksheet = workbook.ActiveSheet;
                             break;
                         }
@@ -64,7 +68,21 @@ namespace OpenRPA.Office.Activities
                         }
                     }
                 }
-                if(workbookcount== 0 || string.IsNullOrEmpty(filename))
+                Microsoft.Office.Interop.Excel.Workbook tempworkbook = officewrap.application.ActiveWorkbook;
+                if(!foundit && tempworkbook != null)
+                {
+                    officewrap.application.DisplayAlerts = false;
+                    if(saveChanges && !string.IsNullOrEmpty(filename))
+                    {
+                        tempworkbook.SaveAs(Filename: filename);
+                    }
+                    else
+                    {
+                        tempworkbook.Close(saveChanges);
+                    }
+                    officewrap.application.DisplayAlerts = true;
+                }
+                if (workbookcount== 0 || string.IsNullOrEmpty(filename))
                 {
                     officewrap.application.Quit();
                 }

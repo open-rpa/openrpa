@@ -70,7 +70,14 @@ namespace OpenRPA.IE
                     {
                         Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<IEElement>("item")
                     });
-
+                    ModelItem.Properties["MinResults"].SetValue(new InArgument<int>()
+                    {
+                        Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<int>("0")
+                    });
+                    ModelItem.Properties["Timeout"].SetValue(new InArgument<TimeSpan>()
+                    {
+                        Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromSeconds(0)")
+                    });
                 }
             }
         }

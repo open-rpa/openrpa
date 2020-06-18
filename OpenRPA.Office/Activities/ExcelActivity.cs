@@ -35,6 +35,7 @@ namespace OpenRPA.Office.Activities
                 if (_application == null)
                 {
                     _application = StartExcel();
+                    _application.Visible = true;
                 }
                 return _application;
             }
@@ -42,19 +43,22 @@ namespace OpenRPA.Office.Activities
         private static Microsoft.Office.Interop.Excel.Application StartExcel()
         {
             Microsoft.Office.Interop.Excel.Application instance = null;
-            try
+            OpenRPA.Interfaces.GenericTools.RunUI(() =>
             {
-                instance = (Microsoft.Office.Interop.Excel.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application");
-            }
-            catch (System.Runtime.InteropServices.COMException)
-            {
-                instance = new Microsoft.Office.Interop.Excel.Application();
-            }
-            //finally
-            //{
-            //    if (activeObject == null) activeObject = (Application)Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid("00024500-0000-0000-C000-000000000046")));
-            //    activeObject.Visible = true;
-            //}
+                try
+                {
+                    instance = (Microsoft.Office.Interop.Excel.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application");
+                }
+                catch (System.Runtime.InteropServices.COMException)
+                {
+                    //instance = new Microsoft.Office.Interop.Excel.Application();
+                }
+                finally
+                {
+                    if (instance == null) instance = (Application)Activator.CreateInstance(System.Runtime.InteropServices.Marshal.GetTypeFromCLSID(new Guid("00024500-0000-0000-C000-000000000046")));
+                    instance.Visible = true;
+                }
+            });
 
             return instance;
         }
@@ -86,7 +90,6 @@ namespace OpenRPA.Office.Activities
         public virtual InArgument<string> ReadPassword { get; set; }
         [System.ComponentModel.Category("Misc")]
         public virtual InArgument<string> WritePassword { get; set; }
-        [RequiredArgument]
         [System.ComponentModel.Category("Input")]
         public virtual InArgument<string> Filename { get; set; }
         [System.ComponentModel.Category("Input")]
@@ -111,39 +114,48 @@ namespace OpenRPA.Office.Activities
             if (string.IsNullOrEmpty(readPassword)) readPassword = null;
             var writePassword = WritePassword.Get(context);
             if (string.IsNullOrEmpty(writePassword)) writePassword = null;
-            foreach (Microsoft.Office.Interop.Excel.Workbook w in officewrap.application.Workbooks)
+            if(!string.IsNullOrEmpty(filename))
             {
-                if (w.FullName == filename)
+                foreach (Microsoft.Office.Interop.Excel.Workbook w in officewrap.application.Workbooks)
                 {
-                    try
+                    if (w.FullName == filename)
                     {
-                        workbook = w;
-                        worksheet = workbook.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
-                        break;
+                        try
+                        {
+                            workbook = w;
+                            worksheet = workbook.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
+                            break;
+                        }
+                        catch (Exception)
+                        {
+                            workbook = null;
+                        }
                     }
-                    catch (Exception)
+                }
+                if (workbook == null)
+                {
+                    officewrap.application.DisplayAlerts = false;
+                    //application.AutomationSecurity = Microsoft.Office.Core.MsoAutomationSecurity.msoAutomationSecurityLow;
+                    if (System.IO.File.Exists(filename))
                     {
-                        workbook = null;
+                        workbook = officewrap.application.Workbooks.Open(filename, ReadOnly: false,
+                            Password: readPassword, WriteResPassword: writePassword);
                     }
+                    else
+                    {
+                        if(!string.IsNullOrEmpty(filename))
+                        {
+                            workbook = officewrap.application.Workbooks.Add();
+                            workbook.Activate();
+                            //workbook.SaveCopyAs(filename);
+                            workbook.SaveAs(Filename: filename);
+                        }
+                    }
+                    officewrap.application.DisplayAlerts = true;
                 }
             }
-            if (workbook == null)
-            {
-                officewrap.application.DisplayAlerts = false;
-                //application.AutomationSecurity = Microsoft.Office.Core.MsoAutomationSecurity.msoAutomationSecurityLow;
-                if(System.IO.File.Exists(filename))
-                {
-                    workbook = officewrap.application.Workbooks.Open(filename, ReadOnly: false,
-                        Password: readPassword, WriteResPassword: writePassword);
-                } else
-                {
-                    workbook = officewrap.application.Workbooks.Add();
-                    workbook.Activate();
-                    workbook.SaveCopyAs(filename);
-                }
+            if(workbook == null) workbook = officewrap.application.ActiveWorkbook;
 
-                officewrap.application.DisplayAlerts = true;
-            }
         }
 
         //public void cleanup()
@@ -178,14 +190,7 @@ namespace OpenRPA.Office.Activities
             }
             if (workbook == null)
             {
-                if (!string.IsNullOrEmpty(filename))
-                {
-                    doOpen(context);
-                }
-                else
-                {
-                    workbook = officewrap.application.Workbooks.Add();
-                }
+                doOpen(context);
             }
             string _worksheet = (Worksheet != null ? Worksheet.Get(context) : null);
             try
@@ -234,7 +239,6 @@ namespace OpenRPA.Office.Activities
         {
             Visible = true;
         }
-        [RequiredArgument]
         public InArgument<string> Filename { get; set; }
         //[RequiredArgument]
         [System.ComponentModel.Browsable(false)]
@@ -254,7 +258,6 @@ namespace OpenRPA.Office.Activities
             officewrap.application.Visible = true;
             // officewrap.application.Visible = Visible.Get(context);
             if (!string.IsNullOrEmpty(filename)) filename = Environment.ExpandEnvironmentVariables(filename);
-
             workbook = (Workbook != null ? Workbook.Get(context) : null);
             if (!string.IsNullOrEmpty(filename) && workbook != null)
             {
@@ -273,27 +276,39 @@ namespace OpenRPA.Office.Activities
 
                 }
             }
-            if (workbook == null)
+            if (!string.IsNullOrEmpty(filename) && workbook == null)
             {
-                if (!string.IsNullOrEmpty(filename))
+                foreach (Microsoft.Office.Interop.Excel.Workbook w in officewrap.application.Workbooks)
                 {
-                    foreach (Microsoft.Office.Interop.Excel.Workbook w in officewrap.application.Workbooks)
+                    if (w.FullName == filename)
                     {
-                        if (w.FullName == filename)
-                        {
-                            workbook = w;
-                            break;
-                        }
+                        workbook = w;
+                        break;
                     }
-                    if (workbook == null) workbook = officewrap.application.Workbooks.Open(filename);
-
                 }
-                else
+                if (workbook == null)
                 {
-                    workbook = officewrap.application.Workbooks.Add();
+                    officewrap.application.DisplayAlerts = false;
+                    //application.AutomationSecurity = Microsoft.Office.Core.MsoAutomationSecurity.msoAutomationSecurityLow;
+                    if (System.IO.File.Exists(filename))
+                    {
+                        workbook = officewrap.application.Workbooks.Open(filename, ReadOnly: false);
+                    }
+                    else
+                    {
+                        workbook = officewrap.application.Workbooks.Add();
+                        workbook.Activate();
+                        //workbook.SaveCopyAs(filename);
+                        workbook.SaveAs(Filename: filename);
+                    }
+                    officewrap.application.DisplayAlerts = true;
+
                 }
             }
-
+            if (workbook == null) workbook = officewrap.application.ActiveWorkbook;
+            if(workbook == null)
+            {
+            }
             var _worksheet = (Worksheet != null ? Worksheet.Get(context) : null);
             worksheet = workbook.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
             if (!string.IsNullOrEmpty(_worksheet))

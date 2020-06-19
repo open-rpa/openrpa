@@ -103,7 +103,7 @@ namespace OpenRPA.IE
                 var p = System.Diagnostics.Process.GetProcessById(e.Element.ProcessId);
                 if (p.ProcessName != "iexplore" && p.ProcessName != "iexplore.exe") return;
 
-                var browser = new Browser(e.Element.RawElement);
+                var browser = new Browser();
                 var htmlelement = browser.ElementFromPoint(e.X, e.Y);
                 if (htmlelement == null) { return; }
 
@@ -156,9 +156,7 @@ namespace OpenRPA.IE
             if (e.UIElement.ProcessId < 1) return false;
             var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
             if(p.ProcessName!="iexplore" && p.ProcessName != "iexplore.exe") return false;
-
-            var browser = new Browser(e.UIElement.RawElement);
-
+            var browser = new Browser();
 
             var htmlelement = browser.ElementFromPoint(e.X, e.Y);
             if (htmlelement == null) { return false; }

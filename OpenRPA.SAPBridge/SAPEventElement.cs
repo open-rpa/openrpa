@@ -342,11 +342,11 @@ namespace OpenRPA.SAPBridge
                     Items = children.ToArray();
                 }
             }
-            else if (comp is SAPFEWSELib.GuiRadioButton radio && LoadChildren)
+            else if (comp is SAPFEWSELib.GuiRadioButton radio)
             {
                 var p = new List<SAPElementProperty>();
                 p.Add(new SAPElementProperty("Selected", radio.Selected.ToString(), false));
-                
+                type = "GuiRadioButton";
                 int Left = 0;
                 int Top = 0;
                 int Width = 0;
@@ -372,7 +372,7 @@ namespace OpenRPA.SAPBridge
                 _Rectangle = new Rectangle(ScreenLeft, ScreenTop, Width, Height);
                 var children = new List<SAPEventElement>();
                 var keys = radio.GroupMembers as SAPFEWSELib.GuiCollection;
-                if(keys!=null)
+                if(keys!=null && LoadChildren)
                     for (var i = 0; i < keys.Count; i++)
                     {
                         var ele = keys.ElementAt(i) as SAPFEWSELib.GuiComboBoxEntry;
@@ -385,13 +385,13 @@ namespace OpenRPA.SAPBridge
                     }
                 Items = children.ToArray();
             }
-            else if (comp is SAPFEWSELib.GuiComboBox combobox && LoadChildren)
+            else if (comp is SAPFEWSELib.GuiComboBox combobox)
             {
                 var children = new List<SAPEventElement>();
                 var keys = combobox.Entries as SAPFEWSELib.GuiCollection;
                 var p = new List<SAPElementProperty>();
                 p.Add(new SAPElementProperty("Value", combobox.Value, false));
-
+                type = "GuiComboBox";
                 int Left = 0;
                 int Top = 0;
                 int Width = 0;
@@ -415,17 +415,30 @@ namespace OpenRPA.SAPBridge
                 p.Add(new SAPElementProperty("Height", Height.ToString(), true));
                 Properties = p.ToArray();
                 _Rectangle = new Rectangle(ScreenLeft, ScreenTop, Width, Height);
-                for (var i=0; i < keys.Count; i++)
-                {
-                    var ele = keys.ElementAt(i) as SAPFEWSELib.GuiComboBoxEntry;
-                    var _msg = new SAPEventElement(ele, SystemName, combobox.Id, all);
-                    children.Add(_msg);
-                    if (MaxItem > 0)
+                if(LoadChildren)
+                    for (var i=0; i < keys.Count; i++)
                     {
-                        if (children.Count >= MaxItem) break;
+                        var ele = keys.ElementAt(i) as SAPFEWSELib.GuiComboBoxEntry;
+                        var _msg = new SAPEventElement(ele, SystemName, combobox.Id, all);
+                        children.Add(_msg);
+                        if (MaxItem > 0)
+                        {
+                            if (children.Count >= MaxItem) break;
+                        }
                     }
-                }
                 Items = children.ToArray();
+            }
+            else if (comp is SAPFEWSELib.GuiAbapEditor)
+            {
+                type = "GuiAbapEditor";
+            }
+            else if (comp is SAPFEWSELib.GuiTextedit)
+            {
+                type = "GuiTextedit";
+            }
+            else if (comp is SAPFEWSELib.GuiTextField)
+            {
+                type = "GuiTextField";
             }
             else if (comp.ContainerType)
             {
@@ -510,12 +523,13 @@ namespace OpenRPA.SAPBridge
                 //{
                 //    throw new Exception("Unknown container type " + comp.Type + "!");
                 //}
+
             }
-            else
+            if (Properties == null || Properties.Count() == 0)
             {
-                if(!VisibleOnly) LoadProperties(comp, all);
+                if (!VisibleOnly) LoadProperties(comp, all);
             }
-            if(string.IsNullOrEmpty(Name))
+            if (string.IsNullOrEmpty(Name))
             {
                 if(Properties!=null)
                 {

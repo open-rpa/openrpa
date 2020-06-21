@@ -220,9 +220,12 @@ namespace OpenRPA.Activities
                         }
                         else
                         {
-                            var method = typeof(JObject).GetMethod(nameof(JToken.Value));
-                            var generic = method.MakeGenericMethod(Arguments[a.Key].ArgumentType);
-                            var t = payload[a.Key];
+                            JToken t = payload[a.Key];
+                            var testtest = t.Value<string>();
+                            System.Reflection.MethodInfo method = typeof(JToken).GetMethod(nameof(JToken.Value)); // typeof(JToken).GetMethod(nameof(JToken.Value));
+                            System.Reflection.MethodInfo generic = method.MakeGenericMethod(Arguments[a.Key].ArgumentType);
+                            var value = generic.Invoke(t, new object[] {  });
+                            Arguments[a.Key].Set(context, value);
                         }
                     }
                     else

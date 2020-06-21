@@ -105,22 +105,23 @@ namespace OpenRPA.SAPBridge
         {
             if(app==null) UIElements = new SAPEventElement[] { };
             var result = new List<SAPEventElement>();
-            for (int x = 0; x < app.Children.Count; x++)
-            {
-                var con = app.Children.ElementAt(x) as GuiConnection;
-                if (con.Sessions.Count == 0) continue;
-
-                for (int j = 0; j < con.Sessions.Count; j++)
+            if(app != null && app.Children != null)
+                for (int x = 0; x < app.Children.Count; x++)
                 {
-                    var session = con.Children.ElementAt(j) as GuiSession;
-                    var ele = session as GuiComponent;
-                    GetUIElements(result, session, session.Id, ele, VisibleOnly);
-                    //for (var i = 0; i < session.Children.Count; i++)
-                    //{
-                    //    GetUIElements(result, session, session.Id, session.Children.ElementAt(i), VisibleOnly);
-                    //}
+                    var con = app.Children.ElementAt(x) as GuiConnection;
+                    if (con.Sessions.Count == 0) continue;
+
+                    for (int j = 0; j < con.Sessions.Count; j++)
+                    {
+                        var session = con.Children.ElementAt(j) as GuiSession;
+                        var ele = session as GuiComponent;
+                        GetUIElements(result, session, session.Id, ele, VisibleOnly);
+                        //for (var i = 0; i < session.Children.Count; i++)
+                        //{
+                        //    GetUIElements(result, session, session.Id, session.Children.ElementAt(i), VisibleOnly);
+                        //}
+                    }
                 }
-            }
             lock(UIElements)
             {
                 UIElements = result.ToArray();

@@ -273,7 +273,19 @@ namespace OpenRPA.Script.Activities
                                             myVar.SetValue(context.DataContext, pyobj.ToString());
                                         else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(pyobj.ToString()));
                                         else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(pyobj.ToString()));
-                                        else Log.Information("Ignorering variable " + parameter.Key + " of type " + myVar.PropertyType.FullName);
+                                        else
+                                        {
+                                            try
+                                            {
+                                                var obj = Newtonsoft.Json.JsonConvert.DeserializeObject(pyobj.ToString(), myVar.PropertyType);
+                                                myVar.SetValue(context.DataContext, obj);
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                Log.Information("Failed variable " + parameter.Key + " of type " + myVar.PropertyType.FullName + " " + ex.Message);
+                                            }
+                                        }
+
                                     }
                                 }
                                 //lck = PythonEngine.AcquireLock();

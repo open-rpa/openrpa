@@ -509,7 +509,9 @@ namespace OpenRPA.Net
                 cont = false;
                 QueryMessage<T> q = new QueryMessage<T>(); q.top = _top; q.skip = _skip;
                 q.projection = projection; q.orderby = orderby; q.queryas = queryas;
-                q.collectionname = collectionname; q.query = JObject.Parse(query);
+                q.collectionname = collectionname;
+                if (string.IsNullOrEmpty(query)) query = "{}";
+                    q.query = JObject.Parse(query);
                 q = await q.SendMessage<QueryMessage<T>>(this);
                 if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
                 result.AddRange(q.result);

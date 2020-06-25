@@ -10,8 +10,10 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.130</Version>
-    <PackageReleaseNotes>1.0.130 openflow: Fix uniqe parsing error in insert or update, add UpdateFromDataTable
+    <Version>1.0.132</Version>
+    <PackageReleaseNotes>1.0.132 Fix addon after firefox update breaking things
+1.0.131 utilities: add SetAllRowsAdded
+1.0.130 openflow: Fix uniqe parsing error in insert or update, add UpdateFromDataTable
 1.0.129 Add support for better serialization of variables to and from python
 1.0.127 Allow int/bool and other non string values as selecotr variables. Force WaitForReady when using loop action in NM-GetElement. More SAP Improvements
 1.0.126 pre-release if new updates to SAP

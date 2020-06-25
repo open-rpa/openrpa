@@ -36,6 +36,7 @@ namespace OpenRPA.Office.Activities
             base.Execute(context);
             var dt = DataTable.Get(context);
             if (dt == null) throw new ArgumentException("DataTable is null", "DataTable");
+            if (dt.Rows.Count == 0) return;
             var cells = Cells.Get(context);
             Microsoft.Office.Interop.Excel.Range xlRange = null;
             if (string.IsNullOrEmpty(cells))

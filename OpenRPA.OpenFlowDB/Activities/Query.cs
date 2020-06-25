@@ -22,7 +22,6 @@ namespace OpenRPA.OpenFlowDB
     {
         [Browsable(false)]
         public InArgument<bool> IgnoreErrors { get; set; }
-        [RequiredArgument]
         public InArgument<string> QueryString { get; set; }
         [RequiredArgument]
         public InArgument<string> Collection { get; set; } = "entities";

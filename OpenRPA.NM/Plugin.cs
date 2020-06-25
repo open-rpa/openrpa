@@ -66,6 +66,14 @@ namespace OpenRPA.NM
                 xPath = "/html",
                 frameId = -1
             };
+            var tab = NMHook.tabs.Where(x => x.browser == browser && (x.active || x.selected)).FirstOrDefault();
+            if (tab == null) NMHook.enumwindowandtabs();
+            if (tab!=null)
+            {
+                getelement.tabid = tab.id;
+                getelement.windowId = tab.windowId;
+            }
+
             if (anchor != null && anchor.Count > 1)
             {
                 var s = anchor[1];

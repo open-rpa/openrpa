@@ -512,7 +512,10 @@ namespace OpenRPA
             }
             finally
             {
-                SetStatus("Connected to " + Config.local.wsurl + " as " + global.webSocketClient.user.name);
+                if(global.webSocketClient.user != null)
+                {
+                    SetStatus("Connected to " + Config.local.wsurl + " as " + global.webSocketClient.user.name);
+                }
                 AutoReloading = true;
             }
             Log.FunctionOutdent("RobotInstance", "LoadServerData");

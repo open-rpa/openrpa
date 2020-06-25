@@ -7,8 +7,9 @@
     <Description>Activities and record plugin for handling Internet Explorer, created for OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.30</Version>
-    <PackageReleaseNotes>1.0.30 Fix endless loop bug
+    <Version>1.0.31</Version>
+    <PackageReleaseNotes>1.0.31 Fix launch IE error
+1.0.30 Fix endless loop bug
 1.0.29 Fix select value for IE, add SupportSelect
 1.0.28 Make caching of IE object optional, and disable by default
 1.0.27 Add support for nested getelement, when using xpath

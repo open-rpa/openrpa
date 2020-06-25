@@ -70,6 +70,7 @@ namespace OpenRPA.Utilities
                     firstrow = false;
                 }
             }
+            csvData.AcceptChanges();
             return csvData;
         }
         protected override void Execute(CodeActivityContext context)

@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using Newtonsoft.Json.Linq;
+using System.Data;
 
 namespace OpenRPA.OpenFlowDB
 {
@@ -19,8 +20,8 @@ namespace OpenRPA.OpenFlowDB
     [LocalizedDisplayName("activity_query", typeof(Resources.strings))]
     public class Query : AsyncTaskCodeActivity<JObject[]>
     {
-        [RequiredArgument]
-        public InArgument<bool> IgnoreErrors { get; set; } = false;
+        [Browsable(false)]
+        public InArgument<bool> IgnoreErrors { get; set; }
         [RequiredArgument]
         public InArgument<string> QueryString { get; set; }
         [RequiredArgument]
@@ -29,9 +30,10 @@ namespace OpenRPA.OpenFlowDB
         public InArgument<string> Orderby { get; set; }
         public InArgument<int> Top { get; set; }
         public InArgument<int> Skip { get; set; }
+        public OutArgument<DataTable> DataTable { get; set; }
         protected async override Task<JObject[]> ExecuteAsync(AsyncCodeActivityContext context)
         {
-            var ignoreErrors = IgnoreErrors.Get(context);
+            //var ignoreErrors = IgnoreErrors.Get(context);
             var collection = Collection.Get(context);
             var querystring = QueryString.Get(context);
             var projection = Projection.Get(context);
@@ -44,6 +46,16 @@ namespace OpenRPA.OpenFlowDB
             JObject[] result = null;
             result = await global.webSocketClient.Query<JObject>(collection, querystring, projection, top, skip, orderby);
             System.Windows.Forms.Application.DoEvents();
+            return result;
+        }
+        protected override JObject[] PostExecute(AsyncCodeActivityContext context, JObject[] result)
+        {
+            if (DataTable != null && DataTable.Expression != null)
+            {
+                var jarray = new JArray(result);
+                DataTable dt = jarray.ToDataTable();
+                DataTable.Set(context, dt);
+            }
             return result;
         }
         public new string DisplayName

@@ -25,6 +25,10 @@ namespace OpenRPA.Net
         public object data { get; set; }
         public string correlationId { get; set; }
         public string replyto { get; set; }
+        public int expiration { get; set; }
+        public string consumerTag { get; set; }
+        public string routingkey { get; set; }
+        public string exchange { get; set; }
 
     }
 }

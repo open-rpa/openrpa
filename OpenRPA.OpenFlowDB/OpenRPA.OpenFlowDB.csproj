@@ -9,8 +9,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Configurations>Debug;Release;PrepInstaller;ReleaseNuget</Configurations>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.0.6</Version>
-    <PackageReleaseNotes>1.0.6 Change target framework to 4.7.2
+    <Version>1.0.7</Version>
+    <PackageReleaseNotes>1.0.7 Fix uniqe parsing error in insert or update, add UpdateFromDataTable
+1.0.6 Change target framework to 4.7.2
 1.0.5 Add AssignOpenFlow
 1.0.4 Add langauges
 1.0.3 update reference</PackageReleaseNotes>
@@ -52,6 +53,7 @@
     <None Remove="Activities\RemovePermissionDesigner.xaml" />
     <None Remove="Activities\SaveFileDesigner.xaml" />
     <None Remove="Activities\SetCredentialsDesigner.xaml" />
+    <None Remove="Activities\UpdateFromDataTableDesigner.xaml" />
     <None Remove="Resources\designer\addentitypermission.png" />
     <None Remove="Resources\designer\breakpoint.png" />
     <None Remove="Resources\designer\comment.png" />
@@ -236,6 +238,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\InsertOneDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\UpdateFromDataTableDesigner.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\InsertOrUpdateOneDesigner.xaml">

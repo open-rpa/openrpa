@@ -403,6 +403,24 @@ namespace OpenRPA.OpenFlowDB.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Update From DataTable.
+        /// </summary>
+        public static string activity_updatefromdataTable {
+            get {
+                return ResourceManager.GetString("activity_updatefromdataTable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Commit changes made on a DataTable back to OpenFlow, returns list of inserted and updated rows.
+        /// </summary>
+        public static string activity_updatefromdataTable_tooltip {
+            get {
+                return ResourceManager.GetString("activity_updatefromdataTable_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wait until Completed.
         /// </summary>
         public static string activity_waitforcompleted {

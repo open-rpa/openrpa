@@ -497,6 +497,7 @@ namespace OpenRPA.SAP
                 var row = c.ToDataRow(result, columnNames);
                 if(row!=null) result.Rows.Add(row);
             }
+            result.AcceptChanges();
             return result;
         }
         public DataRow ToDataRow(DataTable dt)

@@ -898,6 +898,7 @@ namespace OpenRPA
                 }
                 table.Rows.Add(objs.ToArray());
             }
+            table.AcceptChanges();
             return table;
         }
     }

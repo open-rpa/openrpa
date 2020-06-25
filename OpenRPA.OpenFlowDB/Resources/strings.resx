@@ -231,6 +231,12 @@
   <data name="activity_setcredentials_tooltip" xml:space="preserve">
     <value>Create or update a set of encrypted credentials in OpenFlow</value>
   </data>
+  <data name="activity_updatefromdataTable" xml:space="preserve">
+    <value>Update From DataTable</value>
+  </data>
+  <data name="activity_updatefromdataTable_tooltip" xml:space="preserve">
+    <value>Commit changes made on a DataTable back to OpenFlow, returns list of inserted and updated rows</value>
+  </data>
   <data name="activity_waitforcompleted" xml:space="preserve">
     <value>Wait until Completed</value>
   </data>

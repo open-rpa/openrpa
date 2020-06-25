@@ -38,9 +38,7 @@ namespace OpenRPA.OpenFlowDB
             var collection = Collection.Get(context);
             if (string.IsNullOrEmpty(collection)) collection = "entities";
             var type = Type.Get(context);
-            var uniqeness = Uniqeness.Get(context);
             var uniqueness = Uniqueness.Get(context);
-            if (string.IsNullOrEmpty(uniqueness)) uniqueness = uniqeness;
             JObject result = null;
             var o = Item.Get(context);
             if (o.GetType() != typeof(JObject))
@@ -66,7 +64,7 @@ namespace OpenRPA.OpenFlowDB
             {
                 result["_type"] = type;
             }
-            result = await global.webSocketClient.InsertOrUpdateOne(collection, 1, false, uniqeness, result);
+            result = await global.webSocketClient.InsertOrUpdateOne(collection, 1, false, uniqueness, result);
             System.Windows.Forms.Application.DoEvents();
             return result;
         }

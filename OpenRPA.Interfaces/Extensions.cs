@@ -61,7 +61,7 @@ namespace OpenRPA.Interfaces
                 }
                 result.Rows.Add(datarow);
             }
-
+            result.AcceptChanges();
             return result;
         }
         public static Newtonsoft.Json.Linq.JArray ToJArray(this System.Data.DataTable dt)

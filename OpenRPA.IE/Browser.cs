@@ -110,7 +110,8 @@ namespace OpenRPA.IE
         }
         internal Browser() {
             findBrowser();
-            if (wBrowser.Document == null) throw new Exception("Failed initializing Internet Eexplorer");
+            if (wBrowser == null || wBrowser.Document == null) return;
+            // if (wBrowser.Document == null) throw new Exception("Failed initializing Internet Eexplorer");
             Document = wBrowser.Document as MSHTML.HTMLDocument;
             title = Document.title;
         }

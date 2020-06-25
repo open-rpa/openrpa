@@ -73,7 +73,8 @@ namespace OpenRPA.Interfaces
             var task = (Task<T>)result;
             try
             {
-                return task.Result;
+                //return task.Result;
+                return PostExecute(context, task.Result);
             }
             catch (AggregateException ex)
             {
@@ -81,7 +82,11 @@ namespace OpenRPA.Interfaces
                 throw;
             }
         }
-
+        //https://stackoverflow.com/questions/26054585/asynctaskcodeactivity-and-lost-context-after-await
+        protected virtual T PostExecute(AsyncCodeActivityContext context, T result)
+        {
+            return result;
+        }
         protected abstract Task<T> ExecuteAsync(AsyncCodeActivityContext context);
     }
 

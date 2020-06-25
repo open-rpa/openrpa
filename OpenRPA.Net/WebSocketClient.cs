@@ -393,7 +393,7 @@ namespace OpenRPA.Net
                         {
                             var e = new QueueMessageEventArgs();
                             OnQueueMessage?.Invoke(qm, e);
-                            msg.data = JsonConvert.SerializeObject(qm);                            
+                            msg.data = JsonConvert.SerializeObject(qm);
                             if (e.isBusy)
                             {
                                 msg.command = "error";

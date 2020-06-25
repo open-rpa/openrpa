@@ -188,7 +188,8 @@ namespace OpenRPA.Office.Activities
                 if (!ignoreEmptyRows) hasValue = true;
                 if (hasValue) dt.LoadDataRow(singleDValue, System.Data.LoadOption.PreserveChanges);
             }
-            return (dt);
+            dt.AcceptChanges();
+            return dt;
         }
         public new string DisplayName
         {

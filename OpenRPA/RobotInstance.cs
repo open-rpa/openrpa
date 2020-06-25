@@ -858,8 +858,8 @@ namespace OpenRPA
                 try
                 {
                     SetStatus("Registering queues");
-                    Log.Debug("Registering queue for robot " + global.webSocketClient.user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    await global.webSocketClient.RegisterQueue(global.webSocketClient.user._id);
+                    Log.Debug("Registering queue for robot " + user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                    await global.webSocketClient.RegisterQueue(user._id);
 
                     foreach (var role in global.webSocketClient.user.roles)
                     {
@@ -934,7 +934,7 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
-            await Task.Delay(1000);
+            await Task.Delay(5000);
             if (autoReconnect)
             {
                 try
@@ -1141,7 +1141,15 @@ namespace OpenRPA
             {
                 if (!string.IsNullOrEmpty(message.replyto) && message.replyto != message.queuename)
                 {
-                    await global.webSocketClient.QueueMessage(message.replyto, command, message.correlationId);
+                    try
+                    {
+                        await global.webSocketClient.QueueMessage(message.replyto, command, message.correlationId);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.Message);
+                    }
                 }
             }
             Log.FunctionOutdent("RobotInstance", "WebSocketClient_OnQueueMessage");

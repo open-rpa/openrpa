@@ -44,7 +44,8 @@ namespace OpenRPA.OpenFlowDB
             {
                 if(row.RowState == DataRowState.Deleted)
                 {
-                    var _id = row["_id"].ToString();
+
+                    var _id = row["_id", DataRowVersion.Original].ToString();
                     await global.webSocketClient.DeleteOne(collection, _id);
                 } 
                 else if(row.RowState == DataRowState.Added || row.RowState == DataRowState.Modified)

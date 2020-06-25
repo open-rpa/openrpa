@@ -115,6 +115,15 @@ namespace OpenRPA.Utilities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Row.
+        /// </summary>
+        public static string activity_deletedatarow_row {
+            get {
+                return ResourceManager.GetString("activity_deletedatarow_row", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save into this folder.
         /// </summary>
         public static string activity_downloadfile_hint {

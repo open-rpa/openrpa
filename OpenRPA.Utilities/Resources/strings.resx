@@ -135,6 +135,9 @@
   <data name="activity_datatable_newcolumnname" xml:space="preserve">
     <value>New columns Name</value>
   </data>
+  <data name="activity_deletedatarow_row" xml:space="preserve">
+    <value>Row</value>
+  </data>
   <data name="activity_downloadfile_hint" xml:space="preserve">
     <value>Save into this folder</value>
   </data>

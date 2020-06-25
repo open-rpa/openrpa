@@ -241,7 +241,12 @@ namespace OpenRPA.NM
                 {
                     return;
                 }
-                if(PluginConfig.compensate_for_old_addon)
+                if(msg.functionName != "mousemove")
+                {
+                    Log.Verbose("[nmhook][resc][" + msg.browser + "]" + msg.functionName + " for tab " + msg.tabid + " - " + msg.messageid);
+                    //Log.Output("[nmhook][resc][" + msg.browser + "]" + msg.functionName + " for tab " + msg.tabid + " - " + msg.messageid + " (" + msg.uix + "," + msg.uiy + "," + msg.uiwidth + "," + msg.uiheight + ")");
+                }
+                if (PluginConfig.compensate_for_old_addon)
                 {
                     msg.uix -= 7;
                     msg.uiy += 7;

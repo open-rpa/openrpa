@@ -675,11 +675,11 @@ chrome.tabs.onCreated.addListener(tabsOnCreated);
 chrome.tabs.onRemoved.addListener(tabsOnRemoved);
 chrome.tabs.onUpdated.addListener(tabsOnUpdated);
 chrome.tabs.onActivated.addListener(tabsOnActivated);
-chrome.extension.onRequest.addListener(function (response) {
-    if (response.type === "urlUpdate") {
-        document.getElementById("addressBar").value = response.url;
-    }
-});
+//chrome.extension.onRequest.addListener(function (response) {
+//    if (response.type === "urlUpdate") {
+//        document.getElementById("addressBar").value = response.url;
+//    }
+//});
 
 chrome.runtime.onMessage.addListener((msg, sender, fnResponse) => {
     if (msg === "loadscript") {

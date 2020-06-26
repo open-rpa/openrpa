@@ -69,8 +69,8 @@ namespace OpenRPA.Office.Activities
             if (unreadonly)
             {
                 if (string.IsNullOrEmpty(filter)) filter = "";
-                if (!filter.ToLower().Contains("[unread]") && filter.ToLower().Contains("httpmail:read"))
-                {
+                //if (!filter.ToLower().Contains("[unread]") && filter.ToLower().Contains("httpmail:read"))
+                //{
                     if (string.IsNullOrEmpty(filter))
                     {
                         filter = "[Unread]=true";
@@ -78,9 +78,13 @@ namespace OpenRPA.Office.Activities
                     {
                         filter += "and [Unread]=true";
                     }
-                }
+                // }
                 // var Filter = "@SQL=" + (char)34 + "urn:schemas:httpmail:hasattachment" + (char)34 + "=1 AND " +
                 // var Filter = "@SQL=" + (char)34 + "urn:schemas:httpmail:read" + (char)34 + "=0";
+            } 
+            else
+            {
+
             }
             if (!string.IsNullOrEmpty(filter))
             {

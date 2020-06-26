@@ -7,8 +7,9 @@
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office, created for OpenRPA robot</Description>
-    <Version>1.0.26</Version>
-    <PackageReleaseNotes>1.0.26 Add GetSelectedRange
+    <Version>1.0.27</Version>
+    <PackageReleaseNotes>1.0.27 fix issue with "unread" only not working / fix issue with ignoreing overwrite property, when saving all attachments
+1.0.26 Add GetSelectedRange
 1.0.25 Fix index error in readrange when HeaderRows is false, add range check in readrange
 1.0.24 Add query and MaxResults to GetMails
 1.0.23 Add Move MailItem

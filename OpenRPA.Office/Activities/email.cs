@@ -35,7 +35,7 @@ namespace OpenRPA.Office.Activities
         {
             foreach(var a in Attachments)
             {
-                if (!a.SaveTo(Path)) return false;
+                if (!a.SaveTo(Path, Overwrite)) return false;
             }
             return true;
         }

@@ -22,7 +22,7 @@ namespace OpenRPA.NM
         public InArgument<string> Script { get; set; }
         public InArgument<int> FrameId { get; set; }
         public InArgument<string> Browser { get; set; }
-        public OutArgument<string> Result { get; set; }
+        public OutArgument<object> Result { get; set; }
         protected override void Execute(NativeActivityContext context)
         {
             var script = Script.Get(context);

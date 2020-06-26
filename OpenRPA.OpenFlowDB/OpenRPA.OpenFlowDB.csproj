@@ -9,8 +9,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Configurations>Debug;Release;PrepInstaller;ReleaseNuget</Configurations>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.0.7</Version>
-    <PackageReleaseNotes>1.0.7 Fix uniqe parsing error in insert or update, add UpdateFromDataTable
+    <Version>1.0.8</Version>
+    <PackageReleaseNotes>1.0.8 fix issue with getfile not fetching newest version when getting by filename
+1.0.7 Fix uniqe parsing error in insert or update, add UpdateFromDataTable
 1.0.6 Change target framework to 4.7.2
 1.0.5 Add AssignOpenFlow
 1.0.4 Add langauges

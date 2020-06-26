@@ -224,10 +224,10 @@ namespace OpenRPA
                 {
                     SetStatus("Loading workflows and state");
                     Log.Debug("Get workflows from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", orderby: "{projectid:-1,name:-1}", top: 5000);
+                    var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", orderby: "{\"projectid\":-1,\"name\":-1}", top: 5000);
                     workflows = workflows.OrderBy(x => x.name).ToArray();
                     Log.Debug("Get projects from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}", orderby: "{name:-1}");
+                    var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}", orderby: "{\"name\":-1}");
                     projects = projects.OrderBy(x => x.name).ToArray();
                     Log.Debug("Get detectors from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                     var detectors = await global.webSocketClient.Query<Interfaces.entity.Detector>("openrpa", "{_type: 'detector'}");
@@ -291,7 +291,7 @@ namespace OpenRPA
                     SetStatus("Fetching projects");
                     var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}", top: 5000);
                     SetStatus("Fetching workflows");
-                    var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", orderby: "{projectid:-1,name:-1}", top: 5000);
+                    var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", orderby: "{\"projectid\":-1,\"name\":-1}", top: 5000);
                     SetStatus("Fetching detectors");
                     var detectors = await global.webSocketClient.Query<Interfaces.entity.Detector>("openrpa", "{_type: 'detector'}");
                     GenericTools.RunUI(() =>

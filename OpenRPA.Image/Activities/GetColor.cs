@@ -29,9 +29,9 @@ namespace OpenRPA.Image
             };
         }
         [RequiredArgument, LocalizedDisplayName("activity_offsetx", typeof(Resources.strings)), LocalizedDescription("activity_offsetx_help", typeof(Resources.strings))]
-        public int OffsetX { get; set; } = 5;
+        public InArgument<int> OffsetX { get; set; } = 5;
         [RequiredArgument, LocalizedDisplayName("activity_offsety", typeof(Resources.strings)), LocalizedDescription("activity_offsety_help", typeof(Resources.strings))]
-        public int OffsetY { get; set; } = 5;
+        public InArgument<int> OffsetY { get; set; } = 5;
         [LocalizedDisplayName("activity_element", typeof(Resources.strings)), LocalizedDescription("activity_element_help", typeof(Resources.strings))]
         public InArgument<IElement> Element { get; set; }
         public OutArgument<System.Drawing.Color> Result { get; set; }
@@ -39,8 +39,8 @@ namespace OpenRPA.Image
         {
             var el = Element.Get(context);
             // if (el == null) throw new ArgumentException("element cannot be null");
-            var x = OffsetX;
-            var y = OffsetY;
+            var x = OffsetX.Get(context);
+            var y = OffsetY.Get(context);
             if (el != null) { x += el.Rectangle.X; y += el.Rectangle.Y; }
             Result.Set(context, GetPixelColor(x, y));
 

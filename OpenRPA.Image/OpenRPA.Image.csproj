@@ -7,8 +7,9 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.26</Version>
-    <PackageReleaseNotes>1.0.25 Exclude sap from recordings
+    <Version>1.0.27</Version>
+    <PackageReleaseNotes>1.0.27 Make x and y arguments for GetColor
+1.0.26 Exclude sap from recordings
 1.0.25 Add support for finding nested windows
 1.0.24 Add GetColor Activity
 1.0.23 Improve design expereince with image activites

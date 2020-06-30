@@ -107,7 +107,7 @@ namespace OpenRPA.Activities
             {
                 if (!string.IsNullOrEmpty(bookmarkname))
                 {
-                    var result = await global.webSocketClient.QueueMessage(workflow, _payload, bookmarkname);
+                    var result = await global.webSocketClient.QueueMessage(workflow, _payload, RobotInstance.instance.robotqueue, bookmarkname);
                 }
             }
             catch (Exception ex)

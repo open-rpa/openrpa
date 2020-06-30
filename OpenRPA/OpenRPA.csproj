@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.134</Version>
-    <PackageReleaseNotes>1.0.134 fix orderby issue when fetching workflow and projects
+    <Version>1.0.135</Version>
+    <PackageReleaseNotes>1.0.135 Update for new version of openflow
+1.0.134 fix orderby issue when fetching workflow and projects
 1.0.133 Fix launch IE error
 1.0.132 Fix addon after firefox update breaking things
 1.0.131 utilities: add SetAllRowsAdded

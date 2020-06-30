@@ -1149,7 +1149,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 {
                     command.data = JObject.FromObject(instance.Exception);
                 }
-                _ = global.webSocketClient.QueueMessage(instance.queuename, command, instance.correlationId);
+                _ = global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId);
                 OnChanged?.Invoke(this);
             }
             if (instance.state == "idle" && Singlestep == true)

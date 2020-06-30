@@ -271,7 +271,7 @@ namespace OpenRPA
                 command.detectorid = Entity._id;
                 if (string.IsNullOrEmpty(Entity._id)) return;
                 command.data = data;
-                _ = global.webSocketClient.QueueMessage(Entity._id, command, null);
+                _ = global.webSocketClient.QueueMessage(Entity._id, command, null, null);
             }
             catch (Exception ex)
             {
@@ -307,7 +307,7 @@ namespace OpenRPA
                     {
                         command.data = JObject.FromObject(instance.Exception);
                     }
-                    _ = global.webSocketClient.QueueMessage(instance.queuename, command, instance.correlationId);
+                    _ = global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId);
                 }
                 if (instance.hasError || instance.isCompleted)
                 {

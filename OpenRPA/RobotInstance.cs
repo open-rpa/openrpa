@@ -42,6 +42,7 @@ namespace OpenRPA
                 return _instance;
             }
         }
+        public string robotqueue = "";
         public bool autoReconnect = true;
         public bool loginInProgress = false;
         private bool first_connect = true;
@@ -862,7 +863,7 @@ namespace OpenRPA
                 {
                     SetStatus("Registering queues");
                     Log.Debug("Registering queue for robot " + user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    await global.webSocketClient.RegisterQueue(user._id);
+                    robotqueue = await global.webSocketClient.RegisterQueue(user._id);
 
                     foreach (var role in global.webSocketClient.user.roles)
                     {
@@ -1146,7 +1147,7 @@ namespace OpenRPA
                 {
                     try
                     {
-                        await global.webSocketClient.QueueMessage(message.replyto, command, message.correlationId);
+                        await global.webSocketClient.QueueMessage(message.replyto, command, null, message.correlationId);
 
                     }
                     catch (Exception ex)

@@ -110,7 +110,7 @@ namespace OpenRPA.Activities
                     _robotcommand["workflowid"] = workflow;
                     _robotcommand["command"] = "invoke";
                     _robotcommand.Add("data", _payload);
-                    var result = await global.webSocketClient.QueueMessage(target, _robotcommand, bookmarkname);
+                    var result = await global.webSocketClient.QueueMessage(target, _robotcommand, RobotInstance.instance.robotqueue, bookmarkname);
                 }
             }
             catch (Exception ex)

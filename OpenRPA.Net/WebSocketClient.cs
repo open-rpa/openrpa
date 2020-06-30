@@ -482,16 +482,17 @@ namespace OpenRPA.Net
             RegisterQueue = await RegisterQueue.SendMessage<RegisterUserMessage>(this);
             if (!string.IsNullOrEmpty(RegisterQueue.error)) throw new Exception(RegisterQueue.error);
         }
-        public async Task RegisterQueue(string queuename)
+        public async Task<string> RegisterQueue(string queuename)
         {
             RegisterQueueMessage RegisterQueue = new RegisterQueueMessage(queuename);
             RegisterQueue = await RegisterQueue.SendMessage<RegisterQueueMessage>(this);
             if (!string.IsNullOrEmpty(RegisterQueue.error)) throw new Exception(RegisterQueue.error);
+            return RegisterQueue.queuename;
         }
-        public async Task<object> QueueMessage(string queuename, object data, string correlationId = null)
+        public async Task<object> QueueMessage(string queuename, object data, string replyto, string correlationId)
         {
             QueueMessage qm = new QueueMessage(queuename);
-            qm.data = data;
+            qm.data = data; qm.replyto = replyto;
             qm.correlationId = correlationId;
             qm = await qm.SendMessage<QueueMessage>(this);
             if (!string.IsNullOrEmpty(qm.error)) throw new Exception(qm.error);

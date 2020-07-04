@@ -49,6 +49,34 @@ namespace OpenRPA.Script.Views
             PluginConfig.vb_intellisense = vb_intellisense.IsChecked.Value;
             PluginConfig.use_embedded_python = use_embedded_python.IsChecked.Value;
             Config.Save();
+
+            //try
+            //{
+            //    if (PluginConfig.use_embedded_python)
+            //    {
+            //        if (!Python.Included.Installer.IsPythonInstalled())
+            //        {
+            //            Python.Included.Installer.SetupPython(true).Wait();
+            //        }
+            //        else
+            //        {
+            //            Python.Included.Installer.SetupPython(false).Wait();
+            //        }
+            //        var path = Python.Included.Installer.EmbeddedPythonHome;
+            //        PythonUtil.Setup.SetPythonPath(path);
+            //        // Python.Runtime.PythonEngine.Initialize();
+            //    }
+            //    else
+            //    {
+            //        PythonUtil.Setup.Run();
+            //    }
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex.ToString());
+            //}
+
         }
 
     }

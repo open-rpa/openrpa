@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -196,7 +197,59 @@ namespace OpenRPA.NM
                 }
             }
         }
-        public string Value
+        public string[] Values
+        {
+            get
+            {
+                string[] result = new string[] { };
+                if (chromeelement.ContainsKey("values"))
+                {
+                    var json = chromeelement["values"].ToString();
+                    result = JsonConvert.DeserializeObject<string[]>(json);
+                }
+                if(result==null|| result.Length==0)
+                {
+                    if(!string.IsNullOrEmpty(Value))
+                    {
+                        result = new string[] { Value };
+                    }
+                }
+                return result;
+            }
+            set
+            {
+                if (NMHook.connected)
+                {
+                    var tab = NMHook.tabs.Where(x => x.id == message.tabid).FirstOrDefault();
+                    if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
+                    // NMHook.HighlightTab(tab);
+
+                    var updateelement = new NativeMessagingMessage("updateelementvalues", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
+                    {
+                        browser = message.browser,
+                        //cssPath = cssselector,
+                        //xPath = xpath,
+                        //tabid = message.tabid,
+                        //frameId = message.frameId,
+                        //data = value
+                        zn_id = zn_id,
+                        tabid = message.tabid,
+                        frameId = message.frameId,
+                        data = JsonConvert.SerializeObject(value)
+                    };
+                    var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(3));
+                    if (subsubresult == null) throw new Exception("Failed setting html element value");
+                    //System.Threading.Thread.Sleep(500);
+                    if (PluginConfig.wait_for_tab_after_set_value)
+                    {
+                        NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
+                    }
+                    return;
+                }
+            }
+        }
+
+    public string Value
         {
             get
             {

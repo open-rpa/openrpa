@@ -1060,6 +1060,8 @@ namespace OpenRPA
                         var param = new Dictionary<string, object>();
                         foreach (var k in data)
                         {
+                            var p = workflow.Parameters.Where(x => x.name == k.Key).FirstOrDefault();
+                            if (p == null) continue;
                             switch (k.Value.Type)
                             {
                                 case JTokenType.Integer: param.Add(k.Key, k.Value.Value<long>()); break;
@@ -1071,7 +1073,10 @@ namespace OpenRPA
                                 default:
                                     try
                                     {
-                                        param.Add(k.Key, k.Value.Value<string>());
+                                        
+                                        // param.Add(k.Key, k.Value.Value<string>());
+                                        var v = k.Value.ToObject(Type.GetType(p.type));
+                                        param.Add(k.Key, v);
                                     }
                                     catch (Exception ex)
                                     {
@@ -1094,6 +1099,10 @@ namespace OpenRPA
                                         param[p.name] = ((JArray)value).ToDataTable();
                                     }
 
+                                } 
+                                else if(p.type.EndsWith("[]"))
+                                {
+                                    param[p.name] = ((JArray)value).ToObject(Type.GetType(p.type));
                                 }
                             }
                         }
@@ -1141,7 +1150,7 @@ namespace OpenRPA
                 };
             }
             // string data = Newtonsoft.Json.JsonConvert.SerializeObject(command);
-            if (command.command == "error" || (command.command == "invoke" && !string.IsNullOrEmpty(command.workflowid)))
+            if (command.command == "error" || ((command.command == "invoke" || command.command == "invokesuccess") && !string.IsNullOrEmpty(command.workflowid)))
             {
                 if (!string.IsNullOrEmpty(message.replyto) && message.replyto != message.queuename)
                 {

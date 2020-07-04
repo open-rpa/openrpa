@@ -484,6 +484,61 @@ if (true == false) {
                     var test = JSON.parse(JSON.stringify(message));
                     return test;
                 },
+                updateelementvalues: function (message) {
+                    var ele = null;
+                    if (ele === null && message.zn_id !== null && message.zn_id !== undefined && message.zn_id > -1) {
+                        message.xPath = '//*[@zn_id="' + message.zn_id + '"]';
+                        var znEle = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+                        if (znEle === null) message.xPath = 'false';
+                        if (znEle !== null) message.xPath = 'true';
+                        ele = znEle;
+                    }
+                    if (ele === null && message.xPath) {
+                        var xpathEle = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+                        if (xpathEle === null) message.xPath = 'false';
+                        if (xpathEle !== null) message.xPath = 'true';
+                        ele = xpathEle;
+                    }
+                    if (ele === null && message.cssPath) {
+                        var cssEle = document.querySelector(message.cssPath);
+                        if (cssEle === null) message.cssPath = 'false';
+                        if (cssEle !== null) message.cssPath = 'true';
+                        ele = cssEle;
+                    }
+                    if (ele) {
+                        ele.focus();
+                        var values = JSON.parse(message.data);
+                        if (ele.tagName && ele.tagName.toLowerCase() == "select") {
+                            for (i = 0; i < ele.options.length; i++) {
+                                if (values.indexOf(ele.options[i].value) > -1) {
+                                    ele.options[i].selected = true;
+                                } else { ele.options[i].selected = false; }
+                            }
+                        }
+
+                        try {
+                            var evt = document.createEvent("HTMLEvents");
+                            evt.initEvent("change", true, true);
+                            ele.dispatchEvent(evt);
+                        } catch (e) {
+                            console.error(e);
+                        }
+                        try {
+                            var evt = document.createEvent("HTMLEvents");
+                            evt.initEvent("input", true, true);
+                            ele.dispatchEvent(evt);
+                        } catch (e) {
+                            console.error(e);
+                        }
+                        //ele.blur();
+                        //var events = ["keydown", "keyup", "keypress"];
+                        //for (var i = 0; i < events.length; ++i) {
+                        //    simulate(ele, events[i]);
+                        //}
+                    }
+                    var test = JSON.parse(JSON.stringify(message));
+                    return test;
+                },
                 applyPhysicalCords: function (message, ele) {
                     var ClientRect = ele.getBoundingClientRect();
                     var devicePixelRatio = window.devicePixelRatio || 1;
@@ -899,6 +954,18 @@ if (true == false) {
                     treeObject["isvisibleonscreen"] = openrpautil.isVisibleOnScreen(element);
                     treeObject["disabled"] = element.disabled;
                     treeObject["innerText"] = element.innerText;
+                    if (element.tagName && element.tagName.toLowerCase() == "options") {
+                        treeObject["selected"] = element.selected;
+                    }
+                    if (element.tagName && element.tagName.toLowerCase() == "select") {
+                        var selectedvalues = [];
+                        for (i = 0; i < element.options.length; i++) {
+                            if (element.options[i].selected) {
+                                selectedvalues.push(element.options[i].value);
+                            }
+                        } 
+                        treeObject["values"] = selectedvalues;
+                    }
 
                     //updateelementtext
                     if (treeObject["disabled"] === null || treeObject["disabled"] === undefined) treeObject["disabled"] = false;

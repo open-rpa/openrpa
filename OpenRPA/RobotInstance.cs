@@ -1157,11 +1157,10 @@ namespace OpenRPA
                     try
                     {
                         await global.webSocketClient.QueueMessage(message.replyto, command, null, message.correlationId);
-
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(ex.Message);
+                        Log.Debug(ex.Message);
                     }
                 }
             }

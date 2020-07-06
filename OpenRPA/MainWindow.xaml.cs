@@ -3047,7 +3047,7 @@ namespace OpenRPA
                     return;
                 }
                 Interfaces.mq.RobotCommand command = new Interfaces.mq.RobotCommand();
-                detector.user = global.webSocketClient.user;
+                // detector.user = global.webSocketClient.user;
                 var data = JObject.FromObject(detector);
                 var Entity = (plugin.Entity as Detector);
                 command.command = "detector";
@@ -3057,7 +3057,17 @@ namespace OpenRPA
                     return;
                 }
                 command.data = data;
-                _ = global.webSocketClient.QueueMessage(Entity._id, command, null, null);
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await global.webSocketClient.QueueMessage(Entity._id, command, null, null);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Debug(ex.Message);
+                    }
+                });
             }
             catch (Exception ex)
             {
@@ -3066,7 +3076,7 @@ namespace OpenRPA
             }
             Log.FunctionOutdent("MainWindow", "OnDetector");
         }
-        public void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
+        public async void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
         {
             Log.FunctionIndent("MainWindow", "IdleOrComplete");
             GenericTools.RunUI(() =>
@@ -3099,7 +3109,14 @@ namespace OpenRPA
                     {
                         command.data = JObject.FromObject(instance.Exception);
                     }
-                    _ = global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId);
+                    try
+                    {
+                        await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Debug(ex.Message);
+                    }                    
                 }
                 if (instance.hasError || instance.isCompleted)
                 {

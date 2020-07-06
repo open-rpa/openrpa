@@ -147,9 +147,9 @@ namespace OpenRPA.Views
                 if (!tab.IsSelected) return;
                 if (e.Key == Input.KeyboardKey.F10 || e.Key == Input.KeyboardKey.F11)
                 {
-                        if (currentprocessid == 0) currentprocessid = System.Diagnostics.Process.GetCurrentProcess().Id;
-                        var element = AutomationHelper.GetFromFocusedElement();
-                        if (element.ProcessId != currentprocessid) return;
+                    if (currentprocessid == 0) currentprocessid = System.Diagnostics.Process.GetCurrentProcess().Id;
+                    var element = AutomationHelper.GetFromFocusedElement();
+                    if (element.ProcessId != currentprocessid) return;
                     //if (!IsRunnning)
                     //{
                     //}
@@ -178,9 +178,10 @@ namespace OpenRPA.Views
                 var element = AutomationHelper.GetFromFocusedElement();
                 if (element.ProcessId != currentprocessid) return;
             }
-            if(e.Key == Key.F2)
+            if (e.Key == Key.F2)
             {
-                Task.Run(() => {
+                Task.Run(() =>
+                {
                     if (Config.local.minimize) GenericTools.Minimize();
                     System.Threading.Thread.Sleep(2000);
                     MainWindow.instance.OnRecord(null);
@@ -1027,7 +1028,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     {
                         var loc = GetSourceLocationFromModelItem(modelItem);
                         var activity = modelItem.GetCurrentValue() as Activity;
-                        if(activity==null)
+                        if (activity == null)
                         {
                             var builder = modelItem.GetCurrentValue() as ActivityBuilder;
                             continue;
@@ -1149,7 +1150,17 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 {
                     command.data = JObject.FromObject(instance.Exception);
                 }
-                _ = global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId);
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Debug(ex.Message);
+                    }
+                });
                 OnChanged?.Invoke(this);
             }
             if (instance.state == "idle" && Singlestep == true)
@@ -1217,13 +1228,14 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                                     NavigateTo(model);
                                 }
                             });
-                        } else
+                        }
+                        else
                         {
                             GenericTools.RunUI(() =>
                             {
                                 SetDebugLocation(null);
                             });
-                            
+
                         }
                     }
                 }
@@ -1359,7 +1371,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 ReadOnly = true;
                 if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
             });
-            if(instance!=null) instance.Run();
+            if (instance != null) instance.Run();
         }
         private void ShowVariables(IDictionary<string, WorkflowInstanceValueType> Variables)
         {
@@ -1401,7 +1413,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     else if (model.ItemType == typeof(System.Activities.ActivityBuilder))
                     {
                         var name = model.GetValue<string>("Name");
-                        if(name != null && name.Contains(" "))
+                        if (name != null && name.Contains(" "))
                         {
                             name = name.Replace(" ", "_");
                             model.Properties["Name"].SetValue(name);
@@ -1549,7 +1561,8 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     var body = newSequence.Properties["Body"];
                     var handler = body.Value.Properties["Handler"];
                     handler.SetValue(handler.Value.Properties["Body"].Value);
-                } else if (newSequence.Properties["Handler"] != null)
+                }
+                else if (newSequence.Properties["Handler"] != null)
                 {
                     var handler = newSequence.Properties["Handler"];
                     handler.SetValue(currentSequence);
@@ -1586,7 +1599,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 {
                     Body = new Sequence()
                 };
-                if(Activities== null)
+                if (Activities == null)
                 {
                     var item = thisselection.PrimarySelection.Parent.Properties["Handler"].SetValue(co);
                     var newActivities = item.Properties["Body"].Value.Properties["Activities"].Collection;
@@ -1690,7 +1703,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
         {
             var thisselection = selection;
             if (selection == null) return;
-            if(selection.SelectedObjects.Count() == 0) return;
+            if (selection.SelectedObjects.Count() == 0) return;
             var modelitem = selection.SelectedObjects.ElementAt(0);
             var p = modelitem.Properties["Id"];
             var id = (string)p.ComputedValue;
@@ -1707,7 +1720,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     return;
                 }
                 WorkflowDesigner.Flush();
-                
+
                 if (global.isConnected)
                 {
                     if (!Workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.invoke))
@@ -1738,7 +1751,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     InitializeStateEnvironment();
                 }
                 // if (instance != null) instance.Run();
-                if(_activityIdMapping.ContainsKey(id))
+                if (_activityIdMapping.ContainsKey(id))
                 {
                     Log.Information("Getting activity " + id);
                     var a = _activityIdMapping[id];
@@ -1747,7 +1760,8 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     //var rootModel = modelService.Root;
                     //instance.Run(root, id);
                     instance.RunThis(root, a);
-                } else
+                }
+                else
                 {
                     Log.Error("Failed finding activity " + id + ", try and close and reopen the designer");
                 }
@@ -1813,7 +1827,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
             });
         }
 
-        
+
         public static async Task<string> LoadImages(string xaml)
         {
             WorkflowDesigner wfDesigner;
@@ -1837,7 +1851,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                             using (var b = await Interfaces.Image.Util.LoadBitmap(image))
                             {
                                 image = Interfaces.Image.Util.Bitmap2Base64(b);
-                            }                                
+                            }
                             item.Properties["Image"].SetValue(image);
                         }
                     }

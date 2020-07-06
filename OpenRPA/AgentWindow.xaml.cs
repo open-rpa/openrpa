@@ -264,14 +264,24 @@ namespace OpenRPA
                 }
                 if (!global.isConnected) return;
                 Interfaces.mq.RobotCommand command = new Interfaces.mq.RobotCommand();
-                detector.user = global.webSocketClient.user;
+                // detector.user = global.webSocketClient.user;
                 var data = JObject.FromObject(detector);
                 var Entity = (plugin.Entity as Interfaces.entity.Detector);
                 command.command = "detector";
                 command.detectorid = Entity._id;
                 if (string.IsNullOrEmpty(Entity._id)) return;
                 command.data = data;
-                _ = global.webSocketClient.QueueMessage(Entity._id, command, null, null);
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await global.webSocketClient.QueueMessage(Entity._id, command, null, null);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Debug(ex.Message);
+                    }
+                });
             }
             catch (Exception ex)
             {
@@ -307,7 +317,18 @@ namespace OpenRPA
                     {
                         command.data = JObject.FromObject(instance.Exception);
                     }
-                    _ = global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId);
+                    Task.Run(async () =>
+                    {
+                        try
+                        {
+                            await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Debug(ex.Message);
+                        }
+                    });
+
                 }
                 if (instance.hasError || instance.isCompleted)
                 {

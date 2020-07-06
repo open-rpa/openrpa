@@ -22,6 +22,7 @@ namespace OpenRPA.Activities
     {
         [RequiredArgument, LocalizedDisplayName("activity_detector", typeof(Resources.strings)), LocalizedDescription("activity_detector_help", typeof(Resources.strings))]
         public string detector { get; set; }
+        public OutArgument<IDetectorEvent> Event { get; set; }
         protected override void Execute(NativeActivityContext context)
         {
             context.CreateBookmark("detector_" + detector, new BookmarkCallback(OnBookmarkCallback));
@@ -30,6 +31,8 @@ namespace OpenRPA.Activities
         {
             // keep bookmark, we want to support being triggerede multiple times, so bookmark needs to be keep incase workflow is restarted
             // context.RemoveBookmark(bookmark.Name);
+            var result = obj as IDetectorEvent;
+            Event.Set(context, result);
         }
         protected override bool CanInduceIdle
         {

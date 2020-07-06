@@ -124,7 +124,6 @@ namespace OpenRPA.FileWatcher
         public string host { get; set; }
         public string fqdn { get; set; }
         public string filepath { get; set; }
-        public TokenUser user { get; set; }
         public DetectorEvent(string FullPath)
         {
             host = Environment.MachineName.ToLower();

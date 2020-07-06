@@ -66,20 +66,26 @@ namespace OpenRPA.Windows
         private AutomationElement desktop;
         public void Start()
         {
-            var automation = AutomationUtil.getAutomation();
-            desktop = automation.GetDesktop();
-            StructureChangedEventHandler = desktop.RegisterStructureChangedEvent(FlaUI.Core.Definitions.TreeScope.Descendants, DetectorCheck);
+            Task.Run(() =>
+            {
+                var automation = AutomationUtil.getAutomation();
+                desktop = automation.GetDesktop();
+                StructureChangedEventHandler = desktop.RegisterStructureChangedEvent(FlaUI.Core.Definitions.TreeScope.Descendants, DetectorCheck);
+            });
         }
         public void Stop()
         {
-            try
+            Task.Run(() =>
             {
-                desktop.FrameworkAutomationElement.UnregisterStructureChangedEventHandler(StructureChangedEventHandler);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-            }
+                try
+                {
+                    desktop.FrameworkAutomationElement.UnregisterStructureChangedEventHandler(StructureChangedEventHandler);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+            });
             //desktop.RemoveStructureChangedEventHandler(StructureChangedEventHandler);
         }
         //private FlaUI.Core.EventHandlers.IAutomationStructureChangedEventHandler StructureChangedEventHandler;

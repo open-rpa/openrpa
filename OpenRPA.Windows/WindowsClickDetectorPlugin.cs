@@ -135,7 +135,6 @@ namespace OpenRPA.Windows
         public IElement element { get; set; }
         public string host { get; set; }
         public string fqdn { get; set; }
-        public TokenUser user { get; set; }
         public DetectorEvent(UIElement element)
         {
             this.element = element;

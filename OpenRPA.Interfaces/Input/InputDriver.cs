@@ -357,7 +357,7 @@ namespace OpenRPA.Input
             if (OnMouseUp == null) return;
             try
             {
-                if (Element == null)
+                if (Element == null || OnMouseDown == null)
                 {
                     Element = AutomationHelper.GetFromPoint(e.X, e.Y);
                 }

@@ -372,7 +372,7 @@ namespace OpenRPA.SAPBridge
             var ActionName = objs[1].ToString();
             upperFirstChar(ref ActionName);
             if (ActionName == "ResizeWorkingPane") return;
-
+            if (ActionName == "Maximize") return; 
             string id = Component.Id;
             var pathToRoot = new List<GuiComponent>();
             GuiComponent element = Component;
@@ -404,8 +404,8 @@ namespace OpenRPA.SAPBridge
                 element = element.Parent as GuiComponent;
                 
             }
-
-                var e = new SAPRecordingEvent();
+            
+            var e = new SAPRecordingEvent();
             e.Action = Action;
             e.ActionName = ActionName;
             e.Name = Component.Name;

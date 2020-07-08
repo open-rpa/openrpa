@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.137</Version>
-    <PackageReleaseNotes>1.0.137 Small improvements to detector
+    <Version>1.0.138</Version>
+    <PackageReleaseNotes>1.0.138 Fix windows click detector
+1.0.137 Small improvements to detector
 1.0.136 Improve parsing arguments when called remotely / Add Values to nmelement to support multi selects
 1.0.135 Update for new version of openflow
 1.0.134 fix orderby issue when fetching workflow and projects

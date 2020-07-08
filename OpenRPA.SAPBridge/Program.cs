@@ -325,7 +325,7 @@ namespace OpenRPA.SAPBridge
                             overlay = recinfo.overlay;
                             //StartMonitorMouse(recinfo.mousemove);
                             form.AddText("StartMonitorMouse::begin");
-                            StartMonitorMouse(true);
+                            if(overlay) StartMonitorMouse(true);
                             form.AddText("StartMonitorMouse::end");
                         }
                         form.AddText("BeginRecord::begin");

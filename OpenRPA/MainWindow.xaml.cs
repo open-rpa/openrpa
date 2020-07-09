@@ -1942,7 +1942,7 @@ namespace OpenRPA
             try
             {
                 var types = new List<Type>();
-                foreach (var p in Plugins.recordPlugins) { types.Add(p.GetType()); }
+                // foreach (var p in Plugins.recordPlugins) { types.Add(p.GetType()); }
                 LayoutDocument layoutDocument = new LayoutDocument { Title = workflow.name };
                 layoutDocument.ContentId = workflow._id;
                 Views.WFDesigner view = new Views.WFDesigner(layoutDocument, workflow, types.ToArray())
@@ -2685,7 +2685,7 @@ namespace OpenRPA
                     {
                         Log.Debug("Add new TypeText");
                         var rme = new Activities.TypeText();
-                        view.Lastinsertedmodel = view.AddRecordingActivity(rme);
+                        view.Lastinsertedmodel = view.AddRecordingActivity(rme, null);
                         rme.AddKey(new Interfaces.Input.vKey((FlaUI.Core.WindowsAPI.VirtualKeyShort)e.Key, false), view.Lastinsertedmodel);
                         view.Lastinserted = rme;
                     }
@@ -2884,6 +2884,7 @@ namespace OpenRPA
             if (sender.Name == "Windows") StopRecordPlugins(false);
             AutomationHelper.syncContext.Post(o =>
             {
+                IPlugin plugin = sender;
                 try
                 {
                     if(sender.Name == "Windows")
@@ -2895,7 +2896,11 @@ namespace OpenRPA
                             {
                                 try
                                 {
-                                    if (p.ParseUserAction(ref e)) break;
+                                    if (p.ParseUserAction(ref e))
+                                    {
+                                        plugin = p;
+                                        break;
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
@@ -2976,7 +2981,7 @@ namespace OpenRPA
 
                         view.ReadOnly = false;
                         view.Lastinserted = e.a.Activity;
-                        view.Lastinsertedmodel = view.AddRecordingActivity(e.a.Activity);
+                        view.Lastinsertedmodel = view.AddRecordingActivity(e.a.Activity, plugin);
                         view.ReadOnly = true;
                         if (e.ClickHandled == false && e.SupportInput == false)
                         {

@@ -304,10 +304,10 @@ namespace OpenRPA.Views
                 Activity wf = new System.Activities.Statements.Sequence { };
                 var ab = new ActivityBuilder
                 {
-                    Name = Workflow.name,
+                    Name = Workflow.name.Replace(" ", "_"),
                     Implementation = wf
                 };
-                AddVBNamespaceSettings(ab, typeof(Action),
+                WFHelper.AddVBNamespaceSettings(ab, typeof(Action),
                     typeof(System.Xml.XmlNode),
                     typeof(OpenRPA.Workflow),
                     typeof(OpenRPA.UIElement),
@@ -315,7 +315,7 @@ namespace OpenRPA.Views
                     typeof(System.Linq.Enumerable),
                     typeof(Microsoft.VisualBasic.Collection)
                     );
-                AddVBNamespaceSettings(ab, extratypes);
+                WFHelper.AddVBNamespaceSettings(ab, extratypes);
 
                 WorkflowDesigner.Load(ab);
             }
@@ -674,27 +674,6 @@ namespace OpenRPA.Views
                 Log.Error(ex.ToString());
             }
         }
-        public void AddVBNamespaceSettings(object rootObject, params Type[] types)
-        {
-            var vbsettings = Microsoft.VisualBasic.Activities.VisualBasic.GetSettings(rootObject);
-            if (vbsettings == null)
-            {
-                vbsettings = new Microsoft.VisualBasic.Activities.VisualBasicSettings();
-            }
-
-
-            foreach (Type t in types)
-            {
-                vbsettings.ImportReferences.Add(
-                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-                    {
-                        Assembly = t.Assembly.GetName().Name,
-                        Import = t.Namespace
-                    });
-            }
-
-            Microsoft.VisualBasic.Activities.VisualBasic.SetSettings(rootObject, vbsettings);
-        }
         public bool IsSequenceSelected
         {
             get
@@ -704,24 +683,95 @@ namespace OpenRPA.Views
                 return false;
             }
         }
-
         IWorkflow IDesigner.Workflow { get => Workflow; set { } }
 
         List<Activity> recording = null;
+        List<IPlugin> recordingplugins = null;
         public void BeginRecording()
         {
             recording = new List<Activity>();
+            recordingplugins = new List<IPlugin>();
         }
-        public ModelItem AddRecordingActivity(Activity a)
+        public ModelItem AddRecordingActivity(Activity a, IPlugin plugin)
         {
-            if (Config.local.recording_add_to_designer) return AddActivity(a);
+            if (Config.local.recording_add_to_designer)
+            {
+                Type t = plugin.GetType();
+                var rootObject = GetRootElement();
+                Microsoft.VisualBasic.Activities.VisualBasicSettings vbsettings = Microsoft.VisualBasic.Activities.VisualBasic.GetSettings(rootObject);
+                if (vbsettings == null)
+                {
+                    vbsettings = new Microsoft.VisualBasic.Activities.VisualBasicSettings();
+
+                    vbsettings.ImportReferences.Add(
+                        new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                        {
+                            Assembly = typeof(TimeSpan).Assembly.GetName().Name,
+                            Import = typeof(TimeSpan).Namespace
+                        });
+                    vbsettings.ImportReferences.Add(
+                        new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                        {
+                            Assembly = typeof(Action).Assembly.GetName().Name,
+                            Import = typeof(Action).Namespace
+                        });
+                    vbsettings.ImportReferences.Add(
+                        new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                        {
+                            Assembly = typeof(System.Xml.XmlNode).Assembly.GetName().Name,
+                            Import = typeof(System.Xml.XmlNode).Namespace
+                        });
+                    vbsettings.ImportReferences.Add(
+                        new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                        {
+                            Assembly = typeof(OpenRPA.UIElement).Assembly.GetName().Name,
+                            Import = typeof(OpenRPA.UIElement).Namespace
+                        });
+                    vbsettings.ImportReferences.Add(
+                        new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                        {
+                            Assembly = typeof(OpenRPA.Workflow).Assembly.GetName().Name,
+                            Import = typeof(OpenRPA.Workflow).Namespace
+                        });
+                    vbsettings.ImportReferences.Add(
+                        new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                        {
+                            Assembly = typeof(System.Data.DataSet).Assembly.GetName().Name,
+                            Import = typeof(System.Data.DataSet).Namespace
+                        });
+                    vbsettings.ImportReferences.Add(
+                        new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                        {
+                            Assembly = typeof(Microsoft.VisualBasic.Collection).Assembly.GetName().Name,
+                            Import = typeof(Microsoft.VisualBasic.Collection).Namespace
+                        });
+                }
+
+                vbsettings.ImportReferences.Add(
+                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                    {
+                        Assembly = t.Assembly.GetName().Name,
+                        Import = t.Namespace
+                    });
+                Microsoft.VisualBasic.Activities.VisualBasic.SetSettings(rootObject, vbsettings);
+                //DynamicAssemblyMonitor(t.Assembly.GetName().Name, t.Assembly, true);
+                return AddActivity(a);
+            }
             if (recording == null) BeginRecording();
             recording.Add(a);
+            if (!recordingplugins.Contains(plugin)) recordingplugins.Add(plugin);
             return null;
         }
         public void EndRecording()
         {
             if (recording == null) return;
+            ModelService modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
+            foreach (var plugin in recordingplugins)
+            {
+                WFHelper.AddNamespaceSettings(GetRootElement(), new Type[] { plugin.GetType() });
+                Type t = plugin.GetType();
+                DynamicAssemblyMonitor(t.Assembly.GetName().Name, t.Assembly, true);
+            }
             foreach (var a in recording)
             {
                 var model = AddActivity(a);
@@ -731,6 +781,66 @@ namespace OpenRPA.Views
                 }
             }
             recording = null;
+        }
+        private void DynamicAssemblyMonitor(string fullname, Assembly asm, bool toadd)
+        {
+            //Get the designers acci
+            var acci = WorkflowDesigner.Context.Items.GetValue<System.Activities.Presentation.Hosting.AssemblyContextControlItem>() ?? new System.Activities.Presentation.Hosting.AssemblyContextControlItem();
+            if (acci.ReferencedAssemblyNames == null)
+                acci.ReferencedAssemblyNames = new List<AssemblyName>();
+            if (toadd)
+                AddDyanamicAssembly(acci, asm);
+            else
+                RemoveDynamicAssembly(acci, asm);
+        }
+        private void RemoveDynamicAssembly(System.Activities.Presentation.Hosting.AssemblyContextControlItem acci, Assembly asm)
+        {
+            if (acci.ReferencedAssemblyNames.Contains(asm.GetName()))
+            {
+                acci.ReferencedAssemblyNames.Remove(asm.GetName());
+                WorkflowDesigner.Context.Items.SetValue(acci);
+            }
+            var root = GetRootElement();
+            if (null == root) return;
+            var vbs = Microsoft.VisualBasic.Activities.VisualBasic.GetSettings(root) ?? new Microsoft.VisualBasic.Activities.VisualBasicSettings();
+
+            var namespaces = (from type in asm.GetTypes() select type.Namespace).Distinct();
+            var fullname = asm.FullName;
+            foreach (var name in namespaces)
+            {
+                var theimport = (from importname in vbs.ImportReferences where importname.Assembly == fullname where importname.Import == name select importname).FirstOrDefault();
+                if (theimport != null)
+                    vbs.ImportReferences.Remove(theimport);
+            }
+            Microsoft.VisualBasic.Activities.VisualBasic.SetSettings(root, vbs);
+
+        }
+        private void AddDyanamicAssembly(System.Activities.Presentation.Hosting.AssemblyContextControlItem acci, Assembly asm)
+        {
+            if (!acci.ReferencedAssemblyNames.Contains(asm.GetName()))
+            {
+                acci.ReferencedAssemblyNames.Add(asm.GetName());
+                WorkflowDesigner.Context.Items.SetValue(acci);
+            }
+            var root = GetRootElement();
+            var fullname = asm.FullName;
+            if (null == root) return;
+            var vbs = Microsoft.VisualBasic.Activities.VisualBasic.GetSettings(root) ?? new Microsoft.VisualBasic.Activities.VisualBasicSettings();
+
+            var namespaces = (from type in asm.GetTypes() select type.Namespace).Distinct();
+            foreach (var name in namespaces)
+            {
+                var import = new Microsoft.VisualBasic.Activities.VisualBasicImportReference() { Assembly = fullname, Import = name };
+                vbs.ImportReferences.Add(import);
+            }
+            Microsoft.VisualBasic.Activities.VisualBasic.SetSettings(root, vbs);
+        }
+        private object GetRootElement()
+        {
+            var modelservice = WorkflowDesigner.Context.Services.GetService<ModelService>();
+            if (modelservice == null) return null;
+            var rootmodel = modelservice.Root.GetCurrentValue();
+            return rootmodel;
         }
         public ModelItem AddActivity(Activity a)
         {

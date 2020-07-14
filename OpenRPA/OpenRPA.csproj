@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.139</Version>
-    <PackageReleaseNotes>1.0.139 Fix default name / stop importing all default namespaces
+    <Version>1.0.140</Version>
+    <PackageReleaseNotes>1.0.140 ExecuteScript
+1.0.139 Fix default name / stop importing all default namespaces
 1.0.138 Fix windows click detector
 1.0.137 Small improvements to detector
 1.0.136 Improve parsing arguments when called remotely / Add Values to nmelement to support multi selects

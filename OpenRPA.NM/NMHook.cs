@@ -99,6 +99,7 @@ namespace OpenRPA.NM
             {
                 if (browser == "chrome") tab = CurrentChromeTab;
                 if (browser == "ff") tab = CurrentFFTab;
+                if (browser == "edge") tab = CurrentEdgeTab;
             } 
             message.tab = tab; message.windowId = tab.windowId; message.tabid = tab.id;
             message.browser = browser; message.frameId = frameid;

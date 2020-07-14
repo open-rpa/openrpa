@@ -8,8 +8,9 @@
     <Company>OpenIAP</Company>
     <Product>OpenRPA</Product>
     <Description>Recorder plugin and Activities for interacting with Chrome/Firefox and Edge, created for OpenRPA robot</Description>
-    <Version>1.0.35</Version>
-    <PackageReleaseNotes>1.0.35 Add Values to nmelement to support multi selects
+    <Version>1.0.36</Version>
+    <PackageReleaseNotes>1.0.36 Fix ExecuteScript for Edge
+1.0.35 Add Values to nmelement to support multi selects
 1.0.34 change return type of executescript to object
 1.0.33 Fix addon after firefox update breaking things
 1.0.32 add SupportSelect

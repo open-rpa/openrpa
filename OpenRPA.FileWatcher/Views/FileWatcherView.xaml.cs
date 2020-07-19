@@ -80,6 +80,20 @@ namespace OpenRPA.FileWatcher.Views
                 NotifyPropertyChanged("Entity");
             }
         }
+        public bool IncludeSubdirectories
+        {
+            get
+            {
+                return plugin.IncludeSubdirectories;
+            }
+            set
+            {
+                plugin.IncludeSubdirectories = value;
+                plugin.Stop();
+                plugin.Start();
+                NotifyPropertyChanged("Entity");
+            }
+        }        
         private void Open_Selector_Click(object sender, RoutedEventArgs e)
         {
         }

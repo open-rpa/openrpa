@@ -70,6 +70,15 @@ namespace OpenRPA.FileWatcher.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sub Directories.
+        /// </summary>
+        public static string plugin_includesubdir {
+            get {
+                return ResourceManager.GetString("plugin_includesubdir", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string plugin_name {

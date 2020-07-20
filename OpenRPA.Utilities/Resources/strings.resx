@@ -168,6 +168,9 @@
   <data name="activity_readpdf_hint" xml:space="preserve">
     <value>Select PDF file to read</value>
   </data>
+  <data name="activity_selectfolder_hint" xml:space="preserve">
+    <value>Selected Folder</value>
+  </data>
   <data name="activity_startprocess_arguments_hint" xml:space="preserve">
     <value>Arguments to be parsed the the executable</value>
   </data>

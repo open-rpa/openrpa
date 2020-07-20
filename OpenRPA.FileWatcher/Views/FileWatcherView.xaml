@@ -9,10 +9,12 @@
     <Grid>
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,20,0,0" Text="{x:Static or:strings.plugin_name}" VerticalAlignment="Top" Width="110" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="183,20,0,0" Text="{Binding Path=EntityName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,48,0,0" Text="{x:Static or:strings.plugin_path}" VerticalAlignment="Top" Width="110" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="183,48,0,0" Text="{Binding EntityPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,71,0,0" Text="{x:Static or:strings.plugin_filter}" VerticalAlignment="Top" Width="110" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="183,71,0,0" Text="{Binding EntityFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,50,0,0" Text="{x:Static or:strings.plugin_path}" VerticalAlignment="Top" Width="110" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="183,50,0,0" Text="{Binding EntityPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,80,0,0" Text="{x:Static or:strings.plugin_filter}" VerticalAlignment="Top" Width="110" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="183,80,0,0" Text="{Binding EntityFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,110,0,0" Text="{x:Static or:strings.plugin_includesubdir}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="183,110,0,0" IsChecked="{Binding IncludeSubdirectories, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
 
     </Grid>
 </UserControl>

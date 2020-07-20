@@ -214,6 +214,15 @@ namespace OpenRPA.Utilities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Selected Folder.
+        /// </summary>
+        public static string activity_selectfolder_hint {
+            get {
+                return ResourceManager.GetString("activity_selectfolder_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Arguments to be parsed the the executable.
         /// </summary>
         public static string activity_startprocess_arguments_hint {

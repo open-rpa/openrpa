@@ -79,6 +79,22 @@ namespace OpenRPA.FileWatcher
                 Entity.Properties["WatchFilter"] = value;
             }
         }
+        public bool IncludeSubdirectories
+        {
+            get
+            {
+                if (Entity == null) return false;
+                if (!Entity.Properties.ContainsKey("IncludeSubdirectories")) return false;
+                var _val = Entity.Properties["IncludeSubdirectories"];
+                if (_val == null) return false;
+                return bool.Parse(_val.ToString());
+            }
+            set
+            {
+                if (Entity == null) return;
+                Entity.Properties["IncludeSubdirectories"] = value;
+            }
+        }
         public void Start()
         {
             try
@@ -88,6 +104,7 @@ namespace OpenRPA.FileWatcher
                 watcher.Filter = WatchFilter;
                 watcher.Changed += new FileSystemEventHandler(OnChanged);
                 watcher.EnableRaisingEvents = true;
+                watcher.IncludeSubdirectories = IncludeSubdirectories;
             }
             catch (Exception ex)
             {

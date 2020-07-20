@@ -55,17 +55,10 @@ namespace OpenRPA.PDPlugin
                 return view;
             }
         }
-        private void OnMouseUp(InputEventArgs e)
+        async private void OnMouseUp(InputEventArgs e)
         {
             try
             {
-                //if (e.Element == null) return;
-                //var pathToRoot = new List<AutomationElement>();
-                //AutomationElement element = e.Element.RawElement;
-                //WindowsSelector selector = new WindowsSelector(element, null, false);
-                //var json = selector.ToString();
-                //var i = new dbitem() { Selector = JArray.Parse(json) };
-                //_ = global.webSocketClient.InsertOne(PluginConfig.collectionname, 0, false, i);
                 IRecordEvent re = new RecordEvent
                 {
                     Button = e.Button
@@ -98,7 +91,14 @@ namespace OpenRPA.PDPlugin
 
                 if (e.Element == null) return;
                 var i = new mouseevent(re);
-                _ = global.webSocketClient.InsertOne(PluginConfig.collectionname, 0, false, i);
+                try
+                {
+                    await global.webSocketClient.InsertOne(PluginConfig.collectionname, 0, false, i);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
 
             }
             catch (Exception ex)

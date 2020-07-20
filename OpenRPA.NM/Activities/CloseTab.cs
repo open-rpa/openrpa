@@ -26,9 +26,9 @@ namespace OpenRPA.NM
             var browser = Browser.Get(context);
             var timeout = TimeSpan.FromSeconds(3);
             if (browser != "chrome" && browser != "ff" && browser != "edge") browser = "chrome";
+            NMHook.enumtabs();
             if (closeall)
             {
-                NMHook.enumtabs();
                 foreach(var tab in NMHook.tabs.Where(x=> x.browser == browser).ToList())
                 {
                     NMHook.closetab(browser, tab.id);
@@ -41,6 +41,7 @@ namespace OpenRPA.NM
                     {
                         NMHook.closetab(browser, NMHook.CurrentChromeTab.id);
                     }
+                    else { Log.Warning("No active tab found for " + browser); }
                 }
                 if (browser == "ff")
                 {
@@ -48,6 +49,15 @@ namespace OpenRPA.NM
                     {
                         NMHook.closetab(browser, NMHook.CurrentFFTab.id);
                     }
+                    else { Log.Warning("No active tab found for " + browser); }
+                }
+                if (browser == "edge")
+                {
+                    if (NMHook.CurrentEdgeTab != null)
+                    {
+                        NMHook.closetab(browser, NMHook.CurrentEdgeTab.id);
+                    }
+                    else { Log.Warning("No active tab found for " + browser); }
                 }
             }
         }

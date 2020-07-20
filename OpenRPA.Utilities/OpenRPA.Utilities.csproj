@@ -59,6 +59,7 @@
     <None Remove="Activities\ReadJSONDesigner.xaml" />
     <None Remove="Activities\ReadPDFDesigner.xaml" />
     <None Remove="Activities\ReplaceDesigner.xaml" />
+    <None Remove="Activities\SelectFolderDesigner.xaml" />
     <None Remove="Activities\SetAllRowsStateDesigner.xaml" />
     <None Remove="Activities\SetAutoLoginDesigner.xaml" />
     <None Remove="Activities\SetCredentialsDesigner.xaml" />
@@ -78,6 +79,7 @@
     <None Remove="Resources\designer\readjson.png" />
     <None Remove="Resources\designer\readpdf.png" />
     <None Remove="Resources\designer\regex.png" />
+    <None Remove="Resources\designer\selectfolder.png" />
     <None Remove="Resources\designer\writeexcel.png" />
     <None Remove="Resources\designer\writefile.png" />
     <None Remove="Resources\toolbox\closeworkbook.png" />
@@ -93,11 +95,13 @@
     <None Remove="Resources\toolbox\readjson.png" />
     <None Remove="Resources\toolbox\readpdf.png" />
     <None Remove="Resources\toolbox\regex.png" />
+    <None Remove="Resources\toolbox\selectfolder.png" />
     <None Remove="Resources\toolbox\writeexcel.png" />
     <None Remove="Resources\toolbox\writefile.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\designer\database.png" />
+    <Resource Include="Resources\designer\selectfolder.png" />
     <EmbeddedResource Include="Resources\toolbox\closeworkbook.png" />
     <EmbeddedResource Include="Resources\toolbox\commentout.png" />
     <EmbeddedResource Include="Resources\toolbox\play.png" />
@@ -107,6 +111,7 @@
     <EmbeddedResource Include="Resources\toolbox\readexcel.png" />
     <EmbeddedResource Include="Resources\toolbox\readfile.png" />
     <EmbeddedResource Include="Resources\toolbox\readpdf.png" />
+    <EmbeddedResource Include="Resources\toolbox\selectfolder.png" />
     <EmbeddedResource Include="Resources\toolbox\writeexcel.png" />
     <EmbeddedResource Include="Resources\toolbox\writefile.png" />
   </ItemGroup>
@@ -146,6 +151,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\AddDataColumnDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\SelectFolderDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

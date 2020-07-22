@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.141</Version>
-    <PackageReleaseNotes>1.0.141 Update File Watcher / Add SelectFolder Activity / Fix Close tab for Edge
+    <Version>1.0.142</Version>
+    <PackageReleaseNotes>1.0.142 Update for generic database providers
+1.0.141 Update File Watcher / Add SelectFolder Activity / Fix Close tab for Edge
 1.0.140 ExecuteScript
 1.0.139 Fix default name / stop importing all default namespaces
 1.0.138 Fix windows click detector

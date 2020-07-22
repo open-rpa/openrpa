@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,12 +10,19 @@ namespace OpenRPA.Database
 {
     public class Connection : IDisposable
     {
-        private string ConnectionString;
-        private OleDbConnection conn;
-        public Connection(string ConnectionString)
+        public string DataSource { get; set; }
+        public string DataProvider { get; set; }
+        public string ConnectionString { get; set; }
+        private DbConnection conn;
+        private DbProviderFactory factory;
+        public Connection(string DataProvider, string DataSource, string ConnectionString)
         {
+            this.DataProvider = DataProvider;
+            this.DataSource = DataSource;
             this.ConnectionString = ConnectionString;
-            conn = new OleDbConnection(this.ConnectionString);
+            factory = DbProviderFactories.GetFactory(DataProvider);
+            conn = factory.CreateConnection();
+            conn.ConnectionString = ConnectionString;
         }
         public void Close()
         {
@@ -36,10 +43,12 @@ namespace OpenRPA.Database
         {
             conn.Open();
         }
-        public int ExecuteNonQuery(string Query, System.Data.CommandType commandType)
+        public int ExecuteNonQuery(string Query, CommandType commandType)
         {
-            using (OleDbCommand cmd = new OleDbCommand(Query, conn))
+            using (var cmd = factory.CreateCommand())
             {
+                cmd.CommandText = Query;
+                cmd.Connection = conn;
                 cmd.CommandType = commandType;
                 // if (Params != null) cmd.Parameters.AddRange(Params);
                 return cmd.ExecuteNonQuery();
@@ -48,19 +57,24 @@ namespace OpenRPA.Database
         internal DataTable ExecuteQuery(string Query, CommandType commandType)
         {
             DataTable result = new DataTable();
-            using (OleDbCommand cmd = new OleDbCommand(Query, conn))
+            using (var cmd = factory.CreateCommand())
             {
+                cmd.CommandText = Query;
+                cmd.Connection = conn;
                 cmd.CommandType = commandType;
                 // if (Params != null) cmd.Parameters.AddRange(Params);
-                OleDbDataAdapter adapter = new OleDbDataAdapter(cmd);
+                var adapter = factory.CreateDataAdapter();
+                adapter.SelectCommand = cmd;
                 adapter.Fill(result);
             }
             return result;
         }
-        public object ExecuteScalar(string Query, System.Data.CommandType commandType)
+        public object ExecuteScalar(string Query, CommandType commandType)
         {
-            using (OleDbCommand cmd = new OleDbCommand(Query, conn))
+            using (var cmd = factory.CreateCommand())
             {
+                cmd.CommandText = Query;
+                cmd.Connection = conn;
                 cmd.CommandType = commandType;
                 // if (Params != null) cmd.Parameters.AddRange(Params);
                 return cmd.ExecuteScalar();
@@ -68,18 +82,22 @@ namespace OpenRPA.Database
         }
         internal int UpdateDataTable(string tablename, DataTable datatable)
         {
-            using (OleDbCommand cmd = new OleDbCommand("SELECT * FROM [" + tablename + "]", conn))
+            using (var cmd = factory.CreateCommand())
             {
-                using (OleDbDataAdapter oledbDataAdapter = new OleDbDataAdapter(cmd))
+                cmd.CommandText = "SELECT * FROM " + tablename;
+                cmd.Connection = conn;
+                using (var adapter = factory.CreateDataAdapter())
                 {
-                    using (OleDbCommandBuilder oledbCommandBuilder = new OleDbCommandBuilder(oledbDataAdapter))
+                    adapter.SelectCommand = cmd;
+                    using (var builder = factory.CreateCommandBuilder())
                     {
-                        oledbCommandBuilder.QuotePrefix = " [";
-                        oledbCommandBuilder.QuoteSuffix = "] ";
-                        oledbDataAdapter.DeleteCommand = oledbCommandBuilder.GetDeleteCommand(true);
-                        oledbDataAdapter.UpdateCommand = oledbCommandBuilder.GetUpdateCommand(true);
-                        oledbDataAdapter.InsertCommand = oledbCommandBuilder.GetInsertCommand(true);
-                        return oledbDataAdapter.Update(datatable);
+                        builder.DataAdapter = adapter;
+                        //builder.QuotePrefix = " [";
+                        //builder.QuoteSuffix = "] ";
+                        adapter.DeleteCommand = builder.GetDeleteCommand(true);
+                        adapter.UpdateCommand = builder.GetUpdateCommand(true);
+                        adapter.InsertCommand = builder.GetInsertCommand(true);
+                        return adapter.Update(datatable);
                     }
                 }
             }

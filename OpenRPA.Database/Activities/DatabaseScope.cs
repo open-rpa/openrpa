@@ -22,13 +22,20 @@ namespace OpenRPA.Database
         public ActivityAction<Connection> Body { get; set; }
         public InArgument<TimeSpan> Timeout { get; set; }
         [RequiredArgument]
+        public InArgument<string> DataProvider { get; set; }
+        [RequiredArgument]
+        public InArgument<string> DataSource { get; set; }
+        [RequiredArgument]
         public InArgument<string> ConnectionString { get; set; }
         private readonly Variable<Connection> Connection = new Variable<Connection>("Connection");
         protected override void Execute(NativeActivityContext context)
         {
+            var dataprovider = DataProvider.Get(context);
+            var datasource = DataSource.Get(context);
             var connectionstring = ConnectionString.Get(context);
             var timeout = Timeout.Get(context);
-            Connection connection = new Connection(connectionstring);
+            Connection connection = new Connection(dataprovider, datasource, connectionstring);
+
             connection.Open();
             context.SetValue(Connection, connection);
             context.ScheduleAction(Body, connection, OnBodyComplete);

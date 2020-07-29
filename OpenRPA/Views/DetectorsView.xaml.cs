@@ -101,7 +101,7 @@ namespace OpenRPA.Views
             }
             Log.FunctionOutdent("DetectorsView", "DetectorPlugins_ItemPropertyChanged");
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             Log.FunctionIndent("DetectorsView", "Button_Click");
             try
@@ -114,6 +114,9 @@ namespace OpenRPA.Views
                 dp = Plugins.AddDetector(RobotInstance.instance, d);
                 dp.OnDetector += main.OnDetector;
                 NotifyPropertyChanged("detectorPlugins");
+                var result = await global.webSocketClient.InsertOne("openrpa", 0, false, d);
+                d._id = result._id;
+                d._acl = result._acl;
             }
             catch (Exception ex)
             {

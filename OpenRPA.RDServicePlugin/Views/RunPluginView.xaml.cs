@@ -169,7 +169,11 @@ namespace OpenRPA.RDServicePlugin.Views
 
                 var servers = await global.webSocketClient.Query<RDService.unattendedserver>("openrpa", "{'_type':'unattendedserver', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
                 server = servers.FirstOrDefault();
-
+                if(server == null)
+                {
+                    Log.Error("Server not found in OpenFlow, does current user have access to object " + computername + "?");
+                }
+                
                 var clients = await global.webSocketClient.Query<RDService.unattendedclient>("openrpa", "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "', 'windowsusername':'" + windowsusername.Replace(@"\", @"\\") + "'}");
                 AddcurrentuserButton.Content = "Add current user";
                 if (clients.Length == 1)
@@ -240,6 +244,7 @@ namespace OpenRPA.RDServicePlugin.Views
             }
             catch (Exception ex)
             {
+                Log.Error(ex.ToString());
                 MessageBox.Show("AddcurrentuserButtonClick: " + ex.Message);
             }
             finally

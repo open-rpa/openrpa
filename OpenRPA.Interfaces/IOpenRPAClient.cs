@@ -21,5 +21,7 @@ namespace OpenRPA.Interfaces
         IDesigner GetWorkflowDesignerByIDOrRelativeFilename(string IDOrRelativeFilename);
         IWorkflow GetWorkflowByIDOrRelativeFilename(string IDOrRelativeFilename);
         IWorkflowInstance GetWorkflowInstanceByInstanceId(string InstanceId);
+        List<IWorkflowInstance> WorkflowInstances { get; }
+
     }
 }

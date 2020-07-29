@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="activity_click_to_view" xml:space="preserve">
+    <value>Double-click to view</value>
+  </data>
   <data name="activity_closetab" xml:space="preserve">
     <value>Close Tab</value>
   </data>
@@ -161,6 +164,12 @@
   </data>
   <data name="activity_open_editor" xml:space="preserve">
     <value>Open Editor</value>
+  </data>
+  <data name="activity_waitfordownload" xml:space="preserve">
+    <value>Wait For Download</value>
+  </data>
+  <data name="activity_waitfordownload_tooltip" xml:space="preserve">
+    <value>Waits for a download to complete in a nm supported browser</value>
   </data>
   <data name="activity_waitforready" xml:space="preserve">
     <value>Wait for ready</value>

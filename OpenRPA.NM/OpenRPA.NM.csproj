@@ -8,8 +8,9 @@
     <Company>OpenIAP</Company>
     <Product>OpenRPA</Product>
     <Description>Recorder plugin and Activities for interacting with Chrome/Firefox and Edge, created for OpenRPA robot</Description>
-    <Version>1.0.36</Version>
-    <PackageReleaseNotes>1.0.36 Fix ExecuteScript for Edge
+    <Version>1.0.37</Version>
+    <PackageReleaseNotes>1.0.37 Add WaitForDownload activity
+1.0.36 Fix ExecuteScript for Edge
 1.0.35 Add Values to nmelement to support multi selects
 1.0.34 change return type of executescript to object
 1.0.33 Fix addon after firefox update breaking things
@@ -64,19 +65,28 @@
     <None Remove="Activities\ExecuteScriptDesigner.xaml" />
     <None Remove="Activities\GetElementDesigner.xaml" />
     <None Remove="Activities\OpenURLDesigner.xaml" />
+    <None Remove="Activities\WaitForDownloadDesigner.xaml" />
+    <None Remove="Resources\designer\detector.png" />
     <None Remove="Resources\designer\gethtmlelement.png" />
+    <None Remove="Resources\toolbox\detector.png" />
     <None Remove="Resources\toolbox\gethtmlelement.png" />
     <None Remove="Snippets\ChromeGoogleSearch.xaml" />
     <None Remove="Snippets\FirefoxGoogleSearch.xaml" />
+    <None Remove="Views\DownloadDetectorView.xaml" />
     <None Remove="Views\RecordPluginView.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\designer\detector.png" />
+    <EmbeddedResource Include="Resources\toolbox\detector.png" />
     <EmbeddedResource Include="Resources\toolbox\gethtmlelement.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\WaitForDownloadDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\Editor.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -90,6 +100,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\OpenURLDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DownloadDetectorView.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RecordPluginView.xaml">

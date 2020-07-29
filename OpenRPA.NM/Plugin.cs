@@ -132,8 +132,10 @@ namespace OpenRPA.NM
             }
             return new NMSelector(nmitem.NMElement, nmanchor, true, null);
         }
+        public static IOpenRPAClient client { get; set; }
         public void Initialize(IOpenRPAClient client)
         {
+            Plugin.client = client;
             NMHook.registreChromeNativeMessagingHost(false);
             NMHook.registreffNativeMessagingHost(false);
             NMHook.checkForPipes(true, true, true );

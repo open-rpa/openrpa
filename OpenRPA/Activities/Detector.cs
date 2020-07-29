@@ -31,8 +31,8 @@ namespace OpenRPA.Activities
         {
             // keep bookmark, we want to support being triggerede multiple times, so bookmark needs to be keep incase workflow is restarted
             // context.RemoveBookmark(bookmark.Name);
-            var result = obj as IDetectorEvent;
-            Event.Set(context, result);
+            // var result = obj as IDetectorEvent;
+            Event.Set(context, obj);
         }
         protected override bool CanInduceIdle
         {

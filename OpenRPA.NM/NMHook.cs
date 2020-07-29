@@ -228,6 +228,18 @@ namespace OpenRPA.NM
                 }
             }
         }
+        private static void downloadcomplete(NativeMessagingMessage msg)
+        {
+            var json = msg.data;
+            var download = JsonConvert.DeserializeObject<Download>(json);
+            foreach(var p in Plugins.detectorPlugins)
+            {
+                if(p is DownloadDetectorPlugin plugin)
+                {
+                    plugin.RaiseDetector(download);
+                }
+            }
+        }
         private static void Client_OnReceivedMessage(NativeMessagingMessage message)
         {
             try
@@ -260,6 +272,7 @@ namespace OpenRPA.NM
                 if (msg.functionName == "tabremoved") tabremoved(msg);
                 if (msg.functionName == "tabupdated") tabupdated(msg);
                 if (msg.functionName == "tabactivated") tabactivated(msg);
+                if (msg.functionName == "downloadcomplete") downloadcomplete(msg);
                 Task.Run(() => { onMessage?.Invoke(msg); });
             }
             catch (Exception ex)

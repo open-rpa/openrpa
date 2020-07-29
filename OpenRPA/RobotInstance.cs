@@ -50,6 +50,15 @@ namespace OpenRPA
         public MainWindow MainWindow { get; set; }
         public IMainWindow Window { get; set; }
         public AgentWindow AgentWindow { get; set; }
+        public List<IWorkflowInstance> WorkflowInstances
+        {
+            get
+            {
+                var result = new List<IWorkflowInstance>();
+                foreach (var wi in WorkflowInstance.Instances) result.Add(wi);
+                return result;
+            }
+        }
         public Views.WFDesigner[] Designers
         {
             get

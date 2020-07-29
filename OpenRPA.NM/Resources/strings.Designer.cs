@@ -61,6 +61,15 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Double-click to view.
+        /// </summary>
+        public static string activity_click_to_view {
+            get {
+                return ResourceManager.GetString("activity_click_to_view", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close Tab.
         /// </summary>
         public static string activity_closetab {
@@ -192,6 +201,24 @@ namespace OpenRPA.NM.Resources {
         public static string activity_openurl_tooltip {
             get {
                 return ResourceManager.GetString("activity_openurl_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait For Download.
+        /// </summary>
+        public static string activity_waitfordownload {
+            get {
+                return ResourceManager.GetString("activity_waitfordownload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Waits for a download to complete in a nm supported browser.
+        /// </summary>
+        public static string activity_waitfordownload_tooltip {
+            get {
+                return ResourceManager.GetString("activity_waitfordownload_tooltip", resourceCulture);
             }
         }
         

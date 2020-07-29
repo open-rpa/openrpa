@@ -675,12 +675,7 @@ chrome.tabs.onCreated.addListener(tabsOnCreated);
 chrome.tabs.onRemoved.addListener(tabsOnRemoved);
 chrome.tabs.onUpdated.addListener(tabsOnUpdated);
 chrome.tabs.onActivated.addListener(tabsOnActivated);
-//chrome.extension.onRequest.addListener(function (response) {
-//    if (response.type === "urlUpdate") {
-//        document.getElementById("addressBar").value = response.url;
-//    }
-//});
-
+chrome.downloads.onChanged.addListener(downloadsOnChanged);
 chrome.runtime.onMessage.addListener((msg, sender, fnResponse) => {
     if (msg === "loadscript") {
         if (openrpautil_script !== null && openrpautil_script !== undefined && openrpautil_script !== '') {
@@ -756,3 +751,36 @@ setInterval(function () {
         console.error(e);
     }
 }, 1000);
+
+
+var downloadsSearch = function (id) {
+    return new Promise(function (resolve, reject) {
+        try {
+            chrome.downloads.search({ id: id }, function (data) {
+                if (data != null && data.length > 0) {
+                    return resolve(data[0]);
+                }
+                resolve(null);
+            });
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+async function downloadsOnChanged(delta) {
+    if (!delta.state ||
+        (delta.state.current != 'complete')) {
+        return;
+    }
+    const download = await downloadsSearch(delta.id);
+    console.log(download);
+
+    if (port == null) return;
+    var message = { functionName: "downloadcomplete", data: JSON.stringify(download) };
+    if (isChrome) message.browser = "chrome";
+    if (isFirefox) message.browser = "ff";
+    if (isChromeEdge) message.browser = "edge";
+    console.debug("[send]" + message.functionName);
+    port.postMessage(JSON.parse(JSON.stringify(message)));
+
+}

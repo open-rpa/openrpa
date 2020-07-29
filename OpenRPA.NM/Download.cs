@@ -23,7 +23,7 @@ namespace OpenRPA.NM
         public string state { get; set; }
         public long totalBytes { get; set; }
         public string url { get; set; }
-        public DateTime startTime { get; set; }
-        public DateTime endTime { get; set; }
+        public DateTime? startTime { get; set; }
+        public DateTime? endTime { get; set; }
     }
 }

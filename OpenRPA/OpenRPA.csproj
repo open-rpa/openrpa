@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.143</Version>
-    <PackageReleaseNotes>1.0.143 Add WaitForDownload activity
+    <Version>1.0.144</Version>
+    <PackageReleaseNotes>1.0.144 Fix Download message from firefox
+1.0.143 Add WaitForDownload activity
 1.0.142 Update for generic database providers
 1.0.141 Update File Watcher / Add SelectFolder Activity / Fix Close tab for Edge
 1.0.140 ExecuteScript

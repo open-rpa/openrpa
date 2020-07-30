@@ -37,6 +37,25 @@ namespace OpenRPA.Interfaces
     }
     public static class Extensions
     {
+        public static Type FindType(string qualifiedTypeName)
+        {
+            Type t = Type.GetType(qualifiedTypeName);
+
+            if (t != null)
+            {
+                return t;
+            }
+            else
+            {
+                foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    t = asm.GetType(qualifiedTypeName);
+                    if (t != null)
+                        return t;
+                }
+                return null;
+            }
+        }
         public static System.Data.DataTable ToDataTable(this Newtonsoft.Json.Linq.JArray jArray)
         {
             var result = new System.Data.DataTable();

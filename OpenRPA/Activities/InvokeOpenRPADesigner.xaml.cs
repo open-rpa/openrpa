@@ -84,7 +84,7 @@ namespace OpenRPA.Activities
                 if(!exists)
                 {
 
-                    Type t = Type.GetType(p.type);
+                    Type t = OpenRPA.Interfaces.Extensions.FindType(p.type);
                     if (p.type == "System.Data.DataTable") t = typeof(System.Data.DataTable);
                     if (t == null) throw new ArgumentException("Failed resolving type '" + p.type + "'");
 

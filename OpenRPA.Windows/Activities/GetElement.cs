@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using System.Reflection;
+using FlaUI.Core.Input;
 
 namespace OpenRPA.Windows
 {
@@ -37,6 +38,7 @@ namespace OpenRPA.Windows
         public InArgument<string> Selector { get; set; }
         // public InArgument<UIElement> From { get; set; }
         public InArgument<IElement> From { get; set; }
+        public InArgument<bool> Interactive { get; set; }
         public OutArgument<UIElement[]> Elements { get; set; }
         [Browsable(false)]
         public string Image { get; set; }
@@ -60,6 +62,7 @@ namespace OpenRPA.Windows
             var maxresults = MaxResults.Get(context);
             var minresults = MinResults.Get(context);
             if (maxresults < 1) maxresults = 1;
+            var interactive = Interactive.Get(context);
             var from = From.Get(context);
 
             //            double _timeout = 250;
@@ -135,6 +138,11 @@ namespace OpenRPA.Windows
             }
             if (more)
             {
+                if(interactive)
+                {
+                    var testelement = _enum.Current;
+                    Wait.UntilResponsive(testelement.RawElement, TimeSpan.FromMilliseconds(_timeout));
+                }
                 context.SetValue(_elements, _enum);
                 context.SetValue(_sw, sw);
                 Log.Selector(string.Format("Windows.GetElement::end:: call ScheduleAction: {0:mm\\:ss\\.fff}", sw.Elapsed));

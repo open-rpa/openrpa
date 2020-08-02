@@ -248,8 +248,7 @@ namespace OpenRPA.NM
                 }
             }
         }
-
-    public string Value
+        public string Value
         {
             get
             {

@@ -248,8 +248,7 @@ namespace OpenRPA.NM
                 }
             }
         }
-
-    public string Value
+        public string Value
         {
             get
             {
@@ -545,6 +544,19 @@ namespace OpenRPA.NM
                 }
                 return result.ToArray();
             }
+        }
+        public bool WaitForVanish(TimeSpan Timeout, bool IsVisible = true, bool isVisibleOnScreen = false)
+        {
+            var sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+            do
+            {
+                System.Threading.Thread.Sleep(100);
+                if (!Refresh()) return true;
+                if(IsVisible && !this.IsVisible) return true;
+                if(isVisibleOnScreen && !this.isVisibleOnScreen) return true;
+            } while (sw.Elapsed < Timeout);
+            return false;
         }
         public override bool Equals(object obj)
         {

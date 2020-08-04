@@ -572,5 +572,44 @@ namespace OpenRPA.NM
             int hCode = Height ^ X ^ Y ^ Width;
             return hCode.GetHashCode();
         }
+        public bool IsChecked
+        {
+            get
+            {
+                if (chromeelement.ContainsKey("checked"))
+                {
+                    if (chromeelement["checked"].ToString() == "true") return true;
+                    if (chromeelement["checked"].ToString() == "True") return true;
+                }
+                return false;
+            }
+            set
+            {
+                if (NMHook.connected)
+                {
+                    var tab = NMHook.tabs.Where(x => x.id == message.tabid).FirstOrDefault();
+                    if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
+                    // NMHook.HighlightTab(tab);
+
+                    var updateelement = new NativeMessagingMessage("updateelementvalue", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
+                    {
+                        browser = message.browser,
+                        zn_id = zn_id,
+                        tabid = message.tabid,
+                        frameId = message.frameId,
+                        data = value.ToString()
+                    };
+                    var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(3));
+                    if (subsubresult == null) throw new Exception("Failed setting html element value");
+                    //System.Threading.Thread.Sleep(500);
+                    if (PluginConfig.wait_for_tab_after_set_value)
+                    {
+                        NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
+                    }
+                    return;
+                }
+            }
+        }
+
     }
 }

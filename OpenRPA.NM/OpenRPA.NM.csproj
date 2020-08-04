@@ -8,8 +8,9 @@
     <Company>OpenIAP</Company>
     <Product>OpenRPA</Product>
     <Description>Recorder plugin and Activities for interacting with Chrome/Firefox and Edge, created for OpenRPA robot</Description>
-    <Version>1.0.39</Version>
-    <PackageReleaseNotes>1.0.39 Add WaitForVanish to NMElement
+    <Version>1.0.40</Version>
+    <PackageReleaseNotes>1.0.40 Add IsChecked to nmelement
+1.0.39 Add WaitForVanish to NMElement
 1.0.38 Fix Download message from firefox
 1.0.37 Add WaitForDownload activity
 1.0.36 Fix ExecuteScript for Edge

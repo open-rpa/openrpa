@@ -460,7 +460,15 @@ if (true == false) {
                     }
                     if (ele) {
                         ele.focus();
-                        ele.value = message.data;
+                        if (ele.tagName == "INPUT" && ele.getAttribute("type") == "checkbox") {
+                            if (message.data === true || message.data === "true" || message.data === "True") {
+                                ele.checked = true;
+                            } else {
+                                ele.checked = false;
+                            }
+                        } else {
+                            ele.value = message.data;
+                        }
                         try {
                             var evt = document.createEvent("HTMLEvents");
                             evt.initEvent("change", true, true);
@@ -954,6 +962,9 @@ if (true == false) {
                     treeObject["isvisibleonscreen"] = openrpautil.isVisibleOnScreen(element);
                     treeObject["disabled"] = element.disabled;
                     treeObject["innerText"] = element.innerText;
+                    if (element.tagName == "INPUT" && element.getAttribute("type") == "checkbox" ) {
+                        treeObject["checked"] = element.checked;
+                    }
                     if (element.tagName && element.tagName.toLowerCase() == "options") {
                         treeObject["selected"] = element.selected;
                     }

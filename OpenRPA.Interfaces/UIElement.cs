@@ -25,6 +25,7 @@ namespace OpenRPA
                 Name = Element.Properties.Name.ValueOrDefault;
                 ClassName = Element.Properties.ClassName.ValueOrDefault;
                 Type = Element.Properties.ControlType.ValueOrDefault.ToString();
+                FrameworkId = Element.Properties.FrameworkId.ValueOrDefault;
             }
             catch (Exception)
             {
@@ -46,6 +47,7 @@ namespace OpenRPA
                 Name = RawElement.Properties.Name.ValueOrDefault;
                 ClassName = RawElement.Properties.ClassName.ValueOrDefault;
                 Type = RawElement.Properties.ControlType.ValueOrDefault.ToString();
+                FrameworkId = RawElement.Properties.FrameworkId.ValueOrDefault;
             }
             catch (Exception ex)
             {
@@ -78,6 +80,7 @@ namespace OpenRPA
         // public string Id { get; set; }
         public string Name { get; set; }
         public string ClassName { get; set; }
+        public string FrameworkId { get; set; }
         public string Type { get; set; }
         public string ControlType
         {

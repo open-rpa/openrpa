@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using Forge.Forms.FormBuilding;
 
 namespace OpenRPA.Forms.Activities
 {
@@ -27,7 +28,18 @@ namespace OpenRPA.Forms.Activities
             var xmlString = Form.Get(context);
             FormResult result = null;
             string json = "";
-            
+
+
+            var definition = FormBuilder.Default.GetDefinition(xmlString, freeze: false);
+            List<string> fields = GenericTools.MainWindow.Dispatcher.Invoke<List<string>>(() =>
+            {
+                List<string> _fields = new List<string>();
+                foreach (DataFormField f in definition.GetElements().Where(x => x is DataFormField))
+                {
+                    _fields.Add(f.Key);
+                }
+                return _fields;
+            });
             var param = new Dictionary<string, object>();
             var vars = context.DataContext.GetProperties();
             foreach (dynamic v in vars)
@@ -38,13 +50,16 @@ namespace OpenRPA.Forms.Activities
                     //_payload.Add(v.DisplayName, value);
                     try
                     {
-                        var test = new { value = value };
-                        if (value.GetType() == typeof(System.Data.DataTable)) continue;
-                        if (value.GetType() == typeof(System.Data.DataView)) continue;
-                        if (value.GetType() == typeof(System.Data.DataRowView)) continue;
-                        //
-                        var asjson = JObject.FromObject(test);
-                        param[v.DisplayName] = value;
+                        if(fields.Contains(v.DisplayName))
+                        {
+                            var test = new { value = value };
+                            if (value.GetType() == typeof(System.Data.DataTable)) continue;
+                            if (value.GetType() == typeof(System.Data.DataView)) continue;
+                            if (value.GetType() == typeof(System.Data.DataRowView)) continue;
+                            //
+                            var asjson = JObject.FromObject(test);
+                            param[v.DisplayName] = value;
+                        }
                     }
                     catch (Exception)
                     {

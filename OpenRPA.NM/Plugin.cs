@@ -310,6 +310,10 @@ namespace OpenRPA.NM
             {
                 LastElement.message.tab = NMHook.tabs.Where(x => x.id == LastElement.message.tabid && x.browser == LastElement.message.browser && x.windowId == LastElement.message.windowId).FirstOrDefault();
             }
+            if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "msedge")
+            {
+                if (e.UIElement.FrameworkId != "chrome" && e.UIElement.FrameworkId != "Chrome") return false;
+            }
             var selector = new NMSelector(LastElement, null, true, null);
             var a = new GetElement { DisplayName = LastElement.id + " " + LastElement.type + " " + LastElement.Name };
             a.Selector = selector.ToString();

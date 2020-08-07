@@ -20,7 +20,7 @@ namespace OpenRPA
         public static T Load(string fileName)
         {
             T t = new T();
-            
+
             if (System.IO.File.Exists(fileName))
             {
                 t = JsonConvert.DeserializeObject<T>(System.IO.File.ReadAllText(fileName));
@@ -33,7 +33,7 @@ namespace OpenRPA
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Trace.WriteLine(ex.ToString(), "Error");                    
+                    System.Diagnostics.Trace.WriteLine(ex.ToString(), "Error");
                 }
             }
             return t;

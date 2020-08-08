@@ -232,6 +232,11 @@ namespace OpenRPA
                 });
                 return;
             }
+            if(Project.disable_local_caching)
+            {
+                if (System.IO.File.Exists(workflowfilepath)) System.IO.File.Delete(workflowfilepath);
+                return;
+            }
             System.IO.File.WriteAllText(workflowfilepath, Xaml);
         }
         public async Task Save(bool UpdateImages)

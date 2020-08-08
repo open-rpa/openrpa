@@ -1195,6 +1195,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable local caching.
+        /// </summary>
+        public static string disable_local_caching {
+            get {
+                return ResourceManager.GetString("disable_local_caching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Logging.
         /// </summary>
         public static string dock_logging {

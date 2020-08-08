@@ -80,6 +80,14 @@
         <StackPanel Grid.Column="1" Grid.Row="0">
             <StackPanel>
                 <TextBlock Text="{x:Static or:strings.open_edit}" FontWeight="Bold"></TextBlock>
+                <CheckBox 
+                    IsChecked="{Binding ElementName=listWorkflows, Path=SelectedValue.disable_local_caching}" 
+                    Margin="20,0,0,0" Content="{x:Static or:strings.disable_local_caching}"
+                    Command="{Binding Data.DisableCachingCommand, Source={StaticResource proxy}}" 
+                    ></CheckBox>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="{x:Static or:strings.open_edit}" FontWeight="Bold"></TextBlock>
                 <Button Click="ButtonEditXAML" Margin="20,0,0,0" Content="{x:Static or:strings.open_edit_xaml}"></Button>
             </StackPanel>
             <StackPanel>

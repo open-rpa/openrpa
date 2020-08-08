@@ -1256,7 +1256,24 @@ namespace OpenRPA
             try
             {
                 if (!IsConnected) return false;
-                return (SelectedContent is Views.WFDesigner || SelectedContent is Views.OpenProject || SelectedContent == null);
+                if(SelectedContent is Views.WFDesigner designer)
+                {
+                    return !designer.Project.disable_local_caching;
+                }
+                if(SelectedContent is Views.OpenProject open)
+                {
+                    var val = open.listWorkflows.SelectedValue;
+                    if (val == null) return false;
+                    if (open.listWorkflows.SelectedValue is Workflow wf)
+                    {
+                        return !wf.Project.disable_local_caching;
+                    }
+                    if (open.listWorkflows.SelectedValue is Project p)
+                    {
+                        return !p.disable_local_caching;
+                    }
+                }
+                return false;
             }
             catch (Exception ex)
             {

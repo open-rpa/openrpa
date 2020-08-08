@@ -11,6 +11,7 @@ namespace OpenRPA
 {
     public class Project : apibase
     {
+        public bool disable_local_caching { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [JsonIgnore]
         public System.Collections.ObjectModel.ObservableCollection<Workflow> Workflows { get; set; }

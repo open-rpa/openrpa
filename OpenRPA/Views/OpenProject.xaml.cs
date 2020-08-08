@@ -43,6 +43,38 @@ namespace OpenRPA.Views
         // public ICommand DeleteCommand { get { return new RelayCommand<object>(MainWindow.instance.OnDelete, MainWindow.instance.CanDelete); } }
         public ICommand CopyIDCommand { get { return new RelayCommand<object>(MainWindow.instance.OnCopyID, MainWindow.instance.CanCopyID); } }
         public ICommand CopyRelativeFilenameCommand { get { return new RelayCommand<object>(MainWindow.instance.OnCopyRelativeFilename, MainWindow.instance.CanCopyID); } }
+        public ICommand DisableCachingCommand { get { return new RelayCommand<object>(OnDisableCaching, CanDisableCaching); } }
+        internal bool CanDisableCaching(object _item)
+        {
+            try
+            {
+                if (!MainWindow.instance.IsConnected) return false;
+                if (MainWindow.instance.SelectedContent is Views.OpenProject view)
+                {
+                    var val = view.listWorkflows.SelectedValue;
+                    if (val == null) return false;
+                    if (view.listWorkflows.SelectedValue is Project p) return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
+        internal async void OnDisableCaching(object _item)
+        {
+            if (MainWindow.instance.SelectedContent is Views.OpenProject view)
+            {
+                var val = view.listWorkflows.SelectedValue;
+                if (val == null) return;
+                if (view.listWorkflows.SelectedValue is Project project)
+                {
+                    await project.Save(false);
+                }
+            }
+        }
         public System.Collections.ObjectModel.ObservableCollection<Project> Projects
         {
             get

@@ -11,7 +11,8 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Version>1.0.150</Version>
-    <PackageReleaseNotes>1.0.149 Add disable local caching option on workflows
+    <PackageReleaseNotes>1.0.150 Fix reconnect issue
+1.0.149 Add disable local caching option on workflows
 1.0.148 Add support registry configuration / Add better support for windows elements in nm / fix bug in openrpa.Forms
 1.0.147 Add IsChecked to nmelement
 1.0.146 Add WaitForVanish to NMElement

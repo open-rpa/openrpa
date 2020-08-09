@@ -275,7 +275,6 @@ namespace OpenRPA
                         else if (!string.IsNullOrEmpty(value.ToString()))
                         {
                             value = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(value.ToString());
-                            var b = true;
                         }
                         else
                         {
@@ -287,7 +286,6 @@ namespace OpenRPA
                         if (value is string && !string.IsNullOrEmpty(value.ToString()))
                         {
                             value = Newtonsoft.Json.JsonConvert.DeserializeObject<byte[]>("\"" + value.ToString() + "\"");
-                            var b = true;
                         }
                         else
                         {

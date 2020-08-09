@@ -127,6 +127,10 @@ namespace OpenRPA.NM
             if (nmanchor != null)
             {
                 var element = GetElementsWithSelector(nmanchor);
+                if(string.IsNullOrEmpty(nmitem.NMElement.cssselector))
+                {
+                    nmitem.NMElement.Refresh();
+                }
                 return new NMSelector(nmitem.NMElement, nmanchor, true, (NMElement)element.FirstOrDefault());
 
             }

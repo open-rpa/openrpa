@@ -67,6 +67,7 @@ namespace OpenRPA.NM
         }
         protected override void Execute(NativeActivityContext context)
         {
+            var eq = new Activities.NMEqualityComparer();
             var selector = Selector.Get(context);
             selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
             var sel = new NMSelector(selector);
@@ -106,6 +107,48 @@ namespace OpenRPA.NM
             var lastelements = context.GetValue(_lastelements);
             if (lastelements == null) lastelements = new NMElement[] { };
             context.SetValue(_lastelements, elements);
+            if(lastelements.Length > 0)
+            {
+                var newelements = new List<NMElement>();
+                for (var i = elements.Length - 1; i >= 0; i--)
+                {
+                    var element = elements[i];
+                    bool exists = false;
+                    foreach (var ele in lastelements)
+                    {
+                        if (eq.Equals(ele, element))
+                        {
+                            exists = true;
+                            break;
+                        } else if(element.ToString() == ele.ToString())
+                        {
+                            var b = eq.Equals(ele, element);
+                        }
+                    }
+                    if (!exists) newelements.Insert(0, element);
+                }
+                if (elements.Length > 0)
+                {
+                    elements = newelements.ToArray();
+
+                    newelements = new List<NMElement>();
+                    for (var i = elements.Length - 1; i >= 0; i--)
+                    {
+                        bool exists = false;
+                        foreach (var ele in lastelements)
+                        {
+                            if (eq.Equals(ele, elements[i]))
+                            {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        if (!exists) newelements.Insert(0, elements[i]);
+                    }
+                    elements = newelements.ToArray();
+                }
+
+            }
             if ((elements.Length + lastelements.Length) < minresults)
             {
                 Log.Selector(string.Format("Windows.GetElement::Failed locating " + minresults + " item(s) {0:mm\\:ss\\.fff}", sw.Elapsed));
@@ -114,13 +157,11 @@ namespace OpenRPA.NM
 
             IEnumerator<NMElement> _enum = elements.ToList().GetEnumerator();
             bool more = _enum.MoveNext();
-            if (lastelements.Length == elements.Length && lastelements.Length > 0)
-            {
-                var eq = new Activities.NMEqualityComparer();
-
-                more = !System.Collections.StructuralComparisons.StructuralEqualityComparer.Equals(lastelements, elements);
-
-            }
+            //if (lastelements.Length == elements.Length && lastelements.Length > 0)
+            //{
+            //    var eq = new Activities.NMEqualityComparer();
+            //    more = !System.Collections.StructuralComparisons.StructuralEqualityComparer.Equals(lastelements, elements);
+            //}
             if (more)
             {
                 context.SetValue(_elements, _enum);

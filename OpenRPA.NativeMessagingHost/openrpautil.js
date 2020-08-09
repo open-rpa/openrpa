@@ -50,7 +50,7 @@ if (true == false) {
                 height = parseInt(height.replace('px', '')) * 0.85;
                 message.uiy += (height | 0);
 
-                message.cssPath = UTILS.cssPath(targetElement);
+                message.cssPath = UTILS.cssPath(targetElement, false);
                 message.xPath = UTILS.xPath(targetElement, true);
                 //console.log('postMessage to', targetElement, { uix: message.uix, uiy: message.uiy });
                 targetElement.contentWindow.postMessage(message, '*');
@@ -76,7 +76,7 @@ if (true == false) {
                         height = parseInt(height.replace('px', '')) * 0.85;
                         message.uiy += (height | 0);
 
-                        message.cssPath = UTILS.cssPath(targetElement);
+                        message.cssPath = UTILS.cssPath(targetElement, false);
                         message.xPath = UTILS.xPath(targetElement, true);
                         targetElement.contentDocument.openrpautil.parent = message;
                     }
@@ -713,7 +713,7 @@ if (true == false) {
                             message.uiy += currentFramePosition.y;
                         }
                         // console.log('inIframe: ' + inIframe());
-                        message.cssPath = UTILS.cssPath(targetElement);
+                        message.cssPath = UTILS.cssPath(targetElement, false);
                         message.xPath = UTILS.xPath(targetElement, true);
                         message.zn_id = openrpautil.getuniqueid(targetElement);
                         message.c = targetElement.childNodes.length;
@@ -880,7 +880,7 @@ if (true == false) {
                         object["tagName"] = element.tagName;
                         if (ident === 0) {
                             object["xPath"] = UTILS.xPath(element, true);
-                            object["cssPath"] = UTILS.cssPath(element);
+                            object["cssPath"] = UTILS.cssPath(element, false);
                             if (object["tagName"] !== 'STYLE' && object["tagName"] !== 'SCRIPT' && object["tagName"] !== 'HEAD' && object["tagName"] !== 'HTML') {
                                 if (element.innerText !== undefined && element.innerText !== null && element.innerText !== '') {
                                     object["innerText"] = element.innerText;
@@ -1288,7 +1288,7 @@ if (true == false) {
                 }
                 var nodeName = node.nodeName.toLowerCase();
 
-                if (id)
+                if (id && optimized)
                     return new UTILS.DOMNodePathStep(nodeName.toLowerCase() + idSelector(id), true);
                 var parent = node.parentNode;
                 if (!parent || parent.nodeType === Node.DOCUMENT_NODE)

@@ -18,15 +18,28 @@ namespace OpenRPA.NM.Activities
             {
                 if (element1.xpath != element2.xpath) return false;
             }
-            if (!string.IsNullOrEmpty(element1.Text) && !string.IsNullOrEmpty(element2.Text))
+            if (!string.IsNullOrEmpty(element1.id) && !string.IsNullOrEmpty(element2.id))
             {
-                if (element1.Text != element2.Text) return false;
+                if (element1.id != element2.id) return false;
             }
-            if (!string.IsNullOrEmpty(element1.Value) && !string.IsNullOrEmpty(element2.Value))
+            if (!string.IsNullOrEmpty(element1.cssselector) && !string.IsNullOrEmpty(element2.cssselector))
             {
-                if (element1.Value != element2.Value) return false;
+                if (element1.cssselector != element2.cssselector) return false;
             }
-            return (GetHashCode(element1) == GetHashCode(element2));
+            if (!string.IsNullOrEmpty(element1.classname) && !string.IsNullOrEmpty(element2.classname))
+            {
+                if (element1.cssselector != element2.cssselector) return false;
+            }
+            if (!string.IsNullOrEmpty(element1.id) && !string.IsNullOrEmpty(element2.id))
+            {
+                if (element1.cssselector != element2.cssselector) return false;
+            }
+            if (element1.zn_id > 0 && element2.zn_id > 0)
+            {
+                if (element1.zn_id != element2.zn_id) return false;
+            }
+            return true;
+            // return (GetHashCode(element1) == GetHashCode(element2));
         }
         public int GetHashCode(NMElement element)
         {

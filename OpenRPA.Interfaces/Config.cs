@@ -284,7 +284,7 @@ namespace OpenRPA
                     }
                     if (typeof(T) == typeof(byte[]))
                     {
-                        if (!string.IsNullOrEmpty(value.ToString()))
+                        if (value is string && !string.IsNullOrEmpty(value.ToString()))
                         {
                             value = Newtonsoft.Json.JsonConvert.DeserializeObject<byte[]>("\"" + value.ToString() + "\"");
                             var b = true;
@@ -295,6 +295,7 @@ namespace OpenRPA
                         }
                     }
                     if (typeof(T) == typeof(int) && value is long) value = int.Parse(value.ToString());
+                    if (typeof(T) == typeof(bool)) value = bool.Parse(value.ToString());
                     if (typeof(T) == typeof(System.Drawing.Rectangle)) {
                         var c = new System.Drawing.RectangleConverter();                        
                         value = c.ConvertFromString(value.ToString());

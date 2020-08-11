@@ -7,8 +7,9 @@
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
-    <Version>1.0.24</Version>
-    <PackageReleaseNotes>1.0.24 Add Interactive to GetElement
+    <Version>1.0.25</Version>
+    <PackageReleaseNotes>1.0.25 Fix threading error in windows.getelement
+1.0.24 Add Interactive to GetElement
 1.0.23 Change target framework to 4.7.2
 1.0.22 Add support for variables in selector
 1.0.21 Fix issue when searching for ghot elements on Windows 7

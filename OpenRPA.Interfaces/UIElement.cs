@@ -26,6 +26,8 @@ namespace OpenRPA
                 ClassName = Element.Properties.ClassName.ValueOrDefault;
                 Type = Element.Properties.ControlType.ValueOrDefault.ToString();
                 FrameworkId = Element.Properties.FrameworkId.ValueOrDefault;
+                _ = Rectangle;
+                _ = Position;
             }
             catch (Exception)
             {
@@ -42,6 +44,8 @@ namespace OpenRPA
                     System.Threading.Thread.Sleep(50);
                     pendingCounter++;
                 }
+                _Rectangle = Rectangle;
+                _Position = Position;
                 ProcessId = RawElement.Properties.ProcessId.ValueOrDefault;
                 // Id = RawElement.Properties.AutomationId.ValueOrDefault;
                 Name = RawElement.Properties.Name.ValueOrDefault;
@@ -57,6 +61,7 @@ namespace OpenRPA
         [JsonIgnore]
         public AutomationElement RawElement { get; private set; }
         object IElement.RawElement { get => RawElement; set => RawElement = value as AutomationElement; }
+        private System.Drawing.Rectangle _Rectangle = System.Drawing.Rectangle.Empty;
         public System.Drawing.Rectangle Rectangle
         {
             get
@@ -65,9 +70,13 @@ namespace OpenRPA
                 {
                     if (RawElement == null) return System.Drawing.Rectangle.Empty;
                     if (!RawElement.Properties.BoundingRectangle.IsSupported) return System.Drawing.Rectangle.Empty;
-                    return new System.Drawing.Rectangle((int)RawElement.Properties.BoundingRectangle.Value.X,
+                    if (_Rectangle == System.Drawing.Rectangle.Empty)
+                    {
+                        _Rectangle = new System.Drawing.Rectangle((int)RawElement.Properties.BoundingRectangle.Value.X,
                         (int)RawElement.Properties.BoundingRectangle.Value.Y, (int)RawElement.Properties.BoundingRectangle.Value.Width,
                         (int)RawElement.Properties.BoundingRectangle.Value.Height);
+                    }
+                    return _Rectangle;
                 }
                 catch (Exception)
                 {
@@ -681,11 +690,16 @@ namespace OpenRPA
         {
             WindowPosition = new System.Drawing.Point(X, Y);
         }
-        System.Drawing.Point Position
+        System.Drawing.Point _Position = System.Drawing.Point.Empty;
+        public System.Drawing.Point Position
         {
             get
             {
-                return new System.Drawing.Point(RawElement.BoundingRectangle.X, RawElement.BoundingRectangle.Y);
+                if(_Position == System.Drawing.Point.Empty)
+                {
+                    _Position = new System.Drawing.Point(RawElement.BoundingRectangle.X, RawElement.BoundingRectangle.Y);
+                }
+                return _Position;
             }
             set
             {

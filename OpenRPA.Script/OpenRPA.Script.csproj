@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
-    <Version>1.0.28</Version>
-    <PackageReleaseNotes>1.0.28 Add support for better serialization of variables to and from python
+    <Version>1.0.29</Version>
+    <PackageReleaseNotes>1.0.29 Add implementation variables to code designer
+1.0.28 Add support for better serialization of variables to and from python
 1.0.27 massive improvements to python, add pipinstall activity
 1.0.26 Add toggle between embedded and locally installed python, Add PipInstall activity
 1.0.25 Change target framework to 4.7.2

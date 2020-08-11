@@ -4,6 +4,7 @@ using System;
 using System.Activities;
 using System.Activities.Expressions;
 using System.Activities.Presentation.Model;
+using System.Activities.Statements;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -44,6 +45,27 @@ namespace OpenRPA.Script.Activities
                     variableModels = o as List<ModelItem>;
                 }
             }
+            ModelItem loadFrom = ModelItem.Parent;
+            while (loadFrom.Parent != null)
+            {
+                var p = loadFrom.Properties.Where(x => x.Name == "Argument").FirstOrDefault();
+                if (p != null)
+                {
+                    var value = p.ComputedValue;
+                    if(value != null)
+                    {
+                        if( value is System.Activities.DelegateInArgument)
+                        {
+                            variableModels.Add(p.Value);
+                        }
+                    }
+                }
+                if (loadFrom.ItemType == typeof(Sequence))
+                {
+                }
+                loadFrom = loadFrom.Parent;
+            }
+
             return variableModels;
         }
         private void Button_Click(object sender, RoutedEventArgs e)

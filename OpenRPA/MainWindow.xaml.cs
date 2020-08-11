@@ -2803,9 +2803,7 @@ namespace OpenRPA
                 {
                     p.OnUserAction += OnUserAction;
                     if (Config.local.record_overlay) p.OnMouseMove += OnMouseMove;
-                    Console.WriteLine("p.start");
                     p.Start();
-                    Console.WriteLine("p.stop");
                 }
 
             }

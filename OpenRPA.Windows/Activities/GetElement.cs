@@ -115,11 +115,11 @@ namespace OpenRPA.Windows
                     WindowsSelectorItem.ClearCache();
                 }
             } while (elements != null && elements.Length == 0 && sw.Elapsed < timeout);
-            //if (PluginConfig.get_elements_in_different_thread && elements.Length > 0)
-            //{
-            //    // Get them again, we need the COM objects to be loaded in the UI thread
-            //    elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
-            //}
+            if (PluginConfig.get_elements_in_different_thread && elements.Length > 0)
+            {
+                // Get them again, we need the COM objects to be loaded in the UI thread
+                elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+            }
             context.SetValue(Elements, elements);
 
             var lastelements = context.GetValue(_lastelements);

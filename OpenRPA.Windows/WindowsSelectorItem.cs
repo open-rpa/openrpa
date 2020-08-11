@@ -21,7 +21,7 @@ namespace OpenRPA.Windows
         public AutomationElement Root { get; set; }
         public string Conditions { get; set; }
         public int Ident { get; set; }
-        
+
     }
     class WindowsSelectorItem : SelectorItem
     {
@@ -84,7 +84,7 @@ namespace OpenRPA.Windows
                     }
                     else
                     {
-                        if(info.Filename.ToLower().Contains("system32\\conhost.exe"))
+                        if (info.Filename.ToLower().Contains("system32\\conhost.exe"))
                         {
                             info.Filename = "%windir%\\system32\\cmd.exe";
                         }
@@ -118,7 +118,7 @@ namespace OpenRPA.Windows
                 }
                 //Enabled = (Properties.Count > 1);
                 //canDisable = true;
-                if(Properties.Count == 0)
+                if (Properties.Count == 0)
                 {
                     try
                     {
@@ -163,7 +163,7 @@ namespace OpenRPA.Windows
             if (element.Properties.Name.IsSupported) name = element.Properties.Name.Value;
             var props = GetProperties();
             // int i = props.Length - 1;
-            int i = props.Length ;
+            int i = props.Length;
             int matchcounter = 0;
             var automation = AutomationUtil.getAutomation();
             var cacheRequest = new CacheRequest();
@@ -277,7 +277,7 @@ namespace OpenRPA.Windows
             if (!PluginConfig.enable_cache) return null;
             var now = DateTime.Now;
             var timeout = PluginConfig.cache_timeout;
-            foreach (var e in MatchCache.Where(x => (now- x.Created) > timeout).ToList())
+            foreach (var e in MatchCache.Where(x => (now - x.Created) > timeout).ToList())
             {
                 RemoveFromCache(e);
             }
@@ -293,7 +293,7 @@ namespace OpenRPA.Windows
                         {
                             RemoveFromCache(result);
                             return null;
-                        } 
+                        }
                         else if (!e.Properties.BoundingRectangle.IsSupported || e.Properties.BoundingRectangle.Value == System.Drawing.Rectangle.Empty)
                         {
                             RemoveFromCache(result);
@@ -346,20 +346,25 @@ namespace OpenRPA.Windows
         {
             var matchs = new List<AutomationElement>();
             var Conditions = GetConditionsWithoutStar();
-            if(isDesktop || !isDesktop)
-                {
+            if (isDesktop || !isDesktop)
+            {
                 var cache = GetFromCache(root, ident, Conditions.ToString());
-                if(cache != null)
+                if (cache != null)
                 {
-                 Log.Selector("matches::FindAllChildren: found in AppWindowCache");
-                 return cache;
+                    Log.Selector("matches::FindAllChildren: found in AppWindowCache");
+                    var result = new List<AutomationElement>();
+                    foreach (var elementNode in cache)
+                    {
+                        if (Match(elementNode)) result.Add(elementNode);
+                    }
+                    return result.ToArray();
                 }
             }
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
             Log.SelectorVerbose("matches::FindAllChildren.isDesktop(" + isDesktop + ")::begin");
 
-            if(search_descendants)
+            if (search_descendants)
             {
                 Log.SelectorVerbose("AutomationElement.matches: Searching for " + Conditions.ToString());
                 AutomationElement[] elements = null;
@@ -385,24 +390,24 @@ namespace OpenRPA.Windows
                 Log.SelectorVerbose(string.Format("AutomationElement.matches.FindAllChildren::begin"));
                 var elements = element.FindAllChildren(Conditions);
                 var manualcheck = Properties.Where(x => x.Enabled == true && x.Value != null && (x.Name == "IndexInParent" || x.Value.Contains("*"))).Count();
-                if(manualcheck > 0)
+                if (manualcheck > 0)
                 {
-                    foreach(var elementNode in elements)
+                    foreach (var elementNode in elements)
                     {
-                        if(Match(elementNode) && matchs.Count < count) matchs.Add(elementNode);
+                        if (Match(elementNode) && matchs.Count < count) matchs.Add(elementNode);
                     }
                     Log.SelectorVerbose(string.Format("AutomationElement.matches.manualcheck(" + isDesktop + ")::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                 }
                 else
                 {
                     //matchs.AddRange(elements);
-                    foreach (var elementNode in elements) if(matchs.Count < count) matchs.Add(elementNode);
+                    foreach (var elementNode in elements) if (matchs.Count < count) matchs.Add(elementNode);
                     Log.SelectorVerbose(string.Format("AutomationElement.matches.puresearch::FindAllChildren::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                 }
             }
-            if((isDesktop || !isDesktop) && matchs.Count > 0)
+            if ((isDesktop || !isDesktop) && matchs.Count > 0)
             {
-                foreach(var e in matchs) { _ = e.Parent; }
+                foreach (var e in matchs) { _ = e.Parent; }
                 AddToCache(root, ident, Conditions.ToString(), matchs.ToArray());
             }
             Log.Selector(string.Format("matches::matches::complete {0:mm\\:ss\\.fff}", sw.Elapsed));

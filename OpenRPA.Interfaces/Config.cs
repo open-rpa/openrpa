@@ -287,7 +287,10 @@ namespace OpenRPA
                         {
                             value = Newtonsoft.Json.JsonConvert.DeserializeObject<byte[]>("\"" + value.ToString() + "\"");
                         }
-                        else
+                        else if (value is byte[])
+                        {
+                            return (T)value;
+                        } else
                         {
                             return default(T);
                         }

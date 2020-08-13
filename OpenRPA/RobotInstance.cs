@@ -831,7 +831,7 @@ namespace OpenRPA
                                             if (user != null)
                                             {
                                                 Config.local.username = user.username;
-                                                Config.Save();
+                                                // Config.Save();
                                                 Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                                                 SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
                                             }

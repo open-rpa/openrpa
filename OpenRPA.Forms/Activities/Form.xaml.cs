@@ -189,7 +189,7 @@ namespace OpenRPA.Forms.Activities
                 }, 1000);
                 return;
             }
-            GenericTools.RunUI(this, () =>
+            GenericTools.RunUI(() =>
             {
                 foreach (var p in defaults)
                 {

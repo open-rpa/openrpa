@@ -218,7 +218,7 @@ namespace OpenRPA.Script.Activities
                     //    }
                     //}
                 }
-                GenericTools.RunUI(this, () =>
+                GenericTools.RunUI(() =>
                 {
                     Title = newtitle;
                     this.errors.Text = error;

@@ -209,22 +209,10 @@ namespace OpenRPA
             System.Threading.Thread.CurrentThread.Name = "UIThread";
             if (!Config.local.isagent)
             {
-                var win = new MainWindow();
-                MainWindow = win;
-                RobotInstance.instance.Window = win;
-                RobotInstance.instance.Window.ReadyForAction += RobotInstance.instance.MainWindowReadyForAction;
-                RobotInstance.instance.Window.Status += RobotInstance.instance.MainWindowStatus;
-                GenericTools.MainWindow = win;
                 if(!Config.local.showloadingscreen) notifyIcon.Visible = true;
             }
             else
             {
-                var win = new AgentWindow();
-                MainWindow = win;
-                RobotInstance.instance.Window = win;
-                RobotInstance.instance.Window.ReadyForAction += RobotInstance.instance.MainWindowReadyForAction;
-                RobotInstance.instance.Window.Status += RobotInstance.instance.MainWindowStatus;
-                GenericTools.MainWindow = win;
                 notifyIcon.Visible = true;
             }
             RobotInstance.instance.Status += App_Status;

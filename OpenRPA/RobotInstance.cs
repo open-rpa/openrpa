@@ -223,6 +223,7 @@ namespace OpenRPA
                     Log.Debug("Get detectors from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                     var detectors = await global.webSocketClient.Query<Interfaces.entity.Detector>("openrpa", "{_type: 'detector'}");
                     Log.Debug("Done getting workflows and projects " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                    CreateMainWindow();
                     SetStatus("Initialize detecors");
                     foreach (var d in detectors)
                     {
@@ -525,7 +526,7 @@ namespace OpenRPA
             Log.Function("RobotInstance", "SetStatus", "Window.SetStatus");
             try
             {
-                Window.SetStatus(message);
+                if(Window!=null) Window.SetStatus(message);
             }
             catch (Exception ex)
             {
@@ -583,6 +584,7 @@ namespace OpenRPA
 
                 if (string.IsNullOrEmpty(Config.local.wsurl))
                 {
+                    CreateMainWindow();
                     SetStatus("loading detectors");
                     var Detectors = Interfaces.entity.Detector.loadDetectors(Interfaces.Extensions.ProjectsDirectory);
                     foreach (var d in Detectors)
@@ -601,8 +603,6 @@ namespace OpenRPA
                     Log.Error(ex.ToString());
                     throw;
                 }
-                // ExpressionEditor.EditorUtil.Init();
-                _ = CodeEditor.init.Initialize();
             }
             catch (Exception ex)
             {
@@ -674,6 +674,49 @@ namespace OpenRPA
                 if (Window != null) Window.Hide();
             });
             Log.FunctionOutdent("RobotInstance", "Hide");
+        }
+        private void CreateMainWindow()
+        {
+            if (Window == null)
+            {
+                var isagent = Config.local.isagent;
+                AutomationHelper.syncContext.Send(o =>
+                {
+                    if(!Config.local.isagent && global.webSocketClient != null)
+                    {
+                        if(global.webSocketClient.user != null)
+                        {
+                            if(global.webSocketClient.user.hasRole("robot agent users"))
+                            {
+                                isagent = true;
+                            }
+                        }
+                    }
+                    SetStatus("Creating main window");
+                    if (!isagent)
+                    {
+                        var win = new MainWindow();
+                        App.Current.MainWindow = win;
+                        Window = win;
+                        Window.ReadyForAction += MainWindowReadyForAction;
+                        Window.Status += MainWindowStatus;
+                        GenericTools.MainWindow = win;
+                    }
+                    else
+                    {
+                        var win = new AgentWindow();
+                        App.Current.MainWindow = win;
+                        Window = win;
+                        Window.ReadyForAction += MainWindowReadyForAction;
+                        Window.Status += MainWindowStatus;
+                        GenericTools.MainWindow = win;
+                    }
+                    // ExpressionEditor.EditorUtil.Init();
+                    _ = CodeEditor.init.Initialize();
+                }, null);
+
+            }
+
         }
         private void Show()
         {

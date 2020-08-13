@@ -69,10 +69,10 @@ namespace OpenRPA.OpenFlowDB
                     workflows.Add(new apibase() { name = "Loading...", _id = "loading" });
                     ModelItem.Properties["workflowid"].SetValue("loading");
                 }
-                var _workflows = await global.webSocketClient.Query<workflow>("workflow", "{_type: 'workflow'}", queryas: targetid);
-                _workflows = _workflows.OrderBy(x => x.projectandname).ToArray();
+                var _workflows = await global.webSocketClient.Query<IWorkflow>("workflow", "{_type: 'workflow'}", queryas: targetid);
+                _workflows = _workflows.OrderBy(x => x.ProjectAndName).ToArray();
                 workflows.Clear();
-                foreach (var w in _workflows) workflows.Add(w);
+                foreach (var w in _workflows) workflows.Add(w as apibase);
                 var currentworkflow = ModelItem.GetValue<string>("workflowid");
                 if (workflowid != currentworkflow && !string.IsNullOrEmpty(currentworkflow))
                 {

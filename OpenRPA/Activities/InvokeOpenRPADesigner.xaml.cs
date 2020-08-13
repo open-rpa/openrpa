@@ -22,7 +22,7 @@ namespace OpenRPA.Activities
         public InvokeOpenRPADesigner()
         {
             InitializeComponent();
-            workflows = new ObservableCollection<Workflow>();
+            workflows = new ObservableCollection<IWorkflow>();
             DataContext = this;
         }
         public event PropertyChangedEventHandler PropertyChanged;
@@ -30,7 +30,7 @@ namespace OpenRPA.Activities
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public ObservableCollection<Workflow> workflows { get; set; }
+        public ObservableCollection<IWorkflow> workflows { get; set; }
         private void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
         {
             try

@@ -8,6 +8,12 @@ namespace OpenRPA.Interfaces
 {
     public interface IMainWindow
     {
+        event ReadyForActionEventHandler ReadyForAction;
+        event StatusEventHandler Status;
+        bool VisualTracking { get; set; }
+        bool SlowMotion { get; set; }        
+        void OnOpenWorkflow(IWorkflow workflow);
+        IDesigner[] Designers { get; }
         IDesigner Designer { get; }
         void OnDetector(IDetectorPlugin plugin, IDetectorEvent detector, EventArgs e);
         void IdleOrComplete(IWorkflowInstance instance, EventArgs e);

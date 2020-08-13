@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Interfaces.entity
 {
-    public class apibase : ObservableObject
+
+    public class apibase : ObservableObject, IBase
     {
         public string _id { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string _type { get { return GetProperty<string>(); } set { SetProperty(value); } }

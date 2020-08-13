@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace OpenRPA
 {
-    public class Project : apibase
+    public class Project : apibase, IProject
     {
         public bool disable_local_caching { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [JsonIgnore]
-        public System.Collections.ObjectModel.ObservableCollection<Workflow> Workflows { get; set; }
+        public System.Collections.ObjectModel.ObservableCollection<IWorkflow> Workflows { get; set; }
         [JsonIgnore]
         public string Path { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public static Project[] LoadProjects(string Path)
@@ -87,7 +87,7 @@ namespace OpenRPA
                 name = Name,
                 Path = System.IO.Path.GetDirectoryName(Filepath),
                 Filename = System.IO.Path.GetFileName(Filepath),
-                Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>()
+                Workflows = new System.Collections.ObjectModel.ObservableCollection<IWorkflow>()
             };
             await p.Save(false);
             if(addDefault)
@@ -102,7 +102,7 @@ namespace OpenRPA
         {
             var Path = System.IO.Path.GetDirectoryName(System.IO.Path.Combine(this.Path, Filename));
             var ProjectFiles = System.IO.Directory.EnumerateFiles(Path, "*.xaml", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
-            Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
+            Workflows = new System.Collections.ObjectModel.ObservableCollection<IWorkflow>();
             foreach (string file in ProjectFiles) Workflows.Add(Workflow.FromFile(this, file));
             //return Workflows.ToArray();
         }
@@ -116,7 +116,7 @@ namespace OpenRPA
             if (!string.IsNullOrEmpty(rootpath)) projectpath = System.IO.Path.Combine(rootpath, name);
             if (!System.IO.Directory.Exists(projectpath)) System.IO.Directory.CreateDirectory(projectpath);
 
-            if (Workflows == null) Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
+            if (Workflows == null) Workflows = new System.Collections.ObjectModel.ObservableCollection<IWorkflow>();
 
             var projectfilepath = System.IO.Path.Combine(projectpath, Filename);
             System.IO.File.WriteAllText(projectfilepath, JsonConvert.SerializeObject(this));

@@ -181,7 +181,7 @@ namespace OpenRPA.Views
             {
                 if (listWorkflows.SelectedItem == null) return null;
                 if (listWorkflows.SelectedItem is Project) return listWorkflows.SelectedItem as Project;
-                if (listWorkflows.SelectedItem is Workflow wf) return wf.Project;
+                if (listWorkflows.SelectedItem is Workflow wf) return wf.Project as Project;
                 return null;
             }
             set

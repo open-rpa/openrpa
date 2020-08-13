@@ -209,21 +209,22 @@ namespace OpenRPA
             System.Threading.Thread.CurrentThread.Name = "UIThread";
             if (!Config.local.isagent)
             {
-                RobotInstance.instance.MainWindow = new MainWindow();
-                RobotInstance.instance.Window = RobotInstance.instance.MainWindow;
-                RobotInstance.instance.MainWindow.ReadyForAction += RobotInstance.instance.MainWindowReadyForAction;
-                RobotInstance.instance.MainWindow.Status += RobotInstance.instance.MainWindowStatus;
-                GenericTools.MainWindow = RobotInstance.instance.MainWindow;
-                MainWindow = RobotInstance.instance.MainWindow;
+                var win = new MainWindow();
+                MainWindow = win;
+                RobotInstance.instance.Window = win;
+                RobotInstance.instance.Window.ReadyForAction += RobotInstance.instance.MainWindowReadyForAction;
+                RobotInstance.instance.Window.Status += RobotInstance.instance.MainWindowStatus;
+                GenericTools.MainWindow = win;
                 if(!Config.local.showloadingscreen) notifyIcon.Visible = true;
-            } else
+            }
+            else
             {
-                RobotInstance.instance.AgentWindow = new AgentWindow();
-                RobotInstance.instance.Window = RobotInstance.instance.AgentWindow;
-                RobotInstance.instance.AgentWindow.ReadyForAction += RobotInstance.instance.MainWindowReadyForAction;
-                RobotInstance.instance.AgentWindow.Status += RobotInstance.instance.MainWindowStatus;
-                GenericTools.MainWindow = RobotInstance.instance.AgentWindow;
-                MainWindow = RobotInstance.instance.AgentWindow;
+                var win = new AgentWindow();
+                MainWindow = win;
+                RobotInstance.instance.Window = win;
+                RobotInstance.instance.Window.ReadyForAction += RobotInstance.instance.MainWindowReadyForAction;
+                RobotInstance.instance.Window.Status += RobotInstance.instance.MainWindowStatus;
+                GenericTools.MainWindow = win;
                 notifyIcon.Visible = true;
             }
             RobotInstance.instance.Status += App_Status;

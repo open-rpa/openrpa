@@ -21,7 +21,7 @@ namespace OpenRPA.Activities
         public InvokeRemoteOpenRPADesigner()
         {
             InitializeComponent();
-            workflows = new ObservableCollection<Workflow>();
+            workflows = new ObservableCollection<IWorkflow>();
             robots = new ObservableCollection<apiuser>();
             DataContext = this;
         }
@@ -30,14 +30,14 @@ namespace OpenRPA.Activities
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public ObservableCollection<Workflow> workflows { get; set; }
+        public ObservableCollection<IWorkflow> workflows { get; set; }
         public ObservableCollection<apiuser> robots { get; set; }
         private string originalworkflow = null;
         private string originaltarget = null;
         private void loadLocalWorkflows()
         {
             workflows.Clear();
-            var result = new List<Workflow>();
+            var result = new List<IWorkflow>();
             foreach (var p in RobotInstance.instance.Projects)
             {
                 foreach (var w in p.Workflows) result.Add(w);

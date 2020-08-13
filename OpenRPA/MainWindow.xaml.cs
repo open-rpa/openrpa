@@ -4,6 +4,7 @@ using OpenRPA.Input;
 using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
 using OpenRPA.Net;
+using OpenRPA.Views;
 using System;
 using System.Activities;
 using System.Activities.Core.Presentation;
@@ -126,7 +127,7 @@ namespace OpenRPA
                         try
                         {
                             Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name, true);
-                            Workflow workflow = project.Workflows.First();
+                            IWorkflow workflow = project.Workflows.First();
                             workflow.Project = project;
                             RobotInstance.instance.Projects.Add(project);
                             OnOpenWorkflow(workflow);
@@ -222,6 +223,33 @@ namespace OpenRPA
             set { }
         }
         private bool SkipLayoutSaving = false;
+        public IDesigner[] Designers
+        {
+            get
+            {
+                if (DManager == null) return new Views.WFDesigner[] { };
+                var result = new List<Views.WFDesigner>();
+                try
+                {
+                    var las = DManager.Layout.Descendents().OfType<LayoutAnchorable>().ToList();
+                    foreach (var dp in las)
+                    {
+                        if (dp.Content is Views.WFDesigner view) result.Add(view);
+
+                    }
+                    var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
+                    foreach (var document in ld)
+                    {
+                        if (document.Content is Views.WFDesigner view) result.Add(view);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+                return result.ToArray();
+            }
+        }
         public uilocal defaultuilocal
         {
             get
@@ -331,8 +359,9 @@ namespace OpenRPA
                         }
                         else
                         {
+                            var d = designer as WFDesigner;
                             designer.forceHasChanged(false);
-                            designer.tab.Close();
+                            d.tab.Close();
                         }
                     }
                 }
@@ -1158,12 +1187,12 @@ namespace OpenRPA
                 {
                     wf = op.listWorkflows.SelectedItem as Workflow;
                     p = op.listWorkflows.SelectedItem as Project;
-                    if (wf != null) p = wf.Project;
+                    if (wf != null) p = wf.Project as Project;
                 }
                 else if (SelectedContent is Views.WFDesigner)
                 {
                     wf = designer.Workflow;
-                    p = wf.Project;
+                    p = wf.Project as Project;
                 }
                 var dialogOpen = new Microsoft.Win32.OpenFileDialog
                 {
@@ -1208,7 +1237,7 @@ namespace OpenRPA
                     project.name = name;
                     project._id = null;
                     await project.Save(false);
-                    Workflow workflow = project.Workflows.First();
+                    IWorkflow workflow = project.Workflows.First();
                     workflow.Project = project;
                     OnOpenWorkflow(workflow);
                     return;
@@ -1947,7 +1976,7 @@ namespace OpenRPA
             Log.FunctionOutdent("MainWindow", "LoadLayout");
         }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
-        public void _onOpenWorkflow(Workflow workflow, bool HasChanged = false)
+        public void _onOpenWorkflow(IWorkflow workflow, bool HasChanged = false)
         {
             Log.FunctionIndent("MainWindow", "_onOpenWorkflow");
             if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) is Views.WFDesigner designer)
@@ -1962,7 +1991,7 @@ namespace OpenRPA
                 // foreach (var p in Plugins.recordPlugins) { types.Add(p.GetType()); }
                 LayoutDocument layoutDocument = new LayoutDocument { Title = workflow.name };
                 layoutDocument.ContentId = workflow._id;
-                Views.WFDesigner view = new Views.WFDesigner(layoutDocument, workflow, types.ToArray())
+                Views.WFDesigner view = new Views.WFDesigner(layoutDocument, workflow as Workflow, types.ToArray())
                 {
                     OnChanged = WFDesigneronChanged
                 };
@@ -1979,7 +2008,7 @@ namespace OpenRPA
             }
             Log.FunctionOutdent("MainWindow", "_onOpenWorkflow");
         }
-        public void OnOpenWorkflow(Workflow workflow)
+        public void OnOpenWorkflow(IWorkflow workflow)
         {
             GenericTools.RunUI(() =>
             {
@@ -2142,7 +2171,7 @@ namespace OpenRPA
                 }
                 //string Name = "New project";
                 Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name, true);
-                Workflow workflow = project.Workflows.First();
+                IWorkflow workflow = project.Workflows.First();
                 workflow.Project = project;
                 RobotInstance.instance.Projects.Add(project);
                 OnOpenWorkflow(workflow);
@@ -3307,6 +3336,7 @@ namespace OpenRPA
                     {
                         if (arg.Name.ToLower().Contains(text))
                         {
+
                             AddOption(designer, arg, suboptions);
                         }
                     }
@@ -3366,7 +3396,7 @@ namespace OpenRPA
                 SearchBox.Focus();
             }
         }
-        private void AddOption(Views.WFDesigner designer, System.Activities.Presentation.Model.ModelItem item, List<QuickLaunchItem> options)
+        private void AddOption(IDesigner designer, System.Activities.Presentation.Model.ModelItem item, List<QuickLaunchItem> options)
         {
             Log.FunctionIndent("MainWindow", "AddOption");
             try
@@ -3416,7 +3446,7 @@ namespace OpenRPA
                 options.Add(new QuickLaunchItem()
                 {
                     Text = displayname,
-                    designer = designer,
+                    designer = designer as Views.WFDesigner,
                     originalitem = item,
                     item = _item,
                     ImageSource = ImageSource
@@ -3428,7 +3458,7 @@ namespace OpenRPA
             }
             Log.FunctionOutdent("MainWindow", "AddOption");
         }
-        private void AddOption(Views.WFDesigner designer, DynamicActivityProperty arg, List<QuickLaunchItem> options)
+        private void AddOption(IDesigner designer, DynamicActivityProperty arg, List<QuickLaunchItem> options)
         {
             Log.FunctionIndent("MainWindow", "AddOption");
             try
@@ -3438,7 +3468,7 @@ namespace OpenRPA
                 options.Add(new QuickLaunchItem()
                 {
                     Text = displayname,
-                    designer = designer,
+                    designer = designer as WFDesigner,
                     argument = arg,
                     ImageSource = ImageSource
                 });

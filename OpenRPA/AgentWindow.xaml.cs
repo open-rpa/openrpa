@@ -14,6 +14,8 @@ namespace OpenRPA
 {
     public partial class AgentWindow : Window, INotifyPropertyChanged, IMainWindow
     {
+        public bool VisualTracking { get; set; } = false;
+        public bool SlowMotion { get; set; } = false;
         public static AgentWindow instance { get; set; }
         public AgentWindow()
         {
@@ -90,6 +92,33 @@ namespace OpenRPA
             }
         }
         private bool first_connect = true;
+        public IDesigner[] Designers
+        {
+            get
+            {
+                if (DManager == null) return new Views.WFDesigner[] { };
+                var result = new List<Views.WFDesigner>();
+                try
+                {
+                    var las = DManager.Layout.Descendents().OfType<LayoutAnchorable>().ToList();
+                    foreach (var dp in las)
+                    {
+                        if (dp.Content is Views.WFDesigner view) result.Add(view);
+
+                    }
+                    var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
+                    foreach (var document in ld)
+                    {
+                        if (document.Content is Views.WFDesigner view) result.Add(view);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+                return result.ToArray();
+            }
+        }
         public void MainWindow_WebSocketClient_OnOpen()
         {
             Log.FunctionIndent("AgentWindow", "MainWindow_WebSocketClient_OnOpen");
@@ -447,7 +476,7 @@ namespace OpenRPA
                 }
             }, null);
         }
-        private void OnOpenWorkflow(Workflow obj)
+        public void OnOpenWorkflow(IWorkflow obj)
         {
             OnPlay(obj);
         }

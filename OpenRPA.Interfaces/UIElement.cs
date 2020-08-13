@@ -370,6 +370,11 @@ namespace OpenRPA
                         return true;
                     }
                 }
+                else if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.RadioButton)
+                {
+                    var radio = RawElement.AsRadioButton();
+                    if (radio.IsChecked) return true;
+                }
                 return false;
             }
             set
@@ -378,6 +383,11 @@ namespace OpenRPA
                 {
                     var combo = RawElement.AsCheckBox();
                     combo.IsChecked = value;
+                }
+                else if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.RadioButton)
+                {
+                    var radio = RawElement.AsRadioButton();
+                    radio.IsChecked = value;
                 }
             }
         }

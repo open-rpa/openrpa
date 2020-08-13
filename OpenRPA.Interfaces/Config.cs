@@ -299,7 +299,7 @@ namespace OpenRPA
                     if (typeof(T) == typeof(bool)) value = bool.Parse(value.ToString());
                     if (typeof(T) == typeof(System.Drawing.Rectangle)) {
                         var c = new System.Drawing.RectangleConverter();                        
-                        value = c.ConvertFromString(value.ToString());
+                        value = c.ConvertFromString(null, new System.Globalization.CultureInfo("en-US"), value.ToString());
                     }
                     if (typeof(T) == typeof(TimeSpan) && value != null)
                     {

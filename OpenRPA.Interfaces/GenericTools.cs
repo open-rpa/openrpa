@@ -15,7 +15,7 @@ namespace OpenRPA.Interfaces
         }
         public static void Minimize(System.Windows.Window window)
         {
-            RunUI(window, () =>
+            RunUI(() =>
             {
                 if (window.WindowState != System.Windows.WindowState.Minimized)
                 {
@@ -41,7 +41,7 @@ namespace OpenRPA.Interfaces
         }
         public static void Restore(System.Windows.Window window)
         {
-            RunUI(window, () =>
+            RunUI(() =>
             {
                 if (window.WindowState == System.Windows.WindowState.Minimized)
                 {
@@ -102,21 +102,10 @@ namespace OpenRPA.Interfaces
         }
         public static void RunUI(Action action)
         {
-            RunUI(MainWindow, action);
-        }
-        public static void RunUI(System.Windows.Window window, Action action)
-        {
-            if (window != null)
+            AutomationHelper.syncContext.Send(o =>
             {
-                window.Dispatcher.Invoke(() =>
-                {
                     action();
-                });
-            }
-            else
-            {
-                action();
-            }
+            }, null);
         }
         private delegate void SafeCallDelegate();
         public static void RunUI(System.Windows.Forms.Form window, Action action)

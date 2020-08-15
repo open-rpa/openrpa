@@ -125,7 +125,7 @@ namespace OpenRPA.NM
                 getelement.tabid = ((NMElement)fromElement).message.tabid;
                 getelement.frameId = ((NMElement)fromElement).message.frameId;
             }
-                subresult = NMHook.sendMessageResult(getelement, false, TimeSpan.FromSeconds(2));
+                subresult = NMHook.sendMessageResult(getelement, false, PluginConfig.protocol_timeout);
             if (subresult != null)
                 if (subresult.results != null)
                     foreach (var b in subresult.results)

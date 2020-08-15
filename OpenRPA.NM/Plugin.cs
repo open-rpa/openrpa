@@ -84,7 +84,7 @@ namespace OpenRPA.NM
             NativeMessagingMessage result = null;
             try
             {
-                result = NMHook.sendMessageResult(getelement, true, TimeSpan.FromSeconds(3));
+                result = NMHook.sendMessageResult(getelement, true, PluginConfig.protocol_timeout);
             }
             catch (Exception)
             {

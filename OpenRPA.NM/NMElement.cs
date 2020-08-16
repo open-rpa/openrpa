@@ -168,6 +168,11 @@ namespace OpenRPA.NM
         {
             get
             {
+                if(!string.IsNullOrEmpty(tagname) && tagname.ToLower() == "select")
+                {
+                    if (chromeelement.ContainsKey("text")) return chromeelement["text"].ToString();
+                    if (chromeelement.ContainsKey("innertext")) return chromeelement["innertext"].ToString();
+                }
                 if (chromeelement.ContainsKey("text")) return chromeelement["text"].ToString();
                 if (chromeelement.ContainsKey("innertext")) return chromeelement["innertext"].ToString();
                 if(!hasRefreshed)
@@ -392,6 +397,11 @@ namespace OpenRPA.NM
                 // getelement.data = "getdom";
                 if (NMHook.connected) message = NMHook.sendMessageResult(getelement, true, PluginConfig.protocol_timeout);
                 if (message == null)
+                {
+                    Log.Error("Failed getting html element");
+                    return false;
+                }
+                if (message.result == null)
                 {
                     Log.Error("Failed getting html element");
                     return false;

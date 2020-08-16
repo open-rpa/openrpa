@@ -406,7 +406,7 @@ namespace OpenRPA.NM
             message.windowId = tab.windowId;
             if (connected)
             {
-                result = sendMessageResult(message, true, TimeSpan.FromSeconds(2));
+                result = sendMessageResult(message, true, PluginConfig.protocol_timeout);
             }
         }
         //public static void HighlightTab(NativeMessagingMessageTab tab)

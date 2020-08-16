@@ -973,6 +973,7 @@ if (true == false) {
                         for (i = 0; i < element.options.length; i++) {
                             if (element.options[i].selected) {
                                 selectedvalues.push(element.options[i].value);
+                                treeObject["text"] = element.options[i].text;
                             }
                         } 
                         treeObject["values"] = selectedvalues;

@@ -274,8 +274,8 @@ namespace OpenRPA
                         if (System.IO.File.Exists(System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "layout.config")))
                         {
                             System.IO.File.Delete(System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "layout.config"));
-                            SkipLayoutSaving = true;
                         }
+                        SkipLayoutSaving = true;
                         //System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo(Config.local.culture);
                         //InitializeComponent();
                         MessageBox.Show("Please restart the robot for the change to take fully effect");

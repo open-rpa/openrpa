@@ -168,6 +168,11 @@ namespace OpenRPA.NM
         {
             get
             {
+                if(!string.IsNullOrEmpty(tagname) && tagname.ToLower() == "select")
+                {
+                    if (chromeelement.ContainsKey("text")) return chromeelement["text"].ToString();
+                    if (chromeelement.ContainsKey("innertext")) return chromeelement["innertext"].ToString();
+                }
                 if (chromeelement.ContainsKey("text")) return chromeelement["text"].ToString();
                 if (chromeelement.ContainsKey("innertext")) return chromeelement["innertext"].ToString();
                 if(!hasRefreshed)
@@ -237,12 +242,12 @@ namespace OpenRPA.NM
                         frameId = message.frameId,
                         data = JsonConvert.SerializeObject(value)
                     };
-                    var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(3));
+                    var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed setting html element value");
                     //System.Threading.Thread.Sleep(500);
                     if (PluginConfig.wait_for_tab_after_set_value)
                     {
-                        NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
+                        NMHook.WaitForTab(updateelement.tabid, updateelement.browser, PluginConfig.protocol_timeout);
                     }
                     return;
                 }
@@ -279,7 +284,7 @@ namespace OpenRPA.NM
                         frameId = message.frameId,
                         data = value
                     };
-                    var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(3));
+                    var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed setting html element value");
                     //System.Threading.Thread.Sleep(500);
                     if (PluginConfig.wait_for_tab_after_set_value)
@@ -324,7 +329,7 @@ namespace OpenRPA.NM
                         tabid = message.tabid,
                         frameId = message.frameId
                     };
-                    NativeMessagingMessage subsubresult = NMHook.sendMessageResult(getelement2, true, TimeSpan.FromSeconds(2));
+                    NativeMessagingMessage subsubresult = NMHook.sendMessageResult(getelement2, true, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed clicking html element");
                     //System.Threading.Thread.Sleep(500);
                     if (PluginConfig.wait_for_tab_click)
@@ -343,7 +348,7 @@ namespace OpenRPA.NM
                     tabid = message.tabid,
                     frameId = message.frameId
                 };
-                if (NMHook.connected) subresult = NMHook.sendMessageResult(getelement, true, TimeSpan.FromSeconds(2));
+                if (NMHook.connected) subresult = NMHook.sendMessageResult(getelement, true, PluginConfig.protocol_timeout);
                 if (subresult == null) throw new Exception("Failed clicking html element, element not found");
                 int hitx = subresult.uix;
                 int hity = subresult.uiy;
@@ -390,8 +395,13 @@ namespace OpenRPA.NM
                 };
                 NativeMessagingMessage message = null;
                 // getelement.data = "getdom";
-                if (NMHook.connected) message = NMHook.sendMessageResult(getelement, true, TimeSpan.FromSeconds(2));
+                if (NMHook.connected) message = NMHook.sendMessageResult(getelement, true, PluginConfig.protocol_timeout);
                 if (message == null)
+                {
+                    Log.Error("Failed getting html element");
+                    return false;
+                }
+                if (message.result == null)
                 {
                     Log.Error("Failed getting html element");
                     return false;
@@ -431,7 +441,7 @@ namespace OpenRPA.NM
                 tabid = message.tabid,
                 frameId = message.frameId
             };
-            var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(3));
+            var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
             if (subsubresult == null) throw new Exception("Failed setting html element value");
             //System.Threading.Thread.Sleep(500);
             if (PluginConfig.wait_for_tab_after_set_value)
@@ -600,7 +610,7 @@ namespace OpenRPA.NM
                         frameId = message.frameId,
                         data = value.ToString()
                     };
-                    var subsubresult = NMHook.sendMessageResult(updateelement, true, TimeSpan.FromSeconds(3));
+                    var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed setting html element value");
                     //System.Threading.Thread.Sleep(500);
                     if (PluginConfig.wait_for_tab_after_set_value)

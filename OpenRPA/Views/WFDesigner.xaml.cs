@@ -1678,7 +1678,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     handler.SetValue(currentSequence);
                 }
             }
-            else if (currentSequence != null && comment.Parent.Properties["Handler"] != null)
+            else if (currentSequence != null && comment.Parent != null && comment.Parent.Properties["Handler"] != null)
             {
                 var handler = comment.Parent.Properties["Handler"];
                 handler.SetValue(currentSequence);
@@ -1690,6 +1690,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
             var pri = thisselection.PrimarySelection;
             if (pri == null) return;
             //var movethis = selectedActivity;
+
             var lastSequence = GetActivitiesScope(SelectedActivity.Parent);
             if (lastSequence == null) lastSequence = GetActivitiesScope(SelectedActivity);
             ModelItemCollection Activities = null;
@@ -1702,7 +1703,29 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 Activities = lastSequence.Properties["Nodes"].Collection;
             }
 
-            if (thisselection.SelectionCount > 1 || thisselection.PrimarySelection.ItemType == typeof(Sequence))
+            if (SelectedActivity.ItemType == typeof(Sequence))
+            {
+                var parent = SelectedActivity.Parent;
+                if (SelectedActivity.Parent.ItemType == typeof(ActivityBuilder)) return;
+                if (parent.Properties["Activities"] != null)
+                {
+                    Activities = parent.Properties["Activities"].Collection;
+                }
+                var co = new Activities.CommentOut
+                {
+                    Body = SelectedActivity.GetCurrentValue() as Activity
+                };
+                if(Activities == null)
+                {
+                    var item = thisselection.PrimarySelection.Parent.Properties["Handler"].SetValue(co);
+                }
+                else
+                {
+                    Activities.Remove(SelectedActivity);
+                    Activities.Add(co);
+                }
+            }
+            else if (thisselection.SelectionCount > 1 || thisselection.PrimarySelection.ItemType == typeof(Sequence))
             {
                 if (lastSequence.Properties["Nodes"] != null) return;
                 var co = new Activities.CommentOut

@@ -46,21 +46,6 @@ namespace OpenRPA.NM
             if (!Running) return;
             var e = new DetectorEvent(download);
             OnDetector?.Invoke(this, e, EventArgs.Empty);
-
-            foreach (var wi in client.WorkflowInstances.ToList())
-            {
-                if (wi.isCompleted) continue;
-                if (wi.Bookmarks != null)
-                {
-                    foreach (var b in wi.Bookmarks)
-                    {
-                        if(b.Key == "DownloadDetectorPlugin")
-                        {
-                            wi.ResumeBookmark(b.Key, e);
-                        }
-                    }
-                }
-            }
         }
         FileSystemWatcher watcher = null;
         private IOpenRPAClient client = null;

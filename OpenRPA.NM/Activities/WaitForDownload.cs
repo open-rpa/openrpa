@@ -16,10 +16,13 @@ namespace OpenRPA.NM
 {
     [System.ComponentModel.Designer(typeof(WaitForDownloadDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(WaitForDownload), "Resources.toolbox.detector.png")]
+    [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_waitfordownload_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_waitfordownload", typeof(Resources.strings))]
-    public class WaitForDownload : NativeActivity
+    public class WaitForDownload : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {
+        [System.ComponentModel.Browsable(false)]
+        public ActivityAction Body { get; set; }
         public OutArgument<DetectorEvent> Event { get; set; }
         public InArgument<TimeSpan> Timeout { get; set; }
         private System.Timers.Timer timer = null;
@@ -46,6 +49,7 @@ namespace OpenRPA.NM
                 };
                 timer.Start();
             }
+            context.ScheduleAction(Body, null, null);
         }
         void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object obj)
         {
@@ -62,6 +66,13 @@ namespace OpenRPA.NM
             {
                 Log.Error(ex.ToString());
             }
+        }
+        public Activity Create(DependencyObject target)
+        {
+            var fef = new WaitForDownload();
+            var aa = new ActivityAction();
+            fef.Body = aa;
+            return fef;
         }
         protected override bool CanInduceIdle
         {

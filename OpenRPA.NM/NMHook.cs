@@ -239,6 +239,21 @@ namespace OpenRPA.NM
                     plugin.RaiseDetector(download);
                 }
             }
+            var e = new DetectorEvent(download);
+            foreach (var wi in Plugin.client.WorkflowInstances.ToList())
+            {
+                if (wi.isCompleted) continue;
+                if (wi.Bookmarks != null)
+                {
+                    foreach (var b in wi.Bookmarks)
+                    {
+                        if (b.Key == "DownloadDetectorPlugin")
+                        {
+                            wi.ResumeBookmark(b.Key, e);
+                        }
+                    }
+                }
+            }
         }
         private static void Client_OnReceivedMessage(NativeMessagingMessage message)
         {

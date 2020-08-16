@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -69,6 +70,17 @@ namespace OpenRPA
                     System.Globalization.CultureInfo.DefaultThreadCurrentCulture = cultur;
                     System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = cultur;
                     ProcessThreadCollection currentThreads = Process.GetCurrentProcess().Threads;
+                    foreach(Thread t in currentThreads)
+                    {
+                        try
+                        {
+                            t.CurrentUICulture = cultur;
+                            t.CurrentCulture = cultur;
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
                 }
                 catch (Exception)
                 {

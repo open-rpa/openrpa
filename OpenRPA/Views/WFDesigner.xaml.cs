@@ -696,7 +696,6 @@ namespace OpenRPA.Views
         {
             if (Config.local.recording_add_to_designer)
             {
-                Type t = plugin.GetType();
                 var rootObject = GetRootElement();
                 Microsoft.VisualBasic.Activities.VisualBasicSettings vbsettings = Microsoft.VisualBasic.Activities.VisualBasic.GetSettings(rootObject);
                 if (vbsettings == null)
@@ -746,13 +745,16 @@ namespace OpenRPA.Views
                             Import = typeof(Microsoft.VisualBasic.Collection).Namespace
                         });
                 }
-
-                vbsettings.ImportReferences.Add(
-                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-                    {
-                        Assembly = t.Assembly.GetName().Name,
-                        Import = t.Namespace
-                    });
+                if(plugin!=null)
+                {
+                    Type t = plugin.GetType();
+                    vbsettings.ImportReferences.Add(
+                        new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                        {
+                            Assembly = t.Assembly.GetName().Name,
+                            Import = t.Namespace
+                        });
+                }
                 Microsoft.VisualBasic.Activities.VisualBasic.SetSettings(rootObject, vbsettings);
                 //DynamicAssemblyMonitor(t.Assembly.GetName().Name, t.Assembly, true);
                 return AddActivity(a);

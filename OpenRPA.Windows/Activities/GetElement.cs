@@ -38,6 +38,7 @@ namespace OpenRPA.Windows
         public InArgument<string> Selector { get; set; }
         // public InArgument<UIElement> From { get; set; }
         public InArgument<IElement> From { get; set; }
+        public InArgument<bool> ClearCache { get; set; }
         public InArgument<bool> Interactive { get; set; }
         public OutArgument<UIElement[]> Elements { get; set; }
         [Browsable(false)]
@@ -54,6 +55,12 @@ namespace OpenRPA.Windows
             sw.Start();
             Log.Selector(string.Format("Windows.GetElement::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
 
+            if(ClearCache != null && ClearCache.Get(context))
+            {
+                Log.Selector(string.Format("Windows.GetElement::Clearing windows element cache {0:mm\\:ss\\.fff}", sw.Elapsed));
+                WindowsSelectorItem.ClearCache();
+            }
+
             UIElement[] elements = null;
             var selector = Selector.Get(context);
             selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
@@ -64,13 +71,6 @@ namespace OpenRPA.Windows
             if (maxresults < 1) maxresults = 1;
             var interactive = Interactive.Get(context);
             var from = From.Get(context);
-
-            //            double _timeout = 250;
-            double _timeout = 5000;
-            if (PluginConfig.search_descendants)
-            {
-                _timeout = 5000;
-            }
 #if DEBUG
             _timeout = TimeSpan.FromDays(1).TotalMilliseconds;
 #endif
@@ -94,7 +94,7 @@ namespace OpenRPA.Windows
                             Log.Error(ex, "");
                         }
                         return new UIElement[] { };
-                    }, TimeSpan.FromMilliseconds(_timeout)).Result;
+                    }, PluginConfig.search_timeout).Result;
                 }
                 else
                 {

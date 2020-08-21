@@ -197,6 +197,9 @@
         <File Id="fil126FD8D7BC3CA134C631C10414C0844C" Source="!(wix.MainSource)\ru\OpenRPA.Windows.resources.dll" />
         <File Id="fil746AB0109F6368FE0AE56C2FA8C44711" Source="!(wix.MainSource)\ru\Xceed.Wpf.AvalonDock.resources.dll" />
       </Component>
+      <Component Id='mainComponentja' Win64='yes' Directory="mainja" Guid='{A0C9CC00-7B62-4296-8E8B-9F14C0BEA6B6}'>
+        <File Id="A0C9CC007B6242968E8B9F14C0BEA6B6" Source="!(wix.MainSource)\ja\OpenRPA.resources.dll" />
+      </Component>
       <Component Id='mainComponentx64' Win64='yes' Directory="mainx64" Guid='{225DF59C-8C11-4AFF-95A9-88A98A6CD576}'>
         <File Id="filB436E4594E3544C098B9943DBDC1A518" Source="!(wix.MainSource)\x64\cef.pak" />
         <File Id="filCB052B4928C8DBE2730D9A211E470208" Source="!(wix.MainSource)\x64\CefSharp.BrowserSubprocess.Core.dll" />
@@ -250,6 +253,8 @@
       </Directory>
       <Directory Id="mainru" Name="ru">
       </Directory>
+      <Directory Id="mainja" Name="ja">
+      </Directory>    
     </DirectoryRef>
 
   </Fragment>

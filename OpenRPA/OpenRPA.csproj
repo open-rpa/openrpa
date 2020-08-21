@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.157</Version>
-    <PackageReleaseNotes>1.0.157 Fix issue with recording keyboard
+    <Version>1.0.158</Version>
+    <PackageReleaseNotes>1.0.158 upgrade flaui / Add ClearCache to windows.getelement
+1.0.157 Fix issue with recording keyboard
 1.0.156 Improve nm.WaitForDownload
 1.0.155 Add custom timeout on nm plugin messages
 1.0.154 Fix a few issues, refactor some interfaces, implement controlling isagent from a role
@@ -192,7 +193,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Include="$(OutputPath)\OpenRPA.exe.config" Pack="true" PackagePath="build" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CefSharp.Wpf" Version="79.1.360" />
+    <PackageReference Include="CefSharp.Wpf" Version="83.4.20" />
     <PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.8.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />

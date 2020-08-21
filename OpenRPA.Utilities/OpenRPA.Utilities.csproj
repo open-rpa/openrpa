@@ -145,7 +145,7 @@
     <EmbeddedResource Include="Resources\toolbox\downloadfile.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.94.2" />
+    <PackageReference Include="ClosedXML" Version="0.95.3" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
     <PackageReference Include="iTextSharp" Version="5.5.13.1" />
   </ItemGroup>

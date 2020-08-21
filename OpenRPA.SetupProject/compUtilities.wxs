@@ -10,7 +10,7 @@
         <File Id="ExcelDataReader.DataSet.dll" Source="!(wix.UtilitiesSource)\ExcelDataReader.DataSet.dll" />
         <File Id="ExcelDataReader.dll" Source="!(wix.UtilitiesSource)\ExcelDataReader.dll" />
         <File Id="ExcelNumberFormat.dll" Source="!(wix.UtilitiesSource)\ExcelNumberFormat.dll" />
-        <File Id="FastMember.dll" Source="!(wix.UtilitiesSource)\FastMember.dll" />
+        <!--<File Id="FastMember.dll" Source="!(wix.UtilitiesSource)\FastMember.dll" />-->
         <File Id="itextsharp.dll" Source="!(wix.UtilitiesSource)\itextsharp.dll" />
       </Component>
       <Component Id='UtilitiesComponentde' Win64='yes' Directory="Utilitiesde" Guid='{60894AD4-AF07-46CC-B54B-EB8E8C5CB89A}'>

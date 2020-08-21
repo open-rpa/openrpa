@@ -217,7 +217,7 @@
         <File Id="fil323CAEE6BB05F64F185321F5B2E40B68" Source="!(wix.MainSource)\x64\libcef.dll" />
         <File Id="filAD78B91DA97E98FE6AF8DD9B80F98B22" Source="!(wix.MainSource)\x64\libEGL.dll" />
         <File Id="fil37B200E9C3DCCC4F10FC43F9BEC63A0F" Source="!(wix.MainSource)\x64\libGLESv2.dll" />
-        <File Id="fil4E634A3E360C3A8A8E07F98A66B10343" Source="!(wix.MainSource)\x64\natives_blob.bin" />
+        <!--<File Id="fil4E634A3E360C3A8A8E07F98A66B10343" Source="!(wix.MainSource)\x64\natives_blob.bin" />-->
         <File Id="fil9ACC4265158BEE28AC5D12597C532D84" Source="!(wix.MainSource)\x64\README.txt" />
         <File Id="fil171EB7F3B881DFD880449D01AB09ECA1" Source="!(wix.MainSource)\x64\snapshot_blob.bin" />
         <File Id="fil9CFD5D2CAB69A2A827A1756C5C77ACD3" Source="!(wix.MainSource)\x64\v8_context_snapshot.bin" />

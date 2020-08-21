@@ -6,7 +6,10 @@
       <Component Id='DatabaseComponent' Guid='{CE8FE032-83AC-49B7-928D-75CE152B213F}' Win64='yes' Directory="INSTALLDIR">
         <File Id="adodb.dll" Source="!(wix.DatabaseSource)\adodb.dll" />
         <File Id="Interop.MSDASC.dll" Source="!(wix.DatabaseSource)\Interop.MSDASC.dll" />
+        <File Id="Microsoft.Data.ConnectionUI.Dialog" Source="!(wix.DatabaseSource)\Microsoft.Data.ConnectionUI.Dialog.dll" />
+        <File Id="Microsoft.Data.ConnectionUI.dll" Source="!(wix.DatabaseSource)\Microsoft.Data.ConnectionUI.dll" />
         <File Id="OpenRPA.Database.dll" Source="!(wix.DatabaseSource)\OpenRPA.Database.dll" />
+      
       </Component>
       <!--<Component Id='DatabaseComponentde' Win64='yes' Directory="Databasede" Guid="{35A4AB21-DB1B-4BCA-BF1C-C99E11FFC6B0}">
         <File Id="OpenRPA.Database.resources.dll_de" Source="!(wix.DatabaseSource)\de\OpenRPA.Database.resources.dll" />

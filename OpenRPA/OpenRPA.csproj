@@ -11,7 +11,7 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Version>1.0.158</Version>
-    <PackageReleaseNotes>1.0.158 upgrade flaui / Add ClearCache to windows.getelement
+    <PackageReleaseNotes>1.0.158 upgrade flaui / Add ClearCache to windows.getelement / add ja translation
 1.0.157 Fix issue with recording keyboard
 1.0.156 Improve nm.WaitForDownload
 1.0.155 Add custom timeout on nm plugin messages

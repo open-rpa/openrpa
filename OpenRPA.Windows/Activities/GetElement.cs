@@ -71,9 +71,6 @@ namespace OpenRPA.Windows
             if (maxresults < 1) maxresults = 1;
             var interactive = Interactive.Get(context);
             var from = From.Get(context);
-#if DEBUG
-            _timeout = TimeSpan.FromDays(1).TotalMilliseconds;
-#endif
             int failcounter = 0;
             do
             {
@@ -141,7 +138,7 @@ namespace OpenRPA.Windows
                 if(interactive)
                 {
                     var testelement = _enum.Current;
-                    Wait.UntilResponsive(testelement.RawElement, TimeSpan.FromMilliseconds(_timeout));
+                    Wait.UntilResponsive(testelement.RawElement, PluginConfig.search_timeout);
                 }
                 context.SetValue(_elements, _enum);
                 context.SetValue(_sw, sw);

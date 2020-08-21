@@ -821,7 +821,9 @@ namespace OpenRPA
                                 {
                                     try
                                     {
+                                        Log.Debug("Create SigninWindow " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                                         var signinWindow = new Views.SigninWindow(url, true);
+                                        Log.Debug("ShowDialog " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                                         signinWindow.ShowDialog();
                                         jwt = signinWindow.jwt;
                                         if (!string.IsNullOrEmpty(jwt))
@@ -838,6 +840,7 @@ namespace OpenRPA
                                         }
                                         else
                                         {
+                                            Log.Debug("Call close " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                                             Close();
                                         }
 

@@ -32,6 +32,9 @@
       <Component Id='FormsComponentru' Win64='yes' Directory="Formsru">
         <File Id="OpenRPA.Forms.resources.dll_ru" Source="!(wix.FormsSource)\ru\OpenRPA.Forms.resources.dll" />
       </Component>
+      <Component Id='FormsComponentja' Win64='yes' Directory="Formsja">
+        <File Id="OpenRPA.Forms.resources.dll_ja" Source="!(wix.FormsSource)\ja\OpenRPA.Forms.resources.dll" />
+      </Component>
 
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
@@ -46,6 +49,8 @@
       <Directory Id="Formsro" Name="ro">
       </Directory>
       <Directory Id="Formsru" Name="ru">
+      </Directory>
+      <Directory Id="Formsja" Name="ja">
       </Directory>
     </DirectoryRef>
 

@@ -10,8 +10,9 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.0.13</Version>
-    <PackageReleaseNotes>1.0.13 Add SetAllRowsState
+    <Version>1.0.14</Version>
+    <PackageReleaseNotes>1.0.14 Add SelectFile Activity
+1.0.13 Add SetAllRowsState
 1.0.12 Add Start Process
 1.0.11 Add Replace Activity
 1.0.10 Fix hint text in WriteCSV activity
@@ -59,6 +60,7 @@
     <None Remove="Activities\ReadJSONDesigner.xaml" />
     <None Remove="Activities\ReadPDFDesigner.xaml" />
     <None Remove="Activities\ReplaceDesigner.xaml" />
+    <None Remove="Activities\SelectFileDesigner.xaml" />
     <None Remove="Activities\SelectFolderDesigner.xaml" />
     <None Remove="Activities\SetAllRowsStateDesigner.xaml" />
     <None Remove="Activities\SetAutoLoginDesigner.xaml" />
@@ -79,6 +81,7 @@
     <None Remove="Resources\designer\readjson.png" />
     <None Remove="Resources\designer\readpdf.png" />
     <None Remove="Resources\designer\regex.png" />
+    <None Remove="Resources\designer\selectfile.png" />
     <None Remove="Resources\designer\selectfolder.png" />
     <None Remove="Resources\designer\writeexcel.png" />
     <None Remove="Resources\designer\writefile.png" />
@@ -95,6 +98,7 @@
     <None Remove="Resources\toolbox\readjson.png" />
     <None Remove="Resources\toolbox\readpdf.png" />
     <None Remove="Resources\toolbox\regex.png" />
+    <None Remove="Resources\toolbox\selectfile.png" />
     <None Remove="Resources\toolbox\selectfolder.png" />
     <None Remove="Resources\toolbox\writeexcel.png" />
     <None Remove="Resources\toolbox\writefile.png" />
@@ -102,8 +106,10 @@
   <ItemGroup>
     <Resource Include="Resources\designer\database.png" />
     <Resource Include="Resources\designer\selectfolder.png" />
+    <Resource Include="Resources\designer\selectfile.png" />
     <EmbeddedResource Include="Resources\toolbox\closeworkbook.png" />
     <EmbeddedResource Include="Resources\toolbox\commentout.png" />
+    <EmbeddedResource Include="Resources\toolbox\selectfile.png" />
     <EmbeddedResource Include="Resources\toolbox\play.png" />
     <EmbeddedResource Include="Resources\toolbox\readjson.png" />
     <EmbeddedResource Include="Resources\toolbox\newemail.png" />
@@ -151,6 +157,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\AddDataColumnDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\SelectFileDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

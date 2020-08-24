@@ -578,6 +578,8 @@ namespace OpenRPA
         {
             Log.FunctionIndent("RobotInstance", "init");
             SetStatus("Checking for updates");
+            Config.Save();
+            SetStatus("Checking for updates");
             _ = CheckForUpdatesAsync();
             try
             {

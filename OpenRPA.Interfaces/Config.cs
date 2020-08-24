@@ -1,6 +1,7 @@
 ﻿using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Security;
 using System.Security.Cryptography;
@@ -9,21 +10,10 @@ using System.Threading.Tasks;
 
 namespace OpenRPA
 {
-    public class Config // : AppSettings<Config>
+    public class Config
     {
-        // public Dictionary<string, object> properties = new Dictionary<string, object>();
         public Dictionary<string, object> settings = new Dictionary<string, object>();
         public Dictionary<string, object> _properties = null;
-        //public Dictionary<string, object> properties { 
-        //    get { 
-        //        if(_properties==null) _properties = GetProperty(null, new Dictionary<string, object>());
-        //        return _properties;
-        //    }
-        //    set { 
-        //        SetProperty(null, value);
-        //        _properties = value;
-        //    } 
-        //}
         public Dictionary<string, object> properties { get { return GetProperty(null, new Dictionary<string, object>()); } set { SetProperty(null, value); } }
         public string wsurl { get { return GetProperty(null, "wss://app.openiap.io/"); } set { SetProperty(null, value); } }
         public string username { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
@@ -166,7 +156,61 @@ namespace OpenRPA
         {
             try
             {
-                string json = Newtonsoft.Json.JsonConvert.SerializeObject(this.settings, Newtonsoft.Json.Formatting.Indented);
+                _ = wsurl;
+                _ = username;
+                _ = jwt;
+                _ = password;
+                _ = entropy;
+                _ = cancelkey;
+                _ = isagent;
+                _ = showloadingscreen;
+                _ = culture;
+                _ = ocrlanguage;
+                _ = openworkflows;
+                _ = mainwindow_position;
+                _ = designerlayout;
+                _ = record_overlay;
+                _ = querypagesize;
+                _ = lastupdatecheck;
+                _ = updatecheckinterval;
+                _ = doupdatecheck;
+                _ = autoupdateupdater;
+                _ = log_to_file;
+                _ = log_file_level_minimum;
+                _ = log_file_level_maximum;
+                _ = log_verbose;
+                _ = log_activity;
+                _ = log_debug;
+                _ = log_selector;
+                _ = log_selector_verbose;
+                _ = log_information;
+                _ = log_output;
+                _ = log_warning;
+                _ = log_error;
+                _ = use_sendkeys;
+                _ = use_virtual_click;
+                _ = use_animate_mouse;
+                _ = use_postwait;
+                _ = minimize;
+                _ = recording_add_to_designer;
+                _ = reloadinterval;
+                _ = move_animation_run_time;
+                _ = move_animation_steps;
+                _ = remote_allow_multiple_running;
+                _ = remote_allow_multiple_running_max;
+                _ = cef_useragent;
+                _ = show_getting_started;
+                _ = notify_on_workflow_remote_start;
+                _ = notify_on_workflow_end;
+                _ = notify_on_workflow_remote_end;
+                _ = log_busy_warning;
+                // settings
+                // _properties
+                var p = this.settings.OrderByDescending(kvp => kvp.Key);
+                var d = new Dictionary<string, object>();
+                foreach (var k in p) if (k.Key != "properties") d.Add(k.Key, k.Value);
+                d.Add("properties", properties);
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(d, Newtonsoft.Json.Formatting.Indented);
                 System.IO.File.WriteAllText(filename, json);
             }
             catch (Exception ex)
@@ -298,8 +342,14 @@ namespace OpenRPA
                     if (typeof(T) == typeof(int) && value is long) value = int.Parse(value.ToString());
                     if (typeof(T) == typeof(bool)) value = bool.Parse(value.ToString());
                     if (typeof(T) == typeof(System.Drawing.Rectangle)) {
-                        var c = new System.Drawing.RectangleConverter();                        
-                        value = c.ConvertFromString(null, new System.Globalization.CultureInfo("en-US"), value.ToString());
+                        if (value.GetType() == typeof(System.Drawing.Rectangle))
+                        {
+                        } 
+                        else
+                        {
+                            var c = new System.Drawing.RectangleConverter();
+                            value = c.ConvertFromString(null, new System.Globalization.CultureInfo("en-US"), value.ToString());
+                        }
                     }
                     if (typeof(T) == typeof(TimeSpan) && value != null)
                     {

@@ -38,7 +38,11 @@ namespace OpenRPA.Utilities
             {
                 result = folderBrowserDialog.ShowDialog();
             });
-            if (result != System.Windows.Forms.DialogResult.OK) return;
+            if (result != System.Windows.Forms.DialogResult.OK)
+            {
+                context.SetValue(Folder, null);
+                return;
+            }
             context.SetValue(Folder, folderBrowserDialog.SelectedPath);
         }
 

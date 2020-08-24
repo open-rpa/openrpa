@@ -168,6 +168,9 @@
   <data name="activity_readpdf_hint" xml:space="preserve">
     <value>Select PDF file to read</value>
   </data>
+  <data name="activity_selectfile_hint" xml:space="preserve">
+    <value>Selected File</value>
+  </data>
   <data name="activity_selectfolder_hint" xml:space="preserve">
     <value>Selected Folder</value>
   </data>

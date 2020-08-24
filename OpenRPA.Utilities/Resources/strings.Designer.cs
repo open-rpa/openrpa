@@ -214,6 +214,15 @@ namespace OpenRPA.Utilities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Selected File.
+        /// </summary>
+        public static string activity_selectfile_hint {
+            get {
+                return ResourceManager.GetString("activity_selectfile_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Selected Folder.
         /// </summary>
         public static string activity_selectfolder_hint {

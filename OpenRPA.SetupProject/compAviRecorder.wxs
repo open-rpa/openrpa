@@ -27,6 +27,9 @@
       <Component Id='AviRecorderComponentru' Win64='yes' Directory="AviRecorderru" Guid='{9CDF08F2-2A08-460F-8876-EBE010D05C67}'>
         <File Id="OpenRPA.AviRecorder.resources.dll_ru" Source="!(wix.AviRecorderSource)\ru\OpenRPA.AviRecorder.resources.dll" />
       </Component>
+      <Component Id='AviRecorderComponentja' Win64='yes' Directory="AviRecorderja" Guid='{8B70D7B4-5EB3-4859-B2A3-4F1525D4E7E1}'>
+        <File Id="OpenRPA.AviRecorder.resources.dll_ja" Source="!(wix.AviRecorderSource)\ja\OpenRPA.AviRecorder.resources.dll" />
+      </Component>
 
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
@@ -41,6 +44,8 @@
       <Directory Id="AviRecorderro" Name="ro">
       </Directory>
       <Directory Id="AviRecorderru" Name="ru">
+      </Directory>
+      <Directory Id="AviRecorderja" Name="ja">
       </Directory>
     </DirectoryRef>
 

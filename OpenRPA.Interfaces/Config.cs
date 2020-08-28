@@ -56,6 +56,7 @@ namespace OpenRPA
         public TimeSpan move_animation_run_time { get { return GetProperty(null, TimeSpan.FromMilliseconds(500)); } set { SetProperty(null, value); } }
         public int move_animation_steps { get { return GetProperty(null, 20); } set { SetProperty(null, value); } }
         public bool remote_allow_multiple_running { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
+        public bool remote_allowed { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
         public int remote_allow_multiple_running_max { get { return GetProperty(null, 2); } set { SetProperty(null, value); } }
         public string cef_useragent { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
         public bool show_getting_started { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
@@ -198,6 +199,7 @@ namespace OpenRPA
                 _ = move_animation_steps;
                 _ = remote_allow_multiple_running;
                 _ = remote_allow_multiple_running_max;
+                _ = remote_allowed;
                 _ = cef_useragent;
                 _ = show_getting_started;
                 _ = notify_on_workflow_remote_start;

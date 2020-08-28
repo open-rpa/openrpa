@@ -133,7 +133,7 @@
     <value>デザイナを開く</value>
   </data>
   <data name="activity_invokeform_tooltip" xml:space="preserve">
-    <value>ユーザを使ってコンピュータ上にあらかじめデザインしたフォームでインタラクションを実施</value>
+    <value>コンピュータ上にあらかじめデザインしたフォームでユーザ対話を実施</value>
   </data>
   <data name="activity_noti_message" xml:space="preserve">
     <value>メッセージ</value>

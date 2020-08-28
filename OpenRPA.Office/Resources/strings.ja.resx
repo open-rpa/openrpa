@@ -259,7 +259,7 @@
     <value>Get the currently selected cells in the specefied worksheet</value>
   </data>
   <data name="activity_movemailitem" xml:space="preserve">
-    <value>新規メールアイテム</value>
+    <value>メールアイテムを移動</value>
   </data>
   <data name="activity_movemailitem_tooltip" xml:space="preserve">
     <value>Move a mail gotten with GetEmails to a different folder</value>

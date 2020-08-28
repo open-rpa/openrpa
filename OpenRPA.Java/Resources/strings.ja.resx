@@ -124,7 +124,7 @@
     <value>アクティビティをドロップ</value>
   </data>
   <data name="activity_getelement_highlight" xml:space="preserve">
-    <value>ハイライト</value>
+    <value>強調</value>
   </data>
   <data name="activity_getelement_open_selector" xml:space="preserve">
     <value>セレクタを開く</value>
@@ -133,7 +133,7 @@
     <value>Find an Windows Java element based on selector</value>
   </data>
   <data name="detector_highlight" xml:space="preserve">
-    <value>ハイライト</value>
+    <value>強調</value>
   </data>
   <data name="detector_name" xml:space="preserve">
     <value>名前</value>

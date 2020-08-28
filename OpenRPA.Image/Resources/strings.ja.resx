@@ -121,7 +121,7 @@
     <value>表示名</value>
   </data>
   <data name="activity_displayname_help" xml:space="preserve">
-    <value>Displayname inside the workflow designer</value>
+    <value>ワークフロー・デザイナ内の表示名</value>
   </data>
   <data name="activity_element" xml:space="preserve">
     <value>要素</value>
@@ -142,7 +142,7 @@
     <value>アクティビティをドロップ</value>
   </data>
   <data name="activity_getelement_highlight" xml:space="preserve">
-    <value>ハイライト</value>
+    <value>強調</value>
   </data>
   <data name="activity_getelement_process_limit" xml:space="preserve">
     <value>処理制限</value>
@@ -160,10 +160,10 @@
     <value>アクティビティをドロップ</value>
   </data>
   <data name="activity_getimage_highlight" xml:space="preserve">
-    <value>ハイライト</value>
+    <value>強調</value>
   </data>
   <data name="activity_getimage_select" xml:space="preserve">
-    <value>イメージを取得</value>
+    <value>イメージを選択</value>
   </data>
   <data name="activity_getimage_tooltip" xml:space="preserve">
     <value>Get an image of the screen relative from another image or element found with GetElement</value>

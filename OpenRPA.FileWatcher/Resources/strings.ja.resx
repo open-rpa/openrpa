@@ -117,49 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="activity_click_to_view" xml:space="preserve">
-    <value>ダブルクリックで表示</value>
+  <data name="plugin_filter" xml:space="preserve">
+    <value>ファイル・フィルタ</value>
   </data>
-  <data name="activity_playrecording" xml:space="preserve">
-    <value>レコーディングを再生</value>
+  <data name="plugin_includesubdir" xml:space="preserve">
+    <value>サブディレクトリ</value>
   </data>
-  <data name="activity_playrecording_tooltip" xml:space="preserve">
-    <value>ビデオレコーディングをプレイバック</value>
+  <data name="plugin_name" xml:space="preserve">
+    <value>名前</value>
   </data>
-  <data name="activity_play_hint" xml:space="preserve">
-    <value>このビデオファイルを再生</value>
-  </data>
-  <data name="activity_startrecording" xml:space="preserve">
-    <value>レコーディングを開始</value>
-  </data>
-  <data name="activity_startrecording_tooltip" xml:space="preserve">
-    <value>画面をファイルにレコーディング開始</value>
-  </data>
-  <data name="activity_start_hint" xml:space="preserve">
-    <value>このフォルダに保存</value>
-  </data>
-  <data name="activity_stoprecording" xml:space="preserve">
-    <value>レコーディングを停止</value>
-  </data>
-  <data name="activity_stoprecording_tooltip" xml:space="preserve">
-    <value>画面レコーディングを停止してファイルに保存</value>
-  </data>
-  <data name="activity_stop_hint" xml:space="preserve">
-    <value>ビデオファイル名を保存</value>
-  </data>
-  <data name="plugin_codec" xml:space="preserve">
-    <value>コーデック</value>
-  </data>
-  <data name="plugin_enabled" xml:space="preserve">
-    <value>有効</value>
-  </data>
-  <data name="plugin_keep_successful" xml:space="preserve">
-    <value>成功を維持</value>
-  </data>
-  <data name="plugin_quality" xml:space="preserve">
-    <value>レコーディング品質</value>
-  </data>
-  <data name="plugin_save_in_folder" xml:space="preserve">
-    <value>フォルダに保存</value>
+  <data name="plugin_path" xml:space="preserve">
+    <value>パス</value>
   </data>
 </root>

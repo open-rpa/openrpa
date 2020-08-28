@@ -139,7 +139,7 @@
     <value>アクティビティをドロップ</value>
   </data>
   <data name="activity_getelement_highlight" xml:space="preserve">
-    <value>ハイライト</value>
+    <value>強調</value>
   </data>
   <data name="activity_getelement_loopaction" xml:space="preserve">
     <value>アクションをループ</value>
@@ -175,7 +175,7 @@
     <value>準備状態を待機</value>
   </data>
   <data name="activity_waitforready_help" xml:space="preserve">
-    <value>Wait for page page to be ready / is not loading</value>
+    <value>ページが準備状態つまり非ロード中になるまで待機</value>
   </data>
   <data name="compensate_for_old_addon" xml:space="preserve">
     <value>古い拡張を補う</value>

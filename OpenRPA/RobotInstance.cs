@@ -1052,6 +1052,12 @@ namespace OpenRPA
                     if (workflow == null) throw new ArgumentException("Unknown workflow " + command.workflowid);
                     lock (statelock)
                     {
+                        if (!Config.local.remote_allowed)
+                        {
+                            // Don't fail, just say busy and let the message expire
+                            // so if this was send to a robot in a role, another robot can pick this up.
+                            e.isBusy = true; return;
+                        }
                         int RunningCount = 0;
                         int RemoteRunningCount = 0;
                         foreach (var i in WorkflowInstance.Instances.ToList())
@@ -1069,13 +1075,7 @@ namespace OpenRPA
                             {
                                 RunningCount++;
                             }
-                            if (!Config.local.remote_allowed)
-                            {
-                                // Don't fail, just say busy and let the message expire
-                                // so if this was send to a robot in a role, another robot can pick this up.
-                                e.isBusy = true; return;
-                            }
-                            else if (!Config.local.remote_allow_multiple_running && RunningCount > 0)
+                            if (!Config.local.remote_allow_multiple_running && RunningCount > 0)
                             {
                                 if (i.Workflow != null)
                                 {

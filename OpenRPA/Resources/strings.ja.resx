@@ -202,7 +202,7 @@
     <value>表示名</value>
   </data>
   <data name="activity_displayname_help" xml:space="preserve">
-    <value>ワークフロー・デザイナー内の表示名</value>
+    <value>ワークフロー・デザイナ内の表示名</value>
   </data>
   <data name="activity_doubleclick" xml:space="preserve">
     <value>ダブルクリック</value>
@@ -256,7 +256,7 @@
     <value>要素を強調</value>
   </data>
   <data name="activity_highlightelement_tooltip" xml:space="preserve">
-    <value>Highlight an element found with GetElement</value>
+    <value>GetElement で見つかった要素をハイライト</value>
   </data>
   <data name="activity_ignoreerrors" xml:space="preserve">
     <value>エラーを無視</value>
@@ -448,7 +448,7 @@
     <value>アニメーション化マウスを使用</value>
   </data>
   <data name="browseraddons" xml:space="preserve">
-    <value>ブラウザー・アドオン</value>
+    <value>ブラウザ・アドオン</value>
   </data>
   <data name="button_ok" xml:space="preserve">
     <value>OK</value>
@@ -625,7 +625,7 @@
     <value>実行</value>
   </data>
   <data name="permissions_read" xml:space="preserve">
-    <value>読込み</value>
+    <value>読込</value>
   </data>
   <data name="permissions_update" xml:space="preserve">
     <value>更新</value>
@@ -691,7 +691,7 @@
     <value>ツール</value>
   </data>
   <data name="tools_change_type" xml:space="preserve">
-    <value>型を変更</value>
+    <value>タイプを変更</value>
   </data>
   <data name="tools_swap_animate" xml:space="preserve">
     <value>アニメーション化の交換</value>

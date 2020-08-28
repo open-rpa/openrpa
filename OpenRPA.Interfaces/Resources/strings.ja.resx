@@ -117,49 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="activity_click_to_view" xml:space="preserve">
-    <value>ダブルクリックで表示</value>
+  <data name="selector_buttons_cancel" xml:space="preserve">
+    <value>キャンセル</value>
   </data>
-  <data name="activity_playrecording" xml:space="preserve">
-    <value>レコーディングを再生</value>
+  <data name="selector_buttons_cancel_hint" xml:space="preserve">
+    <value>変更をキャンセルしてセレクタウィンドウを閉じる</value>
   </data>
-  <data name="activity_playrecording_tooltip" xml:space="preserve">
-    <value>ビデオレコーディングをプレイバック</value>
+  <data name="selector_buttons_highlight" xml:space="preserve">
+    <value>強調</value>
   </data>
-  <data name="activity_play_hint" xml:space="preserve">
-    <value>このビデオファイルを再生</value>
+  <data name="selector_buttons_highlight_hint" xml:space="preserve">
+    <value>カレントセレクタの影響を受ける要素を強調</value>
   </data>
-  <data name="activity_startrecording" xml:space="preserve">
-    <value>レコーディングを開始</value>
+  <data name="selector_buttons_ok" xml:space="preserve">
+    <value>OK</value>
   </data>
-  <data name="activity_startrecording_tooltip" xml:space="preserve">
-    <value>画面をファイルにレコーディング開始</value>
+  <data name="selector_buttons_ok_hint" xml:space="preserve">
+    <value>変更を受諾してセレクタウィンドウを閉じる</value>
   </data>
-  <data name="activity_start_hint" xml:space="preserve">
-    <value>このフォルダに保存</value>
+  <data name="selector_buttons_select" xml:space="preserve">
+    <value>選択</value>
   </data>
-  <data name="activity_stoprecording" xml:space="preserve">
-    <value>レコーディングを停止</value>
+  <data name="selector_buttons_select_hint" xml:space="preserve">
+    <value>クリックして要素を選択</value>
   </data>
-  <data name="activity_stoprecording_tooltip" xml:space="preserve">
-    <value>画面レコーディングを停止してファイルに保存</value>
+  <data name="selector_buttons_sync" xml:space="preserve">
+    <value>ツリーを同期</value>
   </data>
-  <data name="activity_stop_hint" xml:space="preserve">
-    <value>ビデオファイル名を保存</value>
+  <data name="selector_buttons_sync_hint" xml:space="preserve">
+    <value>ツリーを同期してカレント要素に移動</value>
   </data>
-  <data name="plugin_codec" xml:space="preserve">
-    <value>コーデック</value>
-  </data>
-  <data name="plugin_enabled" xml:space="preserve">
-    <value>有効</value>
-  </data>
-  <data name="plugin_keep_successful" xml:space="preserve">
-    <value>成功を維持</value>
-  </data>
-  <data name="plugin_quality" xml:space="preserve">
-    <value>レコーディング品質</value>
-  </data>
-  <data name="plugin_save_in_folder" xml:space="preserve">
-    <value>フォルダに保存</value>
+  <data name="selector_menu_select" xml:space="preserve">
+    <value>要素を選択</value>
   </data>
 </root>

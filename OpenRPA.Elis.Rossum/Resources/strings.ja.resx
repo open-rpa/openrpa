@@ -136,7 +136,7 @@
     <value>Get date the extracted data from an invoice, only works once the file status is in status exported</value>
   </data>
   <data name="activity_exportfile_file" xml:space="preserve">
-    <value>ファイルURL</value>
+    <value>FileURL</value>
   </data>
   <data name="activity_exportfile_file_hint" xml:space="preserve">
     <value>URL to file to get data from</value>
@@ -182,7 +182,7 @@ purged - Only metadata was preserved after a deletion.</value>
     <value>Get a list of queues from rossum, a file must be upload to a queue that has variuse settings set though the website</value>
   </data>
   <data name="activity_getstatus_file" xml:space="preserve">
-    <value>ファイルURL</value>
+    <value>FileURL</value>
   </data>
   <data name="activity_getstatus_file_hint" xml:space="preserve">
     <value>URL to file to get status from</value>
@@ -224,7 +224,7 @@ purged - Only metadata was preserved after a deletion.</value>
     <value>Make workflow go idle while waiting for file to go into the specified status</value>
   </data>
   <data name="activity_waitforfile_file" xml:space="preserve">
-    <value>ファイルURL</value>
+    <value>FileURL</value>
   </data>
   <data name="activity_waitforfile_file_hint" xml:space="preserve">
     <value>URL to file to wait for</value>

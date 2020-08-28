@@ -127,10 +127,10 @@
     <value>Do this, once done processing each result, then reruns the selector and looks for new items</value>
   </data>
   <data name="activity_getelement_tooltip" xml:space="preserve">
-    <value>Find an Windows UI element based on selector</value>
+    <value>セレクタを基準にWindows UI 要素を発見</value>
   </data>
   <data name="detector_button_highlight" xml:space="preserve">
-    <value>ハイライト</value>
+    <value>強調</value>
   </data>
   <data name="detector_button_open_selector" xml:space="preserve">
     <value>セレクタを開く</value>
@@ -151,7 +151,7 @@
     <value>アクティビティをドロップ</value>
   </data>
   <data name="getelement_highlight" xml:space="preserve">
-    <value>ハイライト</value>
+    <value>強調</value>
   </data>
   <data name="getelement_open_selector" xml:space="preserve">
     <value>セレクタを開く</value>

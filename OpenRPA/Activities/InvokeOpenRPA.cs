@@ -147,8 +147,13 @@ namespace OpenRPA.Activities
                 // context.RemoveBookmark(bookmark.Name);
                 var instance = obj as WorkflowInstance;
                 if (instance == null) throw new Exception("Bookmark returned a non WorkflowInstance");
-                if (instance.Exception != null) throw instance.Exception;
-                if (instance.hasError) throw new Exception(instance.errormessage);
+                var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(this.workflow);
+                var name = "The invoked workflow failed with ";
+                if (workflow != null && !string.IsNullOrEmpty(workflow.name)) name = workflow.name;
+                if (workflow != null && !string.IsNullOrEmpty(workflow.ProjectAndName)) name = workflow.ProjectAndName;
+                
+                if (instance.Exception != null) throw new Exception(name + " failed with " + instance.Exception.Message, instance.Exception);
+                if (instance.hasError) throw new Exception(name + " failed with " + instance.errormessage);
 
                 if (Arguments == null || Arguments.Count == 0)
                 {

@@ -28,8 +28,8 @@
       <Component Id='UtilitiesComponentro' Win64='yes' Directory="Utilitiesro" Guid='{911465DA-0BF5-48EE-B570-30055ECBBD09}'>
         <File Id="OpenRPA.Utilities.resources.dll_ro" Source="!(wix.UtilitiesSource)\ro\OpenRPA.Utilities.resources.dll" />
       </Component>
-      <Component Id='UtilitiesComponentru' Win64='yes' Directory="Utilitiesru" Guid='{B49A09EB-4533-465D-A13D-F2D76B42FCE1}'>
-        <File Id="OpenRPA.Utilities.resources.dll_ru" Source="!(wix.UtilitiesSource)\ru\OpenRPA.Utilities.resources.dll" />
+      <Component Id='UtilitiesComponentja' Win64='yes' Directory="Utilitiesja" Guid='{B49A09EB-4533-465D-A13D-F2D76B42FCE1}'>
+        <File Id="OpenRPA.Utilities.resources.dll_ja" Source="!(wix.UtilitiesSource)\ja\OpenRPA.Utilities.resources.dll" />
       </Component>
 
     </ComponentGroup>
@@ -45,6 +45,8 @@
       <Directory Id="Utilitiesro" Name="ro">
       </Directory>
       <Directory Id="Utilitiesru" Name="ru">
+      </Directory>
+      <Directory Id="Utilitiesja" Name="ja">
       </Directory>
     </DirectoryRef>
 

@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="OpenRPA.MSSpeech.Views.MSSpeechView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:or="clr-namespace:OpenRPA.MSSpeech.Resources"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,20,0,0" Text="{x:Static or:strings.plugin_name}" VerticalAlignment="Top" Width="110" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="183,20,0,0" Text="{Binding Path=EntityName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
+
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,51,0,0" Text="{x:Static or:strings.plugin_common_words}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="183,51,0,0" IsChecked="{Binding IncludeCommonWords, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
+
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,79,0,0" Text="{x:Static or:strings.plugin_commands}" VerticalAlignment="Top" Width="110" />
+        <TextBox
+            TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"
+            Height="184" HorizontalAlignment="Left" Margin="183,79,0,0" Text="{Binding Commands, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
+
+    </Grid>
+</UserControl>

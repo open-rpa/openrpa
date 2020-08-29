@@ -159,11 +159,13 @@ namespace OpenRPA.FileWatcher
         public string host { get; set; }
         public string fqdn { get; set; }
         public string filepath { get; set; }
+        public string result { get; set; }
         public DetectorEvent(string FullPath)
         {
             host = Environment.MachineName.ToLower();
             fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
             filepath = FullPath;
+            result = FullPath;
         }
 
     }

@@ -298,6 +298,7 @@ namespace OpenRPA.Interfaces
         public IElement element { get; set; }
         public string host { get; set; }
         public string fqdn { get; set; }
+        public string result { get; set; }
         public DetectorEvent()
         {
             //this.element = element;

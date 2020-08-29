@@ -37,6 +37,28 @@ namespace OpenRPA.Interfaces
     }
     public static class Extensions
     {
+        
+        static public string GetStringFromResource(string resourceName)
+        {
+            return GetStringFromResource(typeof(Extensions), resourceName);
+        }
+        static public string GetStringFromResource(Type t, string resourceName)
+        {
+            string[] names = t.Assembly.GetManifestResourceNames();
+            foreach (var name in names)
+            {
+                if (name.EndsWith(resourceName))
+                {
+                    using (var stream = t.Assembly.GetManifestResourceStream(name))
+                    using (var reader = new System.IO.StreamReader(stream))
+                    {
+                        string result = reader.ReadToEnd();
+                        return result;
+                    }
+                }
+            }
+            return null;
+        }
         public static Type FindType(string qualifiedTypeName)
         {
             Type t = Type.GetType(qualifiedTypeName);

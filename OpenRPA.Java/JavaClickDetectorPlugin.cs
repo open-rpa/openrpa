@@ -127,6 +127,7 @@ namespace OpenRPA.Java
         public IElement element { get; set; }
         public string host { get; set; }
         public string fqdn { get; set; }
+        public string result { get; set; }
         public DetectorEvent(JavaElement element)
         {
             this.element = element;

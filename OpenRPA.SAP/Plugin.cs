@@ -141,9 +141,10 @@ namespace OpenRPA.SAP
             if (e.UIElement.ProcessId > 0)
             {
                 var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-                if (p.ProcessName.ToLower() != "saplogon") { Log.Output("p.ProcessName is not saplogon but " + p.ProcessName); return false; }
+                if (p.ProcessName.ToLower() != "saplogon") { 
+                    Log.Debug("p.ProcessName is not saplogon but " + p.ProcessName); return false; }
             } else {
-                Log.Output("e.UIElement.ProcessId is " + (e.UIElement.ProcessId.ToString()));
+                Log.Debug("e.UIElement.ProcessId is " + (e.UIElement.ProcessId.ToString()));
                 return false; 
             }
             LastRecorderEvent = e;
@@ -176,7 +177,7 @@ namespace OpenRPA.SAP
             } 
             else
             {
-                Log.Output("Skip adding activity, record_with_get_element is false");
+                Log.Debug("Skip adding activity, record_with_get_element is false");
                 e.a = null;
 
             }

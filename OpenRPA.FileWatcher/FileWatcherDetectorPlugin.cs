@@ -101,7 +101,15 @@ namespace OpenRPA.FileWatcher
             {
                 watcher.Path = Watchpath;
                 watcher.NotifyFilter = NotifyFilters.LastWrite;
-                watcher.Filter = WatchFilter;
+                if(!string.IsNullOrEmpty(WatchFilter) && (WatchFilter.Contains(",") || WatchFilter.Contains("|")))
+                {
+                    watcher.Filter = "*";
+                } 
+                else
+                {
+                    watcher.Filter = WatchFilter;
+                }
+                
                 watcher.Changed += new FileSystemEventHandler(OnChanged);
                 watcher.EnableRaisingEvents = true;
                 watcher.IncludeSubdirectories = IncludeSubdirectories;
@@ -120,6 +128,16 @@ namespace OpenRPA.FileWatcher
         {
             try
             {
+                if (!string.IsNullOrEmpty(WatchFilter) && (WatchFilter.Contains(",") || WatchFilter.Contains("|")))
+                {
+                    bool cont = false;
+                    var array = WatchFilter.Split(new Char[] { ',', '|' });
+                    foreach(var ext in array)
+                    {
+                        if (PatternMatcher.FitsMask(e.FullPath, ext)) cont = true;
+                    }
+                    if (!cont) return;
+                }
                 TimeSpan timepassed = DateTime.Now - lastTriggered;
                 if (timepassed.Milliseconds < 100) return;
                 lastTriggered = DateTime.Now;

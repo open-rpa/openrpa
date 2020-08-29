@@ -117,49 +117,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="activity_click_to_view" xml:space="preserve">
-    <value>ダブルクリックで表示</value>
+  <data name="plugin_auto_signout" xml:space="preserve">
+    <value>自動サインアウト</value>
   </data>
-  <data name="activity_playrecording" xml:space="preserve">
-    <value>レコーディングを再生</value>
+  <data name="plugin_button_add_user" xml:space="preserve">
+    <value>カレントユーザを追加</value>
   </data>
-  <data name="activity_playrecording_tooltip" xml:space="preserve">
-    <value>ビデオレコーディングをプレイバック</value>
+  <data name="plugin_button_install_service" xml:space="preserve">
+    <value>サービスをインストール</value>
   </data>
-  <data name="activity_play_hint" xml:space="preserve">
-    <value>このビデオファイルを再生</value>
+  <data name="plugin_button_reauth" xml:space="preserve">
+    <value>サービスを再認証</value>
   </data>
-  <data name="activity_startrecording" xml:space="preserve">
-    <value>レコーディングを開始</value>
+  <data name="plugin_button_remove_user" xml:space="preserve">
+    <value>カレントユーザを除去</value>
   </data>
-  <data name="activity_startrecording_tooltip" xml:space="preserve">
-    <value>画面をファイルにレコーディング開始</value>
+  <data name="plugin_button_start_service" xml:space="preserve">
+    <value>サービスを開始</value>
   </data>
-  <data name="activity_start_hint" xml:space="preserve">
-    <value>このフォルダに保存</value>
+  <data name="plugin_button_stop_service" xml:space="preserve">
+    <value>サービスを停止</value>
   </data>
-  <data name="activity_stoprecording" xml:space="preserve">
-    <value>レコーディングを停止</value>
+  <data name="plugin_button_uninstall_service" xml:space="preserve">
+    <value>サービスをアンインストール</value>
   </data>
-  <data name="activity_stoprecording_tooltip" xml:space="preserve">
-    <value>画面レコーディングを停止してファイルに保存</value>
+  <data name="plugin_executable" xml:space="preserve">
+    <value>実行可能</value>
   </data>
-  <data name="activity_stop_hint" xml:space="preserve">
-    <value>ビデオファイル名を保存</value>
+  <data name="plugin_reload_interval" xml:space="preserve">
+    <value>再読込の間隔</value>
   </data>
-  <data name="plugin_codec" xml:space="preserve">
-    <value>コーデック</value>
+  <data name="plugin_use_free_rdp" xml:space="preserve">
+    <value>フリー RDP の使用</value>
   </data>
-  <data name="plugin_enabled" xml:space="preserve">
-    <value>有効</value>
+  <data name="plugin_windows_login" xml:space="preserve">
+    <value>ログインユーザ名</value>
   </data>
-  <data name="plugin_keep_successful" xml:space="preserve">
-    <value>成功を維持</value>
+  <data name="plugin_windows_password" xml:space="preserve">
+    <value>Windows パスワード</value>
   </data>
-  <data name="plugin_quality" xml:space="preserve">
-    <value>レコーディング品質</value>
-  </data>
-  <data name="plugin_save_in_folder" xml:space="preserve">
-    <value>フォルダに保存</value>
+  <data name="plugin_windows_username" xml:space="preserve">
+    <value>Windows ユーザ名</value>
   </data>
 </root>

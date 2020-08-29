@@ -190,7 +190,7 @@
     <value>更新</value>
   </data>
   <data name="activity_query" xml:space="preserve">
-    <value>問合せ</value>
+    <value>照会</value>
   </data>
   <data name="activity_query_tooltip" xml:space="preserve">
     <value>Query the OpenFlow database for one or more items</value>
@@ -238,7 +238,7 @@
     <value>Commit changes made on a DataTable back to OpenFlow, returns list of inserted and updated rows</value>
   </data>
   <data name="activity_waitforcompleted" xml:space="preserve">
-    <value>完了するまで待機</value>
+    <value>完了まで待機</value>
   </data>
   <data name="activity_waitforcompleted_help" xml:space="preserve">
     <value>Wait for Completion before continuing with workflow</value>

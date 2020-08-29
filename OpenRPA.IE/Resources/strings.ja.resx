@@ -124,13 +124,13 @@
     <value>アクティビティをドロップ</value>
   </data>
   <data name="activity_getelement_highlight" xml:space="preserve">
-    <value>ハイライト</value>
+    <value>強調</value>
   </data>
   <data name="activity_getelement_open_selector" xml:space="preserve">
     <value>セレクタを開く</value>
   </data>
   <data name="activity_getelement_tooltip" xml:space="preserve">
-    <value>Windows UI 要素をセレクタを基準に発見</value>
+    <value>セレクタを基準にWindows UI 要素を発見</value>
   </data>
   <data name="activity_openurl" xml:space="preserve">
     <value>URL を開く</value>

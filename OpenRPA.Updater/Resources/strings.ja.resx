@@ -117,49 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="activity_click_to_view" xml:space="preserve">
-    <value>ダブルクリックで表示</value>
+  <data name="main_button_install" xml:space="preserve">
+    <value>インストール</value>
   </data>
-  <data name="activity_playrecording" xml:space="preserve">
-    <value>レコーディングを再生</value>
+  <data name="main_button_launch" xml:space="preserve">
+    <value>起動</value>
   </data>
-  <data name="activity_playrecording_tooltip" xml:space="preserve">
-    <value>ビデオレコーディングをプレイバック</value>
+  <data name="main_button_launch_hint" xml:space="preserve">
+    <value>OpenRPA を起動</value>
   </data>
-  <data name="activity_play_hint" xml:space="preserve">
-    <value>このビデオファイルを再生</value>
+  <data name="main_button_reinstall" xml:space="preserve">
+    <value>再インストール</value>
   </data>
-  <data name="activity_startrecording" xml:space="preserve">
-    <value>レコーディングを開始</value>
+  <data name="main_button_search" xml:space="preserve">
+    <value>検索</value>
   </data>
-  <data name="activity_startrecording_tooltip" xml:space="preserve">
-    <value>画面をファイルにレコーディング開始</value>
+  <data name="main_button_search_hint" xml:space="preserve">
+    <value>アクティビティを検索</value>
   </data>
-  <data name="activity_start_hint" xml:space="preserve">
-    <value>このフォルダに保存</value>
+  <data name="main_button_search_text" xml:space="preserve">
+    <value>検索...</value>
   </data>
-  <data name="activity_stoprecording" xml:space="preserve">
-    <value>レコーディングを停止</value>
+  <data name="main_button_uninstall" xml:space="preserve">
+    <value>アンインストール</value>
   </data>
-  <data name="activity_stoprecording_tooltip" xml:space="preserve">
-    <value>画面レコーディングを停止してファイルに保存</value>
+  <data name="main_button_update_all" xml:space="preserve">
+    <value>すべてをアップデート</value>
   </data>
-  <data name="activity_stop_hint" xml:space="preserve">
-    <value>ビデオファイル名を保存</value>
+  <data name="main_button_update_all_hint" xml:space="preserve">
+    <value>すべてをアップデート</value>
   </data>
-  <data name="plugin_codec" xml:space="preserve">
-    <value>コーデック</value>
+  <data name="main_button_upgrade" xml:space="preserve">
+    <value>アップグレード</value>
   </data>
-  <data name="plugin_enabled" xml:space="preserve">
-    <value>有効</value>
+  <data name="main_label_authors" xml:space="preserve">
+    <value>作者</value>
   </data>
-  <data name="plugin_keep_successful" xml:space="preserve">
-    <value>成功を維持</value>
+  <data name="main_label_description" xml:space="preserve">
+    <value>説明</value>
   </data>
-  <data name="plugin_quality" xml:space="preserve">
-    <value>レコーディング品質</value>
+  <data name="main_label_id" xml:space="preserve">
+    <value>Id</value>
   </data>
-  <data name="plugin_save_in_folder" xml:space="preserve">
-    <value>フォルダに保存</value>
+  <data name="main_label_latestversion" xml:space="preserve">
+    <value>最新バージョン</value>
+  </data>
+  <data name="main_label_summary" xml:space="preserve">
+    <value>要約</value>
+  </data>
+  <data name="main_label_tags" xml:space="preserve">
+    <value>タグ</value>
+  </data>
+  <data name="main_label_version" xml:space="preserve">
+    <value>バージョン</value>
   </data>
 </root>

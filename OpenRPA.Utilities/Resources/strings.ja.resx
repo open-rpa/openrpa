@@ -117,49 +117,70 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="activity_click_to_view" xml:space="preserve">
-    <value>ダブルクリックで表示</value>
+  <data name="activity_adddatarow_datatable" xml:space="preserve">
+    <value>挿入 DataTable</value>
   </data>
-  <data name="activity_playrecording" xml:space="preserve">
-    <value>レコーディングを再生</value>
+  <data name="activity_converter_datatable" xml:space="preserve">
+    <value>Datatable</value>
   </data>
-  <data name="activity_playrecording_tooltip" xml:space="preserve">
-    <value>ビデオレコーディングをプレイバック</value>
+  <data name="activity_converter_jarray" xml:space="preserve">
+    <value>JArray</value>
   </data>
-  <data name="activity_play_hint" xml:space="preserve">
-    <value>このビデオファイルを再生</value>
+  <data name="activity_datatable" xml:space="preserve">
+    <value>DataTable</value>
   </data>
-  <data name="activity_startrecording" xml:space="preserve">
-    <value>レコーディングを開始</value>
+  <data name="activity_datatable_columnnames" xml:space="preserve">
+    <value>DataTable 列の配列</value>
   </data>
-  <data name="activity_startrecording_tooltip" xml:space="preserve">
-    <value>画面をファイルにレコーディング開始</value>
+  <data name="activity_datatable_newcolumnname" xml:space="preserve">
+    <value>新規列名</value>
   </data>
-  <data name="activity_start_hint" xml:space="preserve">
+  <data name="activity_deletedatarow_row" xml:space="preserve">
+    <value>行</value>
+  </data>
+  <data name="activity_downloadfile_hint" xml:space="preserve">
     <value>このフォルダに保存</value>
   </data>
-  <data name="activity_stoprecording" xml:space="preserve">
-    <value>レコーディングを停止</value>
+  <data name="activity_drop_hint" xml:space="preserve">
+    <value>アクティビティをドロップ</value>
   </data>
-  <data name="activity_stoprecording_tooltip" xml:space="preserve">
-    <value>画面レコーディングを停止してファイルに保存</value>
+  <data name="activity_match_compiled" xml:space="preserve">
+    <value>コンパイル済み</value>
   </data>
-  <data name="activity_stop_hint" xml:space="preserve">
-    <value>ビデオファイル名を保存</value>
+  <data name="activity_match_input" xml:space="preserve">
+    <value>マッチする入力文字列</value>
   </data>
-  <data name="plugin_codec" xml:space="preserve">
-    <value>コーデック</value>
+  <data name="activity_match_pattern" xml:space="preserve">
+    <value>マッチする正規表現</value>
   </data>
-  <data name="plugin_enabled" xml:space="preserve">
-    <value>有効</value>
+  <data name="activity_match_replacement" xml:space="preserve">
+    <value>この文字列で置換</value>
   </data>
-  <data name="plugin_keep_successful" xml:space="preserve">
-    <value>成功を維持</value>
+  <data name="activity_new_datatable" xml:space="preserve">
+    <value>新規 DataTable 変数</value>
   </data>
-  <data name="plugin_quality" xml:space="preserve">
-    <value>レコーディング品質</value>
+  <data name="activity_readexcel_hint" xml:space="preserve">
+    <value>読込 Excel ファイルを選択</value>
   </data>
-  <data name="plugin_save_in_folder" xml:space="preserve">
-    <value>フォルダに保存</value>
+  <data name="activity_readjson_hint" xml:space="preserve">
+    <value>読込 JSON ファイルを選択</value>
+  </data>
+  <data name="activity_readpdf_hint" xml:space="preserve">
+    <value>読込 PDF ファイルを選択</value>
+  </data>
+  <data name="activity_selectfolder_hint" xml:space="preserve">
+    <value>選択したフォルダ</value>
+  </data>
+  <data name="activity_startprocess_arguments_hint" xml:space="preserve">
+    <value>Arguments to be parsed the the executable</value>
+  </data>
+  <data name="activity_startprocess_filename_hint" xml:space="preserve">
+    <value>The full filename and path to the executable to start</value>
+  </data>
+  <data name="activity_writecsv_hint" xml:space="preserve">
+    <value>書込 CSV ファイルを選択</value>
+  </data>
+  <data name="activity_writeexcel_hint" xml:space="preserve">
+    <value>書込 Excel ファイルを選択</value>
   </data>
 </root>

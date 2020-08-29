@@ -84,11 +84,13 @@ namespace OpenRPA.NM
         public string filepath { get; set; }
         public string filename { get; set; }
         public Download download { get; set; }
+        public string result { get; set; }
         public DetectorEvent(Download download)
         {
             host = Environment.MachineName.ToLower();
             fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
             this.download = download;
+            result = download.filename;
             filepath = download.filename;
             filename = Path.GetFileName(download.filename); 
         }

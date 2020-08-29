@@ -1,0 +1,65 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Allan Zimmermann</Authors>
+    <Company>OpenIAP</Company>
+    <Product>OpenRPA</Product>
+    <Description>Detector plugin for speach recognition, created for OpenRPA robot</Description>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
+    <PackageIcon>open_rpa128.png</PackageIcon>
+    <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
+    <PackageTags>OpenRPA</PackageTags>
+    <Configurations>Debug;Release;PrepInstaller</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\debug</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Activities\SpeakDesigner.xaml" />
+    <None Remove="Resources\designer\speak.png" />
+    <None Remove="Resources\toolbox\speak.png" />
+    <None Remove="Views\MSSpeechView.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\toolbox\speak.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Activities\SpeakDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MSSpeechView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.Speech" />
+    <Reference Include="System.Xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\designer\speak.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

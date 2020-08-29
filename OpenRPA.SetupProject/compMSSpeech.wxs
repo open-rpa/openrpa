@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <ComponentGroup Id="MSSpeechComponents">
+      <Component Id='MSSpeechComponent' Guid='{65B32393-C413-475A-BF13-5FAF8E657025}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="OpenRPA.MSSpeech.dll" Source="!(wix.MSSpeechSource)\OpenRPA.MSSpeech.dll" />
+      </Component>
+      <!--<Component Id='MSSpeechComponentde' Win64='yes' Directory="MSSpeechde" Guid='{11330C3C-BEE2-4096-841B-3FE2322D5177}'>
+      </Component>
+      <Component Id='MSSpeechComponentda' Win64='yes' Directory="MSSpeechda" Guid='{AE82139B-9C8B-497E-9206-4A5B4BF067BA}'>
+      </Component>
+      <Component Id='MSSpeechComponentes' Win64='yes' Directory="MSSpeeches" Guid='{338B1AA9-027D-48B7-B52D-76DE3CA8388D}'>
+      </Component>
+      <Component Id='MSSpeechComponentpt' Win64='yes' Directory="MSSpeechpt" Guid='{5204A62F-4243-4EF7-A5C4-A7FC63FFD49E}'>
+      </Component>
+      <Component Id='MSSpeechComponentro' Win64='yes' Directory="MSSpeechro" Guid='{1D149809-E8FE-401E-B3F3-4073FEA8E62E}'>
+      </Component>
+      <Component Id='MSSpeechComponentru' Win64='yes' Directory="MSSpeechru" Guid='{55DA8A96-2073-49C3-BA9C-5BD57A249608}'>
+      </Component>
+      <Component Id='MSSpeechComponentja' Win64='yes' Directory="MSSpeechja" Guid='{8F0F944D-9205-47EA-A469-2EEB7869E064}'>
+      </Component>-->
+    </ComponentGroup>
+    
+    <!--<DirectoryRef Id="INSTALLDIR">
+      <Directory Id="MSSpeechde" Name="de">
+      </Directory>
+      <Directory Id="MSSpeechda" Name="da">
+      </Directory>
+      <Directory Id="MSSpeeches" Name="es">
+      </Directory>
+      <Directory Id="MSSpeechpt" Name="pt">
+      </Directory>
+      <Directory Id="MSSpeechro" Name="ro">
+      </Directory>
+      <Directory Id="MSSpeechru" Name="ru">
+      </Directory>
+      <Directory Id="MSSpeechja" Name="ja">
+      </Directory>
+    </DirectoryRef>-->
+  </Fragment>
+</Wix>

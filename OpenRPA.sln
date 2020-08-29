@@ -75,6 +75,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.SAP", "OpenRPA.SAP\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.SAPBridge", "OpenRPA.SAPBridge\OpenRPA.SAPBridge.csproj", "{B1FECE6D-BCD8-4554-BC40-9ADCCD2B8B43}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.MSSpeech", "OpenRPA.MSSpeech\OpenRPA.MSSpeech.csproj", "{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		All|Any CPU = All|Any CPU
@@ -704,6 +706,26 @@ Global
 		{B1FECE6D-BCD8-4554-BC40-9ADCCD2B8B43}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
 		{B1FECE6D-BCD8-4554-BC40-9ADCCD2B8B43}.ReleaseNuget|x86.ActiveCfg = Release|Any CPU
 		{B1FECE6D-BCD8-4554-BC40-9ADCCD2B8B43}.ReleaseNuget|x86.Build.0 = Release|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.All|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.All|Any CPU.Build.0 = Debug|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.All|x86.ActiveCfg = Debug|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.All|x86.Build.0 = Debug|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.Debug|x86.Build.0 = Debug|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.PrepInstaller|Any CPU.ActiveCfg = PrepInstaller|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.PrepInstaller|Any CPU.Build.0 = PrepInstaller|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.PrepInstaller|x86.ActiveCfg = Debug|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.PrepInstaller|x86.Build.0 = Debug|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.Release|x86.ActiveCfg = Release|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.Release|x86.Build.0 = Release|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.ReleaseNuget|Any CPU.ActiveCfg = Release|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.ReleaseNuget|x86.ActiveCfg = Release|Any CPU
+		{F5B687AA-A5BD-4E7E-A15C-1DA97B857668}.ReleaseNuget|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

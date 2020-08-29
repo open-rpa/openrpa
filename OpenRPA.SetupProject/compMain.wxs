@@ -199,6 +199,7 @@
       </Component>
       <Component Id='mainComponentja' Win64='yes' Directory="mainja" Guid='{A0C9CC00-7B62-4296-8E8B-9F14C0BEA6B6}'>
         <File Id="A0C9CC007B6242968E8B9F14C0BEA6B6" Source="!(wix.MainSource)\ja\OpenRPA.resources.dll" />
+        <File Id="DEB91C7224B2421EB67FE7ED8D99978A" Source="!(wix.MainSource)\ja\OpenRPA.Interfaces.resources.dll" />
         <File Id="E4DA92091EB045328D402CA5EA4F24F7" Source="!(wix.MainSource)\ja\OpenRPA.Windows.resources.dll" />
       </Component>
       <Component Id='mainComponentx64' Win64='yes' Directory="mainx64" Guid='{225DF59C-8C11-4AFF-95A9-88A98A6CD576}'>

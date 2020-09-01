@@ -143,9 +143,9 @@ namespace OpenRPA
                     }
                     // _local = Load(filename);
                     // Hack to force updating old clients for new domain names
-                    //if (_local.wsurl == "wss://demo1.openrpa.dk/" || _local.wsurl == "wss://demo1.openrpa.dk")
+                    if (_local.wsurl == "wss://demo1.openrpa.dk/" || _local.wsurl == "wss://demo1.openrpa.dk")
                     {
-                        _local.wsurl = "wss://demo.accounting.co.za/";
+                        _local.wsurl = "wss://app.openiap.io/";
                     }
                 }
                 return _local;

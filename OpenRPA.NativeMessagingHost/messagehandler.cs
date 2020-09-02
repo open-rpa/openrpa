@@ -53,7 +53,10 @@ namespace OpenRPA.NativeMessagingHost
 
                             //sstring msgStr = new string(input, "UTF-8");
 
-                            var msg = JsonConvert.DeserializeObject<NativeMessagingMessage>(input);
+                            var msg = JsonConvert.DeserializeObject<NativeMessagingMessage>(input, new JsonSerializerSettings
+                            {
+                                NullValueHandling = NullValueHandling.Ignore
+                            });
 
                             if (msg.functionName == "openrpautilscript")
                             {

@@ -75,5 +75,6 @@ namespace OpenRPA
         public string @namespace { get; set; }
         public string nodered_domain_schema { get; set; }
         public string baseurl { get; set; }
+        public string getting_started_url { get; set; }
     }
 }

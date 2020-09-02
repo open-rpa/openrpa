@@ -28,7 +28,7 @@ namespace OpenRPA.Store
                     var i = WorkflowInstance.Instances.Where(x => x.InstanceId == instanceId.ToString()).FirstOrDefault();
                     if(i!=null)
                     {
-                        i.xml = Base64Encode(doc);
+                        i.xml = Interfaces.Extensions.Base64Encode(doc);
                         if(string.IsNullOrEmpty(i._id))
                         {
                             i.Save();
@@ -58,7 +58,7 @@ namespace OpenRPA.Store
                         return null;
                     }
                     Log.Debug("Loading " + instanceId.ToString() + " from Instance Store");
-                    return Base64Decode(i.xml);
+                    return Interfaces.Extensions.Base64Decode(i.xml);
                 }
                 Log.Error("Error locating " + instanceId.ToString() + " in Instance Store");
                 return null;
@@ -69,17 +69,5 @@ namespace OpenRPA.Store
             }
             return null;
         }
-        public static string Base64Encode(string plainText)
-        {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
-        }
-        public static string Base64Decode(string base64EncodedData)
-        {
-            if (string.IsNullOrEmpty(base64EncodedData)) return null;
-            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
-            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
-        }
-
     }
 }

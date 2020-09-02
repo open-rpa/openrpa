@@ -240,7 +240,7 @@ namespace OpenRPA.NM
                         zn_id = zn_id,
                         tabid = message.tabid,
                         frameId = message.frameId,
-                        data = JsonConvert.SerializeObject(value)
+                        data = Interfaces.Extensions.Base64Encode(JsonConvert.SerializeObject(value))
                     };
                     var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed setting html element value");
@@ -282,8 +282,10 @@ namespace OpenRPA.NM
                         zn_id = zn_id,
                         tabid = message.tabid,
                         frameId = message.frameId,
-                        data = value
+                        data = Interfaces.Extensions.Base64Encode(value)
                     };
+                    var temp = Interfaces.Extensions.Base64Decode(updateelement.data);
+                    if (value == null) updateelement.data = null;
                     var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed setting html element value");
                     //System.Threading.Thread.Sleep(500);
@@ -608,7 +610,7 @@ namespace OpenRPA.NM
                         zn_id = zn_id,
                         tabid = message.tabid,
                         frameId = message.frameId,
-                        data = value.ToString()
+                        data = Interfaces.Extensions.Base64Encode(value.ToString())
                     };
                     var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed setting html element value");

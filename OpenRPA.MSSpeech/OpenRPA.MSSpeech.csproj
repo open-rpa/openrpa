@@ -12,6 +12,8 @@
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <PackageTags>OpenRPA</PackageTags>
     <Configurations>Debug;Release;PrepInstaller</Configurations>
+    <Version>1.0.1</Version>
+    <PackageReleaseNotes>1.0.1 fix toolbox icon</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>

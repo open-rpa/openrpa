@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.MSSpeech
 {
     [System.ComponentModel.Designer(typeof(SpeakDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(Speak), "Resources.toolbox.getimage.png")]
+    [System.Drawing.ToolboxBitmap(typeof(Speak), "Resources.toolbox.speak.png")]
     [LocalizedToolboxTooltip("activity_speak_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_speak", typeof(Resources.strings))]
     public class Speak : CodeActivity

@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.162</Version>
-    <PackageReleaseNotes>1.0.162 Add OpenRPA.MSSpeech addon
+    <Version>1.0.163</Version>
+    <PackageReleaseNotes>1.0.163 Fix UTF8 encoding issue with nm extension
+1.0.162 Add OpenRPA.MSSpeech addon
 1.0.161 Add support for multiple file extensions in filter / remove debug from sap / add more ja translations
 1.0.160 Improve error message in invoke openrpa / add option to disable remote invoke with remote_allowed
 1.0.159 Add more ja translations / Add SelectFile Activity / preload all settings from settings.json

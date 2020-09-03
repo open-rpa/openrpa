@@ -49,6 +49,7 @@ namespace OpenRPA.Activities
         protected override void Execute(NativeActivityContext context)
         {
             var selectorstring = Selector.Get(context);
+            selectorstring = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selectorstring, context.DataContext);
             var selector = new Interfaces.Selector.Selector(selectorstring);
             var checkrunning = CheckRunning.Get(context);
             checkrunning = true;

@@ -34,6 +34,7 @@ namespace OpenRPA.Activities
         protected override void Execute(CodeActivityContext context)
         {
             var selectorstring = Selector.Get(context);
+            selectorstring = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selectorstring, context.DataContext);
             var selector = new Interfaces.Selector.Selector(selectorstring);
             var pluginname = selector.First().Selector;
             var Plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();

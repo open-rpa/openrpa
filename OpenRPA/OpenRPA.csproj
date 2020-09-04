@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.164</Version>
-    <PackageReleaseNotes>1.0.164 Fix selector variables for Open and Close Application
+    <Version>1.0.165</Version>
+    <PackageReleaseNotes>1.0.165 Load extensions from project folder as well
+1.0.164 Fix selector variables for Open and Close Application
 1.0.163 Fix UTF8 encoding issue with nm extension
 1.0.162 Add OpenRPA.MSSpeech addon
 1.0.161 Add support for multiple file extensions in filter / remove debug from sap / add more ja translations

@@ -234,6 +234,7 @@ namespace OpenRPA
                 try
                 {
                     if (Config.local.showloadingscreen) splash.BusyContent = "loading plugins";
+                    Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.ProjectsDirectory);
                     Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.PluginsDirectory);
                     if (Config.local.showloadingscreen) splash.BusyContent = "Initialize main window";
                     RobotInstance.instance.init();

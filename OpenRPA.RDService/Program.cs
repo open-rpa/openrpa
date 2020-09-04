@@ -11,6 +11,8 @@ namespace OpenRPA.RDService
     using FlaUI.UIA3.Patterns;
     using OpenRPA.Interfaces;
     using System.IO.Pipes;
+    using System.Threading;
+
     class Program
     {
         public const int StartupWaitSeconds = 0;
@@ -66,6 +68,7 @@ namespace OpenRPA.RDService
             System.IO.File.AppendAllText(System.IO.Path.Combine(logpath, "log_rdservice.txt"), _msg + Environment.NewLine);
         }
         private static string[] args;
+        private static Thread UIThread;
         static void Main(string[] args)
         {
             try
@@ -74,6 +77,24 @@ namespace OpenRPA.RDService
                 var asm = System.Reflection.Assembly.GetEntryAssembly();
                 var filepath = asm.CodeBase.Replace("file:///", "");
                 logpath = System.IO.Path.GetDirectoryName(filepath);
+
+
+                UIThread = new Thread(() =>
+                {
+                    System.Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
+                    {
+                        Console.WriteLine("Hello world from Dispatcher");
+                        AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
+                    }));
+
+                    System.Windows.Threading.Dispatcher.Run();
+                });
+
+                UIThread.SetApartmentState(ApartmentState.STA);
+                UIThread.Start();
+
+                
+
 
                 log("GetParentProcessId");
                 var parentProcess = NativeMethods.GetParentProcessId();
@@ -281,7 +302,14 @@ namespace OpenRPA.RDService
                             {
                                 if(session.rdp!=null || session.freerdp !=null)
                                 {
-                                    session.disconnectrdp();
+                                    try
+                                    {
+                                        session.disconnectrdp();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Log.Error(ex.ToString());
+                                    }
                                 }
                                 session.client = c;
                             }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenRPA.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -71,6 +72,7 @@ namespace OpenRPA.RDService
         private static extern bool CloseHandle(
             IntPtr handle);
 
+        private const int LOGON32_LOGON_BATCH = 4;
         private const int LOGON32_LOGON_INTERACTIVE = 2;
         private const int LOGON32_PROVIDER_DEFAULT = 0;
 
@@ -91,26 +93,34 @@ namespace OpenRPA.RDService
             string domain,
             string password)
         {
+            Log.Information("ImpersonateValidUser");
             WindowsIdentity tempWindowsIdentity = null;
             IntPtr token = IntPtr.Zero;
             IntPtr tokenDuplicate = IntPtr.Zero;
 
             try
             {
+                Log.Information("ImpersonateValidUser::RevertToSelf");
                 if (RevertToSelf())
                 {
+                    Log.Information("ImpersonateValidUser::LogonUser");
                     if (LogonUser(
                         userName,
                         domain,
                         password,
                         LOGON32_LOGON_INTERACTIVE,
+                        //LOGON32_LOGON_BATCH,
                         LOGON32_PROVIDER_DEFAULT,
                         ref token) != 0)
                     {
+                        Log.Information("ImpersonateValidUser::DuplicateToken");
                         if (DuplicateToken(token, 2, ref tokenDuplicate) != 0)
                         {
+                            Log.Information("ImpersonateValidUser::new WindowsIdentity");
                             tempWindowsIdentity = new WindowsIdentity(tokenDuplicate);
+                            Log.Information("ImpersonateValidUser::Impersonate");
                             impersonationContext = tempWindowsIdentity.Impersonate();
+                            Log.Information("ImpersonateValidUser::Impersonate done");
                         }
                         else
                         {
@@ -131,10 +141,12 @@ namespace OpenRPA.RDService
             {
                 if (token != IntPtr.Zero)
                 {
+                    Log.Information("ImpersonateValidUser::CloseHandle token");
                     CloseHandle(token);
                 }
                 if (tokenDuplicate != IntPtr.Zero)
                 {
+                    Log.Information("ImpersonateValidUser::CloseHandle tokenDuplicate");
                     CloseHandle(tokenDuplicate);
                 }
             }

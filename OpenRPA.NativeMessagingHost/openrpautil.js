@@ -476,6 +476,9 @@ if (true == false) {
                                 if (document.openrpadebug) console.log('set checked = false');
                                 ele.checked = false;
                             }
+                        } else if (ele.tagName == "DIV") {
+                            if (document.openrpadebug) console.log('set value', data);
+                            ele.innerHTML = data;
                         } else {
                             if (document.openrpadebug) console.log('set value', data);
                             ele.value = data;

@@ -32,7 +32,7 @@
     <Company>OpenIAP</Company>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\debug\</OutputPath>
+    <OutputPath></OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <OutputPath></OutputPath>
@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FreeRDP-Sharp" Version="0.1.0" />
+    <PackageReference Include="SimpleImpersonation" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />

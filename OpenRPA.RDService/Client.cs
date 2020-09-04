@@ -53,10 +53,9 @@ namespace OpenRPA.RDService
             {
                 // if (form != null) return;
                 // imp = new Impersonator(user, domain, password);
-
                 form = new Form();
                 form.Text = domain + "\\" + user;
-                if(string.IsNullOrEmpty(domain)) form.Text = user;
+                if (string.IsNullOrEmpty(domain)) form.Text = user;
                 Rectangle screen = Screen.PrimaryScreen.WorkingArea;
                 int w = form.Width >= screen.Width ? screen.Width : (screen.Width + form.Width) / 2;
                 int h = form.Height >= screen.Height ? screen.Height : (screen.Height + form.Height) / 2;
@@ -69,49 +68,49 @@ namespace OpenRPA.RDService
                         rdpConnection = new AxMSTSCLib.AxMsRdpClient9NotSafeForScripting();
                         form.Controls.Add(rdpConnection);
                         rdpConnection.Dock = DockStyle.Fill;
-                            // rdpConnection.Enabled = false;
-                            rdpConnection.Server = server;
+                                // rdpConnection.Enabled = false;
+                                rdpConnection.Server = server;
                         rdpConnection.Domain = domain;
                         rdpConnection.UserName = user;
                         rdpConnection.AdvancedSettings7.ClearTextPassword = password;
                         rdpConnection.AdvancedSettings7.EnableCredSspSupport = true;
 
-                            //rdpConnection.AdvancedSettings9.ClearTextPassword = password;
-                            //// rdpConnection.AdvancedSettings9.EnableCredSspSupport = false;
-                            //rdpConnection.AdvancedSettings9.EnableCredSspSupport = true;
+                                //rdpConnection.AdvancedSettings9.ClearTextPassword = password;
+                                //// rdpConnection.AdvancedSettings9.EnableCredSspSupport = false;
+                                //rdpConnection.AdvancedSettings9.EnableCredSspSupport = true;
 
-                            //rdpConnection.AdvancedSettings9.AuthenticationLevel = 2;
-                            //rdpConnection.AdvancedSettings9.EnableCredSspSupport = true;
-                            //rdpConnection.AdvancedSettings9.NegotiateSecurityLayer = false;
+                                //rdpConnection.AdvancedSettings9.AuthenticationLevel = 2;
+                                //rdpConnection.AdvancedSettings9.EnableCredSspSupport = true;
+                                //rdpConnection.AdvancedSettings9.NegotiateSecurityLayer = false;
 
-                            //var ocx = (MSTSCLib.IMsRdpClientNonScriptable7)rdpConnection.GetOcx();
-                            //ocx.EnableCredSspSupport = true;
-                            //ocx.AllowCredentialSaving = false;
-                            //ocx.PromptForCredentials = false;
-                            //ocx.PromptForCredsOnClient = true;
-                            //ocx.AllowPromptingForCredentials = false;
-                            //ocx.EnableCredSspSupport = true;
-                            //ocx.AllowCredentialSaving = false;
-                            //ocx.WarnAboutSendingCredentials = false;
-                            //ocx.MarkRdpSettingsSecure = true;
+                                //var ocx = (MSTSCLib.IMsRdpClientNonScriptable7)rdpConnection.GetOcx();
+                                //ocx.EnableCredSspSupport = true;
+                                //ocx.AllowCredentialSaving = false;
+                                //ocx.PromptForCredentials = false;
+                                //ocx.PromptForCredsOnClient = true;
+                                //ocx.AllowPromptingForCredentials = false;
+                                //ocx.EnableCredSspSupport = true;
+                                //ocx.AllowCredentialSaving = false;
+                                //ocx.WarnAboutSendingCredentials = false;
+                                //ocx.MarkRdpSettingsSecure = true;
 
-                            ////rdp.AdvancedSettings7.DisableRdpdr = 0;
-                            ////rdp.CreateVirtualChannels("CH001,CH002");
+                                ////rdp.AdvancedSettings7.DisableRdpdr = 0;
+                                ////rdp.CreateVirtualChannels("CH001,CH002");
 
-                            //var settings = (MSTSCLib.IMsRdpClientAdvancedSettings8)rdpConnection.AdvancedSettings;
-                            //settings.allowBackgroundInput = 1;
-                            //settings.ClientProtocolSpec = MSTSCLib.ClientSpec.FullMode;
-                            //settings.ConnectToServerConsole = true;
-                            //settings.EnableCredSspSupport = true;
-                            //settings.EncryptionEnabled = 1;
+                                //var settings = (MSTSCLib.IMsRdpClientAdvancedSettings8)rdpConnection.AdvancedSettings;
+                                //settings.allowBackgroundInput = 1;
+                                //settings.ClientProtocolSpec = MSTSCLib.ClientSpec.FullMode;
+                                //settings.ConnectToServerConsole = true;
+                                //settings.EnableCredSspSupport = true;
+                                //settings.EncryptionEnabled = 1;
 
 
-                            //MSTSCLib.IMsRdpClientNonScriptable4 ocx = (MSTSCLib.IMsRdpClientNonScriptable4)rdpConnection.GetOcx();
-                            //ocx.EnableCredSspSupport = true;
-                            //ocx.AllowCredentialSaving = false;
-                            //ocx.PromptForCredentials = false;
-                            //ocx.PromptForCredsOnClient = false;
-                            if (true)
+                                //MSTSCLib.IMsRdpClientNonScriptable4 ocx = (MSTSCLib.IMsRdpClientNonScriptable4)rdpConnection.GetOcx();
+                                //ocx.EnableCredSspSupport = true;
+                                //ocx.AllowCredentialSaving = false;
+                                //ocx.PromptForCredentials = false;
+                                //ocx.PromptForCredsOnClient = false;
+                                if (true)
                         {
                             rdpConnection.OnDisconnected += RdpConnectionOnOnDisconnected;
                             rdpConnection.OnLoginComplete += RdpConnectionOnOnLoginComplete;

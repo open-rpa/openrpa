@@ -404,7 +404,11 @@ if (true == false) {
                         }
                         if (ele !== null) {
                             if (message.data === 'getdom') {
-                                message.result = openrpautil.mapDOM(ele, true, true);
+                                message.result = openrpautil.mapDOM(ele, true, true, false);
+                            }
+                            else if (message.data === 'innerhtml')
+                            {
+                                message.result = openrpautil.mapDOM(ele, true, true, true);
                             }
                             else {
                                 message.result = openrpautil.mapDOM(ele, true);
@@ -476,6 +480,12 @@ if (true == false) {
                                 if (document.openrpadebug) console.log('set checked = false');
                                 ele.checked = false;
                             }
+                        } else if (message.result == "innerhtml") {
+                            if (document.openrpadebug) console.log('set value', data);
+                            ele.innerHTML = data;
+                        } else if (ele.tagName == "DIV") {
+                            if (document.openrpadebug) console.log('set value', data);
+                            ele.innerText = data;
                         } else {
                             if (document.openrpadebug) console.log('set value', data);
                             ele.value = data;
@@ -873,7 +883,7 @@ if (true == false) {
                     }
                     return node;
                 },
-                mapDOM: function (element, json, mapdom) {
+                mapDOM: function (element, json, mapdom, innerhtml) {
                     var maxiden = 40;
                     if (mapdom !== true) maxiden = 1;
                     if (maxiden === null || maxiden === undefined) maxiden = 20;
@@ -980,6 +990,9 @@ if (true == false) {
                     treeObject["isvisibleonscreen"] = openrpautil.isVisibleOnScreen(element);
                     treeObject["disabled"] = element.disabled;
                     treeObject["innerText"] = element.innerText;
+                    if (innerhtml) {
+                        treeObject["innerhtml"] = element.innerHTML;
+                    }
                     if (element.tagName == "INPUT" && element.getAttribute("type") == "checkbox" ) {
                         treeObject["checked"] = element.checked;
                     }

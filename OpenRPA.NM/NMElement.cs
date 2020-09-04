@@ -253,6 +253,71 @@ namespace OpenRPA.NM
                 }
             }
         }
+        public string innerHTML
+        {
+            get
+            {
+                string result = null;
+                if (!chromeelement.ContainsKey("innerhtml"))
+                {
+                    var getelement2 = new NativeMessagingMessage("getelement", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
+                    {
+                        browser = message.browser,
+                        zn_id = zn_id,
+                        tabid = message.tabid,
+                        frameId = message.frameId, 
+                        data = "innerhtml"
+                    };
+                    NativeMessagingMessage subsubresult = NMHook.sendMessageResult(getelement2, true, PluginConfig.protocol_timeout);
+                    if (subsubresult == null) throw new Exception("Failed clicking html element");
+                    parseChromeString(subsubresult.result.ToString());
+                    if (chromeelement.ContainsKey("innerhtml"))
+                    {
+                        result = chromeelement["innerhtml"].ToString();
+                        return result;
+                    }
+
+                }
+                if (chromeelement.ContainsKey("innerhtml") && string.IsNullOrEmpty(result)) result = chromeelement["innerhtml"].ToString();
+                if (chromeelement.ContainsKey("value")) result = chromeelement["value"].ToString();
+                if (chromeelement.ContainsKey("innertext") && string.IsNullOrEmpty(result)) result = chromeelement["innertext"].ToString();
+                if (string.IsNullOrEmpty(result)) result = Text;
+                return result;
+            }
+            set
+            {
+                if (NMHook.connected)
+                {
+                    var tab = NMHook.tabs.Where(x => x.id == message.tabid).FirstOrDefault();
+                    if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
+                    // NMHook.HighlightTab(tab);
+
+                    var updateelement = new NativeMessagingMessage("updateelementvalue", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
+                    {
+                        browser = message.browser,
+                        //cssPath = cssselector,
+                        //xPath = xpath,
+                        //tabid = message.tabid,
+                        //frameId = message.frameId,
+                        //data = value
+                        zn_id = zn_id,
+                        tabid = message.tabid,
+                        frameId = message.frameId,
+                        data = Interfaces.Extensions.Base64Encode(value), result = "innerhtml"
+                    };
+                    var temp = Interfaces.Extensions.Base64Decode(updateelement.data);
+                    if (value == null) updateelement.data = null;
+                    var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
+                    if (subsubresult == null) throw new Exception("Failed setting html element value");
+                    //System.Threading.Thread.Sleep(500);
+                    if (PluginConfig.wait_for_tab_after_set_value)
+                    {
+                        NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
+                    }
+                    return;
+                }
+            }
+        }
         public string Value
         {
             get
@@ -282,7 +347,8 @@ namespace OpenRPA.NM
                         zn_id = zn_id,
                         tabid = message.tabid,
                         frameId = message.frameId,
-                        data = Interfaces.Extensions.Base64Encode(value)
+                        data = Interfaces.Extensions.Base64Encode(value),
+                        result = "value"
                     };
                     var temp = Interfaces.Extensions.Base64Decode(updateelement.data);
                     if (value == null) updateelement.data = null;
@@ -610,7 +676,8 @@ namespace OpenRPA.NM
                         zn_id = zn_id,
                         tabid = message.tabid,
                         frameId = message.frameId,
-                        data = Interfaces.Extensions.Base64Encode(value.ToString())
+                        data = Interfaces.Extensions.Base64Encode(value.ToString()),
+                        result = "value"
                     };
                     var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed setting html element value");

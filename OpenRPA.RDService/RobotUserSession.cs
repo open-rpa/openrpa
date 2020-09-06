@@ -75,6 +75,7 @@ namespace OpenRPA.RDService
                     Log.Information("client is null");
                     return;
                 }
+                if (!client.enabled) return;
                 if (string.IsNullOrEmpty(client._id))
                 {
                     // Log.Information("client._id is null, Dummy client, ignore");
@@ -423,15 +424,20 @@ namespace OpenRPA.RDService
         }
         #region IDisposable Support
         private bool disposedValue = false;
-        public void disconnectrdp()
+        async public Task SendSignout()
         {
-            if(connection!=null)
+            if (connection != null)
             {
-                if(connection.IsConnected && client.autosignout)
+                if (connection.IsConnected && client.autosignout)
                 {
                     connection.PushMessage(new RPAMessage("signout"));
+                    await Task.Delay(2000);
                 }
             }
+        }
+        public void disconnectrdp()
+        {
+            // _ = SendSignout();
             if (freerdp != null)
             {
                 if (freerdp.Connected) freerdp.Disconnect();

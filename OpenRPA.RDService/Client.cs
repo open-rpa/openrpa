@@ -312,7 +312,7 @@ namespace OpenRPA.RDService
                 case 4498: discMsg = "Extended Reason: The remote session was disconnected because of a decryption error at the server. Please try connecting to the remote computer again."; break;
             }
             Console.WriteLine("RdpConnectionOnOnDisconnected: " + discReason + " " + discMsg);
-            Application.Exit();
+            // Application.Exit();
             Connected = false;
             Connecting = false;
             Dispose();
@@ -323,36 +323,58 @@ namespace OpenRPA.RDService
             if (!Connected) return;
             try
             {
-                GenericTools.RunUI(form, () =>
+                if(form!=null && !form.Disposing)
                 {
-                    try
+                    GenericTools.RunUI(form, () =>
                     {
-                        rdpConnection.Disconnect();
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.ToString());
-                    }
-                });
+                        try
+                        {
+                            if (rdpConnection != null && rdpConnection.Connected == 1) rdpConnection.Disconnect();
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                        }
+                    });
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
             }
+            try
+            {
+                if (rdpConnection != null && rdpConnection.Connected == 1) rdpConnection.Disconnect();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
             Dispose();
         }
         public void Dispose()
         {
-            if (!Connected) return;
-            rdpConnection.Disconnect();
             try
             {
-                form.Close();
+                if(rdpConnection!=null) rdpConnection.Disconnect();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
+            if (rdpConnection != null) rdpConnection.Dispose();
+            rdpConnection = null;
+            try
+            {
+                if(form != null) form.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            if (form != null) form.Dispose();
+            form = null;
         }
     }
 }

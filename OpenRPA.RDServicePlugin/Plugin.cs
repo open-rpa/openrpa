@@ -70,6 +70,13 @@ namespace OpenRPA.RDServicePlugin
             }
             if(message.command == "signout")
             {
+                try
+                {
+                    Config.Save();
+                }
+                catch (Exception)
+                {
+                }
                 NativeMethods.ExitWindowsEx((uint)NativeMethods.ExitWindows.LogOff, (uint)(NativeMethods.ShutdownReason.MajorOther | NativeMethods.ShutdownReason.MinorOther));
             }
             Console.WriteLine("OpenRPA Windows Service: " + message.command);

@@ -231,58 +231,63 @@ namespace OpenRPA
         public bool GetRegistryProperty(string propertyname, out object value)
         {
             value = null;
-
-            Microsoft.Win32.RegistryKey rk = null;
-            if(hasLocalMachine == null)
+            try
             {
-                hasLocalMachine = false;
-                try
+                Microsoft.Win32.RegistryKey rk = null;
+                if (hasLocalMachine == null)
+                {
+                    hasLocalMachine = false;
+                    try
+                    {
+                        rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\OpenRPA", false);
+                        if (rk != null) hasLocalMachine = true;
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                else if (hasLocalMachine == true)
                 {
                     rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\OpenRPA", false);
-                    if (rk != null) hasLocalMachine = true;
                 }
-                catch (Exception)
+                if (rk != null)
                 {
-                }
-            } 
-            else if(hasLocalMachine == true)
-            {
-                rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\OpenRPA", false);
-            }
-            if (rk != null)
-            {
-                var tempvalue = rk.GetValue(propertyname);
-                if (tempvalue != null)
-                {
-                    value = tempvalue;
-                    return true;
-                }
+                    var tempvalue = rk.GetValue(propertyname);
+                    if (tempvalue != null)
+                    {
+                        value = tempvalue;
+                        return true;
+                    }
 
-            }
-            if (hasCurrentUser == null)
-            {
-                hasCurrentUser = false;
-                try
+                }
+                if (hasCurrentUser == null)
+                {
+                    hasCurrentUser = false;
+                    try
+                    {
+                        rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\OpenRPA", false);
+                        if (rk != null) hasCurrentUser = true;
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                else if (hasCurrentUser == true)
                 {
                     rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\OpenRPA", false);
-                    if (rk != null) hasCurrentUser = true;
                 }
-                catch (Exception)
+                if (rk != null)
                 {
+                    var tempvalue = rk.GetValue(propertyname);
+                    if (tempvalue != null)
+                    {
+                        value = tempvalue;
+                        return true;
+                    }
                 }
             }
-            else if (hasCurrentUser == true)
+            catch (Exception)
             {
-                rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\OpenRPA", false);
-            }
-            if (rk != null)
-            {
-                var tempvalue = rk.GetValue(propertyname);
-                if (tempvalue != null)
-                {
-                    value = tempvalue;
-                    return true;
-                }
             }
             return false;
         }

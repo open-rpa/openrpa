@@ -20,6 +20,15 @@ namespace OpenRPA.Office.Activities
     [LocalizedDisplayName("activity_closeworkbook", typeof(Resources.strings))]
     public class CloseWorkbook : CodeActivity
     {
+        [System.ComponentModel.Category("Misc")]
+        public virtual InArgument<bool> RemoveReadPassword { get; set; }
+        [System.ComponentModel.Category("Misc")]
+        public virtual InArgument<string> ReadPassword { get; set; }
+        [System.ComponentModel.Category("Misc")]
+        public virtual InArgument<bool> RemoveWritePassword { get; set; }
+        [System.ComponentModel.Category("Misc")]
+        public virtual InArgument<string> WritePassword { get; set; }
+
         [RequiredArgument]
         [Category("Input")]
         [OverloadGroup("asworkbook")]
@@ -36,6 +45,13 @@ namespace OpenRPA.Office.Activities
         public InArgument<bool> SaveChanges { get; set; } = true;
         protected override void Execute(CodeActivityContext context)
         {
+            var readPassword = ReadPassword.Get(context);
+            if (string.IsNullOrEmpty(readPassword)) readPassword = null;
+            var writePassword = WritePassword.Get(context);
+            if (string.IsNullOrEmpty(writePassword)) writePassword = null;
+            var removeReadPassword = RemoveReadPassword.Get(context);
+            var removeWritePassword = RemoveWritePassword.Get(context);
+
             var workbook = Workbook.Get(context);
             var filename = Filename.Get(context);
             var saveChanges = SaveChanges.Get(context);
@@ -56,7 +72,12 @@ namespace OpenRPA.Office.Activities
                         {
                             officewrap.application.DisplayAlerts = false;
                             workbook = w;
-                            w.Close(saveChanges);
+                            if (!string.IsNullOrEmpty(readPassword)) w.Password = readPassword;
+                            if (removeReadPassword) { w.Password = ""; readPassword = ""; }
+                            if (!string.IsNullOrEmpty(writePassword)) w.WritePassword = writePassword;
+                            if (removeWritePassword) { w.WritePassword = ""; writePassword = ""; }
+                            w.SaveAs(Filename: filename, Password: readPassword, WriteResPassword: writePassword);
+                            w.Close();
                             officewrap.application.DisplayAlerts = true;
                             foundit = true;
                             //worksheet = workbook.ActiveSheet;
@@ -74,10 +95,16 @@ namespace OpenRPA.Office.Activities
                     officewrap.application.DisplayAlerts = false;
                     if(saveChanges && !string.IsNullOrEmpty(filename))
                     {
-                        tempworkbook.SaveAs(Filename: filename);
+                        tempworkbook.SaveAs(Filename: filename, Password: readPassword, WriteResPassword: writePassword);
+                        tempworkbook.Close();
                     }
                     else
                     {
+                        if (!string.IsNullOrEmpty(readPassword)) tempworkbook.Password = readPassword;
+                        if (removeReadPassword) tempworkbook.Password = "";
+                        if (!string.IsNullOrEmpty(writePassword)) tempworkbook.WritePassword = writePassword;
+                        if (removeWritePassword) tempworkbook.WritePassword = "";
+                        tempworkbook.Save();
                         tempworkbook.Close(saveChanges);
                     }
                     officewrap.application.DisplayAlerts = true;

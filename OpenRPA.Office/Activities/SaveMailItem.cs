@@ -44,34 +44,37 @@ namespace OpenRPA.Office.Activities
             var filename = Filename.Get(context);
             var folder = Folder.Get(context);
             var astype = Type.Get(context);
-            if(!string.IsNullOrEmpty(folder))
+            if (string.IsNullOrEmpty(filename)) filename = email.Subject;
+            if (!string.IsNullOrEmpty(folder))
             {
-                filename = System.IO.Path.Combine(folder, RemoveInvalidChars(email.Subject));
-                switch(astype)
+                filename = System.IO.Path.Combine(folder, RemoveInvalidChars(filename));
+                string fileextension = ".bin";
+                switch (astype)
                 {
                     case "4":
-                        filename += ".doc"; break;
+                        fileextension = ".doc"; break;
                     case "5":
-                        filename += ".html"; break;
+                        fileextension = ".html"; break;
                     case "8":
-                        filename += ".ics"; break;
+                        fileextension = ".ics"; break;
                     case "10":
-                        filename += ".mht"; break;
+                        fileextension = ".mht"; break;
                     case "3":
-                        filename += ".msg"; break;
+                        fileextension = ".msg"; break;
                     case "9":
-                        filename += ".msg"; break;
+                        fileextension = ".msg"; break;
                     case "1":
-                        filename += ".rtf"; break;
+                        fileextension = ".rtf"; break;
                     case "2":
-                        filename += ".oft"; break;
+                        fileextension = ".oft"; break;
                     case "0":
-                        filename += ".txt"; break;
+                        fileextension = ".txt"; break;
                     case "7":
-                        filename += ".vcs"; break;
+                        fileextension = ".vcs"; break;
                     case "6":
-                        filename += ".vcf"; break;
+                        fileextension = ".vcf"; break;
                 }
+                if (System.IO.Path.GetExtension(filename.ToLower()) != fileextension) filename = filename += fileextension;
             }
             email.mailItem.SaveAs(filename, astype); // olMSGUnicode / msg : 9    olMSG / msg : 3
             if (!string.IsNullOrEmpty(folder))

@@ -7,8 +7,9 @@
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office, created for OpenRPA robot</Description>
-    <Version>1.0.27</Version>
-    <PackageReleaseNotes>1.0.27 fix issue with "unread" only not working / fix issue with ignoreing overwrite property, when saving all attachments
+    <Version>1.0.28</Version>
+    <PackageReleaseNotes>1.0.28 Add passwords for write/read cell, add support for removing password with close workbook, add protect worksheet/unprotect worksheet
+1.0.27 fix issue with "unread" only not working / fix issue with ignoreing overwrite property, when saving all attachments
 1.0.26 Add GetSelectedRange
 1.0.25 Fix index error in readrange when HeaderRows is false, add range check in readrange
 1.0.24 Add query and MaxResults to GetMails
@@ -61,26 +62,32 @@
     <None Remove="Activities\GetSelectedRangeDesigner.xaml" />
     <None Remove="Activities\MoveMailItemDesigner.xaml" />
     <None Remove="Activities\NewMailItemDesigner.xaml" />
+    <None Remove="Activities\ProtectWorksheetDesigner.xaml" />
     <None Remove="Activities\ReadCellDesigner.xaml" />
     <None Remove="Activities\ReadRangeDesigner.xaml" />
     <None Remove="Activities\RunExcelMacroDesigner.xaml" />
     <None Remove="Activities\RunSlideShowDesigner.xaml" />
     <None Remove="Activities\SaveMailItemDesigner.xaml" />
     <None Remove="Activities\SetParagraphDesigner.xaml" />
+    <None Remove="Activities\UnprotectWorksheetDesigner.xaml" />
     <None Remove="Activities\WriteCellDesigner.xaml" />
     <None Remove="Activities\WriteRangeDesigner.xaml" />
     <None Remove="Resources\designer\closeworkbook.png" />
     <None Remove="Resources\designer\commentout.png" />
     <None Remove="Resources\designer\newemail.png" />
     <None Remove="Resources\designer\outlook.png" />
+    <None Remove="Resources\designer\protect.png" />
     <None Remove="Resources\designer\readexcel.png" />
     <None Remove="Resources\designer\refresh.png" />
+    <None Remove="Resources\designer\unprotect.png" />
     <None Remove="Resources\designer\writeexcel.png" />
     <None Remove="Resources\toolbox\closeworkbook.png" />
     <None Remove="Resources\toolbox\commentout.png" />
     <None Remove="Resources\toolbox\newemail.png" />
     <None Remove="Resources\toolbox\outlook.png" />
+    <None Remove="Resources\toolbox\protect.png" />
     <None Remove="Resources\toolbox\readexcel.png" />
+    <None Remove="Resources\toolbox\unprotect.png" />
     <None Remove="Resources\toolbox\writeexcel.png" />
     <None Remove="Snippets\ExcelLoop.xaml" />
     <None Remove="Snippets\ExcelPowerLoop.xaml" />
@@ -89,7 +96,9 @@
     <EmbeddedResource Include="Resources\toolbox\closeworkbook.png" />
     <EmbeddedResource Include="Resources\toolbox\newemail.png" />
     <EmbeddedResource Include="Resources\toolbox\outlook.png" />
+    <EmbeddedResource Include="Resources\toolbox\protect.png" />
     <EmbeddedResource Include="Resources\toolbox\readexcel.png" />
+    <EmbeddedResource Include="Resources\toolbox\unprotect.png" />
     <EmbeddedResource Include="Resources\toolbox\writeexcel.png" />
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +106,13 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\GetSelectedRangeDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\UnprotectWorksheetDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\ProtectWorksheetDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\RunExcelMacroDesigner.xaml">
@@ -180,8 +196,10 @@
     <Resource Include="Resources\designer\commentout.png" />
     <Resource Include="Resources\designer\newemail.png" />
     <Resource Include="Resources\designer\outlook.png" />
+    <Resource Include="Resources\designer\protect.png" />
     <Resource Include="Resources\designer\readexcel.png" />
     <Resource Include="Resources\designer\refresh.png" />
+    <Resource Include="Resources\designer\unprotect.png" />
     <Resource Include="Resources\designer\writeexcel.png" />
     <Resource Include="Snippets\ExcelLoop.xaml">
       <SubType>Designer</SubType>

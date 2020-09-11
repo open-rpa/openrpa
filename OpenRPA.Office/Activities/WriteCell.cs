@@ -43,6 +43,12 @@ namespace OpenRPA.Office.Activities
                 range.Value2 = value;
             }
             //cleanup();
+            var sheetPassword = SheetPassword.Get(context);
+            if (string.IsNullOrEmpty(sheetPassword)) sheetPassword = null;
+            if (!string.IsNullOrEmpty(sheetPassword) && worksheet != null)
+            {
+                worksheet.Protect(sheetPassword);
+            }
         }
         public new string DisplayName
         {

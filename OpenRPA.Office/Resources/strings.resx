@@ -276,6 +276,15 @@
   <data name="activity_newmailitem_tooltip" xml:space="preserve">
     <value>Create a new Microsoft Outlook Mailitem</value>
   </data>
+  <data name="activity_password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="activity_protectworksheet" xml:space="preserve">
+    <value>Protect Worksheet</value>
+  </data>
+  <data name="activity_protectworksheet_tooltip" xml:space="preserve">
+    <value>Protect current worksheet from changes</value>
+  </data>
   <data name="activity_readcell" xml:space="preserve">
     <value>Read Cell</value>
   </data>
@@ -344,6 +353,12 @@
   </data>
   <data name="activity_setparagraph_tooltip" xml:space="preserve">
     <value>Set content of a paragraph in side a Microsoft Word document</value>
+  </data>
+  <data name="activity_unprotectworksheet" xml:space="preserve">
+    <value>Unprotect Worksheet</value>
+  </data>
+  <data name="activity_unprotectworksheet_tooltip" xml:space="preserve">
+    <value>Remove the protection of current worksheet</value>
   </data>
   <data name="activity_writecell" xml:space="preserve">
     <value>Write Cell</value>

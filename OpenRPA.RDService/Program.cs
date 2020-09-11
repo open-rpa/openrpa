@@ -331,7 +331,7 @@ namespace OpenRPA.RDService
                 foreach (var session in sessions.ToList())
                 {
                     var c = clients.Where(x => x.windowsusername == session.client.windowsusername).FirstOrDefault();
-                    if (c == null && session.client != null)
+                    if (c == null && session.client != null && !string.IsNullOrEmpty(session.client._id))
                     {
                         Log.Information("Removing:2 session for " + session.client.windowsusername);
                         sessions.Remove(session);

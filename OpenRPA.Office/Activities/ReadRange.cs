@@ -129,6 +129,12 @@ namespace OpenRPA.Office.Activities
                 if (lastUsedColumn != null) context.SetValue(lastUsedColumn, ColumnIndexToColumnLetter(_lastUsedColumn));
                 if (lastUsedRow != null) context.SetValue(lastUsedRow, _lastUsedRow);
             }
+            var sheetPassword = SheetPassword.Get(context);
+            if (string.IsNullOrEmpty(sheetPassword)) sheetPassword = null;
+            if (!string.IsNullOrEmpty(sheetPassword) && worksheet != null)
+            {
+                worksheet.Protect(sheetPassword);
+            }
 
         }
         static string ColumnIndexToColumnLetter(int colIndex)

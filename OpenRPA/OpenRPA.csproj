@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.167</Version>
-    <PackageReleaseNotes>1.0.167 Improve rdservice, add support for running without freerdp as a service
+    <Version>1.0.168</Version>
+    <PackageReleaseNotes>1.0.168 Add passwords for write/read cell, add support for removing password with close workbook, add protect worksheet/unprotect worksheet
+1.0.167 Improve rdservice, add support for running without freerdp as a service
 1.0.166 Add support to update div value
 1.0.165 Load extensions from project folder as well
 1.0.164 Fix selector variables for Open and Close Application

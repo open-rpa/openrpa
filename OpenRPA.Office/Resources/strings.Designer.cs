@@ -538,6 +538,33 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        public static string activity_password {
+            get {
+                return ResourceManager.GetString("activity_password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Protect Worksheet.
+        /// </summary>
+        public static string activity_protectworksheet {
+            get {
+                return ResourceManager.GetString("activity_protectworksheet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Protect current worksheet from changes.
+        /// </summary>
+        public static string activity_protectworksheet_tooltip {
+            get {
+                return ResourceManager.GetString("activity_protectworksheet_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Read Cell.
         /// </summary>
         public static string activity_readcell {
@@ -741,6 +768,24 @@ namespace OpenRPA.Office.Resources {
         public static string activity_setparagraph_tooltip {
             get {
                 return ResourceManager.GetString("activity_setparagraph_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unprotect Worksheet.
+        /// </summary>
+        public static string activity_unprotectworksheet {
+            get {
+                return ResourceManager.GetString("activity_unprotectworksheet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove the protection of current worksheet.
+        /// </summary>
+        public static string activity_unprotectworksheet_tooltip {
+            get {
+                return ResourceManager.GetString("activity_unprotectworksheet_tooltip", resourceCulture);
             }
         }
         

@@ -108,6 +108,12 @@ namespace OpenRPA.Office.Activities
             //        xlRange.Cells[i + idx, j + 1] = dt.Rows[i][j];
             //    }
             //}
+            var sheetPassword = SheetPassword.Get(context);
+            if (string.IsNullOrEmpty(sheetPassword)) sheetPassword = null;
+            if (!string.IsNullOrEmpty(sheetPassword) && worksheet != null)
+            {
+                worksheet.Protect(sheetPassword);
+            }
         }
         public new string DisplayName
         {

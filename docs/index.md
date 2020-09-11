@@ -27,6 +27,12 @@ Robots have easy access to save any data and files centrally, all protected with
 For shedulering and central management of state and workflows, graphs and more have a look at [OpenFlow](https://github.com/open-rpa/OpenFlow)
 <img src="img/graphs.png" alt="Workflow graphs in OpenFlow"/>
 
+Enterprise Customers also get access to creating custom dashboards and graphs using grafana
+
+![image-20200911113809533](img/grafana1.png)
+
+![image-20200911114001009](img/grafana2)
+
 For now, the robot supports 
 
 Windows Components

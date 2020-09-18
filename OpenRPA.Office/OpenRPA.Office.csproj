@@ -7,8 +7,9 @@
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office, created for OpenRPA robot</Description>
-    <Version>1.0.28</Version>
-    <PackageReleaseNotes>1.0.28 Add passwords for write/read cell, add support for removing password with close workbook, add protect worksheet/unprotect worksheet
+    <Version>1.0.29</Version>
+    <PackageReleaseNotes>1.0.29 Fix excel sheet enumeration bug
+1.0.28 Add passwords for write/read cell, add support for removing password with close workbook, add protect worksheet/unprotect worksheet
 1.0.27 fix issue with "unread" only not working / fix issue with ignoreing overwrite property, when saving all attachments
 1.0.26 Add GetSelectedRange
 1.0.25 Fix index error in readrange when HeaderRows is false, add range check in readrange

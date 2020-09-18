@@ -16,7 +16,7 @@ jobs:
           days-before-stale: 3
           days-before-close: 2
           stale-issue-label: "stale"
-          exempt-issue-labels: "pinned,security,bug,pending,awaiting-approval,work-in-progress"
+          exempt-issue-labels: "pinned,security,bug,enhancement,pending,awaiting-approval,work-in-progress"
           stale-pr-label: "stale"
-          exempt-pr-labels: "pinned,security,bug,pending,awaiting-approval,work-in-progress"
+          exempt-pr-labels: "pinned,security,bug,enhancement,pending,awaiting-approval,work-in-progress"
           debug-only: true

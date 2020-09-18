@@ -1,7 +1,5 @@
 name: "Close stale issues test 2"
-on:
-  schedule:
-    - cron: "0 0 * * *"
+on: [push, pull_request]
 jobs:
   stale:
     runs-on: ubuntu-latest

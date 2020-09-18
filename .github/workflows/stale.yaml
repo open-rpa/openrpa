@@ -19,4 +19,4 @@ jobs:
           exempt-issue-labels: "pinned,security,bug,enhancement,pending,awaiting-approval,work-in-progress"
           stale-pr-label: "stale"
           exempt-pr-labels: "pinned,security,bug,enhancement,pending,awaiting-approval,work-in-progress"
-          debug-only: true
+          debug-only: false

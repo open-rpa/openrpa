@@ -213,9 +213,10 @@ namespace OpenRPA.Office.Activities
             if (!string.IsNullOrEmpty(_worksheet))
             {
                 bool found = false;
-                foreach (Microsoft.Office.Interop.Excel.Worksheet s in workbook.Sheets)
+                foreach (object obj in workbook.Sheets)
                 {
-                    if (s.Name == _worksheet)
+                    Worksheet s = obj as Worksheet;
+                    if (s != null && s.Name == _worksheet)
                     {
                         s.Activate();
                         worksheet = s;
@@ -332,9 +333,10 @@ namespace OpenRPA.Office.Activities
             worksheet = workbook.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
             if (!string.IsNullOrEmpty(_worksheet))
             {
-                foreach (Microsoft.Office.Interop.Excel.Worksheet s in workbook.Sheets)
+                foreach (object obj in workbook.Sheets)
                 {
-                    if (s.Name == _worksheet)
+                    Worksheet s = obj as Worksheet;
+                    if (s != null && s.Name == _worksheet)
                     {
                         s.Activate();
                         worksheet = s;

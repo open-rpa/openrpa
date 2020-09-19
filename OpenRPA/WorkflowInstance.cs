@@ -781,9 +781,17 @@ namespace OpenRPA
             if (isCompleted || hasError) return;
             if (!System.IO.Directory.Exists(System.IO.Path.Combine(Path, "state"))) System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Path, "state"));
             var Filepath = System.IO.Path.Combine(Path, "state", InstanceId + ".json");
+            string json = "";
+            try
+            {
+                json = JsonConvert.SerializeObject(this);
+            }
+            catch (Exception)
+            {
+            }
             lock(filelock)
             {
-                System.IO.File.WriteAllText(Filepath, JsonConvert.SerializeObject(this));
+                if(!string.IsNullOrEmpty(json)) System.IO.File.WriteAllText(Filepath, json);
             }
         }
         public void DeleteFile()

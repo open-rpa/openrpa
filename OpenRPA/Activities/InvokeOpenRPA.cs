@@ -162,24 +162,25 @@ namespace OpenRPA.Activities
                         var myVar = context.DataContext.GetProperties().Find(prop.Key, true);
                         if (myVar != null)
                         {
-                            if (myVar.PropertyType.Name == "DataTable")
-                            {
-                                var json = prop.ToString();
-                                if(!string.IsNullOrEmpty(json))
-                                {
-                                    var jarray = JArray.Parse(json);
-                                    myVar.SetValue(context.DataContext, jarray.ToDataTable());
-                                } 
-                                else
-                                {
-                                    myVar.SetValue(context.DataContext, null);
-                                }
-                            }
-                            else
-                            {
-                                //var myValue = myVar.GetValue(context.DataContext);
-                                myVar.SetValue(context.DataContext, prop.Value);
-                            }
+                            myVar.SetValue(context.DataContext, prop.Value);
+                            //if (myVar.PropertyType.Name == "DataTable")
+                            //{
+                            //    var json = prop.ToString();
+                            //    if(!string.IsNullOrEmpty(json))
+                            //    {
+                            //        var jarray = JArray.Parse(json);
+                            //        myVar.SetValue(context.DataContext, jarray.ToDataTable());
+                            //    } 
+                            //    else
+                            //    {
+                            //        myVar.SetValue(context.DataContext, null);
+                            //    }
+                            //}
+                            //else
+                            //{
+                            //    //var myValue = myVar.GetValue(context.DataContext);
+                            //    myVar.SetValue(context.DataContext, prop.Value);
+                            //}
                         }
                         else
                         {

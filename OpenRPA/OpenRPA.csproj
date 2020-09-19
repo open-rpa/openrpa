@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.169</Version>
-    <PackageReleaseNotes>1.0.169 Fix excel sheet enumeration bug
+    <Version>1.0.170</Version>
+    <PackageReleaseNotes>1.0.170 Fix a few issues with argument parsing for invoke openflow. Fix argument mapping UI for Invoke OpenRPA when robot is offline
+1.0.169 Fix excel sheet enumeration bug
 1.0.168 Add passwords for write/read cell, add support for removing password with close workbook, add protect worksheet/unprotect worksheet
 1.0.167 Improve rdservice, add support for running without freerdp as a service
 1.0.166 Add support to update div value

@@ -45,7 +45,7 @@ namespace OpenRPA.Activities
                     {
                         if(RobotInstance.instance.Window.Designer!=null && RobotInstance.instance.Window.Designer.Workflow != null)
                         {
-                            if (RobotInstance.instance.Window.Designer.Workflow._id != w._id) workflows.Add(w);
+                            if (RobotInstance.instance.Window.Designer.Workflow._id != w._id || w._id == null) workflows.Add(w);
                         } 
                         else
                         {
@@ -69,9 +69,17 @@ namespace OpenRPA.Activities
             if (string.IsNullOrEmpty(workflowid)) throw new ArgumentException("workflow property is null");
             var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
             var designer = RobotInstance.instance.Window.Designer;
-            if (string.IsNullOrEmpty(workflowid)) throw new ArgumentException("workflow is null, not found");
-            if (string.IsNullOrEmpty(workflowid)) throw new ArgumentException("designer is null, cannot find current designer");
+            if (workflow == null) throw new ArgumentException("workflow is null, not found");
+            if (designer == null) throw new ArgumentException("designer is null, cannot find current designer");
             ModelItemDictionary dictionary = base.ModelItem.Properties["Arguments"].Dictionary;
+            try
+            {
+                workflow.ParseParameters();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
             foreach (var p in workflow.Parameters)
             {
                 bool exists = false;

@@ -31,6 +31,8 @@ namespace OpenRPA.Utilities
         {
             var dt = DataTable.Get(context);
             var data = RowData.Get(context);
+            if (dt == null) throw new ArgumentException("DataRable cannot be null", "DataTable");
+            if (data == null) throw new ArgumentException("RowData cannot be null", "RowData");
             dt.Rows.Add(data);
             // dt.Columns.Add(data);
         }

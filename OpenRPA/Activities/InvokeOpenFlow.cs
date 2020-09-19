@@ -154,40 +154,39 @@ namespace OpenRPA.Activities
             {
                 foreach (var key in keys)
                 {
-                    var myVar = context.DataContext.GetProperties().Find(key, true);
+                    PropertyDescriptor myVar = context.DataContext.GetProperties().Find(key, true);
                     if (myVar != null)
                     {
-                        if (myVar.PropertyType.Name == "DataTable")
+
+                        if (myVar.PropertyType == typeof(System.Data.DataTable))
                         {
-                            var json = payload[key].ToString();
-                            if (!string.IsNullOrEmpty(json))
+                            try
                             {
-                                var jarray = JArray.Parse(json);
-                                myVar.SetValue(context.DataContext, jarray.ToDataTable());
-                            } 
-                            else
-                            {
-                                myVar.SetValue(context.DataContext, null);
+                                var json = payload[key].ToString();
+                                if (!string.IsNullOrEmpty(json))
+                                {
+                                    var jarray = JArray.Parse(json);
+                                    myVar.SetValue(context.DataContext, jarray.ToDataTable());
+                                }
+                                else
+                                {
+                                    myVar.SetValue(context.DataContext, null);
+                                }
                             }
-                        }
-                        else if (myVar.PropertyType.Name == "JArray")
-                        {
-                            var json = payload[key].ToString();
-                            var jobj = JArray.Parse(json);
-                            myVar.SetValue(context.DataContext, jobj);
-                        }
-                        else if (myVar.PropertyType.Name == "JObject")
-                        {
-                            var json = payload[key].ToString();
-                            var jobj = JObject.Parse(json);
-                            myVar.SetValue(context.DataContext, jobj);
+                            catch (Exception)
+                            {
+                                throw;
+                            }
                         }
                         else
                         {
-                            myVar.SetValue(context.DataContext, payload[key].ToString());
+                            JToken t = payload[key];
+                            var testtest = t.Value<string>();
+                            System.Reflection.MethodInfo method = typeof(JToken).GetMethod(nameof(JToken.Value)); // typeof(JToken).GetMethod(nameof(JToken.Value));
+                            System.Reflection.MethodInfo generic = method.MakeGenericMethod(myVar.PropertyType);
+                            var value = generic.Invoke(payload, new object[] { key });
+                            myVar.SetValue(context.DataContext, value);
                         }
-                        //var myValue = myVar.GetValue(context.DataContext);
-
                     }
                     else
                     {
@@ -226,12 +225,15 @@ namespace OpenRPA.Activities
                         }
                         else 
                         {
-                            var method = typeof(JObject).GetMethod(nameof(JToken.Value));
-                            var generic = method.MakeGenericMethod(Arguments[a.Key].ArgumentType);
-                            var t = payload[a.Key];
+                            JToken t = payload[a.Key];
+                            var testtest = t.Value<string>();
+                            System.Reflection.MethodInfo method = typeof(JToken).GetMethod(nameof(JToken.Value)); // typeof(JToken).GetMethod(nameof(JToken.Value));
+                            System.Reflection.MethodInfo generic = method.MakeGenericMethod(Arguments[a.Key].ArgumentType);
+                            var value = generic.Invoke(payload, new object[] { a.Key });
+                            Arguments[a.Key].Set(context, value);
                         }
                     } 
-                    else
+                    else if(arguments.Count == 0)
                     {
                         try
                         {

@@ -29,6 +29,7 @@ namespace OpenRPA.Interfaces
         Task Save(bool UpdateImages);
         void SaveFile(string overridepath = null, bool exportImages = false);
         void RunPendingInstances();
+        void ParseParameters();
     }
     public enum workflowparameterdirection
     {

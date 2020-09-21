@@ -85,6 +85,9 @@ namespace OpenRPA.NM
                 if (from != null) browser = from.browser;
                 DoWaitForReady(browser);
             }
+            var lastelements = context.GetValue(_lastelements);
+            if (lastelements == null) lastelements = new NMElement[] { };
+
             var s = new NMSelectorItem(sel[0]);
             if(!string.IsNullOrEmpty(s.url))
             {
@@ -101,59 +104,80 @@ namespace OpenRPA.NM
             do
             {
                 elements = NMSelector.GetElementsWithuiSelector(sel, from, maxresults);
-            } while (elements .Count() == 0 && sw.Elapsed < timeout);
-            if (elements.Count() > maxresults) elements = elements.Take(maxresults).ToArray();
 
-            var lastelements = context.GetValue(_lastelements);
-            if (lastelements == null) lastelements = new NMElement[] { };
-            context.SetValue(_lastelements, elements);
-            if(lastelements.Length > 0)
-            {
-                var newelements = new List<NMElement>();
-                for (var i = elements.Length - 1; i >= 0; i--)
+                if (lastelements.Length > 0)
                 {
-                    var element = elements[i];
-                    bool exists = false;
-                    foreach (var ele in lastelements)
-                    {
-                        if (eq.Equals(ele, element))
-                        {
-                            exists = true;
-                            break;
-                        } else if(element.ToString() == ele.ToString())
-                        {
-                            var b = eq.Equals(ele, element);
-                        }
-                    }
-                    if (!exists) newelements.Insert(0, element);
-                }
-                if (elements.Length > 0)
-                {
-                    elements = newelements.ToArray();
+                    Log.Selector("Found " + elements.Count() + " elements");
 
-                    newelements = new List<NMElement>();
+                    var newelements = new List<NMElement>();
                     for (var i = elements.Length - 1; i >= 0; i--)
                     {
+                        var element = elements[i];
                         bool exists = false;
                         foreach (var ele in lastelements)
                         {
-                            if (eq.Equals(ele, elements[i]))
+                            if (eq.Equals(ele, element))
                             {
                                 exists = true;
                                 break;
                             }
+                            else if (element.ToString() == ele.ToString())
+                            {
+                                var b = eq.Equals(ele, element);
+                            }
                         }
-                        if (!exists) newelements.Insert(0, elements[i]);
+                        if (!exists)
+                        {
+                            newelements.Insert(0, element);
+                        }
+                        else
+                        {
+                            Log.Selector("skip1 dublicate " + element.ToString() + " element");
+                        }
                     }
-                    elements = newelements.ToArray();
+                    if (elements.Length > 0)
+                    {
+                        elements = newelements.ToArray();
+
+                        newelements = new List<NMElement>();
+                        for (var i = elements.Length - 1; i >= 0; i--)
+                        {
+                            bool exists = false;
+                            foreach (var ele in lastelements)
+                            {
+                                if (eq.Equals(ele, elements[i]))
+                                {
+                                    exists = true;
+                                    break;
+                                }
+                            }
+                            if (!exists)
+                            {
+                                newelements.Insert(0, elements[i]);
+                            }
+                            else
+                            {
+                                Log.Selector("skip2 dublicate " + elements[i].ToString() + " element");
+                            }
+                        }
+                        elements = newelements.ToArray();
+                    }
+                    Log.Selector("I now have " + elements.Count() + " elements");
                 }
 
-            }
+            } while (elements .Count() == 0 && sw.Elapsed < timeout);
+            if (elements.Count() > maxresults) elements = elements.Take(maxresults).ToArray();
+
+            Log.Selector("Found " + elements.Count() + " elements");
+
+            context.SetValue(_lastelements, elements);
             if ((elements.Length + lastelements.Length) < minresults)
             {
                 Log.Selector(string.Format("Windows.GetElement::Failed locating " + minresults + " item(s) {0:mm\\:ss\\.fff}", sw.Elapsed));
                 throw new ElementNotFoundException("Failed locating " + minresults + " item(s)");
             }
+
+            
 
             IEnumerator<NMElement> _enum = elements.ToList().GetEnumerator();
             bool more = _enum.MoveNext();

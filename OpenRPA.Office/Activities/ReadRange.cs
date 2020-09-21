@@ -68,14 +68,17 @@ namespace OpenRPA.Office.Activities
             }
             //object[,] valueArray = (object[,])range.Value;
             object[,] valueArray = (object[,])range.get_Value(Microsoft.Office.Interop.Excel.XlRangeValueDataType.xlRangeValueDefault);
+            if(valueArray != null)
+            {
+                var o = ProcessObjects(useHeaderRow, ignoreEmptyRows, valueArray);
 
-                
-            var o = ProcessObjects(useHeaderRow, ignoreEmptyRows, valueArray);
+                System.Data.DataTable dt = o as System.Data.DataTable;
+                dt.TableName = base.worksheet.Name;
+                if (string.IsNullOrEmpty(dt.TableName)) { dt.TableName = "Unknown"; }
+                DataTable.Set(context, dt);
 
-            System.Data.DataTable dt = o as System.Data.DataTable;
-            dt.TableName = base.worksheet.Name;
-            if (string.IsNullOrEmpty(dt.TableName)) { dt.TableName = "Unknown";  }
-            DataTable.Set(context, dt);
+            }
+
 
             //dt.AsEnumerable();
 

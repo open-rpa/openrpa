@@ -83,6 +83,7 @@
     <PackageReference Include="AvalonEdit" Version="6.0.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="3.2.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="3.2.1" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.7.1" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Resources\CodeEditorResources.xaml" />

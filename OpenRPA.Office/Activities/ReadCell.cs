@@ -52,7 +52,14 @@ namespace OpenRPA.Office.Activities
             }
             else
             {
-                context.SetValue(Result, (TResult)range.Value2);
+                var value = range.Value2;
+                if(value.GetType() == typeof(double) && typeof(TResult) == typeof(double)) 
+                {
+                    if(value != null) value = int.Parse(value.ToString());
+                    if (value == null) value = int.Parse("0");
+                }
+                if (value!=null) context.SetValue(Result, (TResult)value);
+                if (value == null) context.SetValue(Result, default(TResult));
             }
             var sheetPassword = SheetPassword.Get(context);
             if (string.IsNullOrEmpty(sheetPassword)) sheetPassword = null;

@@ -36,7 +36,6 @@ namespace OpenRPA.NM
         [Browsable(false)]
         public string Image { get; set; }
         private readonly Variable<IEnumerator<NMElement>> _elements = new Variable<IEnumerator<NMElement>>("_elements");
-        private Variable<NMElement[]> _lastelements = new Variable<NMElement[]>("_lastelements");
         private Variable<NMElement[]> _allelements = new Variable<NMElement[]>("_allelements");
         [System.ComponentModel.Browsable(false)]
         public Activity LoopAction { get; set; }
@@ -67,14 +66,13 @@ namespace OpenRPA.NM
         }
         protected override void Execute(NativeActivityContext context)
         {
-            var eq = new Activities.NMEqualityComparer();
             var selector = Selector.Get(context);
             selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
             var sel = new NMSelector(selector);
             var timeout = Timeout.Get(context);
             var from = From.Get(context);
             var maxresults = MaxResults.Get(context);
-            var minresults = MinResults.Get(context); 
+            var minresults = MinResults.Get(context);
             if (maxresults < 1) maxresults = 1;
             NMElement[] elements = { };
             var sw = new Stopwatch();
@@ -85,14 +83,14 @@ namespace OpenRPA.NM
                 if (from != null) browser = from.browser;
                 DoWaitForReady(browser);
             }
-            var lastelements = context.GetValue(_lastelements);
-            if (lastelements == null) lastelements = new NMElement[] { };
+            var allelements = context.GetValue(_allelements);
+            if (allelements == null) allelements = new NMElement[] { };
 
             var s = new NMSelectorItem(sel[0]);
-            if(!string.IsNullOrEmpty(s.url))
+            if (!string.IsNullOrEmpty(s.url))
             {
                 var tab = NMHook.tabs.Where(x => x.browser == browser && x.url.ToLower().StartsWith(s.url.ToLower())).FirstOrDefault();
-                if(tab != null)
+                if (tab != null)
                 {
                     if (!tab.highlighted || !tab.selected)
                     {
@@ -100,84 +98,46 @@ namespace OpenRPA.NM
                     }
                 }
             }
-            
+
             do
             {
                 elements = NMSelector.GetElementsWithuiSelector(sel, from, maxresults);
+                Log.Selector("BEGIN:: I have " + elements.Count() + " elements, and " + allelements.Count() + " in all elements");
 
-                if (lastelements.Length > 0)
+                // allelements = allelements.Concat(elements).ToArray();
+                if (allelements.Length > 0)
                 {
-                    Log.Selector("Found " + elements.Count() + " elements");
-
                     var newelements = new List<NMElement>();
                     for (var i = elements.Length - 1; i >= 0; i--)
                     {
                         var element = elements[i];
-                        bool exists = false;
-                        foreach (var ele in lastelements)
-                        {
-                            if (eq.Equals(ele, element))
-                            {
-                                exists = true;
-                                break;
-                            }
-                            else if (element.ToString() == ele.ToString())
-                            {
-                                var b = eq.Equals(ele, element);
-                            }
-                        }
-                        if (!exists)
-                        {
-                            newelements.Insert(0, element);
-                        }
-                        else
-                        {
-                            Log.Selector("skip1 dublicate " + element.ToString() + " element");
-                        }
+                        if (!allelements.Contains(element)) newelements.Insert(0, element);
                     }
-                    if (elements.Length > 0)
-                    {
-                        elements = newelements.ToArray();
+                    elements = newelements.ToArray();
+                    //if(elements.Count() > 20)
+                    //{
+                    //    for(var i=0; i < allelements.Length && i < elements.Length; i++)
+                    //    {
+                    //        if (!eq.Equals(allelements[i], elements[i]) || allelements[i].GetHashCode() != elements[i].GetHashCode())
+                    //        {
+                    //            Log.Output(allelements[i].GetHashCode() + " / " + elements[i].GetHashCode());
+                    //        }
 
-                        newelements = new List<NMElement>();
-                        for (var i = elements.Length - 1; i >= 0; i--)
-                        {
-                            bool exists = false;
-                            foreach (var ele in lastelements)
-                            {
-                                if (eq.Equals(ele, elements[i]))
-                                {
-                                    exists = true;
-                                    break;
-                                }
-                            }
-                            if (!exists)
-                            {
-                                newelements.Insert(0, elements[i]);
-                            }
-                            else
-                            {
-                                Log.Selector("skip2 dublicate " + elements[i].ToString() + " element");
-                            }
-                        }
-                        elements = newelements.ToArray();
-                    }
-                    Log.Selector("I now have " + elements.Count() + " elements");
+                    //    }
+
+                    //}
                 }
 
-            } while (elements .Count() == 0 && sw.Elapsed < timeout);
+            } while (elements.Count() == 0 && sw.Elapsed < timeout);
             if (elements.Count() > maxresults) elements = elements.Take(maxresults).ToArray();
 
-            Log.Selector("Found " + elements.Count() + " elements");
-
-            context.SetValue(_lastelements, elements);
-            if ((elements.Length + lastelements.Length) < minresults)
+            if ((elements.Length + allelements.Length) < minresults)
             {
                 Log.Selector(string.Format("Windows.GetElement::Failed locating " + minresults + " item(s) {0:mm\\:ss\\.fff}", sw.Elapsed));
                 throw new ElementNotFoundException("Failed locating " + minresults + " item(s)");
             }
 
-            
+
 
             IEnumerator<NMElement> _enum = elements.ToList().GetEnumerator();
             bool more = _enum.MoveNext();
@@ -188,20 +148,24 @@ namespace OpenRPA.NM
             //}
             if (more)
             {
+                allelements = allelements.Concat(elements).ToArray();
+                var eq = new Activities.NMEqualityComparer();
+                allelements = allelements.Distinct(eq).ToArray();
+
+                //var allelementslength = allelements.Length;
+                //Array.Resize(ref allelements, allelements.Length + elements.Length);
+                //Array.Copy(elements, 0, allelements, allelementslength, elements.Length);
+            }
+
+            context.SetValue(_allelements, allelements);
+            context.SetValue(Elements, allelements);
+            Log.Selector("END:: I have " + elements.Count() + " elements, and " + allelements.Count() + " in all elements");
+
+            if (more)
+            {
                 context.SetValue(_elements, _enum);
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
-
-            var allelements = context.GetValue(_allelements);
-            if (more)
-            {
-                if (allelements == null) allelements = new NMElement[] { };
-                var allelementslength = allelements.Length;
-                Array.Resize(ref allelements, allelements.Length + elements.Length);
-                Array.Copy(elements, 0, allelements, allelementslength, elements.Length);
-            }
-            context.SetValue(Elements, allelements);
-            context.SetValue(_allelements, allelements);
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
@@ -216,12 +180,14 @@ namespace OpenRPA.NM
             {
                 if (LoopAction != null)
                 {
+                    var allelements = context.GetValue(_allelements);
                     context.ScheduleActivity(LoopAction, LoopActionComplete);
                 }
             }
         }
         private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
+            var allelements = context.GetValue(_allelements);
             var selector = Selector.Get(context);
             selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
             var sel = new NMSelector(selector);
@@ -241,7 +207,6 @@ namespace OpenRPA.NM
             Interfaces.Extensions.AddCacheArgument(metadata, "Elements", Elements);
             Interfaces.Extensions.AddCacheArgument(metadata, "MaxResults", MaxResults);
             metadata.AddImplementationVariable(_elements);
-            metadata.AddImplementationVariable(_lastelements);
             metadata.AddImplementationVariable(_allelements);
             base.CacheMetadata(metadata);
         }

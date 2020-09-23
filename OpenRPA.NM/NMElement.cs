@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -177,6 +178,7 @@ namespace OpenRPA.NM
                 if (chromeelement.ContainsKey("innertext")) return chromeelement["innertext"].ToString();
                 if(!hasRefreshed)
                 {
+                    Log.Output("Refresh!");
                     Refresh();
                     if (chromeelement.ContainsKey("text")) return chromeelement["text"].ToString();
                     if (chromeelement.ContainsKey("innertext")) return chromeelement["innertext"].ToString();
@@ -639,17 +641,28 @@ namespace OpenRPA.NM
         }
         public override bool Equals(object obj)
         {
-            if (obj is NMElement nm)
-            {
-                var eq = new Activities.NMEqualityComparer();
-                return eq.Equals(this, nm);
-            }
-            return base.Equals(obj);
+            //if (obj is NMElement nm)
+            //{
+            //    var eq = new Activities.NMEqualityComparer();
+            //    return eq.Equals(this, nm);
+            //}
+            //return base.Equals(obj);
+            return hashCode == obj.GetHashCode();
         }
+        private int hashCode = 0;
         public override int GetHashCode()
         {
-            int hCode = Height ^ X ^ Y ^ Width;
-            return hCode.GetHashCode();
+            if (hashCode > 0) return hashCode;
+            int hCode = 0;
+
+            if (!string.IsNullOrEmpty(xpath)) hCode += xpath.GetHashCode();
+            if (!string.IsNullOrEmpty(id)) hCode += id.GetHashCode();
+            if (!string.IsNullOrEmpty(cssselector)) hCode += cssselector.GetHashCode();
+            if (!string.IsNullOrEmpty(classname)) hCode += classname.GetHashCode();
+            if (!string.IsNullOrEmpty(Text)) hCode += Text.GetHashCode();
+            if (zn_id > 0) hCode += Convert.ToInt32(zn_id);
+            hashCode = hCode.GetHashCode();
+            return hashCode;
         }
         public bool IsChecked
         {

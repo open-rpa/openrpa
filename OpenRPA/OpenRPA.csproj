@@ -10,7 +10,7 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.171</Version>
+    <Version>1.0.172</Version>
     <PackageReleaseNotes>1.0.171 Improve pagination for nm, bugfix for office close workbook, add firefox ready addon
 1.0.170 Fix a few issues with argument parsing for invoke openflow. Fix argument mapping UI for Invoke OpenRPA when robot is offline
 1.0.169 Fix excel sheet enumeration bug

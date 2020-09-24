@@ -31,6 +31,9 @@
       <Component Id='ScriptComponentja' Win64='yes' Directory="Scriptja" Guid='{C8760C03-477E-41EF-806B-ACFD8E419534}'>
         <File Id="OpenRPA.Script.resources.dll_ja" Source="!(wix.ScriptSource)\ja\OpenRPA.Script.resources.dll" />
       </Component>
+      <Component Id='ScriptComponentzh' Win64='yes' Directory="Scriptzh" Guid='{6AF18B5D-A022-4CDA-8593-DBE1DF1E177A}'>
+        <File Id="OpenRPA.Script.resources.dll_zh" Source="!(wix.ScriptSource)\zh\OpenRPA.Script.resources.dll" />
+      </Component>
 
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
@@ -47,6 +50,8 @@
       <Directory Id="Scriptru" Name="ru">
       </Directory>
       <Directory Id="Scriptja" Name="ja">
+      </Directory>
+      <Directory Id="Scriptzh" Name="zh">
       </Directory>
     </DirectoryRef>
 

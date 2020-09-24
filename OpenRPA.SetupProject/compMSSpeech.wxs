@@ -19,10 +19,13 @@
       </Component>
       <Component Id='MSSpeechComponentja' Win64='yes' Directory="MSSpeechja" Guid='{8F0F944D-9205-47EA-A469-2EEB7869E064}'>
       </Component>-->
+      <Component Id='MSSpeechComponentzh' Win64='yes' Directory="MSSpeechzh" Guid='{CE9DEF12-1E5E-4689-98E7-8D24A65D6054}'>
+        <File Id="OpenRPA.MSSpeech.resources.dll_zh" Source="!(wix.MSSpeechSource)\zh\OpenRPA.MSSpeech.resources.dll" />
+      </Component>
     </ComponentGroup>
     
-    <!--<DirectoryRef Id="INSTALLDIR">
-      <Directory Id="MSSpeechde" Name="de">
+    <DirectoryRef Id="INSTALLDIR">
+    <!--  <Directory Id="MSSpeechde" Name="de">
       </Directory>
       <Directory Id="MSSpeechda" Name="da">
       </Directory>
@@ -35,7 +38,9 @@
       <Directory Id="MSSpeechru" Name="ru">
       </Directory>
       <Directory Id="MSSpeechja" Name="ja">
+      </Directory>-->
+      <Directory Id="MSSpeechzh" Name="zh">
       </Directory>
-    </DirectoryRef>-->
+    </DirectoryRef>
   </Fragment>
 </Wix>

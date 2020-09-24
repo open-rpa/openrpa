@@ -53,7 +53,7 @@ namespace OpenRPA.Office.Activities
             else
             {
                 var value = range.Value2;
-                if(value.GetType() == typeof(double) && typeof(TResult) == typeof(double)) 
+                if(value.GetType() == typeof(double) && typeof(TResult) == typeof(int)) 
                 {
                     if(value != null) value = int.Parse(value.ToString());
                     if (value == null) value = int.Parse("0");

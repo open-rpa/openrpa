@@ -32,6 +32,9 @@
       <Component Id='JavaComponentja' Win64='yes' Directory="Javaja" Guid='{7229BACA-98AC-4A63-B271-ACB2F3C5E2A6}'>
         <File Id="OpenRPA.Java.resources.dll_ja" Source="!(wix.JavaSource)\ja\OpenRPA.Java.resources.dll" />
       </Component>
+      <Component Id='JavaComponentzh' Win64='yes' Directory="Javazh" Guid='{5022AD92-D243-45F5-BE4F-DEE397F2E4A4}'>
+        <File Id="OpenRPA.Java.resources.dll_zh" Source="!(wix.JavaSource)\zh\OpenRPA.Java.resources.dll" />
+      </Component>
 
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
@@ -48,6 +51,8 @@
       <Directory Id="Javaru" Name="ru">
       </Directory>
       <Directory Id="Javaja" Name="ja">
+      </Directory>
+      <Directory Id="Javazh" Name="zh">
       </Directory>
     </DirectoryRef>
 

@@ -32,6 +32,9 @@
       <Component Id='OfficeComponentja' Win64='yes' Directory="officeja" Guid="{47D9779E-5165-4738-B018-86F9421C0A83}">
         <File Id="OpenRPA.Office.resources.dll_ja" Source="!(wix.OfficeSource)\ja\OpenRPA.Office.resources.dll" />
       </Component>
+      <Component Id='OfficeComponentzh' Win64='yes' Directory="officezh" Guid="{E1A7E885-AC6D-4587-9A13-17B22CDDCFD0}">
+        <File Id="OpenRPA.Office.resources.dll_zh" Source="!(wix.OfficeSource)\zh\OpenRPA.Office.resources.dll" />
+      </Component>
 
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
@@ -48,6 +51,8 @@
       <Directory Id="officeru" Name="ru">
       </Directory>
       <Directory Id="officeja" Name="ja">
+      </Directory>
+      <Directory Id="officezh" Name="zh">
       </Directory>
     </DirectoryRef>
     <!--<ComponentGroup Id="OfficeComponentsde" >

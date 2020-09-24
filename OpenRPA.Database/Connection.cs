@@ -20,6 +20,7 @@ namespace OpenRPA.Database
             this.DataProvider = DataProvider;
             this.DataSource = DataSource;
             this.ConnectionString = ConnectionString;
+            if (string.IsNullOrEmpty(DataProvider)) DataProvider = "System.Data.OleDb";
             factory = DbProviderFactories.GetFactory(DataProvider);
             conn = factory.CreateConnection();
             conn.ConnectionString = ConnectionString;

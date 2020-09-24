@@ -1,0 +1,393 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="activity_addparagraph" xml:space="preserve">
+    <value>添加段落</value>
+  </data>
+  <data name="activity_addparagraph_filename" xml:space="preserve">
+    <value>文件名</value>
+  </data>
+  <data name="activity_addparagraph_filename_help" xml:space="preserve">
+    <value>要使用的Microsoft Word文档的完整路径和文件名</value>
+  </data>
+  <data name="activity_addparagraph_index" xml:space="preserve">
+    <value>索引</value>
+  </data>
+  <data name="activity_addparagraph_index_help" xml:space="preserve">
+    <value>在此索引处添加新段落（索引为零）保留空白以在文档末尾添加</value>
+  </data>
+  <data name="activity_addparagraph_text" xml:space="preserve">
+    <value>文本</value>
+  </data>
+  <data name="activity_addparagraph_text_help" xml:space="preserve">
+    <value>要添加的文本</value>
+  </data>
+  <data name="activity_addparagraph_tooltip" xml:space="preserve">
+    <value>将新的段落添加到Microsoft Word文档</value>
+  </data>
+  <data name="activity_clearrange" xml:space="preserve">
+    <value>清除范围</value>
+  </data>
+  <data name="activity_clearrange_cells" xml:space="preserve">
+    <value>单元格</value>
+  </data>
+  <data name="activity_clearrange_cells_help" xml:space="preserve">
+    <value>设置要清除的单元格，留空以清除所有单元格</value>
+  </data>
+  <data name="activity_clearrange_tooltip" xml:space="preserve">
+    <value>清除一定范围的单元格中的所有数据和格式</value>
+  </data>
+  <data name="activity_closedocument" xml:space="preserve">
+    <value>关闭文档</value>
+  </data>
+  <data name="activity_closedocument_filename" xml:space="preserve">
+    <value>文件名</value>
+  </data>
+  <data name="activity_closedocument_filename_help" xml:space="preserve">
+    <value>要使用的Microsoft Word文档的完整路径和文件名</value>
+  </data>
+  <data name="activity_closedocument_savechanges" xml:space="preserve">
+    <value>保存改变</value>
+  </data>
+  <data name="activity_closedocument_savechanges_help" xml:space="preserve">
+    <value>设置为true以保存word文件，设置为false以放弃所做的任何更改</value>
+  </data>
+  <data name="activity_closedocument_tooltip" xml:space="preserve">
+    <value>关闭Microsoft Word文档（如果已打开），如果没有其他文档也将关闭word</value>
+  </data>
+  <data name="activity_closeworkbook" xml:space="preserve">
+    <value>关闭工作簿</value>
+  </data>
+  <data name="activity_closeworkbook_filename" xml:space="preserve">
+    <value>文件名</value>
+  </data>
+  <data name="activity_closeworkbook_filename_help" xml:space="preserve">
+    <value>Microsoft Excel工作簿的完整路径和文件名</value>
+  </data>
+  <data name="activity_closeworkbook_savechanges" xml:space="preserve">
+    <value>保存改变</value>
+  </data>
+  <data name="activity_closeworkbook_savechanges_help" xml:space="preserve">
+    <value>设置为true以保存excel文件，设置为false以放弃所做的任何更改</value>
+  </data>
+  <data name="activity_closeworkbook_tooltip" xml:space="preserve">
+    <value>如果打开了一个工作簿，则将其关闭；如果没有更多的工作簿，将关闭excel。</value>
+  </data>
+  <data name="activity_closeworkbook_workbook" xml:space="preserve">
+    <value>工作簿</value>
+  </data>
+  <data name="activity_closeworkbook_workbook_help" xml:space="preserve">
+    <value>使用Microsoft Excel工作簿变量进行处理</value>
+  </data>
+  <data name="activity_drop_hint" xml:space="preserve">
+    <value>丢弃活动</value>
+  </data>
+  <data name="activity_filename" xml:space="preserve">
+    <value>文件名</value>
+  </data>
+  <data name="activity_getemails_reload" xml:space="preserve">
+    <value>重载</value>
+  </data>
+  <data name="activity_getmails" xml:space="preserve">
+    <value>获得邮件</value>
+  </data>
+  <data name="activity_getmails_filter" xml:space="preserve">
+    <value>过滤</value>
+  </data>
+  <data name="activity_getmails_filter_hint" xml:space="preserve">
+    <value>通过查询过滤电子邮件</value>
+  </data>
+  <data name="activity_getmails_tooltip" xml:space="preserve">
+    <value>从Microsoft Outlook文件夹获取所有电子邮件</value>
+  </data>
+  <data name="activity_getparagraph" xml:space="preserve">
+    <value>获得段落</value>
+  </data>
+  <data name="activity_getparagraph_count" xml:space="preserve">
+    <value>计数</value>
+  </data>
+  <data name="activity_getparagraph_count_help" xml:space="preserve">
+    <value>返回Microsoft Word文档中的段落数</value>
+  </data>
+  <data name="activity_getparagraph_filename" xml:space="preserve">
+    <value>文件名</value>
+  </data>
+  <data name="activity_getparagraph_filename_help" xml:space="preserve">
+    <value>要使用的Microsoft Word文档的完整路径和文件名</value>
+  </data>
+  <data name="activity_getparagraph_index" xml:space="preserve">
+    <value>索引</value>
+  </data>
+  <data name="activity_getparagraph_index_help" xml:space="preserve">
+    <value>使用此索引获取段落的所有内容以及更多MaxResults。 将此字段留空以获取整个Word文档</value>
+  </data>
+  <data name="activity_getparagraph_maxresults" xml:space="preserve">
+    <value>最大结果</value>
+  </data>
+  <data name="activity_getparagraph_maxresults_help" xml:space="preserve">
+    <value>限制要获取的段落数量，保留为空白或为0即可从Index开始获取所有段落</value>
+  </data>
+  <data name="activity_getparagraph_text" xml:space="preserve">
+    <value>文本</value>
+  </data>
+  <data name="activity_getparagraph_text_help" xml:space="preserve">
+    <value>将读取的段落保存到此变量</value>
+  </data>
+  <data name="activity_getparagraph_tooltip" xml:space="preserve">
+    <value>从Microsoft Word文档中获取一个或多个段落</value>
+  </data>
+  <data name="activity_getselectedrange" xml:space="preserve">
+    <value>获得选定的范围</value>
+  </data>
+  <data name="activity_getselectedrange_tooltip" xml:space="preserve">
+    <value>在指定的工作表中获取当前选定的单元格</value>
+  </data>
+  <data name="activity_movemailitem" xml:space="preserve">
+    <value>移动邮件项</value>
+  </data>
+  <data name="activity_movemailitem_tooltip" xml:space="preserve">
+    <value>将通过GetEmails获得的邮件移动到另一个文件夹</value>
+  </data>
+  <data name="activity_movemail_mail" xml:space="preserve">
+    <value>邮件</value>
+  </data>
+  <data name="activity_movemail_mail_hint" xml:space="preserve">
+    <value>要移动的邮件项目</value>
+  </data>
+  <data name="activity_newmailitem" xml:space="preserve">
+    <value>新建邮件项目</value>
+  </data>
+  <data name="activity_newmailitem_tooltip" xml:space="preserve">
+    <value>创建一个新的Microsoft Outlook邮件项目</value>
+  </data>
+  <data name="activity_password" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="activity_protectworksheet" xml:space="preserve">
+    <value>保护工作表</value>
+  </data>
+  <data name="activity_protectworksheet_tooltip" xml:space="preserve">
+    <value>保护当前工作表免受更改</value>
+  </data>
+  <data name="activity_readcell" xml:space="preserve">
+    <value>读取单元格</value>
+  </data>
+  <data name="activity_readcell_tooltip" xml:space="preserve">
+    <value>读取Microsoft Excel中单个单元格的内容</value>
+  </data>
+  <data name="activity_readrange" xml:space="preserve">
+    <value>读取范围</value>
+  </data>
+  <data name="activity_readrange_clearformats" xml:space="preserve">
+    <value>清除格式</value>
+  </data>
+  <data name="activity_readrange_clearformats_help" xml:space="preserve">
+    <value>设置为true以从选择工作表中删除所有格式</value>
+  </data>
+  <data name="activity_readrange_tooltip" xml:space="preserve">
+    <value>从Microsoft Excel工作表中读取范围</value>
+  </data>
+  <data name="activity_readrange_useheaderrow" xml:space="preserve">
+    <value>使用标题行</value>
+  </data>
+  <data name="activity_readrange_useheaderrow_help" xml:space="preserve">
+    <value>如果选择范围还包含带有列名称的标题行，请将其设置为true，否则留空（然后所有cloumns将没有名称）</value>
+  </data>
+  <data name="activity_runexcelmacro" xml:space="preserve">
+    <value>执行宏</value>
+  </data>
+  <data name="activity_runexcelmacro_name_hint" xml:space="preserve">
+    <value>宏名称</value>
+  </data>
+  <data name="activity_runexcelmacro_tooltip" xml:space="preserve">
+    <value>在Excel工作簿中运行宏。 需要为宏启用工作簿文件</value>
+  </data>
+  <data name="activity_runslideshow" xml:space="preserve">
+    <value>运行幻灯片放映</value>
+  </data>
+  <data name="activity_runslideshow_tooltip" xml:space="preserve">
+    <value>打开Microsoft Powerpoint演示文稿并开始幻灯片放映</value>
+  </data>
+  <data name="activity_savemailitem" xml:space="preserve">
+    <value>保存邮件项目</value>
+  </data>
+  <data name="activity_savemailitem_tooltip" xml:space="preserve">
+    <value>将Microsoft Outlook邮件项目另存为文件</value>
+  </data>
+  <data name="activity_setparagraph" xml:space="preserve">
+    <value>设置段落</value>
+  </data>
+  <data name="activity_setparagraph_filename" xml:space="preserve">
+    <value>文件名</value>
+  </data>
+  <data name="activity_setparagraph_filename_help" xml:space="preserve">
+    <value>要使用的Microsoft Word文档的完整路径和文件名</value>
+  </data>
+  <data name="activity_setparagraph_index" xml:space="preserve">
+    <value>索引</value>
+  </data>
+  <data name="activity_setparagraph_index_help" xml:space="preserve">
+    <value>使用此索引覆盖段落中的内容，设置为0以覆盖整个Word文档</value>
+  </data>
+  <data name="activity_setparagraph_text" xml:space="preserve">
+    <value>文本</value>
+  </data>
+  <data name="activity_setparagraph_text_help" xml:space="preserve">
+    <value>要设定的文本</value>
+  </data>
+  <data name="activity_setparagraph_tooltip" xml:space="preserve">
+    <value>在Microsoft Word文档的旁边设置段落的内容</value>
+  </data>
+  <data name="activity_unprotectworksheet" xml:space="preserve">
+    <value>取消保护工作表</value>
+  </data>
+  <data name="activity_unprotectworksheet_tooltip" xml:space="preserve">
+    <value>删除当前工作表的保护</value>
+  </data>
+  <data name="activity_writecell" xml:space="preserve">
+    <value>写单元格</value>
+  </data>
+  <data name="activity_writecell_tooltip" xml:space="preserve">
+    <value>将值或公式写入Microsoft Excel中的单个单元格</value>
+  </data>
+  <data name="activity_writerange" xml:space="preserve">
+    <value>写入范围</value>
+  </data>
+  <data name="activity_writerange_cells" xml:space="preserve">
+    <value>单元格</value>
+  </data>
+  <data name="activity_writerange_cells_help" xml:space="preserve">
+    <value>设置开始写入的第一个单元格，保留为空表示从A列中的最后一个空行开始</value>
+  </data>
+  <data name="activity_writerange_datatable" xml:space="preserve">
+    <value>数据表</value>
+  </data>
+  <data name="activity_writerange_datatable_help" xml:space="preserve">
+    <value>要添加到Excel的数据的数据表</value>
+  </data>
+  <data name="activity_writerange_tooltip" xml:space="preserve">
+    <value>将数据表中的所有数据写入Microsoft Excel工作表中的某个范围</value>
+  </data>
+  <data name="activity_writerange_useheaderrow" xml:space="preserve">
+    <value>使用标题行</value>
+  </data>
+  <data name="activity_writerange_useheaderrow_help" xml:space="preserve">
+    <value>如果设置为true，还将添加标题列作为第一行的标题行，设置为false仅添加数据</value>
+  </data>
+</root>

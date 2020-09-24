@@ -70,17 +70,23 @@ namespace OpenRPA
                     System.Globalization.CultureInfo.DefaultThreadCurrentCulture = cultur;
                     System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = cultur;
                     ProcessThreadCollection currentThreads = Process.GetCurrentProcess().Threads;
-                    foreach(Thread t in currentThreads)
+                    foreach (object obj in currentThreads)
                     {
                         try
                         {
-                            t.CurrentUICulture = cultur;
-                            t.CurrentCulture = cultur;
+                            Thread t = obj as Thread;
+                            if (t != null)
+                            {
+                                t.CurrentUICulture = cultur;
+                                t.CurrentCulture = cultur;
+                            }
                         }
                         catch (Exception)
                         {
                         }
                     }
+
+
                 }
                 catch (Exception)
                 {

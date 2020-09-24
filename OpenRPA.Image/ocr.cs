@@ -24,11 +24,17 @@ namespace OpenRPA.Image
             if (!File.Exists(dest))
                 using (System.Net.WebClient webclient = new System.Net.WebClient())
                 {
+                    var Expect100Continue = System.Net.ServicePointManager.Expect100Continue;
+                    var SecurityProtocol = System.Net.ServicePointManager.SecurityProtocol;
+                    System.Net.ServicePointManager.Expect100Continue = true;
+                    System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Ssl3;
                     // string source = string.Format("https://github.com/tesseract-ocr/tessdata/blob/4592b8d453889181e01982d22328b5846765eaad/{0}.traineddata?raw=true", lang);
                     string source = string.Format("https://github.com/tesseract-ocr/tessdata/blob/master/{0}.traineddata?raw=true", lang);
                     System.Diagnostics.Trace.WriteLine(string.Format("Downloading file from '{0}' to '{1}'", source, dest));
                     webclient.DownloadFile(source, dest);
                     System.Diagnostics.Trace.WriteLine(string.Format("Download completed"));
+                    System.Net.ServicePointManager.Expect100Continue = Expect100Continue;
+                    System.Net.ServicePointManager.SecurityProtocol = SecurityProtocol;
                 }
         }
         public static string OcrImage(Emgu.CV.OCR.Tesseract _ocr, Emgu.CV.Mat image)

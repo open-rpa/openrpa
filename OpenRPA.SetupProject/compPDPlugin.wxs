@@ -25,6 +25,9 @@
       <Component Id='PDPluginComponentru' Win64='yes' Directory="PDPluginru" Guid='{8CF302DC-734C-471D-BFD5-37ED47B3B726}'>
         <File Id="OpenRPA.PDPlugin.resources.dll_ru" Source="!(wix.PDPluginSource)\ru\OpenRPA.PDPlugin.resources.dll" />
       </Component>
+      <Component Id='PDPluginComponentzh' Win64='yes' Directory="PDPluginzh" Guid='{E2BBBCC2-16C8-45B1-9F81-B584852332B1}'>
+        <File Id="OpenRPA.PDPlugin.resources.dll_zh" Source="!(wix.PDPluginSource)\zh\OpenRPA.PDPlugin.resources.dll" />
+      </Component>
 
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
@@ -39,6 +42,8 @@
       <Directory Id="PDPluginro" Name="ro">
       </Directory>
       <Directory Id="PDPluginru" Name="ru">
+      </Directory>
+      <Directory Id="PDPluginzh" Name="zh">
       </Directory>
     </DirectoryRef>
 

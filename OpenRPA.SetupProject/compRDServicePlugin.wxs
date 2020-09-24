@@ -82,6 +82,9 @@
       <Component Id='RDServicePluginComponentja' Win64='yes' Directory="RDServicePluginja" Guid='{17C3DC65-5CE6-45AD-9DA4-592A2E7D7D26}'>
         <File Id="OpenRPA.RDServicePlugin.resources.dll_ja" Source="!(wix.RDServicePluginSource)\ja\OpenRPA.RDServicePlugin.resources.dll" />
       </Component>
+      <Component Id='RDServicePluginComponentzh' Win64='yes' Directory="RDServicePluginzh" Guid='{F5D5D51C-6071-4087-B2C7-1461DFD280FE}'>
+        <File Id="OpenRPA.RDServicePlugin.resources.dll_zh" Source="!(wix.RDServicePluginSource)\zh\OpenRPA.RDServicePlugin.resources.dll" />
+      </Component>
 
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
@@ -93,6 +96,7 @@
       <Directory Id="RDServicePluginro" Name="ro" />
       <Directory Id="RDServicePluginru" Name="ru" />
       <Directory Id="RDServicePluginja" Name="ja" />
+      <Directory Id="RDServicePluginzh" Name="zh" />
     </DirectoryRef>
 
   </Fragment>

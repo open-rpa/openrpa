@@ -36,6 +36,9 @@
       <Component Id='UpdaterComponentja' Win64='yes' Directory="Updaterja" Guid='{144CD4E4-241D-42E2-A79B-9FC6B7859B87}'>
         <File Id="OpenRPA.Updater.resources.dll_ja" Source="!(wix.UpdaterSource)\ja\OpenRPA.Updater.resources.dll" />
       </Component>
+      <Component Id='UpdaterComponentzh' Win64='yes' Directory="Updaterzh" Guid='{5928C6DD-802B-4514-A69B-039A7299D0B7}'>
+        <File Id="OpenRPA.Updater.resources.dll_zh" Source="!(wix.UpdaterSource)\zh\OpenRPA.Updater.resources.dll" />
+      </Component>
 
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
@@ -53,6 +56,8 @@
         <Directory Id="Updaterru" Name="ru">
         </Directory>
         <Directory Id="Updaterja" Name="ja">
+        </Directory>
+        <Directory Id="Updaterzh" Name="zh">
         </Directory>
       </Directory>
     </DirectoryRef>

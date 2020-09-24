@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="activity_displayname" xml:space="preserve">
+    <value>显示名</value>
+  </data>
+  <data name="activity_displayname_help" xml:space="preserve">
+    <value>工作流舍弃中的显示名</value>
+  </data>
+  <data name="activity_element" xml:space="preserve">
+    <value>元素</value>
+  </data>
+  <data name="activity_element_help" xml:space="preserve">
+    <value>处理此元素、所有getElement活动的返回类型以及其他一些活动</value>
+  </data>
+  <data name="activity_getcolor" xml:space="preserve">
+    <value>获得颜色</value>
+  </data>
+  <data name="activity_getcolor_tooltip" xml:space="preserve">
+    <value>获取特定坐标处的颜色。</value>
+  </data>
+  <data name="activity_getelement" xml:space="preserve">
+    <value>获得元素</value>
+  </data>
+  <data name="activity_getelement_drop_hint" xml:space="preserve">
+    <value>丢弃活动</value>
+  </data>
+  <data name="activity_getelement_highlight" xml:space="preserve">
+    <value>高亮</value>
+  </data>
+  <data name="activity_getelement_process_limit" xml:space="preserve">
+    <value>Process 限制</value>
+  </data>
+  <data name="activity_getelement_select" xml:space="preserve">
+    <value>选择图片</value>
+  </data>
+  <data name="activity_getelement_tooltip" xml:space="preserve">
+    <value>在屏幕上或特定应用程序窗口中查找图像</value>
+  </data>
+  <data name="activity_getimage" xml:space="preserve">
+    <value>获得图像</value>
+  </data>
+  <data name="activity_getimage_drop_hint" xml:space="preserve">
+    <value>丢弃活动</value>
+  </data>
+  <data name="activity_getimage_highlight" xml:space="preserve">
+    <value>高亮</value>
+  </data>
+  <data name="activity_getimage_select" xml:space="preserve">
+    <value>选择图像</value>
+  </data>
+  <data name="activity_getimage_tooltip" xml:space="preserve">
+    <value>从使用getElement找到的另一个图像或getElement返回的元素</value>
+  </data>
+  <data name="activity_gettext" xml:space="preserve">
+    <value>获得文本</value>
+  </data>
+  <data name="activity_gettext_drop_hint" xml:space="preserve">
+    <value>丢弃活动</value>
+  </data>
+  <data name="activity_gettext_limit" xml:space="preserve">
+    <value>限制于</value>
+  </data>
+  <data name="activity_gettext_limit_hint" xml:space="preserve">
+    <value>只搜索这个次</value>
+  </data>
+  <data name="activity_gettext_tooltip" xml:space="preserve">
+    <value>使用OCR从图像中获取所有文本，可以限制为特定的单词或句子</value>
+  </data>
+  <data name="activity_loadfile_drop_hint" xml:space="preserve">
+    <value>丢弃活动</value>
+  </data>
+  <data name="activity_loadfile_filename" xml:space="preserve">
+    <value>文件名</value>
+  </data>
+  <data name="activity_loadfile_filename_hint" xml:space="preserve">
+    <value>要载入的图像文件名</value>
+  </data>
+  <data name="activity_loadfromfile" xml:space="preserve">
+    <value>从文件载入</value>
+  </data>
+  <data name="activity_loadfromfile_tooltip" xml:space="preserve">
+    <value>从文件加载图像并返回ImageElement</value>
+  </data>
+  <data name="activity_offsetx" xml:space="preserve">
+    <value>X偏移</value>
+  </data>
+  <data name="activity_offsetx_help" xml:space="preserve">
+    <value>单击时在元素内的偏移量</value>
+  </data>
+  <data name="activity_offsety" xml:space="preserve">
+    <value>Y偏移</value>
+  </data>
+  <data name="activity_offsety_help" xml:space="preserve">
+    <value>单击时在元素内的偏移量</value>
+  </data>
+  <data name="activity_takescreenshot" xml:space="preserve">
+    <value>截图</value>
+  </data>
+  <data name="activity_takescreenshot_tooltip" xml:space="preserve">
+    <value>截取整个屏幕或使用Get Element找到的特定元素的屏幕截图</value>
+  </data>
+</root>

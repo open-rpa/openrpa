@@ -22,6 +22,7 @@ namespace OpenRPA.Utilities
         [RequiredArgument]
         public InArgument<string> LocalPath { get; set; }
         public InArgument<bool> Overwrite { get; set; } = false;
+        public InArgument<bool> IgnoreSecurity { get; set; } = false;        
         protected override void AfterExecute(AsyncCodeActivityContext context, object result)
         {
         }
@@ -37,11 +38,17 @@ namespace OpenRPA.Utilities
             var url = URL.Get(context);
             var filepath = LocalPath.Get(context);
             var overwrite = Overwrite.Get(context);
+            var ignoresecurity = IgnoreSecurity.Get(context);
             filepath = Environment.ExpandEnvironmentVariables(filepath);
             // if(string.IsNullOrEmpty(filename)) filename = "temp."
             if(System.IO.File.Exists(filepath) && ! overwrite ) return 42;
             using (var client = new System.Net.WebClient())
             {
+                if(ignoresecurity)
+                {
+                    System.Net.ServicePointManager.Expect100Continue = true;
+                    System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Ssl3;
+                }
                 var dir = System.IO.Path.GetDirectoryName(filepath);
                 if (!System.IO.Directory.Exists(dir)) System.IO.Directory.CreateDirectory(dir);
                 await client.DownloadFileTaskAsync(new Uri(url), filepath);

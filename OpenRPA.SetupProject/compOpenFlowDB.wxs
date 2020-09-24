@@ -28,7 +28,7 @@
       <Component Id='OpenFlowDBComponentja' Win64='yes' Directory="OpenFlowDBja" Guid='{D8151408-F317-4B70-9B1B-CC44CB80F7FD}'>
         <File Id="OpenRPA.OpenFlowDB.resources.dll_ja" Source="!(wix.OpenFlowDBSource)\ja\OpenRPA.OpenFlowDB.resources.dll" />
       </Component>
-      <Component Id='OpenFlowDBComponentzh' Win64='yes' Directory="OpenFlowDBzh" Guid='{D8151408-F317-4B70-9B1B-CC44CB80F7FD}'>
+      <Component Id='OpenFlowDBComponentzh' Win64='yes' Directory="OpenFlowDBzh" Guid='{A7DBE3A5-BACD-45E5-B760-6EE2C9BFA20B}'>
         <File Id="OpenRPA.OpenFlowDB.resources.dll_zh" Source="!(wix.OpenFlowDBSource)\zh\OpenRPA.OpenFlowDB.resources.dll" />
       </Component>
 

@@ -238,7 +238,7 @@
 
       <Component Id='mainComponentzh' Win64='yes' Directory="mainzh" Guid='{0D177985-1CD6-43C0-BB13-19209789FAF0}'>
         <File Id="ED69C2B027A8485085512581DF0FBF1C" Source="!(wix.MainSource)\zh\OpenRPA.resources.dll" />
-        <File Id="84BCCF92B56B4313982A0457F0DAD1A4" Source="!(wix.MainSource)\zh\OpenRPA.Interfaces.resources.dll" />
+        <File Id="F4BCCF92B56B4313982A0457F0DAD1A4" Source="!(wix.MainSource)\zh\OpenRPA.Interfaces.resources.dll" />
         <File Id="BB6C4642DAAB463798B57182BC26DCA2" Source="!(wix.MainSource)\zh\OpenRPA.Windows.resources.dll" />
       </Component>
 

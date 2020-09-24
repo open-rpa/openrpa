@@ -43,7 +43,7 @@
       <Component Id='ImageComponentja' Win64='yes' Directory="Imageja" Guid='{E77BDFCF-4A94-44DE-B5DF-921E5F1DF480}'>
         <File Id="OpenRPA.Image.resources.dll_ja" Source="!(wix.ImageSource)\ja\OpenRPA.Image.resources.dll" />
       </Component>
-      <Component Id='ImageComponentzh' Win64='yes' Directory="Imagezh" Guid='{E77BDFCF-4A94-44DE-B5DF-921E5F1DF480}'>
+      <Component Id='ImageComponentzh' Win64='yes' Directory="Imagezh" Guid='{517963D9-E48F-4371-9D57-D4653DBCF56E}'>
         <File Id="OpenRPA.Image.resources.dll_zh" Source="!(wix.ImageSource)\zh\OpenRPA.Image.resources.dll" />
       </Component>
 

@@ -193,8 +193,7 @@
     <value>探测器</value>
   </data>
   <data name="activity_detector_help" xml:space="preserve">
-    <value>71/5000
-将等待此检测器触发，然后工作流程将继续</value>
+    <value>将等待此检测器触发，然后工作流程将继续</value>
   </data>
   <data name="activity_detector_tooltip" xml:space="preserve">
     <value>将工作流程置于空闲模式，等待选定的检测器触发</value>
@@ -290,7 +289,7 @@
     <value>调用一个OpenRPA内的工作流</value>
   </data>
   <data name="activity_invokeremoteopenrpa" xml:space="preserve">
-    <value>滴啊用远程的OpenRPA</value>
+    <value>调用远程的OpenRPA</value>
   </data>
   <data name="activity_invokeremoteopenrpa_tooltip" xml:space="preserve">
     <value>远程机器人上调用OpenRPA工作流</value>

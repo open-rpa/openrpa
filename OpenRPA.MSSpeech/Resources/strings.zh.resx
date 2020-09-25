@@ -118,33 +118,33 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="activity_speak" xml:space="preserve">
-    <value>Speak</value>
+    <value>说话</value>
   </data>
   <data name="activity_speak_hint" xml:space="preserve">
-    <value>Text to speak</value>
+    <value>要说话的文本</value>
   </data>
   <data name="activity_speak_label" xml:space="preserve">
-    <value>Speak</value>
+    <value>说话</value>
   </data>
   <data name="activity_speak_tooltip" xml:space="preserve">
-    <value>Speak using default sound device</value>
+    <value>使用默认声音设备讲话</value>
   </data>
   <data name="plugin_commands" xml:space="preserve">
-    <value>Commands</value>
+    <value>命令</value>
   </data>
   <data name="plugin_common_words" xml:space="preserve">
-    <value>Common words</value>
+    <value>常用词</value>
   </data>
   <data name="plugin_filter" xml:space="preserve">
-    <value>File filter</value>
+    <value>文件过滤器</value>
   </data>
   <data name="plugin_includesubdir" xml:space="preserve">
-    <value>Sub Directories</value>
+    <value>子目录</value>
   </data>
   <data name="plugin_name" xml:space="preserve">
-    <value>Name</value>
+    <value>名称</value>
   </data>
   <data name="plugin_path" xml:space="preserve">
-    <value>Path</value>
+    <value>路径</value>
   </data>
 </root>

@@ -118,72 +118,72 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="activity_adddatarow_datatable" xml:space="preserve">
-    <value>DataTable to insert into</value>
+    <value>要插入的数据表</value>
   </data>
   <data name="activity_converter_datatable" xml:space="preserve">
-    <value>Datatable</value>
+    <value>数据表</value>
   </data>
   <data name="activity_converter_jarray" xml:space="preserve">
-    <value>JArray</value>
+    <value>数组</value>
   </data>
   <data name="activity_datatable" xml:space="preserve">
-    <value>DataTable</value>
+    <value>数据表</value>
   </data>
   <data name="activity_datatable_columnnames" xml:space="preserve">
-    <value>Array of DataTable columns</value>
+    <value>数据表列的数组</value>
   </data>
   <data name="activity_datatable_newcolumnname" xml:space="preserve">
-    <value>New columns Name</value>
+    <value>新的列名</value>
   </data>
   <data name="activity_deletedatarow_row" xml:space="preserve">
-    <value>Row</value>
+    <value>行</value>
   </data>
   <data name="activity_downloadfile_hint" xml:space="preserve">
-    <value>Save into this folder</value>
+    <value>保存到这个目录</value>
   </data>
   <data name="activity_drop_hint" xml:space="preserve">
-    <value>Drop activity</value>
+    <value>删除活动</value>
   </data>
   <data name="activity_match_compiled" xml:space="preserve">
-    <value>Compiled</value>
+    <value>已编译</value>
   </data>
   <data name="activity_match_input" xml:space="preserve">
-    <value>The input string to match against</value>
+    <value>要匹配的输入字符串</value>
   </data>
   <data name="activity_match_pattern" xml:space="preserve">
-    <value>The regular expression to match</value>
+    <value>要匹配的正则表达式</value>
   </data>
   <data name="activity_match_replacement" xml:space="preserve">
-    <value>Replace with this string</value>
+    <value>用此字符串替换</value>
   </data>
   <data name="activity_new_datatable" xml:space="preserve">
-    <value>New DataTable variable</value>
+    <value>新的数据表变量</value>
   </data>
   <data name="activity_readexcel_hint" xml:space="preserve">
-    <value>Select excel file to read</value>
+    <value>选择要读入的Excel文件</value>
   </data>
   <data name="activity_readjson_hint" xml:space="preserve">
-    <value>Select JSON file to read</value>
+    <value>选择要读入的Json文件</value>
   </data>
   <data name="activity_readpdf_hint" xml:space="preserve">
-    <value>Select PDF file to read</value>
+    <value>选择要读入的Pdf文件</value>
   </data>
   <data name="activity_selectfile_hint" xml:space="preserve">
-    <value>Selected File</value>
+    <value>选定文件</value>
   </data>
   <data name="activity_selectfolder_hint" xml:space="preserve">
-    <value>Selected Folder</value>
+    <value>选定目录</value>
   </data>
   <data name="activity_startprocess_arguments_hint" xml:space="preserve">
-    <value>Arguments to be parsed the the executable</value>
+    <value>被解析为可执行文件的参数</value>
   </data>
   <data name="activity_startprocess_filename_hint" xml:space="preserve">
-    <value>The full filename and path to the executable to start</value>
+    <value>完整的文件名和可执行文件的启动路径</value>
   </data>
   <data name="activity_writecsv_hint" xml:space="preserve">
-    <value>Select CSV file to write to</value>
+    <value>选择要写入的CSV文件</value>
   </data>
   <data name="activity_writeexcel_hint" xml:space="preserve">
-    <value>Select excel file to write to</value>
+    <value>选择要写入的Excel文件</value>
   </data>
 </root>

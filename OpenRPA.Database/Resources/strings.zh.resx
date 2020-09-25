@@ -118,87 +118,87 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="activity_databasescope" xml:space="preserve">
-    <value>Database Scope</value>
+    <value>数据库范围</value>
   </data>
   <data name="activity_databasescope_select" xml:space="preserve">
-    <value>Select Database</value>
+    <value>选择数据库</value>
   </data>
   <data name="activity_databasescope_tooltip" xml:space="preserve">
-    <value>Database scope that opens a connection to a database, and closes the connection at the end</value>
+    <value>数据库作用域可打开与数据库的连接，并在最后关闭连接</value>
   </data>
   <data name="activity_database_datatable" xml:space="preserve">
-    <value>DataTable</value>
+    <value>数据表</value>
   </data>
   <data name="activity_database_datatable_hint" xml:space="preserve">
-    <value>The DataTable to save result into</value>
+    <value>将结果保存到数据表</value>
   </data>
   <data name="activity_database_query" xml:space="preserve">
-    <value>Query</value>
+    <value>查询</value>
   </data>
   <data name="activity_database_query_hint" xml:space="preserve">
-    <value>The query to execute</value>
+    <value>要执行的查询</value>
   </data>
   <data name="activity_database_result" xml:space="preserve">
-    <value>Result</value>
+    <value>结果</value>
   </data>
   <data name="activity_database_result_hint" xml:space="preserve">
-    <value>The result of the query</value>
+    <value>查询的结果</value>
   </data>
   <data name="activity_database_table" xml:space="preserve">
-    <value>Table</value>
+    <value>表（Table）</value>
   </data>
   <data name="activity_database_table_hint" xml:space="preserve">
-    <value>Table to insert rows into</value>
+    <value>要插入数据的表</value>
   </data>
   <data name="activity_executenonquery" xml:space="preserve">
-    <value>Execute Non Query</value>
+    <value>执行非查询</value>
   </data>
   <data name="activity_executenonquery_query" xml:space="preserve">
-    <value>Query</value>
+    <value>查询</value>
   </data>
   <data name="activity_executenonquery_query_help" xml:space="preserve">
-    <value>The query to execute</value>
+    <value>要执行的查询</value>
   </data>
   <data name="activity_executenonquery_tooltip" xml:space="preserve">
-    <value>Runs a query that returns no results, for UPDATE, INSERT, and DELETE statements, the Result value is the number of rows affected by the command, for all else, the Result value will be -1</value>
+    <value>运行一个不返回任何结果的查询，例如UPDATE，INSERT和DELETE语句，Result值是该命令影响的行数，对于所有其他结果，Result值将为-1</value>
   </data>
   <data name="activity_executequery" xml:space="preserve">
-    <value>Execute Query</value>
+    <value>执行查询</value>
   </data>
   <data name="activity_executequery_tooltip" xml:space="preserve">
-    <value>Runs a query and returns the result as a DataTable</value>
+    <value>运行查询并将结果作为DataTable（数据表）返回</value>
   </data>
   <data name="activity_executescalar" xml:space="preserve">
-    <value>Execute Scalar</value>
+    <value>执行Scalar</value>
   </data>
   <data name="activity_executescalar_tooltip" xml:space="preserve">
-    <value>Runs a query that returns exactly one result</value>
+    <value>直接查询，返回正好是一个结果</value>
   </data>
   <data name="activity_getelement_drop_hint" xml:space="preserve">
-    <value>Drop activity</value>
+    <value>删除活动</value>
   </data>
   <data name="activity_updatefromtable" xml:space="preserve">
-    <value>Update From DataTable</value>
+    <value>在数据表中修改</value>
   </data>
   <data name="activity_updatefromtable_datatable" xml:space="preserve">
-    <value>DataTable with the data you want to update from</value>
+    <value>包含你要更新数据的DataTable(数据表)</value>
   </data>
   <data name="activity_updatefromtable_datatable_help" xml:space="preserve">
-    <value>DataTable</value>
+    <value>数据表</value>
   </data>
   <data name="activity_updatefromtable_result" xml:space="preserve">
-    <value>Result</value>
+    <value>结果</value>
   </data>
   <data name="activity_updatefromtable_result_help" xml:space="preserve">
-    <value>The number of rows affected</value>
+    <value>受影响的记录数</value>
   </data>
   <data name="activity_updatefromtable_tablename" xml:space="preserve">
-    <value>TableName</value>
+    <value>表名</value>
   </data>
   <data name="activity_updatefromtable_tablename_help" xml:space="preserve">
-    <value>Table to insert rows into</value>
+    <value>要被插入数据的表名</value>
   </data>
   <data name="activity_updatefromtable_tooltip" xml:space="preserve">
-    <value>Insert, Update and Delete the data from the DataTable against the current database, returns the number of rows affected</value>
+    <value>针对当前数据库从DataTable中插入，更新和删除数据，返回受影响的行数</value>
   </data>
 </root>

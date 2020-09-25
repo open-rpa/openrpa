@@ -145,8 +145,6 @@
     <value>显示通知</value>
   </data>
   <data name="activity_shownotification_tooltip" xml:space="preserve">
-    <value>88/200
- 
-在屏幕的右下角显示通知，显示时间有限</value>
+    <value>在屏幕的右下角显示通知，显示时间有限</value>
   </data>
 </root>

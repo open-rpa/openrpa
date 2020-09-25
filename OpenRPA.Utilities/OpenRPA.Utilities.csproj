@@ -10,8 +10,9 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.0.14</Version>
-    <PackageReleaseNotes>1.0.14 Add SelectFile Activity
+    <Version>1.0.15</Version>
+    <PackageReleaseNotes>1.0.15 Test implementation of support for Arabic for readpdf
+1.0.14 Add SelectFile Activity
 1.0.13 Add SetAllRowsState
 1.0.12 Add Start Process
 1.0.11 Add Replace Activity

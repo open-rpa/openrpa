@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- Update-FormatData C:\code\openrpa\OpenRPA.ps\bin\Debug\net462\ccp.ps.ps1xml -->
+<!-- http://codepyre.com/2012/08/prototypal-inheritance-using-powershell/ -->
+<Configuration>
+<ViewDefinitions>
+  <View>
+    <Name>entitybase</Name>
+    <ViewSelectedBy>
+      <TypeName>OpenRPA.PS.Entity</TypeName>
+    </ViewSelectedBy>
+    <TableControl>
+      <TableHeaders>
+        <TableColumnHeader>
+          <Label>Name</Label>
+        </TableColumnHeader>
+        <TableColumnHeader>
+          <Label>Type</Label>
+          <Width>12</Width>
+        </TableColumnHeader>
+        <TableColumnHeader>
+          <Label>Created by</Label>
+          <Width>30</Width>
+        </TableColumnHeader>
+        <TableColumnHeader>
+          <Label>Created</Label>
+          <Width>13</Width>
+        </TableColumnHeader>
+        <TableColumnHeader>
+          <Label>Updated</Label>
+          <Width>13</Width>
+        </TableColumnHeader>
+      </TableHeaders>
+      <TableRowEntries>
+        <TableRowEntry>
+          <TableColumnItems>
+            <!--<TableColumnItem>
+              <PropertyName>_id</PropertyName>
+            </TableColumnItem>-->
+            <TableColumnItem>
+              <PropertyName>name</PropertyName>
+            </TableColumnItem>
+            <TableColumnItem>
+              <PropertyName>_type</PropertyName>
+            </TableColumnItem>
+            <TableColumnItem>
+              <PropertyName>_createdby</PropertyName>
+            </TableColumnItem>
+            <TableColumnItem>
+              <PropertyName>_created</PropertyName>
+            </TableColumnItem>
+            <TableColumnItem>
+              <PropertyName>_modified</PropertyName>
+            </TableColumnItem>
+          </TableColumnItems>
+        </TableRowEntry>
+      </TableRowEntries>
+    </TableControl>
+  </View>
+
+
+  <View>
+    <Name>File</Name>
+    <ViewSelectedBy>
+      <TypeName>OpenRPA.File</TypeName>
+    </ViewSelectedBy>
+    <TableControl>
+      <TableHeaders>
+        <TableColumnHeader>
+          <Label>Name</Label>
+        </TableColumnHeader>
+        <TableColumnHeader>
+          <Label>File size</Label>
+          <Width>12</Width>
+        </TableColumnHeader>
+        <TableColumnHeader>
+          <Label>Created by</Label>
+          <Width>30</Width>
+        </TableColumnHeader>
+        <TableColumnHeader>
+          <Label>Created</Label>
+          <Width>13</Width>
+        </TableColumnHeader>
+        <TableColumnHeader>
+          <Label>Updated</Label>
+          <Width>13</Width>
+        </TableColumnHeader>
+      </TableHeaders>
+      <TableRowEntries>
+        <TableRowEntry>
+          <TableColumnItems>
+            <TableColumnItem>
+              <ScriptBlock>$_.metadata.name</ScriptBlock>
+            </TableColumnItem>
+            <TableColumnItem>
+              <ScriptBlock>$_.length</ScriptBlock>
+            </TableColumnItem>
+            <TableColumnItem>
+              <ScriptBlock>$_.metadata._createdby</ScriptBlock>
+            </TableColumnItem>
+            <TableColumnItem>
+              <ScriptBlock>$_.metadata._created</ScriptBlock>
+            </TableColumnItem>
+            <TableColumnItem>
+              <ScriptBlock>$_.metadata._modified</ScriptBlock>
+            </TableColumnItem>
+          </TableColumnItems>
+        </TableRowEntry>
+      </TableRowEntries>
+    </TableControl>
+  </View>
+
+
+
+  <!--<View>
+    <Name>entitybase</Name>
+    <ViewSelectedBy>
+      <TypeName>OpenRPA.Workflow</TypeName>
+      <TypeName>OpenRPA.Project</TypeName>
+      <TypeName>OpenRPA.Detector</TypeName>      
+    </ViewSelectedBy>
+    <TableControl>
+      <TableHeaders>
+        <TableColumnHeader>
+          <Label>Name</Label>
+        </TableColumnHeader>
+        <TableColumnHeader>
+          <Label>Created by</Label>
+          <Width>30</Width>
+        </TableColumnHeader>
+        <TableColumnHeader>
+          <Label>Created</Label>
+          <Width>13</Width>
+        </TableColumnHeader>
+        <TableColumnHeader>
+          <Label>Updated</Label>
+          <Width>13</Width>
+        </TableColumnHeader>
+      </TableHeaders>
+      <TableRowEntries>
+        <TableRowEntry>
+          <TableColumnItems>
+            <TableColumnItem>
+              <PropertyName>name</PropertyName>
+            </TableColumnItem>
+            <TableColumnItem>
+              <PropertyName>_createdby</PropertyName>
+            </TableColumnItem>
+            <TableColumnItem>
+              <PropertyName>_created</PropertyName>
+            </TableColumnItem>
+            <TableColumnItem>
+              <PropertyName>_modified</PropertyName>
+            </TableColumnItem>
+          </TableColumnItems>
+        </TableRowEntry>
+      </TableRowEntries>
+    </TableControl>
+  </View>
+
+
+  <View>
+    <Name>entitybase</Name>
+    <ViewSelectedBy>
+      <TypeName>OpenRPA.UnattendedClient</TypeName>
+      <TypeName>OpenRPA.UnattendedServer</TypeName>
+    </ViewSelectedBy>
+    <TableControl>
+      <TableHeaders>
+        <TableColumnHeader>
+          <Label>Name</Label>
+        </TableColumnHeader>
+        <TableColumnHeader>
+          <Label>windowslogin</Label>
+          <Width>30</Width>
+        </TableColumnHeader>
+        <TableColumnHeader>
+          <Label>computername</Label>
+          <Width>30</Width>
+        </TableColumnHeader>
+        <TableColumnHeader>
+          <Label>Created</Label>
+          <Width>13</Width>
+        </TableColumnHeader>
+        <TableColumnHeader>
+          <Label>Updated</Label>
+          <Width>13</Width>
+        </TableColumnHeader>
+      </TableHeaders>
+      <TableRowEntries>
+        <TableRowEntry>
+          <TableColumnItems>
+            <TableColumnItem>
+              <PropertyName>name</PropertyName>
+            </TableColumnItem>
+            <TableColumnItem>
+              <PropertyName>Windows Login</PropertyName>
+            </TableColumnItem>
+            <TableColumnItem>
+              <PropertyName>Computer Name</PropertyName>
+            </TableColumnItem>
+            <TableColumnItem>
+              <PropertyName>_created</PropertyName>
+            </TableColumnItem>
+            <TableColumnItem>
+              <PropertyName>_modified</PropertyName>
+            </TableColumnItem>
+          </TableColumnItems>
+        </TableRowEntry>
+      </TableRowEntries>
+    </TableControl>
+  </View>-->
+  <!-- https://github.com/MvcExtensions/Core/blob/master/build/Pscx/FormatData/Pscx.Archive.Format.ps1xml -->
+</ViewDefinitions>
+</Configuration>

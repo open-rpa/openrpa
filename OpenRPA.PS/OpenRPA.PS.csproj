@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <AssemblyName>OpenRPA.PS</AssemblyName>
+    <RootNamespace>OpenRPA.PS</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
+    <ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Management.Automation">
+      <HintPath>..\..\..\Windows\assembly\GAC_MSIL\System.Management.Automation\1.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="openrpa.ps1xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="openrpa.psd1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Queues\" />
+  </ItemGroup>
+</Project>

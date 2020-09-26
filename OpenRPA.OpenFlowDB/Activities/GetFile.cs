@@ -43,7 +43,6 @@ namespace OpenRPA.OpenFlowDB
             var rows = await global.webSocketClient.Query<JObject>("files", q, null, 100, 0, "{\"_id\": -1}");
 
             if (rows.Length == 0) throw new Exception("File not found");
-            if (rows.Length == 0) throw new Exception("File not found");
             filename = rows[0]["filename"].ToString();
             id = rows[0]["_id"].ToString();
 

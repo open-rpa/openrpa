@@ -37,6 +37,11 @@ namespace OpenRPA.Interfaces
         string replyto { get; set; }
     }
     public delegate void QueueMessageDelegate(IQueueMessage message, QueueMessageEventArgs e);
+    public interface ICollection
+    {
+        string name { get; set; }
+        string type { get; set; }
+    }
     public interface IWebSocketClient
     {
         event Action OnOpen;
@@ -66,6 +71,7 @@ namespace OpenRPA.Interfaces
         Task<string> UploadFile(string filepath, string path, metadata metadata);
         Task DownloadFileAndSave(string filename, string id, string filepath, bool ignorepath);
         Task DownloadFileAndSaveAs(string filename, string id, string filepath, bool ignorepath);
+        Task<ICollection[]> ListCollections(bool includehist = false);
     }
     public class QueueMessageEventArgs : EventArgs
     {

@@ -629,5 +629,15 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
             return q.newinstanceid;
         }
+        public async Task<Interfaces.ICollection[]> ListCollections(bool includehist = false)
+        {
+            var q = new ListCollectionsMessage();
+            q.includehist = includehist; q.jwt = jwt;
+            q = await q.SendMessage<ListCollectionsMessage>(this);
+            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            return q.result;
+        }
+
     }
+
 }

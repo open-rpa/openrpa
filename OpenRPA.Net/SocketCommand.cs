@@ -19,7 +19,6 @@ namespace OpenRPA.Net
         [JsonIgnore]
         public Message msg { get; set; }
         IMessage ISocketCommand.msg { get => msg; set => msg = value as Message; }
-
         public async Task<T> SendMessage<T>(WebSocketClient ws)
         {
             msg.data = JsonConvert.SerializeObject(this);
@@ -30,7 +29,10 @@ namespace OpenRPA.Net
             }
             try
             {
-                var result = JsonConvert.DeserializeObject<T>(reply.data);
+                var result = JsonConvert.DeserializeObject<T>(reply.data, new JsonSerializerSettings
+                {
+                    DateTimeZoneHandling = DateTimeZoneHandling.Local
+                });
                 return result;
             }
             catch (Exception ex)

@@ -6,8 +6,9 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.19</Version>
-    <PackageReleaseNotes>1.0.19 Add complete locking around receiveQueue
+    <Version>1.0.20</Version>
+    <PackageReleaseNotes>1.0.20 Add support for getting called from a dll
+1.0.19 Add complete locking around receiveQueue
 1.0.18 Change target framework to 4.7.2
 1.0.17 add queryas support
 1.0.16 add version info to login message

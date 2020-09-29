@@ -10,6 +10,14 @@
                    Value='[INSTALLDIR]'
                    Type='string'
                    KeyPath='yes' />
+        <Environment
+                  Id="PATH"
+                  Name="PATH"
+                  Value="[INSTALLDIR]"
+                  Permanent="yes"
+                  Part="last"
+                  Action="set"
+                  System="yes" />
         <File Id='openrpaExe' Source='!(wix.MainSource)\OpenRPA.exe' />
 
         <File Id="fil89D857203DD54ABCB0908F0A87409698" Source="!(wix.MainSource)\netstandard.dll" />

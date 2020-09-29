@@ -3,6 +3,8 @@
     <TargetFramework>net462</TargetFramework>
     <AssemblyName>OpenRPA.PS</AssemblyName>
     <RootNamespace>OpenRPA.PS</RootNamespace>
+    <Configurations>Debug;Release;PrepInstaller</Configurations>
+    <Version>1.0.1</Version>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
@@ -14,14 +16,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Update="openrpa.ps1xml">
+    <None Update="OpenRPA\OpenRPA.ps1xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="openrpa.psd1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Update="OpenRPA\OpenRPA.psd1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Queues\" />
   </ItemGroup>
 </Project>

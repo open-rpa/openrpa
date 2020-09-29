@@ -22,13 +22,17 @@ namespace OpenRPA.PS
         private static RuntimeDefinedParameterDictionary _staticStorage;
         public object GetDynamicParameters()
         {
+            if (_Collections == null)
+            {
+                Initialize().Wait();
+            }
             // IEnumerable<string> Collections = new string[] { "entities", "workflow_instances", "nodered", "openrpa_instances", "workflow", "users", "audit", "forms", "openrpa" };
             var runtimeDefinedParameterDictionary = new RuntimeDefinedParameterDictionary();
             var attrib = new Collection<Attribute>()
             {
+                // Mandatory = true,
                 new ParameterAttribute() {
                     HelpMessage = "What collection to query, default is entities",
-                    Mandatory = false,
                     Position = 1
                 },
                 new ValidateSetAttribute(_Collections)

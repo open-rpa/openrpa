@@ -1,6 +1,6 @@
 ﻿@{ 
-ModuleToProcess = 'OpenRPA.PS.dll'
-ModuleVersion = '1.0'
+ModuleToProcess = '..\OpenRPA.PS.dll'
+ModuleVersion = '1.0.1'
 GUID = '8212A209-EFF9-4EBE-9972-680A4A6257BE'
 Author = 'Allan Zimmermann'
 CompanyName = 'OpenRPA ApS'

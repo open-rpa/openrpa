@@ -27,7 +27,6 @@ namespace OpenRPA.PS
             {
                 Initialize().Wait();
             }
-
             // IEnumerable<string> Collections = new string[] { "entities", "workflow_instances", "nodered", "openrpa_instances", "workflow", "users", "audit", "forms", "openrpa" };
             var runtimeDefinedParameterDictionary = new RuntimeDefinedParameterDictionary();
             var attrib = new Collection<Attribute>()

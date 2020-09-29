@@ -176,7 +176,7 @@ namespace OpenRPA.PS
             }
             internal static void PostItem(MarshalItem item)
             {
-                currentAsyncCmdletContext.Post(item);
+                if(currentAsyncCmdletContext != null) currentAsyncCmdletContext.Post(item);
             }
             public void Dispose()
             {

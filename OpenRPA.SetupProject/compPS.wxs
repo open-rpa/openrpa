@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="PSComponents">
+      <Component Id='PSComponent' Guid='{D263C0F0-494A-4600-874E-7D011069E4B5}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="OpenRPA.PS.dll" Source="!(wix.PSSource)\OpenRPA.PS.dll" />
+        <File Id="System.Management.Automation.dll" Source="!(wix.PSSource)\System.Management.Automation.dll" />
+        <Environment
+                  Id="PSModulePath"
+                  Name="PSModulePath"
+                  Value="[INSTALLDIR]"
+                  Permanent="yes"
+                  Part="last"
+                  Action="set"
+                  System="yes" />
+
+      </Component>
+      <Component Id='PSOpenRPASub' Win64='yes' Directory="OpenRPASub" Guid='{EA794D86-CB6A-4A1E-95D4-0721B2BBAF95}'>
+        <File Id="OpenRPA.ps1xml" Source="!(wix.PSSource)\OpenRPA\OpenRPA.ps1xml" />
+        <File Id="OpenRPA.psd1" Source="!(wix.PSSource)\OpenRPA\OpenRPA.psd1" />
+      </Component>
+      <!--<Component Id="PSRegistryEntries" Guid="{AE8F670F-1B82-4234-9E5B-E17C17DFD99F}" Directory="INSTALLDIR">
+        <Environment
+          Id="PATH"
+          Name="PATH"
+          Value="[INSTALLDIR]"
+          Permanent="yes"
+          Part="last"
+          Action="set"
+          System="yes" />
+        <Environment
+          Id="PSModulePath"
+          Name="PSModulePath"
+          Value="[INSTALLDIR]"
+          Permanent="yes"
+          Part="last"
+          Action="set"
+          System="yes" />
+        <RegistryKey Id='ChessInfoBarInstallDir' Root='HKLM' Key='Software\Crimson\Engage' Action='createAndRemoveOnUninstall' >
+          <RegistryValue Type='string' Name='InstallDir' Value="[INSTALLFOLDER]" Action="write" KeyPath="yes" />
+        </RegistryKey>
+      </Component>-->
+      <!--<Component Id='PSComponentde' Win64='yes' Directory="PSde" Guid=''>
+        <File Id="OpenRPA.PS.resources.dll_de" Source="!(wix.PSSource)\de\OpenRPA.PS.resources.dll" />
+      </Component>
+      <Component Id='PSComponentda' Win64='yes' Directory="PSda" Guid=''>
+        <File Id="OpenRPA.PS.resources.dll_da" Source="!(wix.PSSource)\da\OpenRPA.PS.resources.dll" />
+      </Component>
+      <Component Id='PSComponentes' Win64='yes' Directory="PSes" Guid=''>
+        <File Id="OpenRPA.PS.resources.dll_es" Source="!(wix.PSSource)\es\OpenRPA.PS.resources.dll" />
+      </Component>
+      <Component Id='PSComponentpt' Win64='yes' Directory="PSpt" Guid=''>
+        <File Id="OpenRPA.PS.resources.dll_pt" Source="!(wix.PSSource)\pt\OpenRPA.PS.resources.dll" />
+      </Component>
+      <Component Id='PSComponentro' Win64='yes' Directory="PSro" Guid=''>
+        <File Id="OpenRPA.PS.resources.dll_ro" Source="!(wix.PSSource)\ro\OpenRPA.PS.resources.dll" />
+      </Component>
+      <Component Id='PSComponentru' Win64='yes' Directory="PSru" Guid=''>
+        <File Id="OpenRPA.PS.resources.dll_ru" Source="!(wix.PSSource)\ru\OpenRPA.PS.resources.dll" />
+      </Component>
+      <Component Id='PSComponentja' Win64='yes' Directory="PSja" Guid=''>
+        <File Id="OpenRPA.PS.resources.dll_ja" Source="!(wix.PSSource)\ja\OpenRPA.PS.resources.dll" />
+      </Component>
+      <Component Id='PSComponentzh' Win64='yes' Directory="PSzh" Guid=''>
+        <File Id="OpenRPA.PS.resources.dll_zh" Source="!(wix.PSSource)\zh\OpenRPA.PS.resources.dll" />
+      </Component>-->
+
+    </ComponentGroup>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="OpenRPASub" Name="OpenRPA">
+      </Directory>
+      <!--<Directory Id="PSde" Name="de">
+      </Directory>
+      <Directory Id="PSda" Name="da">
+      </Directory>
+      <Directory Id="PSes" Name="es">
+      </Directory>
+      <Directory Id="PSpt" Name="pt">
+      </Directory>
+      <Directory Id="PSro" Name="ro">
+      </Directory>
+      <Directory Id="PSru" Name="ru">
+      </Directory>
+      <Directory Id="PSja" Name="ja">
+      </Directory>
+      <Directory Id="PSzh" Name="zh">
+      </Directory>-->
+    </DirectoryRef>
+
+  </Fragment>
+</Wix>

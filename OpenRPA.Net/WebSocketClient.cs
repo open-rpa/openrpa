@@ -433,7 +433,9 @@ namespace OpenRPA.Net
         }
         public async Task<TokenUser> Signin(string username, SecureString password, string clientagent = "", string clientversion = "")
         {
-            SigninMessage signin = new SigninMessage(username, password, System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
+            var asm = System.Reflection.Assembly.GetEntryAssembly();
+            if (asm == null) asm = System.Reflection.Assembly.GetExecutingAssembly();
+            SigninMessage signin = new SigninMessage(username, password, asm.GetName().Version.ToString());
             if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
             if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
             signin = await signin.SendMessage<SigninMessage>(this);
@@ -448,7 +450,9 @@ namespace OpenRPA.Net
         }
         public async Task<TokenUser> Signin(string jwt, string clientagent = "", string clientversion = "")
         {
-            SigninMessage signin = new SigninMessage(jwt, System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
+            var asm = System.Reflection.Assembly.GetEntryAssembly();
+            if (asm == null) asm = System.Reflection.Assembly.GetExecutingAssembly();
+            SigninMessage signin = new SigninMessage(jwt, asm.GetName().Version.ToString());
             if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
             if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
             signin = await signin.SendMessage<SigninMessage>(this);
@@ -463,7 +467,9 @@ namespace OpenRPA.Net
         }
         public async Task<TokenUser> Signin(SecureString jwt, string clientagent = "", string clientversion = "")
         {
-            SigninMessage signin = new SigninMessage(jwt, System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
+            var asm = System.Reflection.Assembly.GetEntryAssembly();
+            if (asm == null) asm = System.Reflection.Assembly.GetExecutingAssembly();
+            SigninMessage signin = new SigninMessage(jwt, asm.GetName().Version.ToString());
             if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
             if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
             signin = await signin.SendMessage<SigninMessage>(this);
@@ -623,5 +629,15 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
             return q.newinstanceid;
         }
+        public async Task<Interfaces.ICollection[]> ListCollections(bool includehist = false)
+        {
+            var q = new ListCollectionsMessage();
+            q.includehist = includehist; q.jwt = jwt;
+            q = await q.SendMessage<ListCollectionsMessage>(this);
+            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            return q.result;
+        }
+
     }
+
 }

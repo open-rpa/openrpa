@@ -14,6 +14,12 @@
         <File Id="NuGet.Versioning.dll_updater" Source="!(wix.UpdaterSource)\NuGet.Versioning.dll" />
         <File Id="OpenRPA.Updater.exe_updater" Source="!(wix.UpdaterSource)\OpenRPA.Updater.exe" />
         <File Id="OpenRPA.Updater.exe.config_updater" Source="!(wix.UpdaterSource)\OpenRPA.Updater.exe.config" />
+
+        <File Id="System.IO.Compression.dll_updater" Source="!(wix.UpdaterSource)\System.IO.Compression.dll" />
+        <File Id="System.IO.Compression.ZipFile.dll_updater" Source="!(wix.UpdaterSource)\System.IO.Compression.ZipFile.dll" />
+        <File Id="System.Net.Http.dll_updater" Source="!(wix.UpdaterSource)\System.Net.Http.dll" />
+        <File Id="System.Runtime.InteropServices.RuntimeInformation.dll_updater" Source="!(wix.UpdaterSource)\System.Runtime.InteropServices.RuntimeInformation.dll" />
+        <File Id="System.Security.Cryptography.Algorithms.dll_updater" Source="!(wix.UpdaterSource)\System.Security.Cryptography.Algorithms.dll" />
       </Component>
       <Component Id='UpdaterComponentde' Win64='yes' Directory="Updaterde" Guid='{067B6379-A3C2-4A4A-90E9-59D2A65296FF}'>
         <File Id="OpenRPA.Updater.resources.dll_de" Source="!(wix.UpdaterSource)\de\OpenRPA.Updater.resources.dll" />

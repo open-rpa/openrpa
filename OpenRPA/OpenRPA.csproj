@@ -212,6 +212,10 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.8.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="NuGet.Common" Version="5.4.0" />
+    <PackageReference Include="NuGet.Packaging" Version="5.4.0" />
+    <PackageReference Include="NuGet.Protocol" Version="5.4.0" />
+    <PackageReference Include="NuGet.Resolver" Version="5.4.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\ClickElementDesigner.xaml" />
@@ -442,6 +446,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Views\InsertText.xaml" />
     <None Remove="Views\KeyboardSeqWindow.xaml" />
     <None Remove="Views\OpenProject.xaml" />
+    <None Remove="Views\PackageManager.xaml" />
     <None Remove="Views\PermissionsWindow.xaml" />
     <None Remove="Views\RecorderPlugins.xaml" />
     <None Remove="Views\RunPlugins.xaml" />
@@ -510,6 +515,9 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AgentViewProjects.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PackageManager.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\WorkflowInstances.xaml">

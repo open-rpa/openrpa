@@ -447,6 +447,9 @@
   <data name="animatemouse" xml:space="preserve">
     <value>Use Animate Mouse</value>
   </data>
+  <data name="author" xml:space="preserve">
+    <value>Author</value>
+  </data>
   <data name="browseraddons" xml:space="preserve">
     <value>Browser addons</value>
   </data>
@@ -540,6 +543,15 @@
   <data name="import" xml:space="preserve">
     <value>Import</value>
   </data>
+  <data name="include_prerelease" xml:space="preserve">
+    <value>Include Prerelease</value>
+  </data>
+  <data name="install" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="installed" xml:space="preserve">
+    <value>Installed</value>
+  </data>
   <data name="logging" xml:space="preserve">
     <value>Logging</value>
   </data>
@@ -599,6 +611,9 @@
   </data>
   <data name="open_name" xml:space="preserve">
     <value>Name</value>
+  </data>
+  <data name="open_package_manager" xml:space="preserve">
+    <value>Open Package Manager</value>
   </data>
   <data name="open_serializable" xml:space="preserve">
     <value>Serializable</value>
@@ -707,6 +722,12 @@
   </data>
   <data name="uilanguage" xml:space="preserve">
     <value>UI Language</value>
+  </data>
+  <data name="uninstall" xml:space="preserve">
+    <value>Uninstall</value>
+  </data>
+  <data name="update" xml:space="preserve">
+    <value>Update</value>
   </data>
   <data name="usesendkeys" xml:space="preserve">
     <value>Use SendKeys</value>

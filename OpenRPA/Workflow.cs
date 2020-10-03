@@ -26,6 +26,7 @@ namespace OpenRPA
         public Workflow()
         {
             Serializable = true;
+            IsVisible = true;
         }
         public string queue { get { return GetProperty<string>(); } set { SetProperty(value); } }        
         public string Xaml { get { return GetProperty<string>(); } set { _activity = null; SetProperty(value); } }
@@ -446,6 +447,8 @@ namespace OpenRPA
                 }
             }
         }
+        [JsonIgnore]
+        public bool IsVisible { get { return GetProperty<bool>(); } set { SetProperty(value); } } 
     }
 
 }

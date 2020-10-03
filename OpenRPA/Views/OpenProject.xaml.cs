@@ -97,6 +97,56 @@ namespace OpenRPA.Views
             }
             Log.FunctionOutdent("OpenProject", "OpenProject");
         }
+        private string _FilterText = "";
+        public string FilterText
+        {
+            get
+            {
+                return _FilterText;
+            }
+            set
+            {
+                _FilterText = value;
+                var workflows = new List<string>();
+                if (string.IsNullOrEmpty(_FilterText))
+                {
+                    foreach (var designer in RobotInstance.instance.Designers)
+                    {
+                        if (string.IsNullOrEmpty(designer.Workflow._id) && !string.IsNullOrEmpty(designer.Workflow.Filename))
+                        {
+                            workflows.Add(designer.Workflow.RelativeFilename);
+                        }
+                        else if (!string.IsNullOrEmpty(designer.Workflow._id))
+                        {
+                            workflows.Add(designer.Workflow._id);
+
+                        }
+                    }
+                }
+                foreach (var p in Projects)
+                {
+                    bool expand = false;
+                    foreach(var _wf in p.Workflows)
+                    {
+                        if(_wf is Workflow wf)
+                        {
+                            if (string.IsNullOrEmpty(_FilterText))
+                            {
+                                wf.IsVisible = true;
+                                if(workflows.Contains(wf.IDOrRelativeFilename)) expand = true;
+                            }
+                            else
+                            {
+                                wf.IsVisible = wf.name.ToLower().Contains(_FilterText);
+                                if (wf.IsVisible) expand = true;
+                            }
+                        }
+                    }
+                    p.IsExpanded = expand;
+                }
+                NotifyPropertyChanged("FilterText");
+            }
+        }
         private void ListWorkflows_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             Log.FunctionIndent("OpenProject", "ListWorkflows_MouseDoubleClick");
@@ -193,6 +243,50 @@ namespace OpenRPA.Views
             NotifyPropertyChanged("Workflow");
             NotifyPropertyChanged("Project");
             onSelectedItemChanged?.Invoke();
+        }
+        public bool IncludePrerelease { get; set; }
+        private async void ButtonOpenPackageManager(object sender, RoutedEventArgs e)
+        {
+            Log.FunctionIndent("OpenProject", "ButtonOpenPackageManager");
+            try
+            {
+                if (listWorkflows.SelectedItem is Project project)
+                {
+                    try
+                    {
+                        var f = new PackageManager(project);
+                        if (RobotInstance.instance.Window is MainWindow main) f.Owner = main;
+                        f.ShowDialog();
+                        await project.Save(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                        System.Windows.MessageBox.Show("ButtonOpenPackageManager: " + ex.Message);
+                    }
+                }
+                if (listWorkflows.SelectedItem is Workflow workflow)
+                {
+                    try
+                    {
+                        Project p = workflow.Project as Project;
+                        var f = new PackageManager(p);
+                        if(RobotInstance.instance.Window is MainWindow main) f.Owner = main;
+                        f.ShowDialog();
+                        await p.Save(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                        System.Windows.MessageBox.Show("ButtonOpenPackageManager: " + ex.Message);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            Log.FunctionOutdent("OpenProject", "ButtonEditXAML");
         }
     }
 }

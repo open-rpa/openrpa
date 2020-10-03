@@ -146,6 +146,7 @@
                                            MinimumPopulateDelay="200"
                                            ValueMemberPath="name"
                                            PreviewLostKeyboardFocus="SearchBox_PreviewLostKeyboardFocus"
+                                           KeyUp="SearchBox_KeyUp"
             >
                         <input:AutoCompleteBox.ItemTemplate>
                             <DataTemplate>

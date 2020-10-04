@@ -250,6 +250,7 @@ namespace OpenRPA
                     SetStatus("Initialize projects and workflows ");
                     foreach (var p in projects)
                     {
+                        await p.InstallDependencies(true);
                         p.Path = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, p.name);
                         p.Workflows = new System.Collections.ObjectModel.ObservableCollection<IWorkflow>();
                         foreach (var workflow in workflows)
@@ -286,7 +287,7 @@ namespace OpenRPA
                     var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", orderby: "{\"projectid\":-1,\"name\":-1}", top: 5000);
                     SetStatus("Fetching detectors");
                     var detectors = await global.webSocketClient.Query<Interfaces.entity.Detector>("openrpa", "{_type: 'detector'}");
-                    GenericTools.RunUI(() =>
+                    GenericTools.RunUI(async () =>
                     {
                         foreach (var project in projects)
                         {
@@ -302,6 +303,7 @@ namespace OpenRPA
                                     project.SaveFile();
                                     RobotInstance.instance.Projects.Remove(exists);
                                     RobotInstance.instance.Projects.Insert(index, project);
+                                    await project.InstallDependencies(true);
                                 }
                                 catch (Exception ex)
                                 {
@@ -574,7 +576,7 @@ namespace OpenRPA
         {
             ParseCommandLineArgs(Environment.GetCommandLineArgs());
         }
-        public void init()
+        public async Task init()
         {
             Log.FunctionIndent("RobotInstance", "init");
             SetStatus("Checking for updates");
@@ -624,7 +626,7 @@ namespace OpenRPA
                 else
                 {
                     SetStatus("loading projects and workflows");
-                    var _Projects = Project.LoadProjects(Interfaces.Extensions.ProjectsDirectory);
+                    var _Projects = await Project.LoadProjects(Interfaces.Extensions.ProjectsDirectory);
                     RobotInstance.instance.Projects = new System.Collections.ObjectModel.ObservableCollection<Project>();
                     foreach (Project p in _Projects)
                     {

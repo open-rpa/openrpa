@@ -233,17 +233,38 @@ namespace OpenRPA
             {
                 notifyIcon.Visible = true;
             }
+            if(Config.local.files_pending_deletion.Length > 0)
+            {
+                bool sucess = true;
+                foreach(var f in Config.local.files_pending_deletion)
+                {
+                    try
+                    {
+                        if(System.IO.File.Exists(f)) System.IO.File.Delete(f);
+                    }
+                    catch (Exception ex)
+                    {
+                        sucess = false;
+                        Log.Error(ex.ToString());
+                    }
+                }
+                if(sucess)
+                {
+                    Config.local.files_pending_deletion = new string[] { };
+                    Config.Save();
+                }
+            }
             RobotInstance.instance.Status += App_Status;
             Input.InputDriver.Instance.initCancelKey(Config.local.cancelkey);
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 try
                 {
                     if (Config.local.showloadingscreen) splash.BusyContent = "loading plugins";
-                    Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.ProjectsDirectory);
-                    Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.PluginsDirectory);
+                    // Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.ProjectsDirectory);
+                    Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.PluginsDirectory, false);
                     if (Config.local.showloadingscreen) splash.BusyContent = "Initialize main window";
-                    RobotInstance.instance.init();
+                    await RobotInstance.instance.init();
                 }
                 catch (Exception ex)
                 {

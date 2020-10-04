@@ -13,5 +13,6 @@ namespace OpenRPA.Interfaces
         bool disable_local_caching { get; set; }
         string Path { get; set; }
         System.Collections.ObjectModel.ObservableCollection<IWorkflow> Workflows { get; set; }
+        Newtonsoft.Json.Linq.JObject dependencies { get; set; }
     }
 }

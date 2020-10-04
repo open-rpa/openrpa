@@ -38,20 +38,171 @@ namespace OpenRPA.Interfaces
             }
             return null;
         }
-        public static void LoadPlugins(IOpenRPAClient client, string projectsDirectory)
+        public static void LoadPlugins(IOpenRPAClient client)
         {
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
-            Log.Information("LoadPlugins::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+
+            IEnumerable<System.Reflection.Assembly> assemblies = AppDomain.CurrentDomain.GetAssemblies().OrderBy(a => a.GetName().Name);
             ICollection<Type> alltypes = new List<Type>();
             ICollection<Type> pluginTypes = new List<Type>();
             ICollection<Type> snippetTypes = new List<Type>();
             ICollection<Type> runPluginTypes = new List<Type>();
-            ICollection<Type> IDetectorPluginTypes = new List<Type>(); 
+            ICollection<Type> IDetectorPluginTypes = new List<Type>();
 
+            Log.Information("LoadPlugins::Get types " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+            foreach (var a in assemblies)
+            {
+                try
+                {
+                    foreach (var s in a.GetTypes())
+                    {
+                        alltypes.Add(s);
+                    }
+                }
+                catch (Exception) { }
+            }
+
+            Log.Information("LoadPlugins::Get all IRecordPlugins " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+            var IRecordPlugintype = typeof(IRecordPlugin);
+            foreach (var p in alltypes)
+            {
+                try
+                {
+                    if (IRecordPlugintype.IsAssignableFrom(p) && p.IsInterface == false) pluginTypes.Add(p);
+                }
+                catch (Exception) { }
+            }
+            Log.Information("LoadPlugins::Get all IDetectorPlugin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+            var IDetectorPlugintype = typeof(IDetectorPlugin);
+            foreach (var p in alltypes)
+            {
+                try
+                {
+                    if (IDetectorPlugintype.IsAssignableFrom(p) && p.IsInterface == false) IDetectorPluginTypes.Add(p);
+                }
+                catch (Exception) { }
+            }
+
+            Log.Information("LoadPlugins::Get all ISnippet " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+            var ISnippettype = typeof(ISnippet);
+            foreach (var p in alltypes)
+            {
+                try
+                {
+                    if (ISnippettype.IsAssignableFrom(p) && p.IsInterface == false) snippetTypes.Add(p);
+                }
+                catch (Exception) { }
+            }
+
+            Log.Information("LoadPlugins::Get all IRunPlugin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+            var IRunPlugintype = typeof(IRunPlugin);
+            foreach (var p in alltypes)
+            {
+                try
+                {
+                    if (IRunPlugintype.IsAssignableFrom(p) && p.IsInterface == false) runPluginTypes.Add(p);
+                }
+                catch (Exception) { }
+            }
+
+            foreach (var type in IDetectorPluginTypes)
+                if (!detectorPluginTypes.ContainsKey(type.FullName)) detectorPluginTypes.Add(type.FullName, type);
+            foreach (Type type in pluginTypes)
+            {
+                try
+                {
+                    IRecordPlugin plugin = null;
+                    foreach (var p in recordPlugins)
+                    {
+                        if(p.GetType() == type)
+                        {
+                            plugin = p;
+                            break;
+                        }
+                    }                    
+                    if(plugin== null)
+                    {
+                        plugin = (IRecordPlugin)Activator.CreateInstance(type);
+                        Log.Information("LoadPlugins::Initialize plugin " + plugin.Name + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        // SetStatus("Initialize plugin " + plugin.Name);
+                        plugin.Initialize(client);
+                        GenericTools.RunUI(() => recordPlugins.Add(plugin));
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+            }
+            foreach (Type type in snippetTypes)
+            {
+                try
+                {
+                    ISnippet plugin = null;
+                    foreach (var p in Snippets)
+                    {
+                        if (p.GetType() == type)
+                        {
+                            plugin = p;
+                            break;
+                        }
+                    }
+                    if(plugin == null)
+                    {
+                        plugin = (ISnippet)Activator.CreateInstance(type);
+                        Log.Information("LoadPlugins::Initialize snippet " + plugin.Name + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        Snippets.Add(plugin);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+            }
+            foreach (Type type in runPluginTypes)
+            {
+                try
+                {
+                    IRunPlugin plugin = null;
+                    foreach (var p in runPlugins)
+                    {
+                        if (p.GetType() == type)
+                        {
+                            plugin = p;
+                            break;
+                        }
+                    }
+
+                    if (plugin == null)
+                    {
+                        plugin = (IRunPlugin)Activator.CreateInstance(type);
+                        Log.Information("LoadPlugins::Initialize RunPlugin " + plugin.Name + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        plugin.Initialize(client);
+                        GenericTools.RunUI(() => runPlugins.Add(plugin));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+            }
+            Log.Information("LoadPlugins::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+        }
+        public static void LoadPlugins(IOpenRPAClient client, string projectsDirectory, bool recursive)
+        {
+            Log.Information("LoadPlugins::begin ");
             List<string> dllFileNames = new List<string>();
-            foreach (var path in System.IO.Directory.GetFiles(projectsDirectory, "*.dll")) dllFileNames.Add(path);
-            ICollection<Assembly> assemblies = new List<Assembly>();
+            if(recursive)
+            {
+                foreach (var path in System.IO.Directory.GetFiles(projectsDirectory, "*.dll", System.IO.SearchOption.AllDirectories)) dllFileNames.Add(path);
+            } else
+            {
+                foreach (var path in System.IO.Directory.GetFiles(projectsDirectory, "*.dll")) dllFileNames.Add(path);
+            }
+            
+            // ICollection<Assembly> assemblies = new List<Assembly>();
             foreach (string dllFile in dllFileNames)
             {
                 try
@@ -83,117 +234,23 @@ namespace OpenRPA.Interfaces
                     if (dllFile.Contains("Xceed.Wpf.")) continue;
                     if (dllFile.Contains("ControlzEx.")) continue;
                     if (dllFile.Contains("MahApps.")) continue;
+                    if (dllFile.Contains("Snippets.")) continue;
                     if (dllFile.Contains("Interop.SAPFEWSELib")) continue;
                     if (dllFile.Contains("Interop.SapROTWr")) continue;
                     AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
                     Assembly assembly = Assembly.Load(an);
-                    assemblies.Add(assembly);
+                    // assemblies.Add(assembly);
+                }
+                catch (System.BadImageFormatException)
+                {
+                    // don't care
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex, "");
                 }
             }
-            Log.Information("LoadPlugins::Get types " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-            foreach (var a in assemblies)
-            {
-                try
-                {
-                    foreach(var s in a.GetTypes())
-                    {
-                        alltypes.Add(s);
-                    }
-                }
-                catch (Exception) { }
-            }
-
-            Log.Information("LoadPlugins::Get all IRecordPlugins " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-            var IRecordPlugintype = typeof(IRecordPlugin);
-            foreach(var p in alltypes)
-            {
-                try
-                {
-                    if (IRecordPlugintype.IsAssignableFrom(p) && p.IsInterface == false) pluginTypes.Add(p);
-                }
-                catch (Exception) { }
-            }
-            Log.Information("LoadPlugins::Get all IDetectorPlugin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-            var IDetectorPlugintype = typeof(IDetectorPlugin);
-            foreach (var p in alltypes)
-            {
-                try
-                {
-                    if (IDetectorPlugintype.IsAssignableFrom(p) && p.IsInterface == false) IDetectorPluginTypes.Add(p);
-                }
-                catch (Exception) { }
-            }
-            
-            Log.Information("LoadPlugins::Get all ISnippet " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-            var ISnippettype = typeof(ISnippet);
-            foreach (var p in alltypes)
-            {
-                try
-                {
-                    if (ISnippettype.IsAssignableFrom(p) && p.IsInterface == false) snippetTypes.Add(p);
-                }
-                catch (Exception) { }
-            }
-
-            Log.Information("LoadPlugins::Get all IRunPlugin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-            var IRunPlugintype = typeof(IRunPlugin);
-            foreach (var p in alltypes)
-            {
-                try
-                {
-                    if (IRunPlugintype.IsAssignableFrom(p) && p.IsInterface == false) runPluginTypes.Add(p);
-                }
-                catch (Exception) { }
-            }
-
-            foreach (var type in IDetectorPluginTypes) Plugins.detectorPluginTypes.Add(type.FullName, type);
-            foreach (Type type in pluginTypes)
-            {
-                try
-                {
-                    IRecordPlugin plugin = (IRecordPlugin)Activator.CreateInstance(type);
-                    Log.Information("LoadPlugins::Initialize plugin " + plugin.Name + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    // SetStatus("Initialize plugin " + plugin.Name);
-                    plugin.Initialize(client);
-                    GenericTools.RunUI(() => recordPlugins.Add(plugin));
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-            }
-            foreach (Type type in snippetTypes)
-            {
-                try
-                {
-                    ISnippet plugin = (ISnippet)Activator.CreateInstance(type);
-                    Log.Information("LoadPlugins::Initialize snippet " + plugin.Name + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    Snippets.Add(plugin);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-            }
-            foreach (Type type in runPluginTypes)
-            {
-                try
-                {
-                    IRunPlugin plugin = (IRunPlugin)Activator.CreateInstance(type);
-                    Log.Information("LoadPlugins::Initialize RunPlugin " + plugin.Name + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    plugin.Initialize(client);
-                    GenericTools.RunUI(() => runPlugins.Add(plugin));
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-            }
-            Log.Information("LoadPlugins::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+            LoadPlugins(client);
         }
     }
 }

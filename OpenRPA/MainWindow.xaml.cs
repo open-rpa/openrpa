@@ -1234,7 +1234,7 @@ namespace OpenRPA
                         Log.Information("Loading empty projects are not supported");
                         return;
                     }
-                    project = Project.FromFile(System.IO.Path.Combine(projectpath, name + ".rpaproj"));
+                    project = await Project.FromFile(System.IO.Path.Combine(projectpath, name + ".rpaproj"));
                     RobotInstance.instance.Projects.Add(project);
                     project.name = name;
                     project._id = null;

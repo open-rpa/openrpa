@@ -1,4 +1,6 @@
-﻿using OpenRPA.Interfaces;
+﻿using NuGet.Packaging.Core;
+using NuGet.Versioning;
+using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,28 +27,40 @@ namespace OpenRPA.Views
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propertyName)
         {
-            PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            GenericTools.RunUI(() =>
+            {
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            });            
         }
         public DelegateCommand DockAsDocumentCommand = new DelegateCommand((e) => { }, (e) => false);
         public DelegateCommand AutoHideCommand { get; set; } = new DelegateCommand((e) => { }, (e) => false);
-        public bool CanClose { get; set; } = false;
-        public bool CanHide { get; set; } = false;
+        private bool _CanClose = true;
+        public bool CanClose { get { return _CanClose; } set { _CanClose = value; NotifyPropertyChanged("CanClose"); } }
+        private bool _CanHide = true;
+        public bool CanHide { get { return _CanHide; } set { _CanHide = value; NotifyPropertyChanged("CanHide"); } }
+        private bool _IsBusy = true;
+        public bool IsBusy { get { return _IsBusy; } set { _IsBusy = value; NotifyPropertyChanged("IsBusy"); } }
+        private string _BusyContent = "Loading NuGet feeds and packages ...";
+        public string BusyContent { get { return _BusyContent; } set { _BusyContent = value; Log.Output(value); NotifyPropertyChanged("BusyContent"); } }
+        private bool _IncludePrerelease = false;
+        public bool IncludePrerelease { get { return _IncludePrerelease; } set { _IncludePrerelease = value; NotifyPropertyChanged("IncludePrerelease"); FilterText = FilterText; } }
+
         private Project project;
         public PackageManager(Project project) : base()
         {
             this.project = project;
             DataContext = this;
             InitializeComponent();
-            _ = NuGetPackageManager.Instance.Initialize(this);
+            NuGetPackageManager.Instance.Initialize(this);
         }
-        public bool IncludePrerelease { get; set; }
         public NuGet.Configuration.PackageSource SelectedPackageSource { get; set; }
-        private NuGet.Protocol.Core.Types.IPackageSearchMetadata _SelectedPackageItem;
-        public NuGet.Protocol.Core.Types.IPackageSearchMetadata SelectedPackageItem { get {
+        private PackageSearchItem _SelectedPackageItem;
+        public PackageSearchItem SelectedPackageItem { get {
                 return _SelectedPackageItem;
             }
             set
             {
+                if(value!=null) _ = value.LoadVersions(IncludePrerelease);
                 _SelectedPackageItem = value;
                 NotifyPropertyChanged("SelectedPackageItem");
                 NotifyPropertyChanged("IsPackageItemSelected");
@@ -81,8 +95,8 @@ namespace OpenRPA.Views
                 NotifyPropertyChanged("PackageSources");
             }
         }
-        private System.Collections.ObjectModel.ObservableCollection<NuGet.Protocol.Core.Types.IPackageSearchMetadata> _PackageSourceItems;
-        public System.Collections.ObjectModel.ObservableCollection<NuGet.Protocol.Core.Types.IPackageSearchMetadata> PackageSourceItems
+        private System.Collections.ObjectModel.ObservableCollection<PackageSearchItem> _PackageSourceItems;
+        public System.Collections.ObjectModel.ObservableCollection<PackageSearchItem> PackageSourceItems
         {
             get
             {
@@ -109,18 +123,118 @@ namespace OpenRPA.Views
             {
                 _FilterText = value;
                 if (SelectedPackageSource == null) return;
-                _ = NuGetPackageManager.Instance.Search(SelectedPackageSource, this, IncludePrerelease, _FilterText);
+                _ = NuGetPackageManager.Instance.Search(project, SelectedPackageSource, this, IncludePrerelease, _FilterText);
                 NotifyPropertyChanged("FilterText");
             }
         }
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            _ = NuGetPackageManager.Instance.Initialize(this);
+            NuGetPackageManager.Instance.Initialize(this);
         }
         private void treePackageSources_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             SelectedPackageSource = treePackageSources.SelectedItem as NuGet.Configuration.PackageSource;
             FilterText = "";
         }
+        public ICommand InstallCommand { get { return new RelayCommand<object>(OnInstall, CanInstall); } }
+        public ICommand UninstallCommand { get { return new RelayCommand<object>(OnUninstall, CanInstall); } }
+        internal bool CanInstall(object _item)
+        {
+            return true;
+        }
+        internal void OnInstall(object _item)
+        {
+            IsBusy = true;
+            Task.Run(async () =>
+            {
+                try
+                {
+                    if(!string.IsNullOrEmpty(SelectedPackageItem.InstalledVersion))
+                    {
+                        var _minver = VersionRange.Parse(SelectedPackageItem.InstalledVersion);
+                        var _identity = new PackageIdentity(SelectedPackageItem.Id, _minver.MinVersion);
+
+                        // per project or joined ?
+                        // string TargetFolder = System.IO.Path.Combine(project.Path, "extensions");
+                        string TargetFolder = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");
+
+                        BusyContent = "Uninstalling " + _identity.ToString();
+                        NuGetPackageManager.Instance.UninstallPackage(TargetFolder, _identity);
+                        SelectedPackageItem.IsInstalled = false;
+
+                    }
+                    BusyContent = "Initializing";
+                    var minver = VersionRange.Parse(SelectedPackageItem.SelectedVersion);
+                    var identity = new PackageIdentity(SelectedPackageItem.Id, minver.MinVersion);
+                    if (SelectedPackageItem.RequireLicenseAcceptance)
+                    {
+                        // Request accept
+                    }
+                    if (project.dependencies == null) project.dependencies = Newtonsoft.Json.Linq.JObject.Parse("{}");
+                    project.dependencies.Remove(identity.Id);
+                    project.dependencies.Add(identity.Id, minver.MinVersion.ToString());
+                    BusyContent = "Saving current project settings";
+                    await project.Save(false);
+                    BusyContent = "Installing NuGet Packages";
+                    await project.InstallDependencies(false);
+                    //BusyContent = "Reloading Activities Toolbox";
+                    //GenericTools.RunUI(()=> WFToolbox.Instance.InitializeActivitiesToolbox());
+                    SelectedPackageItem.InstalledVersion = SelectedPackageItem.SelectedVersion;
+                    SelectedPackageItem.IsInstalled = true;
+                    IsBusy = false;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+
+            });
+            
+        }
+        internal void OnUninstall(object _item)
+        {
+            IsBusy = true;
+            Task.Run(async () =>
+            {
+                try
+                {
+                    BusyContent = "Initializing";
+                    var minver = VersionRange.Parse(SelectedPackageItem.InstalledVersion);
+                    var identity = new PackageIdentity(SelectedPackageItem.Id, minver.MinVersion);
+                    if (project.dependencies == null) project.dependencies = Newtonsoft.Json.Linq.JObject.Parse("{}");
+                    project.dependencies.Remove(identity.Id);
+
+                    // per project or joined ?
+                    // string TargetFolder = System.IO.Path.Combine(project.Path, "extensions");
+                    string TargetFolder = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");
+
+                    BusyContent = "Uninstalling package";
+                    NuGetPackageManager.Instance.UninstallPackage(TargetFolder, identity);
+                    SelectedPackageItem.IsInstalled = false;
+                    BusyContent = "Saving current project settings";
+                    await project.Save(false);
+                    //BusyContent = "Updating NuGet Packages";
+                    //await project.InstallDependencies();
+                    //BusyContent = "Reloading Activities Toolbox";
+                    //GenericTools.RunUI(() => WFToolbox.Instance.InitializeActivitiesToolbox());
+                    SelectedPackageItem.InstalledVersion = "";
+                    SelectedPackageItem.IsInstalled = false;
+                    if(NuGetPackageManager.PendingDeletion.Count > 0)
+                    {
+                        Config.local.files_pending_deletion = NuGetPackageManager.PendingDeletion.ToArray();
+                        Config.Save();
+                        MessageBox.Show("Please restart the robot for the change to take fully effect");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+                IsBusy = false;
+
+            });
+
+        }
+
     }
 }

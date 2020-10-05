@@ -441,7 +441,7 @@ namespace OpenRPA
                 {
                     try
                     {
-                        Log.Output("Loading " + target);
+                        Log.Debug("NuGetPackageManager.InstallFile::Loading " + target);
                         var an = System.Reflection.AssemblyName.GetAssemblyName(target);
                         var assembly = System.Reflection.Assembly.Load(an);
                     }

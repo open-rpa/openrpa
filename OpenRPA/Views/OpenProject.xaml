@@ -23,12 +23,12 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
+            <!--<RowDefinition Height="20"/>-->
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBox x:Name="searchWorkflows" Grid.Column="0" Grid.Row="0" Height="20" BorderThickness="0"
+        <!--<TextBox x:Name="searchWorkflows" Grid.Column="0" Grid.Row="0" Height="20" BorderThickness="0"
                                          Text="{Binding Path=FilterText,UpdateSourceTrigger=PropertyChanged}" 
-                                         ></TextBox>
+                                         ></TextBox>-->
 
         <TreeView   x:Name="listWorkflows" ItemsSource="{Binding Source={StaticResource Projects}}" BorderThickness="0" Grid.Column="0"  Grid.Row="1" 
                                        MouseDoubleClick="ListWorkflows_MouseDoubleClick" SelectedItemChanged="listWorkflows_SelectedItemChanged"
@@ -93,11 +93,13 @@
             </StackPanel>
             <StackPanel>
                 <TextBlock Text="{x:Static or:strings.open_edit}" FontWeight="Bold"></TextBlock>
-                <Button Click="ButtonEditXAML" Margin="20,0,0,0" Content="{x:Static or:strings.open_edit_xaml}"></Button>
+                <Button Click="ButtonEditXAML" Margin="20,0,0,0" Content="{x:Static or:strings.open_edit_xaml}"
+                        IsEnabled="{Binding IsWorkflowSelected,Mode=OneWay}" ></Button>
             </StackPanel>
             <StackPanel>
                 <TextBlock Text="{x:Static or:strings.open_package_manager}" FontWeight="Bold"></TextBlock>
-                <Button Click="ButtonOpenPackageManager" Margin="20,0,0,0" Content="{x:Static or:strings.open_package_manager}"></Button>
+                <Button Click="ButtonOpenPackageManager" Margin="20,0,0,0" Content="{x:Static or:strings.open_package_manager}"
+                        IsEnabled="{Binding IsWorkflowOrProjectSelected,Mode=OneWay}"></Button>
             </StackPanel>
             <StackPanel>
                 <TextBlock Text="{x:Static or:strings.open_name}" FontWeight="Bold"></TextBlock>

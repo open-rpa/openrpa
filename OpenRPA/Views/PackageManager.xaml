@@ -9,7 +9,7 @@
         xmlns:localroot="clr-namespace:OpenRPA"
         xmlns:projectbase="clr-namespace:OpenRPA"
         mc:Ignorable="d" 
-        Width="900" Height="500" MinWidth="720" MinHeight="400" Loaded="UserControl_Loaded"
+        Width="900" Height="500" MinWidth="720" MinHeight="400"
             >
 
     <Window.Resources>
@@ -171,21 +171,26 @@
                           Height="20" Margin="5,0" VerticalAlignment="Center" 
                           SelectedValue="{Binding ElementName=listPackageSourceItems, Path=SelectedValue.SelectedVersion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 </ComboBox>
-                <Button Content="{x:Static or:strings.update}" Grid.Row="2" Grid.Column="2" Height="20" Margin="5,0" HorizontalAlignment="Stretch" IsEnabled="{Binding SelectedItemIsNeedUpdate}" Visibility="{Binding ElementName=listPackageSourceItems, Path=SelectedValue.IsInstalled,Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}"
+                <Button Content="{x:Static or:strings.update}" Grid.Row="2" Grid.Column="2" Height="20" Margin="5,0" HorizontalAlignment="Stretch" 
+                        Visibility="{Binding ElementName=listPackageSourceItems, Path=SelectedValue.IsInstalled,Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}"
                         Command="{Binding Data.InstallCommand, Source={StaticResource proxy}}" CommandParameter="{Binding ElementName=listPackageSourceItems, Path=SelectedValue}"  />
                 <Button Content="{x:Static or:strings.install}" Grid.Row="2" Grid.Column="2" Height="20" Margin="5,0" HorizontalAlignment="Stretch" 
                         Visibility="{Binding ElementName=listPackageSourceItems, Path=SelectedValue.IsInstalled,Mode=OneWay, Converter={StaticResource BoolNotVisibilityConverter}}" 
+                        IsEnabled="{Binding ElementName=listPackageSourceItems, Path=SelectedValue.CanInstall,Mode=OneWay}" 
                         Command="{Binding Data.InstallCommand, Source={StaticResource proxy}}" CommandParameter="{Binding ElementName=listPackageSourceItems, Path=SelectedValue}" />
 
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Rectangle Height="1" Stroke="#c7c8c9" Margin="5,0" VerticalAlignment="Top"/>
+                    <RichTextBox Margin="5,10" IsReadOnly="True" IsDocumentEnabled="True"  BorderThickness="0" VerticalScrollBarVisibility="Auto">
+                        <FlowDocument>
+                            <Paragraph>
+                                <Run Text="{Binding ElementName=listPackageSourceItems, Path=SelectedValue.Description}"/>
+                            </Paragraph>
+                        </FlowDocument>
+                    </RichTextBox>
+                </Grid>
             </Grid>
-            <Grid Grid.Row="1">
-                <Rectangle Height="1" Stroke="#c7c8c9" Margin="5,0" VerticalAlignment="Top"/>
-                <RichTextBox Margin="5,10" IsReadOnly="True" IsDocumentEnabled="True"  BorderThickness="0" VerticalScrollBarVisibility="Auto">
-                    <FlowDocument>
-                    </FlowDocument>
-                </RichTextBox>
-            </Grid>
-        </Grid>
 
     </Grid>
     </wpfx:BusyIndicator>

@@ -15,6 +15,44 @@ namespace OpenRPA
     public class PackageSearchItem : ObservableObject
     {
         public PackageSearchItem() { }
+        public PackageSearchItem(Project project, PackageReaderBase reader)
+        {
+            Identity = reader.GetIdentity();
+            Id = Identity.Id;
+            Title = reader.NuspecReader.GetTitle();
+            if (string.IsNullOrEmpty(Title)) Title = Id;
+            IsInstalled = isPackageIdInProjectDependencies(project, Id);
+
+            InstalledVersion = "";
+            // Find installed version !
+            var LocalVersion = NuGetPackageManager.Instance.getLocal(Id);
+            CanInstall = false;
+            if (LocalVersion != null)
+            {
+                if (project.dependencies != null)
+                {
+                    foreach (JProperty jp in (JToken)project.dependencies)
+                    {
+                        if(jp.Name == Id)
+                        {
+                            InstalledVersion = (string)jp.Value;
+                            CanInstall = true;
+                        }
+                    }
+                }
+                if(string.IsNullOrEmpty(InstalledVersion)) InstalledVersion = LocalVersion.Identity.Version.ToString();
+                SelectedVersion = InstalledVersion;
+            }
+            NotifyPropertyChanged("InstalledVersion");
+
+            LicenseUrl = reader.NuspecReader.GetLicenseUrl();
+            ProjectUrl = reader.NuspecReader.GetProjectUrl();
+            Tags = reader.NuspecReader.GetTags();
+            Description = reader.NuspecReader.GetDescription();
+            IconUrl = reader.NuspecReader.GetIconUrl();
+            Authors = reader.NuspecReader.GetAuthors();
+            Dependencies = reader.GetPackageDependencies().ToList();
+        }
         public PackageSearchItem(Project project, NuGet.Protocol.Core.Types.IPackageSearchMetadata searchItem)
         {
             Identity = searchItem.Identity;
@@ -25,9 +63,20 @@ namespace OpenRPA
             InstalledVersion = "";
             // Find installed version !
             var LocalVersion = NuGetPackageManager.Instance.getLocal(Id);
+            CanInstall = true;
             if (LocalVersion != null)
             {
-                InstalledVersion = LocalVersion.Identity.Version.ToString();
+                if (project.dependencies != null)
+                {
+                    foreach (JProperty jp in (JToken)project.dependencies)
+                    {
+                        if (jp.Name == Id)
+                        {
+                            InstalledVersion = (string)jp.Value;
+                        }
+                    }
+                }
+                if (string.IsNullOrEmpty(InstalledVersion)) InstalledVersion = LocalVersion.Identity.Version.ToString();
                 SelectedVersion = InstalledVersion;
             }
             NotifyPropertyChanged("InstalledVersion");
@@ -86,6 +135,7 @@ namespace OpenRPA
         public string IconUrl { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string Title { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public bool IsInstalled { get { return GetProperty<bool>(); } set { SetProperty(value); } }
+        public bool CanInstall { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string InstalledVersion { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string LicenseUrl { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string ProjectUrl { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -95,5 +145,10 @@ namespace OpenRPA
         public string SelectedVersion { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public List<PackageDependencyGroup> Dependencies { get { return GetProperty<List<PackageDependencyGroup>>(); } set { SetProperty(value); } }
         public System.Collections.ObjectModel.ObservableCollection<string> VersionList { get { return GetProperty<System.Collections.ObjectModel.ObservableCollection<string>>(); } set { SetProperty(value); } }
+        public override string ToString()
+        {
+            if (string.IsNullOrEmpty(InstalledVersion)) return Id;
+            return Id + "@" + InstalledVersion;
+        }
     }
 }

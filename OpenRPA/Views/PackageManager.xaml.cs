@@ -34,6 +34,7 @@ namespace OpenRPA.Views
         }
         public DelegateCommand DockAsDocumentCommand = new DelegateCommand((e) => { }, (e) => false);
         public DelegateCommand AutoHideCommand { get; set; } = new DelegateCommand((e) => { }, (e) => false);
+        public bool NeedsReload { get; set; }
         private bool _CanClose = true;
         public bool CanClose { get { return _CanClose; } set { _CanClose = value; NotifyPropertyChanged("CanClose"); } }
         private bool _CanHide = true;
@@ -44,7 +45,6 @@ namespace OpenRPA.Views
         public string BusyContent { get { return _BusyContent; } set { _BusyContent = value; Log.Output(value); NotifyPropertyChanged("BusyContent"); } }
         private bool _IncludePrerelease = false;
         public bool IncludePrerelease { get { return _IncludePrerelease; } set { _IncludePrerelease = value; NotifyPropertyChanged("IncludePrerelease"); FilterText = FilterText; } }
-
         private Project project;
         public PackageManager(Project project) : base()
         {
@@ -52,8 +52,9 @@ namespace OpenRPA.Views
             DataContext = this;
             InitializeComponent();
             NuGetPackageManager.Instance.Initialize(this);
+            this.Title = "NuGet Package Manager for " + project.name;
         }
-        public NuGet.Configuration.PackageSource SelectedPackageSource { get; set; }
+        public PackageSourceWrapper SelectedPackageSource { get; set; }
         private PackageSearchItem _SelectedPackageItem;
         public PackageSearchItem SelectedPackageItem { get {
                 return _SelectedPackageItem;
@@ -78,8 +79,8 @@ namespace OpenRPA.Views
 
             }
         }
-        private System.Collections.ObjectModel.ObservableCollection<NuGet.Configuration.PackageSource> _PackageSources;
-        public System.Collections.ObjectModel.ObservableCollection<NuGet.Configuration.PackageSource> PackageSources
+        private System.Collections.ObjectModel.ObservableCollection<PackageSourceWrapper> _PackageSources;
+        public System.Collections.ObjectModel.ObservableCollection<PackageSourceWrapper> PackageSources
         {
             get
             {
@@ -122,18 +123,33 @@ namespace OpenRPA.Views
             set
             {
                 _FilterText = value;
-                if (SelectedPackageSource == null) return;
-                _ = NuGetPackageManager.Instance.Search(project, SelectedPackageSource, this, IncludePrerelease, _FilterText);
+                if (SelectedPackageSource == null) { IsBusy = false; return; }
+                SelectedPackageSource.Search(project, this, IncludePrerelease, _FilterText);
                 NotifyPropertyChanged("FilterText");
             }
         }
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            NuGetPackageManager.Instance.Initialize(this);
-        }
+        //private async Task UpdateFilterText(string value)
+        //{
+        //    _FilterText = value;
+        //    NotifyPropertyChanged("FilterText");
+        //    if (SelectedPackageSource == null) { IsBusy = false; return; }
+        //    async Task<bool> UserKeepsTyping()
+        //    {
+        //        string txt = value;   // remember text
+        //        await Task.Delay(500);        // wait some
+        //        return txt != value;  // return that text chaged or not
+        //    }
+        //    if (await UserKeepsTyping()) return;
+        //    SelectedPackageSource.Search(project, this, IncludePrerelease, _FilterText);
+        //}
         private void treePackageSources_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            SelectedPackageSource = treePackageSources.SelectedItem as NuGet.Configuration.PackageSource;
+            SelectedPackageSource = treePackageSources.SelectedItem as PackageSourceWrapper;
+            if (SelectedPackageSource.source == null)
+            {
+                SelectedPackageSource.ClearCache();
+            }
+
             FilterText = "";
         }
         public ICommand InstallCommand { get { return new RelayCommand<object>(OnInstall, CanInstall); } }
@@ -177,11 +193,20 @@ namespace OpenRPA.Views
                     await project.Save(false);
                     BusyContent = "Installing NuGet Packages";
                     await project.InstallDependencies(false);
+                    NeedsReload = true;
                     //BusyContent = "Reloading Activities Toolbox";
                     //GenericTools.RunUI(()=> WFToolbox.Instance.InitializeActivitiesToolbox());
                     SelectedPackageItem.InstalledVersion = SelectedPackageItem.SelectedVersion;
                     SelectedPackageItem.IsInstalled = true;
                     IsBusy = false;
+                    if (SelectedPackageSource.source == null)
+                    {
+                        SelectedPackageSource.ClearCache();
+                        GenericTools.RunUI(() =>
+                        {
+                            FilterText = FilterText;
+                        });
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -224,6 +249,13 @@ namespace OpenRPA.Views
                         Config.local.files_pending_deletion = NuGetPackageManager.PendingDeletion.ToArray();
                         Config.Save();
                         MessageBox.Show("Please restart the robot for the change to take fully effect");
+                    }
+                    if(SelectedPackageSource.source == null) { 
+                        SelectedPackageSource.ClearCache();
+                        GenericTools.RunUI(() =>
+                        {
+                            FilterText = FilterText;
+                        });                        
                     }
                 }
                 catch (Exception ex)

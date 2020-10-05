@@ -19,7 +19,7 @@ namespace OpenRPA
         public static void SelectItem(this System.Windows.Controls.TreeView treeView, object item)
         {
             var tvItem = treeView.ItemContainerGenerator.ContainerFromItem(item) as System.Windows.Controls.TreeViewItem;
-            if (tvItem != null)
+            if (tvItem == null)
             {
                 treeView.UpdateLayout();
                 tvItem = treeView.ItemContainerGenerator.ContainerFromItem(item) as System.Windows.Controls.TreeViewItem;

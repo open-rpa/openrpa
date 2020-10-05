@@ -242,7 +242,30 @@ namespace OpenRPA.Views
         {
             NotifyPropertyChanged("Workflow");
             NotifyPropertyChanged("Project");
+            NotifyPropertyChanged("IsWorkflowSelected");
+            NotifyPropertyChanged("IsWorkflowOrProjectSelected");
             onSelectedItemChanged?.Invoke();
+        }
+        public bool IsWorkflowSelected
+        {
+            get
+            {
+                if (listWorkflows.SelectedItem == null) return false;
+                if (listWorkflows.SelectedItem is Workflow wf) return true;
+                return false;
+            }
+            set { }
+        }
+        public bool IsWorkflowOrProjectSelected
+        {
+            get
+            {
+                if (listWorkflows.SelectedItem == null) return false;
+                if (listWorkflows.SelectedItem is Workflow wf) return true;
+                if (listWorkflows.SelectedItem is Project p) return true;
+                return false;
+            }
+            set { }
         }
         public bool IncludePrerelease { get; set; }
         private async void ButtonOpenPackageManager(object sender, RoutedEventArgs e)
@@ -257,7 +280,11 @@ namespace OpenRPA.Views
                         var f = new PackageManager(project);
                         if (RobotInstance.instance.Window is MainWindow main) f.Owner = main;
                         f.ShowDialog();
-                        await project.Save(false);
+                        if (f.NeedsReload)
+                        {
+                            await project.InstallDependencies(true);
+                            WFToolbox.Instance.InitializeActivitiesToolbox();
+                        }                        
                     }
                     catch (Exception ex)
                     {
@@ -273,7 +300,11 @@ namespace OpenRPA.Views
                         var f = new PackageManager(p);
                         if(RobotInstance.instance.Window is MainWindow main) f.Owner = main;
                         f.ShowDialog();
-                        await p.Save(false);
+                        if(f.NeedsReload)
+                        {
+                            await p.InstallDependencies(true);
+                            WFToolbox.Instance.InitializeActivitiesToolbox();
+                        }
                     }
                     catch (Exception ex)
                     {

@@ -40,15 +40,16 @@ namespace OpenRPA
                 System.IO.Directory.CreateDirectory(PackagesInstallFolder);
             }
         }
-        private Views.PackageManager view;
+        // private Views.PackageManager view;
         public void Initialize(Views.PackageManager view)
         {
             var provider = NuGetPackageManager.Instance.DefaultSourceRepositoryProvider.PackageSourceProvider;
             var sources = provider.LoadPackageSources();
-            view.PackageSources = new System.Collections.ObjectModel.ObservableCollection<PackageSource>();
+            view.PackageSources = new System.Collections.ObjectModel.ObservableCollection<PackageSourceWrapper>();
+            view.PackageSources.Add(new PackageSourceWrapper());
             foreach (var source in sources)
             {
-                view.PackageSources.Add(source);
+                view.PackageSources.Add(new PackageSourceWrapper(source));
             }
             if (view.SelectedPackageSource == null)
             {
@@ -58,16 +59,8 @@ namespace OpenRPA
                 view.FilterText = "";
             }
         }
-        private string _currentsearchString = null;
-        public async Task Search(Project project, PackageSource source, Views.PackageManager view, bool includePrerelease, string searchString)
+        public async Task<List<IPackageSearchMetadata>> Search(Project project, PackageSource source, bool includePrerelease, string searchString)
         {
-            if(!string.IsNullOrEmpty(_currentsearchString))
-            {
-                Console.WriteLine("skipping: " + _currentsearchString  + " " + searchString);
-                _currentsearchString = searchString;
-                return;
-            }
-            _currentsearchString = searchString;
             var result = new List<IPackageSearchMetadata>();
             foreach (var sourceRepository in DefaultSourceRepositoryProvider.GetRepositories())
             {
@@ -86,7 +79,6 @@ namespace OpenRPA
 
                 try
                 {
-                    Console.WriteLine(searchString);
                     var jsonNugetPackages = await searchResource.SearchAsync(searchString, searchFilter, 0, 50, NullLogger.Instance, CancellationToken.None);
                     if (string.IsNullOrEmpty(searchString))
                     {
@@ -112,25 +104,8 @@ namespace OpenRPA
                     Log.Error(ex.ToString());
                     throw;
                 }
-                view.IsBusy = false;
             }
-
-
-            view.PackageSourceItems = new System.Collections.ObjectModel.ObservableCollection<PackageSearchItem>();
-            foreach (var item in result)
-            {
-                var _item = new PackageSearchItem(project, item);
-                view.PackageSourceItems.Add(_item);
-            }
-            if(!string.IsNullOrEmpty(_currentsearchString) && _currentsearchString != searchString)
-            {
-                var _searchString = _currentsearchString;
-                _currentsearchString = null;
-                _ = Search(project, source, view, includePrerelease, _searchString);
-            } else
-            {
-                _currentsearchString = null;
-            }
+            return result;
         }
         private static NuGetPackageManager _instance = null;
         public static NuGetPackageManager Instance
@@ -190,6 +165,53 @@ namespace OpenRPA
                 }
             }
             return ret;
+        }
+        public async Task<List<PackageSearchItem>> GetLocal(Project project, PackageIdentity identity)
+        {
+            var result = new List<PackageSearchItem>();
+
+            using (var cacheContext = new SourceCacheContext())
+            {
+                var repositories = DefaultSourceRepositoryProvider.GetRepositories();
+                var availablePackages = new HashSet<SourcePackageDependencyInfo>(PackageIdentityComparer.Default);
+                await GetPackageDependencies(identity, cacheContext, availablePackages);
+
+                var resolverContext = new PackageResolverContext(
+                    DependencyBehavior.Lowest,
+                    new[] { identity.Id },
+                    Enumerable.Empty<string>(),
+                    Enumerable.Empty<NuGet.Packaging.PackageReference>(),
+                    Enumerable.Empty<PackageIdentity>(),
+                    availablePackages,
+                    DefaultSourceRepositoryProvider.GetRepositories().Select(s => s.PackageSource),
+                    NullLogger.Instance);
+
+                var resolver = new PackageResolver();
+                // resolverContext.IncludeUnlisted = true;
+                var packagesToInstall = resolver.Resolve(resolverContext, CancellationToken.None)
+                    .Select(p => availablePackages.Single(x => PackageIdentityComparer.Default.Equals(x, p)));
+                var packagePathResolver = new NuGet.Packaging.PackagePathResolver(PackagesInstallFolder);
+                var clientPolicyContext = NuGet.Packaging.Signing.ClientPolicyContext.GetClientPolicy(Settings, NullLogger.Instance);
+                var packageExtractionContext = new PackageExtractionContext(PackageSaveMode.Defaultv3, XmlDocFileSaveMode.None, clientPolicyContext, NullLogger.Instance);
+                var frameworkReducer = new FrameworkReducer();
+
+                foreach (var packageToInstall in packagesToInstall)
+                {
+                    var installedPath = packagePathResolver.GetInstalledPath(packageToInstall);
+                    if (installedPath != null)
+                    {
+                        // per project or joined ?
+                        // string TargetFolder = System.IO.Path.Combine(project.Path, "extensions");
+                        string TargetFolder = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");
+
+                        PackageReaderBase packageReader;
+                        packageReader = new PackageFolderReader(installedPath);
+
+                        result.Add(new PackageSearchItem(project, packageReader));
+                    }
+                }
+            }
+            return result;
         }
         private List<SourceRepository> GetSortedRepositories()
         {

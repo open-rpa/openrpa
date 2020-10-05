@@ -35,7 +35,9 @@ namespace OpenRPA.Views
             // toolborder.Child = InitializeActivitiesToolbox();
             InitializeActivitiesToolbox();
             Log.FunctionOutdent("WFToolbox", "WFToolbox");
+            Instance = this;
         }
+        public static WFToolbox Instance = null;
 
         private string getDisplayName(Type type)
         {
@@ -85,6 +87,7 @@ namespace OpenRPA.Views
                                             || activityType == typeof(FinalState)
                                             || activityType.GetInterfaces().Contains(typeof(IActivityTemplateFactory))
                                             )
+                                            && !activityType.Assembly.CodeBase.Contains("Snippets.dll")
                                             && activityType.IsVisible
                                             && activityType.IsPublic
                                             && !activityType.IsNested

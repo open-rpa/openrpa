@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using NuGet.Versioning;
 using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
 using System;
@@ -11,20 +13,21 @@ namespace OpenRPA
 {
     public class Project : apibase, IProject
     {
+        public Newtonsoft.Json.Linq.JObject dependencies { get; set; }
         public bool disable_local_caching { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [JsonIgnore]
         public System.Collections.ObjectModel.ObservableCollection<IWorkflow> Workflows { get; set; }
         [JsonIgnore]
         public string Path { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        public static Project[] LoadProjects(string Path)
+        public static async Task<Project[]> LoadProjects(string Path)
         {
             var ProjectFiles = System.IO.Directory.EnumerateFiles(Path, "*.rpaproj", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
             var Projects = new List<Project>();
-            foreach (string file in ProjectFiles) Projects.Add(FromFile(file));
+            foreach (string file in ProjectFiles) Projects.Add(await FromFile(file));
             return Projects.ToArray();
         }
-        public static Project FromFile(string Filepath)
+        public static async Task<Project> FromFile(string Filepath)
         {
             Project project = JsonConvert.DeserializeObject<Project>(System.IO.File.ReadAllText(Filepath));
             project.Filename = System.IO.Path.GetFileName(Filepath);
@@ -32,6 +35,7 @@ namespace OpenRPA
             project.Path = System.IO.Path.GetDirectoryName(Filepath);
             project._type = "project";
             project.Init();
+            await project.InstallDependencies(true);
             return project;
         }
         [JsonIgnore]
@@ -190,6 +194,21 @@ namespace OpenRPA
         public override string ToString()
         {
             return name;
+        }
+        public async Task InstallDependencies(bool LoadDlls)
+        {
+            if (dependencies == null) return;
+            foreach (JProperty jp in (JToken)dependencies)
+            {
+                var ver_range = VersionRange.Parse((string)jp.Value);
+                if (ver_range.IsMinInclusive)
+                {
+                    var target_ver = NuGet.Versioning.NuGetVersion.Parse(ver_range.MinVersion.ToString());
+                    await NuGetPackageManager.Instance.DownloadAndInstall(this, new NuGet.Packaging.Core.PackageIdentity(jp.Name, target_ver), LoadDlls);
+                }
+            }
+            // Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.ProjectsDirectory);
+            Plugins.LoadPlugins(RobotInstance.instance);
         }
     }
 }

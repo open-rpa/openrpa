@@ -21,7 +21,7 @@
 //        {
 //            get
 //            {
-//                if (_logger == null) _logger = OpenRPAPackageManagerLogger.Instance;
+//                // if (_logger == null) _logger = OpenRPAPackageManagerLogger.Instance;
 //                return _logger;
 //                // return NullLogger.Instance;
 //            }

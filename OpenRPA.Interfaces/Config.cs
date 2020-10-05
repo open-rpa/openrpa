@@ -26,6 +26,7 @@ namespace OpenRPA
         public string culture { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
         public string ocrlanguage { get { return GetProperty(null, "eng"); } set { SetProperty(null, value); } }
         public string[] openworkflows { get { return GetProperty(null, new string[] { }); } set { SetProperty(null, value); } }
+        public string[] files_pending_deletion { get { return GetProperty(null, new string[] { }); } set { SetProperty(null, value); } }
         public System.Drawing.Rectangle mainwindow_position { get { return GetProperty(null, System.Drawing.Rectangle.Empty); } set { SetProperty(null, value); } }
         public string designerlayout { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
         public bool record_overlay { get { return GetProperty(null, true); } set { SetProperty(null, value); } }

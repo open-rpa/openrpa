@@ -1234,7 +1234,7 @@ namespace OpenRPA
                         Log.Information("Loading empty projects are not supported");
                         return;
                     }
-                    project = Project.FromFile(System.IO.Path.Combine(projectpath, name + ".rpaproj"));
+                    project = await Project.FromFile(System.IO.Path.Combine(projectpath, name + ".rpaproj"));
                     RobotInstance.instance.Projects.Add(project);
                     project.name = name;
                     project._id = null;
@@ -1701,12 +1701,10 @@ namespace OpenRPA
             }, null);
             Log.FunctionOutdent("MainWindow", "OnOpen");
         }
-
         private void View_onSelectedItemChanged()
         {
             NotifyPropertyChanged("CurrentWorkflow");
         }
-
         private void OnDetectors(object _item)
         {
             Log.FunctionIndent("MainWindow", "OnDetectors");
@@ -2993,6 +2991,7 @@ namespace OpenRPA
                             };
                             isRecording = false;
                             InputDriver.Instance.CallNext = true;
+                            win.Owner = this;
                             if (win.ShowDialog() == true)
                             {
                                 e.ClickHandled = true;
@@ -3019,6 +3018,7 @@ namespace OpenRPA
                                 Topmost = true
                             };
                             isRecording = false;
+                            win.Owner = this;
                             if (win.ShowDialog() == true)
                             {
                                 e.a.AddInput(win.Text, e.Element);
@@ -3520,6 +3520,13 @@ namespace OpenRPA
         private void SearchBox_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             if (SearchBox.IsDropDownOpen) e.Handled = true;
+        }
+        private void SearchBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (SelectedContent is Views.OpenProject op)
+            {
+                op.FilterText = SearchBox.Text;
+            }
         }
     }
     public class QuickLaunchItem

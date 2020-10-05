@@ -1051,6 +1051,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Author.
+        /// </summary>
+        public static string author {
+            get {
+                return ResourceManager.GetString("author", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Browser addons.
         /// </summary>
         public static string browseraddons {
@@ -1330,6 +1339,33 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Include Prerelease.
+        /// </summary>
+        public static string include_prerelease {
+            get {
+                return ResourceManager.GetString("include_prerelease", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install.
+        /// </summary>
+        public static string install {
+            get {
+                return ResourceManager.GetString("install", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installed.
+        /// </summary>
+        public static string installed {
+            get {
+                return ResourceManager.GetString("installed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Logging.
         /// </summary>
         public static string logging {
@@ -1488,6 +1524,15 @@ namespace OpenRPA.Resources {
         public static string open_name {
             get {
                 return ResourceManager.GetString("open_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Package Manager.
+        /// </summary>
+        public static string open_package_manager {
+            get {
+                return ResourceManager.GetString("open_package_manager", resourceCulture);
             }
         }
         
@@ -1830,6 +1875,24 @@ namespace OpenRPA.Resources {
         public static string uilanguage {
             get {
                 return ResourceManager.GetString("uilanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uninstall.
+        /// </summary>
+        public static string uninstall {
+            get {
+                return ResourceManager.GetString("uninstall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        public static string update {
+            get {
+                return ResourceManager.GetString("update", resourceCulture);
             }
         }
         

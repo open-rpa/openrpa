@@ -54,9 +54,16 @@ namespace OpenRPA
             if (view.SelectedPackageSource == null)
             {
                 //view.SelectedPackageSource = sources.FirstOrDefault();
-
-                view.treePackageSources.SelectItem(sources.FirstOrDefault());
-                view.FilterText = "";
+                Task.Run(async () =>
+                {
+                    await Task.Delay(100);
+                    GenericTools.RunUI(() =>
+                    {
+                        view.treePackageSources.SelectItem(sources.FirstOrDefault());
+                        view.FilterText = "";
+                        view.IsBusy = false;
+                    });
+                });
             }
         }
         public async Task<List<IPackageSearchMetadata>> Search(Project project, PackageSource source, bool includePrerelease, string searchString)
@@ -258,7 +265,7 @@ namespace OpenRPA
                     if (dependencyInfo == null) continue;
                     availablePackages.Add(dependencyInfo);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                 }
                 foreach (var dependency in dependencyInfo.Dependencies)

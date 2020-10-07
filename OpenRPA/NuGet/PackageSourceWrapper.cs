@@ -97,7 +97,7 @@ namespace OpenRPA
                     //Console.WriteLine("Start new search based on '" + _currentsearchString + "'");
                     var _searchString = _currentsearchString;
                     _currentsearchString = null;
-                    Search(project, view, includePrerelease, _searchString);
+                    _ = Search(project, view, includePrerelease, _searchString);
                 }
                 else
                 {

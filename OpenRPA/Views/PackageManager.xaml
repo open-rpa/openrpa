@@ -10,6 +10,7 @@
         xmlns:projectbase="clr-namespace:OpenRPA"
         mc:Ignorable="d" 
         Width="900" Height="500" MinWidth="720" MinHeight="400"
+        WindowStartupLocation="CenterScreen"
             >
 
     <Window.Resources>

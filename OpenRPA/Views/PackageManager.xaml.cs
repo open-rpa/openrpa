@@ -124,7 +124,7 @@ namespace OpenRPA.Views
             {
                 _FilterText = value;
                 if (SelectedPackageSource == null) { IsBusy = false; return; }
-                SelectedPackageSource.Search(project, this, IncludePrerelease, _FilterText);
+                _ = SelectedPackageSource.Search(project, this, IncludePrerelease, _FilterText);
                 NotifyPropertyChanged("FilterText");
             }
         }

@@ -24,6 +24,10 @@ namespace OpenRPA
                 treeView.UpdateLayout();
                 tvItem = treeView.ItemContainerGenerator.ContainerFromItem(item) as System.Windows.Controls.TreeViewItem;
             }
+            if (tvItem == null)
+            {
+                tvItem = treeView.ItemContainerGenerator.ContainerFromIndex(0) as System.Windows.Controls.TreeViewItem;
+            }            
             if (tvItem != null)
             {
                 tvItem.IsSelected = true;

@@ -42,13 +42,13 @@
         <File Id="fil05A7E61A6DFFA36C9ED0BAF2B52724DF" Source="!(wix.MainSource)\Microsoft.DiaSymReader.dll" />
         <File Id="fil05FF769999D602AD4FA6A489C44ED290" Source="!(wix.MainSource)\Newtonsoft.Json.dll" />
         <File Id="filB9D0C89E2BE03F54B6210850B37C7B82" Source="!(wix.MainSource)\NLog.dll" />
-        <!--<File Id="fil793549DAC9BBACE3FE0A2C6207439558" Source="!(wix.MainSource)\NuGet.Common.dll" />
+        <File Id="fil793549DAC9BBACE3FE0A2C6207439558" Source="!(wix.MainSource)\NuGet.Common.dll" />
         <File Id="fil1914470A96C406BB700EBFE4DFAB0CEF" Source="!(wix.MainSource)\NuGet.Configuration.dll" />
         <File Id="filC77BFD5C891086AC3DFE76BB004671EB" Source="!(wix.MainSource)\NuGet.Frameworks.dll" />
         <File Id="filA46D093A333210FF3DF479B37CE2796C" Source="!(wix.MainSource)\NuGet.Packaging.dll" />
         <File Id="fil3EFEB876BC03C56EB2BD3B5232C1DB09" Source="!(wix.MainSource)\NuGet.Protocol.dll" />
         <File Id="fil5A46BE503A05AA31B5318277C4BB848F" Source="!(wix.MainSource)\NuGet.Resolver.dll" />
-        <File Id="filFAE94905D72D8368BA8CE7A78C6DEA45" Source="!(wix.MainSource)\NuGet.Versioning.dll" />-->
+        <File Id="filFAE94905D72D8368BA8CE7A78C6DEA45" Source="!(wix.MainSource)\NuGet.Versioning.dll" />
         <File Id="fil6E894942E6ADFA63F3967E0A27F05784" Source="!(wix.MainSource)\OpenRPA.CodeEditor.dll" />
         <File Id="filF0FF646DFA53CCC3ABA2E049427B7EBE" Source="!(wix.MainSource)\OpenRPA.CodeEditor.dll.config" />
         <File Id="fil57AE31DC28AB7B6FFDA5F69E89C07922" Source="!(wix.MainSource)\OpenRPA.exe.config" />

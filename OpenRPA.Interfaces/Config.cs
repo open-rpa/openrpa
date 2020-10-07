@@ -308,13 +308,13 @@ namespace OpenRPA
                 }
                 else if(propertyName != "properties")
                 {
-                    if (!properties.TryGetValue(pluginname + "_" + propertyName, out value))
+                    if (properties != null && !properties.TryGetValue(pluginname + "_" + propertyName, out value))
                     {
                     }
                 }
                 if (string.IsNullOrEmpty(pluginname) && value == null)
                 {
-                    if (!settings.TryGetValue(propertyName, out value))
+                    if (settings != null && settings.TryGetValue(propertyName, out value))
                     {
                     }
                 }
@@ -397,10 +397,12 @@ namespace OpenRPA
                 }
                 if (string.IsNullOrEmpty(pluginname))
                 {
+                    if (settings == null) settings = new Dictionary<string, object>();
                     settings[propertyName] = newValue;
                 }
                 else
                 {
+                    if (properties == null) properties = new Dictionary<string, object>();
                     properties[pluginname + "_" + propertyName] = newValue;
                     properties = properties;
                 }

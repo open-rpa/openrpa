@@ -75,7 +75,8 @@
     <globalSetting name="CreateNewFileForm.automaticallyTranslateCheckBox.Checked">False</globalSetting>
     <globalSetting name="sendFileToTranslator.destinationFilePathTextEdit.Text">C:\Users\Allan\Documents\OpenRPA.xlsx</globalSetting>
     <globalSetting name="sendFileToTranslator.fileGroupsListBox">OpenRPA.AviRecorder\Resources\strings###{{{}}}###OpenRPA.Elis.Rossum\Resources\strings###{{{}}}###OpenRPA.FileWatcher\Resources\strings###{{{}}}###OpenRPA.Forms\Resources\strings###{{{}}}###OpenRPA.IE\Resources\strings###{{{}}}###OpenRPA.Image\Resources\strings###{{{}}}###OpenRPA.Interfaces\Resources\strings###{{{}}}###OpenRPA.Java\Resources\strings###{{{}}}###OpenRPA.NM\Resources\strings###{{{}}}###OpenRPA.Office\Resources\strings###{{{}}}###OpenRPA.OpenFlowDB\Resources\strings###{{{}}}###OpenRPA.PDPlugin\Resources\strings###{{{}}}###OpenRPA.RDServicePlugin\Resources\strings###{{{}}}###OpenRPA.Script\Resources\strings###{{{}}}###OpenRPA.Updater\Resources\strings###{{{}}}###OpenRPA.Utilities\Resources\strings###{{{}}}###OpenRPA.Windows\Resources\strings###{{{}}}###OpenRPA\Resources\strings</globalSetting>
-    <globalSetting name="sendFileToTranslator.languagesToExportCheckListBox">Danish (da)###{{{}}}###German (de)###{{{}}}###Spanish (es)###{{{}}}###Portuguese (pt)###{{{}}}###Romanian (ro)###{{{}}}###Russian (ru)</globalSetting>
+    <globalSetting name="sendFileToTranslator.languagesToExportCheckListBox">
+    </globalSetting>
     <globalSetting name="sendFileToTranslator.referenceLanguageComboBoxEdit.SelectedIndex">2</globalSetting>
     <globalSetting name="sendFileToTranslator.openFileAfterGeneratingCheckEdit.Checked">True</globalSetting>
     <globalSetting name="sendFileToTranslator.openAfterGeneratingCheckEdit.Checked">False</globalSetting>
@@ -104,6 +105,14 @@ Kind regards</globalSetting>
     <globalSetting name="receiveFileFromTranslator.fileGroupsListBox">0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17</globalSetting>
     <globalSetting name="receiveFileFromTranslator.languagesToImportCheckListBox">4</globalSetting>
     <globalSetting name="sendFileToTranslator.destinationFilePathTextEdit.InitialDirectory">C:\Users\Allan\Documents</globalSetting>
+    <globalSetting name="CreateNewFilesForm.prefixTextBox.Text">
+    </globalSetting>
+    <globalSetting name="CreateNewFilesForm.prefixCheckBox.Checked">False</globalSetting>
+    <globalSetting name="CreateNewFilesForm.referenceLanguageComboBox.SelectedIndex">-1</globalSetting>
+    <globalSetting name="CreateNewFilesForm.destinationLanguagesListBox">
+    </globalSetting>
+    <globalSetting name="CreateNewFilesForm.copyTextsCheckBox.Checked">False</globalSetting>
+    <globalSetting name="CreateNewFilesForm.automaticallyTranslateCheckBox.Checked">False</globalSetting>
     <userSetting name="Allan@DESKTOP-PK5A5U0.filesInitialDir">C:\code\openrpa\OpenRPA.Windows\Resources</userSetting>
     <userSetting name="Allan@DESKTOP-PK5A5U0.FindText">
     </userSetting>

@@ -26,7 +26,7 @@ namespace OpenRPA.NM.pipe
             pipe.Connected += (sender) => { Connected?.Invoke(); };
             pipe.Error += (e) => { Error?.Invoke(e); };
             pipe.ServerMessage += (sender, message) => {
-                var queue = replyqueue.Where(x => x.messageid == message.messageid).FirstOrDefault();
+                var queue = replyqueue.Where(x => x != null && x.messageid == message.messageid).FirstOrDefault();
                 if (queue != null)
                 {
                     // Log.Information("received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));

@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.1.2</Version>
-    <PackageReleaseNotes>1.1.2 Minor improvements
+    <Version>1.1.3</Version>
+    <PackageReleaseNotes>1.1.3 Test rewriting GetElement as async, to support Cancel
+1.1.2 Minor improvements
 1.1.1 Re-Add NuGet Package support - BETA
 1.0.175 Beta: Add PowerShell support
 1.0.174 Test implementation of support for Arabic for readpdf

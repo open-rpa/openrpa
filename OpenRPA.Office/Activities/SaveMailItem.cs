@@ -45,6 +45,11 @@ namespace OpenRPA.Office.Activities
             var folder = Folder.Get(context);
             var astype = Type.Get(context);
             if (string.IsNullOrEmpty(filename)) filename = email.Subject;
+            if (string.IsNullOrEmpty(filename))
+            {
+                Log.Warning("No filename supplied and mail had no subject, so using no_subject as filename.");
+                filename = "no_subject";
+            }
             if (!string.IsNullOrEmpty(folder))
             {
                 filename = System.IO.Path.Combine(folder, RemoveInvalidChars(filename));

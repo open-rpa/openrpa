@@ -39,17 +39,17 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="30" />
                 </Grid.ColumnDefinitions>
-                <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_expandarchive_filename_hint}" MaxWidth="180" Margin="5" Grid.Row="1" Grid.Column="0"
+                <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_expandarchive_filename_hint}" MaxWidth="180" Margin="5" Grid.Row="0" Grid.Column="0"
                             OwnerActivity="{Binding Path=ModelItem}"
                             Expression="{Binding Path=ModelItem.Filename, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
                             ExpressionType="s:String" HorizontalAlignment="Stretch" />
-                <Button Content="..." Click="FileButton_Click" Width="30" Grid.Row="1" Grid.Column="1" />
+                <Button Content="..." Click="FileButton_Click" Width="30" Grid.Row="0" Grid.Column="1" />
 
-                <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_expandarchive_path_hint}" MaxWidth="180" Margin="5" Grid.Column="0"
+                <sapv:ExpressionTextBox HintText="{x:Static or:strings.activity_expandarchive_path_hint}" MaxWidth="180" Margin="5" Grid.Column="0" Grid.Row="1"
                             OwnerActivity="{Binding Path=ModelItem}"
                             Expression="{Binding Path=ModelItem.Path, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
                             ExpressionType="s:String" HorizontalAlignment="Stretch" />
-                <Button Content="..." Click="PathButton_Click" Width="30" Grid.Column="1" />
+                <Button Content="..." Click="PathButton_Click" Width="30" Grid.Column="1" Grid.Row="1" />
 
             </Grid>
         </DataTemplate>

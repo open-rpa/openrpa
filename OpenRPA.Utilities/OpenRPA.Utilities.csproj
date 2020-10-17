@@ -10,8 +10,9 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
-    <Version>1.0.15</Version>
-    <PackageReleaseNotes>1.0.15 Test implementation of support for Arabic for readpdf
+    <Version>1.0.16</Version>
+    <PackageReleaseNotes>1.0.16 Add CompressArchive and ExpandArchive
+1.0.15 Test implementation of support for Arabic for readpdf
 1.0.14 Add SelectFile Activity
 1.0.13 Add SetAllRowsState
 1.0.12 Add Start Process
@@ -48,10 +49,12 @@
   <ItemGroup>
     <None Remove="Activities\AddDataColumnDesigner.xaml" />
     <None Remove="Activities\AddDataRowDesigner.xaml" />
+    <None Remove="Activities\CompressArchiveDesigner.xaml" />
     <None Remove="Activities\CreateDataTableDesigner.xaml" />
     <None Remove="Activities\DeleteAllRowsDesigner.xaml" />
     <None Remove="Activities\DeleteRowDesigner.xaml" />
     <None Remove="Activities\DownloadFileDesigner.xaml" />
+    <None Remove="Activities\ExpandArchiveDesigner.xaml" />
     <None Remove="Activities\GetCredentialsDesigner.xaml" />
     <None Remove="Activities\JArrayToDataTableDesigner.xaml" />
     <None Remove="Activities\MatchDesigner.xaml" />
@@ -71,9 +74,11 @@
     <None Remove="Activities\WriteExcelDesigner.xaml" />
     <None Remove="Resources\designer\closeworkbook.png" />
     <None Remove="Resources\designer\commentout.png" />
+    <None Remove="Resources\designer\compressarchive.png" />
     <None Remove="Resources\designer\database.png" />
     <None Remove="Resources\designer\downloadfile.png" />
     <None Remove="Resources\designer\entity.png" />
+    <None Remove="Resources\designer\expandarchive.png" />
     <None Remove="Resources\designer\newemail.png" />
     <None Remove="Resources\designer\outlook.png" />
     <None Remove="Resources\designer\play.png" />
@@ -88,9 +93,11 @@
     <None Remove="Resources\designer\writefile.png" />
     <None Remove="Resources\toolbox\closeworkbook.png" />
     <None Remove="Resources\toolbox\commentout.png" />
+    <None Remove="Resources\toolbox\compressarchive.png" />
     <None Remove="Resources\toolbox\database.png" />
     <None Remove="Resources\toolbox\downloadfile.png" />
     <None Remove="Resources\toolbox\entity.png" />
+    <None Remove="Resources\toolbox\expandarchive.png" />
     <None Remove="Resources\toolbox\newemail.png" />
     <None Remove="Resources\toolbox\outlook.png" />
     <None Remove="Resources\toolbox\play.png" />
@@ -105,7 +112,9 @@
     <None Remove="Resources\toolbox\writefile.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\designer\compressarchive.png" />
     <Resource Include="Resources\designer\database.png" />
+    <Resource Include="Resources\designer\expandarchive.png" />
     <Resource Include="Resources\designer\selectfolder.png" />
     <Resource Include="Resources\designer\selectfile.png" />
     <EmbeddedResource Include="Resources\toolbox\closeworkbook.png" />
@@ -146,6 +155,8 @@
     <Resource Include="Resources\designer\regex.png" />
     <Resource Include="Resources\designer\writeexcel.png" />
     <Resource Include="Resources\designer\writefile.png" />
+    <EmbeddedResource Include="Resources\toolbox\compressarchive.png" />
+    <EmbeddedResource Include="Resources\toolbox\expandarchive.png" />
     <EmbeddedResource Include="Resources\toolbox\database.png" />
     <EmbeddedResource Include="Resources\toolbox\regex.png" />
     <EmbeddedResource Include="Resources\toolbox\entity.png" />
@@ -158,6 +169,14 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\AddDataColumnDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\ExpandArchiveDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\CompressArchiveDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

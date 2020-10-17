@@ -120,6 +120,12 @@
   <data name="activity_adddatarow_datatable" xml:space="preserve">
     <value>DataTable to insert into</value>
   </data>
+  <data name="activity_compressarchive_filename_hint" xml:space="preserve">
+    <value>Save zip file with this filename</value>
+  </data>
+  <data name="activity_compressarchive_path_hint" xml:space="preserve">
+    <value>Add all files from this folder</value>
+  </data>
   <data name="activity_converter_datatable" xml:space="preserve">
     <value>Datatable</value>
   </data>
@@ -143,6 +149,12 @@
   </data>
   <data name="activity_drop_hint" xml:space="preserve">
     <value>Drop activity</value>
+  </data>
+  <data name="activity_expandarchive_filename_hint" xml:space="preserve">
+    <value>Select ZIP file to expand</value>
+  </data>
+  <data name="activity_expandarchive_path_hint" xml:space="preserve">
+    <value>Select destination folder</value>
   </data>
   <data name="activity_match_compiled" xml:space="preserve">
     <value>Compiled</value>

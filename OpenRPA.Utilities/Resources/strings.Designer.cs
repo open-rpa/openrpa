@@ -70,6 +70,24 @@ namespace OpenRPA.Utilities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save zip file with this filename.
+        /// </summary>
+        public static string activity_compressarchive_filename_hint {
+            get {
+                return ResourceManager.GetString("activity_compressarchive_filename_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add all files from this folder.
+        /// </summary>
+        public static string activity_compressarchive_path_hint {
+            get {
+                return ResourceManager.GetString("activity_compressarchive_path_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Datatable.
         /// </summary>
         public static string activity_converter_datatable {
@@ -138,6 +156,24 @@ namespace OpenRPA.Utilities.Resources {
         public static string activity_drop_hint {
             get {
                 return ResourceManager.GetString("activity_drop_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select ZIP file to expand.
+        /// </summary>
+        public static string activity_expandarchive_filename_hint {
+            get {
+                return ResourceManager.GetString("activity_expandarchive_filename_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select destination folder.
+        /// </summary>
+        public static string activity_expandarchive_path_hint {
+            get {
+                return ResourceManager.GetString("activity_expandarchive_path_hint", resourceCulture);
             }
         }
         

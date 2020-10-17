@@ -119,10 +119,10 @@ namespace OpenRPA.NM
                 {
                     Console.WriteLine("was Canceled: true! DisplayName" + DisplayName);
                 }
-                if (sw.Elapsed >= timeout)
-                {
-                    Console.WriteLine("Timeout !");
-                }
+                //if (sw.Elapsed >= timeout)
+                //{
+                //    Console.WriteLine("Timeout !");
+                //}
             });
             return elements;
         }

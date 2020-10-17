@@ -17,11 +17,8 @@ namespace OpenRPA.NM
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_getelement_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getelement", typeof(Resources.strings))]
-    public class GetElement : AsyncTaskNativeActivity, System.Activities.Presentation.IActivityTemplateFactory // <NMElement[]>
+    public class GetElement : AsyncTaskNativeActivity, System.Activities.Presentation.IActivityTemplateFactory
     {
-        //[RequiredArgument]
-        //public InArgument<string> XPath { get; set; }
-
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<NMElement> Body { get; set; }
         public InArgument<int> MaxResults { get; set; }
@@ -64,7 +61,6 @@ namespace OpenRPA.NM
             }
 
         }
-        private Stopwatch sw = new Stopwatch();
         private bool IsCancel = false;
         protected override async Task<object> ExecuteAsync(NativeActivityContext context)
         {
@@ -78,8 +74,6 @@ namespace OpenRPA.NM
             var minresults = MinResults.Get(context);
             if (maxresults < 1) maxresults = 1;
             NMElement[] elements = { };
-            
-            sw.Start();
             string browser = sel.browser;
             if (WaitForReady != null && WaitForReady.Get(context))
             {
@@ -101,56 +95,33 @@ namespace OpenRPA.NM
                     }
                 }
             }
-
-
-
-            //var id = Guid.NewGuid().ToString();
-            //context.CreateBookmark(id, (activityContext, bookmark, value) =>
-            //{
-
-            //});
-
-            //Task.Factory.StartNew(() =>
-            //{
-            //    // context.RemoveBookmark(id);
-            //});
-
-            // await Task.Delay(100);
             await Task.Run(() =>
             {
-            do
-            {
-                elements = NMSelector.GetElementsWithuiSelector(sel, from, maxresults);
-                Log.Selector("BEGIN:: I have " + elements.Count() + " elements, and " + allelements.Count() + " in all elements");
-
-                // allelements = allelements.Concat(elements).ToArray();
-                if (allelements.Length > 0)
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+                do
                 {
-                    var newelements = new List<NMElement>();
-                    for (var i = elements.Length - 1; i >= 0; i--)
+                    elements = NMSelector.GetElementsWithuiSelector(sel, from, maxresults);
+                    Log.Selector("BEGIN:: I have " + elements.Count() + " elements, and " + allelements.Count() + " in all elements");
+                    if (allelements.Length > 0)
                     {
-                        var element = elements[i];
-                        if (!allelements.Contains(element)) newelements.Insert(0, element);
+                        var newelements = new List<NMElement>();
+                        for (var i = elements.Length - 1; i >= 0; i--)
+                        {
+                            var element = elements[i];
+                            if (!allelements.Contains(element)) newelements.Insert(0, element);
+                        }
+                        elements = newelements.ToArray();
                     }
-                    elements = newelements.ToArray();
-                    //if(elements.Count() > 20)
-                    //{
-                    //    for(var i=0; i < allelements.Length && i < elements.Length; i++)
-                    //    {
-                    //        if (!eq.Equals(allelements[i], elements[i]) || allelements[i].GetHashCode() != elements[i].GetHashCode())
-                    //        {
-                    //            Log.Output(allelements[i].GetHashCode() + " / " + elements[i].GetHashCode());
-                    //        }
 
-                    //    }
-
-                    //}
-                }
-
-            } while (elements.Count() == 0 && sw.Elapsed < timeout && !IsCancel);
-                if(IsCancel)
+                } while (elements.Count() == 0 && sw.Elapsed < timeout && !IsCancel);
+                if (IsCancel)
                 {
                     Console.WriteLine("was Canceled: true! DisplayName" + DisplayName);
+                }
+                if (sw.Elapsed >= timeout)
+                {
+                    Console.WriteLine("Timeout !");
                 }
             });
             return elements;
@@ -190,7 +161,6 @@ namespace OpenRPA.NM
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {
             metadata.AddDelegate(Body);
-            // metadata.AddImplementationChild(LoopAction);
             metadata.AddChild(LoopAction);
             Interfaces.Extensions.AddCacheArgument(metadata, "MaxResults", MaxResults);
             Interfaces.Extensions.AddCacheArgument(metadata, "MinResults", MinResults);
@@ -200,7 +170,7 @@ namespace OpenRPA.NM
             Interfaces.Extensions.AddCacheArgument(metadata, "From", From);
             Interfaces.Extensions.AddCacheArgument(metadata, "Elements", Elements);
             Interfaces.Extensions.AddCacheArgument(metadata, "WaitForReady", WaitForReady);
-            
+
             metadata.AddImplementationVariable(_elements);
             metadata.AddImplementationVariable(_allelements);
             base.CacheMetadata(metadata);
@@ -221,41 +191,25 @@ namespace OpenRPA.NM
             if (allelements == null) allelements = new NMElement[] { };
             var maxresults = MaxResults.Get(context);
             var minresults = MinResults.Get(context);
-
             NMElement[] elements = result as NMElement[];
-
             if (elements.Count() > maxresults) elements = elements.Take(maxresults).ToArray();
 
             if ((elements.Length + allelements.Length) < minresults)
             {
-                Log.Selector(string.Format("Windows.GetElement::Failed locating " + minresults + " item(s) {0:mm\\:ss\\.fff}", sw.Elapsed));
+                Log.Selector(string.Format("Windows.GetElement::Failed locating " + minresults + " item(s)"));
                 throw new ElementNotFoundException("Failed locating " + minresults + " item(s)");
             }
-
-
-
             IEnumerator<NMElement> _enum = elements.ToList().GetEnumerator();
             bool more = _enum.MoveNext();
-            //if (lastelements.Length == elements.Length && lastelements.Length > 0)
-            //{
-            //    var eq = new Activities.NMEqualityComparer();
-            //    more = !System.Collections.StructuralComparisons.StructuralEqualityComparer.Equals(lastelements, elements);
-            //}
             if (more)
             {
                 allelements = allelements.Concat(elements).ToArray();
                 var eq = new Activities.NMEqualityComparer();
                 allelements = allelements.Distinct(eq).ToArray();
-
-                //var allelementslength = allelements.Length;
-                //Array.Resize(ref allelements, allelements.Length + elements.Length);
-                //Array.Copy(elements, 0, allelements, allelementslength, elements.Length);
             }
-
             context.SetValue(_allelements, allelements);
             context.SetValue(Elements, allelements);
             Log.Selector("END:: I have " + elements.Count() + " elements, and " + allelements.Count() + " in all elements");
-
             if (more)
             {
                 context.SetValue(_elements, _enum);

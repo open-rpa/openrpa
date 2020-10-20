@@ -10,7 +10,7 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.1.7</Version>
+    <Version>1.1.8</Version>
     <PackageReleaseNotes>1.1.8 Fix initialDirectory for SelectFile
 1.1.7 Quick fix of chrome update to UIElement type
 1.1.6 Fix caseing in nm select item by text

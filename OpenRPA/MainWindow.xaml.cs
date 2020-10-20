@@ -2827,7 +2827,7 @@ namespace OpenRPA
                     };
                 }
 
-                p = Plugins.recordPlugins.Where(x => x.Name == "SAP").First();
+                p = Plugins.recordPlugins.Where(x => x.Name == "SAP").FirstOrDefault();
                 if(p != null && (all == true || all == false))
                 {
                     p.OnUserAction += OnUserAction;

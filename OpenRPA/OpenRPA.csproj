@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.1.6</Version>
-    <PackageReleaseNotes>1.1.6 Fix caseing in nm select item by text
+    <Version>1.1.7</Version>
+    <PackageReleaseNotes>1.1.7 Quick fix of chrome update to UIElement type
+1.1.6 Fix caseing in nm select item by text
 1.1.5 Fix order in ExpandArchiveDesigner / Fix issue with timeout in nm
 1.1.4 Add CompressArchive and ExpandArchive
 1.1.3 Test rewriting GetElement as async, to support Cancel

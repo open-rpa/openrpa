@@ -69,6 +69,20 @@ namespace OpenRPA.Utilities
                 dialog.Filter = filter;
                 dialog.FilterIndex = filterIndex;
             }
+            try
+            {
+                if (!string.IsNullOrEmpty(initialDirectory) && !initialDirectory.Contains("\\"))
+                {
+                    Enum.TryParse(initialDirectory, out Environment.SpecialFolder specialfolder);
+                    initialDirectory = Environment.GetFolderPath(specialfolder);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            if (!string.IsNullOrEmpty(initialDirectory)) dialog.InitialDirectory = initialDirectory;
             dialog.CheckFileExists = checkFileExists;
             dialog.CheckPathExists = checkPathExists;
             

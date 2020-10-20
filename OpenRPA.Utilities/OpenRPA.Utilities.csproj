@@ -11,7 +11,8 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Version>1.0.16</Version>
-    <PackageReleaseNotes>1.0.16 Add CompressArchive and ExpandArchive
+    <PackageReleaseNotes>1.0.17 Fix initialDirectory for SelectFile
+1.0.16 Add CompressArchive and ExpandArchive
 1.0.15 Test implementation of support for Arabic for readpdf
 1.0.14 Add SelectFile Activity
 1.0.13 Add SetAllRowsState

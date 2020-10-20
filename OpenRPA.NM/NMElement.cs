@@ -178,7 +178,6 @@ namespace OpenRPA.NM
                 if (chromeelement.ContainsKey("innertext")) return chromeelement["innertext"].ToString();
                 if(!hasRefreshed)
                 {
-                    Log.Output("Refresh!");
                     Refresh();
                     if (chromeelement.ContainsKey("text")) return chromeelement["text"].ToString();
                     if (chromeelement.ContainsKey("innertext")) return chromeelement["innertext"].ToString();
@@ -194,7 +193,7 @@ namespace OpenRPA.NM
                     {
                         foreach (var item in Children)
                         {
-                            if ((!string.IsNullOrEmpty(item.Text) && item.Text.ToLower() == value) || (string.IsNullOrEmpty(item.Text) && string.IsNullOrEmpty(value)))
+                            if ((!string.IsNullOrEmpty(item.Text) && !string.IsNullOrEmpty(value) && item.Text.ToLower() == value.ToLower()) || (string.IsNullOrEmpty(item.Text) && string.IsNullOrEmpty(value)))
                             {
                                 Value = item.Value;
                                 return;

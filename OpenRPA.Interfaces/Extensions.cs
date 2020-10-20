@@ -123,6 +123,7 @@ namespace OpenRPA.Interfaces
         }
         public static IEnumerable<T> GetMyCustomAttributes<T>(this Type type, bool inherit)
         {
+            if (type == null) return default(IEnumerable<T>);
             return type
                 .GetCustomAttributes(typeof(T), inherit)
                 .Cast<T>();

@@ -316,7 +316,7 @@ namespace OpenRPA.NM
             }
             if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "msedge")
             {
-                if (e.UIElement.FrameworkId != "chrome" && e.UIElement.FrameworkId != "Chrome") return false;
+                // if (e.UIElement.FrameworkId != "chrome" && e.UIElement.FrameworkId != "Chrome") return false;
             }
             var selector = new NMSelector(LastElement, null, true, null);
             var a = new GetElement { DisplayName = LastElement.id + " " + LastElement.type + " " + LastElement.Name };

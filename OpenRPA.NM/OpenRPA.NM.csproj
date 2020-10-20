@@ -8,8 +8,9 @@
     <Company>OpenIAP</Company>
     <Product>OpenRPA</Product>
     <Description>Recorder plugin and Activities for interacting with Chrome/Firefox and Edge, created for OpenRPA robot</Description>
-    <Version>1.0.45</Version>
-    <PackageReleaseNotes>1.0.45 Add support to update div value
+    <Version>1.0.46</Version>
+    <PackageReleaseNotes>1.0.46 Fix select item by text
+1.0.45 Add support to update div value
 1.0.44 Fix issue with utf strings in update value
 1.0.43 Improve nm.WaitForDownload
 1.0.42 Add custom timeout on plugin messages and raise default timeout

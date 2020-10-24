@@ -36,7 +36,7 @@ namespace OpenRPA.Activities
                 ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(selectors.vm.json) });
                 var Plugin = Interfaces.Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
                 var _base = Plugin.GetElementsWithSelector(selector, null, 10);
-                if (_base == null && _base.Length == 0) return;
+                if (_base == null || _base.Length == 0) return;
                 var ele = _base[0];
                 if(ele != null && !(ele is UIElement))
                 {

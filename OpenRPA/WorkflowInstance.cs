@@ -776,22 +776,29 @@ namespace OpenRPA
         private object filelock = new object();
         public void SaveFile()
         {
-            if (string.IsNullOrEmpty(InstanceId)) return;
-            if (string.IsNullOrEmpty(Path)) return;
-            if (isCompleted || hasError) return;
-            if (!System.IO.Directory.Exists(System.IO.Path.Combine(Path, "state"))) System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Path, "state"));
-            var Filepath = System.IO.Path.Combine(Path, "state", InstanceId + ".json");
-            string json = "";
             try
             {
-                json = JsonConvert.SerializeObject(this);
+                if (string.IsNullOrEmpty(InstanceId)) return;
+                if (string.IsNullOrEmpty(Path)) return;
+                if (isCompleted || hasError) return;
+                if (!System.IO.Directory.Exists(System.IO.Path.Combine(Path, "state"))) System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Path, "state"));
+                var Filepath = System.IO.Path.Combine(Path, "state", InstanceId + ".json");
+                string json = "";
+                try
+                {
+                    json = JsonConvert.SerializeObject(this);
+                }
+                catch (Exception)
+                {
+                }
+                lock (filelock)
+                {
+                    if (!string.IsNullOrEmpty(json)) System.IO.File.WriteAllText(Filepath, json);
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-            }
-            lock(filelock)
-            {
-                if(!string.IsNullOrEmpty(json)) System.IO.File.WriteAllText(Filepath, json);
+                Log.Error(ex.ToString());
             }
         }
         public void DeleteFile()

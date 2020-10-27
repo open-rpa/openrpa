@@ -45,6 +45,10 @@ namespace OpenRPA.Interfaces
         public static void AddNamespaceSettings(object rootObject, params Type[] types)
         {
             Microsoft.VisualBasic.Activities.VisualBasicSettings vbsettings = Microsoft.VisualBasic.Activities.VisualBasic.GetSettings(rootObject);
+            if (vbsettings == null)
+            {
+                vbsettings = new Microsoft.VisualBasic.Activities.VisualBasicSettings();
+            }
             foreach (Type t in types)
             {
                 vbsettings.ImportReferences.Add(

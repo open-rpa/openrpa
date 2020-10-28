@@ -181,7 +181,6 @@ namespace OpenRPA.Activities
                         else
                         {
                             JToken t = payload[key];
-                            var testtest = t.Value<string>();
                             System.Reflection.MethodInfo method = typeof(JToken).GetMethod(nameof(JToken.Value)); // typeof(JToken).GetMethod(nameof(JToken.Value));
                             System.Reflection.MethodInfo generic = method.MakeGenericMethod(myVar.PropertyType);
                             var value = generic.Invoke(payload, new object[] { key });

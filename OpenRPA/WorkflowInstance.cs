@@ -313,7 +313,9 @@ namespace OpenRPA
             }
         }
         public System.Diagnostics.Stopwatch runWatch { get; set; }
-        apibase IWorkflowInstance.Workflow { get => this.Workflow; set => this.Workflow = value as Workflow; }
+        IWorkflow IWorkflowInstance.Workflow { get => this.Workflow; set => this.Workflow = value as Workflow; }
+
+        // apibase IWorkflowInstance.Workflow { get => this.Workflow; set => this.Workflow = value as Workflow; }
         //public void Run(Activity root, string activityid)
 
         public void RunThis(Activity root, Activity activity)

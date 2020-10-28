@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.1.10</Version>
-    <PackageReleaseNotes>1.1.10 Fix issue with importing namespaces when recording_add_to_designer is false
+    <Version>1.1.11</Version>
+    <PackageReleaseNotes>1.1.11 Fix JArray parse error / Expose instance as variable / Upgrade CefSharp.Wpf
+1.1.10 Fix issue with importing namespaces when recording_add_to_designer is false
 1.1.9 Various small bug fixes
 1.1.8 Fix initialDirectory for SelectFile
 1.1.7 Quick fix of chrome update to UIElement type
@@ -218,7 +219,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Include="$(OutputPath)\OpenRPA.exe.config" Pack="true" PackagePath="build" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CefSharp.Wpf" Version="83.4.20" />
+    <PackageReference Include="CefSharp.Wpf" Version="85.3.130" />
     <PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.8.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />

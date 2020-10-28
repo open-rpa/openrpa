@@ -9,7 +9,7 @@ namespace OpenRPA.Interfaces
 {
     public interface IWorkflowInstance : INotifyPropertyChanged
     {
-        entity.apibase Workflow { get; set; }
+        IWorkflow Workflow { get; set; }
         Dictionary<string, object> Parameters { get; set; }
         Dictionary<string, object> Bookmarks { get; set; }
         string _id { get; set; }

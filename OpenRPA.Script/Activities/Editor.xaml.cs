@@ -57,6 +57,8 @@ namespace OpenRPA.Script.Activities
                 variables.Add(variable.Name, variable.Type);
             }
 
+            if (!variables.ContainsKey("instance")) variables.Add("instance", typeof(IWorkflowInstance));
+
             textEditor.Namespaces = namespaces;
             this.Variables = Variables;
             DataContext = this;
@@ -124,6 +126,7 @@ namespace OpenRPA.Script.Activities
                         var variable = variableModel.GetCurrentValue() as System.Activities.LocationReference;
                         variables.Add(variable.Name, variable.Type);
                     }
+                    if (!variables.ContainsKey("instance")) variables.Add("instance", typeof(IWorkflowInstance));
                     if (language == "VB")
                     {
 

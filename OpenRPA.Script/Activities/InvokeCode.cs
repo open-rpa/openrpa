@@ -101,6 +101,12 @@ namespace OpenRPA.Script.Activities
                     variables.Add(v.DisplayName, rtype);
                     variablevalues.Add(v.DisplayName, value);
                 }
+                string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+
+                var instance = Plugin.client.GetWorkflowInstanceByInstanceId(WorkflowInstanceId);
+                variables.Add("instance", typeof(IWorkflowInstance));
+                variablevalues.Add("instance", instance);
+
                 string sourcecode = code;
                 if (namespaces == null)
                 {
@@ -269,6 +275,7 @@ namespace OpenRPA.Script.Activities
                                         PyObject pyobj = scope.Get(parameter.Key);
                                         if (pyobj == null) continue;
                                         PropertyDescriptor myVar = context.DataContext.GetProperties().Find(parameter.Key, true);
+                                        if (myVar == null) continue;
                                         if (myVar.PropertyType == typeof(string))
                                             myVar.SetValue(context.DataContext, pyobj.ToString());
                                         else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(pyobj.ToString()));
@@ -650,8 +657,8 @@ namespace OpenRPA.Script.Activities
                     return loadedAssemblies[resourceName];
                 }
 
-            // looks for the assembly from the resources and load it
-            using (System.IO.Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+                // looks for the assembly from the resources and load it
+                using (System.IO.Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
                 {
                     if (stream != null)
                     {

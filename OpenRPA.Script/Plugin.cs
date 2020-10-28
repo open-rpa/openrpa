@@ -73,8 +73,10 @@ namespace OpenRPA.Script
         //    var mod = Py.Import("numpy");
         //    return mod;
         //}
+        public static IOpenRPAClient client = null;
         public void Initialize(IOpenRPAClient client)
         {
+            Plugin.client = client;
             _ = PluginConfig.csharp_intellisense;
             _ = PluginConfig.vb_intellisense;
             _ = PluginConfig.use_embedded_python;

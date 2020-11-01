@@ -202,7 +202,7 @@ namespace OpenRPA.Interfaces.Selector
                 try
                 {
                     Selector s = null; treeelement parent;
-                    if(Anchor!=null)
+                    if(Anchor!=null && Plugin.Name == "nm")
                     {
                         parent = item.Parent;
                         while (parent != null && parent.Parent != null) parent = parent.Parent;
@@ -212,8 +212,11 @@ namespace OpenRPA.Interfaces.Selector
                             return;
                         }
                         s = Plugin.GetSelector(null, parent);  
+                    } else if (Anchor != null && Plugin.Name != "nm")
+                    {
+                        s = Anchor;
                     }
-                    var selector = Plugin.GetSelector(s, item);
+                        var selector = Plugin.GetSelector(s, item);
                     Selector = selector;
                     _json = selector.ToString();
 

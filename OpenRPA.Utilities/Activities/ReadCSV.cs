@@ -34,6 +34,7 @@ namespace OpenRPA.Utilities
             {
                 csvReader.SetDelimiters(Delimiters);
                 csvReader.HasFieldsEnclosedInQuotes = true;
+                int maxLength = 0;
                 if (useHeaderRow)
                 {
                     string[] colFields = csvReader.ReadFields();
@@ -42,6 +43,7 @@ namespace OpenRPA.Utilities
                         DataColumn datecolumn = new DataColumn(column);
                         datecolumn.AllowDBNull = true;
                         csvData.Columns.Add(datecolumn);
+                        maxLength++;
                     }
                 }
                 bool firstrow = true;
@@ -55,6 +57,7 @@ namespace OpenRPA.Utilities
                             DataColumn datecolumn = new DataColumn();
                             datecolumn.AllowDBNull = true;
                             csvData.Columns.Add(datecolumn);
+                            maxLength++;
                         }
                     }
 
@@ -65,6 +68,10 @@ namespace OpenRPA.Utilities
                         {
                             fieldData[i] = null;
                         }
+                    }
+                    if(fieldData.Length > maxLength)
+                    {
+                        Array.Resize(ref fieldData, maxLength);
                     }
                     csvData.Rows.Add(fieldData);
                     firstrow = false;

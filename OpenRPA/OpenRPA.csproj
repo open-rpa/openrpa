@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.1.11</Version>
-    <PackageReleaseNotes>1.1.11 Fix JArray parse error / Expose instance as variable / Upgrade CefSharp.Wpf
+    <Version>1.1.12</Version>
+    <PackageReleaseNotes>1.1.12 Fix "cannot select self" on nested windows elements
+1.1.11 Fix JArray parse error / Expose instance as variable / Upgrade CefSharp.Wpf
 1.1.10 Fix issue with importing namespaces when recording_add_to_designer is false
 1.1.9 Various small bug fixes
 1.1.8 Fix initialDirectory for SelectFile

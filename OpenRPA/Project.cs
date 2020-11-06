@@ -189,7 +189,7 @@ namespace OpenRPA
             }
             try
             {
-                if (System.IO.Directory.Exists(Path)) System.IO.Directory.Delete(Path);
+                if (System.IO.Directory.Exists(Path)) System.IO.Directory.Delete(Path, true);
             }
             catch (Exception ex)
             {

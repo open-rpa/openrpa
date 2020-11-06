@@ -17,6 +17,7 @@ namespace OpenRPA.PS
         [Parameter(ValueFromPipeline = true, Position = 1, Mandatory = true, ParameterSetName = "withObject")]
         public PSObject Object { get; set; }
         [Parameter(ValueFromPipeline = true, Position = 1, Mandatory = false, ParameterSetName = "withJson")]
+        public string TargetQueue { get; set; }
         public string json { get; set; }
 
         private static RuntimeDefinedParameterDictionary _staticStorage;
@@ -25,9 +26,10 @@ namespace OpenRPA.PS
         {
             if (_Collections == null)
             {
-                Initialize().Wait();
+                Initialize().Wait(5000);
             }
-            if(_workflows == null)
+            if (global.webSocketClient == null || !global.webSocketClient.isConnected || global.webSocketClient.user == null) return new RuntimeDefinedParameterDictionary();
+            if (_workflows == null)
             {
                 _workflows = global.webSocketClient.Query<openflowworkflow>("workflow", "{_type: 'workflow', rpa: true}").Result;
             }
@@ -55,15 +57,19 @@ namespace OpenRPA.PS
             try
             {
                 var WorkflowRuntime = new RuntimeDefinedParameter();
-                _staticStorage.TryGetValue("Workflow", out WorkflowRuntime);
                 string WorkflowName = "";
-                if (WorkflowRuntime.Value != null && !string.IsNullOrEmpty(WorkflowRuntime.Value.ToString())) WorkflowName = WorkflowRuntime.Value.ToString();
-                var workflow = _workflows.Where(x => x.name == WorkflowName).FirstOrDefault();
-                if(workflow == null)
+                if (_staticStorage != null)
+                {
+                    _staticStorage.TryGetValue("Workflow", out WorkflowRuntime);
+                    if (WorkflowRuntime.Value != null && !string.IsNullOrEmpty(WorkflowRuntime.Value.ToString())) WorkflowName = WorkflowRuntime.Value.ToString();
+                }
+                var workflow = (_workflows == null ? null : _workflows.Where(x => x.name == WorkflowName).FirstOrDefault());
+                if((workflow == null || string.IsNullOrEmpty(WorkflowName)) && string.IsNullOrEmpty(TargetQueue))
                 {
                     WriteError(new ErrorRecord(new Exception("Missing workflow name or workflow not found"), "", ErrorCategory.NotSpecified, null));
                     return;
                 }
+                if (workflow != null) TargetQueue = workflow.queue;
                 if (Object != null)
                 {
                     json = Object.toJson();
@@ -73,10 +79,11 @@ namespace OpenRPA.PS
                 JObject tmpObject = JObject.Parse(json);
                 correlationId = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
 
-                global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
+                if(global.webSocketClient!=null) global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
 
-                WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + workflow.name));
-                var result = await global.webSocketClient.QueueMessage(workflow.queue, tmpObject, psqueue, correlationId);
+                if (workflow != null) WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + workflow.name));
+                if (workflow == null) WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + TargetQueue));
+                var result = await global.webSocketClient.QueueMessage(TargetQueue, tmpObject, psqueue, correlationId);
                 workItemsWaiting.WaitOne();
                 WriteProgress(new ProgressRecord(0, "Invoking", "completed") { RecordType = ProgressRecordType.Completed });
 
@@ -107,7 +114,7 @@ namespace OpenRPA.PS
         }
         protected override Task EndProcessingAsync()
         {
-            global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
+            if(global.webSocketClient!=null) global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
             return base.EndProcessingAsync();
         }
         private string correlationId = null;

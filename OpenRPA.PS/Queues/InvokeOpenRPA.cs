@@ -66,8 +66,9 @@ namespace OpenRPA.PS
                 callcount++;
                 if (_Collections == null)
                 {
-                    Initialize().Wait();
+                    Initialize().Wait(5000);
                 }
+                if(global.webSocketClient == null || !global.webSocketClient.isConnected || global.webSocketClient.user == null) return new RuntimeDefinedParameterDictionary();
                 RuntimeDefinedParameter targetnameparameter = null;
                 RuntimeDefinedParameter workflownameparameter = null;
                 if (_robots == null)
@@ -180,10 +181,10 @@ namespace OpenRPA.PS
                 string targetid = TargetId;
                 workflow workflow;
                 string workflowid = WorkflowId;
-                if (targetnameparameter.Value != null) targetid = targetnameparameter.Value.ToString();
+                if (targetnameparameter != null && targetnameparameter.Value != null) targetid = targetnameparameter.Value.ToString();
                 if (!string.IsNullOrEmpty(targetid))
                 {
-                    robot = _robots.Where(x => x.name == targetid).FirstOrDefault();
+                    robot = (_robots==null?null: _robots.Where(x => x.name == targetid).FirstOrDefault());
                     if (robot != null) { targetid = robot._id; }
                 }
                 if (_Collections == null)
@@ -194,7 +195,7 @@ namespace OpenRPA.PS
                 {
                     _workflows = await global.webSocketClient.Query<workflow>("openrpa", "{_type: 'workflow'}", projection: "{\"projectandname\": 1}", queryas: robot._id, top: 2000);
                 }
-                if (workflownameparameter.Value != null)
+                if (workflownameparameter != null && workflownameparameter.Value != null)
                 {
                     workflow = _workflows.Where(x => x.ProjectAndName == workflownameparameter.Value.ToString()).FirstOrDefault();
                     if (workflow != null) { workflowid = workflow._id; }
@@ -204,7 +205,7 @@ namespace OpenRPA.PS
                     WriteError(new ErrorRecord(new Exception("Missing robot name or robot id"), "", ErrorCategory.NotSpecified, null));
                     return;
                 }
-                robot = _robots.Where(x => x._id == targetid).FirstOrDefault();
+                robot = (_robots == null ? null: _robots.Where(x => x._id == targetid).FirstOrDefault());
                 if (string.IsNullOrEmpty(workflowid))
                 {
                     WriteError(new ErrorRecord(new Exception("Missing workflow name or workflow id"), "", ErrorCategory.NotSpecified, null));
@@ -212,7 +213,7 @@ namespace OpenRPA.PS
                 }
                 _staticStorage = null;
                 callcount = 0;
-                workflow = _workflows.Where(x => x._id == workflowid).FirstOrDefault();
+                workflow = (_workflows==null?null : _workflows.Where(x => x._id == workflowid).FirstOrDefault());
                 if (Object != null)
                 {
                     json = Object.toJson();
@@ -222,13 +223,14 @@ namespace OpenRPA.PS
                 JObject tmpObject = JObject.Parse(json);
                 correlationId = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
 
-                global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
+                if(global.webSocketClient != null) global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
                 
                 IDictionary<string, object> _robotcommand = new System.Dynamic.ExpandoObject();
                 _robotcommand["workflowid"] = workflowid;
                 _robotcommand["command"] = "invoke";
                 _robotcommand.Add("data", tmpObject);
-                WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + workflow.ProjectAndName + " on " + robot.name + "(" + robot.username + ")"));
+                if(robot != null) WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + workflow.ProjectAndName + " on " + robot.name + "(" + robot.username + ")"));
+                if (robot == null) WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + workflowid + " on " + targetid));
                 var result = await global.webSocketClient.QueueMessage(targetid, _robotcommand, psqueue, correlationId);
                 workItemsWaiting.WaitOne();
                 WriteProgress(new ProgressRecord(0, "Invoking", "completed") { RecordType = ProgressRecordType.Completed });
@@ -263,12 +265,11 @@ namespace OpenRPA.PS
         }
         protected override Task EndProcessingAsync()
         {
-            global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
+            if(global.webSocketClient != null) global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
             return base.EndProcessingAsync();
         }
         private string correlationId = null;
         private Interfaces.mq.RobotCommand command = null;
-        private string state = null;
         private void WebSocketClient_OnQueueMessage(IQueueMessage message, QueueMessageEventArgs e)
         {
             if (correlationId == message.correlationId && message.data != null)

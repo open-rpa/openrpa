@@ -175,16 +175,21 @@ namespace OpenRPA
         public async Task Delete()
         {
             foreach (var wf in Workflows.ToList()) { await wf.Delete(); }
-            var Files = System.IO.Directory.EnumerateFiles(Path, "*.*", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
-            foreach (var f in Files) System.IO.File.Delete(f);
-            if (!global.isConnected) return;
-            if (!string.IsNullOrEmpty(_id))
+            if(System.IO.Directory.Exists(Path))
             {
-                await global.webSocketClient.DeleteOne("openrpa", this._id);
+                var Files = System.IO.Directory.EnumerateFiles(Path, "*.*", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
+                foreach (var f in Files) System.IO.File.Delete(f);
+            }
+            if (global.isConnected)
+            {
+                if (!string.IsNullOrEmpty(_id))
+                {
+                    await global.webSocketClient.DeleteOne("openrpa", this._id);
+                }
             }
             try
             {
-                System.IO.Directory.Delete(Path);
+                if (System.IO.Directory.Exists(Path)) System.IO.Directory.Delete(Path);
             }
             catch (Exception ex)
             {

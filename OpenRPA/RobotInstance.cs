@@ -251,7 +251,14 @@ namespace OpenRPA
                     foreach (var p in projects)
                     {
                         SetStatus("Install project dependencies");
-                        await p.InstallDependencies(true);
+                        try
+                        {
+                            await p.InstallDependencies(true);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                        }
                         SetStatus("Initialize " + p.name);
                         p.Path = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, p.name);
                         p.Workflows = new System.Collections.ObjectModel.ObservableCollection<IWorkflow>();
@@ -306,7 +313,14 @@ namespace OpenRPA
                                     RobotInstance.instance.Projects.Remove(exists);
                                     RobotInstance.instance.Projects.Insert(index, project);
                                     SetStatus("Install project dependencies");
-                                    await project.InstallDependencies(true);
+                                    try
+                                    {
+                                        await project.InstallDependencies(true);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Log.Error(ex.ToString());
+                                    }                                    
                                 }
                                 catch (Exception ex)
                                 {

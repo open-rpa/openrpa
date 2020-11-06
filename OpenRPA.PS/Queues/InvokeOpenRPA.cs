@@ -11,28 +11,16 @@ using OpenRPA.Interfaces.entity;
 
 namespace OpenRPA.PS
 {
-    public class workflow : apibase
-    {
-        [Newtonsoft.Json.JsonProperty("projectandname")]
-        public string ProjectAndName { get; set; }
-    }
     [Cmdlet("Invoke", "OpenRPA")]
-    public class InvokeOpenRPA : OpenRPACmdlet, IDynamicParameters
+    public class InvokeOpenRPA : OpenRPACmdlet 
     {
-        // [Parameter(ValueFromPipeline = true, Position = 1, Mandatory = false, ParameterSetName = "withObject")]
         [Parameter(ValueFromPipeline = true, Position = 1, Mandatory = false)]
         public PSObject Object { get; set; }
-        //[Parameter(ValueFromPipeline = true, Position = 1, Mandatory = false, ParameterSetName = "withJson")]
         public string json { get; set; }
-        [Parameter(Position = 2)]
-        public string TargetId { get; set; }
-        [Parameter(Position = 3)]
+        [Parameter(Position = 2, ParameterSetName = "Using ID", Mandatory = true)]
         public string WorkflowId { get; set; }
-        private static RuntimeDefinedParameterDictionary _staticStorage;
-        private static apiuser[] _robots;
-        private static workflow[] _workflows;
-        private static string lasttargetid = null;
-        private static int callcount = 0;
+        [Parameter(Position = 2, ParameterSetName = "Using Filename", Mandatory = true)]
+        public string Filename { get; set; }
         public void WriteStatus(string message)
         {
             bool Debug = (bool)GetVariableValue("openflowdebug", false);
@@ -59,200 +47,70 @@ namespace OpenRPA.PS
             Console.Write(message);
             Console.SetCursorPosition(origCol, origRow);
         }
-        public object GetDynamicParameters()
+        // readonly System.Threading.AutoResetEvent workItemsWaiting = new System.Threading.AutoResetEvent(false);
+        public class TempClient : IOpenRPAClient
         {
-            try
+            public List<IWorkflowInstance> WorkflowInstances => throw new NotImplementedException();
+
+            public event StatusEventHandler Status;
+            public event SignedinEventHandler Signedin;
+            public event ConnectedEventHandler Connected;
+            public event DisconnectedEventHandler Disconnected;
+            public event ReadyForActionEventHandler ReadyForAction;
+            public IWorkflow GetWorkflowByIDOrRelativeFilename(string IDOrRelativeFilename)
             {
-                callcount++;
-                if (_Collections == null)
-                {
-                    Initialize().Wait(5000);
-                }
-                if(global.webSocketClient == null || !global.webSocketClient.isConnected || global.webSocketClient.user == null) return new RuntimeDefinedParameterDictionary();
-                RuntimeDefinedParameter targetnameparameter = null;
-                RuntimeDefinedParameter workflownameparameter = null;
-                if (_robots == null)
-                {
-                    WriteStatus("Getting possible robots and roles");
-                    _robots = global.webSocketClient.Query<apiuser>("users", "{\"$or\":[ {\"_type\": \"user\"}, {\"_type\": \"role\", \"rparole\": true} ]}", top: 2000).Result;
-                }
-                var TargetName = this.GetUnboundValue<string>("TargetName");
-                if (_staticStorage != null)
-                {
-                    _staticStorage.TryGetValue("TargetName", out targetnameparameter);
-                    _staticStorage.TryGetValue("WorkflowName", out workflownameparameter);
-                    //WriteStatus(2, "targetname: " + targetnameparameter.Value + " workflowname: " + workflownameparameter.Value + " test: " + TargetName + "    ");
-                    //WriteStatus(1, "targetname: " + targetnameparameter.IsSet + " workflowname: " + workflownameparameter.IsSet + "     ");
-                }
-                else
-                {
-                    var robotnames = _robots.Select(x => x.name).ToArray();
-                    var targetnameattr = new Collection<Attribute>()
-                    {
-                        new ParameterAttribute() {
-                            HelpMessage = "Targer username or group name",
-                            Position = 1
-                        },
-                        new ValidateSetAttribute(robotnames)
-                    };
-                    targetnameparameter = new RuntimeDefinedParameter("TargetName", typeof(string), targetnameattr);
-                    var runtimeDefinedParameterDictionary = new RuntimeDefinedParameterDictionary();
-                    runtimeDefinedParameterDictionary.Add("TargetName", targetnameparameter);
-                    _staticStorage = runtimeDefinedParameterDictionary;
-                }
-
-                apiuser robot = null;
-                string targetid = TargetId;
-
-                if (targetnameparameter.Value != null) TargetName = targetnameparameter.Value.ToString();
-                if (!string.IsNullOrEmpty(TargetName))
-                {
-                    robot = _robots.Where(x => x.name == TargetName).FirstOrDefault();
-                    if (robot != null) { targetid = robot._id; }
-                } 
-                else if (!string.IsNullOrEmpty(targetid))
-                {
-                    robot = _robots.Where(x => x._id == targetid).FirstOrDefault();
-                }
-
-                if ((_workflows == null || lasttargetid != targetid) && robot != null)
-                {
-                    WriteStatus("Getting possible workflows for " + robot.name);
-                    _workflows = global.webSocketClient.Query<workflow>("openrpa", "{_type: 'workflow'}", projection: "{\"projectandname\": 1}", queryas: targetid, top: 2000).Result;
-                    lasttargetid = targetid;
-                }
-                int wflen = 0;
-                if (_workflows != null) wflen = _workflows.Length;
-                if (robot != null)
-                {
-                    WriteStatus("(" + callcount + ") robots: " + _robots.Length + " workflows: " + wflen + " for " + robot.name);
-                }
-                else
-                {
-                    WriteStatus("(" + callcount + ") robots: " + _robots.Length + " workflows: " + wflen);
-                }
-                
-                if (workflownameparameter == null)
-                {
-                    var workflownameattr = new Collection<Attribute>()
-                    {
-                        new ParameterAttribute() {
-                            HelpMessage = "Workflow name",
-                            Position = 2
-                        }
-                    };
-                    workflownameparameter = new RuntimeDefinedParameter("WorkflowName", typeof(string), workflownameattr);
-                    _staticStorage.Add("WorkflowName", workflownameparameter);
-                }
-                if (workflownameparameter != null)
-                {
-                    ValidateSetAttribute wfname = (ValidateSetAttribute)workflownameparameter.Attributes.Where(x => x.GetType() == typeof(ValidateSetAttribute)).FirstOrDefault();
-                    if(wfname != null) workflownameparameter.Attributes.Remove(wfname);
-                    if(_workflows != null && _workflows.Length > 0)
-                    {
-                        var workflownames = _workflows.Select(x => x.ProjectAndName).ToArray();
-                        wfname = new ValidateSetAttribute(workflownames);
-                        workflownameparameter.Attributes.Add(wfname);
-                    }
-                }
-                return _staticStorage;
+                throw new NotImplementedException();
             }
-            catch (Exception ex)
+            public IDesigner GetWorkflowDesignerByIDOrRelativeFilename(string IDOrRelativeFilename)
             {
-                Console.WriteLine("");
-                Console.WriteLine("");
-                Console.WriteLine(ex.Message);
-                throw;
+                throw new NotImplementedException();
+            }
+            public IWorkflowInstance GetWorkflowInstanceByInstanceId(string InstanceId)
+            {
+                throw new NotImplementedException();
             }
         }
-        readonly System.Threading.AutoResetEvent workItemsWaiting = new System.Threading.AutoResetEvent(false);
         protected override async Task ProcessRecordAsync()
         {
             try
             {
-                RuntimeDefinedParameter targetnameparameter = null;
-                RuntimeDefinedParameter workflownameparameter = null;
-                if (_staticStorage != null)
+                if (string.IsNullOrEmpty(WorkflowId) && string.IsNullOrEmpty(Filename))
                 {
-                    _staticStorage.TryGetValue("TargetName", out targetnameparameter);
-                    _staticStorage.TryGetValue("WorkflowName", out workflownameparameter);
-                }
-                apiuser robot = null;
-                string targetid = TargetId;
-                workflow workflow;
-                string workflowid = WorkflowId;
-                if (targetnameparameter != null && targetnameparameter.Value != null) targetid = targetnameparameter.Value.ToString();
-                if (!string.IsNullOrEmpty(targetid))
-                {
-                    robot = (_robots==null?null: _robots.Where(x => x.name == targetid).FirstOrDefault());
-                    if (robot != null) { targetid = robot._id; }
-                }
-                if (_Collections == null)
-                {
-                    Initialize().Wait();
-                }
-                if (_workflows == null && robot != null)
-                {
-                    _workflows = await global.webSocketClient.Query<workflow>("openrpa", "{_type: 'workflow'}", projection: "{\"projectandname\": 1}", queryas: robot._id, top: 2000);
-                }
-                if (workflownameparameter != null && workflownameparameter.Value != null)
-                {
-                    workflow = _workflows.Where(x => x.ProjectAndName == workflownameparameter.Value.ToString()).FirstOrDefault();
-                    if (workflow != null) { workflowid = workflow._id; }
-                }
-                if (string.IsNullOrEmpty(targetid))
-                {
-                    WriteError(new ErrorRecord(new Exception("Missing robot name or robot id"), "", ErrorCategory.NotSpecified, null));
+                    WriteError(new ErrorRecord(new Exception("Missing WorkflowId or Filename"), "", ErrorCategory.NotSpecified, null));
                     return;
                 }
-                robot = (_robots == null ? null: _robots.Where(x => x._id == targetid).FirstOrDefault());
-                if (string.IsNullOrEmpty(workflowid))
-                {
-                    WriteError(new ErrorRecord(new Exception("Missing workflow name or workflow id"), "", ErrorCategory.NotSpecified, null));
-                    return;
-                }
-                _staticStorage = null;
-                callcount = 0;
-                workflow = (_workflows==null?null : _workflows.Where(x => x._id == workflowid).FirstOrDefault());
                 if (Object != null)
                 {
                     json = Object.toJson();
                 }
                 if (string.IsNullOrEmpty(json)) json = "{}";
-                await RegisterQueue();
                 JObject tmpObject = JObject.Parse(json);
                 correlationId = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
-
-                if(global.webSocketClient != null) global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
-                
                 IDictionary<string, object> _robotcommand = new System.Dynamic.ExpandoObject();
-                _robotcommand["workflowid"] = workflowid;
+                _robotcommand["workflowid"] = WorkflowId;
                 _robotcommand["command"] = "invoke";
                 _robotcommand.Add("data", tmpObject);
-                if(robot != null) WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + workflow.ProjectAndName + " on " + robot.name + "(" + robot.username + ")"));
-                if (robot == null) WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + workflowid + " on " + targetid));
-                var result = await global.webSocketClient.QueueMessage(targetid, _robotcommand, psqueue, correlationId);
-                workItemsWaiting.WaitOne();
-                WriteProgress(new ProgressRecord(0, "Invoking", "completed") { RecordType = ProgressRecordType.Completed });
-                if (command.command == "invokefailed" || command.command == "invokeaborted")
+                WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + WorkflowId));
+
+                var client = new TempClient();
+                AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
+                OpenRPA.Interfaces.Plugins.LoadPlugins(client, "c:\\program files\\openrpa", false);
+                //System.Activities.Activity activity = null;
+                System.Activities.ActivityBuilder ab2;
+                var Xaml = System.IO.File.ReadAllText(Filename);
+                using (var stream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(Xaml)))
                 {
-                    var _ex = new Exception("Invoke failed");
-                    if(command.data != null && !string.IsNullOrEmpty(command.data.ToString()))
-                    {
-                        try
-                        {
-                            _ex = Newtonsoft.Json.JsonConvert.DeserializeObject<Exception>(command.data.ToString());
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                    WriteError(new ErrorRecord(_ex, "", ErrorCategory.NotSpecified, null));
-                    return;
+                    ab2 = System.Xaml.XamlServices.Load(
+                        System.Activities.XamlIntegration.ActivityXamlServices.CreateBuilderReader(
+                        new System.Xaml.XamlXmlReader(stream))) as System.Activities.ActivityBuilder;
                 }
-                if (command.data != null && !string.IsNullOrEmpty(command.data.ToString()))
+
+                var result = System.Activities.WorkflowInvoker.Invoke(ab2.Implementation);
+                // workItemsWaiting.WaitOne();
+                WriteProgress(new ProgressRecord(0, "Invoking", "completed") { RecordType = ProgressRecordType.Completed });
+                if (result != null)
                 {
-                    var payload = JObject.Parse(command.data.ToString());
+                    var payload = JObject.FromObject(result);
                     var _result = payload.toPSObject();
                     WriteObject(_result);
                 }
@@ -265,21 +123,21 @@ namespace OpenRPA.PS
         }
         protected override Task EndProcessingAsync()
         {
-            if(global.webSocketClient != null) global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
+            // if(global.webSocketClient != null) global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
             return base.EndProcessingAsync();
         }
         private string correlationId = null;
-        private Interfaces.mq.RobotCommand command = null;
-        private void WebSocketClient_OnQueueMessage(IQueueMessage message, QueueMessageEventArgs e)
-        {
-            if (correlationId == message.correlationId && message.data != null)
-            {
-                command = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.mq.RobotCommand>(message.data.ToString());
-                if (command.command == "invokefailed" || command.command == "invokeaborted" || command.command == "invokecompleted")
-                {
-                    workItemsWaiting.Set();
-                }
-            }
-        }
+        // private Interfaces.mq.RobotCommand command = null;
+        //private void WebSocketClient_OnQueueMessage(IQueueMessage message, QueueMessageEventArgs e)
+        //{
+        //    if (correlationId == message.correlationId && message.data != null)
+        //    {
+        //        command = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.mq.RobotCommand>(message.data.ToString());
+        //        if (command.command == "invokefailed" || command.command == "invokeaborted" || command.command == "invokecompleted")
+        //        {
+        //            workItemsWaiting.Set();
+        //        }
+        //    }
+        //}
     }
 }

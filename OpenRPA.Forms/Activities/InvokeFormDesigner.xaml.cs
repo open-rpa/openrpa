@@ -20,6 +20,7 @@ namespace OpenRPA.Forms.Activities
         {
             string form = ModelItem.GetValue<string>("Form");
             var f = new FormDesigner(form);
+            f.Owner = GenericTools.MainWindow;
             f.ShowDialog();
             if(form != f.XmlString)
             {

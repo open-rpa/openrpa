@@ -85,6 +85,7 @@ namespace OpenRPA.Windows.Views
                 var selector = new WindowsSelector("[{Selector: 'Windows'}]");
                 selectors = new Interfaces.Selector.SelectorWindow("Windows", selector, null, 10);
             }
+            selectors.Owner = GenericTools.MainWindow;
             if (selectors.ShowDialog() == true)
             {
                 Selector = selectors.vm.json;

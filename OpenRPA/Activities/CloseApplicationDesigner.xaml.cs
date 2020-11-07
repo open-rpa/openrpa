@@ -29,7 +29,7 @@ namespace OpenRPA.Activities
             var selector = new Interfaces.Selector.Selector(SelectorString);
             var pluginname = selector.First().Selector;
             var selectors = new Interfaces.Selector.SelectorWindow(pluginname, selector, maxresult);
-
+            selectors.Owner = Interfaces.GenericTools.MainWindow;
             if (selectors.ShowDialog() == true)
             {
                 ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(selectors.vm.json) });

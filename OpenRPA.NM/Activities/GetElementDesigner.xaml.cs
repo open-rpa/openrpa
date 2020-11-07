@@ -54,6 +54,7 @@ namespace OpenRPA.NM
                 var selector = new NMSelector("[{Selector: 'NM'}]");
                 selectors = new Interfaces.Selector.SelectorWindow("NM", selector, anchor, maxresults);
             }
+            selectors.Owner = GenericTools.MainWindow;
             if (selectors.ShowDialog() == true)
             {
                 ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(selectors.vm.json) });

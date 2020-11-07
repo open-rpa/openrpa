@@ -31,6 +31,7 @@ namespace OpenRPA.NM
             string Script = ModelItem.GetValue<string>("Script");
             if (Script == null) Script = ""; // so we don't overwrite if a variable has been used
             var f = new Editor(Script);
+            f.Owner = GenericTools.MainWindow;
             f.ShowDialog();
             if (f.textEditor.Text != Script)
             {

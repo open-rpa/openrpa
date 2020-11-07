@@ -55,6 +55,7 @@ namespace OpenRPA.IE
                 var selector = new IESelector("[{Selector: 'IE'}]");
                 selectors = new Interfaces.Selector.SelectorWindow("IE", selector, anchor, maxresults);
             }
+            selectors.Owner = Interfaces.GenericTools.MainWindow;
             if (selectors.ShowDialog() == true)
             {
                 ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(selectors.vm.json) });

@@ -77,7 +77,8 @@ namespace OpenRPA.Forms.Activities
                 var f = new Form(xmlString);
                 f.defaults = param;
                 f.Topmost = true;
-                if(f.ShowDialog() == false)
+                f.Owner = GenericTools.MainWindow;
+                if (f.ShowDialog() == false)
                 {
                     if (f.LastError != null) LastError = f.LastError;
                 }

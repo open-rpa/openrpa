@@ -1184,7 +1184,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 Log.Error(ex.ToString());
             }
         }
-        public IDictionary<SourceLocation, System.Activities.Presentation.Debug.BreakpointTypes> BreakpointLocations = null;
+        public IDictionary<SourceLocation, System.Activities.Presentation.Debug.BreakpointTypes> BreakpointLocations { get; set; }
         public void OnVisualTracking(IWorkflowInstance Instance, string ActivityId, string ChildActivityId, string State)
         {
             try
@@ -1248,7 +1248,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 Log.Error(ex.ToString());
             }
         }
-        internal void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
+        public void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
         {
 
             if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))

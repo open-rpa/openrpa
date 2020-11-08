@@ -82,7 +82,8 @@ namespace OpenRPA.Interfaces.Views
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var view = new KeyboardSeqWindow();
-            if(view.ShowDialog() == true)
+            view.Owner = GenericTools.MainWindow;
+            if (view.ShowDialog() == true)
             {
                 Keys = view.Text;
                 plugin.ParseText(view.Text);

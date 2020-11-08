@@ -231,6 +231,7 @@ namespace OpenRPA.Interfaces
             get
             {
                 var asm = System.Reflection.Assembly.GetEntryAssembly();
+                if (asm == null) asm = System.Reflection.Assembly.GetExecutingAssembly();
                 var filepath = asm.CodeBase.Replace("file:///", "");
                 var path = System.IO.Path.GetDirectoryName(filepath);
                 return path;

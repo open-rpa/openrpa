@@ -1121,6 +1121,7 @@ namespace OpenRPA
                 Log.Function("MainWindow", "OnPermissions", "Create and show Views.PermissionsWindow");
                 var pw = new Views.PermissionsWindow(result);
                 Hide();
+                pw.Owner = GenericTools.MainWindow;
                 pw.ShowDialog();
                 if (result is Project)
                 {
@@ -3232,6 +3233,7 @@ namespace OpenRPA
                     Title = "Press New Cancel Key"
                 };
                 Hide();
+                view.Owner = GenericTools.MainWindow;
                 if (view.ShowDialog() == true)
                 {
                     cancelkey.Text = view.Text;

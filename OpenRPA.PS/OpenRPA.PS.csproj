@@ -11,9 +11,11 @@
     <ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="System.Activities" />
     <Reference Include="System.Management.Automation">
       <HintPath>..\..\..\Windows\assembly\GAC_MSIL\System.Management.Automation\1.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xaml" />
   </ItemGroup>
   <ItemGroup>
     <None Update="OpenRPA\OpenRPA.ps1xml">

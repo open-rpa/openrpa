@@ -102,32 +102,40 @@ namespace OpenRPA
             return SecureData;
         }
         private static Config _local = null;
+        public static string SettingsFile
+        {
+            get
+            {
+                string filename = "settings.json";
+                var fi = new System.IO.FileInfo(filename);
+                var _fileName = System.IO.Path.GetFileName(filename);
+                var di = fi.Directory;
+                if (System.IO.File.Exists(System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json")))
+                {
+                    filename = System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json");
+                }
+                else if (System.IO.File.Exists(filename))
+                {
+                }
+                else if (System.IO.File.Exists(System.IO.Path.Combine(di.Parent.FullName, "settings.json")))
+                {
+                    filename = System.IO.Path.Combine(di.Parent.FullName, "settings.json");
+                }
+                else
+                {
+                    // Will create a new file in ProjectsDirectory
+                    filename = System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json");
+                }
+                return filename;
+            }
+        }
         public static Config local
         {
             get
             {
                 if (_local == null)
                 {
-                    string filename = "settings.json";
-                    var fi = new System.IO.FileInfo(filename);
-                    var _fileName = System.IO.Path.GetFileName(filename);
-                    var di = fi.Directory;
-                    if (System.IO.File.Exists(System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json")))
-                    {
-                            filename = System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json");
-                    }
-                    else if (System.IO.File.Exists(filename))
-                    {
-                    }
-                    else if (System.IO.File.Exists(System.IO.Path.Combine(di.Parent.FullName, "settings.json")))
-                    {
-                        filename = System.IO.Path.Combine(di.Parent.FullName, "settings.json");
-                    }
-                    else
-                    {
-                        // Will create a new file in ProjectsDirectory
-                        filename = System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json");
-                    }
+                    string filename = SettingsFile;
                     _local = new Config();
                     if (System.IO.File.Exists(filename))
                     {
@@ -249,7 +257,13 @@ namespace OpenRPA
                 }
                 else if (hasLocalMachine == true)
                 {
-                    rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\OpenRPA", false);
+                    try
+                    {
+                        rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\OpenRPA", false);
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
                 if (rk != null)
                 {

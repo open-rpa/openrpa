@@ -10,6 +10,7 @@ namespace OpenRPA
     public class global
     {
         public static Interfaces.IWebSocketClient webSocketClient = null;
+        public static Interfaces.IOpenRPAClient OpenRPAClient;
         public static bool isConnected
         {
             get

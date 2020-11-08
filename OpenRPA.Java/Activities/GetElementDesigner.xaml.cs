@@ -56,6 +56,7 @@ namespace OpenRPA.Java
                 var selector = new JavaSelector("[{Selector: 'Java'}]");
                 selectors = new Interfaces.Selector.SelectorWindow("Java", selector, anchor, maxresults);
             }
+            selectors.Owner = GenericTools.MainWindow;
             if (selectors.ShowDialog() == true)
             {
                 ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(selectors.vm.json) });

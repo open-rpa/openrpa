@@ -257,7 +257,13 @@ namespace OpenRPA
                 }
                 else if (hasLocalMachine == true)
                 {
-                    rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\OpenRPA", false);
+                    try
+                    {
+                        rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\OpenRPA", false);
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
                 if (rk != null)
                 {

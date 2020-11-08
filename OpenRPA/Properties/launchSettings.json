@@ -2,11 +2,13 @@
   "profiles": {
     "OpenRPA": {
       "commandName": "Project",
+      "commandLineArgs": "/workflowid SDEMO\\New_Workflow3.xaml",
       "nativeDebugging": false
     },
     "ttttt": {
       "commandName": "Executable",
       "executablePath": "C:\\Program Files\\OpenRPA\\OpenRPA.exe",
+      "commandLineArgs": "/workflowid SDEMO\\New_Workflow3.xaml",
       "workingDirectory": "C:\\Program Files\\OpenRPA"
     }
   }

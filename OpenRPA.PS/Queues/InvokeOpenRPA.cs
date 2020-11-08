@@ -12,7 +12,7 @@ using OpenRPA.Interfaces.entity;
 namespace OpenRPA.PS
 {
     [Cmdlet("Invoke", "OpenRPA")]
-    public class InvokeOpenRPA : OpenRPACmdlet 
+    public class InvokeOpenRPA : Cmdlet 
     {
         [Parameter(ValueFromPipeline = true, Position = 1, Mandatory = false)]
         public PSObject Object { get; set; }
@@ -23,10 +23,6 @@ namespace OpenRPA.PS
         public string Filename { get; set; }
         public void WriteStatus(string message)
         {
-            bool Debug = (bool)GetVariableValue("openflowdebug", false);
-            if(!Debug) Debug = (bool)GetVariableValue("openrpadebug", false);
-            if (!Debug) return;
-
             int origRow = Console.CursorTop;
             int origCol = Console.CursorLeft;
             System.Diagnostics.Trace.WriteLine(message + " cord: " + origRow + "," + origCol);
@@ -48,29 +44,7 @@ namespace OpenRPA.PS
             Console.SetCursorPosition(origCol, origRow);
         }
         // readonly System.Threading.AutoResetEvent workItemsWaiting = new System.Threading.AutoResetEvent(false);
-        public class TempClient : IOpenRPAClient
-        {
-            public List<IWorkflowInstance> WorkflowInstances => throw new NotImplementedException();
-
-            public event StatusEventHandler Status;
-            public event SignedinEventHandler Signedin;
-            public event ConnectedEventHandler Connected;
-            public event DisconnectedEventHandler Disconnected;
-            public event ReadyForActionEventHandler ReadyForAction;
-            public IWorkflow GetWorkflowByIDOrRelativeFilename(string IDOrRelativeFilename)
-            {
-                throw new NotImplementedException();
-            }
-            public IDesigner GetWorkflowDesignerByIDOrRelativeFilename(string IDOrRelativeFilename)
-            {
-                throw new NotImplementedException();
-            }
-            public IWorkflowInstance GetWorkflowInstanceByInstanceId(string InstanceId)
-            {
-                throw new NotImplementedException();
-            }
-        }
-        protected override async Task ProcessRecordAsync()
+        protected override void ProcessRecord()
         {
             try
             {
@@ -85,28 +59,28 @@ namespace OpenRPA.PS
                 }
                 if (string.IsNullOrEmpty(json)) json = "{}";
                 JObject tmpObject = JObject.Parse(json);
-                correlationId = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
-                IDictionary<string, object> _robotcommand = new System.Dynamic.ExpandoObject();
-                _robotcommand["workflowid"] = WorkflowId;
-                _robotcommand["command"] = "invoke";
-                _robotcommand.Add("data", tmpObject);
+
+                var param = tmpObject.ToObject<Dictionary<string, object>>();
                 WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + WorkflowId));
+                //try
+                //{
+                //    Interfaces.IPCService.OpenRPAServiceUtil.GetInstance();
+                //}
+                //catch (Exception)
+                //{
+                //    try
+                //    {
+                //        System.Diagnostics.Process.Start("OpenRPA.exe");
+                //        System.Threading.Thread.Sleep(1000);
+                //    }
+                //    catch (Exception)
+                //    {
+                //    }
+                //}
+                Interfaces.IPCService.OpenRPAServiceUtil.GetInstance();
+                var result = Interfaces.IPCService.OpenRPAServiceUtil.RemoteInstance.RunWorkflowByIDOrRelativeFilename(Filename, true, param);
+                // Interfaces.IPCService.OpenRPAServiceUtil.RemoteInstance.ParseCommandLineArgs(new string[] { "workflowid", Filename });
 
-                var client = new TempClient();
-                AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
-                OpenRPA.Interfaces.Plugins.LoadPlugins(client, "c:\\program files\\openrpa", false);
-                //System.Activities.Activity activity = null;
-                System.Activities.ActivityBuilder ab2;
-                var Xaml = System.IO.File.ReadAllText(Filename);
-                using (var stream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(Xaml)))
-                {
-                    ab2 = System.Xaml.XamlServices.Load(
-                        System.Activities.XamlIntegration.ActivityXamlServices.CreateBuilderReader(
-                        new System.Xaml.XamlXmlReader(stream))) as System.Activities.ActivityBuilder;
-                }
-
-                var result = System.Activities.WorkflowInvoker.Invoke(ab2.Implementation);
-                // workItemsWaiting.WaitOne();
                 WriteProgress(new ProgressRecord(0, "Invoking", "completed") { RecordType = ProgressRecordType.Completed });
                 if (result != null)
                 {
@@ -120,11 +94,6 @@ namespace OpenRPA.PS
                 WriteError(new ErrorRecord(ex, "", ErrorCategory.NotSpecified, null));
                 WriteProgress(new ProgressRecord(0, "Invoking", "completed") { RecordType = ProgressRecordType.Completed });
             }
-        }
-        protected override Task EndProcessingAsync()
-        {
-            // if(global.webSocketClient != null) global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
-            return base.EndProcessingAsync();
         }
         private string correlationId = null;
         // private Interfaces.mq.RobotCommand command = null;

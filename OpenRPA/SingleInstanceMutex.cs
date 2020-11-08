@@ -106,14 +106,11 @@ namespace OpenRPA
         /// </summary>
         /// <returns>True if this is the first instance of the application.</returns>
         public static bool InitializeAsFirstInstance(string uniqueName)
-        {
+        {            
             commandLineArgs = GetCommandLineArgs(uniqueName);
-
             // Build unique application Id and the IPC channel name.
             string applicationIdentifier = uniqueName + Environment.UserName;
-
             string channelName = String.Concat(applicationIdentifier, Delimiter, ChannelNameSuffix);
-
             // Create mutex based on unique application Id to check if this is the first instance of the application. 
             bool firstInstance;
             singleInstanceMutex = new Mutex(true, applicationIdentifier, out firstInstance);

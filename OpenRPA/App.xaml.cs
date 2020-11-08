@@ -25,7 +25,7 @@ namespace OpenRPA
             if (SingleInstance<App>.InitializeAsFirstInstance("OpenRPA"))
             {
                 AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-                AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceHandler;
+                // AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceHandler;
                 var application = new App();
                 application.InitializeComponent();
                 application.Run();
@@ -47,17 +47,19 @@ namespace OpenRPA
             {
             }
         }
-        static void CurrentDomain_FirstChanceHandler(object source, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
-        {
-            try
-            {
-                Exception ex = e.Exception;
-                Log.Verbose("FirstChance: " + ex.ToString());
-            }
-            catch (Exception)
-            {
-            }
-        }
+        //static void CurrentDomain_FirstChanceHandler(object source, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+        //{
+        //    try
+        //    {
+        //        Exception ex = e.Exception;
+        //        System.Diagnostics.Trace.WriteLine(ex.ToString());
+        //        Console.WriteLine(ex.ToString());
+        //        // Log.Verbose("FirstChance: " + ex.ToString());
+        //    }
+        //    catch (Exception)
+        //    {
+        //    }
+        //}
         public static System.Windows.Forms.NotifyIcon notifyIcon { get; set; }  = new System.Windows.Forms.NotifyIcon();
         public App()
         {

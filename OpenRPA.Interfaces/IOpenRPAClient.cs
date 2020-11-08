@@ -18,11 +18,13 @@ namespace OpenRPA.Interfaces
         event ConnectedEventHandler Connected;
         event DisconnectedEventHandler Disconnected;
         event ReadyForActionEventHandler ReadyForAction;
+        bool isReadyForAction { get; set; }
         IMainWindow Window { get; set; }
         IDesigner GetWorkflowDesignerByIDOrRelativeFilename(string IDOrRelativeFilename);
         IWorkflow GetWorkflowByIDOrRelativeFilename(string IDOrRelativeFilename);
         IWorkflowInstance GetWorkflowInstanceByInstanceId(string InstanceId);
         List<IWorkflowInstance> WorkflowInstances { get; }
+        void ParseCommandLineArgs(IList<string> args);
 
     }
 }

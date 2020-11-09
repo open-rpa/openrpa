@@ -2,7 +2,7 @@
   "profiles": {
     "OpenRPA": {
       "commandName": "Project",
-      "commandLineArgs": "/workflowid SDEMO\\New_Workflow3.xaml",
+      "commandLineArgs": "/workflowid SDEMO\\New_Workflow3.xaml /workingdir C:\\temp\\openrpa2",
       "nativeDebugging": false
     },
     "ttttt": {

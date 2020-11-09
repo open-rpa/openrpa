@@ -26,6 +26,29 @@ namespace OpenRPA
             {
                 AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
                 // AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceHandler;
+                try
+                {
+                    var args = Environment.GetCommandLineArgs();
+                    CommandLineParser parser = new CommandLineParser();
+                    // parser.Parse(string.Join(" ", args), true);
+                    var options = parser.Parse(args, true);
+                    if (options.ContainsKey("workingdir"))
+                    {
+                        var filepath = options["workingdir"].ToString();
+                        if(System.IO.Directory.Exists(filepath))
+                        {
+                            Log.ResetLogPath(filepath);
+                        } else
+                        {
+                            MessageBox.Show("Path not found " + filepath);
+                            Console.WriteLine("Path not found " + filepath);
+                            return;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                }
                 var application = new App();
                 application.InitializeComponent();
                 application.Run();

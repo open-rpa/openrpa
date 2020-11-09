@@ -211,15 +211,15 @@ namespace OpenRPA.Interfaces.IPCService
                                 _instance.Value.Error = ex;
                                 if (_instance.Value.Pending != null) _instance.Value.Pending.Set();
                             }
+                            if (designer != null)
+                            {
+                                designer.Run(designer.VisualTracking, designer.SlowMotion, instance);
+                            }
+                            else
+                            {
+                                if (instance != null) instance.Run();
+                            }
                         });
-                        if (designer != null)
-                        {
-                            designer.Run(designer.VisualTracking, designer.SlowMotion, instance);
-                        }
-                        else
-                        {
-                            if(instance!=null) instance.Run();
-                        }
                     }
                     catch (Exception ex)
                     {

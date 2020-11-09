@@ -122,14 +122,17 @@ namespace OpenRPA.Activities
                     instance.Bookmarks.Add(instance._id, null);
                     //((WorkflowInstance)instance).wfApp.Persist();
                 }
-                if (designer != null)
+                GenericTools.RunUI(() =>
                 {
-                    designer.Run(designer.VisualTracking, designer.SlowMotion, instance);
-                }
-                else
-                {
-                    instance.Run();
-                }
+                    if (designer != null)
+                    {
+                        designer.Run(designer.VisualTracking, designer.SlowMotion, instance);
+                    }
+                    else
+                    {
+                        instance.Run();
+                    }
+                });
             }
             catch (Exception ex)
             {

@@ -65,9 +65,9 @@ namespace OpenRPA.Interfaces
         }
         public static void ResetLogPath(string folder)
         {
+            Extensions.ProjectsDirectory = folder;
             Config.local.log_to_file = true;
             nlog = null;
-            Extensions.ProjectsDirectory = folder;
         }
         public static void LogLine(string message, string category)
         {

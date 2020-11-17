@@ -115,6 +115,24 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get Element Async.
+        /// </summary>
+        public static string activity_getelement_async {
+            get {
+                return ResourceManager.GetString("activity_getelement_async", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Find an browser elements based on selector.
+        /// </summary>
+        public static string activity_getelement_async_tooltip {
+            get {
+                return ResourceManager.GetString("activity_getelement_async_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Drop activity.
         /// </summary>
         public static string activity_getelement_drop_hint {

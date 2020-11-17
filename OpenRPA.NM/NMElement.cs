@@ -226,7 +226,7 @@ namespace OpenRPA.NM
             {
                 if (NMHook.connected)
                 {
-                    var tab = NMHook.tabs.Where(x => x.id == message.tabid).FirstOrDefault();
+                    var tab = NMHook.FindTabById(browser, message.tabid);
                     if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
                     // NMHook.HighlightTab(tab);
 
@@ -289,7 +289,7 @@ namespace OpenRPA.NM
             {
                 if (NMHook.connected)
                 {
-                    var tab = NMHook.tabs.Where(x => x.id == message.tabid).FirstOrDefault();
+                    var tab = NMHook.FindTabById(browser, message.tabid);
                     if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
                     // NMHook.HighlightTab(tab);
 
@@ -333,7 +333,7 @@ namespace OpenRPA.NM
             {
                 if (NMHook.connected)
                 {
-                    var tab = NMHook.tabs.Where(x => x.id == message.tabid).FirstOrDefault();
+                    var tab = NMHook.FindTabById(browser, message.tabid);
                     if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
                     // NMHook.HighlightTab(tab);
 
@@ -447,6 +447,30 @@ namespace OpenRPA.NM
 
             }
         }
+        public void ClickAndWait()
+        {
+            NMHook.checkForPipes(true, true, true);
+            if (NMHook.connected)
+            {
+                var tab = NMHook.GetCurrentTab(browser);
+                var getelement2 = new NativeMessagingMessage("clickelement", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
+                {
+                    browser = message.browser,
+                    //cssPath = cssselector,
+                    //xPath = xpath,
+                    zn_id = zn_id,
+                    tabid = message.tabid,
+                    frameId = message.frameId
+                };
+                NativeMessagingMessage subsubresult = NMHook.sendMessageResult(getelement2, true, PluginConfig.protocol_timeout);
+                if (subsubresult == null) throw new Exception("Failed clicking html element");
+                if (PluginConfig.wait_for_tab_click)
+                {
+                    NMHook.WaitForTab(subsubresult.tabid, subsubresult.browser, TimeSpan.FromSeconds(5), tab.lastready);
+                }
+
+            }
+        }
         private bool hasRefreshed = false;
         public bool Refresh()
         {
@@ -495,7 +519,7 @@ namespace OpenRPA.NM
         }
         public void Focus()
         {
-            var tab = NMHook.tabs.Where(x => x.id == message.tabid).FirstOrDefault();
+            var tab = NMHook.FindTabById(browser, message.tabid);
             if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
             var updateelement = new NativeMessagingMessage("focuselement", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
             {
@@ -677,7 +701,7 @@ namespace OpenRPA.NM
             {
                 if (NMHook.connected)
                 {
-                    var tab = NMHook.tabs.Where(x => x.id == message.tabid).FirstOrDefault();
+                    var tab = NMHook.FindTabById(browser, message.tabid);
                     if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
                     // NMHook.HighlightTab(tab);
 

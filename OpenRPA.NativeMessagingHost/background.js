@@ -1,6 +1,7 @@
 console.log('openrpa extension begin');
 //var port;
 var openrpautil_script = '';
+var jquery_script = '';
 var portname = 'com.openrpa.msg';
 var lastwindowId = 1;
 var openrpadebug = false;
@@ -105,9 +106,23 @@ async function OnPortMessage(message) {
             }
             return;
         }
+        if (message.functionName === "jqueryscript") {
+            console.log("jqueryscript!!!");
+            console.log(message);
+            jquery_script = message.script;
+            var subtabsList = await tabsquery();
+            for (var l in subtabsList) {
+                try {
+                    if (!allowExecuteScript(subtabsList[l])) continue;
+                    if (jquery_script != null && jquery_script != "") await tabsexecuteScript(subtabsList[l].id, { code: jquery_script, allFrames: true });
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+            return;
+        }
         if (message.functionName === "openrpautilscript") {
             openrpautil_script = message.script;
-
             var subtabsList = await tabsquery();
             for (var l in subtabsList) {
                 try {
@@ -198,6 +213,21 @@ async function OnPortMessage(message) {
         }
         if (message.functionName === "closetab") {
             chrome.tabs.remove(message.tabid);
+            port.postMessage(JSON.parse(JSON.stringify(message)));
+            return;
+        }
+        if (message.functionName === "executescript") {
+            console.log(message);
+            // var script = "(" + message.script + ")()";
+            var script = "function doexecutescript() { " + message.script + " }; doexecutescript();";
+            if (message.frameId > -1) {
+                if (jquery_script != null && jquery_script != "") await tabsexecuteScript(message.tabid, { code: jquery_script, frameId: message.frameId });
+                message.result = await tabsexecuteScript(message.tabid, { code: script, frameId: message.frameId });
+            } else {
+                if (jquery_script != null && jquery_script != "") await tabsexecuteScript(message.tabid, { code: jquery_script, allFrames: true });
+                message.result = await tabsexecuteScript(message.tabid, { code: script, allFrames: true });
+            }
+            console.log(message.result);
             port.postMessage(JSON.parse(JSON.stringify(message)));
             return;
         }
@@ -405,6 +435,7 @@ async function tabsOnUpdated(tabId, changeInfo, tab) {
     try {
         console.debug("tabsOnUpdated: " + changeInfo.status)
         await tabsexecuteScript(tab.id, { code: openrpautil_script, allFrames: true });
+        if (jquery_script != null && jquery_script != "") await tabsexecuteScript(tab.id, { code: jquery_script, allFrames: true });        
     } catch (e) {
         console.log(e);
         console.log(tab);
@@ -478,7 +509,7 @@ var windowsgetAll = function () {
 var tabsexecuteScript = function (tabid, options) {
     return new Promise(function (resolve, reject) {
         try {
-            chrome.tabs.executeScript(tabid, options, function (results) {
+            chrome.tabs.executeScript(tabid, options, function (results, e) {
                 if (chrome.runtime.lastError) {
                     reject(chrome.runtime.lastError.message);
                     return;
@@ -726,6 +757,18 @@ if (port != null) {
 if (openrpautil_script === null || openrpautil_script === undefined || openrpautil_script === '') {
     if (port != null) {
         var message = { functionName: "openrpautilscript" };
+        try {
+            console.log("[send]" + message.functionName);
+            port.postMessage(JSON.parse(JSON.stringify(message)));
+        } catch (e) {
+            console.error(e);
+            port = null;
+        }
+    }
+}
+if (jquery_script === null || jquery_script === undefined || jquery_script === '') {
+    if (port != null) {
+        var message = { functionName: "jqueryscript" };
         try {
             console.log("[send]" + message.functionName);
             port.postMessage(JSON.parse(JSON.stringify(message)));

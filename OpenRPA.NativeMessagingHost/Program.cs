@@ -102,8 +102,7 @@ namespace OpenRPA.NativeMessagingHost
         static void Main(string[] args)
         {
             aTimer = new System.Timers.Timer();
-            //System.Diagnostics.Debugger.Launch();
-            //System.Diagnostics.Debugger.Break();
+            // System.Diagnostics.Debugger.Launch();
 
             handler = new messagehandler();
             handler.onMessage += onMessage;

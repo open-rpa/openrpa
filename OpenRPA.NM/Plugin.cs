@@ -66,7 +66,7 @@ namespace OpenRPA.NM
                 xPath = "/html",
                 frameId = -1
             };
-            var tab = NMHook.tabs.Where(x => x.browser == browser && (x.active || x.selected)).FirstOrDefault();
+            var tab = NMHook.GetCurrentTab(browser);
             if (tab == null) NMHook.enumwindowandtabs();
             if (tab!=null)
             {
@@ -102,7 +102,7 @@ namespace OpenRPA.NM
                 {
                     if (res.result != null)
                     {
-                        if(res.tab == null) { res.tab = NMHook.tabs.Where(x => x.browser == res.browser && x.id == res.tabid).FirstOrDefault(); }
+                        if(res.tab == null) { res.tab = NMHook.FindTabById(res.browser, res.tabid); }
                         var html = new NMElement(res);
                         rootelements.Add(new NMTreeElement(null, true, html));
                         //var html = new HtmlElement(getelement.xPath, getelement.cssPath, res.tabid, res.frameId, res.result);
@@ -206,7 +206,7 @@ namespace OpenRPA.NM
                             Button = Input.MouseButton.Left
                         }; var a = new GetElement { DisplayName = LastElement.ToString() };
 
-                        message.tab = NMHook.tabs.Where(x => x.id == message.tabid && x.windowId == message.windowId).FirstOrDefault();
+                        message.tab = NMHook.FindTabById(message.browser, message.tabid);
 
                         var selector = new NMSelector(LastElement, null, true, null);
                         a.Selector = selector.ToString();
@@ -251,7 +251,7 @@ namespace OpenRPA.NM
                         string title = process.MainWindowTitle;
                         if(!string.IsNullOrEmpty(title))
                         {
-                            var exists = NMHook.tabs.Where(x => x.title == title).FirstOrDefault();
+                            // var exists = NMHook.tabs.Where(x => x.title == title).FirstOrDefault();
                             var automation = AutomationUtil.getAutomation();
                             var _ele = automation.FromHandle(process.MainWindowHandle);
                             return new UIElement(_ele);
@@ -273,12 +273,13 @@ namespace OpenRPA.NM
             string url = "";
             if (p != null) { url = p.Value; }
             NMHook.enumtabs();
-            var tabs = NMHook.tabs.Where(x => x.browser == browser && x.url == url).ToList();
-            if (string.IsNullOrEmpty(url)) tabs = NMHook.tabs.Where(x => x.browser == browser).ToList();
-            foreach (var tab in tabs)
-            {
-                NMHook.CloseTab(tab);
-            }
+            var tab = NMHook.FindTabByURL(browser, url);
+            if(tab != null) NMHook.CloseTab(tab);
+            // if (string.IsNullOrEmpty(url)) tabs = NMHook.tabs.Where(x => x.browser == browser).ToList();
+            //foreach (var tab in tabs)
+            //{
+            //    NMHook.CloseTab(tab);
+            //}
         }
         public bool Match(SelectorItem item, IElement m)
         {
@@ -312,7 +313,7 @@ namespace OpenRPA.NM
             if(LastElement.message == null) return false;
             if (LastElement.message.tab == null)
             {
-                LastElement.message.tab = NMHook.tabs.Where(x => x.id == LastElement.message.tabid && x.browser == LastElement.message.browser && x.windowId == LastElement.message.windowId).FirstOrDefault();
+                LastElement.message.tab = NMHook.FindTabById(LastElement.message.browser, LastElement.message.tabid);
             }
             if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "msedge")
             {

@@ -113,7 +113,7 @@ namespace OpenRPA.Interfaces.IPCService
             }
             catch (Exception ex)
             {
-                // Console.WriteLine(ex.ToString());
+                Log.Debug(ex.ToString());
             }
             string applicationIdentifier = uniqueName + Environment.UserName;
             string channelName = String.Concat(applicationIdentifier, Delimiter, ChannelNameSuffix);

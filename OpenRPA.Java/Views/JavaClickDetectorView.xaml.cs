@@ -85,7 +85,7 @@ namespace OpenRPA.Java.Views
                 var selector = new JavaSelector("[{Selector: 'Java'}]");
                 selectors = new Interfaces.Selector.SelectorWindow("Java", selector, null, 10);
             }
-            selectors.Owner = GenericTools.MainWindow;
+            // selectors.Owner = GenericTools.MainWindow;  -- Locks up and never returns ?
             if (selectors.ShowDialog() == true)
             {
                 plugin.Selector = selectors.vm.json;

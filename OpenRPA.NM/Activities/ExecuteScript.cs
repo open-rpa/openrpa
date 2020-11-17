@@ -1,4 +1,6 @@
-﻿using OpenRPA.Interfaces;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using OpenRPA.Interfaces;
 using System;
 using System.Activities;
 using System.Activities.Presentation.PropertyEditing;
@@ -23,6 +25,7 @@ namespace OpenRPA.NM
         public InArgument<int> FrameId { get; set; }
         public InArgument<string> Browser { get; set; }
         public OutArgument<object> Result { get; set; }
+        public OutArgument<object[]> Results { get; set; }
         protected override void Execute(NativeActivityContext context)
         {
             var script = Script.Get(context);
@@ -31,8 +34,12 @@ namespace OpenRPA.NM
             var timeout = TimeSpan.FromSeconds(3);
             script = Interfaces.Selector.Selector.ReplaceVariables(script, context.DataContext);
             if (browser != "chrome" && browser != "ff" && browser != "edge") browser = "chrome";
+            if (!script.Contains(Environment.NewLine) && !script.Contains(";") && !script.Contains("return")) script = "return " + script;
             var result = NMHook.ExecuteScript(browser, frameid, -1, script, timeout);
-            Result.Set(context, result);
+            if (result == null) { result = "[]"; }
+            var results = JsonConvert.DeserializeObject<object[]>(result.ToString());
+            Result.Set(context, results[0]);
+            Results.Set(context, results);
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {

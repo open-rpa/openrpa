@@ -27,5 +27,6 @@ namespace OpenRPA.Interfaces
         public string url { get; set; }
         public int width { get; set; }
         public int windowId { get; set; }
+        public DateTime? lastready { get; set; }
     }
 }

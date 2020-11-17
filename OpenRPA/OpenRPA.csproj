@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.1.14</Version>
-    <PackageReleaseNotes>1.1.14 Add support for custom project folder, fix ui thread issue for invoke openrpa
+    <Version>1.1.15</Version>
+    <PackageReleaseNotes>1.1.15 Create dedicated asyng get element without a body to avoid confusion on usage
+1.1.14 Add support for custom project folder, fix ui thread issue for invoke openrpa
 1.1.13 Various fixes, see commit history, Add support for local robot execution from powershell even when offline
 1.1.12 Fix "cannot select self" on nested windows elements
 1.1.11 Fix JArray parse error / Expose instance as variable / Upgrade CefSharp.Wpf

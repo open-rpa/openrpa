@@ -779,7 +779,14 @@ if (true == false) {
                 executescript: function (message) {
                     try {
                         if (document.openrpadebug) console.log('script', message.script);
-                        message.result = eval(message.script);
+                        // message.result = eval(message.script);
+                        var s = document.createElement('script');
+                        s.async = false;
+                        s.src = message.script;
+                        s.addEventListener('load', function () {
+                            document.dynjsloaded = true;
+                        });
+                        document.body.appendChild(s);
                         if (document.openrpadebug) console.log('result', message.result);
                     } catch (e) {
                         console.error(e);

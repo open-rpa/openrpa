@@ -62,6 +62,7 @@
     <None Remove="background.js" />
     <None Remove="chromemanifest.json" />
     <None Remove="ffmanifest.json" />
+    <None Remove="jquery.js" />
     <None Remove="openrpautil.js" />
     <None Remove="Resources\OpenRPA.ico" />
     <None Remove="Resources\OpenRPA.png" />
@@ -79,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="background.js" />
+    <EmbeddedResource Include="jquery.js" />
     <EmbeddedResource Include="openrpautil.js" />
   </ItemGroup>
   <ItemGroup>

@@ -265,6 +265,18 @@ async function OnPortMessage(message) {
             if(port!=null) port.postMessage(JSON.parse(JSON.stringify(message)));
             return;
         }
+        if (message.functionName === "executescript") {
+            console.log(message);
+            var script = "(" + message.script + ")()";
+            if (message.frameId > -1) {
+                message.result = await tabsexecuteScript(message.tabid, { code: script, frameId: message.frameId });
+            } else {
+                message.result = await tabsexecuteScript(message.tabid, { code: script, allFrames: true });
+            }
+            console.log(message.result);
+            port.postMessage(JSON.parse(JSON.stringify(message)));
+            return;
+        }
         if (message.functionName === "openurl") {
             if (message.xPath == "true") {
                 var createProperties = { url: message.data };

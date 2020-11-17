@@ -29,17 +29,14 @@ namespace OpenRPA.NM
             NMHook.enumtabs();
             if (closeall)
             {
-                foreach(var tab in NMHook.tabs.Where(x=> x.browser == browser).ToList())
-                {
-                    NMHook.closetab(browser, tab.id);
-                }
+                NMHook.CloseAllTabs(browser);
             } else
             {
                 if (browser == "chrome")
                 {
                     if (NMHook.CurrentChromeTab != null)
                     {
-                        NMHook.closetab(browser, NMHook.CurrentChromeTab.id);
+                        NMHook.CloseTab(browser, NMHook.CurrentChromeTab.id);
                     }
                     else { Log.Warning("No active tab found for " + browser); }
                 }
@@ -47,7 +44,7 @@ namespace OpenRPA.NM
                 {
                     if (NMHook.CurrentFFTab != null)
                     {
-                        NMHook.closetab(browser, NMHook.CurrentFFTab.id);
+                        NMHook.CloseTab(browser, NMHook.CurrentFFTab.id);
                     }
                     else { Log.Warning("No active tab found for " + browser); }
                 }
@@ -55,7 +52,7 @@ namespace OpenRPA.NM
                 {
                     if (NMHook.CurrentEdgeTab != null)
                     {
-                        NMHook.closetab(browser, NMHook.CurrentEdgeTab.id);
+                        NMHook.CloseTab(browser, NMHook.CurrentEdgeTab.id);
                     }
                     else { Log.Warning("No active tab found for " + browser); }
                 }

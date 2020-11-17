@@ -35,7 +35,7 @@ namespace OpenRPA.NM
             if (!string.IsNullOrEmpty(url))
             {
                 NMHook.enumtabs();
-                var tab = NMHook.tabs.Where(x => x.browser == browser && x.url.ToLower().StartsWith(url.ToLower())).FirstOrDefault();
+                var tab = NMHook.FindTabByURL(browser, url);
                 if (tab != null)
                 {
                     if (!tab.highlighted || !tab.selected)

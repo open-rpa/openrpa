@@ -135,6 +135,12 @@
   <data name="activity_getelement" xml:space="preserve">
     <value>Get Element</value>
   </data>
+  <data name="activity_getelement_async" xml:space="preserve">
+    <value>Get Element Async</value>
+  </data>
+  <data name="activity_getelement_async_tooltip" xml:space="preserve">
+    <value>Find an browser elements based on selector</value>
+  </data>
   <data name="activity_getelement_drop_hint" xml:space="preserve">
     <value>Drop activity</value>
   </data>

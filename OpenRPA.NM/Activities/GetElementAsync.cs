@@ -15,15 +15,10 @@ namespace OpenRPA.NM
     [System.ComponentModel.Designer(typeof(GetElementDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(GetElement), "Resources.toolbox.gethtmlelement.png")]
     [System.Windows.Markup.ContentProperty("Body")]
-    [LocalizedToolboxTooltip("activity_getelement_tooltip", typeof(Resources.strings))]
-    [LocalizedDisplayName("activity_getelement", typeof(Resources.strings))]
-    public class GetElement : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    [LocalizedToolboxTooltip("activity_getelement_async_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_getelement_async", typeof(Resources.strings))]
+    public class GetElementAsync : AsyncTaskNativeActivity
     {
-        //[RequiredArgument]
-        //public InArgument<string> XPath { get; set; }
-
-        [System.ComponentModel.Browsable(false)]
-        public ActivityAction<NMElement> Body { get; set; }
         public InArgument<int> MaxResults { get; set; }
         public InArgument<int> MinResults { get; set; }
         public InArgument<TimeSpan> Timeout { get; set; }
@@ -38,8 +33,7 @@ namespace OpenRPA.NM
         private readonly Variable<IEnumerator<NMElement>> _elements = new Variable<IEnumerator<NMElement>>("_elements");
         private Variable<NMElement[]> _allelements = new Variable<NMElement[]>("_allelements");
         [System.ComponentModel.Browsable(false)]
-        public Activity LoopAction { get; set; }
-        public GetElement()
+        public GetElementAsync()
         {
             MaxResults = 1;
             MinResults = 1;
@@ -64,21 +58,21 @@ namespace OpenRPA.NM
             }
 
         }
-        protected override void Execute(NativeActivityContext context)
+        private bool IsCancel = false;
+        protected override async Task<object> ExecuteAsync(NativeActivityContext context)
         {
+            IsCancel = false;
             var selector = Selector.Get(context);
             selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
             var sel = new NMSelector(selector);
             var timeout = Timeout.Get(context);
-            var from = From.Get(context);
+            var from = From?.Get(context);
             var maxresults = MaxResults.Get(context);
             var minresults = MinResults.Get(context);
             if (maxresults < 1) maxresults = 1;
             NMElement[] elements = { };
-            var sw = new Stopwatch();
-            sw.Start();
             string browser = sel.browser;
-            if (WaitForReady.Get(context))
+            if (WaitForReady != null && WaitForReady.Get(context))
             {
                 if (from != null) browser = from.browser;
                 DoWaitForReady(browser);
@@ -98,127 +92,87 @@ namespace OpenRPA.NM
                     }
                 }
             }
-
-            do
+            await Task.Run(() =>
             {
-                elements = NMSelector.GetElementsWithuiSelector(sel, from, maxresults);
-                Log.Selector("BEGIN:: I have " + elements.Count() + " elements, and " + allelements.Count() + " in all elements");
-
-                // allelements = allelements.Concat(elements).ToArray();
-                if (allelements.Length > 0)
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+                do
                 {
-                    var newelements = new List<NMElement>();
-                    for (var i = elements.Length - 1; i >= 0; i--)
+                    elements = NMSelector.GetElementsWithuiSelector(sel, from, maxresults);
+                    Log.Selector("BEGIN:: I have " + elements.Count() + " elements, and " + allelements.Count() + " in all elements");
+                    if (allelements.Length > 0)
                     {
-                        var element = elements[i];
-                        if (!allelements.Contains(element)) newelements.Insert(0, element);
+                        var newelements = new List<NMElement>();
+                        for (var i = elements.Length - 1; i >= 0; i--)
+                        {
+                            var element = elements[i];
+                            if (!allelements.Contains(element)) newelements.Insert(0, element);
+                        }
+                        elements = newelements.ToArray();
                     }
-                    elements = newelements.ToArray();
-                    //if(elements.Count() > 20)
-                    //{
-                    //    for(var i=0; i < allelements.Length && i < elements.Length; i++)
-                    //    {
-                    //        if (!eq.Equals(allelements[i], elements[i]) || allelements[i].GetHashCode() != elements[i].GetHashCode())
-                    //        {
-                    //            Log.Output(allelements[i].GetHashCode() + " / " + elements[i].GetHashCode());
-                    //        }
 
-                    //    }
-
-                    //}
+                } while (elements.Count() == 0 && sw.Elapsed < timeout && !IsCancel);
+                if (IsCancel)
+                {
+                    Console.WriteLine("was Canceled: true! DisplayName" + DisplayName);
                 }
+                //if (sw.Elapsed >= timeout)
+                //{
+                //    Console.WriteLine("Timeout !");
+                //}
+            });
+            return elements;
+        }
+        protected override void CacheMetadata(NativeActivityMetadata metadata)
+        {
+            Interfaces.Extensions.AddCacheArgument(metadata, "MaxResults", MaxResults);
+            Interfaces.Extensions.AddCacheArgument(metadata, "MinResults", MinResults);
+            Interfaces.Extensions.AddCacheArgument(metadata, "Timeout", Timeout);
 
-            } while (elements.Count() == 0 && sw.Elapsed < timeout);
+            Interfaces.Extensions.AddCacheArgument(metadata, "Selector", Selector);
+            Interfaces.Extensions.AddCacheArgument(metadata, "From", From);
+            Interfaces.Extensions.AddCacheArgument(metadata, "Elements", Elements);
+            Interfaces.Extensions.AddCacheArgument(metadata, "WaitForReady", WaitForReady);
+
+            metadata.AddImplementationVariable(_elements);
+            metadata.AddImplementationVariable(_allelements);
+            base.CacheMetadata(metadata);
+        }
+        protected override void AfterExecute(NativeActivityContext context, object result)
+        {
+            var allelements = context.GetValue(_allelements);
+            if (allelements == null) allelements = new NMElement[] { };
+            var maxresults = MaxResults.Get(context);
+            var minresults = MinResults.Get(context);
+            NMElement[] elements = result as NMElement[];
             if (elements.Count() > maxresults) elements = elements.Take(maxresults).ToArray();
 
             if ((elements.Length + allelements.Length) < minresults)
             {
-                Log.Selector(string.Format("Windows.GetElement::Failed locating " + minresults + " item(s) {0:mm\\:ss\\.fff}", sw.Elapsed));
+                Log.Selector(string.Format("Windows.GetElement::Failed locating " + minresults + " item(s)"));
                 throw new ElementNotFoundException("Failed locating " + minresults + " item(s)");
             }
-
-
-
             IEnumerator<NMElement> _enum = elements.ToList().GetEnumerator();
             bool more = _enum.MoveNext();
-            //if (lastelements.Length == elements.Length && lastelements.Length > 0)
-            //{
-            //    var eq = new Activities.NMEqualityComparer();
-            //    more = !System.Collections.StructuralComparisons.StructuralEqualityComparer.Equals(lastelements, elements);
-            //}
             if (more)
             {
                 allelements = allelements.Concat(elements).ToArray();
                 var eq = new Activities.NMEqualityComparer();
                 allelements = allelements.Distinct(eq).ToArray();
-
-                //var allelementslength = allelements.Length;
-                //Array.Resize(ref allelements, allelements.Length + elements.Length);
-                //Array.Copy(elements, 0, allelements, allelementslength, elements.Length);
             }
-
             context.SetValue(_allelements, allelements);
             context.SetValue(Elements, allelements);
             Log.Selector("END:: I have " + elements.Count() + " elements, and " + allelements.Count() + " in all elements");
-
             if (more)
             {
                 context.SetValue(_elements, _enum);
-                context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
         }
-        private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
+        protected override void Cancel(NativeActivityContext context)
         {
-            IEnumerator<NMElement> _enum = _elements.Get(context);
-            if (_enum == null) return;
-            bool more = _enum.MoveNext();
-            if (more)
-            {
-                context.ScheduleAction<NMElement>(Body, _enum.Current, OnBodyComplete);
-            }
-            else
-            {
-                if (LoopAction != null)
-                {
-                    var allelements = context.GetValue(_allelements);
-                    context.ScheduleActivity(LoopAction, LoopActionComplete);
-                }
-            }
-        }
-        private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
-        {
-            var allelements = context.GetValue(_allelements);
-            var selector = Selector.Get(context);
-            selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
-            var sel = new NMSelector(selector);
-            var from = From.Get(context);
-            string browser = sel.browser;
-            if (from != null) browser = from.browser;
-            System.Threading.Thread.Sleep(500);
-            DoWaitForReady(browser);
-            Execute(context);
-
-        }
-        protected override void CacheMetadata(NativeActivityMetadata metadata)
-        {
-            metadata.AddDelegate(Body);
-            Interfaces.Extensions.AddCacheArgument(metadata, "Selector", Selector);
-            Interfaces.Extensions.AddCacheArgument(metadata, "From", From);
-            Interfaces.Extensions.AddCacheArgument(metadata, "Elements", Elements);
-            Interfaces.Extensions.AddCacheArgument(metadata, "MaxResults", MaxResults);
-            metadata.AddImplementationVariable(_elements);
-            metadata.AddImplementationVariable(_allelements);
-            base.CacheMetadata(metadata);
-        }
-        public Activity Create(System.Windows.DependencyObject target)
-        {
-            var fef = new GetElement();
-            var aa = new ActivityAction<NMElement>();
-            var da = new DelegateInArgument<NMElement>();
-            da.Name = "item";
-            fef.Body = aa;
-            aa.Argument = da;
-            return fef;
+            IsCancel = true;
+            Console.WriteLine("Cancel " + DisplayName);
+            base.Cancel(context);
         }
         public new string DisplayName
         {

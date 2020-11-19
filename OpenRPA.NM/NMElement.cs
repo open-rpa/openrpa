@@ -203,6 +203,117 @@ namespace OpenRPA.NM
                 }
             }
         }
+        public string SendText
+        {
+            get
+            {
+                string result = null;
+                if (Attributes.ContainsKey("value")) result = Attributes["value"].ToString();
+                if (Attributes.ContainsKey("innertext") && string.IsNullOrEmpty(result)) result = Attributes["innertext"].ToString();
+                if (string.IsNullOrEmpty(result)) result = Text;
+                return result;
+            }
+            set
+            {
+                if (NMHook.connected)
+                {
+                    var tab = NMHook.FindTabById(browser, message.tabid);
+                    if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
+                    var updateelement = new NativeMessagingMessage("sendtext", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
+                    {
+                        browser = message.browser,
+                        zn_id = zn_id,
+                        tabid = message.tabid,
+                        frameId = message.frameId,
+                        data = Interfaces.Extensions.Base64Encode(value),
+                        result = "value"
+                    };
+                    var temp = Interfaces.Extensions.Base64Decode(updateelement.data);
+                    if (value == null) updateelement.data = null;
+                    var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
+                    if (subsubresult == null) throw new Exception("Failed setting html element value");
+                    if (PluginConfig.wait_for_tab_after_set_value)
+                    {
+                        NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
+                    }
+                    return;
+                }
+            }
+        }
+        public string SetText
+        {
+            get
+            {
+                string result = null;
+                if (Attributes.ContainsKey("value")) result = Attributes["value"].ToString();
+                if (Attributes.ContainsKey("innertext") && string.IsNullOrEmpty(result)) result = Attributes["innertext"].ToString();
+                if (string.IsNullOrEmpty(result)) result = Text;
+                return result;
+            }
+            set
+            {
+                if (NMHook.connected)
+                {
+                    var tab = NMHook.FindTabById(browser, message.tabid);
+                    if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
+                    var updateelement = new NativeMessagingMessage("settext", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
+                    {
+                        browser = message.browser,
+                        zn_id = zn_id,
+                        tabid = message.tabid,
+                        frameId = message.frameId,
+                        data = Interfaces.Extensions.Base64Encode(value),
+                        result = "value"
+                    };
+                    var temp = Interfaces.Extensions.Base64Decode(updateelement.data);
+                    if (value == null) updateelement.data = null;
+                    var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
+                    if (subsubresult == null) throw new Exception("Failed setting html element value");
+                    if (PluginConfig.wait_for_tab_after_set_value)
+                    {
+                        NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
+                    }
+                    return;
+                }
+            }
+        }
+        public string SendKeys
+        {
+            get
+            {
+                string result = null;
+                if (Attributes.ContainsKey("value")) result = Attributes["value"].ToString();
+                if (Attributes.ContainsKey("innertext") && string.IsNullOrEmpty(result)) result = Attributes["innertext"].ToString();
+                if (string.IsNullOrEmpty(result)) result = Text;
+                return result;
+            }
+            set
+            {
+                if (NMHook.connected)
+                {
+                    var tab = NMHook.FindTabById(browser, message.tabid);
+                    if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
+                    var updateelement = new NativeMessagingMessage("sendkeys", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
+                    {
+                        browser = message.browser,
+                        zn_id = zn_id,
+                        tabid = message.tabid,
+                        frameId = message.frameId,
+                        data = Interfaces.Extensions.Base64Encode(value),
+                        result = "value"
+                    };
+                    var temp = Interfaces.Extensions.Base64Decode(updateelement.data);
+                    if (value == null) updateelement.data = null;
+                    var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
+                    if (subsubresult == null) throw new Exception("Failed setting html element value");
+                    if (PluginConfig.wait_for_tab_after_set_value)
+                    {
+                        NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
+                    }
+                    return;
+                }
+            }
+        }
         public string[] Values
         {
             get

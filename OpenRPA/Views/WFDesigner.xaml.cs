@@ -182,9 +182,26 @@ namespace OpenRPA.Views
             {
                 Task.Run(() =>
                 {
-                    if (Config.local.minimize) GenericTools.Minimize();
-                    System.Threading.Thread.Sleep(2000);
-                    MainWindow.instance.OnRecord(null);
+                    try
+                    {
+                        if (Config.local.minimize) GenericTools.Minimize();
+                        System.Threading.Thread.Sleep(2000);
+                        GenericTools.RunUI(() =>
+                        {
+                            try
+                            {
+                                MainWindow.instance.OnRecord(null);
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex.ToString());
+                            }
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }                   
                 });
             }
             if (e.Key == Key.F5)

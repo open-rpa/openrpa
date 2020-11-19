@@ -83,7 +83,12 @@ namespace OpenRPA.NativeMessagingHost
                                 loadscript(ref r2, "jquery");
                                 sendMessage(r2);
                             }
-                            // 
+                            if (msg.functionName == "libsscript")
+                            {
+                                var r2 = new NativeMessagingMessage(msg.functionName, msg.debug, null);
+                                loadscript(ref r2, "libs");
+                                sendMessage(r2);
+                            }
 #pragma warning disable 4014
                             Task.Run(() => { onMessage?.Invoke(msg); });
 #pragma warning restore 4014

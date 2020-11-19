@@ -98,7 +98,6 @@ namespace OpenRPA.NM
                 return e.Value;
             }
         }
-        
         public NMSelectorItem(NMElement element)
         {
             this.Element = element;

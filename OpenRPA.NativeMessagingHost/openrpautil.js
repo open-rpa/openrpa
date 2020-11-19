@@ -1,4 +1,4 @@
-document.openrpadebug = false;
+﻿document.openrpadebug = false;
 document.openrpauniquexpathids = ['ng-model', 'ng-reflect-name']; // aria-label
 function inIframe() {
     var result = true;
@@ -253,6 +253,29 @@ if (true == false) {
                     if (document.openrpadebug) console.log(test);
                     return test;
                 },
+                __getelement: function (message) {
+                    document.openrpadebug = message.debug;
+                    if (message.uniquexpathids) document.openrpauniquexpathids = message.uniquexpathids;
+                    var ele = null;
+                    if (ele === null && message.zn_id !== null && message.zn_id !== undefined && message.zn_id > -1) {
+                        message.xPath = '//*[@zn_id="' + message.zn_id + '"]';
+                    }
+                    if (ele === null && message.xPath) {
+                        var xpathEle = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+                        if (document.openrpadebug) console.log("document.evaluate('" + message.xPath + "', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;");
+                        if (xpathEle === null) message.xPath = 'false';
+                        if (xpathEle !== null) message.xPath = 'true';
+                        ele = xpathEle;
+                    }
+                    if (ele === null && message.cssPath) {
+                        var cssEle = document.querySelector(message.cssPath);
+                        if (document.openrpadebug) console.log("document.querySelector('" + message.cssPath + "');");
+                        if (cssEle === null) message.cssPath = 'false';
+                        if (cssEle !== null) message.cssPath = 'true';
+                        ele = cssEle;
+                    }
+                    return ele;
+                },
                 getelements: function (message) {
                     try {
                         document.openrpadebug = message.debug;
@@ -370,27 +393,8 @@ if (true == false) {
                     return test;
                 },
                 getelement: function (message) {
-                    document.openrpadebug = message.debug;
-                    if (message.uniquexpathids) document.openrpauniquexpathids = message.uniquexpathids;
                     try {
-                        var ele = null;
-                        if (ele === null && message.zn_id !== null && message.zn_id !== undefined && message.zn_id > -1) {
-                            message.xPath = '//*[@zn_id="' + message.zn_id + '"]';
-                        }
-                        if (ele === null && message.xPath) {
-                            var xpathEle = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-                            if (document.openrpadebug) console.log("document.evaluate('" + message.xPath + "', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;");
-                            if (xpathEle === null) message.xPath = 'false';
-                            if (xpathEle !== null) message.xPath = 'true';
-                            ele = xpathEle;
-                        }
-                        if (ele === null && message.cssPath) {
-                            var cssEle = document.querySelector(message.cssPath);
-                            if (document.openrpadebug) console.log("document.querySelector('" + message.cssPath + "');");
-                            if (cssEle === null) message.cssPath = 'false';
-                            if (cssEle !== null) message.cssPath = 'true';
-                            ele = cssEle;
-                        }
+                        var ele = openrpautil.__getelement(message);
                         if (ele !== null && ele !== undefined) {
                             try {
                                 try {
@@ -414,9 +418,6 @@ if (true == false) {
                                 message.result = openrpautil.mapDOM(ele, true);
                             }
                             message.zn_id = openrpautil.getuniqueid(ele);
-
-
-
                             if (openrpautil.parent != null) {
                                 message.parents = openrpautil.parent.parents + 1;
                                 message.uix += openrpautil.parent.uix;
@@ -429,7 +430,6 @@ if (true == false) {
                                 message.uix += currentFramePosition.x;
                                 message.uiy += currentFramePosition.y;
                             }
-
                         }
 
                     } catch (e) {
@@ -1094,6 +1094,289 @@ if (true == false) {
                         nodeElem = nodeElem.parentNode;
                     }
                     return parts.length ? '/' + parts.reverse().join('/') : '';
+                },
+
+
+                // https://stackoverflow.com/questions/4158847/how-to-simulate-key-presses-or-a-click-with-javascript/4176116#4176116
+// https://stackoverflow.com/questions/9515704/use-a-content-script-to-access-the-page-context-variables-and-functions/9517879#9517879
+// https://stackoverflow.com/questions/13987380/how-to-to-initialize-keyboard-event-with-given-char-keycode-in-a-chrome-extensio
+                dispatchKeyboardEvent(element, type, character, keyCode, charCode) {
+                    if (character == null) character = String.fromCharCode(charCode);
+                    if (charCode == null) charCode = character.charCodeAt(0);
+                    if (keyCode == null) keyCode = character.charCodeAt(0); // view: window, 
+                    var event = new KeyboardEvent(type, { "bubbles": true, "cancelable": true, "key": character, "ctrlKey": false, "shiftKey": false, "altKey": false, "charCode": charCode, "keyCode": keyCode, });
+                    var doc = document.ownerDocument || document;
+                    if (element == null) element = doc;
+                    element.dispatchEvent(event);
+                },
+                dispatchInputEvent(element, type, inputType, data) {
+                    var event = new InputEvent(type, { inputType: inputType, data: data });
+                    event.simulated = true;
+                    var doc = document.ownerDocument || document;
+                    if (element == null) element = doc;
+                    element.dispatchEvent(event);
+                },
+                sendtext(message) {
+                    try {
+                        var data = message.data;
+                        try {
+                            data = Base64.decode(data);
+                        } catch (e) {
+                            console.error(e);
+                            console.log(data);
+                        }
+                        const element = openrpautil.__getelement(message);
+                        if (element == null) { throw new Error('SendText, failed locating element'); }
+                        let parsekeys = false;
+                        if (message.reset == true) { element.value = ''; delete message.reset; }
+                        if (message.parsekeys == true) { parsekeys = true; delete message.parsekeys; }
+                        let specialkey = null;
+                        for (let i = 0; i < data.length; ++i) {
+                            let character = data[i];
+                            let keyCode = character.toUpperCase().charCodeAt(i);
+                            let charCode = data.charCodeAt(i);
+                            if (character == "{") {
+                                specialkey = "";
+                                continue;
+                            } else if (character != "}" && specialkey != null) {
+                                specialkey += character;
+                                continue;
+                            } else if (character == "}") {
+                                character = undefined; keyCode = 0; charCode = 0;
+                                if (openrpautil.keynames[specialkey] != null) {
+                                    keyCode = openrpautil.keynames[specialkey];
+                                } else {
+                                    switch (specialkey.toLowerCase()) {
+                                        case "left55": keyCode = 37; break;
+                                        case "up55": keyCode = 38; break;
+                                        case "right55": keyCode = 39; break;
+                                        case "down55": keyCode = 40; break;
+                                    }
+                                }
+                            }
+
+                            openrpautil.dispatchKeyboardEvent(element, 'keydown', character, keyCode, charCode);
+                            openrpautil.dispatchKeyboardEvent(element, 'keypress', character, keyCode, charCode);
+                            openrpautil.dispatchInputEvent(element, "beforeinput", "insertText", character);
+                            if (specialkey == null) element.value += character;
+                            openrpautil.dispatchKeyboardEvent(element, 'keyup', character, keyCode, charCode);
+                            specialkey == null
+                        }
+                    } catch (e) {
+                        console.error('error in getelements');
+                        message.error = e;
+                        console.error(e);
+                    }
+                    var test = JSON.parse(JSON.stringify(message));
+                    if (document.openrpadebug) console.log(test);
+                    return test;
+                },
+                settext(message) {
+                    message.reset = true;
+                    return openrpautil.sendtext(message);
+                },
+                sendkeys(message) {
+                    message.parsekeys = true;
+                    return openrpautil.sendtext(message);
+                },
+
+                keynames: {
+                    'break': 3,
+                    'backspace / delete': 8,
+                    'tab': 9,
+                    'clear': 12,
+                    'enter': 13,
+                    'shift': 16,
+                    'ctrl': 17,
+                    'alt': 18,
+                    'pause/break': 19,
+                    'caps lock': 20,
+                    'hangul': 21,
+                    'hanja': 25,
+                    'escape': 27,
+                    'conversion': 28,
+                    'non-conversion': 29,
+                    'spacebar': 32,
+                    'page up': 33,
+                    'page down': 34,
+                    'end': 35,
+                    'home': 36,
+                    'leftarrow': 37,
+                    'left': 37,
+                    'uparrow': 38,
+                    'up': 38,
+                    'rightarrow': 39,
+                    'right': 39,
+                    'downarrow': 40,
+                    'down': 40,
+                    'select': 41,
+                    'print': 42,
+                    'execute': 43,
+                    'printscreen': 44,
+                    'prtsrc': 44,
+                    'insert': 45,
+                    'delete': 46,
+                    'help': 47,
+                    '0': 48,
+                    '1': 49,
+                    '2': 50,
+                    '3': 51,
+                    '4': 52,
+                    '5': 53,
+                    '6': 54,
+                    '7': 55,
+                    '8': 56,
+                    '9': 57,
+                    ':': 58,
+                    'ffsemicolon': 59,
+                    'equals': 59,
+                    '<': 60,
+                    'ffequals': 61,
+                    'ß': 63,
+                    'ff@': 64,
+                    'a': 65,
+                    'b': 66,
+                    'c': 67,
+                    'd': 68,
+                    'e': 69,
+                    'f': 70,
+                    'g': 71,
+                    'h': 72,
+                    'i': 73,
+                    'j': 74,
+                    'k': 75,
+                    'l': 76,
+                    'm': 77,
+                    'n': 78,
+                    'o': 79,
+                    'p': 80,
+                    'q': 81,
+                    'r': 82,
+                    's': 83,
+                    't': 84,
+                    'u': 85,
+                    'v': 86,
+                    'w': 87,
+                    'x': 88,
+                    'y': 89,
+                    'z': 90,
+                    'windows': 91,
+                    'windowskey': 91,
+                    'leftwindows': 91,
+                    'leftwindowskey': 91,
+                    '⌘': 91,
+                    'searchkey': 91, // Windows Key / Left ⌘ / Chromebook Search key
+                    'righttwindows': 92,
+                    'rightwindowskey': 92,
+                    'windowsmenu': 93, // 'Windows Menu / Right ⌘',
+                    'sleep': 95,
+                    'numpad 0': 96,
+                    'numpad 1': 97,
+                    'numpad 2': 98,
+                    'numpad 3': 99,
+                    'numpad 4': 100,
+                    'numpad 5': 101,
+                    'numpad 6': 102,
+                    'numpad 7': 103,
+                    'numpad 8': 104,
+                    'numpad 9': 105,
+                    'multiply': 106,
+                    'add': 107,
+                    'numpad period (firefox)': 108,
+                    'subtract': 109,
+                    'decimal point': 110,
+                    'divide': 111,
+                    'f1': 112,
+                    'f2': 113,
+                    'f3': 114,
+                    'f4': 115,
+                    'f5': 116,
+                    'f6': 117,
+                    'f7': 118,
+                    'f8': 119,
+                    'f9': 120,
+                    'f10': 121,
+                    'f11': 122,
+                    'f12': 123,
+                    'f13': 124,
+                    'f14': 125,
+                    'f15': 126,
+                    'f16': 127,
+                    'f17': 128,
+                    'f18': 129,
+                    'f19': 130,
+                    'f20': 131,
+                    'f21': 132,
+                    'f22': 133,
+                    'f23': 134,
+                    'f24': 135,
+                    'f25': 136,
+                    'f26': 137,
+                    'f27': 138,
+                    'f28': 139,
+                    'f29': 140,
+                    'f30': 141,
+                    'f31': 142,
+                    'f32': 143,
+                    'numlock': 144,
+                    'scroll lock': 145,
+                    'airplane mode': 151,
+                    '^': 160,
+                    '!': 161,
+                    '؛': 162,
+                    '#': 163,
+                    '$': 164,
+                    'ù': 165,
+                    'pagebackward': 166,
+                    'pageforward': 167,
+                    'refresh': 168,
+                    'closingparen': 169,
+                    '*': 170,
+                    '~': 171,
+                    'homekey': 172,
+                    'home': 172,
+                    'ffminus': 173,
+                    'minus': 173,
+                    'mute': 173,
+                    'unmute': 173,
+                    'decrease volume level': 174,
+                    'increase volume level': 175,
+                    'next': 176,
+                    'previous': 177,
+                    'stop': 178,
+                    'play/pause': 179,
+                    'email': 180,
+                    'mute/unmute (firefox)': 181,
+                    'decrease volume level (firefox)': 182,
+                    'increase volume level (firefox)': 183,
+                    'semi-colon / ñ': 186,
+                    'equal sign': 187,
+                    'comma': 188,
+                    'dash': 189,
+                    'period': 190,
+                    'forward slash / ç': 191,
+                    'grave accent / ñ / æ / ö': 192,
+                    '?, / or °': 193,
+                    'numpad period (chrome)': 194,
+                    'open bracket': 219,
+                    'back slash': 220,
+                    'close bracket / å': 221,
+                    'single quote / ø / ä': 222,
+                    '`': 223,
+                    'left or right ⌘ key (firefox)': 224,
+                    'altgr': 225,
+                    '< /git >, left back slash': 226,
+                    'GNOME Compose Key': 230,
+                    'ç': 231,
+                    'XF86Forward': 233,
+                    'XF86Back': 234,
+                    'non-conversion': 235,
+                    'alphanumeric': 240,
+                    'hiragana/katakana': 242,
+                    'half-width/full-width': 243,
+                    'kanji': 244,
+                    'unlock trackpad (Chrome/Edge)': 251,
+                    'toggle touchpad': 255
                 }
 
             };
@@ -1541,7 +1824,7 @@ if (true == false) {
         };
     /**
      * converts a Uint8Array to a Base64 string.
-     * @param {boolean} [urlsafe] URL-and-filename-safe a la RFC4648 �5
+     * @param {boolean} [urlsafe] URL-and-filename-safe a la RFC4648 §5
      * @returns {string} Base64 string
      */
     const fromUint8Array = (u8a, urlsafe = false) => urlsafe ? _mkUriSafe(_fromUint8Array(u8a)) : _fromUint8Array(u8a);
@@ -1564,7 +1847,7 @@ if (true == false) {
         ? _mkUriSafe(_encode(src))
         : _encode(src);
     /**
-     * converts a UTF-8-encoded string to URL-safe Base64 RFC4648 �5.
+     * converts a UTF-8-encoded string to URL-safe Base64 RFC4648 §5.
      * @returns {string} Base64 string
      */
     const encodeURI = (src) => encode(src, true);
@@ -1682,3 +1965,4 @@ if (true == false) {
     Object.keys(gBase64).forEach(k => gBase64.Base64[k] = gBase64[k]);
     return gBase64;
 }));
+

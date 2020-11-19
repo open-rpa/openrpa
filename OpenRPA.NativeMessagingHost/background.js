@@ -2,6 +2,7 @@ console.log('openrpa extension begin');
 //var port;
 var openrpautil_script = '';
 var jquery_script = '';
+var libsscript_script = '';
 var portname = 'com.openrpa.msg';
 var lastwindowId = 1;
 var openrpadebug = false;
@@ -107,14 +108,27 @@ async function OnPortMessage(message) {
             return;
         }
         if (message.functionName === "jqueryscript") {
-            console.log("jqueryscript!!!");
-            console.log(message);
             jquery_script = message.script;
             var subtabsList = await tabsquery();
             for (var l in subtabsList) {
                 try {
                     if (!allowExecuteScript(subtabsList[l])) continue;
                     if (jquery_script != null && jquery_script != "") await tabsexecuteScript(subtabsList[l].id, { code: jquery_script, allFrames: true });
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+            return;
+        }
+        if (message.functionName === "libsscript") {
+            console.log(message.functionName);
+            console.log(message);
+            libsscript_script = message.script;
+            var subtabsList = await tabsquery();
+            for (var l in subtabsList) {
+                try {
+                    if (!allowExecuteScript(subtabsList[l])) continue;
+                    if (libsscript_script != null && libsscript_script != "") await tabsexecuteScript(subtabsList[l].id, { code: libsscript_script, allFrames: true });
                 } catch (e) {
                     console.log(e);
                 }
@@ -221,10 +235,8 @@ async function OnPortMessage(message) {
             // var script = "(" + message.script + ")()";
             var script = "function doexecutescript() { " + message.script + " }; doexecutescript();";
             if (message.frameId > -1) {
-                if (jquery_script != null && jquery_script != "") await tabsexecuteScript(message.tabid, { code: jquery_script, frameId: message.frameId });
                 message.result = await tabsexecuteScript(message.tabid, { code: script, frameId: message.frameId });
             } else {
-                if (jquery_script != null && jquery_script != "") await tabsexecuteScript(message.tabid, { code: jquery_script, allFrames: true });
                 message.result = await tabsexecuteScript(message.tabid, { code: script, allFrames: true });
             }
             console.log(message.result);
@@ -433,9 +445,9 @@ async function tabsOnUpdated(tabId, changeInfo, tab) {
     }
     if (openrpadebug) console.log(changeInfo);
     try {
-        console.debug("tabsOnUpdated: " + changeInfo.status)
-        await tabsexecuteScript(tab.id, { code: openrpautil_script, allFrames: true });
-        if (jquery_script != null && jquery_script != "") await tabsexecuteScript(tab.id, { code: jquery_script, allFrames: true });        
+        console.debug("tabsOnUpdated: " + changeInfo.status);
+        var bundle = jquery_script + libsscript_script + openrpautil_script;
+        await tabsexecuteScript(tab.id, { code: bundle, allFrames: true });
     } catch (e) {
         console.log(e);
         console.log(tab);
@@ -711,7 +723,8 @@ chrome.runtime.onMessage.addListener((msg, sender, fnResponse) => {
     if (msg === "loadscript") {
         if (openrpautil_script !== null && openrpautil_script !== undefined && openrpautil_script !== '') {
             console.debug("send openrpautil to tab");
-            fnResponse(openrpautil_script);
+            var bundle = jquery_script + libsscript_script + openrpautil_script;
+            fnResponse(bundle);
         } else {
             console.warn("tab requested script, but openrpautil has not been loaded");
             fnResponse(null);
@@ -769,6 +782,14 @@ if (openrpautil_script === null || openrpautil_script === undefined || openrpaut
 if (jquery_script === null || jquery_script === undefined || jquery_script === '') {
     if (port != null) {
         var message = { functionName: "jqueryscript" };
+        try {
+            console.log("[send]" + message.functionName);
+            port.postMessage(JSON.parse(JSON.stringify(message)));
+        } catch (e) {
+            console.error(e);
+            port = null;
+        }
+        var message = { functionName: "libsscript" };
         try {
             console.log("[send]" + message.functionName);
             port.postMessage(JSON.parse(JSON.stringify(message)));

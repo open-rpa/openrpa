@@ -6,11 +6,12 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.30</Version>
+    <Version>1.0.31</Version>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
     <StartupObject />
-    <PackageReleaseNotes>1.0.30 Add support to update div value
+    <PackageReleaseNotes>1.0.31 Improve text updates, change frame messsages to json, to avoid conflict with certain webpages
+1.0.30 Add support to update div value
 1.0.29 Fix utf encoding with setvalue
 1.0.28 Add support for checkboxes
 1.0.27 Fix addon after firefox update breaking things

@@ -17,12 +17,17 @@ if (true == false) {
 } else {
     if (window.openrpautil_contentlistner === null || window.openrpautil_contentlistner === undefined) {
         function remotePushEvent(evt) {
+            var message = evt.data;
+            if (typeof message === "string") {
+                try {
+                    message = JSON.parse(message);
+                } catch (e) { }                
+            }
             if (evt.data != null && evt.data.functionName == "mousemove") {
                 openrpautil.parent = evt.data;
                 try {
                     notifyFrames();
-                } catch (e) {
-                }
+                } catch (e) { }
             }
         }
         if (window.addEventListener) {
@@ -53,6 +58,7 @@ if (true == false) {
                 message.cssPath = UTILS.cssPath(targetElement, false);
                 message.xPath = UTILS.xPath(targetElement, true);
                 //console.log('postMessage to', targetElement, { uix: message.uix, uiy: message.uiy });
+                message = JSON.stringify(message);
                 targetElement.contentWindow.postMessage(message, '*');
             }
             var doFrames = () => {

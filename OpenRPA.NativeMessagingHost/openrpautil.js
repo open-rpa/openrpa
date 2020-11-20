@@ -1,4 +1,4 @@
-ï»¿document.openrpadebug = false;
+document.openrpadebug = false;
 document.openrpauniquexpathids = ['ng-model', 'ng-reflect-name']; // aria-label
 function inIframe() {
     var result = true;
@@ -21,7 +21,7 @@ if (true == false) {
             if (typeof message === "string") {
                 try {
                     message = JSON.parse(message);
-                } catch (e) { }                
+                } catch (e) { }
             }
             if (evt.data != null && evt.data.functionName == "mousemove") {
                 openrpautil.parent = evt.data;
@@ -661,7 +661,7 @@ if (true == false) {
                                             } else {
                                                 positions.push({ x: 0, y: 0 });
                                             }
-                                            
+
                                         }
                                     } catch (e) {
                                         // console.debug(e);
@@ -677,7 +677,7 @@ if (true == false) {
                                 break;
                             }
                     }
-                    
+
                     var result = positions.reduce((accumulator, currentValue) => {
                         return {
                             x: (accumulator.x + currentValue.x) | 0,
@@ -801,7 +801,7 @@ if (true == false) {
                     delete message.script;
                     var test = JSON.parse(JSON.stringify(message));
                     if (document.openrpadebug) console.log(test);
-                    return test;                    
+                    return test;
                 },
                 fullPath: function (el) {
                     var names = [];
@@ -1019,7 +1019,7 @@ if (true == false) {
                                 selectedvalues.push(element.options[i].value);
                                 treeObject["text"] = element.options[i].text;
                             }
-                        } 
+                        }
                         treeObject["values"] = selectedvalues;
                     }
 
@@ -1109,7 +1109,7 @@ if (true == false) {
                 dispatchKeyboardEvent(element, type, character, keyCode, charCode) {
                     if (character == null) character = String.fromCharCode(charCode);
                     if (charCode == null) charCode = character.charCodeAt(0);
-                    if (keyCode == null) keyCode = character.charCodeAt(0); // view: window, 
+                    if (keyCode == null) keyCode = character.charCodeAt(0); // view: window,
                     var event = new KeyboardEvent(type, { "bubbles": true, "cancelable": true, "key": character, "ctrlKey": false, "shiftKey": false, "altKey": false, "charCode": charCode, "keyCode": keyCode, });
                     var doc = document.ownerDocument || document;
                     if (element == null) element = doc;
@@ -1238,7 +1238,7 @@ if (true == false) {
                     'equals': 59,
                     '<': 60,
                     'ffequals': 61,
-                    'ÃŸ': 63,
+                    'ß': 63,
                     'ff@': 64,
                     'a': 65,
                     'b': 66,
@@ -1270,11 +1270,11 @@ if (true == false) {
                     'windowskey': 91,
                     'leftwindows': 91,
                     'leftwindowskey': 91,
-                    'âŒ˜': 91,
-                    'searchkey': 91, // Windows Key / Left âŒ˜ / Chromebook Search key
+                    '?': 91,
+                    'searchkey': 91, // Windows Key / Left ? / Chromebook Search key
                     'righttwindows': 92,
                     'rightwindowskey': 92,
-                    'windowsmenu': 93, // 'Windows Menu / Right âŒ˜',
+                    'windowsmenu': 93, // 'Windows Menu / Right ?',
                     'sleep': 95,
                     'numpad 0': 96,
                     'numpad 1': 97,
@@ -1329,10 +1329,10 @@ if (true == false) {
                     'airplane mode': 151,
                     '^': 160,
                     '!': 161,
-                    'Ø›': 162,
+                    '?': 162,
                     '#': 163,
                     '$': 164,
-                    'Ã¹': 165,
+                    'ù': 165,
                     'pagebackward': 166,
                     'pageforward': 167,
                     'refresh': 168,
@@ -1355,25 +1355,25 @@ if (true == false) {
                     'mute/unmute (firefox)': 181,
                     'decrease volume level (firefox)': 182,
                     'increase volume level (firefox)': 183,
-                    'semi-colon / Ã±': 186,
+                    'semi-colon / ñ': 186,
                     'equal sign': 187,
                     'comma': 188,
                     'dash': 189,
                     'period': 190,
-                    'forward slash / Ã§': 191,
-                    'grave accent / Ã± / Ã¦ / Ã¶': 192,
-                    '?, / or Â°': 193,
+                    'forward slash / ç': 191,
+                    'grave accent / ñ / æ / ö': 192,
+                    '?, / or °': 193,
                     'numpad period (chrome)': 194,
                     'open bracket': 219,
                     'back slash': 220,
-                    'close bracket / Ã¥': 221,
-                    'single quote / Ã¸ / Ã¤': 222,
+                    'close bracket / å': 221,
+                    'single quote / ø / ä': 222,
                     '`': 223,
-                    'left or right âŒ˜ key (firefox)': 224,
+                    'left or right ? key (firefox)': 224,
                     'altgr': 225,
                     '< /git >, left back slash': 226,
                     'GNOME Compose Key': 230,
-                    'Ã§': 231,
+                    'ç': 231,
                     'XF86Forward': 233,
                     'XF86Back': 234,
                     'non-conversion': 235,
@@ -1509,7 +1509,7 @@ if (true == false) {
                     case Node.ELEMENT_NODE:
                         ownValue = node.localName;
                         if (optimized) {
-                            
+
                             for (var i = 0; i < document.openrpauniquexpathids.length; i++) {
                                 var id = document.openrpauniquexpathids[i].toLowerCase();
                                 if (node.getAttribute(id))
@@ -1830,7 +1830,7 @@ if (true == false) {
         };
     /**
      * converts a Uint8Array to a Base64 string.
-     * @param {boolean} [urlsafe] URL-and-filename-safe a la RFC4648 Â§5
+     * @param {boolean} [urlsafe] URL-and-filename-safe a la RFC4648 §5
      * @returns {string} Base64 string
      */
     const fromUint8Array = (u8a, urlsafe = false) => urlsafe ? _mkUriSafe(_fromUint8Array(u8a)) : _fromUint8Array(u8a);
@@ -1853,7 +1853,7 @@ if (true == false) {
         ? _mkUriSafe(_encode(src))
         : _encode(src);
     /**
-     * converts a UTF-8-encoded string to URL-safe Base64 RFC4648 Â§5.
+     * converts a UTF-8-encoded string to URL-safe Base64 RFC4648 §5.
      * @returns {string} Base64 string
      */
     const encodeURI = (src) => encode(src, true);

@@ -243,7 +243,7 @@ if (true == false) {
 
                             ele.focus();
                             ele.dispatchEvent(event);
-                            // getelement(message);
+                            getelement(message);
                         }
                     } catch (e) {
                         console.error(e);

@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.1.16</Version>
-    <PackageReleaseNotes>1.1.16 nm: Add support for SendText/SetText/SendKeys
+    <Version>1.1.17</Version>
+    <PackageReleaseNotes>1.1.17 Change frame messsages to json, to avoid conflict with certain webpages
+1.1.16 nm: Add support for SendText/SetText/SendKeys
 1.1.15 Create dedicated asyng get element without a body to avoid confusion on usage / hotfix selector window
 1.1.14 Add support for custom project folder, fix ui thread issue for invoke openrpa
 1.1.13 Various fixes, see commit history, Add support for local robot execution from powershell even when offline

@@ -204,10 +204,10 @@
                     <RibbonButton Label="{x:Static or:strings.recorderplugins}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
                                   Command="{Binding Data.RecorderPluginsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                 </RibbonGroup>
-                <RibbonGroup Header="{x:Static or:strings.packages}">
+                <!--<RibbonGroup Header="{x:Static or:strings.packages}">
                     <RibbonButton Label="{x:Static or:strings.packages}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Package.png" 
                                   Command="{Binding Data.ManagePackagesCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
-                </RibbonGroup>
+                </RibbonGroup>-->
                 <RibbonGroup Header="{x:Static or:strings.runtime}">
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding Setting_record_overlay}" Command="{Binding Data.VisualTrackingCommand, Source={StaticResource proxy}}" 

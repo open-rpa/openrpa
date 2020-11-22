@@ -1,3 +1,10 @@
+--
+title: "OpenRPA"
+output: 
+  html_document:
+    includes:
+       in_header: docs/_includes/JB/analytics-providers/google
+---
 # ![OpenRPA](OpenRPA-logo.png)OpenRPA
 Open Source Robotic Process Automation Software
 

@@ -250,7 +250,6 @@ namespace OpenRPA.NM
             tab.pinned = msg.tab.pinned;
             tab.selected = msg.tab.selected;
             tab.status = msg.tab.status;
-            Console.WriteLine(tab.status);
             tab.title = msg.tab.title;
             tab.url = msg.tab.url;
             tab.width = msg.tab.width;

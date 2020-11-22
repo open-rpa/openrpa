@@ -1,6 +1,3 @@
----
-title: "OpenRPA"
----
 # ![OpenRPA](OpenRPA-logo.png)OpenRPA
 Open Source Robotic Process Automation Software
 

@@ -221,7 +221,7 @@ namespace OpenRPA.Windows
             }
             return new AndCondition(cond);
         }
-        private AndCondition GetConditionsWithoutStar()
+        internal AndCondition GetConditionsWithoutStar()
         {
             using (var automation = AutomationUtil.getAutomation())
             {

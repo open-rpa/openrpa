@@ -241,6 +241,24 @@ namespace OpenRPA.Windows.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Force beta selector.
+        /// </summary>
+        public static string plugin_force_beta_selector {
+            get {
+                return ResourceManager.GetString("plugin_force_beta_selector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Force new way of using selectors.
+        /// </summary>
+        public static string plugin_force_beta_selector_help {
+            get {
+                return ResourceManager.GetString("plugin_force_beta_selector_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Get elements in different thread.
         /// </summary>
         public static string plugin_get_elements_in_different_thread {

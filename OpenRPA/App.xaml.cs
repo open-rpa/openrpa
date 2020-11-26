@@ -245,6 +245,7 @@ namespace OpenRPA
             if(Config.local.showloadingscreen)
             {
                 splash = new Views.SplashScreen();
+                splash.Topmost = false;
                 splash.Show();
                 splash.BusyContent = "Loading main window";
             }

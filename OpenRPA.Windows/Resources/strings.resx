@@ -177,6 +177,12 @@
   <data name="plugin_enum_properties_help" xml:space="preserve">
     <value>Test each selector element for the minimum required amount of properties needed</value>
   </data>
+  <data name="plugin_force_beta_selector" xml:space="preserve">
+    <value>Force beta selector</value>
+  </data>
+  <data name="plugin_force_beta_selector_help" xml:space="preserve">
+    <value>Force new way of using selectors</value>
+  </data>
   <data name="plugin_get_elements_in_different_thread" xml:space="preserve">
     <value>Get elements in different thread</value>
   </data>

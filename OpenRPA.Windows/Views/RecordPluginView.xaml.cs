@@ -81,7 +81,12 @@ namespace OpenRPA.Windows.Views
             if (enable_cache.IsChecked == null) return;
             PluginConfig.enable_cache = enable_cache.IsChecked.Value;
             Config.Save();
-
+        }
+        private void force_beta_selector_Checked(object sender, RoutedEventArgs e)
+        {
+            if (force_beta_selector.IsChecked == null) return;
+            PluginConfig.force_beta_selector = force_beta_selector.IsChecked.Value;
+            Config.Save();
         }
     }
 }

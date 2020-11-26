@@ -32,7 +32,7 @@ namespace OpenRPA.Windows.Views
         {
             InitializeComponent();
             this.plugin = plugin;
-            HighlightImage.Source = Extensions.GetImageSourceFromResource("search.png");
+            HighlightImage.Source = Interfaces.Extensions.GetImageSourceFromResource("search.png");
             DataContext = this;
         }
         private IDetectorPlugin plugin;
@@ -95,13 +95,13 @@ namespace OpenRPA.Windows.Views
         }
         private void Highlight_Click(object sender, RoutedEventArgs e)
         {
-            HighlightImage.Source = Extensions.GetImageSourceFromResource(".x.png");
+            HighlightImage.Source = Interfaces.Extensions.GetImageSourceFromResource(".x.png");
             string SelectorString = Selector;
             var selector = new WindowsSelector(SelectorString);
             var elements = WindowsSelector.GetElementsWithuiSelector(selector, null, 10);
             if (elements.Count() > 0)
             {
-                HighlightImage.Source = Extensions.GetImageSourceFromResource("check.png");
+                HighlightImage.Source = Interfaces.Extensions.GetImageSourceFromResource("check.png");
             }
             foreach (var ele in elements) ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
         }

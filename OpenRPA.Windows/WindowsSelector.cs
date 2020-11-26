@@ -303,11 +303,6 @@ namespace OpenRPA.Windows
         {
             TimeSpan timeout = TimeSpan.FromMilliseconds(5000);
             timeout = TimeSpan.FromMilliseconds(20000);
-            //var midcounter = 1;
-            //if (PluginConfig.allow_multiple_hits_mid_selector)
-            //{
-            //    midcounter = 10;
-            //}
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
             Log.Selector(string.Format("GetElementsWithuiSelector::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
@@ -317,16 +312,115 @@ namespace OpenRPA.Windows
 
             var current = new List<UIElement>();
             var automation = AutomationUtil.getAutomation();
-
-            var search_descendants = false;
-            var p = selector[0].Properties.Where(x => x.Name == "SearchDescendants").FirstOrDefault();
-            if (p != null) search_descendants = bool.Parse(p.Value);
-
-
+            var first = new WindowsSelectorItem(selector[0]);
+            var second = new WindowsSelectorItem(selector[1]);
+            var last = new WindowsSelectorItem(selector[selector.Count - 1]);
             UIElement[] result = null;
+
+
+            var search_descendants = first.SearchDescendants();
+            if (PluginConfig.force_beta_selector)
+            {
+                if (search_descendants || !search_descendants)
+                {
+                    bool windowsearch = true;
+                    if (!string.IsNullOrEmpty(first.processname()))
+                    {
+                        var me = System.Diagnostics.Process.GetCurrentProcess();
+                        var p = System.Diagnostics.Process.GetProcessesByName(first.processname()).Where(_p => _p.SessionId == me.SessionId).ToArray();
+                        if (p.Length > 0) windowsearch = false;
+                        if (first.processname().ToLower() == "startmenuexperiencehost" || first.processname().ToLower() == "explorer") windowsearch = true;
+                    }
+                    if (first.isImmersiveProcess()) windowsearch = true;
+                    Window window = null;
+                    if (windowsearch)
+                    {
+                        Log.Debug(string.Format("GetElementsWithuiSelector::Find window based on second selector {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        // app = Application.Attach(first.processname);
+                        // var windows = automation.GetDesktop().FindAllChildren(second.GetConditionsWithoutStar());
+                        var _treeWalker = automation.TreeWalkerFactory.GetCustomTreeWalker(second.GetConditionsWithoutStar());
+                        var ele = _treeWalker.GetFirstChild(automation.GetDesktop());
+                        do
+                        {
+                            Log.Debug(string.Format("GetElementsWithuiSelector::Match window {0:mm\\:ss\\.fff}", sw.Elapsed));
+                            if (ele == null)
+                            {
+
+                            }
+                            else if (second.Match(ele))
+                            {
+                                window = ele.AsWindow();
+                            }
+                            else
+                            {
+                                ele = _treeWalker.GetNextSibling(ele);
+                            }
+                        } while (window == null && ele != null);
+                    }
+                    else
+                    {
+                        Log.Debug(string.Format("GetElementsWithuiSelector::attached to " + first.processname() + " {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        // process = FlaUI.Core.Tools.WindowsStoreAppLauncher.Launch(applicationUserModelId, arguments);
+                        // app = Application.LaunchStoreApp(first.applicationUserModelId, first.arguments);
+                        Application app = Application.Attach(first.processname());
+                        window = app.GetMainWindow(automation);
+                    }
+                    if (window != null)
+                    {
+                        Log.Debug(string.Format("GetElementsWithuiSelector::Got main window {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        AutomationElement ele = null;
+                        var cond = last.GetConditionsWithoutStar();
+                        var hasStar = last.Properties.Where(x => x.Enabled == true && (x.Value != null && x.Value.Contains("*"))).ToArray();
+                        var _treeWalker = automation.TreeWalkerFactory.GetCustomTreeWalker(cond);
+
+                        Log.Debug(string.Format("GetElementsWithuiSelector::Got Get Conditions {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        ele = _treeWalker.GetFirstChild(window);
+                        if (hasStar.Length > 0 || maxresults > 1)
+                        {
+                            do
+                            {
+                                Log.Debug(string.Format("GetElementsWithuiSelector::Match element {0:mm\\:ss\\.fff}", sw.Elapsed));
+                                if (last.Match(ele))
+                                {
+                                    Log.Debug(string.Format("GetElementsWithuiSelector::Adding element {0:mm\\:ss\\.fff}", sw.Elapsed));
+                                    current.Add(new UIElement(ele));
+                                }
+                                if (current.Count < maxresults)
+                                {
+                                    ele = _treeWalker.GetNextSibling(ele);
+                                }
+                                else
+                                {
+                                    ele = null;
+                                }
+
+                            } while (current.Count < maxresults && ele != null);
+                        }
+                        else
+                        {
+                            Log.Debug(string.Format("GetElementsWithuiSelector::Adding element {0:mm\\:ss\\.fff}", sw.Elapsed));
+                            current.Add(new UIElement(ele));
+                        }
+                        Log.Debug(string.Format("GetElementsWithuiSelector::completed with " + current.Count + " results {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        if (current.Count > 0)
+                        {
+                            result = current.ToArray();
+                            if (result.Count() > maxresults)
+                            {
+                                Console.WriteLine("found " + result.Count() + " but only needed " + maxresults);
+                                result = result.Take(maxresults).ToArray();
+                            }
+                            return result;
+                        }
+                    }
+                }
+            }
+
+
+
+            
             using (automation)
             {
-                var _treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
                 AutomationElement startfrom = null;
                 if (_fromElement != null) startfrom = _fromElement.RawElement;
                 Log.SelectorVerbose("automation.GetDesktop");

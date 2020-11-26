@@ -32,6 +32,7 @@ namespace OpenRPA.Windows
         public static TimeSpan cache_timeout { get { return globallocal.GetProperty(pluginname, TimeSpan.FromMinutes(5)); } set { globallocal.SetProperty(pluginname, value); } }
         public static TimeSpan search_timeout { get { return globallocal.GetProperty(pluginname, TimeSpan.FromSeconds(5)); } set { globallocal.SetProperty(pluginname, value); } }
         public static bool enable_cache { get { return globallocal.GetProperty(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }
+        public static bool force_beta_selector { get { return globallocal.GetProperty(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }
 
     }
 }

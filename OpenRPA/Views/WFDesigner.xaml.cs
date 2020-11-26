@@ -709,82 +709,68 @@ namespace OpenRPA.Views
             recording = new List<Activity>();
             recordingplugins = new List<IPlugin>();
         }
-        public void AddNamespace(Type t)
-        {
-
-
-            DynamicAssemblyMonitor(t.FullName, t.Assembly, true);
-            //ModelService modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
-            //using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
-            //{
-            //    Microsoft.VisualBasic.Activities.VisualBasicSettings vbsettings = Microsoft.VisualBasic.Activities.VisualBasic.GetSettings(modelService.Root);
-            //    if (vbsettings == null)
-            //    {
-            //        vbsettings = new Microsoft.VisualBasic.Activities.VisualBasicSettings();
-
-            //        vbsettings.ImportReferences.Add(
-            //            new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-            //            {
-            //                Assembly = typeof(TimeSpan).Assembly.GetName().Name,
-            //                Import = typeof(TimeSpan).Namespace
-            //            });
-            //        vbsettings.ImportReferences.Add(
-            //            new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-            //            {
-            //                Assembly = typeof(Action).Assembly.GetName().Name,
-            //                Import = typeof(Action).Namespace
-            //            });
-            //        vbsettings.ImportReferences.Add(
-            //            new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-            //            {
-            //                Assembly = typeof(System.Xml.XmlNode).Assembly.GetName().Name,
-            //                Import = typeof(System.Xml.XmlNode).Namespace
-            //            });
-            //        vbsettings.ImportReferences.Add(
-            //            new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-            //            {
-            //                Assembly = typeof(OpenRPA.UIElement).Assembly.GetName().Name,
-            //                Import = typeof(OpenRPA.UIElement).Namespace
-            //            });
-            //        vbsettings.ImportReferences.Add(
-            //            new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-            //            {
-            //                Assembly = typeof(OpenRPA.Workflow).Assembly.GetName().Name,
-            //                Import = typeof(OpenRPA.Workflow).Namespace
-            //            });
-            //        vbsettings.ImportReferences.Add(
-            //            new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-            //            {
-            //                Assembly = typeof(System.Data.DataSet).Assembly.GetName().Name,
-            //                Import = typeof(System.Data.DataSet).Namespace
-            //            });
-            //        vbsettings.ImportReferences.Add(
-            //            new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-            //            {
-            //                Assembly = typeof(Microsoft.VisualBasic.Collection).Assembly.GetName().Name,
-            //                Import = typeof(Microsoft.VisualBasic.Collection).Namespace
-            //            });
-            //    }
-            //    if (t != null)
-            //    {
-            //        vbsettings.ImportReferences.Add(
-            //            new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-            //            {
-            //                Assembly = t.Assembly.GetName().Name,
-            //                Import = t.Namespace
-            //            });
-            //    }
-            //    Microsoft.VisualBasic.Activities.VisualBasic.SetSettings(modelService.Root, vbsettings);
-            //    editingScope.Complete();
-            //}
-        }
         public ModelItem AddRecordingActivity(Activity a, IPlugin plugin)
         {
+            var rootObject = GetRootElement();
+            Microsoft.VisualBasic.Activities.VisualBasicSettings vbsettings = Microsoft.VisualBasic.Activities.VisualBasic.GetSettings(rootObject);
+            if (vbsettings == null)
+            {
+                vbsettings = new Microsoft.VisualBasic.Activities.VisualBasicSettings();
+
+                vbsettings.ImportReferences.Add(
+                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                    {
+                        Assembly = typeof(TimeSpan).Assembly.GetName().Name,
+                        Import = typeof(TimeSpan).Namespace
+                    });
+                vbsettings.ImportReferences.Add(
+                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                    {
+                        Assembly = typeof(Action).Assembly.GetName().Name,
+                        Import = typeof(Action).Namespace
+                    });
+                vbsettings.ImportReferences.Add(
+                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                    {
+                        Assembly = typeof(System.Xml.XmlNode).Assembly.GetName().Name,
+                        Import = typeof(System.Xml.XmlNode).Namespace
+                    });
+                vbsettings.ImportReferences.Add(
+                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                    {
+                        Assembly = typeof(OpenRPA.UIElement).Assembly.GetName().Name,
+                        Import = typeof(OpenRPA.UIElement).Namespace
+                    });
+                vbsettings.ImportReferences.Add(
+                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                    {
+                        Assembly = typeof(OpenRPA.Workflow).Assembly.GetName().Name,
+                        Import = typeof(OpenRPA.Workflow).Namespace
+                    });
+                vbsettings.ImportReferences.Add(
+                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                    {
+                        Assembly = typeof(System.Data.DataSet).Assembly.GetName().Name,
+                        Import = typeof(System.Data.DataSet).Namespace
+                    });
+                vbsettings.ImportReferences.Add(
+                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                    {
+                        Assembly = typeof(Microsoft.VisualBasic.Collection).Assembly.GetName().Name,
+                        Import = typeof(Microsoft.VisualBasic.Collection).Namespace
+                    });
+            }
             if (plugin != null)
             {
                 Type t = plugin.GetType();
-                AddNamespace(t);
+                vbsettings.ImportReferences.Add(
+                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                    {
+                        Assembly = t.Assembly.GetName().Name,
+                        Import = t.Namespace
+                    });
             }
+            Microsoft.VisualBasic.Activities.VisualBasic.SetSettings(rootObject, vbsettings);
             //DynamicAssemblyMonitor(t.Assembly.GetName().Name, t.Assembly, true);
             if (Config.local.recording_add_to_designer)
             {
@@ -1570,36 +1556,6 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
 #pragma warning restore 0618
                         string variableName = property.ComputedValue.ToString();
                         RenameVariable(SelectedVariableName, variableName);
-                    }
-                    if (model.ItemType.BaseType == typeof(Collection<Activity>))
-                    {
-                        AddNamespace(typeof(IElement));
-                        ModelService modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
-                        using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
-                        {
-                            var arr = model.GetCurrentValue() as Collection<Activity>;
-                            IEnumerable<ModelItem> xyz = modelService.Find(modelService.Root, typeof(Activity));
-                            IEnumerable<ModelItem> xyz2 = modelService.Find(modelService.Root, typeof(Variable));
-
-                            foreach (var a in xyz) AddNamespace(a.ItemType);
-
-                            //var root = modelService.Root.GetCurrentValue();
-                            //var vbs = Microsoft.VisualBasic.Activities.VisualBasic.GetSettings(root) ?? new Microsoft.VisualBasic.Activities.VisualBasicSettings();
-                            //foreach (var a in arr)
-                            //{
-                            //    var t = a.GetType();
-                            //    vbs.ImportReferences.Add(
-                            //    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-                            //    {
-                            //        Assembly = t.Assembly.GetName().Name,
-                            //        Import = t.Namespace
-                            //    });
-
-                            //}
-                            //Microsoft.VisualBasic.Activities.VisualBasic.SetSettings(root, vbs);
-                            editingScope.Complete();
-                        }
-
                     }
                     //else if (e.ModelChangeInfo.ModelChangeType == ModelChangeType.CollectionItemAdded)
                     //{

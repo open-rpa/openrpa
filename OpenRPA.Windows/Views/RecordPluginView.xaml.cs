@@ -39,6 +39,7 @@ namespace OpenRPA.Windows.Views
             traverse_selector_both_ways.IsChecked = PluginConfig.traverse_selector_both_ways;
             search_descendants.IsChecked = PluginConfig.search_descendants;
             enable_cache.IsChecked = PluginConfig.enable_cache;
+            force_beta_selector.IsChecked = PluginConfig.force_beta_selector;
         }
         private void allow_child_searching_IsEnabledChanged(object sender, RoutedEventArgs e)
         {

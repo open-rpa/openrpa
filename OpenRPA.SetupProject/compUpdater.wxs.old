@@ -1,6 +1,6 @@
-<!--<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Fragment>
+  <!--<Fragment>
 
     <ComponentGroup Id="UpdaterComponents">
       <Component Id='UpdaterComponent' Guid='{C441A2BB-BE49-4494-8B2F-87A521745477}' Win64='yes' Directory="Updater">
@@ -68,5 +68,5 @@
       </Directory>
     </DirectoryRef>
 
-  </Fragment>
-</Wix>-->
+  </Fragment>-->
+</Wix>

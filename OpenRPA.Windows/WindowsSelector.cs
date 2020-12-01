@@ -396,7 +396,7 @@ namespace OpenRPA.Windows
 
                             } while (current.Count < maxresults && ele != null);
                         }
-                        else
+                        else if(ele != null)
                         {
                             Log.Debug(string.Format("GetElementsWithuiSelector::Adding element {0:mm\\:ss\\.fff}", sw.Elapsed));
                             current.Add(new UIElement(ele));

@@ -97,6 +97,10 @@ namespace OpenRPA.Windows
                 {
                     Log.Selector(string.Format("Windows.GetElement::GetElementsWithuiSelector using UI thread {0:mm\\:ss\\.fff}", sw.Elapsed));
                     elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+                    if (elements == null || elements.Length == 0)
+                    {
+                        elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+                    }
                 }
                 //elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
                 if (elements == null)

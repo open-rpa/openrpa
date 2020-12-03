@@ -10,8 +10,10 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.1</Version>
-    <PackageReleaseNotes>1.1.19 Remove old updater, auto add namespaces
+    <Version>1.2.2</Version>
+    <PackageReleaseNotes>1.2.2 Integrate new selector with old windows selector
+1.2.1 Try new windows selector
+1.1.19 Remove old updater, auto add namespaces
 1.1.18 Fix major issue with special charecters in nm
 1.1.17 Change frame messsages to json, to avoid conflict with certain webpages
 1.1.16 nm: Add support for SendText/SetText/SendKeys

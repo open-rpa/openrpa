@@ -74,6 +74,7 @@ namespace OpenRPA.Windows
             Properties = new ObservableCollection<SelectorItemProperty>();
             if (isRoot)
             {
+                var w = element.AsWindow();
                 if (element.Properties.ProcessId.IsSupported)
                 {
                     var info = element.GetProcessInfo();
@@ -93,7 +94,7 @@ namespace OpenRPA.Windows
                         Properties.Add(new SelectorItemProperty("arguments", info.Arguments));
                     }
                     Properties.Add(new SelectorItemProperty("Selector", "Windows"));
-                    Properties.Add(new SelectorItemProperty("SearchDescendants", PluginConfig.search_descendants.ToString()));
+                    // Properties.Add(new SelectorItemProperty("SearchDescendants", PluginConfig.search_descendants.ToString()));
                     //Properties.Add(new SelectorItemProperty("", info.));
                 }
                 foreach (var p in Properties)
@@ -108,7 +109,14 @@ namespace OpenRPA.Windows
                 {
                     if (element.Properties.Name.IsSupported && !string.IsNullOrEmpty(element.Properties.Name.Value)) Properties.Add(new SelectorItemProperty("Name", element.Properties.Name.Value));
                     if (element.Properties.ClassName.IsSupported && !string.IsNullOrEmpty(element.Properties.ClassName)) Properties.Add(new SelectorItemProperty("ClassName", element.Properties.ClassName.Value));
-                    if (element.Properties.ControlType.IsSupported && !string.IsNullOrEmpty(element.Properties.ControlType.Value.ToString())) Properties.Add(new SelectorItemProperty("ControlType", element.Properties.ControlType.Value.ToString()));
+                    if (element.Properties.ControlType.IsSupported && !string.IsNullOrEmpty(element.Properties.ControlType.Value.ToString()))
+                    {
+
+                        if (element.Properties.ControlType.Value != FlaUI.Core.Definitions.ControlType.Unknown)
+                        {
+                            Properties.Add(new SelectorItemProperty("ControlType", element.Properties.ControlType.Value.ToString()));
+                        }
+                    }
                     if (element.Properties.AutomationId.IsSupported && !string.IsNullOrEmpty(element.Properties.AutomationId)) Properties.Add(new SelectorItemProperty("AutomationId", element.Properties.AutomationId.Value));
                     if (element.Properties.FrameworkId.IsSupported && !string.IsNullOrEmpty(element.Properties.FrameworkId)) Properties.Add(new SelectorItemProperty("FrameworkId", element.Properties.FrameworkId.Value));
                     if (IndexInParent > -1) Properties.Add(new SelectorItemProperty("IndexInParent", IndexInParent.ToString()));
@@ -123,7 +131,7 @@ namespace OpenRPA.Windows
                     try
                     {
                         var c = element.Properties.ControlType.ValueOrDefault;
-                        Properties.Add(new SelectorItemProperty("ControlType", c.ToString()));
+                        if(c.ToString() != "Unknown") Properties.Add(new SelectorItemProperty("ControlType", c.ToString()));
                     }
                     catch (Exception)
                     {
@@ -221,35 +229,13 @@ namespace OpenRPA.Windows
             }
             return new AndCondition(cond);
         }
-        internal AndCondition GetConditionsWithoutStar()
-        {
-            using (var automation = AutomationUtil.getAutomation())
-            {
-                var cond = new List<ConditionBase>();
-                foreach (var p in Properties.Where(x => x.Enabled == true && (x.Value != null && !x.Value.Contains("*"))))
-                {
-                    //if (p == "ControlType") cond.Add(element.ConditionFactory.ByControlType((ControlType)Enum.Parse(typeof(ControlType), ControlType)));
-                    //if (p == "Name") cond.Add(element.ConditionFactory.ByName(Name));
-                    //if (p == "ClassName") cond.Add(element.ConditionFactory.ByClassName(ClassName));
-                    //if (p == "AutomationId") cond.Add(element.ConditionFactory.ByAutomationId(AutomationId));
-                    if (p.Name == "ControlType")
-                    {
-                        ControlType ct = (ControlType)Enum.Parse(typeof(ControlType), ControlType);
-                        cond.Add(new PropertyCondition(automation.PropertyLibrary.Element.ControlType, ct));
-                    }
-                    if (p.Name == "Name") cond.Add(new PropertyCondition(automation.PropertyLibrary.Element.Name, Name));
-                    if (p.Name == "ClassName") cond.Add(new PropertyCondition(automation.PropertyLibrary.Element.ClassName, ClassName));
-                    if (p.Name == "AutomationId") cond.Add(new PropertyCondition(automation.PropertyLibrary.Element.AutomationId, AutomationId));
-                }
-                return new AndCondition(cond);
-            }
-        }
+
         public AutomationElement[] matches_new(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count, bool isDesktop, TimeSpan timeout, bool search_descendants)
         {
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
             var matchs = new List<AutomationElement>();
-            var c = GetConditionsWithoutStar();
+            var c = Extensions.GetConditionsWithoutStar(this);
             Log.Selector("AutomationElement.matches: Searching for " + c.ToString());
             AutomationElement[] elements = null;
             if (isDesktop)
@@ -345,7 +331,7 @@ namespace OpenRPA.Windows
         public AutomationElement[] matches(AutomationElement root, int ident, AutomationElement element, int count, bool isDesktop, bool search_descendants)
         {
             var matchs = new List<AutomationElement>();
-            var Conditions = GetConditionsWithoutStar();
+            var Conditions = Extensions.GetConditionsWithoutStar(this);
             if (isDesktop || !isDesktop)
             {
                 var cache = GetFromCache(root, ident, Conditions.ToString());
@@ -426,7 +412,13 @@ namespace OpenRPA.Windows
                     string v = null;
                     try
                     {
-                        v = m.Properties.ControlType.ValueOrDefault.ToString();
+                        if (m.Properties.ControlType.IsSupported)
+                        {
+                            if(m.Properties.ControlType.ValueOrDefault != null)
+                            {
+                                v = m.Properties.ControlType.ValueOrDefault.ToString();
+                            }                            
+                        }
                     }
                     catch (Exception)
                     {

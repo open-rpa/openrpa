@@ -118,6 +118,11 @@ namespace OpenRPA.Interfaces
             if (Config.local.log_verbose) { System.Diagnostics.Trace.WriteLine(message, "Verbose"); }
             LogLine(message, "Verbose");
         }
+        public static void Network(string message)
+        {
+            if (Config.local.log_network) { System.Diagnostics.Trace.WriteLine(message, "Network"); }
+            LogLine(message, "Network");
+        }
         public static void Activity(string message)
         {
             if (Config.local.log_activity) { System.Diagnostics.Trace.WriteLine(message, "Activity"); }

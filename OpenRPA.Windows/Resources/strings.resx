@@ -156,12 +156,6 @@
   <data name="getelement_open_selector" xml:space="preserve">
     <value>Open Selector</value>
   </data>
-  <data name="plugin_allow_child_searching" xml:space="preserve">
-    <value>Allow child searching</value>
-  </data>
-  <data name="plugin_allow_child_searching_help" xml:space="preserve">
-    <value>If an element in a selector is not found, automaticly search all children for match</value>
-  </data>
   <data name="plugin_allow_multiple_hits" xml:space="preserve">
     <value>Allow multiple hits</value>
   </data>
@@ -177,23 +171,11 @@
   <data name="plugin_enum_properties_help" xml:space="preserve">
     <value>Test each selector element for the minimum required amount of properties needed</value>
   </data>
-  <data name="plugin_force_beta_selector" xml:space="preserve">
-    <value>Force beta selector</value>
-  </data>
-  <data name="plugin_force_beta_selector_help" xml:space="preserve">
-    <value>Force new way of using selectors</value>
-  </data>
   <data name="plugin_get_elements_in_different_thread" xml:space="preserve">
     <value>Get elements in different thread</value>
   </data>
   <data name="plugin_get_elements_in_different_thread_help" xml:space="preserve">
     <value>GetElement uses another thread while searching, to avoid locks if selector finds robot</value>
-  </data>
-  <data name="plugin_search_descendants" xml:space="preserve">
-    <value>Search descendants</value>
-  </data>
-  <data name="plugin_search_descendants_help" xml:space="preserve">
-    <value>Search all descendants, use for more simple selectors but is slower</value>
   </data>
   <data name="plugin_traverse_selector_both_ways" xml:space="preserve">
     <value>Traverse selector both ways</value>

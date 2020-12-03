@@ -47,7 +47,7 @@ namespace OpenRPA.Net
         {
             try
             {
-                Log.Debug("Connecting to " + url);
+                Log.Network("Connecting to " + url);
                 //if (ws != null && (ws.State == System.Net.WebSockets.WebSocketState.Aborted || ws.State == System.Net.WebSockets.WebSocketState.Closed))
                 if (ws != null && (ws.State != WebSocketState.Connecting))
                 {
@@ -170,7 +170,7 @@ namespace OpenRPA.Net
                         {
                             if(!string.IsNullOrEmpty(tempbuffer))
                             {
-                                Log.Debug("FAILED: " + json);
+                                Log.Network("FAILED: " + json);
                             }
                             tempbuffer += json;
                         }
@@ -334,8 +334,8 @@ namespace OpenRPA.Net
         {
             if (!string.IsNullOrEmpty(msg.replyto))
             {
-                if (msg.command != "pong") { Log.Verbose(msg.command + " / replyto: " + msg.replyto); }
-                    // else { Log.Verbose(msg.command + " / replyto: " + msg.replyto);  }
+                if (msg.command != "pong") { Log.Network(msg.command + " / replyto: " + msg.replyto); }
+                    // else { Log.Network(msg.command + " / replyto: " + msg.replyto);  }
 
                 foreach (var qm in _messageQueue.ToList())
                 {
@@ -357,8 +357,8 @@ namespace OpenRPA.Net
             }
             else
             {
-                if (msg.command != "ping" && msg.command != "refreshtoken") { Log.Verbose(msg.command + " / " + msg.id); }
-                    // else { Log.Verbose(msg.command + " / replyto: " + msg.replyto); }
+                if (msg.command != "ping" && msg.command != "refreshtoken") { Log.Network(msg.command + " / " + msg.id); }
+                    // else { Log.Network(msg.command + " / replyto: " + msg.replyto); }
                 switch (msg.command)
                 {
                     case "ping":

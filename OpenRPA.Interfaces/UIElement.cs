@@ -112,8 +112,11 @@ namespace OpenRPA
                 try
                 {
                     //return rawElement.Patterns.TextEdit.IsSupported || rawElement.Patterns.Text.IsSupported || rawElement.Patterns.Text2.IsSupported
-                    return RawElement.ControlType == FlaUI.Core.Definitions.ControlType.Edit
+                    if (RawElement.Properties.ControlType.IsSupported && !string.IsNullOrEmpty(RawElement.Properties.ControlType.Value.ToString()))
+                    {
+                        return RawElement.ControlType == FlaUI.Core.Definitions.ControlType.Edit
                         || RawElement.ControlType == FlaUI.Core.Definitions.ControlType.Document;
+                    }
                 }
                 catch (Exception)
                 {

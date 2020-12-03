@@ -366,7 +366,7 @@ namespace OpenRPA.Windows
                 }
                 foreach (var _ele in current)
                 {
-                    Log.Debug(string.Format("GetElementsWithuiSelector::Searchin for " + cond.ToString() + " {0:mm\\:ss\\.fff}", sw.Elapsed));
+                    Log.Debug("GetElementsWithuiSelector::Searchin for " + cond.ToString() + string.Format(" {0:mm\\:ss\\.fff}", sw.Elapsed));
                     var hasStar = _sel.Properties.Where(x => x.Enabled == true && (x.Value != null && x.Value.Contains("*"))).ToArray();
                     var _treeWalker = automation.TreeWalkerFactory.GetCustomTreeWalker(cond);
                     AutomationElement ele = _treeWalker.GetFirstChild(_ele.RawElement);

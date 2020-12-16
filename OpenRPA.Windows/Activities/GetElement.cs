@@ -55,12 +55,6 @@ namespace OpenRPA.Windows
             sw.Start();
             Log.Selector(string.Format("Windows.GetElement::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
 
-            if(ClearCache != null && ClearCache.Get(context))
-            {
-                Log.Selector(string.Format("Windows.GetElement::Clearing windows element cache {0:mm\\:ss\\.fff}", sw.Elapsed));
-                WindowsSelectorItem.ClearCache();
-            }
-
             UIElement[] elements = null;
             var selector = Selector.Get(context);
             selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
@@ -74,12 +68,18 @@ namespace OpenRPA.Windows
             int failcounter = 0;
             do
             {
+                if (ClearCache != null && ClearCache.Get(context))
+                {
+                    Log.Selector(string.Format("Windows.GetElement::Clearing windows element cache {0:mm\\:ss\\.fff}", sw.Elapsed));
+                    WindowsSelectorItem.ClearCache();
+                }
                 if (PluginConfig.get_elements_in_different_thread)
                 {
                     elements = OpenRPA.AutomationHelper.RunSTAThread<UIElement[]>(() =>
                     {
                         try
                         {
+
                             Log.Selector(string.Format("Windows.GetElement::GetElementsWithuiSelector in non UI thread {0:mm\\:ss\\.fff}", sw.Elapsed));
                             return WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
                         }

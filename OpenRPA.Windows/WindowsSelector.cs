@@ -310,55 +310,38 @@ namespace OpenRPA.Windows
                             Log.Selector(string.Format("GetElementsWithuiSelector::Process " + first.processname() + " not found, end with 0 results after {0:mm\\:ss\\.fff}", sw.Elapsed));
                             return new UIElement[] { };
                         }
+
+                        var condition = new FlaUI.Core.Conditions.ConditionFactory(automation.PropertyLibrary);
+                        var ors = new List<FlaUI.Core.Conditions.ConditionBase>();
                         foreach (var p in ps)
                         {
-                            try
-                            {
-                                var condition = new FlaUI.Core.Conditions.ConditionFactory(automation.PropertyLibrary);
-                                var con = new FlaUI.Core.Conditions.AndCondition(condition.ByProcessId(p.Id), condition.ByControlType(FlaUI.Core.Definitions.ControlType.Window));
-                                Log.Debug(string.Format("GetElementsWithuiSelector::Searchin for one " + con.ToString() + " {0:mm\\:ss\\.fff}", sw.Elapsed));
-                                var win2 = current.First().RawElement.FindFirstChild(con);
-                                if(win2!= null)
-                                {
-                                    var uiele = new UIElement(win2);
-                                    Log.Debug(string.Format("GetElementsWithuiSelector::Adding element " + uiele.ToString() + " {0:mm\\:ss\\.fff}", sw.Elapsed));
-                                    _current.Add(uiele);
-                                    if (win2.Patterns.Window.TryGetPattern(out var winPattern))
-                                    {
-                                        if (winPattern.WindowVisualState.Value == FlaUI.Core.Definitions.WindowVisualState.Minimized)
-                                        {
-                                            IntPtr handle = win2.Properties.NativeWindowHandle.Value;
-                                            winPattern.SetWindowVisualState(FlaUI.Core.Definitions.WindowVisualState.Normal);
-                                        }
-                                    }
-                                }
-                                if(_current.Count == 0)
-                                {
-                                    Log.Debug(string.Format("GetElementsWithuiSelector::Searchin for all " + con.ToString() + " {0:mm\\:ss\\.fff}", sw.Elapsed));
-                                    var windows = current.First().RawElement.FindAllChildren(con);
-                                    foreach (var win in windows)
-                                    {
-                                        var uiele = new UIElement(win);
-                                        Log.Debug(string.Format("GetElementsWithuiSelector::Adding element " + uiele.ToString() + " {0:mm\\:ss\\.fff}", sw.Elapsed));
-                                        _current.Add(uiele);
-                                        if (win.Patterns.Window.TryGetPattern(out var winPattern))
-                                        {
-                                            if (winPattern.WindowVisualState.Value == FlaUI.Core.Definitions.WindowVisualState.Minimized)
-                                            {
-                                                IntPtr handle = win.Properties.NativeWindowHandle.Value;
-                                                winPattern.SetWindowVisualState(FlaUI.Core.Definitions.WindowVisualState.Normal);
-                                            }
-                                        }
-                                    }
-                                }
-                                if (_current.Count > 0 && _sel.ControlType() == "Window") doContinue = true;
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.Error(ex.ToString());
-                            }                            
-                            
+                            ors.Add(condition.ByProcessId(p.Id));
                         }
+                        // var con = new FlaUI.Core.Conditions.AndCondition(new FlaUI.Core.Conditions.OrCondition(ors), condition.ByControlType(FlaUI.Core.Definitions.ControlType.Window));
+                        //var con = new FlaUI.Core.Conditions.AndCondition(new FlaUI.Core.Conditions.OrCondition(ors),
+                        //    new FlaUI.Core.Conditions.OrCondition(new FlaUI.Core.Conditions.ConditionBase[] {
+                        //        condition.ByControlType(FlaUI.Core.Definitions.ControlType.Window),
+                        //        condition.ByControlType(FlaUI.Core.Definitions.ControlType.Pane)}));
+                        var con = new FlaUI.Core.Conditions.OrCondition(ors);
+                        Log.Debug(string.Format("GetElementsWithuiSelector::Searchin for all " + con.ToString() + " {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        var windows = current.First().RawElement.FindAllChildren(con);
+                        // if(windows.Length==0) windows = current.First().RawElement.FindAllDescendants(con);
+                        foreach (var win in windows)
+                        {
+                            var uiele = new UIElement(win);
+                            Log.Debug(string.Format("GetElementsWithuiSelector::Adding element " + uiele.ToString() + " {0:mm\\:ss\\.fff}", sw.Elapsed));
+                            _current.Add(uiele);
+                            if (win.Patterns.Window.TryGetPattern(out var winPattern))
+                            {
+                                if (winPattern.WindowVisualState.Value == FlaUI.Core.Definitions.WindowVisualState.Minimized)
+                                {
+                                    IntPtr handle = win.Properties.NativeWindowHandle.Value;
+                                    winPattern.SetWindowVisualState(FlaUI.Core.Definitions.WindowVisualState.Normal);
+                                }
+                            }
+                        }
+                        if (_current.Count > 0 && _sel.ControlType() == "Window") doContinue = true;
+                        if (_current.Count > 0) doContinue = true;
                         if (doContinue) continue;
                         current = _current.ToArray();
                         _current.Clear();

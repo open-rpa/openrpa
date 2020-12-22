@@ -5,8 +5,11 @@ Open Source Robotic Process Automation Software
 
 
 
+Join our [🤷💻🤦 Community Forum](https://bb.openiap.io/) for for help or giving feedback 
 
 Join our [💬 community](https://rocket.openiap.io/) for for help or giving feedback 
+
+Click here for [:heavy_dollar_sign:🤷Commercial Support](https://openrpa.dk/)
 
 Check out the documentation on our [wiki pages](https://github.com/open-rpa/openrpa/wiki)
 

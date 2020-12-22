@@ -9,13 +9,13 @@ Join our [🤷💻🤦 Community Forum](https://bb.openiap.io/) for for help or 
 
 Join our [💬 community](https://rocket.openiap.io/) for for help or giving feedback 
 
-Click here for [:heavy_dollar_sign:🤷Commercial Support](https://openrpa.dk/)
+Click here for [💲🤷Commercial Support](https://openrpa.dk/)
 
-Check out the documentation on our [wiki pages](https://github.com/open-rpa/openrpa/wiki)
+Check out the [📘documentation](https://docs.openiap.io/) or knows issue and old documentation on our [❔wiki pages](https://github.com/open-rpa/openrpa/wiki)
 
 Download and try it out here [here](https://github.com/open-rpa/openrpa/releases/latest/download/OpenRPA.msi) 
 
-Also checkout the "backend" for managing multiple robots at [OpenFlow](https://github.com/open-rpa/OpenFlow)
+Also checkout OpenFlow, the "backend" for managing multiple robots at [OpenFlow](https://github.com/open-rpa/OpenFlow)
 
 Excel and browser interaction, used for vat number lookup
 

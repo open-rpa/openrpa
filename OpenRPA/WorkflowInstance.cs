@@ -52,6 +52,8 @@ namespace OpenRPA
         public string WorkflowId { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string caller { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string RelativeFilename { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string projectname { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string xml { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string owner { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string ownerid { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -159,6 +161,9 @@ namespace OpenRPA
         {
             var result = new WorkflowInstance(Workflow) { Parameters = Parameters, name = Workflow.name, Path = Workflow.Project.Path };
             result.RelativeFilename = Workflow.RelativeFilename;
+            result.projectid = Workflow.projectid;
+            result.projectname = Workflow.Project.name; ;
+
             var _ref = (result as IWorkflowInstance);
             foreach (var runner in Plugins.runPlugins)
             {
@@ -820,7 +825,16 @@ namespace OpenRPA
         private Task SaveTask = null;
         public void Save()
         {
-            SaveFile();
+            if (isCompleted || hasError)
+            {
+                DeleteFile();
+                xml = null;
+            } 
+            else
+            {
+                SaveFile();
+            }
+            
             if(Workflow!=null) Workflow.NotifyUIState();
             if (SaveTask==null)
             {
@@ -830,10 +844,6 @@ namespace OpenRPA
                     System.Threading.Thread.Sleep(1000);
                     try
                     {
-                        if (isCompleted || hasError)
-                        {
-                            DeleteFile();
-                        }
                         if (!global.isConnected) return;
                         //if ((DateTime.Now - LastUpdated).TotalMilliseconds < 2000) return;
                         //LastUpdated = DateTime.Now;

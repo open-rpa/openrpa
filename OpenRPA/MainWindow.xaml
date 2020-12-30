@@ -265,6 +265,11 @@
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="{x:Static or:strings.selectorverbose}"></TextBlock>
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <RibbonCheckBox IsChecked="{Binding Setting_log_network}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
+                        <TextBlock Text="{x:Static or:strings.selectornetwork}"></TextBlock>
+                    </StackPanel>
                 </RibbonGroup>
             </RibbonTab>
             <!--<RibbonTab Header="Windows">

@@ -1744,6 +1744,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Network.
+        /// </summary>
+        public static string selectornetwork {
+            get {
+                return ResourceManager.GetString("selectornetwork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Selector Verbose.
         /// </summary>
         public static string selectorverbose {

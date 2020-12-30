@@ -662,6 +662,18 @@ namespace OpenRPA
                 NotifyPropertyChanged("log_selector_verbose");
             }
         }
+        public bool Setting_log_network
+        {
+            get
+            {
+                return Config.local.log_network;
+            }
+            set
+            {
+                Config.local.log_network = value;
+                NotifyPropertyChanged("log_network");
+            }
+        }
         public bool Setting_use_sendkeys
         {
             get

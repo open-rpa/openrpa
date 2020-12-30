@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+	<!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,161 +59,161 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="activity_displayname" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="activity_displayname" xml:space="preserve">
     <value>表示名</value>
   </data>
-  <data name="activity_displayname_help" xml:space="preserve">
+	<data name="activity_displayname_help" xml:space="preserve">
     <value>ワークフロー・デザイナ内の表示名</value>
   </data>
-  <data name="activity_element" xml:space="preserve">
+	<data name="activity_element" xml:space="preserve">
     <value>要素</value>
   </data>
-  <data name="activity_element_help" xml:space="preserve">
+	<data name="activity_element_help" xml:space="preserve">
     <value>Work on this element, the return type of all GetElement activites and some others</value>
   </data>
-  <data name="activity_getcolor" xml:space="preserve">
+	<data name="activity_getcolor" xml:space="preserve">
     <value>色を取得</value>
   </data>
-  <data name="activity_getcolor_tooltip" xml:space="preserve">
+	<data name="activity_getcolor_tooltip" xml:space="preserve">
     <value>Get color at specefied cordinates. </value>
   </data>
-  <data name="activity_getelement" xml:space="preserve">
+	<data name="activity_getelement" xml:space="preserve">
     <value>要素を取得</value>
   </data>
-  <data name="activity_getelement_drop_hint" xml:space="preserve">
+	<data name="activity_getelement_drop_hint" xml:space="preserve">
     <value>アクティビティをドロップ</value>
   </data>
-  <data name="activity_getelement_highlight" xml:space="preserve">
+	<data name="activity_getelement_highlight" xml:space="preserve">
     <value>強調</value>
   </data>
-  <data name="activity_getelement_process_limit" xml:space="preserve">
+	<data name="activity_getelement_process_limit" xml:space="preserve">
     <value>処理制限</value>
   </data>
-  <data name="activity_getelement_select" xml:space="preserve">
+	<data name="activity_getelement_select" xml:space="preserve">
     <value>イメージを選択</value>
   </data>
-  <data name="activity_getelement_tooltip" xml:space="preserve">
+	<data name="activity_getelement_tooltip" xml:space="preserve">
     <value>Find an image on the screen or inside a specific application window</value>
   </data>
-  <data name="activity_getimage" xml:space="preserve">
+	<data name="activity_getimage" xml:space="preserve">
     <value>イメージを取得</value>
   </data>
-  <data name="activity_getimage_drop_hint" xml:space="preserve">
+	<data name="activity_getimage_drop_hint" xml:space="preserve">
     <value>アクティビティをドロップ</value>
   </data>
-  <data name="activity_getimage_highlight" xml:space="preserve">
+	<data name="activity_getimage_highlight" xml:space="preserve">
     <value>強調</value>
   </data>
-  <data name="activity_getimage_select" xml:space="preserve">
+	<data name="activity_getimage_select" xml:space="preserve">
     <value>イメージを選択</value>
   </data>
-  <data name="activity_getimage_tooltip" xml:space="preserve">
+	<data name="activity_getimage_tooltip" xml:space="preserve">
     <value>Get an image of the screen relative from another image or element found with GetElement</value>
   </data>
-  <data name="activity_gettext" xml:space="preserve">
+	<data name="activity_gettext" xml:space="preserve">
     <value>テキストを取得</value>
   </data>
-  <data name="activity_gettext_drop_hint" xml:space="preserve">
+	<data name="activity_gettext_drop_hint" xml:space="preserve">
     <value>アクティビティをドロップ</value>
   </data>
-  <data name="activity_gettext_limit" xml:space="preserve">
+	<data name="activity_gettext_limit" xml:space="preserve">
     <value>制限</value>
   </data>
-  <data name="activity_gettext_limit_hint" xml:space="preserve">
+	<data name="activity_gettext_limit_hint" xml:space="preserve">
     <value>Search only for this word</value>
   </data>
-  <data name="activity_gettext_tooltip" xml:space="preserve">
+	<data name="activity_gettext_tooltip" xml:space="preserve">
     <value>Using OCR get all text from a image, can be limited to a specific word or sentence</value>
   </data>
-  <data name="activity_loadfile_drop_hint" xml:space="preserve">
+	<data name="activity_loadfile_drop_hint" xml:space="preserve">
     <value>アクティビティをドロップ</value>
   </data>
-  <data name="activity_loadfile_filename" xml:space="preserve">
+	<data name="activity_loadfile_filename" xml:space="preserve">
     <value>ファイル名</value>
   </data>
-  <data name="activity_loadfile_filename_hint" xml:space="preserve">
+	<data name="activity_loadfile_filename_hint" xml:space="preserve">
     <value>Image file to load</value>
   </data>
-  <data name="activity_loadfromfile" xml:space="preserve">
+	<data name="activity_loadfromfile" xml:space="preserve">
     <value>ファイルからロード</value>
   </data>
-  <data name="activity_loadfromfile_tooltip" xml:space="preserve">
+	<data name="activity_loadfromfile_tooltip" xml:space="preserve">
     <value>Load an image from a file and return an ImageElement</value>
   </data>
-  <data name="activity_offsetx" xml:space="preserve">
+	<data name="activity_offsetx" xml:space="preserve">
     <value>X オフセット</value>
   </data>
-  <data name="activity_offsetx_help" xml:space="preserve">
+	<data name="activity_offsetx_help" xml:space="preserve">
     <value>Click with this offset inside the element</value>
   </data>
-  <data name="activity_offsety" xml:space="preserve">
+	<data name="activity_offsety" xml:space="preserve">
     <value>Y オフセット</value>
   </data>
-  <data name="activity_offsety_help" xml:space="preserve">
+	<data name="activity_offsety_help" xml:space="preserve">
     <value>Click with this offset inside the element</value>
   </data>
-  <data name="activity_takescreenshot" xml:space="preserve">
+	<data name="activity_takescreenshot" xml:space="preserve">
     <value>スクリーンショットを撮る</value>
   </data>
-  <data name="activity_takescreenshot_tooltip" xml:space="preserve">
+	<data name="activity_takescreenshot_tooltip" xml:space="preserve">
     <value>Take screenshot of the entire screen or a specific element found using Get Element</value>
   </data>
 </root>

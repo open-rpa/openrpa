@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+	<!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,188 +59,188 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="activity_assignopenflow" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="activity_assignopenflow" xml:space="preserve">
     <value>分配OpenFlow</value>
   </data>
-  <data name="activity_assignopenflow_tooltip" xml:space="preserve">
+	<data name="activity_assignopenflow_tooltip" xml:space="preserve">
     <value>将OpenFlow工作流程分配给用户或角色</value>
   </data>
-  <data name="activity_click_to_view" xml:space="preserve">
+	<data name="activity_click_to_view" xml:space="preserve">
     <value>双击查看</value>
   </data>
-  <data name="activity_deletefile" xml:space="preserve">
+	<data name="activity_deletefile" xml:space="preserve">
     <value>删除文件</value>
   </data>
-  <data name="activity_deletefile_tooltip" xml:space="preserve">
+	<data name="activity_deletefile_tooltip" xml:space="preserve">
     <value>从OpenFlow数据库中删除文件</value>
   </data>
-  <data name="activity_deleteone" xml:space="preserve">
+	<data name="activity_deleteone" xml:space="preserve">
     <value>删除一条</value>
   </data>
-  <data name="activity_deleteone_tooltip" xml:space="preserve">
+	<data name="activity_deleteone_tooltip" xml:space="preserve">
     <value>从OpenFlow数据库中删除一条</value>
   </data>
-  <data name="activity_filename" xml:space="preserve">
+	<data name="activity_filename" xml:space="preserve">
     <value>文件名</value>
   </data>
-  <data name="activity_filename_hint" xml:space="preserve">
+	<data name="activity_filename_hint" xml:space="preserve">
     <value>文件名</value>
   </data>
-  <data name="activity_getcredentials" xml:space="preserve">
+	<data name="activity_getcredentials" xml:space="preserve">
     <value>获取证书</value>
   </data>
-  <data name="activity_getcredentials_tooltip" xml:space="preserve">
+	<data name="activity_getcredentials_tooltip" xml:space="preserve">
     <value>从OpenFlow获取一组加密的证书</value>
   </data>
-  <data name="activity_getfile" xml:space="preserve">
+	<data name="activity_getfile" xml:space="preserve">
     <value>获得文件</value>
   </data>
-  <data name="activity_getfile_tooltip" xml:space="preserve">
+	<data name="activity_getfile_tooltip" xml:space="preserve">
     <value>下载保存在OpenFlow数据库中的文件</value>
   </data>
-  <data name="activity_grantpermission" xml:space="preserve">
+	<data name="activity_grantpermission" xml:space="preserve">
     <value>赋予权限</value>
   </data>
-  <data name="activity_grantpermission_tooltip" xml:space="preserve">
+	<data name="activity_grantpermission_tooltip" xml:space="preserve">
     <value>添加或更新对指定对象的用户或角色的权限，之后必须在OpenFlow中更新文档</value>
   </data>
-  <data name="activity_insertone" xml:space="preserve">
+	<data name="activity_insertone" xml:space="preserve">
     <value>插入一条</value>
   </data>
-  <data name="activity_insertone_tooltip" xml:space="preserve">
+	<data name="activity_insertone_tooltip" xml:space="preserve">
     <value>在OpenFlow数据库中插入一条</value>
   </data>
-  <data name="activity_insertorupdateone" xml:space="preserve">
+	<data name="activity_insertorupdateone" xml:space="preserve">
     <value>插入或修改一条</value>
   </data>
-  <data name="activity_insertorupdateone_tooltip" xml:space="preserve">
+	<data name="activity_insertorupdateone_tooltip" xml:space="preserve">
     <value>将一项插入OpenFlow数据库，如果已经存在则进行更新。 除非您指定唯一性，否则检查_id，它将根据唯一性中提到的字段查找现有项</value>
   </data>
-  <data name="activity_local_path" xml:space="preserve">
+	<data name="activity_local_path" xml:space="preserve">
     <value>当前路径</value>
   </data>
-  <data name="activity_local_path_hint" xml:space="preserve">
+	<data name="activity_local_path_hint" xml:space="preserve">
     <value>保存文件到这个路径</value>
   </data>
-  <data name="activity_perm_delete" xml:space="preserve">
+	<data name="activity_perm_delete" xml:space="preserve">
     <value>删除</value>
   </data>
-  <data name="activity_perm_read" xml:space="preserve">
+	<data name="activity_perm_read" xml:space="preserve">
     <value>读取</value>
   </data>
-  <data name="activity_perm_update" xml:space="preserve">
+	<data name="activity_perm_update" xml:space="preserve">
     <value>更新</value>
   </data>
-  <data name="activity_query" xml:space="preserve">
+	<data name="activity_query" xml:space="preserve">
     <value>查询</value>
   </data>
-  <data name="activity_query_tooltip" xml:space="preserve">
+	<data name="activity_query_tooltip" xml:space="preserve">
     <value>在OpenFlow数据库中查询数据</value>
   </data>
-  <data name="activity_removepermission" xml:space="preserve">
+	<data name="activity_removepermission" xml:space="preserve">
     <value>删除权限</value>
   </data>
-  <data name="activity_removepermission_tooltip" xml:space="preserve">
+	<data name="activity_removepermission_tooltip" xml:space="preserve">
     <value>从指定对象的用户或角色中删除权限，则必须在OpenFlow之后更新文档</value>
   </data>
-  <data name="activity_savefile" xml:space="preserve">
+	<data name="activity_savefile" xml:space="preserve">
     <value>保存文件</value>
   </data>
-  <data name="activity_savefile_filename" xml:space="preserve">
+	<data name="activity_savefile_filename" xml:space="preserve">
     <value>文件名</value>
   </data>
-  <data name="activity_savefile_filename_help" xml:space="preserve">
+	<data name="activity_savefile_filename_help" xml:space="preserve">
     <value>要上传文件的完整路径和文件名</value>
   </data>
-  <data name="activity_savefile_path" xml:space="preserve">
+	<data name="activity_savefile_path" xml:space="preserve">
     <value>路径</value>
   </data>
-  <data name="activity_savefile_path_help" xml:space="preserve">
+	<data name="activity_savefile_path_help" xml:space="preserve">
     <value>将文件保存在服务器上的此子文件夹中，再次获取文件时具有相关性</value>
   </data>
-  <data name="activity_savefile_result" xml:space="preserve">
+	<data name="activity_savefile_result" xml:space="preserve">
     <value>结果</value>
   </data>
-  <data name="activity_savefile_result_help" xml:space="preserve">
+	<data name="activity_savefile_result_help" xml:space="preserve">
     <value>返回新上传文件的ID</value>
   </data>
-  <data name="activity_savefile_tooltip" xml:space="preserve">
+	<data name="activity_savefile_tooltip" xml:space="preserve">
     <value>上传文件并将其保存到OpenFlow数据库中</value>
   </data>
-  <data name="activity_setcredentials" xml:space="preserve">
+	<data name="activity_setcredentials" xml:space="preserve">
     <value>设置证书</value>
   </data>
-  <data name="activity_setcredentials_tooltip" xml:space="preserve">
+	<data name="activity_setcredentials_tooltip" xml:space="preserve">
     <value>在OpenFlow中创建或更新一组加密的证书</value>
   </data>
-  <data name="activity_updatefromdataTable" xml:space="preserve">
+	<data name="activity_updatefromdataTable" xml:space="preserve">
     <value>从数据表更新</value>
   </data>
-  <data name="activity_updatefromdataTable_tooltip" xml:space="preserve">
+	<data name="activity_updatefromdataTable_tooltip" xml:space="preserve">
     <value>将对DataTable所做的更改提交回OpenFlow，返回插入和更新的行的列表</value>
   </data>
-  <data name="activity_waitforcompleted" xml:space="preserve">
+	<data name="activity_waitforcompleted" xml:space="preserve">
     <value>等待直到结束</value>
   </data>
-  <data name="activity_waitforcompleted_help" xml:space="preserve">
+	<data name="activity_waitforcompleted_help" xml:space="preserve">
     <value>等待完成，然后继续工作流程</value>
   </data>
 </root>

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+	<!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,188 +59,188 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="activity_assignopenflow" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="activity_assignopenflow" xml:space="preserve">
     <value>OpenFlow を割当</value>
   </data>
-  <data name="activity_assignopenflow_tooltip" xml:space="preserve">
+	<data name="activity_assignopenflow_tooltip" xml:space="preserve">
     <value>Assign an OpenFlow workflow to a user or role</value>
   </data>
-  <data name="activity_click_to_view" xml:space="preserve">
+	<data name="activity_click_to_view" xml:space="preserve">
     <value>ダブルクリックで表示</value>
   </data>
-  <data name="activity_deletefile" xml:space="preserve">
+	<data name="activity_deletefile" xml:space="preserve">
     <value>ファイルを削除</value>
   </data>
-  <data name="activity_deletefile_tooltip" xml:space="preserve">
+	<data name="activity_deletefile_tooltip" xml:space="preserve">
     <value>Delete a file from the OpenFlow database</value>
   </data>
-  <data name="activity_deleteone" xml:space="preserve">
+	<data name="activity_deleteone" xml:space="preserve">
     <value>1件削除</value>
   </data>
-  <data name="activity_deleteone_tooltip" xml:space="preserve">
+	<data name="activity_deleteone_tooltip" xml:space="preserve">
     <value>Delete one item in the OpenFlow database</value>
   </data>
-  <data name="activity_filename" xml:space="preserve">
+	<data name="activity_filename" xml:space="preserve">
     <value>ファイル名</value>
   </data>
-  <data name="activity_filename_hint" xml:space="preserve">
+	<data name="activity_filename_hint" xml:space="preserve">
     <value>ファイル名</value>
   </data>
-  <data name="activity_getcredentials" xml:space="preserve">
+	<data name="activity_getcredentials" xml:space="preserve">
     <value>資格情報を取得</value>
   </data>
-  <data name="activity_getcredentials_tooltip" xml:space="preserve">
+	<data name="activity_getcredentials_tooltip" xml:space="preserve">
     <value>Get a set of encrypted credentials from OpenFlow</value>
   </data>
-  <data name="activity_getfile" xml:space="preserve">
+	<data name="activity_getfile" xml:space="preserve">
     <value>ファイルを取得</value>
   </data>
-  <data name="activity_getfile_tooltip" xml:space="preserve">
+	<data name="activity_getfile_tooltip" xml:space="preserve">
     <value>Download a file saved inside the OpenFlow database</value>
   </data>
-  <data name="activity_grantpermission" xml:space="preserve">
+	<data name="activity_grantpermission" xml:space="preserve">
     <value>許可を付与</value>
   </data>
-  <data name="activity_grantpermission_tooltip" xml:space="preserve">
+	<data name="activity_grantpermission_tooltip" xml:space="preserve">
     <value>Add or update permissions for a user or role on the specified object, you must update the document in OpenFlow after</value>
   </data>
-  <data name="activity_insertone" xml:space="preserve">
+	<data name="activity_insertone" xml:space="preserve">
     <value>1件挿入</value>
   </data>
-  <data name="activity_insertone_tooltip" xml:space="preserve">
+	<data name="activity_insertone_tooltip" xml:space="preserve">
     <value>Inserts one item into the OpenFlow database</value>
   </data>
-  <data name="activity_insertorupdateone" xml:space="preserve">
+	<data name="activity_insertorupdateone" xml:space="preserve">
     <value>1件挿入または更新</value>
   </data>
-  <data name="activity_insertorupdateone_tooltip" xml:space="preserve">
+	<data name="activity_insertorupdateone_tooltip" xml:space="preserve">
     <value>Inserts one item into the OpenFlow database, update if already exists. checks on _id unless you specify Uniqueness then it will find existing items based on the fields mentioned in Uniqueness</value>
   </data>
-  <data name="activity_local_path" xml:space="preserve">
+	<data name="activity_local_path" xml:space="preserve">
     <value>ローカルパス</value>
   </data>
-  <data name="activity_local_path_hint" xml:space="preserve">
+	<data name="activity_local_path_hint" xml:space="preserve">
     <value>Save file into this folder</value>
   </data>
-  <data name="activity_perm_delete" xml:space="preserve">
+	<data name="activity_perm_delete" xml:space="preserve">
     <value>削除</value>
   </data>
-  <data name="activity_perm_read" xml:space="preserve">
+	<data name="activity_perm_read" xml:space="preserve">
     <value>読込</value>
   </data>
-  <data name="activity_perm_update" xml:space="preserve">
+	<data name="activity_perm_update" xml:space="preserve">
     <value>更新</value>
   </data>
-  <data name="activity_query" xml:space="preserve">
+	<data name="activity_query" xml:space="preserve">
     <value>照会</value>
   </data>
-  <data name="activity_query_tooltip" xml:space="preserve">
+	<data name="activity_query_tooltip" xml:space="preserve">
     <value>Query the OpenFlow database for one or more items</value>
   </data>
-  <data name="activity_removepermission" xml:space="preserve">
+	<data name="activity_removepermission" xml:space="preserve">
     <value>許可を除去</value>
   </data>
-  <data name="activity_removepermission_tooltip" xml:space="preserve">
+	<data name="activity_removepermission_tooltip" xml:space="preserve">
     <value>Remove a permission from a user or role on the specified object, you must update the document in OpenFlow after</value>
   </data>
-  <data name="activity_savefile" xml:space="preserve">
+	<data name="activity_savefile" xml:space="preserve">
     <value>ファイルを保存</value>
   </data>
-  <data name="activity_savefile_filename" xml:space="preserve">
+	<data name="activity_savefile_filename" xml:space="preserve">
     <value>ファイル名</value>
   </data>
-  <data name="activity_savefile_filename_help" xml:space="preserve">
+	<data name="activity_savefile_filename_help" xml:space="preserve">
     <value>The complete path and filename of the file to upload</value>
   </data>
-  <data name="activity_savefile_path" xml:space="preserve">
+	<data name="activity_savefile_path" xml:space="preserve">
     <value>パス</value>
   </data>
-  <data name="activity_savefile_path_help" xml:space="preserve">
+	<data name="activity_savefile_path_help" xml:space="preserve">
     <value>Save file in this subfolder on the server, this has relevans when getting the file again</value>
   </data>
-  <data name="activity_savefile_result" xml:space="preserve">
+	<data name="activity_savefile_result" xml:space="preserve">
     <value>結果</value>
   </data>
-  <data name="activity_savefile_result_help" xml:space="preserve">
+	<data name="activity_savefile_result_help" xml:space="preserve">
     <value>Returns the id of new uploaded file</value>
   </data>
-  <data name="activity_savefile_tooltip" xml:space="preserve">
+	<data name="activity_savefile_tooltip" xml:space="preserve">
     <value>Upload and save a file into the OpenFlow database</value>
   </data>
-  <data name="activity_setcredentials" xml:space="preserve">
+	<data name="activity_setcredentials" xml:space="preserve">
     <value>資格情報を設定</value>
   </data>
-  <data name="activity_setcredentials_tooltip" xml:space="preserve">
+	<data name="activity_setcredentials_tooltip" xml:space="preserve">
     <value>Create or update a set of encrypted credentials in OpenFlow</value>
   </data>
-  <data name="activity_updatefromdataTable" xml:space="preserve">
+	<data name="activity_updatefromdataTable" xml:space="preserve">
     <value>DataTable から更新</value>
   </data>
-  <data name="activity_updatefromdataTable_tooltip" xml:space="preserve">
+	<data name="activity_updatefromdataTable_tooltip" xml:space="preserve">
     <value>Commit changes made on a DataTable back to OpenFlow, returns list of inserted and updated rows</value>
   </data>
-  <data name="activity_waitforcompleted" xml:space="preserve">
+	<data name="activity_waitforcompleted" xml:space="preserve">
     <value>完了まで待機</value>
   </data>
-  <data name="activity_waitforcompleted_help" xml:space="preserve">
+	<data name="activity_waitforcompleted_help" xml:space="preserve">
     <value>Wait for Completion before continuing with workflow</value>
   </data>
 </root>

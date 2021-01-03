@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.5</Version>
-    <PackageReleaseNotes>1.2.5 Improve openflow package stiching code
+    <Version>1.2.6</Version>
+    <PackageReleaseNotes>1.2.6 Add custom timeout for openining IE browser
+1.2.5 Improve openflow package stiching code
 1.2.4 Fix GetMails to support multiple accounts
 1.2.3 various improvements, improve windows finder in get element
 1.2.2 Integrate new selector with old windows selector

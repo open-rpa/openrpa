@@ -23,5 +23,6 @@ namespace OpenRPA.IE
         }
         public static bool enable_xpath_support { get { return globallocal.GetProperty(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }
         public static bool enable_caching_browser { get { return globallocal.GetProperty(pluginname, false); } set { globallocal.SetProperty(pluginname, value); } }
+        public static TimeSpan open_browser_url_timeout { get { return globallocal.GetProperty(pluginname, TimeSpan.FromSeconds(10)); } set { globallocal.SetProperty(pluginname, value); } }
     }
 }

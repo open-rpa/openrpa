@@ -35,7 +35,6 @@ namespace OpenRPA.IE
         }
         private static Browser browser;
         private static DateTime browser_at;
-        private static TimeSpan browser_for = TimeSpan.FromSeconds(5);
         public static Browser GetBrowser(bool forcenew, string url = null)
         {
             if (!PluginConfig.enable_caching_browser) browser = null;
@@ -44,7 +43,7 @@ namespace OpenRPA.IE
             {
                 try
                 {
-                    if((DateTime.Now - browser_at) > browser_for)
+                    if((DateTime.Now - browser_at) > PluginConfig.open_browser_url_timeout)
                     {
                         browser = null;
                     }
@@ -73,13 +72,12 @@ namespace OpenRPA.IE
                 // Open the URL
                 ie.Navigate2(url, ref m, ref m, ref m, ref m);
                 ie.Visible = true;
-                while (result.wBrowser == null && sw.Elapsed < TimeSpan.FromSeconds(5))
+                while (result.wBrowser == null && sw.Elapsed < PluginConfig.open_browser_url_timeout)
                 {
-                    var timeout = TimeSpan.FromSeconds(10);
                     result.findBrowser();
                     if(result.wBrowser!=null && result.Document != null)
                     {
-                        while (sw.Elapsed < timeout && result.Document.readyState != "complete" && result.Document.readyState != "interactive")
+                        while (sw.Elapsed < PluginConfig.open_browser_url_timeout && result.Document.readyState != "complete" && result.Document.readyState != "interactive")
                         {
                             Log.Debug("pending complete, readyState: " + result.Document.readyState);
                             System.Threading.Thread.Sleep(100);
@@ -159,7 +157,7 @@ namespace OpenRPA.IE
 
                     var sw = new Stopwatch(); sw.Start();
 
-                    while (panel == null && sw.Elapsed < TimeSpan.FromSeconds(5))
+                    while (panel == null && sw.Elapsed < PluginConfig.open_browser_url_timeout)
                     {
                         panel = _ele.FindFirst(TreeScope.Descendants,
                         new AndCondition(new PropertyCondition(automation.PropertyLibrary.Element.ControlType, ControlType.Pane),

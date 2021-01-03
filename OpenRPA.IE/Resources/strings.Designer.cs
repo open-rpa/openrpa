@@ -185,5 +185,23 @@ namespace OpenRPA.IE.Resources {
                 return ResourceManager.GetString("enable_xpath_support_help", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open browser timeout.
+        /// </summary>
+        public static string open_browser_timeout {
+            get {
+                return ResourceManager.GetString("open_browser_timeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timeout on opening browser and opening an url.
+        /// </summary>
+        public static string open_browser_timeout_help {
+            get {
+                return ResourceManager.GetString("open_browser_timeout_help", resourceCulture);
+            }
+        }
     }
 }

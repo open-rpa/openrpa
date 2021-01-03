@@ -14,7 +14,10 @@
 
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,30,0,0" Text="{x:Static or:strings.enable_caching_browser}" VerticalAlignment="Top" Width="110" />
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,30,0,0" VerticalAlignment="Top" Width="222" x:Name="enable_caching_browser" 
-            Checked="value_Changed" Unchecked="value_Changed" />
+            Checked="value_Changed" Unchecked="value_Changed"  />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,30,0,0" Text="{x:Static or:strings.enable_caching_browser_help}" VerticalAlignment="Top" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,50,0,0" Text="{x:Static or:strings.open_browser_timeout}" VerticalAlignment="Top" Width="110" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="151,50,0,0" VerticalAlignment="Top" Width="110" x:Name="browser_timeout" TextChanged="value_Changed" Background="White" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="280,50,0,0" Text="{x:Static or:strings.open_browser_timeout_help}" VerticalAlignment="Top" />
     </Grid>
 </UserControl>

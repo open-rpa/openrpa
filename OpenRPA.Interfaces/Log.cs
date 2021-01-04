@@ -76,7 +76,7 @@ namespace OpenRPA.Interfaces
             {
                 var config = new NLog.Config.LoggingConfiguration();
                 var logfile = new NLog.Targets.FileTarget("logfile") { FileName = System.IO.Path.Combine(Extensions.ProjectsDirectory, "logfile.txt") };
-                logfile.Layout = "${time}|${message}";
+                logfile.Layout = "${time}|${level:uppercase=true}|${message}";
                 // var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
                 // config.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
                 // config.AddRule(NLog.LogLevel.Trace, NLog.LogLevel.Fatal, logfile);

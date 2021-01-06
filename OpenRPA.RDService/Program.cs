@@ -398,6 +398,7 @@ namespace OpenRPA.RDService
         {
             try
             {
+                Console.WriteLine("Do work!");
                 log("BEGIN::Set ProjectsDirectory");
                 // Don't mess with ProjectsDirectory if we need to reauth
                 if (args.Length == 0) Log.ResetLogPath(logpath);

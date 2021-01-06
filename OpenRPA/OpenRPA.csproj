@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.8</Version>
-    <PackageReleaseNotes>1.2.8 Add category to openrpa log file
+    <Version>1.2.9</Version>
+    <PackageReleaseNotes>1.2.9 Fix Move Mail to support multiple accounts
+1.2.8 Add category to openrpa log file
 1.2.7 Filter cookies on login page for local domain
 1.2.6 Add custom timeout for openining IE browser
 1.2.5 Improve openflow package stiching code

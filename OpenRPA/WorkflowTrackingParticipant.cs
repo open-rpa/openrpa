@@ -66,7 +66,7 @@ namespace OpenRPA
                 ActivityScheduledRecord activityScheduledRecord = trackRecord as ActivityScheduledRecord;
                 WorkflowInstanceRecord workflowInstanceRecord = trackRecord as WorkflowInstanceRecord;
 
-                if(workflowInstanceRecord != null)
+                if (workflowInstanceRecord != null)
                 {
                     if (workflowInstanceRecord.State == WorkflowInstanceStates.Started || workflowInstanceRecord.State == WorkflowInstanceStates.Resumed)
                     {
@@ -103,14 +103,14 @@ namespace OpenRPA
                             if (timer.ContainsKey(ActivityId))
                             {
                                 Stopwatch sw = timer[ActivityId];
-                                if(sw.ElapsedMilliseconds > 0)
+                                if (sw.ElapsedMilliseconds > 0)
                                 {
                                     RobotInstance.activity_duration.WithLabels((activityStateRecord.Activity.Name, activityStateRecord.Activity.TypeName, Instance.Workflow.name)).Observe(sw.ElapsedMilliseconds / 1000);
                                 }
                             }
                         }
                     }
-                    if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Name))
+                    if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Name) && Instance != null && Instance.Workflow != null)
                     {
                         RobotInstance.activity_counter.WithLabels((activityStateRecord.Activity.Name, activityStateRecord.Activity.TypeName, Instance.Workflow.name)).Inc();
                     }
@@ -154,7 +154,7 @@ namespace OpenRPA
                         if (activityScheduledRecord.Activity != null) ActivityId = activityScheduledRecord.Activity.Id;
                         if (activityScheduledRecord.Child != null) ChildActivityId = activityScheduledRecord.Child.Id;
                     }
-                    if(activityScheduledRecord.Activity == null && activityScheduledRecord.Child!=null)
+                    if (activityScheduledRecord.Activity == null && activityScheduledRecord.Child != null)
                     {
                         // this will make "1" be handles twice, but "1" is always sendt AFTER being scheduled, but we can catch it here ?
                         ActivityId = activityScheduledRecord.Child.Id;
@@ -162,7 +162,7 @@ namespace OpenRPA
                     }
                     if (string.IsNullOrEmpty(ActivityId)) return;
 
-                    if(activityScheduledRecord.Child.Id == "1.11")
+                    if (activityScheduledRecord.Child.Id == "1.11")
                     {
                         // scheduler.GetType().GetMethod("ClearAllWorkItems", BindingFlags.Public | BindingFlags.Instance).Invoke(scheduler, new object[] { executor });
                         // scheduler.GetType().GetMethod("ScheduleWork", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(scheduler, new object[] { false });

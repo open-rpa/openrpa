@@ -120,16 +120,18 @@ namespace OpenRPA.Net
         {
             try
             {
-                if (!json.StartsWith("{") && !json.StartsWith("[")) return false;
-                if (!json.EndsWith("}") && !json.EndsWith("]")) return false;
-                var jObject = JObject.Parse(json);
-                return true;
+                if ((json.StartsWith("{") && json.EndsWith("}")) ||
+                    (json.StartsWith("[") && json.EndsWith("]")))
+                {
+                    var jObject = JObject.Parse(json);
+                    return true;
+                }                
             }
             catch
             {
                 Log.Verbose(json);
-                return false;
             }
+            return false;
         }
         string tempbuffer = null;
         private async Task receiveLoop()

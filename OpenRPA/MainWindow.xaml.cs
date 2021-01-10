@@ -611,7 +611,7 @@ namespace OpenRPA
             set
             {
                 Config.local.log_debug = value;
-                NotifyPropertyChanged("log_debug");
+                NotifyPropertyChanged("Setting_log_debug");
             }
         }
         public bool Setting_log_warning
@@ -623,7 +623,7 @@ namespace OpenRPA
             set
             {
                 Config.local.log_warning = value;
-                NotifyPropertyChanged("log_warning");
+                NotifyPropertyChanged("Setting_log_warning");
             }
         }
         public bool Setting_log_verbose
@@ -635,7 +635,7 @@ namespace OpenRPA
             set
             {
                 Config.local.log_verbose = value;
-                NotifyPropertyChanged("log_verbose");
+                NotifyPropertyChanged("Setting_log_verbose");
             }
         }
         public bool Setting_log_selector
@@ -647,7 +647,7 @@ namespace OpenRPA
             set
             {
                 Config.local.log_selector = value;
-                NotifyPropertyChanged("log_selector");
+                NotifyPropertyChanged("Setting_log_selector");
             }
         }
         public bool Setting_log_selector_verbose
@@ -659,7 +659,7 @@ namespace OpenRPA
             set
             {
                 Config.local.log_selector_verbose = value;
-                NotifyPropertyChanged("log_selector_verbose");
+                NotifyPropertyChanged("Setting_log_selector_verbose");
             }
         }
         public bool Setting_log_network
@@ -671,7 +671,7 @@ namespace OpenRPA
             set
             {
                 Config.local.log_network = value;
-                NotifyPropertyChanged("log_network");
+                NotifyPropertyChanged("Setting_log_network");
             }
         }
         public bool Setting_use_sendkeys
@@ -3544,6 +3544,14 @@ namespace OpenRPA
             {
                 op.FilterText = SearchBox.Text;
             }
+        }
+        private void clearTraceMessages_Click(object sender, RoutedEventArgs e)
+        {
+            Tracing.TraceMessages = "";
+        }
+        private void clearOutputMessages_Click(object sender, RoutedEventArgs e)
+        {
+            Tracing.OutputMessages = "";
         }
     }
     public class QuickLaunchItem

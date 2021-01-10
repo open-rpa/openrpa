@@ -1276,7 +1276,7 @@ namespace OpenRPA
         metricTime.Stop();
             try
             {
-                if (global.webSocketClient.user != null)
+                if (global.webSocketClient != null && global.webSocketClient.user != null)
                 {
                     mem_used.Set(mem_used_counter.NextValue());
                     // mem_total.Set(mem_total_counter.NextValue());

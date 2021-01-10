@@ -7,6 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Prometheus.Client.Abstractions;
+using Prometheus.Client;
+using System.Diagnostics;
 
 namespace OpenRPA
 {
@@ -31,7 +34,7 @@ namespace OpenRPA
                             {
                                 // Limit workflow instance tracking records for started and completed workflow states
                                 // States = { WorkflowInstanceStates.Started, WorkflowInstanceStates.Completed },
-                                // States = { "*" }
+                                States = { "*" }
                             },
                             new ActivityStateQuery()
                             {
@@ -52,6 +55,7 @@ namespace OpenRPA
                         }
             };
         }
+        public static Dictionary<string, Dictionary<string, Stopwatch>> timers = new Dictionary<string, Dictionary<string, Stopwatch>>();
         protected override void Track(TrackingRecord trackRecord, TimeSpan timeStamp)
         {
             try
@@ -60,10 +64,57 @@ namespace OpenRPA
                 Guid InstanceId = trackRecord.InstanceId;
                 ActivityStateRecord activityStateRecord = trackRecord as ActivityStateRecord;
                 ActivityScheduledRecord activityScheduledRecord = trackRecord as ActivityScheduledRecord;
+                WorkflowInstanceRecord workflowInstanceRecord = trackRecord as WorkflowInstanceRecord;
+
+                if(workflowInstanceRecord != null)
+                {
+                    if (workflowInstanceRecord.State == WorkflowInstanceStates.Started || workflowInstanceRecord.State == WorkflowInstanceStates.Resumed)
+                    {
+                        timers.Add(InstanceId.ToString(), new Dictionary<string, Stopwatch>());
+                    }
+                    if (workflowInstanceRecord.State == WorkflowInstanceStates.Aborted || workflowInstanceRecord.State == WorkflowInstanceStates.Canceled ||
+                        workflowInstanceRecord.State == WorkflowInstanceStates.Completed || workflowInstanceRecord.State == WorkflowInstanceStates.Deleted ||
+                        workflowInstanceRecord.State == WorkflowInstanceStates.Suspended || workflowInstanceRecord.State == WorkflowInstanceStates.Terminated ||
+                        workflowInstanceRecord.State == WorkflowInstanceStates.UnhandledException || workflowInstanceRecord.State == WorkflowInstanceStates.UpdateFailed)
+                    {
+                        if (timers.ContainsKey(InstanceId.ToString())) timers.Remove(InstanceId.ToString());
+                    }
+                }
                 //if (activityStateRecord != null || activityScheduledRecord != null)
                 if (activityStateRecord != null)
                 {
+                    string ActivityId = null;
                     var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
+                    if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Id)) ActivityId = activityStateRecord.Activity.Id;
+                    // var sw = new Stopwatch(); sw.Start();
+                    if (timers.ContainsKey(InstanceId.ToString()) && !string.IsNullOrEmpty(ActivityId))
+                    {
+                        var timer = timers[InstanceId.ToString()];
+                        if (activityStateRecord.State == ActivityStates.Executing)
+                        {
+                            if (!timer.ContainsKey(ActivityId))
+                            {
+                                Stopwatch sw = new Stopwatch(); sw.Start();
+                                timer.Add(ActivityId, sw);
+                            }
+                        }
+                        if (activityStateRecord.State != ActivityStates.Executing)
+                        {
+                            if (timer.ContainsKey(ActivityId))
+                            {
+                                Stopwatch sw = timer[ActivityId];
+                                if(sw.ElapsedMilliseconds > 0)
+                                {
+                                    RobotInstance.activity_duration.WithLabels((activityStateRecord.Activity.Name, activityStateRecord.Activity.TypeName, Instance.Workflow.name)).Observe(sw.ElapsedMilliseconds / 1000);
+                                }
+                            }
+                        }
+                    }
+                    if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Name))
+                    {
+                        RobotInstance.activity_counter.WithLabels((activityStateRecord.Activity.Name, activityStateRecord.Activity.TypeName, Instance.Workflow.name)).Inc();
+                    }
+
                     foreach (var v in activityStateRecord.Variables)
                     {
                         if (Instance.Variables.ContainsKey(v.Key))

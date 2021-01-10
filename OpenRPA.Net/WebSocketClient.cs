@@ -625,7 +625,13 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
             return q.result;
         }
-
+        public async Task PushMetrics(string metrics)
+        {
+            var q = new PushMetricsMessage();
+            q.metrics = metrics; q.jwt = jwt;
+            q = await q.SendMessage<PushMetricsMessage>(this);
+            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+        }
     }
 
 }

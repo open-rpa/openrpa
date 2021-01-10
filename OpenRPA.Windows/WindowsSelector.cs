@@ -310,6 +310,7 @@ namespace OpenRPA.Windows
                             Log.Selector(string.Format("GetElementsWithuiSelector::Process " + first.processname() + " not found, end with 0 results after {0:mm\\:ss\\.fff}", sw.Elapsed));
                             return new UIElement[] { };
                         }
+                        var psids = ps.Select(x => x.Id).ToArray();
 
                         var condition = new FlaUI.Core.Conditions.ConditionFactory(automation.PropertyLibrary);
                         var ors = new List<FlaUI.Core.Conditions.ConditionBase>();
@@ -323,25 +324,70 @@ namespace OpenRPA.Windows
                         //        condition.ByControlType(FlaUI.Core.Definitions.ControlType.Window),
                         //        condition.ByControlType(FlaUI.Core.Definitions.ControlType.Pane)}));
                         var con = new FlaUI.Core.Conditions.OrCondition(ors);
-                        Log.Debug(string.Format("GetElementsWithuiSelector::Searchin for all " + con.ToString() + " {0:mm\\:ss\\.fff}", sw.Elapsed));
-                        var windows = current.First().RawElement.FindAllChildren(con);
-                        // if(windows.Length==0) windows = current.First().RawElement.FindAllDescendants(con);
-                        foreach (var win in windows)
+                        if (PluginConfig.enable_cache)
                         {
-                            var uiele = new UIElement(win);
-                            Log.Debug(string.Format("GetElementsWithuiSelector::Adding element " + uiele.ToString() + " {0:mm\\:ss\\.fff}", sw.Elapsed));
-                            _current.Add(uiele);
-                            if (win.Patterns.Window.TryGetPattern(out var winPattern))
+                            var cache = WindowsSelectorItem.GetFromCache(current.First().RawElement, i, con.ToString());
+                            if (cache != null)
                             {
-                                if (winPattern.WindowVisualState.Value == FlaUI.Core.Definitions.WindowVisualState.Minimized)
+                                Log.Debug("GetElementsWithuiSelector: found in AppWindowCache " + con.ToString());
+                                foreach (var elementNode in cache)
                                 {
-                                    IntPtr handle = win.Properties.NativeWindowHandle.Value;
-                                    winPattern.SetWindowVisualState(FlaUI.Core.Definitions.WindowVisualState.Normal);
+                                    if (WindowsSelectorItem.Match(_sel, elementNode)) _current.Add(new UIElement(elementNode));
                                 }
                             }
+                            var elements = _current.Select(x => x.RawElement).ToArray();
+                            WindowsSelectorItem.AddToCache(current.First().RawElement, 0, con.ToString(), elements);
                         }
-                        if (_current.Count > 0 && _sel.ControlType() == "Window") doContinue = true;
-                        if (_current.Count > 0) doContinue = true;
+
+                        if(_current.Count == 0)
+                        {
+                            Log.Debug(string.Format("GetElementsWithuiSelector::Searchin for all " + con.ToString() + " {0:mm\\:ss\\.fff}", sw.Elapsed));
+                            // var ___treeWalker = automation.TreeWalkerFactory.GetCustomTreeWalker(con);
+                            var ___treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
+                            var win = ___treeWalker.GetFirstChild(current.First().RawElement);
+                            while (win != null)
+                            {
+                                bool addit = false;
+                                if (win.Properties.ProcessId.IsSupported && psids.Contains(win.Properties.ProcessId))
+                                {
+                                    addit = true;
+                                }
+                                if(addit)
+                                {
+                                    var uiele = new UIElement(win);
+                                    Log.Debug(string.Format("GetElementsWithuiSelector::Adding element " + uiele.ToString() + " {0:mm\\:ss\\.fff}", sw.Elapsed));
+                                    _current.Add(uiele);
+                                    if (win.Patterns.Window.TryGetPattern(out var winPattern))
+                                    {
+                                        if (winPattern.WindowVisualState.Value == FlaUI.Core.Definitions.WindowVisualState.Minimized)
+                                        {
+                                            IntPtr handle = win.Properties.NativeWindowHandle.Value;
+                                            winPattern.SetWindowVisualState(FlaUI.Core.Definitions.WindowVisualState.Normal);
+                                        }
+                                    }
+                                    if (PluginConfig.allow_multiple_hits_mid_selector)
+                                    {
+                                        win = ___treeWalker.GetNextSibling(win);
+                                    }
+                                    else
+                                    {
+                                        win = null;
+                                    }
+                                }
+                                else
+                                {
+                                    win = ___treeWalker.GetNextSibling(win);
+                                }
+                            }
+                            if (_current.Count > 0 && PluginConfig.enable_cache)
+                            {
+                                var elements = _current.Select(x => x.RawElement).ToArray();
+                                WindowsSelectorItem.AddToCache(current.First().RawElement, i, con.ToString(), elements);
+                            }
+                        }
+
+                        if (_current.Count > 0 && _current.First().ControlType.ToString() == _sel.ControlType()) doContinue = true;
+                        //if (_current.Count > 0) doContinue = true;
                         if (doContinue) continue;
                         current = _current.ToArray();
                         _current.Clear();
@@ -349,49 +395,67 @@ namespace OpenRPA.Windows
                 }
                 foreach (var _ele in current)
                 {
-                    Log.Debug("GetElementsWithuiSelector::Searchin for " + cond.ToString() + string.Format(" {0:mm\\:ss\\.fff}", sw.Elapsed));
-                    var hasStar = _sel.Properties.Where(x => x.Enabled == true && (x.Value != null && x.Value.Contains("*"))).ToArray();
-                    var _treeWalker = automation.TreeWalkerFactory.GetCustomTreeWalker(cond);
-                    AutomationElement ele = _treeWalker.GetFirstChild(_ele.RawElement);
-
-                    if(ele == null)
+                    if (PluginConfig.enable_cache)
                     {
-                        var __treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
-                        var elementNode = _treeWalker.GetFirstChild(_ele.RawElement);
-                    }
-                    // if ((hasStar.Length > 0 || maxresults > 1 ) && ele != null)
-                    if(ele != null)
-                    {
-                        do
+                        var cache = WindowsSelectorItem.GetFromCache(_ele.RawElement, i, cond.ToString());
+                        if (cache != null)
                         {
-                            // Log.Debug(string.Format("GetElementsWithuiSelector::Match element {0:mm\\:ss\\.fff}", sw.Elapsed));
-                            if (WindowsSelectorItem.Match(_sel, ele))
+                            Log.Debug("GetElementsWithuiSelector: found in AppWindowCache " + cond.ToString());
+                            foreach (var elementNode in cache)
                             {
-                                var uiele = new UIElement(ele);
-                                Log.Debug(string.Format("GetElementsWithuiSelector::Adding element "  + uiele.ToString() + " {0:mm\\:ss\\.fff}", sw.Elapsed));
-                                _current.Add(uiele);
+                                if (WindowsSelectorItem.Match(_sel, elementNode)) _current.Add(new UIElement(elementNode));
                             }
-
-                            bool getmore = false;
-                            if ((selectors.Count - 1) == i)
-                            {
-                                if (_current.Count < maxresults) getmore = true;
-                            }
-                            else
-                            {
-                                if (_current.Count == 0)
-                                {
-                                    getmore = true;
-                                } 
-                                else if (PluginConfig.allow_multiple_hits_mid_selector)
-                                {
-                                    getmore = true;
-                                } 
-                            }
-                            if(getmore) ele = _treeWalker.GetNextSibling(ele);
-                            if (!getmore) ele = null;
-                        } while (ele != null);
+                        }
+                        var elements = _current.Select(x => x.RawElement).ToArray();
+                        WindowsSelectorItem.AddToCache(current.First().RawElement, 0, cond.ToString(), elements);
                     }
+                    if(_current.Count == 0)
+                    {
+                        Log.Debug("GetElementsWithuiSelector::Searchin for " + cond.ToString() + string.Format(" {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        var hasStar = _sel.Properties.Where(x => x.Enabled == true && (x.Value != null && x.Value.Contains("*"))).ToArray();
+                        var _treeWalker = automation.TreeWalkerFactory.GetCustomTreeWalker(cond);
+                        AutomationElement ele = _treeWalker.GetFirstChild(_ele.RawElement);
+                        // if ((hasStar.Length > 0 || maxresults > 1 ) && ele != null)
+                        if (ele != null)
+                        {
+                            do
+                            {
+                                // Log.Debug(string.Format("GetElementsWithuiSelector::Match element {0:mm\\:ss\\.fff}", sw.Elapsed));
+                                if (WindowsSelectorItem.Match(_sel, ele))
+                                {
+                                    var uiele = new UIElement(ele);
+                                    Log.Debug(string.Format("GetElementsWithuiSelector::Adding element " + uiele.ToString() + " {0:mm\\:ss\\.fff}", sw.Elapsed));
+                                    _current.Add(uiele);
+                                }
+
+                                bool getmore = false;
+                                if ((selectors.Count - 1) == i)
+                                {
+                                    if (_current.Count < maxresults) getmore = true;
+                                }
+                                else
+                                {
+                                    if (_current.Count == 0)
+                                    {
+                                        getmore = true;
+                                    }
+                                    else if (PluginConfig.allow_multiple_hits_mid_selector)
+                                    {
+                                        getmore = true;
+                                    }
+                                }
+                                if (getmore) ele = _treeWalker.GetNextSibling(ele);
+                                if (!getmore) ele = null;
+                            } while (ele != null);
+                        }
+                        if (_current.Count > 0 && PluginConfig.enable_cache)
+                        {
+                            var elements = _current.Select(x => x.RawElement).ToArray();
+                            WindowsSelectorItem.AddToCache(current.First().RawElement, i, cond.ToString(), elements);
+                        }
+
+                    }
+
 
                 }
             }

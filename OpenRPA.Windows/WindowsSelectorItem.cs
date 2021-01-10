@@ -258,7 +258,7 @@ namespace OpenRPA.Windows
             return matchs.ToArray();
         }
         private static List<MatchCacheItem> MatchCache = new List<MatchCacheItem>();
-        public AutomationElement[] GetFromCache(AutomationElement root, int ident, string Conditions)
+        public static AutomationElement[] GetFromCache(AutomationElement root, int ident, string Conditions)
         {
             if (!PluginConfig.enable_cache) return null;
             var now = DateTime.Now;
@@ -305,7 +305,7 @@ namespace OpenRPA.Windows
             }
             return null;
         }
-        public void RemoveFromCache(MatchCacheItem item)
+        public static void RemoveFromCache(MatchCacheItem item)
         {
             var items = MatchCache.Where(x => x.Root.Equals(item.Root) && x.Ident >= item.Ident).ToList();
             foreach (var e in items) MatchCache.Remove(e);
@@ -315,10 +315,10 @@ namespace OpenRPA.Windows
         {
             MatchCache.Clear();
         }
-        public void AddToCache(AutomationElement root, int ident, string Conditions, AutomationElement[] Result)
+        public static void AddToCache(AutomationElement root, int ident, string Conditions, AutomationElement[] Result)
         {
             if (!PluginConfig.enable_cache) return;
-            var result = MatchCache.Where(x => x.Conditions == Conditions && x.Root.Equals(root)).FirstOrDefault();
+            var result = MatchCache.Where(x => x.Conditions == Conditions && x.Ident == ident && x.Root.Equals(root)).FirstOrDefault();
             if (result != null)
             {
                 result.Result = Result;

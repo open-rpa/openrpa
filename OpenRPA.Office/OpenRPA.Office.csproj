@@ -8,7 +8,8 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office, created for OpenRPA robot</Description>
     <Version>1.0.31</Version>
-    <PackageReleaseNotes>1.0.31 Fix Move Mail to support multiple accounts
+    <PackageReleaseNotes>1.0.32 Fix creating missing worksheets in typed activities
+1.0.31 Fix Move Mail to support multiple accounts
 1.0.30 Fix GetMails to support multiple accounts
 1.0.29 Fix excel sheet enumeration bug
 1.0.28 Add passwords for write/read cell, add support for removing password with close workbook, add protect worksheet/unprotect worksheet

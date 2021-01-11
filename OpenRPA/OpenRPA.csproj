@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.10</Version>
-    <PackageReleaseNotes>1.2.10 Add basic metrics
+    <Version>1.2.11</Version>
+    <PackageReleaseNotes>1.2.11 Office: Fix creating missing worksheets in typed activities
+1.2.10 Add basic metrics
 1.2.9 Fix Move Mail to support multiple accounts
 1.2.8 Add category to openrpa log file
 1.2.7 Filter cookies on login page for local domain

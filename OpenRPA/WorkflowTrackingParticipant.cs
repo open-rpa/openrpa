@@ -105,14 +105,18 @@ namespace OpenRPA
                                 Stopwatch sw = timer[ActivityId];
                                 if (sw.ElapsedMilliseconds > 0)
                                 {
-                                    RobotInstance.activity_duration.WithLabels((activityStateRecord.Activity.Name, activityStateRecord.Activity.TypeName, Instance.Workflow.name)).Observe(sw.ElapsedMilliseconds / 1000);
+                                    var TypeName = activityStateRecord.Activity.TypeName;
+                                    if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
+                                    RobotInstance.activity_duration.WithLabels((activityStateRecord.Activity.Name, TypeName, Instance.Workflow.name)).Observe(sw.ElapsedMilliseconds / 1000);
                                 }
                             }
                         }
                     }
                     if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Name) && Instance != null && Instance.Workflow != null)
                     {
-                        RobotInstance.activity_counter.WithLabels((activityStateRecord.Activity.Name, activityStateRecord.Activity.TypeName, Instance.Workflow.name)).Inc();
+                        var TypeName = activityStateRecord.Activity.TypeName;
+                        if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
+                        RobotInstance.activity_counter.WithLabels((activityStateRecord.Activity.Name, TypeName, Instance.Workflow.name)).Inc();
                     }
 
                     foreach (var v in activityStateRecord.Variables)

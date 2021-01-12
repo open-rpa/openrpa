@@ -16,6 +16,7 @@ namespace OpenRPA.Interfaces
         public static Dictionary<string, Type> detectorPluginTypes = new Dictionary<string, Type>();
         public static ObservableCollection<IRunPlugin> runPlugins = new ObservableCollection<IRunPlugin>();
         public static ObservableCollection<ISnippet> Snippets = new ObservableCollection<ISnippet>();
+        public static ICollection<Type> WorkflowExtensionsTypes = new List<Type>();
         public static IDetectorPlugin AddDetector(IOpenRPAClient client, entity.Detector entity)
         {
             foreach(var d in detectorPluginTypes)
@@ -105,6 +106,20 @@ namespace OpenRPA.Interfaces
                 }
                 catch (Exception) { }
             }
+            Log.Information("LoadPlugins::Get all ICustomWorkflowExtension " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+            var WorkflowExtensiontype = typeof(ICustomWorkflowExtension);
+            foreach (var p in alltypes)
+            {
+                try
+                {
+                    if (WorkflowExtensiontype.IsAssignableFrom(p) && p.IsInterface == false)
+                    {
+                        if(!WorkflowExtensionsTypes.Contains(p)) WorkflowExtensionsTypes.Add(p);
+                    }
+                }
+                catch (Exception) { }
+            }
+            
 
             foreach (var type in IDetectorPluginTypes)
                 if (!detectorPluginTypes.ContainsKey(type.FullName)) detectorPluginTypes.Add(type.FullName, type);

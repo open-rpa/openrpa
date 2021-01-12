@@ -222,6 +222,19 @@ namespace OpenRPA
                 }
                 wfApp = new System.Activities.WorkflowApplication(activity, Parameters);
                 wfApp.Extensions.Add(TrackingParticipant);
+                foreach(var t in Plugins.WorkflowExtensionsTypes)
+                {
+                    try
+                    {
+                        var ext = (ICustomWorkflowExtension)Activator.CreateInstance(t);
+                        ext.Initialize(RobotInstance.instance, Workflow, this);
+                        wfApp.Extensions.Add(ext);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("error init " + t.Name + ": " + ex.ToString());
+                    }
+                }
                 if (Workflow.Serializable)
                 {
                     //if (Config.local.localstate)
@@ -241,6 +254,20 @@ namespace OpenRPA
             {
                 wfApp = new System.Activities.WorkflowApplication(activity);
                 wfApp.Extensions.Add(TrackingParticipant);
+                foreach (var t in Plugins.WorkflowExtensionsTypes)
+                {
+                    try
+                    {
+                        var ext = (ICustomWorkflowExtension)Activator.CreateInstance(t);
+                        ext.Initialize(RobotInstance.instance, Workflow, this);
+                        wfApp.Extensions.Add(ext);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("error init " + t.Name + ": " + ex.ToString());
+                    }
+                }
+
                 addwfApphandlers(wfApp);
                 if (Workflow.Serializable || !Workflow.Serializable)
                 {

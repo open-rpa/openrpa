@@ -98,7 +98,7 @@ namespace OpenRPA.Windows.Views
             HighlightImage.Source = Interfaces.Extensions.GetImageSourceFromResource(".x.png");
             string SelectorString = Selector;
             var selector = new WindowsSelector(SelectorString);
-            var elements = WindowsSelector.GetElementsWithuiSelector(selector, null, 10);
+            var elements = WindowsSelector.GetElementsWithuiSelector(selector, null, 10, null);
             if (elements.Count() > 0)
             {
                 HighlightImage.Source = Interfaces.Extensions.GetImageSourceFromResource("check.png");

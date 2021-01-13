@@ -32,7 +32,7 @@ namespace OpenRPA.Windows
                 if (anchor != null)
                 {
                     if (!(anchor is WindowsSelector Windowsselector)) { Windowsselector = new WindowsSelector(anchor.ToString()); }
-                    var elements = WindowsSelector.GetElementsWithuiSelector(Windowsselector, null, 5);
+                    var elements = WindowsSelector.GetElementsWithuiSelector(Windowsselector, null, 5, null);
                     if (elements.Count() > 0)
                     {
                         _rootElement = elements[0].RawElement;
@@ -247,7 +247,7 @@ namespace OpenRPA.Windows
             {
                 winselector = new WindowsSelector(selector.ToString());
             }
-            var result = WindowsSelector.GetElementsWithuiSelector(winselector, fromElement, maxresults);
+            var result = WindowsSelector.GetElementsWithuiSelector(winselector, fromElement, maxresults, null);
             return result;
         }
         public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)

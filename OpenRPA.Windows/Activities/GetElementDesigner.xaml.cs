@@ -109,17 +109,17 @@ namespace OpenRPA.Windows
                 var elements = new List<UIElement>();
                 if (anchor != null)
                 {
-                    var _base = WindowsSelector.GetElementsWithuiSelector(anchor, null, 10);
+                    var _base = WindowsSelector.GetElementsWithuiSelector(anchor, null, 10, null);
                     foreach (var _e in _base)
                     {
-                        var res = WindowsSelector.GetElementsWithuiSelector(selector, _e, maxresults);
+                        var res = WindowsSelector.GetElementsWithuiSelector(selector, _e, maxresults, null);
                         elements.AddRange(res);
                     }
 
                 }
                 else
                 {
-                    var res = WindowsSelector.GetElementsWithuiSelector(selector, null, maxresults);
+                    var res = WindowsSelector.GetElementsWithuiSelector(selector, null, maxresults, null);
                     elements.AddRange(res);
                 }
 

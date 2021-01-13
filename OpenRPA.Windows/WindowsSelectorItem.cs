@@ -23,7 +23,7 @@ namespace OpenRPA.Windows
         public int Ident { get; set; }
 
     }
-    class WindowsSelectorItem : SelectorItem
+    public class WindowsSelectorItem : SelectorItem
     {
         public WindowsSelectorItem() { }
         public WindowsSelectorItem(SelectorItem item)

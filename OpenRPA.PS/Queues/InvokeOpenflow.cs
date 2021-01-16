@@ -128,7 +128,7 @@ namespace OpenRPA.PS
                 state = msg["state"].ToString();
                 if (!string.IsNullOrEmpty(state))
                 {
-                    if(state != "failed" || state == "completed")
+                    if(state == "failed" || state == "completed")
                     {
                         workItemsWaiting.Set();
                     }

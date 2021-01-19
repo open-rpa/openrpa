@@ -35,9 +35,14 @@ namespace OpenRPA.Office.Activities
             try
             {
                 var outlookApplication = CreateOutlookInstance();
-                MAPIFolder inBox = (MAPIFolder)outlookApplication.ActiveExplorer().Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox);
-                MAPIFolder folderbase = inBox.Store.GetRootFolder();
-                foreach (MAPIFolder folder in folderbase.Folders)
+                //MAPIFolder inBox = (MAPIFolder)outlookApplication.ActiveExplorer().Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox);
+                //MAPIFolder folderbase = inBox.Store.GetRootFolder();
+                //foreach (MAPIFolder folder in folderbase.Folders)
+                //{
+                //    GetFolders(folder, 0);
+                //}
+                var oNS = outlookApplication.GetNamespace("MAPI");
+                foreach (MAPIFolder folder in oNS.Folders)
                 {
                     GetFolders(folder, 0);
                 }

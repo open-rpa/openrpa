@@ -118,11 +118,11 @@ namespace OpenRPA.NM
         {
             get
             {
-                var win = windows.Where(x => x.browser == "chrome" && x.focused).FirstOrDefault();
+                var win = windows.Where(x => x != null && x.browser == "chrome" && x.focused).FirstOrDefault();
                 if (win != null) return win;
-                win = windows.Where(x => x.browser == "chrome" && x.id == 1).FirstOrDefault();
+                win = windows.Where(x => x != null && x.browser == "chrome" && x.id == 1).FirstOrDefault();
                 if (win != null) return win;
-                win = windows.Where(x => x.browser == "chrome").FirstOrDefault();
+                win = windows.Where(x => x != null && x.browser == "chrome").FirstOrDefault();
                 return win;
             }
         }

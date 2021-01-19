@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+	<!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,158 +59,158 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="activity_click_to_view" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="activity_click_to_view" xml:space="preserve">
     <value>双击查看</value>
   </data>
-  <data name="activity_closetab" xml:space="preserve">
+	<data name="activity_closetab" xml:space="preserve">
     <value>关闭页签</value>
   </data>
-  <data name="activity_closetab_tooltip" xml:space="preserve">
+	<data name="activity_closetab_tooltip" xml:space="preserve">
     <value>关闭当前页签页或所有页签</value>
   </data>
-  <data name="activity_executescript" xml:space="preserve">
+	<data name="activity_executescript" xml:space="preserve">
     <value>执行脚本</value>
   </data>
-  <data name="activity_executescript_tooltip" xml:space="preserve">
+	<data name="activity_executescript_tooltip" xml:space="preserve">
     <value>在浏览器中执行脚本,当前的活动页签和默认的Frame</value>
   </data>
-  <data name="activity_getelement" xml:space="preserve">
+	<data name="activity_getelement" xml:space="preserve">
     <value>获得元素</value>
   </data>
-  <data name="activity_getelement_drop_hint" xml:space="preserve">
+	<data name="activity_getelement_drop_hint" xml:space="preserve">
     <value>丢弃活动</value>
   </data>
-  <data name="activity_getelement_highlight" xml:space="preserve">
+	<data name="activity_getelement_highlight" xml:space="preserve">
     <value>高亮</value>
   </data>
-  <data name="activity_getelement_loopaction" xml:space="preserve">
+	<data name="activity_getelement_loopaction" xml:space="preserve">
     <value>循环动作</value>
   </data>
-  <data name="activity_getelement_loopaction_tooltop" xml:space="preserve">
+	<data name="activity_getelement_loopaction_tooltop" xml:space="preserve">
     <value>这样做，一旦完成处理每个结果，然后重新运行选择器并寻找新的item。</value>
   </data>
-  <data name="activity_getelement_open_selector" xml:space="preserve">
+	<data name="activity_getelement_open_selector" xml:space="preserve">
     <value>打开选择器</value>
   </data>
-  <data name="activity_getelement_tooltip" xml:space="preserve">
+	<data name="activity_getelement_tooltip" xml:space="preserve">
     <value>查找选择器选择的浏览器元素</value>
   </data>
-  <data name="activity_openurl" xml:space="preserve">
+	<data name="activity_openurl" xml:space="preserve">
     <value>打开URL</value>
   </data>
-  <data name="activity_openurl_getcurrent" xml:space="preserve">
+	<data name="activity_openurl_getcurrent" xml:space="preserve">
     <value>获得当前</value>
   </data>
-  <data name="activity_openurl_tooltip" xml:space="preserve">
+	<data name="activity_openurl_tooltip" xml:space="preserve">
     <value>在选定的浏览器中打开指定的URL</value>
   </data>
-  <data name="activity_open_editor" xml:space="preserve">
+	<data name="activity_open_editor" xml:space="preserve">
     <value>打开编辑器</value>
   </data>
-  <data name="activity_waitfordownload" xml:space="preserve">
+	<data name="activity_waitfordownload" xml:space="preserve">
     <value>等待下载完成</value>
   </data>
-  <data name="activity_waitfordownload_tooltip" xml:space="preserve">
+	<data name="activity_waitfordownload_tooltip" xml:space="preserve">
     <value>在nm支持的浏览器中，等待下载完成</value>
   </data>
-  <data name="activity_waitforready" xml:space="preserve">
+	<data name="activity_waitforready" xml:space="preserve">
     <value>等待就绪</value>
   </data>
-  <data name="activity_waitforready_help" xml:space="preserve">
+	<data name="activity_waitforready_help" xml:space="preserve">
     <value>等待页面准备就绪而不是载入中</value>
   </data>
-  <data name="compensate_for_old_addon" xml:space="preserve">
+	<data name="compensate_for_old_addon" xml:space="preserve">
     <value>补偿旧的扩展名</value>
   </data>
-  <data name="compensate_for_old_addon_help" xml:space="preserve">
+	<data name="compensate_for_old_addon_help" xml:space="preserve">
     <value>为旧添加添加像素补偿</value>
   </data>
-  <data name="debug_console_output" xml:space="preserve">
+	<data name="debug_console_output" xml:space="preserve">
     <value>调试控制台</value>
   </data>
-  <data name="debug_console_output_help" xml:space="preserve">
+	<data name="debug_console_output_help" xml:space="preserve">
     <value>写调试信息到浏览器的控制台中</value>
   </data>
-  <data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
+	<data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
     <value>设置值后等待</value>
   </data>
-  <data name="plugin_wait_for_tab_after_set_value_help" xml:space="preserve">
+	<data name="plugin_wait_for_tab_after_set_value_help" xml:space="preserve">
     <value>设置值后，等待选项卡状态为就绪状态</value>
   </data>
-  <data name="register_old_portname" xml:space="preserve">
+	<data name="register_old_portname" xml:space="preserve">
     <value>注册旧的端口名</value>
   </data>
-  <data name="register_old_portname_help" xml:space="preserve">
+	<data name="register_old_portname_help" xml:space="preserve">
     <value>注册旧的浏览器扩展端口名称</value>
   </data>
-  <data name="unique_xpath_ids" xml:space="preserve">
+	<data name="unique_xpath_ids" xml:space="preserve">
     <value>唯一的IDS</value>
   </data>
-  <data name="unique_xpath_ids_help" xml:space="preserve">
+	<data name="unique_xpath_ids_help" xml:space="preserve">
     <value>创建xpath选择器时，将这些属性用作唯一ID</value>
   </data>
-  <data name="wait_for_tab_click" xml:space="preserve">
+	<data name="wait_for_tab_click" xml:space="preserve">
     <value>等待页签</value>
   </data>
-  <data name="wait_for_tab_click_help" xml:space="preserve">
+	<data name="wait_for_tab_click_help" xml:space="preserve">
     <value>单击按钮后等待页签状态为就绪状态</value>
   </data>
 </root>

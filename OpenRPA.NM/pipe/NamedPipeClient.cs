@@ -13,20 +13,22 @@ namespace OpenRPA.NM.pipe
     {
         public NamedPipeWrapper.NamedPipeClient<T> pipe = null;
         public List<queuemsg<T>> replyqueue = null;
+        public static object lockobj = new object();
         public event Action<T> ServerMessage;
         public event Action Disconnected;
         public event Action Connected;
         public event Action<Exception> Error;
         public NamedPipeClient(string pipeName)
         {
-            replyqueue = new List<queuemsg<T>>();
+            lock(lockobj) replyqueue = new List<queuemsg<T>>();
             pipe = new NamedPipeWrapper.NamedPipeClient<T>(pipeName);
             pipe.AutoReconnect = true;
             pipe.Disconnected += (sender) => { Disconnected?.Invoke(); };
             pipe.Connected += (sender) => { Connected?.Invoke(); };
             pipe.Error += (e) => { Error?.Invoke(e); };
             pipe.ServerMessage += (sender, message) => {
-                var queue = replyqueue.Where(x => x != null && x.messageid == message.messageid).FirstOrDefault();
+                queuemsg<T> queue;
+                lock (lockobj) queue = replyqueue.Where(x => x != null && x.messageid == message.messageid).FirstOrDefault();
                 if (queue != null)
                 {
                     // Log.Information("received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));
@@ -57,7 +59,7 @@ namespace OpenRPA.NM.pipe
             if (pipe == null || !pipe.isConnected) return result;
 
             var queue = new queuemsg<T>(message);
-            replyqueue.Add(queue);
+            lock (lockobj) replyqueue.Add(queue);
             // Log.Information("Send and queue message " + message.messageid);
             using (queue.autoReset = new AutoResetEvent(false))
             {
@@ -66,7 +68,7 @@ namespace OpenRPA.NM.pipe
                 queue.sw.Stop();
             }
             // Log.Debug("received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));
-            replyqueue.Remove(queue);
+            lock (lockobj) replyqueue.Remove(queue);
             result = queue.result;
             if (result != null && result.error != null)
             {

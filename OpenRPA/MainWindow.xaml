@@ -265,6 +265,11 @@
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="{x:Static or:strings.selectorverbose}"></TextBlock>
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <RibbonCheckBox IsChecked="{Binding Setting_log_network}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
+                        <TextBlock Text="{x:Static or:strings.selectornetwork}"></TextBlock>
+                    </StackPanel>
                 </RibbonGroup>
             </RibbonTab>
             <!--<RibbonTab Header="Windows">
@@ -340,10 +345,32 @@
                     <avalonDock:LayoutAnchorSide>
                         <avalonDock:LayoutAnchorGroup >
                             <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="False"  x:Name="Logging" Title="{x:Static or:strings.dock_logging}" ContentId="Logging" >
-                                <TextBox Text="{Binding Tracing.TraceMessages}" TextWrapping="Wrap" IsReadOnly="False" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                                <DockPanel>
+                                    <StackPanel HorizontalAlignment="Left">
+                                        <Button DockPanel.Dock="Top" Height="20" Width="20" Click="clearTraceMessages_Click" >X</Button>
+                                        <RibbonCheckBox IsChecked="{Binding Setting_log_warning}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.warning}" />
+                                        <RibbonCheckBox IsChecked="{Binding Setting_log_debug}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.debug}" />
+                                        <RibbonCheckBox IsChecked="{Binding Setting_log_verbose}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.verbose}" />
+                                        <RibbonCheckBox IsChecked="{Binding Setting_log_selector}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.selector}"/>
+                                        <RibbonCheckBox IsChecked="{Binding Setting_log_selector_verbose}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.selectorverbose}" />
+                                        <RibbonCheckBox IsChecked="{Binding Setting_log_network}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.selectornetwork}" />
+                                    </StackPanel>
+                                    <TextBox DockPanel.Dock="Bottom" Text="{Binding Tracing.TraceMessages}" TextWrapping="Wrap" IsReadOnly="False" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                                </DockPanel>
                             </avalonDock:LayoutAnchorable>
                             <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="False"  x:Name="Output" Title="{x:Static or:strings.dock_output}" ContentId="Output" >
-                                <TextBox Text="{Binding Tracing.OutputMessages}" TextWrapping="Wrap" IsReadOnly="False" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                                <DockPanel>
+                                    <StackPanel HorizontalAlignment="Left">
+                                        <Button DockPanel.Dock="Top" Height="20" Width="20" Click="clearOutputMessages_Click" >X</Button>
+                                    </StackPanel>
+                                    <TextBox Text="{Binding Tracing.OutputMessages}" TextWrapping="Wrap" IsReadOnly="False" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                                </DockPanel>
                             </avalonDock:LayoutAnchorable>
 
                             <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="False"  x:Name="WorkflowInstances" Title="{x:Static or:strings.dock_workflowinstances}" 

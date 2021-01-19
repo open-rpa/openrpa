@@ -76,7 +76,7 @@ namespace OpenRPA.Interfaces
             {
                 var config = new NLog.Config.LoggingConfiguration();
                 var logfile = new NLog.Targets.FileTarget("logfile") { FileName = System.IO.Path.Combine(Extensions.ProjectsDirectory, "logfile.txt") };
-                logfile.Layout = "${time}|${message}";
+                logfile.Layout = "${time}|${level:uppercase=true}|${message}";
                 // var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
                 // config.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
                 // config.AddRule(NLog.LogLevel.Trace, NLog.LogLevel.Fatal, logfile);
@@ -117,6 +117,11 @@ namespace OpenRPA.Interfaces
         {
             if (Config.local.log_verbose) { System.Diagnostics.Trace.WriteLine(message, "Verbose"); }
             LogLine(message, "Verbose");
+        }
+        public static void Network(string message)
+        {
+            if (Config.local.log_network) { System.Diagnostics.Trace.WriteLine(message, "Network"); }
+            LogLine(message, "Network");
         }
         public static void Activity(string message)
         {

@@ -8,10 +8,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,10,0,0" Text="{x:Static or:strings.plugin_allow_child_searching}" VerticalAlignment="Top" Width="110" />
-        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,10,0,0" VerticalAlignment="Top" Width="222" x:Name="allow_child_searching" 
-            Checked="allow_child_searching_IsEnabledChanged" Unchecked="allow_child_searching_IsEnabledChanged" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,10,0,0" Text="{x:Static or:strings.plugin_allow_child_searching_help}" VerticalAlignment="Top" />
 
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,30,0,0" Text="{x:Static or:strings.plugin_allow_multiple_hits}" VerticalAlignment="Top" Width="110" />
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,30,0,0" VerticalAlignment="Top" Width="222" x:Name="allow_multiple_hits_mid_selector" 
@@ -35,15 +31,10 @@
             Checked="traverse_selector_both_ways_IsEnabledChanged"  Unchecked="traverse_selector_both_ways_IsEnabledChanged" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,90,0,0" Text="{x:Static or:strings.plugin_traverse_selector_both_ways_help}" VerticalAlignment="Top" />
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,120,0,0" Text="{x:Static or:strings.plugin_search_descendants}" VerticalAlignment="Top" Width="110" />
-        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,120,0,0" VerticalAlignment="Top" Width="222" x:Name="search_descendants" 
-            Checked="search_descendants_Checked"  Unchecked="search_descendants_Checked" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,120,0,0" Text="{x:Static or:strings.plugin_search_descendants_help}" VerticalAlignment="Top" />
-
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,150,0,0" Text="{x:Static or:strings.plugin_enable_cache}" VerticalAlignment="Top" Width="110" />
-        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,150,0,0" VerticalAlignment="Top" Width="222" x:Name="enable_cache" 
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,130,0,0" Text="{x:Static or:strings.plugin_enable_cache}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,130,0,0" VerticalAlignment="Top" Width="222" x:Name="enable_cache" 
             Checked="enable_cache_Checked"  Unchecked="enable_cache_Checked" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,150,0,0" Text="{x:Static or:strings.enable_cache_help}" VerticalAlignment="Top" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,130,0,0" Text="{x:Static or:strings.enable_cache_help}" VerticalAlignment="Top" />
 
     </Grid>
 </UserControl>

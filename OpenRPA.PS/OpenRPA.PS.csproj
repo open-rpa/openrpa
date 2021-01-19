@@ -4,7 +4,8 @@
     <AssemblyName>OpenRPA.PS</AssemblyName>
     <RootNamespace>OpenRPA.PS</RootNamespace>
     <Configurations>Debug;Release;PrepInstaller</Configurations>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
+    <PackageReleaseNotes>1.0.2 Check for error response on Invoke-Openflow</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />

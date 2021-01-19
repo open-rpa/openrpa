@@ -10,8 +10,21 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.1.20</Version>
-    <PackageReleaseNotes>1.1.20 Rollback code for auto adding namespaces
+    <Version>1.2.14</Version>
+    <PackageReleaseNotes>1.2.14 Add support for custom screensize for HD robots
+1.2.13 ps: Check for error response on Invoke-Openflow
+1.2.12 Normalize selector code
+1.2.11 Office: Fix creating missing worksheets in typed activities
+1.2.10 Add basic metrics
+1.2.9 Fix Move Mail to support multiple accounts
+1.2.8 Add category to openrpa log file
+1.2.7 Filter cookies on login page for local domain
+1.2.6 Add custom timeout for openining IE browser
+1.2.5 Improve openflow package stiching code
+1.2.4 Fix GetMails to support multiple accounts
+1.2.3 various improvements, improve windows finder in get element
+1.2.2 Integrate new selector with old windows selector
+1.2.1 Try new windows selector
 1.1.19 Remove old updater, auto add namespaces
 1.1.18 Fix major issue with special charecters in nm
 1.1.17 Change frame messsages to json, to avoid conflict with certain webpages
@@ -236,6 +249,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <PackageReference Include="NuGet.Packaging" Version="5.4.0" />
     <PackageReference Include="NuGet.Protocol" Version="5.4.0" />
     <PackageReference Include="NuGet.Resolver" Version="5.4.0" />
+    <PackageReference Include="Prometheus.Client" Version="4.2.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\ClickElementDesigner.xaml" />
@@ -867,6 +881,14 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Microsoft.Expression.Interactions.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="System.Windows.Interactivity.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
     <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />

@@ -34,11 +34,30 @@ namespace OpenRPA.IE.Views
             DataContext = this;
             enable_xpath_support.IsChecked = PluginConfig.enable_xpath_support;
             enable_caching_browser.IsChecked = PluginConfig.enable_caching_browser;
+            browser_timeout.Text = PluginConfig.open_browser_url_timeout.ToString();
         }
         private void value_Changed(object sender, RoutedEventArgs e)
         {
             PluginConfig.enable_xpath_support = enable_xpath_support.IsChecked.Value;
             PluginConfig.enable_caching_browser = enable_caching_browser.IsChecked.Value;
+            try
+            {
+                TimeSpan t;
+                if(TimeSpan.TryParse(browser_timeout.Text, out t))
+                {
+                    browser_timeout.Background = Brushes.White;
+                    PluginConfig.open_browser_url_timeout = t;
+                }
+                else
+                {
+                    browser_timeout.Background = Brushes.Red;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
             Config.Save();
         }
     }

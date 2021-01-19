@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+	<!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,674 +59,674 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="activity_add_variables" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="activity_add_variables" xml:space="preserve">
     <value>変数を追加</value>
   </data>
-  <data name="activity_animatemouse" xml:space="preserve">
+	<data name="activity_animatemouse" xml:space="preserve">
     <value>マウスをアニメーション化</value>
   </data>
-  <data name="activity_animatemouse_help" xml:space="preserve">
+	<data name="activity_animatemouse_help" xml:space="preserve">
     <value>目的地にすぐに移動する代わりに、ビジュアルにマウスを移動</value>
   </data>
-  <data name="activity_animatemove" xml:space="preserve">
+	<data name="activity_animatemove" xml:space="preserve">
     <value>移動をアニメーション化</value>
   </data>
-  <data name="activity_animatemove_help" xml:space="preserve">
+	<data name="activity_animatemove_help" xml:space="preserve">
     <value>目的地にすぐに移動する代わりに、ビジュアルにウィンドウを移動</value>
   </data>
-  <data name="activity_blocking" xml:space="preserve">
+	<data name="activity_blocking" xml:space="preserve">
     <value>ブロック</value>
   </data>
-  <data name="activity_blocking_help" xml:space="preserve">
+	<data name="activity_blocking_help" xml:space="preserve">
     <value>完了するまで実行をブロック</value>
   </data>
-  <data name="activity_checkrunning" xml:space="preserve">
+	<data name="activity_checkrunning" xml:space="preserve">
     <value>実行をチェック</value>
   </data>
-  <data name="activity_checkrunning_help" xml:space="preserve">
+	<data name="activity_checkrunning_help" xml:space="preserve">
     <value>Check if application is already running using the selector, if set to false, will launch a new application no matter what</value>
   </data>
-  <data name="activity_clickdelay" xml:space="preserve">
+	<data name="activity_clickdelay" xml:space="preserve">
     <value>クリック遅延</value>
   </data>
-  <data name="activity_clickdelay_help" xml:space="preserve">
+	<data name="activity_clickdelay_help" xml:space="preserve">
     <value>各キーストローク間のディレイ</value>
   </data>
-  <data name="activity_clickelement" xml:space="preserve">
+	<data name="activity_clickelement" xml:space="preserve">
     <value>要素をクリック</value>
   </data>
-  <data name="activity_clickelement_tooltip" xml:space="preserve">
+	<data name="activity_clickelement_tooltip" xml:space="preserve">
     <value>GetElement で見つかった要素をクリック</value>
   </data>
-  <data name="activity_click_to_view" xml:space="preserve">
+	<data name="activity_click_to_view" xml:space="preserve">
     <value>ダブルクリックで表示</value>
   </data>
-  <data name="activity_closeapplication" xml:space="preserve">
+	<data name="activity_closeapplication" xml:space="preserve">
     <value>アプリケーションをクローズ</value>
   </data>
-  <data name="activity_closeapplication_tooltip" xml:space="preserve">
+	<data name="activity_closeapplication_tooltip" xml:space="preserve">
     <value>Find application based on a UI selector and then closes the Application</value>
   </data>
-  <data name="activity_commentout" xml:space="preserve">
+	<data name="activity_commentout" xml:space="preserve">
     <value>コメントアウト</value>
   </data>
-  <data name="activity_commentout_tooltip" xml:space="preserve">
+	<data name="activity_commentout_tooltip" xml:space="preserve">
     <value>Ignore everything inside this Acitvity, handy for quickly remarking something out</value>
   </data>
-  <data name="activity_copyclipboard" xml:space="preserve">
+	<data name="activity_copyclipboard" xml:space="preserve">
     <value>クリックボードをコピー</value>
   </data>
-  <data name="activity_copyclipboard_tooltip" xml:space="preserve">
+	<data name="activity_copyclipboard_tooltip" xml:space="preserve">
     <value>クリップボードのコンテンツを変数にコピー</value>
   </data>
-  <data name="activity_datatable" xml:space="preserve">
+	<data name="activity_datatable" xml:space="preserve">
     <value>データテーブル</value>
   </data>
-  <data name="activity_datatable_help" xml:space="preserve">
+	<data name="activity_datatable_help" xml:space="preserve">
     <value>The DataTable to work with</value>
   </data>
-  <data name="activity_dataview" xml:space="preserve">
+	<data name="activity_dataview" xml:space="preserve">
     <value>データビュー</value>
   </data>
-  <data name="activity_dataview_help" xml:space="preserve">
+	<data name="activity_dataview_help" xml:space="preserve">
     <value>The DateView to work with</value>
   </data>
-  <data name="activity_detector" xml:space="preserve">
+	<data name="activity_detector" xml:space="preserve">
     <value>検知器</value>
   </data>
-  <data name="activity_detector_help" xml:space="preserve">
+	<data name="activity_detector_help" xml:space="preserve">
     <value>検知器はこのトリガを待機し、トリガされるとワークフローを継続</value>
   </data>
-  <data name="activity_detector_tooltip" xml:space="preserve">
+	<data name="activity_detector_tooltip" xml:space="preserve">
     <value>ワークフローを待機モードに設定し、選択した検知器がトリガされるのを待機</value>
   </data>
-  <data name="activity_displayname" xml:space="preserve">
+	<data name="activity_displayname" xml:space="preserve">
     <value>表示名</value>
   </data>
-  <data name="activity_displayname_help" xml:space="preserve">
+	<data name="activity_displayname_help" xml:space="preserve">
     <value>ワークフロー・デザイナ内の表示名</value>
   </data>
-  <data name="activity_doubleclick" xml:space="preserve">
+	<data name="activity_doubleclick" xml:space="preserve">
     <value>ダブルクリック</value>
   </data>
-  <data name="activity_doubleclick_help" xml:space="preserve">
+	<data name="activity_doubleclick_help" xml:space="preserve">
     <value>シングルクリックの代わりにダブルクリックする</value>
   </data>
-  <data name="activity_drop_hint" xml:space="preserve">
+	<data name="activity_drop_hint" xml:space="preserve">
     <value>アクティビティをドロップ</value>
   </data>
-  <data name="activity_duration" xml:space="preserve">
+	<data name="activity_duration" xml:space="preserve">
     <value>期間</value>
   </data>
-  <data name="activity_duration_help" xml:space="preserve">
+	<data name="activity_duration_help" xml:space="preserve">
     <value>この期間だけ実行</value>
   </data>
-  <data name="activity_element" xml:space="preserve">
+	<data name="activity_element" xml:space="preserve">
     <value>要素</value>
   </data>
-  <data name="activity_element_help" xml:space="preserve">
+	<data name="activity_element_help" xml:space="preserve">
     <value>Click on this element, the return type of all GetElement activites and some others</value>
   </data>
-  <data name="activity_focuselement" xml:space="preserve">
+	<data name="activity_focuselement" xml:space="preserve">
     <value>要素をフォーカス</value>
   </data>
-  <data name="activity_focuselement_tooltip" xml:space="preserve">
+	<data name="activity_focuselement_tooltip" xml:space="preserve">
     <value>要素にフォーカスを与える</value>
   </data>
-  <data name="activity_force" xml:space="preserve">
+	<data name="activity_force" xml:space="preserve">
     <value>強制</value>
   </data>
-  <data name="activity_force_help" xml:space="preserve">
+	<data name="activity_force_help" xml:space="preserve">
     <value>アクションを強制的に実施</value>
   </data>
-  <data name="activity_foreachdatarow" xml:space="preserve">
+	<data name="activity_foreachdatarow" xml:space="preserve">
     <value>Foreach DataRow</value>
   </data>
-  <data name="activity_foreachdatarow_tooltip" xml:space="preserve">
+	<data name="activity_foreachdatarow_tooltip" xml:space="preserve">
     <value>DataTable 内の各行を列挙</value>
   </data>
-  <data name="activity_height" xml:space="preserve">
+	<data name="activity_height" xml:space="preserve">
     <value>高さ</value>
   </data>
-  <data name="activity_height_help" xml:space="preserve">
+	<data name="activity_height_help" xml:space="preserve">
     <value>If set, will move the window to this location</value>
   </data>
-  <data name="activity_highlight" xml:space="preserve">
+	<data name="activity_highlight" xml:space="preserve">
     <value>強調</value>
   </data>
-  <data name="activity_highlightelement" xml:space="preserve">
+	<data name="activity_highlightelement" xml:space="preserve">
     <value>要素を強調</value>
   </data>
-  <data name="activity_highlightelement_tooltip" xml:space="preserve">
+	<data name="activity_highlightelement_tooltip" xml:space="preserve">
     <value>GetElement で見つかった要素をハイライト</value>
   </data>
-  <data name="activity_ignoreerrors" xml:space="preserve">
+	<data name="activity_ignoreerrors" xml:space="preserve">
     <value>エラーを無視</value>
   </data>
-  <data name="activity_ignoreerrors_help" xml:space="preserve">
+	<data name="activity_ignoreerrors_help" xml:space="preserve">
     <value>If an error occurs, will ignore it an continue</value>
   </data>
-  <data name="activity_imageresult" xml:space="preserve">
+	<data name="activity_imageresult" xml:space="preserve">
     <value>イメージ結果</value>
   </data>
-  <data name="activity_imageresult_help" xml:space="preserve">
+	<data name="activity_imageresult_help" xml:space="preserve">
     <value>結果をイメージとして返却</value>
   </data>
-  <data name="activity_insertclipboard" xml:space="preserve">
+	<data name="activity_insertclipboard" xml:space="preserve">
     <value>クリックボードを挿入</value>
   </data>
-  <data name="activity_insertclipboard_tooltip" xml:space="preserve">
+	<data name="activity_insertclipboard_tooltip" xml:space="preserve">
     <value>ユーザのクリップボードバッファに新規コンテンツを挿入</value>
   </data>
-  <data name="activity_invokeopenflow" xml:space="preserve">
+	<data name="activity_invokeopenflow" xml:space="preserve">
     <value>OpenFlow を実行</value>
   </data>
-  <data name="activity_invokeopenflow_tooltip" xml:space="preserve">
+	<data name="activity_invokeopenflow_tooltip" xml:space="preserve">
     <value>Invoke a workflow in node registered for RPA usage inside OpenFlow</value>
   </data>
-  <data name="activity_invokeopenrpa" xml:space="preserve">
+	<data name="activity_invokeopenrpa" xml:space="preserve">
     <value>OpenRPA を実行</value>
   </data>
-  <data name="activity_invokeopenrpa_tooltip" xml:space="preserve">
+	<data name="activity_invokeopenrpa_tooltip" xml:space="preserve">
     <value>ローカル OpenRPA ワークフローを実行</value>
   </data>
-  <data name="activity_invokeremoteopenrpa" xml:space="preserve">
+	<data name="activity_invokeremoteopenrpa" xml:space="preserve">
     <value>リモート OpenRPA を実行</value>
   </data>
-  <data name="activity_invokeremoteopenrpa_tooltip" xml:space="preserve">
+	<data name="activity_invokeremoteopenrpa_tooltip" xml:space="preserve">
     <value>Invoke a OpenRPA Workflow on a remote Robot</value>
   </data>
-  <data name="activity_keymodifiers" xml:space="preserve">
+	<data name="activity_keymodifiers" xml:space="preserve">
     <value>Key Modifier</value>
   </data>
-  <data name="activity_keymodifiers_help" xml:space="preserve">
+	<data name="activity_keymodifiers_help" xml:space="preserve">
     <value>Hold this key down, while clicking, only works if Virtual click is disabled</value>
   </data>
-  <data name="activity_map_variables" xml:space="preserve">
+	<data name="activity_map_variables" xml:space="preserve">
     <value>変数をマップ</value>
   </data>
-  <data name="activity_mousebutton" xml:space="preserve">
+	<data name="activity_mousebutton" xml:space="preserve">
     <value>マウスボタン</value>
   </data>
-  <data name="activity_mousebutton_help" xml:space="preserve">
+	<data name="activity_mousebutton_help" xml:space="preserve">
     <value>クリックするマウスボタン</value>
   </data>
-  <data name="activity_movemouse" xml:space="preserve">
+	<data name="activity_movemouse" xml:space="preserve">
     <value>マウスを移動</value>
   </data>
-  <data name="activity_movemouse_tooltip" xml:space="preserve">
+	<data name="activity_movemouse_tooltip" xml:space="preserve">
     <value>Move mouse cursor to a location relative to an element found with GetElement (or desktop if no element supplied)</value>
   </data>
-  <data name="activity_offsetx" xml:space="preserve">
+	<data name="activity_offsetx" xml:space="preserve">
     <value>X オフセット</value>
   </data>
-  <data name="activity_offsetx_help" xml:space="preserve">
+	<data name="activity_offsetx_help" xml:space="preserve">
     <value>Click with this offset inside the element</value>
   </data>
-  <data name="activity_offsety" xml:space="preserve">
+	<data name="activity_offsety" xml:space="preserve">
     <value>Y オフセット</value>
   </data>
-  <data name="activity_offsety_help" xml:space="preserve">
+	<data name="activity_offsety_help" xml:space="preserve">
     <value>Click with this offset inside the element</value>
   </data>
-  <data name="activity_openapplication" xml:space="preserve">
+	<data name="activity_openapplication" xml:space="preserve">
     <value>アプリケーションを開く</value>
   </data>
-  <data name="activity_openapplication_tooltip" xml:space="preserve">
+	<data name="activity_openapplication_tooltip" xml:space="preserve">
     <value>Search for Windows element based on a selector, and give it focus, if not found start the application</value>
   </data>
-  <data name="activity_open_selector" xml:space="preserve">
+	<data name="activity_open_selector" xml:space="preserve">
     <value>セレクタを開く</value>
   </data>
-  <data name="activity_postwait" xml:space="preserve">
+	<data name="activity_postwait" xml:space="preserve">
     <value>事後待機</value>
   </data>
-  <data name="activity_postwait_help" xml:space="preserve">
+	<data name="activity_postwait_help" xml:space="preserve">
     <value>Wait this amount of time, after doing the click, help full one applications that can be very slow to react on clicks</value>
   </data>
-  <data name="activity_result" xml:space="preserve">
+	<data name="activity_result" xml:space="preserve">
     <value>結果</value>
   </data>
-  <data name="activity_result_help" xml:space="preserve">
+	<data name="activity_result_help" xml:space="preserve">
     <value>Save the result into this variable</value>
   </data>
-  <data name="activity_selector" xml:space="preserve">
+	<data name="activity_selector" xml:space="preserve">
     <value>セレクタ</value>
   </data>
-  <data name="activity_selector_help" xml:space="preserve">
+	<data name="activity_selector_help" xml:space="preserve">
     <value>The selector used to find the element(s), supports mapping workflow variables by using {{variablename}}</value>
   </data>
-  <data name="activity_select_element" xml:space="preserve">
+	<data name="activity_select_element" xml:space="preserve">
     <value>要素を選択</value>
   </data>
-  <data name="activity_sendctrlc" xml:space="preserve">
+	<data name="activity_sendctrlc" xml:space="preserve">
     <value>Ctrl+C を送信</value>
   </data>
-  <data name="activity_sendctrlc_help" xml:space="preserve">
+	<data name="activity_sendctrlc_help" xml:space="preserve">
     <value>Send Ctrl+C before trying to copy the Clipboard Content</value>
   </data>
-  <data name="activity_showballontop_message" xml:space="preserve">
+	<data name="activity_showballontop_message" xml:space="preserve">
     <value>メッセージ</value>
   </data>
-  <data name="activity_showballontop_message_hint" xml:space="preserve">
+	<data name="activity_showballontop_message_hint" xml:space="preserve">
     <value>表示するメッセージ</value>
   </data>
-  <data name="activity_showballontop_title" xml:space="preserve">
+	<data name="activity_showballontop_title" xml:space="preserve">
     <value>タイトル</value>
   </data>
-  <data name="activity_showballontop_title_hint" xml:space="preserve">
+	<data name="activity_showballontop_title_hint" xml:space="preserve">
     <value>Title on bollanmessage</value>
   </data>
-  <data name="activity_showballoontip" xml:space="preserve">
+	<data name="activity_showballoontip" xml:space="preserve">
     <value>バルーンチップを表示</value>
   </data>
-  <data name="activity_showballoontip_tooltip" xml:space="preserve">
+	<data name="activity_showballoontip_tooltip" xml:space="preserve">
     <value>Show a small ballontip near the system tray, will respect OS message center settings</value>
   </data>
-  <data name="activity_stringresult" xml:space="preserve">
+	<data name="activity_stringresult" xml:space="preserve">
     <value>文字列結果</value>
   </data>
-  <data name="activity_stringresult_help" xml:space="preserve">
+	<data name="activity_stringresult_help" xml:space="preserve">
     <value>Return the result as a string</value>
   </data>
-  <data name="activity_target" xml:space="preserve">
+	<data name="activity_target" xml:space="preserve">
     <value>ターゲット</value>
   </data>
-  <data name="activity_target_help" xml:space="preserve">
+	<data name="activity_target_help" xml:space="preserve">
     <value>ターゲットのユーザまたはロール</value>
   </data>
-  <data name="activity_text" xml:space="preserve">
+	<data name="activity_text" xml:space="preserve">
     <value>テキスト</value>
   </data>
-  <data name="activity_timeout" xml:space="preserve">
+	<data name="activity_timeout" xml:space="preserve">
     <value>タイムアウト</value>
   </data>
-  <data name="activity_timeout_help" xml:space="preserve">
+	<data name="activity_timeout_help" xml:space="preserve">
     <value>Wait this long before giving up and either failing or continuing depending on other settings</value>
   </data>
-  <data name="activity_typetext" xml:space="preserve">
+	<data name="activity_typetext" xml:space="preserve">
     <value>テキストをタイプ</value>
   </data>
-  <data name="activity_typetext_tooltip" xml:space="preserve">
+	<data name="activity_typetext_tooltip" xml:space="preserve">
     <value>Send keyboard strokes to what ever that has focus, should only be used by recorder</value>
   </data>
-  <data name="activity_virtualclick" xml:space="preserve">
+	<data name="activity_virtualclick" xml:space="preserve">
     <value>仮想クリック</value>
   </data>
-  <data name="activity_virtualclick_help" xml:space="preserve">
+	<data name="activity_virtualclick_help" xml:space="preserve">
     <value>Try and do a Virtual click instead of using the mouse, not all elements supports this</value>
   </data>
-  <data name="activity_waitforcompleted" xml:space="preserve">
+	<data name="activity_waitforcompleted" xml:space="preserve">
     <value>完了まで待機</value>
   </data>
-  <data name="activity_waitforcompleted_help" xml:space="preserve">
+	<data name="activity_waitforcompleted_help" xml:space="preserve">
     <value>Wait for Completion before continuing with workflow</value>
   </data>
-  <data name="activity_width" xml:space="preserve">
+	<data name="activity_width" xml:space="preserve">
     <value>幅</value>
   </data>
-  <data name="activity_width_help" xml:space="preserve">
+	<data name="activity_width_help" xml:space="preserve">
     <value>If set, will move the window to this location</value>
   </data>
-  <data name="activity_workflow" xml:space="preserve">
+	<data name="activity_workflow" xml:space="preserve">
     <value>ワークフロー</value>
   </data>
-  <data name="activity_workflow_help" xml:space="preserve">
+	<data name="activity_workflow_help" xml:space="preserve">
     <value>このワークフローを使用</value>
   </data>
-  <data name="activity_x" xml:space="preserve">
+	<data name="activity_x" xml:space="preserve">
     <value>X</value>
   </data>
-  <data name="activity_x_help" xml:space="preserve">
+	<data name="activity_x_help" xml:space="preserve">
     <value>If set, will move the window to this location</value>
   </data>
-  <data name="activity_y" xml:space="preserve">
+	<data name="activity_y" xml:space="preserve">
     <value>Y</value>
   </data>
-  <data name="activity_y_help" xml:space="preserve">
+	<data name="activity_y_help" xml:space="preserve">
     <value>If set, will move the window to this location</value>
   </data>
-  <data name="animatemouse" xml:space="preserve">
+	<data name="animatemouse" xml:space="preserve">
     <value>アニメーション化マウスを使用</value>
   </data>
-  <data name="browseraddons" xml:space="preserve">
+	<data name="browseraddons" xml:space="preserve">
     <value>ブラウザ・アドオン</value>
   </data>
-  <data name="button_ok" xml:space="preserve">
+	<data name="button_ok" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="cancelkey" xml:space="preserve">
+	<data name="cancelkey" xml:space="preserve">
     <value>キャンセル・キー</value>
   </data>
-  <data name="chrome" xml:space="preserve">
+	<data name="chrome" xml:space="preserve">
     <value>Chrome</value>
   </data>
-  <data name="clickpostwait" xml:space="preserve">
+	<data name="clickpostwait" xml:space="preserve">
     <value>クリックを事後待機に設定</value>
   </data>
-  <data name="copy" xml:space="preserve">
+	<data name="copy" xml:space="preserve">
     <value>コピー</value>
   </data>
-  <data name="copyid" xml:space="preserve">
+	<data name="copyid" xml:space="preserve">
     <value>ID をコピー</value>
   </data>
-  <data name="copyrelativefilename" xml:space="preserve">
+	<data name="copyrelativefilename" xml:space="preserve">
     <value>相対ファイル名をコピー</value>
   </data>
-  <data name="debug" xml:space="preserve">
+	<data name="debug" xml:space="preserve">
     <value>デバッグ</value>
   </data>
-  <data name="delete" xml:space="preserve">
+	<data name="delete" xml:space="preserve">
     <value>削除</value>
   </data>
-  <data name="designer_menu_commentout" xml:space="preserve">
+	<data name="designer_menu_commentout" xml:space="preserve">
     <value>コメントアウト</value>
   </data>
-  <data name="designer_menu_runfromhere" xml:space="preserve">
+	<data name="designer_menu_runfromhere" xml:space="preserve">
     <value>ここから実行</value>
   </data>
-  <data name="designer_menu_runthis" xml:space="preserve">
+	<data name="designer_menu_runthis" xml:space="preserve">
     <value>このアクティビティを実行</value>
   </data>
-  <data name="designer_menu_uncomment" xml:space="preserve">
+	<data name="designer_menu_uncomment" xml:space="preserve">
     <value>コメント解除</value>
   </data>
-  <data name="details" xml:space="preserve">
+	<data name="details" xml:space="preserve">
     <value>詳細</value>
   </data>
-  <data name="detectors" xml:space="preserve">
+	<data name="detectors" xml:space="preserve">
     <value>検知器</value>
   </data>
-  <data name="disable_local_caching" xml:space="preserve">
+	<data name="disable_local_caching" xml:space="preserve">
     <value>ローカルキャッシュを無効化</value>
   </data>
-  <data name="dock_logging" xml:space="preserve">
+	<data name="dock_logging" xml:space="preserve">
     <value>ロギング</value>
   </data>
-  <data name="dock_output" xml:space="preserve">
+	<data name="dock_output" xml:space="preserve">
     <value>出力</value>
   </data>
-  <data name="dock_properties" xml:space="preserve">
+	<data name="dock_properties" xml:space="preserve">
     <value>プロパティ</value>
   </data>
-  <data name="dock_snippets" xml:space="preserve">
+	<data name="dock_snippets" xml:space="preserve">
     <value>スニペット</value>
   </data>
-  <data name="dock_toolbox" xml:space="preserve">
+	<data name="dock_toolbox" xml:space="preserve">
     <value>ツールボックス</value>
   </data>
-  <data name="dock_workflowinstances" xml:space="preserve">
+	<data name="dock_workflowinstances" xml:space="preserve">
     <value>ワークフロー・インスタンス</value>
   </data>
-  <data name="download" xml:space="preserve">
+	<data name="download" xml:space="preserve">
     <value>ダウンロード</value>
   </data>
-  <data name="edge" xml:space="preserve">
+	<data name="edge" xml:space="preserve">
     <value>Edge</value>
   </data>
-  <data name="exitapplication" xml:space="preserve">
+	<data name="exitapplication" xml:space="preserve">
     <value>アプリケーションを終了</value>
   </data>
-  <data name="export" xml:space="preserve">
+	<data name="export" xml:space="preserve">
     <value>エクスポート</value>
   </data>
-  <data name="files" xml:space="preserve">
+	<data name="files" xml:space="preserve">
     <value>ファイル</value>
   </data>
-  <data name="firefox" xml:space="preserve">
+	<data name="firefox" xml:space="preserve">
     <value>Firefox</value>
   </data>
-  <data name="general" xml:space="preserve">
+	<data name="general" xml:space="preserve">
     <value>一般</value>
   </data>
-  <data name="import" xml:space="preserve">
+	<data name="import" xml:space="preserve">
     <value>インポート</value>
   </data>
-  <data name="logging" xml:space="preserve">
+	<data name="logging" xml:space="preserve">
     <value>ロギング</value>
   </data>
-  <data name="mainnew" xml:space="preserve">
+	<data name="mainnew" xml:space="preserve">
     <value>新規</value>
   </data>
-  <data name="maintitle" xml:space="preserve">
+	<data name="maintitle" xml:space="preserve">
     <value>OpenRPA</value>
   </data>
-  <data name="main_reload" xml:space="preserve">
+	<data name="main_reload" xml:space="preserve">
     <value>再読込</value>
   </data>
-  <data name="main_settings_recording_add_to_designer" xml:space="preserve">
+	<data name="main_settings_recording_add_to_designer" xml:space="preserve">
     <value>デザイナに直接記録</value>
   </data>
-  <data name="minimize" xml:space="preserve">
+	<data name="minimize" xml:space="preserve">
     <value>最小化</value>
   </data>
-  <data name="name" xml:space="preserve">
+	<data name="name" xml:space="preserve">
     <value>名前</value>
   </data>
-  <data name="newproject" xml:space="preserve">
+	<data name="newproject" xml:space="preserve">
     <value>新規プロジェクト</value>
   </data>
-  <data name="newworkflow" xml:space="preserve">
+	<data name="newworkflow" xml:space="preserve">
     <value>新規ワークフロー</value>
   </data>
-  <data name="nodered" xml:space="preserve">
+	<data name="nodered" xml:space="preserve">
     <value>NodeRED</value>
   </data>
-  <data name="open" xml:space="preserve">
+	<data name="open" xml:space="preserve">
     <value>開く</value>
   </data>
-  <data name="openflow" xml:space="preserve">
+	<data name="openflow" xml:space="preserve">
     <value>OpenFlow</value>
   </data>
-  <data name="openrpa" xml:space="preserve">
+	<data name="openrpa" xml:space="preserve">
     <value>OpenRPA</value>
   </data>
-  <data name="open_created" xml:space="preserve">
+	<data name="open_created" xml:space="preserve">
     <value>作成日時</value>
   </data>
-  <data name="open_createdby" xml:space="preserve">
+	<data name="open_createdby" xml:space="preserve">
     <value>作成者</value>
   </data>
-  <data name="open_edit" xml:space="preserve">
+	<data name="open_edit" xml:space="preserve">
     <value>編集</value>
   </data>
-  <data name="open_edit_xaml" xml:space="preserve">
+	<data name="open_edit_xaml" xml:space="preserve">
     <value>XAML を編集</value>
   </data>
-  <data name="open_modified" xml:space="preserve">
+	<data name="open_modified" xml:space="preserve">
     <value>更新日時</value>
   </data>
-  <data name="open_modifiedby" xml:space="preserve">
+	<data name="open_modifiedby" xml:space="preserve">
     <value>更新者</value>
   </data>
-  <data name="open_name" xml:space="preserve">
+	<data name="open_name" xml:space="preserve">
     <value>名前</value>
   </data>
-  <data name="open_serializable" xml:space="preserve">
+	<data name="open_serializable" xml:space="preserve">
     <value>シリアライズ可能</value>
   </data>
-  <data name="open_state" xml:space="preserve">
+	<data name="open_state" xml:space="preserve">
     <value>状態</value>
   </data>
-  <data name="packages" xml:space="preserve">
+	<data name="packages" xml:space="preserve">
     <value>パッケージ</value>
   </data>
-  <data name="permissions" xml:space="preserve">
+	<data name="permissions" xml:space="preserve">
     <value>権限</value>
   </data>
-  <data name="permissionswindow_delete" xml:space="preserve">
+	<data name="permissionswindow_delete" xml:space="preserve">
     <value>削除</value>
   </data>
-  <data name="permissionswindow_new" xml:space="preserve">
+	<data name="permissionswindow_new" xml:space="preserve">
     <value>新規</value>
   </data>
-  <data name="permissions_delete" xml:space="preserve">
+	<data name="permissions_delete" xml:space="preserve">
     <value>削除</value>
   </data>
-  <data name="permissions_invoke" xml:space="preserve">
+	<data name="permissions_invoke" xml:space="preserve">
     <value>実行</value>
   </data>
-  <data name="permissions_read" xml:space="preserve">
+	<data name="permissions_read" xml:space="preserve">
     <value>読込</value>
   </data>
-  <data name="permissions_update" xml:space="preserve">
+	<data name="permissions_update" xml:space="preserve">
     <value>更新</value>
   </data>
-  <data name="play" xml:space="preserve">
+	<data name="play" xml:space="preserve">
     <value>再生</value>
   </data>
-  <data name="plugins" xml:space="preserve">
+	<data name="plugins" xml:space="preserve">
     <value>プラグイン</value>
   </data>
-  <data name="record" xml:space="preserve">
+	<data name="record" xml:space="preserve">
     <value>記録</value>
   </data>
-  <data name="recorderplugins" xml:space="preserve">
+	<data name="recorderplugins" xml:space="preserve">
     <value>記録プラグイン</value>
   </data>
-  <data name="recordingoverlay" xml:space="preserve">
+	<data name="recordingoverlay" xml:space="preserve">
     <value>記録中オーバレイ</value>
   </data>
-  <data name="rename" xml:space="preserve">
+	<data name="rename" xml:space="preserve">
     <value>名前の変更</value>
   </data>
-  <data name="ribbon_search" xml:space="preserve">
+	<data name="ribbon_search" xml:space="preserve">
     <value>検索</value>
   </data>
-  <data name="runplugins" xml:space="preserve">
+	<data name="runplugins" xml:space="preserve">
     <value>プラグインを実行</value>
   </data>
-  <data name="runtime" xml:space="preserve">
+	<data name="runtime" xml:space="preserve">
     <value>ランタイム</value>
   </data>
-  <data name="save" xml:space="preserve">
+	<data name="save" xml:space="preserve">
     <value>保存</value>
   </data>
-  <data name="selector" xml:space="preserve">
+	<data name="selector" xml:space="preserve">
     <value>セレクタ</value>
   </data>
-  <data name="selectorverbose" xml:space="preserve">
+	<data name="selectorverbose" xml:space="preserve">
     <value>セレクタ Verbose</value>
   </data>
-  <data name="settings" xml:space="preserve">
+	<data name="settings" xml:space="preserve">
     <value>設定</value>
   </data>
-  <data name="settingsfile" xml:space="preserve">
+	<data name="settingsfile" xml:space="preserve">
     <value>設定ファイル</value>
   </data>
-  <data name="signout" xml:space="preserve">
+	<data name="signout" xml:space="preserve">
     <value>サインアウト</value>
   </data>
-  <data name="slowmotion" xml:space="preserve">
+	<data name="slowmotion" xml:space="preserve">
     <value>スローモーション</value>
   </data>
-  <data name="status_disconnected" xml:space="preserve">
+	<data name="status_disconnected" xml:space="preserve">
     <value>非接続</value>
   </data>
-  <data name="stop" xml:space="preserve">
+	<data name="stop" xml:space="preserve">
     <value>停止</value>
   </data>
-  <data name="tesseract" xml:space="preserve">
+	<data name="tesseract" xml:space="preserve">
     <value>Tesseract</value>
   </data>
-  <data name="tools" xml:space="preserve">
+	<data name="tools" xml:space="preserve">
     <value>ツール</value>
   </data>
-  <data name="tools_change_type" xml:space="preserve">
+	<data name="tools_change_type" xml:space="preserve">
     <value>タイプを変更</value>
   </data>
-  <data name="tools_swap_animate" xml:space="preserve">
+	<data name="tools_swap_animate" xml:space="preserve">
     <value>アニメーション化の交換</value>
   </data>
-  <data name="tools_swap_sendkeys" xml:space="preserve">
+	<data name="tools_swap_sendkeys" xml:space="preserve">
     <value>SendKey の交換</value>
   </data>
-  <data name="tools_swap_virtualclick" xml:space="preserve">
+	<data name="tools_swap_virtualclick" xml:space="preserve">
     <value>仮想クリックの交換</value>
   </data>
-  <data name="type" xml:space="preserve">
+	<data name="type" xml:space="preserve">
     <value>タイプ</value>
   </data>
-  <data name="uilanguage" xml:space="preserve">
+	<data name="uilanguage" xml:space="preserve">
     <value>UI 言語</value>
   </data>
-  <data name="usesendkeys" xml:space="preserve">
+	<data name="usesendkeys" xml:space="preserve">
     <value>SendKey を使用</value>
   </data>
-  <data name="usevirtualclicks" xml:space="preserve">
+	<data name="usevirtualclicks" xml:space="preserve">
     <value>仮想クリックを使用</value>
   </data>
-  <data name="value" xml:space="preserve">
+	<data name="value" xml:space="preserve">
     <value>値</value>
   </data>
-  <data name="verbose" xml:space="preserve">
+	<data name="verbose" xml:space="preserve">
     <value>Verbose</value>
   </data>
-  <data name="version" xml:space="preserve">
+	<data name="version" xml:space="preserve">
     <value>バージョン</value>
   </data>
-  <data name="visualtracking" xml:space="preserve">
+	<data name="visualtracking" xml:space="preserve">
     <value>ビジュアル追跡</value>
   </data>
-  <data name="warning" xml:space="preserve">
+	<data name="warning" xml:space="preserve">
     <value>警告</value>
   </data>
 </root>

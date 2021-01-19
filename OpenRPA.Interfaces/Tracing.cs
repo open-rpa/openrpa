@@ -30,6 +30,8 @@ namespace OpenRPA.Interfaces
             }
             set {
                 _TraceMessages = value;
+                OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Trace"));
+                OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("TraceMessages"));
             }
         }
         private string _OutputMessages = "";
@@ -51,6 +53,7 @@ namespace OpenRPA.Interfaces
             }
             set {
                 _OutputMessages = value;
+                OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("OutputMessages"));
             }
         }
         public override void Write(object o)

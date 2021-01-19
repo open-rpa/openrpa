@@ -144,6 +144,12 @@
   <data name="plugin_executable" xml:space="preserve">
     <value>Executable</value>
   </data>
+  <data name="plugin_rdp_height" xml:space="preserve">
+    <value>Screen height</value>
+  </data>
+  <data name="plugin_rdp_width" xml:space="preserve">
+    <value>Screen width</value>
+  </data>
   <data name="plugin_reload_interval" xml:space="preserve">
     <value>Reload interval</value>
   </data>

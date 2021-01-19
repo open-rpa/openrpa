@@ -39,6 +39,7 @@ namespace OpenRPA
         public int log_file_level_minimum { get { return GetProperty(null, NLog.LogLevel.Info.Ordinal); } set { SetProperty(null, value); } }
         public int log_file_level_maximum { get { return GetProperty(null, NLog.LogLevel.Fatal.Ordinal); } set { SetProperty(null, value); } }
         public bool log_verbose { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
+        public bool log_network { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
         public bool log_activity { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
         public bool log_debug { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
         public bool log_selector { get { return GetProperty(null, false); } set { SetProperty(null, value); } }

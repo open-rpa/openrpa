@@ -398,6 +398,7 @@ namespace OpenRPA.RDService
         {
             try
             {
+                Console.WriteLine("Do work!");
                 log("BEGIN::Set ProjectsDirectory");
                 // Don't mess with ProjectsDirectory if we need to reauth
                 if (args.Length == 0) Log.ResetLogPath(logpath);
@@ -405,6 +406,12 @@ namespace OpenRPA.RDService
                 log("Set UnhandledException");
                 AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
                 System.Threading.Thread.Sleep(1000 * StartupWaitSeconds);
+                _ = PluginConfig.reloadinterval;
+                _ = PluginConfig.jwt;
+                _ = PluginConfig.wsurl;
+                _ = PluginConfig.width;
+                _ = PluginConfig.height;
+                _ = PluginConfig.height;
                 if (args.Length != 0)
                 {
                     try
@@ -493,12 +500,16 @@ namespace OpenRPA.RDService
                         }
                         return;
                     }
+                    else if (args[0].ToLower() == "service" || args[0].ToLower() == "s")
+                    {
+                    }
                     else
                     {
                         Console.WriteLine("unknown command " + args[0]);
                         Console.WriteLine("try uninstall or reauth ");
+                        return;
                     }
-                    return;
+                    
                 }
 
 
@@ -544,6 +555,10 @@ namespace OpenRPA.RDService
                 }
                 if (!isService)
                 {
+                    if (args.Length > 0 && (args[0].ToLower() == "service" || args[0].ToLower() == "s"))
+                    {
+                        isService = true;
+                    }
                     Log.Information("******************************");
                     Log.Information("* Done                       *");
                     Log.Information("******************************");

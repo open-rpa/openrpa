@@ -678,6 +678,9 @@
   <data name="selector" xml:space="preserve">
     <value>Selector</value>
   </data>
+  <data name="selectornetwork" xml:space="preserve">
+    <value>Network</value>
+  </data>
   <data name="selectorverbose" xml:space="preserve">
     <value>Selector Verbose</value>
   </data>

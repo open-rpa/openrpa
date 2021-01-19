@@ -47,7 +47,7 @@ namespace OpenRPA.Net
         {
             try
             {
-                Log.Debug("Connecting to " + url);
+                Log.Network("Connecting to " + url);
                 //if (ws != null && (ws.State == System.Net.WebSockets.WebSocketState.Aborted || ws.State == System.Net.WebSockets.WebSocketState.Closed))
                 if (ws != null && (ws.State != WebSocketState.Connecting))
                 {
@@ -120,15 +120,18 @@ namespace OpenRPA.Net
         {
             try
             {
-                if (!json.StartsWith("{") && !json.StartsWith("[")) return false;
-                if (!json.EndsWith("}") && !json.EndsWith("]")) return false;
-                var jObject = JObject.Parse(json);
-                return true;
+                if ((json.StartsWith("{") && json.EndsWith("}")) ||
+                    (json.StartsWith("[") && json.EndsWith("]")))
+                {
+                    var jObject = JObject.Parse(json);
+                    return true;
+                }                
             }
             catch
             {
-                return false;
+                Log.Verbose(json);
             }
+            return false;
         }
         string tempbuffer = null;
         private async Task receiveLoop()
@@ -147,39 +150,24 @@ namespace OpenRPA.Net
                     }
                     result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), src.Token);
                     json = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
-                    if (TryParseJSON(json))
+
+                    var workingjson = tempbuffer + json;
+                    if (TryParseJSON(workingjson))
                     {
-                        var message = JsonConvert.DeserializeObject<SocketMessage>(json);
-                        lock (_receiveQueue)
+                        var message = JsonConvert.DeserializeObject<SocketMessage>(workingjson);
+                        if(!string.IsNullOrEmpty(message.id) && !string.IsNullOrEmpty(message.command) && message != null)
                         {
-                            if (message != null) _receiveQueue.Add(message);
-                        }
-                    } else
-                    {
-                        
-                        if (TryParseJSON(tempbuffer + json))
-                        {
-                            var message = JsonConvert.DeserializeObject<SocketMessage>(tempbuffer + json);
                             lock (_receiveQueue)
                             {
-                                if (message != null) _receiveQueue.Add(message);
+                                tempbuffer = "";
+                                if(message.index % 100 == 99) Log.Network("Adding " + message.id + " to receiveQueue " + (message.index + 1) + " of " + message.count);
+                                _receiveQueue.Add(message);
                             }
-                            tempbuffer = null;
-                        } 
-                        else
-                        {
-                            if(!string.IsNullOrEmpty(tempbuffer))
-                            {
-                                Log.Debug("FAILED: " + json);
-                            }
-                            tempbuffer += json;
+                            await ProcessQueue();
                         }
-                        if(!string.IsNullOrEmpty(tempbuffer) && tempbuffer.Length > (websocket_package_size*2))
-                        {
-                            tempbuffer = null;
-                        }
+                        else { tempbuffer += json; }
                     }
-                    await ProcessQueue();
+                    else { tempbuffer += json; }
                 }
                 catch (System.Net.WebSockets.WebSocketException ex)
                 {
@@ -253,14 +241,14 @@ namespace OpenRPA.Net
                     }
                     if (first.count == msgs.Count)
                     {
-
+                        if(msgs.Count > 100) Log.Network("Stiching together " + first.count + " messages for message id " + first.id);
                         string data = "";
                         foreach (var m in msgs.OrderBy((y) => y.index))
                         {
                             data += m.data;
                         }
                         var result = new Message(first, data);
-                        Process(result);
+                        Log.Network("Processing message " + result.id);
                         lock (_receiveQueue)
                         {
                             foreach (var m in msgs.OrderBy((y) => y.index).ToList())
@@ -268,6 +256,8 @@ namespace OpenRPA.Net
                                 _receiveQueue.Remove(m);
                             }
                         }
+                        Process(result);
+                        Log.Network("Processing message " + result.id +  " complete");
                     }
                 }
             }
@@ -334,8 +324,8 @@ namespace OpenRPA.Net
         {
             if (!string.IsNullOrEmpty(msg.replyto))
             {
-                if (msg.command != "pong") { Log.Verbose(msg.command + " / replyto: " + msg.replyto); }
-                    // else { Log.Verbose(msg.command + " / replyto: " + msg.replyto);  }
+                if (msg.command != "pong") { Log.Network(msg.command + " / replyto: " + msg.replyto); }
+                    // else { Log.Network(msg.command + " / replyto: " + msg.replyto);  }
 
                 foreach (var qm in _messageQueue.ToList())
                 {
@@ -357,8 +347,8 @@ namespace OpenRPA.Net
             }
             else
             {
-                if (msg.command != "ping" && msg.command != "refreshtoken") { Log.Verbose(msg.command + " / " + msg.id); }
-                    // else { Log.Verbose(msg.command + " / replyto: " + msg.replyto); }
+                if (msg.command != "ping" && msg.command != "refreshtoken") { Log.Network(msg.command + " / " + msg.id); }
+                    // else { Log.Network(msg.command + " / replyto: " + msg.replyto); }
                 switch (msg.command)
                 {
                     case "ping":
@@ -637,7 +627,13 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
             return q.result;
         }
-
+        public async Task PushMetrics(string metrics)
+        {
+            var q = new PushMetricsMessage();
+            q.metrics = metrics; q.jwt = jwt;
+            q = await q.SendMessage<PushMetricsMessage>(this);
+            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+        }
     }
 
 }

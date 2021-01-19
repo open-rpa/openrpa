@@ -60,7 +60,8 @@ namespace OpenRPA.Office.Activities
                 return;
             }
             MAPIFolder inBox = (MAPIFolder)outlookApplication.ActiveExplorer().Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox);
-            MAPIFolder folderbase = inBox.Store.GetRootFolder();
+            // MAPIFolder folderbase = inBox.Store.GetRootFolder();
+            var folderbase = outlookApplication.GetNamespace("MAPI");
             MAPIFolder mfolder = GetFolder(folderbase, folder);
 
             Items Items = mfolder.Items;
@@ -169,6 +170,15 @@ namespace OpenRPA.Office.Activities
                     var temp = GetFolder(subFolder, FullFolderPath);
                     if (temp != null) return temp;
                 }
+            }
+            return null;
+        }
+        public MAPIFolder GetFolder(NameSpace folder, string FullFolderPath)
+        {
+            foreach (MAPIFolder subFolder in folder.Folders)
+            {
+                var temp = GetFolder(subFolder, FullFolderPath);
+                if (temp != null) return temp;
             }
             return null;
         }

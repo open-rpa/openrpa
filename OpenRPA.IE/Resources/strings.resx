@@ -159,4 +159,10 @@
   <data name="enable_xpath_support_help" xml:space="preserve">
     <value>Enable experimental XPath support in IE</value>
   </data>
+  <data name="open_browser_timeout" xml:space="preserve">
+    <value>Open browser timeout</value>
+  </data>
+  <data name="open_browser_timeout_help" xml:space="preserve">
+    <value>Timeout on opening browser and opening an url</value>
+  </data>
 </root>

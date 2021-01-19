@@ -32,19 +32,11 @@ namespace OpenRPA.Windows.Views
         {
             InitializeComponent();
             DataContext = this;
-            allow_child_searching.IsChecked = PluginConfig.allow_child_searching;
             allow_multiple_hits_mid_selector.IsChecked = PluginConfig.allow_multiple_hits_mid_selector;
             enum_properties.IsChecked = PluginConfig.enum_selector_properties;
             get_elements_in_different_thread.IsChecked = PluginConfig.get_elements_in_different_thread;
             traverse_selector_both_ways.IsChecked = PluginConfig.traverse_selector_both_ways;
-            search_descendants.IsChecked = PluginConfig.search_descendants;
             enable_cache.IsChecked = PluginConfig.enable_cache;
-        }
-        private void allow_child_searching_IsEnabledChanged(object sender, RoutedEventArgs e)
-        {
-            if (allow_child_searching.IsChecked == null) return;
-            PluginConfig.allow_child_searching = allow_child_searching.IsChecked.Value;
-            Config.Save();
         }
         private void allow_multiple_hits_mid_selector_IsEnabledChanged(object sender, RoutedEventArgs e)
         {
@@ -70,18 +62,11 @@ namespace OpenRPA.Windows.Views
             PluginConfig.traverse_selector_both_ways = traverse_selector_both_ways.IsChecked.Value;
             Config.Save();
         }
-        private void search_descendants_Checked(object sender, RoutedEventArgs e)
-        {
-            if (search_descendants.IsChecked == null) return;
-            PluginConfig.search_descendants = search_descendants.IsChecked.Value;
-            Config.Save();
-        }
         private void enable_cache_Checked(object sender, RoutedEventArgs e)
         {
             if (enable_cache.IsChecked == null) return;
             PluginConfig.enable_cache = enable_cache.IsChecked.Value;
             Config.Save();
-
         }
     }
 }

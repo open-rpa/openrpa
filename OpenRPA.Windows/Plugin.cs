@@ -32,7 +32,7 @@ namespace OpenRPA.Windows
                 if (anchor != null)
                 {
                     if (!(anchor is WindowsSelector Windowsselector)) { Windowsselector = new WindowsSelector(anchor.ToString()); }
-                    var elements = WindowsSelector.GetElementsWithuiSelector(Windowsselector, null, 5);
+                    var elements = WindowsSelector.GetElementsWithuiSelector(Windowsselector, null, 5, null);
                     if (elements.Count() > 0)
                     {
                         _rootElement = elements[0].RawElement;
@@ -231,10 +231,14 @@ namespace OpenRPA.Windows
         public bool ParseUserAction(ref IRecordEvent e) { return false; }
         public void Initialize(IOpenRPAClient client)
         {
-            _ = PluginConfig.allow_child_searching;
+            // _ = PluginConfig.allow_child_searching;
+            _ = PluginConfig.allow_attach;
+            _ = PluginConfig.cache_timeout;
+            _ = PluginConfig.enable_cache;
             _ = PluginConfig.allow_multiple_hits_mid_selector;
             _ = PluginConfig.enum_selector_properties;
             _ = PluginConfig.get_elements_in_different_thread;
+            _ = PluginConfig.search_timeout;
             _ = PluginConfig.traverse_selector_both_ways;
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
@@ -243,7 +247,7 @@ namespace OpenRPA.Windows
             {
                 winselector = new WindowsSelector(selector.ToString());
             }
-            var result = WindowsSelector.GetElementsWithuiSelector(winselector, fromElement, maxresults);
+            var result = WindowsSelector.GetElementsWithuiSelector(winselector, fromElement, maxresults, null);
             return result;
         }
         public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)

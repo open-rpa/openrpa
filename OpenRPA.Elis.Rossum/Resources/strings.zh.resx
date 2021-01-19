@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+	<!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,104 +59,104 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="activity_auth" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="activity_auth" xml:space="preserve">
     <value>授权</value>
   </data>
-  <data name="activity_auth_hint" xml:space="preserve">
+	<data name="activity_auth_hint" xml:space="preserve">
     <value>用户名或邮箱</value>
   </data>
-  <data name="activity_auth_tooltip" xml:space="preserve">
+	<data name="activity_auth_tooltip" xml:space="preserve">
     <value>针对Rossum服务进行身份验证并获得令牌/密钥</value>
   </data>
-  <data name="activity_auth_username" xml:space="preserve">
+	<data name="activity_auth_username" xml:space="preserve">
     <value>用户名</value>
   </data>
-  <data name="activity_exportfiledata" xml:space="preserve">
+	<data name="activity_exportfiledata" xml:space="preserve">
     <value>导出文件数据</value>
   </data>
-  <data name="activity_exportfiledata_tooltip" xml:space="preserve">
+	<data name="activity_exportfiledata_tooltip" xml:space="preserve">
     <value>获取发票中提取的数据的日期，仅在文件状态为导出状态时有效</value>
   </data>
-  <data name="activity_exportfile_file" xml:space="preserve">
+	<data name="activity_exportfile_file" xml:space="preserve">
     <value>文件URL</value>
   </data>
-  <data name="activity_exportfile_file_hint" xml:space="preserve">
+	<data name="activity_exportfile_file_hint" xml:space="preserve">
     <value>要从中获取数据的文件的URL</value>
   </data>
-  <data name="activity_exportfile_key" xml:space="preserve">
+	<data name="activity_exportfile_key" xml:space="preserve">
     <value>秘钥</value>
   </data>
-  <data name="activity_exportfile_key_hint" xml:space="preserve">
+	<data name="activity_exportfile_key_hint" xml:space="preserve">
     <value>来自身份验证活动的API密钥</value>
   </data>
-  <data name="activity_exportfile_queue" xml:space="preserve">
+	<data name="activity_exportfile_queue" xml:space="preserve">
     <value>队列</value>
   </data>
-  <data name="activity_exportfile_queue_hint" xml:space="preserve">
+	<data name="activity_exportfile_queue_hint" xml:space="preserve">
     <value>用于导出数据的队列</value>
   </data>
-  <data name="activity_getfilestatus" xml:space="preserve">
+	<data name="activity_getfilestatus" xml:space="preserve">
     <value>获得文件状态</value>
   </data>
-  <data name="activity_getfilestatus_tooltip" xml:space="preserve">
+	<data name="activity_getfilestatus_tooltip" xml:space="preserve">
     <value>获取队列中文件的状态，可以是
 importing-AI核心引擎正在处理文档以提取数据； 文档的初始状态。
 failed_import-导入失败，例如 由于文档文件格式错误。
@@ -169,76 +169,76 @@ postponed-操作员已选择推迟文档而不是导出文档。
 deleted-用户删除文档时。
 purged-删除后仅保留元数据。</value>
   </data>
-  <data name="activity_getqueues" xml:space="preserve">
+	<data name="activity_getqueues" xml:space="preserve">
     <value>获得队列</value>
   </data>
-  <data name="activity_getqueues_key" xml:space="preserve">
+	<data name="activity_getqueues_key" xml:space="preserve">
     <value>秘钥</value>
   </data>
-  <data name="activity_getqueues_key_hint" xml:space="preserve">
+	<data name="activity_getqueues_key_hint" xml:space="preserve">
     <value>来自身份验证活动的API密钥</value>
   </data>
-  <data name="activity_getqueues_tooltip" xml:space="preserve">
+	<data name="activity_getqueues_tooltip" xml:space="preserve">
     <value>从rossum获取队列列表，必须将文件上传到通过网站设置了杂项设置的队列</value>
   </data>
-  <data name="activity_getstatus_file" xml:space="preserve">
+	<data name="activity_getstatus_file" xml:space="preserve">
     <value>文件URL</value>
   </data>
-  <data name="activity_getstatus_file_hint" xml:space="preserve">
+	<data name="activity_getstatus_file_hint" xml:space="preserve">
     <value>要从中获取文件的状态的URL</value>
   </data>
-  <data name="activity_getstatus_key" xml:space="preserve">
+	<data name="activity_getstatus_key" xml:space="preserve">
     <value>秘钥</value>
   </data>
-  <data name="activity_getstatus_key_hint" xml:space="preserve">
+	<data name="activity_getstatus_key_hint" xml:space="preserve">
     <value>来自身份验证活动的API密钥</value>
   </data>
-  <data name="activity_uploadfile" xml:space="preserve">
+	<data name="activity_uploadfile" xml:space="preserve">
     <value>上传文件</value>
   </data>
-  <data name="activity_uploadfile_filename" xml:space="preserve">
+	<data name="activity_uploadfile_filename" xml:space="preserve">
     <value>文件名</value>
   </data>
-  <data name="activity_uploadfile_filename_hint" xml:space="preserve">
+	<data name="activity_uploadfile_filename_hint" xml:space="preserve">
     <value>要上传到队列的文件</value>
   </data>
-  <data name="activity_uploadfile_key" xml:space="preserve">
+	<data name="activity_uploadfile_key" xml:space="preserve">
     <value>秘钥</value>
   </data>
-  <data name="activity_uploadfile_key_hint" xml:space="preserve">
+	<data name="activity_uploadfile_key_hint" xml:space="preserve">
     <value>来自身份验证活动的API密钥</value>
   </data>
-  <data name="activity_uploadfile_queue" xml:space="preserve">
+	<data name="activity_uploadfile_queue" xml:space="preserve">
     <value>队列</value>
   </data>
-  <data name="activity_uploadfile_queue_hint" xml:space="preserve">
+	<data name="activity_uploadfile_queue_hint" xml:space="preserve">
     <value>将文件上传到队列</value>
   </data>
-  <data name="activity_uploadfile_tooltip" xml:space="preserve">
+	<data name="activity_uploadfile_tooltip" xml:space="preserve">
     <value>上传文件到Rossum 队列</value>
   </data>
-  <data name="activity_waitforfilestatus" xml:space="preserve">
+	<data name="activity_waitforfilestatus" xml:space="preserve">
     <value>等待文件状态</value>
   </data>
-  <data name="activity_waitforfilestatus_tooltip" xml:space="preserve">
+	<data name="activity_waitforfilestatus_tooltip" xml:space="preserve">
     <value>在等待文件进入指定状态时使工作流空闲</value>
   </data>
-  <data name="activity_waitforfile_file" xml:space="preserve">
+	<data name="activity_waitforfile_file" xml:space="preserve">
     <value>文件URL</value>
   </data>
-  <data name="activity_waitforfile_file_hint" xml:space="preserve">
+	<data name="activity_waitforfile_file_hint" xml:space="preserve">
     <value>等待文件的URL</value>
   </data>
-  <data name="activity_waitforfile_key" xml:space="preserve">
+	<data name="activity_waitforfile_key" xml:space="preserve">
     <value>秘钥</value>
   </data>
-  <data name="activity_waitforfile_key_hint" xml:space="preserve">
+	<data name="activity_waitforfile_key_hint" xml:space="preserve">
     <value>来自身份验证活动的API密钥</value>
   </data>
-  <data name="activity_waitforfile_status" xml:space="preserve">
+	<data name="activity_waitforfile_status" xml:space="preserve">
     <value>状态</value>
   </data>
-  <data name="activity_waitforfile_status_hint" xml:space="preserve">
+	<data name="activity_waitforfile_status_hint" xml:space="preserve">
     <value>需要等待的状态</value>
   </data>
 </root>

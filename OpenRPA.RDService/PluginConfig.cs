@@ -32,7 +32,9 @@ namespace OpenRPA.RDService
         public static string wsurl { get { return globallocal.GetProperty<string>(pluginname, null); } set { globallocal.SetProperty(pluginname, value); } }        
         public static string entropy { get { return globallocal.GetProperty<string>(pluginname, null); } set { globallocal.SetProperty(pluginname, value); } }
         public static string tempjwt { get { return globallocal.GetProperty<string>(pluginname, null); } set { globallocal.SetProperty(pluginname, value); } }
-        public static bool usefreerdp { get { return globallocal.GetProperty<bool>(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }
+        public static bool usefreerdp { get { return globallocal.GetProperty<bool>(pluginname, false); } set { globallocal.SetProperty(pluginname, value); } }
+        public static int width { get { return globallocal.GetProperty<int>(pluginname, 0); } set { globallocal.SetProperty(pluginname, value); } }
+        public static int height { get { return globallocal.GetProperty<int>(pluginname, 0); } set { globallocal.SetProperty(pluginname, value); } }
         private static void loadEntropy()
         {
             if (string.IsNullOrEmpty(entropy))

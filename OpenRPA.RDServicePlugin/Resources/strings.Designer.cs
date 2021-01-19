@@ -142,6 +142,24 @@ namespace OpenRPA.RDServicePlugin.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Screen height.
+        /// </summary>
+        public static string plugin_rdp_height {
+            get {
+                return ResourceManager.GetString("plugin_rdp_height", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Screen width.
+        /// </summary>
+        public static string plugin_rdp_width {
+            get {
+                return ResourceManager.GetString("plugin_rdp_width", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reload interval.
         /// </summary>
         public static string plugin_reload_interval {

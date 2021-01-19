@@ -74,43 +74,48 @@ namespace OpenRPA.RDService
                         rdpConnection.UserName = user;
                         rdpConnection.AdvancedSettings7.ClearTextPassword = password;
                         rdpConnection.AdvancedSettings7.EnableCredSspSupport = true;
+                        if(PluginConfig.width > 0 && PluginConfig.height > 0)
+                        {
+                            rdpConnection.DesktopWidth = PluginConfig.width;
+                            rdpConnection.DesktopHeight = PluginConfig.height;
+                        }
 
-                                //rdpConnection.AdvancedSettings9.ClearTextPassword = password;
-                                //// rdpConnection.AdvancedSettings9.EnableCredSspSupport = false;
-                                //rdpConnection.AdvancedSettings9.EnableCredSspSupport = true;
+                        //rdpConnection.AdvancedSettings9.ClearTextPassword = password;
+                        //// rdpConnection.AdvancedSettings9.EnableCredSspSupport = false;
+                        //rdpConnection.AdvancedSettings9.EnableCredSspSupport = true;
 
-                                //rdpConnection.AdvancedSettings9.AuthenticationLevel = 2;
-                                //rdpConnection.AdvancedSettings9.EnableCredSspSupport = true;
-                                //rdpConnection.AdvancedSettings9.NegotiateSecurityLayer = false;
+                        //rdpConnection.AdvancedSettings9.AuthenticationLevel = 2;
+                        //rdpConnection.AdvancedSettings9.EnableCredSspSupport = true;
+                        //rdpConnection.AdvancedSettings9.NegotiateSecurityLayer = false;
 
-                                //var ocx = (MSTSCLib.IMsRdpClientNonScriptable7)rdpConnection.GetOcx();
-                                //ocx.EnableCredSspSupport = true;
-                                //ocx.AllowCredentialSaving = false;
-                                //ocx.PromptForCredentials = false;
-                                //ocx.PromptForCredsOnClient = true;
-                                //ocx.AllowPromptingForCredentials = false;
-                                //ocx.EnableCredSspSupport = true;
-                                //ocx.AllowCredentialSaving = false;
-                                //ocx.WarnAboutSendingCredentials = false;
-                                //ocx.MarkRdpSettingsSecure = true;
+                        //var ocx = (MSTSCLib.IMsRdpClientNonScriptable7)rdpConnection.GetOcx();
+                        //ocx.EnableCredSspSupport = true;
+                        //ocx.AllowCredentialSaving = false;
+                        //ocx.PromptForCredentials = false;
+                        //ocx.PromptForCredsOnClient = true;
+                        //ocx.AllowPromptingForCredentials = false;
+                        //ocx.EnableCredSspSupport = true;
+                        //ocx.AllowCredentialSaving = false;
+                        //ocx.WarnAboutSendingCredentials = false;
+                        //ocx.MarkRdpSettingsSecure = true;
 
-                                ////rdp.AdvancedSettings7.DisableRdpdr = 0;
-                                ////rdp.CreateVirtualChannels("CH001,CH002");
+                        ////rdp.AdvancedSettings7.DisableRdpdr = 0;
+                        ////rdp.CreateVirtualChannels("CH001,CH002");
 
-                                //var settings = (MSTSCLib.IMsRdpClientAdvancedSettings8)rdpConnection.AdvancedSettings;
-                                //settings.allowBackgroundInput = 1;
-                                //settings.ClientProtocolSpec = MSTSCLib.ClientSpec.FullMode;
-                                //settings.ConnectToServerConsole = true;
-                                //settings.EnableCredSspSupport = true;
-                                //settings.EncryptionEnabled = 1;
+                        //var settings = (MSTSCLib.IMsRdpClientAdvancedSettings8)rdpConnection.AdvancedSettings;
+                        //settings.allowBackgroundInput = 1;
+                        //settings.ClientProtocolSpec = MSTSCLib.ClientSpec.FullMode;
+                        //settings.ConnectToServerConsole = true;
+                        //settings.EnableCredSspSupport = true;
+                        //settings.EncryptionEnabled = 1;
 
 
-                                //MSTSCLib.IMsRdpClientNonScriptable4 ocx = (MSTSCLib.IMsRdpClientNonScriptable4)rdpConnection.GetOcx();
-                                //ocx.EnableCredSspSupport = true;
-                                //ocx.AllowCredentialSaving = false;
-                                //ocx.PromptForCredentials = false;
-                                //ocx.PromptForCredsOnClient = false;
-                                if (true)
+                        //MSTSCLib.IMsRdpClientNonScriptable4 ocx = (MSTSCLib.IMsRdpClientNonScriptable4)rdpConnection.GetOcx();
+                        //ocx.EnableCredSspSupport = true;
+                        //ocx.AllowCredentialSaving = false;
+                        //ocx.PromptForCredentials = false;
+                        //ocx.PromptForCredsOnClient = false;
+                        if (true)
                         {
                             rdpConnection.OnDisconnected += RdpConnectionOnOnDisconnected;
                             rdpConnection.OnLoginComplete += RdpConnectionOnOnLoginComplete;
@@ -142,34 +147,34 @@ namespace OpenRPA.RDService
         }
         private void RdpConnection_OnConnecting(object sender, EventArgs e)
         {
-            Console.WriteLine("RdpConnection_OnConnecting");
+            Log.Debug("RdpConnection_OnConnecting");
         }
         private void RdpConnection_OnConnected(object sender, EventArgs e)
         {
-            Console.WriteLine("RdpConnection_OnConnected");
+            Log.Debug("RdpConnection_OnConnected");
         }
         private void RdpConnection_OnAuthenticationWarningDisplayed(object sender, EventArgs e)
         {
-            Console.WriteLine("RdpConnection_OnAuthenticationWarningDisplayed");
+            Log.Output("RdpConnection_OnAuthenticationWarningDisplayed");
         }
         private void RdpConnection_OnFatalError(object sender, AxMSTSCLib.IMsTscAxEvents_OnFatalErrorEvent e)
         {
-            Console.WriteLine("RdpConnection_OnFatalError: " + e.errorCode);
+            Log.Error("RdpConnection_OnFatalError: " + e.errorCode);
             Connecting = false;
         }
         private void RdpConnection_OnAuthenticationWarningDismissed(object sender, EventArgs e)
         {
-            Console.WriteLine("RdpConnection_OnAuthenticationWarningDismissed: ");
+            Log.Debug("RdpConnection_OnAuthenticationWarningDismissed: ");
         }
         private void RdpConnection_OnWarning(object sender, AxMSTSCLib.IMsTscAxEvents_OnWarningEvent e)
         {
-            Console.WriteLine("RdpConnection_OnWarning: " + e.warningCode);
+            Log.Debug("RdpConnection_OnWarning: " + e.warningCode);
         }
         private void RdpConnectionOnOnLogonError(object sender, AxMSTSCLib.IMsTscAxEvents_OnLogonErrorEvent e)
         {
             Connecting = false;
             LogonErrorCode = e.lError;
-            Console.WriteLine("RdpConnectionOnOnLogonError: " + LogonErrorCode);
+            Log.Debug("RdpConnectionOnOnLogonError: " + LogonErrorCode);
         }
         private void RdpConnectionOnOnLoginComplete(object sender, EventArgs e)
         {
@@ -311,7 +316,7 @@ namespace OpenRPA.RDService
                 case 50331728: discMsg = "You no longer have access to Azure RemoteApp. Ask your admin or tech support for help."; break;
                 case 4498: discMsg = "Extended Reason: The remote session was disconnected because of a decryption error at the server. Please try connecting to the remote computer again."; break;
             }
-            Console.WriteLine("RdpConnectionOnOnDisconnected: " + discReason + " " + discMsg);
+            Log.Output("RdpConnectionOnOnDisconnected: " + discReason + " " + discMsg);
             // Application.Exit();
             Connected = false;
             Connecting = false;
@@ -361,7 +366,7 @@ namespace OpenRPA.RDService
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Log.Debug(ex.ToString());
             }
             if (rdpConnection != null) rdpConnection.Dispose();
             rdpConnection = null;
@@ -371,7 +376,7 @@ namespace OpenRPA.RDService
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Log.Debug(ex.ToString());
             }
             if (form != null) form.Dispose();
             form = null;

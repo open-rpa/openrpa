@@ -72,13 +72,13 @@ namespace OpenRPA.RDService
                 }
                 if (client == null)
                 {
-                    Log.Information("client is null");
+                    Log.Debug("client is null");
                     return;
                 }
                 if (!client.enabled) return;
                 if (string.IsNullOrEmpty(client._id))
                 {
-                    // Log.Information("client._id is null, Dummy client, ignore");
+                    // Log.Debug("client._id is null, Dummy client, ignore");
                     return; // Dummy client, ignore
                 }
                 if (connection != null && connection.IsConnected == false) { connection = null; created = DateTime.Now; }
@@ -99,7 +99,7 @@ namespace OpenRPA.RDService
                 {
                     if (freerdp == null || freerdp.Connected == false)
                     {
-                        if (freerdp == null) Console.WriteLine("rdp is null");
+                        if (freerdp == null) Log.Debug("rdp is null");
                         if (string.IsNullOrEmpty(client.windowspassword)) return;
                         lastrdp = DateTime.Now;
                     }
@@ -109,14 +109,14 @@ namespace OpenRPA.RDService
                         var hostname = NativeMethods.GetHostName().ToLower();
                         try
                         {
-                            Log.Information("Tesing connection to " + rdpip + " port 3389");
+                            Log.Debug("Tesing connection to " + rdpip + " port 3389");
                             using (var tcpClient = new System.Net.Sockets.TcpClient())
                             {
                                 var ipAddress = System.Net.IPAddress.Parse(rdpip);
                                 var ipEndPoint = new System.Net.IPEndPoint(ipAddress, 3389);
                                 tcpClient.Connect(ipEndPoint);
                             }
-                            Log.Information("Success");
+                            Log.Debug("Success");
                         }
                         catch (Exception ex)
                         {
@@ -138,34 +138,34 @@ namespace OpenRPA.RDService
                             }
                         }
 
-                        Log.Information("Impersonate " + client.windowslogin);
+                        Log.Debug("Impersonate " + client.windowslogin);
                         try
                         {
-                            //Log.Information("windowsusername: " + windowsusername);
-                            //Log.Information("windowsdomain: " + windowsdomain);
-                            //Log.Information("windowspassword: " + client.windowspassword);
+                            //Log.Debug("windowsusername: " + windowsusername);
+                            //Log.Debug("windowsdomain: " + windowsdomain);
+                            //Log.Debug("windowspassword: " + client.windowspassword);
                             var credentials = new UserCredentials(windowsdomain, windowsusername, client.windowspassword);
                             Impersonation.RunAsUser(credentials, LogonType.Interactive, () =>
                             {
                                 ConnectionAttempts++;
-                                Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowslogin);
+                                Log.Debug("Connecting RDP connection to " + rdpip + " for " + client.windowslogin);
                                 freerdp.Connect(rdpip, "", client.windowslogin, client.windowspassword);
 
                             });
                             //using (var imp = new Impersonator(windowsusername, windowsdomain, client.windowspassword))
                             //{
                             //    ConnectionAttempts++;
-                            //    Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowslogin);
+                            //    Log.Debug("Connecting RDP connection to " + rdpip + " for " + client.windowslogin);
                             //    freerdp.Connect(rdpip, "", client.windowslogin, client.windowspassword);
                             //    //if (client.windowsusername.StartsWith(hostname + @"\"))
                             //    //{
                             //    //    // var windowsusername = client.windowsusername.Substring(hostname.Length + 1);
-                            //    //    Log.Information("Connecting RDP connection to " + rdpip + " for " + windowsusername);
+                            //    //    Log.Debug("Connecting RDP connection to " + rdpip + " for " + windowsusername);
                             //    //    freerdp.Connect(rdpip, "", windowsusername, client.windowspassword);
                             //    //}
                             //    //else
                             //    //{
-                            //    //    Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowsusername);
+                            //    //    Log.Debug("Connecting RDP connection to " + rdpip + " for " + client.windowsusername);
                             //    //    freerdp.Connect(rdpip, "", client.windowsusername, client.windowspassword);
                             //    //}
                             //}
@@ -185,7 +185,7 @@ namespace OpenRPA.RDService
                 {
                     if (rdp == null || rdp.Connected == false)
                     {
-                        if (rdp == null) Console.WriteLine("rdp is null");
+                        if (rdp == null) Log.Debug("rdp is null");
                         if (string.IsNullOrEmpty(client.windowspassword)) return;
                         lastrdp = DateTime.Now;
                     }
@@ -195,14 +195,14 @@ namespace OpenRPA.RDService
                     {
                         try
                         {
-                            Log.Information("Tesing connection to " + rdpip + " port 3389");
+                            Log.Debug("Tesing connection to " + rdpip + " port 3389");
                             using (var tcpClient = new System.Net.Sockets.TcpClient())
                             {
                                 var ipAddress = System.Net.IPAddress.Parse(rdpip);
                                 var ipEndPoint = new System.Net.IPEndPoint(ipAddress, 3389);
                                 tcpClient.Connect(ipEndPoint);
                             }
-                            Log.Information("Success");
+                            Log.Debug("Success");
                         }
                         catch (Exception ex)
                         {
@@ -210,12 +210,12 @@ namespace OpenRPA.RDService
                             return;
                         }
 
-                        Log.Information("Increment ConnectionAttempts");
+                        Log.Debug("Increment ConnectionAttempts");
                         ConnectionAttempts++;
-                        Log.Information("Get HostName");
+                        Log.Debug("Get HostName");
                         var hostname = NativeMethods.GetHostName().ToLower();
-                        Log.Information("hostname is: " + hostname);
-                        Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowslogin);
+                        Log.Debug("hostname is: " + hostname);
+                        Log.Debug("Connecting RDP connection to " + rdpip + " for " + client.windowslogin);
                         // Task.Run(()=>rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername.Substring(hostname.Length + 1), client.windowspassword));
                         if (string.IsNullOrEmpty(client.windowslogin))
                         {
@@ -230,34 +230,45 @@ namespace OpenRPA.RDService
                             }
                         }
                         rdp.CreateRdpConnectionasync(rdpip, "", client.windowslogin, client.windowspassword);
-                        Log.Information("Connection initialized");
+                        Log.Debug("Connection initialized");
                         //if (client.windowsusername.StartsWith(hostname + @"\"))
                         //{
                         //    var windowsusername = client.windowsusername.Substring(hostname.Length + 1);
-                        //    Log.Information("Connecting RDP connection to " + rdpip + " for " + windowsusername);
+                        //    Log.Debug("Connecting RDP connection to " + rdpip + " for " + windowsusername);
                         //    // Task.Run(()=>rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername.Substring(hostname.Length + 1), client.windowspassword));
                         //    rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername.Substring(hostname.Length + 1), client.windowspassword);
-                        //    Log.Information("Connection initialized");
+                        //    Log.Debug("Connection initialized");
                         //}
                         //else
                         //{
-                        //    Log.Information("Connecting RDP connection to " + rdpip + " for " + client.windowsusername);
+                        //    Log.Debug("Connecting RDP connection to " + rdpip + " for " + client.windowsusername);
                         //    // Task.Run(() => rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername, client.windowspassword));
                         //    rdp.CreateRdpConnectionasync(rdpip, "", client.windowsusername, client.windowspassword);
-                        //    Log.Information("Connection initialized");
+                        //    Log.Debug("Connection initialized");
                         //}
                         created = DateTime.Now;
                     }
-                    if (rdp == null || rdp.Connected == false) return;
+                    if (rdp == null) {
+                        Log.Debug("rdp is null, exit");
+                        return; 
+                    }
+                    if (rdp.Connected == false)
+                    {
+                        Log.Debug("rdp.Connected is false, exit");
+                        return;
+                    }
                 }
 
+                Log.Debug("EnableDisablePrivilege's");
                 NativeMethods.EnableDisablePrivilege(NativeMethods.GetSecurityEntityValue(NativeMethods.SecurityEntity.SE_ASSIGNPRIMARYTOKEN_NAME), true);
                 NativeMethods.EnableDisablePrivilege(NativeMethods.GetSecurityEntityValue(NativeMethods.SecurityEntity.SE_BACKUP_NAME), true);
                 NativeMethods.EnableDisablePrivilege(NativeMethods.GetSecurityEntityValue(NativeMethods.SecurityEntity.SE_DEBUG_NAME), true);
                 NativeMethods.EnableDisablePrivilege(NativeMethods.GetSecurityEntityValue(NativeMethods.SecurityEntity.SE_LOAD_DRIVER_NAME), true);
                 NativeMethods.EnableDisablePrivilege(NativeMethods.GetSecurityEntityValue(NativeMethods.SecurityEntity.SE_TCB_NAME), true);
-
-                try
+                Log.Debug("get explorer process'");
+                Log.Debug("windowsusername: " + client.windowsusername);
+                Log.Debug("windowslogin: " + client.windowslogin);
+                    try
                 {
                     var procs = Process.GetProcessesByName("explorer");
                     System.Diagnostics.Process ownerexplorer = null;
@@ -266,9 +277,12 @@ namespace OpenRPA.RDService
                         try
                         {
                             var owner = NativeMethods.GetProcessUserName(explorer.Id).ToLower();
-                            if (owner == client.windowsusername)
+                            if (owner == client.windowsusername || owner == client.windowslogin)
                             {
+                                Log.Debug("Found explorer process for " + owner);
                                 ownerexplorer = explorer;
+                            } else {
+                                Log.Debug("skip explorer process for " + owner);
                             }
                         }
                         catch (Exception ex)
@@ -278,7 +292,12 @@ namespace OpenRPA.RDService
                             return;
                         }
                     }
-                    if (ownerexplorer == null) return;
+                    if (ownerexplorer == null)
+                    {
+                        Log.Debug("ownerexplorer is null, exit");
+                        return;
+                    }
+                    Log.Debug("get openrpa process'");
                     System.Diagnostics.Process ownerrpa = null;
                     procs = Process.GetProcessesByName("openrpa");
                     foreach (var rpa in procs)
@@ -286,9 +305,13 @@ namespace OpenRPA.RDService
                         try
                         {
                             var owner = NativeMethods.GetProcessUserName(rpa.Id).ToLower();
-                            if (owner == client.windowsusername)
+                            if (owner == client.windowsusername || owner == client.windowslogin)
                             {
+                                Log.Debug("Found openrpa process for " + owner);
                                 ownerrpa = rpa;
+                            } else
+                            {
+                                Log.Debug("skip openrpa process for " + owner);
                             }
                         }
                         catch (Exception ex)
@@ -300,6 +323,7 @@ namespace OpenRPA.RDService
                     }
                     if (ownerrpa != null)
                     {
+                        Log.Debug("ownerrpa is not null, exit");
                         //if(client.autorestart != TimeSpan.Zero && (DateTime.Now - lastheartbeat) > client.autorestart )
                         //{
                         //    try
@@ -314,13 +338,21 @@ namespace OpenRPA.RDService
                         //}
                         return;
                     }
-                    if (string.IsNullOrEmpty(client.openrpapath)) return;
-                    if (!System.IO.File.Exists(client.openrpapath)) return;
+                    if (string.IsNullOrEmpty(client.openrpapath))
+                    {
+                        Log.Debug("openrpapath not set for user");
+                        return;
+                    }
+                    if (!System.IO.File.Exists(client.openrpapath))
+                    {
+                        Log.Debug("openrpapath not found " + client.openrpapath);
+                        return;
+                    }
                     var path = System.IO.Path.GetDirectoryName(client.openrpapath);
                     //if (!Program.isService)
                     //{
-                    //    Log.Information("Not running as service, so just launching openrpa here");
-                    //    Log.Information(client.openrpapath);
+                    //    Log.Debug("Not running as service, so just launching openrpa here");
+                    //    Log.Debug(client.openrpapath);
                     //    created = DateTime.Now;
                     //    Process.Start(new ProcessStartInfo(client.openrpapath) { WorkingDirectory = path });
                     //    return;
@@ -359,8 +391,8 @@ namespace OpenRPA.RDService
                     //}
                     if (Program.isService)
                     {
-                        Log.Information("Attaching to user explorer and launching robot in session");
-                        Log.Information(client.openrpapath);
+                        Log.Debug("Attaching to user explorer and launching robot in session");
+                        Log.Debug(client.openrpapath);
                         created = DateTime.Now;
                         hasShownLaunchWarning = false;
                         if (!NativeMethods.Launch(ownerexplorer, path, client.openrpapath.Replace("/", @"\")))

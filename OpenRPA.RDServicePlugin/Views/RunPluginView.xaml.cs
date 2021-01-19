@@ -339,5 +339,28 @@ namespace OpenRPA.RDServicePlugin.Views
                 Log.Error(ex.ToString());
             }
         }
+        private void plugin_rdp_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                int width = -1;
+                if (int.TryParse(plugin_rdp_width.Text, out width))
+                {
+                    RDService.PluginConfig.width = width;
+                    RDService.PluginConfig.Save();
+                }
+                int height = -1;
+                if (int.TryParse(plugin_rdp_height.Text, out height))
+                {
+                    RDService.PluginConfig.height = height;
+                    RDService.PluginConfig.Save();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+        }
+
     }
 }

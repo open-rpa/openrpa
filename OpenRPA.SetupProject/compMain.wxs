@@ -168,7 +168,11 @@
         <File Id="fil283C54AA0CCA5A82032AD6F88F3D5D84" Source="!(wix.MainSource)\Xceed.Wpf.AvalonDock.Themes.Aero.dll" />
         <File Id="filB6214F7016ABD85F0A90650A1F105B9C" Source="!(wix.MainSource)\Xceed.Wpf.AvalonDock.Themes.Metro.dll" />
         <File Id="filBB96100CC38385FF7DB0DBFE799C5F23" Source="!(wix.MainSource)\Xceed.Wpf.AvalonDock.Themes.VS2010.dll" />
-        <File Id="fil4F8E845B9B0CB9B26B9D7BA0D7737124" Source="!(wix.MainSource)\Xceed.Wpf.Toolkit.dll" />
+        <File Id="filBB96100CC38385FF7DB0DBFE799C5F24" Source="!(wix.MainSource)\Xceed.Wpf.Toolkit.dll" />
+        <File Id="filBB96100CC38385FF7DB0DBFE799C5F25" Source="!(wix.MainSource)\Microsoft.Bcl.HashCode.dll" />
+        <File Id="filBB96100CC38385FF7DB0DBFE799C5F26" Source="!(wix.MainSource)\Prometheus.Client.dll" />
+        <File Id="filBB96100CC38385FF7DB0DBFE799C5F27" Source="!(wix.MainSource)\Microsoft.Expression.Interactions.dll" />
+        <File Id="filBB96100CC38385FF7DB0DBFE799C5F28" Source="!(wix.MainSource)\System.Windows.Interactivity.dll" />
         <RemoveFolder Id='RemoveLocalAppDataFolder' Directory='INSTALLDIR' On='uninstall' />
       </Component>
       <Component Id='mainComponentde' Win64='yes' Directory="mainde" Guid='{5B022629-6132-43BC-87EF-8777CD939585}'>

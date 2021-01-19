@@ -178,24 +178,6 @@ namespace OpenRPA.Windows.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Allow child searching.
-        /// </summary>
-        public static string plugin_allow_child_searching {
-            get {
-                return ResourceManager.GetString("plugin_allow_child_searching", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to If an element in a selector is not found, automaticly search all children for match.
-        /// </summary>
-        public static string plugin_allow_child_searching_help {
-            get {
-                return ResourceManager.GetString("plugin_allow_child_searching_help", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Allow multiple hits.
         /// </summary>
         public static string plugin_allow_multiple_hits {
@@ -255,24 +237,6 @@ namespace OpenRPA.Windows.Resources {
         public static string plugin_get_elements_in_different_thread_help {
             get {
                 return ResourceManager.GetString("plugin_get_elements_in_different_thread_help", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Search descendants.
-        /// </summary>
-        public static string plugin_search_descendants {
-            get {
-                return ResourceManager.GetString("plugin_search_descendants", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Search all descendants, use for more simple selectors but is slower.
-        /// </summary>
-        public static string plugin_search_descendants_help {
-            get {
-                return ResourceManager.GetString("plugin_search_descendants_help", resourceCulture);
             }
         }
         

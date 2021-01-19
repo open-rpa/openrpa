@@ -326,13 +326,11 @@ namespace OpenRPA.Office.Activities
                 }
             }
             if (workbook == null) workbook = officewrap.application.ActiveWorkbook;
-            if(workbook == null)
-            {
-            }
             var _worksheet = (Worksheet != null ? Worksheet.Get(context) : null);
             worksheet = workbook.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
             if (!string.IsNullOrEmpty(_worksheet))
             {
+                bool found = false;
                 foreach (object obj in workbook.Sheets)
                 {
                     Worksheet s = obj as Worksheet;
@@ -340,9 +338,18 @@ namespace OpenRPA.Office.Activities
                     {
                         s.Activate();
                         worksheet = s;
+                        found = true;
+                        break;
                     }
                 }
+                if (!found)
+                {
+                    worksheet = workbook.Sheets.Add(Type.Missing, workbook.Sheets[workbook.Sheets.Count], 1, Microsoft.Office.Interop.Excel.XlSheetType.xlWorksheet) as Microsoft.Office.Interop.Excel.Worksheet;
+                    worksheet.Name = _worksheet;
+                }
             }
+
+
             var sheetPassword = SheetPassword.Get(context);
             if (string.IsNullOrEmpty(sheetPassword)) sheetPassword = null;
             if (!string.IsNullOrEmpty(sheetPassword) && worksheet != null)

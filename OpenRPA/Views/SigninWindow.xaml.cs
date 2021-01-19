@@ -98,7 +98,7 @@ namespace OpenRPA.Views
                         foreach (var cookie in browsercookies)
                         {
                             System.Diagnostics.Debug.WriteLine("CookieName: " + cookie.Name);
-                            cookies += cookie.Name + "=" + cookie.Value + "; ";
+                            if(cookie.Domain == new Uri(this.url).DnsSafeHost) cookies += cookie.Name + "=" + cookie.Value + "; ";
                         }
                         if (!string.IsNullOrEmpty(cookies))
                         {

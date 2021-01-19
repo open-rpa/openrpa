@@ -51,15 +51,10 @@ namespace OpenRPA.Windows
         // public ActivityAction<UIElement> LoopAction { get; set; }
         protected override void Execute(NativeActivityContext context)
         {
+            WindowsCacheExtension ext = context.GetExtension<WindowsCacheExtension>();
             var sw = new Stopwatch();
             sw.Start();
             Log.Selector(string.Format("Windows.GetElement::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
-
-            if(ClearCache != null && ClearCache.Get(context))
-            {
-                Log.Selector(string.Format("Windows.GetElement::Clearing windows element cache {0:mm\\:ss\\.fff}", sw.Elapsed));
-                WindowsSelectorItem.ClearCache();
-            }
 
             UIElement[] elements = null;
             var selector = Selector.Get(context);
@@ -74,14 +69,20 @@ namespace OpenRPA.Windows
             int failcounter = 0;
             do
             {
+                if (ClearCache != null && ClearCache.Get(context))
+                {
+                    Log.Selector(string.Format("Windows.GetElement::Clearing windows element cache {0:mm\\:ss\\.fff}", sw.Elapsed));
+                    WindowsSelectorItem.ClearCache();
+                }
                 if (PluginConfig.get_elements_in_different_thread)
                 {
                     elements = OpenRPA.AutomationHelper.RunSTAThread<UIElement[]>(() =>
                     {
                         try
                         {
+
                             Log.Selector(string.Format("Windows.GetElement::GetElementsWithuiSelector in non UI thread {0:mm\\:ss\\.fff}", sw.Elapsed));
-                            return WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+                            return WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults, ext);
                         }
                         catch (System.Threading.ThreadAbortException)
                         {
@@ -96,7 +97,11 @@ namespace OpenRPA.Windows
                 else
                 {
                     Log.Selector(string.Format("Windows.GetElement::GetElementsWithuiSelector using UI thread {0:mm\\:ss\\.fff}", sw.Elapsed));
-                    elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+                    elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults, ext);
+                    if (elements == null || elements.Length == 0)
+                    {
+                        elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults, ext);
+                    }
                 }
                 //elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
                 if (elements == null)
@@ -115,7 +120,7 @@ namespace OpenRPA.Windows
             if (PluginConfig.get_elements_in_different_thread && elements.Length > 0)
             {
                 // Get them again, we need the COM objects to be loaded in the UI thread
-                elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults);
+                elements = WindowsSelector.GetElementsWithuiSelector(sel, from, maxresults, ext);
             }
             context.SetValue(Elements, elements);
 

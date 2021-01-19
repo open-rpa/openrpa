@@ -72,6 +72,7 @@ namespace OpenRPA.Interfaces
         Task DownloadFileAndSave(string filename, string id, string filepath, bool ignorepath);
         Task DownloadFileAndSaveAs(string filename, string id, string filepath, bool ignorepath);
         Task<ICollection[]> ListCollections(bool includehist = false);
+        Task PushMetrics(string metrics);
     }
     public class QueueMessageEventArgs : EventArgs
     {

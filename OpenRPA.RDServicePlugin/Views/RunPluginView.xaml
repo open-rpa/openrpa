@@ -41,10 +41,10 @@
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,428,0,0" Text="{x:Static or:strings.plugin_auto_signout}" VerticalAlignment="Top" Width="110" />
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="139,428,0,0" VerticalAlignment="Top" Width="222" x:Name="chkautosignout" 
                   Checked="chkautosignout_Checked" Unchecked="chkautosignout_Checked" Click="chkautosignout_Click" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="250,52,0,0" Text="{x:Static or:strings.plugin_rdp_width}" VerticalAlignment="Top" Width="110" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="366,52,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="plugin_rdp_width" TextChanged="plugin_rdp_TextChanged" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="250,80,0,0" Text="{x:Static or:strings.plugin_rdp_height}" VerticalAlignment="Top" Width="110" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="366,80,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="plugin_rdp_height" TextChanged="plugin_rdp_TextChanged" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="161,16,0,0" Text="{x:Static or:strings.plugin_rdp_width}" VerticalAlignment="Top" Width="110" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="277,16,0,0" Text="" VerticalAlignment="Top" Width="80" x:Name="plugin_rdp_width" TextChanged="plugin_rdp_TextChanged" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="161,44,0,0" Text="{x:Static or:strings.plugin_rdp_height}" VerticalAlignment="Top" Width="110" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="277,44,0,0" Text="" VerticalAlignment="Top" Width="80" x:Name="plugin_rdp_height" TextChanged="plugin_rdp_TextChanged" />
 
 
     </Grid>

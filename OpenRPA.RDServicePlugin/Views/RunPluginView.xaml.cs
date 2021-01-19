@@ -37,6 +37,14 @@ namespace OpenRPA.RDServicePlugin.Views
             this.plugin = plugin;
             lblWindowsusername.Text = NativeMethods.GetProcessUserName(System.Diagnostics.Process.GetCurrentProcess().Id);
             lblWindowsLogin.Text = NativeMethods.GetProcessUserName(System.Diagnostics.Process.GetCurrentProcess().Id);
+            try
+            {
+                plugin_rdp_width.Text = RDService.PluginConfig.width.ToString();
+                plugin_rdp_height.Text = RDService.PluginConfig.height.ToString();
+            }
+            catch (Exception)
+            {
+            }
         }
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {

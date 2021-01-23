@@ -73,7 +73,7 @@ namespace OpenRPA.Office.Activities
             }
             return null;
         }
-        public bool Move(string folder)
+        public bool Move(string targetfolder)
         {
             var outlookApplication = CreateOutlookInstance();
             if (outlookApplication.ActiveExplorer() == null)
@@ -81,11 +81,18 @@ namespace OpenRPA.Office.Activities
                 Log.Warning("Outlook not running!");
                 return false;
             }
-            MAPIFolder inBox = (MAPIFolder)outlookApplication.ActiveExplorer().Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox);
-            MAPIFolder folderbase = inBox.Store.GetRootFolder();
-            MAPIFolder mfolder = GetFolder(folderbase, folder);
-            mailItem.Move(mfolder);
-            return true;
+            var oNS = outlookApplication.GetNamespace("MAPI");
+            foreach (MAPIFolder folder in oNS.Folders)
+            {
+                MAPIFolder mfolder = GetFolder(folder, targetfolder);
+                if(mfolder != null)
+                {
+                    mailItem.Move(mfolder);
+                    return true;
+                }
+            }
+            Log.Error("Fail locating " + targetfolder);
+            return false;
         }
         public string BillingInformation { get { return mailItem.BillingInformation; } set { mailItem.BillingInformation = value; } }
         public string Body { get { return mailItem.Body; } set { mailItem.Body = value; } }

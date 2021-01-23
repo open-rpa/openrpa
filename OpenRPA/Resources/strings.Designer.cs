@@ -1087,6 +1087,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Child Session.
+        /// </summary>
+        public static string childsession {
+            get {
+                return ResourceManager.GetString("childsession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chrome.
         /// </summary>
         public static string chrome {
@@ -1384,6 +1393,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable Child Sessions.
+        /// </summary>
+        public static string main_settings_enable_child_sessions {
+            get {
+                return ResourceManager.GetString("main_settings_enable_child_sessions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Record directly into designer.
         /// </summary>
         public static string main_settings_recording_add_to_designer {
@@ -1650,6 +1668,15 @@ namespace OpenRPA.Resources {
         public static string play {
             get {
                 return ResourceManager.GetString("play", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Play in child.
+        /// </summary>
+        public static string playinchildsession {
+            get {
+                return ResourceManager.GetString("playinchildsession", resourceCulture);
             }
         }
         

@@ -19,6 +19,7 @@
 
     <Window.Resources>
         <local:BindingProxy x:Key="proxy" Data="{Binding}" />
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -158,7 +159,16 @@
                             </DataTemplate>
                         </input:AutoCompleteBox.ItemTemplate>
                     </input:AutoCompleteBox>
-                </RibbonGroup>    
+                </RibbonGroup>
+                <RibbonGroup Header="" Visibility="{Binding Path=Setting_ShowChildSessions, Converter={StaticResource BoolToVis}}"
+                             HorizontalAlignment="Center">
+                    <RibbonButton Label="{x:Static or:strings.childsession}" LargeImageSource="/OpenRPA;component/Resources/Buttons/picture_in_picture.png" 
+                                  Click="RibbonButton_Click"
+                                   />
+                    <RibbonButton Label="{x:Static or:strings.playinchildsession}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Play.png" 
+                                  Command="{Binding Data.PlayInChildCommand, Source={StaticResource proxy}}" 
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}"/>
+                </RibbonGroup>
             </RibbonTab>
             <RibbonTab Header="{x:Static or:strings.settings}">
                 <RibbonGroup Header="{x:Static or:strings.cancelkey}">
@@ -233,6 +243,11 @@
                         <RibbonCheckBox IsChecked="{Binding Setting_recording_add_to_designer}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="{x:Static or:strings.main_settings_recording_add_to_designer}"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" >
+                        <RibbonCheckBox IsChecked="{Binding Setting_IsChildSessionsEnabled}" Command="{Binding Data.ChildSessionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
+                        <TextBlock Text="{x:Static or:strings.main_settings_enable_child_sessions}"></TextBlock>
                     </StackPanel>
                     <!--<StackPanel Orientation="Horizontal">
                         <RibbonTextBox Text="{Binding Setting_use_postwait}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}"  />

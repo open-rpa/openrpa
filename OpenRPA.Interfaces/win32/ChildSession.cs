@@ -28,6 +28,27 @@ namespace OpenRPA.Interfaces.win32
             {
                 throw new InvalidOperationException("Failed to enable child session");
             }
+            try
+            {
+                using (var key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Terminal Server Client", true))
+                {
+                    key.SetValue("RemoteDesktop_SuppressWhenMinimized", 2);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            //try
+            //{
+            //    var exepath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            //    using (var key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true))
+            //    {
+            //        key.SetValue("openrpa", exepath);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //}
         }
         public static void DisableChildSessions()
         {
@@ -39,9 +60,17 @@ namespace OpenRPA.Interfaces.win32
         public static void LogOffChildSession()
         {
             uint SessionId;
-            if (WTSGetChildSessionId(out SessionId) && !WTSLogoffSession(IntPtr.Zero, SessionId, true))
+            if (WTSGetChildSessionId(out SessionId) && !NativeMethods.WTSLogoffSession(IntPtr.Zero, (int)SessionId, true))
             {
                 throw new Exception("Failed to logoff child session " + SessionId + " " + Marshal.GetLastWin32Error());
+            }
+        }
+        public static void DisconnectChildSession()
+        {
+            uint SessionId;
+            if (WTSGetChildSessionId(out SessionId) && !NativeMethods.WTSDisconnectSession(IntPtr.Zero, (int)SessionId, true))
+            {
+                throw new Exception("Failed to disconnect child session " + SessionId + " " + Marshal.GetLastWin32Error());
             }
         }
         public static uint GetChildSessionId()
@@ -60,8 +89,6 @@ namespace OpenRPA.Interfaces.win32
         public static extern bool WTSIsChildSessionsEnabled(out bool isEnabled);
         [DllImport("Wtsapi32.dll")]
         public static extern bool WTSEnableChildSessions(bool enable);
-        [DllImport("Wtsapi32.dll", SetLastError = true)]
-        public static extern bool WTSLogoffSession(IntPtr hServer, uint SessionId, bool bWait);
         [DllImport("Wtsapi32.dll")]
         public static extern bool WTSGetChildSessionId(out uint SessionId);
     }

@@ -15,7 +15,7 @@ namespace OpenRPA.Interfaces
     public static class NativeMethods
     {
         [DllImport("kernel32.dll")]
-        static extern int WTSGetActiveConsoleSessionId();
+        public static extern int WTSGetActiveConsoleSessionId();
 
         [DllImport("gdi32.dll")]
         static extern int GetDeviceCaps(IntPtr hdc, int nIndex);

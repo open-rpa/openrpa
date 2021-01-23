@@ -100,49 +100,52 @@ namespace OpenRPA.Interfaces.IPCService
         public static OpenRPAService RemoteInstance;
         public static bool _ChildSession = false;
         public static IpcClientChannel secondInstanceChannel;
-        public static void GetInstance(string uniqueName = "OpenRPAService", bool ChildSession = false)
+        public static bool GetInstance(string uniqueName = "OpenRPAService", bool ChildSession = false)
         {
-            if (RemoteInstance != null && _ChildSession == ChildSession)
-            {
-                try
-                {
-                    RemoteInstance.Ping();
-                    return;
-                }
-                catch (Exception)
-                {
-                }
-            }
-            _ChildSession = ChildSession;
-            //if (secondInstanceChannel == null)
-            //{
-            //    secondInstanceChannel = new IpcClientChannel();
-            //    ChannelServices.RegisterChannel(secondInstanceChannel, true);
-            //}
             try
             {
-                if(ChannelServices.RegisteredChannels.Length > 0 && secondInstanceChannel != null)
+                if (RemoteInstance != null && _ChildSession == ChildSession)
                 {
                     try
                     {
-                        ChannelServices.UnregisterChannel(secondInstanceChannel);
+                        RemoteInstance.Ping();
+                        return true;
                     }
                     catch (Exception)
                     {
                     }
                 }
-                secondInstanceChannel = new IpcClientChannel();
-                ChannelServices.RegisterChannel(secondInstanceChannel, true);
+                _ChildSession = ChildSession;
+                try
+                {
+                    if (ChannelServices.RegisteredChannels.Length > 0 && secondInstanceChannel != null)
+                    {
+                        try
+                        {
+                            ChannelServices.UnregisterChannel(secondInstanceChannel);
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                    secondInstanceChannel = new IpcClientChannel();
+                    ChannelServices.RegisterChannel(secondInstanceChannel, true);
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug(ex.ToString());
+                }
+                string channelName = String.Concat(ApplicationIdentifier(uniqueName, ChildSession), Delimiter, ChannelNameSuffix);
+                string remotingServiceUrl = IpcProtocol + channelName + "/" + RemoteServiceName;
+                // Obtain a reference to the remoting service exposed by the server i.e the first instance of the application
+                RemoteInstance = (OpenRPAService)RemotingServices.Connect(typeof(OpenRPAService), remotingServiceUrl);
+                RemoteInstance.Ping();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Log.Debug(ex.ToString());
+                return false;
             }
-            string channelName = String.Concat(ApplicationIdentifier(uniqueName, ChildSession), Delimiter, ChannelNameSuffix);
-            string remotingServiceUrl = IpcProtocol + channelName + "/" + RemoteServiceName;
-            // Obtain a reference to the remoting service exposed by the server i.e the first instance of the application
-            RemoteInstance = (OpenRPAService)RemotingServices.Connect(typeof(OpenRPAService), remotingServiceUrl);
-            RemoteInstance.Ping();
+            return true;
         }
     }
     //public interface IOpenRPAService
@@ -259,7 +262,7 @@ namespace OpenRPA.Interfaces.IPCService
             var _instance = new RunWorkflowInstance(uniqueid, IDOrRelativeFilename, WaitForCompleted, Arguments);
             RunWorkflowInstances.Add(uniqueid, _instance);
             StartWorkflowInstances();
-            if(WaitForCompleted) _instance.Pending.WaitOne();
+            if (WaitForCompleted) _instance.Pending.WaitOne();
             if (_instance.Error != null) throw _instance.Error;
             return _instance.Result;
         }

@@ -737,7 +737,67 @@ namespace OpenRPA
                 NotifyPropertyChanged("recording_add_to_designer");
             }
         }
+        public bool Setting_ShowChildSessions
+        {
+            get
+            {
+                var CurrentP = System.Diagnostics.Process.GetCurrentProcess();
+                var mywinstation = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
+                if (string.IsNullOrEmpty(mywinstation)) mywinstation = "";
+                mywinstation = mywinstation.ToLower();
+                if (!mywinstation.Contains("rdp") && mywinstation != "console")
+                {
+                    return false;
+                }
+                return Setting_IsChildSessionsEnabled;
+            }
+            set
+            {
+
+            }
+        }
+        public bool Setting_IsChildSessionsEnabled
+        {
+            get
+            {
+                return Interfaces.win32.ChildSession.IsChildSessionsEnabled();
+            }
+            set
+            {
+                var state = (bool)value;
+                try
+                {
+                    if (Interfaces.win32.ChildSession.IsChildSessionsEnabled())
+                    {
+                        if (state == false) Interfaces.win32.ChildSession.DisableChildSessions();
+                    }
+                    else
+                    {
+                        if (state == true)
+                        {
+                            var messageBoxResult = MessageBox.Show("Enable ChildSessions ?\nYou will be prompted for username and password until you have restarted your computer\nYou can only enabled child session if you ran the robot with administrator rights!", "Enable ChildSessions", MessageBoxButton.YesNo);
+                            if (messageBoxResult == MessageBoxResult.Yes)
+                            {
+                                Interfaces.win32.ChildSession.EnableChildSessions();
+                                MessageBox.Show("Child sessions enabled, you may need to reboot for this to work.\nIf you do not reboot now, you may be prompted for username and password\n the first time you start the child session");
+                            }
+                        }
+                    }
+                    Config.Save();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "");
+                    MessageBox.Show(ex.Message);
+                }
+                //Config.local.recording_add_to_designer = value;
+                NotifyPropertyChanged("Setting_IsChildSessionsEnabled");
+                NotifyPropertyChanged("Setting_ShowChildSessions");
+            }
+        }
+        public ICommand PlayInChildCommand { get { return new RelayCommand<object>(OnPlayInChild, CanPlayInChild); } }
         public ICommand LoggingOptionCommand { get { return new RelayCommand<object>(OnLoggingOptionCommand, CanAllways); } }
+        public ICommand ChildSessionCommand { get { return new RelayCommand<object>(OnChildSessionCommand, CanAllways); } }
         public ICommand ExitAppCommand { get { return new RelayCommand<object>(OnExitApp, (e) => true); } }
         public ICommand SettingsCommand { get { return new RelayCommand<object>(OnSettings, CanSettings); } }
         public ICommand MinimizeCommand { get { return new RelayCommand<object>(OnMinimize, CanMinimize); } }
@@ -1071,6 +1131,9 @@ namespace OpenRPA
                 Log.Error(ex, "");
                 MessageBox.Show(ex.Message);
             }
+        }
+        private void OnChildSessionCommand(object _item)
+        {
         }
         private bool CanPermissions(object _item)
         {
@@ -3552,6 +3615,109 @@ namespace OpenRPA
         private void clearOutputMessages_Click(object sender, RoutedEventArgs e)
         {
             Tracing.OutputMessages = "";
+        }
+        internal Views.ChildSession childSession;
+        private bool CanPlayInChild(object _item)
+        {
+            if (Interfaces.IPCService.OpenRPAServiceUtil.RemoteInstance == null) return false;
+            if (!Interfaces.IPCService.OpenRPAServiceUtil._ChildSession) return false;
+            try
+            {
+                Interfaces.IPCService.OpenRPAServiceUtil.RemoteInstance.Ping();
+                return CanPlay(_item);
+            }
+            catch (Exception)
+            {
+            }
+            return false;
+        }
+        private async void OnPlayInChild(object item)
+        {
+            Log.FunctionIndent("MainWindow", "OnPlayInChild");
+            string errormessage = "";
+            if (SelectedContent is Views.OpenProject view)
+            {
+                var val = view.listWorkflows.SelectedValue;
+                if (val == null)
+                {
+                    Log.FunctionOutdent("MainWindow", "OnPlayInChild", "SelectedValue is null");
+                    return;
+                }
+                if (!(view.listWorkflows.SelectedValue is Workflow workflow))
+                {
+                    Log.FunctionOutdent("MainWindow", "OnPlayInChild", "SelectedValue is not workflow");
+                    return;
+                }
+                try
+                {
+                    if (this.Minimize) GenericTools.Minimize();
+                    var param = new Dictionary<string, object>();
+                    await Task.Run(() => Interfaces.IPCService.OpenRPAServiceUtil.RemoteInstance.RunWorkflowByIDOrRelativeFilename(workflow.IDOrRelativeFilename, true, param));
+                }
+                catch (Exception ex)
+                {
+                    errormessage = ex.Message;
+                    Log.Error(ex.ToString());
+                }
+                if (Config.local.notify_on_workflow_end && !string.IsNullOrEmpty(errormessage))
+                {
+                    App.notifyIcon.ShowBalloonTip(1000, "", errormessage, System.Windows.Forms.ToolTipIcon.Error);
+                    GenericTools.Restore();
+                }
+                else if (!string.IsNullOrEmpty(errormessage))
+                {
+                    GenericTools.Restore();
+                    MessageBox.Show("OnPlayInChild " + errormessage);
+                }
+                Log.FunctionOutdent("MainWindow", "OnPlayInChild");
+                return;
+            }
+            try
+            {
+                if (!(SelectedContent is Views.WFDesigner))
+                {
+                    Log.FunctionOutdent("MainWindow", "OnPlayInChild", "Selected content is not WFDesigner");
+                    return;
+                }
+                var designer = (Views.WFDesigner)SelectedContent;
+                if (designer.HasChanged) { await designer.SaveAsync(); }
+                var param = new Dictionary<string, object>();
+                await Task.Run(() => Interfaces.IPCService.OpenRPAServiceUtil.RemoteInstance.RunWorkflowByIDOrRelativeFilename(designer.Workflow.IDOrRelativeFilename, true, param));
+            }
+            catch (Exception ex)
+            {
+                errormessage = ex.Message;
+            }
+            if (Config.local.notify_on_workflow_end && !string.IsNullOrEmpty(errormessage))
+            {
+                App.notifyIcon.ShowBalloonTip(1000, "", errormessage, System.Windows.Forms.ToolTipIcon.Error);
+                GenericTools.Restore();
+            }
+            else if (!string.IsNullOrEmpty(errormessage))
+            {
+                GenericTools.Restore();
+                MessageBox.Show("onPlay " + errormessage);
+            }
+            Log.FunctionOutdent("MainWindow", "OnPlay");
+            
+        }
+        private void RibbonButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(childSession==null)
+            {
+                childSession = new ChildSession();
+            }
+            uint SessionId = Interfaces.win32.ChildSession.GetChildSessionId();
+            if(SessionId>0)
+            {
+                var winstation = UserLogins.QuerySessionInformation((int)SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
+                if(!string.IsNullOrEmpty(winstation))
+                {
+                    // Interfaces.win32.ChildSession.LogOffChildSession();
+                    Interfaces.win32.ChildSession.DisconnectChildSession();
+                }
+            }
+            childSession.Show();
         }
     }
     public class QuickLaunchItem

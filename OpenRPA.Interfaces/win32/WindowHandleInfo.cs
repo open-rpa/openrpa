@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
-namespace OpenRPA.Image
+namespace OpenRPA.Interfaces.win32
 {
     public class WindowHandleInfo
     {

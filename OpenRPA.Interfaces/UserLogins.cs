@@ -9,6 +9,90 @@ namespace OpenRPA.Interfaces
 {
     public class UserLogins
     {
+        [DllImport("Wtsapi32.dll")]
+        public static extern bool WTSQuerySessionInformationW(
+         IntPtr hServer,
+         int SessionId,
+         int WTSInfoClass,
+         out IntPtr ppBuffer,
+         out IntPtr pBytesReturned);
+        public static string QuerySessionInformation(int SessionId, WTS_INFO_CLASS info)
+        {
+            return QuerySessionInformation(SessionId, info, IntPtr.Zero);
+        }
+        public static string QuerySessionInformation(int SessionId, WTS_INFO_CLASS info, IntPtr hServer)
+        {
+            IntPtr AnswerBytes;
+            IntPtr AnswerCount;
+            WTSQuerySessionInformationW(hServer, SessionId, (int)info, out AnswerBytes, out AnswerCount);
+            return Marshal.PtrToStringUni(AnswerBytes);
+        }
+        public enum WTS_INFO_CLASS
+        {
+            WTSInitialProgram = 0,
+            WTSApplicationName = 1,
+            WTSWorkingDirectory = 2,
+            WTSOEMId = 3,
+            WTSSessionId = 4,
+            WTSUserName = 5,
+            WTSWinStationName = 6,
+            WTSDomainName = 7,
+            WTSConnectState = 8,
+            WTSClientBuildNumber = 9,
+            WTSClientName = 10,
+            WTSClientDirectory = 11,
+            WTSClientProductId = 12,
+            WTSClientHardwareId = 13,
+            WTSClientAddress = 14,
+            WTSClientDisplay = 15,
+            WTSClientProtocolType = 16,
+            WTSIdleTime = 17,
+            WTSLogonTime = 18,
+            WTSIncomingBytes = 19,
+            WTSOutgoingBytes = 20,
+            WTSIncomingFrames = 21,
+            WTSOutgoingFrames = 22,
+            WTSClientInfo = 23,
+            WTSSessionInfo = 24,
+            WTSSessionInfoEx = 25,
+            WTSConfigInfo = 26,
+            WTSValidationInfo = 27,
+            WTSSessionAddressV4 = 28,
+            WTSIsRemoteSession = 29
+        }
+        public enum _WTS_INFO_CLASS
+        {
+            WTSInitialProgram = 0,
+            WTSApplicationName = 1,
+            WTSWorkingDirectory = 2,
+            WTSOEMId = 3,
+            WTSSessionId = 4,
+            WTSUserName = 5,
+            WTSWinStationName = 6,
+            WTSDomainName = 0,
+            WTSConnectState,
+            WTSClientBuildNumber,
+            WTSClientName,
+            WTSClientDirectory,
+            WTSClientProductId,
+            WTSClientHardwareId,
+            WTSClientAddress,
+            WTSClientDisplay,
+            WTSClientProtocolType,
+            WTSIdleTime,
+            WTSLogonTime,
+            WTSIncomingBytes,
+            WTSOutgoingBytes,
+            WTSIncomingFrames,
+            WTSOutgoingFrames,
+            WTSClientInfo,
+            WTSSessionInfo,
+            WTSSessionInfoEx,
+            WTSConfigInfo,
+            WTSValidationInfo,
+            WTSSessionAddressV4,
+            WTSIsRemoteSession
+        }
 
         [DllImport("wtsapi32.dll")]
         static extern IntPtr WTSOpenServer([MarshalAs(UnmanagedType.LPStr)] String pServerName);
@@ -41,27 +125,26 @@ namespace OpenRPA.Interfaces
 
             public WTS_CONNECTSTATE_CLASS State;
         }
-
-        public enum WTS_INFO_CLASS
-        {
-            WTSInitialProgram,
-            WTSApplicationName,
-            WTSWorkingDirectory,
-            WTSOEMId,
-            WTSSessionId,
-            WTSUserName,
-            WTSWinStationName,
-            WTSDomainName,
-            WTSConnectState,
-            WTSClientBuildNumber,
-            WTSClientName,
-            WTSClientDirectory,
-            WTSClientProductId,
-            WTSClientHardwareId,
-            WTSClientAddress,
-            WTSClientDisplay,
-            WTSClientProtocolType
-        }
+        //public enum WTS_INFO_CLASS
+        //{
+        //    WTSInitialProgram,
+        //    WTSApplicationName,
+        //    WTSWorkingDirectory,
+        //    WTSOEMId,
+        //    WTSSessionId,
+        //    WTSUserName,
+        //    WTSWinStationName,
+        //    WTSDomainName,
+        //    WTSConnectState,
+        //    WTSClientBuildNumber,
+        //    WTSClientName,
+        //    WTSClientDirectory,
+        //    WTSClientProductId,
+        //    WTSClientHardwareId,
+        //    WTSClientAddress,
+        //    WTSClientDisplay,
+        //    WTSClientProtocolType
+        //}
         public enum WTS_CONNECTSTATE_CLASS
         {
             WTSActive,

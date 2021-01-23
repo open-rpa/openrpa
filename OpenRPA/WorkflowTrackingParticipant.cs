@@ -56,6 +56,7 @@ namespace OpenRPA
             };
         }
         public static Dictionary<string, Dictionary<string, Stopwatch>> timers = new Dictionary<string, Dictionary<string, Stopwatch>>();
+        public static object timerslock = new object();
         protected override void Track(TrackingRecord trackRecord, TimeSpan timeStamp)
         {
             try
@@ -70,14 +71,15 @@ namespace OpenRPA
                 {
                     if (workflowInstanceRecord.State == WorkflowInstanceStates.Started || workflowInstanceRecord.State == WorkflowInstanceStates.Resumed)
                     {
-                        timers.Add(InstanceId.ToString(), new Dictionary<string, Stopwatch>());
+                        lock(timerslock) timers.Add(InstanceId.ToString(), new Dictionary<string, Stopwatch>());
+                        
                     }
                     if (workflowInstanceRecord.State == WorkflowInstanceStates.Aborted || workflowInstanceRecord.State == WorkflowInstanceStates.Canceled ||
                         workflowInstanceRecord.State == WorkflowInstanceStates.Completed || workflowInstanceRecord.State == WorkflowInstanceStates.Deleted ||
                         workflowInstanceRecord.State == WorkflowInstanceStates.Suspended || workflowInstanceRecord.State == WorkflowInstanceStates.Terminated ||
                         workflowInstanceRecord.State == WorkflowInstanceStates.UnhandledException || workflowInstanceRecord.State == WorkflowInstanceStates.UpdateFailed)
                     {
-                        if (timers.ContainsKey(InstanceId.ToString())) timers.Remove(InstanceId.ToString());
+                        if (timers.ContainsKey(InstanceId.ToString())) lock (timerslock) timers.Remove(InstanceId.ToString());
                     }
                 }
                 //if (activityStateRecord != null || activityScheduledRecord != null)

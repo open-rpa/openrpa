@@ -76,7 +76,6 @@ namespace OpenRPA.RDService
             }
         }
         private static string[] args;
-        private static Thread UIThread;
         static void Main(string[] args)
         {
             try

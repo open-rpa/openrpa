@@ -35,7 +35,7 @@ namespace OpenRPA.Interfaces.win32
                     key.SetValue("RemoteDesktop_SuppressWhenMinimized", 2);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
             //try

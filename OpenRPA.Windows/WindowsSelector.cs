@@ -27,9 +27,8 @@ namespace OpenRPA.Windows
             var pathToRoot = new List<AutomationElement>();
             while (element != null)
             {
-                // Break on circular relationship (should not happen?)
-                //if (pathToRoot.Contains(element) || element.Equals(_rootElement)) { break; }
-                // if (pathToRoot.Contains(element)) { break; }
+                // Break on circular relationship(should not happen?)
+                if (pathToRoot.Contains(element)) { break; }
                 try
                 {
                     if (element.Parent != null) pathToRoot.Add(element);
@@ -108,7 +107,6 @@ namespace OpenRPA.Windows
 
             }
             WindowsSelectorItem item;
-
             if(PluginConfig.traverse_selector_both_ways)
             {
                 Log.Selector(string.Format("windowsselector::create traverse_selector_both_ways::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
@@ -269,7 +267,6 @@ namespace OpenRPA.Windows
         {
             return WindowsSelector.GetElementsWithuiSelector(this, fromElement, maxresults, null);
         }
-
         public static UIElement[] GetElementsWithuiSelectorItem(int ident, AutomationBase automation, WindowsSelectorItem sel, UIElement[] parents, int maxresults, bool LastItem)
         {
             var _current = new List<UIElement>();
@@ -287,8 +284,6 @@ namespace OpenRPA.Windows
                             if (WindowsSelectorItem.Match(sel, elementNode)) _current.Add(new UIElement(elementNode));
                         }
                     }
-                    //var elements = _current.Select(x => x.RawElement).ToArray();
-                    //WindowsSelectorItem.AddToCache(_ele.RawElement, 0, cond.ToString(), elements);
                 }
                 if (!string.IsNullOrEmpty(sel.processname()))
                 {
@@ -309,13 +304,8 @@ namespace OpenRPA.Windows
                         {
                             ors.Add(condition.ByProcessId(p.Id));
                         }
-                        // var con = new FlaUI.Core.Conditions.AndCondition(new FlaUI.Core.Conditions.OrCondition(ors), condition.ByControlType(FlaUI.Core.Definitions.ControlType.Window));
-                        //var con = new FlaUI.Core.Conditions.AndCondition(new FlaUI.Core.Conditions.OrCondition(ors),
-                        //    new FlaUI.Core.Conditions.OrCondition(new FlaUI.Core.Conditions.ConditionBase[] {
-                        //        condition.ByControlType(FlaUI.Core.Definitions.ControlType.Window),
-                        //        condition.ByControlType(FlaUI.Core.Definitions.ControlType.Pane)}));
                         var con = new FlaUI.Core.Conditions.OrCondition(ors);
-                        if (PluginConfig.enable_cache && cond.ChildCount > 0)
+                        if (PluginConfig.enable_cache && con.ChildCount > 0)
                         {
                             var cache = WindowsSelectorItem.GetFromCache(_ele.RawElement, ident, con.ToString());
                             if (cache != null)
@@ -326,8 +316,6 @@ namespace OpenRPA.Windows
                                     if (WindowsSelectorItem.Match(sel, elementNode)) _current.Add(new UIElement(elementNode));
                                 }
                             }
-                            //var elements = _current.Select(x => x.RawElement).ToArray();
-                            //WindowsSelectorItem.AddToCache(_ele.RawElement, ident, con.ToString(), elements);
                         }
 
                         if (_current.Count == 0)
@@ -370,18 +358,12 @@ namespace OpenRPA.Windows
                                     win = ___treeWalker.GetNextSibling(win);
                                 }
                             }
-                            if (_current.Count > 0 && PluginConfig.enable_cache && cond.ChildCount > 0)
+                            if (_current.Count > 0 && PluginConfig.enable_cache && con.ChildCount > 0)
                             {
                                 var elements = _current.Select(x => x.RawElement).ToArray();
                                 WindowsSelectorItem.AddToCache(_ele.RawElement, ident, con.ToString(), elements);
                             }
                         }
-
-                        //if (_current.Count > 0 && _current.First().ControlType.ToString() == sel.ControlType()) doContinue = true;
-                        //if (_current.Count > 0) doContinue = true;
-                        //if (doContinue) return _current.ToArray();
-                        //current = _current.ToArray();
-                        //_current.Clear();
                     }
                     return _current.ToArray();
                 }
@@ -434,7 +416,6 @@ namespace OpenRPA.Windows
             }
             return _current.ToArray();
         }
-
         public static UIElement[] GetElementsWithuiSelector(WindowsSelector selector, IElement fromElement, int maxresults, WindowsCacheExtension ext)
         {
             TimeSpan timeout = TimeSpan.FromMilliseconds(5000);
@@ -490,10 +471,6 @@ namespace OpenRPA.Windows
                 }
                 return result;
             }
-
-
-
-
             if (result == null)
             {
                 Log.Selector(string.Format("GetElementsWithuiSelector::ended with 0 results after {0:mm\\:ss\\.fff}", sw.Elapsed));
@@ -503,206 +480,6 @@ namespace OpenRPA.Windows
             Log.Selector(string.Format("GetElementsWithuiSelector::ended with " + result.Length + " results after {0:mm\\:ss\\.fff}", sw.Elapsed));
             return result;
 
-        }
-        public static UIElement[] GetElementsWithuiSelector2(WindowsSelector selector, IElement fromElement = null, int maxresults = 1)
-        {
-            TimeSpan timeout = TimeSpan.FromMilliseconds(5000);
-            timeout = TimeSpan.FromMilliseconds(20000);
-            var sw = new System.Diagnostics.Stopwatch();
-            sw.Start();
-            Log.Selector(string.Format("GetElementsWithuiSelector::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
-
-            UIElement _fromElement = fromElement as UIElement;
-            var selectors = selector.Where(x => x.Enabled == true && x.Selector == null).ToList();
-
-            var current = new List<UIElement>();
-            var automation = AutomationUtil.getAutomation();
-            var first = new WindowsSelectorItem(selector[0]);
-            var second = new WindowsSelectorItem(selector[1]);
-            var last = new WindowsSelectorItem(selector[selector.Count - 1]);
-            UIElement[] result = null;
-
-            var search_descendants = first.SearchDescendants();
-            if (true)
-            {
-                if (search_descendants || !search_descendants)
-                {
-                    bool windowsearch = true;
-                    if (!string.IsNullOrEmpty(first.processname()))
-                    {
-                        var me = System.Diagnostics.Process.GetCurrentProcess();
-                        var p = System.Diagnostics.Process.GetProcessesByName(first.processname()).Where(_p => _p.SessionId == me.SessionId).ToArray();
-                        if (p.Length > 0) windowsearch = false;
-                        if (first.processname().ToLower() == "startmenuexperiencehost" || first.processname().ToLower() == "explorer") windowsearch = true;
-                    }
-                    if (first.isImmersiveProcess()) windowsearch = true;
-                    Window window = null;
-                    if (windowsearch)
-                    {
-                        Log.Debug(string.Format("GetElementsWithuiSelector::Find window based on second selector {0:mm\\:ss\\.fff}", sw.Elapsed));
-                        // app = Application.Attach(first.processname);
-                        // var windows = automation.GetDesktop().FindAllChildren(second.GetConditionsWithoutStar());
-                        var _treeWalker = automation.TreeWalkerFactory.GetCustomTreeWalker(second.GetConditionsWithoutStar());
-                        var ele = _treeWalker.GetFirstChild(automation.GetDesktop());
-                        do
-                        {
-                            Log.Debug(string.Format("GetElementsWithuiSelector::Match window {0:mm\\:ss\\.fff}", sw.Elapsed));
-                            if (ele == null)
-                            {
-
-                            }
-                            else if (second.Match(ele))
-                            {
-                                window = ele.AsWindow();
-                            }
-                            else
-                            {
-                                ele = _treeWalker.GetNextSibling(ele);
-                            }
-                        } while (window == null && ele != null);
-                    }
-                    else
-                    {
-                        Log.Debug(string.Format("GetElementsWithuiSelector::attached to " + first.processname() + " {0:mm\\:ss\\.fff}", sw.Elapsed));
-                        // process = FlaUI.Core.Tools.WindowsStoreAppLauncher.Launch(applicationUserModelId, arguments);
-                        // app = Application.LaunchStoreApp(first.applicationUserModelId, first.arguments);
-                        Application app = Application.Attach(first.processname());
-                        window = app.GetMainWindow(automation);
-                    }
-                    if (window != null)
-                    {
-                        Log.Debug(string.Format("GetElementsWithuiSelector::Got main window {0:mm\\:ss\\.fff}", sw.Elapsed));
-                        AutomationElement ele = null;
-                        var cond = last.GetConditionsWithoutStar();
-                        var hasStar = last.Properties.Where(x => x.Enabled == true && (x.Value != null && x.Value.Contains("*"))).ToArray();
-                        var _treeWalker = automation.TreeWalkerFactory.GetCustomTreeWalker(cond);
-
-                        Log.Debug(string.Format("GetElementsWithuiSelector::Got Get Conditions {0:mm\\:ss\\.fff}", sw.Elapsed));
-                        ele = _treeWalker.GetFirstChild(window);
-                        if (hasStar.Length > 0 || maxresults > 1)
-                        {
-                            do
-                            {
-                                Log.Debug(string.Format("GetElementsWithuiSelector::Match element {0:mm\\:ss\\.fff}", sw.Elapsed));
-                                if (last.Match(ele))
-                                {
-                                    Log.Debug(string.Format("GetElementsWithuiSelector::Adding element {0:mm\\:ss\\.fff}", sw.Elapsed));
-                                    current.Add(new UIElement(ele));
-                                }
-                                if (current.Count < maxresults)
-                                {
-                                    ele = _treeWalker.GetNextSibling(ele);
-                                }
-                                else
-                                {
-                                    ele = null;
-                                }
-
-                            } while (current.Count < maxresults && ele != null);
-                        }
-                        else if (ele != null)
-                        {
-                            Log.Debug(string.Format("GetElementsWithuiSelector::Adding element {0:mm\\:ss\\.fff}", sw.Elapsed));
-                            current.Add(new UIElement(ele));
-                        }
-                        Log.Debug(string.Format("GetElementsWithuiSelector::completed with " + current.Count + " results {0:mm\\:ss\\.fff}", sw.Elapsed));
-                        if (current.Count > 0)
-                        {
-                            result = current.ToArray();
-                            if (result.Count() > maxresults)
-                            {
-                                Console.WriteLine("found " + result.Count() + " but only needed " + maxresults);
-                                result = result.Take(maxresults).ToArray();
-                            }
-                            return result;
-                        }
-                    }
-                }
-            }
-
-
-
-
-            using (automation)
-            {
-                AutomationElement startfrom = null;
-                if (_fromElement != null) startfrom = _fromElement.RawElement;
-                Log.SelectorVerbose("automation.GetDesktop");
-                bool isDesktop = false;
-                if (startfrom == null)
-                {
-                    startfrom = automation.GetDesktop();
-                    isDesktop = true;
-                }
-                current.Add(new UIElement(startfrom));
-                for (var i = 0; i < selectors.Count; i++)
-                {
-                    var s = new WindowsSelectorItem(selectors[i]);
-                    var elements = new List<UIElement>();
-                    elements.AddRange(current);
-                    current.Clear();
-                    int count = 0;
-                    foreach (var _element in elements)
-                    {
-                        count = maxresults;
-                        //if (i == 0) count = midcounter;
-                        //// if (i < selectors.Count) count = 500;
-                        //if ((i + 1) < selectors.Count) count = 1;
-                        if (i < (selectors.Count - 1)) count = 500;
-                        var matches = (s).matches(startfrom, i, _element.RawElement, count, isDesktop, search_descendants); // (i == 0 ? 1: maxresults)
-                        var uimatches = new List<UIElement>();
-                        foreach (var m in matches)
-                        {
-                            var ui = new UIElement(m);
-                            uimatches.Add(ui);
-                        }
-                        current.AddRange(uimatches.ToArray());
-                        if (sw.Elapsed > timeout)
-                        {
-                            Log.Selector(string.Format("GetElementsWithuiSelector::timed out {0:mm\\:ss\\.fff}", sw.Elapsed));
-                            return new UIElement[] { };
-                        }
-                    }
-                    if (i == (selectors.Count - 1)) result = current.ToArray();
-                    Log.Selector(string.Format("Found " + current.Count + " hits for selector # " + i + " {0:mm\\:ss\\.fff}", sw.Elapsed));
-                    if (i > 0 && elements.Count > 0 && current.Count == 0)
-                    {
-                        var message = "needed to find " + Environment.NewLine + selectors[i].ToString() + Environment.NewLine + "but found only: " + Environment.NewLine;
-                        var children = elements[0].RawElement.FindAllChildren();
-                        foreach (var c in children)
-                        {
-                            try
-                            {
-                                message += new UIElement(c).ToString() + Environment.NewLine;
-                            }
-                            catch (Exception)
-                            {
-                            }
-                        }
-                        Log.Selector(message);
-                    }
-                    if (i == 0 && isDesktop && current.Count > 0)
-                    {
-                        if (current[0].RawElement.Patterns.Window.TryGetPattern(out var winPattern))
-                        {
-                            if (winPattern.WindowVisualState.Value == FlaUI.Core.Definitions.WindowVisualState.Minimized)
-                            {
-                                IntPtr handle = current[0].RawElement.Properties.NativeWindowHandle.Value;
-                                winPattern.SetWindowVisualState(FlaUI.Core.Definitions.WindowVisualState.Normal);
-                            }
-                        }
-                    }
-                    isDesktop = false;
-                }
-            }
-            if (result == null)
-            {
-                Log.Selector(string.Format("GetElementsWithuiSelector::ended with 0 results after {0:mm\\:ss\\.fff}", sw.Elapsed));
-                return new UIElement[] { };
-            }
-            if (result.Count() > maxresults) result = result.Take(maxresults).ToArray();
-            Log.Selector(string.Format("GetElementsWithuiSelector::ended with " + result.Length + " results after {0:mm\\:ss\\.fff}", sw.Elapsed));
-            return result;
         }
     }
 }

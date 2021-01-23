@@ -459,6 +459,9 @@
   <data name="cancelkey" xml:space="preserve">
     <value>Cancel key</value>
   </data>
+  <data name="childsession" xml:space="preserve">
+    <value>Child Session</value>
+  </data>
   <data name="chrome" xml:space="preserve">
     <value>Chrome</value>
   </data>
@@ -564,6 +567,9 @@
   <data name="main_reload" xml:space="preserve">
     <value>Reload</value>
   </data>
+  <data name="main_settings_enable_child_sessions" xml:space="preserve">
+    <value>Enable Child Sessions</value>
+  </data>
   <data name="main_settings_recording_add_to_designer" xml:space="preserve">
     <value>Record directly into designer</value>
   </data>
@@ -647,6 +653,9 @@
   </data>
   <data name="play" xml:space="preserve">
     <value>Play</value>
+  </data>
+  <data name="playinchildsession" xml:space="preserve">
+    <value>Play in child</value>
   </data>
   <data name="plugins" xml:space="preserve">
     <value>Plugins</value>

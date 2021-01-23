@@ -21,6 +21,7 @@ namespace OpenRPA.PS
         public string WorkflowId { get; set; }
         [Parameter(Position = 2, ParameterSetName = "Using Filename", Mandatory = true)]
         public string Filename { get; set; }
+        [Parameter()] public SwitchParameter ChildSession { get; set; }
         public void WriteStatus(string message)
         {
             int origRow = Console.CursorTop;
@@ -77,7 +78,7 @@ namespace OpenRPA.PS
                 //    {
                 //    }
                 //}
-                Interfaces.IPCService.OpenRPAServiceUtil.GetInstance();
+                Interfaces.IPCService.OpenRPAServiceUtil.GetInstance(ChildSession: ChildSession.IsPresent);
                 var result = Interfaces.IPCService.OpenRPAServiceUtil.RemoteInstance.RunWorkflowByIDOrRelativeFilename(Filename, true, param);
                 // Interfaces.IPCService.OpenRPAServiceUtil.RemoteInstance.ParseCommandLineArgs(new string[] { "workflowid", Filename });
 

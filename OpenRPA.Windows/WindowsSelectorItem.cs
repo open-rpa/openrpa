@@ -263,11 +263,28 @@ namespace OpenRPA.Windows
             if (!PluginConfig.enable_cache) return null;
             var now = DateTime.Now;
             var timeout = PluginConfig.cache_timeout;
-            foreach (var e in MatchCache.Where(x => (now - x.Created) > timeout).ToList())
+            MatchCacheItem result = null;
+            try
             {
-                RemoveFromCache(e);
+                for(var i = MatchCache.Count-1; i > 0; i--)
+                {
+                    try
+                    {
+                        if (now - MatchCache[i].Created > timeout) RemoveFromCache(MatchCache[i]);
+                        if(MatchCache[i].Conditions == Conditions && MatchCache[i].Root.Equals(root) && MatchCache[i].Ident == ident)
+                        {
+                            result = MatchCache[i];
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        RemoveFromCache(MatchCache[i]);
+                    }
+                }
             }
-            var result = MatchCache.Where(x => x.Conditions == Conditions && x.Root.Equals(root) && x.Ident == ident).FirstOrDefault();
+            catch (Exception)
+            {
+            }
             if (result != null)
             {
                 try
@@ -307,8 +324,14 @@ namespace OpenRPA.Windows
         }
         public static void RemoveFromCache(MatchCacheItem item)
         {
-            var items = MatchCache.Where(x => x.Root.Equals(item.Root) && x.Ident >= item.Ident).ToList();
-            foreach (var e in items) MatchCache.Remove(e);
+            try
+            {
+                var items = MatchCache.Where(x => x.Root.Equals(item.Root) && x.Ident >= item.Ident).ToList();
+                foreach (var e in items) MatchCache.Remove(e);
+            }
+            catch (Exception)
+            {
+            }
             MatchCache.Remove(item);
         }
         public static void ClearCache()
@@ -318,7 +341,14 @@ namespace OpenRPA.Windows
         public static void AddToCache(AutomationElement root, int ident, string Conditions, AutomationElement[] Result)
         {
             if (!PluginConfig.enable_cache) return;
-            var result = MatchCache.Where(x => x.Conditions == Conditions && x.Ident == ident && x.Root.Equals(root)).FirstOrDefault();
+            MatchCacheItem result = null;
+            try
+            {
+                result = MatchCache.Where(x => x.Conditions == Conditions && x.Ident == ident && x.Root.Equals(root)).FirstOrDefault();
+            }
+            catch (Exception)
+            {
+            }
             if (result != null)
             {
                 result.Result = Result;
@@ -414,10 +444,7 @@ namespace OpenRPA.Windows
                     {
                         if (m.Properties.ControlType.IsSupported)
                         {
-                            if(m.Properties.ControlType.ValueOrDefault != null)
-                            {
-                                v = m.Properties.ControlType.ValueOrDefault.ToString();
-                            }                            
+                            v = m.Properties.ControlType.ValueOrDefault.ToString();
                         }
                     }
                     catch (Exception)

@@ -112,8 +112,8 @@ namespace OpenRPA.Image
                         allChildWindows.Add(p.MainWindowHandle);
                         foreach (var window in allChildWindows)
                         {
-                            WindowHandleInfo.RECT rct;
-                            if (!WindowHandleInfo.GetWindowRect(new HandleRef(this, window), out rct))
+                            Interfaces.win32.WindowHandleInfo.RECT rct;
+                            if (!Interfaces.win32.WindowHandleInfo.GetWindowRect(new HandleRef(this, window), out rct))
                             {
                                 continue;
                             }

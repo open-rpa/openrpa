@@ -1,0 +1,71 @@
+﻿<Window x:Class="OpenRPA.Views.ChildSession"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenRPA"
+        xmlns:or="clr-namespace:OpenRPA.Resources"
+        xmlns:ribbon="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:input="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
+        xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
+        xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+        xmlns:dockctrl="clr-namespace:Xceed.Wpf.AvalonDock.Controls;assembly=Xceed.Wpf.AvalonDock" xmlns:views="clr-namespace:OpenRPA.Views"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded"  Name="TheChildSession" Closed="ChildSession_Closed" Closing="ChildSession_Closing"
+        Title="Child Session"
+        x:Uid="title"
+         Height="750" Width="1200">
+
+    <Window.Resources>
+        <local:BindingProxy x:Key="proxy" Data="{Binding}" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+        <DockPanel>
+            <WindowsFormsHost x:Name="formhost" DockPanel.Dock="Top">
+            </WindowsFormsHost>
+        </DockPanel>
+        <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="2" Height="25" Background="Gray">
+            <StatusBar FocusManager.IsFocusScope="True" x:Name="StatusBar">
+                <StatusBarItem x:Name="LabelStatusBar" Content="{x:Static or:strings.status_disconnected}" />
+                <StatusBarItem VerticalAlignment="Top" HorizontalContentAlignment="Center">
+                    <ItemsControl x:Name="lvDataBinding">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="10,0,10,0">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status}" Value="">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} : {1}">
+                                            <Binding Path="Name" />
+                                            <Binding Path="Status" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StatusBarItem>
+            </StatusBar>
+        </StatusBar>
+
+    </Grid>
+
+
+</Window>

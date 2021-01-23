@@ -307,8 +307,14 @@ namespace OpenRPA.Windows
         }
         public static void RemoveFromCache(MatchCacheItem item)
         {
-            var items = MatchCache.Where(x => x.Root.Equals(item.Root) && x.Ident >= item.Ident).ToList();
-            foreach (var e in items) MatchCache.Remove(e);
+            try
+            {
+                var items = MatchCache.Where(x => x.Root.Equals(item.Root) && x.Ident >= item.Ident).ToList();
+                foreach (var e in items) MatchCache.Remove(e);
+            }
+            catch (Exception)
+            {
+            }
             MatchCache.Remove(item);
         }
         public static void ClearCache()

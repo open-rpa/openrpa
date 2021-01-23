@@ -14,6 +14,19 @@ namespace OpenRPA.Interfaces.IPCService
 {
     public static class OpenRPAServiceUtil
     {
+        public static string ApplicationIdentifier(string uniqueName, bool ChildSession)
+        {
+            if(ChildSession)
+            {
+                uint SessionId = win32.ChildSession.GetChildSessionId();
+                return uniqueName + Environment.UserName + SessionId;
+            }
+            else
+            {
+                var p = System.Diagnostics.Process.GetCurrentProcess();
+                return uniqueName + Environment.UserName + p.SessionId;
+            }
+        }
         private const string Delimiter = ":";
         private const string ChannelNameSuffix = "OpenRPAIPCChannel";
         private const string RemoteServiceName = "OpenRPAService";
@@ -74,11 +87,10 @@ namespace OpenRPA.Interfaces.IPCService
         public static bool InitializeService(string uniqueName = "OpenRPAService")
         {
             // Build unique application Id and the IPC channel name.
-            string applicationIdentifier = uniqueName + Environment.UserName;
-            string channelName = String.Concat(applicationIdentifier, Delimiter, ChannelNameSuffix);
+            string channelName = String.Concat(ApplicationIdentifier(uniqueName, false), Delimiter, ChannelNameSuffix);
             // Create mutex based on unique application Id to check if this is the first instance of the application. 
             bool firstInstance;
-            OpenRPAMutex = new Mutex(true, applicationIdentifier, out firstInstance);
+            OpenRPAMutex = new Mutex(true, ApplicationIdentifier(uniqueName, false), out firstInstance);
             if (firstInstance)
             {
                 CreateRemoteService(channelName);
@@ -86,11 +98,11 @@ namespace OpenRPA.Interfaces.IPCService
             return firstInstance;
         }
         public static OpenRPAService RemoteInstance;
+        public static bool _ChildSession = false;
         public static IpcClientChannel secondInstanceChannel;
-        public static void GetInstance(string uniqueName = "OpenRPAService")
+        public static void GetInstance(string uniqueName = "OpenRPAService", bool ChildSession = false)
         {
-
-            if (RemoteInstance != null)
+            if (RemoteInstance != null && _ChildSession == ChildSession)
             {
                 try
                 {
@@ -101,6 +113,7 @@ namespace OpenRPA.Interfaces.IPCService
                 {
                 }
             }
+            _ChildSession = ChildSession;
             //if (secondInstanceChannel == null)
             //{
             //    secondInstanceChannel = new IpcClientChannel();
@@ -108,15 +121,24 @@ namespace OpenRPA.Interfaces.IPCService
             //}
             try
             {
-                IpcClientChannel secondInstanceChannel = new IpcClientChannel();
+                if(ChannelServices.RegisteredChannels.Length > 0 && secondInstanceChannel != null)
+                {
+                    try
+                    {
+                        ChannelServices.UnregisterChannel(secondInstanceChannel);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                secondInstanceChannel = new IpcClientChannel();
                 ChannelServices.RegisterChannel(secondInstanceChannel, true);
             }
             catch (Exception ex)
             {
                 Log.Debug(ex.ToString());
             }
-            string applicationIdentifier = uniqueName + Environment.UserName;
-            string channelName = String.Concat(applicationIdentifier, Delimiter, ChannelNameSuffix);
+            string channelName = String.Concat(ApplicationIdentifier(uniqueName, ChildSession), Delimiter, ChannelNameSuffix);
             string remotingServiceUrl = IpcProtocol + channelName + "/" + RemoteServiceName;
             // Obtain a reference to the remoting service exposed by the server i.e the first instance of the application
             RemoteInstance = (OpenRPAService)RemotingServices.Connect(typeof(OpenRPAService), remotingServiceUrl);

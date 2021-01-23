@@ -737,15 +737,24 @@ namespace OpenRPA
                 NotifyPropertyChanged("recording_add_to_designer");
             }
         }
+        public bool isRunningInChildSession()
+        {
+            var CurrentP = System.Diagnostics.Process.GetCurrentProcess();
+            var mywinstation = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
+            if (string.IsNullOrEmpty(mywinstation)) mywinstation = "";
+            mywinstation = mywinstation.ToLower();
+            if (!mywinstation.Contains("rdp") && mywinstation != "console")
+            {
+                return true;
+            }
+            return false;
+
+        }
         public bool Setting_ShowChildSessions
         {
             get
             {
-                var CurrentP = System.Diagnostics.Process.GetCurrentProcess();
-                var mywinstation = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
-                if (string.IsNullOrEmpty(mywinstation)) mywinstation = "";
-                mywinstation = mywinstation.ToLower();
-                if (!mywinstation.Contains("rdp") && mywinstation != "console")
+                if (isRunningInChildSession())
                 {
                     return false;
                 }
@@ -1363,11 +1372,11 @@ namespace OpenRPA
             try
             {
                 if (!IsConnected) return false;
-                if(SelectedContent is Views.WFDesigner designer)
+                if (SelectedContent is Views.WFDesigner designer)
                 {
                     return !designer.Project.disable_local_caching;
                 }
-                if(SelectedContent is Views.OpenProject open)
+                if (SelectedContent is Views.OpenProject open)
                 {
                     var val = open.listWorkflows.SelectedValue;
                     if (val == null) return false;
@@ -1750,10 +1759,11 @@ namespace OpenRPA
                     var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
                     foreach (var document in ld)
                     {
-                        if (document.Content is Views.OpenProject op) {
+                        if (document.Content is Views.OpenProject op)
+                        {
                             document.IsSelected = true;
                             Log.FunctionOutdent("MainWindow", "OnOpen", "allready open");
-                            return; 
+                            return;
                         }
                     }
                     var view = new Views.OpenProject(this);
@@ -1791,10 +1801,11 @@ namespace OpenRPA
                     var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
                     foreach (var document in ld)
                     {
-                        if (document.Content is Views.DetectorsView op) { 
+                        if (document.Content is Views.DetectorsView op)
+                        {
                             document.IsSelected = true;
                             Log.FunctionOutdent("MainWindow", "OnDetectors", "allready open");
-                            return; 
+                            return;
                         }
                     }
                     var view = new Views.DetectorsView(this);
@@ -1821,10 +1832,11 @@ namespace OpenRPA
                     var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
                     foreach (var document in ld)
                     {
-                        if (document.Content is Views.RunPlugins op) { 
+                        if (document.Content is Views.RunPlugins op)
+                        {
                             document.IsSelected = true;
                             Log.FunctionOutdent("MainWindow", "OnRunPlugins", "allready open");
-                            return; 
+                            return;
                         }
                     }
                     var view = new Views.RunPlugins();
@@ -1851,10 +1863,11 @@ namespace OpenRPA
                     var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
                     foreach (var document in ld)
                     {
-                        if (document.Content is Views.RecorderPlugins op) { 
+                        if (document.Content is Views.RecorderPlugins op)
+                        {
                             document.IsSelected = true;
                             Log.FunctionOutdent("MainWindow", "OnRecorderPluginsCommand", "allready open");
-                            return; 
+                            return;
                         }
                     }
                     var view = new Views.RecorderPlugins();
@@ -2067,6 +2080,12 @@ namespace OpenRPA
                 // foreach (var p in Plugins.recordPlugins) { types.Add(p.GetType()); }
                 LayoutDocument layoutDocument = new LayoutDocument { Title = workflow.name };
                 layoutDocument.ContentId = workflow._id;
+                if (isRunningInChildSession())
+                {
+                    Log.Warning("Refuse loading workflow designer in ChildSession");
+                    Log.FunctionOutdent("MainWindow", "_onOpenWorkflow");
+                    return;
+                }
                 Views.WFDesigner view = new Views.WFDesigner(layoutDocument, workflow as Workflow, types.ToArray())
                 {
                     OnChanged = WFDesigneronChanged
@@ -2481,7 +2500,8 @@ namespace OpenRPA
             {
                 App.notifyIcon.ShowBalloonTip(1000, "", errormessage, System.Windows.Forms.ToolTipIcon.Error);
                 GenericTools.Restore();
-            } else if (!string.IsNullOrEmpty(errormessage))
+            }
+            else if (!string.IsNullOrEmpty(errormessage))
             {
                 GenericTools.Restore();
                 MessageBox.Show("onPlay " + errormessage);
@@ -2773,7 +2793,7 @@ namespace OpenRPA
         {
             System.Diagnostics.Process.Start("msedge.exe", "https://chrome.google.com/webstore/detail/openrpa/hpnihnhlcnfejboocnckgchjdofeaphe");
         }
-        
+
         private int lastsapprocessid = -1;
         private void OnKeyDown(Input.InputEventArgs e)
         {
@@ -2782,7 +2802,7 @@ namespace OpenRPA
             try
             {
                 var element = AutomationUtil.getAutomation().FocusedElement();
-                if(element != null && element.Properties.ProcessId.IsSupported)
+                if (element != null && element.Properties.ProcessId.IsSupported)
                 {
                     if (element.Properties.ProcessId == lastsapprocessid) return;
                     var p = System.Diagnostics.Process.GetProcessById(element.Properties.ProcessId);
@@ -2904,7 +2924,7 @@ namespace OpenRPA
                 }
 
                 p = Plugins.recordPlugins.Where(x => x.Name == "SAP").FirstOrDefault();
-                if(p != null && (all == true || all == false))
+                if (p != null && (all == true || all == false))
                 {
                     p.OnUserAction += OnUserAction;
                     if (Config.local.record_overlay) p.OnMouseMove += OnMouseMove;
@@ -2978,7 +2998,7 @@ namespace OpenRPA
                 {
                     try
                     {
-                        if(_overlayWindow!=null)
+                        if (_overlayWindow != null)
                         {
                             _overlayWindow.Visible = true;
                             _overlayWindow.Bounds = e.Element.Rectangle;
@@ -3012,7 +3032,7 @@ namespace OpenRPA
                 IPlugin plugin = sender;
                 try
                 {
-                    if(sender.Name == "Windows")
+                    if (sender.Name == "Windows")
                     {
                         // TODO: Add priotrity, we could create an ordered list in config ?
                         foreach (var p in Plugins.recordPlugins)
@@ -3074,14 +3094,15 @@ namespace OpenRPA
                             if (win.ShowDialog() == true)
                             {
                                 e.ClickHandled = true;
-                                if(!string.IsNullOrEmpty(win.SelectedItem.Value))
+                                if (!string.IsNullOrEmpty(win.SelectedItem.Value))
                                 {
                                     e.a.AddInput(win.SelectedItem.Value, e.Element);
-                                } else
+                                }
+                                else
                                 {
                                     e.a.AddInput(win.SelectedItem.Name, e.Element);
                                 }
-                                
+
                             }
                             else
                             {
@@ -3184,7 +3205,8 @@ namespace OpenRPA
                 var Entity = (plugin.Entity as Detector);
                 command.command = "detector";
                 command.detectorid = Entity._id;
-                if (string.IsNullOrEmpty(Entity._id)) {
+                if (string.IsNullOrEmpty(Entity._id))
+                {
                     Log.FunctionOutdent("MainWindow", "OnDetector", "Entity._id is null");
                     return;
                 }
@@ -3248,7 +3270,7 @@ namespace OpenRPA
                     catch (Exception ex)
                     {
                         Log.Debug(ex.Message);
-                    }                    
+                    }
                 }
                 if (instance.hasError || instance.isCompleted)
                 {
@@ -3265,15 +3287,16 @@ namespace OpenRPA
                     Log.Information(message);
                     if ((Config.local.notify_on_workflow_end && !isRemote) || (Config.local.notify_on_workflow_remote_end && isRemote))
                     {
-                        if(instance.state == "completed")
+                        if (instance.state == "completed")
                         {
                             // App.notifyIcon.ShowBalloonTip(1000, instance.Workflow.name + " " + instance.state, message, System.Windows.Forms.ToolTipIcon.Info);
                             App.notifyIcon.ShowBalloonTip(1000, "", message, System.Windows.Forms.ToolTipIcon.Info);
-                        } else
+                        }
+                        else
                         {
                             // App.notifyIcon.ShowBalloonTip(1000, instance.Workflow.name + " " + instance.state, message, System.Windows.Forms.ToolTipIcon.Error);
                             App.notifyIcon.ShowBalloonTip(1000, "", message, System.Windows.Forms.ToolTipIcon.Error);
-                        }                        
+                        }
                     }
                     System.Threading.Thread.Sleep(200);
                     foreach (var wi in WorkflowInstance.Instances.ToList())
@@ -3699,19 +3722,19 @@ namespace OpenRPA
                 MessageBox.Show("onPlay " + errormessage);
             }
             Log.FunctionOutdent("MainWindow", "OnPlay");
-            
+
         }
         private void RibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            if(childSession==null)
+            if (childSession == null)
             {
                 childSession = new ChildSession();
             }
             uint SessionId = Interfaces.win32.ChildSession.GetChildSessionId();
-            if(SessionId>0)
+            if (SessionId > 0)
             {
                 var winstation = UserLogins.QuerySessionInformation((int)SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
-                if(!string.IsNullOrEmpty(winstation))
+                if (!string.IsNullOrEmpty(winstation))
                 {
                     // Interfaces.win32.ChildSession.LogOffChildSession();
                     Interfaces.win32.ChildSession.DisconnectChildSession();

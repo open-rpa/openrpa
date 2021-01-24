@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.15</Version>
-    <PackageReleaseNotes>1.2.15 Add support for Child Sessions
+    <Version>1.2.16</Version>
+    <PackageReleaseNotes>1.2.16 Minor fixes to Windows Selector and cache
+1.2.15 Add support for Child Sessions
 1.2.14 Add support for custom screensize for HD robots
 1.2.13 ps: Check for error response on Invoke-Openflow
 1.2.12 Normalize selector code

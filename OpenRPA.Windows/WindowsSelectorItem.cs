@@ -21,6 +21,11 @@ namespace OpenRPA.Windows
         public AutomationElement Root { get; set; }
         public string Conditions { get; set; }
         public int Ident { get; set; }
+        public override string ToString()
+        {
+            if(Result == null) return "[0] " + Conditions;
+            return "[" + Result.Length + "] " + Conditions;
+        }
 
     }
     public class WindowsSelectorItem : SelectorItem
@@ -266,7 +271,7 @@ namespace OpenRPA.Windows
             MatchCacheItem result = null;
             try
             {
-                for(var i = MatchCache.Count-1; i > 0; i--)
+                for(var i = MatchCache.Count-1; i >= 0; i--)
                 {
                     try
                     {

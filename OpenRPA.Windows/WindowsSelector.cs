@@ -344,7 +344,7 @@ namespace OpenRPA.Windows
                                             winPattern.SetWindowVisualState(FlaUI.Core.Definitions.WindowVisualState.Normal);
                                         }
                                     }
-                                    if (PluginConfig.allow_multiple_hits_mid_selector)
+                                    if (PluginConfig.allow_multiple_hits_mid_selector || ident == 0) // do all
                                     {
                                         win = ___treeWalker.GetNextSibling(win);
                                     }
@@ -448,17 +448,23 @@ namespace OpenRPA.Windows
                 var sel = new WindowsSelectorItem(_sel);
                 var current = _current.ToArray();
                 _current.Clear();
-                if(i == 1 && current.Length == 1 && current.First().ControlType == sel.ControlType)
+                // if(i == 1 && current.Length == 1 && current.First().ControlType == sel.ControlType)
+                if(i == 1)
                 {
+                    foreach(var e in current)
+                    {
+                        if (WindowsSelectorItem.Match(sel, e.RawElement))
+                        {
+                            _current.Add(e);
+                        }
+                    }
+                    if (_current.Count > 0) continue;
                     //_current = GetElementsWithuiSelectorItem(automation, sel, current, maxresults, i == (selectors.Count - 1)).ToList();
                     //if(_current.Count == 0) _current = current.ToList();
-                    _current = current.ToList();
+                    //_current = current.ToList();
                 } 
-                else
-                {
-                    _current = GetElementsWithuiSelectorItem(i, automation, sel, current, maxresults, i == (selectors.Count - 1)).ToList();
-                    if(i == 0 && _current.Count == 0) _current = current.ToList();
-                }
+                _current = GetElementsWithuiSelectorItem(i, automation, sel, current, maxresults, i == (selectors.Count - 1)).ToList();
+                if(i == 0 && _current.Count == 0) _current = current.ToList();
             }
             Log.Debug(string.Format("GetElementsWithuiSelector::completed with " + _current.Count + " results {0:mm\\:ss\\.fff}", sw.Elapsed));
             if (_current.Count > 0)

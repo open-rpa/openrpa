@@ -95,7 +95,7 @@ namespace OpenRPA.Views
                 Task.Run(() =>
                 {
                     bool connected = false;
-                    while (!isConnected && !isClosing)
+                    while (isConnected && !isClosing)
                     {
                         try
                         {
@@ -127,6 +127,7 @@ namespace OpenRPA.Views
                             System.Threading.Thread.Sleep(1000);
                         }
                     }
+                    Log.Debug("rdp.OnConnected: Done");
                 });
                 //var sw = new System.Diagnostics.Stopwatch(); sw.Start();
                 //bool connected = false;

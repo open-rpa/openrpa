@@ -52,6 +52,7 @@ namespace OpenRPA
                 var application = new App();
                 application.InitializeComponent();
                 application.Run();
+                // application.Run();
                 // Allow single instance code to perform cleanup operations
                 SingleInstance<App>.Cleanup();
             }

@@ -173,6 +173,8 @@
         <File Id="filBB96100CC38385FF7DB0DBFE799C5F26" Source="!(wix.MainSource)\Prometheus.Client.dll" />
         <File Id="filBB96100CC38385FF7DB0DBFE799C5F27" Source="!(wix.MainSource)\Microsoft.Expression.Interactions.dll" />
         <File Id="filBB96100CC38385FF7DB0DBFE799C5F28" Source="!(wix.MainSource)\System.Windows.Interactivity.dll" />
+        <File Id="filBB96100CC38385FF7DB0DBFE799C5F29" Source="!(wix.MainSource)\AxInterop.MSTSCLib.dll" />
+        <File Id="filBB96100CC38385FF7DB0DBFE799C5F30" Source="!(wix.MainSource)\MSTSCLib.dll" />
         <RemoveFolder Id='RemoveLocalAppDataFolder' Directory='INSTALLDIR' On='uninstall' />
       </Component>
       <Component Id='mainComponentde' Win64='yes' Directory="mainde" Guid='{5B022629-6132-43BC-87EF-8777CD939585}'>

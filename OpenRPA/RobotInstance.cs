@@ -660,20 +660,23 @@ namespace OpenRPA
                     System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = true;
                     System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.Normal;
                     System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Normal;
-                    SetStatus("Run pending workflow instances");
-                    Log.Debug("RunPendingInstances::begin ");
-                    foreach (Project p in _Projects)
+                    if (first_connect)
                     {
-                        foreach (var workflow in p.Workflows)
+                        SetStatus("Run pending workflow instances");
+                        Log.Debug("RunPendingInstances::begin ");
+                        foreach (Project p in _Projects)
                         {
-                            if (workflow.Project != null)
+                            foreach (var workflow in p.Workflows)
                             {
-                                workflow.RunPendingInstances();
-                            }
+                                if (workflow.Project != null)
+                                {
+                                    workflow.RunPendingInstances();
+                                }
 
+                            }
                         }
+                        Log.Debug("RunPendingInstances::end ");
                     }
-                    Log.Debug("RunPendingInstances::end ");
                     GenericTools.RunUI(() =>
                     {
                         if (App.splash != null)

@@ -25,7 +25,7 @@ namespace OpenRPA.OpenFlowDB
         public InArgument<bool> InitialRun { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_waitforcompleted", typeof(Resources.strings)), LocalizedDescription("activity_ignoreerrors_help", typeof(Resources.strings))]
         public InArgument<bool> WaitForCompleted { get; set; } = true;
-        protected override async void Execute(NativeActivityContext context)
+        protected override void Execute(NativeActivityContext context)
         {
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
             bool waitforcompleted = WaitForCompleted.Get(context);
@@ -72,7 +72,8 @@ namespace OpenRPA.OpenFlowDB
             {
                 if (!string.IsNullOrEmpty(bookmarkname))
                 {
-                    var result = await global.webSocketClient.CreateWorkflowInstance(workflowid, global.webSocketClient.user._id, targetid, _payload, initialrun, bookmarkname);
+                    var result = global.webSocketClient.CreateWorkflowInstance(workflowid, global.webSocketClient.user._id, targetid, _payload, initialrun, bookmarkname);
+                    result.Wait(5000);
                 }
             }
             catch (Exception ex)

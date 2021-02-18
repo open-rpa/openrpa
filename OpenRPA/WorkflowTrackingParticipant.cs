@@ -274,6 +274,8 @@ namespace OpenRPA
             int list_count = 0;
             try
             {
+                if (activityInstance == null) return null;
+                if (activityInstance.Activity == null) return null;
                 if (activityInstance.Activity.Id == ActivityId) return activityInstance;
                 list = typeof(ActivityInstance).GetField("childList", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(activityInstance);
                 if (list == null)

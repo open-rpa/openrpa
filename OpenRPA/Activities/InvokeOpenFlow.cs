@@ -24,7 +24,7 @@ namespace OpenRPA.Activities
         public InArgument<bool> WaitForCompleted { get; set; } = true;
         [Category("Input")]
         public Dictionary<string, Argument> Arguments { get; set; } = new Dictionary<string, Argument>();
-        protected override async void Execute(NativeActivityContext context)
+        protected override void Execute(NativeActivityContext context)
         {
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
             bool waitforcompleted = WaitForCompleted.Get(context);
@@ -107,7 +107,8 @@ namespace OpenRPA.Activities
             {
                 if (!string.IsNullOrEmpty(bookmarkname))
                 {
-                    var result = await global.webSocketClient.QueueMessage(workflow, _payload, RobotInstance.instance.robotqueue, bookmarkname);
+                    var result = global.webSocketClient.QueueMessage(workflow, _payload, RobotInstance.instance.robotqueue, bookmarkname);
+                    result.Wait(5000);
                 }
             }
             catch (Exception ex)

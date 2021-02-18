@@ -25,7 +25,7 @@ namespace OpenRPA.Activities
         [RequiredArgument, LocalizedDisplayName("activity_waitforcompleted", typeof(Resources.strings)), LocalizedDescription("activity_waitforcompleted_help", typeof(Resources.strings))]
         public InArgument<bool> WaitForCompleted { get; set; } = true;
         public Dictionary<string, Argument> Arguments { get; set; } = new Dictionary<string, Argument>();
-        protected async override void Execute(NativeActivityContext context)
+        protected override void Execute(NativeActivityContext context)
         {
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
             string bookmarkname = null;
@@ -110,7 +110,8 @@ namespace OpenRPA.Activities
                     _robotcommand["workflowid"] = workflow;
                     _robotcommand["command"] = "invoke";
                     _robotcommand.Add("data", _payload);
-                    var result = await global.webSocketClient.QueueMessage(target, _robotcommand, RobotInstance.instance.robotqueue, bookmarkname);
+                    var result = global.webSocketClient.QueueMessage(target, _robotcommand, RobotInstance.instance.robotqueue, bookmarkname);
+                    result.Wait(5000);
                 }
             }
             catch (Exception ex)

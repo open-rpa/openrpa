@@ -26,7 +26,6 @@ namespace OpenRPA.Windows
             if(Result == null) return "[0] " + Conditions;
             return "[" + Result.Length + "] " + Conditions;
         }
-
     }
     public class WindowsSelectorItem : SelectorItem
     {
@@ -234,7 +233,6 @@ namespace OpenRPA.Windows
             }
             return new AndCondition(cond);
         }
-
         public AutomationElement[] matches_new(AutomationBase automation, AutomationElement element, ITreeWalker _treeWalker, int count, bool isDesktop, TimeSpan timeout, bool search_descendants)
         {
             var sw = new System.Diagnostics.Stopwatch();
@@ -263,27 +261,30 @@ namespace OpenRPA.Windows
             return matchs.ToArray();
         }
         private static List<MatchCacheItem> MatchCache = new List<MatchCacheItem>();
+        private static object cache_lock = new object();
         public static AutomationElement[] GetFromCache(AutomationElement root, int ident, string Conditions)
         {
             if (!PluginConfig.enable_cache) return null;
             var now = DateTime.Now;
             var timeout = PluginConfig.cache_timeout;
             MatchCacheItem result = null;
+            MatchCacheItem[] _list = null;
+            lock (cache_lock) _list = MatchCache.ToArray();
             try
             {
-                for(var i = MatchCache.Count-1; i >= 0; i--)
+                for(var i = _list.Length-1; i >= 0; i--)
                 {
                     try
                     {
-                        if (now - MatchCache[i].Created > timeout) RemoveFromCache(MatchCache[i]);
-                        if(MatchCache[i].Conditions == Conditions && MatchCache[i].Root.Equals(root) && MatchCache[i].Ident == ident)
+                        if (now - _list[i].Created > timeout) RemoveFromCache(_list[i]);
+                        if(_list[i].Conditions == Conditions && _list[i].Root.Equals(root) && _list[i].Ident == ident)
                         {
-                            result = MatchCache[i];
+                            result = _list[i];
                         }
                     }
                     catch (Exception)
                     {
-                        RemoveFromCache(MatchCache[i]);
+                        RemoveFromCache(_list[i]);
                     }
                 }
             }
@@ -331,17 +332,20 @@ namespace OpenRPA.Windows
         {
             try
             {
-                var items = MatchCache.Where(x => x.Root.Equals(item.Root) && x.Ident >= item.Ident).ToList();
-                foreach (var e in items) MatchCache.Remove(e);
+                lock(cache_lock)
+                {
+                    var items = MatchCache.Where(x => x.Root.Equals(item.Root) && x.Ident >= item.Ident).ToList();
+                    foreach (var e in items) MatchCache.Remove(e);
+                }
             }
             catch (Exception)
             {
             }
-            MatchCache.Remove(item);
+            lock (cache_lock) MatchCache.Remove(item);
         }
         public static void ClearCache()
         {
-            MatchCache.Clear();
+            lock (cache_lock) MatchCache.Clear();
         }
         public static void AddToCache(AutomationElement root, int ident, string Conditions, AutomationElement[] Result)
         {
@@ -349,7 +353,7 @@ namespace OpenRPA.Windows
             MatchCacheItem result = null;
             try
             {
-                result = MatchCache.Where(x => x.Conditions == Conditions && x.Ident == ident && x.Root.Equals(root)).FirstOrDefault();
+                lock (cache_lock) result = MatchCache.Where(x => x.Conditions == Conditions && x.Ident == ident && x.Root.Equals(root)).FirstOrDefault();
             }
             catch (Exception)
             {
@@ -361,7 +365,7 @@ namespace OpenRPA.Windows
                 return;
             }
             result = new MatchCacheItem() { Conditions = Conditions, Created = DateTime.Now, Root = root, Ident = ident, Result = Result };
-            MatchCache.Add(result);
+            lock (cache_lock) MatchCache.Add(result);
         }
         public AutomationElement[] matches(AutomationElement root, int ident, AutomationElement element, int count, bool isDesktop, bool search_descendants)
         {

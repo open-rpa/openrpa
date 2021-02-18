@@ -222,9 +222,7 @@ namespace OpenRPA
         }
         void nIcon_Click(object sender, EventArgs e)
         {
-            MainWindow.Visibility = Visibility.Visible;
-            // notifyIcon.Visible = false;
-            Interfaces.GenericTools.Restore();
+            GenericTools.Restore();
         }
         private void Application_Exit(object sender, ExitEventArgs e)
         {

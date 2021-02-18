@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,10 +33,24 @@ namespace OpenRPA.Interfaces
         {
             RunUI(() =>
             {
-                if (MainWindow.WindowState == System.Windows.WindowState.Minimized)
+                if (MainWindow.WindowState == System.Windows.WindowState.Minimized ||  MainWindow.Visibility == System.Windows.Visibility.Hidden)
                 {
+                    MainWindow.Show();
                     MainWindow.Visibility = System.Windows.Visibility.Visible;
                     Restore(Handle);
+                    ActivateWindow(MainWindow);
+                    //Task.Run(() =>
+                    //{
+                    //    System.Threading.Thread.Sleep(500);
+                    //    RunUI(() =>
+                    //    {
+                    //        MainWindow.Activate();
+                    //        MainWindow.Focus();
+                    //    });
+                    //});
+                    
+                    MainWindow.Activate();
+                    MainWindow.Focus();
                 }
             });
         }
@@ -43,11 +58,13 @@ namespace OpenRPA.Interfaces
         {
             RunUI(() =>
             {
-                if (window.WindowState == System.Windows.WindowState.Minimized)
+                if (window.WindowState == System.Windows.WindowState.Minimized || MainWindow.Visibility == System.Windows.Visibility.Hidden)
                 {
                     window.Visibility = System.Windows.Visibility.Visible;
                     IntPtr hWnd = new System.Windows.Interop.WindowInteropHelper(window).Handle;
                     Restore(hWnd);
+                    MainWindow.Activate();
+                    MainWindow.Focus();
                 }
             });
         }
@@ -155,5 +172,32 @@ namespace OpenRPA.Interfaces
             Array.Copy(buffer, i, result, 0, 32 - i);
             return new string(result);
         }
+        public static void ActivateWindow(System.Windows.Window window)
+        {
+            var hwnd = new System.Windows.Interop.WindowInteropHelper(window).EnsureHandle();
+
+            var threadId1 = GetWindowThreadProcessId(GetForegroundWindow(), IntPtr.Zero);
+            var threadId2 = GetWindowThreadProcessId(hwnd, IntPtr.Zero);
+
+            if (threadId1 != threadId2)
+            {
+                AttachThreadInput(threadId1, threadId2, true);
+                SetForegroundWindow(hwnd);
+                AttachThreadInput(threadId1, threadId2, false);
+            }
+            else
+                SetForegroundWindow(hwnd);
+        }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr ProcessId);
+
+        [DllImport("user32.dll")]
+        public static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetForegroundWindow();
     }
 }

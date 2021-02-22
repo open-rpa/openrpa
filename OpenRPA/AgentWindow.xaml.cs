@@ -48,6 +48,7 @@ namespace OpenRPA
             lvDataBinding.ItemsSource = Plugins.recordPlugins;
             NotifyPropertyChanged("Toolbox");
             lblVersion.Text = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
+            WindowState = WindowState.Minimized;
         }
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
@@ -83,7 +84,7 @@ namespace OpenRPA
                         Log.Error(ex.ToString());
                     }
                 }
-                WindowState = WindowState.Minimized;
+                // WindowState = WindowState.Minimized;
             }
             catch (Exception ex)
             {

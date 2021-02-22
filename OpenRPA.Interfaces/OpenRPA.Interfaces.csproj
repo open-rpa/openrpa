@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.53</Version>
-    <PackageReleaseNotes>1.0.53 Add category to openrpa log file
+    <Version>1.0.54</Version>
+    <PackageReleaseNotes>1.0.54 Fix parsing Rect in non us regional settings
+1.0.53 Add category to openrpa log file
 1.0.52 Fix "cannot select self" on nested windows elements
 1.0.51 Add support registry configuration
 1.0.50 Extend interfaces to access workflow instances

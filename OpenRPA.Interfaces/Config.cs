@@ -372,8 +372,16 @@ namespace OpenRPA
                         } 
                         else
                         {
-                            var c = new System.Drawing.RectangleConverter();
-                            value = c.ConvertFromString(null, new System.Globalization.CultureInfo("en-US"), value.ToString());
+                            try
+                            {
+                                var c = new System.Drawing.RectangleConverter();
+                                // value = c.ConvertFromString(null, new System.Globalization.CultureInfo("en-US"), value.ToString());
+                                value = c.ConvertFromString(value.ToString());
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex.ToString());
+                            }
                         }
                     }
                     if (typeof(T) == typeof(TimeSpan) && value != null)

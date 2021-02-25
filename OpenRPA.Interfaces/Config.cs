@@ -377,10 +377,12 @@ namespace OpenRPA
                                 var c = new System.Drawing.RectangleConverter();
                                 // value = c.ConvertFromString(null, new System.Globalization.CultureInfo("en-US"), value.ToString());
                                 value = c.ConvertFromString(value.ToString());
+                                return (T)value;
                             }
                             catch (Exception ex)
                             {
                                 Log.Error(ex.ToString());
+                                return (T)mydefault;
                             }
                         }
                     }

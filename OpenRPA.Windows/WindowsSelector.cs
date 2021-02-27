@@ -370,10 +370,17 @@ namespace OpenRPA.Windows
                 if (_current.Count == 0 && string.IsNullOrEmpty(sel.Selector))
                 {
                     Log.Debug("GetElementsWithuiSelector::Searchin for " + cond.ToString());
-                    var hasStar = sel.Properties.Where(x => x.Enabled == true && (x.Value != null && x.Value.Contains("*"))).ToArray();
-                    var _treeWalker = automation.TreeWalkerFactory.GetCustomTreeWalker(cond);
+                    ITreeWalker _treeWalker = default(ITreeWalker);
+                    if (sel.search_descendants)
+                    {
+                        var hasStar = sel.Properties.Where(x => x.Enabled == true && (x.Value != null && x.Value.Contains("*"))).ToArray();
+                        _treeWalker = automation.TreeWalkerFactory.GetCustomTreeWalker(cond);
+                    }
+                    else
+                    {
+                        _treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
+                    }
                     AutomationElement ele = _treeWalker.GetFirstChild(_ele.RawElement);
-                    // if ((hasStar.Length > 0 || maxresults > 1 ) && ele != null)
                     if (ele != null)
                     {
                         do

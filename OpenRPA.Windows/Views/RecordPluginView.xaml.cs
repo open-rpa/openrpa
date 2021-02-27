@@ -37,6 +37,7 @@ namespace OpenRPA.Windows.Views
             get_elements_in_different_thread.IsChecked = PluginConfig.get_elements_in_different_thread;
             traverse_selector_both_ways.IsChecked = PluginConfig.traverse_selector_both_ways;
             enable_cache.IsChecked = PluginConfig.enable_cache;
+            search_descendants.IsChecked = PluginConfig.search_descendants;
         }
         private void allow_multiple_hits_mid_selector_IsEnabledChanged(object sender, RoutedEventArgs e)
         {
@@ -66,6 +67,7 @@ namespace OpenRPA.Windows.Views
         {
             if (enable_cache.IsChecked == null) return;
             PluginConfig.enable_cache = enable_cache.IsChecked.Value;
+            PluginConfig.search_descendants = search_descendants.IsChecked.Value;
             Config.Save();
         }
     }

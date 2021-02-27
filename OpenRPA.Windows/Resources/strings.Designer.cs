@@ -241,6 +241,24 @@ namespace OpenRPA.Windows.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search descendants.
+        /// </summary>
+        public static string plugin_search_descendants {
+            get {
+                return ResourceManager.GetString("plugin_search_descendants", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allow using &quot;partial&quot; selectors that is alow shorter, but can be slow with many ui elements.
+        /// </summary>
+        public static string plugin_search_descendants_help {
+            get {
+                return ResourceManager.GetString("plugin_search_descendants_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Traverse selector both ways.
         /// </summary>
         public static string plugin_traverse_selector_both_ways {

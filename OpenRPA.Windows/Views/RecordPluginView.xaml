@@ -31,6 +31,11 @@
             Checked="traverse_selector_both_ways_IsEnabledChanged"  Unchecked="traverse_selector_both_ways_IsEnabledChanged" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,90,0,0" Text="{x:Static or:strings.plugin_traverse_selector_both_ways_help}" VerticalAlignment="Top" />
 
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,110,0,0" Text="{x:Static or:strings.plugin_search_descendants}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,110,0,0" VerticalAlignment="Top" Width="222" x:Name="search_descendants" 
+            Checked="enable_cache_Checked"  Unchecked="enable_cache_Checked" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,110,0,0" Text="{x:Static or:strings.plugin_search_descendants_help}" VerticalAlignment="Top" />
+
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,130,0,0" Text="{x:Static or:strings.plugin_enable_cache}" VerticalAlignment="Top" Width="110" />
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,130,0,0" VerticalAlignment="Top" Width="222" x:Name="enable_cache" 
             Checked="enable_cache_Checked"  Unchecked="enable_cache_Checked" />

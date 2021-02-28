@@ -79,7 +79,7 @@ namespace OpenRPA.Windows
             {
                 winanchor = new WindowsSelector(anchor.ToString());
             }
-            return new WindowsSelector(windowsitem.RawElement, winanchor, true);
+            return new WindowsSelector(windowsitem.RawElement, winanchor, PluginConfig.enum_selector_properties);
         }
         public string Name { get => "Windows"; }
         public string Status => _status;

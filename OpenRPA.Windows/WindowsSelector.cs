@@ -70,7 +70,7 @@ namespace OpenRPA.Windows
             {
                 bool SearchDescendants = false;
                 var p = anchor.First().Properties.Where(x => x.Name == "SearchDescendants").FirstOrDefault();
-                if (p.Value != null && p.Value == "true") SearchDescendants = true;
+                if (p.Value != null && p.Value != null && p.Value == "true") SearchDescendants = true;
                 if(SearchDescendants)
                 {
                     var a = anchor.Last();

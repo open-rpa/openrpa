@@ -29,17 +29,22 @@ namespace OpenRPA.Windows
             {
                 var automation = AutomationUtil.getAutomation();
                 var _rootElement = automation.GetDesktop();
+                var _treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
                 if (anchor != null)
                 {
                     if (!(anchor is WindowsSelector Windowsselector)) { Windowsselector = new WindowsSelector(anchor.ToString()); }
                     var elements = WindowsSelector.GetElementsWithuiSelector(Windowsselector, null, 5, null);
                     if (elements.Count() > 0)
                     {
-                        _rootElement = elements[0].RawElement;
+                        foreach (var elementNode in elements)
+                        {
+                            result.Add(new WindowsTreeElement(null, false, automation, elementNode.RawElement, _treeWalker));
+                        }
+                        //_rootElement = elements[0].RawElement;
+                        return;
                     }
 
                 }
-                var _treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
                 if (_rootElement != null)
                 {
                     var elementNode = _treeWalker.GetFirstChild(_rootElement);

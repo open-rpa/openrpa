@@ -77,6 +77,8 @@
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Resources\check.png" />
+    <None Remove="Resources\search.png" />
     <None Remove="Resources\Selector\Button.png" />
     <None Remove="Resources\Selector\Calendar.png" />
     <None Remove="Resources\Selector\CheckBox.png" />
@@ -110,9 +112,15 @@
     <None Remove="Resources\Selector\ToolTip.png" />
     <None Remove="Resources\Selector\Tree.png" />
     <None Remove="Resources\Selector\Window.png" />
+    <None Remove="Resources\x.png" />
     <None Remove="Selector\SelectorWindow.xaml" />
     <None Remove="Views\KeyboardDetectorView.xaml" />
     <None Remove="Views\KeyboardSeqWindow.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\check.png" />
+    <EmbeddedResource Include="Resources\search.png" />
+    <EmbeddedResource Include="Resources\x.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FlaUI.UIA3" Version="3.2.0">

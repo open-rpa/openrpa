@@ -267,7 +267,7 @@ namespace OpenRPA.Windows
         {
             return WindowsSelector.GetElementsWithuiSelector(this, fromElement, maxresults, null);
         }
-        public static UIElement[] GetElementsWithuiSelectorItem(int ident, AutomationBase automation, WindowsSelectorItem sel, UIElement[] parents, int maxresults, bool LastItem)
+        public static UIElement[] GetElementsWithuiSelectorItem(int ident, AutomationBase automation, WindowsSelectorItem sel, UIElement[] parents, int maxresults, bool LastItem, bool search_descendants)
         {
             var _current = new List<UIElement>();
             var cond = sel.GetConditionsWithoutStar();
@@ -371,7 +371,7 @@ namespace OpenRPA.Windows
                 {
                     Log.Debug("GetElementsWithuiSelector::Searchin for " + cond.ToString());
                     ITreeWalker _treeWalker = default(ITreeWalker);
-                    if (sel.search_descendants)
+                    if (sel.search_descendants || search_descendants)
                     {
                         var hasStar = sel.Properties.Where(x => x.Enabled == true && (x.Value != null && x.Value.Contains("*"))).ToArray();
                         _treeWalker = automation.TreeWalkerFactory.GetCustomTreeWalker(cond);
@@ -447,6 +447,11 @@ namespace OpenRPA.Windows
             UIElement[] result = null;
             // AutomationElement ele = null;
 
+            bool search_descendants = PluginConfig.search_descendants;
+            var v = selectors[0].Properties.Where(x => x.Name == "search_descendants").FirstOrDefault();
+            if (v == null) selectors[0].Properties.Where(x => x.Name == "SearchDescendants").FirstOrDefault();
+            if (v != null) search_descendants = bool.Parse(v.Value);
+
             if (startfrom == null) startfrom = automation.GetDesktop();
             _current.Add(new UIElement(startfrom));
             for (var i = 0; i < selectors.Count; i++)
@@ -470,7 +475,7 @@ namespace OpenRPA.Windows
                     //if(_current.Count == 0) _current = current.ToList();
                     //_current = current.ToList();
                 } 
-                _current = GetElementsWithuiSelectorItem(i, automation, sel, current, maxresults, i == (selectors.Count - 1)).ToList();
+                _current = GetElementsWithuiSelectorItem(i, automation, sel, current, maxresults, i == (selectors.Count - 1), search_descendants).ToList();
                 if(i == 0 && _current.Count == 0) _current = current.ToList();
             }
             Log.Debug(string.Format("GetElementsWithuiSelector::completed with " + _current.Count + " results {0:mm\\:ss\\.fff}", sw.Elapsed));

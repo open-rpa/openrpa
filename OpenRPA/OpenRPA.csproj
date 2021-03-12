@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.23</Version>
-    <PackageReleaseNotes>1.2.23 Windows: allow search_descendants any where in selector / Fix icon on highlight button
+    <Version>1.2.24</Version>
+    <PackageReleaseNotes>1.2.24 Re add FrameworkId to recorded selector
+1.2.23 Windows: allow search_descendants any where in selector / Fix icon on highlight button
 1.2.22 nm: Launch edge using microsoft-edge: uri instead, fix connection test for edge/ff
 1.2.21 windows: Fix ui selector for nesting get elements
 1.2.20 Fix config issue, add toggle for search_descendants

@@ -28,10 +28,12 @@ namespace OpenRPA.Utilities
         protected override void Execute(CodeActivityContext context)
         {
             var dt = DataTable.Get(context);
-            foreach(DataRow row in dt.Rows)
-            {
-                row.Delete();
-            }
+            int count = dt.Rows.Count;
+            for(var i= count-1; i >= count; i--) dt.Rows[i].Delete();
+            //foreach(DataRow row in dt.Rows.)
+            //{
+            //    row.Delete();
+            //}
         }
 
     }

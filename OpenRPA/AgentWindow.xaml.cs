@@ -305,7 +305,7 @@ namespace OpenRPA
                 {
                     try
                     {
-                        await global.webSocketClient.QueueMessage(Entity._id, command, null, null);
+                        await global.webSocketClient.QueueMessage(Entity._id, command, null, null, 0);
                     }
                     catch (Exception ex)
                     {
@@ -351,7 +351,7 @@ namespace OpenRPA
                     {
                         try
                         {
-                            await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId);
+                            await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId, 0);
                         }
                         catch (Exception ex)
                         {

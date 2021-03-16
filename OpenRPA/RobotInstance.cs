@@ -1092,7 +1092,8 @@ namespace OpenRPA
             try
             {
                 command = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.mq.RobotCommand>(message.data.ToString());
-                if (command.command == "invokecompleted" || command.command == "invokefailed" || command.command == "invokeaborted" || command.command == "error" || command.command == null)
+                if (command.command == "invokecompleted" || command.command == "invokefailed" || command.command == "invokeaborted" || command.command == "error" || command.command == null
+                    || command.command == "timeout")
                 {
                     if (!string.IsNullOrEmpty(message.correlationId))
                     {
@@ -1282,7 +1283,7 @@ namespace OpenRPA
                 {
                     try
                     {
-                        await global.webSocketClient.QueueMessage(message.replyto, command, null, message.correlationId);
+                        await global.webSocketClient.QueueMessage(message.replyto, command, null, message.correlationId, 0);
                     }
                     catch (Exception ex)
                     {

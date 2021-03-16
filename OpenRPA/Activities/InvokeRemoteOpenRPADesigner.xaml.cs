@@ -101,7 +101,7 @@ namespace OpenRPA.Activities
                 {
                     workflows.Clear();
                     workflows.Add(new Workflow() { name = "Loading...", _id = "loading" });
-                    ModelItem.Properties["workflow"].SetValue("loading");
+                    ModelItem.Properties["workflow"].SetValue(new InArgument<string>() { Expression = new Literal<string>("Loading...") });
                 }
                 // var _workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", "{'name':1, 'projectandname': 1}", orderby: "{projectid:-1,name:-1}", queryas: target);
                 var _workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", queryas: target, top: 5000);
@@ -109,9 +109,10 @@ namespace OpenRPA.Activities
                 workflows.Clear();
                 foreach (var w in _workflows) workflows.Add(w);
                 var currentworkflow = ModelItem.GetValue<string>("workflow");
-                if (workflow != currentworkflow && !string.IsNullOrEmpty(currentworkflow))
+                if (workflow != currentworkflow)
                 {
-                    ModelItem.Properties["workflow"].SetValue(workflow);
+                    // ModelItem.Properties["workflow"].SetValue(workflow);
+                    ModelItem.Properties["workflow"].SetValue(new InArgument<string>() { Expression = new Literal<string>(workflow) });
                 }
             }
             catch (Exception ex)
@@ -123,7 +124,8 @@ namespace OpenRPA.Activities
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            string workflowid = (string)ModelItem.Properties["workflow"].Value.GetCurrentValue();
+            // string workflowid = (string)ModelItem.Properties["workflow"].Value.GetCurrentValue();
+            string workflowid = ModelItem.GetValue<string>("workflow");
             if (string.IsNullOrEmpty(workflowid)) throw new ArgumentException("workflow property is null");
             var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
             var designer = RobotInstance.instance.Window.Designer;

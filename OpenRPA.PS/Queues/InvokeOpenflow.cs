@@ -19,6 +19,8 @@ namespace OpenRPA.PS
         [Parameter(ValueFromPipeline = true, Position = 1, Mandatory = false, ParameterSetName = "withJson")]
         public string TargetQueue { get; set; }
         public string json { get; set; }
+        [Parameter(Mandatory = false)]
+        public int Expiration { get; set; }
 
         private static RuntimeDefinedParameterDictionary _staticStorage;
         private static openflowworkflow[] _workflows;
@@ -83,7 +85,7 @@ namespace OpenRPA.PS
 
                 if (workflow != null) WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + workflow.name));
                 if (workflow == null) WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + TargetQueue));
-                var result = await global.webSocketClient.QueueMessage(TargetQueue, tmpObject, psqueue, correlationId);
+                var result = await global.webSocketClient.QueueMessage(TargetQueue, tmpObject, psqueue, correlationId, Expiration);
                 workItemsWaiting.WaitOne();
                 WriteProgress(new ProgressRecord(0, "Invoking", "completed") { RecordType = ProgressRecordType.Completed });
 

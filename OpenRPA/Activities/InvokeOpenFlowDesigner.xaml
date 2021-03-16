@@ -1,5 +1,6 @@
 ﻿<sap:ActivityDesigner x:Class="OpenRPA.Activities.InvokeOpenFlowDesigner"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:c="clr-namespace:OpenRPA.Interfaces;assembly=OpenRPA.Interfaces"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
@@ -25,6 +26,7 @@
     </sap:ActivityDesigner.Icon>
 
     <sap:ActivityDesigner.Resources>
+        <c:InArgumentStringConverter x:Key="InArgumentStringConverter" />
         <DataTemplate x:Key="Collapsed">
             <Label Padding="0,0,0,0" FontStyle="Italic" Foreground="{x:Static SystemColors.GrayTextBrush}" HorizontalAlignment="Center"
                        VerticalAlignment="Center" Content="{x:Static or:strings.activity_click_to_view}"></Label>
@@ -35,7 +37,7 @@
                 ItemsSource="{Binding workflows}"
                 DisplayMemberPath="name"
                 SelectedValuePath="queue"
-                SelectedValue="{Binding Path=ModelItem.workflow, Mode=TwoWay}"
+                SelectedValue="{Binding Path=ModelItem.workflow, Mode=TwoWay, Converter={StaticResource InArgumentStringConverter}}"
                 >
                 </ComboBox>
                 <Button Click="Button_Click" Content="{x:Static or:strings.activity_map_variables}"></Button>

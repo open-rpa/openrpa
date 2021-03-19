@@ -504,10 +504,11 @@ namespace OpenRPA.NM
             else if (browser == "edge")
             {
                 int tabcount = 0;
-                if (chromeconnected) lock (tabs) tabcount = tabs.Where(x => x.browser == "edge").Count();
+                if (edgeconnected) lock (tabs) tabcount = tabs.Where(x => x.browser == "edge").Count();
                 if (!edgeconnected || tabcount == 0)
                 {
-                    System.Diagnostics.Process.Start("msedge.exe", url);
+                    System.Diagnostics.Process.Start("microsoft-edge:" + url);
+                    // System.Diagnostics.Process.Start("msedge.exe", url);
                     var sw = new System.Diagnostics.Stopwatch();
                     sw.Start();
                     do
@@ -524,7 +525,7 @@ namespace OpenRPA.NM
             else
             {
                 int tabcount = 0;
-                if (chromeconnected) lock (tabs) tabcount = tabs.Where(x => x.browser == "ff").Count();
+                if (ffconnected) lock (tabs) tabcount = tabs.Where(x => x.browser == "ff").Count();
                 if (!ffconnected || tabcount == 0)
                 {
                     System.Diagnostics.Process.Start("firefox.exe", url);

@@ -60,7 +60,7 @@ namespace OpenRPA.Interfaces
         Task<TokenUser> Signin(SecureString jwt, string clientagent = "", string clientversion = "");
         Task RegisterUser(string name, string username, string password);
         Task<string> RegisterQueue(string queuename);
-        Task<object> QueueMessage(string queuename, object data, string replyto, string correlationId);
+        Task<object> QueueMessage(string queuename, object data, string replyto, string correlationId, int expiration);
         Task<string> CreateWorkflowInstance(string workflowid, string resultqueue, string targetid, object payload, bool initialrun, string correlationId = null, string parentid = null);
         Task<T[]> Query<T>(string collectionname, string query, string projection = null, int top = 100, int skip = 0, string orderby = null, string queryas = null);
         Task<T> InsertOrUpdateOne<T>(string collectionname, int w, bool j, string uniqeness, T item);

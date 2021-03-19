@@ -19,9 +19,10 @@ namespace OpenRPA.Activities
     public class InvokeOpenFlow : NativeActivity
     {
         [RequiredArgument, LocalizedDisplayName("activity_workflow", typeof(Resources.strings)), LocalizedDescription("activity_workflow_help", typeof(Resources.strings))]
-        public string workflow { get; set; }
+        public InArgument<string> workflow { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_waitforcompleted", typeof(Resources.strings)), LocalizedDescription("activity_ignoreerrors_help", typeof(Resources.strings))]
         public InArgument<bool> WaitForCompleted { get; set; } = true;
+        public InArgument<int> Expiration { get; set; }
         [Category("Input")]
         public Dictionary<string, Argument> Arguments { get; set; } = new Dictionary<string, Argument>();
         protected override void Execute(NativeActivityContext context)
@@ -107,8 +108,10 @@ namespace OpenRPA.Activities
             {
                 if (!string.IsNullOrEmpty(bookmarkname))
                 {
-                    var result = global.webSocketClient.QueueMessage(workflow, _payload, RobotInstance.instance.robotqueue, bookmarkname);
-                    result.Wait(5000);
+                    int expiration = Expiration.Get(context);
+                    var result = global.webSocketClient.QueueMessage(workflow.Get(context), _payload, RobotInstance.instance.robotqueue, bookmarkname, expiration);
+                    if (expiration < 1) expiration = 5000;
+                    result.Wait(expiration + 500);
                 }
             }
             catch (Exception ex)
@@ -130,6 +133,11 @@ namespace OpenRPA.Activities
             var _msg = JObject.Parse(obj.ToString());
             JObject payload = _msg; // Backward compatible with older version of openflow
             if (_msg.ContainsKey("payload")) payload = _msg.Value<JObject>("payload");
+            if(_msg.ContainsKey("command"))
+            {
+                var command = _msg["command"].ToString();
+                if(command == "timeout") throw new Exception("request timed out, no workflow node picked up the message in a timely fashion");
+            }
             var state = _msg["state"].ToString();
             if (!string.IsNullOrEmpty(state))
             {

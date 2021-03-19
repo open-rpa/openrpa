@@ -19,7 +19,7 @@ namespace OpenRPA.Activities
     public class InvokeOpenRPA : NativeActivity
     {
         [RequiredArgument, LocalizedDisplayName("activity_workflow", typeof(Resources.strings)), LocalizedDescription("activity_workflow_help", typeof(Resources.strings))]
-        public string workflow { get; set; }
+        public InArgument<string> workflow { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_waitforcompleted", typeof(Resources.strings)), LocalizedDescription("activity_waitforcompleted_help", typeof(Resources.strings))]
         public InArgument<bool> WaitForCompleted { get; set; } = true;
         [Category("Input")]
@@ -97,12 +97,12 @@ namespace OpenRPA.Activities
 
             try
             {
-                var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(this.workflow);
+                var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(this.workflow.Get(context));
                 IWorkflowInstance instance = null;
                 Views.WFDesigner designer = null;
                 GenericTools.RunUI(() =>
                 {
-                    designer = RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(this.workflow) as Views.WFDesigner;
+                    designer = RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(this.workflow.Get(context)) as Views.WFDesigner;
                     if (designer != null)
                     {
                         designer.BreakpointLocations = null;
@@ -150,7 +150,7 @@ namespace OpenRPA.Activities
                 // context.RemoveBookmark(bookmark.Name);
                 var instance = obj as WorkflowInstance;
                 if (instance == null) throw new Exception("Bookmark returned a non WorkflowInstance");
-                var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(this.workflow);
+                var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(this.workflow.Get(context));
                 var name = "The invoked workflow failed with ";
                 if (workflow != null && !string.IsNullOrEmpty(workflow.name)) name = workflow.name;
                 if (workflow != null && !string.IsNullOrEmpty(workflow.ProjectAndName)) name = workflow.ProjectAndName;

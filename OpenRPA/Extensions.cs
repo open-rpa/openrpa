@@ -183,13 +183,25 @@ namespace OpenRPA
                     result = model.Properties[name].Value.Properties["Expression"].ComputedValue.TryCast<T>();
                     if(result==null)
                     {
-                        var outresult = model.Properties[name].Value.Properties["Expression"].ComputedValue.TryCast<VisualBasicReference<T>>();
-                        result = outresult.ExpressionText.TryCast<T>();
+                        try
+                        {
+                            var outresult = model.Properties[name].Value.Properties["Expression"].ComputedValue.TryCast<VisualBasicReference<T>>();
+                            result = outresult.ExpressionText.TryCast<T>();
+                        }
+                        catch (Exception)
+                        {
+                        }
                     }
                     if(result==null)
                     {
-                        var inresult = model.Properties["Value"].Value.Properties["Expression"].ComputedValue.TryCast<System.Activities.Expressions.Literal<T>>();
-                        result = inresult.Value.TryCast<T>();
+                        try
+                        {
+                            var inresult = model.Properties["Value"].Value.Properties["Expression"].ComputedValue.TryCast<System.Activities.Expressions.Literal<T>>();
+                            result = inresult.Value.TryCast<T>();
+                        }
+                        catch (Exception)
+                        {
+                        }
                     }
                     return result;
                 }

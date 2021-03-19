@@ -28,6 +28,9 @@ namespace OpenRPA.PS
         public string TargetId { get; set; }
         [Parameter(Position = 3)]
         public string WorkflowId { get; set; }
+        [Parameter(Mandatory = false)]
+        public int Expiration { get; set; }
+
         private static RuntimeDefinedParameterDictionary _staticStorage;
         private static apiuser[] _robots;
         private static workflow[] _workflows;
@@ -231,7 +234,7 @@ namespace OpenRPA.PS
                 _robotcommand.Add("data", tmpObject);
                 if(robot != null) WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + workflow.ProjectAndName + " on " + robot.name + "(" + robot.username + ")"));
                 if (robot == null) WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + workflowid + " on " + targetid));
-                var result = await global.webSocketClient.QueueMessage(targetid, _robotcommand, psqueue, correlationId);
+                var result = await global.webSocketClient.QueueMessage(targetid, _robotcommand, psqueue, correlationId, Expiration);
                 workItemsWaiting.WaitOne();
                 WriteProgress(new ProgressRecord(0, "Invoking", "completed") { RecordType = ProgressRecordType.Completed });
                 if (command.command == "invokefailed" || command.command == "invokeaborted")

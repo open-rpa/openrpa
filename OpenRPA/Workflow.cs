@@ -49,8 +49,14 @@ namespace OpenRPA
         {
             get
             {
-                if (string.IsNullOrEmpty(_id)) return RelativeFilename;
+                if(Project!=null) return Project.name + "/" + RelativeFilename;
+                if(!string.IsNullOrEmpty(_ProjectAndName) && _ProjectAndName.Contains("/"))
+                {
+                    return _ProjectAndName.Substring(0, _ProjectAndName.IndexOf("/") + 1) + RelativeFilename;
+                }
                 return _id;
+                //if (string.IsNullOrEmpty(_id)) return RelativeFilename;
+                //return _id;
             }
         }
         private string _ProjectAndName;

@@ -19,11 +19,12 @@ namespace OpenRPA.Activities
     public class InvokeRemoteOpenRPA : NativeActivity
     {
         [RequiredArgument, LocalizedDisplayName("activity_workflow", typeof(Resources.strings)), LocalizedDescription("activity_workflow_help", typeof(Resources.strings))]
-        public string workflow { get; set; }
+        public InArgument<string> workflow { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_target", typeof(Resources.strings)), LocalizedDescription("activity_target_help", typeof(Resources.strings))]
-        public string target { get; set; }
+        public InArgument<string> target { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_waitforcompleted", typeof(Resources.strings)), LocalizedDescription("activity_waitforcompleted_help", typeof(Resources.strings))]
         public InArgument<bool> WaitForCompleted { get; set; } = true;
+        public InArgument<int> Expiration { get; set; }
         public Dictionary<string, Argument> Arguments { get; set; } = new Dictionary<string, Argument>();
         protected override void Execute(NativeActivityContext context)
         {
@@ -106,13 +107,14 @@ namespace OpenRPA.Activities
             {
                 if (!string.IsNullOrEmpty(bookmarkname))
                 {
+                    int expiration = Expiration.Get(context);
                     IDictionary<string, object> _robotcommand = new System.Dynamic.ExpandoObject();
-                    _robotcommand["workflowid"] = workflow;
+                    _robotcommand["workflowid"] = workflow.Get(context);
                     _robotcommand["command"] = "invoke";
                     _robotcommand.Add("data", _payload);
-                    var result = global.webSocketClient.QueueMessage(target, _robotcommand, RobotInstance.instance.robotqueue, bookmarkname);
+                    var result = global.webSocketClient.QueueMessage(target.Get(context), _robotcommand, RobotInstance.instance.robotqueue, bookmarkname, expiration);
                     result.Wait(5000);
-                }
+                } 
             }
             catch (Exception ex)
             {
@@ -133,7 +135,7 @@ namespace OpenRPA.Activities
             // context.RemoveBookmark(bookmark.Name);
             var command = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.mq.RobotCommand>(obj.ToString());
             if (command.data == null) return;
-            if(command.command == "invokefailed")
+            if(command.command == "invokefailed" || command.command == "error")
             {
                 if (string.IsNullOrEmpty(command.data.ToString())) throw new Exception("Invoke failed");
                 Exception ex = null;
@@ -146,6 +148,10 @@ namespace OpenRPA.Activities
                 }
                 if (ex != null) throw ex;
                 throw new Exception(command.data.ToString());
+            }
+            if(command.command == "timeout")
+            {
+                throw new Exception("request timed out, no robot picked up the message in a timely fashion");
             }
             if (string.IsNullOrEmpty(command.data.ToString())) return;
             var payload = JObject.Parse(command.data.ToString());

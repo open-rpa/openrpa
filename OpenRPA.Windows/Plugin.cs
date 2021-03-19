@@ -36,11 +36,11 @@ namespace OpenRPA.Windows
                     var elements = WindowsSelector.GetElementsWithuiSelector(Windowsselector, null, 5, null);
                     if (elements.Count() > 0)
                     {
-                        // _rootElement = elements[0].RawElement;
                         foreach (var elementNode in elements)
                         {
                             result.Add(new WindowsTreeElement(null, false, automation, elementNode.RawElement, _treeWalker));
                         }
+                        //_rootElement = elements[0].RawElement;
                         return;
                     }
 

@@ -494,9 +494,10 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(RegisterQueue.error)) throw new Exception(RegisterQueue.error);
             return RegisterQueue.queuename;
         }
-        public async Task<object> QueueMessage(string queuename, object data, string replyto, string correlationId)
+        public async Task<object> QueueMessage(string queuename, object data, string replyto, string correlationId, int expiration)
         {
             QueueMessage qm = new QueueMessage(queuename);
+            qm.expiration = expiration;
             qm.data = data; qm.replyto = replyto;
             qm.correlationId = correlationId;
             qm = await qm.SendMessage<QueueMessage>(this);

@@ -92,7 +92,7 @@ namespace OpenRPA.SAP
                 loadFrom = loadFrom.Parent;
             }
 
-            HighlightImage = Interfaces.Extensions.GetImageSourceFromResource(".x.png");
+            HighlightImage = Interfaces.Extensions.GetImageSourceFromResource("search.png");
             NotifyPropertyChanged("HighlightImage");
             string SelectorString = ModelItem.GetValue<string>("Selector");
             int maxresults = ModelItem.GetValue<int>("MaxResults");
@@ -119,8 +119,11 @@ namespace OpenRPA.SAP
             if (elements.Count() > 0)
             {
                 HighlightImage = Interfaces.Extensions.GetImageSourceFromResource("check.png");
-                NotifyPropertyChanged("HighlightImage");
+            } else
+            {
+                HighlightImage = Interfaces.Extensions.GetImageSourceFromResource(".x.png");
             }
+            NotifyPropertyChanged("HighlightImage");
             foreach (var ele in elements) ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
         }
         public string ImageString

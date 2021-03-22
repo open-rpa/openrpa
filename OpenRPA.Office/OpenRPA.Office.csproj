@@ -7,8 +7,9 @@
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office, created for OpenRPA robot</Description>
-    <Version>1.0.31</Version>
-    <PackageReleaseNotes>1.0.32 Fix creating missing worksheets in typed activities
+    <Version>1.0.33</Version>
+    <PackageReleaseNotes>1.0.33 Add ReplyMailItem
+1.0.32 Fix creating missing worksheets in typed activities
 1.0.31 Fix Move Mail to support multiple accounts
 1.0.30 Fix GetMails to support multiple accounts
 1.0.29 Fix excel sheet enumeration bug
@@ -69,6 +70,7 @@
     <None Remove="Activities\ProtectWorksheetDesigner.xaml" />
     <None Remove="Activities\ReadCellDesigner.xaml" />
     <None Remove="Activities\ReadRangeDesigner.xaml" />
+    <None Remove="Activities\ReplyMailItemDesigner.xaml" />
     <None Remove="Activities\RunExcelMacroDesigner.xaml" />
     <None Remove="Activities\RunSlideShowDesigner.xaml" />
     <None Remove="Activities\SaveMailItemDesigner.xaml" />
@@ -110,6 +112,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\GetSelectedRangeDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\ReplyMailItemDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\UnprotectWorksheetDesigner.xaml">

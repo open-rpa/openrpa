@@ -637,6 +637,24 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reply MailItem.
+        /// </summary>
+        public static string activity_replymailitem {
+            get {
+                return ResourceManager.GetString("activity_replymailitem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create a reply to a Microsoft Outlook Mailitem.
+        /// </summary>
+        public static string activity_replymailitem_tooltip {
+            get {
+                return ResourceManager.GetString("activity_replymailitem_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run Excel Macro.
         /// </summary>
         public static string activity_runexcelmacro {

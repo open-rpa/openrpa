@@ -16,17 +16,36 @@ namespace OpenRPA
     {
         public WorkflowInstance()
         {
+            // if (RobotInstance.instance.tracer != null) span = RobotInstance.instance.tracer.StartActiveSpan("WorkflowInstance created");
+
         }
-        public WorkflowInstance(Workflow workflow)
+        private WorkflowInstance(Workflow workflow)
         {
             Workflow = workflow;
             WorkflowId = workflow._id;
             _type = "workflowinstance";
             _id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
             _acl = workflow._acl;
+            // if(RobotInstance.instance.tracer != null) span = RobotInstance.instance.tracer.StartActiveSpan("Initialize " + workflow.name);
             // LastUpdated = DateTime.Now;
         }
+
+        //            if(RobotInstance.instance.source != null) activity = RobotInstance.instance.source.StartActivity("Initialize " + workflow.name);
+        //    if (!string.IsNullOrEmpty(Config.local.openflow_uniqueid)) activity?.SetTag("ofid", Config.local.openflow_uniqueid);
+        //activity?.SetTag("clientversion", System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
+
         [JsonIgnore]
+        public Stack<System.Diagnostics.Activity> Activities = new Stack<System.Diagnostics.Activity>();
+        [JsonIgnore]
+        public System.Diagnostics.Activity RootActivity = null;
+        [JsonProperty(propertyName: "parentspanid")]
+        public string ParentSpanId { get; set; }
+        [JsonProperty(propertyName: "spanid")]
+        public string SpanId { get; set; }
+        //[JsonIgnore]
+        //public string spanid { get; set; }
+        [JsonIgnore]
+        public System.Diagnostics.ActivitySource source = new System.Diagnostics.ActivitySource("OpenRPA");
         // public DateTime LastUpdated { get { return GetProperty<DateTime>(); } set { SetProperty(value); } } 
         private static List<WorkflowInstance> _Instances = new List<WorkflowInstance>();
         public static List<WorkflowInstance> Instances

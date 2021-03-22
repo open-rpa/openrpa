@@ -155,14 +155,18 @@ namespace OpenRPA.Interfaces.IPCService
     public class RunWorkflowInstance
     {
         public RunWorkflowInstance() { }
-        public RunWorkflowInstance(string UniqueId, string IDOrRelativeFilename, bool WaitForCompleted, Dictionary<string, object> Arguments) {
+        public RunWorkflowInstance(string UniqueId, string IDOrRelativeFilename, bool WaitForCompleted, Dictionary<string, object> Arguments, string SpanId, string ParentSpanId) {
             this.UniqueId = UniqueId;
             this.IDOrRelativeFilename = IDOrRelativeFilename;
             this.WaitForCompleted = WaitForCompleted;
             this.Arguments = Arguments;
             Started = false;
+            this.SpanId = SpanId;
+            this.ParentSpanId = ParentSpanId;
             Pending = new System.Threading.AutoResetEvent(false);
         }
+        public string ParentSpanId { get; set; }
+        public string SpanId { get; set; }
         public string UniqueId { get; set; }
         public bool Started { get; set; }
         public string IDOrRelativeFilename { get; set; }
@@ -222,11 +226,11 @@ namespace OpenRPA.Interfaces.IPCService
                                 {
                                     designer.BreakpointLocations = null;
                                     // instance = workflow.CreateInstance(Arguments, null, null, designer.IdleOrComplete, designer.OnVisualTracking);
-                                    instance = workflow.CreateInstance(_instance.Value.Arguments, null, null, IdleOrComplete, designer.OnVisualTracking);
+                                    instance = workflow.CreateInstance(_instance.Value.Arguments, null, null, IdleOrComplete, designer.OnVisualTracking, _instance.Value.ParentSpanId, _instance.Value.ParentSpanId);
                                 }
                                 else
                                 {
-                                    instance = workflow.CreateInstance(_instance.Value.Arguments, null, null, IdleOrComplete, null);
+                                    instance = workflow.CreateInstance(_instance.Value.Arguments, null, null, IdleOrComplete, null, _instance.Value.ParentSpanId, _instance.Value.ParentSpanId);
                                 }
                                 instance.caller = _instance.Value.UniqueId;
 
@@ -259,7 +263,7 @@ namespace OpenRPA.Interfaces.IPCService
         {
             string uniqueid = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
             if (Arguments == null) Arguments = new Dictionary<string, object>();
-            var _instance = new RunWorkflowInstance(uniqueid, IDOrRelativeFilename, WaitForCompleted, Arguments);
+            var _instance = new RunWorkflowInstance(uniqueid, IDOrRelativeFilename, WaitForCompleted, Arguments, null, null);
             RunWorkflowInstances.Add(uniqueid, _instance);
             StartWorkflowInstances();
             if (WaitForCompleted) _instance.Pending.WaitOne();

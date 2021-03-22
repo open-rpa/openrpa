@@ -3,7 +3,6 @@ using System;
 using System.Activities;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +17,7 @@ namespace OpenRPA.Activities
     public class CommentOut : CodeActivity
     {
         [DefaultValue(null)]
-        public Activity Body { get; set; }
+        public System.Activities.Activity Body { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             // This is an empty method because this activity is meant to "comment" other activities out,

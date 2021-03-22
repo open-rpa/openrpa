@@ -49,7 +49,8 @@ namespace OpenRPA
         {
             get
             {
-                if(Project!=null) return Project.name + "/" + RelativeFilename;
+                if (RelativeFilename.Contains("\\")) return RelativeFilename;
+                if (Project!=null) return Project.name + "\\" + Filename;
                 if(!string.IsNullOrEmpty(_ProjectAndName) && _ProjectAndName.Contains("/"))
                 {
                     return _ProjectAndName.Substring(0, _ProjectAndName.IndexOf("/") + 1) + RelativeFilename;
@@ -400,7 +401,7 @@ namespace OpenRPA
             }
         }
         public IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId,
-            OpenRPA.Interfaces.idleOrComplete idleOrComplete, OpenRPA.Interfaces.VisualTrackingHandler VisualTracking)
+            OpenRPA.Interfaces.idleOrComplete idleOrComplete, OpenRPA.Interfaces.VisualTrackingHandler VisualTracking, string SpanId, string ParentSpanId)
         {
             if (this.Parameters == null) this.Parameters = new List<workflowparameter>();
             if (this.Parameters.Count == 0)
@@ -408,6 +409,8 @@ namespace OpenRPA
                 ParseParameters();
             }
             var instance = WorkflowInstance.Create(this, Parameters);
+            instance.SpanId = SpanId;
+            instance.ParentSpanId = ParentSpanId;
             instance.queuename = queuename; instance.correlationId = correlationId;
             if (idleOrComplete != null) instance.OnIdleOrComplete += idleOrComplete;
             if (VisualTracking != null) instance.OnVisualTracking += VisualTracking;

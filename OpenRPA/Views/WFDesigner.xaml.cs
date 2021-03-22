@@ -1490,11 +1490,11 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
                     if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0 || Singlestep == true)
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking);
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking, null, null);
                     }
                     else
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null);
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null, null, null);
                     }
                 }
                 ReadOnly = true;
@@ -1888,11 +1888,11 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
                     if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0)
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking) as WorkflowInstance;
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking, null, null) as WorkflowInstance;
                     }
                     else
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null) as WorkflowInstance;
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null, null, null) as WorkflowInstance;
                     }
                 }
                 ReadOnly = true;
@@ -1957,11 +1957,11 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
                     if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0)
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking) as WorkflowInstance;
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking, null, null) as WorkflowInstance;
                     }
                     else
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null) as WorkflowInstance;
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null, null, null) as WorkflowInstance;
                     }
                 }
                 ReadOnly = true;

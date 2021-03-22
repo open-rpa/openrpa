@@ -97,7 +97,12 @@ namespace OpenRPA.Activities
 
             try
             {
-                var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(this.workflow.Get(context));
+                var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == context.WorkflowInstanceId.ToString() ).FirstOrDefault();
+
+                // , string SpanId, string ParentSpanId
+                var workflowid = this.workflow.Get(context);
+                var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
+                if (workflow == null) throw new ArgumentException("Failed locating workflow " + workflowid);
                 IWorkflowInstance instance = null;
                 Views.WFDesigner designer = null;
                 GenericTools.RunUI(() =>
@@ -106,11 +111,11 @@ namespace OpenRPA.Activities
                     if (designer != null)
                     {
                         designer.BreakpointLocations = null;
-                        instance = workflow.CreateInstance(param, null, null, designer.IdleOrComplete, designer.OnVisualTracking);
+                        instance = workflow.CreateInstance(param, null, null, designer.IdleOrComplete, designer.OnVisualTracking, null, Instance.SpanId);
                     }
                     else
                     {
-                        instance = workflow.CreateInstance(param, null, null, RobotInstance.instance.Window.IdleOrComplete,  null);
+                        instance = workflow.CreateInstance(param, null, null, RobotInstance.instance.Window.IdleOrComplete,  null, null, Instance.SpanId);
                     }
                     instance.caller = WorkflowInstanceId;
                 });

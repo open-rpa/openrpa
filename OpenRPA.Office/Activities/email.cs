@@ -16,7 +16,8 @@ namespace OpenRPA.Office.Activities
         {
             this.mailItem = mailItem;
         }
-        internal Microsoft.Office.Interop.Outlook.MailItem mailItem;
+        [System.Runtime.Serialization.IgnoreDataMember, Newtonsoft.Json.JsonIgnore]
+        public Microsoft.Office.Interop.Outlook.MailItem mailItem { get; private set; }
         //public Application Application { get { return mailItem.Application; } }
 
         //public OlObjectClass Class { get { return mailItem.Class; } }

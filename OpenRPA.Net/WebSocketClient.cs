@@ -432,6 +432,15 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
             user = signin.user;
             jwt = signin.jwt;
+            if (!string.IsNullOrEmpty(signin.openflow_uniqueid))
+            {
+                Config.local.openflow_uniqueid = signin.openflow_uniqueid;
+                Config.local.enable_analytics = signin.enable_analytics;
+            }
+            if (!string.IsNullOrEmpty(signin.otel_trace_url)) Config.local.otel_trace_url = signin.otel_trace_url;
+            if (!string.IsNullOrEmpty(signin.otel_metric_url)) Config.local.otel_metric_url = signin.otel_metric_url;
+            if (signin.otel_trace_interval > 0) Config.local.otel_trace_interval = signin.otel_trace_interval;
+            if (signin.otel_metric_interval > 0) Config.local.otel_metric_interval = signin.otel_metric_interval;
             if (signin.websocket_package_size > 100)
             {
                 this.websocket_package_size = signin.websocket_package_size;
@@ -449,6 +458,15 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
             user = signin.user;
             this.jwt = signin.jwt;
+            if (!string.IsNullOrEmpty(signin.openflow_uniqueid))
+            {
+                Config.local.openflow_uniqueid = signin.openflow_uniqueid;
+                Config.local.enable_analytics = signin.enable_analytics;
+            }
+            if (!string.IsNullOrEmpty(signin.otel_trace_url)) Config.local.otel_trace_url = signin.otel_trace_url;
+            if (!string.IsNullOrEmpty(signin.otel_metric_url)) Config.local.otel_metric_url = signin.otel_metric_url;
+            if (signin.otel_trace_interval > 0) Config.local.otel_trace_interval = signin.otel_trace_interval;
+            if (signin.otel_metric_interval > 0) Config.local.otel_metric_interval = signin.otel_metric_interval;
             if (signin.websocket_package_size > 100)
             {
                 this.websocket_package_size = signin.websocket_package_size;
@@ -466,6 +484,15 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
             user = signin.user;
             this.jwt = signin.jwt;
+            if (!string.IsNullOrEmpty(signin.openflow_uniqueid))
+            {
+                Config.local.openflow_uniqueid = signin.openflow_uniqueid;
+                Config.local.enable_analytics = signin.enable_analytics;
+            }
+            if (!string.IsNullOrEmpty(signin.otel_trace_url)) Config.local.otel_trace_url = signin.otel_trace_url;
+            if (!string.IsNullOrEmpty(signin.otel_metric_url)) Config.local.otel_metric_url = signin.otel_metric_url;
+            if (signin.otel_trace_interval > 0) Config.local.otel_trace_interval = signin.otel_trace_interval;
+            if (signin.otel_metric_interval > 0) Config.local.otel_metric_interval = signin.otel_metric_interval;
             if (signin.websocket_package_size > 100)
             {
                 this.websocket_package_size = signin.websocket_package_size;

@@ -9,6 +9,10 @@ namespace OpenRPA.Interfaces
 {
     public interface IWorkflowInstance : INotifyPropertyChanged
     {
+        [Newtonsoft.Json.JsonProperty(propertyName: "parentspanid")]
+        string ParentSpanId { get; set; }
+        [Newtonsoft.Json.JsonProperty(propertyName: "spanid")]
+        string SpanId { get; set; }
         IWorkflow Workflow { get; set; }
         Dictionary<string, object> Parameters { get; set; }
         Dictionary<string, object> Bookmarks { get; set; }

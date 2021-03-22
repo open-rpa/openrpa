@@ -40,5 +40,11 @@ namespace OpenRPA.Net
         public int websocket_package_size { get; set; }
         public string clientagent { get; set; } = "openrpa";
         public string clientversion { get; set; } = "0.0.0.1";
+        public string openflow_uniqueid { get; set; } = "";
+        public bool enable_analytics { get; set; } = true;
+        public string otel_trace_url { get; set; } = "";
+        public string otel_metric_url { get; set; } = "";
+        public int otel_trace_interval { get; set; } = 0;
+        public int otel_metric_interval { get; set; } = 0;
     }
 }

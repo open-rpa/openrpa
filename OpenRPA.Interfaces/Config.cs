@@ -67,6 +67,12 @@ namespace OpenRPA
         public bool notify_on_workflow_end { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
         public bool notify_on_workflow_remote_end { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
         public bool log_busy_warning { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
+        public string openflow_uniqueid { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
+        public bool enable_analytics { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
+        public string otel_trace_url { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
+        public string otel_metric_url { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
+        public int otel_trace_interval { get { return GetProperty(null, 2); } set { SetProperty(null, value); } }
+        public int otel_metric_interval { get { return GetProperty(null, 2); } set { SetProperty(null, value); } }
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)

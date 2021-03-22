@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.25</Version>
-    <PackageReleaseNotes>1.2.25 Utilities: Fix issue with DeleteAllRows, Allow variables for Invoke OpenRPA , add Expiration for invoke nodes
+    <Version>1.2.26</Version>
+    <PackageReleaseNotes>1.2.26 Add otel to openrpa, version 1 / add ReplyMailItem
+1.2.25 Utilities: Fix issue with DeleteAllRows, Allow variables for Invoke OpenRPA , add Expiration for invoke nodes
 1.2.24 Re add FrameworkId to recorded selector
 1.2.23 Windows: allow search_descendants any where in selector / Fix icon on highlight button
 1.2.22 nm: Launch edge using microsoft-edge: uri instead, fix connection test for edge/ff
@@ -255,12 +256,14 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <PackageReference Include="CefSharp.Wpf" Version="86.0.241" />
     <PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.8.1" />
+    <PackageReference Include="Grpc.Core" Version="2.36.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="NuGet.Common" Version="5.4.0" />
     <PackageReference Include="NuGet.Packaging" Version="5.4.0" />
     <PackageReference Include="NuGet.Protocol" Version="5.4.0" />
     <PackageReference Include="NuGet.Resolver" Version="5.4.0" />
-    <PackageReference Include="Prometheus.Client" Version="4.2.0" />
+    <PackageReference Include="OpenTelemetry" Version="1.1.0-beta1" />
+    <PackageReference Include="OpenTelemetry.Api" Version="1.1.0-beta1" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\ClickElementDesigner.xaml" />
@@ -719,6 +722,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\PR\opentelemetry-dotnet\src\OpenTelemetry.Exporter.OpenTelemetryProtocol\OpenTelemetry.Exporter.OpenTelemetryProtocol.csproj" />
     <ProjectReference Include="..\OpenRPA.CodeEditor\OpenRPA.CodeEditor.csproj" />
     <ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj">
       <IncludeAssets>all</IncludeAssets>

@@ -23,7 +23,7 @@ namespace OpenRPA.Interfaces
         IProject Project { get; set; }
         string ProjectAndName { get; set; }
         List<workflowparameter> Parameters { get; set; }
-        IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, idleOrComplete idleOrComplete, VisualTrackingHandler VisualTracking);
+        IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, idleOrComplete idleOrComplete, VisualTrackingHandler VisualTracking, string SpanId, string ParentSpanId);
         Task Delete();
         string UniqueFilename();
         Task Save(bool UpdateImages);

@@ -34,6 +34,18 @@ namespace OpenRPA.Interfaces
                 OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("TraceMessages"));
             }
         }
+        public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id)
+        {
+            base.TraceEvent(eventCache, source, eventType, id);
+        }
+        public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id, string format, params object[] args)
+        {
+            base.TraceEvent(eventCache, source, eventType, id, format, args);
+        }
+        public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id, string message)
+        {
+            base.TraceEvent(eventCache, source, eventType, id, message);
+        }
         private string _OutputMessages = "";
         public string OutputMessages
         {

@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.26</Version>
-    <PackageReleaseNotes>1.2.26 Add otel to openrpa, version 1 / add ReplyMailItem
+    <Version>1.2.27</Version>
+    <PackageReleaseNotes>1.2.27 Fix issue with looping activites and otel
+1.2.26 Add otel to openrpa, version 1 / add ReplyMailItem
 1.2.25 Utilities: Fix issue with DeleteAllRows, Allow variables for Invoke OpenRPA , add Expiration for invoke nodes
 1.2.24 Re add FrameworkId to recorded selector
 1.2.23 Windows: allow search_descendants any where in selector / Fix icon on highlight button

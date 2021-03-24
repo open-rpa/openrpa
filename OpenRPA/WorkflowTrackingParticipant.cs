@@ -154,6 +154,8 @@ namespace OpenRPA
                                 System.Diagnostics.Activity.Current = Instance.RootActivity;
                                 var span = Instance.source.StartActivity(Name, ActivityKind.Consumer);
                                 span?.AddTag("type", TypeName);
+                                span?.AddTag("ActivityId", ActivityId);
+                                // Console.WriteLine("Push " + Name);
                                 if (Instance.source != null) Instance.Activities.Push(span);
                                 // Console.WriteLine("start " + TypeName);
                             }
@@ -163,14 +165,34 @@ namespace OpenRPA
                             if (timer.ContainsKey(ActivityId))
                             {
                                 Stopwatch sw = timer[ActivityId];
+                                timer.Remove(ActivityId);
                                 if (sw.ElapsedMilliseconds > 0)
                                 {
                                     var TypeName = activityStateRecord.Activity.TypeName;
+                                    var Name = activityStateRecord.Activity.Name;
+                                    if (String.IsNullOrEmpty(Name)) Name = TypeName;
                                     if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
                                     //RobotInstance.activity_duration.WithLabels((activityStateRecord.Activity.Name, TypeName, Instance.Workflow.name)).Observe(sw.ElapsedMilliseconds / 1000);
-                                    var span = Instance.Activities.Pop();
-                                    // Console.WriteLine("end " + span.DisplayName);
-                                    span?.Dispose();
+                                    try
+                                    {
+                                        if(Instance.Activities.Count > 0)
+                                        {
+                                            if(Instance.Activities.First().DisplayName == Name)
+                                            {
+                                                // Console.WriteLine("Popping " + Name);
+                                                var span = Instance.Activities.Pop();
+                                                span?.Dispose();
+                                            } else
+                                            {
+                                                Log.Debug("Skip pop, expected " + Name + " but found " + Instance.Activities.First().DisplayName);
+                                            }
+                                        }
+
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Log.Error(ex.ToString());
+                                    }
                                 }
                             }
                         }

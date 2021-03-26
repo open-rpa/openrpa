@@ -868,7 +868,7 @@ namespace OpenRPA
                 Log.Debug(ex.ToString());
             }
         }
-        private Task SaveTask = null;
+        // private Task SaveTask = null;
         public void Save()
         {
             if (isCompleted || hasError)
@@ -879,45 +879,27 @@ namespace OpenRPA
             else
             {
                 SaveFile();
-            }
-            
+            }            
             if(Workflow!=null) Workflow.NotifyUIState();
-            if (SaveTask==null)
+            Task.Run(async () =>
             {
-                //SaveTask = new Task.Delay(1000).ContinueWith(async () =>
-                SaveTask = Task.Run(async () =>
+                // System.Threading.Thread.Sleep(1000);
+                try
                 {
-                    System.Threading.Thread.Sleep(1000);
-                    try
-                    {
-                        if (!global.isConnected) return;
-                        //if ((DateTime.Now - LastUpdated).TotalMilliseconds < 2000) return;
-                        //LastUpdated = DateTime.Now;
-                        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, null, this);
-                        _id = result._id;
-                        _acl = result._acl;
-                        //Log.Debug("Saved with id: " + _id);
-
-
-                        // Catch up if others havent been saved
-                        foreach (var i in Instances.ToList())
-                        {
-                            //if (string.IsNullOrEmpty(_id)) await i.Save();
-                            if (string.IsNullOrEmpty(_id)) i.Save();
-                        }
-
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.ToString());
-                        // throw;
-                    }
-                    finally
-                    {
-                        SaveTask = null;
-                    }
-                });
-            }
+                    if (!global.isConnected) return;
+                    var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, null, this);
+                    _id = result._id;
+                    _acl = result._acl;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                    // throw;
+                }
+                finally
+                {
+                }
+            });
         }
         public static async Task RunPendingInstances()
         {

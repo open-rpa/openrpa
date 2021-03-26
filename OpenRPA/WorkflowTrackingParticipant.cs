@@ -55,6 +55,7 @@ namespace OpenRPA
         }
         public static Dictionary<string, Dictionary<string, Stopwatch>> timers = new Dictionary<string, Dictionary<string, Stopwatch>>();
         public static object timerslock = new object();
+        private static string hostname = null;
         protected override void Track(TrackingRecord trackRecord, TimeSpan timeStamp)
         {
             try
@@ -82,6 +83,29 @@ namespace OpenRPA
                         Instance.RootActivity?.SetTag("status.code", 200);
                         Instance.RootActivity?.SetTag("status.state", workflowInstanceRecord.State.ToString());
                         Instance.RootActivity?.SetTag("ofid", Config.local.openflow_uniqueid);
+                        try
+                        {
+                            if (global.webSocketClient != null && global.webSocketClient.user != null && !string.IsNullOrEmpty(global.webSocketClient.user.username))
+                            {
+                                Instance.RootActivity?.SetTag("username", global.webSocketClient.user.username);
+                            }
+                            else
+                            {
+                                Instance.RootActivity?.SetTag("username", System.Security.Principal.WindowsIdentity.GetCurrent().Name);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        try
+                        {
+                            if (hostname == null) hostname = System.Net.Dns.GetHostName();
+                            Instance.RootActivity?.SetTag("hostname", hostname);
+                        }
+                        catch (Exception)
+                        {
+                            hostname = "";
+                        }
                         Instance.Activities.Push(Instance.RootActivity);
                     }
                     else if (workflowInstanceRecord.State == WorkflowInstanceStates.Aborted || workflowInstanceRecord.State == WorkflowInstanceStates.Canceled ||
@@ -158,6 +182,9 @@ namespace OpenRPA
                                 // Console.WriteLine("Push " + Name);
                                 if (Instance.source != null) Instance.Activities.Push(span);
                                 // Console.WriteLine("start " + TypeName);
+                            } else
+                            {
+                                // Console.WriteLine("Skip adding new span and timer for " + ActivityId);
                             }
                         }
                         if (activityStateRecord.State != ActivityStates.Executing)
@@ -184,7 +211,7 @@ namespace OpenRPA
                                                 span?.Dispose();
                                             } else
                                             {
-                                                Log.Debug("Skip pop, expected " + Name + " but found " + Instance.Activities.First().DisplayName);
+                                                // Console.WriteLine("Skip pop, expected " + Name + " but found " + Instance.Activities.First().DisplayName);
                                             }
                                         }
 
@@ -194,6 +221,9 @@ namespace OpenRPA
                                         Log.Error(ex.ToString());
                                     }
                                 }
+                            } else
+                            {
+                                // Console.WriteLine("Skip removing old span and timer for " + ActivityId);
                             }
                         }
                     }

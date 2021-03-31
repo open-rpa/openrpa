@@ -157,9 +157,11 @@ namespace OpenRPA
                 //if (activityStateRecord != null || activityScheduledRecord != null)
                 if (activityStateRecord != null)
                 {
-                    string ActivityId = null;
+                    string ActivityId = null, name = null;
                     var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
                     if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Id)) ActivityId = activityStateRecord.Activity.Id;
+                    if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Name)) name = activityStateRecord.Activity.Name;
+                    Console.WriteLine(activityStateRecord.State.ToString() + " " + ActivityId + " " + name);
                     // var sw = new Stopwatch(); sw.Start();
                     if (timers.ContainsKey(InstanceId.ToString()) && !string.IsNullOrEmpty(ActivityId))
                     {
@@ -193,33 +195,29 @@ namespace OpenRPA
                             {
                                 Stopwatch sw = timer[ActivityId];
                                 timer.Remove(ActivityId);
-                                if (sw.ElapsedMilliseconds > 0)
+                                var TypeName = activityStateRecord.Activity.TypeName;
+                                var Name = activityStateRecord.Activity.Name;
+                                if (String.IsNullOrEmpty(Name)) Name = TypeName;
+                                if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
+                                try
                                 {
-                                    var TypeName = activityStateRecord.Activity.TypeName;
-                                    var Name = activityStateRecord.Activity.Name;
-                                    if (String.IsNullOrEmpty(Name)) Name = TypeName;
-                                    if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
-                                    //RobotInstance.activity_duration.WithLabels((activityStateRecord.Activity.Name, TypeName, Instance.Workflow.name)).Observe(sw.ElapsedMilliseconds / 1000);
-                                    try
+                                    if(Instance.Activities.Count > 0)
                                     {
-                                        if(Instance.Activities.Count > 0)
+                                        if(Instance.Activities.First().DisplayName == Name)
                                         {
-                                            if(Instance.Activities.First().DisplayName == Name)
-                                            {
-                                                // Console.WriteLine("Popping " + Name);
-                                                var span = Instance.Activities.Pop();
-                                                span?.Dispose();
-                                            } else
-                                            {
-                                                // Console.WriteLine("Skip pop, expected " + Name + " but found " + Instance.Activities.First().DisplayName);
-                                            }
+                                            // Console.WriteLine("Popping " + Name);
+                                            var span = Instance.Activities.Pop();
+                                            span?.Dispose();
+                                        } else
+                                        {
+                                            // Console.WriteLine("Skip pop, expected " + Name + " but found " + Instance.Activities.First().DisplayName);
                                         }
+                                    }
 
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Log.Error(ex.ToString());
-                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.Error(ex.ToString());
                                 }
                             } else
                             {

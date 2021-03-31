@@ -323,7 +323,26 @@ namespace OpenRPA.Windows
                             Log.Debug(string.Format("GetElementsWithuiSelector::Searchin for all " + con.ToString()));
                             // var ___treeWalker = automation.TreeWalkerFactory.GetCustomTreeWalker(con);
                             var ___treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
-                            var win = ___treeWalker.GetFirstChild(_ele.RawElement);
+                            int retries = 0;
+                            AutomationElement win = null;
+                            bool hasError = false;
+                            do
+                            {
+                                hasError = false;
+                                try
+                                {
+                                    win = ___treeWalker.GetFirstChild(_ele.RawElement);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.Debug(ex.ToString());
+                                    retries++;
+                                    hasError = true;
+                                    // throw;
+                                }
+
+                            } while (hasError && retries < 10);
+                            
                             while (win != null)
                             {
                                 bool addit = false;
@@ -380,7 +399,27 @@ namespace OpenRPA.Windows
                     {
                         _treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
                     }
-                    AutomationElement ele = _treeWalker.GetFirstChild(_ele.RawElement);
+                    int retries = 0;
+                    AutomationElement ele = null;
+                    bool hasError = false;
+                    do
+                    {
+                        hasError = false;
+                        try
+                        {
+                            ele = _treeWalker.GetFirstChild(_ele.RawElement);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Debug(ex.ToString());
+                            retries++;
+                            hasError = true;
+                            // throw;
+                        }
+
+                    } while (hasError && retries < 10);
+
+                    
                     if (ele != null)
                     {
                         do

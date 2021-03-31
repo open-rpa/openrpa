@@ -84,8 +84,11 @@ namespace OpenRPA.SAP
                 // SAPhook.Instance.OnRecordEvent += OnRecordEvent;
                 SAPhook.Instance.Connected += () => { SetStatus("Online"); };
                 SAPhook.Instance.Disconnected += () => { SetStatus("Offline"); };
-                timer = new System.Timers.Timer(5000);
-                timer.Elapsed += Timer_Elapsed;
+                if (timer == null)
+                {
+                    timer = new System.Timers.Timer(5000);
+                    timer.Elapsed += Timer_Elapsed;
+                }
                 timer.Start();
             }
             catch (Exception ex)
@@ -99,10 +102,10 @@ namespace OpenRPA.SAP
             try
             {
                 SAPhook.Instance.RefreshConnections();
-                if(SAPhook.Instance.isSapRunning)
+                if (SAPhook.Instance.Connections.Length < 1)
                 {
                     SetStatus("Online(-1)");
-                } 
+                }
                 else
                 {
                     SetStatus("Online(" + SAPhook.Instance.Connections.Length + ")");
@@ -113,7 +116,8 @@ namespace OpenRPA.SAP
             {
                 Log.Error("Error getting sap sessions: " + ex.Message);
             }
-            timer.Interval = TimeSpan.FromMinutes(5).TotalMilliseconds;
+            // timer.Interval = TimeSpan.FromMinutes(5).TotalMilliseconds;
+            timer.Interval = TimeSpan.FromSeconds(30).TotalMilliseconds;
             timer.Start();
         }
         public static Plugin Instance { get; set; }
@@ -122,8 +126,8 @@ namespace OpenRPA.SAP
             if (!SAPhook.Instance.isConnected) return;
             Instance = this;
             var e = new SAPToogleRecordingEvent();
-            // e.overlay = Config.local.record_overlay;
             e.overlay = false;
+            e.overlay = Config.local.record_overlay;
             e.mousemove = Config.local.record_overlay;
             var msg = new SAPEvent("beginrecord"); msg.Set(e);
             SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(5));
@@ -141,11 +145,12 @@ namespace OpenRPA.SAP
             if (e.UIElement.ProcessId > 0)
             {
                 var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-                if (p.ProcessName.ToLower() != "saplogon") { 
-                    Log.Debug("p.ProcessName is not saplogon but " + p.ProcessName); return false; }
-            } else {
-                Log.Debug("e.UIElement.ProcessId is " + (e.UIElement.ProcessId.ToString()));
-                return false; 
+                if (p.ProcessName.ToLower() != "saplogon") { Log.Output("p.ProcessName is not saplogon but " + p.ProcessName); return false; }
+            }
+            else
+            {
+                Log.Output("e.UIElement.ProcessId is " + (e.UIElement.ProcessId.ToString()));
+                return false;
             }
             LastRecorderEvent = e;
             e.ClickHandled = false;
@@ -174,14 +179,12 @@ namespace OpenRPA.SAP
                 e.OffsetY = e.Y - LastElement.Rectangle.Y;
                 e.ClickHandled = true;
                 LastElement.Click(true, e.Button, e.X, e.Y, false, false);
-            } 
+            }
             else
             {
                 Log.Debug("Skip adding activity, record_with_get_element is false");
                 e.a = null;
-
             }
-
             return true;
         }
         public void RaiseUserAction(RecordEvent r)
@@ -223,7 +226,7 @@ namespace OpenRPA.SAP
                 lastid = e.UIElement.ProcessId;
             }
             e.Element = SAPhook.Instance.LastElement;
-            if(e.Element == null) e.UIElement = null;
+            if (e.Element == null) e.UIElement = null;
             return true;
         }
     }
@@ -244,7 +247,7 @@ namespace OpenRPA.SAP
         public Activity Activity { get; set; }
         public void AddActivity(Activity a, string Name)
         {
-            if(Activity is GetElement)
+            if (Activity is GetElement)
             {
                 var aa = new ActivityAction<SAPElement>();
                 var da = new DelegateInArgument<SAPElement>

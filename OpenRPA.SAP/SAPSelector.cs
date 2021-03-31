@@ -19,7 +19,6 @@ namespace OpenRPA.SAP
             sw.Start();
             Log.Selector(string.Format("SAPselector::AutomationElement::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
             Log.Selector(string.Format("SAPselector::GetControlVSAPwWalker::end {0:mm\\:ss\\.fff}", sw.Elapsed));
-
             Clear();
             SAPSelectorItem item;
             if (anchor == null)
@@ -32,17 +31,10 @@ namespace OpenRPA.SAP
             }
             item = new SAPSelectorItem(element, false);
             item.Enabled = true; item.canDisable = false;
+            var idfield = element.id;
+            if (idfield.Contains("/")) idfield = idfield.Substring(idfield.LastIndexOf("/") + 1);
+            item.Properties.Add(new SelectorItemProperty("idfield", idfield));
             Items.Add(item);
-            //for (var i = 0; i < pathToRoot.Count(); i++)
-            //{
-            //    var o = pathToRoot[i];
-            //    item = new SAPSelectorItem(o, false);
-            //    if (i == 0 || i == (pathToRoot.Count() - 1)) item.canDisable = false;
-            //    if (doEnum) { item.EnumNeededProperties(o, o.Parent); }
-            //    Items.Add(item);
-            //}
-            //pathToRoot.Reverse();
-
             Log.Selector(string.Format("SAPselector::EnumNeededProperties::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
@@ -70,7 +62,7 @@ namespace OpenRPA.SAP
             if (msg != null)
             {
                 var ele = msg.Get<SAPEventElement>();
-                if(!string.IsNullOrEmpty(ele.Id))
+                if (!string.IsNullOrEmpty(ele.Id))
                 {
                     var _element = new SAPElement(null, ele);
                     result.Add(_element);
@@ -78,19 +70,19 @@ namespace OpenRPA.SAP
             }
             return result.ToArray();
         }
-        public static SAPElement[] GetElementsWithuiSelector( SAPSelector selector, IElement fromElement, int skip, int maxresults, bool FlatternGuiTree)
+        public static SAPElement[] GetElementsWithuiSelector(SAPSelector selector, IElement fromElement, int skip, int maxresults, bool FlatternGuiTree)
         {
             var result = new List<SAPElement>();
             var root = new SAPSelectorItem(selector[0]);
             var SystemName = root.SystemName;
-            if(SAPhook.Instance.Sessions == null || SAPhook.Instance.Sessions.Length == 0)
+            if (SAPhook.Instance.Sessions == null || SAPhook.Instance.Sessions.Length == 0)
             {
                 SAPhook.Instance.RefreshConnections();
             }
-            if(SAPhook.Instance.Sessions!=null)
+            if (SAPhook.Instance.Sessions != null)
                 foreach (var session in SAPhook.Instance.Sessions)
                 {
-                    if(string.IsNullOrEmpty(SystemName) || (SystemName == session.Info.SystemName))
+                    if (string.IsNullOrEmpty(SystemName) || (SystemName == session.Info.SystemName))
                     {
                         result.AddRange(GetElementsWithuiSelector(session, selector, fromElement, skip, maxresults, FlatternGuiTree));
                         if (result.Count > maxresults) return result.ToArray();

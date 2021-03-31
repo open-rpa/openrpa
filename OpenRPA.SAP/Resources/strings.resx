@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="activity_displayname" xml:space="preserve">
+    <value>Displayname</value>
+  </data>
+  <data name="activity_displayname_help" xml:space="preserve">
+    <value>Displayname</value>
+  </data>
   <data name="activity_getelement" xml:space="preserve">
     <value>Get Element</value>
   </data>
@@ -288,10 +294,22 @@
   <data name="plugin_launch_sap_bridge" xml:space="preserve">
     <value>Launch SAP bridge</value>
   </data>
+  <data name="plugin_recording_skip_methods" xml:space="preserve">
+    <value>Skip methods</value>
+  </data>
+  <data name="plugin_recording_skip_methods_help" xml:space="preserve">
+    <value>Doing recording skip adding these methods</value>
+  </data>
+  <data name="plugin_recording_skip_properties" xml:space="preserve">
+    <value>Skip properties</value>
+  </data>
+  <data name="plugin_recording_skip_properties_help" xml:space="preserve">
+    <value>Doing recording the value of these properties</value>
+  </data>
   <data name="plugin_record_with_get_element" xml:space="preserve">
     <value>Record Get Element</value>
   </data>
   <data name="plugin_record_with_get_element_help" xml:space="preserve">
-    <value>When recording use GetElement instead of SetProperty</value>
+    <value>Doing recording use GetElement instead of SetProperty</value>
   </data>
 </root>

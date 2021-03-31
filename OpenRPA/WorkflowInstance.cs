@@ -884,21 +884,26 @@ namespace OpenRPA
             Task.Run(async () =>
             {
                 // System.Threading.Thread.Sleep(1000);
-                try
+                int retries = 0;
+                bool hasError = false;
+                do
                 {
-                    if (!global.isConnected) return;
-                    var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, null, this);
-                    _id = result._id;
-                    _acl = result._acl;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                    // throw;
-                }
-                finally
-                {
-                }
+                    hasError = false;
+                    try
+                    {
+                        if (!global.isConnected) return;
+                        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, null, this);
+                        _id = result._id;
+                        _acl = result._acl;
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Debug(ex.ToString());
+                        retries++;
+                        hasError = true;
+                        // throw;
+                    }
+                } while (hasError && retries < 10);
             });
         }
         public static async Task RunPendingInstances()

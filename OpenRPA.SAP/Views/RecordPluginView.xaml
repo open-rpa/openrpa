@@ -13,16 +13,25 @@
             Checked="auto_launch_SAP_bridge_Checked" Unchecked="auto_launch_SAP_bridge_Checked" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,10,0,0" Text="{x:Static or:strings.plugin_auto_launch_sap_bridge_help}" VerticalAlignment="Top" />
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,30,0,0" Text="{x:Static or:strings.plugin_record_with_get_element}" VerticalAlignment="Top" Width="110" />
-        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,30,0,0" VerticalAlignment="Top" Width="222" x:Name="record_with_get_element" 
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,40,0,0" Text="{x:Static or:strings.plugin_record_with_get_element}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,40,0,0" VerticalAlignment="Top" Width="222" x:Name="record_with_get_element" 
             Checked="auto_launch_SAP_bridge_Checked" Unchecked="auto_launch_SAP_bridge_Checked" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,30,0,0" Text="{x:Static or:strings.plugin_record_with_get_element_help}" VerticalAlignment="Top" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,40,0,0" Text="{x:Static or:strings.plugin_record_with_get_element_help}" VerticalAlignment="Top" />
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,50,0,0" Text="{x:Static or:strings.plugin_bridge_timeout_seconds}" VerticalAlignment="Top" Width="110" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="151,50,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="bridge_timeout_seconds" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,50,0,0" Text="{x:Static or:strings.plugin_bridge_timeout_seconds_help}" VerticalAlignment="Top" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,70,0,0" Text="{x:Static or:strings.plugin_bridge_timeout_seconds}" VerticalAlignment="Top" Width="110" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="151,70,0,0" Text="" VerticalAlignment="Top" Width="109" x:Name="bridge_timeout_seconds" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="265,70,0,0" Text="{x:Static or:strings.plugin_bridge_timeout_seconds_help}" VerticalAlignment="Top" />
 
-        <Button Height="23" HorizontalAlignment="Left" Margin="151,80,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_launch_sap_bridge}" Click="launch_SAP_bridge_Click" ></Button>
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,100,0,0" Text="{x:Static or:strings.plugin_recording_skip_methods}" VerticalAlignment="Top" Width="110" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="151,100,0,0" Text="" VerticalAlignment="Top" Width="197" x:Name="recording_skip_methods" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="355,100,0,0" Text="{x:Static or:strings.plugin_recording_skip_methods_help}" VerticalAlignment="Top" />
+
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,130,0,0" Text="{x:Static or:strings.plugin_recording_skip_properties}" VerticalAlignment="Top" Width="110" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="151,130,0,0" Text="" VerticalAlignment="Top" Width="197" x:Name="recording_skip_properties" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="355,130,0,0" Text="{x:Static or:strings.plugin_recording_skip_properties_help}" VerticalAlignment="Top" />
+       
+
+        <Button Height="23" HorizontalAlignment="Left" Margin="151,160,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_launch_sap_bridge}" Click="launch_SAP_bridge_Click" ></Button>
 
     </Grid>
 </UserControl>

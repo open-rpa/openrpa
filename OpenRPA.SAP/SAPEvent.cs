@@ -91,6 +91,7 @@ namespace OpenRPA.SAP
         public int TypeAsNumber { get; set; }
         public bool ContainerType { get; set; }
         public string Id { get; set; }
+        public string StatusBarText { get; set; }
     }
     [Serializable]
     public class SAPLoginEvent

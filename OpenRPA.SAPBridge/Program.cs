@@ -11,6 +11,9 @@ namespace OpenRPA.SAPBridge
 {
     class Program
     {
+        public static bool log_send_message = false;
+        public static bool log_resc_message = false;
+        public static bool log_missing_defaulttooltip = false;
         private static SAPEventElement LastElement;
         private static MainWindow form;
         public static NamedPipeServer<SAPEvent> pipe;
@@ -61,8 +64,7 @@ namespace OpenRPA.SAPBridge
                 pipe.ClientConnected += Pipe_ClientConnected;
                 pipe.ClientMessage += Server_OnReceivedMessage;
                 pipe.Start();
-                // SAPHook.Instance.
-
+                Task.Run(() => SAPEventElement.PropogateTypeCache());
                 System.Windows.Forms.Application.Run(form);
             }
             catch (Exception ex)
@@ -112,7 +114,7 @@ namespace OpenRPA.SAPBridge
         private static object _lock = new object();
         private static void OnMouseMove(InputEventArgs e)
         {
-            lock(_lock)
+            lock (_lock)
             {
                 if (isMoving) return;
                 isMoving = true;
@@ -175,10 +177,10 @@ namespace OpenRPA.SAPBridge
                         //    Program.log("[element] " + ele.ToString());
                         //}
                         var found = elements.OrderBy(x => x.IdPathCell.Length).Last();
-                        if(found.Items != null && found.Items.Length > 0)
+                        if (found.Items != null && found.Items.Length > 0)
                         {
                             elements = found.Items.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
-                            if(elements!=null && elements.Length > 0) found = elements.OrderBy(x => x.IdPathCell.Length).Last();
+                            if (elements != null && elements.Length > 0) found = elements.OrderBy(x => x.IdPathCell.Length).Last();
 
                         }
                         //Program.log("[element] " + found.ToString() + " " + found.Rectangle.ToString());
@@ -186,12 +188,12 @@ namespace OpenRPA.SAPBridge
                         if (found.Items != null && found.Items.Length > 0)
                         {
                             var found2 = found.Items.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
-                            if(found2.Length > 0)
+                            if (found2.Length > 0)
                             {
                                 found = found2.First();
                             }
                         }
-                        
+
                         if (LastElement != null && (found.Id == LastElement.Id && found.Path == LastElement.Path && found.Cell == LastElement.Cell))
                         {
                             // form.AddText("[SKIP] mousemove " + LastElement.ToString());
@@ -204,7 +206,7 @@ namespace OpenRPA.SAPBridge
                         LastElement = found;
                         SAPEvent message = new SAPEvent("mousemove");
                         message.Set(LastElement);
-                        form.AddText("[send] " + message.action + " " + LastElement.ToString() + " " + LastElement.Rectangle.ToString());
+                        if (log_send_message) if (log_send_message) form.AddText("[send] " + message.action + " " + LastElement.ToString() + " " + LastElement.Rectangle.ToString());
                         pipe.PushMessage(message);
                     }
                     else
@@ -249,8 +251,10 @@ namespace OpenRPA.SAPBridge
                         var last = elements.OrderBy(x => x.Id.Length).Last();
                         SAPEvent message = new SAPEvent("mousedown");
                         message.Set(last);
-                        form.AddText("[send] " + message.action + " " + last.ToString());
+                        if (log_send_message) form.AddText("[send] " + message.action + " " + last.ToString());
                         pipe.PushMessage(message);
+                        Task.Run(() => { if (recordstarting && !SAPHook.Instance.refreshingui) SAPHook.Instance.RefreshUIElements(true); });
+                        // 
                     }
                     else
                     {
@@ -270,10 +274,11 @@ namespace OpenRPA.SAPBridge
         }
         private static string _prefix = "SAPFEWSELib.";
         private static System.Reflection.Assembly _sapGuiApiAssembly = null;
-        public static System.Reflection.Assembly SAPGuiApiAssembly 
-        { 
-            get {      
-                if(_sapGuiApiAssembly == null)
+        public static System.Reflection.Assembly SAPGuiApiAssembly
+        {
+            get
+            {
+                if (_sapGuiApiAssembly == null)
                 {
                     var stm = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("OpenRPA.SAPBridge.Resources.Interop.SAPFEWSELib.dll");
                     var bs = new byte[(int)stm.Length];
@@ -281,12 +286,11 @@ namespace OpenRPA.SAPBridge
                     stm.Close();
                     _sapGuiApiAssembly = System.Reflection.Assembly.Load(bs);
                 }
-                return _sapGuiApiAssembly; 
-            } 
+                return _sapGuiApiAssembly;
+            }
         }
         public static bool recordstarting = false;
         public static GuiVComponent _lastHighlight = null;
-
         public static string StripSession(string id)
         {
             // /app/con[0]/ses[0]/wnd
@@ -298,7 +302,7 @@ namespace OpenRPA.SAPBridge
         }
         public static int ExtractIndex(ref string part)
         {
-            if(part.Contains("["))
+            if (part.Contains("["))
             {
                 var strindex = part.Substring(part.IndexOf("[") + 1);
                 strindex = strindex.Substring(0, strindex.IndexOf("]"));
@@ -312,7 +316,7 @@ namespace OpenRPA.SAPBridge
             try
             {
                 if (message == null) return;
-                form.AddText("[resc] " + message.action);
+                if (log_resc_message) form.AddText("[resc] " + message.action);
                 if (message.action == "beginrecord")
                 {
                     try
@@ -325,20 +329,22 @@ namespace OpenRPA.SAPBridge
                             overlay = recinfo.overlay;
                             //StartMonitorMouse(recinfo.mousemove);
                             form.AddText("StartMonitorMouse::begin");
-                            if(overlay) StartMonitorMouse(true);
+                            // if(overlay) StartMonitorMouse(true);
+                            // if(recinfo.mousemove) StartMonitorMouse(true);
+                            StartMonitorMouse(true);
                             form.AddText("StartMonitorMouse::end");
                         }
                         form.AddText("BeginRecord::begin");
                         SAPHook.Instance.BeginRecord(overlay);
                         form.AddText("BeginRecord::end");
-                        form.AddText("[send] " + message.action);
+                        if (log_send_message) form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                         recordstarting = false;
                     }
                     catch (Exception ex)
                     {
                         message.error = ex.Message;
-                        form.AddText("[send] " + message.action);
+                        if (log_send_message) form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                     }
                 }
@@ -348,13 +354,13 @@ namespace OpenRPA.SAPBridge
                     {
                         StopMonitorMouse();
                         SAPHook.Instance.EndRecord();
-                        form.AddText("[send] " + message.action);
+                        if (log_send_message) form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                     }
                     catch (Exception ex)
                     {
                         message.error = ex.Message;
-                        form.AddText("[send] " + message.action);
+                        if (log_send_message) form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                     }
                 }
@@ -369,7 +375,7 @@ namespace OpenRPA.SAPBridge
                             {
                                 if (session.Info.SystemName.ToLower() == login.SystemName.ToLower()) { dologin = false; break; }
                             }
-                        if(dologin)
+                        if (dologin)
                         {
                             if (SAPHook.Instance.Login(login))
                             {
@@ -384,17 +390,17 @@ namespace OpenRPA.SAPBridge
                                 message.error = "Login failed";
                             }
                         }
-                        form.AddText("[send] " + message.action);
+                        if (log_send_message) form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                     }
                     catch (Exception ex)
                     {
                         message.error = ex.Message;
-                        form.AddText("[send] " + message.action);
+                        if (log_send_message) form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                     }
                 }
-                if(message.action == "getconnections")
+                if (message.action == "getconnections")
                 {
                     try
                     {
@@ -402,13 +408,13 @@ namespace OpenRPA.SAPBridge
                         SAPHook.Instance.RefreshSessions();
                         result.Connections = SAPHook.Instance.Connections;
                         message.Set(result);
-                        form.AddText("[send] " + message.action);
+                        if (log_send_message) form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                     }
                     catch (Exception ex)
                     {
                         message.error = ex.Message;
-                        form.AddText("[send] " + message.action);
+                        if (log_send_message) form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                     }
                 }
@@ -421,17 +427,17 @@ namespace OpenRPA.SAPBridge
                         var session = SAPHook.Instance.GetSession(msg.SystemName);
                         var sapelements = new List<GuiComponent>();
                         msg.Id = StripSession(msg.Id);
-                        var paths = msg.Id.Split(new string[] { "/"}, StringSplitOptions.None);
-                        for(var i = 0; i < paths.Length; i++)
+                        var paths = msg.Id.Split(new string[] { "/" }, StringSplitOptions.None);
+                        for (var i = 0; i < paths.Length; i++)
                         {
                             string part = paths[i];
                             int index = ExtractIndex(ref part);
                             if (i == 0)
                             {
                                 if (index > -1) sapelements.Add(session.Children.ElementAt(index));
-                                if(index == -1)
+                                if (index == -1)
                                 {
-                                    for(var x = 0; x < session.Children.Count; x++)
+                                    for (var x = 0; x < session.Children.Count; x++)
                                     {
                                         sapelements.Add(session.Children.ElementAt(x));
                                     }
@@ -442,7 +448,7 @@ namespace OpenRPA.SAPBridge
                     catch (Exception ex)
                     {
                         message.error = ex.Message;
-                        form.AddText("[send] " + message.action);
+                        if (log_send_message) form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                     }
                 }
@@ -457,29 +463,29 @@ namespace OpenRPA.SAPBridge
                         {
                             msg.Id = null;
                             message.Set(msg);
-                            form.AddText("[send] " + message.action);
+                            if (log_send_message) form.AddText("[send] " + message.action);
                             pipe.PushMessage(message);
                             return;
                         }
                         // msg.Id = StripSession(msg.Id);
                         GuiComponent comp = session.GetSAPComponentById<GuiComponent>(msg.Id);
-                        if (comp is null) 
+                        if (comp is null)
                         {
                             msg.Id = null;
                             message.Set(msg);
-                            form.AddText("[send] " + message.action);
+                            if (log_send_message) form.AddText("[send] " + message.action);
                             pipe.PushMessage(message);
                             return;
                         }
-                        msg = new SAPEventElement(comp, session.Info.SystemName, msg.GetAllProperties, msg.Path, msg.Cell, msg.Flat, true, msg.MaxItem, msg.VisibleOnly);
+                        msg = new SAPEventElement(session, comp, session.Info.SystemName, msg.GetAllProperties, msg.Path, msg.Cell, msg.Flat, true, msg.MaxItem, msg.VisibleOnly);
                         message.Set(msg);
-                        form.AddText("[send] " + message.action);
+                        if (log_send_message) form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                     }
                     catch (Exception ex)
                     {
                         message.error = ex.Message;
-                        form.AddText("[send] " + message.action);
+                        if (log_send_message) form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                     }
                 }
@@ -491,7 +497,7 @@ namespace OpenRPA.SAPBridge
                         if (step != null)
                         {
                             var session = SAPHook.Instance.GetSession(step.SystemName);
-                            if(session != null)
+                            if (session != null)
                             {
                                 GuiComponent comp = session.GetSAPComponentById<GuiComponent>(step.Id);
                                 if (comp == null)
@@ -512,7 +518,7 @@ namespace OpenRPA.SAPBridge
                                 if (message.action == "setproperty") step.Result = t.InvokeMember(step.ActionName, System.Reflection.BindingFlags.SetProperty, null, comp, Parameters);
                                 if (message.action == "getproperty") step.Result = t.InvokeMember(step.ActionName, System.Reflection.BindingFlags.GetProperty, null, comp, Parameters);
                                 var vcomp = comp as GuiVComponent;
-                                
+
                                 if (message.action == "highlight" && vcomp != null)
                                 {
                                     try
@@ -533,17 +539,17 @@ namespace OpenRPA.SAPBridge
                             }
                             message.Set(step);
                         }
-                        form.AddText("[send] " + message.action);
+                        if (log_send_message) form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                     }
                     catch (Exception ex)
                     {
                         message.error = ex.Message;
-                        if (ex.InnerException!=null)
+                        if (ex.InnerException != null)
                         {
                             message.error = ex.InnerException.Message;
                         }
-                        form.AddText("[send] " + message.action);
+                        if (log_send_message) form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                     }
 

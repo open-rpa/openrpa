@@ -311,7 +311,7 @@ namespace OpenRPA.SAPBridge
             }
         }
 
-        public static T GetSAPComponentById<T>(this GuiSession session,  string id) where T : class
+        public static T GetSAPComponentById<T>(this GuiSession session, string id) where T : class
         {
             try
             {

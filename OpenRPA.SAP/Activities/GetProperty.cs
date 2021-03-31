@@ -17,7 +17,6 @@ namespace OpenRPA.SAP
     [LocalizedDisplayName("activity_getproperty", typeof(Resources.strings))]
     public class GetProperty : CodeActivity
     {
-        
         [RequiredArgument, LocalizedDisplayName("activity_getproperty_systemname", typeof(Resources.strings)), LocalizedDescription("activity_getproperty_systemname_help", typeof(Resources.strings))]
         public InArgument<string> SystemName { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_getproperty_path", typeof(Resources.strings)), LocalizedDescription("activity_getproperty_path_help", typeof(Resources.strings))]

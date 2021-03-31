@@ -34,9 +34,6 @@ namespace OpenRPA.SAP
             if (!string.IsNullOrEmpty(element.id)) Properties.Add(new SelectorItemProperty("id", element.id));
             if (!string.IsNullOrEmpty(element.Path)) Properties.Add(new SelectorItemProperty("path", element.Path));
             if (!string.IsNullOrEmpty(element.Cell)) Properties.Add(new SelectorItemProperty("cell", element.Cell));
-            //if (!string.IsNullOrEmpty(element.Name)) Properties.Add(new SelectorItemProperty("Name", element.Name));
-            //if (!string.IsNullOrEmpty(element.Role)) Properties.Add(new SelectorItemProperty("Role", element.Role));
-            //if (!string.IsNullOrEmpty(element.Tip)) Properties.Add(new SelectorItemProperty("Tip", element.Tip));
             Enabled = (Properties.Count > 1);
             foreach (var p in Properties)
             {

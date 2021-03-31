@@ -102,6 +102,8 @@ namespace OpenRPA.SAP
                     r.ClickHandled = true;
                     if (data.Action == "InvokeMethod")
                     {
+                        var skipMethods = PluginConfig.recording_skip_methods.ToLower().Split(',');
+                        if (skipMethods.Contains(data.ActionName.ToLower())) return;
                         var a = new InvokeMethod();
                         a.Path = data.Id; a.ActionName = data.ActionName; a.SystemName = data.SystemName;
                         if(data.Parameters != null)
@@ -112,10 +114,13 @@ namespace OpenRPA.SAP
                                 var name = "param" + i.ToString();
                             }
                         }
+                        a.loadImageAsync(data.Id, data.SystemName, data.ActionName, data.StatusBarText);
                         r.a = new GetElementResult(a);
                     }
                     if (data.Action == "SetProperty")
                     {
+                        var skipMethods = PluginConfig.recording_skip_properties.ToLower().Split(',');
+                        if (skipMethods.Contains(data.ActionName.ToLower())) return;
                         var a = new SetProperty();
                         a.Path = data.Id; a.ActionName = data.ActionName; a.SystemName = data.SystemName;
                         if (data.Parameters != null)
@@ -127,9 +132,10 @@ namespace OpenRPA.SAP
 
                             }
                         }
+                        a.loadImageAsync(data.Id, data.SystemName, data.StatusBarText);
                         r.a = new GetElementResult(a);
                     }
-                    if(r != null)
+                    if (r != null)
                     {
                         Plugin.Instance.RaiseUserAction(r);
                     }

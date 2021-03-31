@@ -4,8 +4,9 @@
     <PackageIcon>open_rpa128.png</PackageIcon>
     <Platforms>AnyCPU;x86</Platforms>
     <Configurations>Debug;Release;PrepInstaller</Configurations>
-    <Version>1.0.1</Version>
-    <PackageReleaseNotes>1.0.1 Remove debug output doing recording</PackageReleaseNotes>
+    <Version>1.0.2</Version>
+    <PackageReleaseNotes>1.0.2 Improve 
+1.0.1 Remove debug output doing recording</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>

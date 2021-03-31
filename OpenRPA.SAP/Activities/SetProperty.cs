@@ -17,7 +17,43 @@ namespace OpenRPA.SAP
     [LocalizedDisplayName("activity_setproperty", typeof(Resources.strings))]
     public class SetProperty : CodeActivity
     {
-        
+        public void loadImageAsync(string Id, string SystemName,string statusBarText)
+        {
+            Task.Run(() =>
+            {
+                StatusBarText = statusBarText;
+                var msg = new SAPEvent("getitem");
+                msg.Set(new SAPEventElement() { Id = Id, SystemName = SystemName, GetAllProperties = false });
+                msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
+                if (msg != null)
+                {
+                    var ele = msg.Get<SAPEventElement>();
+                    if (!string.IsNullOrEmpty(ele.Id))
+                    {
+                        var _element = new SAPElement(null, ele);
+                        Image = _element.ImageString();
+                        var message = _element.Properties.Where(x => x.Key == "Tooltip").FirstOrDefault();
+                        if (message.Value != null && !string.IsNullOrEmpty(message.Value.Value)) this.message = message.Value.Value;
+                        var tooltip = _element.Properties.Where(x => x.Key == "DefaultTooltip").FirstOrDefault();
+                        if (tooltip.Value != null && !string.IsNullOrEmpty(tooltip.Value.Value)) this.tooltip = tooltip.Value.Value;
+                        DisplayName = "Set " + Id.Substring(Id.LastIndexOf("/") + 1);
+                    } else
+                    {
+                        Log.Debug("loadImageAsync: Fail locating " + Id + " returned null id");
+                    }
+
+                } else
+                {
+                    Log.Debug("loadImageAsync: Fail locating " + Id);
+                }
+            });
+        }
+        [Browsable(false)]
+        public string message { get; set; } = "";
+        [Browsable(false)]
+        public string tooltip { get; set; } = "";
+        [Browsable(false)]
+        public string StatusBarText { get; set; } = "";
         [RequiredArgument, LocalizedDisplayName("activity_setproperty_systemname", typeof(Resources.strings)), LocalizedDescription("activity_setproperty_systemname_help", typeof(Resources.strings))]
         public InArgument<string> SystemName { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_setproperty_path", typeof(Resources.strings)), LocalizedDescription("activity_setproperty_path_help", typeof(Resources.strings))]
@@ -25,9 +61,9 @@ namespace OpenRPA.SAP
         [RequiredArgument, LocalizedDisplayName("activity_setproperty_actionname", typeof(Resources.strings)), LocalizedDescription("activity_setproperty_actionname_help", typeof(Resources.strings))]
         public InArgument<string> ActionName { get; set; }
         [LocalizedDisplayName("activity_setproperty_parameters", typeof(Resources.strings)), LocalizedDescription("activity_setproperty_parameters_help", typeof(Resources.strings))]
-        // public InArgument<object[]> Parameters { get; set; }
-        // public Dictionary<string, Argument> Arguments { get; set; } = new Dictionary<string, Argument>();
         public InArgument<string> Parameters { get; set; }
+        [Browsable(false)]
+        public string Image { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             string systemname = SystemName.Get(context);
@@ -72,5 +108,6 @@ namespace OpenRPA.SAP
                 base.DisplayName = value;
             }
         }
+
     }
 }

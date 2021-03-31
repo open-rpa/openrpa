@@ -61,6 +61,24 @@ namespace OpenRPA.SAP.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Displayname.
+        /// </summary>
+        public static string activity_displayname {
+            get {
+                return ResourceManager.GetString("activity_displayname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displayname.
+        /// </summary>
+        public static string activity_displayname_help {
+            get {
+                return ResourceManager.GetString("activity_displayname_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Get Element.
         /// </summary>
         public static string activity_getelement {
@@ -583,11 +601,47 @@ namespace OpenRPA.SAP.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to When recording use GetElement instead of SetProperty.
+        ///   Looks up a localized string similar to Doing recording use GetElement instead of SetProperty.
         /// </summary>
         public static string plugin_record_with_get_element_help {
             get {
                 return ResourceManager.GetString("plugin_record_with_get_element_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip methods.
+        /// </summary>
+        public static string plugin_recording_skip_methods {
+            get {
+                return ResourceManager.GetString("plugin_recording_skip_methods", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Doing recording skip adding these methods.
+        /// </summary>
+        public static string plugin_recording_skip_methods_help {
+            get {
+                return ResourceManager.GetString("plugin_recording_skip_methods_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip properties.
+        /// </summary>
+        public static string plugin_recording_skip_properties {
+            get {
+                return ResourceManager.GetString("plugin_recording_skip_properties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Doing recording the value of these properties.
+        /// </summary>
+        public static string plugin_recording_skip_properties_help {
+            get {
+                return ResourceManager.GetString("plugin_recording_skip_properties_help", resourceCulture);
             }
         }
     }

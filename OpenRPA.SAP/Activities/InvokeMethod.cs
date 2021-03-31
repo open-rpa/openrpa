@@ -16,7 +16,29 @@ namespace OpenRPA.SAP
     [LocalizedToolboxTooltip("activity_invokemethod_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_invokemethod", typeof(Resources.strings))]
     public class InvokeMethod : CodeActivity
-    {        
+    {
+        public void loadImageAsync(string Id, string SystemName, string ActionName, string statusBarText)
+        {
+            Task.Run(() =>
+            {
+                StatusBarText = statusBarText;
+                var msg = new SAPEvent("getitem");
+                msg.Set(new SAPEventElement() { Id = Id, SystemName = SystemName, GetAllProperties = false });
+                msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
+                if (msg != null)
+                {
+                    var ele = msg.Get<SAPEventElement>();
+                    if (!string.IsNullOrEmpty(ele.Id))
+                    {
+                        var _element = new SAPElement(null, ele);
+                        Image = _element.ImageString();
+                        DisplayName = ActionName + " " + Id.Substring(Id.LastIndexOf("/") + 1);
+                    }
+                }
+            });
+        }
+        [Browsable(false)]
+        public string StatusBarText { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_invokemethod_systemname", typeof(Resources.strings)), LocalizedDescription("activity_invokemethod_systemname_help", typeof(Resources.strings))]
         public InArgument<string> SystemName { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_invokemethod_path", typeof(Resources.strings)), LocalizedDescription("activity_invokemethod_path_help", typeof(Resources.strings))]
@@ -27,6 +49,8 @@ namespace OpenRPA.SAP
         public InArgument<string> Parameters { get; set; }
         [LocalizedDisplayName("activity_invokemethod_result", typeof(Resources.strings)), LocalizedDescription("activity_invokemethod_result_help", typeof(Resources.strings))]
         public OutArgument<string> Result { get; set; }
+        [Browsable(false)]
+        public string Image { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             string systemname = SystemName.Get(context);

@@ -93,6 +93,7 @@ namespace OpenRPA.SAPBridge
         public int TypeAsNumber { get; set; }
         public bool ContainerType { get; set; }
         public string Id { get; set; }
+        public string StatusBarText { get; set; }
     }
     [Serializable]
     public class SAPLoginEvent
@@ -219,7 +220,8 @@ namespace OpenRPA.SAPBridge
         public bool VisibleOnly { get; set; }
         public string Id { get; set; }
         [JsonIgnore, IgnoreDataMember]
-        public string IdPathCell { 
+        public string IdPathCell
+        {
             get
             {
                 var id = Program.StripSession(Id);

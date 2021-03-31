@@ -54,7 +54,14 @@ namespace OpenRPA.Script.Activities
             foreach (var variableModel in Variables)
             {
                 var variable = variableModel.GetCurrentValue() as System.Activities.LocationReference;
-                variables.Add(variable.Name, variable.Type);
+                if(variables.ContainsKey(variable.Name))
+                {
+                    System.Windows.MessageBox.Show("Editor: Doublecate variable  " + variable.Name + " found. Try and avoid that if possible");
+                } 
+                else
+                {
+                    variables.Add(variable.Name, variable.Type);
+                }                
             }
 
             if (!variables.ContainsKey("instance")) variables.Add("instance", typeof(IWorkflowInstance));

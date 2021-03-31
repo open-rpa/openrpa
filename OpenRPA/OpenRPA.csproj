@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.28</Version>
-    <PackageReleaseNotes>1.2.28 Fix save state issue, fix otel time span issue
+    <Version>1.2.29</Version>
+    <PackageReleaseNotes>1.2.29 Hit fix sap
+1.2.28 Fix save state issue, fix otel time span issue
 1.2.27 Fix issue with looping activites and otel
 1.2.26 Add otel to openrpa, version 1 / add ReplyMailItem
 1.2.25 Utilities: Fix issue with DeleteAllRows, Allow variables for Invoke OpenRPA , add Expiration for invoke nodes

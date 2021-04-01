@@ -161,7 +161,6 @@ namespace OpenRPA
                     var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
                     if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Id)) ActivityId = activityStateRecord.Activity.Id;
                     if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Name)) name = activityStateRecord.Activity.Name;
-                    Console.WriteLine(activityStateRecord.State.ToString() + " " + ActivityId + " " + name);
                     // var sw = new Stopwatch(); sw.Start();
                     if (timers.ContainsKey(InstanceId.ToString()) && !string.IsNullOrEmpty(ActivityId))
                     {
@@ -181,12 +180,7 @@ namespace OpenRPA
                                 var span = Instance.source.StartActivity(Name, ActivityKind.Consumer);
                                 span?.AddTag("type", TypeName);
                                 span?.AddTag("ActivityId", ActivityId);
-                                // Console.WriteLine("Push " + Name);
                                 if (Instance.source != null) Instance.Activities.Push(span);
-                                // Console.WriteLine("start " + TypeName);
-                            } else
-                            {
-                                // Console.WriteLine("Skip adding new span and timer for " + ActivityId);
                             }
                         }
                         if (activityStateRecord.State != ActivityStates.Executing)
@@ -205,12 +199,8 @@ namespace OpenRPA
                                     {
                                         if(Instance.Activities.First().DisplayName == Name)
                                         {
-                                            // Console.WriteLine("Popping " + Name);
                                             var span = Instance.Activities.Pop();
                                             span?.Dispose();
-                                        } else
-                                        {
-                                            // Console.WriteLine("Skip pop, expected " + Name + " but found " + Instance.Activities.First().DisplayName);
                                         }
                                     }
 
@@ -219,9 +209,6 @@ namespace OpenRPA
                                 {
                                     Log.Error(ex.ToString());
                                 }
-                            } else
-                            {
-                                // Console.WriteLine("Skip removing old span and timer for " + ActivityId);
                             }
                         }
                     }
@@ -246,9 +233,7 @@ namespace OpenRPA
                             }
 
                         }
-                        //wfi.variables.Add(v.Key, v.Value);
                     }
-                    // Log.Activity(activityStateRecord.State + " " + activityStateRecord.Activity.Id + " " + activityStateRecord.Activity.Name);
                 }
                 if (activityScheduledRecord != null)
                 {
@@ -288,14 +273,6 @@ namespace OpenRPA
                         //firstWorkItem.GetType().GetMethod("Dispose", BindingFlags.Public | BindingFlags.Instance).Invoke(firstWorkItem, new object[] { executor });
 
                         //scheduler.GetType().GetMethod("NotifyWorkCompletion", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(scheduler, new object[] { });
-                    }
-                    if (activityScheduledRecord.Activity != null)
-                    {
-                        // Log.Activity("Scheduled " + activityScheduledRecord.Activity.Id + " " + activityScheduledRecord.Activity.Name + " -> " + activityScheduledRecord.Child.Id + " " + activityScheduledRecord.Child.Name);
-                    }
-                    else if (activityScheduledRecord.Child != null)
-                    {
-                        // Log.Activity("Scheduled " + activityScheduledRecord.Child.Id + " " + activityScheduledRecord.Child.Name);
                     }
 
                     if (Instance.Variables == null) Instance.Variables = new Dictionary<string, WorkflowInstanceValueType>();
@@ -368,10 +345,6 @@ namespace OpenRPA
                     }
 
                     OnVisualTracking?.Invoke(Instance, ActivityId, ChildActivityId, State);
-                }
-                else
-                {
-                    // Log.Debug(trackRecord.ToString());
                 }
             }
             catch (Exception ex)

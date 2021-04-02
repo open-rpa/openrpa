@@ -28,6 +28,7 @@ namespace OpenRPA.IE.Views
         {
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
+        bool init = true;
         public RecordPluginView()
         {
             InitializeComponent();
@@ -35,9 +36,11 @@ namespace OpenRPA.IE.Views
             enable_xpath_support.IsChecked = PluginConfig.enable_xpath_support;
             enable_caching_browser.IsChecked = PluginConfig.enable_caching_browser;
             browser_timeout.Text = PluginConfig.open_browser_url_timeout.ToString();
+            init = false;
         }
         private void value_Changed(object sender, RoutedEventArgs e)
         {
+            if (init) return;
             PluginConfig.enable_xpath_support = enable_xpath_support.IsChecked.Value;
             PluginConfig.enable_caching_browser = enable_caching_browser.IsChecked.Value;
             try

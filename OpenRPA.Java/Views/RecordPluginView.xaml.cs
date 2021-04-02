@@ -28,14 +28,17 @@ namespace OpenRPA.Java.Views
         {
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
+        bool init = true;
         public RecordPluginView()
         {
             InitializeComponent();
             DataContext = this;
             auto_launch_java_bridge.IsChecked = PluginConfig.auto_launch_java_bridge;
+            init = false;
         }
         private void auto_launch_java_bridge_Checked(object sender, RoutedEventArgs e)
         {
+            if (init) return;
             if (auto_launch_java_bridge.IsChecked == null) return;
             PluginConfig.auto_launch_java_bridge = auto_launch_java_bridge.IsChecked.Value;
             Config.Save();

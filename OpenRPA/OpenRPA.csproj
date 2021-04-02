@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.33</Version>
-    <PackageReleaseNotes>1.2.33 Fix issue with search_descendants on windows selector
+    <Version>1.2.34</Version>
+    <PackageReleaseNotes>1.2.34 fix ui issue with recorder properties
+1.2.33 Fix issue with search_descendants on windows selector
 1.2.32 Add profile control to nm.openurl
 1.2.31 remove debug info
 1.2.30 Fix span timing issue

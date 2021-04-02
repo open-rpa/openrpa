@@ -30,6 +30,7 @@ namespace OpenRPA.RDServicePlugin.Views
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
         private Plugin plugin;
+        bool init = true;
         public RunPluginView(Plugin plugin)
         {
             InitializeComponent();
@@ -45,6 +46,7 @@ namespace OpenRPA.RDServicePlugin.Views
             catch (Exception)
             {
             }
+            init = false;
         }
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
@@ -283,7 +285,7 @@ namespace OpenRPA.RDServicePlugin.Views
         {
             try
             {
-                if (chkUseFreeRDP.IsChecked == null) return;
+                if (init) return;
                 RDService.PluginConfig.usefreerdp = chkUseFreeRDP.IsChecked.Value;
                 RDService.PluginConfig.Save();
             }
@@ -296,7 +298,7 @@ namespace OpenRPA.RDServicePlugin.Views
         {
             try
             {
-                if (chkUseFreeRDP.IsChecked == null) return;
+                if (init) return;
                 RDService.PluginConfig.usefreerdp = chkUseFreeRDP.IsChecked.Value;
                 RDService.PluginConfig.Save();
             }
@@ -309,6 +311,7 @@ namespace OpenRPA.RDServicePlugin.Views
         {
             try
             {
+                if (init) return;
                 TimeSpan ts = TimeSpan.Zero;
                 if (TimeSpan.TryParse(txtreloadinterval.Text, out ts))
                 {
@@ -325,6 +328,7 @@ namespace OpenRPA.RDServicePlugin.Views
         {
             try
             {
+                if (init) return;
                 if (client == null) return;
                 client.autosignout = chkautosignout.IsChecked.Value;
                 await global.webSocketClient.UpdateOne("openrpa", 1, false, client);
@@ -338,6 +342,7 @@ namespace OpenRPA.RDServicePlugin.Views
         {
             try
             {
+                if (init) return;
                 if (client == null) return;
                 client.autosignout = chkautosignout.IsChecked.Value;
                 await global.webSocketClient.UpdateOne("openrpa", 1, false, client);
@@ -351,6 +356,7 @@ namespace OpenRPA.RDServicePlugin.Views
         {
             try
             {
+                if (init) return;
                 int width = -1;
                 if (int.TryParse(plugin_rdp_width.Text, out width))
                 {

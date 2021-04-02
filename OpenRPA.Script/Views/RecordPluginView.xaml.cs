@@ -28,7 +28,7 @@ namespace OpenRPA.Script.Views
         {
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
-        bool doupdate = false;
+        bool init = false;
         public RecordPluginView()
         {
             InitializeComponent();
@@ -36,11 +36,11 @@ namespace OpenRPA.Script.Views
             csharp_intellisense.IsChecked = PluginConfig.csharp_intellisense;
             vb_intellisense.IsChecked = PluginConfig.vb_intellisense;
             use_embedded_python.IsChecked = PluginConfig.use_embedded_python;
-            doupdate = true;
+            init = true;
         }
         private void on_Checked(object sender, RoutedEventArgs e)
         {
-            if (!doupdate) return;
+            if (!init) return;
             if (csharp_intellisense.IsChecked == null) return;
             if (vb_intellisense.IsChecked == null) return;
             if (csharp_intellisense.IsChecked == null) return;
@@ -49,35 +49,6 @@ namespace OpenRPA.Script.Views
             PluginConfig.vb_intellisense = vb_intellisense.IsChecked.Value;
             PluginConfig.use_embedded_python = use_embedded_python.IsChecked.Value;
             Config.Save();
-
-            //try
-            //{
-            //    if (PluginConfig.use_embedded_python)
-            //    {
-            //        if (!Python.Included.Installer.IsPythonInstalled())
-            //        {
-            //            Python.Included.Installer.SetupPython(true).Wait();
-            //        }
-            //        else
-            //        {
-            //            Python.Included.Installer.SetupPython(false).Wait();
-            //        }
-            //        var path = Python.Included.Installer.EmbeddedPythonHome;
-            //        PythonUtil.Setup.SetPythonPath(path);
-            //        // Python.Runtime.PythonEngine.Initialize();
-            //    }
-            //    else
-            //    {
-            //        PythonUtil.Setup.Run();
-            //    }
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    Log.Error(ex.ToString());
-            //}
-
         }
-
     }
 }

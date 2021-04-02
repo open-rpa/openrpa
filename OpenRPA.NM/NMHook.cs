@@ -479,7 +479,7 @@ namespace OpenRPA.NM
         //        UpdateTab(tab);
         //    }
         //}
-        public static void openurl(string browser, string url, bool newtab)
+        public static void openurl(string browser, string url, bool newtab, string profile, string profilepath)
         {
             if (browser == "chrome")
             {
@@ -487,7 +487,14 @@ namespace OpenRPA.NM
                 if(chromeconnected) lock(tabs) tabcount = tabs.Where(x => x.browser == "chrome").Count();
                 if (!chromeconnected || tabcount == 0)
                 {
-                    System.Diagnostics.Process.Start("chrome.exe", url);
+                    if(string.IsNullOrEmpty(profilepath))
+                    {
+                        System.Diagnostics.Process.Start("chrome.exe", "\"" + url + "\"");
+                    } else
+                    {
+                        System.Diagnostics.Process.Start("chrome.exe", "--user-data-dir=\"" + profilepath + "\"  \"" + url + "\"");
+                    }
+                    
                     var sw = new System.Diagnostics.Stopwatch();
                     sw.Start();
                     do
@@ -507,8 +514,16 @@ namespace OpenRPA.NM
                 if (edgeconnected) lock (tabs) tabcount = tabs.Where(x => x.browser == "edge").Count();
                 if (!edgeconnected || tabcount == 0)
                 {
-                    System.Diagnostics.Process.Start("microsoft-edge:" + url);
-                    // System.Diagnostics.Process.Start("msedge.exe", url);
+                    if (string.IsNullOrEmpty(profilepath))
+                    {
+                        // System.Diagnostics.Process.Start("microsoft-edge:" + url);
+                        System.Diagnostics.Process.Start("msedge.exe", "\"" + url + "\"");
+                    }
+                    else
+                    {
+                        System.Diagnostics.Process.Start("msedge.exe", "--user-data-dir=\"" + profilepath + "\" \"" + url + "\"");
+                    }
+
                     var sw = new System.Diagnostics.Stopwatch();
                     sw.Start();
                     do
@@ -528,7 +543,18 @@ namespace OpenRPA.NM
                 if (ffconnected) lock (tabs) tabcount = tabs.Where(x => x.browser == "ff").Count();
                 if (!ffconnected || tabcount == 0)
                 {
-                    System.Diagnostics.Process.Start("firefox.exe", url);
+                    if (string.IsNullOrEmpty(profilepath))
+                    {
+                        System.Diagnostics.Process.Start("firefox.exe", "\"" + url + "\"");
+                    }
+                    else
+                    {
+                        var p = System.Diagnostics.Process.Start("firefox.exe", "-no-remote -CreateProfile \"" + profile + "\" \"" + profilepath + "\" \"" + url + "\"");
+                        p.WaitForExit(10000);
+                        System.Diagnostics.Process.Start("firefox.exe", "-no-remote -P \"" + profile + "\" \"" + url + "\"");
+                        // -no-remote -profile -p -CreateProfile
+                    }
+
                     var sw = new System.Diagnostics.Stopwatch();
                     sw.Start();
                     do

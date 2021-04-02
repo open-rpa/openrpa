@@ -8,8 +8,9 @@
     <Company>OpenIAP</Company>
     <Product>OpenRPA</Product>
     <Description>Recorder plugin and Activities for interacting with Chrome/Firefox and Edge, created for OpenRPA robot</Description>
-    <Version>1.0.50</Version>
-    <PackageReleaseNotes>1.0.50 Launch edge using microsoft-edge: uri instead, fix connection test for edge/ff
+    <Version>1.0.51</Version>
+    <PackageReleaseNotes>1.0.51 Add profile control to openurl
+1.0.50 Launch edge using microsoft-edge: uri instead, fix connection test for edge/ff
 1.0.49 Fix major issue with special charecters in nm
 1.0.48 Improve text updates, change frame messsages to json, to avoid conflict with certain webpages
 1.0.47 Add support for SendText/SetText/SendKeys

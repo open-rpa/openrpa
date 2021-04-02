@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.31</Version>
-    <PackageReleaseNotes>1.2.31 remove debug info
+    <Version>1.2.32</Version>
+    <PackageReleaseNotes>1.2.32 Add profile control to nm.openurl
+1.2.31 remove debug info
 1.2.30 Fix span timing issue
 1.2.29 Hit fix sap
 1.2.28 Fix save state issue, fix otel time span issue
@@ -269,6 +270,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <PackageReference Include="NuGet.Resolver" Version="5.4.0" />
     <PackageReference Include="OpenTelemetry" Version="1.1.0-beta1" />
     <PackageReference Include="OpenTelemetry.Api" Version="1.1.0-beta1" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\ClickElementDesigner.xaml" />
@@ -727,7 +729,6 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PR\opentelemetry-dotnet\src\OpenTelemetry.Exporter.OpenTelemetryProtocol\OpenTelemetry.Exporter.OpenTelemetryProtocol.csproj" />
     <ProjectReference Include="..\OpenRPA.CodeEditor\OpenRPA.CodeEditor.csproj" />
     <ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj">
       <IncludeAssets>all</IncludeAssets>

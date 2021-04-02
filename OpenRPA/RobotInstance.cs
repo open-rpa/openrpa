@@ -72,6 +72,32 @@ namespace OpenRPA
         public bool autoReconnect = true;
         public bool loginInProgress = false;
         private bool first_connect = true;
+        private bool? _isRunningInChildSession = null;
+        public bool isRunningInChildSession
+        {
+            get {
+                if (_isRunningInChildSession != null) return _isRunningInChildSession.Value;
+                try
+                {
+                    var CurrentP = System.Diagnostics.Process.GetCurrentProcess();
+                    var mywinstation = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
+                    if (string.IsNullOrEmpty(mywinstation)) mywinstation = "";
+                    mywinstation = mywinstation.ToLower();
+                    if (!mywinstation.Contains("rdp") && mywinstation != "console")
+                    {
+                        _isRunningInChildSession = true;
+                        return true;
+                    }
+                    _isRunningInChildSession = false;
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                    return false;
+                }
+            }
+        }
         private static readonly object statelock = new object();
         // public MainWindow MainWindow { get; set; }
         public IMainWindow Window { get; set; }

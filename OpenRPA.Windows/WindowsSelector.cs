@@ -68,9 +68,7 @@ namespace OpenRPA.Windows
             pathToRoot.Reverse();
             if (anchor != null)
             {
-                bool SearchDescendants = false;
-                var p = anchor.First().Properties.Where(x => x.Name == "SearchDescendants").FirstOrDefault();
-                if (p.Value != null && p.Value != null && p.Value == "true") SearchDescendants = true;
+                bool SearchDescendants = anchor.First().SearchDescendants();
                 if(SearchDescendants)
                 {
                     var a = anchor.Last();
@@ -250,14 +248,6 @@ namespace OpenRPA.Windows
                 Log.Selector(string.Format("windowsselector::search_descendants::loop element " + i + ":end {0:mm\\:ss\\.fff}", sw.Elapsed));
             }
             pathToRoot.Reverse();
-            if(anchor!=null)
-            {
-                //var p = Items[0].Properties.Where(x => x.Name == "SearchDescendants").FirstOrDefault();
-                //if(p==null)
-                //{
-                //    Items[0].Properties.Add(new SelectorItemProperty("SearchDescendants", PluginConfig.search_descendants.ToString()));
-                //}                
-            }
             Log.Selector(string.Format("windowsselector::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
@@ -390,7 +380,7 @@ namespace OpenRPA.Windows
                 {
                     Log.Debug("GetElementsWithuiSelector::Searchin for " + cond.ToString());
                     ITreeWalker _treeWalker = default(ITreeWalker);
-                    if (sel.search_descendants || search_descendants)
+                    if (search_descendants)
                     {
                         var hasStar = sel.Properties.Where(x => x.Enabled == true && (x.Value != null && x.Value.Contains("*"))).ToArray();
                         _treeWalker = automation.TreeWalkerFactory.GetCustomTreeWalker(cond);
@@ -486,11 +476,7 @@ namespace OpenRPA.Windows
             UIElement[] result = null;
             // AutomationElement ele = null;
 
-            bool search_descendants = PluginConfig.search_descendants;
-            var v = selectors[0].Properties.Where(x => x.Name == "search_descendants").FirstOrDefault();
-            if (v == null) selectors[0].Properties.Where(x => x.Name == "SearchDescendants").FirstOrDefault();
-            if (v != null) search_descendants = bool.Parse(v.Value);
-
+            bool search_descendants = selectors[0].SearchDescendants();
             if (startfrom == null) startfrom = automation.GetDesktop();
             _current.Add(new UIElement(startfrom));
             for (var i = 0; i < selectors.Count; i++)

@@ -36,17 +36,6 @@ namespace OpenRPA.Windows
             Properties = item.Properties;
             Element = item.Element;
         }
-        public bool search_descendants
-        {
-            get
-            {
-                if (Properties == null) return PluginConfig.search_descendants;
-                var v = Properties.Where(x => x.Name == "search_descendants").FirstOrDefault();
-                if (v == null) Properties.Where(x => x.Name == "SearchDescendants").FirstOrDefault();
-                if (v == null) return PluginConfig.search_descendants;
-                return bool.Parse(v.Value);
-            }
-        }
         public string Name
         {
             get
@@ -110,9 +99,6 @@ namespace OpenRPA.Windows
                     }
                     Properties.Add(new SelectorItemProperty("Selector", "Windows"));
                     Properties.Add(new SelectorItemProperty("search_descendants", PluginConfig.search_descendants.ToString()));
-                    // if(!PluginConfig.search_descendants) Properties.Add(new SelectorItemProperty("search_descendants", "false"));
-                    // Properties.Add(new SelectorItemProperty("SearchDescendants", PluginConfig.search_descendants.ToString()));
-                    //Properties.Add(new SelectorItemProperty("", info.));
                 }
                 foreach (var p in Properties)
                 {

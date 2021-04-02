@@ -28,6 +28,7 @@ namespace OpenRPA.Windows.Views
         {
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
+        bool init = true;
         public RecordPluginView()
         {
             InitializeComponent();
@@ -38,6 +39,7 @@ namespace OpenRPA.Windows.Views
             traverse_selector_both_ways.IsChecked = PluginConfig.traverse_selector_both_ways;
             enable_cache.IsChecked = PluginConfig.enable_cache;
             search_descendants.IsChecked = PluginConfig.search_descendants;
+            init = false;
         }
         private void allow_multiple_hits_mid_selector_IsEnabledChanged(object sender, RoutedEventArgs e)
         {
@@ -65,7 +67,7 @@ namespace OpenRPA.Windows.Views
         }
         private void enable_cache_Checked(object sender, RoutedEventArgs e)
         {
-            if (enable_cache.IsChecked == null) return;
+            if (init) return;
             PluginConfig.enable_cache = enable_cache.IsChecked.Value;
             PluginConfig.search_descendants = search_descendants.IsChecked.Value;
             Config.Save();

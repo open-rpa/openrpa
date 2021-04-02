@@ -28,6 +28,7 @@ namespace OpenRPA.NM.Views
         {
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
+        bool init = true;
         public RecordPluginView()
         {
             InitializeComponent();
@@ -37,9 +38,11 @@ namespace OpenRPA.NM.Views
             compensate_for_old_addon.IsChecked = PluginConfig.compensate_for_old_addon;
             debug_console_output.IsChecked = PluginConfig.debug_console_output;
             unique_xpath_ids.Text = string.Join(",", PluginConfig.unique_xpath_ids);
+            init = false;
         }
         private void value_Changed(object sender, RoutedEventArgs e)
         {
+            if (init) return;
             if (wait_for_tab_after_set_value.IsChecked == null) return;
             PluginConfig.wait_for_tab_after_set_value = wait_for_tab_after_set_value.IsChecked.Value;
             PluginConfig.wait_for_tab_click = wait_for_tab_click.IsChecked.Value;
@@ -50,6 +53,7 @@ namespace OpenRPA.NM.Views
 
         private void unique_xpath_ids_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (init) return;
             PluginConfig.unique_xpath_ids = unique_xpath_ids.Text.Split(',');
             Config.Save();
         }

@@ -7,8 +7,9 @@
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
-    <Version>1.0.29</Version>
-    <PackageReleaseNotes>1.0.29 windows: Fix ui selector for nesting get elements
+    <Version>1.0.30</Version>
+    <PackageReleaseNotes>1.0.30 Fix issue with search_descendants on selector
+1.0.29 windows: Fix ui selector for nesting get elements
 1.0.28 Fix config issue, add toggle for search_descendants
 1.0.27 Minor fixes to Windows Selector and cache
 1.0.26 Add ClearCache to Get Element / Add search_timeout to control timeout

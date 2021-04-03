@@ -1416,6 +1416,8 @@ namespace OpenRPA
                 string _type = data["fullDocument"].Value<string>("_type");
                 string _id = data["fullDocument"].Value<string>("_id");
                 long _version = data["fullDocument"].Value<long>("_version");
+                string operationType = data.Value<string>("operationType");
+                if (operationType != "replace" || operationType != "insert" || operationType != "update") return; // we don't support delete right now
                 if (_type == "workflow")
                 {
                     var exists = GetWorkflowByIDOrRelativeFilename(_id);

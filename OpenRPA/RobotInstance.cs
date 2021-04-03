@@ -1488,17 +1488,24 @@ namespace OpenRPA
                     }
                     else if (exists == null)
                     {
-                        var workflow = Newtonsoft.Json.JsonConvert.DeserializeObject<Workflow>(data["fullDocument"].ToString());
-                        var project = RobotInstance.instance.Projects.Where(x => x._id == workflow.projectid).FirstOrDefault();
-                        if (project != null)
+                        GenericTools.RunUI(() =>
                         {
-                            GenericTools.RunUI(() =>
+                            if (instance.Window.SelectedContent is Views.WFDesigner designer)
                             {
+                                if (string.IsNullOrEmpty(designer.Workflow._id)) return; // this is proberly the workflow open right now
+                                return;
+                            }
+
+                            var workflow = Newtonsoft.Json.JsonConvert.DeserializeObject<Workflow>(data["fullDocument"].ToString());
+                            var project = RobotInstance.instance.Projects.Where(x => x._id == workflow.projectid).FirstOrDefault();
+                            if (project != null)
+                            {
+                                workflow.Project = project;
                                 project.Workflows.Add(workflow);
                                 workflow.SaveFile();
-                            });
-                        }
-                        else { Log.Error("Failed locating project " + workflow.projectid + " for updated workflow " + workflow._id + " / " + workflow.name); }
+                            }
+                            else { Log.Error("Failed locating project " + workflow.projectid + " for updated workflow " + workflow._id + " / " + workflow.name); }
+                        });
                     }
                 }
                 if (_type == "project")

@@ -1374,6 +1374,7 @@ namespace OpenRPA
                 if (!IsConnected) return false;
                 if (SelectedContent is Views.WFDesigner designer)
                 {
+                    if (designer.Project == null) return true;
                     return !designer.Project.disable_local_caching;
                 }
                 if (SelectedContent is Views.OpenProject open)
@@ -1382,6 +1383,7 @@ namespace OpenRPA
                     if (val == null) return false;
                     if (open.listWorkflows.SelectedValue is Workflow wf)
                     {
+                        if (wf.Project == null) return true;
                         return !wf.Project.disable_local_caching;
                     }
                     if (open.listWorkflows.SelectedValue is Project p)

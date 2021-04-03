@@ -82,6 +82,7 @@ namespace OpenRPA
         {
             get
             {
+                if (Project == null) return Filename;
                 return System.IO.Path.Combine(Project.Path, Filename);
             }
         }   
@@ -293,22 +294,30 @@ namespace OpenRPA
         }
         public async Task Delete()
         {
-            if (Project.Workflows.Contains(this)) Project.Workflows.Remove(this);
-            if (string.IsNullOrEmpty(FilePath)) return;
-            System.IO.File.Delete(FilePath);
-            if (!global.isConnected) return;
-            if (!string.IsNullOrEmpty(_id))
+            try
             {
-                var imagepath = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "images");
-                if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
-                var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
-                foreach (var f in files)
+                if (Project != null && Project.Workflows.Contains(this)) Project.Workflows.Remove(this);
+                if (string.IsNullOrEmpty(FilePath)) return;
+                System.IO.File.Delete(FilePath);
+                if (!global.isConnected) return;
+                if (!string.IsNullOrEmpty(_id))
                 {
-                    await global.webSocketClient.DeleteOne("files", f._id);
-                    var imagefilepath = System.IO.Path.Combine(imagepath, f._id + ".png");
-                    if (System.IO.File.Exists(imagefilepath)) System.IO.File.Delete(imagefilepath);
+                    var imagepath = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "images");
+                    if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
+                    var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
+                    foreach (var f in files)
+                    {
+                        await global.webSocketClient.DeleteOne("files", f._id);
+                        var imagefilepath = System.IO.Path.Combine(imagepath, f._id + ".png");
+                        if (System.IO.File.Exists(imagefilepath)) System.IO.File.Delete(imagefilepath);
+                    }
+                    await global.webSocketClient.DeleteOne("openrpa", this._id);
                 }
-                await global.webSocketClient.DeleteOne("openrpa", this._id);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                throw;
             }
         }
         public void RunPendingInstances()

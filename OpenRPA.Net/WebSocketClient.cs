@@ -400,6 +400,32 @@ namespace OpenRPA.Net
                         msg.SendMessage(this);
                         // if (string.IsNullOrEmpty(qm.replyto)) msg.SendMessage(this);
                         break;
+                    case "watchevent":
+                        msg.reply();
+                        WatchEventMessage wem;
+                        try
+                        {
+                            wem = JsonConvert.DeserializeObject<WatchEventMessage>(msg.data);
+                            if (!string.IsNullOrEmpty(wem.id) && watches.ContainsKey(wem.id))
+                            {
+                                try
+                                {
+                                    watches[wem.id](wem.id, wem.result);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.Error(ex.ToString());
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                            msg.SendMessage(this);
+                            break;
+                        }
+                        //msg.SendMessage(this);
+                        break;
                     default:
                         Log.Error("Received unknown command '" + msg.command + "' with data: " + msg.data);
                         break;
@@ -661,6 +687,24 @@ namespace OpenRPA.Net
             q.metrics = metrics; q.jwt = jwt;
             q = await q.SendMessage<PushMetricsMessage>(this);
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+        }
+        private Dictionary<string, WatchEventDelegate> watches = new Dictionary<string, WatchEventDelegate>();
+        public async Task<string> Watch(string collectionname, string aggregates, WatchEventDelegate onWatchEvent)
+        {
+            WatchMessage q = new WatchMessage();
+            q.collectionname = collectionname; q.aggregates = JArray.Parse(aggregates);
+            q = await q.SendMessage<WatchMessage>(this);
+            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            if (!watches.ContainsKey(q.id)) watches.Add(q.id, onWatchEvent);
+            return q.id;
+        }
+        public async Task UnWatch(string id)
+        {
+            WatchMessage q = new WatchMessage(); q.msg.command = "unwatch";
+            q.id = id;
+            q = await q.SendMessage<WatchMessage>(this);
+            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            if (watches.ContainsKey(id)) watches.Remove(id);
         }
     }
 

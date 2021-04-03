@@ -42,6 +42,7 @@ namespace OpenRPA.Interfaces
         string name { get; set; }
         string type { get; set; }
     }
+    public delegate void WatchEventDelegate(string id, Newtonsoft.Json.Linq.JObject data);
     public interface IWebSocketClient
     {
         event Action OnOpen;
@@ -73,6 +74,8 @@ namespace OpenRPA.Interfaces
         Task DownloadFileAndSaveAs(string filename, string id, string filepath, bool ignorepath);
         Task<ICollection[]> ListCollections(bool includehist = false);
         Task PushMetrics(string metrics);
+        Task<string> Watch(string collectionname, string query, WatchEventDelegate onWatchEvent);
+        Task UnWatch(string id);
     }
     public class QueueMessageEventArgs : EventArgs
     {

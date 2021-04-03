@@ -1245,7 +1245,7 @@ namespace OpenRPA
         private void OnReload(object _item)
         {
             Log.Function("MainWindow", "OnReload");
-            _ = RobotInstance.instance.LoadServerData();
+            _ = RobotInstance.instance.LoadServerData(true);
         }
         private bool CanImport(object _item)
         {

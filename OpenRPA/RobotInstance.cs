@@ -160,7 +160,7 @@ namespace OpenRPA
         private void ReloadTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             reloadTimer.Stop();
-            _ = LoadServerData();
+            _ = LoadServerData(false);
         }
         public IDesigner GetWorkflowDesignerByIDOrRelativeFilename(string IDOrRelativeFilename)
         {
@@ -247,7 +247,7 @@ namespace OpenRPA
             {
             }
         }
-        public async Task LoadServerData()
+        public async Task LoadServerData(bool force)
         {
             Log.FunctionIndent("RobotInstance", "LoadServerData");
             if (!global.isSignedIn)
@@ -335,7 +335,7 @@ namespace OpenRPA
                     }
                     if (up != null) GenericTools.RunUI(() => Projects.Add(up));
                 }
-                else if (!global.openflowconfig.supports_watch)
+                else if (!global.openflowconfig.supports_watch || force)
                 {
                     Log.Debug("Reloading server data");
                     SetStatus("Fetching projects");
@@ -937,7 +937,7 @@ namespace OpenRPA
                     }
                 }
                 InitializeOTEL();
-                await LoadServerData();
+                await LoadServerData(true);
                 try
                 {
                     SetStatus("Run pending workflow instances");
@@ -1417,7 +1417,7 @@ namespace OpenRPA
                 string _id = data["fullDocument"].Value<string>("_id");
                 long _version = data["fullDocument"].Value<long>("_version");
                 string operationType = data.Value<string>("operationType");
-                if (operationType != "replace" || operationType != "insert" || operationType != "update") return; // we don't support delete right now
+                if (operationType != "replace" && operationType != "insert" && operationType != "update") return; // we don't support delete right now
                 if (_type == "workflow")
                 {
                     var exists = GetWorkflowByIDOrRelativeFilename(_id);

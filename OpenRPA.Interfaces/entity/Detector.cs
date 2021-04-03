@@ -54,22 +54,22 @@ namespace OpenRPA.Interfaces.entity
             if (filename == null) return null;
             return string.Join("_", filename.Split(System.IO.Path.GetInvalidFileNameChars()));
         }
-        public void SaveFile()
+        public void SaveFile(string Path)
         {
             Filename = ReplaceInvalidChars(Filename);
+            this.Path = Path;
             if (string.IsNullOrEmpty(Filename))
             {
-                Filename = UniqueFilename();
+                Filename = UniqueFilename(Path);
             }
-            var basePath = System.IO.Path.GetDirectoryName(Filepath);
-            if (!System.IO.Directory.Exists(basePath)) System.IO.Directory.CreateDirectory(basePath);
+            if (!System.IO.Directory.Exists(Path)) System.IO.Directory.CreateDirectory(Path);
             System.IO.File.WriteAllText(Filepath, JsonConvert.SerializeObject(this));
         }
         public void Delete()
         {
             if (System.IO.File.Exists(Filename)) System.IO.File.Delete(Filename);
         }
-        public string UniqueFilename()
+        public string UniqueFilename(string Path)
         {
             string Filename = ""; string FilePath = "";
             bool isUnique = false; int counter = 1;

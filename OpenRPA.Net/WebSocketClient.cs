@@ -602,7 +602,7 @@ namespace OpenRPA.Net
             q.w = w; q.j = j;
             q.collectionname = collectionname; q.item = item;
             q = await q.SendMessage<UpdateOneMessage<T>>(this);
-            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            if (q != null && !string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
             return q.result;
         }
         public async Task DeleteOne(string collectionname, string Id)

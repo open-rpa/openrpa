@@ -11,7 +11,8 @@ namespace OpenRPA.Interfaces
         event ReadyForActionEventHandler ReadyForAction;
         event StatusEventHandler Status;
         bool VisualTracking { get; set; }
-        bool SlowMotion { get; set; }        
+        bool SlowMotion { get; set; }
+        object SelectedContent { get; }
         void OnOpenWorkflow(IWorkflow workflow);
         IDesigner[] Designers { get; }
         IDesigner Designer { get; }

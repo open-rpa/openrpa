@@ -77,7 +77,7 @@ namespace OpenRPA.Views
                             else
                             {
                                 var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, p.Entity);
-                                Entity._acl = result._acl;
+                                if(result!=null) Entity._acl = result._acl;
                             }
                         }
                         catch (Exception ex)
@@ -88,7 +88,7 @@ namespace OpenRPA.Views
                     {
                         if (string.IsNullOrEmpty(Entity._id)) Entity._id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", ""); 
                     }
-                    Entity.SaveFile();
+                    Entity.SaveFile(Interfaces.Extensions.ProjectsDirectory);
                 }
             }
             catch (Exception ex)
@@ -111,12 +111,19 @@ namespace OpenRPA.Views
                 var d = new Interfaces.entity.Detector(); d.Plugin = kv.Value.FullName;
                 IDetectorPlugin dp = null;
                 d.Path = Interfaces.Extensions.ProjectsDirectory;
-                dp = Plugins.AddDetector(RobotInstance.instance, d);
-                dp.OnDetector += main.OnDetector;
                 NotifyPropertyChanged("detectorPlugins");
+                d.name = kv.Value.Name;
                 var result = await global.webSocketClient.InsertOne("openrpa", 0, false, d);
                 d._id = result._id;
                 d._acl = result._acl;
+                IDetectorPlugin exists = Plugins.detectorPlugins.Where(x => x.Entity._id == d._id).FirstOrDefault();
+                if(exists == null)
+                {
+                    dp = Plugins.AddDetector(RobotInstance.instance, d);
+                    dp.OnDetector += main.OnDetector;
+                    dp.Entity._id = result._id;
+                    dp.Entity._acl = result._acl;
+                }
             }
             catch (Exception ex)
             {

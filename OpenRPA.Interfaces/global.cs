@@ -79,5 +79,6 @@ namespace OpenRPA
         public string getting_started_url { get; set; }
         public int websocket_package_size { get; set; }
         public string version { get; set; }
+        public bool supports_watch { get; set; }
     }
 }

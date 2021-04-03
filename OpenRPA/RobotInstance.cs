@@ -339,7 +339,7 @@ namespace OpenRPA
                     }
                     if (up != null) GenericTools.RunUI(() => Projects.Add(up));
                 }
-                else
+                else if (!global.openflowconfig.supports_watch)
                 {
                     Log.Debug("Reloading server data");
                     SetStatus("Fetching projects");
@@ -568,6 +568,13 @@ namespace OpenRPA
                     });
 
                 }
+                if (global.openflowconfig.supports_watch)
+                {
+                    if (string.IsNullOrEmpty(openrpa_watchid))
+                    {
+                        openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[{ '$match': { 'fullDocument._type': {'$exists': true} } }]", onWatchEvent);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -582,6 +589,136 @@ namespace OpenRPA
                 AutoReloading = true;
             }
             Log.FunctionOutdent("RobotInstance", "LoadServerData");
+        }
+        private string openrpa_watchid = "";
+        private void onWatchEvent(string id, Newtonsoft.Json.Linq.JObject data)
+        {
+            string _type = data["fullDocument"].Value<string>("_type");
+            string _id = data["fullDocument"].Value<string>("_id");
+            long _version = data["fullDocument"].Value<long>("_version");
+            if (_type == "workflow")
+            {
+                var exists = GetWorkflowByIDOrRelativeFilename(_id);
+                // var workflow = Newtonsoft.Json.JsonConvert.DeserializeObject<Workflow>(data.ToString());
+                if (exists != null && exists._version != _version)
+                {
+                    var workflow = Newtonsoft.Json.JsonConvert.DeserializeObject<Workflow>(data["fullDocument"].ToString());
+                    var project = RobotInstance.instance.Projects.Where(x => x._id == workflow.projectid).FirstOrDefault();
+                    workflow.Project = project;
+                    GenericTools.RunUI(() =>
+                    {
+                        if (!(RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) is Views.WFDesigner designer))
+                        {
+                            int index = -1;
+                            try
+                            {
+                                if (project.Workflows == null) project.Workflows = new System.Collections.ObjectModel.ObservableCollection<IWorkflow>();
+                                index = project.Workflows.IndexOf(exists);
+                                project.Workflows.Remove(exists);
+                                project.Workflows.Insert(index, workflow);
+                                workflow.SaveFile();
+                                project.NotifyPropertyChanged("Workflows");
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error("project2, index: " + index.ToString());
+                                Log.Error(ex.ToString());
+                            }
+                        }
+                        else
+                        {
+                            if(designer.HasChanged)
+                            {
+                                var messageBoxResult = System.Windows.MessageBox.Show(workflow.name + " has been updated by " + workflow._modifiedby + ", reload workflow ?", "Workflow has been updated",
+    System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.None, System.Windows.MessageBoxResult.Yes);
+                                if (messageBoxResult == System.Windows.MessageBoxResult.Yes)
+                                {
+                                    int index = -1;
+                                    designer.forceHasChanged(false);
+                                    designer.tab.Close();
+                                    index = project.Workflows.IndexOf(exists);
+                                    project.Workflows.Remove(exists);
+                                    project.Workflows.Insert(index, workflow);
+                                    workflow.SaveFile();
+                                    project.NotifyPropertyChanged("Workflows");
+                                    Window.OnOpenWorkflow(workflow);
+                                }
+                                else
+                                {
+                                    designer.Workflow.current_version = workflow._version;
+                                }
+                            } else
+                            {
+                                int index = -1;
+                                designer.forceHasChanged(false);
+                                designer.tab.Close();
+                                index = project.Workflows.IndexOf(exists);
+                                project.Workflows.Remove(exists);
+                                project.Workflows.Insert(index, workflow);
+                                workflow.SaveFile();
+                                project.NotifyPropertyChanged("Workflows");
+                                Window.OnOpenWorkflow(workflow);
+
+                            }
+                        }
+                    });
+
+                }
+                else if (exists == null)
+                {
+                    var workflow = Newtonsoft.Json.JsonConvert.DeserializeObject<Workflow>(data["fullDocument"].ToString());
+                    var project = RobotInstance.instance.Projects.Where(x => x._id == workflow.projectid).FirstOrDefault();
+                    if (project != null)
+                    {
+                        GenericTools.RunUI(() =>
+                        {
+                            project.Workflows.Add(workflow);
+                            workflow.SaveFile();
+                        });
+                    }
+                    else { Log.Error("Failed locating project " + workflow.projectid + " for updated workflow " + workflow._id + " / " + workflow.name); }
+                }
+            }
+            if (_type == "project")
+            {
+                var project = Newtonsoft.Json.JsonConvert.DeserializeObject<Project>(data["fullDocument"].ToString());
+                project.Path = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, project.name);
+                Project exists = RobotInstance.instance.Projects.Where(x => x._id == project._id).FirstOrDefault();
+                GenericTools.RunUI(async () =>
+                {
+                    if (exists != null && exists._version != project._version)
+                    {
+                        int index = -1;
+                        try
+                        {
+                            Log.Information("Updating project " + project.name);
+                            index = RobotInstance.instance.Projects.IndexOf(exists);
+                            project.SaveFile();
+                            RobotInstance.instance.Projects.Remove(exists);
+                            RobotInstance.instance.Projects.Insert(index, project);
+                            SetStatus("Install project dependencies");
+                            try
+                            {
+                                await project.InstallDependencies(true);
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex.ToString());
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error("project1, index: " + index.ToString());
+                            Log.Error(ex.ToString());
+                        }
+                    }
+                    else if (exists == null)
+                    {
+                        project.SaveFile();
+                        RobotInstance.instance.Projects.Add(project);
+                    }
+                });
+            }
         }
         private void SetStatus(string message)
         {
@@ -1079,6 +1216,7 @@ namespace OpenRPA
             Log.FunctionIndent("RobotInstance", "WebSocketClient_OnClose", reason);
             Log.Information("Disconnected " + reason);
             SetStatus("Disconnected from " + Config.local.wsurl + " reason " + reason);
+            openrpa_watchid = null;
             try
             {
                 Disconnected?.Invoke();

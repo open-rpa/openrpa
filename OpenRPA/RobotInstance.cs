@@ -725,24 +725,30 @@ namespace OpenRPA
                 if (_type == "detector")
                 {
                     var d = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.entity.Detector>(data["fullDocument"].ToString());
-                    IDetectorPlugin exists = Plugins.detectorPlugins.Where(x => x.Entity._id == d._id).FirstOrDefault();
-                    if (exists != null && d._version != exists.Entity._version)
+                    GenericTools.RunUI(() =>
                     {
-                        exists.Stop();
-                        exists.OnDetector -= Window.OnDetector;
-                        Plugins.detectorPlugins.Remove(exists);
-                        exists = Plugins.AddDetector(RobotInstance.instance, d);
-                        exists.OnDetector += Window.OnDetector;
-                    }
-                    else if (exists == null)
-                    {
-                        exists = Plugins.AddDetector(RobotInstance.instance, d);
-                        if (exists != null)
+                        //if (instance.Window.SelectedContent is Views.DetectorsView dview)
+                        //{
+                        //    return;
+                        //}
+                        IDetectorPlugin exists = Plugins.detectorPlugins.Where(x => x.Entity._id == d._id).FirstOrDefault();
+                        if (exists != null && d._version != exists.Entity._version)
                         {
+                            exists.Stop();
+                            exists.OnDetector -= Window.OnDetector;
+                            exists = Plugins.UpdateDetector(RobotInstance.instance, d);
                             exists.OnDetector += Window.OnDetector;
                         }
-                        else { Log.Information("Failed loading detector " + d.name); }
-                    }
+                        else if (exists == null)
+                        {
+                            exists = Plugins.AddDetector(RobotInstance.instance, d);
+                            if (exists != null)
+                            {
+                                exists.OnDetector += Window.OnDetector;
+                            }
+                            else { Log.Information("Failed loading detector " + d.name); }
+                        }
+                    });
                 }
             }
             catch (Exception ex)

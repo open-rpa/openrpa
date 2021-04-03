@@ -28,7 +28,32 @@ namespace OpenRPA.Interfaces
                         IDetectorPlugin plugin = (IDetectorPlugin)Activator.CreateInstance(d.Value);
                         if(string.IsNullOrEmpty(entity.name)) entity.name = plugin.Name;
                         plugin.Initialize(client, entity);
-                        Plugins.detectorPlugins.Add(plugin);
+                        IDetectorPlugin exists = Plugins.detectorPlugins.Where(x => x.Entity._id == entity._id).FirstOrDefault();
+                        if(exists == null) Plugins.detectorPlugins.Add(plugin);
+                        return plugin;
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("OpenRPA.Interfaces.Plugins.AddDetector: " + ex.ToString());
+                    }
+                }
+            }
+            return null;
+        }
+        public static IDetectorPlugin UpdateDetector(IOpenRPAClient client, entity.Detector entity)
+        {
+            foreach (var d in detectorPluginTypes)
+            {
+                if (d.Key == entity.Plugin)
+                {
+                    IDetectorPlugin plugin = Plugins.detectorPlugins.Where(x => x.Entity._id == entity._id).FirstOrDefault();
+                    if (plugin == null) return AddDetector(client, entity);
+                    try
+                    {
+                        plugin.Stop();
+                        plugin.Entity = entity;
+                        if (string.IsNullOrEmpty(entity.name)) entity.name = plugin.Name;
+                        plugin.Start();
                         return plugin;
                     }
                     catch (Exception ex)

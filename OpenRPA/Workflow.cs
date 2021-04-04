@@ -298,7 +298,7 @@ namespace OpenRPA
             {
                 if (Project != null && Project.Workflows.Contains(this)) Project.Workflows.Remove(this);
                 if (string.IsNullOrEmpty(FilePath)) return;
-                System.IO.File.Delete(FilePath);
+                if (System.IO.File.Exists(FilePath)) System.IO.File.Delete(FilePath);
                 if (!global.isConnected) return;
                 if (!string.IsNullOrEmpty(_id))
                 {

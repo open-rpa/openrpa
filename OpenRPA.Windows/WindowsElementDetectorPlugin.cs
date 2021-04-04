@@ -79,7 +79,7 @@ namespace OpenRPA.Windows
             {
                 try
                 {
-                    desktop.FrameworkAutomationElement.UnregisterStructureChangedEventHandler(StructureChangedEventHandler);
+                    if(desktop!= null) desktop.FrameworkAutomationElement.UnregisterStructureChangedEventHandler(StructureChangedEventHandler);
                 }
                 catch (Exception ex)
                 {
@@ -135,8 +135,12 @@ namespace OpenRPA.Windows
                     }
                     else { return; }
                 }
-                var _e = new DetectorEvent(new UIElement(element));
-                OnDetector?.Invoke(this, _e, EventArgs.Empty);
+
+                if(element!=null)
+                {
+                    var _e = new DetectorEvent(new UIElement(element));
+                    OnDetector?.Invoke(this, _e, EventArgs.Empty);
+                }
             }
             catch (Exception ex)
             {

@@ -12,6 +12,7 @@ namespace OpenRPA.Interfaces.mq
         public string workflowid { get; set; }
         public string flowid { get; set; }
         public string detectorid { get; set; }
+        public bool killexisting { get; set; }
         public Newtonsoft.Json.Linq.JObject data { get; set; }
         // public Dictionary<string, object> parameters { get; set; }
     }

@@ -1187,12 +1187,26 @@ namespace OpenRPA
                         {
                             if (!string.IsNullOrEmpty(i.correlationId) && !i.isCompleted)
                             {
-                                RemoteRunningCount++;
-                                RunningCount++;
+                                if (command.killexisting && i.WorkflowId == workflow._id && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
+                                {
+                                    i.Abort("Killed by nodered rpa node, due to killexisting");
+                                }
+                                else
+                                {
+                                    RemoteRunningCount++;
+                                    RunningCount++;
+                                }
                             }
-                            else if (i.state == "running")
+                            else if (!i.isCompleted)
                             {
-                                RunningCount++;
+                                if (command.killexisting && i.WorkflowId == workflow._id && Config.local.remote_allowed_killing_any)
+                                {
+                                    i.Abort("Killed by nodered rpa node, due to killexisting");
+                                }
+                                else
+                                {
+                                    RunningCount++;
+                                }
                             }
                             if (!Config.local.remote_allow_multiple_running && RunningCount > 0)
                             {

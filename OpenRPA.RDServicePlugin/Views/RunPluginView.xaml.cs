@@ -182,6 +182,17 @@ namespace OpenRPA.RDServicePlugin.Views
                 if(server == null)
                 {
                     Log.Error("Server not found in OpenFlow, does current user have access to object " + computername + "?");
+                    AddcurrentuserButton.Content = "Add current user";
+                    txtreloadinterval.Text = RDService.PluginConfig.reloadinterval.ToString();
+                    chkUseFreeRDP.IsChecked = RDService.PluginConfig.usefreerdp;
+                    AddcurrentuserButton.IsEnabled = false;
+                    RemovecurrentuserButton.IsEnabled = false;
+                    ReauthenticateButton.IsEnabled = false;
+                    StartServiceButton.IsEnabled = false;
+                    StopServiceButton.IsEnabled = false;
+                    InstallServiceButton.IsEnabled = true;
+                    UninstallServiceButton.IsEnabled = false;
+                    return;
                 }
                 
                 var clients = await global.webSocketClient.Query<RDService.unattendedclient>("openrpa", "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "', 'windowsusername':'" + windowsusername.Replace(@"\", @"\\") + "'}");

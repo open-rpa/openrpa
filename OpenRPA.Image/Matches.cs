@@ -10,6 +10,7 @@ namespace OpenRPA.Image
     using Emgu.CV.CvEnum;
     using Emgu.CV.Structure;
     using Emgu.CV.Util;
+    using OpenRPA.Interfaces;
     using System.Drawing;
     static class Matches
     {
@@ -30,57 +31,71 @@ namespace OpenRPA.Image
         }
         public static Rectangle FindMatch(Image<Bgr, byte> Source, Image<Bgr, byte> Template, double Threshold)
         {
-            ;
-            using (Image<Gray, float> result = Source.MatchTemplate(Template, TemplateMatchingType.CcoeffNormed))
+            try
             {
-                double[] minValues, maxValues;
-                Point[] minLocations, maxLocations;
-                result.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
-                // between 0.75 and 0.95 would be good.
-                if (maxValues[0] > Threshold)
+                using (Image<Gray, float> result = Source.MatchTemplate(Template, TemplateMatchingType.CcoeffNormed))
                 {
-                    Rectangle match = new Rectangle(maxLocations[0], Template.Size);
-                    return match;
+                    double[] minValues, maxValues;
+                    Point[] minLocations, maxLocations;
+                    result.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+                    // between 0.75 and 0.95 would be good.
+                    if (maxValues[0] > Threshold)
+                    {
+                        Rectangle match = new Rectangle(maxLocations[0], Template.Size);
+                        return match;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Log.Debug(ex.ToString());
             }
             return Rectangle.Empty;
         }
 
         public static Rectangle[] FindMatches(Bitmap Source, Bitmap Template, double Threshold, int maxResults, bool asGray)
         {
-            if (Template.Width > Source.Width) throw new ArgumentException("Template is wider than the source");
-            if (Template.Height > Source.Height) throw new ArgumentException("Template is higher than the source");
-            if (asGray)
+            try
             {
-                using (var source = new Image<Gray, byte>(Source))
+                if (Template.Width > Source.Width) throw new ArgumentException("Template is wider than the source");
+                if (Template.Height > Source.Height) throw new ArgumentException("Template is higher than the source");
+                if (asGray)
                 {
-                    using (var template = new Image<Gray, byte>(Template))
+                    using (var source = new Image<Gray, byte>(Source))
                     {
-                        //Interfaces.Image.Util.SaveImageStamped(source.Bitmap, "c:\\temp", "FindMatches-source");
-                        //Interfaces.Image.Util.SaveImageStamped(template.Bitmap, "c:\\temp", "FindMatches-template");
-                        //rpaactivities.image.util.saveImage(source, "FindMatches-source");
-                        //rpaactivities.image.util.saveImage(template, "FindMatches-template");
-                        var result = FindMatches(source, template, Threshold, maxResults);
-                        //image.util.showImage(template);
-                        return result;
+                        using (var template = new Image<Gray, byte>(Template))
+                        {
+                            //Interfaces.Image.Util.SaveImageStamped(source.Bitmap, "c:\\temp", "FindMatches-source");
+                            //Interfaces.Image.Util.SaveImageStamped(template.Bitmap, "c:\\temp", "FindMatches-template");
+                            //rpaactivities.image.util.saveImage(source, "FindMatches-source");
+                            //rpaactivities.image.util.saveImage(template, "FindMatches-template");
+                            var result = FindMatches(source, template, Threshold, maxResults);
+                            //image.util.showImage(template);
+                            return result;
+                        }
+                    }
+                }
+                else
+                {
+                    using (var source = new Image<Bgr, byte>(Source))
+                    {
+                        using (var template = new Image<Bgr, byte>(Template))
+                        {
+                            //Interfaces.Image.Util.SaveImageStamped(source.Bitmap, "c:\\temp", "FindMatches-source");
+                            //Interfaces.Image.Util.SaveImageStamped(template.Bitmap, "c:\\temp", "FindMatches-template");
+                            //rpaactivities.image.util.saveImage(source, "FindMatches-source");
+                            //rpaactivities.image.util.saveImage(template, "FindMatches-template");
+                            var result = FindMatches(source, template, Threshold, maxResults);
+                            return result;
+                        }
                     }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                using (var source = new Image<Bgr, byte>(Source))
-                {
-                    using (var template = new Image<Bgr, byte>(Template))
-                    {
-                        //Interfaces.Image.Util.SaveImageStamped(source.Bitmap, "c:\\temp", "FindMatches-source");
-                        //Interfaces.Image.Util.SaveImageStamped(template.Bitmap, "c:\\temp", "FindMatches-template");
-                        //rpaactivities.image.util.saveImage(source, "FindMatches-source");
-                        //rpaactivities.image.util.saveImage(template, "FindMatches-template");
-                        var result = FindMatches(source, template, Threshold, maxResults);
-                        return result;
-                    }
-                }
+                Log.Debug(ex.ToString());
             }
+            return new Rectangle[] { };
         }
         private static Rectangle[] FindMatches<TColor, TDepth>(Image<TColor, TDepth> Source, Image<TColor, TDepth> Template, double Threshold, int maxResults, bool inverted = false)
         where TColor : struct, IColor

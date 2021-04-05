@@ -356,5 +356,23 @@ namespace OpenRPA.Image.Resources {
                 return ResourceManager.GetString("activity_takescreenshot_tooltip", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mouse move time.
+        /// </summary>
+        public static string plugin_recording_mouse_move_time {
+            get {
+                return ResourceManager.GetString("plugin_recording_mouse_move_time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Doing recording, move mouse away for X miliseconds before getting image.
+        /// </summary>
+        public static string plugin_recording_mouse_move_time_help {
+            get {
+                return ResourceManager.GetString("plugin_recording_mouse_move_time_help", resourceCulture);
+            }
+        }
     }
 }

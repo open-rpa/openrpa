@@ -71,6 +71,7 @@
     <None Remove="Resources\toolbox\palette.png" />
     <None Remove="Resources\toolbox\palette2.png" />
     <None Remove="Resources\x.png" />
+    <None Remove="Views\RecordPluginView.xaml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\check.png" />
@@ -104,6 +105,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\GetTextDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RecordPluginView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

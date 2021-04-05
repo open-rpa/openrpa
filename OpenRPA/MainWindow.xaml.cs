@@ -145,7 +145,7 @@ namespace OpenRPA
                         if (Config.local.show_getting_started)
                         {
                             var url = Config.local.getting_started_url;
-                            if (string.IsNullOrEmpty(url)) url = "https://openrpa.dk/gettingstarted.html";
+                            if (string.IsNullOrEmpty(url)) url = "https://skadefro.github.io/openrpa.dk/gettingstarted.html";
                             if (!string.IsNullOrEmpty(global.openflowconfig.getting_started_url)) url = global.openflowconfig.getting_started_url;
                             LayoutDocument layoutDocument = new LayoutDocument { Title = "Getting started" };
                             layoutDocument.ContentId = "GettingStarted";

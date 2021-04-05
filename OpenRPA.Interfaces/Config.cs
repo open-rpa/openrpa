@@ -73,6 +73,8 @@ namespace OpenRPA
         public string otel_metric_url { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
         public int otel_trace_interval { get { return GetProperty(null, 2); } set { SetProperty(null, value); } }
         public int otel_metric_interval { get { return GetProperty(null, 2); } set { SetProperty(null, value); } }
+        public int max_projects { get { return GetProperty(null, 100); } set { SetProperty(null, value); } }
+        public int max_workflows { get { return GetProperty(null, 500); } set { SetProperty(null, value); } }
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)

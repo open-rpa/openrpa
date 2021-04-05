@@ -8,8 +8,9 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.55</Version>
-    <PackageReleaseNotes>1.0.55 Return default for illegal Rectangle
+    <Version>1.0.56</Version>
+    <PackageReleaseNotes>1.0.56 Better import handling and a few minor improvements
+1.0.55 Return default for illegal Rectangle
 1.0.54 Fix parsing Rect in non us regional settings
 1.0.53 Add category to openrpa log file
 1.0.52 Fix "cannot select self" on nested windows elements

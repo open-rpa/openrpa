@@ -281,7 +281,7 @@ namespace OpenRPA.Image
                 // rpaactivities.image.util.saveImage(saveimage, "GuessContour-result");
                 saveimage.Dispose();
                 desktopb.Dispose();
-                System.Diagnostics.Trace.WriteLine("using overlaps " + rect.ToString());
+                // System.Diagnostics.Trace.WriteLine("using overlaps " + rect.ToString());
                 if (rect.Width > elementw) { rect.Width = elementw; }
                 if (rect.Height > elementh) { rect.Height = elementh; }
                 OffsetX = x - rect.X;

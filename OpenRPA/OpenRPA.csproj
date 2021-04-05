@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.36</Version>
-    <PackageReleaseNotes>1.2.36 Better import handling and a few minor improvements
+    <Version>1.2.37</Version>
+    <PackageReleaseNotes>1.2.37 improve image recording, auto import namespaces on drop
+1.2.36 Better import handling and a few minor improvements
 1.2.35 Use change stream for updates, if supported
 1.2.34 fix ui issue with recorder properties
 1.2.33 Fix issue with search_descendants on windows selector

@@ -101,6 +101,9 @@ namespace OpenRPA.Image
         }
         public Activity Create(System.Windows.DependencyObject target)
         {
+            Type t = typeof(GetElement);
+            var wfdesigner = Plugin.client.Window.LastDesigner;
+            WFHelper.DynamicAssemblyMonitor(wfdesigner.WorkflowDesigner, t.Assembly.GetName().Name, t.Assembly, true);
             var fef = new GetImage();
             var aa = new ActivityAction<ImageElement>();
             var da = new DelegateInArgument<ImageElement>();

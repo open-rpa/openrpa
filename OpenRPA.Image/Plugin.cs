@@ -48,8 +48,10 @@ namespace OpenRPA.Image
         {
             throw new NotImplementedException();
         }
+        public static IOpenRPAClient client { get; set; }
         public void Initialize(IOpenRPAClient client)
         {
+            Plugin.client = client;
         }
         public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)
         {

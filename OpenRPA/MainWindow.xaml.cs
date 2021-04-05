@@ -252,6 +252,36 @@ namespace OpenRPA
                 return result.ToArray();
             }
         }
+        public Views.WFDesigner Designer
+        {
+            get
+            {
+                if (SelectedContent is Views.WFDesigner view)
+                {
+                    _LastDesigner = view;
+                    return view;
+                }
+                return null;
+            }
+            set
+            {
+
+            }
+        }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
+        IDesigner IMainWindow.Designer { get => Designer; }
+        private Views.WFDesigner _LastDesigner;
+        public Views.WFDesigner LastDesigner
+        {
+            get
+            {
+                if (Designer != null) _LastDesigner = Designer;
+                if (SelectedContent is Views.OpenProject) _LastDesigner = null;
+                if (SelectedContent is Views.DetectorsView) _LastDesigner = null;
+                return _LastDesigner;
+            }
+        }
+        IDesigner IMainWindow.LastDesigner { get => LastDesigner; }
         public uilocal defaultuilocal
         {
             get
@@ -457,17 +487,6 @@ namespace OpenRPA
             NotifyPropertyChanged("CurrentWorkflow");
             NotifyPropertyChanged("LastDesigner");
         }
-        private Views.WFDesigner _LastDesigner;
-        public Views.WFDesigner LastDesigner
-        {
-            get
-            {
-                if (Designer != null) _LastDesigner = Designer;
-                if (SelectedContent is Views.OpenProject) _LastDesigner = null;
-                if (SelectedContent is Views.DetectorsView) _LastDesigner = null;
-                return _LastDesigner;
-            }
-        }
         public object SelectedContent
         {
             get
@@ -498,21 +517,6 @@ namespace OpenRPA
 
             }
         }
-        public Views.WFDesigner Designer
-        {
-            get
-            {
-                if (SelectedContent is Views.WFDesigner view)
-                {
-                    return view;
-                }
-                return null;
-            }
-            set
-            {
-
-            }
-        }
         public LayoutDocumentPane MainTabControl
         {
             get
@@ -531,8 +535,6 @@ namespace OpenRPA
                 }
             }
         }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
-        IDesigner IMainWindow.Designer { get => Designer; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         public bool Setting_record_overlay
         {

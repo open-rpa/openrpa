@@ -133,6 +133,9 @@ namespace OpenRPA.IE
         }
         public Activity Create(System.Windows.DependencyObject target)
         {
+            Type t = typeof(GetElement);
+            var wfdesigner = Plugin.client.Window.LastDesigner;
+            WFHelper.DynamicAssemblyMonitor(wfdesigner.WorkflowDesigner, t.Assembly.GetName().Name, t.Assembly, true);
             var fef = new GetElement();
             var aa = new ActivityAction<IEElement>();
             var da = new DelegateInArgument<IEElement>();

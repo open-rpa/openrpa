@@ -189,8 +189,10 @@ namespace OpenRPA.IE
             e.SupportSelect = htmlelement.tagName.ToLower() == "select";
             return true;
         }
+        public static IOpenRPAClient client { get; set; }
         public void Initialize(IOpenRPAClient client)
         {
+            Plugin.client = client;
             _ = PluginConfig.enable_xpath_support;
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)

@@ -271,6 +271,7 @@ namespace OpenRPA
             }
         }
         public IDesigner Designer => null;
+        public IDesigner LastDesigner => null;
         public void OnDetector(IDetectorPlugin plugin, IDetectorEvent detector, EventArgs e)
         {
             try

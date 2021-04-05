@@ -234,8 +234,10 @@ namespace OpenRPA.Windows
             thread.Start();
         }
         public bool ParseUserAction(ref IRecordEvent e) { return false; }
+        public static IOpenRPAClient client { get; set; }
         public void Initialize(IOpenRPAClient client)
         {
+            Plugin.client = client;
             // _ = PluginConfig.allow_child_searching;
             _ = PluginConfig.allow_attach;
             _ = PluginConfig.cache_timeout;

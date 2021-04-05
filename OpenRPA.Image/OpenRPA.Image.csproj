@@ -7,8 +7,9 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.27</Version>
-    <PackageReleaseNotes>1.0.27 Make x and y arguments for GetColor
+    <Version>1.0.28</Version>
+    <PackageReleaseNotes>1.0.28 Add custom time for mouse move doing recording
+1.0.27 Make x and y arguments for GetColor
 1.0.26 Exclude sap from recordings
 1.0.25 Add support for finding nested windows
 1.0.24 Add GetColor Activity

@@ -208,6 +208,8 @@ namespace OpenRPA.Views
             {
                 if (BreakPointhit)
                 {
+                    SetDebugLocation(null);
+                    Properties = WorkflowDesigner.PropertyInspectorView;
                     Singlestep = false;
                     BreakPointhit = false;
                     ResumeRuntimeFromHost.Set();
@@ -1318,6 +1320,8 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 this.VisualTracking = VisualTracking; this.SlowMotion = SlowMotion;
                 if (BreakPointhit)
                 {
+                    SetDebugLocation(null);
+                    Properties = WorkflowDesigner.PropertyInspectorView;
                     Singlestep = false;
                     BreakPointhit = false;
                     if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();

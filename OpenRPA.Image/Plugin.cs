@@ -13,7 +13,18 @@ namespace OpenRPA.Image
     {
         public string Name => "Image";
         public string Status => "";
-        public UserControl editor => null;
+        private Views.RecordPluginView view;
+        public System.Windows.Controls.UserControl editor
+        {
+            get
+            {
+                if (view == null)
+                {
+                    view = new Views.RecordPluginView();
+                }
+                return view;
+            }
+        }
         public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
         public event Action<IRecordPlugin, IRecordEvent> OnMouseMove
         {
@@ -37,8 +48,10 @@ namespace OpenRPA.Image
         {
             throw new NotImplementedException();
         }
+        public static IOpenRPAClient client { get; set; }
         public void Initialize(IOpenRPAClient client)
         {
+            Plugin.client = client;
         }
         public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)
         {
@@ -110,6 +123,7 @@ namespace OpenRPA.Image
 
 
             NativeMethods.SetCursorPos(e.X - 80, e.Y - 80);
+            System.Threading.Thread.Sleep(PluginConfig.recording_mouse_move_time);
 
             var a = new GetElement
             {

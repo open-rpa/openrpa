@@ -16,6 +16,7 @@ namespace OpenRPA.Interfaces
         void OnOpenWorkflow(IWorkflow workflow);
         IDesigner[] Designers { get; }
         IDesigner Designer { get; }
+        IDesigner LastDesigner { get; }
         void OnDetector(IDetectorPlugin plugin, IDetectorEvent detector, EventArgs e);
         void IdleOrComplete(IWorkflowInstance instance, EventArgs e);
         void MainWindow_WebSocketClient_OnOpen();

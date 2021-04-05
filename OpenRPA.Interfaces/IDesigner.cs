@@ -10,6 +10,7 @@ namespace OpenRPA.Interfaces
     public interface IDesigner
     {
         bool HasChanged { get; set; }
+        System.Activities.Presentation.WorkflowDesigner WorkflowDesigner { get; }
         System.Activities.Argument GetArgument(string Name, bool add, Type type);
         System.Activities.DynamicActivityProperty GetArgumentOf<T>(string Name, bool add);
         System.Activities.Variable GetVariable(string Name, Type type);

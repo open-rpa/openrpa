@@ -180,7 +180,7 @@ namespace OpenRPA
                                 var span = Instance.source.StartActivity(Name, ActivityKind.Consumer);
                                 span?.AddTag("type", TypeName);
                                 span?.AddTag("ActivityId", ActivityId);
-                                if (Instance.source != null) Instance.Activities.Push(span);
+                                if (Instance.source != null && span != null) Instance.Activities.Push(span);
                             }
                         }
                         if (activityStateRecord.State != ActivityStates.Executing)

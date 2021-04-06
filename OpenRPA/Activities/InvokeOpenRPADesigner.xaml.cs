@@ -65,7 +65,7 @@ namespace OpenRPA.Activities
         private void Button2_Click(object sender, RoutedEventArgs e)
         {
             if (ModelItem.Properties["workflow"].Value == null) return;
-            string workflowid = (string)ModelItem.Properties["workflow"].Value.GetCurrentValue();
+            string workflowid = ModelItem.GetValue<string>("workflow");
             if (string.IsNullOrEmpty(workflowid)) throw new ArgumentException("workflow property is null");
             var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
             var designer = RobotInstance.instance.Window.Designer;
@@ -79,6 +79,7 @@ namespace OpenRPA.Activities
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
+                MessageBox.Show("Failed mapping arguments" + Environment.NewLine + ex.Message);
             }
             foreach (var p in workflow.Parameters)
             {
@@ -136,7 +137,7 @@ namespace OpenRPA.Activities
         {
             try
             {
-                string workflowid = (string)ModelItem.Properties["workflow"].Value.GetCurrentValue();
+                string workflowid = ModelItem.GetValue<string>("workflow");
                 if (string.IsNullOrEmpty(workflowid)) throw new ArgumentException("workflow property is null");
                 var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
                 var designer = RobotInstance.instance.Window.Designer;

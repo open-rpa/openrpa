@@ -49,6 +49,7 @@ namespace OpenRPA
         {
             get
             {
+                if (string.IsNullOrEmpty(RelativeFilename)) return name;
                 if (RelativeFilename.Contains("\\")) return RelativeFilename;
                 if (Project!=null) return Project.name + "\\" + Filename;
                 if(!string.IsNullOrEmpty(_ProjectAndName) && _ProjectAndName.Contains("/"))

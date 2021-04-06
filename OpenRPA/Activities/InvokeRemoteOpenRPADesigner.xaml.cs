@@ -68,7 +68,7 @@ namespace OpenRPA.Activities
             try
             {
                 if (ModelItem.Properties["workflow"].Value == null) return;
-                string workflowid = (string)ModelItem.Properties["workflow"].Value.GetCurrentValue();
+                string workflowid = ModelItem.GetValue<string>("workflow");
                 var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
                 var designer = RobotInstance.instance.Window.Designer;
                 foreach(var p in workflow.Parameters)
@@ -124,7 +124,6 @@ namespace OpenRPA.Activities
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            // string workflowid = (string)ModelItem.Properties["workflow"].Value.GetCurrentValue();
             string workflowid = ModelItem.GetValue<string>("workflow");
             if (string.IsNullOrEmpty(workflowid)) throw new ArgumentException("workflow property is null");
             var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(workflowid);

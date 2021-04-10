@@ -44,13 +44,13 @@ namespace OpenRPA
                     _cacheinstalled = new List<PackageSearchItem>();
                     if(project.dependencies != null)
                     {
-                        foreach (JProperty jp in (JToken)project.dependencies)
+                        foreach (var jp in project.dependencies)
                         {
-                            var ver_range = NuGet.Versioning.VersionRange.Parse((string)jp.Value);
+                            var ver_range = NuGet.Versioning.VersionRange.Parse(jp.Value);
                             if (ver_range.IsMinInclusive)
                             {
                                 var target_ver = NuGet.Versioning.NuGetVersion.Parse(ver_range.MinVersion.ToString());
-                                var _temp = await NuGetPackageManager.Instance.GetLocal(project, new NuGet.Packaging.Core.PackageIdentity(jp.Name, target_ver));
+                                var _temp = await NuGetPackageManager.Instance.GetLocal(project, new NuGet.Packaging.Core.PackageIdentity(jp.Key, target_ver));
                                 foreach(var item in _temp)
                                 {
                                     if(_cacheinstalled.Where(x=> x.Id == item.Id).FirstOrDefault() == null)

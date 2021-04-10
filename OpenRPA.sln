@@ -79,6 +79,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.MSSpeech", "OpenRPA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.PS", "OpenRPA.ps\OpenRPA.PS.csproj", "{FED047CA-2265-4B9B-86B4-3FBF17FE580F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteDB", "..\LiteDB\LiteDB\LiteDB.csproj", "{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		All|Any CPU = All|Any CPU
@@ -748,6 +750,26 @@ Global
 		{FED047CA-2265-4B9B-86B4-3FBF17FE580F}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
 		{FED047CA-2265-4B9B-86B4-3FBF17FE580F}.ReleaseNuget|x86.ActiveCfg = Release|Any CPU
 		{FED047CA-2265-4B9B-86B4-3FBF17FE580F}.ReleaseNuget|x86.Build.0 = Release|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.All|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.All|Any CPU.Build.0 = Debug|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.All|x86.ActiveCfg = Debug|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.All|x86.Build.0 = Debug|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.Debug|x86.Build.0 = Debug|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.PrepInstaller|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.PrepInstaller|Any CPU.Build.0 = Debug|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.PrepInstaller|x86.ActiveCfg = Debug|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.PrepInstaller|x86.Build.0 = Debug|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.Release|x86.ActiveCfg = Release|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.Release|x86.Build.0 = Release|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.ReleaseNuget|Any CPU.ActiveCfg = Release|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.ReleaseNuget|x86.ActiveCfg = Release|Any CPU
+		{4BDFB94D-B06A-4AD8-9D19-E3F4D483BB37}.ReleaseNuget|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

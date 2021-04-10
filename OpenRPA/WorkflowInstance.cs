@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
+using OpenTelemetry.Trace;
 using System;
 using System.Activities;
 using System.Collections.Generic;
@@ -195,7 +196,7 @@ namespace OpenRPA
             }
             result.host = Environment.MachineName.ToLower();
             result.fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
-            result.createApp(Workflow.Activity);
+            result.createApp(Workflow.Activity());
             lock (Instances) Instances.Add(result);
             foreach (var i in Instances.ToList())
             {
@@ -908,14 +909,15 @@ namespace OpenRPA
         }
         public static async Task RunPendingInstances()
         {
+            // var span = RobotInstance.instance.source.StartActivity("RunPendingInstances", System.Diagnostics.ActivityKind.Internal);
             Log.FunctionIndent("RobotInstance", "RunPendingInstances");
-            if (!global.isConnected)
-            {
-                Log.FunctionOutdent("RobotInstance", "RunPendingInstances", "Not connected");
-                return;
-            }
             try
             {
+                if (!global.isConnected)
+                {
+                    Log.FunctionOutdent("RobotInstance", "RunPendingInstances", "Not connected");
+                    return;
+                }
                 var host = Environment.MachineName.ToLower();
                 var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
                 var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "'}", top: 1000);
@@ -949,11 +951,12 @@ namespace OpenRPA
                         {
                             if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
                         }
-                        i.createApp(workflow.Activity);
+                        i.createApp(workflow.Activity());
                         i.Run();
                     }
                     catch (Exception ex)
                     {
+                        // span?.RecordException(ex);
                         i.state = "failed";
                         i.Exception = ex;
                         i.errormessage = ex.Message;
@@ -971,7 +974,12 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex.ToString());
+                // span?.RecordException(ex);
+                Log.Error(ex.ToString());                
+            }
+            finally
+            {
+                // span?.Dispose();
             }
             Log.FunctionOutdent("RobotInstance", "RunPendingInstances");
         }

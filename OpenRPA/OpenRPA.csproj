@@ -227,6 +227,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <Platforms>AnyCPU;x86</Platforms>
     <Authors>Allan Zimmermann</Authors>
     <Company>OpenIAP</Company>
+    <UserSecretsId>1274c280-f9dd-4345-85e6-eee6a8008313</UserSecretsId>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
@@ -275,8 +276,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <PackageReference Include="NuGet.Packaging" Version="5.4.0" />
     <PackageReference Include="NuGet.Protocol" Version="5.4.0" />
     <PackageReference Include="NuGet.Resolver" Version="5.4.0" />
-    <PackageReference Include="OpenTelemetry" Version="1.1.0-beta1" />
-    <PackageReference Include="OpenTelemetry.Api" Version="1.1.0-beta1" />
+    <PackageReference Include="OpenTelemetry.Api" Version="1.0.1" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
@@ -736,6 +736,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\LiteDB\LiteDB\LiteDB.csproj" />
     <ProjectReference Include="..\OpenRPA.CodeEditor\OpenRPA.CodeEditor.csproj" />
     <ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj">
       <IncludeAssets>all</IncludeAssets>

@@ -121,15 +121,16 @@ namespace OpenRPA
                 try
                 {
                     SetStatus("Load layout and reopen workflows");
-                    if (RobotInstance.instance.Projects.Count == 0 && first_connect)
+                    if (RobotInstance.instance.Projects.Count() == 0 && first_connect)
                     {
                         string Name = "New Project";
                         try
                         {
-                            Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name, true);
-                            IWorkflow workflow = project.Workflows.First();
-                            workflow.Project = project;
-                            RobotInstance.instance.Projects.Add(project);
+                            Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name);
+                            RobotInstance.instance.Projects.Insert(project);
+
+                            IWorkflow workflow = await project.AddDefaultWorkflow();
+                            RobotInstance.instance.NotifyPropertyChanged("Projects");
                             OnOpenWorkflow(workflow);
                         }
                         catch (Exception ex)
@@ -430,6 +431,11 @@ namespace OpenRPA
             InputDriver.Instance.Dispose();
             StopDetectorPlugins();
             SaveLayout();
+            if(RobotInstance.instance.db != null)
+            {
+                RobotInstance.instance.db.Dispose();
+                RobotInstance.instance.db = null;
+            }
             // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds
             Application.Current.Shutdown();
             Log.FunctionOutdent("MainWindow", "Window_Closed");
@@ -1322,12 +1328,13 @@ namespace OpenRPA
                         return;
                     }
                     project = await Project.FromFile(System.IO.Path.Combine(projectpath, name + ".rpaproj"));
-                    RobotInstance.instance.Projects.Add(project);
+                    RobotInstance.instance.Projects.Insert(project);
                     project.name = name;
                     project._id = null;
                     await project.Save(false);
                     IWorkflow workflow = project.Workflows.First();
                     workflow.Project = project;
+                    RobotInstance.instance.NotifyPropertyChanged("Projects");
                     OnOpenWorkflow(workflow);
                     return;
                 }
@@ -1592,7 +1599,6 @@ namespace OpenRPA
             try
             {
                 RobotInstance.instance.autoReconnect = true;
-                RobotInstance.instance.Projects.Clear();
                 var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
                 foreach (var document in ld)
                 {
@@ -2045,9 +2051,9 @@ namespace OpenRPA
             });
             try
             {
-                foreach (var p in RobotInstance.instance.Projects)
+                foreach (var p in RobotInstance.instance.Projects.FindAll())
                 {
-                    foreach (var wf in p.Workflows)
+                    if(p.Workflows!=null) foreach(var wf in p.Workflows)
                     {
 
                         if (Config.local.openworkflows.Contains(wf._id) && !string.IsNullOrEmpty(wf._id))
@@ -2217,6 +2223,7 @@ namespace OpenRPA
                 {
                     Workflow workflow = Workflow.Create(designer.Project, "New Workflow");
                     OnOpenWorkflow(workflow);
+                    RobotInstance.instance.NotifyPropertyChanged("Projects");
                     Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Designer selected");
                     return;
                 }
@@ -2226,6 +2233,7 @@ namespace OpenRPA
                 {
                     Workflow workflow = Workflow.Create(wf.Project, "New Workflow");
                     OnOpenWorkflow(workflow);
+                    RobotInstance.instance.NotifyPropertyChanged("Projects");
                     Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Workflow selected");
                     return;
                 }
@@ -2233,6 +2241,7 @@ namespace OpenRPA
                 {
                     Workflow workflow = Workflow.Create(p, "New Workflow");
                     OnOpenWorkflow(workflow);
+                    RobotInstance.instance.NotifyPropertyChanged("Projects");
                     Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Project selected");
                     return;
                 }
@@ -2269,10 +2278,10 @@ namespace OpenRPA
                     return;
                 }
                 //string Name = "New project";
-                Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name, true);
-                IWorkflow workflow = project.Workflows.First();
-                workflow.Project = project;
-                RobotInstance.instance.Projects.Add(project);
+                Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name);
+                RobotInstance.instance.Projects.Insert(project);
+                IWorkflow workflow = await project.AddDefaultWorkflow();
+                RobotInstance.instance.NotifyPropertyChanged("Projects");
                 OnOpenWorkflow(workflow);
             }
             catch (Exception ex)
@@ -2364,6 +2373,7 @@ namespace OpenRPA
                         return;
                     }
                     await wf.Delete();
+                    RobotInstance.instance.NotifyPropertyChanged("Projects");
                 }
                 if (val is Project p)
                 {
@@ -2384,7 +2394,7 @@ namespace OpenRPA
                         }
                     }
                     await p.Delete();
-                    RobotInstance.instance.Projects.Remove(p);
+                    RobotInstance.instance.NotifyPropertyChanged("Projects");
                 }
             }
             catch (Exception ex)

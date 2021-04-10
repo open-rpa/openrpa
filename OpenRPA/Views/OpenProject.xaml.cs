@@ -75,21 +75,52 @@ namespace OpenRPA.Views
                 }
             }
         }
-        public System.Collections.ObjectModel.ObservableCollection<Project> Projects
+        private System.Collections.ObjectModel.ObservableCollection<IProject> _Projects = new System.Collections.ObjectModel.ObservableCollection<IProject>();
+        public System.Collections.ObjectModel.ObservableCollection<IProject> Projects
         {
             get
             {
-                return RobotInstance.instance.Projects;
+                // UpdateProjectsList();
+                return _Projects;
+            }
+        }
+        public static OpenProject Instance;
+        public static bool isUpdating = false;
+        public static void UpdateProjectsList()
+        {
+            try
+            {
+                // Log.Output("UpdateProjectsList");
+                var result = RobotInstance.instance.Projects.FindAll().ToList();
+                for (var i = 0; i < result.Count; i++) result[i].UpdateWorkflowsList();
+                GenericTools.RunUI(() =>
+                {
+                    isUpdating = true;
+                    try
+                    {
+                        Instance._Projects.UpdateCollection(result);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    isUpdating = false;
+                });
+            }
+            catch (Exception)
+            {
             }
         }
         public OpenProject(MainWindow main)
         {
+            Instance = this;
             Log.FunctionIndent("OpenProject", "OpenProject");
             try
             {
                 InitializeComponent();
                 this.main = main;
                 DataContext = this;
+                RobotInstance.instance.PropertyChanged += Instance_PropertyChanged;
+                UpdateProjectsList();
             }
             catch (Exception ex)
             {
@@ -97,6 +128,11 @@ namespace OpenRPA.Views
             }
             Log.FunctionOutdent("OpenProject", "OpenProject");
         }
+        private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Projects") NotifyPropertyChanged("Projects");
+        }
+
         private string _FilterText = "";
         public string FilterText
         {
@@ -106,6 +142,8 @@ namespace OpenRPA.Views
             }
             set
             {
+                isUpdating = true;
+                Log.Output("FilterText begin");
                 _FilterText = value;
                 var workflows = new List<string>();
                 if (string.IsNullOrEmpty(_FilterText))
@@ -123,7 +161,8 @@ namespace OpenRPA.Views
                         }
                     }
                 }
-                foreach (var p in Projects)
+                Log.Output("Search projects");
+                foreach (var p in _Projects)
                 {
                     bool expand = false;
                     foreach(var _wf in p.Workflows)
@@ -142,9 +181,14 @@ namespace OpenRPA.Views
                             }
                         }
                     }
+                    Log.Output("expanding " + p.name);
                     p.IsExpanded = expand;
                 }
+                isUpdating = false;
+                UpdateProjectsList();
+                Log.Output("FilterText complete");
                 NotifyPropertyChanged("FilterText");
+                NotifyPropertyChanged("Projects");
             }
         }
         private void ListWorkflows_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -238,8 +282,10 @@ namespace OpenRPA.Views
             {
             }
         }
+        
         private void listWorkflows_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
+            if (isUpdating) return;
             NotifyPropertyChanged("Workflow");
             NotifyPropertyChanged("Project");
             NotifyPropertyChanged("IsWorkflowSelected");

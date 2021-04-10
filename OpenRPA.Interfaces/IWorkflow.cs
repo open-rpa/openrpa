@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -11,15 +12,21 @@ namespace OpenRPA.Interfaces
     public delegate void VisualTrackingHandler(IWorkflowInstance Instance, string ActivityId, string ChildActivityId, string State);
     public interface IWorkflow : INotifyPropertyChanged, IBase
     {
+        [JsonIgnore]
         long current_version { get; set;  }
+        bool IsExpanded { get; set; }
+        bool IsSelected { get; set; }
         string queue { get; set; }
         string Xaml { get; set; }
         string projectid { get; set; }
+        [JsonIgnore]
         string RelativeFilename { get; }
+        [JsonIgnore]
         string IDOrRelativeFilename { get; }
         string FilePath { get; }
         string Filename { get; set; }
         bool Serializable { get; set; }
+        [JsonIgnore]
         IProject Project { get; set; }
         string ProjectAndName { get; set; }
         List<workflowparameter> Parameters { get; set; }

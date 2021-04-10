@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using OpenRPA.Interfaces;
+using OpenTelemetry.Trace;
 using System;
 using System.Activities;
 using System.Activities.Core.Presentation;
@@ -154,7 +155,7 @@ namespace OpenRPA.Views
                     //{
                     //}
                     if (e.AltKey || e.CtrlKey || e.ShiftKey || e.WinKey) return;
-                    if (Workflow.Activity == null) return;
+                    if (Workflow.Activity() == null) return;
                     Singlestep = true;
                     // if (e.Key == Input.KeyboardKey.F11) { StepInto = true; }
                     if (BreakPointhit)
@@ -217,7 +218,7 @@ namespace OpenRPA.Views
                 }
                 try
                 {
-                    if (Workflow.Activity == null) return;
+                    if (Workflow.Activity() == null) return;
                     Run(VisualTracking, SlowMotion, null);
                 }
                 catch (Exception ex)
@@ -384,6 +385,9 @@ namespace OpenRPA.Views
         }
         public async Task<bool> SaveAsync()
         {
+            // var span = RobotInstance.instance.source.StartActivity("Workflow Designer SaveAsync", System.Diagnostics.ActivityKind.Client);
+            try
+            {
             var imagepath = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "images");
             if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
             WorkflowDesigner.Flush();
@@ -499,6 +503,16 @@ namespace OpenRPA.Views
                 OnChanged?.Invoke(this);
             }
             return true;
+            }
+            catch (Exception ex)
+            {
+                // span?.RecordException(ex);
+                throw;
+            }
+            finally
+            {
+                // span?.Dispose();
+            }
         }
         public void RenameWorkflow(string name)
         {

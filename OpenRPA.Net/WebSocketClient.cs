@@ -2,8 +2,10 @@
 using Newtonsoft.Json.Linq;
 using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
+using OpenTelemetry.Trace;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 // using System.Net.WebSockets.Managed;
 using System.Net.WebSockets;
@@ -16,6 +18,7 @@ namespace OpenRPA.Net
 {
     public class WebSocketClient : IWebSocketClient
     {
+        public System.Diagnostics.ActivitySource source = new System.Diagnostics.ActivitySource("OpenRPA.Net");
         static SemaphoreSlim ProcessingSemaphore = new SemaphoreSlim(1, 1);
         static SemaphoreSlim SendStringSemaphore = new SemaphoreSlim(1, 1);
         private WebSocket ws = null;
@@ -83,7 +86,6 @@ namespace OpenRPA.Net
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
                 OnClose?.Invoke(ex.Message);
             }
         }
@@ -533,10 +535,25 @@ namespace OpenRPA.Net
         }
         public async Task<string> RegisterQueue(string queuename)
         {
-            RegisterQueueMessage RegisterQueue = new RegisterQueueMessage(queuename);
-            RegisterQueue = await RegisterQueue.SendMessage<RegisterQueueMessage>(this);
-            if (!string.IsNullOrEmpty(RegisterQueue.error)) throw new Exception(RegisterQueue.error);
-            return RegisterQueue.queuename;
+            var span = source.StartActivity("RegisterQueue", ActivityKind.Client);
+            try
+            {
+                span?.SetTag("name", queuename);
+                RegisterQueueMessage RegisterQueue = new RegisterQueueMessage(queuename);
+                RegisterQueue = await RegisterQueue.SendMessage<RegisterQueueMessage>(this);
+                if (!string.IsNullOrEmpty(RegisterQueue.error)) throw new Exception(RegisterQueue.error);
+                span?.SetTag("queuename", RegisterQueue.queuename);
+                return RegisterQueue.queuename;
+            }
+            catch (Exception ex)
+            {
+                span?.RecordException(ex);
+                throw;
+            }
+            finally
+            {
+                span?.Dispose();
+            }
         }
         public async Task<object> QueueMessage(string queuename, object data, string replyto, string correlationId, int expiration)
         {
@@ -550,29 +567,47 @@ namespace OpenRPA.Net
         }
         private async Task<T[]> _Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby, string queryas)
         {
-            var result = new List<T>();
-            bool cont = false;
-            int _top = top;
-            int _skip = skip;
-            if (_top > Config.local.querypagesize) _top = Config.local.querypagesize;
-            do
+            var span = source.StartActivity("Query", ActivityKind.Client);
+            try
             {
-                cont = false;
-                QueryMessage<T> q = new QueryMessage<T>(); q.top = _top; q.skip = _skip;
-                q.projection = projection; q.orderby = orderby; q.queryas = queryas;
-                q.collectionname = collectionname;
-                if (string.IsNullOrEmpty(query)) query = "{}";
-                    q.query = JObject.Parse(query);
-                q = await q.SendMessage<QueryMessage<T>>(this);
-                if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
-                result.AddRange(q.result);
-                if (q.result.Count() == _top && result.Count < top)
+                var result = new List<T>();
+                bool cont = false;
+                int _top = top;
+                int _skip = skip;
+                if (_top > Config.local.querypagesize) _top = Config.local.querypagesize;
+                span?.SetTag("top", _top);
+                span?.SetTag("query", query);
+                do
                 {
-                    cont = true;
-                    _skip += _top;
-                }
-            } while (cont);
-            return result.ToArray();
+                    cont = false;
+                    QueryMessage<T> q = new QueryMessage<T>(); q.top = _top; q.skip = _skip;
+                    q.projection = projection; q.orderby = orderby; q.queryas = queryas;
+                    q.collectionname = collectionname;
+                    if (string.IsNullOrEmpty(query)) query = "{}";
+                    q.query = JObject.Parse(query);
+                    span?.AddEvent(new ActivityEvent("Do Server Request"));
+                    q = await q.SendMessage<QueryMessage<T>>(this);
+                    if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+                    result.AddRange(q.result);
+                    span?.AddEvent(new ActivityEvent("Got " + q.result.Count() + " results"));
+                    if (q.result.Count() == _top && result.Count < top)
+                    {
+                        cont = true;
+                        _skip += _top;
+                    }
+                } while (cont);
+                span?.SetTag("results", result.Count);
+                return result.ToArray();
+            }
+            catch (Exception ex)
+            {
+                span?.RecordException(ex);
+                throw;
+            }
+            finally
+            {
+                span?.Dispose();
+            }
         }
         public async Task<T[]> Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby, string queryas)
         {

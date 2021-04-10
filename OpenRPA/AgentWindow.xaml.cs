@@ -69,10 +69,10 @@ namespace OpenRPA
             try
             {
                 OnOpen(null);
-                if(RobotInstance.instance.ProjectCount>0)
-                {
-                    RobotInstance.instance.Projects.First().IsExpanded = true;
-                }
+                //if(RobotInstance.instance.ProjectCount>0)
+                //{
+                //    RobotInstance.instance.Projects.First().IsExpanded = true;
+                //}
                 if (string.IsNullOrEmpty(Config.local.wsurl))
                 {
                     try
@@ -123,7 +123,7 @@ namespace OpenRPA
         public void MainWindow_WebSocketClient_OnOpen()
         {
             Log.FunctionIndent("AgentWindow", "MainWindow_WebSocketClient_OnOpen");
-            if (RobotInstance.instance.Projects.Count == 0 && first_connect)
+            if (RobotInstance.instance.Projects.Count() == 0 && first_connect)
             {
             }
             if (first_connect)
@@ -211,6 +211,11 @@ namespace OpenRPA
         {
             InputDriver.Instance.CallNext = true;
             InputDriver.Instance.Dispose();
+            if (RobotInstance.instance.db != null)
+            {
+                RobotInstance.instance.db.Dispose();
+                RobotInstance.instance.db = null;
+            }
             // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds
             Application.Current.Shutdown();
         }
@@ -430,7 +435,6 @@ namespace OpenRPA
             try
             {
                 RobotInstance.instance.autoReconnect = true;
-                RobotInstance.instance.Projects.Clear();
                 var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
                 foreach (var document in ld)
                 {

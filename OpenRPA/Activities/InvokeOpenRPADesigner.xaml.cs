@@ -37,9 +37,9 @@ namespace OpenRPA.Activities
             {
                 if (RobotInstance.instance == null) throw new ArgumentException("RobotInstance.instance");
                 if (RobotInstance.instance.Projects == null) throw new ArgumentException("RobotInstance.instance.Projects");
-                if (RobotInstance.instance.Projects.Count == 0) throw new ArgumentException("RobotInstance.instance.Projects.Count == 0");
+                if (RobotInstance.instance.Projects.Count() == 0) throw new ArgumentException("RobotInstance.instance.Projects.Count == 0");
                 var result = new List<Workflow>();
-                foreach (var p in RobotInstance.instance.Projects)
+                foreach (var p in RobotInstance.instance.Projects.FindAll())
                 {
                     foreach (var w in p.Workflows)
                     {

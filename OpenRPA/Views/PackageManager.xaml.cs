@@ -186,7 +186,7 @@ namespace OpenRPA.Views
                     {
                         // Request accept
                     }
-                    if (project.dependencies == null) project.dependencies = Newtonsoft.Json.Linq.JObject.Parse("{}");
+                    if (project.dependencies == null) project.dependencies = new Dictionary<string, string>();
                     project.dependencies.Remove(identity.Id);
                     project.dependencies.Add(identity.Id, minver.MinVersion.ToString());
                     BusyContent = "Saving current project settings";
@@ -226,9 +226,9 @@ namespace OpenRPA.Views
                     BusyContent = "Initializing";
                     var minver = VersionRange.Parse(SelectedPackageItem.InstalledVersion);
                     var identity = new PackageIdentity(SelectedPackageItem.Id, minver.MinVersion);
-                    if (project.dependencies == null) project.dependencies = Newtonsoft.Json.Linq.JObject.Parse("{}");
-                    project.dependencies.Remove(identity.Id);
 
+                    if (project.dependencies == null) project.dependencies = new Dictionary<string, string>();
+                    project.dependencies.Remove(identity.Id);
                     // per project or joined ?
                     // string TargetFolder = System.IO.Path.Combine(project.Path, "extensions");
                     string TargetFolder = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");

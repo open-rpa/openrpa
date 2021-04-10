@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using LiteDB;
+using Newtonsoft.Json;
 using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
 using System;
@@ -13,8 +14,12 @@ namespace OpenRPA
 {
     public class Workflow : apibase, IWorkflow
     {
-        [JsonIgnore]
+        [JsonIgnore, BsonIgnore]
         private long _current_version = 0;
+        [JsonIgnore]
+        public bool isDirty { get; set; }
+        [JsonIgnore]
+        public bool isLocalOnly { get; set; }
         public long current_version { get {
                 if (_version > _current_version) return _version;
                 return _current_version;
@@ -33,7 +38,7 @@ namespace OpenRPA
         public List<workflowparameter> Parameters { get { return GetProperty<List<workflowparameter>>(); } set { SetProperty(value); } }
         public bool Serializable { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        [JsonIgnore]
+        [JsonIgnore, BsonIgnore]
         public string RelativeFilename
         {
             get
@@ -44,7 +49,7 @@ namespace OpenRPA
                 return System.IO.Path.Combine(lastFolderName, Filename);
             }
         }
-        [JsonIgnore]
+        [JsonIgnore, BsonIgnore]
         public string IDOrRelativeFilename
         {
             get
@@ -88,12 +93,26 @@ namespace OpenRPA
             }
         }   
         public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        [JsonIgnore]
-        public bool IsExpanded { get { return GetProperty<bool>(); } set { SetProperty(value); } }
-        [JsonIgnore]
-        public bool IsSelected { get { return GetProperty<bool>(); } set { SetProperty(value); } }
+        [JsonIgnore, BsonIgnore]
+        public bool IsExpanded { 
+            get { return GetProperty<bool>(); } 
+            set {
+                if (Views.OpenProject.isUpdating) return;
+                SetProperty(value);
+                if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name)) RobotInstance.instance.Workflows.Update(this); 
+            } 
+        }
+        [JsonIgnore, BsonIgnore]
+        public bool IsSelected { 
+            get { return GetProperty<bool>(); } 
+            set {
+                if (Views.OpenProject.isUpdating) return;
+                SetProperty(value);
+                if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name)) RobotInstance.instance.Workflows.Update(this);
+            } 
+        }
         private string laststate = "unloaded";
-        [JsonIgnore]
+        [JsonIgnore, BsonIgnore]
         public string State
         {
             get
@@ -117,7 +136,7 @@ namespace OpenRPA
                 return state;
             }
         }
-        [JsonIgnore]
+        [JsonIgnore, BsonIgnore]
         public string StateImage
         {
             get
@@ -138,7 +157,7 @@ namespace OpenRPA
             NotifyPropertyChanged("State");
             NotifyPropertyChanged("StateImage");
         }
-        [JsonIgnore]
+        [JsonIgnore, BsonIgnore]
         public List<WorkflowInstance> Instances
         {
             get
@@ -146,7 +165,7 @@ namespace OpenRPA
                 return WorkflowInstance.Instances.Where(x => (x.WorkflowId == _id && !string.IsNullOrEmpty(_id)) || (x.RelativeFilename == RelativeFilename && string.IsNullOrEmpty(_id))).ToList();
             }
         }
-        [JsonIgnore]
+        [JsonIgnore, BsonIgnore]
         public bool isRunnning
         {
             get
@@ -164,7 +183,7 @@ namespace OpenRPA
                 return false;
             }
         }
-        [JsonIgnore]
+        [JsonIgnore, BsonIgnore]
         public IProject Project { get; set; }
         public static Workflow FromFile(IProject project, string Filename)
         {
@@ -195,13 +214,20 @@ namespace OpenRPA
                     //workflow.FilePath = System.IO.Path.Combine(Project.Path, Name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".xaml");
                     workflow.Filename = Name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".xaml";
                 }
-                if (!System.IO.File.Exists(workflow.FilePath)) isUnique = true;
+                var exists = RobotInstance.instance.Workflows.Find(x => x.name.ToLower() == workflow.name && x.projectid == Project._id).FirstOrDefault();
+                if(exists == null) isUnique = true;
+                // if (!System.IO.File.Exists(workflow.FilePath)) isUnique = true;
                 counter++;
             }
             workflow._type = "workflow";
             workflow.Parameters = new List<workflowparameter>();
             //workflow.Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>();
             workflow.projectid = Project._id;
+            workflow._id = Guid.NewGuid().ToString();
+            workflow.isDirty = true;
+            workflow.isLocalOnly = true;
+            RobotInstance.instance.Workflows.Insert(workflow);
+            _ = workflow.Save(false);
             return workflow;
         }
         public void SaveFile(string overridepath = null, bool exportImages = false)
@@ -251,24 +277,48 @@ namespace OpenRPA
         }
         public async Task Save(bool UpdateImages)
         {
-            try
+            if (projectid == null && string.IsNullOrEmpty(projectid)) throw new Exception("Cannot save workflow with out a project/projectid");
+            if(string.IsNullOrEmpty(projectid) && projectid!=null) projectid = Project._id;
+            if (!global.isConnected)
             {
-                SaveFile();
+                try
+                {
+                    if (string.IsNullOrEmpty(_id))
+                    {
+                        _id = Guid.NewGuid().ToString();
+                        isDirty = true;
+                        isLocalOnly = true;
+                        RobotInstance.instance.Workflows.Insert(this);
+                    }
+                    else
+                    {
+                        var exists = RobotInstance.instance.Workflows.FindById(_id);
+                        if (exists != null) RobotInstance.instance.Workflows.Update(this);
+                        if (exists == null) RobotInstance.instance.Workflows.Insert(this);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+                return;
             }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-            }
-            projectid = Project._id;
-            if (!global.isConnected) return;
-            if (string.IsNullOrEmpty(_id))
+            
+            if (string.IsNullOrEmpty(_id)|| isLocalOnly == true)
             {
                 var result = await global.webSocketClient.InsertOne("openrpa", 0, false, this);
+                isLocalOnly = false;
+                if(!string.IsNullOrEmpty(_id))
+                {
+                    var exists = RobotInstance.instance.Workflows.FindById(_id);
+                    if (exists != null) RobotInstance.instance.Workflows.Delete(_id);
+                }
                 _id = result._id;
                 _acl = result._acl;
                 _modified = result._modified;
                 _modifiedby = result._modifiedby;
                 _modifiedbyid = result._modifiedbyid;
+                RobotInstance.instance.Workflows.Insert(this);
             }
             else
             {
@@ -278,6 +328,9 @@ namespace OpenRPA
                 _modifiedby = result._modifiedby;
                 _modifiedbyid = result._modifiedbyid;
                 _version = result._version;
+                var exists = RobotInstance.instance.Workflows.FindById(_id);
+                if (exists != null) RobotInstance.instance.Workflows.Update(this);
+                if (exists == null) RobotInstance.instance.Workflows.Insert(this);
                 if (UpdateImages)
                 {
                     var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
@@ -314,6 +367,8 @@ namespace OpenRPA
                     }
                     await global.webSocketClient.DeleteOne("openrpa", this._id);
                 }
+                var exists = RobotInstance.instance.Workflows.FindById(_id);
+                if (exists != null) RobotInstance.instance.Workflows.Delete(_id);
             }
             catch (Exception ex)
             {
@@ -348,7 +403,7 @@ namespace OpenRPA
                                     if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
                                 }
                                 lock(WorkflowInstance.Instances) WorkflowInstance.Instances.Add(i);
-                                i.createApp(Activity);
+                                i.createApp(Activity());
                                 i.Run();
                             }
                         }
@@ -393,11 +448,8 @@ namespace OpenRPA
             return Filename;
         }
         private System.Activities.Activity _activity = null;
-        [Newtonsoft.Json.JsonIgnore]
-        public System.Activities.Activity Activity
+        public System.Activities.Activity Activity()
         {
-            get
-            {
                 if (string.IsNullOrEmpty(Xaml)) return null;
                 if (_activity != null) return _activity;
                 var activitySettings = new System.Activities.XamlIntegration.ActivityXamlServicesSettings
@@ -408,7 +460,6 @@ namespace OpenRPA
                 var xamlReader = new System.Xaml.XamlXmlReader(new System.IO.StringReader(Xaml), xamlReaderSettings);
                 _activity = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, activitySettings);
                 return _activity;
-            }
         }
         public IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId,
             OpenRPA.Interfaces.idleOrComplete idleOrComplete, OpenRPA.Interfaces.VisualTrackingHandler VisualTracking, string SpanId, string ParentSpanId)
@@ -466,7 +517,7 @@ namespace OpenRPA
                 }
             }
         }
-        [JsonIgnore]
+        [JsonIgnore, BsonIgnore]
         public bool IsVisible { get { return GetProperty<bool>(); } set { SetProperty(value); } } 
     }
 

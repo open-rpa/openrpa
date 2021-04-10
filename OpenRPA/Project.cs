@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using LiteDB;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NuGet.Versioning;
 using OpenRPA.Interfaces;
@@ -13,13 +14,51 @@ namespace OpenRPA
 {
     public class Project : apibase, IProject
     {
-        public Newtonsoft.Json.Linq.JObject dependencies { get; set; }
+        [JsonIgnore]
+        public bool isDirty { get; set; }
+        public Dictionary<string, string> dependencies { get; set; }
         public bool disable_local_caching { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        [JsonIgnore]
-        public System.Collections.ObjectModel.ObservableCollection<IWorkflow> Workflows { get; set; }
-        [JsonIgnore]
-        public string Path { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        // [JsonIgnore, BsonRef("workflows")]
+        private System.Collections.ObjectModel.ObservableCollection<IWorkflow> _Workflows = new System.Collections.ObjectModel.ObservableCollection<IWorkflow>();
+        [JsonIgnore, BsonIgnore]
+        public System.Collections.ObjectModel.ObservableCollection<IWorkflow> Workflows
+        {
+            get
+            {
+                return _Workflows;
+            }
+        }
+        public void UpdateWorkflowsList()
+        {
+            // Log.Output("UpdateWorkflowsList");
+            var list = RobotInstance.instance.Workflows.Find(x => x.projectid == _id);
+            Workflows.UpdateCollection(list);
+        }
+        //public override bool Equals(object obj)
+        //{
+        //    var p = obj as Project;
+        //    if (p == null) return false;
+        //    if (p._id != _id) return false;
+        //    return true;
+        //}
+        //public override int GetHashCode()
+        //{
+        //    int hash = 13;
+        //    hash = (hash * 7) + _id.GetHashCode();
+        //    return hash;
+        //}
+        // public List<IWorkflow> Workflows { get; set; }
+        // public System.Collections.ObjectModel.ObservableCollection<IWorkflow> Workflows { get; set; }
+        [JsonIgnore, BsonIgnore]
+        public string Path
+        {
+            get
+            {
+                return System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, name);
+            }
+        }
+        // public string Path { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public static async Task<Project[]> LoadProjects(string Path)
         {
             var ProjectFiles = System.IO.Directory.EnumerateFiles(Path, "*.rpaproj", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
@@ -32,17 +71,33 @@ namespace OpenRPA
             Project project = JsonConvert.DeserializeObject<Project>(System.IO.File.ReadAllText(Filepath));
             project.Filename = System.IO.Path.GetFileName(Filepath);
             if (string.IsNullOrEmpty(project.name)) { project.name = System.IO.Path.GetFileNameWithoutExtension(Filepath); }
-            project.Path = System.IO.Path.GetDirectoryName(Filepath);
             project._type = "project";
             project.Init();
             await project.InstallDependencies(true);
             return project;
         }
         [JsonIgnore]
-        public bool IsExpanded { get { return GetProperty<bool>(); } set { SetProperty(value); } }
+        public bool IsExpanded { 
+            get { return GetProperty<bool>(); } 
+            set {
+                var orgvalue = GetProperty<bool>();
+                if (Views.OpenProject.isUpdating) return;
+                SetProperty(value);
+                if (value && (_Workflows ==null || _Workflows.Count == 0)) UpdateWorkflowsList();
+                if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name) && orgvalue != value) RobotInstance.instance.Projects.Update(this);
+            } 
+        }
         [JsonIgnore]
-        public bool IsSelected { get { return GetProperty<bool>(); } set { SetProperty(value); } }
-        public static async Task<Project> Create(string Path, string Name, bool addDefault)
+        public bool IsSelected { 
+            get { return GetProperty<bool>(); }
+            set
+            {
+                if (Views.OpenProject.isUpdating) return;
+                SetProperty(value); 
+                if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name)) RobotInstance.instance.Projects.Update(this); 
+            }
+        }
+        public static async Task<Project> Create(string Path, string Name)
         {
             var basePath = System.IO.Path.Combine(Path, Name);
             if (System.IO.Directory.Exists(basePath) && System.IO.Directory.GetFiles(basePath).Count() > 0)
@@ -89,24 +144,22 @@ namespace OpenRPA
             {
                 _type = "project",
                 name = Name,
-                Path = System.IO.Path.GetDirectoryName(Filepath),
-                Filename = System.IO.Path.GetFileName(Filepath),
-                Workflows = new System.Collections.ObjectModel.ObservableCollection<IWorkflow>()
+                Filename = System.IO.Path.GetFileName(Filepath)
             };
             await p.Save(false);
-            if(addDefault)
-            {
-                var w = Workflow.Create(p, "New Workflow");
-                p.Workflows.Add(w);
-                await w.Save(false);
-            }
             return p;
+        }
+        public async Task<IWorkflow> AddDefaultWorkflow()
+        {
+            var w = Workflow.Create(this, "New Workflow");
+            this.Workflows.Add(w);
+            await w.Save(false);
+            return w;
         }
         public void Init()
         {
             var Path = System.IO.Path.GetDirectoryName(System.IO.Path.Combine(this.Path, Filename));
             var ProjectFiles = System.IO.Directory.EnumerateFiles(Path, "*.xaml", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
-            Workflows = new System.Collections.ObjectModel.ObservableCollection<IWorkflow>();
             foreach (string file in ProjectFiles) Workflows.Add(Workflow.FromFile(this, file));
             //return Workflows.ToArray();
         }
@@ -119,8 +172,6 @@ namespace OpenRPA
 
             if (!string.IsNullOrEmpty(rootpath)) projectpath = System.IO.Path.Combine(rootpath, name);
             if (!System.IO.Directory.Exists(projectpath)) System.IO.Directory.CreateDirectory(projectpath);
-
-            if (Workflows == null) Workflows = new System.Collections.ObjectModel.ObservableCollection<IWorkflow>();
 
             var projectfilepath = System.IO.Path.Combine(projectpath, Filename);
             System.IO.File.WriteAllText(projectfilepath, JsonConvert.SerializeObject(this));
@@ -141,23 +192,36 @@ namespace OpenRPA
             SaveFile();
             if (global.isConnected)
             {
-                if (string.IsNullOrEmpty(_id))
+                try
                 {
-                    var result = await global.webSocketClient.InsertOne("openrpa", 0, false, this);
-                    _id = result._id;
-                    _acl = result._acl;
-                    _modified = result._modified;
-                    _modifiedby = result._modifiedby;
-                    _modifiedbyid = result._modifiedbyid;
+                    RobotInstance.instance.DisableWatch = true;
+                    if (string.IsNullOrEmpty(_id))
+                    {
+                        var result = await global.webSocketClient.InsertOne("openrpa", 0, false, this);
+                        _id = result._id;
+                        _acl = result._acl;
+                        _modified = result._modified;
+                        _modifiedby = result._modifiedby;
+                        _modifiedbyid = result._modifiedbyid;
+                    }
+                    else
+                    {
+                        var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, this);
+                        _acl = result._acl;
+                        _modified = result._modified;
+                        _modifiedby = result._modifiedby;
+                        _modifiedbyid = result._modifiedbyid;
+                        _version = result._version;
+                    }
                 }
-                else
+                catch (Exception)
                 {
-                    var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, this);
-                    _acl = result._acl;
-                    _modified = result._modified;
-                    _modifiedby = result._modifiedby;
-                    _modifiedbyid = result._modifiedbyid;
-                    _version = result._version;
+
+                    throw;
+                }
+                finally
+                {
+                    RobotInstance.instance.DisableWatch = false;
                 }
             }
             foreach (var workflow in Workflows)
@@ -195,6 +259,8 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
+            var exists = RobotInstance.instance.Projects.FindById(_id);
+            if(exists!=null) RobotInstance.instance.Projects.Delete(_id);
         }
         public override string ToString()
         {
@@ -203,13 +269,13 @@ namespace OpenRPA
         public async Task InstallDependencies(bool LoadDlls)
         {
             if (dependencies == null) return;
-            foreach (JProperty jp in (JToken)dependencies)
+            foreach (var jp in dependencies)
             {
-                var ver_range = VersionRange.Parse((string)jp.Value);
+                var ver_range = VersionRange.Parse(jp.Value);
                 if (ver_range.IsMinInclusive)
                 {
                     var target_ver = NuGet.Versioning.NuGetVersion.Parse(ver_range.MinVersion.ToString());
-                    await NuGetPackageManager.Instance.DownloadAndInstall(this, new NuGet.Packaging.Core.PackageIdentity(jp.Name, target_ver), LoadDlls);
+                    await NuGetPackageManager.Instance.DownloadAndInstall(this, new NuGet.Packaging.Core.PackageIdentity(jp.Key, target_ver), LoadDlls);
                 }
             }
             // Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.ProjectsDirectory);

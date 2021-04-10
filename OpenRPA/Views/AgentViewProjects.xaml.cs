@@ -36,11 +36,11 @@ namespace OpenRPA.Views
         //public ICommand DeleteCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnDelete, AgentWindow.instance.CanDelete); } }
         //public ICommand CopyIDCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnCopyID, AgentWindow.instance.CanCopyID); } }
         //public ICommand CopyRelativeFilenameCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnCopyRelativeFilename, AgentWindow.instance.CanCopyID); } }
-        public System.Collections.ObjectModel.ObservableCollection<Project> Projects
+        public List<IProject> Projects
         {
             get
             {
-                return RobotInstance.instance.Projects;
+                return RobotInstance.instance.Projects.FindAll().ToList();
             }
         }
         public AgentViewProjects(AgentWindow main)

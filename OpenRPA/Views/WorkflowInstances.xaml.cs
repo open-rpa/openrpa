@@ -1,4 +1,5 @@
 ﻿using OpenRPA.Interfaces;
+using OpenTelemetry.Trace;
 using System;
 using System.Activities.Presentation.Toolbox;
 using System.Collections.Generic;
@@ -58,8 +59,21 @@ namespace OpenRPA.Views
                 if (string.IsNullOrEmpty(workflow._id)) return;
                 Task.Run(() =>
                 {
-                    instances = global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{WorkflowId: '" + workflow._id + "'}", "{\"state\":1,\"_modified\":1,\"errormessage\":1}", orderby: "{\"_modified\": -1}", top: 10).Result;
-                    GenericTools.RunUI(() => NotifyPropertyChanged("Instances"));
+                    // var span = RobotInstance.instance.source.StartActivity("Load Workflow Instances", System.Diagnostics.ActivityKind.Client);
+                    try
+                    {
+                        instances = global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{WorkflowId: '" + workflow._id + "'}", "{\"state\":1,\"_modified\":1,\"errormessage\":1}", orderby: "{\"_modified\": -1}", top: 10).Result;
+                        GenericTools.RunUI(() => NotifyPropertyChanged("Instances"));
+                    }
+                    catch (Exception ex)
+                    {
+                        // span?.RecordException(ex);
+                        Log.Error(ex.ToString());
+                    }
+                    finally
+                    {
+                        // span?.Dispose();
+                    }
                 }); //.Wait();
             }            
         }

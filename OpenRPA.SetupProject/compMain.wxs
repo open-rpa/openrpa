@@ -191,6 +191,7 @@
         <File Id="Microsoft.Extensions.Options.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Options.dll" />
         <File Id="Microsoft.Extensions.Primitives.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Primitives.dll" />
 
+        <File Id="LiteDB.dll" Source="!(wix.MainSource)\LiteDB.dll" />
         <!--
         <File Id="" Source="!(wix.MainSource)\" />
         -->

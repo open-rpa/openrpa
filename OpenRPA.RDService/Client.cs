@@ -347,13 +347,13 @@ namespace OpenRPA.RDService
             {
                 Log.Error(ex.ToString());
             }
-            try
-            {
-                if (rdpConnection != null && rdpConnection.Connected == 1) rdpConnection.Disconnect();
-            }
-            catch (Exception)
-            {
-            }
+            //try
+            //{
+            //    if (rdpConnection != null && rdpConnection.Connected == 1) rdpConnection.Disconnect();
+            //}
+            //catch (Exception)
+            //{
+            //}
             Dispose();
         }
         public void Dispose()

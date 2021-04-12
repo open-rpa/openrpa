@@ -179,10 +179,10 @@ namespace OpenRPA
         }
         public static WorkflowInstance Create(Workflow Workflow, Dictionary<string, object> Parameters)
         {
-            var result = new WorkflowInstance(Workflow) { Parameters = Parameters, name = Workflow.name, Path = Workflow.Project.Path };
+            var result = new WorkflowInstance(Workflow) { Parameters = Parameters, name = Workflow.name, Path = Workflow.Project().Path };
             result.RelativeFilename = Workflow.RelativeFilename;
             result.projectid = Workflow.projectid;
-            result.projectname = Workflow.Project.name; ;
+            result.projectname = Workflow.Project().name;
 
             var _ref = (result as IWorkflowInstance);
             foreach (var runner in Plugins.runPlugins)

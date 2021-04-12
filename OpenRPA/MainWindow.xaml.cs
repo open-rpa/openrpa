@@ -1253,7 +1253,7 @@ namespace OpenRPA
         private void OnReload(object _item)
         {
             Log.Function("MainWindow", "OnReload");
-            _ = RobotInstance.instance.LoadServerData(true);
+            _ = RobotInstance.instance.LoadServerData();
         }
         private bool CanImport(object _item)
         {
@@ -1282,12 +1282,12 @@ namespace OpenRPA
                 {
                     wf = op.listWorkflows.SelectedItem as Workflow;
                     p = op.listWorkflows.SelectedItem as Project;
-                    if (wf != null) p = wf.Project as Project;
+                    if (wf != null) p = wf.Project() as Project;
                 }
                 else if (SelectedContent is Views.WFDesigner)
                 {
                     wf = designer.Workflow;
-                    p = wf.Project as Project;
+                    p = wf.Project() as Project;
                 }
                 var dialogOpen = new Microsoft.Win32.OpenFileDialog
                 {
@@ -1333,7 +1333,7 @@ namespace OpenRPA
                     project._id = null;
                     await project.Save(false);
                     IWorkflow workflow = project.Workflows.First();
-                    workflow.Project = project;
+                    workflow.projectid = project._id;
                     RobotInstance.instance.NotifyPropertyChanged("Projects");
                     OnOpenWorkflow(workflow);
                     return;
@@ -1383,8 +1383,7 @@ namespace OpenRPA
                 if (!IsConnected) return false;
                 if (SelectedContent is Views.WFDesigner designer)
                 {
-                    if (designer.Project == null) return true;
-                    return !designer.Project.disable_local_caching;
+                    return true;
                 }
                 if (SelectedContent is Views.OpenProject open)
                 {
@@ -1392,8 +1391,9 @@ namespace OpenRPA
                     if (val == null) return false;
                     if (open.listWorkflows.SelectedValue is Workflow wf)
                     {
-                        if (wf.Project == null) return true;
-                        return !wf.Project.disable_local_caching;
+                        //if (wf.Project == null) return true;
+                        //return !wf.Project.disable_local_caching;
+                        return true;
                     }
                     if (open.listWorkflows.SelectedValue is Project p)
                     {
@@ -2051,19 +2051,15 @@ namespace OpenRPA
             });
             try
             {
-                foreach (var p in RobotInstance.instance.Projects.FindAll())
+                foreach (var wf in RobotInstance.instance.Workflows.FindAll())
                 {
-                    if(p.Workflows!=null) foreach(var wf in p.Workflows)
+                    if (Config.local.openworkflows.Contains(wf._id) && !string.IsNullOrEmpty(wf._id))
                     {
-
-                        if (Config.local.openworkflows.Contains(wf._id) && !string.IsNullOrEmpty(wf._id))
-                        {
-                            OnOpenWorkflow(wf);
-                        }
-                        else if (Config.local.openworkflows.Contains(wf.RelativeFilename) && !string.IsNullOrEmpty(wf.RelativeFilename))
-                        {
-                            OnOpenWorkflow(wf);
-                        }
+                        OnOpenWorkflow(wf);
+                    }
+                    else if (Config.local.openworkflows.Contains(wf.RelativeFilename) && !string.IsNullOrEmpty(wf.RelativeFilename))
+                    {
+                        OnOpenWorkflow(wf);
                     }
                 }
                 if (Snippets != null) Snippets.Reload();
@@ -2119,10 +2115,6 @@ namespace OpenRPA
             {
                 try
                 {
-                    if (workflow.Project != null)
-                    {
-                        workflow.Project.IsExpanded = true;
-                    }
                     _onOpenWorkflow(workflow);
                 }
                 catch (Exception ex)
@@ -2221,7 +2213,7 @@ namespace OpenRPA
             {
                 if (SelectedContent is Views.WFDesigner designer)
                 {
-                    Workflow workflow = Workflow.Create(designer.Project, "New Workflow");
+                    Workflow workflow = Workflow.Create(designer.Workflow.Project(), "New Workflow");
                     OnOpenWorkflow(workflow);
                     RobotInstance.instance.NotifyPropertyChanged("Projects");
                     Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Designer selected");
@@ -2231,7 +2223,7 @@ namespace OpenRPA
                 var val = view.listWorkflows.SelectedValue;
                 if (val is Workflow wf)
                 {
-                    Workflow workflow = Workflow.Create(wf.Project, "New Workflow");
+                    Workflow workflow = Workflow.Create(wf.Project(), "New Workflow");
                     OnOpenWorkflow(workflow);
                     RobotInstance.instance.NotifyPropertyChanged("Projects");
                     Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Workflow selected");
@@ -2310,7 +2302,7 @@ namespace OpenRPA
             {
                 var designer = (Views.WFDesigner)SelectedContent;
                 await designer.SaveAsync();
-                Workflow workflow = Workflow.Create(designer.Project, "Copy of " + designer.Workflow.name);
+                Workflow workflow = Workflow.Create(designer.Workflow.Project(), "Copy of " + designer.Workflow.name);
                 var xaml = designer.Workflow.Xaml;
                 xaml = Views.WFDesigner.SetWorkflowName(xaml, workflow.name);
                 workflow.Xaml = xaml;

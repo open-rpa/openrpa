@@ -78,7 +78,6 @@ namespace OpenRPA
             }
             if (!string.IsNullOrEmpty(_currentsearchString))
             {
-                // Console.WriteLine("skipping: " + _currentsearchString + " " + searchString);
                 _currentsearchString = searchString;
                 return;
             }
@@ -86,15 +85,14 @@ namespace OpenRPA
 
             _ = Task.Run(async () =>
             {
-                Console.WriteLine("Searching for '" + searchString + "'");
+                Log.Debug("Searching for '" + searchString + "'");
                 var result = await NuGetPackageManager.Instance.Search(project, source, includePrerelease, searchString);
-                Console.WriteLine("Update list of packages based on '" + searchString + "'");
+                Log.Debug("Update list of packages based on '" + searchString + "'");
                 GenericTools.RunUI(() =>
                 {
                 });
                 if (!string.IsNullOrEmpty(_currentsearchString) && _currentsearchString != searchString)
                 {
-                    //Console.WriteLine("Start new search based on '" + _currentsearchString + "'");
                     var _searchString = _currentsearchString;
                     _currentsearchString = null;
                     _ = Search(project, view, includePrerelease, _searchString);
@@ -115,7 +113,6 @@ namespace OpenRPA
                     });
 
                 }
-                //Console.WriteLine("complete:: '" + searchString + "'");
             });
         }
     }

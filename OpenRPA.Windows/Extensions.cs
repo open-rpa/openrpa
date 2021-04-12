@@ -56,12 +56,6 @@ namespace OpenRPA.Windows
             if (e == null) e = item.Properties.Where(x => x.Name == "search_descendants").FirstOrDefault();
             if (e == null) return PluginConfig.search_descendants;
             return bool.Parse(e.Value);
-
-
-
-            if (e == null || string.IsNullOrEmpty(e.Value)) return false;
-            if (e.Value.ToLower() == "true") return true;
-            return false;
         }
         public static string processname(this Interfaces.Selector.SelectorItem item)
         {

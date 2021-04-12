@@ -26,8 +26,7 @@ namespace OpenRPA.Interfaces
         string FilePath { get; }
         string Filename { get; set; }
         bool Serializable { get; set; }
-        [JsonIgnore]
-        IProject Project { get; set; }
+        //IProject Project { get; }
         string ProjectAndName { get; set; }
         List<workflowparameter> Parameters { get; set; }
         IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, idleOrComplete idleOrComplete, VisualTrackingHandler VisualTracking, string SpanId, string ParentSpanId);

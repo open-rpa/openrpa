@@ -16,13 +16,26 @@ namespace OpenRPA.RDService
         public RobotUserSession(unattendedclient client)
         {
             this.client = client;
+            BeginWork();
+        }
+        public void BeginWork()
+        {
+            if (cancellationTokenSource != null )
+            {
+                if(!cancellationTokenSource.IsCancellationRequested)
+                {
+                    cancellationTokenSource.Cancel();
+                }
+                cancellationTokenSource.Dispose();
+                cancellationTokenSource = new System.Threading.CancellationTokenSource(); ;
+            }
             var t = Task.Factory.StartNew(() =>
             {
                 while (!cancellationTokenSource.IsCancellationRequested)
                 {
                     try
                     {
-                        lock(mylock)
+                        lock (mylock)
                         {
                             DoWork();
                         }
@@ -68,7 +81,7 @@ namespace OpenRPA.RDService
             {
                 if(System.Diagnostics.Debugger.IsAttached)
                 {
-                    skiprdp = true;
+                    // skiprdp = true;
                 }
                 if (client == null)
                 {
@@ -270,28 +283,7 @@ namespace OpenRPA.RDService
                 Log.Debug("windowslogin: " + client.windowslogin);
                     try
                 {
-                    var procs = Process.GetProcessesByName("explorer");
-                    System.Diagnostics.Process ownerexplorer = null;
-                    foreach (var explorer in procs)
-                    {
-                        try
-                        {
-                            var owner = NativeMethods.GetProcessUserName(explorer.Id).ToLower();
-                            if (owner == client.windowsusername || owner == client.windowslogin)
-                            {
-                                Log.Debug("Found explorer process for " + owner);
-                                ownerexplorer = explorer;
-                            } else {
-                                Log.Debug("skip explorer process for " + owner);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error(ex.ToString());
-                            created = DateTime.Now;
-                            return;
-                        }
-                    }
+                    System.Diagnostics.Process ownerexplorer = GetOwnerExplorer();
                     if (ownerexplorer == null)
                     {
                         Log.Debug("ownerexplorer is null, exit");
@@ -299,7 +291,7 @@ namespace OpenRPA.RDService
                     }
                     Log.Debug("get openrpa process'");
                     System.Diagnostics.Process ownerrpa = null;
-                    procs = Process.GetProcessesByName("openrpa");
+                    var procs = Process.GetProcessesByName("openrpa");
                     foreach (var rpa in procs)
                     {
                         try
@@ -421,6 +413,38 @@ namespace OpenRPA.RDService
                 Log.Error(ex.ToString());
                 created = DateTime.Now;
             }
+        }
+
+        public Process GetOwnerExplorer()
+        {
+            return RobotUserSession.GetOwnerExplorer(client);
+        }
+        public static Process GetOwnerExplorer(unattendedclient client)
+        {
+            var procs = Process.GetProcessesByName("explorer");
+            System.Diagnostics.Process ownerexplorer = null;
+            foreach (var explorer in procs)
+            {
+                try
+                {
+                    var owner = NativeMethods.GetProcessUserName(explorer.Id).ToLower();
+                    if (owner == client.windowsusername || owner == client.windowslogin)
+                    {
+                        Log.Debug("Found explorer process for " + owner);
+                        ownerexplorer = explorer;
+                    }
+                    else
+                    {
+                        Log.Debug("skip explorer process for " + owner);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                    return null;
+                }
+            }
+            return ownerexplorer;
         }
         public void AddConnection(NamedPipeWrapper.NamedPipeConnection<RPAMessage, RPAMessage> connection)
         {

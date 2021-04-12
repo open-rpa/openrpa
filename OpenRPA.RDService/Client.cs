@@ -353,8 +353,6 @@ namespace OpenRPA.RDService
             }
             catch (Exception)
             {
-
-                throw;
             }
             Dispose();
         }
@@ -362,7 +360,7 @@ namespace OpenRPA.RDService
         {
             try
             {
-                if(rdpConnection!=null) rdpConnection.Disconnect();
+                if(rdpConnection!=null && rdpConnection.Connected != 0) rdpConnection.Disconnect();
             }
             catch (Exception ex)
             {

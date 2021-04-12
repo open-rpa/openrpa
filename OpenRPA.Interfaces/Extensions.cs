@@ -272,7 +272,6 @@ namespace OpenRPA.Interfaces
                         var set = new System.Resources.ResourceSet(type.Assembly.GetManifestResourceStream(names[0]));
                         foreach (System.Collections.DictionaryEntry resource in set)
                         {
-                            // Log.Information("\n[{0}] \t{1}", resource.Key, resource.Value);
                             if (((string)resource.Key).EndsWith(resourceName.ToLower()))
                             {
                                 using (var reader = new System.IO.StreamReader(resource.Value as System.IO.Stream))

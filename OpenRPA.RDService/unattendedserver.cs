@@ -13,5 +13,6 @@ namespace OpenRPA.RDService
         public string computername { get; set; }
         public string computerfqdn { get; set; }
         public bool enabled { get; set; }
+        public bool singleuser { get; set; }
     }
 }

@@ -90,7 +90,6 @@ namespace OpenRPA.Views
         {
             try
             {
-                // Log.Output("UpdateProjectsList");
                 var result = RobotInstance.instance.Projects.FindAll().ToList();
                 for (var i = 0; i < result.Count; i++) result[i].UpdateWorkflowsList();
                 GenericTools.RunUI(() =>
@@ -275,7 +274,7 @@ namespace OpenRPA.Views
             {
                 if (listWorkflows.SelectedItem == null) return null;
                 if (listWorkflows.SelectedItem is Project) return listWorkflows.SelectedItem as Project;
-                if (listWorkflows.SelectedItem is Workflow wf) return wf.Project as Project;
+                if (listWorkflows.SelectedItem is Workflow wf) return wf.Project() as Project;
                 return null;
             }
             set
@@ -342,7 +341,7 @@ namespace OpenRPA.Views
                 {
                     try
                     {
-                        Project p = workflow.Project as Project;
+                        Project p = workflow.Project() as Project;
                         var f = new PackageManager(p);
                         if(RobotInstance.instance.Window is MainWindow main) f.Owner = main;
                         f.ShowDialog();

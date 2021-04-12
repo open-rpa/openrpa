@@ -43,9 +43,9 @@ namespace OpenRPA
         {
             get
             {
-                if (Project == null) return Filename;
-                if (string.IsNullOrEmpty(Project.Path)) return Filename;
-                string lastFolderName = System.IO.Path.GetFileName(Project.Path);
+                if (Project() == null) return Filename;
+                if (string.IsNullOrEmpty(Project().Path)) return Filename;
+                string lastFolderName = System.IO.Path.GetFileName(Project().Path);
                 return System.IO.Path.Combine(lastFolderName, Filename);
             }
         }
@@ -56,7 +56,7 @@ namespace OpenRPA
             {
                 if (string.IsNullOrEmpty(RelativeFilename)) return name;
                 if (RelativeFilename.Contains("\\")) return RelativeFilename;
-                if (Project!=null) return Project.name + "\\" + Filename;
+                if (Project() != null) return Project().name + "\\" + Filename;
                 if(!string.IsNullOrEmpty(_ProjectAndName) && _ProjectAndName.Contains("/"))
                 {
                     return _ProjectAndName.Substring(0, _ProjectAndName.IndexOf("/") + 1) + RelativeFilename;
@@ -72,12 +72,12 @@ namespace OpenRPA
         {
             get
             {
-                if (Project == null)
+                if (Project() == null)
                 {
                     if (!string.IsNullOrEmpty(_ProjectAndName)) return _ProjectAndName;
                     return name;
                 }
-                return Project.name + "/" + name;
+                return Project().name + "/" + name;
             }
             set
             {
@@ -88,8 +88,8 @@ namespace OpenRPA
         {
             get
             {
-                if (Project == null) return Filename;
-                return System.IO.Path.Combine(Project.Path, Filename);
+                if (Project() == null) return Filename;
+                return System.IO.Path.Combine(Project().Path, Filename);
             }
         }   
         public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -183,13 +183,22 @@ namespace OpenRPA
                 return false;
             }
         }
-        [JsonIgnore, BsonIgnore]
-        public IProject Project { get; set; }
+        //[JsonIgnore, BsonIgnore]
+        //public IProject Project { 
+        //    get
+        //    {
+        //        return RobotInstance.instance.Projects.FindById(projectid);
+        //    }
+        //}
+        public IProject Project()
+        {
+            return RobotInstance.instance.Projects.FindById(projectid);
+        }
         public static Workflow FromFile(IProject project, string Filename)
         {
             var result = new Workflow();
             result._type = "workflow";
-            result.Project = project;
+            result.projectid = project._id;
             result.Filename = System.IO.Path.GetFileName(Filename);
             result.name = System.IO.Path.GetFileNameWithoutExtension(Filename);
             result.Xaml = System.IO.File.ReadAllText(Filename);
@@ -199,7 +208,7 @@ namespace OpenRPA
         }
         public static Workflow Create(IProject Project, string Name)
         {
-            Workflow workflow = new Workflow { Project = Project, name = Name, _acl = Project._acl };
+            Workflow workflow = new Workflow { projectid = Project._id, name = Name, _acl = Project._acl };
             bool isUnique = false; int counter = 1;
             while (!isUnique)
             {
@@ -234,9 +243,9 @@ namespace OpenRPA
         {
             if (string.IsNullOrEmpty(name)) return;
             if (string.IsNullOrEmpty(Xaml)) return;
-            if (!Project.Workflows.Contains(this)) Project.Workflows.Add(this);
+            if (!Project().Workflows.Contains(this)) Project().Workflows.Add(this);
 
-            var workflowpath = Project.Path;
+            var workflowpath = Project().Path;
             if (!string.IsNullOrEmpty(overridepath)) workflowpath = overridepath;
             var workflowfilepath = System.IO.Path.Combine(workflowpath, Filename);
             if (string.IsNullOrEmpty(workflowfilepath))
@@ -268,7 +277,7 @@ namespace OpenRPA
                 });
                 return;
             }
-            if(Project.disable_local_caching)
+            if(Project().disable_local_caching)
             {
                 if (System.IO.File.Exists(workflowfilepath)) System.IO.File.Delete(workflowfilepath);
                 return;
@@ -278,7 +287,7 @@ namespace OpenRPA
         public async Task Save(bool UpdateImages)
         {
             if (projectid == null && string.IsNullOrEmpty(projectid)) throw new Exception("Cannot save workflow with out a project/projectid");
-            if(string.IsNullOrEmpty(projectid) && projectid!=null) projectid = Project._id;
+            if(string.IsNullOrEmpty(projectid) && projectid!=null) projectid = Project()._id;
             if (!global.isConnected)
             {
                 try
@@ -293,7 +302,7 @@ namespace OpenRPA
                     else
                     {
                         var exists = RobotInstance.instance.Workflows.FindById(_id);
-                        if (exists != null) RobotInstance.instance.Workflows.Update(this);
+                        if (exists != null) RobotInstance.instance.UpdateWorkflow(this);
                         if (exists == null) RobotInstance.instance.Workflows.Insert(this);
                     }
                 }
@@ -329,7 +338,7 @@ namespace OpenRPA
                 _modifiedbyid = result._modifiedbyid;
                 _version = result._version;
                 var exists = RobotInstance.instance.Workflows.FindById(_id);
-                if (exists != null) RobotInstance.instance.Workflows.Update(this);
+                if (exists != null) RobotInstance.instance.UpdateWorkflow(this);
                 if (exists == null) RobotInstance.instance.Workflows.Insert(this);
                 if (UpdateImages)
                 {
@@ -350,7 +359,6 @@ namespace OpenRPA
         {
             try
             {
-                if (Project != null && Project.Workflows.Contains(this)) Project.Workflows.Remove(this);
                 if (string.IsNullOrEmpty(FilePath)) return;
                 if (System.IO.File.Exists(FilePath)) System.IO.File.Delete(FilePath);
                 if (!global.isConnected) return;
@@ -378,7 +386,7 @@ namespace OpenRPA
         }
         public void RunPendingInstances()
         {
-            var statepath = System.IO.Path.Combine(Project.Path, "state");
+            var statepath = System.IO.Path.Combine(Project().Path, "state");
             if(System.IO.Directory.Exists(statepath))
             {
                 var ProjectFiles = System.IO.Directory.EnumerateFiles(statepath, "*.json", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
@@ -390,7 +398,7 @@ namespace OpenRPA
                         {
                             var i = JsonConvert.DeserializeObject<WorkflowInstance>(System.IO.File.ReadAllText(f));
                             i.Workflow = this;
-                            i.Path = Project.Path;
+                            i.Path = Project().Path;
                             //if (idleOrComplete != null) i.OnIdleOrComplete += idleOrComplete;
                             //if (VisualTracking != null) i.OnVisualTracking += VisualTracking;
                             var exists = WorkflowInstance.Instances.Where(x => x.InstanceId == i.InstanceId).FirstOrDefault();
@@ -435,12 +443,12 @@ namespace OpenRPA
                 if (counter == 1)
                 {
                     Filename = System.Text.RegularExpressions.Regex.Replace(name, @"[^0-9a-zA-Z]+", "") + ".xaml";
-                    FilePath = System.IO.Path.Combine(Project.Path, Filename);
+                    FilePath = System.IO.Path.Combine(Project().Path, Filename);
                 }
                 else
                 {
                     Filename = name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".xaml";
-                    FilePath = System.IO.Path.Combine(Project.Path, Filename);
+                    FilePath = System.IO.Path.Combine(Project().Path, Filename);
                 }
                 if (!System.IO.File.Exists(FilePath)) isUnique = true;
                 counter++;

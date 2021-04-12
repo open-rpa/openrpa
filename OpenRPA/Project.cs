@@ -31,7 +31,6 @@ namespace OpenRPA
         }
         public void UpdateWorkflowsList()
         {
-            // Log.Output("UpdateWorkflowsList");
             var list = RobotInstance.instance.Workflows.Find(x => x.projectid == _id);
             Workflows.UpdateCollection(list);
         }
@@ -269,11 +268,13 @@ namespace OpenRPA
         public async Task InstallDependencies(bool LoadDlls)
         {
             if (dependencies == null) return;
+            if (dependencies.Count == 0) return;
             foreach (var jp in dependencies)
             {
                 var ver_range = VersionRange.Parse(jp.Value);
                 if (ver_range.IsMinInclusive)
                 {
+                    Log.Information("DownloadAndInstall " + jp.Key);
                     var target_ver = NuGet.Versioning.NuGetVersion.Parse(ver_range.MinVersion.ToString());
                     await NuGetPackageManager.Instance.DownloadAndInstall(this, new NuGet.Packaging.Core.PackageIdentity(jp.Key, target_ver), LoadDlls);
                 }

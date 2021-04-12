@@ -42,7 +42,7 @@ namespace OpenRPA.Views
         private bool _IsBusy = true;
         public bool IsBusy { get { return _IsBusy; } set { _IsBusy = value; NotifyPropertyChanged("IsBusy"); } }
         private string _BusyContent = "Loading NuGet feeds and packages ...";
-        public string BusyContent { get { return _BusyContent; } set { _BusyContent = value; Log.Output(value); NotifyPropertyChanged("BusyContent"); } }
+        public string BusyContent { get { return _BusyContent; } set { _BusyContent = value; NotifyPropertyChanged("BusyContent"); } }
         private bool _IncludePrerelease = false;
         public bool IncludePrerelease { get { return _IncludePrerelease; } set { _IncludePrerelease = value; NotifyPropertyChanged("IncludePrerelease"); FilterText = FilterText; } }
         private Project project;

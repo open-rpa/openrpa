@@ -109,13 +109,6 @@ namespace OpenRPA.Views
         public bool HasChanged { get; set; }
         public void forceHasChanged(bool value) { HasChanged = value; }
         public ModelItem SelectedActivity { get; private set; }
-        public IProject Project
-        {
-            get
-            {
-                return Workflow.Project;
-            }
-        }
         private void OnCancel()
         {
             //GenericTools.RunUI(() =>
@@ -385,7 +378,7 @@ namespace OpenRPA.Views
         }
         public async Task<bool> SaveAsync()
         {
-            // var span = RobotInstance.instance.source.StartActivity("Workflow Designer SaveAsync", System.Diagnostics.ActivityKind.Client);
+            var span = RobotInstance.instance.source.StartActivity("Workflow Designer SaveAsync", System.Diagnostics.ActivityKind.Client);
             try
             {
             var imagepath = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "images");
@@ -462,10 +455,6 @@ namespace OpenRPA.Views
                 {
                     var files = await global.webSocketClient.Query<Interfaces.entity.metadata>("files", "{\"metadata.workflow\": \"" + Workflow._id + "\"}");
                     var unusedfiles = files.Where(x => !usedimages.Contains(x._id)).ToList();
-                    //Console.WriteLine("usedimages: " + usedimages.Count);
-                    //Console.WriteLine("files: " + files.Length);
-                    //Console.WriteLine("unusedfiles: " + unusedfiles.Count);
-                    //Console.WriteLine("*****");
                     foreach (var f in unusedfiles)
                     {
                         await global.webSocketClient.DeleteOne("files", f._id);
@@ -506,12 +495,12 @@ namespace OpenRPA.Views
             }
             catch (Exception ex)
             {
-                // span?.RecordException(ex);
+                span?.RecordException(ex);
                 throw;
             }
             finally
             {
-                // span?.Dispose();
+                span?.Dispose();
             }
         }
         public void RenameWorkflow(string name)

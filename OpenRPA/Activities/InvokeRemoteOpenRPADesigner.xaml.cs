@@ -42,7 +42,8 @@ namespace OpenRPA.Activities
             {
                 foreach (var w in p.Workflows) result.Add(w);
             }
-            result = result.OrderBy(x => x.name).OrderBy(x => x.Project.name).ToList();
+            // result = result.OrderBy(x => x.name).OrderBy(x => x.Project.name).ToList();
+            result = result.OrderBy(x => x.name).OrderBy(x => x.projectid).ToList();
             foreach (var w in result) workflows.Add(w);
         }
         private async void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)

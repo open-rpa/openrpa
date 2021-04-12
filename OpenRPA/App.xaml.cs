@@ -71,19 +71,6 @@ namespace OpenRPA
             {
             }
         }
-        //static void CurrentDomain_FirstChanceHandler(object source, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
-        //{
-        //    try
-        //    {
-        //        Exception ex = e.Exception;
-        //        System.Diagnostics.Trace.WriteLine(ex.ToString());
-        //        Console.WriteLine(ex.ToString());
-        //        // Log.Verbose("FirstChance: " + ex.ToString());
-        //    }
-        //    catch (Exception)
-        //    {
-        //    }
-        //}
         public static System.Windows.Forms.NotifyIcon notifyIcon { get; set; }  = new System.Windows.Forms.NotifyIcon();
         public App()
         {
@@ -281,7 +268,7 @@ namespace OpenRPA
             }
             RobotInstance.instance.Status += App_Status;
             Input.InputDriver.Instance.initCancelKey(Config.local.cancelkey);
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
                 try
                 {
@@ -289,7 +276,7 @@ namespace OpenRPA
                     // Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.ProjectsDirectory);
                     Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.PluginsDirectory, false);
                     if (Config.local.showloadingscreen) splash.BusyContent = "Initialize main window";
-                    await RobotInstance.instance.init();
+                    RobotInstance.instance.init();
                 }
                 catch (Exception ex)
                 {

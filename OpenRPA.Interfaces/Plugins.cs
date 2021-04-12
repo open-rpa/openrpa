@@ -75,8 +75,8 @@ namespace OpenRPA.Interfaces
             ICollection<Type> snippetTypes = new List<Type>();
             ICollection<Type> runPluginTypes = new List<Type>();
             ICollection<Type> IDetectorPluginTypes = new List<Type>();
-
-            Log.Information("LoadPlugins::Get types " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Information("Begin loading plugins");
+            Log.Debug("LoadPlugins::Get types " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
             foreach (var a in assemblies)
             {
                 try
@@ -89,7 +89,7 @@ namespace OpenRPA.Interfaces
                 catch (Exception) { }
             }
 
-            Log.Information("LoadPlugins::Get all IRecordPlugins " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Debug("LoadPlugins::Get all IRecordPlugins " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
             var IRecordPlugintype = typeof(IRecordPlugin);
             foreach (var p in alltypes)
             {
@@ -99,7 +99,7 @@ namespace OpenRPA.Interfaces
                 }
                 catch (Exception) { }
             }
-            Log.Information("LoadPlugins::Get all IDetectorPlugin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Debug("LoadPlugins::Get all IDetectorPlugin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
             var IDetectorPlugintype = typeof(IDetectorPlugin);
             foreach (var p in alltypes)
             {
@@ -110,7 +110,7 @@ namespace OpenRPA.Interfaces
                 catch (Exception) { }
             }
 
-            Log.Information("LoadPlugins::Get all ISnippet " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Debug("LoadPlugins::Get all ISnippet " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
             var ISnippettype = typeof(ISnippet);
             foreach (var p in alltypes)
             {
@@ -121,7 +121,7 @@ namespace OpenRPA.Interfaces
                 catch (Exception) { }
             }
 
-            Log.Information("LoadPlugins::Get all IRunPlugin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Debug("LoadPlugins::Get all IRunPlugin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
             var IRunPlugintype = typeof(IRunPlugin);
             foreach (var p in alltypes)
             {
@@ -131,7 +131,7 @@ namespace OpenRPA.Interfaces
                 }
                 catch (Exception) { }
             }
-            Log.Information("LoadPlugins::Get all ICustomWorkflowExtension " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Debug("LoadPlugins::Get all ICustomWorkflowExtension " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
             var WorkflowExtensiontype = typeof(ICustomWorkflowExtension);
             foreach (var p in alltypes)
             {
@@ -164,7 +164,7 @@ namespace OpenRPA.Interfaces
                     if(plugin== null)
                     {
                         plugin = (IRecordPlugin)Activator.CreateInstance(type);
-                        Log.Information("LoadPlugins::Initialize plugin " + plugin.Name + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        Log.Debug("LoadPlugins::Initialize plugin " + plugin.Name + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         // SetStatus("Initialize plugin " + plugin.Name);
                         plugin.Initialize(client);
                         GenericTools.RunUI(() => recordPlugins.Add(plugin));
@@ -192,7 +192,7 @@ namespace OpenRPA.Interfaces
                     if(plugin == null)
                     {
                         plugin = (ISnippet)Activator.CreateInstance(type);
-                        Log.Information("LoadPlugins::Initialize snippet " + plugin.Name + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        Log.Debug("LoadPlugins::Initialize snippet " + plugin.Name + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         Snippets.Add(plugin);
                     }
                 }
@@ -218,7 +218,7 @@ namespace OpenRPA.Interfaces
                     if (plugin == null)
                     {
                         plugin = (IRunPlugin)Activator.CreateInstance(type);
-                        Log.Information("LoadPlugins::Initialize RunPlugin " + plugin.Name + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        Log.Debug("LoadPlugins::Initialize RunPlugin " + plugin.Name + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         plugin.Initialize(client);
                         GenericTools.RunUI(() => runPlugins.Add(plugin));
                     }
@@ -228,11 +228,12 @@ namespace OpenRPA.Interfaces
                     Log.Error(ex.ToString());
                 }
             }
-            Log.Information("LoadPlugins::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Debug("LoadPlugins::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Information("Load plugins ended after " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
         }
         public static void LoadPlugins(IOpenRPAClient client, string projectsDirectory, bool recursive)
         {
-            Log.Information("LoadPlugins::begin ");
+            Log.Debug("LoadPlugins::begin ");
             List<string> dllFileNames = new List<string>();
             if(recursive)
             {

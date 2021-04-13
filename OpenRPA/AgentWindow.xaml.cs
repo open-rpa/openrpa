@@ -16,10 +16,10 @@ namespace OpenRPA
     {
         public bool VisualTracking { get; set; } = false;
         public bool SlowMotion { get; set; } = false;
-        public static AgentWindow instance { get; set; }
+        public static AgentWindow Instance { get; set; }
         public AgentWindow()
         {
-            instance = this;
+            Instance = this;
             if (!string.IsNullOrEmpty(Config.local.culture))
             {
                 try
@@ -68,7 +68,7 @@ namespace OpenRPA
         {
             try
             {
-                OnOpen(null);
+                OnOpen();
                 //if(RobotInstance.instance.ProjectCount>0)
                 //{
                 //    RobotInstance.instance.Projects.First().IsExpanded = true;
@@ -327,6 +327,16 @@ namespace OpenRPA
         }
         public void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
         {
+            if (instance == null) return;
+            var span = RobotInstance.instance.source.StartActivity("IdleOrComplete " + instance.state + " " + instance.name, System.Diagnostics.ActivityKind.Consumer);
+            Log.FunctionIndent("MainWindow", "IdleOrComplete");
+            span?.SetTag("caller", instance.caller);
+            span?.SetTag("_id", instance._id);
+            span?.SetTag("correlationId", instance.correlationId);
+            span?.SetTag("isCompleted", instance.isCompleted);
+            span?.SetTag("state", instance.state);
+            span?.SetTag("errormessage", instance.errormessage);
+            span?.SetTag("host", instance.host);
             GenericTools.RunUI(() =>
             {
                 try
@@ -357,6 +367,7 @@ namespace OpenRPA
                     {
                         try
                         {
+                            span?.AddEvent(new System.Diagnostics.ActivityEvent("Queue Message with status"));
                             await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId, 0);
                         }
                         catch (Exception ex)
@@ -401,15 +412,21 @@ namespace OpenRPA
                         {
                             if (b.Key == instance._id)
                             {
+                                span?.AddEvent(new System.Diagnostics.ActivityEvent("Resume Bookmark " + b.Key));
                                 wi.ResumeBookmark(b.Key, instance);
                             }
                         }
                     }
                 }
+                RobotInstance.instance.NotifyPropertyChanged("Projects");
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
+            }
+            finally
+            {
+                span?.Dispose();
             }
         }
         private void OnExitApp(object _item)
@@ -452,7 +469,7 @@ namespace OpenRPA
                 MessageBox.Show(ex.Message);
             }
         }
-        private void OnOpen(object _item)
+        private void OnOpen()
         {
             AutomationHelper.syncContext.Post(o =>
             {
@@ -463,7 +480,8 @@ namespace OpenRPA
                     {
                         if (document.Content is Views.OpenProject op) { document.IsSelected = true; return; }
                     }
-                    var view = new Views.AgentViewProjects(this);
+                    // var view = new Views.AgentViewProjects(this);
+                    var view = new Views.OpenProject(this);
                     // view.onOpenProject += OnOpenProject;
                     view.onOpenWorkflow += OnOpenWorkflow;
 
@@ -474,6 +492,7 @@ namespace OpenRPA
                     MainTabControl.Children.Add(layoutDocument);
                     layoutDocument.IsSelected = true;
                     // layoutDocument.Closing += LayoutDocument_Closing;
+                    RobotInstance.instance.NotifyPropertyChanged("Projects");
                 }
                 catch (Exception ex)
                 {

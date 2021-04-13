@@ -10,6 +10,8 @@ namespace OpenRPA.RDService
 {
     using FlaUI.UIA3.Patterns;
     using OpenRPA.Interfaces;
+    using OpenTelemetry.Resources;
+    using OpenTelemetry.Trace;
     using System.IO.Pipes;
     using System.Threading;
 
@@ -80,6 +82,7 @@ namespace OpenRPA.RDService
         {
             try
             {
+                InitializeOTEL();
                 Program.args = args;
                 var asm = System.Reflection.Assembly.GetEntryAssembly();
                 var filepath = asm.CodeBase.Replace("file:///", "");
@@ -176,14 +179,17 @@ namespace OpenRPA.RDService
         private static string openrpa_watchid;
         private static async void WebSocketClient_OnOpen()
         {
+            var span = source.StartActivity("WebSocketClient_OnOpen");
             try
             {
+                InitializeOTEL();
                 Log.Information("WebSocketClient_OnOpen");
                 TokenUser user = null;
                 while (user == null)
                 {
                     if (!string.IsNullOrEmpty(PluginConfig.tempjwt))
                     {
+                        span?.AddEvent(new System.Diagnostics.ActivityEvent("Try signin using temp token"));
                         user = await global.webSocketClient.Signin(PluginConfig.tempjwt, "RDService", System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString()); 
                         if (user != null)
                         {
@@ -193,19 +199,23 @@ namespace OpenRPA.RDService
                                 PluginConfig.tempjwt = null;
                                 PluginConfig.Save();
                             }
+                            span?.AddEvent(new System.Diagnostics.ActivityEvent("Signed in as " + user.username));
                             Log.Information("Signed in as " + user.username);
                         }
                     }
                     else if (PluginConfig.jwt != null && PluginConfig.jwt.Length > 0)
                     {
+                        span?.AddEvent(new System.Diagnostics.ActivityEvent("Try signin using token"));
                         user = await global.webSocketClient.Signin(PluginConfig.UnprotectString(Base64Decode(PluginConfig.jwt)), "RDService", System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString()); 
                         if (user != null)
                         {
+                            span?.AddEvent(new System.Diagnostics.ActivityEvent("Signed in as " + user.username));
                             Log.Information("Signed in as " + user.username);
                         }
                     }
                     else
                     {
+                        span?.AddEvent(new System.Diagnostics.ActivityEvent("Missing jwt from config, close down"));
                         Log.Error("Missing jwt from config, close down");
                         _ = global.webSocketClient.Close();
                         if (isService) await manager.StopService();
@@ -219,6 +229,7 @@ namespace OpenRPA.RDService
                 server = servers.FirstOrDefault();
                 if (servers.Length == 0)
                 {
+                    span?.AddEvent(new System.Diagnostics.ActivityEvent("Adding new unattendedserver for " + computerfqdn));
                     Log.Information("Adding new unattendedserver for " + computerfqdn);
                     server = new unattendedserver() { computername = computername, computerfqdn = computerfqdn, name = computerfqdn, enabled = true };
                     server = await global.webSocketClient.InsertOne("openrpa", 1, false, server);
@@ -229,6 +240,7 @@ namespace OpenRPA.RDService
                 // Create listener for robots to connect too
                 if(pipe==null)
                 {
+                    span?.AddEvent(new System.Diagnostics.ActivityEvent("Creating pipe service for robots"));
                     PipeSecurity ps = new PipeSecurity();
                     ps.AddAccessRule(new PipeAccessRule("Users", PipeAccessRights.ReadWrite | PipeAccessRights.CreateNewInstance, System.Security.AccessControl.AccessControlType.Allow));
                     ps.AddAccessRule(new PipeAccessRule("CREATOR OWNER", PipeAccessRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
@@ -243,6 +255,7 @@ namespace OpenRPA.RDService
                 {
                     if (string.IsNullOrEmpty(openrpa_watchid))
                     {
+                        span?.AddEvent(new System.Diagnostics.ActivityEvent("Add database watch"));
                         // "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}"
                         // openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[{ '$match': { 'fullDocument._type': {'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'} } }]", onWatchEvent);
                         openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[{ '$match': {'fullDocument.computername':'" + computername + "', 'fullDocument.computerfqdn':'" + computerfqdn + "'} }]", onWatchEvent);
@@ -253,6 +266,7 @@ namespace OpenRPA.RDService
                 {
                     if (reloadTimer == null)
                     {
+                        span?.AddEvent(new System.Diagnostics.ActivityEvent("Add reload timer"));
                         reloadTimer = new System.Timers.Timer(PluginConfig.reloadinterval.TotalMilliseconds);
                         reloadTimer.Elapsed += async (o, e) =>
                         {
@@ -275,25 +289,32 @@ namespace OpenRPA.RDService
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
+                span?.RecordException(ex);
+            }
+            finally
+            {
+                span?.Dispose();
             }
         }
         private static void onWatchEvent(string id, Newtonsoft.Json.Linq.JObject data)
         {
+            var span = source.StartActivity("onWatchEvent");
             Log.Information("onWatchEvent");
             try
             {
                 string _type = data["fullDocument"].Value<string>("_type");
-                Log.Information("_type: " + _type);
+                span?.AddTag("_type", _type);
                 string _id = data["fullDocument"].Value<string>("_id");
-                Log.Information("_id: " + _id);
+                span?.AddTag("_id", _id);
                 long _version = data["fullDocument"].Value<long>("_version");
-                Log.Information("_version: " + _version);
+                span?.AddTag("_version", _version);
                 string operationType = data.Value<string>("operationType");
+                span?.AddTag("operationType", operationType);
                 Log.Information("operationType: " + operationType);
                 if (operationType != "replace" && operationType != "insert" && operationType != "update") return; // we don't support delete right now
                 if (_type == "unattendedclient")
                 {
-                    Log.Information("DeserializeObject");
+                    span?.AddEvent(new System.Diagnostics.ActivityEvent("DeserializeObject"));
                     var unattendedclient = Newtonsoft.Json.JsonConvert.DeserializeObject<unattendedclient>(data["fullDocument"].ToString());
                     if(unattendedclient==null)
                     {
@@ -309,74 +330,119 @@ namespace OpenRPA.RDService
             }
             catch (Exception ex)
             {
+                span?.RecordException(ex);
                 Log.Error(ex.ToString());
             }
+            span?.Dispose();
         }
         private static void UnattendedclientUpdated(unattendedclient unattendedclient)
         {
-            RobotUserSession session = null;
-            if (sessions != null) session = sessions.Where(x => x.client._id == unattendedclient._id).FirstOrDefault();
-            if (!unattendedclient.enabled)
+            if (unattendedclient == null) return;
+            var span = source.StartActivity("UnattendedclientUpdated for " + unattendedclient.windowsusername);
+            try
             {
-                if (session != null)
+                span?.AddTag("windowsusername", unattendedclient.windowsusername);
+                span?.AddTag("enabled", unattendedclient.enabled);
+                RobotUserSession session = null;
+                if (sessions != null) session = sessions.Where(x => x.client._id == unattendedclient._id).FirstOrDefault();
+                if (!unattendedclient.enabled)
                 {
-                    Log.Information("SendSignout");
-                    _ = session.SendSignout();
-                    if (session.rdp != null || session.freerdp != null)
+                    if (session != null)
                     {
-                        Log.Information("disconnecting session for " + session.client.windowsusername);
-                        try
+                        //if(session.client.autosignout)
+                        //{
+                        //    span?.AddEvent(new System.Diagnostics.ActivityEvent("Send Signout signal"));
+                        //    _ = session.SendSignout();
+                        //}
+                        if (session.rdp != null || session.freerdp != null)
                         {
-                            session.disconnectrdp();
+                            Log.Information("disconnecting session for " + session.client.windowsusername);
+                            span?.AddEvent(new System.Diagnostics.ActivityEvent("disconnecting session for " + session.client.windowsusername));
+                            try
+                            {
+                                session.disconnectrdp();
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex.ToString());
+                            }
                         }
-                        catch (Exception ex)
-                        {
-                            Log.Error(ex.ToString());
-                        }
-                    }
 
-                }
-                Log.Information("GetOwnerExplorer");
-                System.Diagnostics.Process ownerexplorer = RobotUserSession.GetOwnerExplorer(unattendedclient);
-                if (ownerexplorer != null)
-                {
-                    Log.Information("WTSLogoffSession " + ownerexplorer.SessionId);
-                    NativeMethods.WTSLogoffSession(IntPtr.Zero, (int)ownerexplorer.SessionId, true);
-                }
-            }
-            if (unattendedclient.enabled)
-            {
-                if (server == null) Log.Error("Server is null");
-                if (session == null) Log.Error("session is null");
-                if (server != null && server.singleuser)
-                {
+                    }
+                    span?.AddEvent(new System.Diagnostics.ActivityEvent("GetOwnerExplorer"));
+                    Log.Information("GetOwnerExplorer");
                     System.Diagnostics.Process ownerexplorer = RobotUserSession.GetOwnerExplorer(unattendedclient);
-                    int sessionid = -1;
-                    if (ownerexplorer != null) sessionid = ownerexplorer.SessionId;
-                    var procs = System.Diagnostics.Process.GetProcessesByName("explorer");
-                    foreach (var explorer in procs)
+                    if (ownerexplorer != null)
                     {
-                        if (explorer.SessionId != sessionid)
+                        if(server.logoff)
                         {
-                            NativeMethods.WTSLogoffSession(IntPtr.Zero, (int)explorer.SessionId, true);
+                            span?.AddEvent(new System.Diagnostics.ActivityEvent("WTSLogoffSession " + ownerexplorer.SessionId));
+                            Log.Information("WTSLogoffSession " + ownerexplorer.SessionId);
+                            NativeMethods.WTSLogoffSession(IntPtr.Zero, (int)ownerexplorer.SessionId, true);
+                        } else
+                        {
+                            span?.AddEvent(new System.Diagnostics.ActivityEvent("WTSDisconnectSession " + ownerexplorer.SessionId));
+                            Log.Information("WTSDisconnectSession " + ownerexplorer.SessionId);
+                            NativeMethods.WTSDisconnectSession(IntPtr.Zero, (int)ownerexplorer.SessionId, true);
                         }
                     }
                 }
-                else if (server == null) Log.Information("server is null!!!");
+                if (unattendedclient.enabled)
+                {
+                    if (server != null && server.singleuser)
+                    {
+                        span?.AddEvent(new System.Diagnostics.ActivityEvent("GetOwnerExplorer"));
+                        Log.Information("GetOwnerExplorer");
+                        System.Diagnostics.Process ownerexplorer = RobotUserSession.GetOwnerExplorer(unattendedclient);
+                        int sessionid = -1;
+                        if (ownerexplorer != null) sessionid = ownerexplorer.SessionId;
+                        var procs = System.Diagnostics.Process.GetProcessesByName("explorer");
+                        foreach (var explorer in procs)
+                        {
+                            if (explorer.SessionId != sessionid)
+                            {
+                                if (server.logoff)
+                                {
+                                    span?.AddEvent(new System.Diagnostics.ActivityEvent("WTSLogoffSession " + explorer.SessionId));
+                                    Log.Information("WTSLogoffSession " + explorer.SessionId);
+                                    NativeMethods.WTSLogoffSession(IntPtr.Zero, (int)explorer.SessionId, true);
+                                }
+                                else
+                                {
+                                    span?.AddEvent(new System.Diagnostics.ActivityEvent("WTSDisconnectSession " + explorer.SessionId));
+                                    Log.Information("WTSDisconnectSession " + explorer.SessionId);
+                                    NativeMethods.WTSDisconnectSession(IntPtr.Zero, (int)explorer.SessionId, true);
+                                }
+                            }
+                        }
+                    }
+                    else if (server == null) Log.Information("server is null!!!");
 
-                if (session != null)
-                {
-                    Log.Information("Updating session for " + unattendedclient.windowsusername);
-                    session.client = unattendedclient;
-                    if (session.rdp == null && session.freerdp == null) session.BeginWork();
+                    if (session != null)
+                    {
+                        span?.AddEvent(new System.Diagnostics.ActivityEvent("Updating session for " + unattendedclient.windowsusername));
+                        Log.Information("Updating session for " + unattendedclient.windowsusername);
+                        session.client = unattendedclient;
+                        if (session.rdp == null && session.freerdp == null) session.BeginWork();
+                    }
+                    else
+                    {
+                        span?.AddEvent(new System.Diagnostics.ActivityEvent("Adding session for " + unattendedclient.windowsusername));
+                        Log.Information("Adding session for " + unattendedclient.windowsusername);
+                        sessions.Add(new RobotUserSession(unattendedclient));
+                    }
                 }
-                else
-                {
-                    Log.Information("Adding session for " + unattendedclient.windowsusername);
-                    sessions.Add(new RobotUserSession(unattendedclient));
-                }
+                cleanup();
             }
-            cleanup();
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                span?.RecordException(ex);
+            }
+            finally
+            {
+                span?.Dispose();
+            }
         }
         private static void cleanup()
         {
@@ -485,6 +551,59 @@ namespace OpenRPA.RDService
             }
         }
         public static OpenRPA.NamedPipeWrapper.NamedPipeServer<RPAMessage> pipe = null;
+        private static TracerProvider StatsTracerProvider;
+        private static TracerProvider tracerProvider;
+        public static System.Diagnostics.ActivitySource source = new System.Diagnostics.ActivitySource("OpenRPA.RDService");
+        private static bool InitializeOTEL()
+        {
+            var span = source.StartActivity("InitializeOTEL");
+            try
+            {
+                AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+                span?.SetTag("enable_analytics", Config.local.enable_analytics);
+                if (Config.local.enable_analytics && StatsTracerProvider == null)
+                {
+                    span?.AddEvent(new System.Diagnostics.ActivityEvent("Adding listener for analytics"));
+                    StatsTracerProvider = OpenTelemetry.Sdk.CreateTracerProviderBuilder()
+                    .SetSampler(new AlwaysOnSampler())
+                    .AddSource("OpenRPA").AddSource("OpenRPA.RobotInstance").AddSource("OpenRPA.Net").AddSource("OpenRPA.RDService")
+                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenRPA.RDService"))
+                    .AddOtlpExporter(otlpOptions =>
+                    {
+                        otlpOptions.Endpoint = new Uri("https://otel.stats.openiap.io");
+                    })
+                    .Build();
+                }
+                span?.SetTag("otel_trace_url", Config.local.otel_trace_url);
+                if (!string.IsNullOrEmpty(Config.local.otel_trace_url) && tracerProvider == null)
+                {
+                    span?.AddEvent(new System.Diagnostics.ActivityEvent("Adding listener for otel"));
+                    tracerProvider = OpenTelemetry.Sdk.CreateTracerProviderBuilder()
+                    .SetSampler(new AlwaysOnSampler())
+                    .AddSource("OpenRPA").AddSource("OpenRPA.RobotInstance").AddSource("OpenRPA.Net").AddSource("OpenRPA.RDService")
+                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenRPA.RDService"))
+                    .AddOtlpExporter(otlpOptions =>
+                    {
+                        if (Config.local.otel_trace_url.Contains("http://") && Config.local.otel_trace_url.Contains(":80"))
+                        {
+                            Config.local.otel_trace_url = Config.local.otel_trace_url.Replace("http://", "https://").Replace(":80", "");
+                        }
+                        otlpOptions.Endpoint = new Uri(Config.local.otel_trace_url);
+                    })
+                    .Build();
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            finally
+            {
+                span?.Dispose();
+            }
+            return false;
+        }
         private static void DoWork()
         {
             try

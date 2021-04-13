@@ -91,12 +91,12 @@
                     Command="{Binding Data.DisableCachingCommand, Source={StaticResource proxy}}" 
                     ></CheckBox>
             </StackPanel>
-            <StackPanel>
+            <StackPanel x:Name="EditXAMLPanel">
                 <TextBlock Text="{x:Static or:strings.open_edit}" FontWeight="Bold"></TextBlock>
                 <Button Click="ButtonEditXAML" Margin="20,0,0,0" Content="{x:Static or:strings.open_edit_xaml}"
                         IsEnabled="{Binding IsWorkflowSelected,Mode=OneWay}" ></Button>
             </StackPanel>
-            <StackPanel>
+            <StackPanel x:Name="PackageManagerPanel">
                 <TextBlock Text="{x:Static or:strings.open_package_manager}" FontWeight="Bold"></TextBlock>
                 <Button Click="ButtonOpenPackageManager" Margin="20,0,0,0" Content="{x:Static or:strings.open_package_manager}"
                         IsEnabled="{Binding IsWorkflowOrProjectSelected,Mode=OneWay}"></Button>

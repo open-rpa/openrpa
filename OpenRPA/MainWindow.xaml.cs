@@ -5,6 +5,7 @@ using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
 using OpenRPA.Net;
 using OpenRPA.Views;
+using OpenTelemetry.Trace;
 using System;
 using System.Activities;
 using System.Activities.Core.Presentation;
@@ -116,63 +117,66 @@ namespace OpenRPA
         public void MainWindow_WebSocketClient_OnOpen()
         {
             Log.FunctionIndent("MainWindow", "MainWindow_WebSocketClient_OnOpen");
-            GenericTools.RunUI(async () =>
-            {
-                try
+            if (first_connect)
+            { 
+                GenericTools.RunUI(async () =>
                 {
-                    SetStatus("Load layout and reopen workflows");
-                    if (RobotInstance.instance.Projects.Count() == 0 && first_connect)
+
                     {
-                        string Name = "New Project";
                         try
                         {
-                            Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name);
-                            RobotInstance.instance.Projects.Insert(project);
+                            SetStatus("Load layout and reopen workflows");
+                            if (RobotInstance.instance.Projects.Count() == 0 && first_connect)
+                            {
+                                string Name = "New Project";
+                                try
+                                {
+                                    Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name);
+                                    RobotInstance.instance.Projects.Insert(project);
 
-                            IWorkflow workflow = await project.AddDefaultWorkflow();
-                            RobotInstance.instance.NotifyPropertyChanged("Projects");
-                            OnOpenWorkflow(workflow);
+                                    IWorkflow workflow = await project.AddDefaultWorkflow();
+                                    RobotInstance.instance.NotifyPropertyChanged("Projects");
+                                    OnOpenWorkflow(workflow);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.Error(ex.ToString());
+                                }
+                            }
+                            first_connect = false;
+                            LoadLayout();
+
+                            if (Config.local.show_getting_started)
+                            {
+                                var url = Config.local.getting_started_url;
+                                if (string.IsNullOrEmpty(url)) url = "https://skadefro.github.io/openrpa.dk/gettingstarted.html";
+                                if (!string.IsNullOrEmpty(global.openflowconfig.getting_started_url)) url = global.openflowconfig.getting_started_url;
+                                LayoutDocument layoutDocument = new LayoutDocument { Title = "Getting started" };
+                                layoutDocument.ContentId = "GettingStarted";
+                                // Views.GettingStarted view = new Views.GettingStarted(url + "://" + u.Host + "/gettingstarted.html");
+                                Views.GettingStarted view = new Views.GettingStarted(url);
+                                layoutDocument.Content = view;
+                                MainTabControl.Children.Add(layoutDocument);
+                                layoutDocument.IsSelected = true;
+                                layoutDocument.Closing += LayoutDocument_Closing;
+                            }
+
                         }
                         catch (Exception ex)
                         {
                             Log.Error(ex.ToString());
                         }
                     }
-                    if (first_connect)
+                    try
                     {
-                        first_connect = false;
-                        LoadLayout();
-
-                        if (Config.local.show_getting_started)
-                        {
-                            var url = Config.local.getting_started_url;
-                            if (string.IsNullOrEmpty(url)) url = "https://skadefro.github.io/openrpa.dk/gettingstarted.html";
-                            if (!string.IsNullOrEmpty(global.openflowconfig.getting_started_url)) url = global.openflowconfig.getting_started_url;
-                            LayoutDocument layoutDocument = new LayoutDocument { Title = "Getting started" };
-                            layoutDocument.ContentId = "GettingStarted";
-                            // Views.GettingStarted view = new Views.GettingStarted(url + "://" + u.Host + "/gettingstarted.html");
-                            Views.GettingStarted view = new Views.GettingStarted(url);
-                            layoutDocument.Content = view;
-                            MainTabControl.Children.Add(layoutDocument);
-                            layoutDocument.IsSelected = true;
-                            layoutDocument.Closing += LayoutDocument_Closing;
-                        }
+                        ReadyForAction?.Invoke();
                     }
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-
-                try
-                {
-                    ReadyForAction?.Invoke();
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-            });
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                });
+            }
             Log.FunctionOutdent("MainWindow", "MainWindow_WebSocketClient_OnOpen");
         }
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
@@ -1777,7 +1781,7 @@ namespace OpenRPA
                         }
                     }
                     var view = new Views.OpenProject(this);
-                    view.onOpenProject += OnOpenProject;
+                    // view.onOpenProject += OnOpenProject;
                     view.onOpenWorkflow += OnOpenWorkflow;
                     view.onSelectedItemChanged += View_onSelectedItemChanged;
 
@@ -2140,13 +2144,13 @@ namespace OpenRPA
             }, null);
             Log.FunctionOutdent("MainWindow", "WFDesigneronChanged");
         }
-        public void OnOpenProject(Project project)
-        {
-            foreach (var wf in project.Workflows)
-            {
-                OnOpenWorkflow(wf);
-            }
-        }
+        //public void OnOpenProject(Project project)
+        //{
+        //    foreach (var wf in project.Workflows)
+        //    {
+        //        OnOpenWorkflow(wf);
+        //    }
+        //}
         private bool CanSave(object _item)
         {
             try
@@ -3238,7 +3242,16 @@ namespace OpenRPA
         }
         public async void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
         {
+            if (instance == null) return;
+            var span = RobotInstance.instance.source.StartActivity("IdleOrComplete " + instance.state + " " + instance.name, System.Diagnostics.ActivityKind.Consumer);
             Log.FunctionIndent("MainWindow", "IdleOrComplete");
+            span?.SetTag("caller", instance.caller);
+            span?.SetTag("_id", instance._id);
+            span?.SetTag("correlationId", instance.correlationId);
+            span?.SetTag("isCompleted", instance.isCompleted);
+            span?.SetTag("state", instance.state);
+            span?.SetTag("errormessage", instance.errormessage);
+            span?.SetTag("host", instance.host);
             GenericTools.RunUI(() =>
             {
                 try
@@ -3271,6 +3284,7 @@ namespace OpenRPA
                     }
                     try
                     {
+                        span?.AddEvent(new System.Diagnostics.ActivityEvent("Queue Message with status"));
                         await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId, 0);
                     }
                     catch (Exception ex)
@@ -3313,15 +3327,22 @@ namespace OpenRPA
                         {
                             if (b.Key == instance._id)
                             {
+                                span?.AddEvent(new System.Diagnostics.ActivityEvent("Resume Bookmark " + b.Key));
                                 wi.ResumeBookmark(b.Key, instance);
                             }
                         }
                     }
                 }
+                RobotInstance.instance.NotifyPropertyChanged("Projects");
             }
             catch (Exception ex)
             {
+                span?.RecordException(ex);
                 Log.Error(ex.ToString());
+            }
+            finally
+            {
+                span?.Dispose();
             }
             Log.FunctionOutdent("MainWindow", "IdleOrComplete");
         }

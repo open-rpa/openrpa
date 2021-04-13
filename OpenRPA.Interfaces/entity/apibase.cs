@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,10 @@ namespace OpenRPA.Interfaces.entity
 
     public class apibase : ObservableObject, IBase
     {
+        [JsonIgnore]
+        public bool isDirty { get; set; }
+        [JsonIgnore]
+        public bool isLocalOnly { get; set; }
         public string _id { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string _type { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string name { get { return GetProperty<string>(); } set { SetProperty(value); } }

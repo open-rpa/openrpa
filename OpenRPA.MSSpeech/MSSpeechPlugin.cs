@@ -91,16 +91,20 @@ namespace OpenRPA.MSSpeech
             if (!string.IsNullOrEmpty(_commands) || IncludeCommonWords)
             {
                 var gBuilder = new System.Speech.Recognition.GrammarBuilder();
-                if (IncludeCommonWords)
-                {
-                    gBuilder.AppendDictation();
-                }
+                //if (IncludeCommonWords)
+                //{
+                //    gBuilder.AppendDictation();
+                //}
                 if (!string.IsNullOrEmpty(_commands))
                 {
                     var commands = new System.Speech.Recognition.Choices();
                     var array = _commands.Split(new char[] { '\n', '\r' }).Where(x => !string.IsNullOrEmpty(x)).ToArray();
                     commands.Add(array);
                     gBuilder.Append(commands);
+                }
+                if (IncludeCommonWords)
+                {
+                    gBuilder.AppendDictation();
                 }
                 var grammer = new System.Speech.Recognition.Grammar(gBuilder);
                 recEngine.UnloadAllGrammars();

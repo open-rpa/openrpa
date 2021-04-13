@@ -29,7 +29,7 @@ namespace OpenRPA.Views
         public event Action<Project> onOpenProject;
         //public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; }
         private AgentWindow main = null;
-        public ICommand PlayCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnPlay, AgentWindow.instance.CanPlay); } }
+        public ICommand PlayCommand { get { return new RelayCommand<object>(AgentWindow.Instance.OnPlay, AgentWindow.Instance.CanPlay); } }
         //public ICommand ExportCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnExport, AgentWindow.instance.CanExport); } }
         //public ICommand RenameCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnRename, AgentWindow.instance.CanRename); } }
         //public ICommand DeleteCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnDelete2, AgentWindow.instance.CanDelete); } }

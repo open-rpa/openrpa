@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Interfaces
 {
-    public interface IWorkflowInstance : INotifyPropertyChanged
+    public interface IWorkflowInstance : INotifyPropertyChanged, IBase
     {
         [Newtonsoft.Json.JsonProperty(propertyName: "parentspanid")]
         string ParentSpanId { get; set; }
@@ -16,7 +16,6 @@ namespace OpenRPA.Interfaces
         IWorkflow Workflow { get; set; }
         Dictionary<string, object> Parameters { get; set; }
         Dictionary<string, object> Bookmarks { get; set; }
-        string _id { get; set; }
         string correlationId { get; set; }
         string queuename { get; set; }
         string InstanceId { get; set; }

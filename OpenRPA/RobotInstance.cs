@@ -51,6 +51,7 @@ namespace OpenRPA
         public LiteDatabase db; 
         public LiteDB.ILiteCollection<IProject> Projects;
         public LiteDB.ILiteCollection<IWorkflow> Workflows;
+        public LiteDB.ILiteCollection<Interfaces.entity.Detector> Detectors;
         public int ProjectCount
         {
             get
@@ -97,6 +98,10 @@ namespace OpenRPA
 
                     _instance.Workflows = _instance.db.GetCollection<IWorkflow>("workflows");
                     _instance.Workflows.EnsureIndex(x => x._id, true);
+
+                    _instance.Detectors = _instance.db.GetCollection<Interfaces.entity.Detector>("detectors");
+                    _instance.Detectors.EnsureIndex(x => x._id, true);
+
                     // BsonMapper.Global.Entity<Project>().DbRef(x => x.Workflows, "workflows");
                     AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) =>
                     {
@@ -323,13 +328,14 @@ namespace OpenRPA
                 foreach (var p in local_projects)
                 {
                     var exists = server_projects.Where(x => x._id == p._id).FirstOrDefault();
-                    if (exists == null) {
+                    if (exists == null)
+                    {
                         span?.AddEvent(new ActivityEvent("Removing local project " + p.name));
-                        Log.Debug("Removing local project " + p.name); 
-                        Projects.Delete(p._id); 
+                        Log.Debug("Removing local project " + p.name);
+                        Projects.Delete(p._id);
                     }
                 }
-                if(reload_ids.Count > 0 )
+                if (reload_ids.Count > 0)
                 {
                     for (var i = 0; i < reload_ids.Count; i++) reload_ids[i] = "'" + reload_ids[i] + "'";
                     span?.AddEvent(new ActivityEvent("Featching fresh version of ´" + reload_ids.Count + " projects"));
@@ -361,28 +367,29 @@ namespace OpenRPA
                 var server_workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{\"_type\": 'workflow'}", "{\"_version\": 1}", top: Config.local.max_workflows);
                 var local_workflows = Workflows.FindAll().ToList();
                 reload_ids = new List<string>();
-                foreach (var p in server_workflows)
+                foreach (var wf in server_workflows)
                 {
-                    var exists = local_workflows.Where(x => x._id == p._id).FirstOrDefault();
+                    var exists = local_workflows.Where(x => x._id == wf._id).FirstOrDefault();
                     if (exists != null)
                     {
-                        if (exists._version < p._version) reload_ids.Add(p._id);
+                        if (exists._version < wf._version) reload_ids.Add(wf._id);
                     }
                     else
                     {
-                        reload_ids.Add(p._id);
+                        reload_ids.Add(wf._id);
                     }
                 }
                 foreach (var wf in local_workflows)
                 {
                     var exists = server_workflows.Where(x => x._id == wf._id).FirstOrDefault();
-                    if (exists == null) {
+                    if (exists == null)
+                    {
                         span?.AddEvent(new ActivityEvent("Removing local workflow " + wf.name));
-                        Log.Debug("Removing local workflow " + wf.name); 
-                        Workflows.Delete(wf._id); 
+                        Log.Debug("Removing local workflow " + wf.name);
+                        Workflows.Delete(wf._id);
                     }
                 }
-                if(reload_ids.Count > 0)
+                if (reload_ids.Count > 0)
                 {
                     for (var i = 0; i < reload_ids.Count; i++) reload_ids[i] = "'" + reload_ids[i] + "'";
                     var q = "{ _type: 'workflow', '_id': {'$in': [" + string.Join(",", reload_ids) + "]}}";
@@ -412,367 +419,81 @@ namespace OpenRPA
                     }
                 }
                 NotifyPropertyChanged("Projects");
-            }
-            catch (Exception ex)
-            {
-                span?.RecordException(ex);
-                Log.Error(ex, "");
-            }
-            finally
-            {
-                if (global.webSocketClient.user != null)
+
+
+
+
+                span?.AddEvent(new ActivityEvent("query detector versions"));
+                var server_detectors = await global.webSocketClient.Query<Interfaces.entity.Detector>("openrpa", "{\"_type\": 'detector'}", "{\"_version\": 1}");
+                var local_detectors = Detectors.FindAll().ToList();
+                reload_ids = new List<string>();
+                foreach (var detector in server_detectors)
                 {
-                    SetStatus("Connected to " + Config.local.wsurl + " as " + global.webSocketClient.user.name);
-                }
-                AutoReloading = true;
-                span?.Dispose();
-            }
-        }
-        public async Task LoadServerData2(bool force)
-        {
-            var span = source.StartActivity("LoadServerData", ActivityKind.Consumer);
-            try
-            {
-                Log.FunctionIndent("RobotInstance", "LoadServerData");
-                if (!global.isSignedIn)
-                {
-                    Log.FunctionOutdent("RobotInstance", "LoadServerData", "Not signed in");
-                    return;
-                }
-                var sw = new System.Diagnostics.Stopwatch();
-                sw.Start();
-                try
-                {
-                    if (ProjectCount == 0 || first_connect)
+                    var exists = local_detectors.Where(x => x._id == detector._id).FirstOrDefault();
+                    if (exists != null)
                     {
-                        SetStatus("Loading workflows and state");
-                        Log.Debug("Get workflows from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        // span?.AddEvent(new ActivityEvent("load projects from server"));
-                        var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}", orderby: "{\"name\":-1}", top: Config.local.max_projects);
-                        projects = projects.OrderBy(x => x.name).ToArray();
-                        var projectids = projects.Select(x => "'" + x._id + "'").ToArray();
-                        var q = "{ _type: 'workflow', 'projectid': {'$in': [" + string.Join(",", projectids) + "]}}";
-                        // span?.AddEvent(new ActivityEvent("load workflows from server"));
-                        var workflows = await global.webSocketClient.Query<Workflow>("openrpa", q, orderby: "{\"projectid\":-1,\"name\":-1}", top: Config.local.max_workflows);
-                        workflows = workflows.OrderBy(x => x.name).ToArray();
-
-                        foreach (var workflow in workflows)
-                        {
-                            var wfexists = Workflows.Find(x => x._id == workflow._id).FirstOrDefault();
-                            if (wfexists == null) { Workflows.Insert(workflow); } else { UpdateWorkflow(workflow); }
-                        }
-
-                        Log.Debug("Get projects from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        Log.Debug("Get detectors from server " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        // span?.AddEvent(new ActivityEvent("load detectors from server"));
-                        var detectors = await global.webSocketClient.Query<Interfaces.entity.Detector>("openrpa", "{_type: 'detector'}");
-                        Log.Debug("Done getting workflows and projects " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        SetStatus("Initialize detecors");
-                        foreach (var d in detectors)
-                        {
-                            IDetectorPlugin dp = null;
-                            d.Path = Interfaces.Extensions.ProjectsDirectory;
-                            dp = Plugins.AddDetector(this, d);
-                            if (dp != null) dp.OnDetector += Window.OnDetector;
-                            if (dp == null) Log.Error("Detector " + d.name + " not loaded! (plugin: " + d.Plugin + ")");
-                        }
-                        var folders = new List<string>();
-                        foreach (var p in projects)
-                        {
-                            string regexSearch = new string(System.IO.Path.GetInvalidFileNameChars()) + new string(System.IO.Path.GetInvalidPathChars());
-                            var r = new System.Text.RegularExpressions.Regex(string.Format("[{0}]", System.Text.RegularExpressions.Regex.Escape(regexSearch)));
-                            p.name = r.Replace(p.name, "");
-                            folders.Add(p.Path);
-                        }
-                        SetStatus("Initialize projects and workflows ");
-                        foreach (var p in projects)
-                        {
-                            SetStatus("Install project dependencies");
-                            try
-                            {
-                                await p.InstallDependencies(true);
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.Error(ex.ToString());
-                            }
-                            SetStatus("Initialize " + p.name);
-                            Log.Debug("Saving project " + p.name + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                            p.SaveFile();
-                            var pexists = Projects.Find(x => x._id == p._id).FirstOrDefault();
-                            if (pexists == null) { Projects.Insert(p); } else {
-                                p.IsExpanded = pexists.IsExpanded;
-                                p.IsSelected = pexists.IsSelected;
-                                Projects.Update(p); 
-                            }
-
-                        }
-                        foreach (var wf in workflows)
-                        {
-                            var hasProject = RobotInstance.instance.Projects.Find(x => x._id == wf.projectid && !string.IsNullOrEmpty(wf.projectid)).FirstOrDefault();
-                            if (hasProject == null)
-                            {
-                                IProject unknown = Projects.Find(x => x.name == "Uknown").FirstOrDefault();
-                                if (unknown == null)
-                                {
-                                    unknown = await Project.Create(Interfaces.Extensions.ProjectsDirectory, "Unknown");
-                                    Projects.Insert(unknown);
-                                }
-                                wf.projectid = unknown._id;
-                                unknown.Workflows.Add(wf);
-                                var wfexists = Workflows.Find(x => x._id == wf._id).FirstOrDefault();
-                                if (wfexists == null) { Workflows.Insert(wf); } else { UpdateWorkflow(wf); }
-                            }
-                        }
-                        NotifyPropertyChanged("Projects");
+                        if (exists._version < detector._version) reload_ids.Add(detector._id);
                     }
-                    else if (!global.openflowconfig.supports_watch || force)
+                    else
                     {
-                        Log.Debug("Reloading server data");
-                        SetStatus("Fetching projects");
-                        // span?.AddEvent(new ActivityEvent("load projects from server"));
-                        var projects = await global.webSocketClient.Query<Project>("openrpa", "{_type: 'project'}", top: 5000);
-                        SetStatus("Fetching workflows");
-                        // span?.AddEvent(new ActivityEvent("load workflow from server"));
-                        var workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow'}", orderby: "{\"projectid\":-1,\"name\":-1}", top: 5000);
-                        SetStatus("Fetching detectors");
-                        // span?.AddEvent(new ActivityEvent("load detectors from server"));
-                        var detectors = await global.webSocketClient.Query<Interfaces.entity.Detector>("openrpa", "{_type: 'detector'}");
-                        GenericTools.RunUI(async () =>
+                        reload_ids.Add(detector._id);
+                    }
+                }
+                foreach (var detector in local_detectors)
+                {
+                    var exists = server_detectors.Where(x => x._id == detector._id).FirstOrDefault();
+                    if (exists == null)
+                    {
+                        span?.AddEvent(new ActivityEvent("Removing local detector " + detector.name));
+                        Log.Debug("Removing local detector " + detector.name);
+                        var d = Plugins.detectorPlugins.Where(x => x.Entity._id == exists._id).FirstOrDefault();
+                        if(d != null)
                         {
-                            foreach (var project in projects)
+                            d.OnDetector -= Window.OnDetector;
+                            d.Stop();
+                            Plugins.detectorPlugins.Remove(d);
+                        }
+                        Detectors.Delete(detector._id);
+                    }
+                }
+                if (reload_ids.Count > 0)
+                {
+                    for (var i = 0; i < reload_ids.Count; i++) reload_ids[i] = "'" + reload_ids[i] + "'";
+                    var q = "{ _type: 'detector', '_id': {'$in': [" + string.Join(",", reload_ids) + "]}}";
+                    server_detectors = await global.webSocketClient.Query<Interfaces.entity.Detector>("openrpa", q, orderby: "{\"name\":-1}");
+                    foreach (var detector in server_detectors)
+                    {
+                        try
+                        {
+                            IDetectorPlugin exists = Plugins.detectorPlugins.Where(x => x.Entity._id == detector._id).FirstOrDefault();
+                            if (exists != null && detector._version != exists.Entity._version)
                             {
-                                IProject exists = RobotInstance.instance.Projects.Find(x => x._id == project._id).FirstOrDefault();
-                                if (exists != null && exists._version != project._version)
-                                {
-                                    int index = -1;
-                                    try
-                                    {
-                                        Projects.Update(project);
-                                        Log.Information("Updating project " + project.name);
-                                        project.SaveFile();
-                                        SetStatus("Install project dependencies");
-                                        try
-                                        {
-                                            await project.InstallDependencies(true);
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            Log.Error(ex.ToString());
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Log.Error("project1, index: " + index.ToString());
-                                        Log.Error(ex.ToString());
-                                    }
-                                }
-                                else if (exists == null)
-                                {
-                                    project.SaveFile();
-                                    RobotInstance.instance.Projects.Insert(project);
-
-                                }
+                                exists.Stop();
+                                exists.OnDetector -= Window.OnDetector;
+                                exists = Plugins.UpdateDetector(this, detector);
+                                if (exists != null) exists.OnDetector += Window.OnDetector;
                             }
-                            foreach (var workflow in workflows)
+                            else if (exists == null)
                             {
-                                IWorkflow exists = null;
-                                IProject project = RobotInstance.instance.Projects.Find(x => x._id == workflow.projectid).FirstOrDefault();
-                                workflow.projectid = project._id;
-
-                                RobotInstance.instance.Projects.FindAll().ForEach(p =>
+                                exists = Plugins.AddDetector(this, detector);
+                                if (exists != null)
                                 {
-                                    try
-                                    {
-                                        if (exists == null)
-                                        {
-                                            var temp = p.Workflows.Where(x => x.IDOrRelativeFilename == workflow.IDOrRelativeFilename).FirstOrDefault();
-                                            if (temp != null)
-                                            {
-                                                exists = temp;
-                                            }
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Log.Error(ex.ToString());
-                                    }
-                                });
-                                if (exists != null && exists.current_version != workflow._version)
-                                {
-                                    if (!(RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) is Views.WFDesigner designer))
-                                    {
-                                        int index = -1;
-                                        try
-                                        {
-                                            index = project.Workflows.IndexOf(exists);
-                                            project.Workflows.Remove(exists);
-                                            project.Workflows.Insert(index, workflow);
-                                            workflow.SaveFile();
-                                            project.NotifyPropertyChanged("Workflows");
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            Log.Error("project2, index: " + index.ToString());
-                                            Log.Error(ex.ToString());
-                                        }
-                                    }
-                                    else
-                                    {
-                                        //var messageBoxResult = MessageBox.Show(workflow.name + " has been updated by " + workflow._modifiedby + ", reload workflow ?", "Workflow has been updated", 
-                                        //    MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.Yes, MessageBoxOptions.DefaultDesktopOnly);
-                                        var messageBoxResult = System.Windows.MessageBox.Show(workflow.name + " has been updated by " + workflow._modifiedby + ", reload workflow ?", "Workflow has been updated",
-                                            System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.None, System.Windows.MessageBoxResult.Yes);
-                                        if (messageBoxResult == System.Windows.MessageBoxResult.Yes)
-                                        {
-                                            int index = -1;
-                                            designer.forceHasChanged(false);
-                                            designer.tab.Close();
-                                            index = project.Workflows.IndexOf(exists);
-                                            project.Workflows.Remove(exists);
-                                            project.Workflows.Insert(index, workflow);
-                                            workflow.SaveFile();
-                                            project.NotifyPropertyChanged("Workflows");
-                                            Window.OnOpenWorkflow(workflow);
-                                        }
-                                        else
-                                        {
-                                            designer.Workflow.current_version = workflow._version;
-                                        }
-                                    }
-                                }
-                                else if (exists == null)
-                                {
-                                    project = RobotInstance.instance.Projects.Find(p => p._id == workflow.projectid).FirstOrDefault();
-                                    if (project != null)
-                                    {
-                                        Log.Information("Adding " + workflow.name + " to project " + project.name);
-                                        workflow.projectid = project._id;
-                                        project.Workflows.Add(workflow);
-                                        workflow.SaveFile();
-                                        project.NotifyPropertyChanged("Workflows");
-                                    }
-                                    else
-                                    {
-                                        Log.Information("No project found, so disposing workflow " + workflow.name);
-                                    }
-                                }
-                                else
-                                {
-                                    // workflow not new and not updated, so dispose
-                                }
-                            }
-                            Log.Debug("Done getting workflows and projects " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                            SetStatus("Initialize detecors");
-                            foreach (var d in detectors)
-                            {
-                                IDetectorPlugin exists = Plugins.detectorPlugins.Where(x => x.Entity._id == d._id).FirstOrDefault();
-                                if (exists != null && d._version != exists.Entity._version)
-                                {
-                                    exists.Stop();
-                                    exists.OnDetector -= Window.OnDetector;
-                                    Plugins.detectorPlugins.Remove(exists);
-                                    exists = Plugins.AddDetector(RobotInstance.instance, d);
                                     exists.OnDetector += Window.OnDetector;
                                 }
-                                else if (exists == null)
-                                {
-                                    exists = Plugins.AddDetector(RobotInstance.instance, d);
-                                    if (exists != null)
-                                    {
-                                        exists.OnDetector += Window.OnDetector;
-                                    }
-                                    else { Log.Information("Failed loading detector " + d.name); }
-
-                                }
+                                else { Log.Information("Failed loading detector " + detector.name); }
                             }
-                            foreach (var d in Plugins.detectorPlugins.ToList())
-                            {
-                                var exists = detectors.Where(x => x._id == d.Entity._id).FirstOrDefault();
-                                if (exists == null)
-                                {
-                                    d.Stop();
-                                    d.OnDetector -= Window.OnDetector;
-                                    Plugins.detectorPlugins.Remove(d);
-                                }
-                            }
-
-                            RobotInstance.instance.Projects.FindAll().ForEach(p =>
-                            {
-                                try
-                                {
-                                    Workflow wfexists = null;
-                                    foreach (var workflow in p.Workflows.ToList())
-                                    {
-                                        wfexists = workflows.Where(x => x.IDOrRelativeFilename == workflow.IDOrRelativeFilename).FirstOrDefault();
-                                        if (wfexists == null)
-                                        {
-                                            var designer = RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename);
-                                            if (designer == null)
-                                            {
-                                                p.Workflows.Remove(workflow);
-                                                try
-                                                {
-                                                    System.IO.File.Delete(workflow.FilePath);
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    Log.Error(ex.ToString());
-                                                }
-                                            }
-                                        }
-                                    }
-                                    Project projexists = null;
-                                    projexists = projects.Where(x => x._id == p._id).FirstOrDefault();
-                                    if (wfexists == null)
-                                    {
-                                        if (p.Workflows.Count == 0)
-                                        {
-                                            RobotInstance.instance.Projects.Delete(p._id);
-                                            try
-                                            {
-                                                var projectfilepath = System.IO.Path.Combine(p.Path, p.Filename);
-                                                System.IO.File.Delete(projectfilepath);
-                                                System.IO.Directory.Delete(p.Path);
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                Log.Error(ex.ToString());
-                                            }
-
-                                        }
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    Log.Error(ex.ToString());
-                                }
-                            });
-                        });
-                        NotifyPropertyChanged("Projects");
-                    }
-                    if (global.openflowconfig.supports_watch)
-                    {
-                        if (string.IsNullOrEmpty(openrpa_watchid))
+                            var dexists = Detectors.FindById(detector._id);
+                            if (dexists == null) Detectors.Insert(detector);
+                            if (dexists != null) Detectors.Update(detector);
+                        }
+                        catch (Exception ex)
                         {
-                            openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[{ '$match': { 'fullDocument._type': {'$exists': true} } }]", onWatchEvent);
+                            Log.Error(ex.ToString());
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    // span?.RecordException(ex);
-                    Log.Error(ex, "");
-                }
-                finally
-                {
-                    if (global.webSocketClient.user != null)
-                    {
-                        SetStatus("Connected to " + Config.local.wsurl + " as " + global.webSocketClient.user.name);
-                    }
-                    AutoReloading = true;
-                }
-                Log.FunctionOutdent("RobotInstance", "LoadServerData");
+
+
             }
             catch (Exception ex)
             {
@@ -781,14 +502,15 @@ namespace OpenRPA
             }
             finally
             {
-                if (global.webSocketClient.user != null)
+                if (global.webSocketClient.user != null && global.webSocketClient.isConnected)
                 {
                     SetStatus("Connected to " + Config.local.wsurl + " as " + global.webSocketClient.user.name);
+                } else {
+                    SetStatus("Offline");
                 }
                 AutoReloading = true;
                 span?.Dispose();
             }
-
         }
         private string openrpa_watchid = "";
         private void SetStatus(string message)
@@ -843,46 +565,6 @@ namespace OpenRPA
             Config.Save();
             SetStatus("Checking for updates");
             _ = CheckForUpdatesAsync();
-
-            //CreateMainWindow();
-            //GenericTools.RunUI(() =>
-            //{
-            //    if (App.splash != null)
-            //    {
-            //        App.splash.Close();
-            //        App.splash = null;
-            //    }
-            //    if (!Config.local.isagent) Show();
-            //    ReadyForAction?.Invoke();
-            //});
-            try
-            {
-                if (string.IsNullOrEmpty(Config.local.wsurl))
-                {
-                    // CreateMainWindow();
-                    SetStatus("loading detectors");
-                    var Detectors = Interfaces.entity.Detector.loadDetectors(Interfaces.Extensions.ProjectsDirectory);
-                    foreach (var d in Detectors)
-                    {
-                        IDetectorPlugin dp = null;
-                        d.Path = Interfaces.Extensions.ProjectsDirectory;
-                        dp = Plugins.AddDetector(RobotInstance.instance, d);
-                        if (dp != null) dp.OnDetector += Window.OnDetector;
-                    }
-                }
-                try
-                {
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                    throw;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-            }
             try
             {
                 if (!string.IsNullOrEmpty(Config.local.wsurl))
@@ -904,14 +586,13 @@ namespace OpenRPA
                     {
                         SetStatus("Run pending workflow instances");
                         Log.Debug("RunPendingInstances::begin ");
-                        foreach (Project p in Projects.FindAll())
+                        var wfs = Workflows.FindAll();
+                        foreach (var workflow in wfs)
                         {
-                            foreach (var workflow in p.Workflows)
-                            {
-                                workflow.RunPendingInstances();
-                            }
+                            workflow.RunPendingInstances();
                         }
                         Log.Debug("RunPendingInstances::end ");
+                        // CreateMainWindow();
                     }
                     GenericTools.RunUI(() =>
                     {
@@ -985,6 +666,14 @@ namespace OpenRPA
                     // ExpressionEditor.EditorUtil.Init();
                     _ = CodeEditor.init.Initialize();
                 }, null);
+                SetStatus("loading detectors");
+                var _detectors = Detectors.FindAll();
+                foreach (var d in _detectors)
+                {
+                    IDetectorPlugin dp = null;
+                    dp = Plugins.AddDetector(this, d);
+                    if (dp != null) dp.OnDetector += Window.OnDetector;
+                }
 
             }
 
@@ -1313,6 +1002,7 @@ namespace OpenRPA
             span?.Dispose();
             Log.FunctionOutdent("RobotInstance", "RobotInstance_WebSocketClient_OnOpen");
         }
+        int ReconnectDelay = 5000;
         private async void WebSocketClient_OnClose(string reason)
         {
             Log.FunctionIndent("RobotInstance", "WebSocketClient_OnClose", reason);
@@ -1348,7 +1038,9 @@ namespace OpenRPA
                 ReadyForAction?.Invoke();
             });
 
-            await Task.Delay(5000);
+            await Task.Delay(ReconnectDelay);
+            ReconnectDelay += 5000;
+            if (ReconnectDelay > 60000*2) ReconnectDelay = 60000 * 2;
             if (autoReconnect)
             {
                 try
@@ -1539,6 +1231,7 @@ namespace OpenRPA
                         }
                         Log.Information("Create instance of " + workflow.name);
                         Log.Function("RobotInstance", "WebSocketClient_OnQueueMessage", "Create instance and run workflow");
+                        if (Window == null) { e.isBusy = true; return; }
                         GenericTools.RunUI(() =>
                         {
                             command.command = "invokesuccess";
@@ -1552,7 +1245,7 @@ namespace OpenRPA
                                     designer.Run(Window.VisualTracking, Window.SlowMotion, instance);
                                 }
                                 else
-                                {
+                                {                                    
                                     instance = workflow.CreateInstance(param, message.replyto, message.correlationId, Window.IdleOrComplete, null, null, null);
                                     instance.Run();
                                 }
@@ -1721,18 +1414,21 @@ namespace OpenRPA
                             {
                                 exists.Stop();
                                 exists.OnDetector -= Window.OnDetector;
-                                exists = Plugins.UpdateDetector(RobotInstance.instance, d);
-                                exists.OnDetector += Window.OnDetector;
+                                exists = Plugins.UpdateDetector(this, d);
+                                if(exists!=null) exists.OnDetector += Window.OnDetector;
                             }
                             else if (exists == null)
                             {
-                                exists = Plugins.AddDetector(RobotInstance.instance, d);
+                                exists = Plugins.AddDetector(this, d);
                                 if (exists != null)
                                 {
                                     exists.OnDetector += Window.OnDetector;
                                 }
                                 else { Log.Information("Failed loading detector " + d.name); }
                             }
+                            var dexists = Detectors.FindById(d._id);
+                            if (dexists == null) Detectors.Insert(d);
+                            if (dexists != null) Detectors.Update(d);
                         }
                         catch (Exception ex)
                         {

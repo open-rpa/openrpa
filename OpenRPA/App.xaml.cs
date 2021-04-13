@@ -41,7 +41,6 @@ namespace OpenRPA
                         } else
                         {
                             MessageBox.Show("Path not found " + filepath);
-                            Console.WriteLine("Path not found " + filepath);
                             return;
                         }
                     }
@@ -199,6 +198,10 @@ namespace OpenRPA
                 folderPath = Interfaces.Extensions.ProjectsDirectory;
                 assemblyPath = System.IO.Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
                 if (System.IO.File.Exists(assemblyPath)) return Assembly.LoadFrom(assemblyPath);
+
+                folderPath = System.IO.Path.GetTempPath();
+                assemblyPath = System.IO.Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
+                if (System.IO.File.Exists(assemblyPath)) return Assembly.LoadFrom(assemblyPath);
             }
             catch (Exception ex)
             {
@@ -280,6 +283,7 @@ namespace OpenRPA
                 }
                 catch (Exception ex)
                 {
+                    Log.Error(ex.ToString());
                     Console.WriteLine(ex.ToString());
                 }
             });

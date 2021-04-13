@@ -14,8 +14,6 @@ namespace OpenRPA
 {
     public class Project : apibase, IProject
     {
-        [JsonIgnore]
-        public bool isDirty { get; set; }
         public Dictionary<string, string> dependencies { get; set; }
         public bool disable_local_caching { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -31,7 +29,8 @@ namespace OpenRPA
         }
         public void UpdateWorkflowsList()
         {
-            var list = RobotInstance.instance.Workflows.Find(x => x.projectid == _id);
+            var list = RobotInstance.instance.Workflows.Find(x => x.projectid == _id).ToList();
+            // Log.Output("Update workflows for " + name);
             Workflows.UpdateCollection(list);
         }
         //public override bool Equals(object obj)
@@ -79,10 +78,15 @@ namespace OpenRPA
         public bool IsExpanded { 
             get { return GetProperty<bool>(); } 
             set {
+                if (!_backingFieldValues.ContainsKey("IsExpanded"))
+                {
+                    SetProperty(value);
+                    return;
+                }
                 var orgvalue = GetProperty<bool>();
                 if (Views.OpenProject.isUpdating) return;
                 SetProperty(value);
-                if (value && (_Workflows ==null || _Workflows.Count == 0)) UpdateWorkflowsList();
+                if (value && orgvalue != value && (_Workflows ==null || _Workflows.Count == 0)) UpdateWorkflowsList();
                 if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name) && orgvalue != value) RobotInstance.instance.Projects.Update(this);
             } 
         }

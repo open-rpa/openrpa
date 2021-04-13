@@ -32,24 +32,46 @@ namespace OpenRPA.Views
         public bool CanClose { get; set; } = false;
         public bool CanHide { get; set; } = false;
         public event Action<Workflow> onOpenWorkflow;
-        public event Action<Project> onOpenProject;
+        // public event Action<Project> onOpenProject;
         public event Action onSelectedItemChanged;
         //public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; }
-        private MainWindow main = null;
-        public ICommand PlayCommand { get { return new RelayCommand<object>(MainWindow.instance.OnPlay, MainWindow.instance.CanPlay); } }
-        public ICommand ExportCommand { get { return new RelayCommand<object>(MainWindow.instance.OnExport, MainWindow.instance.CanExport); } }
-        public ICommand RenameCommand { get { return new RelayCommand<object>(MainWindow.instance.OnRename, MainWindow.instance.CanRename); } }
-        public ICommand DeleteCommand { get { return new RelayCommand<object>(MainWindow.instance.OnDelete2, MainWindow.instance.CanDelete); } }
+        private IMainWindow main = null;
+        public ICommand PlayCommand { get {
+                if (RobotInstance.instance.Window is MainWindow main) return new RelayCommand<object>(main.OnPlay, main.CanPlay);
+                if (RobotInstance.instance.Window is AgentWindow agent) return new RelayCommand<object>(agent.OnPlay, agent.CanPlay);
+                return null;
+            } }
+        public ICommand ExportCommand { get {
+                if (RobotInstance.instance.Window is MainWindow main) return new RelayCommand<object>(main.OnExport, main.CanExport);
+                return null;
+            } }
+        public ICommand RenameCommand { get {
+                if (RobotInstance.instance.Window is MainWindow main) return new RelayCommand<object>(main.OnRename, main.CanRename);
+                return null;
+            } }
+        public ICommand DeleteCommand { get {
+                if (RobotInstance.instance.Window is MainWindow main) return new RelayCommand<object>(main.OnDelete2, main.CanDelete);
+                return null;
+            } }
         // public ICommand DeleteCommand { get { return new RelayCommand<object>(MainWindow.instance.OnDelete, MainWindow.instance.CanDelete); } }
-        public ICommand CopyIDCommand { get { return new RelayCommand<object>(MainWindow.instance.OnCopyID, MainWindow.instance.CanCopyID); } }
-        public ICommand CopyRelativeFilenameCommand { get { return new RelayCommand<object>(MainWindow.instance.OnCopyRelativeFilename, MainWindow.instance.CanCopyID); } }
-        public ICommand DisableCachingCommand { get { return new RelayCommand<object>(OnDisableCaching, CanDisableCaching); } }
+        public ICommand CopyIDCommand { get {
+                if (RobotInstance.instance.Window is MainWindow main) return new RelayCommand<object>(main.OnCopyID, main.CanCopyID);
+                return null;
+            } }
+        public ICommand CopyRelativeFilenameCommand { get {
+                if (RobotInstance.instance.Window is MainWindow main) return new RelayCommand<object>(main.OnCopyRelativeFilename, main.CanCopyID);
+                return null;
+            } }
+        public ICommand DisableCachingCommand { get { 
+                return new RelayCommand<object>(OnDisableCaching, CanDisableCaching); 
+            } }
         internal bool CanDisableCaching(object _item)
         {
             try
             {
-                if (!MainWindow.instance.IsConnected) return false;
-                if (MainWindow.instance.SelectedContent is Views.OpenProject view)
+                if (RobotInstance.instance.Window is AgentWindow) return false;
+                    if (!global.webSocketClient.isConnected) return false;
+                if (main.SelectedContent is Views.OpenProject view)
                 {
                     var val = view.listWorkflows.SelectedValue;
                     if (val == null) return false;
@@ -65,7 +87,7 @@ namespace OpenRPA.Views
         }
         internal async void OnDisableCaching(object _item)
         {
-            if (MainWindow.instance.SelectedContent is Views.OpenProject view)
+            if (main.SelectedContent is Views.OpenProject view)
             {
                 var val = view.listWorkflows.SelectedValue;
                 if (val == null) return;
@@ -90,6 +112,7 @@ namespace OpenRPA.Views
         {
             try
             {
+                if (Instance == null) Log.Debug("UpdateProjectsList, Instance is null");
                 var result = RobotInstance.instance.Projects.FindAll().ToList();
                 for (var i = 0; i < result.Count; i++) result[i].UpdateWorkflowsList();
                 GenericTools.RunUI(() =>
@@ -97,7 +120,7 @@ namespace OpenRPA.Views
                     isUpdating = true;
                     try
                     {
-                        Instance._Projects.UpdateCollection(result);
+                        if (Instance!=null) Instance._Projects.UpdateCollection(result);
                     }
                     catch (Exception)
                     {
@@ -109,13 +132,15 @@ namespace OpenRPA.Views
             {
             }
         }
-        public OpenProject(MainWindow main)
+        public OpenProject(IMainWindow main)
         {
             Instance = this;
             Log.FunctionIndent("OpenProject", "OpenProject");
             try
             {
                 InitializeComponent();
+                if (RobotInstance.instance.Window is AgentWindow) EditXAMLPanel.Visibility = Visibility.Hidden;
+                if (RobotInstance.instance.Window is AgentWindow) PackageManagerPanel.Visibility = Visibility.Hidden;
                 this.main = main;
                 DataContext = this;
                 RobotInstance.instance.PropertyChanged += Instance_PropertyChanged;
@@ -245,7 +270,7 @@ namespace OpenRPA.Views
             {
                 if (e.Key == Key.F2)
                 {
-                    MainWindow.instance.OnRename(null);
+                    if (RobotInstance.instance.Window is MainWindow main) main.OnRename(null);
                 }
             }
             catch (Exception ex)
@@ -280,8 +305,7 @@ namespace OpenRPA.Views
             set
             {
             }
-        }
-        
+        }        
         private void listWorkflows_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (isUpdating) return;

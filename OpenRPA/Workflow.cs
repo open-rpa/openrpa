@@ -16,10 +16,6 @@ namespace OpenRPA
     {
         [JsonIgnore, BsonIgnore]
         private long _current_version = 0;
-        [JsonIgnore]
-        public bool isDirty { get; set; }
-        [JsonIgnore]
-        public bool isLocalOnly { get; set; }
         public long current_version { get {
                 if (_version > _current_version) return _version;
                 return _current_version;
@@ -149,7 +145,7 @@ namespace OpenRPA
                     case "failed": return "/OpenRPA;component/Resources/state/failed.png";
                     case "completed": return "/OpenRPA;component/Resources/state/Completed.png";
                     default: return "/OpenRPA;component/Resources/state/unloaded.png";
-                }
+                }                
             }
         }
         public void NotifyUIState()
@@ -312,7 +308,7 @@ namespace OpenRPA
                 }
                 return;
             }
-            
+            RobotInstance.instance.DisableWatch = true;
             if (string.IsNullOrEmpty(_id)|| isLocalOnly == true)
             {
                 var result = await global.webSocketClient.InsertOne("openrpa", 0, false, this);
@@ -354,6 +350,7 @@ namespace OpenRPA
                     }
                 }
             }
+            RobotInstance.instance.DisableWatch = false;
         }
         public async Task Delete()
         {

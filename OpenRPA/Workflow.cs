@@ -94,8 +94,23 @@ namespace OpenRPA
             get { return GetProperty<bool>(); } 
             set {
                 if (Views.OpenProject.isUpdating) return;
+                if (value == GetProperty<bool>()) return;
                 SetProperty(value);
-                if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name)) RobotInstance.instance.Workflows.Update(this); 
+                if (!_backingFieldValues.ContainsKey("IsExpanded")) return;
+                if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
+                {
+                    var wf = RobotInstance.instance.Workflows.FindById(_id);
+                    if(wf._version== _version)
+                    {
+                        if (System.Diagnostics.Debugger.IsAttached) Log.Output("Saving " + this.name + " with version " + this._version);
+                        RobotInstance.instance.Workflows.Update(this);
+                    } else
+                    {
+                        if (System.Diagnostics.Debugger.IsAttached) Log.Output("Setting " + this.name + " with version " + this._version);
+                        wf.IsExpanded = value;
+                    }                    
+                    RobotInstance.instance.Workflows.Update(this);
+                }
             } 
         }
         [JsonIgnore, BsonIgnore]
@@ -103,9 +118,28 @@ namespace OpenRPA
             get { return GetProperty<bool>(); } 
             set {
                 if (Views.OpenProject.isUpdating) return;
+                if (value == GetProperty<bool>()) return;
                 SetProperty(value);
-                if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name)) RobotInstance.instance.Workflows.Update(this);
-            } 
+                if (!_backingFieldValues.ContainsKey("IsSelected")) return;
+                if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
+                {
+                    if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
+                    {
+                        var wf = RobotInstance.instance.Workflows.FindById(_id);
+                        if (wf._version == _version)
+                        {
+                            if (System.Diagnostics.Debugger.IsAttached) Log.Output("Saving " + this.name + " with version " + this._version);
+                            RobotInstance.instance.Workflows.Update(this);
+                        }
+                        else
+                        {
+                            if (System.Diagnostics.Debugger.IsAttached) Log.Output("Setting " + this.name + " with version " + this._version);
+                            wf.IsSelected = value;
+                        }
+                        RobotInstance.instance.Workflows.Update(this);
+                    }
+                }
+            }
         }
         private string laststate = "unloaded";
         [JsonIgnore, BsonIgnore]
@@ -298,7 +332,7 @@ namespace OpenRPA
                     else
                     {
                         var exists = RobotInstance.instance.Workflows.FindById(_id);
-                        if (exists != null) RobotInstance.instance.UpdateWorkflow(this);
+                        if (exists != null) RobotInstance.instance.UpdateWorkflow(this, false);
                         if (exists == null) RobotInstance.instance.Workflows.Insert(this);
                     }
                 }
@@ -327,15 +361,17 @@ namespace OpenRPA
             }
             else
             {
+                _version++; // Add one to avoid watch update
                 var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, this);
                 _acl = result._acl;
                 _modified = result._modified;
                 _modifiedby = result._modifiedby;
                 _modifiedbyid = result._modifiedbyid;
                 _version = result._version;
+                if (System.Diagnostics.Debugger.IsAttached) Log.Output("Saved and returned as version " + this._version);
                 var exists = RobotInstance.instance.Workflows.FindById(_id);
-                if (exists != null) RobotInstance.instance.UpdateWorkflow(this);
-                if (exists == null) RobotInstance.instance.Workflows.Insert(this);
+                if (exists != null) { RobotInstance.instance.UpdateWorkflow(this, true); if (System.Diagnostics.Debugger.IsAttached) Log.Output("Saved in local db as version " + this._version);  }
+                if (exists == null) { RobotInstance.instance.Workflows.Insert(this); if (System.Diagnostics.Debugger.IsAttached) Log.Output("Inserted in local db as version  " + this  ._version);  }
                 if (UpdateImages)
                 {
                     var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");

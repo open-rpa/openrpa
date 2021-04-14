@@ -259,6 +259,8 @@ namespace OpenRPA.RDService
                         // "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}"
                         // openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[{ '$match': { 'fullDocument._type': {'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'} } }]", onWatchEvent);
                         openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[{ '$match': {'fullDocument.computername':'" + computername + "', 'fullDocument.computerfqdn':'" + computerfqdn + "'} }]", onWatchEvent);
+
+                        // openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[]", onWatchEvent);
                         await ReloadConfig();
                     }
                 } 
@@ -316,12 +318,14 @@ namespace OpenRPA.RDService
                 {
                     span?.AddEvent(new System.Diagnostics.ActivityEvent("DeserializeObject"));
                     var unattendedclient = Newtonsoft.Json.JsonConvert.DeserializeObject<unattendedclient>(data["fullDocument"].ToString());
-                    if(unattendedclient==null)
+                    if(unattendedclient != null && unattendedclient.computerfqdn == server.computerfqdn && unattendedclient.computername == server.computername)
+                    {
+                        UnattendedclientUpdated(unattendedclient);
+                    } else if(unattendedclient==null)
                     {
                         Log.Error("Failed DeserializeObject");
                         return;
-                    }
-                    UnattendedclientUpdated(unattendedclient);
+                    }                    
                 }
                 if (_type == "unattendedserver")
                 {

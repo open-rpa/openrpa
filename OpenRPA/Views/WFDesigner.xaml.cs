@@ -266,6 +266,7 @@ namespace OpenRPA.Views
         public WFDesigner(Xceed.Wpf.AvalonDock.Layout.LayoutDocument tab, Workflow workflow, Type[] extratypes)
         {
             InitializeComponent();
+            if (System.Diagnostics.Debugger.IsAttached) Log.Output("Open " + workflow.name + " version " + workflow._version);
             this.extratypes = extratypes;
             DataContext = this;
             this.tab = tab;
@@ -391,8 +392,8 @@ namespace OpenRPA.Views
                         var exists = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow', _id: '" + Workflow._id + "'}", top: 1);
                         if (Workflow.current_version != exists[0]._version)
                         {
-                            var messageBoxResult = MessageBox.Show(Workflow.name + " has a newer version, that has been updated by " + exists[0]._modifiedby +
-                                ", do you still wish to overwrite the workflow ?", "Workflow has been updated by someone else", MessageBoxButton.YesNo);
+                            var messageBoxResult = MessageBox.Show(Workflow.name + " has a newer version " + exists[0]._version + " , that has been updated by " + exists[0]._modifiedby +
+                                ", do you still wish to overwrite the workflow with your version " + Workflow.current_version + "?", "Workflow has been updated by someone else", MessageBoxButton.YesNo);
                             if (messageBoxResult != MessageBoxResult.Yes)
                             {
                                 Workflow.current_version = exists[0]._version;
@@ -486,9 +487,11 @@ namespace OpenRPA.Views
                 var modelItem = WorkflowDesigner.Context.Services.GetService<ModelService>().Root;
                 Workflow.name = modelItem.GetValue<string>("Name").Replace("_", " ");
                 Workflow.Xaml = WorkflowDesigner.Text;
-                await Workflow.Save(false);
+                var _hasChanged = HasChanged;
+                HasChanged = false;
                 RobotInstance.instance.Workflows.Update(Workflow);
-                if (HasChanged)
+                await Workflow.Save(false);
+                if (_hasChanged)
                 {
                     HasChanged = false;
                     OnChanged?.Invoke(this);

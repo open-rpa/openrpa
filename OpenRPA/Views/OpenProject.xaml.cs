@@ -31,7 +31,7 @@ namespace OpenRPA.Views
         public DelegateCommand AutoHideCommand { get; set; } = new DelegateCommand((e) => { }, (e) => false);
         public bool CanClose { get; set; } = false;
         public bool CanHide { get; set; } = false;
-        public event Action<Workflow> onOpenWorkflow;
+        public event Action<IWorkflow> onOpenWorkflow;
         // public event Action<Project> onOpenProject;
         public event Action onSelectedItemChanged;
         //public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; }
@@ -167,7 +167,6 @@ namespace OpenRPA.Views
             set
             {
                 isUpdating = true;
-                Log.Output("FilterText begin");
                 _FilterText = value;
                 var workflows = new List<string>();
                 if (string.IsNullOrEmpty(_FilterText))
@@ -185,7 +184,6 @@ namespace OpenRPA.Views
                         }
                     }
                 }
-                Log.Output("Search projects");
                 foreach (var p in _Projects)
                 {
                     bool expand = false;
@@ -205,12 +203,10 @@ namespace OpenRPA.Views
                             }
                         }
                     }
-                    Log.Output("expanding " + p.name);
                     p.IsExpanded = expand;
                 }
                 isUpdating = false;
                 UpdateProjectsList();
-                Log.Output("FilterText complete");
                 NotifyPropertyChanged("FilterText");
                 NotifyPropertyChanged("Projects");
             }
@@ -222,7 +218,8 @@ namespace OpenRPA.Views
             {
                 if (listWorkflows.SelectedItem is Workflow f)
                 {
-                    onOpenWorkflow?.Invoke(f);
+                    var freshwf = RobotInstance.instance.Workflows.FindById(f._id);
+                    onOpenWorkflow?.Invoke(freshwf);
                     return;
                 }
                 //var p = (Project)listWorkflows.SelectedItem;

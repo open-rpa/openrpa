@@ -86,9 +86,24 @@ namespace OpenRPA
                 var orgvalue = GetProperty<bool>();
                 if (Views.OpenProject.isUpdating) return;
                 SetProperty(value);
-                if (value && orgvalue != value && (_Workflows ==null || _Workflows.Count == 0)) UpdateWorkflowsList();
-                if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name) && orgvalue != value) RobotInstance.instance.Projects.Update(this);
-            } 
+                //if (value && orgvalue != value && (_Workflows ==null || _Workflows.Count == 0)) UpdateWorkflowsList();
+                //if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name) && orgvalue != value) RobotInstance.instance.Projects.Update(this);
+                if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
+                {
+                    var wf = RobotInstance.instance.Projects.FindById(_id);
+                    if (wf._version == _version)
+                    {
+                        if(System.Diagnostics.Debugger.IsAttached) Log.Output("Saving " + this.name + " with version " + this._version);
+                        RobotInstance.instance.Projects.Update(this);
+                    }
+                    else
+                    {
+                        if (System.Diagnostics.Debugger.IsAttached) Log.Output("Setting " + this.name + " with version " + this._version);
+                        wf.IsExpanded = value;
+                    }
+                    RobotInstance.instance.Projects.Update(this);
+                }
+            }
         }
         [JsonIgnore]
         public bool IsSelected { 
@@ -97,7 +112,25 @@ namespace OpenRPA
             {
                 if (Views.OpenProject.isUpdating) return;
                 SetProperty(value); 
-                if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name)) RobotInstance.instance.Projects.Update(this); 
+                if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
+                {
+                    if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
+                    {
+                        var wf = RobotInstance.instance.Projects.FindById(_id);
+                        if (wf._version == _version)
+                        {
+                            if (System.Diagnostics.Debugger.IsAttached) Log.Output("Saving " + this.name + " with version " + this._version);
+                            RobotInstance.instance.Projects.Update(this);
+                        }
+                        else
+                        {
+                            if (System.Diagnostics.Debugger.IsAttached) Log.Output("Setting " + this.name + " with version " + this._version);
+                            wf.IsSelected = value;
+                        }
+                        RobotInstance.instance.Projects.Update(this);
+                    }
+                }
+
             }
         }
         public static async Task<Project> Create(string Path, string Name)

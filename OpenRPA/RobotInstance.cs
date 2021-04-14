@@ -30,7 +30,8 @@ namespace OpenRPA
         {
             reloadTimer = new System.Timers.Timer(Config.local.reloadinterval.TotalMilliseconds);
             reloadTimer.Elapsed += ReloadTimer_Elapsed;
-            if(InitializeOTEL())
+            reloadTimer.Stop();
+            if (InitializeOTEL())
             {
                 //metricTime = new System.Timers.Timer(5000);
                 //metricTime.Elapsed += metricTime_Elapsed;
@@ -48,7 +49,7 @@ namespace OpenRPA
         //public static Prometheus.Client.Abstractions.IGauge mem_used = factory.CreateGauge("openrpa_memory_size_used_bytes", "Amount of heap memory usage for OpenRPA client");
         //public static Prometheus.Client.Abstractions.IGauge mem_total = factory.CreateGauge("openrpa_memory_size_total_bytes", "Amount of heap memory usage for OpenRPA client");
         // public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; } = new System.Collections.ObjectModel.ObservableCollection<Project>();
-        public LiteDatabase db; 
+        public LiteDatabase db;
         public LiteDB.ILiteCollection<IProject> Projects;
         public LiteDB.ILiteCollection<IWorkflow> Workflows;
         public LiteDB.ILiteCollection<Interfaces.entity.Detector> Detectors;
@@ -57,7 +58,7 @@ namespace OpenRPA
             get
             {
                 int result = 0;
-                GenericTools.RunUI(()=> { result = Projects.Count(); });
+                GenericTools.RunUI(() => { result = Projects.Count(); });
                 return result;
             }
         }
@@ -107,7 +108,7 @@ namespace OpenRPA
                     {
                         try
                         {
-                            if(instance.db != null) instance.db.Dispose();
+                            if (instance.db != null) instance.db.Dispose();
                         }
                         catch (Exception)
                         {
@@ -125,7 +126,8 @@ namespace OpenRPA
         private bool? _isRunningInChildSession = null;
         public bool isRunningInChildSession
         {
-            get {
+            get
+            {
                 if (_isRunningInChildSession != null) return _isRunningInChildSession.Value;
                 try
                 {
@@ -175,14 +177,21 @@ namespace OpenRPA
             }
             set
             {
-                if (reloadTimer.Enabled = value)
+                if (!global.openflowconfig.supports_watch)
+                {
+                    if (reloadTimer.Enabled = value)
+                    {
+                        reloadTimer.Stop();
+                        reloadTimer.Start();
+                        return;
+                    }
+                    if (value == true) reloadTimer.Start();
+                    if (value == false) reloadTimer.Stop();
+                }
+                else
                 {
                     reloadTimer.Stop();
-                    reloadTimer.Start();
-                    return;
                 }
-                if (value == true) reloadTimer.Start();
-                if (value == false) reloadTimer.Stop();
             }
         }
         public void MainWindowReadyForAction()
@@ -197,7 +206,7 @@ namespace OpenRPA
                         App.splash.Close();
                         App.splash = null;
                     }
-                    if(!Config.local.isagent) Show();
+                    if (!Config.local.isagent) Show();
                     ReadyForAction?.Invoke();
                     Input.InputDriver.Instance.Initialize();
 
@@ -233,7 +242,7 @@ namespace OpenRPA
                 bool returnit = false;
                 if (wf._id == IDOrRelativeFilename) returnit = true; ;
                 if (wf.IDOrRelativeFilename.ToLower().Replace("\\", "/") == IDOrRelativeFilename.ToLower().Replace("\\", "/")) returnit = true;
-                if(returnit) return wf;
+                if (returnit) return wf;
             }
             Log.FunctionOutdent("RobotInstance", "GetWorkflowByIDOrRelativeFilename");
             return null;
@@ -403,7 +412,7 @@ namespace OpenRPA
                             {
                                 span?.AddEvent(new ActivityEvent("Updating local workflow " + wf.name));
                                 Log.Debug("Updating local workflow " + wf.name);
-                                UpdateWorkflow(wf);
+                                UpdateWorkflow(wf, false);
                             }
                             else
                             {
@@ -447,7 +456,7 @@ namespace OpenRPA
                         span?.AddEvent(new ActivityEvent("Removing local detector " + detector.name));
                         Log.Debug("Removing local detector " + detector.name);
                         var d = Plugins.detectorPlugins.Where(x => x.Entity._id == exists._id).FirstOrDefault();
-                        if(d != null)
+                        if (d != null)
                         {
                             d.OnDetector -= Window.OnDetector;
                             d.Stop();
@@ -505,7 +514,9 @@ namespace OpenRPA
                 if (global.webSocketClient.user != null && global.webSocketClient.isConnected)
                 {
                     SetStatus("Connected to " + Config.local.wsurl + " as " + global.webSocketClient.user.name);
-                } else {
+                }
+                else
+                {
                     SetStatus("Offline");
                 }
                 AutoReloading = true;
@@ -527,7 +538,7 @@ namespace OpenRPA
             Log.Function("RobotInstance", "SetStatus", "Window.SetStatus");
             try
             {
-                if(Window!=null) Window.SetStatus(message);
+                if (Window != null) Window.SetStatus(message);
             }
             catch (Exception ex)
             {
@@ -601,10 +612,10 @@ namespace OpenRPA
                             App.splash.Close();
                             App.splash = null;
                         }
-                        if(!Config.local.isagent) Show();
+                        if (!Config.local.isagent) Show();
                         ReadyForAction?.Invoke();
                     });
-                    if(!isReadyForAction)
+                    if (!isReadyForAction)
                     {
                         ParseCommandLineArgs();
                         isReadyForAction = true;
@@ -621,7 +632,8 @@ namespace OpenRPA
         private void Hide()
         {
             Log.FunctionIndent("RobotInstance", "Hide");
-            GenericTools.RunUI(() => {
+            GenericTools.RunUI(() =>
+            {
                 if (App.splash != null) App.splash.Hide();
                 if (Window != null) Window.Hide();
             });
@@ -634,11 +646,11 @@ namespace OpenRPA
                 var isagent = Config.local.isagent;
                 AutomationHelper.syncContext.Send(o =>
                 {
-                    if(!Config.local.isagent && global.webSocketClient != null)
+                    if (!Config.local.isagent && global.webSocketClient != null)
                     {
-                        if(global.webSocketClient.user != null)
+                        if (global.webSocketClient.user != null)
                         {
-                            if(global.webSocketClient.user.hasRole("robot agent users"))
+                            if (global.webSocketClient.user.hasRole("robot agent users"))
                             {
                                 isagent = true;
                             }
@@ -681,11 +693,13 @@ namespace OpenRPA
         private void Show()
         {
             Log.FunctionIndent("RobotInstance", "Show");
-            GenericTools.RunUI(() => {
+            GenericTools.RunUI(() =>
+            {
                 if (App.splash != null)
                 {
                     App.splash.Show();
-                } else
+                }
+                else
                 {
                     if (Window != null) Window.Show();
                 }
@@ -695,7 +709,8 @@ namespace OpenRPA
         private void Close()
         {
             Log.FunctionIndent("RobotInstance", "Close");
-            GenericTools.RunUI(() => {
+            GenericTools.RunUI(() =>
+            {
                 if (App.splash != null) App.splash.Close();
                 if (Window != null) Window.Close();
                 System.Windows.Application.Current.Shutdown();
@@ -863,7 +878,7 @@ namespace OpenRPA
                 {
 
                     bool registerqueues = true;
-                    if(Interfaces.win32.ChildSession.IsChildSessionsEnabled())
+                    if (Interfaces.win32.ChildSession.IsChildSessionsEnabled())
                     {
                         var CurrentP = System.Diagnostics.Process.GetCurrentProcess();
                         var myusername = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);
@@ -902,7 +917,7 @@ namespace OpenRPA
                         //    registerqueues = false;
                         //}
                     }
-                    if(registerqueues)
+                    if (registerqueues)
                     {
                         SetStatus("Registering queues");
                         Log.Debug("Registering queue for robot " + user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
@@ -962,7 +977,7 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
-            if(first_connect)
+            if (first_connect)
             {
                 first_connect = false;
                 GenericTools.RunUI(() =>
@@ -974,7 +989,7 @@ namespace OpenRPA
                             App.splash.Close();
                             App.splash = null;
                         }
-                        if(!Config.local.isagent) Show();
+                        if (!Config.local.isagent) Show();
                         ReadyForAction?.Invoke();
                     }
                     catch (Exception ex)
@@ -993,7 +1008,6 @@ namespace OpenRPA
                     }
                 }
                 _ = LoadServerData();
-
             }
             catch (Exception ex)
             {
@@ -1040,7 +1054,7 @@ namespace OpenRPA
 
             await Task.Delay(ReconnectDelay);
             ReconnectDelay += 5000;
-            if (ReconnectDelay > 60000*2) ReconnectDelay = 60000 * 2;
+            if (ReconnectDelay > 60000 * 2) ReconnectDelay = 60000 * 2;
             if (autoReconnect)
             {
                 try
@@ -1108,6 +1122,26 @@ namespace OpenRPA
                 {
                     data = data.Value<JObject>("payload");
                 }
+                if (command.command == "killallworkflows")
+                {
+                    if (Config.local.remote_allowed_killing_any)
+                    {
+                        command.command = "killallworkflowssuccess";
+                        foreach (var i in WorkflowInstance.Instances.ToList())
+                        {
+                            if (!i.isCompleted)
+                            {
+                                i.Abort("Killed remotly by killallworkflows command");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        command.command = "error";
+                        command.data = JObject.FromObject(new Exception("kill all not allowed for " + global.webSocketClient.user + " running on " + System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower()));
+                    }
+                    if (data != null) command.data = JObject.FromObject(data);
+                }
                 if (command.command == null) return;
                 if (command.command == "invoke" && !string.IsNullOrEmpty(command.workflowid))
                 {
@@ -1131,7 +1165,11 @@ namespace OpenRPA
                         }
                         foreach (var i in WorkflowInstance.Instances.ToList())
                         {
-                            if (!string.IsNullOrEmpty(i.correlationId) && !i.isCompleted)
+                            if (command.killallexisting && Config.local.remote_allowed_killing_any && !i.isCompleted)
+                            {
+                                i.Abort("Killed by nodered rpa node, due to killallexisting");
+                            }
+                            else if (!string.IsNullOrEmpty(i.correlationId) && !i.isCompleted)
                             {
                                 if (command.killexisting && i.WorkflowId == workflow._id && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
                                 {
@@ -1158,7 +1196,7 @@ namespace OpenRPA
                             {
                                 if (i.Workflow != null)
                                 {
-                                    if(Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
+                                    if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
                                 }
                                 else
                                 {
@@ -1196,7 +1234,7 @@ namespace OpenRPA
                                 default:
                                     try
                                     {
-                                        
+
                                         // param.Add(k.Key, k.Value.Value<string>());
                                         var v = k.Value.ToObject(Type.GetType(p.type));
                                         param.Add(k.Key, v);
@@ -1210,20 +1248,20 @@ namespace OpenRPA
                                     // default: param.Add(k.Key, k.Value.Value<string>()); break;
                             }
                         }
-                        foreach(var p in workflow.Parameters)
+                        foreach (var p in workflow.Parameters)
                         {
-                            if(param.ContainsKey(p.name))
+                            if (param.ContainsKey(p.name))
                             {
                                 var value = param[p.name];
                                 if (p.type == "System.Data.DataTable" && value != null)
                                 {
-                                    if(value is JArray)
+                                    if (value is JArray)
                                     {
                                         param[p.name] = ((JArray)value).ToDataTable();
                                     }
 
-                                } 
-                                else if(p.type.EndsWith("[]"))
+                                }
+                                else if (p.type.EndsWith("[]"))
                                 {
                                     param[p.name] = ((JArray)value).ToObject(Type.GetType(p.type));
                                 }
@@ -1245,7 +1283,7 @@ namespace OpenRPA
                                     designer.Run(Window.VisualTracking, Window.SlowMotion, instance);
                                 }
                                 else
-                                {                                    
+                                {
                                     instance = workflow.CreateInstance(param, message.replyto, message.correlationId, Window.IdleOrComplete, null, null, null);
                                     instance.Run();
                                 }
@@ -1274,7 +1312,7 @@ namespace OpenRPA
                 };
             }
             // string data = Newtonsoft.Json.JsonConvert.SerializeObject(command);
-            if (command.command == "error" || ((command.command == "invoke" || command.command == "invokesuccess") && !string.IsNullOrEmpty(command.workflowid)))
+            if (command.command == "error" || command.command == "killallworkflowssuccess" || ((command.command == "invoke" || command.command == "invokesuccess") && !string.IsNullOrEmpty(command.workflowid)))
             {
                 if (!string.IsNullOrEmpty(message.replyto) && message.replyto != message.queuename)
                 {
@@ -1304,7 +1342,7 @@ namespace OpenRPA
             {
                 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
-                if(Config.local.enable_analytics && StatsTracerProvider == null)
+                if (Config.local.enable_analytics && StatsTracerProvider == null)
                 {
                     StatsTracerProvider = OpenTelemetry.Sdk.CreateTracerProviderBuilder()
                     .SetSampler(new AlwaysOnSampler())
@@ -1324,7 +1362,7 @@ namespace OpenRPA
                     .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenRPA"))
                     .AddOtlpExporter(otlpOptions =>
                     {
-                        if(Config.local.otel_trace_url.Contains("http://") && Config.local.otel_trace_url.Contains(":80"))
+                        if (Config.local.otel_trace_url.Contains("http://") && Config.local.otel_trace_url.Contains(":80"))
                         {
                             Config.local.otel_trace_url = Config.local.otel_trace_url.Replace("http://", "https://").Replace(":80", "");
                         }
@@ -1377,7 +1415,7 @@ namespace OpenRPA
         {
             try
             {
-                if (DisableWatch) return;
+                // if (DisableWatch) return;
                 string _type = data["fullDocument"].Value<string>("_type");
                 string _id = data["fullDocument"].Value<string>("_id");
                 long _version = data["fullDocument"].Value<long>("_version");
@@ -1385,11 +1423,12 @@ namespace OpenRPA
                 if (operationType != "replace" && operationType != "insert" && operationType != "update") return; // we don't support delete right now
                 if (_type == "workflow")
                 {
+                    if (System.Diagnostics.Debugger.IsAttached) Log.Output(operationType + " version " + _version);
                     var workflow = Newtonsoft.Json.JsonConvert.DeserializeObject<Workflow>(data["fullDocument"].ToString());
                     var wfexists = instance.Workflows.FindById(_id);
                     if (wfexists != null && wfexists._version != _version)
                     {
-                        UpdateWorkflow(workflow);
+                        UpdateWorkflow(workflow, false);
                     }
                     else if (wfexists == null)
                     {
@@ -1397,6 +1436,7 @@ namespace OpenRPA
                         instance.NotifyPropertyChanged("Projects");
                     }
                 }
+                if (DisableWatch) return;
                 if (_type == "project")
                 {
                     var project = Newtonsoft.Json.JsonConvert.DeserializeObject<Project>(data["fullDocument"].ToString());
@@ -1415,7 +1455,7 @@ namespace OpenRPA
                                 exists.Stop();
                                 exists.OnDetector -= Window.OnDetector;
                                 exists = Plugins.UpdateDetector(this, d);
-                                if(exists!=null) exists.OnDetector += Window.OnDetector;
+                                if (exists != null) exists.OnDetector += Window.OnDetector;
                             }
                             else if (exists == null)
                             {
@@ -1442,7 +1482,7 @@ namespace OpenRPA
                 Log.Error(ex.ToString());
             }
         }
-        public void UpdateWorkflow(IWorkflow Workflow)
+        public void UpdateWorkflow(IWorkflow Workflow, bool forceSave)
         {
             GenericTools.RunUI(() =>
             {
@@ -1456,27 +1496,36 @@ namespace OpenRPA
                     {
                         if (designer.HasChanged)
                         {
-                            if (global.webSocketClient.user._id == Workflow._modifiedbyid) return;
-                            var messageBoxResult = System.Windows.MessageBox.Show(Workflow.name + " has been updated by " + Workflow._modifiedby + ", reload workflow ?", "Workflow has been updated",
-                                    System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.None, System.Windows.MessageBoxResult.Yes);
-                            if (messageBoxResult == System.Windows.MessageBoxResult.Yes)
+                            if (forceSave)
                             {
                                 instance.Workflows.Update(Workflow);
-                                designer.forceHasChanged(false);
-                                designer.tab.Close();
-                                Window.OnOpenWorkflow(Workflow);
                             }
                             else
                             {
-                                designer.Workflow.current_version = Workflow._version;
+                                var messageBoxResult = System.Windows.MessageBox.Show(Workflow.name + " has been updated by " + Workflow._modifiedby + ", reload workflow ?", "Workflow has been updated",
+                                        System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.None, System.Windows.MessageBoxResult.Yes);
+                                if (messageBoxResult == System.Windows.MessageBoxResult.Yes)
+                                {
+                                    instance.Workflows.Update(Workflow);
+                                    designer.forceHasChanged(false);
+                                    designer.tab.Close();
+                                    Window.OnOpenWorkflow(Workflow);
+                                }
+                                else
+                                {
+                                    designer.Workflow.current_version = Workflow._version;
+                                }
                             }
                         }
                         else
                         {
-                            designer.forceHasChanged(false);
-                            designer.tab.Close();
-                            instance.Workflows.Update(Workflow);
-                            Window.OnOpenWorkflow(Workflow);
+                            if(designer.Workflow._version != Workflow._version)
+                            {
+                                designer.forceHasChanged(false);
+                                designer.tab.Close();
+                                instance.Workflows.Update(Workflow);
+                                Window.OnOpenWorkflow(Workflow);
+                            }
                         }
                     }
                 }

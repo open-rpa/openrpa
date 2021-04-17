@@ -14,6 +14,8 @@ namespace OpenRPA.Interfaces.entity
         public bool isDirty { get; set; }
         [JsonIgnore]
         public bool isLocalOnly { get; set; }
+        [JsonIgnore]
+        public bool isDeleted { get; set; }
         public string _id { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string _type { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string name { get { return GetProperty<string>(); } set { SetProperty(value); } }

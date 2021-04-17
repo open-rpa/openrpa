@@ -190,7 +190,7 @@ namespace OpenRPA.Views
                     project.dependencies.Remove(identity.Id);
                     project.dependencies.Add(identity.Id, minver.MinVersion.ToString());
                     BusyContent = "Saving current project settings";
-                    await project.Save(false);
+                    await project.Save();
                     BusyContent = "Installing NuGet Packages";
                     await project.InstallDependencies(false);
                     NeedsReload = true;
@@ -237,7 +237,7 @@ namespace OpenRPA.Views
                     NuGetPackageManager.Instance.UninstallPackage(TargetFolder, identity);
                     SelectedPackageItem.IsInstalled = false;
                     BusyContent = "Saving current project settings";
-                    await project.Save(false);
+                    await project.Save();
                     //BusyContent = "Updating NuGet Packages";
                     //await project.InstallDependencies();
                     //BusyContent = "Reloading Activities Toolbox";

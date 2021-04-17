@@ -63,7 +63,7 @@ namespace OpenRPA.Views
                 var list = (ExtendedObservableCollection<OpenRPA.Interfaces.IDetectorPlugin>)sender;
                 foreach(var p in list.ToList())
                 {
-                    var Entity = (p.Entity as Interfaces.entity.Detector);
+                    var Entity = (p.Entity as Detector);
                     if (global.isConnected)
                     {
                         try
@@ -106,7 +106,7 @@ namespace OpenRPA.Views
             {
                 var btn = sender as System.Windows.Controls.Button;
                 var kv = (System.Collections.Generic.KeyValuePair<string, System.Type>)btn.DataContext;
-                var d = new Interfaces.entity.Detector(); d.Plugin = kv.Value.FullName;
+                var d = new Detector(); d.Plugin = kv.Value.FullName;
                 IDetectorPlugin dp = null;
                 NotifyPropertyChanged("detectorPlugins");
                 d.name = kv.Value.Name;
@@ -147,9 +147,9 @@ namespace OpenRPA.Views
                     var item = lidtDetectors.SelectedValue as IDetectorPlugin;
                     item.Stop();
                     item.OnDetector -= main.OnDetector;
-                    var d = item.Entity as OpenRPA.Interfaces.entity.Detector;
+                    var d = item.Entity;
                     var kd = item.Entity;
-                    var _id = (item.Entity as Interfaces.entity.Detector)._id;
+                    var _id = item.Entity._id;
                     if (global.isConnected)
                     {
                         if (!string.IsNullOrEmpty(_id))

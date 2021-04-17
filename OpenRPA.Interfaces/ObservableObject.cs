@@ -67,6 +67,7 @@ namespace OpenRPA
                 throw;
             }
         }
+        private static string[] isDirtyIgnored = { "isDirty", "isLocalOnly", "IsExpanded", "IsExpanded", "IsSelected" };
         /// <summary>
         /// Saves a property value to the internal backing field
         /// </summary>
@@ -77,6 +78,9 @@ namespace OpenRPA
                 if (propertyName == null)
                 {
                     throw new ArgumentNullException(nameof(propertyName));
+                }
+                if (!isDirtyIgnored.Contains(propertyName)) { 
+                    _backingFieldValues["isDirty"] = true; 
                 }
                 if (IsEqual(GetProperty<T>(propertyName), newValue)) return false;
                 _backingFieldValues[propertyName] = newValue;

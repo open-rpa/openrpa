@@ -38,7 +38,6 @@ namespace OpenRPA.Views
             Instance = this;
         }
         public static WFToolbox Instance = null;
-
         private string getDisplayName(Type type)
         {
             string displayName = type.Name;
@@ -70,7 +69,7 @@ namespace OpenRPA.Views
                         "Cast`2", "ArgumentValue`1", "ArrayItemReference`1", "ArrayItemValue`1", "Assign`1", "Constraint`1","CSharpReference`1", "CSharpValue`1", "DelegateArgumentReference`1",
                             "DelegateArgumentValue`1", "Divide`3", "DynamicActivity`1", "Equal`3", "FieldReference`2", "FieldValue`2", "ForEach`1", "InvokeAction", "InvokeDelegate",
                         "ArgumentReference`1", "VariableReference`1", "VariableValue`1", "VisualBasicReference`1", "VisualBasicValue`1", "InvokeMethod`1",
-                        "StateMachineWithInitialStateFactory", "ParallelForEach","ParallelForEach`1", "ParallelForEachWithBodyFactory", "ForEachWithBodyFactory" };
+                        "StateMachineWithInitialStateFactory", "ParallelForEach","ParallelForEach`1", "ParallelForEachWithBodyFactory", "ForEachWithBodyFactory", "ForEachWithBodyFactory`1" };
 
                         var wfToolboxCategory = new ToolboxCategory(activityLibrary.GetName().Name);
                         var actvities = from

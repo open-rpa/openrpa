@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA
 {
-    public class Project : apibase, IProject
+    public class Project : LocallyCached, IProject
     {
         public Dictionary<string, string> dependencies { get; set; }
         public bool disable_local_caching { get { return GetProperty<bool>(); } set { SetProperty(value); } }
@@ -29,7 +29,7 @@ namespace OpenRPA
         }
         public void UpdateWorkflowsList()
         {
-            var list = RobotInstance.instance.Workflows.Find(x => x.projectid == _id).ToList();
+            var list = RobotInstance.instance.Workflows.Find(x => x.projectid == _id && !x.isDeleted).ToList();
             // Log.Output("Update workflows for " + name);
             Workflows.UpdateCollection(list);
         }
@@ -78,14 +78,10 @@ namespace OpenRPA
         public bool IsExpanded { 
             get { return GetProperty<bool>(); } 
             set {
-                if (!_backingFieldValues.ContainsKey("IsExpanded"))
-                {
-                    SetProperty(value);
-                    return;
-                }
-                var orgvalue = GetProperty<bool>();
                 if (Views.OpenProject.isUpdating) return;
+                if (value == GetProperty<bool>()) return;
                 SetProperty(value);
+                if (!_backingFieldValues.ContainsKey("IsExpanded")) return;
                 //if (value && orgvalue != value && (_Workflows ==null || _Workflows.Count == 0)) UpdateWorkflowsList();
                 //if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name) && orgvalue != value) RobotInstance.instance.Projects.Update(this);
                 if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
@@ -111,7 +107,9 @@ namespace OpenRPA
             set
             {
                 if (Views.OpenProject.isUpdating) return;
-                SetProperty(value); 
+                if (value == GetProperty<bool>()) return;
+                SetProperty(value);
+                if (!_backingFieldValues.ContainsKey("IsSelected")) return;
                 if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
                 {
                     if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
@@ -136,7 +134,9 @@ namespace OpenRPA
         public static async Task<Project> Create(string Path, string Name)
         {
             var basePath = System.IO.Path.Combine(Path, Name);
-            if (System.IO.Directory.Exists(basePath) && System.IO.Directory.GetFiles(basePath).Count() > 0)
+            var exists = RobotInstance.instance.Projects.Find(x => x.name == Name).FirstOrDefault();
+            // if (System.IO.Directory.Exists(basePath) && System.IO.Directory.GetFiles(basePath).Count() > 0)
+            if(exists != null)
             {
                 var originalname = Name;
                 bool isUnique = false; int counter = 1;
@@ -151,45 +151,29 @@ namespace OpenRPA
                         Name = originalname + counter.ToString();
                         basePath = System.IO.Path.Combine(Path, Name);
                     }
-                    if (!System.IO.Directory.Exists(basePath)) isUnique = true;
+                    exists = RobotInstance.instance.Projects.Find(x => x.name == Name).FirstOrDefault();
+                    isUnique = (exists == null);
                     counter++;
                 }
             }
             var Filepath = System.IO.Path.Combine(Path, Name, Name.Replace(" ", "_").Replace(".", "") + ".rpaproj");
-
-            if (string.IsNullOrEmpty(Filepath))
-            {
-                bool isUnique = false; int counter = 1;
-                while (!isUnique)
-                {
-                    if (counter == 1)
-                    {
-                        Filepath = System.IO.Path.Combine(Path, Name, Name.Replace(" ", "_").Replace(".", "") + ".rpaproj");
-                    }
-                    else
-                    {
-                        Filepath = System.IO.Path.Combine(Path, Name, Name.Replace(" ", "_").Replace(".", "") + counter.ToString() +  ".rpaproj");
-                    }
-                    if (!System.IO.File.Exists(Filepath)) isUnique = true;
-                    counter++;
-                }
-            }
-            if (!System.IO.Directory.Exists(basePath)) System.IO.Directory.CreateDirectory(basePath);
-            if (System.IO.Directory.GetFiles(basePath).Count() > 0) throw new Exception(basePath + " is not empty");
+            //if (System.IO.Directory.Exists(basePath))
+            //{
+            //    if (System.IO.Directory.GetFiles(basePath).Count() > 0) throw new Exception(basePath + " is not empty");
+            //}
             Project p = new Project
             {
                 _type = "project",
                 name = Name,
                 Filename = System.IO.Path.GetFileName(Filepath)
             };
-            await p.Save(false);
+            await p.Save();
             return p;
         }
         public async Task<IWorkflow> AddDefaultWorkflow()
         {
-            var w = Workflow.Create(this, "New Workflow");
-            this.Workflows.Add(w);
-            await w.Save(false);
+            var w = await Workflow.Create(this, "New Workflow");
+            Workflows.Add(w);
             return w;
         }
         public void Init()
@@ -199,7 +183,7 @@ namespace OpenRPA
             foreach (string file in ProjectFiles) Workflows.Add(Workflow.FromFile(this, file));
             //return Workflows.ToArray();
         }
-        public void SaveFile(string rootpath = null, bool exportImages = false)
+        public void ExportProject(string rootpath)
         {
             string regexSearch = new string(System.IO.Path.GetInvalidFileNameChars()) + new string(System.IO.Path.GetInvalidPathChars());
             var r = new System.Text.RegularExpressions.Regex(string.Format("[{0}]", System.Text.RegularExpressions.Regex.Escape(regexSearch)));
@@ -217,54 +201,19 @@ namespace OpenRPA
                 if(filenames.Contains(workflow.Filename))
                 {
                     workflow.Filename = workflow.UniqueFilename();
-                    _ = workflow.Save(false);
                 }
                 filenames.Add(workflow.Filename);
-                workflow.SaveFile(projectpath, exportImages);
+                workflow.ExportFile(System.IO.Path.Combine(projectpath, workflow.Filename));
             }
         }
-        public async Task Save(bool UpdateImages)
+        public async Task Save()
         {
-            SaveFile();
-            if (global.isConnected)
-            {
-                try
-                {
-                    RobotInstance.instance.DisableWatch = true;
-                    if (string.IsNullOrEmpty(_id))
-                    {
-                        var result = await global.webSocketClient.InsertOne("openrpa", 0, false, this);
-                        _id = result._id;
-                        _acl = result._acl;
-                        _modified = result._modified;
-                        _modifiedby = result._modifiedby;
-                        _modifiedbyid = result._modifiedbyid;
-                    }
-                    else
-                    {
-                        var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, this);
-                        _acl = result._acl;
-                        _modified = result._modified;
-                        _modifiedby = result._modifiedby;
-                        _modifiedbyid = result._modifiedbyid;
-                        _version = result._version;
-                    }
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-                finally
-                {
-                    RobotInstance.instance.DisableWatch = false;
-                }
-            }
+            await Save<Project>();
             foreach (var workflow in Workflows)
             {
                 try
                 {
-                    await workflow.Save(UpdateImages);
+                    await workflow.Save();
                 }
                 catch (Exception ex)
                 {

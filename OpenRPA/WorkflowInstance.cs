@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA
 {
-    public class WorkflowInstance : apibase, IWorkflowInstance
+    public class WorkflowInstance : LocallyCached, IWorkflowInstance
     {
         public WorkflowInstance()
         {
@@ -30,24 +30,16 @@ namespace OpenRPA
             // if(RobotInstance.instance.tracer != null) span = RobotInstance.instance.tracer.StartActiveSpan("Initialize " + workflow.name);
             // LastUpdated = DateTime.Now;
         }
-
-        //            if(RobotInstance.instance.source != null) activity = RobotInstance.instance.source.StartActivity("Initialize " + workflow.name);
-        //    if (!string.IsNullOrEmpty(Config.local.openflow_uniqueid)) activity?.SetTag("ofid", Config.local.openflow_uniqueid);
-        //activity?.SetTag("clientversion", System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
-
         [JsonIgnore]
         public Stack<System.Diagnostics.Activity> Activities = new Stack<System.Diagnostics.Activity>();
         [JsonIgnore]
         public System.Diagnostics.Activity RootActivity = null;
         [JsonProperty(propertyName: "parentspanid")]
-        public string ParentSpanId { get; set; }
+        public string ParentSpanId { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [JsonProperty(propertyName: "spanid")]
-        public string SpanId { get; set; }
-        //[JsonIgnore]
-        //public string spanid { get; set; }
-        [JsonIgnore]
+        public string SpanId { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        [JsonIgnore, LiteDB.BsonIgnore]
         public System.Diagnostics.ActivitySource source = new System.Diagnostics.ActivitySource("OpenRPA");
-        // public DateTime LastUpdated { get { return GetProperty<DateTime>(); } set { SetProperty(value); } } 
         private static List<WorkflowInstance> _Instances = new List<WorkflowInstance>();
         public static List<WorkflowInstance> Instances
         {
@@ -57,16 +49,15 @@ namespace OpenRPA
                 // return _Instances.Where(x => x.state != "loaded").ToList();
             }
         }
-
         public event VisualTrackingHandler OnVisualTracking;
         public event idleOrComplete OnIdleOrComplete;
         public Dictionary<string, object> Parameters { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
         public Dictionary<string, object> Bookmarks { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
-        [JsonIgnore]
+        [JsonIgnore, LiteDB.BsonIgnore]
         public string Path { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string correlationId { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string queuename { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        [JsonIgnore]
+        [JsonIgnore, LiteDB.BsonIgnore]
         public Dictionary<string, WorkflowInstanceValueType> Variables { get { return GetProperty<Dictionary<string, WorkflowInstanceValueType>>(); } set { SetProperty(value); } }
         public string InstanceId { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string WorkflowId { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -81,7 +72,7 @@ namespace OpenRPA
         public string fqdn { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string errormessage { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string errorsource { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        [JsonIgnore]
+        [JsonIgnore, LiteDB.BsonIgnore]
         public Exception Exception { get { return GetProperty<Exception>(); } set { SetProperty(value); } }
         public bool isCompleted { 
             get {
@@ -130,11 +121,11 @@ namespace OpenRPA
                 SetProperty(value); 
             } 
         }
-        [JsonIgnore]
+        [JsonIgnore, LiteDB.BsonIgnore]
         public Workflow Workflow { get { return GetProperty<Workflow>(); } set { SetProperty(value); } }
-        [JsonIgnore]
+        [JsonIgnore, LiteDB.BsonIgnore]
         public System.Activities.WorkflowApplication wfApp { get; set; }
-        [JsonIgnore]
+        [JsonIgnore, LiteDB.BsonIgnore]
         public WorkflowTrackingParticipant TrackingParticipant { get; set; }
         private void NotifyState()
         {
@@ -366,10 +357,6 @@ namespace OpenRPA
         }
         public System.Diagnostics.Stopwatch runWatch { get; set; }
         IWorkflow IWorkflowInstance.Workflow { get => this.Workflow; set => this.Workflow = value as Workflow; }
-
-        // apibase IWorkflowInstance.Workflow { get => this.Workflow; set => this.Workflow = value as Workflow; }
-        //public void Run(Activity root, string activityid)
-
         public void RunThis(Activity root, Activity activity)
         {
             createApp(activity);
@@ -736,20 +723,24 @@ namespace OpenRPA
                 _ = Workflow.State;
                 if (e.CompletionState == System.Activities.ActivityInstanceState.Faulted)
                 {
+                    Save();
                 }
                 else if (e.CompletionState == System.Activities.ActivityInstanceState.Canceled)
                 {
+                    Save();
                 }
                 else if (e.CompletionState == System.Activities.ActivityInstanceState.Closed)
                 {
                     state = "completed";
                     foreach (var o in e.Outputs) Parameters[o.Key] = o.Value;
                     if (runWatch != null) runWatch.Stop();
+                    Save();
                     NotifyCompleted();
                     OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
                 }
                 else if (e.CompletionState == System.Activities.ActivityInstanceState.Executing)
                 {
+                    Save();
                 }
                 else
                 {
@@ -800,15 +791,8 @@ namespace OpenRPA
                 {
                     state = "unloaded";
 
-                } else
-                {
-                    DeleteFile();
                 }
-                //isUnloaded = true;
-                if(global.isConnected)
-                {
-                    Save();
-                }
+                Save();
             };
 
             wfApp.OnUnhandledException = delegate (System.Activities.WorkflowApplicationUnhandledExceptionEventArgs e)
@@ -821,91 +805,27 @@ namespace OpenRPA
                 if(e.ExceptionSource!=null) errorsource = e.ExceptionSource.Id;
                 //exceptionsource = e.ExceptionSource.Id;
                 if (runWatch != null) runWatch.Stop();
+                Save();
                 NotifyAborted();
                 OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
                 return System.Activities.UnhandledExceptionAction.Terminate;
             };
 
         }
-        private object filelock = new object();
-        public void SaveFile()
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(InstanceId)) return;
-                if (string.IsNullOrEmpty(Path)) return;
-                if (isCompleted || hasError) return;
-                if (!System.IO.Directory.Exists(System.IO.Path.Combine(Path, "state"))) System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Path, "state"));
-                var Filepath = System.IO.Path.Combine(Path, "state", InstanceId + ".json");
-                string json = "";
-                try
-                {
-                    json = JsonConvert.SerializeObject(this);
-                }
-                catch (Exception)
-                {
-                }
-                lock (filelock)
-                {
-                    if (!string.IsNullOrEmpty(json)) System.IO.File.WriteAllText(Filepath, json);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-            }
-        }
-        public void DeleteFile()
-        {
-            if (string.IsNullOrEmpty(InstanceId)) return;
-            if (string.IsNullOrEmpty(Path)) return;
-            var Filepath = System.IO.Path.Combine(Path, "state", InstanceId + ".json");
-            try
-            {
-                if (System.IO.File.Exists(Filepath)) System.IO.File.Delete(Filepath);
-            }
-            catch (Exception ex)
-            {
-                Log.Debug(ex.ToString());
-            }
-        }
-        // private Task SaveTask = null;
         public void Save()
         {
             if (isCompleted || hasError)
             {
-                DeleteFile();
                 xml = null;
-            } 
-            else
-            {
-                SaveFile();
-            }            
-            if(Workflow!=null) Workflow.NotifyUIState();
-            Task.Run(async () =>
-            {
-                // System.Threading.Thread.Sleep(1000);
-                int retries = 0;
-                bool hasError = false;
-                do
-                {
-                    hasError = false;
-                    try
-                    {
-                        if (!global.isConnected) return;
-                        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, null, this);
-                        _id = result._id;
-                        _acl = result._acl;
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Debug(ex.ToString());
-                        retries++;
-                        hasError = true;
-                        // throw;
-                    }
-                } while (hasError && retries < 10);
-            });
+            }
+            //Task<LogEntity> task = Task.Run<LogEntity>(async () => await GetLogAsync());
+            //return task.Result;
+            _ = Save<WorkflowInstance>();
+            if (Workflow!=null) Workflow.NotifyUIState();
+            //Task.Run(async () =>
+            //{
+            //    await Save<WorkflowInstance>();
+            //});
         }
         public static async Task RunPendingInstances()
         {

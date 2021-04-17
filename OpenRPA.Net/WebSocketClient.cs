@@ -77,7 +77,7 @@ namespace OpenRPA.Net
                     ws = null;
                     return;
                 }
-                Log.Information("Connecting to " + url);
+                Log.Network("Connecting to " + url);
                 await ws.ConnectAsync(new Uri(url), src.Token);
                 Log.Information("Connected to " + url);
                 Task receiveTask = Task.Run(async () => await receiveLoop(), src.Token);

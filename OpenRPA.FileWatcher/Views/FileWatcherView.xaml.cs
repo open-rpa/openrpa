@@ -32,7 +32,7 @@ namespace OpenRPA.FileWatcher.Views
             DataContext = this;
         }
         private FileWatcherDetectorPlugin plugin;
-        public Detector Entity
+        public IDetector Entity
         {
             get
             {

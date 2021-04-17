@@ -1,17 +1,13 @@
-﻿using Newtonsoft.Json;
-using OpenRPA.Interfaces.entity;
-using OpenRPA.Interfaces.Selector;
+﻿using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OpenRPA.Interfaces;
 
-
-namespace OpenRPA.Input
+namespace OpenRPA
 {
-    public class Detector : apibase, IDetector
+    public class Detector : LocallyCached, IDetector
     {
         public Detector()
         {
@@ -20,5 +16,13 @@ namespace OpenRPA.Input
         }
         public string Plugin { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public Dictionary<string, object> Properties { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
+        public async Task Save()
+        {
+            await Save<Detector>();
+        }
+        public async Task Delete()
+        {
+            await Delete<Detector>();
+        }
     }
 }

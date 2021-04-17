@@ -32,8 +32,8 @@ namespace OpenRPA.Interfaces
         IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, idleOrComplete idleOrComplete, VisualTrackingHandler VisualTracking, string SpanId, string ParentSpanId);
         Task Delete();
         string UniqueFilename();
-        Task Save(bool UpdateImages);
-        void SaveFile(string overridepath = null, bool exportImages = false);
+        Task Save();
+        Task ExportFile(string filepath);
         void RunPendingInstances();
         void ParseParameters();
     }

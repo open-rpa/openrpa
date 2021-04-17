@@ -17,7 +17,7 @@ namespace OpenRPA.Interfaces
         public static ObservableCollection<IRunPlugin> runPlugins = new ObservableCollection<IRunPlugin>();
         public static ObservableCollection<ISnippet> Snippets = new ObservableCollection<ISnippet>();
         public static ICollection<Type> WorkflowExtensionsTypes = new List<Type>();
-        public static IDetectorPlugin AddDetector(IOpenRPAClient client, entity.Detector entity)
+        public static IDetectorPlugin AddDetector(IOpenRPAClient client, IDetector entity)
         {
             foreach(var d in detectorPluginTypes)
             {
@@ -40,7 +40,7 @@ namespace OpenRPA.Interfaces
             }
             return null;
         }
-        public static IDetectorPlugin UpdateDetector(IOpenRPAClient client, entity.Detector entity)
+        public static IDetectorPlugin UpdateDetector(IOpenRPAClient client, IDetector entity)
         {
             foreach (var d in detectorPluginTypes)
             {

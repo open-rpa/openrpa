@@ -50,9 +50,10 @@ namespace OpenRPA
         //public static Prometheus.Client.Abstractions.IGauge mem_total = factory.CreateGauge("openrpa_memory_size_total_bytes", "Amount of heap memory usage for OpenRPA client");
         // public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; } = new System.Collections.ObjectModel.ObservableCollection<Project>();
         public LiteDatabase db;
-        public LiteDB.ILiteCollection<IProject> Projects;
-        public LiteDB.ILiteCollection<IWorkflow> Workflows;
-        public LiteDB.ILiteCollection<Interfaces.entity.Detector> Detectors;
+        public LiteDB.ILiteCollection<Project> Projects;
+        public LiteDB.ILiteCollection<Workflow> Workflows;
+        public LiteDB.ILiteCollection<Detector> Detectors;
+        public LiteDB.ILiteCollection<WorkflowInstance> dbWorkflowInstances;
         public int ProjectCount
         {
             get
@@ -94,14 +95,17 @@ namespace OpenRPA
                     );
 
                     _instance.db = new LiteDatabase(Interfaces.Extensions.ProjectsDirectory + @"\lite.db");
-                    _instance.Projects = _instance.db.GetCollection<IProject>("projects");
+                    _instance.Projects = _instance.db.GetCollection<Project>("projects");
                     _instance.Projects.EnsureIndex(x => x._id, true);
 
-                    _instance.Workflows = _instance.db.GetCollection<IWorkflow>("workflows");
+                    _instance.Workflows = _instance.db.GetCollection<Workflow>("workflows");
                     _instance.Workflows.EnsureIndex(x => x._id, true);
 
-                    _instance.Detectors = _instance.db.GetCollection<Interfaces.entity.Detector>("detectors");
+                    _instance.Detectors = _instance.db.GetCollection<Detector>("detectors");
                     _instance.Detectors.EnsureIndex(x => x._id, true);
+
+                    _instance.dbWorkflowInstances = _instance.db.GetCollection<WorkflowInstance>("workflowinstances");
+                    _instance.dbWorkflowInstances.EnsureIndex(x => x._id, true);                    
 
                     // BsonMapper.Global.Entity<Project>().DbRef(x => x.Workflows, "workflows");
                     AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) =>
@@ -177,7 +181,7 @@ namespace OpenRPA
             }
             set
             {
-                if (!global.openflowconfig.supports_watch)
+                if (global.openflowconfig != null && !global.openflowconfig.supports_watch)
                 {
                     if (reloadTimer.Enabled = value)
                     {
@@ -309,6 +313,7 @@ namespace OpenRPA
         }
         public async Task LoadServerData()
         {
+            DisableWatch = true;
             var span = source.StartActivity("LoadServerData", ActivityKind.Consumer);
             try
             {
@@ -328,6 +333,7 @@ namespace OpenRPA
                     if (exists != null)
                     {
                         if (exists._version < p._version) reload_ids.Add(p._id);
+                        if (exists._version > p._version && p.isDirty) await p.Save();
                     }
                     else
                     {
@@ -337,11 +343,15 @@ namespace OpenRPA
                 foreach (var p in local_projects)
                 {
                     var exists = server_projects.Where(x => x._id == p._id).FirstOrDefault();
-                    if (exists == null)
+                    if (exists == null && !p.isDirty)
                     {
                         span?.AddEvent(new ActivityEvent("Removing local project " + p.name));
                         Log.Debug("Removing local project " + p.name);
                         Projects.Delete(p._id);
+                    } else if ( p.isDirty)
+                    {
+                        if (p.isDeleted) await p.Delete();
+                        if (!p.isDeleted) await p.Save();
                     }
                 }
                 if (reload_ids.Count > 0)
@@ -359,14 +369,14 @@ namespace OpenRPA
                             Log.Debug("Updating local project " + p.name);
                             p.IsExpanded = exists.IsExpanded;
                             p.IsSelected = exists.IsSelected;
-                            Projects.Update(p);
+                            await p.Save();
                             await p.InstallDependencies(true);
                         }
                         else
                         {
                             span?.AddEvent(new ActivityEvent("Adding local project " + p.name));
                             Log.Debug("Adding local project " + p.name);
-                            Projects.Insert(p);
+                            await p.Save();
                             await p.InstallDependencies(true);
                         }
                     }
@@ -382,6 +392,7 @@ namespace OpenRPA
                     if (exists != null)
                     {
                         if (exists._version < wf._version) reload_ids.Add(wf._id);
+                        if (exists._version > wf._version && wf.isDirty) await wf.Save();
                     }
                     else
                     {
@@ -391,11 +402,15 @@ namespace OpenRPA
                 foreach (var wf in local_workflows)
                 {
                     var exists = server_workflows.Where(x => x._id == wf._id).FirstOrDefault();
-                    if (exists == null)
+                    if (exists == null && !wf.isDirty)
                     {
                         span?.AddEvent(new ActivityEvent("Removing local workflow " + wf.name));
                         Log.Debug("Removing local workflow " + wf.name);
                         Workflows.Delete(wf._id);
+                    } else if (wf.isDirty)
+                    {
+                        if (wf.isDeleted) await wf.Delete();
+                        if (!wf.isDeleted) await wf.Save();
                     }
                 }
                 if (reload_ids.Count > 0)
@@ -418,7 +433,7 @@ namespace OpenRPA
                             {
                                 span?.AddEvent(new ActivityEvent("Adding local workflow " + wf.name));
                                 Log.Debug("Adding local workflow " + wf.name);
-                                Workflows.Insert(wf);
+                                await wf.Save();
                             }
                         }
                         catch (Exception ex)
@@ -433,7 +448,7 @@ namespace OpenRPA
 
 
                 span?.AddEvent(new ActivityEvent("query detector versions"));
-                var server_detectors = await global.webSocketClient.Query<Interfaces.entity.Detector>("openrpa", "{\"_type\": 'detector'}", "{\"_version\": 1}");
+                var server_detectors = await global.webSocketClient.Query<Detector>("openrpa", "{\"_type\": 'detector'}", "{\"_version\": 1}");
                 var local_detectors = Detectors.FindAll().ToList();
                 reload_ids = new List<string>();
                 foreach (var detector in server_detectors)
@@ -442,6 +457,7 @@ namespace OpenRPA
                     if (exists != null)
                     {
                         if (exists._version < detector._version) reload_ids.Add(detector._id);
+                        if (exists._version > detector._version && detector.isDirty) await detector.Save();
                     }
                     else
                     {
@@ -451,7 +467,7 @@ namespace OpenRPA
                 foreach (var detector in local_detectors)
                 {
                     var exists = server_detectors.Where(x => x._id == detector._id).FirstOrDefault();
-                    if (exists == null)
+                    if (exists == null && !detector.isDirty)
                     {
                         span?.AddEvent(new ActivityEvent("Removing local detector " + detector.name));
                         Log.Debug("Removing local detector " + detector.name);
@@ -463,13 +479,18 @@ namespace OpenRPA
                             Plugins.detectorPlugins.Remove(d);
                         }
                         Detectors.Delete(detector._id);
+                    } else if ( detector.isDirty)
+                    {
+                        if (detector.isDeleted) await detector.Delete();
+                        if (!detector.isDeleted) await detector.Save();
+
                     }
                 }
                 if (reload_ids.Count > 0)
                 {
                     for (var i = 0; i < reload_ids.Count; i++) reload_ids[i] = "'" + reload_ids[i] + "'";
                     var q = "{ _type: 'detector', '_id': {'$in': [" + string.Join(",", reload_ids) + "]}}";
-                    server_detectors = await global.webSocketClient.Query<Interfaces.entity.Detector>("openrpa", q, orderby: "{\"name\":-1}");
+                    server_detectors = await global.webSocketClient.Query<Detector>("openrpa", q, orderby: "{\"name\":-1}");
                     foreach (var detector in server_detectors)
                     {
                         try
@@ -501,7 +522,12 @@ namespace OpenRPA
                         }
                     }
                 }
-
+                var LocalOnlyProjects = _instance.Projects.Find(x => x.isLocalOnly);
+                foreach (var i in LocalOnlyProjects) await i.Save<Project>();
+                var LocalOnlyWorkflws = _instance.Workflows.Find(x => x.isLocalOnly);
+                foreach (var i in LocalOnlyWorkflws) await i.Save<Workflow>();
+                //_instance.dbWorkflowInstances = _instance.db.GetCollection<WorkflowInstance>("workflowinstances");
+                //_instance.dbWorkflowInstances.EnsureIndex(x => x._id, true);
 
             }
             catch (Exception ex)
@@ -520,6 +546,7 @@ namespace OpenRPA
                     SetStatus("Offline");
                 }
                 AutoReloading = true;
+                DisableWatch = false;
                 span?.Dispose();
             }
         }
@@ -1000,7 +1027,7 @@ namespace OpenRPA
             }
             try
             {
-                if (global.openflowconfig.supports_watch)
+                if (global.openflowconfig != null && global.openflowconfig.supports_watch)
                 {
                     if (string.IsNullOrEmpty(openrpa_watchid))
                     {
@@ -1020,7 +1047,7 @@ namespace OpenRPA
         private async void WebSocketClient_OnClose(string reason)
         {
             Log.FunctionIndent("RobotInstance", "WebSocketClient_OnClose", reason);
-            Log.Information("Disconnected " + reason);
+            if(global.webSocketClient.isConnected) Log.Information("Disconnected " + reason);
             SetStatus("Disconnected from " + Config.local.wsurl + " reason " + reason);
             openrpa_watchid = null;
             try
@@ -1411,11 +1438,11 @@ namespace OpenRPA
         //    metricTime.Start();
         //}
         public bool DisableWatch = false;
-        private void onWatchEvent(string id, Newtonsoft.Json.Linq.JObject data)
+        private async void onWatchEvent(string id, Newtonsoft.Json.Linq.JObject data)
         {
             try
             {
-                // if (DisableWatch) return;
+                if (DisableWatch) return;
                 string _type = data["fullDocument"].Value<string>("_type");
                 string _id = data["fullDocument"].Value<string>("_id");
                 long _version = data["fullDocument"].Value<long>("_version");
@@ -1432,19 +1459,26 @@ namespace OpenRPA
                     }
                     else if (wfexists == null)
                     {
-                        instance.Workflows.Insert(workflow);
+                        await workflow.Save();
                         instance.NotifyPropertyChanged("Projects");
                     }
                 }
-                if (DisableWatch) return;
                 if (_type == "project")
                 {
                     var project = Newtonsoft.Json.JsonConvert.DeserializeObject<Project>(data["fullDocument"].ToString());
-                    _ = UpdateProject(project);
+                    Project exists = RobotInstance.instance.Projects.FindById(_id);
+                    if (exists != null && _version != exists._version)
+                    {
+                        await UpdateProject(project);
+                    } else if(exists == null)
+                    {
+                        await UpdateProject(project);
+                    }
+                    
                 }
                 if (_type == "detector")
                 {
-                    var d = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.entity.Detector>(data["fullDocument"].ToString());
+                    var d = Newtonsoft.Json.JsonConvert.DeserializeObject<Detector>(data["fullDocument"].ToString());
                     GenericTools.RunUI(() =>
                     {
                         try
@@ -1490,7 +1524,7 @@ namespace OpenRPA
                 {
                     if (!(instance.GetWorkflowDesignerByIDOrRelativeFilename(Workflow.IDOrRelativeFilename) is Views.WFDesigner designer))
                     {
-                        instance.Workflows.Update(Workflow);
+                        instance.Workflows.Update(Workflow as Workflow);
                     }
                     else
                     {
@@ -1498,7 +1532,7 @@ namespace OpenRPA
                         {
                             if (forceSave)
                             {
-                                instance.Workflows.Update(Workflow);
+                                instance.Workflows.Update(Workflow as Workflow);
                             }
                             else
                             {
@@ -1506,7 +1540,7 @@ namespace OpenRPA
                                         System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.None, System.Windows.MessageBoxResult.Yes);
                                 if (messageBoxResult == System.Windows.MessageBoxResult.Yes)
                                 {
-                                    instance.Workflows.Update(Workflow);
+                                    instance.Workflows.Update(Workflow as Workflow);
                                     designer.forceHasChanged(false);
                                     designer.tab.Close();
                                     Window.OnOpenWorkflow(Workflow);
@@ -1523,7 +1557,7 @@ namespace OpenRPA
                             {
                                 designer.forceHasChanged(false);
                                 designer.tab.Close();
-                                instance.Workflows.Update(Workflow);
+                                instance.Workflows.Update(Workflow as Workflow);
                                 Window.OnOpenWorkflow(Workflow);
                             }
                         }
@@ -1538,14 +1572,7 @@ namespace OpenRPA
         }
         public async Task UpdateProject(IProject project)
         {
-            IProject exists = instance.Projects.Find(x => x._id == project._id).FirstOrDefault();
-            if (exists == null) instance.Projects.Insert(project);
-            if (exists != null)
-            {
-                project.IsExpanded = exists.IsExpanded;
-                project.IsSelected = exists.IsSelected;
-                instance.Projects.Update(project);
-            }
+            await project.Save();
             instance.NotifyPropertyChanged("Projects");
             try
             {

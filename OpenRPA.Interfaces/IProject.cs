@@ -19,7 +19,7 @@ namespace OpenRPA.Interfaces
         // Newtonsoft.Json.Linq.JObject dependencies { get; set; }
         Dictionary<string, string> dependencies { get; set; }
         void NotifyPropertyChanged(string propertyName);
-        Task Save(bool UpdateImages);
+        Task Save();
         Task InstallDependencies(bool LoadDlls);
         void UpdateWorkflowsList();
     }

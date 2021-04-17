@@ -36,7 +36,7 @@ namespace OpenRPA.Views
         //public ICommand DeleteCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnDelete, AgentWindow.instance.CanDelete); } }
         //public ICommand CopyIDCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnCopyID, AgentWindow.instance.CanCopyID); } }
         //public ICommand CopyRelativeFilenameCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnCopyRelativeFilename, AgentWindow.instance.CanCopyID); } }
-        public List<IProject> Projects
+        public List<Project> Projects
         {
             get
             {
@@ -84,7 +84,7 @@ namespace OpenRPA.Views
                         f.XAML = workflow.Xaml;
                         f.ShowDialog();
                         workflow.Xaml = f.XAML;
-                        await workflow.Save(false);
+                        await workflow.Save();
                     }
                     catch (Exception ex)
                     {

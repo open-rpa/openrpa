@@ -138,6 +138,24 @@
   <data name="activity_blocking_help" xml:space="preserve">
     <value>Block execution until the complete</value>
   </data>
+  <data name="activity_break" xml:space="preserve">
+    <value>Break</value>
+  </data>
+  <data name="activity_Breakabledowhile" xml:space="preserve">
+    <value>Do While</value>
+  </data>
+  <data name="activity_Breakabledowhile_tooltip" xml:space="preserve">
+    <value>Execute the contained workflow while condition is true</value>
+  </data>
+  <data name="activity_breakablewhile" xml:space="preserve">
+    <value>While</value>
+  </data>
+  <data name="activity_breakablewhile_tooltip" xml:space="preserve">
+    <value>Execute the contained workflow while condition is true</value>
+  </data>
+  <data name="activity_break_tooltip" xml:space="preserve">
+    <value>Breaks out of a loop and continues execution after the loop</value>
+  </data>
   <data name="activity_checkrunning" xml:space="preserve">
     <value>Check Running</value>
   </data>
@@ -170,6 +188,18 @@
   </data>
   <data name="activity_commentout_tooltip" xml:space="preserve">
     <value>Ignore everything inside this Acitvity, handy for quickly remarking something out</value>
+  </data>
+  <data name="activity_condition" xml:space="preserve">
+    <value>Condition</value>
+  </data>
+  <data name="activity_condition_help" xml:space="preserve">
+    <value>Executed body while this condition is true</value>
+  </data>
+  <data name="activity_continue" xml:space="preserve">
+    <value>Continue</value>
+  </data>
+  <data name="activity_continue_tooltip" xml:space="preserve">
+    <value>Stop executing body of the loop and continue to next item</value>
   </data>
   <data name="activity_copyclipboard" xml:space="preserve">
     <value>Copy Clipboard</value>

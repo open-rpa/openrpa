@@ -12,7 +12,7 @@ using System.Windows.Threading;
 
 namespace OpenRPA
 {
-    public class Workflow : apibase, IWorkflow
+    public class Workflow : LocallyCached, IWorkflow
     {
         [JsonIgnore, BsonIgnore]
         private long _current_version = 0;
@@ -29,7 +29,7 @@ namespace OpenRPA
             Serializable = true;
             IsVisible = true;
         }
-        public string queue { get { return GetProperty<string>(); } set { SetProperty(value); } }        
+        public string queue { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string Xaml { get { return GetProperty<string>(); } set { _activity = null; SetProperty(value); } }
         public List<workflowparameter> Parameters { get { return GetProperty<List<workflowparameter>>(); } set { SetProperty(value); } }
         public bool Serializable { get { return GetProperty<bool>(); } set { SetProperty(value); } }
@@ -89,7 +89,7 @@ namespace OpenRPA
             }
         }   
         public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        [JsonIgnore, BsonIgnore]
+        [JsonIgnore]
         public bool IsExpanded { 
             get { return GetProperty<bool>(); } 
             set {
@@ -113,7 +113,7 @@ namespace OpenRPA
                 }
             } 
         }
-        [JsonIgnore, BsonIgnore]
+        [JsonIgnore]
         public bool IsSelected { 
             get { return GetProperty<bool>(); } 
             set {
@@ -236,10 +236,11 @@ namespace OpenRPA
             //sresult.Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>();
             return result;
         }
-        public static Workflow Create(IProject Project, string Name)
+        public async static Task<Workflow> Create(IProject Project, string Name)
         {
             Workflow workflow = new Workflow { projectid = Project._id, name = Name, _acl = Project._acl };
-            bool isUnique = false; int counter = 1;
+            var exists = RobotInstance.instance.Workflows.Find(x => x.name == workflow.name).FirstOrDefault();
+            bool isUnique = (exists == null); int counter = 1;
             while (!isUnique)
             {
                 if (counter == 1)
@@ -253,8 +254,10 @@ namespace OpenRPA
                     //workflow.FilePath = System.IO.Path.Combine(Project.Path, Name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".xaml");
                     workflow.Filename = Name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".xaml";
                 }
-                var exists = RobotInstance.instance.Workflows.Find(x => x.name.ToLower() == workflow.name && x.projectid == Project._id).FirstOrDefault();
-                if(exists == null) isUnique = true;
+                exists = RobotInstance.instance.Workflows.Find(x => x.name == workflow.name).FirstOrDefault();
+                isUnique = (exists == null);
+                //var exists = RobotInstance.instance.Workflows.Find(x => x.name.ToLower() == workflow.name && x.projectid == Project._id).FirstOrDefault();
+                //if(exists == null) isUnique = true;
                 // if (!System.IO.File.Exists(workflow.FilePath)) isUnique = true;
                 counter++;
             }
@@ -266,136 +269,41 @@ namespace OpenRPA
             workflow.isDirty = true;
             workflow.isLocalOnly = true;
             RobotInstance.instance.Workflows.Insert(workflow);
-            _ = workflow.Save(false);
+            await workflow.Save();
             return workflow;
         }
-        public void SaveFile(string overridepath = null, bool exportImages = false)
+        public async Task ExportFile(string filepath)
         {
-            if (string.IsNullOrEmpty(name)) return;
-            if (string.IsNullOrEmpty(Xaml)) return;
-            if (!Project().Workflows.Contains(this)) Project().Workflows.Add(this);
-
-            var workflowpath = Project().Path;
-            if (!string.IsNullOrEmpty(overridepath)) workflowpath = overridepath;
-            var workflowfilepath = System.IO.Path.Combine(workflowpath, Filename);
-            if (string.IsNullOrEmpty(workflowfilepath))
-            {
-                Filename = UniqueFilename();
-            }
-            else
-            {
-                var guess = name.Replace(" ", "_").Replace(".", "") + ".xaml";
-                var newName = UniqueFilename();
-                if (guess == newName && Filename != guess)
-                {
-                    System.IO.File.WriteAllText(System.IO.Path.Combine(workflowpath, guess), Xaml);
-                    System.IO.File.Delete(workflowfilepath);
-                    Filename = guess;
-                    return;
-                }
-            }
-            if(exportImages)
-            {
-                GenericTools.RunUI(async () => {
-                    string beforexaml = Xaml;
-                    string xaml = await Views.WFDesigner.LoadImages(beforexaml);
-                    //string xaml = Task.Run(() =>
-                    //{
-                    //    return Views.WFDesigner.LoadImages(beforexaml);
-                    //}).Result;
-                    System.IO.File.WriteAllText(workflowfilepath, xaml);
-                });
-                return;
-            }
-            if(Project().disable_local_caching)
-            {
-                if (System.IO.File.Exists(workflowfilepath)) System.IO.File.Delete(workflowfilepath);
-                return;
-            }
-            System.IO.File.WriteAllText(workflowfilepath, Xaml);
+            string xaml = await Views.WFDesigner.LoadImages(Xaml);
+            System.IO.File.WriteAllText(filepath, xaml);
         }
-        public async Task Save(bool UpdateImages)
+        public async Task Save()
         {
             if (projectid == null && string.IsNullOrEmpty(projectid)) throw new Exception("Cannot save workflow with out a project/projectid");
-            if(string.IsNullOrEmpty(projectid) && projectid!=null) projectid = Project()._id;
-            if (!global.isConnected)
+            if (string.IsNullOrEmpty(projectid)) projectid = Project()._id;
+            await Save<Workflow>();
+            RobotInstance.instance.UpdateWorkflow(this, false);
+        }
+        public async Task UpdateImagePermissions()
+        {
+            if (!global.isConnected) return;
+            var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
+            foreach (var f in files)
             {
-                try
+                bool equal = f.metadata._acl.SequenceEqual(_acl);
+                if (!equal)
                 {
-                    if (string.IsNullOrEmpty(_id))
-                    {
-                        _id = Guid.NewGuid().ToString();
-                        isDirty = true;
-                        isLocalOnly = true;
-                        RobotInstance.instance.Workflows.Insert(this);
-                    }
-                    else
-                    {
-                        var exists = RobotInstance.instance.Workflows.FindById(_id);
-                        if (exists != null) RobotInstance.instance.UpdateWorkflow(this, false);
-                        if (exists == null) RobotInstance.instance.Workflows.Insert(this);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-                return;
-            }
-            RobotInstance.instance.DisableWatch = true;
-            if (string.IsNullOrEmpty(_id)|| isLocalOnly == true)
-            {
-                var result = await global.webSocketClient.InsertOne("openrpa", 0, false, this);
-                isLocalOnly = false;
-                if(!string.IsNullOrEmpty(_id))
-                {
-                    var exists = RobotInstance.instance.Workflows.FindById(_id);
-                    if (exists != null) RobotInstance.instance.Workflows.Delete(_id);
-                }
-                _id = result._id;
-                _acl = result._acl;
-                _modified = result._modified;
-                _modifiedby = result._modifiedby;
-                _modifiedbyid = result._modifiedbyid;
-                RobotInstance.instance.Workflows.Insert(this);
-            }
-            else
-            {
-                _version++; // Add one to avoid watch update
-                var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, this);
-                _acl = result._acl;
-                _modified = result._modified;
-                _modifiedby = result._modifiedby;
-                _modifiedbyid = result._modifiedbyid;
-                _version = result._version;
-                if (System.Diagnostics.Debugger.IsAttached) Log.Output("Saved and returned as version " + this._version);
-                var exists = RobotInstance.instance.Workflows.FindById(_id);
-                if (exists != null) { RobotInstance.instance.UpdateWorkflow(this, true); if (System.Diagnostics.Debugger.IsAttached) Log.Output("Saved in local db as version " + this._version);  }
-                if (exists == null) { RobotInstance.instance.Workflows.Insert(this); if (System.Diagnostics.Debugger.IsAttached) Log.Output("Inserted in local db as version  " + this  ._version);  }
-                if (UpdateImages)
-                {
-                    var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
-                    foreach (var f in files)
-                    {
-                        bool equal = f.metadata._acl.SequenceEqual(_acl);
-                        if (!equal)
-                        {
-                            f.metadata._acl = _acl;
-                            await global.webSocketClient.UpdateOne("files", 0, false, f);
-                        }
-                    }
+                    f.metadata._acl = _acl;
+                    await global.webSocketClient.UpdateOne("files", 0, false, f);
                 }
             }
-            RobotInstance.instance.DisableWatch = false;
         }
         public async Task Delete()
         {
             try
             {
-                if (string.IsNullOrEmpty(FilePath)) return;
-                if (System.IO.File.Exists(FilePath)) System.IO.File.Delete(FilePath);
-                if (!global.isConnected) return;
-                if (!string.IsNullOrEmpty(_id))
+                await Delete<Workflow>();
+                if (!string.IsNullOrEmpty(_id) && global.isConnected)
                 {
                     var imagepath = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "images");
                     if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
@@ -408,8 +316,6 @@ namespace OpenRPA
                     }
                     await global.webSocketClient.DeleteOne("openrpa", this._id);
                 }
-                var exists = RobotInstance.instance.Workflows.FindById(_id);
-                if (exists != null) RobotInstance.instance.Workflows.Delete(_id);
             }
             catch (Exception ex)
             {
@@ -469,21 +375,21 @@ namespace OpenRPA
         }
         public string UniqueFilename()
         {
-            string Filename = ""; string FilePath = "";
-            bool isUnique = false; int counter = 1;
+            string Filename = ""; 
+            var isUnique = false;
+            int counter = 1;
             while (!isUnique)
             {
                 if (counter == 1)
                 {
                     Filename = System.Text.RegularExpressions.Regex.Replace(name, @"[^0-9a-zA-Z]+", "") + ".xaml";
-                    FilePath = System.IO.Path.Combine(Project().Path, Filename);
                 }
                 else
                 {
                     Filename = name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".xaml";
-                    FilePath = System.IO.Path.Combine(Project().Path, Filename);
                 }
-                if (!System.IO.File.Exists(FilePath)) isUnique = true;
+                var exists = RobotInstance.instance.Workflows.Find(x => x.Filename == Filename).FirstOrDefault();
+                isUnique = (exists == null);
                 counter++;
             }
             return Filename;

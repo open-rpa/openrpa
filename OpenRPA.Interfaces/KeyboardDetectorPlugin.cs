@@ -12,7 +12,7 @@ namespace OpenRPA.Interfaces
     public class KeyboardDetectorPlugin : ObservableObject, IDetectorPlugin
     {
         //object IDetectorPlugin.Entity { get => Entity; set => Entity = value as entity.KeyboardDetector; }
-        public entity.Detector Entity { get; set; }
+        public IDetector Entity { get; set; }
         public string Name
         {
             get
@@ -43,7 +43,7 @@ namespace OpenRPA.Interfaces
         public void Initialize(IOpenRPAClient client)
         {
         }
-        public void Initialize(IOpenRPAClient client, entity.Detector InEntity)
+        public void Initialize(IOpenRPAClient client, IDetector InEntity)
         {
             Entity = InEntity;
             Start();

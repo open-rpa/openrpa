@@ -132,7 +132,6 @@ namespace OpenRPA
                                 try
                                 {
                                     Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name);
-                                    RobotInstance.instance.Projects.Insert(project);
 
                                     IWorkflow workflow = await project.AddDefaultWorkflow();
                                     RobotInstance.instance.NotifyPropertyChanged("Projects");
@@ -150,7 +149,7 @@ namespace OpenRPA
                             {
                                 var url = Config.local.getting_started_url;
                                 if (string.IsNullOrEmpty(url)) url = "https://skadefro.github.io/openrpa.dk/gettingstarted.html";
-                                if (!string.IsNullOrEmpty(global.openflowconfig.getting_started_url)) url = global.openflowconfig.getting_started_url;
+                                if (global.openflowconfig != null && !string.IsNullOrEmpty(global.openflowconfig.getting_started_url)) url = global.openflowconfig.getting_started_url;
                                 LayoutDocument layoutDocument = new LayoutDocument { Title = "Getting started" };
                                 layoutDocument.ContentId = "GettingStarted";
                                 // Views.GettingStarted view = new Views.GettingStarted(url + "://" + u.Host + "/gettingstarted.html");
@@ -1208,7 +1207,7 @@ namespace OpenRPA
             if (DetectorsView != null)
             {
                 if (!(DetectorsView.lidtDetectors.SelectedItem is IDetectorPlugin detector)) return;
-                result = detector.Entity;
+                result = detector.Entity as apibase;
             }
             List<ace> orgAcl = new List<ace>();
             try
@@ -1219,18 +1218,22 @@ namespace OpenRPA
                 Hide();
                 pw.Owner = GenericTools.MainWindow;
                 pw.ShowDialog();
-                if (result is Project)
+                if (result is Project p)
                 {
                     Log.Function("MainWindow", "OnPermissions", "Update permissions on each workflow in project");
-                    var p = result as Project;
-                    foreach (var wf in p.Workflows)
+                    foreach (var _wf in p.Workflows)
                     {
-                        wf._acl = p._acl;
+                        _wf._acl = p._acl;
+                        await ((Workflow)_wf).UpdateImagePermissions();
                     }
-                    await ((Project)result).Save(true);
+                    await p.Save();
                 }
                 Log.Function("MainWindow", "OnPermissions", "save Entity");
-                if (result is Workflow) await ((Workflow)result).Save(true);
+                if (result is Workflow wf)
+                {
+                    await wf.Save();
+                    await wf.UpdateImagePermissions();
+                }
                 if (result is Detector)
                 {
                     var _result = await global.webSocketClient.UpdateOne("openrpa", 0, false, result);
@@ -1304,7 +1307,7 @@ namespace OpenRPA
                 if (System.IO.Path.GetExtension(filename) == ".xaml")
                 {
                     var name = System.IO.Path.GetFileNameWithoutExtension(dialogOpen.FileName);
-                    Workflow workflow = Workflow.Create(p, name);
+                    Workflow workflow = await Workflow.Create(p, name);
                     workflow.Xaml = System.IO.File.ReadAllText(dialogOpen.FileName);
                     _onOpenWorkflow(workflow, true);
                     return;
@@ -1332,10 +1335,9 @@ namespace OpenRPA
                         return;
                     }
                     project = await Project.FromFile(System.IO.Path.Combine(projectpath, name + ".rpaproj"));
-                    RobotInstance.instance.Projects.Insert(project);
                     project.name = name;
                     project._id = null;
-                    await project.Save(false);
+                    await project.Save();
                     IWorkflow workflow = project.Workflows.First();
                     workflow.projectid = project._id;
                     RobotInstance.instance.NotifyPropertyChanged("Projects");
@@ -1420,8 +1422,7 @@ namespace OpenRPA
                 if (SelectedContent is Views.WFDesigner designer)
                 {
                     designer.WorkflowDesigner.Flush();
-                    string beforexaml = designer.WorkflowDesigner.Text;
-                    string xaml = await Views.WFDesigner.LoadImages(beforexaml);
+                    designer.Workflow.Xaml = designer.WorkflowDesigner.Text;
                     var dialogSave = new Microsoft.Win32.SaveFileDialog
                     {
                         Title = "Save Workflow",
@@ -1430,7 +1431,7 @@ namespace OpenRPA
                     };
                     if (dialogSave.ShowDialog() == true)
                     {
-                        System.IO.File.WriteAllText(dialogSave.FileName, xaml);
+                        await designer.Workflow.ExportFile(dialogSave.FileName);
                     }
                     Log.FunctionOutdent("MainWindow", "OnExport");
                     return;
@@ -1447,13 +1448,11 @@ namespace OpenRPA
                                 return;
                             }
                             var path = openFileDialog1.SelectedPath;
-                            p.SaveFile(path, true);
+                            p.ExportProject(path);
                         }
                     }
                     if (op.listWorkflows.SelectedItem is Workflow wf)
                     {
-                        string beforexaml = wf.Xaml;
-                        string xaml = await Views.WFDesigner.LoadImages(beforexaml);
                         var dialogSave = new Microsoft.Win32.SaveFileDialog
                         {
                             Title = "Save Workflow",
@@ -1462,7 +1461,7 @@ namespace OpenRPA
                         };
                         if (dialogSave.ShowDialog() == true)
                         {
-                            System.IO.File.WriteAllText(dialogSave.FileName, xaml);
+                            await wf.ExportFile(dialogSave.FileName);
                         }
                     }
                     Log.FunctionOutdent("MainWindow", "OnExport");
@@ -2179,7 +2178,7 @@ namespace OpenRPA
                     var Project = view.listWorkflows.SelectedItem as Project;
                     if (Project != null)
                     {
-                        await Project.Save(false);
+                        await Project.Save();
                     }
                 }
             }
@@ -2210,14 +2209,14 @@ namespace OpenRPA
                 return false;
             }
         }
-        private void OnNewWorkflow(object _item)
+        private async void OnNewWorkflow(object _item)
         {
             Log.FunctionIndent("MainWindow", "OnNewWorkflow");
             try
             {
                 if (SelectedContent is Views.WFDesigner designer)
                 {
-                    Workflow workflow = Workflow.Create(designer.Workflow.Project(), "New Workflow");
+                    Workflow workflow = await Workflow.Create(designer.Workflow.Project(), "New Workflow");
                     OnOpenWorkflow(workflow);
                     RobotInstance.instance.NotifyPropertyChanged("Projects");
                     Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Designer selected");
@@ -2227,7 +2226,7 @@ namespace OpenRPA
                 var val = view.listWorkflows.SelectedValue;
                 if (val is Workflow wf)
                 {
-                    Workflow workflow = Workflow.Create(wf.Project(), "New Workflow");
+                    Workflow workflow = await Workflow.Create(wf.Project(), "New Workflow");
                     OnOpenWorkflow(workflow);
                     RobotInstance.instance.NotifyPropertyChanged("Projects");
                     Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Workflow selected");
@@ -2235,7 +2234,7 @@ namespace OpenRPA
                 }
                 if (val is Project p)
                 {
-                    Workflow workflow = Workflow.Create(p, "New Workflow");
+                    Workflow workflow = await Workflow.Create(p, "New Workflow");
                     OnOpenWorkflow(workflow);
                     RobotInstance.instance.NotifyPropertyChanged("Projects");
                     Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Project selected");
@@ -2275,7 +2274,6 @@ namespace OpenRPA
                 }
                 //string Name = "New project";
                 Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name);
-                RobotInstance.instance.Projects.Insert(project);
                 IWorkflow workflow = await project.AddDefaultWorkflow();
                 RobotInstance.instance.NotifyPropertyChanged("Projects");
                 OnOpenWorkflow(workflow);
@@ -2306,7 +2304,7 @@ namespace OpenRPA
             {
                 var designer = (Views.WFDesigner)SelectedContent;
                 await designer.SaveAsync();
-                Workflow workflow = Workflow.Create(designer.Workflow.Project(), "Copy of " + designer.Workflow.name);
+                Workflow workflow = await Workflow.Create(designer.Workflow.Project(), "Copy of " + designer.Workflow.name);
                 var xaml = designer.Workflow.Xaml;
                 xaml = Views.WFDesigner.SetWorkflowName(xaml, workflow.name);
                 workflow.Xaml = xaml;
@@ -2557,7 +2555,7 @@ namespace OpenRPA
                     string Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "New name", project.name);
                     if (string.IsNullOrEmpty(Name) || project.name == Name) return;
                     project.name = Name;
-                    await project.Save(false);
+                    await project.Save();
                 }
                 if (!(view.listWorkflows.SelectedValue is Workflow workflow)) return;
                 try
@@ -2574,7 +2572,7 @@ namespace OpenRPA
                         if (string.IsNullOrEmpty(Name) || workflow.name == Name) return;
                         workflow.Xaml = Views.WFDesigner.SetWorkflowName(workflow.Xaml, Name);
                         workflow.name = Name;
-                        await workflow.Save(false);
+                        await workflow.Save();
                     }
                 }
                 catch (Exception ex)

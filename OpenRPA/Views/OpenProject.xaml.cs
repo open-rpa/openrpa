@@ -93,7 +93,7 @@ namespace OpenRPA.Views
                 if (val == null) return;
                 if (view.listWorkflows.SelectedValue is Project project)
                 {
-                    await project.Save(false);
+                    await project.Save();
                 }
             }
         }
@@ -245,7 +245,7 @@ namespace OpenRPA.Views
                         f.XAML = workflow.Xaml;
                         f.ShowDialog();
                         workflow.Xaml = f.XAML;
-                        await workflow.Save(false);
+                        await workflow.Save();
                     }
                     catch (Exception ex)
                     {

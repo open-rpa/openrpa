@@ -490,7 +490,7 @@ namespace OpenRPA.Views
                 var _hasChanged = HasChanged;
                 HasChanged = false;
                 RobotInstance.instance.Workflows.Update(Workflow);
-                await Workflow.Save(false);
+                await Workflow.Save();
                 if (_hasChanged)
                 {
                     HasChanged = false;

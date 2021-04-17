@@ -289,7 +289,7 @@ namespace OpenRPA
                     {
                         foreach (var b in wi.Bookmarks)
                         {
-                            var _id = (plugin.Entity as Interfaces.entity.Detector)._id;
+                            var _id = plugin.Entity._id;
                             Log.Debug(b.Key + " -> " + "detector_" + _id);
                             if (b.Key == "detector_" + _id)
                             {
@@ -302,7 +302,7 @@ namespace OpenRPA
                 Interfaces.mq.RobotCommand command = new Interfaces.mq.RobotCommand();
                 // detector.user = global.webSocketClient.user;
                 var data = JObject.FromObject(detector);
-                var Entity = (plugin.Entity as Interfaces.entity.Detector);
+                var Entity = plugin.Entity;
                 command.command = "detector";
                 command.detectorid = Entity._id;
                 if (string.IsNullOrEmpty(Entity._id)) return;

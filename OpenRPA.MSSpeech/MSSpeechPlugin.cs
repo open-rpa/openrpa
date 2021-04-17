@@ -13,7 +13,7 @@ namespace OpenRPA.MSSpeech
 {
     public class MSSpeechPlugin : ObservableObject, IDetectorPlugin
     {
-        public Detector Entity { get; set; }
+        public IDetector Entity { get; set; }
         public string Name
         {
             get
@@ -41,7 +41,7 @@ namespace OpenRPA.MSSpeech
         }
         public event DetectorDelegate OnDetector;
         System.Speech.Recognition.SpeechRecognitionEngine recEngine = new System.Speech.Recognition.SpeechRecognitionEngine();
-        public void Initialize(IOpenRPAClient client, Detector InEntity)
+        public void Initialize(IOpenRPAClient client, IDetector InEntity)
         {
             Entity = InEntity;
             recEngine.SetInputToDefaultAudioDevice();

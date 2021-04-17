@@ -33,8 +33,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Office", "OpenRPA.O
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Script", "OpenRPA.Script\OpenRPA.Script.csproj", "{3FCE734C-B133-4BA7-A001-7F33B85D8BD5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Updater", "OpenRPA.Updater\OpenRPA.Updater.csproj", "{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindowsAccessBridgeInterop", "WindowsAccessBridgeInterop\WindowsAccessBridgeInterop.csproj", "{4B5DE0E1-2F0A-426D-BB12-BECB0F6F8B51}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA", "OpenRPA\OpenRPA.csproj", "{E6F0AB4D-6926-41AE-AD25-2DDA26D9642E}"
@@ -395,26 +393,6 @@ Global
 		{3FCE734C-B133-4BA7-A001-7F33B85D8BD5}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
 		{3FCE734C-B133-4BA7-A001-7F33B85D8BD5}.ReleaseNuget|x86.ActiveCfg = ReleaseNuget|Any CPU
 		{3FCE734C-B133-4BA7-A001-7F33B85D8BD5}.ReleaseNuget|x86.Build.0 = ReleaseNuget|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.All|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.All|Any CPU.Build.0 = ReleaseNuget|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.All|x86.ActiveCfg = ReleaseNuget|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.All|x86.Build.0 = ReleaseNuget|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.Debug|x86.ActiveCfg = Debug|x86
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.Debug|x86.Build.0 = Debug|x86
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.PrepInstaller|Any CPU.ActiveCfg = PrepInstaller|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.PrepInstaller|Any CPU.Build.0 = PrepInstaller|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.PrepInstaller|x86.ActiveCfg = PrepInstaller|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.PrepInstaller|x86.Build.0 = PrepInstaller|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.Release|x86.ActiveCfg = Release|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.Release|x86.Build.0 = Release|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.ReleaseNuget|x86.ActiveCfg = ReleaseNuget|Any CPU
-		{501FE807-4F9A-4FF9-A0BA-8F93CFC184DE}.ReleaseNuget|x86.Build.0 = ReleaseNuget|Any CPU
 		{4B5DE0E1-2F0A-426D-BB12-BECB0F6F8B51}.All|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
 		{4B5DE0E1-2F0A-426D-BB12-BECB0F6F8B51}.All|Any CPU.Build.0 = ReleaseNuget|Any CPU
 		{4B5DE0E1-2F0A-426D-BB12-BECB0F6F8B51}.All|x86.ActiveCfg = ReleaseNuget|Any CPU
@@ -780,7 +758,7 @@ Global
 		{70E2E351-AC0D-486D-B357-B890EF20D1C8} = {8CBC9129-7A79-483A-838B-2C6FF3762B35}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
+		BuildVersion_StartDate = 2000/1/1
 	EndGlobalSection
 EndGlobal

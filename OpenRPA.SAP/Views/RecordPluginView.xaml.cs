@@ -69,5 +69,32 @@ namespace OpenRPA.SAP.Views
         {
             SAPhook.EnsureSAPBridge();
         }
+
+        private void property_Changed(object sender, TextChangedEventArgs e)
+        {
+            if (init) return;
+            if (auto_launch_sap_bridge.IsChecked == null) return;
+            PluginConfig.auto_launch_sap_bridge = auto_launch_sap_bridge.IsChecked.Value;
+            PluginConfig.record_with_get_element = record_with_get_element.IsChecked.Value;
+            if (string.IsNullOrEmpty(bridge_timeout_seconds.Text))
+            {
+                PluginConfig.bridge_timeout_seconds = 60;
+            }
+            else
+            {
+                try
+                {
+                    PluginConfig.bridge_timeout_seconds = int.Parse(bridge_timeout_seconds.Text);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+            }
+            PluginConfig.recording_skip_methods = recording_skip_methods.Text;
+            PluginConfig.recording_skip_properties = recording_skip_properties.Text;
+            Config.Save();
+
+        }
     }
 }

@@ -69,6 +69,11 @@ namespace OpenRPA
                 if (workflowInstanceRecord != null)
                 {
                     var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
+                    if(Instance==null)
+                    {
+                        Log.Error("WorkflowTrackingParticipant failed locating WorkflowInstance with InstanceId " + InstanceId.ToString());
+                        return;
+                    }
                     if (workflowInstanceRecord.State == WorkflowInstanceStates.Started || workflowInstanceRecord.State == WorkflowInstanceStates.Resumed)
                     {
                         lock(timerslock) timers.Add(InstanceId.ToString(), new Dictionary<string, Stopwatch>());

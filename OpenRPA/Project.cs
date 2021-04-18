@@ -29,7 +29,7 @@ namespace OpenRPA
         }
         public void UpdateWorkflowsList()
         {
-            var list = RobotInstance.instance.Workflows.Find(x => x.projectid == _id && !x.isDeleted).ToList();
+            var list = RobotInstance.instance.Workflows.Find(x => x.projectid == _id && !x.isDeleted).OrderBy(x => x.name).ToList();
             // Log.Output("Update workflows for " + name);
             Workflows.UpdateCollection(list);
         }
@@ -133,39 +133,13 @@ namespace OpenRPA
         }
         public static async Task<Project> Create(string Path, string Name)
         {
-            var basePath = System.IO.Path.Combine(Path, Name);
-            var exists = RobotInstance.instance.Projects.Find(x => x.name == Name).FirstOrDefault();
-            // if (System.IO.Directory.Exists(basePath) && System.IO.Directory.GetFiles(basePath).Count() > 0)
-            if(exists != null)
-            {
-                var originalname = Name;
-                bool isUnique = false; int counter = 1;
-                while (!isUnique)
-                {
-                    if (counter == 1)
-                    {
-                        basePath = System.IO.Path.Combine(Path, Name);
-                    }
-                    else
-                    {
-                        Name = originalname + counter.ToString();
-                        basePath = System.IO.Path.Combine(Path, Name);
-                    }
-                    exists = RobotInstance.instance.Projects.Find(x => x.name == Name).FirstOrDefault();
-                    isUnique = (exists == null);
-                    counter++;
-                }
-            }
-            var Filepath = System.IO.Path.Combine(Path, Name, Name.Replace(" ", "_").Replace(".", "") + ".rpaproj");
-            //if (System.IO.Directory.Exists(basePath))
-            //{
-            //    if (System.IO.Directory.GetFiles(basePath).Count() > 0) throw new Exception(basePath + " is not empty");
-            //}
+            Name = UniqueName(Name, null);
+            var Filename = Name.Replace(" ", "_").Replace(".", "") + ".rpaproj";
             Project p = new Project
             {
                 _type = "project",
                 name = Name,
-                Filename = System.IO.Path.GetFileName(Filepath)
+                Filename = Filename
             };
             await p.Save();
             return p;
@@ -182,6 +156,26 @@ namespace OpenRPA
             var ProjectFiles = System.IO.Directory.EnumerateFiles(Path, "*.xaml", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
             foreach (string file in ProjectFiles) Workflows.Add(Workflow.FromFile(this, file));
             //return Workflows.ToArray();
+        }
+        public static string UniqueName(string name, string _id = null)
+        {
+            string Name = name;
+            Project exists = null;
+            bool isUnique = false; int counter = 1;
+            while (!isUnique)
+            {
+                if (counter == 1)
+                {
+                }
+                else
+                {
+                    Name = name + counter.ToString();
+                }
+                exists = RobotInstance.instance.Projects.Find(x => x.name == Name && x._id != _id).FirstOrDefault();
+                isUnique = (exists == null);
+                counter++;
+            }
+            return Name;
         }
         public void ExportProject(string rootpath)
         {

@@ -33,7 +33,16 @@ namespace OpenRPA
         public string Xaml { get { return GetProperty<string>(); } set { _activity = null; SetProperty(value); } }
         public List<workflowparameter> Parameters { get { return GetProperty<List<workflowparameter>>(); } set { SetProperty(value); } }
         public bool Serializable { get { return GetProperty<bool>(); } set { SetProperty(value); } }
-        public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string Filename { get { 
+                var value = GetProperty<string>(); 
+                if(string.IsNullOrEmpty(value))
+                {
+                    _backingFieldValues["Filename"] = UniqueFilename();
+                    _backingFieldValues["isDirty"] = true;
+                    return _backingFieldValues["Filename"] as string;
+                }
+                return value;
+            } set { SetProperty(value); } }
         [JsonIgnore, BsonIgnore]
         public string RelativeFilename
         {
@@ -239,28 +248,9 @@ namespace OpenRPA
         public async static Task<Workflow> Create(IProject Project, string Name)
         {
             Workflow workflow = new Workflow { projectid = Project._id, name = Name, _acl = Project._acl };
-            var exists = RobotInstance.instance.Workflows.Find(x => x.name == workflow.name).FirstOrDefault();
-            bool isUnique = (exists == null); int counter = 1;
-            while (!isUnique)
-            {
-                if (counter == 1)
-                {
-                    // workflow.FilePath = System.IO.Path.Combine(Project.Path, Name.Replace(" ", "_").Replace(".", "") + ".xaml");
-                    workflow.Filename = Name.Replace(" ", "_").Replace(".", "") + ".xaml";
-                }
-                else
-                {
-                    workflow.name = Name + counter.ToString();
-                    //workflow.FilePath = System.IO.Path.Combine(Project.Path, Name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".xaml");
-                    workflow.Filename = Name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".xaml";
-                }
-                exists = RobotInstance.instance.Workflows.Find(x => x.name == workflow.name).FirstOrDefault();
-                isUnique = (exists == null);
-                //var exists = RobotInstance.instance.Workflows.Find(x => x.name.ToLower() == workflow.name && x.projectid == Project._id).FirstOrDefault();
-                //if(exists == null) isUnique = true;
-                // if (!System.IO.File.Exists(workflow.FilePath)) isUnique = true;
-                counter++;
-            }
+            var exists = RobotInstance.instance.Workflows.Find(x => x.name == workflow.name && x.projectid == workflow.projectid).FirstOrDefault();
+            workflow.name = workflow.UniqueName();
+            workflow.Filename = workflow.UniqueFilename();
             workflow._type = "workflow";
             workflow.Parameters = new List<workflowparameter>();
             //workflow.Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>();
@@ -373,6 +363,26 @@ namespace OpenRPA
                 }
             }
         }
+        public string UniqueName()
+        {
+            string Name = name;
+            Workflow exists = null;
+            bool isUnique = false; int counter = 1;
+            while (!isUnique)
+            {
+                if (counter == 1)
+                {
+                }
+                else
+                {
+                    Name = name + counter.ToString();
+                }
+                exists = RobotInstance.instance.Workflows.Find(x => x.name == Name && x.projectid == projectid && x._id != _id).FirstOrDefault();
+                isUnique = (exists == null);
+                counter++;
+            }
+            return Name;
+        }
         public string UniqueFilename()
         {
             string Filename = ""; 
@@ -388,7 +398,7 @@ namespace OpenRPA
                 {
                     Filename = name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".xaml";
                 }
-                var exists = RobotInstance.instance.Workflows.Find(x => x.Filename == Filename).FirstOrDefault();
+                var exists = RobotInstance.instance.Workflows.Find(x => x.Filename == Filename && x.projectid == projectid && x._id != _id).FirstOrDefault();
                 isUnique = (exists == null);
                 counter++;
             }
@@ -397,16 +407,16 @@ namespace OpenRPA
         private System.Activities.Activity _activity = null;
         public System.Activities.Activity Activity()
         {
-                if (string.IsNullOrEmpty(Xaml)) return null;
-                if (_activity != null) return _activity;
-                var activitySettings = new System.Activities.XamlIntegration.ActivityXamlServicesSettings
-                {
-                    CompileExpressions = true
-                };
-                var xamlReaderSettings = new System.Xaml.XamlXmlReaderSettings { LocalAssembly = typeof(Workflow).Assembly };
-                var xamlReader = new System.Xaml.XamlXmlReader(new System.IO.StringReader(Xaml), xamlReaderSettings);
-                _activity = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, activitySettings);
-                return _activity;
+            if (string.IsNullOrEmpty(Xaml)) return null;
+            if (_activity != null) return _activity;
+            var activitySettings = new System.Activities.XamlIntegration.ActivityXamlServicesSettings
+            {
+                CompileExpressions = true
+            };
+            var xamlReaderSettings = new System.Xaml.XamlXmlReaderSettings { LocalAssembly = typeof(Workflow).Assembly };
+            var xamlReader = new System.Xaml.XamlXmlReader(new System.IO.StringReader(Xaml), xamlReaderSettings);
+            _activity = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, activitySettings);
+            return _activity;
         }
         public IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId,
             OpenRPA.Interfaces.idleOrComplete idleOrComplete, OpenRPA.Interfaces.VisualTrackingHandler VisualTracking, string SpanId, string ParentSpanId)

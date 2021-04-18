@@ -113,7 +113,7 @@ namespace OpenRPA.Views
             try
             {
                 if (Instance == null) Log.Debug("UpdateProjectsList, Instance is null");
-                var result = RobotInstance.instance.Projects.FindAll().ToList();
+                var result = RobotInstance.instance.Projects.FindAll().OrderBy(x => x.name).ToList();
                 for (var i = 0; i < result.Count; i++) result[i].UpdateWorkflowsList();
                 GenericTools.RunUI(() =>
                 {

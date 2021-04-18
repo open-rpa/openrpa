@@ -94,7 +94,7 @@ namespace OpenRPA.Activities
                     }
                 }
             }
-
+            Exception error = null;
             try
             {
                 var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == context.WorkflowInstanceId.ToString() ).FirstOrDefault();
@@ -107,29 +107,40 @@ namespace OpenRPA.Activities
                 Views.WFDesigner designer = null;
                 GenericTools.RunUI(() =>
                 {
-                    designer = RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(this.workflow.Get(context)) as Views.WFDesigner;
-                    if (designer != null)
+                    try
                     {
-                        designer.BreakpointLocations = null;
-                        instance = workflow.CreateInstance(param, null, null, designer.IdleOrComplete, designer.OnVisualTracking, null, Instance.SpanId);
+                        designer = RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(this.workflow.Get(context)) as Views.WFDesigner;
+                        if (designer != null)
+                        {
+                            designer.BreakpointLocations = null;
+                            instance = workflow.CreateInstance(param, null, null, designer.IdleOrComplete, designer.OnVisualTracking, null, Instance.SpanId);
+                        }
+                        else
+                        {
+                            instance = workflow.CreateInstance(param, null, null, RobotInstance.instance.Window.IdleOrComplete, null, null, Instance.SpanId);
+                        }
+                        instance.caller = WorkflowInstanceId;
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        instance = workflow.CreateInstance(param, null, null, RobotInstance.instance.Window.IdleOrComplete,  null, null, Instance.SpanId);
+                        error = ex;
                     }
-                    instance.caller = WorkflowInstanceId;
                 });
-                Log.Verbose("InvokeOpenRPA: Run Instance ID " + instance._id);
-                if (waitforcompleted)
+                if (error!=null) throw error;
+                if (instance != null)
                 {
-                    context.CreateBookmark(instance._id, new BookmarkCallback(OnBookmarkCallback));
-                    if (instance.Bookmarks == null) instance.Bookmarks = new Dictionary<string, object>();
-                    instance.Bookmarks.Add(instance._id, null);
-                    //((WorkflowInstance)instance).wfApp.Persist();
+                    Log.Verbose("InvokeOpenRPA: Run Instance ID " + instance._id);
+                    if (waitforcompleted)
+                    {
+                        context.CreateBookmark(instance._id, new BookmarkCallback(OnBookmarkCallback));
+                        if (instance.Bookmarks == null) instance.Bookmarks = new Dictionary<string, object>();
+                        instance.Bookmarks.Add(instance._id, null);
+                        //((WorkflowInstance)instance).wfApp.Persist();
+                    }
                 }
                 GenericTools.RunUI(() =>
                 {
-                    if (designer != null)
+                    if (designer != null & instance != null)
                     {
                         designer.Run(designer.VisualTracking, designer.SlowMotion, instance);
                     }

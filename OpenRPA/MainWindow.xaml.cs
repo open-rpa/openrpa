@@ -2266,13 +2266,14 @@ namespace OpenRPA
             Log.FunctionIndent("MainWindow", "OnNewProject");
             try
             {
-                string Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "Name project", "New project");
+
+                string Name = Project.UniqueName("New project", null);
+                Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "Name project", Name);
                 if (string.IsNullOrEmpty(Name))
                 {
                     Log.FunctionOutdent("MainWindow", "OnNewProject", "Name is null");
                     return;
                 }
-                //string Name = "New project";
                 Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name);
                 IWorkflow workflow = await project.AddDefaultWorkflow();
                 RobotInstance.instance.NotifyPropertyChanged("Projects");

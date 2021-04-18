@@ -46,6 +46,7 @@ namespace OpenRPA
                     {
                         var result = await global.webSocketClient.InsertOne("openrpa", 0, false, entity);
                         isLocalOnly = false;
+                        isDirty = false;
                         _id = result._id;
                         _acl = result._acl;
                         _modified = result._modified;
@@ -59,6 +60,7 @@ namespace OpenRPA
                         {
                             entity._version++; // Add one to avoid watch update
                             var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, entity);
+                            isDirty = false;
                             _acl = result._acl;
                             _modified = result._modified;
                             _modifiedby = result._modifiedby;

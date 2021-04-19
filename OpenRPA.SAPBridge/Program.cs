@@ -78,24 +78,24 @@ namespace OpenRPA.SAPBridge
             {
                 try
                 {
-                    Program.log("RefreshSessions::begin");
+                    // Program.log("RefreshSessions::begin");
                     SAPHook.Instance.RefreshSessions();
-                    Program.log("RefreshSessions::end");
+                    // Program.log("RefreshSessions::end");
 
                     isMoving = false;
                     InputDriver.Instance.OnMouseMove -= OnMouseMove;
                     InputDriver.Instance.OnMouseDown -= OnMouseDown;
                     if (MouseMove)
                     {
-                        Program.log("hook OnMouseMove");
+                        // Program.log("hook OnMouseMove");
                         InputDriver.Instance.OnMouseMove += OnMouseMove;
                     }
-                    Program.log("hook OnMouseDown");
+                    // Program.log("hook OnMouseDown");
                     InputDriver.Instance.OnMouseDown += OnMouseDown;
 
-                    Program.log("RefreshUIElements::begin");
+                    // Program.log("RefreshUIElements::begin");
                     SAPHook.Instance.RefreshUIElements(true);
-                    Program.log("RefreshUIElements::end");
+                    // Program.log("RefreshUIElements::end");
 
                 }
                 catch (Exception ex)
@@ -106,9 +106,9 @@ namespace OpenRPA.SAPBridge
         }
         public static void StopMonitorMouse()
         {
-            Program.log("unhook OnMouseMove");
+            // Program.log("unhook OnMouseMove");
             InputDriver.Instance.OnMouseMove -= OnMouseMove;
-            Program.log("unhook OnMouseDown");
+            // Program.log("unhook OnMouseDown");
             InputDriver.Instance.OnMouseDown -= OnMouseDown;
         }
         private static object _lock = new object();
@@ -206,12 +206,12 @@ namespace OpenRPA.SAPBridge
                         LastElement = found;
                         SAPEvent message = new SAPEvent("mousemove");
                         message.Set(LastElement);
-                        if (log_send_message) if (log_send_message) form.AddText("[send] " + message.action + " " + LastElement.ToString() + " " + LastElement.Rectangle.ToString());
+                        if (log_send_message) form.AddText("[send] " + message.action + " " + LastElement.ToString() + " " + LastElement.Rectangle.ToString());
                         pipe.PushMessage(message);
                     }
                     else
                     {
-                        log("Mouseover " + e.X + "," + e.Y + " not found in UI List");
+                        // log("Mouseover " + e.X + "," + e.Y + " not found in UI List");
                     }
                 }
             }
@@ -328,15 +328,15 @@ namespace OpenRPA.SAPBridge
                         {
                             overlay = recinfo.overlay;
                             //StartMonitorMouse(recinfo.mousemove);
-                            form.AddText("StartMonitorMouse::begin");
+                            // form.AddText("StartMonitorMouse::begin");
                             // if(overlay) StartMonitorMouse(true);
                             // if(recinfo.mousemove) StartMonitorMouse(true);
                             StartMonitorMouse(true);
-                            form.AddText("StartMonitorMouse::end");
+                            // form.AddText("StartMonitorMouse::end");
                         }
-                        form.AddText("BeginRecord::begin");
+                        // form.AddText("BeginRecord::begin");
                         SAPHook.Instance.BeginRecord(overlay);
-                        form.AddText("BeginRecord::end");
+                        // form.AddText("BeginRecord::end");
                         if (log_send_message) form.AddText("[send] " + message.action);
                         pipe.PushMessage(message);
                         recordstarting = false;

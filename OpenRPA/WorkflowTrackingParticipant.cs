@@ -365,9 +365,9 @@ namespace OpenRPA
                                 Log.Debug(ex.Message);
                             }
                         }
+                        OnVisualTracking?.Invoke(Instance, ActivityId, ChildActivityId, State);
                     }
 
-                    OnVisualTracking?.Invoke(Instance, ActivityId, ChildActivityId, State);
                 }
             }
             catch (Exception ex)

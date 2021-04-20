@@ -19,7 +19,7 @@ namespace OpenRPA.Net
         [JsonIgnore]
         public Message msg { get; set; }
         IMessage ISocketCommand.msg { get => msg; set => msg = value as Message; }
-        public async Task<T> SendMessage<T>(WebSocketClient ws)
+        public async Task<T> SendMessage<T>(WebSocketClient ws) where T : new()
         {
             msg.data = JsonConvert.SerializeObject(this);
             var reply = await ws.SendMessage(msg);
@@ -29,10 +29,17 @@ namespace OpenRPA.Net
             }
             try
             {
+                if (string.IsNullOrEmpty(reply.data)) return new T();
+                if (reply.data == "{}") return new T();
+
                 var result = JsonConvert.DeserializeObject<T>(reply.data, new JsonSerializerSettings
                 {
                     DateTimeZoneHandling = DateTimeZoneHandling.Local
                 });
+                if (result == null)
+                {
+                    return result;
+                }
                 return result;
             }
             catch (Exception ex)
@@ -40,7 +47,7 @@ namespace OpenRPA.Net
                 Console.WriteLine(reply.data);
                 Console.WriteLine(ex.ToString());
                 throw;
-            }            
+            }
         }
     }
 }

@@ -16,8 +16,6 @@ namespace OpenRPA
     {
         public WorkflowInstance()
         {
-            // if (RobotInstance.instance.tracer != null) span = RobotInstance.instance.tracer.StartActiveSpan("WorkflowInstance created");
-
         }
         private WorkflowInstance(Workflow workflow)
         {
@@ -893,8 +891,15 @@ namespace OpenRPA
                     {
                         if (!global.isConnected) return;
                         var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, null, this);
-                        _id = result._id;
-                        _acl = result._acl;
+                        if(result != null)
+                        {
+                            _id = result._id;
+                            _acl = result._acl;
+                        } else
+                        {
+                            retries++;
+                            hasError = true;
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -904,6 +909,10 @@ namespace OpenRPA
                         // throw;
                     }
                 } while (hasError && retries < 10);
+                if (hasError)
+                {
+                    Log.Error("Failed saving workflowinstance " + _id);
+                }
             });
         }
         public static async Task RunPendingInstances()

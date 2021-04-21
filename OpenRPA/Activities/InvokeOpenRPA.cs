@@ -97,7 +97,7 @@ namespace OpenRPA.Activities
             Exception error = null;
             try
             {
-                var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == context.WorkflowInstanceId.ToString() ).FirstOrDefault();
+                var ThisInstance = WorkflowInstance.Instances.Where(x => x.InstanceId == context.WorkflowInstanceId.ToString() ).FirstOrDefault();
 
                 // , string SpanId, string ParentSpanId
                 var workflowid = this.workflow.Get(context);
@@ -113,11 +113,11 @@ namespace OpenRPA.Activities
                         if (designer != null)
                         {
                             designer.BreakpointLocations = null;
-                            instance = workflow.CreateInstance(param, null, null, designer.IdleOrComplete, designer.OnVisualTracking, null, Instance.SpanId);
+                            instance = workflow.CreateInstance(param, null, null, designer.IdleOrComplete, designer.OnVisualTracking, null, ThisInstance.SpanId);
                         }
                         else
                         {
-                            instance = workflow.CreateInstance(param, null, null, RobotInstance.instance.Window.IdleOrComplete, null, null, Instance.SpanId);
+                            instance = workflow.CreateInstance(param, null, null, RobotInstance.instance.Window.IdleOrComplete, null, null, ThisInstance.SpanId);
                         }
                         instance.caller = WorkflowInstanceId;
                     }

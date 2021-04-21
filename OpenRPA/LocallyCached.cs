@@ -33,6 +33,7 @@ namespace OpenRPA
                         {
                             entity._version++; // Add one to avoid watch update
                             // collection.Update(entity);
+                            entity._modified = DateTime.Now;
                         }
                     }
                     catch (Exception ex)
@@ -52,29 +53,29 @@ namespace OpenRPA
                         _modified = result._modified;
                         _modifiedby = result._modifiedby;
                         _modifiedbyid = result._modifiedbyid;
-                        if (System.Diagnostics.Debugger.IsAttached) Log.Output("Inserted to openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
+                        Log.Verbose("Inserted to openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
                     }
                     else
                     {
                         if(entity.isDirty)
                         {
                             entity._version++; // Add one to avoid watch update
-                            var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, entity);
+                            var result = await global.webSocketClient.InsertOrUpdateOne("openrpa", 0, false, null, entity);
                             isDirty = false;
                             _acl = result._acl;
                             _modified = result._modified;
                             _modifiedby = result._modifiedby;
                             _modifiedbyid = result._modifiedbyid;
                             _version = result._version;
-                            if (System.Diagnostics.Debugger.IsAttached) Log.Output("Updated in openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
+                            Log.Verbose("Updated in openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
                         }
                     }
                 }
                 lock(savelock)
                 {
                     var exists = collection.FindById(_id);
-                    if (exists != null) { collection.Update(entity); if (System.Diagnostics.Debugger.IsAttached) Log.Output("Updated in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
-                    if (exists == null) { collection.Insert(entity); if (System.Diagnostics.Debugger.IsAttached) Log.Output("Inserted in local db as version  " + entity._version + " " + entity._type + " " + entity.name); }
+                    if (exists != null) { collection.Update(entity); Log.Verbose("Updated in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
+                    if (exists == null) { collection.Insert(entity); Log.Verbose("Inserted in local db as version  " + entity._version + " " + entity._type + " " + entity.name); }
                 }
             }
             catch (Exception)
@@ -99,8 +100,8 @@ namespace OpenRPA
                     lock (savelock)
                     {
                         var exists = collection.FindById(_id);
-                        if (exists != null) { collection.Update(entity); if (System.Diagnostics.Debugger.IsAttached) Log.Output("Updated in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
-                        if (exists == null) { collection.Insert(entity); if (System.Diagnostics.Debugger.IsAttached) Log.Output("Inserted in local db as version  " + entity._version + " " + entity._type + " " + entity.name); }
+                        if (exists != null) { collection.Update(entity); Log.Verbose("Updated in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
+                        if (exists == null) { collection.Insert(entity); Log.Verbose("Inserted in local db as version  " + entity._version + " " + entity._type + " " + entity.name); }
                     }
                 }
                 catch (Exception ex)
@@ -110,11 +111,11 @@ namespace OpenRPA
             } else
             {
                 await global.webSocketClient.DeleteOne("openrpa", entity._id);
-                if (System.Diagnostics.Debugger.IsAttached) Log.Output("Deleted in openflow and as version " + entity._version + " " + entity._type + " " + entity.name);
+                Log.Verbose("Deleted in openflow and as version " + entity._version + " " + entity._type + " " + entity.name);
                 lock (savelock)
                 {
                     var exists = collection.FindById(_id);
-                    if (exists != null) { collection.Delete(entity._id); if (System.Diagnostics.Debugger.IsAttached) Log.Output("Deleted in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
+                    if (exists != null) { collection.Delete(entity._id); Log.Verbose("Deleted in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
                 }
             }
         }

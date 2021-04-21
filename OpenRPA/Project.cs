@@ -30,7 +30,6 @@ namespace OpenRPA
         public void UpdateWorkflowsList()
         {
             var list = RobotInstance.instance.Workflows.Find(x => x.projectid == _id && !x.isDeleted).OrderBy(x => x.name).ToList();
-            // Log.Output("Update workflows for " + name);
             Workflows.UpdateCollection(list);
         }
         //public override bool Equals(object obj)
@@ -89,12 +88,12 @@ namespace OpenRPA
                     var wf = RobotInstance.instance.Projects.FindById(_id);
                     if (wf._version == _version)
                     {
-                        if(System.Diagnostics.Debugger.IsAttached) Log.Output("Saving " + this.name + " with version " + this._version);
+                        Log.Verbose("Saving " + this.name + " with version " + this._version);
                         RobotInstance.instance.Projects.Update(this);
                     }
                     else
                     {
-                        if (System.Diagnostics.Debugger.IsAttached) Log.Output("Setting " + this.name + " with version " + this._version);
+                        Log.Verbose("Setting " + this.name + " with version " + this._version);
                         wf.IsExpanded = value;
                     }
                     RobotInstance.instance.Projects.Update(this);
@@ -117,12 +116,12 @@ namespace OpenRPA
                         var wf = RobotInstance.instance.Projects.FindById(_id);
                         if (wf._version == _version)
                         {
-                            if (System.Diagnostics.Debugger.IsAttached) Log.Output("Saving " + this.name + " with version " + this._version);
+                            Log.Verbose("Saving " + this.name + " with version " + this._version);
                             RobotInstance.instance.Projects.Update(this);
                         }
                         else
                         {
-                            if (System.Diagnostics.Debugger.IsAttached) Log.Output("Setting " + this.name + " with version " + this._version);
+                            Log.Verbose("Setting " + this.name + " with version " + this._version);
                             wf.IsSelected = value;
                         }
                         RobotInstance.instance.Projects.Update(this);

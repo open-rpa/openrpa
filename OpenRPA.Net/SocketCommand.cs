@@ -25,7 +25,7 @@ namespace OpenRPA.Net
             var reply = await ws.SendMessage(msg);
             if (reply.command == "error")
             {
-                throw new Exception("server error: " + reply.data);
+                throw new SocketException("server error: " + reply.data);
             }
             try
             {

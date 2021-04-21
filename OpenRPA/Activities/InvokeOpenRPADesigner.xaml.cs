@@ -97,14 +97,6 @@ namespace OpenRPA.Activities
                     Type t = OpenRPA.Interfaces.Extensions.FindType(p.type);
                     if (p.type == "System.Data.DataTable") t = typeof(System.Data.DataTable);
                     if (t == null) throw new ArgumentException("Failed resolving type '" + p.type + "'");
-
-                    //Type atype = typeof(VisualBasicValue<>);
-                    //Type constructed = atype.MakeGenericType(t);
-                    //object o = Activator.CreateInstance(constructed, p.name);
-
-                    //Log.Information("Checking for variable " + p.name + " of type " + p.type);
-                    //designer.GetVariable(p.name, t);
-
                     Argument a = null;
                     if (p.direction == workflowparameterdirection.@in) a = Argument.Create(t, ArgumentDirection.In);
                     if (p.direction == workflowparameterdirection.inout) a = Argument.Create(t, ArgumentDirection.InOut);
@@ -149,7 +141,6 @@ namespace OpenRPA.Activities
                     Type t = Type.GetType(p.type);
                     if (p.type == "System.Data.DataTable") t = typeof(System.Data.DataTable);
                     if (t == null) throw new ArgumentException("Failed resolving type '" + p.type + "'");
-                    Log.Information("Checking for variable " + p.name + " of type " + p.type);
                     designer.GetVariable(p.name, t);
                 }
 

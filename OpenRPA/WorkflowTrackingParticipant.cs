@@ -68,7 +68,8 @@ namespace OpenRPA
 
                 if (workflowInstanceRecord != null)
                 {
-                    var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
+                    WorkflowInstance Instance = null;
+                    lock (WorkflowInstance.Instances) Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
                     if (Instance == null)
                     {
                         Log.Error("WorkflowTrackingParticipant failed locating WorkflowInstance with InstanceId " + InstanceId.ToString());
@@ -142,16 +143,6 @@ namespace OpenRPA
                                 Instance.RootActivity?.SetTag("Reason", ((System.Activities.Tracking.WorkflowInstanceTerminatedRecord)workflowInstanceRecord).Reason);
                             }
                             Instance.RootActivity?.SetTag("status.state", workflowInstanceRecord.State.ToString());
-                            if (Instance.source != null)
-                            {
-                                while (Instance.Activities.Count > 0)
-                                {
-                                    var span = Instance.Activities.Pop();
-                                    span?.Dispose();
-                                }
-                                Instance.RootActivity = null;
-                            }
-
                         }
                         else
                         {
@@ -168,7 +159,8 @@ namespace OpenRPA
                 if (activityStateRecord != null)
                 {
                     string ActivityId = null, name = null;
-                    var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
+                    WorkflowInstance Instance = null;
+                    lock (WorkflowInstance.Instances) Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
                     if (Instance == null)
                     {
                         Log.Error("WorkflowTrackingParticipant failed locating WorkflowInstance with InstanceId " + InstanceId.ToString());

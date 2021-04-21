@@ -18,4 +18,16 @@ namespace OpenRPA.Interfaces
         }
 
     }
+    [Serializable()]
+    public class SocketException : Exception
+    {
+        public SocketException(string message)
+            : base(message)
+        {
+        }
+        protected SocketException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context)
+        {
+        }
+
+    }
 }

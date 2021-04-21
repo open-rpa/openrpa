@@ -47,5 +47,10 @@ namespace OpenRPA.Net
             _ = ws.ProcessQueue();
             // 
         }
+        public override string ToString()
+        {
+            if(!string.IsNullOrEmpty(replyto)) return command + " reply to " + replyto;
+            return command + " " + id;
+        }
     }
 }

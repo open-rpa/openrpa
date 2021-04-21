@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA
 {
-    public class WorkflowInstance : LocallyCached, IWorkflowInstance
+    public class WorkflowInstance : LocallyCached, IWorkflowInstance, IDisposable
     {
         public WorkflowInstance()
         {
@@ -189,10 +189,7 @@ namespace OpenRPA
             result.fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
             result.createApp(Workflow.Activity());
             lock (Instances) Instances.Add(result);
-            foreach (var i in Instances.ToList())
-            {
-                if (i.isCompleted) lock (Instances) Instances.Remove(i);
-            }
+            CleanUp();
             return result;
         }
         public void createApp(Activity activity)
@@ -336,10 +333,11 @@ namespace OpenRPA
                 // Log.Debug(String.Format("Workflow {0} resuming at bookmark '{1}' value '{2}'", wfApp.Id.ToString(), bookmarkName, value));
                 Task.Run(() =>
                 {
-                    System.Threading.Thread.Sleep(50);
+                    // System.Threading.Thread.Sleep(50);
                     try
                     {
                         wfApp.ResumeBookmark(bookmarkName, value);
+                        Log.Information(name + " resumed in " + string.Format("{0:mm\\:ss\\.fff}", runWatch.Elapsed));
                     }
                     catch (Exception ex)
                     {
@@ -682,8 +680,12 @@ namespace OpenRPA
                 runWatch.Start();
                 if (string.IsNullOrEmpty(InstanceId))
                 {
-                    wfApp.Run();
-                    InstanceId = wfApp.Id.ToString();
+                    lock(WorkflowInstance.Instances)
+                    {
+                        wfApp.Run();
+                        Log.Information(name + " started in " + string.Format("{0:mm\\:ss\\.fff}", runWatch.Elapsed));
+                        InstanceId = wfApp.Id.ToString();
+                    }
                     state = "running";
                     Save();
                 }
@@ -697,6 +699,7 @@ namespace OpenRPA
                     {
                         wfApp.Run();
                     }
+                    Log.Information(name + " resumed in " + string.Format("{0:mm\\:ss\\.fff}", runWatch.Elapsed));
                     state = "running";
                     Save();
                 }
@@ -719,32 +722,43 @@ namespace OpenRPA
         {
             wfApp.Completed = delegate (System.Activities.WorkflowApplicationCompletedEventArgs e)
             {
-                isCompleted = true;
-                _ = Workflow.State;
-                if (e.CompletionState == System.Activities.ActivityInstanceState.Faulted)
+                try
                 {
-                    Save();
+                    isCompleted = true;
+                    _ = Workflow.State;
+                    if (e.CompletionState == System.Activities.ActivityInstanceState.Faulted)
+                    {
+                        Save();
+                    }
+                    else if (e.CompletionState == System.Activities.ActivityInstanceState.Canceled)
+                    {
+                        Save();
+                    }
+                    else if (e.CompletionState == System.Activities.ActivityInstanceState.Closed)
+                    {
+                        state = "completed";
+                        foreach (var o in e.Outputs) Parameters[o.Key] = o.Value;
+                        if (runWatch != null) runWatch.Stop();
+                        Save();
+                        NotifyCompleted();
+                        OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
+                    }
+                    else if (e.CompletionState == System.Activities.ActivityInstanceState.Executing)
+                    {
+                        Save();
+                    }
+                    else
+                    {
+                        throw new Exception("Unknown completetion state!!!" + e.CompletionState);
+                    }
                 }
-                else if (e.CompletionState == System.Activities.ActivityInstanceState.Canceled)
+                catch (Exception ex)
                 {
-                    Save();
+                    Log.Error(ex.ToString());
                 }
-                else if (e.CompletionState == System.Activities.ActivityInstanceState.Closed)
+                finally
                 {
-                    state = "completed";
-                    foreach (var o in e.Outputs) Parameters[o.Key] = o.Value;
-                    if (runWatch != null) runWatch.Stop();
-                    Save();
-                    NotifyCompleted();
-                    OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
-                }
-                else if (e.CompletionState == System.Activities.ActivityInstanceState.Executing)
-                {
-                    Save();
-                }
-                else
-                {
-                    throw new Exception("Unknown completetion state!!!" + e.CompletionState);
+                    CleanUpSpans();
                 }
             };
 
@@ -902,6 +916,42 @@ namespace OpenRPA
                 // span?.Dispose();
             }
             Log.FunctionOutdent("RobotInstance", "RunPendingInstances");
+        }
+        public static void CleanUp()
+        {
+            lock(Instances)
+            {
+                foreach (var i in Instances.ToList())
+                {
+                    if (i.isCompleted && i._modified > DateTime.Now.AddMinutes(5)) lock (Instances) Instances.Remove(i);
+                }
+
+            }
+        }
+        public override string ToString()
+        {
+            if (string.IsNullOrEmpty(InstanceId)) return "No InstanceId";
+            return InstanceId;
+        }
+        public void CleanUpSpans()
+        {
+            if (Activities != null)
+            {
+                while (Activities.Count > 0)
+                {
+                    var span = Activities.Pop();
+                    span?.Dispose();
+                }
+                RootActivity?.Dispose();
+                RootActivity = null;
+            }
+        }
+        private bool isDisposing = false;
+        public void Dispose()
+        {
+            if (isDisposing) return;
+            isDisposing = true;
+            CleanUpSpans();
         }
     }
 

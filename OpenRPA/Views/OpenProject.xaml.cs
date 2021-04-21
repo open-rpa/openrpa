@@ -121,6 +121,8 @@ namespace OpenRPA.Views
                     try
                     {
                         if (Instance!=null) Instance._Projects.UpdateCollection(result);
+                        System.Windows.Input.CommandManager.InvalidateRequerySuggested();
+
                     }
                     catch (Exception)
                     {

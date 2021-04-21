@@ -19,7 +19,7 @@ namespace OpenRPA.Windows
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_getelement_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getelement", typeof(Resources.strings))]
-    public class GetElement : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    public class GetElement : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         public GetElement()
         {
@@ -49,7 +49,7 @@ namespace OpenRPA.Windows
         [System.ComponentModel.Browsable(false)]
         public Activity LoopAction { get; set; }
         // public ActivityAction<UIElement> LoopAction { get; set; }
-        protected override void Execute(NativeActivityContext context)
+        protected override void StartLoop(NativeActivityContext context)
         {
             WindowsCacheExtension ext = context.GetExtension<WindowsCacheExtension>();
             var sw = new Stopwatch();
@@ -160,14 +160,14 @@ namespace OpenRPA.Windows
             Stopwatch sw = _sw.Get(context);
             Log.Selector(string.Format("Windows.GetElement:OnBodyComplete::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
             bool more = _enum.MoveNext();
-            if (more)
+            if (more && !breakRequested)
             {
                 Log.Selector(string.Format("Windows.GetElement:ScheduleAction {0:mm\\:ss\\.fff}", sw.Elapsed));
                 context.ScheduleAction<UIElement>(Body, _enum.Current, OnBodyComplete);
             }
             else
             {
-                if (LoopAction != null)
+                if (LoopAction != null && !breakRequested)
                 {
                     context.ScheduleActivity(LoopAction, LoopActionComplete);
                 }
@@ -176,7 +176,7 @@ namespace OpenRPA.Windows
         }
         private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
-            Execute(context);
+            if (!breakRequested) StartLoop(context);
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {

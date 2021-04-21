@@ -17,7 +17,7 @@ namespace OpenRPA.NM
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_getelement_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getelement", typeof(Resources.strings))]
-    public class GetElement : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    public class GetElement : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         //[RequiredArgument]
         //public InArgument<string> XPath { get; set; }
@@ -64,7 +64,7 @@ namespace OpenRPA.NM
             }
 
         }
-        protected override void Execute(NativeActivityContext context)
+        protected override void StartLoop(NativeActivityContext context)
         {
             var selector = Selector.Get(context);
             selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
@@ -172,13 +172,13 @@ namespace OpenRPA.NM
             IEnumerator<NMElement> _enum = _elements.Get(context);
             if (_enum == null) return;
             bool more = _enum.MoveNext();
-            if (more)
+            if (more && !breakRequested)
             {
                 context.ScheduleAction<NMElement>(Body, _enum.Current, OnBodyComplete);
             }
             else
             {
-                if (LoopAction != null)
+                if (LoopAction != null && !breakRequested)
                 {
                     var allelements = context.GetValue(_allelements);
                     context.ScheduleActivity(LoopAction, LoopActionComplete);
@@ -187,6 +187,7 @@ namespace OpenRPA.NM
         }
         private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
+            if (breakRequested) return;
             var allelements = context.GetValue(_allelements);
             var selector = Selector.Get(context);
             selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
@@ -196,7 +197,7 @@ namespace OpenRPA.NM
             if (from != null) browser = from.browser;
             System.Threading.Thread.Sleep(500);
             DoWaitForReady(browser);
-            Execute(context);
+            StartLoop(context);
 
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)

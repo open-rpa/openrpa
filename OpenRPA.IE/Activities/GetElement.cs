@@ -16,7 +16,7 @@ namespace OpenRPA.IE
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_getelement_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getelement", typeof(Resources.strings))]
-    public class GetElement : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    public class GetElement : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         //[RequiredArgument]
         //public InArgument<string> XPath { get; set; }
@@ -44,7 +44,7 @@ namespace OpenRPA.IE
                 Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromSeconds(3)")
             };
         }
-        protected override void Execute(NativeActivityContext context)
+        protected override void StartLoop(NativeActivityContext context)
         {
             var selector = Selector.Get(context);
             selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
@@ -105,13 +105,13 @@ namespace OpenRPA.IE
         {
             IEnumerator<IEElement> _enum = _elements.Get(context);
             bool more = _enum.MoveNext();
-            if (more)
+            if (more && !breakRequested)
             {
                 context.ScheduleAction<IEElement>(Body, _enum.Current, OnBodyComplete);
             }
             else
             {
-                if (LoopAction != null)
+                if (LoopAction != null && !breakRequested)
                 {
                     context.ScheduleActivity(LoopAction, LoopActionComplete);
                 }
@@ -119,7 +119,7 @@ namespace OpenRPA.IE
         }
         private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
-            Execute(context);
+            if (!breakRequested) StartLoop(context);
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {

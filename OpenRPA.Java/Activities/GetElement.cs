@@ -16,7 +16,7 @@ namespace OpenRPA.Java
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_getelement_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getelement", typeof(Resources.strings))]
-    public class GetElement : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    public class GetElement : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<JavaElement> Body { get; set; }
@@ -34,7 +34,7 @@ namespace OpenRPA.Java
         public string Image { get; set; }
         private Variable<IEnumerator<JavaElement>> _elements = new Variable<IEnumerator<JavaElement>>("_elements");
         public Activity LoopAction { get; set; }
-        protected override void Execute(NativeActivityContext context)
+        protected override void StartLoop(NativeActivityContext context)
         {
             var SelectorString = Selector.Get(context);
             SelectorString = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(SelectorString, context.DataContext);
@@ -74,13 +74,13 @@ namespace OpenRPA.Java
         {
             IEnumerator<JavaElement> _enum = _elements.Get(context);
             bool more = _enum.MoveNext();
-            if (more)
+            if (more && !breakRequested)
             {
                 context.ScheduleAction<JavaElement>(Body, _enum.Current, OnBodyComplete);
             }
             else
             {
-                if (LoopAction != null)
+                if (LoopAction != null && !breakRequested)
                 {
                     context.ScheduleActivity(LoopAction, LoopActionComplete);
                 }
@@ -88,7 +88,7 @@ namespace OpenRPA.Java
         }
         private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
-            Execute(context);
+            if (!breakRequested) StartLoop(context);
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {

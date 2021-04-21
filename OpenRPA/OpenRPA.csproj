@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.39</Version>
-    <PackageReleaseNotes>1.2.39 Fix Map Variables issue for invoke openrpa
+    <Version>1.2.40</Version>
+    <PackageReleaseNotes>1.2.40 Add support for break and continue in most loops
+1.2.39 Fix Map Variables issue for invoke openrpa
 1.2.38 Add support for killing robot workflow remotely
 1.2.37 improve image recording, auto import namespaces on drop
 1.2.36 Better import handling and a few minor improvements
@@ -280,9 +281,13 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Activities\BreakableDoWhileDesigner.xaml" />
+    <None Remove="Activities\BreakableWhileDesigner.xaml" />
+    <None Remove="Activities\BreakDesigner.xaml" />
     <None Remove="Activities\ClickElementDesigner.xaml" />
     <None Remove="Activities\CloseApplicationDesigner.xaml" />
     <None Remove="Activities\CommentOutDesigner.xaml" />
+    <None Remove="Activities\ContinueDesigner.xaml" />
     <None Remove="Activities\CopyClipboardDesigner.xaml" />
     <None Remove="Activities\DetectorDesigner.xaml" />
     <None Remove="Activities\FocusElementDesigner.xaml" />
@@ -352,9 +357,11 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Resources\close.png" />
     <None Remove="Resources\designer\addentitypermission.png" />
     <None Remove="Resources\designer\ballon.png" />
+    <None Remove="Resources\designer\break.png" />
     <None Remove="Resources\designer\breakpoint.png" />
     <None Remove="Resources\designer\comment.png" />
     <None Remove="Resources\designer\commentout.png" />
+    <None Remove="Resources\designer\continue.png" />
     <None Remove="Resources\designer\copyclipboard.png" />
     <None Remove="Resources\designer\deleteentity.png" />
     <None Remove="Resources\designer\detector.png" />
@@ -452,9 +459,11 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Resources\state\unloaded.png" />
     <None Remove="Resources\toolbox\addentitypermission.png" />
     <None Remove="Resources\toolbox\ballon.png" />
+    <None Remove="Resources\toolbox\break.png" />
     <None Remove="Resources\toolbox\breakpoint.png" />
     <None Remove="Resources\toolbox\comment.png" />
     <None Remove="Resources\toolbox\commentout.png" />
+    <None Remove="Resources\toolbox\continue.png" />
     <None Remove="Resources\toolbox\copyclipboard.png" />
     <None Remove="Resources\toolbox\deleteentity.png" />
     <None Remove="Resources\toolbox\detector.png" />
@@ -524,6 +533,12 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Views\WorkflowInstances.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\BreakableDoWhileDesigner.xaml" />
+    <Page Include="Activities\BreakableWhileDesigner.xaml" />
+    <Page Include="Activities\BreakDesigner.xaml" />
+    <Page Include="Activities\ContinueDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\FocusElementDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -632,6 +647,8 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <Resource Include="Resources\Buttons\Zeniverse_ikon.png" />
     <Resource Include="Resources\Buttons\zeniverse_ikon_84Z_icon.ico" />
     <Resource Include="Resources\close.png" />
+    <Resource Include="Resources\designer\break.png" />
+    <Resource Include="Resources\designer\continue.png" />
     <Resource Include="Resources\designer\mouse.png" />
     <Resource Include="Resources\gears-1236578_1920.jpg" />
     <Resource Include="Resources\icons\activity.png" />
@@ -888,6 +905,8 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <Resource Include="Resources\state\Running.png" />
     <Resource Include="Resources\state\Running_green.png" />
     <Resource Include="Resources\state\unloaded.png" />
+    <EmbeddedResource Include="Resources\toolbox\break.png" />
+    <EmbeddedResource Include="Resources\toolbox\continue.png" />
     <EmbeddedResource Include="Resources\toolbox\mouse.png" />
   </ItemGroup>
   <ItemGroup>

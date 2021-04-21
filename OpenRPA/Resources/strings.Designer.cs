@@ -124,6 +124,60 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Break.
+        /// </summary>
+        public static string activity_break {
+            get {
+                return ResourceManager.GetString("activity_break", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Breaks out of a loop and continues execution after the loop.
+        /// </summary>
+        public static string activity_break_tooltip {
+            get {
+                return ResourceManager.GetString("activity_break_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do While.
+        /// </summary>
+        public static string activity_Breakabledowhile {
+            get {
+                return ResourceManager.GetString("activity_Breakabledowhile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Execute the contained workflow while condition is true.
+        /// </summary>
+        public static string activity_Breakabledowhile_tooltip {
+            get {
+                return ResourceManager.GetString("activity_Breakabledowhile_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to While.
+        /// </summary>
+        public static string activity_breakablewhile {
+            get {
+                return ResourceManager.GetString("activity_breakablewhile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Execute the contained workflow while condition is true.
+        /// </summary>
+        public static string activity_breakablewhile_tooltip {
+            get {
+                return ResourceManager.GetString("activity_breakablewhile_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Check Running.
         /// </summary>
         public static string activity_checkrunning {
@@ -219,6 +273,24 @@ namespace OpenRPA.Resources {
         public static string activity_commentout_tooltip {
             get {
                 return ResourceManager.GetString("activity_commentout_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Continue.
+        /// </summary>
+        public static string activity_continue {
+            get {
+                return ResourceManager.GetString("activity_continue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop executing body of the loop and continue to next item.
+        /// </summary>
+        public static string activity_continue_tooltip {
+            get {
+                return ResourceManager.GetString("activity_continue_tooltip", resourceCulture);
             }
         }
         

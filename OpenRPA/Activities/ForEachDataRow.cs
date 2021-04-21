@@ -15,7 +15,7 @@ namespace OpenRPA.Activities
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_foreachdatarow_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_foreachdatarow", typeof(Resources.strings))]
-    public class ForEachDataRow : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    public class ForEachDataRow : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         [RequiredArgument,Category("Input"),OverloadGroup("DataTable"), LocalizedDisplayName("activity_datatable", typeof(Resources.strings)), LocalizedDescription("activity_datatable_help", typeof(Resources.strings))]
         public InArgument<System.Data.DataTable> DataTable { get; set; }
@@ -24,7 +24,7 @@ namespace OpenRPA.Activities
         [Browsable(false)]
         public ActivityAction<System.Data.DataRowView> Body { get; set; }
         private Variable<IEnumerator<System.Data.DataRowView>> _elements = new Variable<IEnumerator<System.Data.DataRowView>>("_elements");
-        protected override void Execute(NativeActivityContext context)
+        protected override void StartLoop(NativeActivityContext context)
         {
             System.Data.DataView dv;
             System.Data.DataTable dt = DataTable.Get(context);
@@ -50,7 +50,7 @@ namespace OpenRPA.Activities
         {
             IEnumerator<System.Data.DataRowView> _enum = _elements.Get(context);
             bool more = _enum.MoveNext();
-            if (more)
+            if (!breakRequested && more)
             {
                 context.ScheduleAction<System.Data.DataRowView>(Body, _enum.Current, OnBodyComplete);
             }

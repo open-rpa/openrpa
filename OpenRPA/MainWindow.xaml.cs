@@ -3255,7 +3255,6 @@ namespace OpenRPA
             {
                 try
                 {
-                    CommandManager.InvalidateRequerySuggested();
                     if (string.IsNullOrEmpty(instance.queuename) && string.IsNullOrEmpty(instance.correlationId) && string.IsNullOrEmpty(instance.caller) && instance.isCompleted)
                     {
                         if (this.Minimize) GenericTools.Restore();
@@ -3317,7 +3316,7 @@ namespace OpenRPA
                             App.notifyIcon.ShowBalloonTip(1000, "", message, System.Windows.Forms.ToolTipIcon.Error);
                         }
                     }
-                    System.Threading.Thread.Sleep(200);
+                    // System.Threading.Thread.Sleep(200);
                     foreach (var wi in WorkflowInstance.Instances.ToList())
                     {
                         if (wi.isCompleted) continue;

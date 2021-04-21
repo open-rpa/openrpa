@@ -233,7 +233,7 @@ namespace OpenRPA
             foreach (var designer in Designers)
             {
                 if (designer.Workflow._id == IDOrRelativeFilename) return designer;
-                if (designer.Workflow.IDOrRelativeFilename.ToLower().Replace("\\", "/") == IDOrRelativeFilename.ToLower().Replace("\\", "/")) return designer;
+                if (designer.Workflow.IDOrRelativeFilename.ToLower().Replace("\\", "/") == IDOrRelativeFilename.ToLower().Replace("/", "\\")) return designer;
             }
             Log.FunctionOutdent("RobotInstance", "GetWorkflowDesignerByIDOrRelativeFilename");
             return null;
@@ -241,15 +241,10 @@ namespace OpenRPA
         public IWorkflow GetWorkflowByIDOrRelativeFilename(string IDOrRelativeFilename)
         {
             Log.FunctionIndent("RobotInstance", "GetWorkflowByIDOrRelativeFilename");
-            foreach (var wf in Workflows.FindAll())
-            {
-                bool returnit = false;
-                if (wf._id == IDOrRelativeFilename) returnit = true; ;
-                if (wf.IDOrRelativeFilename.ToLower().Replace("\\", "/") == IDOrRelativeFilename.ToLower().Replace("\\", "/")) returnit = true;
-                if (returnit) return wf;
-            }
+            var filename = IDOrRelativeFilename.ToLower().Replace("\\", "/");
+            var result = Workflows.Find(x => x.RelativeFilename == filename || x._id == IDOrRelativeFilename).FirstOrDefault();
             Log.FunctionOutdent("RobotInstance", "GetWorkflowByIDOrRelativeFilename");
-            return null;
+            return result;
         }
         public IWorkflowInstance GetWorkflowInstanceByInstanceId(string InstanceId)
         {
@@ -673,37 +668,44 @@ namespace OpenRPA
                 var isagent = Config.local.isagent;
                 AutomationHelper.syncContext.Send(o =>
                 {
-                    if (!Config.local.isagent && global.webSocketClient != null)
+                    try
                     {
-                        if (global.webSocketClient.user != null)
+                        if (!Config.local.isagent && global.webSocketClient != null)
                         {
-                            if (global.webSocketClient.user.hasRole("robot agent users"))
+                            if (global.webSocketClient.user != null)
                             {
-                                isagent = true;
+                                if (global.webSocketClient.user.hasRole("robot agent users"))
+                                {
+                                    isagent = true;
+                                }
                             }
                         }
+                        SetStatus("Creating main window");
+                        if (!isagent)
+                        {
+                            var win = new MainWindow();
+                            App.Current.MainWindow = win;
+                            Window = win;
+                            Window.ReadyForAction += MainWindowReadyForAction;
+                            Window.Status += MainWindowStatus;
+                            GenericTools.MainWindow = win;
+                        }
+                        else
+                        {
+                            var win = new AgentWindow();
+                            App.Current.MainWindow = win;
+                            Window = win;
+                            Window.ReadyForAction += MainWindowReadyForAction;
+                            Window.Status += MainWindowStatus;
+                            GenericTools.MainWindow = win;
+                        }
+                        // ExpressionEditor.EditorUtil.Init();
+                        _ = CodeEditor.init.Initialize();
                     }
-                    SetStatus("Creating main window");
-                    if (!isagent)
+                    catch (Exception ex)
                     {
-                        var win = new MainWindow();
-                        App.Current.MainWindow = win;
-                        Window = win;
-                        Window.ReadyForAction += MainWindowReadyForAction;
-                        Window.Status += MainWindowStatus;
-                        GenericTools.MainWindow = win;
+                        Log.Error("RobotInstance.CreateMainWindow: " + ex.ToString());
                     }
-                    else
-                    {
-                        var win = new AgentWindow();
-                        App.Current.MainWindow = win;
-                        Window = win;
-                        Window.ReadyForAction += MainWindowReadyForAction;
-                        Window.Status += MainWindowStatus;
-                        GenericTools.MainWindow = win;
-                    }
-                    // ExpressionEditor.EditorUtil.Init();
-                    _ = CodeEditor.init.Initialize();
                 }, null);
                 SetStatus("loading detectors");
                 var _detectors = Detectors.FindAll();
@@ -751,6 +753,7 @@ namespace OpenRPA
             try
             {
                 Connected?.Invoke();
+                ReconnectDelay = 5000;
             }
             catch (Exception ex)
             {
@@ -1186,10 +1189,7 @@ namespace OpenRPA
                         }
                         int RunningCount = 0;
                         int RemoteRunningCount = 0;
-                        foreach (var i in WorkflowInstance.Instances.ToList())
-                        {
-                            if (i.isCompleted) lock (WorkflowInstance.Instances) WorkflowInstance.Instances.Remove(i);
-                        }
+                        WorkflowInstance.CleanUp();
                         foreach (var i in WorkflowInstance.Instances.ToList())
                         {
                             if (command.killallexisting && Config.local.remote_allowed_killing_any && !i.isCompleted)
@@ -1450,7 +1450,7 @@ namespace OpenRPA
                 if (operationType != "replace" && operationType != "insert" && operationType != "update") return; // we don't support delete right now
                 if (_type == "workflow")
                 {
-                    if (System.Diagnostics.Debugger.IsAttached) Log.Output(operationType + " version " + _version);
+                    Log.Verbose(operationType + " version " + _version);
                     var workflow = Newtonsoft.Json.JsonConvert.DeserializeObject<Workflow>(data["fullDocument"].ToString());
                     var wfexists = instance.Workflows.FindById(_id);
                     if (wfexists != null && wfexists._version != _version)

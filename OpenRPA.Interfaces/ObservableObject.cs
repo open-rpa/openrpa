@@ -79,10 +79,6 @@ namespace OpenRPA
                 {
                     throw new ArgumentNullException(nameof(propertyName));
                 }
-                if(propertyName == "isDirty")
-                {
-                    var b = true;
-                }
                 if (!isDirtyIgnored.Contains(propertyName) && _backingFieldValues.Count > 5) {
 
                     string modulename = null;
@@ -103,6 +99,14 @@ namespace OpenRPA
                             _backingFieldValues["isDirty"] = true;
                         }
                         else if (modulename == "OpenRPA.exe" && modulename2 == "OpenRPA.exe")
+                        {
+                            _backingFieldValues["isDirty"] = true;
+                        }
+                        else if (modulename == "OpenRPA.exe" && modulename2 == "LiteDB.dll")
+                        {
+                            _backingFieldValues["isDirty"] = true;
+                        }
+                        else if (modulename == "OpenRPA.exe" && modulename2 == "OpenRPA.Interfaces.dll")
                         {
                             _backingFieldValues["isDirty"] = true;
                         }

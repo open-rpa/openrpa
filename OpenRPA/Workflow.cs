@@ -43,15 +43,22 @@ namespace OpenRPA
                 }
                 return value;
             } set { SetProperty(value); } }
-        [JsonIgnore, BsonIgnore]
+        private string _RelativeFilename;
+        [JsonProperty("projectandfilename"), BsonField("projectandfilename")]
         public string RelativeFilename
         {
             get
             {
-                if (Project() == null) return Filename;
-                if (string.IsNullOrEmpty(Project().Path)) return Filename;
+                if (!string.IsNullOrEmpty(_RelativeFilename)) { return _RelativeFilename; }
+                if (Project() == null) { return Filename.ToLower(); }
+                if (string.IsNullOrEmpty(Project().Path)) { return Filename.ToLower(); }
                 string lastFolderName = System.IO.Path.GetFileName(Project().Path);
-                return System.IO.Path.Combine(lastFolderName, Filename);
+                _RelativeFilename = System.IO.Path.Combine(lastFolderName, Filename).ToLower().Replace("\\", "/");
+                return _RelativeFilename;
+            }
+            set
+            {
+                _RelativeFilename = value;
             }
         }
         [JsonIgnore, BsonIgnore]
@@ -72,7 +79,7 @@ namespace OpenRPA
             }
         }
         private string _ProjectAndName;
-        [JsonProperty("projectandname")]
+        [JsonProperty("projectandname"), BsonField("projectandname")]
         public string ProjectAndName
         {
             get
@@ -111,11 +118,11 @@ namespace OpenRPA
                     var wf = RobotInstance.instance.Workflows.FindById(_id);
                     if(wf._version== _version)
                     {
-                        if (System.Diagnostics.Debugger.IsAttached) Log.Output("Saving " + this.name + " with version " + this._version);
+                        Log.Verbose("Saving " + this.name + " with version " + this._version);
                         RobotInstance.instance.Workflows.Update(this);
                     } else
                     {
-                        if (System.Diagnostics.Debugger.IsAttached) Log.Output("Setting " + this.name + " with version " + this._version);
+                        Log.Verbose("Setting " + this.name + " with version " + this._version);
                         wf.IsExpanded = value;
                     }                    
                     RobotInstance.instance.Workflows.Update(this);
@@ -137,12 +144,12 @@ namespace OpenRPA
                         var wf = RobotInstance.instance.Workflows.FindById(_id);
                         if (wf._version == _version)
                         {
-                            if (System.Diagnostics.Debugger.IsAttached) Log.Output("Saving " + this.name + " with version " + this._version);
+                            Log.Verbose("Saving " + this.name + " with version " + this._version);
                             RobotInstance.instance.Workflows.Update(this);
                         }
                         else
                         {
-                            if (System.Diagnostics.Debugger.IsAttached) Log.Output("Setting " + this.name + " with version " + this._version);
+                            Log.Verbose("Setting " + this.name + " with version " + this._version);
                             wf.IsSelected = value;
                         }
                         RobotInstance.instance.Workflows.Update(this);

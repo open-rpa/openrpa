@@ -337,17 +337,6 @@ namespace OpenRPA
             span?.SetTag("state", instance.state);
             span?.SetTag("errormessage", instance.errormessage);
             span?.SetTag("host", instance.host);
-            GenericTools.RunUI(() =>
-            {
-                try
-                {
-                    System.Windows.Input.CommandManager.InvalidateRequerySuggested();
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-            });
             try
             {
                 bool isRemote = false;

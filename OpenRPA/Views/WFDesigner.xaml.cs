@@ -266,7 +266,7 @@ namespace OpenRPA.Views
         public WFDesigner(Xceed.Wpf.AvalonDock.Layout.LayoutDocument tab, Workflow workflow, Type[] extratypes)
         {
             InitializeComponent();
-            if (System.Diagnostics.Debugger.IsAttached) Log.Output("Open " + workflow.name + " version " + workflow._version);
+            Log.Verbose("Open " + workflow.name + " version " + workflow._version);
             this.extratypes = extratypes;
             DataContext = this;
             this.tab = tab;
@@ -1815,7 +1815,6 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 // if (instance != null) instance.Run();
                 if (_activityIdMapping.ContainsKey(id))
                 {
-                    Log.Information("Getting activity " + id);
                     var a = _activityIdMapping[id];
                     var root = _activityIdMapping["1.1"];
                     //var modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
@@ -1888,8 +1887,6 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
 
             });
         }
-
-
         public static async Task<string> LoadImages(string xaml)
         {
             WorkflowDesigner wfDesigner;
@@ -1942,6 +1939,5 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
             wfDesigner.Flush();
             return wfDesigner.Text;
         }
-
     }
 }

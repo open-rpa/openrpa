@@ -41,11 +41,13 @@ namespace OpenRPA
                         Log.Error(ex.ToString());
                     }
                 }
+                string collectionname = "openrpa";
+                if (_type == "workflowinstance") collectionname = "openrpa_instances";
                 if (global.isConnected)
                 {
                     if (string.IsNullOrEmpty(_id) || isLocalOnly == true)
                     {
-                        var result = await global.webSocketClient.InsertOne("openrpa", 0, false, entity);
+                        var result = await global.webSocketClient.InsertOne(collectionname, 0, false, entity);
                         isLocalOnly = false;
                         isDirty = false;
                         _id = result._id;
@@ -60,7 +62,7 @@ namespace OpenRPA
                         if(entity.isDirty)
                         {
                             entity._version++; // Add one to avoid watch update
-                            var result = await global.webSocketClient.InsertOrUpdateOne("openrpa", 0, false, null, entity);
+                            var result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity);
                             isDirty = false;
                             _acl = result._acl;
                             _modified = result._modified;
@@ -110,7 +112,10 @@ namespace OpenRPA
                 }
             } else
             {
-                await global.webSocketClient.DeleteOne("openrpa", entity._id);
+                string collectionname = "openrpa";
+                if (_type == "workflowinstance") collectionname = "openrpa_instances";
+
+                await global.webSocketClient.DeleteOne(collectionname, entity._id);
                 Log.Verbose("Deleted in openflow and as version " + entity._version + " " + entity._type + " " + entity.name);
                 lock (savelock)
                 {

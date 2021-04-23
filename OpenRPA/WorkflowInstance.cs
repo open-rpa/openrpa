@@ -728,7 +728,23 @@ namespace OpenRPA
                     _ = Workflow.State;
                     if (e.CompletionState == System.Activities.ActivityInstanceState.Faulted)
                     {
-                        Save();
+                        if(state == "running" || state == "idle" || state == "completed")
+                        {
+                            state = "faulted";
+                            state = "aborted";
+                            if (e.TerminationException != null)
+                            {
+                                Exception = e.TerminationException;
+                                errormessage = e.TerminationException.Message;
+                            }
+                            else
+                            {
+                                errormessage = "Faulted for unknown reason";
+                            }
+                            Save();
+                            NotifyCompleted();
+                            OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
+                        }
                     }
                     else if (e.CompletionState == System.Activities.ActivityInstanceState.Canceled)
                     {
@@ -815,7 +831,7 @@ namespace OpenRPA
                 isCompleted = true;
                 state = "failed";
                 Exception = e.UnhandledException;
-                errormessage = e.UnhandledException.ToString();
+                errormessage = e.UnhandledException.Message;
                 if(e.ExceptionSource!=null) errorsource = e.ExceptionSource.Id;
                 //exceptionsource = e.ExceptionSource.Id;
                 if (runWatch != null) runWatch.Stop();
@@ -824,7 +840,6 @@ namespace OpenRPA
                 OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
                 return System.Activities.UnhandledExceptionAction.Terminate;
             };
-
         }
         public void Save()
         {

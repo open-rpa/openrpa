@@ -3316,20 +3316,30 @@ namespace OpenRPA
                             App.notifyIcon.ShowBalloonTip(1000, "", message, System.Windows.Forms.ToolTipIcon.Error);
                         }
                     }
-                    // System.Threading.Thread.Sleep(200);
-                    foreach (var wi in WorkflowInstance.Instances.ToList())
+                    _ = Task.Run(() =>
                     {
-                        if (wi.isCompleted) continue;
-                        if (wi.Bookmarks == null) continue;
-                        foreach (var b in wi.Bookmarks)
+                        var sw = new System.Diagnostics.Stopwatch(); sw.Start();
+                        while (sw.Elapsed < TimeSpan.FromSeconds(1))
                         {
-                            if (b.Key == instance._id)
+                            lock (WorkflowInstance.Instances)
                             {
-                                span?.AddEvent(new System.Diagnostics.ActivityEvent("Resume Bookmark " + b.Key));
-                                wi.ResumeBookmark(b.Key, instance);
+                                foreach (var wi in WorkflowInstance.Instances.ToList())
+                                {
+                                    if (wi.isCompleted) continue;
+                                    if (wi.Bookmarks == null) continue;
+                                    foreach (var b in wi.Bookmarks)
+                                    {
+                                        if (b.Key == instance._id)
+                                        {
+                                            wi.ResumeBookmark(b.Key, instance);
+                                            span?.AddEvent(new System.Diagnostics.ActivityEvent("Resume Bookmark " + b.Key));
+                                            return;
+                                        }
+                                    }
+                                }
                             }
                         }
-                    }
+                    });
                 }
                 RobotInstance.instance.NotifyPropertyChanged("Projects");
             }

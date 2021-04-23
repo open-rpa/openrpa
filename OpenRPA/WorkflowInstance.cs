@@ -16,6 +16,7 @@ namespace OpenRPA
     {
         public WorkflowInstance()
         {
+            _id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
         }
         private WorkflowInstance(Workflow workflow)
         {
@@ -329,7 +330,7 @@ namespace OpenRPA
         {
             try
             {
-                Log.Verbose("[workflow] Resume workflow at bookmark '" + bookmarkName + "'");
+                Log.Debug("[workflow] Resume workflow at bookmark '" + bookmarkName + "'");
                 if (isCompleted)
                 {
                     throw new ArgumentException("cannot resume bookmark on completed workflow!");
@@ -890,7 +891,7 @@ namespace OpenRPA
                     try
                     {
                         if (!global.isConnected) return;
-                        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, null, this);
+                        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, "InstanceId,WorkflowId", this);
                         if(result != null)
                         {
                             _id = result._id;

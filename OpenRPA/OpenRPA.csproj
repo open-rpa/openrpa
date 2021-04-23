@@ -10,7 +10,7 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.40</Version>
+    <Version>1.2.41</Version>
     <PackageReleaseNotes>1.2.40 Add support for break and continue in most loops
 1.2.39 Fix Map Variables issue for invoke openrpa
 1.2.38 Add support for killing robot workflow remotely

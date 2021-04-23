@@ -110,7 +110,7 @@ namespace OpenRPA
                     else
                     {
                         laststate = "running";
-                        state = instace.First().state;
+                        state = instace.OrderBy(x=> x._modified).First().state;
                     }
                     laststate = state;
                 }

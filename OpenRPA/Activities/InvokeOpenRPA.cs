@@ -122,7 +122,7 @@ namespace OpenRPA.Activities
                 Log.Verbose("InvokeOpenRPA: Run Instance ID " + instance._id);
                 if (waitforcompleted)
                 {
-                    Log.Debug("[workflow] Create bookmark '" + instance._id + "'");
+                    Log.Verbose("[workflow] Create bookmark '" + instance._id + "'");
                     context.CreateBookmark(instance._id, new BookmarkCallback(OnBookmarkCallback));
                     if (instance.Bookmarks == null) instance.Bookmarks = new Dictionary<string, object>();
                     instance.Bookmarks.Add(instance._id, null);

@@ -1179,10 +1179,7 @@ namespace OpenRPA
                         }
                         int RunningCount = 0;
                         int RemoteRunningCount = 0;
-                        foreach (var i in WorkflowInstance.Instances.ToList())
-                        {
-                            if (i.isCompleted) lock (WorkflowInstance.Instances) WorkflowInstance.Instances.Remove(i);
-                        }
+                        WorkflowInstance.CleanUp();
                         foreach (var i in WorkflowInstance.Instances.ToList())
                         {
                             if (!string.IsNullOrEmpty(i.correlationId) && !i.isCompleted)

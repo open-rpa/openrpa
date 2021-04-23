@@ -1299,18 +1299,29 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
             }
             if (instance.hasError || instance.isCompleted)
             {
-                foreach (var wi in WorkflowInstance.Instances.ToList())
+                _ = Task.Run(() =>
                 {
-                    if (wi.isCompleted) continue;
-                    if (wi.Bookmarks == null) continue;
-                    foreach (var b in wi.Bookmarks)
+                    var sw = new System.Diagnostics.Stopwatch(); sw.Start();
+                    while (sw.Elapsed < TimeSpan.FromSeconds(1))
                     {
-                        if (b.Key == instance._id)
+                        lock (WorkflowInstance.Instances)
                         {
-                            wi.ResumeBookmark(b.Key, instance);
+                            foreach (var wi in WorkflowInstance.Instances.ToList())
+                            {
+                                if (wi.isCompleted) continue;
+                                if (wi.Bookmarks == null) continue;
+                                foreach (var b in wi.Bookmarks)
+                                {
+                                    if (b.Key == instance._id)
+                                    {
+                                        wi.ResumeBookmark(b.Key, instance);
+                                        return;
+                                    }
+                                }
+                            }
                         }
                     }
-                }
+                });
             }
         }
         public void Run(bool VisualTracking, bool SlowMotion, IWorkflowInstance instance)

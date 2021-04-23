@@ -16,6 +16,7 @@ namespace OpenRPA
     {
         public WorkflowInstance()
         {
+            _id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
         }
         private WorkflowInstance(Workflow workflow)
         {
@@ -195,10 +196,7 @@ namespace OpenRPA
             result.fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
             result.createApp(Workflow.Activity);
             lock (Instances) Instances.Add(result);
-            foreach (var i in Instances.ToList())
-            {
-                if (i.isCompleted) lock (Instances) Instances.Remove(i);
-            }
+            WorkflowInstance.CleanUp();
             return result;
         }
         public void createApp(Activity activity)
@@ -866,7 +864,21 @@ namespace OpenRPA
                 Log.Debug(ex.ToString());
             }
         }
-        // private Task SaveTask = null;
+        public static void CleanUp()
+        {
+            lock (Instances)
+            {
+                foreach (var i in Instances.ToList())
+                {
+                    if (i.isCompleted && i._modified > DateTime.Now.AddMinutes(5))
+                    {
+                        Log.Verbose("[workflow] Remove workflow with id '" + i.WorkflowId + "'");
+                        lock (Instances) Instances.Remove(i);
+                    }
+                }
+
+            }
+        }
         public void Save()
         {
             if (isCompleted || hasError)
@@ -890,7 +902,7 @@ namespace OpenRPA
                     try
                     {
                         if (!global.isConnected) return;
-                        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, null, this);
+                        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, "InstanceId,WorkflowId", this);
                         if(result != null)
                         {
                             _id = result._id;
@@ -983,6 +995,14 @@ namespace OpenRPA
                 Log.Error(ex.ToString());
             }
             Log.FunctionOutdent("RobotInstance", "RunPendingInstances");
+        }
+        public override string ToString()
+        {
+            if(Bookmarks != null && Bookmarks.Count > 0)
+            {
+                return state + " " + WorkflowId + "(" + Bookmarks.Count + ")";
+            }
+            return state + " " + WorkflowId;
         }
     }
 

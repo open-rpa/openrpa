@@ -731,6 +731,23 @@ namespace OpenRPA
                 _ = Workflow.State;
                 if (e.CompletionState == System.Activities.ActivityInstanceState.Faulted)
                 {
+                    if (state == "running" || state == "idle" || state == "completed")
+                    {
+                        state = "faulted";
+                        state = "aborted";
+                        if (e.TerminationException != null)
+                        {
+                            Exception = e.TerminationException;
+                            errormessage = e.TerminationException.Message;
+                        }
+                        else
+                        {
+                            errormessage = "Faulted for unknown reason";
+                        }
+                        Save();
+                        NotifyCompleted();
+                        OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
+                    }
                 }
                 else if (e.CompletionState == System.Activities.ActivityInstanceState.Canceled)
                 {
@@ -751,7 +768,6 @@ namespace OpenRPA
                     throw new Exception("Unknown completetion state!!!" + e.CompletionState);
                 }
             };
-
             wfApp.Aborted = delegate (System.Activities.WorkflowApplicationAbortedEventArgs e)
             {
                 hasError = true;
@@ -764,7 +780,6 @@ namespace OpenRPA
                 NotifyAborted();
                 OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
             };
-
             wfApp.Idle = delegate (System.Activities.WorkflowApplicationIdleEventArgs e)
             {
                 var bookmarks = new Dictionary<string, object>();
@@ -781,14 +796,12 @@ namespace OpenRPA
                     OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
                 }
             };
-
             wfApp.PersistableIdle = delegate (System.Activities.WorkflowApplicationIdleEventArgs e)
             {
                 //return PersistableIdleAction.Unload;
                 Save();
                 return System.Activities.PersistableIdleAction.Persist;
             };
-
             wfApp.Unloaded = delegate (System.Activities.WorkflowApplicationEventArgs e)
             {
                 if (!isCompleted && !hasError)
@@ -805,14 +818,13 @@ namespace OpenRPA
                     Save();
                 }
             };
-
             wfApp.OnUnhandledException = delegate (System.Activities.WorkflowApplicationUnhandledExceptionEventArgs e)
             {
                 hasError = true;
                 isCompleted = true;
                 state = "failed";
                 Exception = e.UnhandledException;
-                errormessage = e.UnhandledException.ToString();
+                errormessage = e.UnhandledException.Message;
                 if(e.ExceptionSource!=null) errorsource = e.ExceptionSource.Id;
                 //exceptionsource = e.ExceptionSource.Id;
                 if (runWatch != null) runWatch.Stop();
@@ -820,7 +832,6 @@ namespace OpenRPA
                 OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
                 return System.Activities.UnhandledExceptionAction.Terminate;
             };
-
         }
         private object filelock = new object();
         public void SaveFile()

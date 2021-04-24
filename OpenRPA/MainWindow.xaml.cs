@@ -118,7 +118,7 @@ namespace OpenRPA
         {
             Log.FunctionIndent("MainWindow", "MainWindow_WebSocketClient_OnOpen");
             if (first_connect)
-            { 
+            {
                 GenericTools.RunUI(async () =>
                 {
 
@@ -434,7 +434,7 @@ namespace OpenRPA
             InputDriver.Instance.Dispose();
             StopDetectorPlugins();
             SaveLayout();
-            if(RobotInstance.instance.db != null)
+            if (RobotInstance.instance.db != null)
             {
                 RobotInstance.instance.db.Dispose();
                 RobotInstance.instance.db = null;
@@ -2077,7 +2077,7 @@ namespace OpenRPA
         public void _onOpenWorkflow(IWorkflow workflow, bool HasChanged = false)
         {
             Log.FunctionIndent("MainWindow", "_onOpenWorkflow");
-            if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) is Views.WFDesigner designer)
+            if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(workflow.RelativeFilename) is Views.WFDesigner designer)
             {
                 designer.tab.IsSelected = true;
                 Log.FunctionOutdent("MainWindow", "_onOpenWorkflow", "Already open");
@@ -2382,7 +2382,7 @@ namespace OpenRPA
                         }
                         foreach (var _wf in p.Workflows.ToList())
                         {
-                            var designer = RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(_wf.IDOrRelativeFilename) as Views.WFDesigner;
+                            var designer = RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(_wf.RelativeFilename) as Views.WFDesigner;
                             if (designer == null && !string.IsNullOrEmpty(_wf._id)) { }
                             if (designer != null) { designer.tab.Close(); }
                             await _wf.Delete();

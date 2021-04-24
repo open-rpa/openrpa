@@ -21,8 +21,6 @@ namespace OpenRPA.Interfaces
         string projectid { get; set; }
         [JsonIgnore]
         string RelativeFilename { get; }
-        [JsonIgnore]
-        string IDOrRelativeFilename { get; }
         string FilePath { get; }
         string Filename { get; set; }
         bool Serializable { get; set; }

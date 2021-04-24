@@ -1526,7 +1526,7 @@ namespace OpenRPA
             {
                 try
                 {
-                    if (!(instance.GetWorkflowDesignerByIDOrRelativeFilename(Workflow.IDOrRelativeFilename) is Views.WFDesigner designer))
+                    if (!(instance.GetWorkflowDesignerByIDOrRelativeFilename(Workflow.RelativeFilename) is Views.WFDesigner designer))
                     {
                         instance.Workflows.Update(Workflow as Workflow);
                     }

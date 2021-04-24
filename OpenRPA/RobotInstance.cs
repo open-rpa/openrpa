@@ -233,7 +233,7 @@ namespace OpenRPA
             foreach (var designer in Designers)
             {
                 if (designer.Workflow._id == IDOrRelativeFilename) return designer;
-                if (designer.Workflow.RelativeFilename.ToLower().Replace("\\", "/") == IDOrRelativeFilename.ToLower().Replace("/", "\\") || designer.Workflow._id == IDOrRelativeFilename) return designer;
+                if (designer.Workflow.RelativeFilename.ToLower().Replace("\\", "/") == IDOrRelativeFilename.ToLower().Replace("\\", "/")) return designer;
             }
             Log.FunctionOutdent("RobotInstance", "GetWorkflowDesignerByIDOrRelativeFilename");
             return null;

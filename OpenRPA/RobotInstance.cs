@@ -105,7 +105,7 @@ namespace OpenRPA
                     _instance.Detectors.EnsureIndex(x => x._id, true);
 
                     _instance.dbWorkflowInstances = _instance.db.GetCollection<WorkflowInstance>("workflowinstances");
-                    _instance.dbWorkflowInstances.EnsureIndex(x => x._id, true);                    
+                    _instance.dbWorkflowInstances.EnsureIndex(x => x._id, true);
 
                     // BsonMapper.Global.Entity<Project>().DbRef(x => x.Workflows, "workflows");
                     AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) =>
@@ -233,7 +233,7 @@ namespace OpenRPA
             foreach (var designer in Designers)
             {
                 if (designer.Workflow._id == IDOrRelativeFilename) return designer;
-                if (designer.Workflow.IDOrRelativeFilename.ToLower().Replace("\\", "/") == IDOrRelativeFilename.ToLower().Replace("/", "\\")) return designer;
+                if (designer.Workflow.RelativeFilename.ToLower().Replace("\\", "/") == IDOrRelativeFilename.ToLower().Replace("/", "\\") || designer.Workflow._id == IDOrRelativeFilename) return designer;
             }
             Log.FunctionOutdent("RobotInstance", "GetWorkflowDesignerByIDOrRelativeFilename");
             return null;
@@ -242,7 +242,7 @@ namespace OpenRPA
         {
             Log.FunctionIndent("RobotInstance", "GetWorkflowByIDOrRelativeFilename");
             var filename = IDOrRelativeFilename.ToLower().Replace("\\", "/");
-            var result = Workflows.Find(x => x.RelativeFilename == filename || x._id == IDOrRelativeFilename).FirstOrDefault();
+            var result = Workflows.Find(x => x.RelativeFilename.ToLower() == filename.ToLower() || x._id == IDOrRelativeFilename).FirstOrDefault();
             Log.FunctionOutdent("RobotInstance", "GetWorkflowByIDOrRelativeFilename");
             return result;
         }
@@ -343,7 +343,8 @@ namespace OpenRPA
                         span?.AddEvent(new ActivityEvent("Removing local project " + p.name));
                         Log.Debug("Removing local project " + p.name);
                         Projects.Delete(p._id);
-                    } else if ( p.isDirty)
+                    }
+                    else if (p.isDirty)
                     {
                         if (p.isDeleted) await p.Delete();
                         if (!p.isDeleted) await p.Save();
@@ -402,7 +403,8 @@ namespace OpenRPA
                         span?.AddEvent(new ActivityEvent("Removing local workflow " + wf.name));
                         Log.Debug("Removing local workflow " + wf.name);
                         Workflows.Delete(wf._id);
-                    } else if (wf.isDirty)
+                    }
+                    else if (wf.isDirty)
                     {
                         if (wf.isDeleted) await wf.Delete();
                         if (!wf.isDeleted) await wf.Save();
@@ -474,7 +476,8 @@ namespace OpenRPA
                             Plugins.detectorPlugins.Remove(d);
                         }
                         Detectors.Delete(detector._id);
-                    } else if ( detector.isDirty)
+                    }
+                    else if (detector.isDirty)
                     {
                         if (detector.isDeleted) await detector.Delete();
                         if (!detector.isDeleted) await detector.Save();
@@ -1050,7 +1053,7 @@ namespace OpenRPA
         private async void WebSocketClient_OnClose(string reason)
         {
             Log.FunctionIndent("RobotInstance", "WebSocketClient_OnClose", reason);
-            if(global.webSocketClient.isConnected) Log.Information("Disconnected " + reason);
+            if (global.webSocketClient.isConnected) Log.Information("Disconnected " + reason);
             SetStatus("Disconnected from " + Config.local.wsurl + " reason " + reason);
             openrpa_watchid = null;
             try
@@ -1470,11 +1473,12 @@ namespace OpenRPA
                     if (exists != null && _version != exists._version)
                     {
                         await UpdateProject(project);
-                    } else if(exists == null)
+                    }
+                    else if (exists == null)
                     {
                         await UpdateProject(project);
                     }
-                    
+
                 }
                 if (_type == "detector")
                 {
@@ -1553,7 +1557,7 @@ namespace OpenRPA
                         }
                         else
                         {
-                            if(designer.Workflow._version != Workflow._version)
+                            if (designer.Workflow._version != Workflow._version)
                             {
                                 designer.forceHasChanged(false);
                                 designer.tab.Close();

@@ -16,13 +16,17 @@ namespace OpenRPA
     {
         [JsonIgnore, BsonIgnore]
         private long _current_version = 0;
-        public long current_version { get {
+        public long current_version
+        {
+            get
+            {
                 if (_version > _current_version) return _version;
                 return _current_version;
-                        } 
-            set {
+            }
+            set
+            {
                 _current_version = value;
-            } 
+            }
         }
         public Workflow()
         {
@@ -33,27 +37,34 @@ namespace OpenRPA
         public string Xaml { get { return GetProperty<string>(); } set { _activity = null; SetProperty(value); } }
         public List<workflowparameter> Parameters { get { return GetProperty<List<workflowparameter>>(); } set { SetProperty(value); } }
         public bool Serializable { get { return GetProperty<bool>(); } set { SetProperty(value); } }
-        public string Filename { get { 
-                var value = GetProperty<string>(); 
-                if(string.IsNullOrEmpty(value))
-                {
-                    _backingFieldValues["Filename"] = UniqueFilename();
-                    _backingFieldValues["isDirty"] = true;
-                    return _backingFieldValues["Filename"] as string;
-                }
+        public string Filename
+        {
+            get
+            {
+                var value = GetProperty<string>();
+                if (string.IsNullOrEmpty(value)) value = "";
+                //if(string.IsNullOrEmpty(value))
+                //{
+                //    _backingFieldValues["Filename"] = UniqueFilename();
+                //    _backingFieldValues["isDirty"] = true;
+                //    return _backingFieldValues["Filename"] as string;
+                //}
                 return value;
-            } set { SetProperty(value); } }
+            }
+            set { SetProperty(value); }
+        }
         private string _RelativeFilename;
         [JsonProperty("projectandfilename"), BsonField("projectandfilename")]
         public string RelativeFilename
         {
             get
             {
+                if (string.IsNullOrEmpty(Filename)) return "";
                 if (!string.IsNullOrEmpty(_RelativeFilename)) { return _RelativeFilename; }
-                if (Project() == null) { return Filename.ToLower(); }
-                if (string.IsNullOrEmpty(Project().Path)) { return Filename.ToLower(); }
+                if (Project() == null) { return Filename; }
+                if (string.IsNullOrEmpty(Project().Path)) { return Filename; }
                 string lastFolderName = System.IO.Path.GetFileName(Project().Path);
-                _RelativeFilename = System.IO.Path.Combine(lastFolderName, Filename).ToLower().Replace("\\", "/");
+                _RelativeFilename = System.IO.Path.Combine(lastFolderName, Filename).Replace("\\", "/");
                 return _RelativeFilename;
             }
             set
@@ -69,7 +80,7 @@ namespace OpenRPA
                 if (string.IsNullOrEmpty(RelativeFilename)) return name;
                 if (RelativeFilename.Contains("\\")) return RelativeFilename;
                 if (Project() != null) return Project().name + "\\" + Filename;
-                if(!string.IsNullOrEmpty(_ProjectAndName) && _ProjectAndName.Contains("/"))
+                if (!string.IsNullOrEmpty(_ProjectAndName) && _ProjectAndName.Contains("/"))
                 {
                     return _ProjectAndName.Substring(0, _ProjectAndName.IndexOf("/") + 1) + RelativeFilename;
                 }
@@ -103,12 +114,14 @@ namespace OpenRPA
                 if (Project() == null) return Filename;
                 return System.IO.Path.Combine(Project().Path, Filename);
             }
-        }   
+        }
         public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [JsonIgnore]
-        public bool IsExpanded { 
-            get { return GetProperty<bool>(); } 
-            set {
+        public bool IsExpanded
+        {
+            get { return GetProperty<bool>(); }
+            set
+            {
                 if (Views.OpenProject.isUpdating) return;
                 if (value == GetProperty<bool>()) return;
                 SetProperty(value);
@@ -116,23 +129,26 @@ namespace OpenRPA
                 if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
                 {
                     var wf = RobotInstance.instance.Workflows.FindById(_id);
-                    if(wf._version== _version)
+                    if (wf._version == _version)
                     {
                         Log.Verbose("Saving " + this.name + " with version " + this._version);
                         RobotInstance.instance.Workflows.Update(this);
-                    } else
+                    }
+                    else
                     {
                         Log.Verbose("Setting " + this.name + " with version " + this._version);
                         wf.IsExpanded = value;
-                    }                    
+                    }
                     RobotInstance.instance.Workflows.Update(this);
                 }
-            } 
+            }
         }
         [JsonIgnore]
-        public bool IsSelected { 
-            get { return GetProperty<bool>(); } 
-            set {
+        public bool IsSelected
+        {
+            get { return GetProperty<bool>(); }
+            set
+            {
                 if (Views.OpenProject.isUpdating) return;
                 if (value == GetProperty<bool>()) return;
                 SetProperty(value);
@@ -195,7 +211,7 @@ namespace OpenRPA
                     case "failed": return "/OpenRPA;component/Resources/state/failed.png";
                     case "completed": return "/OpenRPA;component/Resources/state/Completed.png";
                     default: return "/OpenRPA;component/Resources/state/unloaded.png";
-                }                
+                }
             }
         }
         public void NotifyUIState()
@@ -208,7 +224,7 @@ namespace OpenRPA
         {
             get
             {
-                return WorkflowInstance.Instances.Where(x => (x.WorkflowId == _id && !string.IsNullOrEmpty(_id)) || (x.RelativeFilename == RelativeFilename && string.IsNullOrEmpty(_id))).ToList();
+                return WorkflowInstance.Instances.Where(x => (x.WorkflowId == _id && !string.IsNullOrEmpty(_id)) || (x.RelativeFilename.ToLower() == RelativeFilename.ToLower() && string.IsNullOrEmpty(_id))).ToList();
             }
         }
         [JsonIgnore, BsonIgnore]
@@ -257,7 +273,6 @@ namespace OpenRPA
             Workflow workflow = new Workflow { projectid = Project._id, name = Name, _acl = Project._acl };
             var exists = RobotInstance.instance.Workflows.Find(x => x.name == workflow.name && x.projectid == workflow.projectid).FirstOrDefault();
             workflow.name = workflow.UniqueName();
-            workflow.Filename = workflow.UniqueFilename();
             workflow._type = "workflow";
             workflow.Parameters = new List<workflowparameter>();
             //workflow.Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>();
@@ -266,7 +281,8 @@ namespace OpenRPA
             workflow.isDirty = true;
             workflow.isLocalOnly = true;
             RobotInstance.instance.Workflows.Insert(workflow);
-            await workflow.Save();
+            // await workflow.Save();
+            await workflow.Save<Workflow>();
             return workflow;
         }
         public async Task ExportFile(string filepath)
@@ -277,6 +293,7 @@ namespace OpenRPA
         public async Task Save()
         {
             if (projectid == null && string.IsNullOrEmpty(projectid)) throw new Exception("Cannot save workflow with out a project/projectid");
+            if (string.IsNullOrEmpty(Filename)) Filename = UniqueFilename();
             if (string.IsNullOrEmpty(projectid)) projectid = Project()._id;
             await Save<Workflow>();
             RobotInstance.instance.UpdateWorkflow(this, false);
@@ -323,7 +340,7 @@ namespace OpenRPA
         public void RunPendingInstances()
         {
             var statepath = System.IO.Path.Combine(Project().Path, "state");
-            if(System.IO.Directory.Exists(statepath))
+            if (System.IO.Directory.Exists(statepath))
             {
                 var ProjectFiles = System.IO.Directory.EnumerateFiles(statepath, "*.json", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
                 if (!global.isConnected)
@@ -346,7 +363,7 @@ namespace OpenRPA
                                 {
                                     if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
                                 }
-                                lock(WorkflowInstance.Instances) WorkflowInstance.Instances.Add(i);
+                                lock (WorkflowInstance.Instances) WorkflowInstance.Instances.Add(i);
                                 i.createApp(Activity());
                                 i.Run();
                             }
@@ -392,7 +409,7 @@ namespace OpenRPA
         }
         public string UniqueFilename()
         {
-            string Filename = ""; 
+            string Filename = "";
             var isUnique = false;
             int counter = 1;
             while (!isUnique)
@@ -482,7 +499,7 @@ namespace OpenRPA
             }
         }
         [JsonIgnore, BsonIgnore]
-        public bool IsVisible { get { return GetProperty<bool>(); } set { SetProperty(value); } } 
+        public bool IsVisible { get { return GetProperty<bool>(); } set { SetProperty(value); } }
     }
 
 }

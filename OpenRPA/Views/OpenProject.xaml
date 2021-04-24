@@ -106,6 +106,10 @@
                 <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue.name}" ></TextBlock>
             </StackPanel>
             <StackPanel>
+                <TextBlock Text="{x:Static or:strings.open_filename}" FontWeight="Bold"></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue.Filename}" ></TextBlock>
+            </StackPanel>
+            <StackPanel>
                 <TextBlock Text="{x:Static or:strings.open_state}" FontWeight="Bold"></TextBlock>
                 <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue.State}" ></TextBlock>
             </StackPanel>

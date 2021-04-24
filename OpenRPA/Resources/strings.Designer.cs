@@ -1609,6 +1609,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filename.
+        /// </summary>
+        public static string open_filename {
+            get {
+                return ResourceManager.GetString("open_filename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last modified at.
         /// </summary>
         public static string open_modified {

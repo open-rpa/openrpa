@@ -38,10 +38,7 @@ namespace OpenRPA.Activities
         {
             workflows.Clear();
             var result = new List<IWorkflow>();
-            foreach (var p in RobotInstance.instance.Projects.FindAll())
-            {
-                foreach (var w in p.Workflows) result.Add(w);
-            }
+            foreach (var w in RobotInstance.instance.Workflows.FindAll()) result.Add(w);
             // result = result.OrderBy(x => x.name).OrderBy(x => x.Project.name).ToList();
             result = result.OrderBy(x => x.name).OrderBy(x => x.projectid).ToList();
             foreach (var w in result) workflows.Add(w);
@@ -72,7 +69,7 @@ namespace OpenRPA.Activities
                 string workflowid = ModelItem.GetValue<string>("workflow");
                 var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
                 var designer = RobotInstance.instance.Window.Designer;
-                foreach(var p in workflow.Parameters)
+                foreach (var p in workflow.Parameters)
                 {
                     Type t = Type.GetType(p.type);
                     if (p.type == "System.Data.DataTable") t = typeof(System.Data.DataTable);

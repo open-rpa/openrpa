@@ -639,6 +639,9 @@
   <data name="open_edit_xaml" xml:space="preserve">
     <value>Edit XAML</value>
   </data>
+  <data name="open_filename" xml:space="preserve">
+    <value>Filename</value>
+  </data>
   <data name="open_modified" xml:space="preserve">
     <value>Last modified at</value>
   </data>

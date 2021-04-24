@@ -39,20 +39,17 @@ namespace OpenRPA.Activities
                 if (RobotInstance.instance.Projects == null) throw new ArgumentException("RobotInstance.instance.Projects");
                 if (RobotInstance.instance.Projects.Count() == 0) throw new ArgumentException("RobotInstance.instance.Projects.Count == 0");
                 var result = new List<Workflow>();
-                foreach (var p in RobotInstance.instance.Projects.FindAll())
+                foreach (var w in RobotInstance.instance.Workflows.FindAll())
                 {
-                    foreach (var w in p.Workflows)
+                    if (RobotInstance.instance.Window.Designer != null && RobotInstance.instance.Window.Designer.Workflow != null)
                     {
-                        if(RobotInstance.instance.Window.Designer!=null && RobotInstance.instance.Window.Designer.Workflow != null)
-                        {
-                            if (RobotInstance.instance.Window.Designer.Workflow._id != w._id || w._id == null) workflows.Add(w);
-                        } 
-                        else
-                        {
-                            workflows.Add(w);
-                        }
-                        
+                        if (RobotInstance.instance.Window.Designer.Workflow._id != w._id || w._id == null) result.Add(w);
                     }
+                    else
+                    {
+                        result.Add(w);
+                    }
+
                 }
                 // result = result.OrderBy(x => x.name).OrderBy(x => x.Project.name).ToList();
                 result = result.OrderBy(x => x.name).OrderBy(x => x.projectid).ToList();
@@ -85,13 +82,13 @@ namespace OpenRPA.Activities
             foreach (var p in workflow.Parameters)
             {
                 bool exists = false;
-                foreach(var key in dictionary.Keys)
+                foreach (var key in dictionary.Keys)
                 {
-                    if(key.ToString() == p.name) exists = true;
+                    if (key.ToString() == p.name) exists = true;
                     if (key.GetValue<string>("AnnotationText") == p.name) exists = true;
                     if (key.GetValue<string>("Name") == p.name) exists = true;
                 }
-                if(!exists)
+                if (!exists)
                 {
 
                     Type t = OpenRPA.Interfaces.Extensions.FindType(p.type);
@@ -106,7 +103,7 @@ namespace OpenRPA.Activities
                     dictionary.Add(p.name, a);
                 }
             }
-            foreach(var a in dictionary.ToList())
+            foreach (var a in dictionary.ToList())
             {
                 bool exists = workflow.Parameters.Where(x => x.name == a.Key.ToString()).Count() > 0;
                 if (!exists) dictionary.Remove(a.Key);

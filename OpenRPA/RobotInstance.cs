@@ -230,11 +230,12 @@ namespace OpenRPA
         public IDesigner GetWorkflowDesignerByIDOrRelativeFilename(string IDOrRelativeFilename)
         {
             Log.FunctionIndent("RobotInstance", "GetWorkflowDesignerByIDOrRelativeFilename");
-            foreach (var designer in Designers)
-            {
-                if (designer.Workflow._id == IDOrRelativeFilename) return designer;
-                if (designer.Workflow.RelativeFilename.ToLower().Replace("\\", "/") == IDOrRelativeFilename.ToLower().Replace("\\", "/")) return designer;
-            }
+            if(!string.IsNullOrEmpty(IDOrRelativeFilename))
+                foreach (var designer in Designers)
+                {
+                    if (designer.Workflow._id == IDOrRelativeFilename) return designer;
+                    if (designer.Workflow.RelativeFilename.ToLower().Replace("\\", "/") == IDOrRelativeFilename.ToLower().Replace("\\", "/")) return designer;
+                }
             Log.FunctionOutdent("RobotInstance", "GetWorkflowDesignerByIDOrRelativeFilename");
             return null;
         }

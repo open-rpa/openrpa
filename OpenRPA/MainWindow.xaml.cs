@@ -3303,6 +3303,7 @@ namespace OpenRPA
                     }
                     if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
                     Log.Information(message);
+                    Log.Output(message);
                     if ((Config.local.notify_on_workflow_end && !isRemote) || (Config.local.notify_on_workflow_remote_end && isRemote))
                     {
                         if (instance.state == "completed")

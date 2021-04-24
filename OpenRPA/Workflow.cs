@@ -191,7 +191,7 @@ namespace OpenRPA
                     else
                     {
                         laststate = "running";
-                        state = instace.OrderBy(x => x._modified).First().state;
+                        state = instace.OrderByDescending(x => x._modified).First().state;
                     }
                     laststate = state;
                 }

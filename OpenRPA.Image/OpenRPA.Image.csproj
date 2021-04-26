@@ -58,6 +58,7 @@
     <None Remove="Activities\GetImageDesigner.xaml" />
     <None Remove="Activities\GetTextDesigner.xaml" />
     <None Remove="Activities\LoadFromFileDesigner.xaml" />
+    <None Remove="Activities\PrintWindowDesigner.xaml" />
     <None Remove="Activities\TakeScreenshotDesigner.xaml" />
     <None Remove="Resources\check.png" />
     <None Remove="Resources\designer\camera.png" />
@@ -94,6 +95,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\GetElementDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\PrintWindowDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\TakeScreenshotDesigner.xaml">

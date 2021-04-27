@@ -267,6 +267,12 @@
   <data name="activity_foreachdatarow_tooltip" xml:space="preserve">
     <value>Enumerate through each row inside a DataTable</value>
   </data>
+  <data name="activity_getpassword" xml:space="preserve">
+    <value>Get Password</value>
+  </data>
+  <data name="activity_getpassword_tooltip" xml:space="preserve">
+    <value>Store your password safely</value>
+  </data>
   <data name="activity_height" xml:space="preserve">
     <value>Height</value>
   </data>

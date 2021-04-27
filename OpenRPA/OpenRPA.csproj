@@ -280,6 +280,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <PackageReference Include="OpenTelemetry" Version="1.1.0-beta1" />
     <PackageReference Include="OpenTelemetry.Api" Version="1.1.0-beta1" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.0.1" />
+    <PackageReference Include="Simple.AES" Version="2.0.2" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\BreakableDoWhileDesigner.xaml" />
@@ -293,6 +294,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Activities\DetectorDesigner.xaml" />
     <None Remove="Activities\FocusElementDesigner.xaml" />
     <None Remove="Activities\ForEachDataRowDesigner.xaml" />
+    <None Remove="Activities\GetPasswordDesigner.xaml" />
     <None Remove="Activities\HighlightElementDesigner.xaml" />
     <None Remove="Activities\InsertClipboardDesigner.xaml" />
     <None Remove="Activities\InvokeOpenFlowDesigner.xaml" />
@@ -396,6 +398,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Resources\designer\messagebox.png" />
     <None Remove="Resources\designer\mouse.png" />
     <None Remove="Resources\designer\openurl.png" />
+    <None Remove="Resources\designer\password.png" />
     <None Remove="Resources\designer\prompt.png" />
     <None Remove="Resources\designer\readexcel.png" />
     <None Remove="Resources\designer\readfile.png" />
@@ -499,6 +502,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Resources\toolbox\messagebox.png" />
     <None Remove="Resources\toolbox\mouse.png" />
     <None Remove="Resources\toolbox\openurl.png" />
+    <None Remove="Resources\toolbox\password.png" />
     <None Remove="Resources\toolbox\prompt.png" />
     <None Remove="Resources\toolbox\readexcel.png" />
     <None Remove="Resources\toolbox\readfile.png" />
@@ -541,6 +545,9 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\FocusElementDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\GetPasswordDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\ShowBalloonTipDesigner.xaml">
@@ -651,6 +658,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <Resource Include="Resources\designer\break.png" />
     <Resource Include="Resources\designer\continue.png" />
     <Resource Include="Resources\designer\mouse.png" />
+    <Resource Include="Resources\designer\password.png" />
     <Resource Include="Resources\gears-1236578_1920.jpg" />
     <Resource Include="Resources\icons\activity.png" />
     <Resource Include="Resources\icons\activity.svg" />
@@ -703,6 +711,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <EmbeddedResource Include="Resources\toolbox\log.png" />
     <EmbeddedResource Include="Resources\toolbox\messagebox.png" />
     <EmbeddedResource Include="Resources\toolbox\openurl.png" />
+    <EmbeddedResource Include="Resources\toolbox\password.png" />
     <EmbeddedResource Include="Resources\toolbox\prompt.png" />
     <EmbeddedResource Include="Resources\toolbox\readexcel.png" />
     <EmbeddedResource Include="Resources\toolbox\readfile.png" />

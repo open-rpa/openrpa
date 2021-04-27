@@ -511,6 +511,24 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get Password.
+        /// </summary>
+        public static string activity_getpassword {
+            get {
+                return ResourceManager.GetString("activity_getpassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Store your password safely.
+        /// </summary>
+        public static string activity_getpassword_tooltip {
+            get {
+                return ResourceManager.GetString("activity_getpassword_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Height.
         /// </summary>
         public static string activity_height {

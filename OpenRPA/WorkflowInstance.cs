@@ -81,8 +81,10 @@ namespace OpenRPA
         public string errorsource { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [JsonIgnore]
         public Exception Exception { get { return GetProperty<Exception>(); } set { SetProperty(value); } }
-        public bool isCompleted { 
-            get {
+        public bool isCompleted
+        {
+            get
+            {
                 var value = GetProperty<bool>();
                 if (!value && wfApp != null)
                 {
@@ -102,14 +104,16 @@ namespace OpenRPA
                 }
                 return value;
             }
-            set 
-            { 
-                SetProperty(value); 
+            set
+            {
+                SetProperty(value);
             }
         }
         public bool hasError { get { return GetProperty<bool>(); } set { SetProperty(value); } }
-        public string state { 
-            get {
+        public string state
+        {
+            get
+            {
                 var value = GetProperty<string>();
                 if (isCompleted && (value == "loaded" || value == "running" || value == "idle" || value == "unloaded"))
                 {
@@ -123,10 +127,11 @@ namespace OpenRPA
                     }
                 }
                 return value;
-            } 
-            set { 
-                SetProperty(value); 
-            } 
+            }
+            set
+            {
+                SetProperty(value);
+            }
         }
         [JsonIgnore]
         public Workflow Workflow { get { return GetProperty<Workflow>(); } set { SetProperty(value); } }
@@ -237,7 +242,7 @@ namespace OpenRPA
                 }
                 wfApp = new System.Activities.WorkflowApplication(activity, Parameters);
                 wfApp.Extensions.Add(TrackingParticipant);
-                foreach(var t in Plugins.WorkflowExtensionsTypes)
+                foreach (var t in Plugins.WorkflowExtensionsTypes)
                 {
                     try
                     {
@@ -625,7 +630,7 @@ namespace OpenRPA
         public void DoStuff(object scheduler)
         {
 
-            if(SystemActivities == null)
+            if (SystemActivities == null)
             {
                 SystemActivities = typeof(System.Activities.Hosting.WorkflowInstance).Assembly;
             }
@@ -646,14 +651,14 @@ namespace OpenRPA
 
             try
             {
-                
 
-                
+
+
                 if (!IsEmpty)
                 {
                     firstWorkItem.GetType().GetMethod("Release", BindingFlags.Public | BindingFlags.Instance).Invoke(firstWorkItem, new object[] { executor });
                     var IsValid = (bool)firstWorkItem.GetType().GetProperty("IsValid", BindingFlags.Public | BindingFlags.Instance).GetValue(firstWorkItem);
-                    
+
                     var action = executor.GetType().GetMethod("TryExecuteNonEmptyWorkItem", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(executor, new object[] { firstWorkItem });
                     firstWorkItem.GetType().GetMethod("PostProcess", BindingFlags.Public | BindingFlags.Instance).Invoke(firstWorkItem, new object[] { executor });
                 }
@@ -701,7 +706,7 @@ namespace OpenRPA
                     {
                         if (b.Value != null && !string.IsNullOrEmpty(b.Value.ToString())) wfApp.ResumeBookmark(b.Key, b.Value);
                     }
-                    if(Bookmarks.Count() == 0)
+                    if (Bookmarks.Count() == 0)
                     {
                         wfApp.Run();
                     }
@@ -773,10 +778,10 @@ namespace OpenRPA
                 hasError = true;
                 isCompleted = true;
                 state = "aborted";
-                Exception =  e.Reason;
+                Exception = e.Reason;
                 errormessage = e.Reason.Message;
                 Save();
-                if(runWatch!=null) runWatch.Stop();
+                if (runWatch != null) runWatch.Stop();
                 NotifyAborted();
                 OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
             };
@@ -808,12 +813,13 @@ namespace OpenRPA
                 {
                     state = "unloaded";
 
-                } else
+                }
+                else
                 {
                     DeleteFile();
                 }
                 //isUnloaded = true;
-                if(global.isConnected)
+                if (global.isConnected)
                 {
                     Save();
                 }
@@ -825,7 +831,7 @@ namespace OpenRPA
                 state = "failed";
                 Exception = e.UnhandledException;
                 errormessage = e.UnhandledException.Message;
-                if(e.ExceptionSource!=null) errorsource = e.ExceptionSource.Id;
+                if (e.ExceptionSource != null) errorsource = e.ExceptionSource.Id;
                 //exceptionsource = e.ExceptionSource.Id;
                 if (runWatch != null) runWatch.Stop();
                 NotifyAborted();
@@ -896,16 +902,17 @@ namespace OpenRPA
             {
                 DeleteFile();
                 xml = null;
-            } 
+            }
             else
             {
                 SaveFile();
-            }            
-            if(Workflow!=null) Workflow.NotifyUIState();
+            }
+            if (Workflow != null) Workflow.NotifyUIState();
             Task.Run(async () =>
             {
                 // System.Threading.Thread.Sleep(1000);
                 int retries = 0;
+                _modified = DateTime.Now;
                 bool hasError = false;
                 do
                 {
@@ -914,11 +921,18 @@ namespace OpenRPA
                     {
                         if (!global.isConnected) return;
                         var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, "InstanceId,WorkflowId", this);
-                        if(result != null)
+                        if (result != null)
                         {
                             _id = result._id;
                             _acl = result._acl;
-                        } else
+                            _created = result._created;
+                            _createdby = result._createdby;
+                            _createdbyid = result._createdbyid;
+                            _modified = result._modified;
+                            _modifiedby = result._modifiedby;
+                            _modifiedbyid = result._modifiedbyid;
+                        }
+                        else
                         {
                             retries++;
                             hasError = true;
@@ -1009,7 +1023,7 @@ namespace OpenRPA
         }
         public override string ToString()
         {
-            if(Bookmarks != null && Bookmarks.Count > 0)
+            if (Bookmarks != null && Bookmarks.Count > 0)
             {
                 return state + " " + WorkflowId + "(" + Bookmarks.Count + ")";
             }

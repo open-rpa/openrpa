@@ -15,20 +15,24 @@ namespace OpenRPA
     {
         [JsonIgnore]
         private long _current_version = 0;
-        public long current_version { get {
+        public long current_version
+        {
+            get
+            {
                 if (_version > _current_version) return _version;
                 return _current_version;
-                        } 
-            set {
+            }
+            set
+            {
                 _current_version = value;
-            } 
+            }
         }
         public Workflow()
         {
             Serializable = true;
             IsVisible = true;
         }
-        public string queue { get { return GetProperty<string>(); } set { SetProperty(value); } }        
+        public string queue { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string Xaml { get { return GetProperty<string>(); } set { _activity = null; SetProperty(value); } }
         public List<workflowparameter> Parameters { get { return GetProperty<List<workflowparameter>>(); } set { SetProperty(value); } }
         public bool Serializable { get { return GetProperty<bool>(); } set { SetProperty(value); } }
@@ -51,8 +55,8 @@ namespace OpenRPA
             {
                 if (string.IsNullOrEmpty(RelativeFilename)) return name;
                 if (RelativeFilename.Contains("\\")) return RelativeFilename;
-                if (Project!=null) return Project.name + "\\" + Filename;
-                if(!string.IsNullOrEmpty(_ProjectAndName) && _ProjectAndName.Contains("/"))
+                if (Project != null) return Project.name + "\\" + Filename;
+                if (!string.IsNullOrEmpty(_ProjectAndName) && _ProjectAndName.Contains("/"))
                 {
                     return _ProjectAndName.Substring(0, _ProjectAndName.IndexOf("/") + 1) + RelativeFilename;
                 }
@@ -86,7 +90,7 @@ namespace OpenRPA
                 if (Project == null) return Filename;
                 return System.IO.Path.Combine(Project.Path, Filename);
             }
-        }   
+        }
         public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [JsonIgnore]
         public bool IsExpanded { get { return GetProperty<bool>(); } set { SetProperty(value); } }
@@ -110,7 +114,7 @@ namespace OpenRPA
                     else
                     {
                         laststate = "running";
-                        state = instace.OrderBy(x=> x._modified).First().state;
+                        state = instace.OrderByDescending(x => x._modified).First().state;
                     }
                     laststate = state;
                 }
@@ -229,9 +233,10 @@ namespace OpenRPA
                     return;
                 }
             }
-            if(exportImages)
+            if (exportImages)
             {
-                GenericTools.RunUI(async () => {
+                GenericTools.RunUI(async () =>
+                {
                     string beforexaml = Xaml;
                     string xaml = await Views.WFDesigner.LoadImages(beforexaml);
                     //string xaml = Task.Run(() =>
@@ -242,7 +247,7 @@ namespace OpenRPA
                 });
                 return;
             }
-            if(Project.disable_local_caching)
+            if (Project.disable_local_caching)
             {
                 if (System.IO.File.Exists(workflowfilepath)) System.IO.File.Delete(workflowfilepath);
                 return;
@@ -324,7 +329,7 @@ namespace OpenRPA
         public void RunPendingInstances()
         {
             var statepath = System.IO.Path.Combine(Project.Path, "state");
-            if(System.IO.Directory.Exists(statepath))
+            if (System.IO.Directory.Exists(statepath))
             {
                 var ProjectFiles = System.IO.Directory.EnumerateFiles(statepath, "*.json", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
                 if (!global.isConnected)
@@ -347,7 +352,7 @@ namespace OpenRPA
                                 {
                                     if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
                                 }
-                                lock(WorkflowInstance.Instances) WorkflowInstance.Instances.Add(i);
+                                lock (WorkflowInstance.Instances) WorkflowInstance.Instances.Add(i);
                                 i.createApp(Activity);
                                 i.Run();
                             }
@@ -467,7 +472,7 @@ namespace OpenRPA
             }
         }
         [JsonIgnore]
-        public bool IsVisible { get { return GetProperty<bool>(); } set { SetProperty(value); } } 
+        public bool IsVisible { get { return GetProperty<bool>(); } set { SetProperty(value); } }
     }
 
 }

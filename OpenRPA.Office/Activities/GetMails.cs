@@ -16,7 +16,7 @@ namespace OpenRPA.Office.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.outlook.png")]
     [LocalizedToolboxTooltip("activity_getmails_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getmails", typeof(Resources.strings))]
-    public class GetMails : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    public class GetMails : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         public GetMails()
         {
@@ -48,7 +48,7 @@ namespace OpenRPA.Office.Activities
             }
             return outlookApplication;
         }
-        protected override void Execute(NativeActivityContext context)
+        protected override void StartLoop(NativeActivityContext context)
         {
             var folder = Folder.Get(context);
             var maxresults = MaxResults.Get(context);
@@ -120,17 +120,13 @@ namespace OpenRPA.Office.Activities
         {
             IEnumerator<email> _enum = _elements.Get(context);
             bool more = _enum.MoveNext();
-            if (more)
+            if (more && !breakRequested)
             {
                 context.ScheduleAction<email>(Body, _enum.Current, OnBodyComplete);
             }
             else
             {
             }
-        }
-        private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
-        {
-            Execute(context);
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {

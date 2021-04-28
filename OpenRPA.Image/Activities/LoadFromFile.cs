@@ -18,7 +18,7 @@ namespace OpenRPA.Image
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_loadfromfile_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_loadfromfile", typeof(Resources.strings))]
-    public class LoadFromFile : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    public class LoadFromFile : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         [RequiredArgument]
         public InArgument<string> Filename { get; set; }
@@ -26,7 +26,7 @@ namespace OpenRPA.Image
         [Browsable(false)]
         public ActivityAction<ImageElement> Body { get; set; }
         private Variable<ImageElement> elements = new Variable<ImageElement>("elements");
-        protected override void Execute(NativeActivityContext context)
+        protected override void StartLoop(NativeActivityContext context)
         {
             var filename = Filename.Get(context);
             filename = Environment.ExpandEnvironmentVariables(filename);
@@ -38,10 +38,6 @@ namespace OpenRPA.Image
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
-        }
-        private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
-        {
-            Execute(context);
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {

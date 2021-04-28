@@ -22,7 +22,7 @@ namespace OpenRPA.Utilities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.regex.png")]
     [System.Windows.Markup.ContentProperty("Body")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
-    public class Matches : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    public class Matches : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         public ActivityAction<System.Text.RegularExpressions.Match> Body { get; set; }
         [RequiredArgument]
@@ -50,7 +50,7 @@ namespace OpenRPA.Utilities
         public bool Singleline { get; set; }
         public OutArgument<System.Text.RegularExpressions.Match[]> Results { get; set; }
         private Variable<IEnumerator<System.Text.RegularExpressions.Match>> _elements = new Variable<IEnumerator<System.Text.RegularExpressions.Match>>("_elements");
-        protected override void Execute(NativeActivityContext context)
+        protected override void StartLoop(NativeActivityContext context)
         {
             var options = RegexOptions.None;
             if (Compiled) options = options | RegexOptions.Compiled;
@@ -78,7 +78,7 @@ namespace OpenRPA.Utilities
         {
             IEnumerator<System.Text.RegularExpressions.Match> _enum = _elements.Get(context);
             bool more = _enum.MoveNext();
-            if (more)
+            if (more && !breakRequested)
             {
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }

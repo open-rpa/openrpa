@@ -77,9 +77,9 @@ namespace OpenRPA.Office.Activities
             }
             else
             {
+                folders.Add(new outlookfolder() { name = space(ident * 5) + folder.Name, _id = folder.FullFolderPath });
                 foreach (MAPIFolder subFolder in folder.Folders)
                 {
-                    folders.Add(new outlookfolder() { name = space(ident * 5) + folder.Name, _id = folder.FullFolderPath });
                     GetFolders(subFolder, (ident + 1));
                     if (folders.Count > PluginConfig.get_emails_max_folders) return;
                 }

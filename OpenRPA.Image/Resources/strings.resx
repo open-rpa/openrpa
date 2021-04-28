@@ -210,6 +210,12 @@
   <data name="activity_offsety_help" xml:space="preserve">
     <value>Click with this offset inside the element</value>
   </data>
+  <data name="activity_printwindow" xml:space="preserve">
+    <value>Print Window</value>
+  </data>
+  <data name="activity_printwindow_tooltip" xml:space="preserve">
+    <value>Print an application window with specified window name even when screen is locked</value>
+  </data>
   <data name="activity_takescreenshot" xml:space="preserve">
     <value>Take Screenshot</value>
   </data>

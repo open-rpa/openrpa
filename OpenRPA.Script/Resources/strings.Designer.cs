@@ -169,6 +169,24 @@ namespace OpenRPA.Script.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Python folder.
+        /// </summary>
+        public static string plugin_python_exe_path {
+            get {
+                return ResourceManager.GetString("plugin_python_exe_path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path to folder with python3.exe, leave blank to search %PATH% or %PYTHON_PATH%.
+        /// </summary>
+        public static string plugin_python_exe_path_help {
+            get {
+                return ResourceManager.GetString("plugin_python_exe_path_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use embedded python.
         /// </summary>
         public static string plugin_use_embedded_python {

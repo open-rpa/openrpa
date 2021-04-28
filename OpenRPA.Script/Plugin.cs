@@ -86,7 +86,7 @@ namespace OpenRPA.Script
             //System.Diagnostics.Debugger.Break();
             if (PluginConfig.use_embedded_python)
             {
-                if(!Python.Included.Installer.IsPythonInstalled())
+                if (!Python.Included.Installer.IsPythonInstalled())
                 {
                     Python.Included.Installer.SetupPython(true).Wait();
                 }
@@ -97,8 +97,10 @@ namespace OpenRPA.Script
                 var path = Python.Included.Installer.EmbeddedPythonHome;
                 PythonUtil.Setup.SetPythonPath(path);
                 // Python.Runtime.PythonEngine.Initialize();
-            } else
+            }
+            else
             {
+                if (!string.IsNullOrEmpty(PluginConfig.python_exe_path)) PythonUtil.Setup.SetPythonPath(PluginConfig.python_exe_path);
                 PythonUtil.Setup.Run();
             }
 

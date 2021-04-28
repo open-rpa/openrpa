@@ -23,7 +23,6 @@ namespace OpenRPA.Script.PythonUtil
                 webClient.DownloadFile("https://bootstrap.pypa.io/get-pip.py", System.IO.Path.Combine(libpath, "get-pip.py"));
             }
             string result = RunCommand(path, System.IO.Path.Combine(path, "python.exe"), "Lib\\get-pip.py");
-            // cd C:\Users\Allan\AppData\Local\python-3.7.3-embed-amd64\Lib && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 
         }
         public static void AddToPath(string path)
@@ -31,7 +30,7 @@ namespace OpenRPA.Script.PythonUtil
             var name = "PATH";
             var scope = EnvironmentVariableTarget.Process;
             var Value = Environment.GetEnvironmentVariable(name, scope);
-            if(!Value.Contains(path))
+            if (!Value.Contains(path))
             {
                 Value += ";" + path;
                 Environment.SetEnvironmentVariable(name, Value, scope);
@@ -39,11 +38,11 @@ namespace OpenRPA.Script.PythonUtil
         }
         public static void Run(string[] modules = null)
         {
-            if (modules==null) modules = new string[] { "numpy" };
+            // if (modules == null) modules = new string[] { "numpy" };
+            if (modules == null) modules = new string[] { "" };
             int pyversion = CheckPythonVer();
             if (pyversion == 0)
-                throw new Exception("Python 3.6 not found! Please download and install from https://www.python.org/downloads/release/python-368/");
-
+                throw new Exception("Python 3.7 not found! Please download and install from https://www.python.org/downloads/release/python-370/");
             if (pyversion == 36 || pyversion == 37)
             {
                 foreach (var item in modules)
@@ -71,7 +70,7 @@ namespace OpenRPA.Script.PythonUtil
         {
             int pyversion = CheckPythonVer();
             if (pyversion == 0)
-                throw new Exception("Python 3.6 not found");
+                throw new Exception("Python 3.7 not found");
             ModuleInfo result = null;
             if (pyversion == 36 || pyversion == 37)
             {
@@ -180,7 +179,7 @@ namespace OpenRPA.Script.PythonUtil
             {
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
                 System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                if(PluginConfig.py_create_no_window)
+                if (PluginConfig.py_create_no_window)
                 {
                     startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                     startInfo.RedirectStandardOutput = true;
@@ -196,11 +195,12 @@ namespace OpenRPA.Script.PythonUtil
                 if (PluginConfig.py_create_no_window)
                 {
                     string error = process.StandardError.ReadToEnd();
-                    if (!string.IsNullOrWhiteSpace(error))
+                    if (!string.IsNullOrWhiteSpace(error) && !error.Contains("WARNING"))
                         throw new Exception(error);
 
                     return process.StandardOutput.ReadToEnd();
-                } else
+                }
+                else
                 {
                     process.WaitForExit();
                     return "";

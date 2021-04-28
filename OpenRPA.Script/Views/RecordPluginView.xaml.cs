@@ -50,5 +50,17 @@ namespace OpenRPA.Script.Views
             PluginConfig.use_embedded_python = use_embedded_python.IsChecked.Value;
             Config.Save();
         }
+        public string python_exe_path
+        {
+            get
+            {
+                return PluginConfig.python_exe_path;
+            }
+            set
+            {
+                PluginConfig.python_exe_path = value;
+                Config.Save();
+            }
+        }
     }
 }

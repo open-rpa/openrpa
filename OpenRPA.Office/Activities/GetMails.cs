@@ -60,19 +60,12 @@ namespace OpenRPA.Office.Activities
                 Log.Warning("Outlook not running!");
                 return;
             }
-            // MAPIFolder inBox = (MAPIFolder)outlookApplication.ActiveExplorer().Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox);
-            // MAPIFolder folderbase = inBox.Store.GetRootFolder();
-            // var folderbase = outlookApplication.GetNamespace("MAPI");
             MAPIFolder mfolder = GetFolder(outlookApplication, folder);
-
             Items Items = mfolder.Items;
             var unreadonly = UnreadOnly.Get(context);
-
             if (unreadonly)
             {
                 if (string.IsNullOrEmpty(filter)) filter = "";
-                //if (!filter.ToLower().Contains("[unread]") && filter.ToLower().Contains("httpmail:read"))
-                //{
                 if (string.IsNullOrEmpty(filter))
                 {
                     filter = "[Unread]=true";
@@ -81,20 +74,11 @@ namespace OpenRPA.Office.Activities
                 {
                     filter += "and [Unread]=true";
                 }
-                // }
-                // var Filter = "@SQL=" + (char)34 + "urn:schemas:httpmail:hasattachment" + (char)34 + "=1 AND " +
-                // var Filter = "@SQL=" + (char)34 + "urn:schemas:httpmail:read" + (char)34 + "=0";
-            }
-            else
-            {
-
             }
             if (!string.IsNullOrEmpty(filter))
             {
                 Items = Items.Restrict(filter);
-
             }
-
             var result = new List<email>();
             foreach (var folderItem in Items)
             {

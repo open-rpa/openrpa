@@ -18,7 +18,7 @@ namespace OpenRPA.Image
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_gettext_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_gettext", typeof(Resources.strings))]
-    public class GetText : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    public class GetText : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         public GetText()
         {
@@ -37,7 +37,7 @@ namespace OpenRPA.Image
         public ActivityAction<ImageElement> Body { get; set; }
         private Variable<ImageElement[]> elements = new Variable<ImageElement[]>("elements");
         private Variable<IEnumerator<ImageElement>> _elements = new Variable<IEnumerator<ImageElement>>("_elements");
-        public static ImageElement[]  Execute(IElement ele, System.Activities.Presentation.Model.ModelItem model)
+        public static ImageElement[] Execute(IElement ele, System.Activities.Presentation.Model.ModelItem model)
         {
             var wordlimit = model.GetValue<string>("WordLimit");
             var casesensitive = model.GetValue<bool>("CaseSensitive");
@@ -76,7 +76,7 @@ namespace OpenRPA.Image
             }
             return result;
         }
-        protected override void Execute(NativeActivityContext context)
+        protected override void StartLoop(NativeActivityContext context)
         {
             // var match = Element.Get(context);
             var wordlimit = WordLimit.Get(context);
@@ -99,10 +99,11 @@ namespace OpenRPA.Image
 
             // OpenRPA.Interfaces.Image.Util.SaveImageStamped(ele.element, "OCR");
             Bitmap sourceimg = null;
-            if(ele is ImageElement)
+            if (ele is ImageElement)
             {
                 sourceimg = ((ImageElement)ele).element;
-            } else
+            }
+            else
             {
                 sourceimg = Interfaces.Image.Util.Screenshot(ele.Rectangle.X, ele.Rectangle.Y, ele.Rectangle.Width, ele.Rectangle.Height);
             }
@@ -131,14 +132,10 @@ namespace OpenRPA.Image
         {
             IEnumerator<ImageElement> _enum = _elements.Get(context);
             bool more = _enum.MoveNext();
-            if (more)
+            if (more && !breakRequested)
             {
                 context.ScheduleAction<ImageElement>(Body, _enum.Current, OnBodyComplete);
             }
-        }
-        private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
-        {
-            Execute(context);
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {

@@ -47,6 +47,7 @@ namespace OpenRPA.Office
         public void Initialize(IOpenRPAClient client)
         {
             _ = PluginConfig.get_emails_max_folders;
+            _ = PluginConfig.get_emails_skip_public;
 
         }
         public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)

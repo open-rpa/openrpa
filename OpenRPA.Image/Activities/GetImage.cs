@@ -18,7 +18,7 @@ namespace OpenRPA.Image
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_getimage_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getimage", typeof(Resources.strings))]
-    public class GetImage : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    public class GetImage : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         // I want this !!!!
         // https://stackoverflow.com/questions/50669794/alternative-to-taking-rapid-screenshots-of-a-window
@@ -49,7 +49,7 @@ namespace OpenRPA.Image
         [Browsable(false)]
         public ActivityAction<ImageElement> Body { get; set; }
         private Variable<ImageElement> elements = new Variable<ImageElement>("elements");
-        protected override void Execute(NativeActivityContext context)
+        protected override void StartLoop(NativeActivityContext context)
         {
             var relativelement = Element.Get(context);
             var match = relativelement.Rectangle;
@@ -58,7 +58,7 @@ namespace OpenRPA.Image
             match.Width = Width.Get(context);
             match.Height = Height.Get(context);
             var imageelement = relativelement as ImageElement;
-            if(imageelement!=null)
+            if (imageelement != null)
             {
                 var processname = imageelement.Processname;
                 if (!string.IsNullOrEmpty(processname))
@@ -80,10 +80,6 @@ namespace OpenRPA.Image
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
-        }
-        private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
-        {
-            Execute(context);
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {

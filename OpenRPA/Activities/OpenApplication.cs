@@ -15,7 +15,7 @@ namespace OpenRPA.Activities
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_openapplication_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_openapplication", typeof(Resources.strings))]
-    public class OpenApplication : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    public class OpenApplication : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         public OpenApplication()
         {
@@ -45,7 +45,7 @@ namespace OpenRPA.Activities
         private Variable<IElement> _element = new Variable<IElement>("_element");
         [Browsable(false)]
         public ActivityAction<IElement> Body { get; set; }
-        protected override void Execute(NativeActivityContext context)
+        protected override void StartLoop(NativeActivityContext context)
         {
             var selectorstring = Selector.Get(context);
             selectorstring = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selectorstring, context.DataContext);
@@ -58,7 +58,7 @@ namespace OpenRPA.Activities
             var element = Plugin.LaunchBySelector(selector, checkrunning, timeout);
             Result.Set(context, element);
             _element.Set(context, element);
-            if (element!=null && element is UIElement ui && Body == null)
+            if (element != null && element is UIElement ui && Body == null)
             {
                 //var window = ((UIElement)element).GetWindow();
                 var x = X.Get(context);
@@ -66,7 +66,7 @@ namespace OpenRPA.Activities
                 var width = Width.Get(context);
                 var height = Height.Get(context);
                 var animatemove = AnimateMove.Get(context);
-                if((width == 0 && height == 0) || (x == 0 && y == 0))
+                if ((width == 0 && height == 0) || (x == 0 && y == 0))
                 {
                 }
                 else
@@ -79,7 +79,7 @@ namespace OpenRPA.Activities
                     }
                 }
             }
-            if(element!=null && Body != null)
+            if (element != null && Body != null)
             {
                 // element.Focus();
                 context.ScheduleAction(Body, element, OnBodyComplete);
@@ -87,29 +87,21 @@ namespace OpenRPA.Activities
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
+            if (breakRequested) return;
             IElement element = _element.Get(context);
             if (element != null && element is UIElement ui)
             {
-                //var window = ((UIElement)element).GetWindow();
                 var x = X.Get(context);
                 var y = Y.Get(context);
                 var width = Width.Get(context);
                 var height = Height.Get(context);
                 var animatemove = AnimateMove.Get(context);
-                //if(width > 0 && height > 0)
-                //{
-                //    ui.SetWindowSize(width, height);
-                //}
-                //if (x>0 && y>0)
-                //{
-                // if (animatemove) ui.MoveWindowTo(x, y);
                 if (animatemove) ui.MoveWindowTo(x, y, width, height);
                 if (!animatemove)
                 {
                     ui.SetWindowSize(width, height);
                     ui.SetWindowPosition(x, y);
                 }
-                //}
             }
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)

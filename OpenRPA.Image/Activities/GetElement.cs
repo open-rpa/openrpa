@@ -18,7 +18,7 @@ namespace OpenRPA.Image
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_getelement_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getelement", typeof(Resources.strings))]
-    public class GetElement : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    public class GetElement : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         // I want this !!!!
         // https://stackoverflow.com/questions/50669794/alternative-to-taking-rapid-screenshots-of-a-window
@@ -55,7 +55,8 @@ namespace OpenRPA.Image
             MemoryStream stream = null;
             if (System.Text.RegularExpressions.Regex.Match(Image, "[a-f0-9]{24}").Success)
             {
-                b = Task.Run(() => {
+                b = Task.Run(() =>
+                {
                     return Interfaces.Image.Util.LoadBitmap(Image);
                 }).Result;
             }
@@ -91,9 +92,9 @@ namespace OpenRPA.Image
             }
             return result;
         }
-        protected override void Execute(NativeActivityContext context)
+        protected override void StartLoop(NativeActivityContext context)
         {
-            if(Image==null) new ArgumentException("Image is null");
+            if (Image == null) new ArgumentException("Image is null");
             //var timeout = TimeSpan.FromSeconds(3);
             var timeout = Timeout.Get(context);
             var maxresults = MaxResults.Get(context);
@@ -123,7 +124,7 @@ namespace OpenRPA.Image
             {
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
-            else if(elements.Count() < minresults)
+            else if (elements.Count() < minresults)
             {
                 throw new Interfaces.ElementNotFoundException("Failed locating item");
             }
@@ -132,13 +133,13 @@ namespace OpenRPA.Image
         {
             IEnumerator<ImageElement> _enum = _elements.Get(context);
             bool more = _enum.MoveNext();
-            if (more)
+            if (more && !breakRequested)
             {
                 context.ScheduleAction<ImageElement>(Body, _enum.Current, OnBodyComplete);
             }
             else
             {
-                if (LoopAction != null)
+                if (LoopAction != null && !breakRequested)
                 {
                     context.ScheduleActivity(LoopAction, LoopActionComplete);
                 }
@@ -146,7 +147,7 @@ namespace OpenRPA.Image
         }
         private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
-            Execute(context);
+            if (!breakRequested) Execute(context);
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {

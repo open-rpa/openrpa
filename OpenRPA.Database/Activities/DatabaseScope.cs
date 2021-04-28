@@ -16,7 +16,7 @@ namespace OpenRPA.Database
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_databasescope_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_databasescope", typeof(Resources.strings))]
-    public class DatabaseScope : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    public class DatabaseScope : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         [Browsable(false)]
         public ActivityAction<Connection> Body { get; set; }
@@ -28,7 +28,7 @@ namespace OpenRPA.Database
         [RequiredArgument]
         public InArgument<string> ConnectionString { get; set; }
         private readonly Variable<Connection> Connection = new Variable<Connection>("Connection");
-        protected override void Execute(NativeActivityContext context)
+        protected override void StartLoop(NativeActivityContext context)
         {
             var dataprovider = DataProvider.Get(context);
             var datasource = DataSource.Get(context);
@@ -42,16 +42,13 @@ namespace OpenRPA.Database
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
+            if (breakRequested) return;
             Connection connection = Connection.Get(context);
-            if(connection!=null)
+            if (connection != null)
             {
                 connection.Close();
                 connection.Dispose();
             }
-        }
-        private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
-        {
-            Execute(context);
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {

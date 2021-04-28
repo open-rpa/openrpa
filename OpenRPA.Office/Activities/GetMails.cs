@@ -55,34 +55,36 @@ namespace OpenRPA.Office.Activities
             var filter = Filter.Get(context);
             if (string.IsNullOrEmpty(folder)) return;
             var outlookApplication = CreateOutlookInstance();
-            if (outlookApplication.ActiveExplorer() == null) {
+            if (outlookApplication.ActiveExplorer() == null)
+            {
                 Log.Warning("Outlook not running!");
                 return;
             }
-            MAPIFolder inBox = (MAPIFolder)outlookApplication.ActiveExplorer().Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox);
+            // MAPIFolder inBox = (MAPIFolder)outlookApplication.ActiveExplorer().Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox);
             // MAPIFolder folderbase = inBox.Store.GetRootFolder();
-            var folderbase = outlookApplication.GetNamespace("MAPI");
-            MAPIFolder mfolder = GetFolder(folderbase, folder);
+            // var folderbase = outlookApplication.GetNamespace("MAPI");
+            MAPIFolder mfolder = GetFolder(outlookApplication, folder);
 
             Items Items = mfolder.Items;
             var unreadonly = UnreadOnly.Get(context);
-            
+
             if (unreadonly)
             {
                 if (string.IsNullOrEmpty(filter)) filter = "";
                 //if (!filter.ToLower().Contains("[unread]") && filter.ToLower().Contains("httpmail:read"))
                 //{
-                    if (string.IsNullOrEmpty(filter))
-                    {
-                        filter = "[Unread]=true";
-                    } else
-                    {
-                        filter += "and [Unread]=true";
-                    }
+                if (string.IsNullOrEmpty(filter))
+                {
+                    filter = "[Unread]=true";
+                }
+                else
+                {
+                    filter += "and [Unread]=true";
+                }
                 // }
                 // var Filter = "@SQL=" + (char)34 + "urn:schemas:httpmail:hasattachment" + (char)34 + "=1 AND " +
                 // var Filter = "@SQL=" + (char)34 + "urn:schemas:httpmail:read" + (char)34 + "=0";
-            } 
+            }
             else
             {
 
@@ -102,7 +104,7 @@ namespace OpenRPA.Office.Activities
                 {
                     var _e = new email(mailItem);
                     result.Add(_e);
-                    if (result.Count == maxresults) break;                    
+                    if (result.Count == maxresults) break;
                 }
             }
             Emails.Set(context, result);
@@ -150,37 +152,66 @@ namespace OpenRPA.Office.Activities
             aa.Argument = da;
             return fef;
         }
-        public MAPIFolder GetFolder(MAPIFolder folder, string FullFolderPath)
+        //public MAPIFolder GetFolder(MAPIFolder folder, string FullFolderPath)
+        //{
+        //    if (folder.Folders.Count == 0)
+        //    {
+        //        if (folder.FullFolderPath == FullFolderPath)
+        //        {
+        //            return folder;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        foreach (MAPIFolder subFolder in folder.Folders)
+        //        {
+        //            if (folder.FullFolderPath == FullFolderPath)
+        //            {
+        //                return folder;
+        //            }
+        //            var temp = GetFolder(subFolder, FullFolderPath);
+        //            if (temp != null) return temp;
+        //        }
+        //    }
+        //    return null;
+        //}
+        //public MAPIFolder GetFolder(NameSpace folder, string FullFolderPath)
+        //{
+        //    foreach (MAPIFolder subFolder in folder.Folders)
+        //    {
+        //        var temp = GetFolder(subFolder, FullFolderPath);
+        //        if (temp != null) return temp;
+        //    }
+        //    return null;
+        //}
+        private Microsoft.Office.Interop.Outlook.Folder GetFolder(Application application, string folderPath)
         {
-            if (folder.Folders.Count == 0)
+            Microsoft.Office.Interop.Outlook.Folder folder;
+            string backslash = @"\";
+            try
             {
-                if (folder.FullFolderPath == FullFolderPath)
+                if (folderPath.StartsWith(@"\\"))
                 {
-                    return folder;
+                    folderPath = folderPath.Remove(0, 2);
                 }
-            }
-            else
-            {
-                foreach (MAPIFolder subFolder in folder.Folders)
+                String[] folders =
+                    folderPath.Split(backslash.ToCharArray());
+                folder = application.Session.Folders[folders[0]] as Microsoft.Office.Interop.Outlook.Folder;
+                if (folder != null)
                 {
-                    if (folder.FullFolderPath == FullFolderPath)
+                    for (int i = 1; i <= folders.GetUpperBound(0); i++)
                     {
-                        return folder;
+                        Microsoft.Office.Interop.Outlook.Folders subFolders = folder.Folders;
+                        folder = subFolders[folders[i]] as Microsoft.Office.Interop.Outlook.Folder;
+                        if (folder == null)
+                        {
+                            return null;
+                        }
                     }
-                    var temp = GetFolder(subFolder, FullFolderPath);
-                    if (temp != null) return temp;
                 }
+                return folder;
             }
-            return null;
-        }
-        public MAPIFolder GetFolder(NameSpace folder, string FullFolderPath)
-        {
-            foreach (MAPIFolder subFolder in folder.Folders)
-            {
-                var temp = GetFolder(subFolder, FullFolderPath);
-                if (temp != null) return temp;
-            }
-            return null;
+            catch { return null; }
         }
         public new string DisplayName
         {

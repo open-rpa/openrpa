@@ -38,7 +38,7 @@ namespace OpenRPA.NM
             var result = NMHook.ExecuteScript(browser, frameid, -1, script, timeout);
             if (result == null) { result = "[]"; }
             var results = JsonConvert.DeserializeObject<object[]>(result.ToString());
-            Result.Set(context, results[0]);
+            if (results != null && results.Length > 0) { Result.Set(context, results[0]); } else { Result.Set(context, null); }
             Results.Set(context, results);
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)

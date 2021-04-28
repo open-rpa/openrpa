@@ -44,11 +44,15 @@ namespace OpenRPA.Office.Activities
                 var curfolder = ModelItem.GetValue<string>("Folder");
                 folders.Clear();
                 var outlookApplication = CreateOutlookInstance();
-                var oNS = outlookApplication.GetNamespace("MAPI");
-                foreach (MAPIFolder folder in oNS.Folders)
+                foreach (var folder in outlookApplication.Session.Folders)
                 {
-                    GetFolders(folder, 0);
+                    GetFolders(folder as MAPIFolder, 0);
                 }
+                //var oNS = outlookApplication.GetNamespace("MAPI");
+                //foreach (MAPIFolder folder in oNS.Folders)
+                //{
+                //    GetFolders(folder, 0);
+                //}
 
                 //MAPIFolder inBox = (MAPIFolder)outlookApplication.ActiveExplorer().Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox);
                 //MAPIFolder folderbase = inBox.Store.GetRootFolder();
@@ -66,12 +70,9 @@ namespace OpenRPA.Office.Activities
         }
         public void GetFolders(MAPIFolder folder, int ident)
         {
+            if (folders.Count > PluginConfig.get_emails_max_folders) return;
             if (folder.Folders.Count == 0)
             {
-                //if (folder.Name == "Folder Name")
-                //{
-                //    mailsFromThisFolder = folder;
-                //}
                 folders.Add(new outlookfolder() { name = space(ident * 5) + folder.Name, _id = folder.FullFolderPath });
             }
             else
@@ -80,6 +81,7 @@ namespace OpenRPA.Office.Activities
                 {
                     folders.Add(new outlookfolder() { name = space(ident * 5) + folder.Name, _id = folder.FullFolderPath });
                     GetFolders(subFolder, (ident + 1));
+                    if (folders.Count > PluginConfig.get_emails_max_folders) return;
                 }
             }
         }

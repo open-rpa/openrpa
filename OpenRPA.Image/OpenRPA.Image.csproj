@@ -97,7 +97,7 @@
     <Page Include="Activities\GetElementDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Activities\PrintWindowDesigner.xaml">
+    <Page Include="Activities\PrintWindowDesigner.xaml" />
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\TakeScreenshotDesigner.xaml">

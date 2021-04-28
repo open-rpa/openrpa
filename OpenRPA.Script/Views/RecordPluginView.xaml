@@ -23,5 +23,9 @@
             Checked="on_Checked" Unchecked="on_Checked" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,50,0,0" Text="{x:Static or:strings.plugin_use_embedded_python_help}" VerticalAlignment="Top" />
 
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,70,0,0" Text="{x:Static or:strings.plugin_python_exe_path}" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,70,0,0" Text="{x:Static or:strings.plugin_python_exe_path_help}" VerticalAlignment="Top" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="151,90,0,0" VerticalAlignment="Top" Width="450" Text="{Binding Path=python_exe_path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
+
     </Grid>
 </UserControl>

@@ -22,7 +22,7 @@ namespace OpenRPA.Windows
                     //if (p == "ClassName") cond.Add(element.ConditionFactory.ByClassName(ClassName));
                     //if (p == "AutomationId") cond.Add(element.ConditionFactory.ByAutomationId(AutomationId));
                     var v = item.Properties.Where(x => x.Name == p.Name).FirstOrDefault();
-                    if(v != null)
+                    if (v != null)
                     {
                         if (p.Name == "ControlType")
                         {
@@ -56,12 +56,6 @@ namespace OpenRPA.Windows
             if (e == null) e = item.Properties.Where(x => x.Name == "search_descendants").FirstOrDefault();
             if (e == null) return PluginConfig.search_descendants;
             return bool.Parse(e.Value);
-
-
-
-            if (e == null || string.IsNullOrEmpty(e.Value)) return false;
-            if (e.Value.ToLower() == "true") return true;
-            return false;
         }
         public static string processname(this Interfaces.Selector.SelectorItem item)
         {
@@ -82,6 +76,6 @@ namespace OpenRPA.Windows
             if (e == null) return null;
             return e.Value;
         }
-        
+
     }
 }

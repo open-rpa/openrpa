@@ -159,6 +159,9 @@
   <data name="plugin_python_exe_path_help" xml:space="preserve">
     <value>Path to folder with python3.exe, leave blank to search %PATH% or %PYTHON_PATH%</value>
   </data>
+  <data name="plugin_python_must_restart" xml:space="preserve">
+    <value>Please note, you MUST restart OpenRPA if changing any of these settings!</value>
+  </data>
   <data name="plugin_use_embedded_python" xml:space="preserve">
     <value>Use embedded python</value>
   </data>

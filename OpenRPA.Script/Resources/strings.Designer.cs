@@ -187,6 +187,15 @@ namespace OpenRPA.Script.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please note, you MUST restart OpenRPA if changing any of these settings!.
+        /// </summary>
+        public static string plugin_python_must_restart {
+            get {
+                return ResourceManager.GetString("plugin_python_must_restart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use embedded python.
         /// </summary>
         public static string plugin_use_embedded_python {

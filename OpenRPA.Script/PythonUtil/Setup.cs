@@ -12,7 +12,7 @@ namespace OpenRPA.Script.PythonUtil
     public static class Setup
     {
         //private static string pythonCommand = "python";
-        private static string pipCommand = "pip";
+        // private static string pipCommand = "pip";
         public static void InstallPip(string path)
         {
             var libpath = System.IO.Path.Combine(path, "Lib");
@@ -27,23 +27,32 @@ namespace OpenRPA.Script.PythonUtil
         }
         public static void AddToPath(string path)
         {
-            var name = "PATH";
-            var scope = EnvironmentVariableTarget.Process;
-            var Value = Environment.GetEnvironmentVariable(name, scope);
+            var Value = GetEnv("PATH");
             if (!Value.Contains(path))
             {
-                Value += ";" + path;
-                Environment.SetEnvironmentVariable(name, Value, scope);
+                Value += (path + ";");
+                SetEnv("PATH", Value);
             }
+        }
+        public static void SetEnv(string Name, string Value)
+        {
+            var scope = EnvironmentVariableTarget.Process;
+            Environment.SetEnvironmentVariable(Name, Value, scope);
+        }
+        public static string GetEnv(string Name)
+        {
+            var scope = EnvironmentVariableTarget.Process;
+            var Value = Environment.GetEnvironmentVariable(Name, scope);
+            return Value;
         }
         public static void Run(string[] modules = null)
         {
             // if (modules == null) modules = new string[] { "numpy" };
-            if (modules == null) modules = new string[] { "" };
+            if (modules == null) modules = new string[] { };
             int pyversion = CheckPythonVer();
             if (pyversion == 0)
                 throw new Exception("Python 3.7 not found! Please download and install from https://www.python.org/downloads/release/python-370/");
-            if (pyversion == 36 || pyversion == 37)
+            if (pyversion == 37 || pyversion == 37 || pyversion == 38 || pyversion == 39)
             {
                 foreach (var item in modules)
                 {
@@ -52,29 +61,32 @@ namespace OpenRPA.Script.PythonUtil
             }
             else
             {
-                throw new Exception("Version not supported: " + pyversion);
+                throw new Exception("Python version not supported: " + pyversion);
             }
         }
         public static void InstallModule(string name)
         {
+            if (string.IsNullOrEmpty(name)) return;
             Log.Debug("using existing python, check if '" + name + "' is installed");
             if (CheckModule(name) == null)
             {
                 Log.Information("Installing python module '" + name + "'");
                 Console.WriteLine("Installing {0}.....", name);
-                string result = RunCommand(null, pipCommand, string.Format("install {0}", name));
+                // string result = RunCommand(null, "python", string.Format("-m pip install {0}", name));
+                string result = RunCommand(null, "pip", string.Format("install {0}", name));
                 Console.Write("Done!");
             }
         }
         public static ModuleInfo CheckModule(string name)
         {
+            if (string.IsNullOrEmpty(name)) return null;
             int pyversion = CheckPythonVer();
             if (pyversion == 0)
                 throw new Exception("Python 3.7 not found");
             ModuleInfo result = null;
-            if (pyversion == 36 || pyversion == 37)
+            if (pyversion == 37 || pyversion == 37 || pyversion == 38 || pyversion == 39)
             {
-                string info = RunCommand(null, pipCommand, string.Format("show {0}", name));
+                string info = RunCommand(null, "python", string.Format("-m pip show {0}", name));
                 if (!string.IsNullOrWhiteSpace(info))
                 {
                     string[] lines = info.Split('\n');
@@ -135,7 +147,7 @@ namespace OpenRPA.Script.PythonUtil
             }
             else
             {
-                throw new Exception("Version not supported: " + pyversion);
+                throw new Exception("Python version not supported: " + pyversion);
             }
             return result;
         }
@@ -146,9 +158,13 @@ namespace OpenRPA.Script.PythonUtil
                 string result = RunCommand(null, "python", "--version");
                 string[] versionSplit = result.Replace("Python", "").Trim().Split('.');
 
-                var filepath = CommandLinePathResolver.TryGetFullPathForCommand("python.exe");
-                var path = System.IO.Path.GetDirectoryName(filepath);
-                SetPythonPath(path, true);
+                var PYTHON_PATH = PythonUtil.Setup.GetEnv("PYTHON_PATH");
+                if (string.IsNullOrEmpty(PYTHON_PATH))
+                {
+                    var filepath = CommandLinePathResolver.TryGetFullPathForCommand("python");
+                    var path = System.IO.Path.GetDirectoryName(filepath);
+                    SetPythonPath(path, true);
+                }
 
                 return Convert.ToInt32(versionSplit[0] + versionSplit[1]);
             }
@@ -159,12 +175,17 @@ namespace OpenRPA.Script.PythonUtil
                     string result = RunCommand(null, "python3", "--version");
                     string[] versionSplit = result.Replace("Python", "").Trim().Split('.');
 
-                    var filepath = CommandLinePathResolver.TryGetFullPathForCommand("python3.exe");
-                    var path = System.IO.Path.GetDirectoryName(filepath);
-                    SetPythonPath(path, true);
+                    var PYTHON_PATH = PythonUtil.Setup.GetEnv("PYTHON_PATH");
+                    if (string.IsNullOrEmpty(PYTHON_PATH))
+                    {
+                        var filepath = CommandLinePathResolver.TryGetFullPathForCommand("python3");
+                        var path = System.IO.Path.GetDirectoryName(filepath);
+                        SetPythonPath(path, true);
+                    }
+
 
                     //pythonCommand = "python3";
-                    pipCommand = "pip3";
+                    //pipCommand = "pip3";
                     return Convert.ToInt32(versionSplit[0] + versionSplit[1]);
                 }
                 catch (Exception)
@@ -173,10 +194,54 @@ namespace OpenRPA.Script.PythonUtil
                 }
             }
         }
+        public static string GetExePath(string exec)
+        {
+            var path = "";
+            var PYTHON_PATH = GetEnv("PYTHON_PATH");
+            var PYTHON_HOME = GetEnv("PYTHON_HOME");
+            if (!exec.EndsWith(".exe") && !exec.EndsWith(".bat")) exec = exec + ".exe";
+            if (!string.IsNullOrEmpty(PluginConfig.python_exe_path) && System.IO.File.Exists(System.IO.Path.Combine(PluginConfig.python_exe_path, exec)))
+            {
+                path = PluginConfig.python_exe_path;
+            }
+            if (!string.IsNullOrEmpty(PluginConfig.python_exe_path) && System.IO.File.Exists(System.IO.Path.Combine(PluginConfig.python_exe_path, "Scripts", exec)))
+            {
+                path = System.IO.Path.Combine(PluginConfig.python_exe_path, "Scripts");
+            }
+            else if (!string.IsNullOrEmpty(PYTHON_PATH) && System.IO.File.Exists(System.IO.Path.Combine(PYTHON_PATH, exec)))
+            {
+                path = PYTHON_PATH;
+            }
+            else if (!string.IsNullOrEmpty(PYTHON_PATH) && System.IO.File.Exists(System.IO.Path.Combine(PYTHON_PATH, "Scripts", exec)))
+            {
+                path = System.IO.Path.Combine(PYTHON_PATH, "Scripts");
+            }
+            else if (!string.IsNullOrEmpty(PYTHON_HOME) && System.IO.File.Exists(System.IO.Path.Combine(PYTHON_HOME, exec)))
+            {
+                path = PYTHON_HOME;
+            }
+            else if (!string.IsNullOrEmpty(PYTHON_HOME) && System.IO.File.Exists(System.IO.Path.Combine(PYTHON_HOME, "Scripts", exec)))
+            {
+                path = System.IO.Path.Combine(PYTHON_HOME, "Scripts");
+            }
+            else
+            {
+                var temppath = CommandLinePathResolver.TryGetFullPathForCommand(exec);
+                if (!string.IsNullOrEmpty(temppath)) path = System.IO.Path.GetDirectoryName(temppath);
+            }
+            return path;
+        }
         public static string RunCommand(string path, string exec, string arguments)
         {
             try
             {
+                if (string.IsNullOrEmpty(path))
+                {
+                    string _temppath = GetExePath(exec);
+                    if (!string.IsNullOrEmpty(_temppath)) path = _temppath;
+                }
+                var filepath = exec;
+                if (!string.IsNullOrEmpty(path)) filepath = System.IO.Path.Combine(path, exec);
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
                 System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
                 if (PluginConfig.py_create_no_window)
@@ -186,7 +251,7 @@ namespace OpenRPA.Script.PythonUtil
                     startInfo.RedirectStandardError = true;
                     startInfo.CreateNoWindow = PluginConfig.py_create_no_window;
                 }
-                startInfo.FileName = exec;
+                startInfo.FileName = filepath;
                 startInfo.Arguments = arguments;
                 startInfo.UseShellExecute = false;
                 startInfo.WorkingDirectory = path;
@@ -251,12 +316,18 @@ namespace OpenRPA.Script.PythonUtil
                 throw;
             }
         }
+        private static string originalPath = null;
         public static void SetPythonPath(string path, bool init)
         {
-            Environment.SetEnvironmentVariable("PYTHON_PATH", path);
-            Environment.SetEnvironmentVariable("PYTHON_HOME", path);
-            PythonUtil.Setup.AddToPath(path);
-            PythonUtil.Setup.AddToPath(System.IO.Path.Combine(path, "Scripts"));
+            SetEnv("PYTHON_PATH", path);
+            SetEnv("PYTHON_HOME", path);
+            if (string.IsNullOrEmpty(originalPath))
+            {
+                originalPath = GetEnv("PATH");
+            }
+            else { SetEnv("PATH", originalPath); }
+            AddToPath(path);
+            AddToPath(System.IO.Path.Combine(path, "Scripts"));
             try
             {
                 Python.Runtime.PythonEngine.PythonHome = path;

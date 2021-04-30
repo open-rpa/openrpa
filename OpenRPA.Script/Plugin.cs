@@ -84,6 +84,7 @@ namespace OpenRPA.Script
 
             //System.Diagnostics.Debugger.Launch();
             //System.Diagnostics.Debugger.Break();
+            bool hadError = false;
             if (PluginConfig.use_embedded_python)
             {
                 if (!Python.Included.Installer.IsPythonInstalled())
@@ -107,12 +108,23 @@ namespace OpenRPA.Script
                 }
                 catch (Exception ex)
                 {
+                    hadError = true;
                     Log.Error(ex.ToString());
                 }
             }
             // PythonUtil.Setup.Run();
             //Python.Runtime.PythonEngine.Initialize();
-            _ = Python.Runtime.PythonEngine.BeginAllowThreads();
+            if (!hadError)
+            {
+                //try
+                //{
+                //    _ = Python.Runtime.PythonEngine.BeginAllowThreads();
+                //}
+                //catch (Exception ex)
+                //{
+                //    Log.Error(ex.ToString());
+                //}
+            }
             //if (InvokeCode.pool == null)
             //{
             //    InvokeCode.pool = RunspaceFactory.CreateRunspacePool(1, 5);

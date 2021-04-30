@@ -39,9 +39,9 @@ namespace OpenRPA.Script
                     string str1 = System.IO.Path.Combine(path, "Lib", module);
                     string str2 = System.IO.Path.Combine(path, "Lib", "site-packages", module);
                     var exists = System.IO.Directory.Exists(str1) && System.IO.File.Exists(System.IO.Path.Combine(str1, "__init__.py"));
-                    if(!exists) exists = System.IO.Directory.Exists(str2) && System.IO.File.Exists(System.IO.Path.Combine(str2, "__init__.py"));
-                    if(!exists || force)
-                    {                        
+                    if (!exists) exists = System.IO.Directory.Exists(str2) && System.IO.File.Exists(System.IO.Path.Combine(str2, "__init__.py"));
+                    if (!exists || force)
+                    {
                         Log.Information("Installing python module '" + module + "' into '" + str2 + "'");
                         Log.Information("run from '" + path + "'");
                         var cmd = System.IO.Path.Combine(path, "Scripts", "pip");
@@ -57,14 +57,20 @@ namespace OpenRPA.Script
                         //Python.Included.Installer.PipInstallModule(module);
                     }
                 }
-                
+
             }
             else
             {
+                //if (!Python.Included.Installer.IsPipInstalled())
+                //{
+                //    var path = PythonUtil.Setup.GetEnv("PYTHON_PATH");
+                //    if (!string.IsNullOrEmpty(path)) PythonUtil.Setup.InstallPip(path);
+                //}
+
                 PythonUtil.Setup.Run(modules);
             }
 
-            
+
         }
         [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
         public new string DisplayName

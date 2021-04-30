@@ -6,10 +6,12 @@
       <Component Id='ScriptComponent' Guid='{2F47EB82-7138-4EF1-8303-C3B80C373ED9}' Win64='yes' Directory="INSTALLDIR">
         <File Id="OpenRPA.Script.dll" Source="!(wix.ScriptSource)\OpenRPA.Script.dll" />
         <File Id="Python.Included.dll" Source="!(wix.ScriptSource)\Python.Included.dll" />
-        <File Id="Python.Runtime.NETStandard.dll" Source="!(wix.ScriptSource)\Python.Runtime.NETStandard.dll" />
+        <File Id="Python.Deployment.dll" Source="!(wix.ScriptSource)\Python.Deployment.dll" />
+        <File Id="Python.Runtime.dll" Source="!(wix.ScriptSource)\Python.Runtime.dll" />
+        <!--<File Id="Python.Runtime.NETStandard.dll" Source="!(wix.ScriptSource)\Python.Runtime.NETStandard.dll" />-->
         <File Id="sharpAHK.dll" Source="!(wix.ScriptSource)\sharpAHK.dll" />
       </Component>
-      
+
       <Component Id='ScriptComponentde' Win64='yes' Directory="Scriptde" Guid='{CDE7933C-79BC-432D-9BCE-021AF8EB6E5D}'>
         <File Id="OpenRPA.Script.resources.dll_de" Source="!(wix.ScriptSource)\de\OpenRPA.Script.resources.dll" />
       </Component>

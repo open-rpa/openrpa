@@ -70,14 +70,21 @@ namespace OpenRPA
                 {
                     var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
                     if (Instance == null) return;
-                    lock(Instance)
+                    lock (Instance)
                     {
                         if (workflowInstanceRecord.State == WorkflowInstanceStates.Started || workflowInstanceRecord.State == WorkflowInstanceStates.Resumed)
                         {
                             lock (timerslock) timers.Add(InstanceId.ToString(), new Dictionary<string, Stopwatch>());
                             System.Diagnostics.Activity.Current = null;
-                            // Instance.RootActivity = Instance.source.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.Workflow.name, ActivityKind.Consumer, Instance.ParentSpanId);
-                            Instance.RootActivity = Instance.source.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.Workflow.name, ActivityKind.Consumer);
+                            try
+                            {
+                                // Instance.RootActivity = Instance.source?.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.Workflow.name, ActivityKind.Consumer, Instance.ParentSpanId);
+                                Instance.RootActivity = Instance.source?.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.Workflow.name, ActivityKind.Consumer);
+                            }
+                            catch (Exception)
+                            {
+                                Instance.source = null;
+                            }
                             if (Instance.RootActivity != null)
                             {
                                 if (!string.IsNullOrEmpty(Instance.ParentSpanId)) Instance.RootActivity?.SetParentId(Instance.ParentSpanId);
@@ -183,10 +190,17 @@ namespace OpenRPA
                                 if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
 
                                 System.Diagnostics.Activity.Current = Instance.RootActivity;
-                                var span = Instance.source.StartActivity(Name, ActivityKind.Consumer);
-                                span?.AddTag("type", TypeName);
-                                span?.AddTag("ActivityId", ActivityId);
-                                if (Instance.source != null && span != null) Instance.Activities.Push(span);
+                                try
+                                {
+                                    var span = Instance.source?.StartActivity(Name, ActivityKind.Consumer);
+                                    span?.AddTag("type", TypeName);
+                                    span?.AddTag("ActivityId", ActivityId);
+                                    if (Instance.source != null && span != null) Instance.Activities.Push(span);
+                                }
+                                catch (Exception)
+                                {
+                                    Instance.source = null;
+                                }
                             }
                         }
                         if (activityStateRecord.State != ActivityStates.Executing)
@@ -201,15 +215,17 @@ namespace OpenRPA
                                 if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
                                 try
                                 {
-                                    if(Instance.Activities.Count > 0)
+                                    lock (Instance.Activities)
                                     {
-                                        if(Instance.Activities.First().DisplayName == Name)
+                                        if (Instance.Activities.Count > 0)
                                         {
-                                            var span = Instance.Activities.Pop();
-                                            span?.Dispose();
+                                            if (Instance.Activities.First()?.DisplayName == Name)
+                                            {
+                                                var span = Instance.Activities.Pop();
+                                                span?.Dispose();
+                                            }
                                         }
                                     }
-
                                 }
                                 catch (Exception ex)
                                 {

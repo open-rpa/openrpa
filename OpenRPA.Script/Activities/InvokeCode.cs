@@ -78,6 +78,7 @@ namespace OpenRPA.Script.Activities
                     AppDomain.Unload(domain);
             }
         }
+        private static bool python_doinit = true;
         protected override void Execute(CodeActivityContext context)
         {
             string currentdir = System.IO.Directory.GetCurrentDirectory();
@@ -220,129 +221,128 @@ namespace OpenRPA.Script.Activities
                 }
                 if (language == "Python")
                 {
-                    try
+                    Exception ex = null;
+                    GenericTools.RunUI(() =>
                     {
-                        GenericTools.RunUI(() =>
+                        if (PluginConfig.use_embedded_python)
                         {
-                            if (PluginConfig.use_embedded_python)
-                            {
-                                System.IO.Directory.SetCurrentDirectory(Python.Included.Installer.EmbeddedPythonHome);
-                            }
+                            System.IO.Directory.SetCurrentDirectory(Python.Included.Installer.EmbeddedPythonHome);
+                        }
+                        else
+                        {
+                            var path = OpenRPA.Script.PythonUtil.Setup.GetExePath("python");
+                            System.IO.Directory.SetCurrentDirectory(path);
+                        }
 
-                            IntPtr lck = IntPtr.Zero;
-                            try
-                            {
-                                lck = PythonEngine.AcquireLock();
-                                using (var scope = Py.CreateScope())
-                                {
-                                    foreach (var parameter in variablevalues)
-                                    {
-                                        PyObject pyobj = parameter.Value.ToPython();
-                                        scope.Set(parameter.Key, pyobj);
-                                    }
-                                    try
-                                    {
-
-                                        PythonOutput output = new PythonOutput();
-                                        dynamic sys = Py.Import("sys");
-                                        sys.stdout = output;
-                                        sys.stderr = output;
-
-                                        //                                    PythonEngine.RunSimpleString(@"
-                                        //import sys
-                                        //from System import Console
-                                        //class output(object):
-                                        //    def write(self, msg):
-                                        //        Console.Out.Write(msg)
-                                        //    def writelines(self, msgs):
-                                        //        for msg in msgs:
-                                        //            Console.Out.Write(msg)
-                                        //    def flush(self):
-                                        //        pass
-                                        //    def close(self):
-                                        //        pass
-                                        //sys.stdout = sys.stderr = output()
-                                        //");
-
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Log.Debug(ex.ToString());
-                                    }
-                                    scope.Exec(code);
-                                    foreach (var parameter in variablevalues)
-                                    {
-                                        PyObject pyobj = scope.Get(parameter.Key);
-                                        if (pyobj == null) continue;
-                                        PropertyDescriptor myVar = context.DataContext.GetProperties().Find(parameter.Key, true);
-                                        if (myVar == null) continue;
-                                        if (myVar.PropertyType == typeof(string))
-                                            myVar.SetValue(context.DataContext, pyobj.ToString());
-                                        else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(pyobj.ToString()));
-                                        else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(pyobj.ToString()));
-                                        else
-                                        {
-                                            try
-                                            {
-                                                var obj = Newtonsoft.Json.JsonConvert.DeserializeObject(pyobj.ToString(), myVar.PropertyType);
-                                                myVar.SetValue(context.DataContext, obj);
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                Log.Information("Failed variable " + parameter.Key + " of type " + myVar.PropertyType.FullName + " " + ex.Message);
-                                            }
-                                        }
-
-                                    }
-                                }
-                                //lck = PythonEngine.AcquireLock();
-                                //PythonEngine.Exec(code);
-                            }
-                            catch (Exception)
-                            {
-                                //Log.Error(ex.ToString());
-                                throw;
-                            }
-                            finally
-                            {
-                                PythonEngine.ReleaseLock(lck);
-                            }
-                        });
-                        //using (Python.Runtime.Py.GIL())
-                        //{
-                        //    IntPtr lck = Python.Runtime.PythonEngine.AcquireLock();
-                        //    Python.Runtime.PythonEngine.Exec(code);
-                        //    Python.Runtime.PythonEngine.ReleaseLock(lck);
-                        //    //// create a Python scope
-                        //    //using (var scope = Python.Runtime.Py.CreateScope())
-                        //    //{
-                        //    //    //// convert the Person object to a PyObject
-                        //    //    //PyObject pyPerson = person.ToPython();
-
-                        //    //    // create a Python variable "person"
-                        //    //    // scope.Set("person", pyPerson);
-
-                        //    //    // the person object may now be used in Python
-                        //    //    // string code = "fullName = person.FirstName + ' ' + person.LastName";
-                        //    //    scope.Exec(code);
-                        //    //}
-                        //}
-                    }
-                    catch (Exception)
-                    {
-                        throw;
-                    }
-                    finally
-                    {
+                        bool doRelease = false;
+                        IntPtr lck = IntPtr.Zero;
                         try
                         {
-                            // Python.Runtime.PythonEngine.Shutdown();
+                            if (python_doinit)
+                            {
+                                Python.Runtime.PythonEngine.Initialize();
+                                _ = Python.Runtime.PythonEngine.BeginAllowThreads();
+                                python_doinit = false;
+                            }
+                            lck = PythonEngine.AcquireLock();
+                            doRelease = true;
+                            using (var scope = Py.CreateScope())
+                            {
+                                foreach (var parameter in variablevalues)
+                                {
+                                    PyObject pyobj = parameter.Value.ToPython();
+                                    scope.Set(parameter.Key, pyobj);
+                                }
+                                try
+                                {
+
+                                    PythonOutput output = new PythonOutput();
+                                    dynamic sys = Py.Import("sys");
+                                    sys.stdout = output;
+                                    sys.stderr = output;
+
+                                    //                                    PythonEngine.RunSimpleString(@"
+                                    //import sys
+                                    //from System import Console
+                                    //class output(object):
+                                    //    def write(self, msg):
+                                    //        Console.Out.Write(msg)
+                                    //    def writelines(self, msgs):
+                                    //        for msg in msgs:
+                                    //            Console.Out.Write(msg)
+                                    //    def flush(self):
+                                    //        pass
+                                    //    def close(self):
+                                    //        pass
+                                    //sys.stdout = sys.stderr = output()
+                                    //");
+
+                                }
+                                catch (Exception _ex)
+                                {
+                                    Log.Debug(_ex.ToString());
+                                }
+                                scope.Exec(code);
+                                foreach (var parameter in variablevalues)
+                                {
+                                    PyObject pyobj = scope.Get(parameter.Key);
+                                    if (pyobj == null) continue;
+                                    PropertyDescriptor myVar = context.DataContext.GetProperties().Find(parameter.Key, true);
+                                    if (myVar == null) continue;
+                                    if (myVar.PropertyType == typeof(string))
+                                        myVar.SetValue(context.DataContext, pyobj.ToString());
+                                    else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(pyobj.ToString()));
+                                    else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(pyobj.ToString()));
+                                    else
+                                    {
+                                        try
+                                        {
+                                            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject(pyobj.ToString(), myVar.PropertyType);
+                                            myVar.SetValue(context.DataContext, obj);
+                                        }
+                                        catch (Exception _ex)
+                                        {
+                                            Log.Information("Failed variable " + parameter.Key + " of type " + myVar.PropertyType.FullName + " " + _ex.Message);
+                                        }
+                                    }
+
+                                }
+                            }
+                            //lck = PythonEngine.AcquireLock();
+                            //PythonEngine.Exec(code);
                         }
-                        catch (Exception ex)
+                        catch (Exception _ex)
                         {
-                            Log.Error(ex.ToString());
+                            ex = _ex;
                         }
-                    }
+                        finally
+                        {
+                            if (doRelease) PythonEngine.ReleaseLock(lck);
+                        }
+                    });
+                    //using (Python.Runtime.Py.GIL())
+                    //{
+                    //    IntPtr lck = Python.Runtime.PythonEngine.AcquireLock();
+                    //    Python.Runtime.PythonEngine.Exec(code);
+                    //    Python.Runtime.PythonEngine.ReleaseLock(lck);
+                    //    //// create a Python scope
+                    //    //using (var scope = Python.Runtime.Py.CreateScope())
+                    //    //{
+                    //    //    //// convert the Person object to a PyObject
+                    //    //    //PyObject pyPerson = person.ToPython();
+
+                    //    //    // create a Python variable "person"
+                    //    //    // scope.Set("person", pyPerson);
+
+                    //    //    // the person object may now be used in Python
+                    //    //    // string code = "fullName = person.FirstName + ' ' + person.LastName";
+                    //    //    scope.Exec(code);
+                    //    //}
+                    //}
+
+                    if (ex != null) throw ex;
+
+                    // Python.Runtime.PythonEngine.Shutdown();
                     return;
                 }
                 var assemblyLocations = GetAssemblyLocations();

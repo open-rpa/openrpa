@@ -257,8 +257,15 @@ namespace OpenRPA.Script.PythonUtil
             Environment.SetEnvironmentVariable("PYTHON_HOME", path);
             PythonUtil.Setup.AddToPath(path);
             PythonUtil.Setup.AddToPath(System.IO.Path.Combine(path, "Scripts"));
-            Python.Runtime.PythonEngine.PythonHome = path;
-            Python.Runtime.PythonEngine.Initialize();
+            try
+            {
+                Python.Runtime.PythonEngine.PythonHome = path;
+                Python.Runtime.PythonEngine.Initialize();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
     }
 }

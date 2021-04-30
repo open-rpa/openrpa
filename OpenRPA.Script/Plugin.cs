@@ -100,11 +100,16 @@ namespace OpenRPA.Script
             }
             else
             {
-                if (!string.IsNullOrEmpty(PluginConfig.python_exe_path)) PythonUtil.Setup.SetPythonPath(PluginConfig.python_exe_path);
-                PythonUtil.Setup.Run();
+                try
+                {
+                    if (!string.IsNullOrEmpty(PluginConfig.python_exe_path)) PythonUtil.Setup.SetPythonPath(PluginConfig.python_exe_path);
+                    PythonUtil.Setup.Run();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
             }
-
-
             // PythonUtil.Setup.Run();
             //Python.Runtime.PythonEngine.Initialize();
             _ = Python.Runtime.PythonEngine.BeginAllowThreads();

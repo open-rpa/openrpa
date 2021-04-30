@@ -148,7 +148,7 @@ namespace OpenRPA.Script.PythonUtil
 
                 var filepath = CommandLinePathResolver.TryGetFullPathForCommand("python.exe");
                 var path = System.IO.Path.GetDirectoryName(filepath);
-                SetPythonPath(path);
+                SetPythonPath(path, true);
 
                 return Convert.ToInt32(versionSplit[0] + versionSplit[1]);
             }
@@ -161,7 +161,7 @@ namespace OpenRPA.Script.PythonUtil
 
                     var filepath = CommandLinePathResolver.TryGetFullPathForCommand("python3.exe");
                     var path = System.IO.Path.GetDirectoryName(filepath);
-                    SetPythonPath(path);
+                    SetPythonPath(path, true);
 
                     //pythonCommand = "python3";
                     pipCommand = "pip3";
@@ -251,7 +251,7 @@ namespace OpenRPA.Script.PythonUtil
                 throw;
             }
         }
-        public static void SetPythonPath(string path)
+        public static void SetPythonPath(string path, bool init)
         {
             Environment.SetEnvironmentVariable("PYTHON_PATH", path);
             Environment.SetEnvironmentVariable("PYTHON_HOME", path);
@@ -260,7 +260,7 @@ namespace OpenRPA.Script.PythonUtil
             try
             {
                 Python.Runtime.PythonEngine.PythonHome = path;
-                Python.Runtime.PythonEngine.Initialize();
+                if (init) Python.Runtime.PythonEngine.Initialize();
             }
             catch (Exception ex)
             {

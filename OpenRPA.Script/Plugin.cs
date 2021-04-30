@@ -95,14 +95,14 @@ namespace OpenRPA.Script
                     Python.Included.Installer.SetupPython(false).Wait();
                 }
                 var path = Python.Included.Installer.EmbeddedPythonHome;
-                PythonUtil.Setup.SetPythonPath(path);
+                PythonUtil.Setup.SetPythonPath(path, true);
                 // Python.Runtime.PythonEngine.Initialize();
             }
             else
             {
                 try
                 {
-                    if (!string.IsNullOrEmpty(PluginConfig.python_exe_path)) PythonUtil.Setup.SetPythonPath(PluginConfig.python_exe_path);
+                    if (!string.IsNullOrEmpty(PluginConfig.python_exe_path)) PythonUtil.Setup.SetPythonPath(PluginConfig.python_exe_path, false);
                     PythonUtil.Setup.Run();
                 }
                 catch (Exception ex)

@@ -32,6 +32,7 @@ namespace OpenRPA.Views
         {
             Owner = App.Current.MainWindow;
             InitializeComponent();
+            Title = "Permissions for " + item.name;
             vm = new wfPermissionsModel(this, item);
             reload();
             DataContext = vm;

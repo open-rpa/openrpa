@@ -61,6 +61,7 @@ namespace OpenRPA
                     {
                         if(entity.isDirty)
                         {
+                            Log.Output("Saving " + entity.name + " with " + entity._acl.Length + " ace's");
                             entity._version++; // Add one to avoid watch update
                             var result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity);
                             isDirty = false;

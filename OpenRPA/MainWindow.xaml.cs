@@ -1195,7 +1195,7 @@ namespace OpenRPA
             {
                 var val = view.listWorkflows.SelectedValue;
                 if (val == null) return;
-                if (val is Workflow wf) { result = wf; }
+                if (val is Workflow wf) { result = wf.Project() as Project; } // Avoid confusion, disallow setting permission on workflows
                 if (val is Project p) { result = p; }
             }
             Log.FunctionIndent("MainWindow", "OnPermissions");
@@ -1222,6 +1222,7 @@ namespace OpenRPA
                 {
                     p.isDirty = true;
                     Log.Function("MainWindow", "OnPermissions", "Update permissions on each workflow in project");
+                    if (p.Workflows.Count == 0) p.UpdateWorkflowsList();
                     foreach (Workflow _wf in p.Workflows)
                     {
                         _wf._acl = p._acl;

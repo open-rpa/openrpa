@@ -3663,8 +3663,8 @@ namespace OpenRPA
         {
             if (SelectedContent is Views.OpenProject op)
             {
-                op.FilterText = SearchBox.Text;
             }
+            Views.OpenProject.Instance.FilterText = SearchBox.Text;
         }
         private void clearTraceMessages_Click(object sender, RoutedEventArgs e)
         {

@@ -14,6 +14,10 @@ namespace OpenRPA
 {
     public class Project : LocallyCached, IProject
     {
+        public Project()
+        {
+            FilteredSource = ((System.Windows.Data.ListCollectionView)System.Windows.Data.CollectionViewSource.GetDefaultView(Workflows));
+        }
         public Dictionary<string, string> dependencies { get; set; }
         public bool disable_local_caching { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -24,6 +28,7 @@ namespace OpenRPA
         {
             get
             {
+                // Log.Output("Workflows " + _Workflows.Count);
                 return _Workflows;
             }
         }
@@ -31,7 +36,23 @@ namespace OpenRPA
         {
             var list = RobotInstance.instance.Workflows.Find(x => x.projectid == _id && !x.isDeleted).OrderBy(x => x.name).ToList();
             Workflows.UpdateCollection(list);
+            // Log.Output("UpdateWorkflowsList " + Workflows.Count);
         }
+        public System.Windows.Data.ListCollectionView FilteredSource;
+        public System.ComponentModel.ICollectionView FilteredWorkflows
+        {
+            get
+            {
+                var FilterText = Views.OpenProject.Instance.FilterText;
+                if (string.IsNullOrEmpty(FilterText))
+                {
+                    return FilteredSource;
+                }
+                FilteredSource.Filter = p => ((IWorkflow)p).name.ToLower().Contains(FilterText.ToLower());
+                return FilteredSource;
+            }
+        }
+
         //public override bool Equals(object obj)
         //{
         //    var p = obj as Project;
@@ -74,12 +95,14 @@ namespace OpenRPA
             return project;
         }
         [JsonIgnore]
-        public bool IsExpanded { 
-            get { return GetProperty<bool>(); } 
-            set {
-                if (Views.OpenProject.isUpdating) return;
+        public bool IsExpanded
+        {
+            get { return GetProperty<bool>(); }
+            set
+            {
                 if (value == GetProperty<bool>()) return;
                 SetProperty(value);
+                if (Views.OpenProject.isUpdating) return;
                 if (!_backingFieldValues.ContainsKey("IsExpanded")) return;
                 //if (value && orgvalue != value && (_Workflows ==null || _Workflows.Count == 0)) UpdateWorkflowsList();
                 //if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name) && orgvalue != value) RobotInstance.instance.Projects.Update(this);
@@ -101,7 +124,8 @@ namespace OpenRPA
             }
         }
         [JsonIgnore]
-        public bool IsSelected { 
+        public bool IsSelected
+        {
             get { return GetProperty<bool>(); }
             set
             {
@@ -191,7 +215,7 @@ namespace OpenRPA
             var filenames = new List<string>();
             foreach (var workflow in Workflows)
             {
-                if(filenames.Contains(workflow.Filename))
+                if (filenames.Contains(workflow.Filename))
                 {
                     workflow.Filename = workflow.UniqueFilename();
                 }
@@ -217,7 +241,7 @@ namespace OpenRPA
         public async Task Delete()
         {
             foreach (var wf in Workflows.ToList()) { await wf.Delete(); }
-            if(System.IO.Directory.Exists(Path))
+            if (System.IO.Directory.Exists(Path))
             {
                 var Files = System.IO.Directory.EnumerateFiles(Path, "*.*", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
                 foreach (var f in Files) System.IO.File.Delete(f);
@@ -238,7 +262,7 @@ namespace OpenRPA
                 Log.Error(ex.ToString());
             }
             var exists = RobotInstance.instance.Projects.FindById(_id);
-            if(exists!=null) RobotInstance.instance.Projects.Delete(_id);
+            if (exists != null) RobotInstance.instance.Projects.Delete(_id);
         }
         public override string ToString()
         {

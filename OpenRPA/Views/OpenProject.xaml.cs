@@ -36,41 +36,69 @@ namespace OpenRPA.Views
         public event Action onSelectedItemChanged;
         //public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; }
         private IMainWindow main = null;
-        public ICommand PlayCommand { get {
+        public ICommand PlayCommand
+        {
+            get
+            {
                 if (RobotInstance.instance.Window is MainWindow main) return new RelayCommand<object>(main.OnPlay, main.CanPlay);
                 if (RobotInstance.instance.Window is AgentWindow agent) return new RelayCommand<object>(agent.OnPlay, agent.CanPlay);
                 return null;
-            } }
-        public ICommand ExportCommand { get {
+            }
+        }
+        public ICommand ExportCommand
+        {
+            get
+            {
                 if (RobotInstance.instance.Window is MainWindow main) return new RelayCommand<object>(main.OnExport, main.CanExport);
                 return null;
-            } }
-        public ICommand RenameCommand { get {
+            }
+        }
+        public ICommand RenameCommand
+        {
+            get
+            {
                 if (RobotInstance.instance.Window is MainWindow main) return new RelayCommand<object>(main.OnRename, main.CanRename);
                 return null;
-            } }
-        public ICommand DeleteCommand { get {
+            }
+        }
+        public ICommand DeleteCommand
+        {
+            get
+            {
                 if (RobotInstance.instance.Window is MainWindow main) return new RelayCommand<object>(main.OnDelete2, main.CanDelete);
                 return null;
-            } }
+            }
+        }
         // public ICommand DeleteCommand { get { return new RelayCommand<object>(MainWindow.instance.OnDelete, MainWindow.instance.CanDelete); } }
-        public ICommand CopyIDCommand { get {
+        public ICommand CopyIDCommand
+        {
+            get
+            {
                 if (RobotInstance.instance.Window is MainWindow main) return new RelayCommand<object>(main.OnCopyID, main.CanCopyID);
                 return null;
-            } }
-        public ICommand CopyRelativeFilenameCommand { get {
+            }
+        }
+        public ICommand CopyRelativeFilenameCommand
+        {
+            get
+            {
                 if (RobotInstance.instance.Window is MainWindow main) return new RelayCommand<object>(main.OnCopyRelativeFilename, main.CanCopyID);
                 return null;
-            } }
-        public ICommand DisableCachingCommand { get { 
-                return new RelayCommand<object>(OnDisableCaching, CanDisableCaching); 
-            } }
+            }
+        }
+        public ICommand DisableCachingCommand
+        {
+            get
+            {
+                return new RelayCommand<object>(OnDisableCaching, CanDisableCaching);
+            }
+        }
         internal bool CanDisableCaching(object _item)
         {
             try
             {
                 if (RobotInstance.instance.Window is AgentWindow) return false;
-                    if (!global.webSocketClient.isConnected) return false;
+                if (!global.webSocketClient.isConnected) return false;
                 if (main.SelectedContent is Views.OpenProject view)
                 {
                     var val = view.listWorkflows.SelectedValue;
@@ -102,7 +130,6 @@ namespace OpenRPA.Views
         {
             get
             {
-                // UpdateProjectsList();
                 return _Projects;
             }
         }
@@ -112,15 +139,30 @@ namespace OpenRPA.Views
         {
             try
             {
+                if (!string.IsNullOrEmpty(Instance.FilterText))
+                {
+                    foreach (var p in Instance.Projects)
+                    {
+                        // result[i].NotifyPropertyChanged("FilteredWorkflows");
+                        //result[i].FilteredSource.Refresh();
+                        //if (result[i].FilteredSource.Count > 0) result[i].UpdateWorkflowsList();
+                        p.NotifyPropertyChanged("FilteredWorkflows");
+                    }
+
+                    return;
+                }
                 if (Instance == null) Log.Debug("UpdateProjectsList, Instance is null");
                 var result = RobotInstance.instance.Projects.FindAll().OrderBy(x => x.name).ToList();
-                for (var i = 0; i < result.Count; i++) result[i].UpdateWorkflowsList();
+                for (var i = 0; i < result.Count; i++)
+                {
+                    result[i].UpdateWorkflowsList();
+                }
                 GenericTools.RunUI(() =>
                 {
                     isUpdating = true;
                     try
                     {
-                        if (Instance!=null) Instance._Projects.UpdateCollection(result);
+                        if (Instance != null) Instance._Projects.UpdateCollection(result);
                         System.Windows.Input.CommandManager.InvalidateRequerySuggested();
 
                     }
@@ -159,6 +201,8 @@ namespace OpenRPA.Views
             if (e.PropertyName == "Projects") NotifyPropertyChanged("Projects");
         }
 
+        public static bool isFiltering = false;
+        public static bool ReFilter = false;
         private string _FilterText = "";
         public string FilterText
         {
@@ -168,49 +212,38 @@ namespace OpenRPA.Views
             }
             set
             {
-                isUpdating = true;
                 _FilterText = value;
-                var workflows = new List<string>();
-                if (string.IsNullOrEmpty(_FilterText))
+                if (isFiltering)
                 {
-                    foreach (var designer in RobotInstance.instance.Designers)
-                    {
-                        if (string.IsNullOrEmpty(designer.Workflow._id) && !string.IsNullOrEmpty(designer.Workflow.Filename))
-                        {
-                            workflows.Add(designer.Workflow.RelativeFilename);
-                        }
-                        else if (!string.IsNullOrEmpty(designer.Workflow._id))
-                        {
-                            workflows.Add(designer.Workflow._id);
-
-                        }
-                    }
+                    ReFilter = true;
+                    return;
                 }
-                foreach (var p in _Projects)
+                ReFilter = false;
+                isFiltering = true;
+                isUpdating = true;
+                foreach (Project p in _Projects)
                 {
-                    bool expand = false;
-                    foreach(var _wf in p.Workflows)
-                    {
-                        if(_wf is Workflow wf)
-                        {
-                            if (string.IsNullOrEmpty(_FilterText))
-                            {
-                                wf.IsVisible = true;
-                                if(workflows.Contains(wf.IDOrRelativeFilename)) expand = true;
-                            }
-                            else
-                            {
-                                wf.IsVisible = wf.name.ToLower().Contains(_FilterText);
-                                if (wf.IsVisible) expand = true;
-                            }
-                        }
-                    }
-                    p.IsExpanded = expand;
+                    p.IsExpanded = string.IsNullOrEmpty(_FilterText) ? false : p.FilteredSource.Count > 0;
                 }
                 isUpdating = false;
-                UpdateProjectsList();
+                // UpdateProjectsList();
+                foreach (var p in Instance.Projects) p.NotifyPropertyChanged("FilteredWorkflows");
                 NotifyPropertyChanged("FilterText");
                 NotifyPropertyChanged("Projects");
+                if (ReFilter)
+                {
+                    isUpdating = true;
+                    foreach (Project p in _Projects)
+                    {
+                        p.IsExpanded = string.IsNullOrEmpty(_FilterText) ? false : p.FilteredSource.Count > 0;
+                    }
+                    isUpdating = false;
+                    // UpdateProjectsList();
+                    foreach (var p in Instance.Projects) p.NotifyPropertyChanged("FilteredWorkflows");
+                    NotifyPropertyChanged("FilterText");
+                    NotifyPropertyChanged("Projects");
+                }
+                isFiltering = false;
             }
         }
         private void ListWorkflows_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -304,7 +337,7 @@ namespace OpenRPA.Views
             set
             {
             }
-        }        
+        }
         private void listWorkflows_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (isUpdating) return;
@@ -352,7 +385,7 @@ namespace OpenRPA.Views
                         {
                             await project.InstallDependencies(true);
                             WFToolbox.Instance.InitializeActivitiesToolbox();
-                        }                        
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -366,9 +399,9 @@ namespace OpenRPA.Views
                     {
                         Project p = workflow.Project() as Project;
                         var f = new PackageManager(p);
-                        if(RobotInstance.instance.Window is MainWindow main) f.Owner = main;
+                        if (RobotInstance.instance.Window is MainWindow main) f.Owner = main;
                         f.ShowDialog();
-                        if(f.NeedsReload)
+                        if (f.NeedsReload)
                         {
                             await p.InstallDependencies(true);
                             WFToolbox.Instance.InitializeActivitiesToolbox();

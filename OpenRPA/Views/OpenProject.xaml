@@ -53,7 +53,7 @@
                 </Style>
             </TreeView.ItemContainerStyle>
             <TreeView.Resources>
-                <HierarchicalDataTemplate DataType="{x:Type projectbase:Project}" ItemsSource="{Binding Workflows}">
+                <HierarchicalDataTemplate DataType="{x:Type projectbase:Project}" ItemsSource="{Binding FilteredWorkflows}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding name}" />
                         <StackPanel.ContextMenu >
@@ -64,7 +64,7 @@
                         </StackPanel.ContextMenu>
                     </StackPanel>
                 </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type projectbase:Workflow}" ItemsSource="{Binding Workflows}">
+                <HierarchicalDataTemplate DataType="{x:Type projectbase:Workflow}" ItemsSource="{Binding FilteredWorkflows}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{Binding StateImage}" Width="16" Height="16" />
                         <TextBlock Text="{Binding name}" />

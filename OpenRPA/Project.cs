@@ -38,7 +38,9 @@ namespace OpenRPA
             Workflows.UpdateCollection(list);
             // Log.Output("UpdateWorkflowsList " + Workflows.Count);
         }
+        [JsonIgnore, BsonIgnore]
         public System.Windows.Data.ListCollectionView FilteredSource;
+        [JsonIgnore, BsonIgnore]
         public System.ComponentModel.ICollectionView FilteredWorkflows
         {
             get

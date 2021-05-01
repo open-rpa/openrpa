@@ -1220,10 +1220,12 @@ namespace OpenRPA
                 pw.ShowDialog();
                 if (result is Project p)
                 {
+                    p.isDirty = true;
                     Log.Function("MainWindow", "OnPermissions", "Update permissions on each workflow in project");
-                    foreach (var _wf in p.Workflows)
+                    foreach (Workflow _wf in p.Workflows)
                     {
                         _wf._acl = p._acl;
+                        _wf.isDirty = true;
                         await ((Workflow)_wf).UpdateImagePermissions();
                     }
                     await p.Save();
@@ -1231,6 +1233,7 @@ namespace OpenRPA
                 Log.Function("MainWindow", "OnPermissions", "save Entity");
                 if (result is Workflow wf)
                 {
+                    wf.isDirty = true;
                     await wf.Save();
                     await wf.UpdateImagePermissions();
                 }

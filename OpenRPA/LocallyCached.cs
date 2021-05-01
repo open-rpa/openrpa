@@ -59,9 +59,8 @@ namespace OpenRPA
                     }
                     else
                     {
-                        if(entity.isDirty)
+                        if (entity.isDirty)
                         {
-                            Log.Output("Saving " + entity.name + " with " + entity._acl.Length + " ace's");
                             entity._version++; // Add one to avoid watch update
                             var result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity);
                             isDirty = false;
@@ -74,7 +73,7 @@ namespace OpenRPA
                         }
                     }
                 }
-                lock(savelock)
+                lock (savelock)
                 {
                     var exists = collection.FindById(_id);
                     if (exists != null) { collection.Update(entity); Log.Verbose("Updated in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
@@ -88,7 +87,7 @@ namespace OpenRPA
             finally
             {
                 RobotInstance.instance.DisableWatch = wasDisableWatch;
-            }            
+            }
         }
         public async Task Delete<T>() where T : apibase
         {
@@ -111,7 +110,8 @@ namespace OpenRPA
                 {
                     Log.Error(ex.ToString());
                 }
-            } else
+            }
+            else
             {
                 string collectionname = "openrpa";
                 if (_type == "workflowinstance") collectionname = "openrpa_instances";

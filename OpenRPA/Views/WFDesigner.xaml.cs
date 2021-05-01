@@ -723,9 +723,9 @@ namespace OpenRPA.Views
         {
             if (plugin != null)
             {
-                    WFHelper.AddVBNamespaceSettings(WorkflowDesigner, new Type[] { plugin.GetType() });
-                    Type t = plugin.GetType();
-                    WFHelper.DynamicAssemblyMonitor(WorkflowDesigner, t.Assembly.GetName().Name, t.Assembly, true);
+                WFHelper.AddVBNamespaceSettings(WorkflowDesigner, new Type[] { plugin.GetType() });
+                Type t = plugin.GetType();
+                WFHelper.DynamicAssemblyMonitor(WorkflowDesigner, t.Assembly.GetName().Name, t.Assembly, true);
             }
             //DynamicAssemblyMonitor(t.Assembly.GetName().Name, t.Assembly, true);
             if (Config.local.recording_add_to_designer)
@@ -1304,33 +1304,43 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     }
 
 
-                OnChanged?.Invoke(this);
-            }
-            if (instance.hasError || instance.isCompleted)
-            {
-                _ = Task.Run(() =>
+                    OnChanged?.Invoke(this);
+                }
+                if (instance.hasError || instance.isCompleted)
                 {
-                    var sw = new System.Diagnostics.Stopwatch(); sw.Start();
-                    while (sw.Elapsed < TimeSpan.FromSeconds(1))
+                    _ = Task.Run(() =>
                     {
-                        lock (WorkflowInstance.Instances)
+                        var sw = new System.Diagnostics.Stopwatch(); sw.Start();
+                        while (sw.Elapsed < TimeSpan.FromSeconds(1))
                         {
-                            foreach (var wi in WorkflowInstance.Instances.ToList())
+                            lock (WorkflowInstance.Instances)
                             {
-                                if (wi.isCompleted) continue;
-                                if (wi.Bookmarks == null) continue;
-                                foreach (var b in wi.Bookmarks)
+                                foreach (var wi in WorkflowInstance.Instances.ToList())
                                 {
-                                    if (b.Key == instance._id)
+                                    if (wi.isCompleted) continue;
+                                    if (wi.Bookmarks == null) continue;
+                                    foreach (var b in wi.Bookmarks)
                                     {
-                                        wi.ResumeBookmark(b.Key, instance);
-                                        return;
+                                        if (b.Key == instance._id)
+                                        {
+                                            wi.ResumeBookmark(b.Key, instance);
+                                            return;
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                });
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                span.RecordException(ex);
+                Log.Error(ex.ToString());
+            }
+            finally
+            {
+                span?.Dispose();
             }
         }
         public void Run(bool VisualTracking, bool SlowMotion, IWorkflowInstance instance)

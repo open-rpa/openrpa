@@ -1304,44 +1304,33 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     }
 
 
-                    OnChanged?.Invoke(this);
-                }
-                if (instance.hasError || instance.isCompleted)
+                OnChanged?.Invoke(this);
+            }
+            if (instance.hasError || instance.isCompleted)
+            {
+                _ = Task.Run(() =>
                 {
-                    _ = Task.Run(() =>
+                    var sw = new System.Diagnostics.Stopwatch(); sw.Start();
+                    while (sw.Elapsed < TimeSpan.FromSeconds(1))
                     {
-                        var sw = new System.Diagnostics.Stopwatch(); sw.Start();
-                        while (sw.Elapsed < TimeSpan.FromSeconds(1))
+                        lock (WorkflowInstance.Instances)
                         {
-                            lock (WorkflowInstance.Instances)
+                            foreach (var wi in WorkflowInstance.Instances.ToList())
                             {
-                                foreach (var wi in WorkflowInstance.Instances.ToList())
+                                if (wi.isCompleted) continue;
+                                if (wi.Bookmarks == null) continue;
+                                foreach (var b in wi.Bookmarks)
                                 {
-                                    if (wi.isCompleted) continue;
-                                    if (wi.Bookmarks == null) continue;
-                                    foreach (var b in wi.Bookmarks)
+                                    if (b.Key == instance._id)
                                     {
-                                        if (b.Key == instance._id)
-                                        {
-                                            wi.ResumeBookmark(b.Key, instance);
-                                            span?.AddEvent(new System.Diagnostics.ActivityEvent("Resume Bookmark " + b.Key));
-                                            return;
-                                        }
+                                        wi.ResumeBookmark(b.Key, instance);
+                                        return;
                                     }
                                 }
                             }
                         }
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                span?.RecordException(ex);
-                Log.Error(ex.ToString());
-            }
-            finally
-            {
-                span?.Dispose();
+                    }
+                });
             }
         }
         public void Run(bool VisualTracking, bool SlowMotion, IWorkflowInstance instance)

@@ -33,7 +33,7 @@ namespace OpenRPA.Office
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         public static treeelement[] _GetRootElements(Selector anchor)
         {
-            if(anchor!=null) return new treeelement[] { };
+            if (anchor != null) return new treeelement[] { };
             return new treeelement[] { };
         }
         public treeelement[] GetRootElements(Selector anchor)
@@ -46,6 +46,9 @@ namespace OpenRPA.Office
         }
         public void Initialize(IOpenRPAClient client)
         {
+            _ = PluginConfig.get_emails_max_folders;
+            _ = PluginConfig.get_emails_skip_public;
+
         }
         public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)
         {

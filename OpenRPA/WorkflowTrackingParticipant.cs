@@ -68,21 +68,23 @@ namespace OpenRPA
 
                 if (workflowInstanceRecord != null)
                 {
-                    WorkflowInstance Instance = null;
-                    lock (WorkflowInstance.Instances) Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
-                    if (Instance == null)
-                    {
-                        Log.Error("WorkflowTrackingParticipant failed locating WorkflowInstance with InstanceId " + InstanceId.ToString());
-                        return;
-                    }
+                    var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
+                    if (Instance == null) return;
                     lock (Instance)
                     {
                         if (workflowInstanceRecord.State == WorkflowInstanceStates.Started || workflowInstanceRecord.State == WorkflowInstanceStates.Resumed)
                         {
                             lock (timerslock) timers.Add(InstanceId.ToString(), new Dictionary<string, Stopwatch>());
                             System.Diagnostics.Activity.Current = null;
-                            // Instance.RootActivity = Instance.source.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.Workflow.name, ActivityKind.Consumer, Instance.ParentSpanId);
-                            Instance.RootActivity = Instance.source.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.Workflow.name, ActivityKind.Consumer);
+                            try
+                            {
+                                // Instance.RootActivity = Instance.source?.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.Workflow.name, ActivityKind.Consumer, Instance.ParentSpanId);
+                                Instance.RootActivity = Instance.source?.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.Workflow.name, ActivityKind.Consumer);
+                            }
+                            catch (Exception)
+                            {
+                                Instance.source = null;
+                            }
                             if (Instance.RootActivity != null)
                             {
                                 if (!string.IsNullOrEmpty(Instance.ParentSpanId)) Instance.RootActivity?.SetParentId(Instance.ParentSpanId);
@@ -143,6 +145,16 @@ namespace OpenRPA
                                 Instance.RootActivity?.SetTag("Reason", ((System.Activities.Tracking.WorkflowInstanceTerminatedRecord)workflowInstanceRecord).Reason);
                             }
                             Instance.RootActivity?.SetTag("status.state", workflowInstanceRecord.State.ToString());
+                            if (Instance.source != null)
+                            {
+                                while (Instance.Activities.Count > 0)
+                                {
+                                    var span = Instance.Activities.Pop();
+                                    span?.Dispose();
+                                }
+                                Instance.RootActivity = null;
+                            }
+
                         }
                         else
                         {
@@ -186,48 +198,57 @@ namespace OpenRPA
                                     if (String.IsNullOrEmpty(Name)) Name = TypeName;
                                     if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
 
-                                    System.Diagnostics.Activity.Current = Instance.RootActivity;
-                                    var span = Instance.source.StartActivity(Name, ActivityKind.Consumer);
+                                System.Diagnostics.Activity.Current = Instance.RootActivity;
+                                try
+                                {
+                                    var span = Instance.source?.StartActivity(Name, ActivityKind.Consumer);
                                     span?.AddTag("type", TypeName);
                                     span?.AddTag("ActivityId", ActivityId);
                                     if (Instance.source != null && span != null) Instance.Activities.Push(span);
                                 }
-                            }
-                            if (activityStateRecord.State != ActivityStates.Executing)
-                            {
-                                if (timer.ContainsKey(ActivityId))
+                                catch (Exception)
                                 {
-                                    Stopwatch sw = timer[ActivityId];
-                                    timer.Remove(ActivityId);
-                                    var TypeName = activityStateRecord.Activity.TypeName;
-                                    var Name = activityStateRecord.Activity.Name;
-                                    if (String.IsNullOrEmpty(Name)) Name = TypeName;
-                                    if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
-                                    try
+                                    Instance.source = null;
+                                }
+                            }
+                        }
+                        if (activityStateRecord.State != ActivityStates.Executing)
+                        {
+                            if (timer.ContainsKey(ActivityId))
+                            {
+                                Stopwatch sw = timer[ActivityId];
+                                timer.Remove(ActivityId);
+                                var TypeName = activityStateRecord.Activity.TypeName;
+                                var Name = activityStateRecord.Activity.Name;
+                                if (String.IsNullOrEmpty(Name)) Name = TypeName;
+                                if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
+                                try
+                                {
+                                    lock (Instance.Activities)
                                     {
                                         if (Instance.Activities.Count > 0)
                                         {
-                                            if (Instance.Activities.First().DisplayName == Name)
+                                            if (Instance.Activities.First()?.DisplayName == Name)
                                             {
                                                 var span = Instance.Activities.Pop();
                                                 span?.Dispose();
                                             }
                                         }
-
                                     }
-                                    catch (Exception ex)
-                                    {
-                                        Log.Error(ex.ToString());
-                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.Error(ex.ToString());
                                 }
                             }
                         }
-                        if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Name) && Instance != null && Instance.Workflow != null)
-                        {
-                            var TypeName = activityStateRecord.Activity.TypeName;
-                            if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
-                            //RobotInstance.activity_counter.WithLabels((activityStateRecord.Activity.Name, TypeName, Instance.Workflow.name)).Inc();
-                        }
+                    }
+                    if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Name) && Instance != null && Instance.Workflow != null)
+                    {
+                        var TypeName = activityStateRecord.Activity.TypeName;
+                        if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
+                        //RobotInstance.activity_counter.WithLabels((activityStateRecord.Activity.Name, TypeName, Instance.Workflow.name)).Inc();
+                    }
 
                         foreach (var v in activityStateRecord.Variables)
                         {

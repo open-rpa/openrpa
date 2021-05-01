@@ -36,7 +36,6 @@ namespace OpenRPA.Windows
         public InArgument<int> MaxResults { get; set; }
         public InArgument<int> MinResults { get; set; }
         public InArgument<string> Selector { get; set; }
-        // public InArgument<UIElement> From { get; set; }
         public InArgument<IElement> From { get; set; }
         public InArgument<bool> ClearCache { get; set; }
         public InArgument<bool> Interactive { get; set; }
@@ -48,7 +47,6 @@ namespace OpenRPA.Windows
         private Variable<Stopwatch> _sw = new Variable<Stopwatch>("_sw");
         [System.ComponentModel.Browsable(false)]
         public Activity LoopAction { get; set; }
-        // public ActivityAction<UIElement> LoopAction { get; set; }
         protected override void StartLoop(NativeActivityContext context)
         {
             WindowsCacheExtension ext = context.GetExtension<WindowsCacheExtension>();
@@ -108,11 +106,12 @@ namespace OpenRPA.Windows
                 {
                     elements = new UIElement[] { };
                 }
-                if (elements.Length == 0) { 
+                if (elements.Length == 0)
+                {
                     Log.Selector(string.Format("Windows.GetElement::Found no elements {0:mm\\:ss\\.fff}", sw.Elapsed));
                     failcounter++;
                 }
-                if(failcounter > 2)
+                if (failcounter > 2)
                 {
                     WindowsSelectorItem.ClearCache();
                 }
@@ -134,13 +133,13 @@ namespace OpenRPA.Windows
             }
             IEnumerator<UIElement> _enum = elements.ToList().GetEnumerator();
             bool more = _enum.MoveNext();
-            if(lastelements.Length == elements.Length && lastelements.Length > 0)
+            if (lastelements.Length == elements.Length && lastelements.Length > 0)
             {
                 more = !System.Collections.StructuralComparisons.StructuralEqualityComparer.Equals(lastelements, elements);
             }
             if (more)
             {
-                if(interactive)
+                if (interactive)
                 {
                     var testelement = _enum.Current;
                     Wait.UntilResponsive(testelement.RawElement, PluginConfig.search_timeout);
@@ -149,7 +148,8 @@ namespace OpenRPA.Windows
                 context.SetValue(_sw, sw);
                 Log.Selector(string.Format("Windows.GetElement::end:: call ScheduleAction: {0:mm\\:ss\\.fff}", sw.Elapsed));
                 context.ScheduleAction<UIElement>(Body, _enum.Current, OnBodyComplete);
-            } else
+            }
+            else
             {
                 Log.Selector(string.Format("Windows.GetElement:end {0:mm\\:ss\\.fff}", sw.Elapsed));
             }

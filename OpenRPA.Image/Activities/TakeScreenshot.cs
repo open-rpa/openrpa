@@ -18,7 +18,7 @@ namespace OpenRPA.Image
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_takescreenshot_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_takescreenshot", typeof(Resources.strings))]
-    public class TakeScreenshot : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    public class TakeScreenshot : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         public TakeScreenshot()
         {
@@ -36,11 +36,11 @@ namespace OpenRPA.Image
         [Browsable(false)]
         public ActivityAction<ImageElement> Body { get; set; }
         private Variable<ImageElement> elements = new Variable<ImageElement>("elements");
-        protected override void Execute(NativeActivityContext context)
+        protected override void StartLoop(NativeActivityContext context)
         {
             var relativelement = Element.Get(context);
             Rectangle match = new Rectangle(0, 0, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
-            if(relativelement!=null)
+            if (relativelement != null)
             {
                 match = relativelement.Rectangle;
             }
@@ -57,10 +57,6 @@ namespace OpenRPA.Image
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
-        }
-        private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
-        {
-            Execute(context);
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {

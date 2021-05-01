@@ -15,7 +15,7 @@ namespace OpenRPA.Office.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.readexcel.png")]
     [LocalizedToolboxTooltip("activity_getparagraph_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getparagraph", typeof(Resources.strings))]
-    public class GetParagraph : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    public class GetParagraph : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         [Category("Input")]
         [LocalizedDisplayName("activity_getparagraph_filename", typeof(Resources.strings)), LocalizedDescription("activity_getparagraph_filename_help", typeof(Resources.strings))]
@@ -34,7 +34,7 @@ namespace OpenRPA.Office.Activities
         [Browsable(false)]
         public ActivityAction<string> Body { get; set; }
         private readonly Variable<IEnumerator<string>> _elements = new Variable<IEnumerator<string>>("_elements");
-        protected override void Execute(NativeActivityContext context)
+        protected override void StartLoop(NativeActivityContext context)
         {
             var filename = Filename.Get(context);
             var maxresults = MaxResults.Get(context);
@@ -60,29 +60,29 @@ namespace OpenRPA.Office.Activities
             }
             finally
             {
-                if(activeObject==null) activeObject = (Application)Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid("000209FF-0000-0000-C000-000000000046")));
+                if (activeObject == null) activeObject = (Application)Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid("000209FF-0000-0000-C000-000000000046")));
                 activeObject.Visible = true;
             }
             object ofilename = filename;
-            if(document==null) document = activeObject.Documents.Open(ref ofilename, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing);
+            if (document == null) document = activeObject.Documents.Open(ref ofilename, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing);
             var p = document.Content.Paragraphs;
             string text = "";
             int index = Index.Get(context);
             Count.Set(context, p.Count);
             var result = new List<string>();
-            if(Index.Expression == null)
+            if (Index.Expression == null)
             {
-                for(var i = 0; i < p.Count; i++)
+                for (var i = 0; i < p.Count; i++)
                 {
                     result.Add(p[i + 1].Range.Text);
                     text += p[i + 1].Range.Text;
                     if (maxresults > 0 && maxresults == result.Count) break;
                 }
-            } 
+            }
             else
             {
                 if (p.Count < index) throw new Exception("filename only contains " + p.Count + " Paragraphs");
-                for (var i = (index-1); i < p.Count; i++)
+                for (var i = (index - 1); i < p.Count; i++)
                 {
                     result.Add(p[i + 1].Range.Text);
                     text += p[i + 1].Range.Text;
@@ -97,7 +97,7 @@ namespace OpenRPA.Office.Activities
             bool more = _enum.MoveNext();
             if (more)
             {
-                if(Body!=null) context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
+                if (Body != null) context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
 
         }
@@ -105,7 +105,7 @@ namespace OpenRPA.Office.Activities
         {
             IEnumerator<string> _enum = _elements.Get(context);
             bool more = _enum.MoveNext();
-            if (more)
+            if (more && !breakRequested)
             {
                 context.ScheduleAction<string>(Body, _enum.Current, OnBodyComplete);
             }

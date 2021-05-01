@@ -340,6 +340,24 @@ namespace OpenRPA.Image.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Print Window.
+        /// </summary>
+        public static string activity_printwindow {
+            get {
+                return ResourceManager.GetString("activity_printwindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Print an application window with specified window name even when screen is locked.
+        /// </summary>
+        public static string activity_printwindow_tooltip {
+            get {
+                return ResourceManager.GetString("activity_printwindow_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Take Screenshot.
         /// </summary>
         public static string activity_takescreenshot {

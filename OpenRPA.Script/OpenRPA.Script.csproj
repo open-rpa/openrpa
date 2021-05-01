@@ -94,7 +94,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="3.4.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="3.4.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="3.4.0" />
-    <PackageReference Include="Python.Included" Version="3.7.3.4" />
+    <PackageReference Include="Python.Included" Version="3.7.3.13" />
     <PackageReference Include="sharpAHK" Version="1.0.0.5" />
     <PackageReference Include="System.Management.Automation.dll" Version="10.0.10586" />
   </ItemGroup>

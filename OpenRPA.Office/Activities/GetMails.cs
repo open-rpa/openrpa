@@ -16,7 +16,7 @@ namespace OpenRPA.Office.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.outlook.png")]
     [LocalizedToolboxTooltip("activity_getmails_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getmails", typeof(Resources.strings))]
-    public class GetMails : NativeActivity, System.Activities.Presentation.IActivityTemplateFactory
+    public class GetMails : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         public GetMails()
         {
@@ -48,51 +48,37 @@ namespace OpenRPA.Office.Activities
             }
             return outlookApplication;
         }
-        protected override void Execute(NativeActivityContext context)
+        protected override void StartLoop(NativeActivityContext context)
         {
             var folder = Folder.Get(context);
             var maxresults = MaxResults.Get(context);
             var filter = Filter.Get(context);
             if (string.IsNullOrEmpty(folder)) return;
             var outlookApplication = CreateOutlookInstance();
-            if (outlookApplication.ActiveExplorer() == null) {
+            if (outlookApplication.ActiveExplorer() == null)
+            {
                 Log.Warning("Outlook not running!");
                 return;
             }
-            MAPIFolder inBox = (MAPIFolder)outlookApplication.ActiveExplorer().Session.GetDefaultFolder(OlDefaultFolders.olFolderInbox);
-            // MAPIFolder folderbase = inBox.Store.GetRootFolder();
-            var folderbase = outlookApplication.GetNamespace("MAPI");
-            MAPIFolder mfolder = GetFolder(folderbase, folder);
-
+            MAPIFolder mfolder = GetFolder(outlookApplication, folder);
             Items Items = mfolder.Items;
             var unreadonly = UnreadOnly.Get(context);
-            
             if (unreadonly)
             {
                 if (string.IsNullOrEmpty(filter)) filter = "";
-                //if (!filter.ToLower().Contains("[unread]") && filter.ToLower().Contains("httpmail:read"))
-                //{
-                    if (string.IsNullOrEmpty(filter))
-                    {
-                        filter = "[Unread]=true";
-                    } else
-                    {
-                        filter += "and [Unread]=true";
-                    }
-                // }
-                // var Filter = "@SQL=" + (char)34 + "urn:schemas:httpmail:hasattachment" + (char)34 + "=1 AND " +
-                // var Filter = "@SQL=" + (char)34 + "urn:schemas:httpmail:read" + (char)34 + "=0";
-            } 
-            else
-            {
-
+                if (string.IsNullOrEmpty(filter))
+                {
+                    filter = "[Unread]=true";
+                }
+                else
+                {
+                    filter += "and [Unread]=true";
+                }
             }
             if (!string.IsNullOrEmpty(filter))
             {
                 Items = Items.Restrict(filter);
-
             }
-
             var result = new List<email>();
             foreach (var folderItem in Items)
             {
@@ -102,7 +88,7 @@ namespace OpenRPA.Office.Activities
                 {
                     var _e = new email(mailItem);
                     result.Add(_e);
-                    if (result.Count == maxresults) break;                    
+                    if (result.Count == maxresults) break;
                 }
             }
             Emails.Set(context, result);
@@ -118,17 +104,13 @@ namespace OpenRPA.Office.Activities
         {
             IEnumerator<email> _enum = _elements.Get(context);
             bool more = _enum.MoveNext();
-            if (more)
+            if (more && !breakRequested)
             {
                 context.ScheduleAction<email>(Body, _enum.Current, OnBodyComplete);
             }
             else
             {
             }
-        }
-        private void LoopActionComplete(NativeActivityContext context, ActivityInstance completedInstance)
-        {
-            Execute(context);
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {
@@ -150,37 +132,66 @@ namespace OpenRPA.Office.Activities
             aa.Argument = da;
             return fef;
         }
-        public MAPIFolder GetFolder(MAPIFolder folder, string FullFolderPath)
+        //public MAPIFolder GetFolder(MAPIFolder folder, string FullFolderPath)
+        //{
+        //    if (folder.Folders.Count == 0)
+        //    {
+        //        if (folder.FullFolderPath == FullFolderPath)
+        //        {
+        //            return folder;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        foreach (MAPIFolder subFolder in folder.Folders)
+        //        {
+        //            if (folder.FullFolderPath == FullFolderPath)
+        //            {
+        //                return folder;
+        //            }
+        //            var temp = GetFolder(subFolder, FullFolderPath);
+        //            if (temp != null) return temp;
+        //        }
+        //    }
+        //    return null;
+        //}
+        //public MAPIFolder GetFolder(NameSpace folder, string FullFolderPath)
+        //{
+        //    foreach (MAPIFolder subFolder in folder.Folders)
+        //    {
+        //        var temp = GetFolder(subFolder, FullFolderPath);
+        //        if (temp != null) return temp;
+        //    }
+        //    return null;
+        //}
+        private Microsoft.Office.Interop.Outlook.Folder GetFolder(Application application, string folderPath)
         {
-            if (folder.Folders.Count == 0)
+            Microsoft.Office.Interop.Outlook.Folder folder;
+            string backslash = @"\";
+            try
             {
-                if (folder.FullFolderPath == FullFolderPath)
+                if (folderPath.StartsWith(@"\\"))
                 {
-                    return folder;
+                    folderPath = folderPath.Remove(0, 2);
                 }
-            }
-            else
-            {
-                foreach (MAPIFolder subFolder in folder.Folders)
+                String[] folders =
+                    folderPath.Split(backslash.ToCharArray());
+                folder = application.Session.Folders[folders[0]] as Microsoft.Office.Interop.Outlook.Folder;
+                if (folder != null)
                 {
-                    if (folder.FullFolderPath == FullFolderPath)
+                    for (int i = 1; i <= folders.GetUpperBound(0); i++)
                     {
-                        return folder;
+                        Microsoft.Office.Interop.Outlook.Folders subFolders = folder.Folders;
+                        folder = subFolders[folders[i]] as Microsoft.Office.Interop.Outlook.Folder;
+                        if (folder == null)
+                        {
+                            return null;
+                        }
                     }
-                    var temp = GetFolder(subFolder, FullFolderPath);
-                    if (temp != null) return temp;
                 }
+                return folder;
             }
-            return null;
-        }
-        public MAPIFolder GetFolder(NameSpace folder, string FullFolderPath)
-        {
-            foreach (MAPIFolder subFolder in folder.Folders)
-            {
-                var temp = GetFolder(subFolder, FullFolderPath);
-                if (temp != null) return temp;
-            }
-            return null;
+            catch { return null; }
         }
         public new string DisplayName
         {

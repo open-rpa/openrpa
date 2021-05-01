@@ -29,14 +29,14 @@ namespace OpenRPA.Net
             }
             try
             {
-                if (string.IsNullOrEmpty(reply.data)) return new T();
+                if(string.IsNullOrEmpty(reply.data)) return new T();
                 if (reply.data == "{}") return new T();
 
                 var result = JsonConvert.DeserializeObject<T>(reply.data, new JsonSerializerSettings
                 {
                     DateTimeZoneHandling = DateTimeZoneHandling.Local
                 });
-                if (result == null)
+                if(result == null)
                 {
                     return result;
                 }

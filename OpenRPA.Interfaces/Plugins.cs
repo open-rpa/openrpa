@@ -278,6 +278,7 @@ namespace OpenRPA.Interfaces
                     if (dllFile.Contains("Snippets.")) continue;
                     if (dllFile.Contains("Interop.SAPFEWSELib")) continue;
                     if (dllFile.Contains("Interop.SapROTWr")) continue;
+                    if (dllFile.Contains("grpc_csharp_ext")) continue;
                     AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
                     Assembly assembly = Assembly.Load(an);
                     // assemblies.Add(assembly);

@@ -22,7 +22,7 @@ namespace OpenRPA.Windows
                     //if (p == "ClassName") cond.Add(element.ConditionFactory.ByClassName(ClassName));
                     //if (p == "AutomationId") cond.Add(element.ConditionFactory.ByAutomationId(AutomationId));
                     var v = item.Properties.Where(x => x.Name == p.Name).FirstOrDefault();
-                    if(v != null)
+                    if (v != null)
                     {
                         if (p.Name == "ControlType")
                         {
@@ -76,6 +76,6 @@ namespace OpenRPA.Windows
             if (e == null) return null;
             return e.Value;
         }
-        
+
     }
 }

@@ -2754,7 +2754,7 @@ namespace OpenRPA
         {
             try
             {
-                if (!IsConnected) return false;
+                // if (!IsConnected) return false;
                 if (!(SelectedContent is Views.WFDesigner)) return false;
                 var designer = (Views.WFDesigner)SelectedContent;
                 foreach (var i in designer.Workflow.Instances)

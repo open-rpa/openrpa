@@ -51,16 +51,16 @@ namespace OpenRPA.Windows
             }
             Log.Selector(string.Format("windowsselector::create pathToRoot::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             AutomationElement win = null;
-            for(var i = 0; i < pathToRoot.Count; i++)
+            for (var i = 0; i < pathToRoot.Count; i++)
             {
                 var _item = pathToRoot[i];
                 FlaUI.Core.Definitions.ControlType ct;
-                if(_item.Properties.ControlType.TryGetValue(out ct))
+                if (_item.Properties.ControlType.TryGetValue(out ct))
                 {
                     if (ct == FlaUI.Core.Definitions.ControlType.Window) win = _item;
                 }
             }
-            if(win != null)
+            if (win != null)
             {
                 var indexof = pathToRoot.IndexOf(win) + 1;
                 pathToRoot.RemoveRange(indexof, pathToRoot.Count - indexof);
@@ -69,7 +69,7 @@ namespace OpenRPA.Windows
             if (anchor != null)
             {
                 bool SearchDescendants = anchor.First().SearchDescendants();
-                if(SearchDescendants)
+                if (SearchDescendants)
                 {
                     var a = anchor.Last();
                     var idx = -1;
@@ -105,7 +105,7 @@ namespace OpenRPA.Windows
 
             }
             WindowsSelectorItem item;
-            if(PluginConfig.traverse_selector_both_ways)
+            if (PluginConfig.traverse_selector_both_ways)
             {
                 Log.Selector(string.Format("windowsselector::create traverse_selector_both_ways::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
                 var temppathToRoot = new List<AutomationElement>();
@@ -125,7 +125,7 @@ namespace OpenRPA.Windows
                         var i = temppathToRoot.First();
                         temppathToRoot.Remove(i);
                         item = new WindowsSelectorItem(i, false);
-                        if(parent!=null)
+                        if (parent != null)
                         {
                             var m = item.matches(root, count, parent, 2, isDesktop, false);
                             if (m.Length > 0)
@@ -216,7 +216,7 @@ namespace OpenRPA.Windows
                         {
                             p.Enabled = false;
                         }
-                                
+
                     }
                     //if (p.Name == "ClassName" && p.Value.StartsWith("WindowsForms10")) p.Value = "WindowsForms10*";
                     if (p.Name == "ClassName" && p.Value.ToLower() == "shelldll_defview")
@@ -332,7 +332,7 @@ namespace OpenRPA.Windows
                                 }
 
                             } while (hasError && retries < 10);
-                            
+
                             while (win != null)
                             {
                                 bool addit = false;
@@ -343,7 +343,7 @@ namespace OpenRPA.Windows
                                 if (addit)
                                 {
                                     var uiele = new UIElement(win);
-                                    Log.Debug(string.Format("GetElementsWithuiSelector::Adding element " + uiele.ToString() ));
+                                    Log.Debug(string.Format("GetElementsWithuiSelector::Adding element " + uiele.ToString()));
                                     _current.Add(uiele);
                                     if (win.Patterns.Window.TryGetPattern(out var winPattern))
                                     {
@@ -409,7 +409,7 @@ namespace OpenRPA.Windows
 
                     } while (hasError && retries < 10);
 
-                    
+
                     if (ele != null)
                     {
                         do
@@ -471,7 +471,7 @@ namespace OpenRPA.Windows
             // var automation = AutomationUtil.getAutomation();
             AutomationBase automation = null;
             if (ext != null) automation = ext.automation;
-            if(automation == null) automation = AutomationUtil.getAutomation();
+            if (automation == null) automation = AutomationUtil.getAutomation();
 
             UIElement[] result = null;
             // AutomationElement ele = null;
@@ -486,9 +486,9 @@ namespace OpenRPA.Windows
                 var current = _current.ToArray();
                 _current.Clear();
                 // if(i == 1 && current.Length == 1 && current.First().ControlType == sel.ControlType)
-                if(i == 1)
+                if (i == 1)
                 {
-                    foreach(var e in current)
+                    foreach (var e in current)
                     {
                         if (WindowsSelectorItem.Match(sel, e.RawElement))
                         {
@@ -499,9 +499,9 @@ namespace OpenRPA.Windows
                     //_current = GetElementsWithuiSelectorItem(automation, sel, current, maxresults, i == (selectors.Count - 1)).ToList();
                     //if(_current.Count == 0) _current = current.ToList();
                     //_current = current.ToList();
-                } 
+                }
                 _current = GetElementsWithuiSelectorItem(i, automation, sel, current, maxresults, i == (selectors.Count - 1), search_descendants).ToList();
-                if(i == 0 && _current.Count == 0) _current = current.ToList();
+                if (i == 0 && _current.Count == 0) _current = current.ToList();
             }
             Log.Debug(string.Format("GetElementsWithuiSelector::completed with " + _current.Count + " results {0:mm\\:ss\\.fff}", sw.Elapsed));
             if (_current.Count > 0)

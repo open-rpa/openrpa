@@ -21,9 +21,9 @@ namespace OpenRPA.RDService
         }
         public void BeginWork()
         {
-            if (cancellationTokenSource != null )
+            if (cancellationTokenSource != null)
             {
-                if(!cancellationTokenSource.IsCancellationRequested)
+                if (!cancellationTokenSource.IsCancellationRequested)
                 {
                     cancellationTokenSource.Cancel();
                 }
@@ -66,7 +66,6 @@ namespace OpenRPA.RDService
         public Client rdp;
         public FreeRDP.Core.RDP freerdp;
         public unattendedclient client;
-        public NamedPipeWrapper.NamedPipeConnection<RPAMessage, RPAMessage> connection;
         private DateTime created = DateTime.Now;
         private DateTime lastheartbeat = DateTime.Now;
         private DateTime lastrdp = DateTime.Now - TimeSpan.FromMinutes(1);
@@ -81,7 +80,7 @@ namespace OpenRPA.RDService
             Activity span = null;
             try
             {
-                if(System.Diagnostics.Debugger.IsAttached)
+                if (System.Diagnostics.Debugger.IsAttached)
                 {
                     // skiprdp = true;
                 }
@@ -100,14 +99,6 @@ namespace OpenRPA.RDService
                 span = Program.source.StartActivity("UserSession do work " + client.windowsusername);
                 span?.SetTag("enabled", client.windowsusername);
                 span?.SetTag("windowsusername", client.enabled);
-                if (connection != null && connection.IsConnected == false) { connection = null; created = DateTime.Now; }
-                // Is OpenRPA connected for this user ?
-                if (connection != null)
-                {
-                    connection.PushMessage(new RPAMessage("ping"));
-                    // created = DateTime.Now;
-                    // return;
-                }
                 if ((DateTime.Now - created).TotalSeconds < 5) return;
                 // Is user signed in ?
                 // ownerexplorer = null;
@@ -145,7 +136,7 @@ namespace OpenRPA.RDService
 
                         var windowsusername = client.windowsusername.Substring(client.windowsusername.IndexOf("\\") + 1);
                         var windowsdomain = client.windowsusername.Substring(0, client.windowsusername.IndexOf("\\"));
-                        if(string.IsNullOrEmpty(client.windowslogin))
+                        if (string.IsNullOrEmpty(client.windowslogin))
                         {
                             if (client.windowsusername.StartsWith(hostname + @"\"))
                             {
@@ -275,10 +266,11 @@ namespace OpenRPA.RDService
                         //}
                         created = DateTime.Now;
                     }
-                    if (rdp == null) {
+                    if (rdp == null)
+                    {
                         Log.Debug("rdp is null, exit");
                         span?.AddEvent(new ActivityEvent("rdp is null, exit"));
-                        return; 
+                        return;
                     }
                     if (rdp.Connected == false)
                     {
@@ -297,7 +289,7 @@ namespace OpenRPA.RDService
                 Log.Debug("get explorer process'");
                 Log.Debug("windowsusername: " + client.windowsusername);
                 Log.Debug("windowslogin: " + client.windowslogin);
-                    try
+                try
                 {
                     System.Diagnostics.Process ownerexplorer = GetOwnerExplorer();
                     if (ownerexplorer == null)
@@ -318,7 +310,8 @@ namespace OpenRPA.RDService
                             {
                                 Log.Debug("Found openrpa process for " + owner);
                                 ownerrpa = rpa;
-                            } else
+                            }
+                            else
                             {
                                 Log.Debug("skip openrpa process for " + owner);
                             }
@@ -418,7 +411,7 @@ namespace OpenRPA.RDService
                             Log.Error(errorMessage);
                         }
                     }
-                    else if(!hasShownLaunchWarning)
+                    else if (!hasShownLaunchWarning)
                     {
                         span?.AddEvent(new ActivityEvent("Not running as Local System, so cannot spawn processes in other users desktops"));
                         Log.Warning("Not running as Local System, so cannot spawn processes in other users desktops");
@@ -477,51 +470,8 @@ namespace OpenRPA.RDService
             }
             return ownerexplorer;
         }
-        public void AddConnection(NamedPipeWrapper.NamedPipeConnection<RPAMessage, RPAMessage> connection)
-        {
-            try
-            {
-                if (this.connection != null)
-                {
-                    this.connection.ReceiveMessage -= Connection_ReceiveMessage;
-                }
-                this.connection = connection;
-                this.connection.ReceiveMessage += Connection_ReceiveMessage;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-            }
-        }
-        private void Connection_ReceiveMessage(NamedPipeWrapper.NamedPipeConnection<RPAMessage, RPAMessage> connection, RPAMessage message)
-        {
-            try
-            {
-                if (message.command == "pong")
-                {
-                    lastheartbeat = DateTime.Now;
-                    return;
-                }
-                Log.Information(message.command.ToString());
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-            }
-        }
         #region IDisposable Support
         private bool disposedValue = false;
-        async public Task SendSignout()
-        {
-            if (connection != null)
-            {
-                if (connection.IsConnected && client.autosignout)
-                {
-                    connection.PushMessage(new RPAMessage("signout"));
-                    await Task.Delay(2000);
-                }
-            }
-        }
         public void disconnectrdp()
         {
             // _ = SendSignout();
@@ -542,12 +492,6 @@ namespace OpenRPA.RDService
         public void disconnect()
         {
             disconnectrdp();
-            if (connection != null)
-            {
-                if (connection.IsConnected) connection.Close();
-                connection = null;
-            }
-
         }
         protected virtual void Dispose(bool disposing)
         {

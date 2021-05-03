@@ -12,45 +12,63 @@ namespace OpenRPA.Interfaces
     {
         public static void Minimize()
         {
-            Minimize(MainWindow);
+            try
+            {
+                Minimize(MainWindow);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         public static void Minimize(System.Windows.Window window)
         {
             RunUI(() =>
             {
-                if (window.WindowState != System.Windows.WindowState.Minimized)
+                try
                 {
-                    NativeMethods.ShowWindow(new System.Windows.Interop.WindowInteropHelper(window).Handle, NativeMethods.SW_MINIMIZE);
+                    if (window.WindowState != System.Windows.WindowState.Minimized)
+                    {
+                        NativeMethods.ShowWindow(new System.Windows.Interop.WindowInteropHelper(window).Handle, NativeMethods.SW_MINIMIZE);
 
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
                 }
             });
         }
         public static void Minimize(IntPtr hWnd)
         {
-            NativeMethods.ShowWindow(hWnd, NativeMethods.SW_MINIMIZE);
+            try
+            {
+                NativeMethods.ShowWindow(hWnd, NativeMethods.SW_MINIMIZE);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         public static void Restore()
         {
             RunUI(() =>
             {
-                if (MainWindow.WindowState == System.Windows.WindowState.Minimized ||  MainWindow.Visibility == System.Windows.Visibility.Hidden)
+                try
                 {
-                    MainWindow.Show();
-                    MainWindow.Visibility = System.Windows.Visibility.Visible;
-                    Restore(Handle);
-                    ActivateWindow(MainWindow);
-                    //Task.Run(() =>
-                    //{
-                    //    System.Threading.Thread.Sleep(500);
-                    //    RunUI(() =>
-                    //    {
-                    //        MainWindow.Activate();
-                    //        MainWindow.Focus();
-                    //    });
-                    //});
-                    
-                    MainWindow.Activate();
-                    MainWindow.Focus();
+                    if (MainWindow.WindowState == System.Windows.WindowState.Minimized || MainWindow.Visibility == System.Windows.Visibility.Hidden)
+                    {
+                        MainWindow.Show();
+                        MainWindow.Visibility = System.Windows.Visibility.Visible;
+                        Restore(Handle);
+                        ActivateWindow(MainWindow);
+                        MainWindow.Activate();
+                        MainWindow.Focus();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
                 }
             });
         }
@@ -58,20 +76,35 @@ namespace OpenRPA.Interfaces
         {
             RunUI(() =>
             {
-                if (window.WindowState == System.Windows.WindowState.Minimized || MainWindow.Visibility == System.Windows.Visibility.Hidden)
+                try
                 {
-                    window.Visibility = System.Windows.Visibility.Visible;
-                    IntPtr hWnd = new System.Windows.Interop.WindowInteropHelper(window).Handle;
-                    Restore(hWnd);
-                    MainWindow.Activate();
-                    MainWindow.Focus();
+                    if (window.WindowState == System.Windows.WindowState.Minimized || MainWindow.Visibility == System.Windows.Visibility.Hidden)
+                    {
+                        window.Visibility = System.Windows.Visibility.Visible;
+                        IntPtr hWnd = new System.Windows.Interop.WindowInteropHelper(window).Handle;
+                        Restore(hWnd);
+                        MainWindow.Activate();
+                        MainWindow.Focus();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
                 }
             });
         }
         public static void Restore(IntPtr hWnd)
         {
-            NativeMethods.ShowWindow(hWnd, NativeMethods.SW_RESTORE);
-            NativeMethods.SetForegroundWindow(hWnd);
+            try
+            {
+                NativeMethods.ShowWindow(hWnd, NativeMethods.SW_RESTORE);
+                NativeMethods.SetForegroundWindow(hWnd);
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         private static IntPtr _handle = IntPtr.Zero;
         public static IntPtr Handle
@@ -119,22 +152,43 @@ namespace OpenRPA.Interfaces
         }
         public static void RunUI(Action action)
         {
-            AutomationHelper.syncContext.Send(o =>
+            try
             {
-                    action();
-            }, null);
+                AutomationHelper.syncContext.Send(o =>
+                {
+                    try
+                    {
+                        action();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                }, null);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         private delegate void SafeCallDelegate();
         public static void RunUI(System.Windows.Forms.Form window, Action action)
         {
-            if (window != null)
+            try
             {
-                var d = new SafeCallDelegate(action);
-                window.Invoke(d);
+                if (window != null)
+                {
+                    var d = new SafeCallDelegate(action);
+                    window.Invoke(d);
+                }
+                else
+                {
+                    action();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                action();
+                Log.Error(ex.ToString());
             }
         }
         public static string ToShortString() => ToShortString(Guid.NewGuid());

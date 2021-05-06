@@ -16,7 +16,7 @@ namespace OpenRPA.Interfaces.IPCService
     {
         public static string ApplicationIdentifier(string uniqueName, bool ChildSession)
         {
-            if(ChildSession)
+            if (ChildSession)
             {
                 uint SessionId = win32.ChildSession.GetChildSessionId();
                 return uniqueName + Environment.UserName + SessionId;
@@ -94,7 +94,7 @@ namespace OpenRPA.Interfaces.IPCService
             if (firstInstance)
             {
                 CreateRemoteService(channelName);
-            } 
+            }
             return firstInstance;
         }
         public static OpenRPAService RemoteInstance;
@@ -155,7 +155,8 @@ namespace OpenRPA.Interfaces.IPCService
     public class RunWorkflowInstance
     {
         public RunWorkflowInstance() { }
-        public RunWorkflowInstance(string UniqueId, string IDOrRelativeFilename, bool WaitForCompleted, Dictionary<string, object> Arguments, string SpanId, string ParentSpanId) {
+        public RunWorkflowInstance(string UniqueId, string IDOrRelativeFilename, bool WaitForCompleted, Dictionary<string, object> Arguments, string SpanId, string ParentSpanId)
+        {
             this.UniqueId = UniqueId;
             this.IDOrRelativeFilename = IDOrRelativeFilename;
             this.WaitForCompleted = WaitForCompleted;
@@ -186,9 +187,9 @@ namespace OpenRPA.Interfaces.IPCService
         private System.Timers.Timer pendingTimer = null;
         public void StartWorkflowInstances()
         {
-            if(global.OpenRPAClient== null || !global.OpenRPAClient.isReadyForAction)
+            if (global.OpenRPAClient == null || !global.OpenRPAClient.isReadyForAction)
             {
-                if(pendingTimer == null)
+                if (pendingTimer == null)
                 {
                     pendingTimer = new System.Timers.Timer(500);
                     pendingTimer.Elapsed += (e, r) =>
@@ -207,9 +208,9 @@ namespace OpenRPA.Interfaces.IPCService
                 }
                 return;
             }
-            foreach(var _instance in RunWorkflowInstances.ToList())
+            foreach (var _instance in RunWorkflowInstances.ToList())
             {
-                if(!_instance.Value.Started)
+                if (!_instance.Value.Started)
                 {
                     try
                     {
@@ -273,24 +274,24 @@ namespace OpenRPA.Interfaces.IPCService
         public void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
         {
             if (string.IsNullOrEmpty(instance.caller)) return;
-            if(!RunWorkflowInstances.ContainsKey(instance.caller)) return;
+            if (!RunWorkflowInstances.ContainsKey(instance.caller)) return;
             if (instance.isCompleted || instance.Exception != null)
             {
                 var _instance = RunWorkflowInstances[instance.caller];
                 if (instance.Parameters != null)
                 {
                     _instance.Result = instance.Parameters;
-                } else { _instance.Result = new Dictionary<string, object>(); }
+                }
+                else { _instance.Result = new Dictionary<string, object>(); }
                 RunWorkflowInstances.Remove(instance.caller);
                 if (!string.IsNullOrEmpty(instance.errormessage)) _instance.Error = new Exception(instance.errormessage);
                 if (instance.Exception != null) _instance.Error = instance.Exception;
                 _instance.Pending.Set();
                 GenericTools.RunUI(() =>
                 {
-                    // if ran in designer, call IdleOrComplete to break out of debugging and make designer not readonly
-                    var designer = global.OpenRPAClient.GetWorkflowDesignerByIDOrRelativeFilename(_instance.IDOrRelativeFilename);
                     try
                     {
+                        var designer = global.OpenRPAClient.GetWorkflowDesignerByIDOrRelativeFilename(_instance.IDOrRelativeFilename);
                         if (designer != null) designer.IdleOrComplete(instance, e);
                     }
                     catch (Exception)

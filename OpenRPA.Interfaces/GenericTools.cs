@@ -56,6 +56,7 @@ namespace OpenRPA.Interfaces
             {
                 try
                 {
+                    MainWindow.Visibility = System.Windows.Visibility.Visible;
                     if (MainWindow.WindowState == System.Windows.WindowState.Minimized || MainWindow.Visibility == System.Windows.Visibility.Hidden)
                     {
                         MainWindow.Show();
@@ -78,6 +79,7 @@ namespace OpenRPA.Interfaces
             {
                 try
                 {
+                    window.Visibility = System.Windows.Visibility.Visible;
                     if (window.WindowState == System.Windows.WindowState.Minimized || MainWindow.Visibility == System.Windows.Visibility.Hidden)
                     {
                         window.Visibility = System.Windows.Visibility.Visible;

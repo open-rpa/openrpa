@@ -65,13 +65,20 @@ namespace OpenRPA.AviRecorder
 
             GenericTools.RunUI(() =>
             {
-                if (string.IsNullOrEmpty(filename)) filename = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-                lastFileName = System.IO.Path.Combine(outputFolder, filename + extension);
-                var bitRate = Mp3AudioEncoderLame.SupportedBitRates.OrderBy(br => br).ElementAt(audioQuality);
-                recorder = new Recorder(lastFileName,
-                    encoder, encodingQuality,
-                    audioSourceIndex, audioWaveFormat, encodeAudio, bitRate);
-                IsRecording = true;
+                try
+                {
+                    if (string.IsNullOrEmpty(filename)) filename = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+                    lastFileName = System.IO.Path.Combine(outputFolder, filename + extension);
+                    var bitRate = Mp3AudioEncoderLame.SupportedBitRates.OrderBy(br => br).ElementAt(audioQuality);
+                    recorder = new Recorder(lastFileName,
+                        encoder, encodingQuality,
+                        audioSourceIndex, audioWaveFormat, encodeAudio, bitRate);
+                    IsRecording = true;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
             });
         }
 

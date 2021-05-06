@@ -82,6 +82,28 @@ namespace OpenRPA.PS
             }
             return responseObject;
         }
+        public static PSObject toPSObjectWithTypeName(this JObject entity, string Collection)
+        {
+            entity["__pscollection"] = Collection;
+            var obj = entity.toPSObject();
+            //var display = new PSPropertySet("DefaultDisplayPropertySet", new[] { "name", "_type", "_createdby", "_created" });
+            //var mi = new PSMemberSet("PSStandardMembers", new[] { display });
+            //obj.Members.Add(mi);
+            obj.TypeNames.Insert(0, "OpenRPA.PS.Entity");
+            if (Collection == "openrpa")
+            {
+                if (entity.Value<string>("_type") == "workflow") obj.TypeNames.Insert(0, "OpenRPA.Workflow");
+                if (entity.Value<string>("_type") == "project") obj.TypeNames.Insert(0, "OpenRPA.Project");
+                if (entity.Value<string>("_type") == "detector") obj.TypeNames.Insert(0, "OpenRPA.Detector");
+                if (entity.Value<string>("_type") == "unattendedclient") obj.TypeNames.Insert(0, "OpenRPA.UnattendedClient");
+                if (entity.Value<string>("_type") == "unattendedserver") obj.TypeNames.Insert(0, "OpenRPA.UnattendedServer");
+            }
+            else if (Collection == "files")
+            {
+                obj.TypeNames.Insert(0, "OpenRPA.File");
+            }
+            return obj;
+        }
         public static bool IsUpper(this string value)
         {
             // Consider string to be uppercase if it has no lowercase letters.

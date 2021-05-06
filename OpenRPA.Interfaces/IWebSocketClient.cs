@@ -46,7 +46,7 @@ namespace OpenRPA.Interfaces
     public interface IWebSocketClient
     {
         event Action OnOpen;
-        event Action<string> OnClose;        
+        event Action<string> OnClose;
         event QueueMessageDelegate OnQueueMessage;
         TokenUser user { get; }
         string url { get; set; }
@@ -76,6 +76,9 @@ namespace OpenRPA.Interfaces
         Task PushMetrics(string metrics);
         Task<string> Watch(string collectionname, string query, WatchEventDelegate onWatchEvent);
         Task UnWatch(string id);
+        Task EnsureNoderedInstance(string _id);
+        Task DeleteNoderedInstance(string _id);
+        Task RestartNoderedInstance(string _id);
     }
     public class QueueMessageEventArgs : EventArgs
     {

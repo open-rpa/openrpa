@@ -42,7 +42,6 @@
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Activities\AlertDesigner.xaml" />
     <None Remove="Activities\Form.xaml" />
     <None Remove="Activities\FormDesigner.xaml" />
     <None Remove="Activities\InvokeFormDesigner.xaml" />
@@ -82,9 +81,6 @@
     <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Activities\AlertDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Activities\Form.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

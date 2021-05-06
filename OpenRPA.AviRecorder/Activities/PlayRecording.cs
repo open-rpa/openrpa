@@ -24,8 +24,15 @@ namespace OpenRPA.AviRecorder.Activities
             var filename = Filename.Get(context);
             GenericTools.RunUI(() =>
             {
-                var f = new Playback(filename);
-                f.ShowDialog();
+                try
+                {
+                    var f = new Playback(filename);
+                    f.ShowDialog();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
             });
         }
         public new string DisplayName

@@ -18,10 +18,17 @@ namespace OpenRPA.Interfaces
         {
             RunUI(() =>
             {
-                if (window.WindowState != System.Windows.WindowState.Minimized)
+                try
                 {
-                    NativeMethods.ShowWindow(new System.Windows.Interop.WindowInteropHelper(window).Handle, NativeMethods.SW_MINIMIZE);
+                    if (window.WindowState != System.Windows.WindowState.Minimized)
+                    {
+                        NativeMethods.ShowWindow(new System.Windows.Interop.WindowInteropHelper(window).Handle, NativeMethods.SW_MINIMIZE);
 
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
                 }
             });
         }
@@ -33,24 +40,22 @@ namespace OpenRPA.Interfaces
         {
             RunUI(() =>
             {
-                if (MainWindow.WindowState == System.Windows.WindowState.Minimized ||  MainWindow.Visibility == System.Windows.Visibility.Hidden)
+                try
                 {
-                    MainWindow.Show();
                     MainWindow.Visibility = System.Windows.Visibility.Visible;
-                    Restore(Handle);
-                    ActivateWindow(MainWindow);
-                    //Task.Run(() =>
-                    //{
-                    //    System.Threading.Thread.Sleep(500);
-                    //    RunUI(() =>
-                    //    {
-                    //        MainWindow.Activate();
-                    //        MainWindow.Focus();
-                    //    });
-                    //});
-                    
-                    MainWindow.Activate();
-                    MainWindow.Focus();
+                    if (MainWindow.WindowState == System.Windows.WindowState.Minimized || MainWindow.Visibility == System.Windows.Visibility.Hidden)
+                    {
+                        MainWindow.Show();
+                        MainWindow.Visibility = System.Windows.Visibility.Visible;
+                        Restore(Handle);
+                        ActivateWindow(MainWindow);
+                        MainWindow.Activate();
+                        MainWindow.Focus();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
                 }
             });
         }
@@ -58,13 +63,21 @@ namespace OpenRPA.Interfaces
         {
             RunUI(() =>
             {
-                if (window.WindowState == System.Windows.WindowState.Minimized || MainWindow.Visibility == System.Windows.Visibility.Hidden)
+                try
                 {
                     window.Visibility = System.Windows.Visibility.Visible;
-                    IntPtr hWnd = new System.Windows.Interop.WindowInteropHelper(window).Handle;
-                    Restore(hWnd);
-                    MainWindow.Activate();
-                    MainWindow.Focus();
+                    if (window.WindowState == System.Windows.WindowState.Minimized || MainWindow.Visibility == System.Windows.Visibility.Hidden)
+                    {
+                        window.Visibility = System.Windows.Visibility.Visible;
+                        IntPtr hWnd = new System.Windows.Interop.WindowInteropHelper(window).Handle;
+                        Restore(hWnd);
+                        MainWindow.Activate();
+                        MainWindow.Focus();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
                 }
             });
         }
@@ -121,7 +134,7 @@ namespace OpenRPA.Interfaces
         {
             AutomationHelper.syncContext.Send(o =>
             {
-                    action();
+                action();
             }, null);
         }
         private delegate void SafeCallDelegate();

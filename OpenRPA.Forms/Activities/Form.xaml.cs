@@ -59,7 +59,7 @@ namespace OpenRPA.Forms.Activities
         }
         private void Window_Unloaded(object sender, RoutedEventArgs e)
         {
-            foreach(var rec in Application.Current.Resources.MergedDictionaries.ToList())
+            foreach (var rec in Application.Current.Resources.MergedDictionaries.ToList())
             {
                 if (rec.Source == null) continue;
                 if (rec.Source.AbsolutePath.Contains("Forge.Forms")) Application.Current.Resources.MergedDictionaries.Remove(rec);
@@ -119,7 +119,7 @@ namespace OpenRPA.Forms.Activities
             get
             {
                 var json = JsonConvert.SerializeObject(CurrentModel, Formatting.Indented);
-                return json;                
+                return json;
             }
         }
         public Exception LastError { get; set; }
@@ -130,10 +130,11 @@ namespace OpenRPA.Forms.Activities
                 LastError = null;
                 CompiledDefinition = FormBuilder.Default.GetDefinition(xmlString);
                 var t = CompiledDefinition.GetElements().Where(x => x is TitleElement).FirstOrDefault();
-                if(t != null && t.Resources.ContainsKey("Content"))
+                if (t != null && t.Resources.ContainsKey("Content"))
                 {
                     this.Title = t.Resources["Content"].GetStringValue(null).Value;
-                } else
+                }
+                else
                 {
                     var h = CompiledDefinition.GetElements().Where(x => x is HeadingElement).FirstOrDefault();
                     if (h != null && h.Resources.ContainsKey("Content"))
@@ -162,7 +163,7 @@ namespace OpenRPA.Forms.Activities
             actionContext = e.ActionContext;
             var fields = CompiledDefinition.GetElements();
             var firstNameElement = (DataFormField)CompiledDefinition.GetElements().FirstOrDefault(x => x is DataFormField d && d.Key == "FirstName");
-            if(actionContext.Action != null && actionContext.Action.ToString()!="reset")
+            if (actionContext.Action != null && actionContext.Action.ToString() != "reset")
             {
                 DialogResult = true;
             }
@@ -191,10 +192,17 @@ namespace OpenRPA.Forms.Activities
             }
             GenericTools.RunUI(() =>
             {
-                foreach (var p in defaults)
+                try
                 {
-                    //CompiledDefinition.UpdateDefaultValue(p.Key, p.Value);
-                    CurrentModel[p.Key] = p.Value;
+                    foreach (var p in defaults)
+                    {
+                        //CompiledDefinition.UpdateDefaultValue(p.Key, p.Value);
+                        CurrentModel[p.Key] = p.Value;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
                 }
             });
         }

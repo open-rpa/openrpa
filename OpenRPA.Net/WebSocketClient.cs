@@ -35,7 +35,7 @@ namespace OpenRPA.Net
             get
             {
                 if (ws == null) return false;
-                if(ws.State != System.Net.WebSockets.WebSocketState.Open) return false;
+                if (ws.State != System.Net.WebSockets.WebSocketState.Open) return false;
                 return true;
             }
         }
@@ -54,7 +54,8 @@ namespace OpenRPA.Net
                     ws.Dispose();
                     ws = null;
                 }
-                if(ws == null) {
+                if (ws == null)
+                {
                     // ws = (ClientWebSocket)SystemClientWebSocket.CreateClientWebSocket();
                     if (VersionHelper.IsWindows8OrGreater())
                     {
@@ -67,7 +68,7 @@ namespace OpenRPA.Net
                     src = new CancellationTokenSource();
                 }
                 if (ws.State == System.Net.WebSockets.WebSocketState.Connecting || ws.State == System.Net.WebSockets.WebSocketState.Open) return;
-                if(ws.State == System.Net.WebSockets.WebSocketState.CloseReceived)
+                if (ws.State == System.Net.WebSockets.WebSocketState.CloseReceived)
                 {
                     OnClose?.Invoke("Socket closing");
                     ws.Dispose();
@@ -125,7 +126,7 @@ namespace OpenRPA.Net
                 {
                     var jObject = JObject.Parse(json);
                     return true;
-                }                
+                }
             }
             catch
             {
@@ -144,7 +145,8 @@ namespace OpenRPA.Net
                 try
                 {
                     if (ws == null) { return; }
-                    if (ws.State != System.Net.WebSockets.WebSocketState.Open) {
+                    if (ws.State != System.Net.WebSockets.WebSocketState.Open)
+                    {
                         OnClose?.Invoke("");
                         return;
                     }
@@ -155,12 +157,12 @@ namespace OpenRPA.Net
                     if (TryParseJSON(workingjson))
                     {
                         var message = JsonConvert.DeserializeObject<SocketMessage>(workingjson);
-                        if(!string.IsNullOrEmpty(message.id) && !string.IsNullOrEmpty(message.command) && message != null)
+                        if (!string.IsNullOrEmpty(message.id) && !string.IsNullOrEmpty(message.command) && message != null)
                         {
                             lock (_receiveQueue)
                             {
                                 tempbuffer = "";
-                                if(message.index % 100 == 99) Log.Network("Adding " + message.id + " to receiveQueue " + (message.index + 1) + " of " + message.count);
+                                if (message.index % 100 == 99) Log.Network("Adding " + message.id + " to receiveQueue " + (message.index + 1) + " of " + message.count);
                                 _receiveQueue.Add(message);
                             }
                             await ProcessQueue();
@@ -192,7 +194,7 @@ namespace OpenRPA.Net
                     }
                     else
                     {
-                        if(!string.IsNullOrEmpty(json)) Log.Error(json);
+                        if (!string.IsNullOrEmpty(json)) Log.Error(json);
                         Log.Error(ex, "");
                         await Task.Delay(3000);
                         //await this.Close();
@@ -241,7 +243,7 @@ namespace OpenRPA.Net
                     }
                     if (first.count == msgs.Count)
                     {
-                        if(msgs.Count > 100) Log.Network("Stiching together " + first.count + " messages for message id " + first.id);
+                        if (msgs.Count > 100) Log.Network("Stiching together " + first.count + " messages for message id " + first.id);
                         string data = "";
                         foreach (var m in msgs.OrderBy((y) => y.index))
                         {
@@ -257,7 +259,7 @@ namespace OpenRPA.Net
                             }
                         }
                         Process(result);
-                        Log.Network("Processing message " + result.id +  " complete");
+                        Log.Network("Processing message " + result.id + " complete");
                     }
                 }
             }
@@ -314,7 +316,7 @@ namespace OpenRPA.Net
         }
         public void PushMessage(SocketMessage msg)
         {
-            lock(_sendQueue)
+            lock (_sendQueue)
             {
                 _sendQueue.Add(msg);
             }
@@ -325,7 +327,7 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(msg.replyto))
             {
                 if (msg.command != "pong") { Log.Network(msg.command + " / replyto: " + msg.replyto); }
-                    // else { Log.Network(msg.command + " / replyto: " + msg.replyto);  }
+                // else { Log.Network(msg.command + " / replyto: " + msg.replyto);  }
 
                 foreach (var qm in _messageQueue.ToList())
                 {
@@ -348,7 +350,7 @@ namespace OpenRPA.Net
             else
             {
                 if (msg.command != "ping" && msg.command != "refreshtoken") { Log.Network(msg.command + " / " + msg.id); }
-                    // else { Log.Network(msg.command + " / replyto: " + msg.replyto); }
+                // else { Log.Network(msg.command + " / replyto: " + msg.replyto); }
                 switch (msg.command)
                 {
                     case "ping":
@@ -361,10 +363,10 @@ namespace OpenRPA.Net
                         this.user = signin.user;
                         this.jwt = signin.jwt;
                         // msg.SendMessage(this); no need to confirm
-                        if(signin.websocket_package_size > 100)
+                        if (signin.websocket_package_size > 100)
                         {
                             this.websocket_package_size = signin.websocket_package_size;
-                        }                        
+                        }
                         break;
                     case "queuemessage":
                         msg.reply();
@@ -435,11 +437,11 @@ namespace OpenRPA.Net
         public async Task<Message> SendMessage(Message msg)
         {
             var qm = new QueuedMessage(msg);
-            lock(_messageQueue)
+            lock (_messageQueue)
             {
                 _messageQueue.Add(qm);
             }
-            
+
             using (qm.autoReset = new AutoResetEvent(false))
             {
                 msg.SendMessage(this);
@@ -562,7 +564,7 @@ namespace OpenRPA.Net
                 q.projection = projection; q.orderby = orderby; q.queryas = queryas;
                 q.collectionname = collectionname;
                 if (string.IsNullOrEmpty(query)) query = "{}";
-                    q.query = JObject.Parse(query);
+                q.query = JObject.Parse(query);
                 q = await q.SendMessage<QueryMessage<T>>(this);
                 if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
                 result.AddRange(q.result);
@@ -622,7 +624,7 @@ namespace OpenRPA.Net
             q.mimeType = MimeTypeHelper.GetMimeType(System.IO.Path.GetExtension(filepath));
             q.file = base64;
             q.metadata = metadata;
-            if(q.metadata == null) q.metadata = new metadata();
+            if (q.metadata == null) q.metadata = new metadata();
             q.metadata.name = System.IO.Path.GetFileName(filepath);
             q.metadata.filename = q.filename;
             q.metadata.path = path;
@@ -672,6 +674,27 @@ namespace OpenRPA.Net
             q = await q.SendMessage<CreateWorkflowInstanceMessage>(this);
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
             return q.newinstanceid;
+        }
+        public async Task EnsureNoderedInstance(string _id)
+        {
+            var q = new EnsureNoderedInstanceMessage();
+            q._id = _id;
+            q = await q.SendMessage<EnsureNoderedInstanceMessage>(this);
+            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+        }
+        public async Task DeleteNoderedInstance(string _id)
+        {
+            var q = new DeleteNoderedInstanceMessage();
+            q._id = _id;
+            q = await q.SendMessage<DeleteNoderedInstanceMessage>(this);
+            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+        }
+        public async Task RestartNoderedInstance(string _id)
+        {
+            var q = new RestartNoderedInstanceMessage();
+            q._id = _id;
+            q = await q.SendMessage<RestartNoderedInstanceMessage>(this);
+            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
         }
         public async Task<Interfaces.ICollection[]> ListCollections(bool includehist = false)
         {

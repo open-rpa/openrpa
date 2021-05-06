@@ -26,7 +26,7 @@ namespace OpenRPA.IE
                 Log.Warning("Failed locating an Internet Explore instance");
                 return new treeelement[] { };
             }
-            if(anchor != null)
+            if (anchor != null)
             {
                 if (!(anchor is IESelector ieselector)) { ieselector = new IESelector(anchor.ToString()); }
                 var elements = IESelector.GetElementsWithuiSelector(ieselector, null, 5);
@@ -113,7 +113,14 @@ namespace OpenRPA.IE
                 // sel = new IESelector(e.Element.rawElement, null, true);
                 GenericTools.RunUI(() =>
                 {
-                    sel = new IESelector(browser, htmlelement, null, false, e.X, e.Y);
+                    try
+                    {
+                        sel = new IESelector(browser, htmlelement, null, false, e.X, e.Y);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
                 });
                 if (sel == null) return;
                 if (sel.Count < 2) return;
@@ -151,11 +158,12 @@ namespace OpenRPA.IE
             thread.IsBackground = true;
             thread.Start();
         }
-        public bool ParseUserAction(ref IRecordEvent e) {
+        public bool ParseUserAction(ref IRecordEvent e)
+        {
             if (e.UIElement == null) return false;
             if (e.UIElement.ProcessId < 1) return false;
             var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-            if(p.ProcessName!="iexplore" && p.ProcessName != "iexplore.exe") return false;
+            if (p.ProcessName != "iexplore" && p.ProcessName != "iexplore.exe") return false;
             var browser = new Browser();
 
             var htmlelement = browser.ElementFromPoint(e.X, e.Y);
@@ -211,23 +219,30 @@ namespace OpenRPA.IE
             if (string.IsNullOrEmpty(url)) return null;
             GenericTools.RunUI(() =>
             {
-                var browser = Browser.GetBrowser(true, url);
-                var doc = browser.Document;
-                if (url != doc.url) doc.url = url;
-                browser.Show();
-                var sw = new System.Diagnostics.Stopwatch();
-                sw.Start();
-                while (sw.Elapsed < timeout)
+                try
                 {
-                    try
+                    var browser = Browser.GetBrowser(true, url);
+                    var doc = browser.Document;
+                    if (url != doc.url) doc.url = url;
+                    browser.Show();
+                    var sw = new System.Diagnostics.Stopwatch();
+                    sw.Start();
+                    while (sw.Elapsed < timeout)
                     {
-                        Log.Debug("pending complete, readyState: " + doc.readyState);
-                        Thread.Sleep(100);
-                        if (doc.readyState != "complete" && doc.readyState != "interactive") break;
+                        try
+                        {
+                            Log.Debug("pending complete, readyState: " + doc.readyState);
+                            Thread.Sleep(100);
+                            if (doc.readyState != "complete" && doc.readyState != "interactive") break;
+                        }
+                        catch (Exception)
+                        {
+                        }
                     }
-                    catch (Exception)
-                    {
-                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
                 }
             });
 
@@ -242,7 +257,7 @@ namespace OpenRPA.IE
                         var wBrowser = w as SHDocVw.WebBrowser;
                         var automation = Interfaces.AutomationUtil.getAutomation();
                         var _ele = automation.FromHandle(new IntPtr(wBrowser.HWND));
-                        if(_ele != null)
+                        if (_ele != null)
                         {
                             var ui = new UIElement(_ele);
                             var window = ui.GetWindow();
@@ -271,7 +286,7 @@ namespace OpenRPA.IE
                     try
                     {
                         var wBrowser = _ie as SHDocVw.WebBrowser;
-                        if(wBrowser.LocationURL == url || string.IsNullOrEmpty(url))
+                        if (wBrowser.LocationURL == url || string.IsNullOrEmpty(url))
                         {
                             using (var automation = Interfaces.AutomationUtil.getAutomation())
                             {
@@ -284,7 +299,7 @@ namespace OpenRPA.IE
                             }
                         }
                     }
-                    catch (Exception ex)    
+                    catch (Exception ex)
                     {
                         Log.Error(ex, "");
                     }

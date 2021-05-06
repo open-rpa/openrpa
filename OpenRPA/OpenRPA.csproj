@@ -410,6 +410,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Resources\icons\flowchart.png" />
     <None Remove="Resources\icons\openin.png" />
     <None Remove="Resources\icons\property.png" />
+    <None Remove="Resources\icons\spinner2.png" />
     <None Remove="Resources\icons\variable.png" />
     <None Remove="Resources\open.png" />
     <None Remove="Resources\open_flow.ico" />
@@ -663,6 +664,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <Resource Include="Resources\icons\flowchart.png" />
     <Resource Include="Resources\icons\openin.png" />
     <Resource Include="Resources\icons\property.png" />
+    <Resource Include="Resources\icons\spinner2.png" />
     <Resource Include="Resources\icons\variable.png" />
     <Resource Include="Resources\open.png" />
     <Resource Include="Resources\open_flow.ico" />

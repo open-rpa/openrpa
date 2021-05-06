@@ -230,7 +230,7 @@ namespace OpenRPA
         public IDesigner GetWorkflowDesignerByIDOrRelativeFilename(string IDOrRelativeFilename)
         {
             Log.FunctionIndent("RobotInstance", "GetWorkflowDesignerByIDOrRelativeFilename");
-            if(!string.IsNullOrEmpty(IDOrRelativeFilename))
+            if (!string.IsNullOrEmpty(IDOrRelativeFilename))
                 foreach (var designer in Designers)
                 {
                     if (designer.Workflow._id == IDOrRelativeFilename) return designer;
@@ -310,6 +310,7 @@ namespace OpenRPA
         public async Task LoadServerData()
         {
             DisableWatch = true;
+            Window.IsLoading = true;
             var span = source.StartActivity("LoadServerData", ActivityKind.Consumer);
             try
             {
@@ -469,7 +470,7 @@ namespace OpenRPA
                     {
                         span?.AddEvent(new ActivityEvent("Removing local detector " + detector.name));
                         Log.Debug("Removing local detector " + detector.name);
-                        var d = Plugins.detectorPlugins.Where(x => x.Entity._id == exists._id).FirstOrDefault();
+                        var d = Plugins.detectorPlugins.Where(x => x.Entity._id == detector._id).FirstOrDefault();
                         if (d != null)
                         {
                             d.OnDetector -= Window.OnDetector;
@@ -547,6 +548,7 @@ namespace OpenRPA
                 AutoReloading = true;
                 DisableWatch = false;
                 span?.Dispose();
+                Window.IsLoading = false;
             }
         }
         private string openrpa_watchid = "";

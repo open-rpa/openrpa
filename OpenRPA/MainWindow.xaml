@@ -398,7 +398,7 @@
                     </avalonDock:LayoutAnchorSide>
                 </avalonDock:LayoutRoot.BottomSide>
 
-                
+
                 <avalonDock:LayoutRoot.RightSide>
                     <avalonDock:LayoutAnchorSide>
                         <avalonDock:LayoutAnchorGroup >
@@ -416,6 +416,29 @@
 
         <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="2" Height="25" Background="Gray">
             <StatusBar FocusManager.IsFocusScope="True" x:Name="StatusBar">
+                <StatusBarItem>
+                    <Image
+                        Source="/OpenRPA;component/Resources/icons/spinner2.png"
+                        Width="13"
+                        Height="13"
+                        RenderTransformOrigin="0.5, 0.5"
+                        Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
+                        <Image.RenderTransform>
+                            <RotateTransform x:Name="noFreeze" />
+                        </Image.RenderTransform>
+                        <Image.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                        Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
+                        To="360" Duration="0:0:1" RepeatBehavior="Forever" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Image.Triggers>
+                    </Image>
+                </StatusBarItem>
                 <StatusBarItem x:Name="LabelStatusBar" Content="{x:Static or:strings.status_disconnected}" />
                 <StatusBarItem VerticalAlignment="Top" HorizontalContentAlignment="Center">
                     <ItemsControl x:Name="lvDataBinding">

@@ -92,6 +92,8 @@ namespace OpenRPA
                 throw;
             }
         }
+        private bool _IsLoading = false;
+        public bool IsLoading { get { return _IsLoading; } set { _IsLoading = value; NotifyPropertyChanged("IsLoading"); } }
         private bool first_connect = true;
         public IDesigner[] Designers
         {
@@ -621,7 +623,7 @@ namespace OpenRPA
                     workflow = wf;
                 }
             }
-            if(workflow  != null)
+            if (workflow != null)
             {
                 string errormessage = "";
                 try

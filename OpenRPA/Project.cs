@@ -48,6 +48,7 @@ namespace OpenRPA
                 var FilterText = Views.OpenProject.Instance.FilterText;
                 if (string.IsNullOrEmpty(FilterText))
                 {
+                    FilteredSource.Filter = null;
                     return FilteredSource;
                 }
                 FilteredSource.Filter = p => ((IWorkflow)p).name.ToLower().Contains(FilterText.ToLower());

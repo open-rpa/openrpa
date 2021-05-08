@@ -158,6 +158,7 @@ namespace OpenRPA
                     if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
                     {
                         var wf = RobotInstance.instance.Workflows.FindById(_id);
+                        if (wf == null) return;
                         if (wf._version == _version)
                         {
                             Log.Verbose("Saving " + this.name + " with version " + this._version);
@@ -292,9 +293,19 @@ namespace OpenRPA
         }
         public async Task Save()
         {
-            if (projectid == null && string.IsNullOrEmpty(projectid)) throw new Exception("Cannot save workflow with out a project/projectid");
+            if (string.IsNullOrEmpty(projectid)) throw new Exception("Cannot save workflow with out a project/projectid");
             if (string.IsNullOrEmpty(Filename)) Filename = UniqueFilename();
-            if (string.IsNullOrEmpty(projectid)) projectid = Project()._id;
+            if (Project() == null)
+            {
+                Log.Information("Missing project " + projectid + " while saving workflow " + name);
+                var q = "{\"_type\": 'project', '_id': '" + projectid + "'}";
+                var server_projects = await global.webSocketClient.Query<Project>("openrpa", q);
+                if (server_projects.Length > 0)
+                {
+                    Log.Information("Adding project " + server_projects[0].name);
+                    await server_projects[0].Save();
+                }
+            }
             await Save<Workflow>();
             RobotInstance.instance.UpdateWorkflow(this, false);
         }
@@ -500,6 +511,10 @@ namespace OpenRPA
         }
         [JsonIgnore, BsonIgnore]
         public bool IsVisible { get { return GetProperty<bool>(); } set { SetProperty(value); } }
+        public override string ToString()
+        {
+            return RelativeFilename;
+        }
     }
 
 }

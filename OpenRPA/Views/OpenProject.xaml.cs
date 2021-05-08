@@ -139,6 +139,7 @@ namespace OpenRPA.Views
         {
             try
             {
+                if (Instance == null) { Log.Debug("UpdateProjectsList, Instance is null"); return; }
                 if (!string.IsNullOrEmpty(Instance.FilterText))
                 {
                     foreach (var p in Instance.Projects)
@@ -151,7 +152,6 @@ namespace OpenRPA.Views
 
                     return;
                 }
-                if (Instance == null) Log.Debug("UpdateProjectsList, Instance is null");
                 var result = RobotInstance.instance.Projects.FindAll().OrderBy(x => x.name).ToList();
                 for (var i = 0; i < result.Count; i++)
                 {

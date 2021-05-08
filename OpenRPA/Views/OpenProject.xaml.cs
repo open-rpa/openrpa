@@ -25,7 +25,14 @@ namespace OpenRPA.Views
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propertyName)
         {
-            PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            try
+            {
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         public DelegateCommand DockAsDocumentCommand = new DelegateCommand((e) => { }, (e) => false);
         public DelegateCommand AutoHideCommand { get; set; } = new DelegateCommand((e) => { }, (e) => false);
@@ -133,6 +140,36 @@ namespace OpenRPA.Views
                 return _Projects;
             }
         }
+
+        public System.Windows.Data.ListCollectionView FilteredSource;
+        public System.ComponentModel.ICollectionView FilteredProjects
+        {
+            get
+            {
+                var FilterText = Instance.FilterText;
+                if (string.IsNullOrEmpty(FilterText))
+                {
+                    FilteredSource.Filter = null;
+                    Log.Output("return " + FilteredSource.Count + " unfiltered");
+                    return FilteredSource;
+                }
+                FilterText = FilterText.ToLower();
+                FilteredSource.Filter =
+                    obj =>
+                    {
+                        Project p = obj as Project;
+                        if (p.name.ToLower().Contains(FilterText)) return true;
+                        p.UpdateFilteredWorkflows();
+                        if (p.FilteredSource.Count > 0) return true;
+                        //((IProject)p).name.ToLower().Contains(FilterText.ToLower()) || (IProject)p).FilteredSource.Count > 0;
+                        return false;
+                    };
+                Log.Output("return " + FilteredSource.Count + " filtered");
+                return FilteredSource;
+            }
+        }
+
+
         public static OpenProject Instance;
         public static bool isUpdating = false;
         public static void UpdateProjectsList()
@@ -144,9 +181,6 @@ namespace OpenRPA.Views
                 {
                     foreach (var p in Instance.Projects)
                     {
-                        // result[i].NotifyPropertyChanged("FilteredWorkflows");
-                        //result[i].FilteredSource.Refresh();
-                        //if (result[i].FilteredSource.Count > 0) result[i].UpdateWorkflowsList();
                         p.NotifyPropertyChanged("FilteredWorkflows");
                     }
 
@@ -179,6 +213,7 @@ namespace OpenRPA.Views
         public OpenProject(IMainWindow main)
         {
             Instance = this;
+            FilteredSource = ((System.Windows.Data.ListCollectionView)System.Windows.Data.CollectionViewSource.GetDefaultView(Projects));
             Log.FunctionIndent("OpenProject", "OpenProject");
             try
             {
@@ -199,6 +234,7 @@ namespace OpenRPA.Views
         private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Projects") NotifyPropertyChanged("Projects");
+            if (e.PropertyName == "Projects") NotifyPropertyChanged("FilteredProjects");
         }
 
         public static bool isFiltering = false;
@@ -230,6 +266,8 @@ namespace OpenRPA.Views
                 foreach (var p in Instance.Projects) p.NotifyPropertyChanged("FilteredWorkflows");
                 NotifyPropertyChanged("FilterText");
                 NotifyPropertyChanged("Projects");
+                NotifyPropertyChanged("FilteredProjects");
+
                 if (ReFilter)
                 {
                     isUpdating = true;
@@ -242,6 +280,7 @@ namespace OpenRPA.Views
                     foreach (var p in Instance.Projects) p.NotifyPropertyChanged("FilteredWorkflows");
                     NotifyPropertyChanged("FilterText");
                     NotifyPropertyChanged("Projects");
+                    NotifyPropertyChanged("FilteredProjects");
                 }
                 isFiltering = false;
             }
@@ -345,6 +384,7 @@ namespace OpenRPA.Views
             NotifyPropertyChanged("Project");
             NotifyPropertyChanged("IsWorkflowSelected");
             NotifyPropertyChanged("IsWorkflowOrProjectSelected");
+            // NotifyPropertyChanged("FilteredProjects");
             onSelectedItemChanged?.Invoke();
         }
         public bool IsWorkflowSelected

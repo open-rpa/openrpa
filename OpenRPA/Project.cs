@@ -45,15 +45,19 @@ namespace OpenRPA
         {
             get
             {
-                var FilterText = Views.OpenProject.Instance.FilterText;
-                if (string.IsNullOrEmpty(FilterText))
-                {
-                    FilteredSource.Filter = null;
-                    return FilteredSource;
-                }
-                FilteredSource.Filter = p => ((IWorkflow)p).name.ToLower().Contains(FilterText.ToLower());
+                UpdateFilteredWorkflows();
                 return FilteredSource;
             }
+        }
+        public void UpdateFilteredWorkflows()
+        {
+            var FilterText = Views.OpenProject.Instance.FilterText;
+            if (string.IsNullOrEmpty(FilterText))
+            {
+                FilteredSource.Filter = null;
+            }
+            FilteredSource.Filter = p => ((IWorkflow)p).name.ToLower().Contains(FilterText.ToLower());
+
         }
 
         //public override bool Equals(object obj)

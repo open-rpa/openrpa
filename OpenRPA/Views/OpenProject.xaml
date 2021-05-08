@@ -12,8 +12,6 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
-        <CollectionViewSource Source="{Binding Projects}" x:Key="Projects">
-        </CollectionViewSource>
         <localroot:BindingProxy x:Key="proxy" Data="{Binding}" />
     </UserControl.Resources>
 
@@ -30,7 +28,7 @@
                                          Text="{Binding Path=FilterText,UpdateSourceTrigger=PropertyChanged}" 
                                          ></TextBox>-->
 
-        <TreeView   x:Name="listWorkflows" ItemsSource="{Binding Source={StaticResource Projects}}" BorderThickness="0" Grid.Column="0"  Grid.Row="1" 
+        <TreeView   x:Name="listWorkflows" ItemsSource="{Binding FilteredProjects}" BorderThickness="0" Grid.Column="0"  Grid.Row="1" 
                                        MouseDoubleClick="ListWorkflows_MouseDoubleClick" SelectedItemChanged="listWorkflows_SelectedItemChanged"
                     >
             <TreeView.ItemContainerStyle>

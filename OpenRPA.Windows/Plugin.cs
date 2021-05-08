@@ -22,7 +22,7 @@ namespace OpenRPA.Windows
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         public static treeelement[] _GetRootElements(Selector anchor)
         {
-            if(CurrentProcessId==0) CurrentProcessId = Process.GetCurrentProcess().Id;
+            if (CurrentProcessId == 0) CurrentProcessId = Process.GetCurrentProcess().Id;
 
             var result = new List<treeelement>();
             Task.Run(() =>
@@ -247,6 +247,7 @@ namespace OpenRPA.Windows
             _ = PluginConfig.get_elements_in_different_thread;
             _ = PluginConfig.search_timeout;
             _ = PluginConfig.traverse_selector_both_ways;
+            _ = PluginConfig.enable_windows_detector;
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
@@ -353,7 +354,7 @@ namespace OpenRPA.Windows
 
             sw = new Stopwatch();
             sw.Start();
-            if(timeout < TimeSpan.FromSeconds(10))
+            if (timeout < TimeSpan.FromSeconds(10))
             {
                 timeout = TimeSpan.FromSeconds(10);
             }
@@ -395,7 +396,7 @@ namespace OpenRPA.Windows
             {
                 var window = ((UIElement)elements[0]);
                 return new UIElement(window.GetWindow());
-            } 
+            }
             else
             {
                 return null;
@@ -409,31 +410,32 @@ namespace OpenRPA.Windows
         public void CloseBySelector(Selector selector, TimeSpan timeout, bool Force)
         {
             IElement[] elements = { };
-                if (PluginConfig.get_elements_in_different_thread)
+            if (PluginConfig.get_elements_in_different_thread)
+            {
+                elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
                 {
-                    elements = OpenRPA.AutomationHelper.RunSTAThread<IElement[]>(() =>
+                    try
                     {
-                        try
-                        {
-                            return GetElementsWithSelector(selector, null, 1);
-                        }
-                        catch (System.Threading.ThreadAbortException)
-                        {
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error(ex, "");
-                        }
-                        return new UIElement[] { };
-                    }, TimeSpan.FromMilliseconds(5000)).Result;
-                } else
-                {
-                    elements = GetElementsWithSelector(selector, null, 1);
-                }
-                    if (elements == null)
-                    {
-                        elements = new IElement[] { };
+                        return GetElementsWithSelector(selector, null, 1);
                     }
+                    catch (System.Threading.ThreadAbortException)
+                    {
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, "");
+                    }
+                    return new UIElement[] { };
+                }, TimeSpan.FromMilliseconds(5000)).Result;
+            }
+            else
+            {
+                elements = GetElementsWithSelector(selector, null, 1);
+            }
+            if (elements == null)
+            {
+                elements = new IElement[] { };
+            }
             // elements = GetElementsWithSelector(selector, null, 1);
             if (elements.Length > 0)
             {
@@ -489,7 +491,7 @@ namespace OpenRPA.Windows
         {
             try
             {
-                if(Config.local.use_sendkeys)
+                if (Config.local.use_sendkeys)
                 {
                     AddActivity(new System.Activities.Statements.Assign<string>
                     {
@@ -525,7 +527,7 @@ namespace OpenRPA.Windows
         public IBodyActivity a { get; set; }
         public Interfaces.Selector.Selector Selector { get; set; }
         public bool SupportInput { get; set; }
-        public bool SupportSelect { get; set; }        
+        public bool SupportSelect { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public int OffsetX { get; set; }

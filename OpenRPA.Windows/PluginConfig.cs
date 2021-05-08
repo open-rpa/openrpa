@@ -32,5 +32,6 @@ namespace OpenRPA.Windows
         public static bool enable_cache { get { return globallocal.GetProperty(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }
         public static bool allow_attach { get { return globallocal.GetProperty(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }
         public static bool search_descendants { get { return globallocal.GetProperty(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }
+        public static bool enable_windows_detector { get { return globallocal.GetProperty(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }
     }
 }

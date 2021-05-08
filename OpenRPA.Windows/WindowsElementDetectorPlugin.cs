@@ -66,6 +66,8 @@ namespace OpenRPA.Windows
         private AutomationElement desktop;
         public void Start()
         {
+            if (string.IsNullOrEmpty(Selector)) return;
+            if (!PluginConfig.enable_windows_detector) return;
             Task.Run(() =>
             {
                 var automation = AutomationUtil.getAutomation();
@@ -79,7 +81,7 @@ namespace OpenRPA.Windows
             {
                 try
                 {
-                    if(desktop!= null) desktop.FrameworkAutomationElement.UnregisterStructureChangedEventHandler(StructureChangedEventHandler);
+                    if (desktop != null) desktop.FrameworkAutomationElement.UnregisterStructureChangedEventHandler(StructureChangedEventHandler);
                 }
                 catch (Exception ex)
                 {
@@ -136,7 +138,7 @@ namespace OpenRPA.Windows
                     else { return; }
                 }
 
-                if(element!=null)
+                if (element != null)
                 {
                     var _e = new DetectorEvent(new UIElement(element));
                     OnDetector?.Invoke(this, _e, EventArgs.Empty);

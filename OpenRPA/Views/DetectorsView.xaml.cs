@@ -61,7 +61,7 @@ namespace OpenRPA.Views
             {
                 await semaphoreSlim.WaitAsync();
                 var list = (ExtendedObservableCollection<OpenRPA.Interfaces.IDetectorPlugin>)sender;
-                foreach(var p in list.ToList())
+                foreach (var p in list.ToList())
                 {
                     var Entity = (p.Entity as Detector);
                     if (global.isConnected)
@@ -79,14 +79,14 @@ namespace OpenRPA.Views
                             else
                             {
                                 var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, p.Entity);
-                                if(result!=null) Entity._acl = result._acl;
+                                if (result != null) Entity._acl = result._acl;
                             }
                         }
                         catch (Exception ex)
                         {
                             Log.Error(ex.ToString());
                         }
-                    } 
+                    }
                 }
             }
             catch (Exception ex)
@@ -115,14 +115,15 @@ namespace OpenRPA.Views
                     var result = await global.webSocketClient.InsertOne("openrpa", 0, false, d);
                     d._id = result._id;
                     d._acl = result._acl;
-                } else
+                }
+                else
                 {
                     d._id = Guid.NewGuid().ToString();
                     d.isDirty = true;
                     d.isLocalOnly = true;
                 }
                 IDetectorPlugin exists = Plugins.detectorPlugins.Where(x => x.Entity._id == d._id).FirstOrDefault();
-                if(exists == null)
+                if (exists == null)
                 {
                     dp = Plugins.AddDetector(RobotInstance.instance, d);
                     dp.OnDetector += main.OnDetector;
@@ -144,21 +145,35 @@ namespace OpenRPA.Views
             {
                 if (e.Key == Key.Delete)
                 {
-                    var item = lidtDetectors.SelectedValue as IDetectorPlugin;
-                    item.Stop();
-                    item.OnDetector -= main.OnDetector;
-                    var d = item.Entity;
-                    var kd = item.Entity;
-                    var _id = item.Entity._id;
-                    if (global.isConnected)
+                    var index = lidtDetectors.SelectedIndex;
+                    var items = new List<object>();
+                    foreach (var item in lidtDetectors.SelectedItems) items.Add(item);
+                    foreach (var item in items)
                     {
-                        if (!string.IsNullOrEmpty(_id))
+                        var d = item as IDetectorPlugin;
+                        if (d != null)
                         {
-                            await global.webSocketClient.DeleteOne("openrpa", _id);
+                            var entity = d.Entity as Detector;
+                            d.OnDetector -= main.OnDetector;
+                            d.Stop();
+                            Plugins.detectorPlugins.Remove(d);
+                            if (entity != null)
+                            {
+                                await entity.Delete();
+                            }
                         }
                     }
-                    detectorPlugins.Remove(item);
-                    RobotInstance.instance.Detectors.Delete(_id);
+                    if (index > -1)
+                    {
+                        if (index >= lidtDetectors.Items.Count)
+                        {
+                            index = lidtDetectors.Items.Count - 1;
+                        }
+                        if (index > -1)
+                        {
+                            ((ListBoxItem)lidtDetectors.ItemContainerGenerator.ContainerFromIndex((lidtDetectors.Items.Count > 1 ? (index == 0 ? 1 : index - 1) : 0)))?.Focus();
+                        }
+                    }
                 }
             }
             catch (Exception ex)

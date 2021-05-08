@@ -90,7 +90,7 @@ namespace OpenRPA
                 SetStatus("loading Snippets toolbox");
                 Snippets = new Views.Snippets();
                 NotifyPropertyChanged("Snippets");
-                OnOpen(null);
+                // OnOpen(null);
                 AddHotKeys();
                 if (string.IsNullOrEmpty(Config.local.wsurl))
                 {
@@ -126,22 +126,6 @@ namespace OpenRPA
                         try
                         {
                             SetStatus("Load layout and reopen workflows");
-                            if (RobotInstance.instance.Projects.Count() == 0 && first_connect)
-                            {
-                                string Name = "New Project";
-                                try
-                                {
-                                    Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name);
-
-                                    IWorkflow workflow = await project.AddDefaultWorkflow();
-                                    RobotInstance.instance.NotifyPropertyChanged("Projects");
-                                    OnOpenWorkflow(workflow);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Log.Error(ex.ToString());
-                                }
-                            }
                             first_connect = false;
                             LoadLayout();
 
@@ -1769,7 +1753,7 @@ namespace OpenRPA
                 return false;
             }
         }
-        private void OnOpen(object _item)
+        public void OnOpen(object _item)
         {
             Log.FunctionIndent("MainWindow", "OnOpen");
             AutomationHelper.syncContext.Post(o =>

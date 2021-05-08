@@ -25,5 +25,6 @@ namespace OpenRPA.Interfaces
         void Hide();
         void Show();
         void Close();
+        void OnOpen(object _item);
     }
 }

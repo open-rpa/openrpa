@@ -68,7 +68,7 @@ namespace OpenRPA
         {
             try
             {
-                OnOpen();
+                OnOpen(null);
                 //if(RobotInstance.instance.ProjectCount>0)
                 //{
                 //    RobotInstance.instance.Projects.First().IsExpanded = true;
@@ -470,7 +470,7 @@ namespace OpenRPA
                 MessageBox.Show(ex.Message);
             }
         }
-        private void OnOpen()
+        public void OnOpen(object _item)
         {
             AutomationHelper.syncContext.Post(o =>
             {

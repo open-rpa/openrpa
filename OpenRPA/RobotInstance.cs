@@ -684,6 +684,7 @@ namespace OpenRPA
                     global.webSocketClient.OnClose += WebSocketClient_OnClose;
                     global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
                     global.webSocketClient.OnQueueClosed += WebSocketClient_OnQueueClosed;
+                    global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
                     SetStatus("Connecting to " + Config.local.wsurl);
                     _ = global.webSocketClient.Connect();
                 }
@@ -996,73 +997,6 @@ namespace OpenRPA
                 {
                     Log.Error(ex.ToString());
                 }
-                try
-                {
-
-                    bool registerqueues = true;
-                    if (Interfaces.win32.ChildSession.IsChildSessionsEnabled())
-                    {
-                        var CurrentP = System.Diagnostics.Process.GetCurrentProcess();
-                        var myusername = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);
-                        var mydomain = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSDomainName);
-                        var mywinstation = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
-
-                        if (string.IsNullOrEmpty(mywinstation)) mywinstation = "";
-                        mywinstation = mywinstation.ToLower();
-                        if (!mywinstation.Contains("rdp") && mywinstation != "console")
-                        {
-                            Log.Debug("my WTSUserName: " + myusername);
-                            Log.Debug("my WTSDomainName: " + mydomain);
-                            Log.Debug("my WTSWinStationName: " + mywinstation);
-                            registerqueues = false;
-                            Log.Warning("mywinstation is empty or does not contain RDP, skip registering queues");
-                        }
-                        else
-                        {
-                            var processes = System.Diagnostics.Process.GetProcessesByName("explorer");
-                            foreach (var ps in processes)
-                            {
-                                var username = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);
-                                var domain = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSDomainName);
-                                var winstation = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
-                                Log.Debug("WTSUserName: " + username);
-                                Log.Debug("WTSDomainName: " + domain);
-                                Log.Debug("WTSWinStationName: " + winstation);
-                            }
-                        }
-                        //int ConsoleSession = NativeMethods.WTSGetActiveConsoleSessionId();
-                        ////uint SessionId = Interfaces.win32.ChildSession.GetChildSessionId();
-                        //var p = System.Diagnostics.Process.GetCurrentProcess();
-                        //if (ConsoleSession != p.SessionId)
-                        //{
-                        //    Log.Warning("Child sessions enabled and not running as console, skip registering queues");
-                        //    registerqueues = false;
-                        //}
-                    }
-                    if (registerqueues)
-                    {
-                        SetStatus("Registering queues");
-                        Log.Debug("Registering queue for robot " + user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        robotqueue = await global.webSocketClient.RegisterQueue(user._id);
-
-                    foreach (var role in global.webSocketClient.user.roles)
-                    {
-                        var roles = await global.webSocketClient.Query<Interfaces.entity.apirole>("users", "{_id: '" + role._id + "'}", top: 5000);
-                        if (roles.Length == 1 && roles[0].rparole)
-                        {
-                            SetStatus("Add queue " + role.name);
-                            Log.Debug("Registering queue for role " + role.name + " " + role._id + " ");
-                            await global.webSocketClient.RegisterQueue(role._id);
-                        }
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                _ = Task.Run(async () =>
-                {
-                    SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
-                }
             }
             catch (Exception ex)
             {
@@ -1178,6 +1112,7 @@ namespace OpenRPA
                     global.webSocketClient.OnClose -= WebSocketClient_OnClose;
                     global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
                     global.webSocketClient.OnQueueClosed -= WebSocketClient_OnQueueClosed;
+                    global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
                     global.webSocketClient = null;
 
                     global.webSocketClient = new Net.WebSocketClient(Config.local.wsurl);
@@ -1185,6 +1120,7 @@ namespace OpenRPA
                     global.webSocketClient.OnClose += WebSocketClient_OnClose;
                     global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
                     global.webSocketClient.OnQueueClosed += WebSocketClient_OnQueueClosed;
+                    global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
                     SetStatus("Connecting to " + Config.local.wsurl);
 
                     await global.webSocketClient.Connect();
@@ -1445,6 +1381,60 @@ namespace OpenRPA
         {
             await Task.Delay(5000);
             await RegisterQueues();
+        }
+        async private Task RegisterQueues()
+        {
+            bool registerqueues = true;
+            Interfaces.entity.TokenUser user = global.webSocketClient.user;
+            if (Interfaces.win32.ChildSession.IsChildSessionsEnabled())
+            {
+                var CurrentP = System.Diagnostics.Process.GetCurrentProcess();
+                var myusername = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);
+                var mydomain = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSDomainName);
+                var mywinstation = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
+
+                if (string.IsNullOrEmpty(mywinstation)) mywinstation = "";
+                mywinstation = mywinstation.ToLower();
+                if (!mywinstation.Contains("rdp") && mywinstation != "console")
+                {
+                    Log.Debug("my WTSUserName: " + myusername);
+                    Log.Debug("my WTSDomainName: " + mydomain);
+                    Log.Debug("my WTSWinStationName: " + mywinstation);
+                    registerqueues = false;
+                    Log.Warning("mywinstation is empty or does not contain RDP, skip registering queues");
+                }
+                else
+                {
+                    var processes = System.Diagnostics.Process.GetProcessesByName("explorer");
+                    foreach (var ps in processes)
+                    {
+                        var username = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);
+                        var domain = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSDomainName);
+                        var winstation = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
+                        Log.Debug("WTSUserName: " + username);
+                        Log.Debug("WTSDomainName: " + domain);
+                        Log.Debug("WTSWinStationName: " + winstation);
+                    }
+                }
+            }
+            if (registerqueues)
+            {
+                SetStatus("Registering queues");
+                Log.Debug("Registering queue for robot " + user._id);
+                robotqueue = await global.webSocketClient.RegisterQueue(user._id);
+
+                foreach (var role in global.webSocketClient.user.roles)
+                {
+                    var roles = await global.webSocketClient.Query<Interfaces.entity.apirole>("users", "{_id: '" + role._id + "'}", top: 5000);
+                    if (roles.Length == 1 && roles[0].rparole)
+                    {
+                        SetStatus("Add queue " + role.name);
+                        Log.Debug("Registering queue for role " + role.name + " " + role._id + " ");
+                        await global.webSocketClient.RegisterQueue(role._id);
+                    }
+                }
+            }
+
         }
 
         //private string last_metric;

@@ -683,6 +683,7 @@ namespace OpenRPA
                     global.webSocketClient.OnOpen += RobotInstance_WebSocketClient_OnOpen;
                     global.webSocketClient.OnClose += WebSocketClient_OnClose;
                     global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
+                    global.webSocketClient.OnQueueClosed += WebSocketClient_OnQueueClosed;
                     SetStatus("Connecting to " + Config.local.wsurl);
                     _ = global.webSocketClient.Connect();
                 }
@@ -984,6 +985,19 @@ namespace OpenRPA
                 }
                 try
                 {
+                    await RegisterQueues();
+                    if (!isReadyForAction)
+                    {
+                        ParseCommandLineArgs();
+                        isReadyForAction = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+                try
+                {
 
                     bool registerqueues = true;
                     if (Interfaces.win32.ChildSession.IsChildSessionsEnabled())
@@ -1031,29 +1045,21 @@ namespace OpenRPA
                         Log.Debug("Registering queue for robot " + user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         robotqueue = await global.webSocketClient.RegisterQueue(user._id);
 
-                        foreach (var role in global.webSocketClient.user.roles)
+                    foreach (var role in global.webSocketClient.user.roles)
+                    {
+                        var roles = await global.webSocketClient.Query<Interfaces.entity.apirole>("users", "{_id: '" + role._id + "'}", top: 5000);
+                        if (roles.Length == 1 && roles[0].rparole)
                         {
-                            var roles = await global.webSocketClient.Query<Interfaces.entity.apirole>("users", "{_id: '" + role._id + "'}", top: 5000);
-                            if (roles.Length == 1 && roles[0].rparole)
-                            {
-                                SetStatus("Add queue " + role.name);
-                                Log.Debug("Registering queue for role " + role.name + " " + role._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                                await global.webSocketClient.RegisterQueue(role._id);
-                            }
+                            SetStatus("Add queue " + role.name);
+                            Log.Debug("Registering queue for role " + role.name + " " + role._id + " ");
+                            await global.webSocketClient.RegisterQueue(role._id);
                         }
                     }
-
-                    if (!isReadyForAction)
-                    {
-                        ParseCommandLineArgs();
-                        isReadyForAction = true;
-                    }
                 }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-                finally
+            }
+            catch (Exception)
+            {
+                _ = Task.Run(async () =>
                 {
                     SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
                 }
@@ -1171,12 +1177,14 @@ namespace OpenRPA
                     global.webSocketClient.OnOpen -= RobotInstance_WebSocketClient_OnOpen;
                     global.webSocketClient.OnClose -= WebSocketClient_OnClose;
                     global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
+                    global.webSocketClient.OnQueueClosed -= WebSocketClient_OnQueueClosed;
                     global.webSocketClient = null;
 
                     global.webSocketClient = new Net.WebSocketClient(Config.local.wsurl);
                     global.webSocketClient.OnOpen += RobotInstance_WebSocketClient_OnOpen;
                     global.webSocketClient.OnClose += WebSocketClient_OnClose;
                     global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
+                    global.webSocketClient.OnQueueClosed += WebSocketClient_OnQueueClosed;
                     SetStatus("Connecting to " + Config.local.wsurl);
 
                     await global.webSocketClient.Connect();
@@ -1433,6 +1441,12 @@ namespace OpenRPA
             }
             Log.FunctionOutdent("RobotInstance", "WebSocketClient_OnQueueMessage");
         }
+        private async void WebSocketClient_OnQueueClosed(IQueueClosedMessage message, QueueMessageEventArgs e)
+        {
+            await Task.Delay(5000);
+            await RegisterQueues();
+        }
+
         //private string last_metric;
         //private System.Diagnostics.PerformanceCounter mem_used_counter;
         // private System.Diagnostics.PerformanceCounter mem_total_counter;

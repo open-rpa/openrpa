@@ -31,6 +31,7 @@ namespace OpenRPA.Net
         public event Action OnOpen;
         public event Action<string> OnClose;
         public event QueueMessageDelegate OnQueueMessage;
+        public event QueueClosedDelegate OnQueueClosed;
         public TokenUser user { get; private set; }
         public string jwt { get; private set; }
         public bool isConnected
@@ -369,6 +370,40 @@ namespace OpenRPA.Net
                         {
                             this.websocket_package_size = signin.websocket_package_size;
                         }
+                        break;
+                    case "queueclosed":
+                        msg.reply();
+                        QueueClosedMessage qc = null;
+                        try
+                        {
+                            qc = JsonConvert.DeserializeObject<QueueClosedMessage>(msg.data);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                            msg.SendMessage(this);
+                            break;
+                        }
+                        try
+                        {
+                            var e = new QueueMessageEventArgs();
+                            OnQueueClosed?.Invoke(qc, e);
+                            msg.data = JsonConvert.SerializeObject(qc);
+                            if (e.isBusy)
+                            {
+                                msg.command = "error";
+                                msg.data = "Sorry, I'm bussy";
+                                msg.SendMessage(this);
+                                return;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            msg.command = "error";
+                            msg.data = ex.ToString();
+                        }
+                        msg.SendMessage(this);
+                        // if (string.IsNullOrEmpty(qm.replyto)) msg.SendMessage(this);
                         break;
                     case "queuemessage":
                         msg.reply();

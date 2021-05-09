@@ -36,7 +36,12 @@ namespace OpenRPA.Interfaces
         string correlationId { get; set; }
         string replyto { get; set; }
     }
+    public interface IQueueClosedMessage : ISocketCommand
+    {
+        string queuename { get; set; }
+    }
     public delegate void QueueMessageDelegate(IQueueMessage message, QueueMessageEventArgs e);
+    public delegate void QueueClosedDelegate(IQueueClosedMessage message, QueueMessageEventArgs e);
     public interface ICollection
     {
         string name { get; set; }
@@ -48,6 +53,7 @@ namespace OpenRPA.Interfaces
         event Action OnOpen;
         event Action<string> OnClose;
         event QueueMessageDelegate OnQueueMessage;
+        event QueueClosedDelegate OnQueueClosed;
         TokenUser user { get; }
         string url { get; set; }
         string jwt { get; }

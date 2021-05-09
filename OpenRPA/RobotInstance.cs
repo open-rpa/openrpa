@@ -18,7 +18,7 @@ namespace OpenRPA
         {
             reloadTimer = new System.Timers.Timer(Config.local.reloadinterval.TotalMilliseconds);
             reloadTimer.Elapsed += ReloadTimer_Elapsed;
-            if(InitializeOTEL())
+            if (InitializeOTEL())
             {
                 //metricTime = new System.Timers.Timer(5000);
                 //metricTime.Elapsed += metricTime_Elapsed;
@@ -41,7 +41,7 @@ namespace OpenRPA
             get
             {
                 int result = 0;
-                GenericTools.RunUI(()=> { result = Projects.Count; });
+                GenericTools.RunUI(() => { result = Projects.Count; });
                 return result;
             }
         }
@@ -73,7 +73,8 @@ namespace OpenRPA
         private bool? _isRunningInChildSession = null;
         public bool isRunningInChildSession
         {
-            get {
+            get
+            {
                 if (_isRunningInChildSession != null) return _isRunningInChildSession.Value;
                 try
                 {
@@ -145,7 +146,7 @@ namespace OpenRPA
                         App.splash.Close();
                         App.splash = null;
                     }
-                    if(!Config.local.isagent) Show();
+                    if (!Config.local.isagent) Show();
                     ReadyForAction?.Invoke();
                     Input.InputDriver.Instance.Initialize();
 
@@ -370,7 +371,7 @@ namespace OpenRPA
                                     catch (Exception ex)
                                     {
                                         Log.Error(ex.ToString());
-                                    }                                    
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
@@ -580,7 +581,7 @@ namespace OpenRPA
             }
             finally
             {
-                if(global.webSocketClient.user != null)
+                if (global.webSocketClient.user != null)
                 {
                     SetStatus("Connected to " + Config.local.wsurl + " as " + global.webSocketClient.user.name);
                 }
@@ -603,7 +604,7 @@ namespace OpenRPA
             Log.Function("RobotInstance", "SetStatus", "Window.SetStatus");
             try
             {
-                if(Window!=null) Window.SetStatus(message);
+                if (Window != null) Window.SetStatus(message);
             }
             catch (Exception ex)
             {
@@ -678,6 +679,7 @@ namespace OpenRPA
                     global.webSocketClient.OnOpen += RobotInstance_WebSocketClient_OnOpen;
                     global.webSocketClient.OnClose += WebSocketClient_OnClose;
                     global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
+                    global.webSocketClient.OnQueueClosed -= WebSocketClient_OnQueueClosed;
                     SetStatus("Connecting to " + Config.local.wsurl);
                     _ = global.webSocketClient.Connect();
                 }
@@ -718,10 +720,10 @@ namespace OpenRPA
                             App.splash.Close();
                             App.splash = null;
                         }
-                        if(!Config.local.isagent) Show();
+                        if (!Config.local.isagent) Show();
                         ReadyForAction?.Invoke();
                     });
-                    if(!isReadyForAction)
+                    if (!isReadyForAction)
                     {
                         ParseCommandLineArgs();
                         isReadyForAction = true;
@@ -738,7 +740,8 @@ namespace OpenRPA
         private void Hide()
         {
             Log.FunctionIndent("RobotInstance", "Hide");
-            GenericTools.RunUI(() => {
+            GenericTools.RunUI(() =>
+            {
                 if (App.splash != null) App.splash.Hide();
                 if (Window != null) Window.Hide();
             });
@@ -751,11 +754,11 @@ namespace OpenRPA
                 var isagent = Config.local.isagent;
                 AutomationHelper.syncContext.Send(o =>
                 {
-                    if(!Config.local.isagent && global.webSocketClient != null)
+                    if (!Config.local.isagent && global.webSocketClient != null)
                     {
-                        if(global.webSocketClient.user != null)
+                        if (global.webSocketClient.user != null)
                         {
-                            if(global.webSocketClient.user.hasRole("robot agent users"))
+                            if (global.webSocketClient.user.hasRole("robot agent users"))
                             {
                                 isagent = true;
                             }
@@ -790,11 +793,13 @@ namespace OpenRPA
         private void Show()
         {
             Log.FunctionIndent("RobotInstance", "Show");
-            GenericTools.RunUI(() => {
+            GenericTools.RunUI(() =>
+            {
                 if (App.splash != null)
                 {
                     App.splash.Show();
-                } else
+                }
+                else
                 {
                     if (Window != null) Window.Show();
                 }
@@ -804,7 +809,8 @@ namespace OpenRPA
         private void Close()
         {
             Log.FunctionIndent("RobotInstance", "Close");
-            GenericTools.RunUI(() => {
+            GenericTools.RunUI(() =>
+            {
                 if (App.splash != null) App.splash.Close();
                 if (Window != null) Window.Close();
                 System.Windows.Application.Current.Shutdown();
@@ -967,65 +973,7 @@ namespace OpenRPA
                 }
                 try
                 {
-
-                    bool registerqueues = true;
-                    if(Interfaces.win32.ChildSession.IsChildSessionsEnabled())
-                    {
-                        var CurrentP = System.Diagnostics.Process.GetCurrentProcess();
-                        var myusername = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);
-                        var mydomain = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSDomainName);
-                        var mywinstation = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
-
-                        if (string.IsNullOrEmpty(mywinstation)) mywinstation = "";
-                        mywinstation = mywinstation.ToLower();
-                        if (!mywinstation.Contains("rdp") && mywinstation != "console")
-                        {
-                            Log.Debug("my WTSUserName: " + myusername);
-                            Log.Debug("my WTSDomainName: " + mydomain);
-                            Log.Debug("my WTSWinStationName: " + mywinstation);
-                            registerqueues = false;
-                            Log.Warning("mywinstation is empty or does not contain RDP, skip registering queues");
-                        }
-                        else
-                        {
-                            var processes = System.Diagnostics.Process.GetProcessesByName("explorer");
-                            foreach (var ps in processes)
-                            {
-                                var username = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);
-                                var domain = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSDomainName);
-                                var winstation = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
-                                Log.Debug("WTSUserName: " + username);
-                                Log.Debug("WTSDomainName: " + domain);
-                                Log.Debug("WTSWinStationName: " + winstation);
-                            }
-                        }
-                        //int ConsoleSession = NativeMethods.WTSGetActiveConsoleSessionId();
-                        ////uint SessionId = Interfaces.win32.ChildSession.GetChildSessionId();
-                        //var p = System.Diagnostics.Process.GetCurrentProcess();
-                        //if (ConsoleSession != p.SessionId)
-                        //{
-                        //    Log.Warning("Child sessions enabled and not running as console, skip registering queues");
-                        //    registerqueues = false;
-                        //}
-                    }
-                    if(registerqueues)
-                    {
-                        SetStatus("Registering queues");
-                        Log.Debug("Registering queue for robot " + user._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                        robotqueue = await global.webSocketClient.RegisterQueue(user._id);
-
-                        foreach (var role in global.webSocketClient.user.roles)
-                        {
-                            var roles = await global.webSocketClient.Query<Interfaces.entity.apirole>("users", "{_id: '" + role._id + "'}", top: 5000);
-                            if (roles.Length == 1 && roles[0].rparole)
-                            {
-                                SetStatus("Add queue " + role.name);
-                                Log.Debug("Registering queue for role " + role.name + " " + role._id + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                                await global.webSocketClient.RegisterQueue(role._id);
-                            }
-                        }
-                    }
-
+                    await RegisterQueues();
                     if (!isReadyForAction)
                     {
                         ParseCommandLineArgs();
@@ -1057,7 +1005,7 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
-            if(first_connect)
+            if (first_connect)
             {
                 first_connect = false;
                 GenericTools.RunUI(() =>
@@ -1069,7 +1017,7 @@ namespace OpenRPA
                             App.splash.Close();
                             App.splash = null;
                         }
-                        if(!Config.local.isagent) Show();
+                        if (!Config.local.isagent) Show();
                         ReadyForAction?.Invoke();
                     }
                     catch (Exception ex)
@@ -1080,6 +1028,69 @@ namespace OpenRPA
             }
             Log.FunctionOutdent("RobotInstance", "RobotInstance_WebSocketClient_OnOpen");
         }
+        async private Task RegisterQueues()
+        {
+            bool registerqueues = true;
+            Interfaces.entity.TokenUser user = global.webSocketClient.user;
+            if (Interfaces.win32.ChildSession.IsChildSessionsEnabled())
+            {
+                var CurrentP = System.Diagnostics.Process.GetCurrentProcess();
+                var myusername = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);
+                var mydomain = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSDomainName);
+                var mywinstation = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
+
+                if (string.IsNullOrEmpty(mywinstation)) mywinstation = "";
+                mywinstation = mywinstation.ToLower();
+                if (!mywinstation.Contains("rdp") && mywinstation != "console")
+                {
+                    Log.Debug("my WTSUserName: " + myusername);
+                    Log.Debug("my WTSDomainName: " + mydomain);
+                    Log.Debug("my WTSWinStationName: " + mywinstation);
+                    registerqueues = false;
+                    Log.Warning("mywinstation is empty or does not contain RDP, skip registering queues");
+                }
+                else
+                {
+                    var processes = System.Diagnostics.Process.GetProcessesByName("explorer");
+                    foreach (var ps in processes)
+                    {
+                        var username = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);
+                        var domain = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSDomainName);
+                        var winstation = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
+                        Log.Debug("WTSUserName: " + username);
+                        Log.Debug("WTSDomainName: " + domain);
+                        Log.Debug("WTSWinStationName: " + winstation);
+                    }
+                }
+                //int ConsoleSession = NativeMethods.WTSGetActiveConsoleSessionId();
+                ////uint SessionId = Interfaces.win32.ChildSession.GetChildSessionId();
+                //var p = System.Diagnostics.Process.GetCurrentProcess();
+                //if (ConsoleSession != p.SessionId)
+                //{
+                //    Log.Warning("Child sessions enabled and not running as console, skip registering queues");
+                //    registerqueues = false;
+                //}
+            }
+            if (registerqueues)
+            {
+                SetStatus("Registering queues");
+                Log.Debug("Registering queue for robot " + user._id);
+                robotqueue = await global.webSocketClient.RegisterQueue(user._id);
+
+                foreach (var role in global.webSocketClient.user.roles)
+                {
+                    var roles = await global.webSocketClient.Query<Interfaces.entity.apirole>("users", "{_id: '" + role._id + "'}", top: 5000);
+                    if (roles.Length == 1 && roles[0].rparole)
+                    {
+                        SetStatus("Add queue " + role.name);
+                        Log.Debug("Registering queue for role " + role.name + " " + role._id + " ");
+                        await global.webSocketClient.RegisterQueue(role._id);
+                    }
+                }
+            }
+
+        }
+
         private async void WebSocketClient_OnClose(string reason)
         {
             Log.FunctionIndent("RobotInstance", "WebSocketClient_OnClose", reason);
@@ -1103,12 +1114,14 @@ namespace OpenRPA
                     global.webSocketClient.OnOpen -= RobotInstance_WebSocketClient_OnOpen;
                     global.webSocketClient.OnClose -= WebSocketClient_OnClose;
                     global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
+                    global.webSocketClient.OnQueueClosed -= WebSocketClient_OnQueueClosed;
                     global.webSocketClient = null;
 
                     global.webSocketClient = new Net.WebSocketClient(Config.local.wsurl);
                     global.webSocketClient.OnOpen += RobotInstance_WebSocketClient_OnOpen;
                     global.webSocketClient.OnClose += WebSocketClient_OnClose;
                     global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
+                    global.webSocketClient.OnQueueClosed += WebSocketClient_OnQueueClosed;
                     SetStatus("Connecting to " + Config.local.wsurl);
 
                     await global.webSocketClient.Connect();
@@ -1209,7 +1222,7 @@ namespace OpenRPA
                             {
                                 if (i.Workflow != null)
                                 {
-                                    if(Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
+                                    if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
                                 }
                                 else
                                 {
@@ -1247,7 +1260,7 @@ namespace OpenRPA
                                 default:
                                     try
                                     {
-                                        
+
                                         // param.Add(k.Key, k.Value.Value<string>());
                                         var v = k.Value.ToObject(Type.GetType(p.type));
                                         param.Add(k.Key, v);
@@ -1261,20 +1274,20 @@ namespace OpenRPA
                                     // default: param.Add(k.Key, k.Value.Value<string>()); break;
                             }
                         }
-                        foreach(var p in workflow.Parameters)
+                        foreach (var p in workflow.Parameters)
                         {
-                            if(param.ContainsKey(p.name))
+                            if (param.ContainsKey(p.name))
                             {
                                 var value = param[p.name];
                                 if (p.type == "System.Data.DataTable" && value != null)
                                 {
-                                    if(value is JArray)
+                                    if (value is JArray)
                                     {
                                         param[p.name] = ((JArray)value).ToDataTable();
                                     }
 
-                                } 
-                                else if(p.type.EndsWith("[]"))
+                                }
+                                else if (p.type.EndsWith("[]"))
                                 {
                                     param[p.name] = ((JArray)value).ToObject(Type.GetType(p.type));
                                 }
@@ -1340,6 +1353,12 @@ namespace OpenRPA
             }
             Log.FunctionOutdent("RobotInstance", "WebSocketClient_OnQueueMessage");
         }
+        private async void WebSocketClient_OnQueueClosed(IQueueClosedMessage message, QueueMessageEventArgs e)
+        {
+            await Task.Delay(5000);
+            await RegisterQueues();
+        }
+
         //private string last_metric;
         //private System.Diagnostics.PerformanceCounter mem_used_counter;
         // private System.Diagnostics.PerformanceCounter mem_total_counter;
@@ -1354,7 +1373,7 @@ namespace OpenRPA
             {
                 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
-                if(Config.local.enable_analytics && StatsTracerProvider == null)
+                if (Config.local.enable_analytics && StatsTracerProvider == null)
                 {
                     StatsTracerProvider = OpenTelemetry.Sdk.CreateTracerProviderBuilder()
                     .SetSampler(new AlwaysOnSampler())
@@ -1374,7 +1393,7 @@ namespace OpenRPA
                     .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenRPA"))
                     .AddOtlpExporter(otlpOptions =>
                     {
-                        if(Config.local.otel_trace_url.Contains("http://") && Config.local.otel_trace_url.Contains(":80"))
+                        if (Config.local.otel_trace_url.Contains("http://") && Config.local.otel_trace_url.Contains(":80"))
                         {
                             Config.local.otel_trace_url = Config.local.otel_trace_url.Replace("http://", "https://").Replace(":80", "");
                         }
@@ -1553,9 +1572,9 @@ namespace OpenRPA
                                 {
                                     Log.Information("Updating project " + project.name);
                                     exists.name = project.name;
-                                    if(exists.Filename != project.Filename)
+                                    if (exists.Filename != project.Filename)
                                     {
-                                        if(System.IO.File.Exists(exists.Path + "\\" + exists.Filename))
+                                        if (System.IO.File.Exists(exists.Path + "\\" + exists.Filename))
                                             System.IO.File.Delete(exists.Path + "\\" + exists.Filename);
                                     }
                                     exists.Filename = project.Filename;

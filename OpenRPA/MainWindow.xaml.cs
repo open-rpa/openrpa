@@ -119,7 +119,7 @@ namespace OpenRPA
             Log.FunctionIndent("MainWindow", "MainWindow_WebSocketClient_OnOpen");
             if (first_connect)
             {
-                GenericTools.RunUI(async () =>
+                GenericTools.RunUI(() =>
                 {
 
                     {

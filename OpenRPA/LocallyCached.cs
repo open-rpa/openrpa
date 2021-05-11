@@ -17,6 +17,7 @@ namespace OpenRPA
             try
             {
                 RobotInstance.instance.DisableWatch = true;
+                if (RobotInstance.instance.db == null) return;
                 var collection = RobotInstance.instance.db.GetCollection<T>(_type.ToLower() + "s");
                 var entity = (T)Convert.ChangeType(this, typeof(T));
                 if (!global.isConnected)

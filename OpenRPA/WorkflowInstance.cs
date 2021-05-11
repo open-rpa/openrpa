@@ -685,7 +685,7 @@ namespace OpenRPA
                 runWatch.Start();
                 if (string.IsNullOrEmpty(InstanceId))
                 {
-                    lock(WorkflowInstance.Instances)
+                    lock (WorkflowInstance.Instances)
                     {
                         wfApp.Run();
                         Log.Information(name + " started in " + string.Format("{0:mm\\:ss\\.fff}", runWatch.Elapsed));
@@ -733,7 +733,7 @@ namespace OpenRPA
                     _ = Workflow.State;
                     if (e.CompletionState == System.Activities.ActivityInstanceState.Faulted)
                     {
-                        if(state == "running" || state == "idle" || state == "completed")
+                        if (state == "running" || state == "idle" || state == "completed")
                         {
                             state = "faulted";
                             state = "aborted";
@@ -832,7 +832,7 @@ namespace OpenRPA
                 state = "failed";
                 Exception = e.UnhandledException;
                 errormessage = e.UnhandledException.Message;
-                if(e.ExceptionSource!=null) errorsource = e.ExceptionSource.Id;
+                if (e.ExceptionSource != null) errorsource = e.ExceptionSource.Id;
                 //exceptionsource = e.ExceptionSource.Id;
                 if (runWatch != null) runWatch.Stop();
                 Save();
@@ -850,7 +850,7 @@ namespace OpenRPA
             //Task<LogEntity> task = Task.Run<LogEntity>(async () => await GetLogAsync());
             //return task.Result;
             _ = Save<WorkflowInstance>();
-            if (Workflow!=null) Workflow.NotifyUIState();
+            if (Workflow != null) Workflow.NotifyUIState();
             //Task.Run(async () =>
             //{
             //    await Save<WorkflowInstance>();
@@ -862,15 +862,16 @@ namespace OpenRPA
             Log.FunctionIndent("RobotInstance", "RunPendingInstances");
             try
             {
-                if (!global.isConnected)
-                {
-                    Log.FunctionOutdent("RobotInstance", "RunPendingInstances", "Not connected");
-                    return;
-                }
+                //if (!global.isConnected)
+                //{
+                //    Log.FunctionOutdent("RobotInstance", "RunPendingInstances", "Not connected");
+                //    return;
+                //}
                 var host = Environment.MachineName.ToLower();
                 var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
-                var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "'}", top: 1000);
-                foreach (var i in results)
+                //var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "'}", top: 1000);
+                var results = RobotInstance.instance.WorkflowInstances.FindAll(x => (x.state == "idle" || x.state == "running") && x.fqdn == fqdn);
+                foreach (WorkflowInstance i in results)
                 {
                     try
                     {
@@ -924,7 +925,7 @@ namespace OpenRPA
             catch (Exception ex)
             {
                 // span?.RecordException(ex);
-                Log.Error(ex.ToString());                
+                Log.Error(ex.ToString());
             }
             finally
             {
@@ -934,7 +935,7 @@ namespace OpenRPA
         }
         public static void CleanUp()
         {
-            lock(Instances)
+            lock (Instances)
             {
                 foreach (var i in Instances.ToList())
                 {

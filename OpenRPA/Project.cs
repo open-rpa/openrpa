@@ -28,7 +28,6 @@ namespace OpenRPA
         {
             get
             {
-                // Log.Output("Workflows " + _Workflows.Count);
                 return _Workflows;
             }
         }
@@ -36,7 +35,6 @@ namespace OpenRPA
         {
             var list = RobotInstance.instance.Workflows.Find(x => x.projectid == _id && !x.isDeleted).OrderBy(x => x.name).ToList();
             Workflows.UpdateCollection(list);
-            // Log.Output("UpdateWorkflowsList " + Workflows.Count);
         }
         [JsonIgnore, BsonIgnore]
         public System.Windows.Data.ListCollectionView FilteredSource;

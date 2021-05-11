@@ -150,7 +150,6 @@ namespace OpenRPA.Views
                 if (string.IsNullOrEmpty(FilterText))
                 {
                     FilteredSource.Filter = null;
-                    Log.Output("return " + FilteredSource.Count + " unfiltered");
                     return FilteredSource;
                 }
                 FilterText = FilterText.ToLower();
@@ -164,7 +163,6 @@ namespace OpenRPA.Views
                         //((IProject)p).name.ToLower().Contains(FilterText.ToLower()) || (IProject)p).FilteredSource.Count > 0;
                         return false;
                     };
-                Log.Output("return " + FilteredSource.Count + " filtered");
                 return FilteredSource;
             }
         }

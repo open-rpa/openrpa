@@ -678,7 +678,7 @@ namespace OpenRPA.Net
             q.collectionname = collectionname; q.item = item;
             q = await q.SendMessage<UpdateOneMessage<T>>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
-            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);           
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.result;
         }
         public async Task DeleteOne(string collectionname, string Id)

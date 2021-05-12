@@ -97,7 +97,19 @@ namespace OpenRPA.Activities
                         {
                             if (vk > 0)
                             {
-                                disposes.Add(FlaUI.Core.Input.Keyboard.Pressing(vk));
+                                switch (vk)
+                                {
+                                    case FlaUI.Core.WindowsAPI.VirtualKeyShort.LEFT: System.Windows.Forms.SendKeys.SendWait("+({LEFT})"); break;
+                                    case FlaUI.Core.WindowsAPI.VirtualKeyShort.RIGHT: System.Windows.Forms.SendKeys.SendWait("+({RIGHT})"); break;
+                                    case FlaUI.Core.WindowsAPI.VirtualKeyShort.UP: System.Windows.Forms.SendKeys.SendWait("+({UP})"); break;
+                                    case FlaUI.Core.WindowsAPI.VirtualKeyShort.DOWN: System.Windows.Forms.SendKeys.SendWait("+({DOWN})"); break;
+                                    case FlaUI.Core.WindowsAPI.VirtualKeyShort.END: System.Windows.Forms.SendKeys.SendWait("+({END})"); break;
+                                    case FlaUI.Core.WindowsAPI.VirtualKeyShort.HOME: System.Windows.Forms.SendKeys.SendWait("+({HOME})"); break;
+                                    default:
+                                        Log.Output(vk.ToString() + " press");
+                                        FlaUI.Core.Input.Keyboard.Press(vk);
+                                        break;
+                                }
                             }
                             else
                             {
@@ -172,13 +184,14 @@ namespace OpenRPA.Activities
         }
         public void AddKey(vKey _key, System.Activities.Presentation.Model.ModelItem lastinsertedmodel)
         {
-            if(_keys == null) _keys = new List<vKey>();
-            if(!_key.up)
+            if (_keys == null) _keys = new List<vKey>();
+            if (!_key.up)
             {
                 var isdown = _downkeys.Where(x => x.KeyCode == _key.KeyCode).FirstOrDefault();
                 if (isdown != null) return;
                 _downkeys.Add(_key);
-            } else
+            }
+            else
             {
                 var isdown = _downkeys.Where(x => x.KeyCode == _key.KeyCode).FirstOrDefault();
                 if (isdown == null) return;
@@ -224,7 +237,7 @@ namespace OpenRPA.Activities
             }
             //Text = result;
             if (result == null) result = "";
-            if(lastinsertedmodel!=null) lastinsertedmodel.Properties["Text"].SetValue(new InArgument<string>(result));
+            if (lastinsertedmodel != null) lastinsertedmodel.Properties["Text"].SetValue(new InArgument<string>(result));
         }
         public void UpdateModel(System.Activities.Presentation.Model.ModelItem lastinsertedmodel)
         {

@@ -725,6 +725,7 @@ namespace OpenRPA
                 errormessage = ex.Message;
                 Save();
                 if (runWatch != null) runWatch.Stop();
+                NotifyAborted();
                 OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -750,7 +751,7 @@ namespace OpenRPA
                             errormessage = "Faulted for unknown reason";
                         }
                         Save();
-                        NotifyCompleted();
+                        NotifyAborted();
                         OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
                     }
                 }

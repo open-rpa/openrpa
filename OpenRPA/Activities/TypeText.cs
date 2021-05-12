@@ -75,7 +75,6 @@ namespace OpenRPA.Activities
                         {
                             if (vk > 0)
                             {
-                                Log.Output(vk.ToString() + " down");
                                 enddisposes.Add(FlaUI.Core.Input.Keyboard.Pressing(vk));
                             }
                             else
@@ -87,7 +86,6 @@ namespace OpenRPA.Activities
                         {
                             if (vk > 0)
                             {
-                                Log.Output(vk.ToString() + " up");
                                 FlaUI.Core.Input.Keyboard.Release(vk);
                             }
                             else
@@ -108,7 +106,6 @@ namespace OpenRPA.Activities
                                     case FlaUI.Core.WindowsAPI.VirtualKeyShort.END: System.Windows.Forms.SendKeys.SendWait("+({END})"); break;
                                     case FlaUI.Core.WindowsAPI.VirtualKeyShort.HOME: System.Windows.Forms.SendKeys.SendWait("+({HOME})"); break;
                                     default:
-                                        Log.Output(vk.ToString() + " press");
                                         FlaUI.Core.Input.Keyboard.Press(vk);
                                         break;
                                 }

@@ -1146,7 +1146,7 @@ namespace OpenRPA
         {
             try
             {
-                if (!IsConnected) return false;
+                // if (!IsConnected) return false;
                 if (isRecording) return false;
                 if (SelectedContent as Views.OpenProject != null)
                 {
@@ -1377,7 +1377,7 @@ namespace OpenRPA
         {
             try
             {
-                if (!IsConnected) return false;
+                // if (!IsConnected) return false;
                 if (SelectedContent is Views.WFDesigner designer)
                 {
                     return true;
@@ -2244,7 +2244,8 @@ namespace OpenRPA
             try
             {
 
-                if (!IsConnected) return false; return true;
+                // if (!IsConnected) return false; 
+                return true;
             }
             catch (Exception ex)
             {
@@ -2407,7 +2408,7 @@ namespace OpenRPA
                     return true;
                 }
 
-                if (!IsConnected) return false;
+                //if (!IsConnected) return false;
                 if (isRecording) return false;
                 if (!(SelectedContent is Views.WFDesigner)) return false;
                 var designer = (Views.WFDesigner)SelectedContent;
@@ -2523,7 +2524,7 @@ namespace OpenRPA
                     }
                     return true;
                 }
-                if (!IsConnected) return false;
+                // if (!IsConnected) return false;
                 if (isRecording) return false;
                 if (!(SelectedContent is Views.WFDesigner)) return false;
                 var designer = (Views.WFDesigner)SelectedContent;
@@ -2589,7 +2590,7 @@ namespace OpenRPA
                     }
                     return true;
                 }
-                if (!IsConnected) return false;
+                // if (!IsConnected) return false;
                 if (isRecording) return false;
                 if (!(SelectedContent is Views.WFDesigner)) return false;
                 var designer = (Views.WFDesigner)SelectedContent;
@@ -2670,7 +2671,7 @@ namespace OpenRPA
                     if (wf.State == "running") return true;
                     return false;
                 }
-                if (!IsConnected) return false;
+                // if (!IsConnected) return false;
                 if (isRecording) return true;
                 if (!(SelectedContent is Views.WFDesigner)) return false;
                 var designer = (Views.WFDesigner)SelectedContent;

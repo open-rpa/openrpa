@@ -376,24 +376,31 @@ namespace OpenRPA
                     server_projects = await global.webSocketClient.Query<Project>("openrpa", q, orderby: "{\"name\":-1}", top: Config.local.max_projects);
                     foreach (var p in server_projects)
                     {
-                        var exists = local_projects.Where(x => x._id == p._id).FirstOrDefault();
-                        if (exists != null)
+                        try
                         {
-                            span?.AddEvent(new ActivityEvent("Updating local project " + p.name));
-                            Log.Information("LoadServerData::Updating local project " + p.name);
-                            p.IsExpanded = exists.IsExpanded;
-                            p.IsSelected = exists.IsSelected;
-                            p.isDirty = false;
-                            await p.Save();
-                            updatePackages.Add(p._id);
+                            var exists = local_projects.Where(x => x._id == p._id).FirstOrDefault();
+                            if (exists != null)
+                            {
+                                span?.AddEvent(new ActivityEvent("Updating local project " + p.name));
+                                Log.Information("LoadServerData::Updating local project " + p.name);
+                                p.IsExpanded = exists.IsExpanded;
+                                p.IsSelected = exists.IsSelected;
+                                p.isDirty = false;
+                                await p.Save();
+                                updatePackages.Add(p._id);
+                            }
+                            else
+                            {
+                                span?.AddEvent(new ActivityEvent("Adding local project " + p.name));
+                                Log.Information("LoadServerData::Adding local project " + p.name);
+                                p.isDirty = false;
+                                await p.Save();
+                                updatePackages.Add(p._id);
+                            }
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            span?.AddEvent(new ActivityEvent("Adding local project " + p.name));
-                            Log.Information("LoadServerData::Adding local project " + p.name);
-                            p.isDirty = false;
-                            await p.Save();
-                            updatePackages.Add(p._id);
+                            Log.Error(ex.ToString());
                         }
                     }
                 }
@@ -407,34 +414,51 @@ namespace OpenRPA
                 var server_workflows = await global.webSocketClient.Query<Workflow>("openrpa", _q, "{\"_version\": 1}", top: Config.local.max_workflows);
                 var local_workflows = Workflows.FindAll().ToList();
                 reload_ids = new List<string>();
+                Log.Information("LoadServerData::Loop " + server_workflows.Length + " server workflows");
                 foreach (var wf in server_workflows)
                 {
                     var exists = local_workflows.Where(x => x._id == wf._id).FirstOrDefault();
                     if (exists != null)
                     {
-                        if (exists._version < wf._version) reload_ids.Add(wf._id);
-                        if (exists._version > wf._version && wf.isDirty) await wf.Save();
+                        try
+                        {
+                            if (exists._version < wf._version) reload_ids.Add(wf._id);
+                            if (exists._version > wf._version && wf.isDirty) await wf.Save();
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                        }
                     }
                     else
                     {
                         reload_ids.Add(wf._id);
                     }
                 }
+                Log.Information("LoadServerData::Loop " + local_workflows.Count + " local workflows");
                 foreach (var wf in local_workflows)
                 {
-                    var exists = server_workflows.Where(x => x._id == wf._id).FirstOrDefault();
-                    if (exists == null && !wf.isDirty)
+                    try
                     {
-                        span?.AddEvent(new ActivityEvent("Removing local workflow " + wf.name));
-                        Log.Debug("Removing local workflow " + wf.name);
-                        Workflows.Delete(wf._id);
+                        var exists = server_workflows.Where(x => x._id == wf._id).FirstOrDefault();
+                        if (exists == null && !wf.isDirty)
+                        {
+                            span?.AddEvent(new ActivityEvent("Removing local workflow " + wf.name));
+                            Log.Debug("Removing local workflow " + wf.name);
+                            Workflows.Delete(wf._id);
+                        }
+                        else if (wf.isDirty || wf.isLocalOnly)
+                        {
+                            if (wf.isDeleted) await wf.Delete();
+                            if (!wf.isDeleted) await wf.Save();
+                        }
                     }
-                    else if (wf.isDirty)
+                    catch (Exception ex)
                     {
-                        if (wf.isDeleted) await wf.Delete();
-                        if (!wf.isDeleted) await wf.Save();
+                        Log.Error(ex.ToString());
                     }
                 }
+                Log.Information("LoadServerData::reload_ids " + reload_ids.Count);
                 if (reload_ids.Count > 0)
                 {
                     for (var i = 0; i < reload_ids.Count; i++) reload_ids[i] = "'" + reload_ids[i] + "'";
@@ -478,38 +502,51 @@ namespace OpenRPA
                 reload_ids = new List<string>();
                 foreach (var detector in server_detectors)
                 {
-                    var exists = local_detectors.Where(x => x._id == detector._id).FirstOrDefault();
-                    if (exists != null)
+                    try
                     {
-                        if (exists._version < detector._version) reload_ids.Add(detector._id);
-                        if (exists._version > detector._version && detector.isDirty) await detector.Save();
+                        var exists = local_detectors.Where(x => x._id == detector._id).FirstOrDefault();
+                        if (exists != null)
+                        {
+                            if (exists._version < detector._version) reload_ids.Add(detector._id);
+                            if (exists._version > detector._version && detector.isDirty) await detector.Save();
+                        }
+                        else
+                        {
+                            reload_ids.Add(detector._id);
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        reload_ids.Add(detector._id);
+                        Log.Error(ex.Message);
                     }
                 }
                 foreach (var detector in local_detectors)
                 {
-                    var exists = server_detectors.Where(x => x._id == detector._id).FirstOrDefault();
-                    if (exists == null && !detector.isDirty)
+                    try
                     {
-                        span?.AddEvent(new ActivityEvent("Removing local detector " + detector.name));
-                        Log.Debug("Removing local detector " + detector.name);
-                        var d = Plugins.detectorPlugins.Where(x => x.Entity._id == detector._id).FirstOrDefault();
-                        if (d != null)
+                        var exists = server_detectors.Where(x => x._id == detector._id).FirstOrDefault();
+                        if (exists == null && !detector.isDirty)
                         {
-                            d.OnDetector -= Window.OnDetector;
-                            d.Stop();
-                            Plugins.detectorPlugins.Remove(d);
+                            span?.AddEvent(new ActivityEvent("Removing local detector " + detector.name));
+                            Log.Debug("Removing local detector " + detector.name);
+                            var d = Plugins.detectorPlugins.Where(x => x.Entity._id == detector._id).FirstOrDefault();
+                            if (d != null)
+                            {
+                                d.OnDetector -= Window.OnDetector;
+                                d.Stop();
+                                Plugins.detectorPlugins.Remove(d);
+                            }
+                            Detectors.Delete(detector._id);
                         }
-                        Detectors.Delete(detector._id);
+                        else if (detector.isDirty)
+                        {
+                            if (detector.isDeleted) await detector.Delete();
+                            if (!detector.isDeleted) await detector.Save();
+                        }
                     }
-                    else if (detector.isDirty)
+                    catch (Exception ex)
                     {
-                        if (detector.isDeleted) await detector.Delete();
-                        if (!detector.isDeleted) await detector.Save();
-
+                        Log.Error(ex.Message);
                     }
                 }
                 if (reload_ids.Count > 0)

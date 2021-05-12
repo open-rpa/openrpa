@@ -24,6 +24,7 @@ namespace OpenRPA
                 {
                     try
                     {
+                        isDirty = true;
                         if (string.IsNullOrEmpty(_id))
                         {
                             _id = Guid.NewGuid().ToString();

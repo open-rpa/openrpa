@@ -293,7 +293,7 @@ namespace OpenRPA
         }
         public async Task Save()
         {
-            if (string.IsNullOrEmpty(projectid)) throw new Exception("Cannot save workflow with out a project/projectid");
+            if (string.IsNullOrEmpty(projectid)) throw new Exception("Cannot save workflow " + name + " with out a project/projectid");
             if (string.IsNullOrEmpty(Filename)) Filename = UniqueFilename();
             if (Project() == null)
             {

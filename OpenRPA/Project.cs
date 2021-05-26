@@ -233,14 +233,8 @@ namespace OpenRPA
             await Save<Project>();
             foreach (var workflow in Workflows)
             {
-                try
-                {
-                    await workflow.Save();
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Error saving " + workflow.name, ex);
-                }
+                workflow.projectid = _id;
+                await workflow.Save();
             }
         }
         public async Task Delete()

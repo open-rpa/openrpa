@@ -30,7 +30,7 @@ namespace OpenRPA.Activities
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
             // IDictionary<string, object> _payload = new System.Dynamic.ExpandoObject();
             var param = new Dictionary<string, object>();
-            if(Arguments == null || Arguments.Count == 0)
+            if (Arguments == null || Arguments.Count == 0)
             {
                 var vars = context.DataContext.GetProperties();
                 foreach (dynamic v in vars)
@@ -41,9 +41,8 @@ namespace OpenRPA.Activities
                         //_payload.Add(v.DisplayName, value);
                         try
                         {
-                            var test = new { value };
-                            if (value.GetType() == typeof(System.Data.DataView)) continue;
-                            if (value.GetType() == typeof(System.Data.DataRowView)) continue;
+                            //if (value.GetType() == typeof(System.Data.DataView)) continue;
+                            //if (value.GetType() == typeof(System.Data.DataRowView)) continue;
                             //if (value.GetType() == typeof(System.Data.DataTable))
                             //{
                             //    if (value != null) param[v.DisplayName] = ((System.Data.DataTable)value).ToJArray();
@@ -54,7 +53,8 @@ namespace OpenRPA.Activities
                             //    param[v.DisplayName] = value;
                             //}
                             //
-                            var asjson = JObject.FromObject(test);
+                            //var test = new { value };
+                            //var asjson = JObject.FromObject(test);
                             param[v.DisplayName] = value;
                         }
                         catch (Exception)
@@ -66,19 +66,19 @@ namespace OpenRPA.Activities
                         param[v.DisplayName] = value;
                     }
                 }
-            } 
+            }
             else
             {
                 Dictionary<string, object> arguments = (from argument in Arguments
-                                                          where argument.Value.Direction != ArgumentDirection.Out
-                                                          select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));
-                foreach(var a in arguments)
+                                                        where argument.Value.Direction != ArgumentDirection.Out
+                                                        select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));
+                foreach (var a in arguments)
                 {
                     var value = a.Value;
-                    if(value!=null)
+                    if (value != null)
                     {
-                        if (value.GetType() == typeof(System.Data.DataView)) continue;
-                        if (value.GetType() == typeof(System.Data.DataRowView)) continue;
+                        //if (value.GetType() == typeof(System.Data.DataView)) continue;
+                        //if (value.GetType() == typeof(System.Data.DataRowView)) continue;
                         //if (value.GetType() == typeof(System.Data.DataTable))
                         //{
                         //    if (value != null) param[a.Key] = ((System.Data.DataTable)value).ToJArray();
@@ -88,7 +88,8 @@ namespace OpenRPA.Activities
                         //    param[a.Key] = a.Value;
                         //}
                         param[a.Key] = a.Value;
-                    } else
+                    }
+                    else
                     {
                         param[a.Key] = null;
                     }
@@ -97,7 +98,7 @@ namespace OpenRPA.Activities
             Exception error = null;
             try
             {
-                var ThisInstance = WorkflowInstance.Instances.Where(x => x.InstanceId == context.WorkflowInstanceId.ToString() ).FirstOrDefault();
+                var ThisInstance = WorkflowInstance.Instances.Where(x => x.InstanceId == context.WorkflowInstanceId.ToString()).FirstOrDefault();
 
                 // , string SpanId, string ParentSpanId
                 var workflowid = this.workflow.Get(context);
@@ -126,7 +127,7 @@ namespace OpenRPA.Activities
                         error = ex;
                     }
                 });
-                if (error!=null) throw error;
+                if (error != null) throw error;
                 if (instance != null)
                 {
                     Log.Verbose("InvokeOpenRPA: Run Instance ID " + instance._id);
@@ -170,7 +171,7 @@ namespace OpenRPA.Activities
                 var name = "The invoked workflow failed with ";
                 if (workflow != null && !string.IsNullOrEmpty(workflow.name)) name = workflow.name;
                 if (workflow != null && !string.IsNullOrEmpty(workflow.ProjectAndName)) name = workflow.ProjectAndName;
-                
+
                 if (instance.Exception != null) throw new Exception(name + " failed with " + instance.Exception.Message, instance.Exception);
                 if (instance.hasError) throw new Exception(name + " failed with " + instance.errormessage);
 
@@ -210,11 +211,11 @@ namespace OpenRPA.Activities
                 else
                 {
                     Dictionary<string, object> arguments = (from argument in Arguments
-                                                               where argument.Value.Direction != ArgumentDirection.In
-                                                               select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));
+                                                            where argument.Value.Direction != ArgumentDirection.In
+                                                            select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));
                     foreach (var a in arguments)
                     {
-                        if(instance.Parameters.ContainsKey(a.Key))
+                        if (instance.Parameters.ContainsKey(a.Key))
                         {
                             Arguments[a.Key].Set(context, instance.Parameters[a.Key]);
 

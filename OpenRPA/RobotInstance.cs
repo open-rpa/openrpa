@@ -1032,6 +1032,7 @@ namespace OpenRPA
         {
             if (!global.isConnected)
             {
+                Log.Debug("RegisterQueues, not connected retry in 5 seconds");
                 _ = Task.Run(async () =>
                 {
                     await Task.Delay(5000);
@@ -1043,45 +1044,52 @@ namespace OpenRPA
             {
                 bool registerqueues = true;
                 Interfaces.entity.TokenUser user = global.webSocketClient.user;
-                if (Interfaces.win32.ChildSession.IsChildSessionsEnabled())
+                try
                 {
-                    var CurrentP = System.Diagnostics.Process.GetCurrentProcess();
-                    var myusername = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);
-                    var mydomain = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSDomainName);
-                    var mywinstation = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
+                    if (Interfaces.win32.ChildSession.IsChildSessionsEnabled())
+                    {
+                        var CurrentP = System.Diagnostics.Process.GetCurrentProcess();
+                        var myusername = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);
+                        var mydomain = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSDomainName);
+                        var mywinstation = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
 
-                    if (string.IsNullOrEmpty(mywinstation)) mywinstation = "";
-                    mywinstation = mywinstation.ToLower();
-                    if (!mywinstation.Contains("rdp") && mywinstation != "console")
-                    {
-                        Log.Debug("my WTSUserName: " + myusername);
-                        Log.Debug("my WTSDomainName: " + mydomain);
-                        Log.Debug("my WTSWinStationName: " + mywinstation);
-                        registerqueues = false;
-                        Log.Warning("mywinstation is empty or does not contain RDP, skip registering queues");
-                    }
-                    else
-                    {
-                        var processes = System.Diagnostics.Process.GetProcessesByName("explorer");
-                        foreach (var ps in processes)
+                        if (string.IsNullOrEmpty(mywinstation)) mywinstation = "";
+                        mywinstation = mywinstation.ToLower();
+                        if (!mywinstation.Contains("rdp") && mywinstation != "console")
                         {
-                            var username = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);
-                            var domain = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSDomainName);
-                            var winstation = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
-                            Log.Debug("WTSUserName: " + username);
-                            Log.Debug("WTSDomainName: " + domain);
-                            Log.Debug("WTSWinStationName: " + winstation);
+                            Log.Debug("my WTSUserName: " + myusername);
+                            Log.Debug("my WTSDomainName: " + mydomain);
+                            Log.Debug("my WTSWinStationName: " + mywinstation);
+                            registerqueues = false;
+                            Log.Warning("mywinstation is empty or does not contain RDP, skip registering queues");
                         }
+                        else
+                        {
+                            var processes = System.Diagnostics.Process.GetProcessesByName("explorer");
+                            foreach (var ps in processes)
+                            {
+                                var username = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);
+                                var domain = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSDomainName);
+                                var winstation = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
+                                Log.Debug("WTSUserName: " + username);
+                                Log.Debug("WTSDomainName: " + domain);
+                                Log.Debug("WTSWinStationName: " + winstation);
+                            }
+                        }
+                        //int ConsoleSession = NativeMethods.WTSGetActiveConsoleSessionId();
+                        ////uint SessionId = Interfaces.win32.ChildSession.GetChildSessionId();
+                        //var p = System.Diagnostics.Process.GetCurrentProcess();
+                        //if (ConsoleSession != p.SessionId)
+                        //{
+                        //    Log.Warning("Child sessions enabled and not running as console, skip registering queues");
+                        //    registerqueues = false;
+                        //}
                     }
-                    //int ConsoleSession = NativeMethods.WTSGetActiveConsoleSessionId();
-                    ////uint SessionId = Interfaces.win32.ChildSession.GetChildSessionId();
-                    //var p = System.Diagnostics.Process.GetCurrentProcess();
-                    //if (ConsoleSession != p.SessionId)
-                    //{
-                    //    Log.Warning("Child sessions enabled and not running as console, skip registering queues");
-                    //    registerqueues = false;
-                    //}
                 }
+                catch (Exception)
+                {
+                }
+
                 if (registerqueues)
                 {
                     SetStatus("Registering queues");
@@ -1100,8 +1108,9 @@ namespace OpenRPA
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Log.Error(ex.ToString());
                 _ = Task.Run(async () =>
                 {
                     await Task.Delay(5000);

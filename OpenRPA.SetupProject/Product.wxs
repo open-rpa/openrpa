@@ -10,7 +10,7 @@
 
   <!-- The URL for add/remove programs -->
   <?define InfoURL="https://openrpa.dk/" ?>
-  
+
   <?define netver_old="net472" ?>
   <?define netver="net462" ?>
 
@@ -59,7 +59,7 @@
     <WixVariable Id="SAPSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.SAP\bin\PrepInstaller\$(var.netver)"/>
     <WixVariable Id="MSSpeechSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.MSSpeech\bin\PrepInstaller\$(var.netver)"/>
     <WixVariable Id="PSSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.PS\bin\PrepInstaller\$(var.netver)"/>
-    
+
 
 
     <Feature Id="MainFeature" Title="OpenRPA Core Components" Level="1" Absent='disallow' AllowAdvertise='no' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
@@ -181,7 +181,7 @@
       <Custom Action="SetCustomActionDataValue" Before="FixPaths" />
       <Custom Action="FixPaths" Before="InstallFinalize" />
     </InstallExecuteSequence>
-   
+
     <!-- 
     https://wixtoolset.org/documentation/manual/v3/xsd/wix/installuisequence.html
     https://wixtoolset.org/documentation/manual/v3/xsd/wix/installexecutesequence.html

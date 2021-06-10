@@ -9,7 +9,7 @@
   <?define UpgradeCode="c3ca861f-6a0c-40ad-b62d-ef94b84256ec" ?>
 
   <!-- The URL for add/remove programs -->
-  <?define InfoURL="https://openiap.io/" ?>
+  <?define InfoURL="https://openrpa.dk/" ?>
 
   <?define netver_old="net472" ?>
   <?define netver="net462" ?>

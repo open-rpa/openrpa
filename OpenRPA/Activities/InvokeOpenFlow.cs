@@ -50,8 +50,8 @@ namespace OpenRPA.Activities
 
                             if (value.GetType() == typeof(System.Data.DataTable))
                             {
-                                if(value != null) _payload[v.DisplayName] = ((System.Data.DataTable)value).ToJArray();
-                            } 
+                                if (value != null) _payload[v.DisplayName] = ((System.Data.DataTable)value).ToJArray();
+                            }
                             else
                             {
                                 var asjson = JObject.FromObject(test);
@@ -90,14 +90,15 @@ namespace OpenRPA.Activities
                         {
                             _payload[a.Key] = a.Value;
                         }
-                    } else { _payload[a.Key] = null; }
+                    }
+                    else { _payload[a.Key] = null; }
 
                 }
             }
             try
-                {
+            {
                 bookmarkname = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
-                if(waitforcompleted) context.CreateBookmark(bookmarkname, new BookmarkCallback(OnBookmarkCallback));
+                if (waitforcompleted) context.CreateBookmark(bookmarkname, new BookmarkCallback(OnBookmarkCallback));
             }
             catch (Exception ex)
             {
@@ -117,7 +118,7 @@ namespace OpenRPA.Activities
             catch (Exception ex)
             {
                 var i = WorkflowInstance.Instances.Where(x => x.InstanceId == WorkflowInstanceId).FirstOrDefault();
-                if(i != null)
+                if (i != null)
                 {
                     i.Abort(ex.Message);
                 }
@@ -133,10 +134,10 @@ namespace OpenRPA.Activities
             var _msg = JObject.Parse(obj.ToString());
             JObject payload = _msg; // Backward compatible with older version of openflow
             if (_msg.ContainsKey("payload")) payload = _msg.Value<JObject>("payload");
-            if(_msg.ContainsKey("command"))
+            if (_msg.ContainsKey("command"))
             {
                 var command = _msg["command"].ToString();
-                if(command == "timeout") throw new Exception("request timed out, no workflow node picked up the message in a timely fashion");
+                if (command == "timeout") throw new Exception("request timed out, no workflow node picked up the message in a timely fashion");
             }
             var state = _msg["state"].ToString();
             if (!string.IsNullOrEmpty(state))
@@ -231,24 +232,24 @@ namespace OpenRPA.Activities
                                 throw;
                             }
                         }
-                        else 
+                        else
                         {
                             JToken t = payload[a.Key];
-                            var testtest = t.Value<string>();
                             System.Reflection.MethodInfo method = typeof(JToken).GetMethod(nameof(JToken.Value)); // typeof(JToken).GetMethod(nameof(JToken.Value));
                             System.Reflection.MethodInfo generic = method.MakeGenericMethod(Arguments[a.Key].ArgumentType);
                             var value = generic.Invoke(payload, new object[] { a.Key });
                             Arguments[a.Key].Set(context, value);
                         }
-                    } 
-                    else if(arguments.Count == 0)
+                    }
+                    else if (arguments.Count == 0)
                     {
                         try
                         {
                             if (Arguments[a.Key].ArgumentType.IsValueType)
                             {
                                 Arguments[a.Key].Set(context, Activator.CreateInstance(Arguments[a.Key].ArgumentType));
-                            } else
+                            }
+                            else
                             {
                                 Arguments[a.Key].Set(context, null);
                             }

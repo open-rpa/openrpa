@@ -75,8 +75,8 @@
         <File Id="cmpE4B4F7691D3ACD4A72AE99FFE470CE17" Source="!(wix.MainSource)\System.Collections.dll" />
         <File Id="cmp75515765AA531707944115B02998F998" Source="!(wix.MainSource)\System.Collections.NonGeneric.dll" />
         <File Id="cmp22D219EF6A7035FFC0254F6BE572FF77" Source="!(wix.MainSource)\System.Collections.Specialized.dll" />
-        <File Id="cmp22AEF5790256905123AF78698CD859DD" Source="!(wix.MainSource)\System.ComponentModel.dll" />        
-        <File Id="cmp5349EC5703EBCAA1E6C7DA272802BE58" Source="!(wix.MainSource)\System.ComponentModel.EventBasedAsync.dll" />        
+        <File Id="cmp22AEF5790256905123AF78698CD859DD" Source="!(wix.MainSource)\System.ComponentModel.dll" />
+        <File Id="cmp5349EC5703EBCAA1E6C7DA272802BE58" Source="!(wix.MainSource)\System.ComponentModel.EventBasedAsync.dll" />
         <File Id="cmp7B3236183FA982DA508702B357E3D75E" Source="!(wix.MainSource)\System.ComponentModel.Primitives.dll" />
         <File Id="cmp58C198180EDB7D42EDD28920E1B2E513" Source="!(wix.MainSource)\System.ComponentModel.TypeConverter.dll" />
         <File Id="cmp03737AA3B5F539D51D9418A6ED0E4F6C" Source="!(wix.MainSource)\System.Console.dll" />
@@ -169,32 +169,6 @@
         <File Id="filB6214F7016ABD85F0A90650A1F105B9C" Source="!(wix.MainSource)\Xceed.Wpf.AvalonDock.Themes.Metro.dll" />
         <File Id="filBB96100CC38385FF7DB0DBFE799C5F23" Source="!(wix.MainSource)\Xceed.Wpf.AvalonDock.Themes.VS2010.dll" />
         <File Id="filBB96100CC38385FF7DB0DBFE799C5F24" Source="!(wix.MainSource)\Xceed.Wpf.Toolkit.dll" />
-        <!--<File Id="filBB96100CC38385FF7DB0DBFE799C5F25" Source="!(wix.MainSource)\Microsoft.Bcl.HashCode.dll" />
-        <File Id="filBB96100CC38385FF7DB0DBFE799C5F26" Source="!(wix.MainSource)\Prometheus.Client.dll" />-->
-        <File Id="filBB96100CC38385FF7DB0DBFE799C5F29" Source="!(wix.MainSource)\OpenTelemetry.Api.dll" />
-        <File Id="filBB96100CC38385FF7DB0DBFE799C5F30" Source="!(wix.MainSource)\OpenTelemetry.dll" />
-        <File Id="filBB96100CC38385FF7DB0DBFE799C5F31" Source="!(wix.MainSource)\OpenTelemetry.Exporter.OpenTelemetryProtocol.dll" />
-        <File Id="System.Diagnostics.DiagnosticSource.dll" Source="!(wix.MainSource)\System.Diagnostics.DiagnosticSource.dll" />
-        <File Id="Google.Protobuf.dll" Source="!(wix.MainSource)\Google.Protobuf.dll" />
-        <File Id="Grpc.Core.Api.dll" Source="!(wix.MainSource)\Grpc.Core.Api.dll" />
-        <File Id="Grpc.Core.dll" Source="!(wix.MainSource)\Grpc.Core.dll" />
-        <File Id="grpc_csharp_ext.x64.dll" Source="!(wix.MainSource)\grpc_csharp_ext.x64.dll" />
-        <!--<File Id="grpc_csharp_ext.x86.dll" Source="!(wix.MainSource)\grpc_csharp_ext.x86.dll" />-->
-        <File Id="libgrpc_csharp_ext.x64.dylib" Source="!(wix.MainSource)\libgrpc_csharp_ext.x64.dylib" />
-        <File Id="libgrpc_csharp_ext.x64.so" Source="!(wix.MainSource)\libgrpc_csharp_ext.x64.so" />
-        <!--<File Id="libgrpc_csharp_ext.x86.dylib" Source="!(wix.MainSource)\libgrpc_csharp_ext.x86.dylib" />
-        <File Id="libgrpc_csharp_ext.x86.so" Source="!(wix.MainSource)\libgrpc_csharp_ext.x86.so" />-->
-        <File Id="Microsoft.Extensions.Logging.Abstractions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Logging.Abstractions.dll" />
-        <File Id="Microsoft.Extensions.Logging.Configuration.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Logging.Configuration.dll" />
-        <File Id="Microsoft.Extensions.Logging.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Logging.dll" />
-        <File Id="Microsoft.Extensions.Options.ConfigurationExtensions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Options.ConfigurationExtensions.dll" />
-        <File Id="Microsoft.Extensions.Options.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Options.dll" />
-        <File Id="Microsoft.Extensions.Primitives.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Primitives.dll" />
-
-        <!--
-        <File Id="" Source="!(wix.MainSource)\" />
-        -->
-
         <File Id="filBB96100CC38385FF7DB0DBFE799C5F27" Source="!(wix.MainSource)\Microsoft.Expression.Interactions.dll" />
         <File Id="filBB96100CC38385FF7DB0DBFE799C5F28" Source="!(wix.MainSource)\System.Windows.Interactivity.dll" />
         <File Id="AxInterop.MSTSCLib.dll" Source="!(wix.MainSource)\AxInterop.MSTSCLib.dll" />

@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
 using OpenRPA.Interfaces;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,21 +18,8 @@ namespace OpenRPA
             reloadTimer.Elapsed += ReloadTimer_Elapsed;
             if (InitializeOTEL())
             {
-                //metricTime = new System.Timers.Timer(5000);
-                //metricTime.Elapsed += metricTime_Elapsed;
-                //metricTime.Start();
             }
         }
-        //public static Prometheus.Client.Collectors.CollectorRegistry registry = new Prometheus.Client.Collectors.CollectorRegistry();
-        //public static Prometheus.Client.MetricFactory factory = new Prometheus.Client.MetricFactory(registry);
-        //public static Prometheus.Client.Abstractions.IMetricFamily<Prometheus.Client.Abstractions.ICounter, (string, string, string)> activity_counter = 
-        //    factory.CreateCounter("openrpa_activity_counter", "Total number of acitivity activations", labelNames: ("activity", "type", "workflow"));
-        //public static Prometheus.Client.Abstractions.IMetricFamily<Prometheus.Client.Abstractions.IHistogram, (string, string, string)> activity_duration = 
-        //    factory.CreateHistogram("openrpa_activity_duration", "Duration of each acitivity activation",
-        //        buckets: new[] { 0.1, 0.3, 0.5, 0.7, 1, 3, 5, 7, 10 },
-        //        labelNames: ("activity", "type", "workflow"));
-        //public static Prometheus.Client.Abstractions.IGauge mem_used = factory.CreateGauge("openrpa_memory_size_used_bytes", "Amount of heap memory usage for OpenRPA client");
-        //public static Prometheus.Client.Abstractions.IGauge mem_total = factory.CreateGauge("openrpa_memory_size_total_bytes", "Amount of heap memory usage for OpenRPA client");
         public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; } = new System.Collections.ObjectModel.ObservableCollection<Project>();
         public int ProjectCount
         {
@@ -1118,7 +1103,6 @@ namespace OpenRPA
                 });
             }
         }
-
         private async void WebSocketClient_OnClose(string reason)
         {
             Log.FunctionIndent("RobotInstance", "WebSocketClient_OnClose", reason);
@@ -1386,49 +1370,10 @@ namespace OpenRPA
             await Task.Delay(5000);
             await RegisterQueues();
         }
-
-        //private string last_metric;
-        //private System.Diagnostics.PerformanceCounter mem_used_counter;
-        // private System.Diagnostics.PerformanceCounter mem_total_counter;
-        // private System.Diagnostics.PerformanceCounter mem_free_counter;
-        private TracerProvider StatsTracerProvider;
-        private TracerProvider tracerProvider;
-        // public Tracer tracer = null;
-        // private InstrumentationWithActivitySource Sampler = null;
         private bool InitializeOTEL()
         {
             try
             {
-                AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-
-                if (Config.local.enable_analytics && StatsTracerProvider == null)
-                {
-                    StatsTracerProvider = OpenTelemetry.Sdk.CreateTracerProviderBuilder()
-                    .SetSampler(new AlwaysOnSampler())
-                    .AddSource("OpenRPA")
-                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenRPA"))
-                    .AddOtlpExporter(otlpOptions =>
-                    {
-                        otlpOptions.Endpoint = new Uri("https://otel.stats.openiap.io");
-                    })
-                    .Build();
-                }
-                if (!string.IsNullOrEmpty(Config.local.otel_trace_url) && tracerProvider == null)
-                {
-                    tracerProvider = OpenTelemetry.Sdk.CreateTracerProviderBuilder()
-                    .SetSampler(new AlwaysOnSampler())
-                    .AddSource("OpenRPA")
-                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenRPA"))
-                    .AddOtlpExporter(otlpOptions =>
-                    {
-                        if (Config.local.otel_trace_url.Contains("http://") && Config.local.otel_trace_url.Contains(":80"))
-                        {
-                            Config.local.otel_trace_url = Config.local.otel_trace_url.Replace("http://", "https://").Replace(":80", "");
-                        }
-                        otlpOptions.Endpoint = new Uri(Config.local.otel_trace_url);
-                    })
-                    .Build();
-                }
                 return true;
             }
             catch (Exception ex)
@@ -1437,38 +1382,6 @@ namespace OpenRPA
             }
             return false;
         }
-        //private async void metricTime_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        //{
-        ////public static Prometheus.Client.Abstractions.IGauge mem_used = factory.CreateGauge("openrpa_memory_size_used_bytes", "Amount of heap memory usage for OpenRPA client");
-        ////public static Prometheus.Client.Abstractions.IGauge mem_total = factory.CreateGauge("openrpa_memory_size_total_bytes", "Amount of heap memory usage for OpenRPA client");
-        //metricTime.Stop();
-        //    try
-        //    {
-        //        if (global.webSocketClient != null && global.webSocketClient.user != null)
-        //        {
-        //            //mem_used.Set(mem_used_counter.NextValue());
-        //            //// mem_total.Set(mem_total_counter.NextValue());
-        //            //using (var memoryStream = await Prometheus.Client.ScrapeHandler.ProcessAsync(registry))
-        //            //{
-        //            //    var result = System.Text.Encoding.ASCII.GetString(memoryStream.ToArray());
-        //            //    if (last_metric != result)
-        //            //    {
-        //            //        await global.webSocketClient.PushMetrics(result);
-        //            //        last_metric = result;
-        //            //    }
-        //            //}
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        if(ex.Message == "server error: Unknown command error")
-        //        {
-        //            return;
-        //        }
-        //        Log.Error(ex.ToString());
-        //    }
-        //    metricTime.Start();
-        //}
         private void onWatchEvent(string id, Newtonsoft.Json.Linq.JObject data)
         {
             try
@@ -1615,7 +1528,8 @@ namespace OpenRPA
                                     exists._modifiedbyid = project._modifiedbyid;
                                     exists._version = project._version;
                                     SetStatus("Saving " + exists.name);
-                                    exists.Save(false);
+                                    // exists.Save(false);
+                                    exists.SaveFile();
                                     SetStatus("Install project dependencies");
                                     try
                                     {

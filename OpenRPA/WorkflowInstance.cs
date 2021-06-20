@@ -25,27 +25,11 @@ namespace OpenRPA
             _type = "workflowinstance";
             _id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
             _acl = workflow._acl;
-            // if(RobotInstance.instance.tracer != null) span = RobotInstance.instance.tracer.StartActiveSpan("Initialize " + workflow.name);
-            // LastUpdated = DateTime.Now;
         }
-
-        //            if(RobotInstance.instance.source != null) activity = RobotInstance.instance.source.StartActivity("Initialize " + workflow.name);
-        //    if (!string.IsNullOrEmpty(Config.local.openflow_uniqueid)) activity?.SetTag("ofid", Config.local.openflow_uniqueid);
-        //activity?.SetTag("clientversion", System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
-
-        [JsonIgnore]
-        public Stack<System.Diagnostics.Activity> Activities = new Stack<System.Diagnostics.Activity>();
-        [JsonIgnore]
-        public System.Diagnostics.Activity RootActivity = null;
         [JsonProperty(propertyName: "parentspanid")]
         public string ParentSpanId { get; set; }
         [JsonProperty(propertyName: "spanid")]
         public string SpanId { get; set; }
-        //[JsonIgnore]
-        //public string spanid { get; set; }
-        [JsonIgnore]
-        public System.Diagnostics.ActivitySource source = new System.Diagnostics.ActivitySource("OpenRPA");
-        // public DateTime LastUpdated { get { return GetProperty<DateTime>(); } set { SetProperty(value); } } 
         private static List<WorkflowInstance> _Instances = new List<WorkflowInstance>();
         public static List<WorkflowInstance> Instances
         {
@@ -55,7 +39,6 @@ namespace OpenRPA
                 // return _Instances.Where(x => x.state != "loaded").ToList();
             }
         }
-
         public event VisualTrackingHandler OnVisualTracking;
         public event idleOrComplete OnIdleOrComplete;
         public Dictionary<string, object> Parameters { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
@@ -366,10 +349,6 @@ namespace OpenRPA
         }
         public System.Diagnostics.Stopwatch runWatch { get; set; }
         IWorkflow IWorkflowInstance.Workflow { get => this.Workflow; set => this.Workflow = value as Workflow; }
-
-        // apibase IWorkflowInstance.Workflow { get => this.Workflow; set => this.Workflow = value as Workflow; }
-        //public void Run(Activity root, string activityid)
-
         public void RunThis(Activity root, Activity activity)
         {
             createApp(activity);

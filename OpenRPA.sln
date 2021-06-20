@@ -64,6 +64,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.RDServiceMonitor", "OpenRPA.RDServiceMonitor\OpenRPA.RDServiceMonitor.csproj", "{B42506D3-469E-4283-95EF-95A580ADA86E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "installer", "installer", "{8CBC9129-7A79-483A-838B-2C6FF3762B35}"
+	ProjectSection(SolutionItems) = preProject
+		dowinget.bat = dowinget.bat
+		sign.ps1 = sign.ps1
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.SetupActions", "OpenRPA.SetupActions\OpenRPA.SetupActions.csproj", "{52AF10F7-DCF9-4E1D-B4DD-331456671118}"
 EndProject

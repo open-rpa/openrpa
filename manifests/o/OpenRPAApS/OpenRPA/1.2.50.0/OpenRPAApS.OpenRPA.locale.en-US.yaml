@@ -2,9 +2,9 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.0.0.schema.json
 
 PackageIdentifier: OpenRPAApS.OpenRPA
-PackageVersion: 1.2.47.0
+PackageVersion: 1.2.50.0
 PackageLocale: en-US
-Publisher: OpenIAP ApS
+Publisher: OpenRPA ApS
 PackageName: OpenRPA
 License: MPL
 ShortDescription: Enterprise Grade OpenSource RPA Solution

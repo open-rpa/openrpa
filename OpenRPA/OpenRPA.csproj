@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.50</Version>
-    <PackageReleaseNotes>1.2.50 Fix issue when parsing JObjects in Invoke Openflow
+    <Version>1.2.51</Version>
+    <PackageReleaseNotes>1.2.51 Remove OpenTelemetry stuff, going to move this to an extension later
+1.2.50 Fix issue when parsing JObjects in Invoke Openflow
 1.2.49 Fix register queue issue on Windows XP/7
 1.2.48 Improve json parsing
 1.2.44 minor fixes, add basic nodered cmdlets to powershell
@@ -233,6 +234,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <Platforms>AnyCPU;x86</Platforms>
     <Authors>Allan Zimmermann</Authors>
     <Company>OpenIAP</Company>
+    <UserSecretsId>67d03aca-cfb1-4f1c-9efa-111ce7476743</UserSecretsId>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
@@ -275,15 +277,11 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <PackageReference Include="CefSharp.Wpf" Version="86.0.241" />
     <PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.8.1" />
-    <PackageReference Include="Grpc.Core" Version="2.36.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="NuGet.Common" Version="5.4.0" />
     <PackageReference Include="NuGet.Packaging" Version="5.4.0" />
     <PackageReference Include="NuGet.Protocol" Version="5.4.0" />
     <PackageReference Include="NuGet.Resolver" Version="5.4.0" />
-    <PackageReference Include="OpenTelemetry" Version="1.1.0-beta1" />
-    <PackageReference Include="OpenTelemetry.Api" Version="1.1.0-beta1" />
-    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\BreakableDoWhileDesigner.xaml" />

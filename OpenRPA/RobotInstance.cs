@@ -931,17 +931,6 @@ namespace OpenRPA
                 }
                 InitializeOTEL();
                 await LoadServerData(true);
-                try
-                {
-                    SetStatus("Run pending workflow instances");
-                    Log.Debug("RunPendingInstances::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    await WorkflowInstance.RunPendingInstances();
-                    Log.Debug("RunPendingInstances::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
                 Log.Debug("WebSocketClient_OnOpen::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
 
                 System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = true;
@@ -993,7 +982,7 @@ namespace OpenRPA
             if (first_connect)
             {
                 first_connect = false;
-                GenericTools.RunUI(() =>
+                GenericTools.RunUI(async () =>
                 {
                     try
                     {
@@ -1009,6 +998,16 @@ namespace OpenRPA
                     {
                         Log.Error(ex.ToString());
                     }
+                    try
+                    {
+                        SetStatus("Run pending workflow instances");
+                        await WorkflowInstance.RunPendingInstances();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                    SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
                 });
             }
             Log.FunctionOutdent("RobotInstance", "RobotInstance_WebSocketClient_OnOpen");

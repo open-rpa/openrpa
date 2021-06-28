@@ -720,6 +720,7 @@ namespace OpenRPA
                 errormessage = ex.Message;
                 Save();
                 if (runWatch != null) runWatch.Stop();
+                NotifyAborted();
                 OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -761,7 +762,7 @@ namespace OpenRPA
                         foreach (var o in e.Outputs) Parameters[o.Key] = o.Value;
                         if (runWatch != null) runWatch.Stop();
                         Save();
-                        NotifyCompleted();
+                        NotifyAborted();
                         OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
                     }
                     else if (e.CompletionState == System.Activities.ActivityInstanceState.Executing)

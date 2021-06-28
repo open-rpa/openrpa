@@ -18,7 +18,6 @@ namespace OpenRPA.Net
 {
     public class WebSocketClient : IWebSocketClient
     {
-        public System.Diagnostics.ActivitySource source = new System.Diagnostics.ActivitySource("OpenRPA.Net");
         static SemaphoreSlim ProcessingSemaphore = new SemaphoreSlim(1, 1);
         static SemaphoreSlim SendStringSemaphore = new SemaphoreSlim(1, 1);
         private WebSocket ws = null;
@@ -619,24 +618,19 @@ namespace OpenRPA.Net
         }
         public async Task<string> RegisterQueue(string queuename)
         {
-            var span = source.StartActivity("RegisterQueue", ActivityKind.Client);
             try
             {
-                span?.SetTag("name", queuename);
                 RegisterQueueMessage RegisterQueue = new RegisterQueueMessage(queuename);
                 RegisterQueue = await RegisterQueue.SendMessage<RegisterQueueMessage>(this);
                 if (!string.IsNullOrEmpty(RegisterQueue.error)) throw new SocketException(RegisterQueue.error);
-                span?.SetTag("queuename", RegisterQueue.queuename);
                 return RegisterQueue.queuename;
             }
             catch (Exception ex)
             {
-                span?.RecordException(ex);
                 throw;
             }
             finally
             {
-                span?.Dispose();
             }
         }
         public async Task<object> QueueMessage(string queuename, object data, string replyto, string correlationId, int expiration)
@@ -651,7 +645,6 @@ namespace OpenRPA.Net
         }
         private async Task<T[]> _Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby, string queryas)
         {
-            var span = source.StartActivity("Query", ActivityKind.Client);
             try
             {
                 var result = new List<T>();
@@ -659,8 +652,6 @@ namespace OpenRPA.Net
                 int _top = top;
                 int _skip = skip;
                 if (_top > Config.local.querypagesize) _top = Config.local.querypagesize;
-                span?.SetTag("top", _top);
-                span?.SetTag("query", query);
                 do
                 {
                     cont = false;
@@ -669,29 +660,24 @@ namespace OpenRPA.Net
                     q.collectionname = collectionname;
                     if (string.IsNullOrEmpty(query)) query = "{}";
                     q.query = JObject.Parse(query);
-                    span?.AddEvent(new ActivityEvent("Do Server Request"));
                     q = await q.SendMessage<QueryMessage<T>>(this);
                     if (q == null) throw new SocketException("Server returned an empty response");
                     if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
                     result.AddRange(q.result);
-                    span?.AddEvent(new ActivityEvent("Got " + q.result.Count() + " results"));
                     if (q.result.Count() == _top && result.Count < top)
                     {
                         cont = true;
                         _skip += _top;
                     }
                 } while (cont);
-                span?.SetTag("results", result.Count);
                 return result.ToArray();
             }
             catch (Exception ex)
             {
-                span?.RecordException(ex);
                 throw;
             }
             finally
             {
-                span?.Dispose();
             }
         }
         public async Task<T[]> Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby, string queryas)

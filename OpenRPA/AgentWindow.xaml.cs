@@ -330,15 +330,7 @@ namespace OpenRPA
         public void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
         {
             if (instance == null) return;
-            var span = RobotInstance.instance.source.StartActivity("IdleOrComplete " + instance.state + " " + instance.name, System.Diagnostics.ActivityKind.Consumer);
             Log.FunctionIndent("MainWindow", "IdleOrComplete");
-            span?.SetTag("caller", instance.caller);
-            span?.SetTag("_id", instance._id);
-            span?.SetTag("correlationId", instance.correlationId);
-            span?.SetTag("isCompleted", instance.isCompleted);
-            span?.SetTag("state", instance.state);
-            span?.SetTag("errormessage", instance.errormessage);
-            span?.SetTag("host", instance.host);
             try
             {
                 bool isRemote = false;
@@ -358,7 +350,6 @@ namespace OpenRPA
                     {
                         try
                         {
-                            span?.AddEvent(new System.Diagnostics.ActivityEvent("Queue Message with status"));
                             await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId, 0);
                         }
                         catch (Exception ex)
@@ -410,7 +401,6 @@ namespace OpenRPA
                                         if (b.Key == instance._id)
                                         {
                                             wi.ResumeBookmark(b.Key, instance);
-                                            span?.AddEvent(new System.Diagnostics.ActivityEvent("Resume Bookmark " + b.Key));
                                             return;
                                         }
                                     }
@@ -427,7 +417,6 @@ namespace OpenRPA
             }
             finally
             {
-                span?.Dispose();
             }
         }
         private void OnExitApp(object _item)

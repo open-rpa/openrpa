@@ -140,7 +140,6 @@ namespace OpenRPA
                                 Instance.Variables.Add(v.Key, new WorkflowInstanceValueType(v.Value.GetType(), v.Value));
                             }
 
-                            }
                         }
                     }
                 }

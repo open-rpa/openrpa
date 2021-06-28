@@ -886,22 +886,6 @@ namespace OpenRPA
                 Log.Debug(ex.ToString());
             }
         }
-        public static void CleanUp()
-        {
-            lock (Instances)
-            {
-                foreach (var i in Instances.ToList())
-                {
-                    // if (i.isCompleted && i._modified > DateTime.Now.AddMinutes(5))
-                    if (i.isCompleted && i._modified < DateTime.Now.AddSeconds(15))
-                    {
-                        Log.Verbose("[workflow] Remove workflow with id '" + i.WorkflowId + "'");
-                        lock (Instances) Instances.Remove(i);
-                    }
-                }
-
-            }
-        }
         public void Save()
         {
             if (isCompleted || hasError)
@@ -1000,7 +984,12 @@ namespace OpenRPA
             {
                 foreach (var i in Instances.ToList())
                 {
-                    if (i.isCompleted && i._modified > DateTime.Now.AddMinutes(5)) lock (Instances) Instances.Remove(i);
+                    // if (i.isCompleted && i._modified > DateTime.Now.AddMinutes(5))
+                    if (i.isCompleted && i._modified < DateTime.Now.AddSeconds(15))
+                    {
+                        Log.Verbose("[workflow] Remove workflow with id '" + i.WorkflowId + "'");
+                        lock (Instances) Instances.Remove(i);
+                    }
                 }
 
             }

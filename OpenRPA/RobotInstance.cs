@@ -23,7 +23,6 @@ namespace OpenRPA
             }
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
-        public System.Diagnostics.ActivitySource source = new System.Diagnostics.ActivitySource("OpenRPA.RobotInstance");
         private RobotInstance()
         {
             reloadTimer = new System.Timers.Timer(Config.local.reloadinterval.TotalMilliseconds);
@@ -33,7 +32,7 @@ namespace OpenRPA
             {
             }
         }
-        public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; } = new System.Collections.ObjectModel.ObservableCollection<Project>();
+        // public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; } = new System.Collections.ObjectModel.ObservableCollection<Project>();
         //public static Prometheus.Client.Collectors.CollectorRegistry registry = new Prometheus.Client.Collectors.CollectorRegistry();
         //public static Prometheus.Client.MetricFactory factory = new Prometheus.Client.MetricFactory(registry);
         //public static Prometheus.Client.Abstractions.IMetricFamily<Prometheus.Client.Abstractions.ICounter, (string, string, string)> activity_counter = 
@@ -55,7 +54,7 @@ namespace OpenRPA
             get
             {
                 int result = 0;
-                GenericTools.RunUI(() => { result = Projects.Count; });
+                GenericTools.RunUI(() => { result = Projects.Count(); });
                 return result;
             }
         }
@@ -312,7 +311,6 @@ namespace OpenRPA
             Log.Information("LoadServerData::begin");
             DisableWatch = true;
             Window.IsLoading = true;
-            var span = source.StartActivity("LoadServerData", ActivityKind.Consumer);
             try
             {
                 Log.FunctionIndent("RobotInstance", "LoadServerData");
@@ -321,7 +319,6 @@ namespace OpenRPA
                     Log.FunctionOutdent("RobotInstance", "LoadServerData", "Not signed in");
                     return;
                 }
-                span?.AddEvent(new ActivityEvent("query project versions"));
                 Log.Information("LoadServerData::query project versions");
                 var server_projects = await global.webSocketClient.Query<Project>("openrpa", "{\"_type\": 'project'}", "{\"_version\": 1}", top: Config.local.max_projects);
                 var local_projects = Projects.FindAll().ToList();
@@ -353,7 +350,6 @@ namespace OpenRPA
                     var exists = server_projects.Where(x => x._id == p._id).FirstOrDefault();
                     if (exists == null && !p.isDirty)
                     {
-                        span?.AddEvent(new ActivityEvent("Removing local project " + p.name));
                         Log.Information("LoadServerData::Removing local project " + p.name);
                         Projects.Delete(p._id);
                     }
@@ -367,7 +363,6 @@ namespace OpenRPA
                 {
                     for (var i = 0; i < reload_ids.Count; i++) reload_ids[i] = "'" + reload_ids[i] + "'";
                     Log.Information("LoadServerData::Featching fresh version of ´" + reload_ids.Count + " projects");
-                    span?.AddEvent(new ActivityEvent("Featching fresh version of ´" + reload_ids.Count + " projects"));
                     var q = "{ _type: 'project', '_id': {'$in': [" + string.Join(",", reload_ids) + "]}}";
                     server_projects = await global.webSocketClient.Query<Project>("openrpa", q, orderby: "{\"name\":-1}", top: Config.local.max_projects);
                     foreach (var p in server_projects)
@@ -377,7 +372,6 @@ namespace OpenRPA
                             var exists = local_projects.Where(x => x._id == p._id).FirstOrDefault();
                             if (exists != null)
                             {
-                                span?.AddEvent(new ActivityEvent("Updating local project " + p.name));
                                 Log.Information("LoadServerData::Updating local project " + p.name);
                                 p.IsExpanded = exists.IsExpanded;
                                 p.IsSelected = exists.IsSelected;
@@ -387,7 +381,6 @@ namespace OpenRPA
                             }
                             else
                             {
-                                span?.AddEvent(new ActivityEvent("Adding local project " + p.name));
                                 Log.Information("LoadServerData::Adding local project " + p.name);
                                 p.isDirty = false;
                                 await p.Save();
@@ -405,7 +398,6 @@ namespace OpenRPA
                 for (var i = 0; i < local_projects.Count; i++) local_project_ids.Add("'" + local_projects[i]._id + "'");
 
                 Log.Information("LoadServerData::query workflow versions");
-                span?.AddEvent(new ActivityEvent("query workflow versions"));
                 var _q = "{ _type: 'workflow', 'projectid': {'$in': [" + string.Join(",", local_project_ids) + "]}}";
                 var server_workflows = await global.webSocketClient.Query<Workflow>("openrpa", _q, "{\"_version\": 1}", top: Config.local.max_workflows);
                 var local_workflows = Workflows.FindAll().ToList();
@@ -439,7 +431,6 @@ namespace OpenRPA
                         var exists = server_workflows.Where(x => x._id == wf._id).FirstOrDefault();
                         if (exists == null && !wf.isDirty)
                         {
-                            span?.AddEvent(new ActivityEvent("Removing local workflow " + wf.name));
                             Log.Debug("Removing local workflow " + wf.name);
                             Workflows.Delete(wf._id);
                         }
@@ -468,14 +459,12 @@ namespace OpenRPA
                         {
                             if (exists != null)
                             {
-                                span?.AddEvent(new ActivityEvent("Updating local workflow " + wf.name));
                                 Log.Information("LoadServerData::Updating local workflow " + wf.name);
                                 wf.isDirty = false;
                                 UpdateWorkflow(wf, false);
                             }
                             else
                             {
-                                span?.AddEvent(new ActivityEvent("Adding local workflow " + wf.name));
                                 Log.Information("LoadServerData::Adding local workflow " + wf.name);
                                 wf.isDirty = false;
                                 await wf.Save();
@@ -492,7 +481,6 @@ namespace OpenRPA
 
 
                 Log.Information("LoadServerData::query detector versions");
-                span?.AddEvent(new ActivityEvent("query detector versions"));
                 var server_detectors = await global.webSocketClient.Query<Detector>("openrpa", "{\"_type\": 'detector'}", "{\"_version\": 1}");
                 var local_detectors = Detectors.FindAll().ToList();
                 reload_ids = new List<string>();
@@ -523,7 +511,6 @@ namespace OpenRPA
                         var exists = server_detectors.Where(x => x._id == detector._id).FirstOrDefault();
                         if (exists == null && !detector.isDirty)
                         {
-                            span?.AddEvent(new ActivityEvent("Removing local detector " + detector.name));
                             Log.Debug("Removing local detector " + detector.name);
                             var d = Plugins.detectorPlugins.Where(x => x.Entity._id == detector._id).FirstOrDefault();
                             if (d != null)
@@ -634,7 +621,6 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                span?.RecordException(ex);
                 Log.Error(ex, "");
             }
             finally
@@ -649,7 +635,6 @@ namespace OpenRPA
                 }
                 AutoReloading = true;
                 DisableWatch = false;
-                span?.Dispose();
                 Window.IsLoading = false;
                 Window.OnOpen(null);
                 Log.Information("LoadServerData::end");
@@ -860,7 +845,6 @@ namespace OpenRPA
         }
         private async void RobotInstance_WebSocketClient_OnOpen()
         {
-            var span = source.StartActivity("SocketOpen", ActivityKind.Internal);
             Log.FunctionIndent("RobotInstance", "RobotInstance_WebSocketClient_OnOpen");
             try
             {
@@ -869,7 +853,6 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                span?.RecordException(ex);
                 Log.Error(ex.ToString());
             }
             Interfaces.entity.TokenUser user = null;
@@ -887,7 +870,6 @@ namespace OpenRPA
                 SetStatus("Connected to " + Config.local.wsurl);
                 while (user == null)
                 {
-                    var loginspan = source.StartActivity("Signin", ActivityKind.Internal);
                     string errormessage = string.Empty;
                     if (!string.IsNullOrEmpty(Config.local.username) && Config.local.password != null && Config.local.password.Length > 0)
                     {
@@ -988,7 +970,6 @@ namespace OpenRPA
                             return;
                         }
                     }
-                    loginspan?.Dispose();
                 }
                 InitializeOTEL();
                 try
@@ -1103,7 +1084,6 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
-            span?.Dispose();
             Log.FunctionOutdent("RobotInstance", "RobotInstance_WebSocketClient_OnOpen");
         }
         int ReconnectDelay = 5000;
@@ -1508,44 +1488,12 @@ namespace OpenRPA
         //private System.Diagnostics.PerformanceCounter mem_used_counter;
         // private System.Diagnostics.PerformanceCounter mem_total_counter;
         // private System.Diagnostics.PerformanceCounter mem_free_counter;
-        private TracerProvider StatsTracerProvider;
-        private TracerProvider tracerProvider;
         // public Tracer tracer = null;
         // private InstrumentationWithActivitySource Sampler = null;
         private bool InitializeOTEL()
         {
             try
             {
-                AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-
-                if (Config.local.enable_analytics && StatsTracerProvider == null)
-                {
-                    StatsTracerProvider = OpenTelemetry.Sdk.CreateTracerProviderBuilder()
-                    .SetSampler(new AlwaysOnSampler())
-                    .AddSource("OpenRPA").AddSource("OpenRPA.RobotInstance").AddSource("OpenRPA.Net")
-                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenRPA"))
-                    .AddOtlpExporter(otlpOptions =>
-                    {
-                        otlpOptions.Endpoint = new Uri("https://otel.stats.openiap.io");
-                    })
-                    .Build();
-                }
-                if (!string.IsNullOrEmpty(Config.local.otel_trace_url) && tracerProvider == null)
-                {
-                    tracerProvider = OpenTelemetry.Sdk.CreateTracerProviderBuilder()
-                    .SetSampler(new AlwaysOnSampler())
-                    .AddSource("OpenRPA").AddSource("OpenRPA.RobotInstance").AddSource("OpenRPA.Net")
-                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenRPA"))
-                    .AddOtlpExporter(otlpOptions =>
-                    {
-                        if (Config.local.otel_trace_url.Contains("http://") && Config.local.otel_trace_url.Contains(":80"))
-                        {
-                            Config.local.otel_trace_url = Config.local.otel_trace_url.Replace("http://", "https://").Replace(":80", "");
-                        }
-                        otlpOptions.Endpoint = new Uri(Config.local.otel_trace_url);
-                    })
-                    .Build();
-                }
                 return true;
             }
             catch (Exception ex)

@@ -379,7 +379,6 @@ namespace OpenRPA.Views
         }
         public async Task<bool> SaveAsync()
         {
-            var span = RobotInstance.instance.source.StartActivity("Workflow Designer SaveAsync", System.Diagnostics.ActivityKind.Client);
             try
             {
                 var imagepath = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "images");
@@ -500,12 +499,10 @@ namespace OpenRPA.Views
             }
             catch (Exception ex)
             {
-                span?.RecordException(ex);
                 throw;
             }
             finally
             {
-                span?.Dispose();
             }
         }
         public void RenameWorkflow(string name)
@@ -1164,14 +1161,6 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
         public void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
         {
             if (instance == null) return;
-            var span = RobotInstance.instance.source.StartActivity("IdleOrComplete " + instance.state + " " + instance.name, System.Diagnostics.ActivityKind.Consumer);
-            span?.SetTag("caller", instance.caller);
-            span?.SetTag("_id", instance._id);
-            span?.SetTag("correlationId", instance.correlationId);
-            span?.SetTag("isCompleted", instance.isCompleted);
-            span?.SetTag("state", instance.state);
-            span?.SetTag("errormessage", instance.errormessage);
-            span?.SetTag("host", instance.host);
             try
             {
                 if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
@@ -1189,7 +1178,6 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     {
                         try
                         {
-                            span?.AddEvent(new System.Diagnostics.ActivityEvent("Queue Message with status"));
                             await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId, 0);
                         }
                         catch (Exception ex)
@@ -1335,12 +1323,10 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
             }
             catch (Exception ex)
             {
-                span.RecordException(ex);
                 Log.Error(ex.ToString());
             }
             finally
             {
-                span?.Dispose();
             }
         }
         public void Run(bool VisualTracking, bool SlowMotion, IWorkflowInstance instance)

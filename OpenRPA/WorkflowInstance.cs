@@ -26,19 +26,21 @@ namespace OpenRPA
             _type = "workflowinstance";
             _id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
             _acl = workflow._acl;
-            // if(RobotInstance.instance.tracer != null) span = RobotInstance.instance.tracer.StartActiveSpan("Initialize " + workflow.name);
-            // LastUpdated = DateTime.Now;
         }
+
         [JsonIgnore]
         public Stack<System.Diagnostics.Activity> Activities = new Stack<System.Diagnostics.Activity>();
         [JsonIgnore]
         public System.Diagnostics.Activity RootActivity = null;
         [JsonProperty(propertyName: "parentspanid")]
-        public string ParentSpanId { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string ParentSpanId { get; set; }
         [JsonProperty(propertyName: "spanid")]
-        public string SpanId { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        [JsonIgnore, LiteDB.BsonIgnore]
+        public string SpanId { get; set; }
+        //[JsonIgnore]
+        //public string spanid { get; set; }
+        [JsonIgnore]
         public System.Diagnostics.ActivitySource source = new System.Diagnostics.ActivitySource("OpenRPA");
+        // public DateTime LastUpdated { get { return GetProperty<DateTime>(); } set { SetProperty(value); } } 
         private static List<WorkflowInstance> _Instances = new List<WorkflowInstance>();
         public static List<WorkflowInstance> Instances
         {
@@ -841,6 +843,64 @@ namespace OpenRPA
                 OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
                 return System.Activities.UnhandledExceptionAction.Terminate;
             };
+        }
+        private object filelock = new object();
+        public void SaveFile()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(InstanceId)) return;
+                if (string.IsNullOrEmpty(Path)) return;
+                if (isCompleted || hasError) return;
+                if (!System.IO.Directory.Exists(System.IO.Path.Combine(Path, "state"))) System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Path, "state"));
+                var Filepath = System.IO.Path.Combine(Path, "state", InstanceId + ".json");
+                string json = "";
+                try
+                {
+                    json = JsonConvert.SerializeObject(this);
+                }
+                catch (Exception)
+                {
+                }
+                lock (filelock)
+                {
+                    if (!string.IsNullOrEmpty(json)) System.IO.File.WriteAllText(Filepath, json);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+        }
+        public void DeleteFile()
+        {
+            if (string.IsNullOrEmpty(InstanceId)) return;
+            if (string.IsNullOrEmpty(Path)) return;
+            var Filepath = System.IO.Path.Combine(Path, "state", InstanceId + ".json");
+            try
+            {
+                if (System.IO.File.Exists(Filepath)) System.IO.File.Delete(Filepath);
+            }
+            catch (Exception ex)
+            {
+                Log.Debug(ex.ToString());
+            }
+        }
+        public static void CleanUp()
+        {
+            lock (Instances)
+            {
+                foreach (var i in Instances.ToList())
+                {
+                    // if (i.isCompleted && i._modified > DateTime.Now.AddMinutes(5))
+                    if (i.isCompleted && i._modified < DateTime.Now.AddSeconds(15))
+                    {
+                        Log.Verbose("[workflow] Remove workflow with id '" + i.WorkflowId + "'");
+                        lock (Instances) Instances.Remove(i);
+                    }
+                }
+
+            }
         }
         public void Save()
         {

@@ -75,48 +75,6 @@ namespace OpenRPA
                         if (workflowInstanceRecord.State == WorkflowInstanceStates.Started || workflowInstanceRecord.State == WorkflowInstanceStates.Resumed)
                         {
                             lock (timerslock) timers.Add(InstanceId.ToString(), new Dictionary<string, Stopwatch>());
-                            System.Diagnostics.Activity.Current = null;
-                            try
-                            {
-                                // Instance.RootActivity = Instance.source?.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.Workflow.name, ActivityKind.Consumer, Instance.ParentSpanId);
-                                Instance.RootActivity = Instance.source?.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.Workflow.name, ActivityKind.Consumer);
-                            }
-                            catch (Exception)
-                            {
-                                Instance.source = null;
-                            }
-                            if (Instance.RootActivity != null)
-                            {
-                                if (!string.IsNullOrEmpty(Instance.ParentSpanId)) Instance.RootActivity?.SetParentId(Instance.ParentSpanId);
-                                Instance.SpanId = Instance.RootActivity.SpanId.ToHexString();
-                            }
-                            Instance.RootActivity?.SetTag("status.code", 200);
-                            Instance.RootActivity?.SetTag("status.state", workflowInstanceRecord.State.ToString());
-                            Instance.RootActivity?.SetTag("ofid", Config.local.openflow_uniqueid);
-                            try
-                            {
-                                if (global.webSocketClient != null && global.webSocketClient.user != null && !string.IsNullOrEmpty(global.webSocketClient.user.username))
-                                {
-                                    Instance.RootActivity?.SetTag("username", global.webSocketClient.user.username);
-                                }
-                                else
-                                {
-                                    Instance.RootActivity?.SetTag("username", System.Security.Principal.WindowsIdentity.GetCurrent().Name);
-                                }
-                            }
-                            catch (Exception)
-                            {
-                            }
-                            try
-                            {
-                                if (hostname == null) hostname = System.Net.Dns.GetHostName();
-                                Instance.RootActivity?.SetTag("hostname", hostname);
-                            }
-                            catch (Exception)
-                            {
-                                hostname = "";
-                            }
-                            Instance.Activities.Push(Instance.RootActivity);
                         }
                         else if (workflowInstanceRecord.State == WorkflowInstanceStates.Aborted || workflowInstanceRecord.State == WorkflowInstanceStates.Canceled ||
                             workflowInstanceRecord.State == WorkflowInstanceStates.Completed || workflowInstanceRecord.State == WorkflowInstanceStates.Deleted ||
@@ -124,92 +82,31 @@ namespace OpenRPA
                             workflowInstanceRecord.State == WorkflowInstanceStates.UnhandledException || workflowInstanceRecord.State == WorkflowInstanceStates.UpdateFailed)
                         {
                             if (timers.ContainsKey(InstanceId.ToString())) lock (timerslock) timers.Remove(InstanceId.ToString());
-                            if (workflowInstanceRecord.State != WorkflowInstanceStates.Completed)
-                            {
-                                Instance.RootActivity?.SetTag("status.state", 500);
-                            }
-                            if (workflowInstanceRecord.State == WorkflowInstanceStates.UnhandledException)
-                            {
-                                Instance.RootActivity?.SetTag("Exception", ((System.Activities.Tracking.WorkflowInstanceUnhandledExceptionRecord)workflowInstanceRecord).UnhandledException);
-                            }
-                            if (workflowInstanceRecord.State == WorkflowInstanceStates.Aborted)
-                            {
-                                Instance.RootActivity?.SetTag("Reason", ((System.Activities.Tracking.WorkflowInstanceAbortedRecord)workflowInstanceRecord).Reason);
-                            }
-                            if (workflowInstanceRecord.State == WorkflowInstanceStates.Suspended)
-                            {
-                                Instance.RootActivity?.SetTag("Reason", ((System.Activities.Tracking.WorkflowInstanceSuspendedRecord)workflowInstanceRecord).Reason);
-                            }
-                            if (workflowInstanceRecord.State == WorkflowInstanceStates.Terminated)
-                            {
-                                Instance.RootActivity?.SetTag("Reason", ((System.Activities.Tracking.WorkflowInstanceTerminatedRecord)workflowInstanceRecord).Reason);
-                            }
-                            Instance.RootActivity?.SetTag("status.state", workflowInstanceRecord.State.ToString());
-                            if (Instance.source != null)
-                            {
-                                while (Instance.Activities.Count > 0)
-                                {
-                                    var span = Instance.Activities.Pop();
-                                    span?.Dispose();
-                                }
-                                Instance.RootActivity = null;
-                            }
 
-                        }
-                        else
-                        {
-                            Instance.RootActivity?.AddEvent(new ActivityEvent(workflowInstanceRecord.State.ToString()));
-                            if (Instance.Activities.Count > 0)
-                            {
-                                Instance.Activities.First()?.AddEvent(new ActivityEvent(workflowInstanceRecord.State.ToString()));
-                            }
                         }
                     }
 
                 }
-                //if (activityStateRecord != null || activityScheduledRecord != null)
                 if (activityStateRecord != null)
                 {
                     string ActivityId = null, name = null;
-                    WorkflowInstance Instance = null;
-                    lock (WorkflowInstance.Instances) Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
-                    if (Instance == null)
+                    var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
+                    if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Id)) ActivityId = activityStateRecord.Activity.Id;
+                    if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Name)) name = activityStateRecord.Activity.Name;
+                    // var sw = new Stopwatch(); sw.Start();
+                    if (timers.ContainsKey(InstanceId.ToString()) && !string.IsNullOrEmpty(ActivityId))
                     {
-                        Log.Error("WorkflowTrackingParticipant failed locating WorkflowInstance with InstanceId " + InstanceId.ToString());
-                        return;
-                    }
-                    lock (Instance)
-                    {
-
-                        if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Id)) ActivityId = activityStateRecord.Activity.Id;
-                        if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Name)) name = activityStateRecord.Activity.Name;
-                        // var sw = new Stopwatch(); sw.Start();
-                        if (timers.ContainsKey(InstanceId.ToString()) && !string.IsNullOrEmpty(ActivityId))
+                        var timer = timers[InstanceId.ToString()];
+                        if (activityStateRecord.State == ActivityStates.Executing)
                         {
-                            var timer = timers[InstanceId.ToString()];
-                            if (activityStateRecord.State == ActivityStates.Executing)
+                            if (!timer.ContainsKey(ActivityId))
                             {
-                                if (!timer.ContainsKey(ActivityId))
-                                {
-                                    Stopwatch sw = new Stopwatch(); sw.Start();
-                                    timer.Add(ActivityId, sw);
-                                    var TypeName = activityStateRecord.Activity.TypeName;
-                                    var Name = activityStateRecord.Activity.Name;
-                                    if (String.IsNullOrEmpty(Name)) Name = TypeName;
-                                    if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
-
-                                System.Diagnostics.Activity.Current = Instance.RootActivity;
-                                try
-                                {
-                                    var span = Instance.source?.StartActivity(Name, ActivityKind.Consumer);
-                                    span?.AddTag("type", TypeName);
-                                    span?.AddTag("ActivityId", ActivityId);
-                                    if (Instance.source != null && span != null) Instance.Activities.Push(span);
-                                }
-                                catch (Exception)
-                                {
-                                    Instance.source = null;
-                                }
+                                Stopwatch sw = new Stopwatch(); sw.Start();
+                                timer.Add(ActivityId, sw);
+                                var TypeName = activityStateRecord.Activity.TypeName;
+                                var Name = activityStateRecord.Activity.Name;
+                                if (String.IsNullOrEmpty(Name)) Name = TypeName;
+                                if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
                             }
                         }
                         if (activityStateRecord.State != ActivityStates.Executing)
@@ -222,24 +119,6 @@ namespace OpenRPA
                                 var Name = activityStateRecord.Activity.Name;
                                 if (String.IsNullOrEmpty(Name)) Name = TypeName;
                                 if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
-                                try
-                                {
-                                    lock (Instance.Activities)
-                                    {
-                                        if (Instance.Activities.Count > 0)
-                                        {
-                                            if (Instance.Activities.First()?.DisplayName == Name)
-                                            {
-                                                var span = Instance.Activities.Pop();
-                                                span?.Dispose();
-                                            }
-                                        }
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    Log.Error(ex.ToString());
-                                }
                             }
                         }
                     }
@@ -247,21 +126,19 @@ namespace OpenRPA
                     {
                         var TypeName = activityStateRecord.Activity.TypeName;
                         if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
-                        //RobotInstance.activity_counter.WithLabels((activityStateRecord.Activity.Name, TypeName, Instance.Workflow.name)).Inc();
                     }
-
-                        foreach (var v in activityStateRecord.Variables)
+                    foreach (var v in activityStateRecord.Variables)
+                    {
+                        if (Instance.Variables.ContainsKey(v.Key))
                         {
-                            if (Instance.Variables.ContainsKey(v.Key))
+                            Instance.Variables[v.Key].value = v.Value;
+                        }
+                        else
+                        {
+                            if (v.Value != null)
                             {
-                                Instance.Variables[v.Key].value = v.Value;
+                                Instance.Variables.Add(v.Key, new WorkflowInstanceValueType(v.Value.GetType(), v.Value));
                             }
-                            else
-                            {
-                                if (v.Value != null)
-                                {
-                                    Instance.Variables.Add(v.Key, new WorkflowInstanceValueType(v.Value.GetType(), v.Value));
-                                }
 
                             }
                         }

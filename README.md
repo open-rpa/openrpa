@@ -34,3 +34,11 @@ Easy Object detection in images using robot, OpenFlow and google vision API
 See a small video of running the robot for the first time
 
 [![First time run](https://img.youtube.com/vi/SqLHlMpQhZA/1.jpg)](https://www.youtube.com/watch?v=34-H-_EPwJg)
+
+A big thank you, goes out too
+
+[![openiap](docs/img/openiap.png)](https://openiap.io/) for developing OpenRPA and OpenFlow
+
+[![BPA](docs/img/BPA.png)](https://bpatechnologies.com/) for creating the documentation for OpenRPA
+
+[![signpath](docs/img/signpath.png)](https://signpath.io/) for sponsoring the signing tool used by OpenRPA

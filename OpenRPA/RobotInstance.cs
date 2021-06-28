@@ -1,8 +1,6 @@
 ﻿using LiteDB;
 using Newtonsoft.Json.Linq;
 using OpenRPA.Interfaces;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -33,11 +31,9 @@ namespace OpenRPA
             reloadTimer.Stop();
             if (InitializeOTEL())
             {
-                //metricTime = new System.Timers.Timer(5000);
-                //metricTime.Elapsed += metricTime_Elapsed;
-                //metricTime.Start();
             }
         }
+        public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; } = new System.Collections.ObjectModel.ObservableCollection<Project>();
         //public static Prometheus.Client.Collectors.CollectorRegistry registry = new Prometheus.Client.Collectors.CollectorRegistry();
         //public static Prometheus.Client.MetricFactory factory = new Prometheus.Client.MetricFactory(registry);
         //public static Prometheus.Client.Abstractions.IMetricFamily<Prometheus.Client.Abstractions.ICounter, (string, string, string)> activity_counter = 
@@ -59,7 +55,7 @@ namespace OpenRPA
             get
             {
                 int result = 0;
-                GenericTools.RunUI(() => { result = Projects.Count(); });
+                GenericTools.RunUI(() => { result = Projects.Count; });
                 return result;
             }
         }
@@ -1064,7 +1060,7 @@ namespace OpenRPA
             if (first_connect)
             {
                 first_connect = false;
-                GenericTools.RunUI(() =>
+                GenericTools.RunUI(async () =>
                 {
                     try
                     {
@@ -1080,6 +1076,16 @@ namespace OpenRPA
                     {
                         Log.Error(ex.ToString());
                     }
+                    try
+                    {
+                        SetStatus("Run pending workflow instances");
+                        await WorkflowInstance.RunPendingInstances();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                    SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
                 });
             }
             try

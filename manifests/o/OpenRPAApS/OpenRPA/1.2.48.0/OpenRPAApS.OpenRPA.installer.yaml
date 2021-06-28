@@ -1,0 +1,13 @@
+# Created using wingetcreate
+
+PackageIdentifier: OpenRPAApS.OpenRPA
+PackageVersion: 1.2.48.0
+Installers:
+- InstallerLocale: en-US
+  Architecture: x64
+  InstallerType: msi
+  InstallerUrl: https://github.com/open-rpa/openrpa/releases/download/1.2.48/OpenRPA.msi
+  InstallerSha256: 24E2A8CE58E5FC92F821FB4463CB4372818B3F90CE86E7825544EBE74B3E4787
+  ProductCode: '{ACBF9167-8096-47A8-8FEA-8D7542182C62}'
+ManifestType: installer
+ManifestVersion: 1.0.0

@@ -5,7 +5,7 @@ using OpenRPA.Interfaces.entity;
 using OpenTelemetry.Trace;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.IO;
 using System.Linq;
 // using System.Net.WebSockets.Managed;
 using System.Net.WebSockets;
@@ -127,8 +127,14 @@ namespace OpenRPA.Net
                 if ((json.StartsWith("{") && json.EndsWith("}")) ||
                     (json.StartsWith("[") && json.EndsWith("]")))
                 {
-                    var jObject = JObject.Parse(json);
-                    return true;
+                    int begincount = System.Text.RegularExpressions.Regex.Matches(json, "{").Count; // json.TakeWhile(c => c == '{').Count();
+                    int endcount = System.Text.RegularExpressions.Regex.Matches(json, "}").Count; // json.TakeWhile(c => c == '}').Count();
+                    if (begincount == endcount)
+                    {
+                        var jObject = JObject.Parse(json);
+                        return true;
+                    }
+
                 }
             }
             catch
@@ -156,23 +162,64 @@ namespace OpenRPA.Net
                     result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), src.Token);
                     json = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
 
+
                     var workingjson = tempbuffer + json;
-                    if (TryParseJSON(workingjson))
+                    bool foundone = false;
+
+                    if ((workingjson.StartsWith("{") && workingjson.EndsWith("}")) || (workingjson.StartsWith("[") && workingjson.EndsWith("]")))
                     {
-                        var message = JsonConvert.DeserializeObject<SocketMessage>(workingjson);
-                        if (!string.IsNullOrEmpty(message.id) && !string.IsNullOrEmpty(message.command) && message != null)
+                        int begincount = System.Text.RegularExpressions.Regex.Matches(workingjson, "{").Count;
+                        int endcount = System.Text.RegularExpressions.Regex.Matches(workingjson, "}").Count;
+                        if (begincount == endcount)
                         {
-                            lock (_receiveQueue)
+                            using (StringReader sr = new StringReader(workingjson))
+                            using (JsonTextReader reader = new JsonTextReader(sr))
                             {
-                                tempbuffer = "";
-                                if (message.index % 100 == 99) Log.Network("Adding " + message.id + " to receiveQueue " + (message.index + 1) + " of " + message.count);
-                                _receiveQueue.Add(message);
+                                reader.SupportMultipleContent = true;
+                                var serializer = new JsonSerializer();
+                                while (reader.Read())
+                                {
+                                    if (reader.TokenType == JsonToken.StartObject)
+                                    {
+                                        var message = serializer.Deserialize<SocketMessage>(reader);
+                                        if (!string.IsNullOrEmpty(message.id) && !string.IsNullOrEmpty(message.command) && message != null)
+                                        {
+                                            lock (_receiveQueue)
+                                            {
+                                                foundone = true;
+                                                tempbuffer = "";
+                                                if (message.index % 100 == 99) Log.Network("Adding " + message.id + " to receiveQueue " + (message.index + 1) + " of " + message.count);
+                                                _receiveQueue.Add(message);
+                                            }
+
+                                        }
+                                        else { tempbuffer += json; }
+                                    }
+                                }
                             }
-                            await ProcessQueue();
                         }
                         else { tempbuffer += json; }
                     }
                     else { tempbuffer += json; }
+                    if (foundone) await ProcessQueue();
+
+
+                    //if (TryParseJSON(workingjson))
+                    //{
+                    //    var message = JsonConvert.DeserializeObject<SocketMessage>(workingjson);
+                    //    if (!string.IsNullOrEmpty(message.id) && !string.IsNullOrEmpty(message.command) && message != null)
+                    //    {
+                    //        lock (_receiveQueue)
+                    //        {
+                    //            tempbuffer = "";
+                    //            if (message.index % 100 == 99) Log.Network("Adding " + message.id + " to receiveQueue " + (message.index + 1) + " of " + message.count);
+                    //            _receiveQueue.Add(message);
+                    //        }
+                    //        await ProcessQueue();
+                    //    }
+                    //    else { tempbuffer += json; }
+                    //}
+                    //else { tempbuffer += json; }
                 }
                 catch (System.Net.WebSockets.WebSocketException ex)
                 {

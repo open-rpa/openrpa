@@ -37,7 +37,7 @@ See a small video of running the robot for the first time
 
 A big thank you, goes out too
 
-[![openiap](docs/img/openiap.png)](](https://openiap.io/)) for developing OpenRPA and OpenFlow
+[![openiap](docs/img/openiap.png)]((https://openiap.io/)) for developing OpenRPA and OpenFlow
 
 [![BPA](docs/img/BPA.png)](https://bpatechnologies.com/) for creating the documentation for OpenRPA
 

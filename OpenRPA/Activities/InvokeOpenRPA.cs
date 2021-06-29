@@ -114,11 +114,11 @@ namespace OpenRPA.Activities
                         if (designer != null)
                         {
                             designer.BreakpointLocations = null;
-                            instance = workflow.CreateInstance(param, null, null, designer.IdleOrComplete, designer.OnVisualTracking, null, ThisInstance.SpanId);
+                            instance = workflow.CreateInstance(param, null, null, designer.IdleOrComplete, designer.OnVisualTracking);
                         }
                         else
                         {
-                            instance = workflow.CreateInstance(param, null, null, RobotInstance.instance.Window.IdleOrComplete, null, null, ThisInstance.SpanId);
+                            instance = workflow.CreateInstance(param, null, null, RobotInstance.instance.Window.IdleOrComplete, null);
                         }
                         instance.caller = WorkflowInstanceId;
                     }

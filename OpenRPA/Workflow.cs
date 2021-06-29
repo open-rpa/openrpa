@@ -454,7 +454,7 @@ namespace OpenRPA
             return _activity;
         }
         public IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId,
-            OpenRPA.Interfaces.idleOrComplete idleOrComplete, OpenRPA.Interfaces.VisualTrackingHandler VisualTracking, string SpanId, string ParentSpanId)
+            OpenRPA.Interfaces.idleOrComplete idleOrComplete, OpenRPA.Interfaces.VisualTrackingHandler VisualTracking)
         {
             if (this.Parameters == null) this.Parameters = new List<workflowparameter>();
             if (this.Parameters.Count == 0)
@@ -462,8 +462,6 @@ namespace OpenRPA
                 ParseParameters();
             }
             var instance = WorkflowInstance.Create(this, Parameters);
-            instance.SpanId = SpanId;
-            instance.ParentSpanId = ParentSpanId;
             instance.queuename = queuename; instance.correlationId = correlationId;
             if (idleOrComplete != null) instance.OnIdleOrComplete += idleOrComplete;
             if (VisualTracking != null) instance.OnVisualTracking += VisualTracking;

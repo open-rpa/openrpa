@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
-using OpenTelemetry.Trace;
 using System;
 using System.Activities;
 using System.Collections.Generic;
@@ -28,19 +27,6 @@ namespace OpenRPA
             _acl = workflow._acl;
         }
 
-        [JsonIgnore]
-        public Stack<System.Diagnostics.Activity> Activities = new Stack<System.Diagnostics.Activity>();
-        [JsonIgnore]
-        public System.Diagnostics.Activity RootActivity = null;
-        [JsonProperty(propertyName: "parentspanid")]
-        public string ParentSpanId { get; set; }
-        [JsonProperty(propertyName: "spanid")]
-        public string SpanId { get; set; }
-        //[JsonIgnore]
-        //public string spanid { get; set; }
-        [JsonIgnore]
-        public System.Diagnostics.ActivitySource source = new System.Diagnostics.ActivitySource("OpenRPA");
-        // public DateTime LastUpdated { get { return GetProperty<DateTime>(); } set { SetProperty(value); } } 
         private static List<WorkflowInstance> _Instances = new List<WorkflowInstance>();
         public static List<WorkflowInstance> Instances
         {
@@ -782,7 +768,6 @@ namespace OpenRPA
                 }
                 finally
                 {
-                    CleanUpSpans();
                 }
             };
             wfApp.Aborted = delegate (System.Activities.WorkflowApplicationAbortedEventArgs e)
@@ -951,7 +936,6 @@ namespace OpenRPA
                     }
                     catch (Exception ex)
                     {
-                        // span?.RecordException(ex);
                         i.state = "failed";
                         i.Exception = ex;
                         i.errormessage = ex.Message;
@@ -969,12 +953,10 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                // span?.RecordException(ex);
                 Log.Error(ex.ToString());
             }
             finally
             {
-                // span?.Dispose();
             }
             Log.FunctionOutdent("RobotInstance", "RunPendingInstances");
         }
@@ -999,25 +981,11 @@ namespace OpenRPA
             if (string.IsNullOrEmpty(InstanceId)) return "No InstanceId";
             return InstanceId;
         }
-        public void CleanUpSpans()
-        {
-            if (Activities != null)
-            {
-                while (Activities.Count > 0)
-                {
-                    var span = Activities.Pop();
-                    span?.Dispose();
-                }
-                RootActivity?.Dispose();
-                RootActivity = null;
-            }
-        }
         private bool isDisposing = false;
         public void Dispose()
         {
             if (isDisposing) return;
             isDisposing = true;
-            CleanUpSpans();
         }
     }
 

@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
 using OpenRPA.Interfaces;
-using OpenTelemetry.Trace;
 using System;
 using System.Activities;
 using System.Activities.Core.Presentation;
@@ -1396,11 +1395,11 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
                     if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0 || Singlestep == true)
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking, null, null);
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking);
                     }
                     else
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null, null, null);
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null);
                     }
                 }
                 ReadOnly = true;
@@ -1794,11 +1793,11 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
                     if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0)
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking, null, null) as WorkflowInstance;
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking) as WorkflowInstance;
                     }
                     else
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null, null, null) as WorkflowInstance;
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null) as WorkflowInstance;
                     }
                 }
                 ReadOnly = true;
@@ -1862,11 +1861,11 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
                     if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0)
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking, null, null) as WorkflowInstance;
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking) as WorkflowInstance;
                     }
                     else
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null, null, null) as WorkflowInstance;
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null) as WorkflowInstance;
                     }
                 }
                 ReadOnly = true;

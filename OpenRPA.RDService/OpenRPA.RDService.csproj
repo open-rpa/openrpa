@@ -71,9 +71,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FreeRDP-Sharp" Version="0.1.0" />
-    <PackageReference Include="Grpc.Core" Version="2.36.1" />
-    <PackageReference Include="OpenTelemetry.Api" Version="1.0.1" />
-    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.0.1" />
     <PackageReference Include="SimpleImpersonation" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>

@@ -173,6 +173,7 @@
         <File Id="filBB96100CC38385FF7DB0DBFE799C5F28" Source="!(wix.MainSource)\System.Windows.Interactivity.dll" />
         <File Id="AxInterop.MSTSCLib.dll" Source="!(wix.MainSource)\AxInterop.MSTSCLib.dll" />
         <File Id="MSTSCLib.dll" Source="!(wix.MainSource)\MSTSCLib.dll" />
+        <File Id="LiteDB.dll" Source="!(wix.MainSource)\LiteDB.dll" />
         <RemoveFolder Id='RemoveLocalAppDataFolder' Directory='INSTALLDIR' On='uninstall' />
       </Component>
       <Component Id='mainComponentde' Win64='yes' Directory="mainde" Guid='{5B022629-6132-43BC-87EF-8777CD939585}'>

@@ -1,5 +1,4 @@
 ﻿using OpenRPA.Interfaces;
-using OpenTelemetry.Trace;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -64,21 +63,18 @@ namespace OpenRPA.RDService
                 form.Size = new Size(w, h);
                 form.Load += (sender, args) =>
                 {
-                    var span = Program.source.StartActivity("MSTSC.form loaded for " + domain + "\\" + user);
                     try
                     {
-                        span?.AddTag("domain", domain);
-                        span?.AddTag("user", user);
                         rdpConnection = new AxMSTSCLib.AxMsRdpClient9NotSafeForScripting();
                         form.Controls.Add(rdpConnection);
                         rdpConnection.Dock = DockStyle.Fill;
-                                // rdpConnection.Enabled = false;
-                                rdpConnection.Server = server;
+                        // rdpConnection.Enabled = false;
+                        rdpConnection.Server = server;
                         rdpConnection.Domain = domain;
                         rdpConnection.UserName = user;
                         rdpConnection.AdvancedSettings7.ClearTextPassword = password;
                         rdpConnection.AdvancedSettings7.EnableCredSspSupport = true;
-                        if(PluginConfig.width > 0 && PluginConfig.height > 0)
+                        if (PluginConfig.width > 0 && PluginConfig.height > 0)
                         {
                             rdpConnection.DesktopWidth = PluginConfig.width;
                             rdpConnection.DesktopHeight = PluginConfig.height;
@@ -136,13 +132,11 @@ namespace OpenRPA.RDService
                     }
                     catch (Exception ex)
                     {
-                        span?.RecordException(ex);
                         Log.Error(ex.ToString());
                         Connecting = false;
                     }
                     finally
                     {
-                        span?.Dispose();
                     }
 
                 };
@@ -200,11 +194,9 @@ namespace OpenRPA.RDService
         }
         private void RdpConnectionOnOnDisconnected(object sender, AxMSTSCLib.IMsTscAxEvents_OnDisconnectedEvent e)
         {
-            var span = Program.source.StartActivity("RdpConnectionOnOnDisconnected");
             try
             {
                 var discReason = e.discReason;
-                span?.SetTag("reason", discReason);
                 var discMsg = "";
                 switch (discReason) // https://social.technet.microsoft.com/wiki/contents/articles/37870.remote-desktop-client-troubleshooting-disconnect-codes-and-reasons.aspx
                 {
@@ -330,7 +322,6 @@ namespace OpenRPA.RDService
                     case 50331728: discMsg = "You no longer have access to Azure RemoteApp. Ask your admin or tech support for help."; break;
                     case 4498: discMsg = "Extended Reason: The remote session was disconnected because of a decryption error at the server. Please try connecting to the remote computer again."; break;
                 }
-                span?.SetTag("message", discMsg);
                 Log.Output("RdpConnectionOnOnDisconnected: " + discReason + " " + discMsg);
                 // Application.Exit();
                 Connected = false;
@@ -339,11 +330,9 @@ namespace OpenRPA.RDService
             }
             catch (Exception ex)
             {
-                span?.RecordException(ex);
             }
             finally
             {
-                span?.Dispose();
             }
         }
         // https://stackoverflow.com/questions/1567017/com-object-that-has-been-separated-from-its-underlying-rcw-cannot-be-used
@@ -352,7 +341,7 @@ namespace OpenRPA.RDService
             if (!Connected) return;
             try
             {
-                if(form!=null && !form.Disposing)
+                if (form != null && !form.Disposing)
                 {
                     GenericTools.RunUI(form, () =>
                     {
@@ -377,7 +366,7 @@ namespace OpenRPA.RDService
         {
             try
             {
-                if(rdpConnection!=null && rdpConnection.Connected != 0) rdpConnection.Disconnect();
+                if (rdpConnection != null && rdpConnection.Connected != 0) rdpConnection.Disconnect();
             }
             catch (Exception ex)
             {
@@ -387,7 +376,7 @@ namespace OpenRPA.RDService
             rdpConnection = null;
             try
             {
-                if(form != null) form.Close();
+                if (form != null) form.Close();
             }
             catch (Exception ex)
             {

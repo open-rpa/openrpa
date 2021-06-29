@@ -1,5 +1,4 @@
 ﻿using OpenRPA.Interfaces;
-using OpenTelemetry.Trace;
 using System;
 using System.Activities.Presentation.Toolbox;
 using System.Collections.Generic;
@@ -34,12 +33,12 @@ namespace OpenRPA.Views
             InitializeComponent();
             DataContext = this;
         }
-        public static readonly DependencyProperty WorkflowProperty = 
+        public static readonly DependencyProperty WorkflowProperty =
             DependencyProperty.Register("Workflow", typeof(Workflow), typeof(WorkflowInstances), new FrameworkPropertyMetadata
-        {
-            BindsTwoWayByDefault = true,
-            DefaultValue = null,
-            PropertyChangedCallback = OnWorkflowPropertyChanged
+            {
+                BindsTwoWayByDefault = true,
+                DefaultValue = null,
+                PropertyChangedCallback = OnWorkflowPropertyChanged
             });
         private static void OnWorkflowPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -47,19 +46,20 @@ namespace OpenRPA.Views
             if (me != null) me.Workflow = e.NewValue as Workflow;
         }
         private Workflow workflow = null;
-        public Workflow Workflow { 
+        public Workflow Workflow
+        {
             get
             {
                 return workflow;
-            } 
-            set {
+            }
+            set
+            {
                 workflow = value;
                 if (workflow == null) return;
                 if (!global.isConnected) return;
                 if (string.IsNullOrEmpty(workflow._id)) return;
                 Task.Run(() =>
                 {
-                    // var span = RobotInstance.instance.source.StartActivity("Load Workflow Instances", System.Diagnostics.ActivityKind.Client);
                     try
                     {
                         instances = global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{WorkflowId: '" + workflow._id + "'}", "{\"state\":1,\"_modified\":1,\"errormessage\":1}", orderby: "{\"_modified\": -1}", top: 10).Result;
@@ -67,15 +67,13 @@ namespace OpenRPA.Views
                     }
                     catch (Exception ex)
                     {
-                        // span?.RecordException(ex);
                         Log.Error(ex.ToString());
                     }
                     finally
                     {
-                        // span?.Dispose();
                     }
                 }); //.Wait();
-            }            
+            }
         }
         WorkflowInstance[] instances = new WorkflowInstance[] { };
         public WorkflowInstance[] Instances

@@ -13,7 +13,7 @@ namespace OpenRPA.Interfaces
     public interface IWorkflow : INotifyPropertyChanged, IBase
     {
         [JsonIgnore]
-        long current_version { get; set;  }
+        long current_version { get; set; }
         bool IsExpanded { get; set; }
         bool IsSelected { get; set; }
         string queue { get; set; }
@@ -27,7 +27,7 @@ namespace OpenRPA.Interfaces
         //IProject Project { get; }
         string ProjectAndName { get; set; }
         List<workflowparameter> Parameters { get; set; }
-        IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, idleOrComplete idleOrComplete, VisualTrackingHandler VisualTracking, string SpanId, string ParentSpanId);
+        IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, idleOrComplete idleOrComplete, VisualTrackingHandler VisualTracking);
         Task Delete();
         string UniqueFilename();
         Task Save();

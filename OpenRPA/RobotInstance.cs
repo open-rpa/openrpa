@@ -1348,12 +1348,12 @@ namespace OpenRPA
                                 if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(command.workflowid) is Views.WFDesigner designer)
                                 {
                                     designer.BreakpointLocations = null;
-                                    instance = workflow.CreateInstance(param, message.replyto, message.correlationId, designer.IdleOrComplete, designer.OnVisualTracking, null, null);
+                                    instance = workflow.CreateInstance(param, message.replyto, message.correlationId, designer.IdleOrComplete, designer.OnVisualTracking);
                                     designer.Run(Window.VisualTracking, Window.SlowMotion, instance);
                                 }
                                 else
                                 {
-                                    instance = workflow.CreateInstance(param, message.replyto, message.correlationId, Window.IdleOrComplete, null, null, null);
+                                    instance = workflow.CreateInstance(param, message.replyto, message.correlationId, Window.IdleOrComplete, null);
                                     instance.Run();
                                 }
                                 if (Config.local.notify_on_workflow_remote_start)

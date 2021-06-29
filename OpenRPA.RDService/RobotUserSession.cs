@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace OpenRPA.RDService
 {
     using OpenRPA.Interfaces;
-    using OpenTelemetry.Trace;
     using SimpleImpersonation;
     using System.Windows.Threading;
 
@@ -77,7 +76,6 @@ namespace OpenRPA.RDService
         [System.Security.Permissions.PermissionSetAttribute(System.Security.Permissions.SecurityAction.Demand, Name = "FullTrust")]
         public void DoWork()
         {
-            Activity span = null;
             try
             {
                 if (System.Diagnostics.Debugger.IsAttached)
@@ -95,10 +93,6 @@ namespace OpenRPA.RDService
                     // Log.Debug("client._id is null, Dummy client, ignore");
                     return; // Dummy client, ignore
                 }
-                System.Diagnostics.Activity.Current = null;
-                span = Program.source.StartActivity("UserSession do work " + client.windowsusername);
-                span?.SetTag("enabled", client.windowsusername);
-                span?.SetTag("windowsusername", client.enabled);
                 if ((DateTime.Now - created).TotalSeconds < 5) return;
                 // Is user signed in ?
                 // ownerexplorer = null;
@@ -202,14 +196,12 @@ namespace OpenRPA.RDService
                     if (rdp == null) rdp = new Client();
                     if (rdp.Connecting)
                     {
-                        span?.AddEvent(new ActivityEvent("RDP connecting"));
                         return;
                     }
                     if (!rdp.Connected)
                     {
                         try
                         {
-                            span?.AddEvent(new ActivityEvent("Tesing connection to " + rdpip + " port 3389"));
                             Log.Debug("Tesing connection to " + rdpip + " port 3389");
                             using (var tcpClient = new System.Net.Sockets.TcpClient())
                             {
@@ -218,17 +210,14 @@ namespace OpenRPA.RDService
                                 tcpClient.Connect(ipEndPoint);
                             }
                             Log.Debug("Success");
-                            span?.AddEvent(new ActivityEvent("connection successfull"));
                         }
                         catch (Exception ex)
                         {
-                            span?.RecordException(ex);
                             Log.Error(ex.ToString());
                             return;
                         }
 
                         Log.Debug("Increment ConnectionAttempts");
-                        span?.SetTag("ConnectionAttempts", ConnectionAttempts);
                         ConnectionAttempts++;
                         Log.Debug("Get HostName");
                         var hostname = NativeMethods.GetHostName().ToLower();
@@ -269,13 +258,11 @@ namespace OpenRPA.RDService
                     if (rdp == null)
                     {
                         Log.Debug("rdp is null, exit");
-                        span?.AddEvent(new ActivityEvent("rdp is null, exit"));
                         return;
                     }
                     if (rdp.Connected == false)
                     {
                         Log.Debug("rdp.Connected is false, exit");
-                        span?.AddEvent(new ActivityEvent("rdp.Connected is false, exit"));
                         return;
                     }
                 }
@@ -294,7 +281,6 @@ namespace OpenRPA.RDService
                     System.Diagnostics.Process ownerexplorer = GetOwnerExplorer();
                     if (ownerexplorer == null)
                     {
-                        span?.AddEvent(new ActivityEvent("ownerexplorer is null, exit"));
                         Log.Debug("ownerexplorer is null, exit");
                         return;
                     }
@@ -320,14 +306,12 @@ namespace OpenRPA.RDService
                         {
                             Log.Error(ex.ToString());
                             created = DateTime.Now;
-                            span?.RecordException(ex);
                             return;
                         }
                     }
                     if (ownerrpa != null)
                     {
                         Log.Debug("ownerrpa is not null, exit");
-                        span?.AddEvent(new ActivityEvent("ownerrpa is not null, exit"));
                         //if(client.autorestart != TimeSpan.Zero && (DateTime.Now - lastheartbeat) > client.autorestart )
                         //{
                         //    try
@@ -345,13 +329,11 @@ namespace OpenRPA.RDService
                     if (string.IsNullOrEmpty(client.openrpapath))
                     {
                         Log.Debug("openrpapath not set for user");
-                        span?.AddEvent(new ActivityEvent("openrpapath not set for user"));
                         return;
                     }
                     if (!System.IO.File.Exists(client.openrpapath))
                     {
                         Log.Debug("openrpapath not found " + client.openrpapath);
-                        span?.AddEvent(new ActivityEvent("openrpapath not found " + client.openrpapath));
                         return;
                     }
                     var path = System.IO.Path.GetDirectoryName(client.openrpapath);
@@ -397,15 +379,12 @@ namespace OpenRPA.RDService
                     //}
                     if (Program.isService)
                     {
-                        span?.AddEvent(new ActivityEvent("Attaching to user explorer and launching robot in session"));
                         Log.Debug("Attaching to user explorer and launching robot in session");
                         Log.Debug(client.openrpapath);
                         created = DateTime.Now;
                         hasShownLaunchWarning = false;
                         if (!NativeMethods.Launch(ownerexplorer, path, client.openrpapath.Replace("/", @"\")))
                         {
-                            span?.AddEvent(new ActivityEvent("Failed launching robot in session"));
-                            span?.RecordException(new System.ComponentModel.Win32Exception(System.Runtime.InteropServices.Marshal.GetLastWin32Error()));
                             Log.Error("Failed launching robot in session");
                             string errorMessage = new System.ComponentModel.Win32Exception(System.Runtime.InteropServices.Marshal.GetLastWin32Error()).Message;
                             Log.Error(errorMessage);
@@ -413,7 +392,6 @@ namespace OpenRPA.RDService
                     }
                     else if (!hasShownLaunchWarning)
                     {
-                        span?.AddEvent(new ActivityEvent("Not running as Local System, so cannot spawn processes in other users desktops"));
                         Log.Warning("Not running as Local System, so cannot spawn processes in other users desktops");
                         created = DateTime.Now;
                         hasShownLaunchWarning = true;
@@ -421,7 +399,6 @@ namespace OpenRPA.RDService
                 }
                 catch (Exception ex)
                 {
-                    span?.RecordException(ex);
                     Log.Error(ex.ToString());
                     created = DateTime.Now;
                 }
@@ -429,13 +406,11 @@ namespace OpenRPA.RDService
             }
             catch (Exception ex)
             {
-                span?.RecordException(ex);
                 Log.Error(ex.ToString());
                 created = DateTime.Now;
             }
             finally
             {
-                span?.Dispose();
             }
         }
 

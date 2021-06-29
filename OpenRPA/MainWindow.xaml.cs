@@ -5,7 +5,6 @@ using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
 using OpenRPA.Net;
 using OpenRPA.Views;
-using OpenTelemetry.Trace;
 using System;
 using System.Activities;
 using System.Activities.Core.Presentation;
@@ -2454,13 +2453,13 @@ namespace OpenRPA
                     if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(workflow.IDOrRelativeFilename) is Views.WFDesigner designer)
                     {
                         designer.BreakpointLocations = null;
-                        instance = workflow.CreateInstance(param, null, null, new idleOrComplete(designer.IdleOrComplete), designer.OnVisualTracking, null, null);
+                        instance = workflow.CreateInstance(param, null, null, new idleOrComplete(designer.IdleOrComplete), designer.OnVisualTracking);
                         designer.SetDebugLocation(null);
                         designer.Run(VisualTracking, SlowMotion, instance);
                     }
                     else
                     {
-                        instance = workflow.CreateInstance(param, null, null, IdleOrComplete, null, null, null);
+                        instance = workflow.CreateInstance(param, null, null, IdleOrComplete, null);
                         instance.Run();
                     }
                 }

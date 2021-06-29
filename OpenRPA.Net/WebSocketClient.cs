@@ -2,7 +2,6 @@
 using Newtonsoft.Json.Linq;
 using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
-using OpenTelemetry.Trace;
 using System;
 using System.Collections.Generic;
 using System.IO;

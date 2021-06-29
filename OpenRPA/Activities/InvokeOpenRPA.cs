@@ -145,7 +145,7 @@ namespace OpenRPA.Activities
                     {
                         designer.Run(designer.VisualTracking, designer.SlowMotion, instance);
                     }
-                    else
+                    else if (instance != null)
                     {
                         instance.Run();
                     }

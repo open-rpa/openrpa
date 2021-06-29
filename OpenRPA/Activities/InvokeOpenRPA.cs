@@ -106,20 +106,33 @@ namespace OpenRPA.Activities
                 if (workflow == null) throw new ArgumentException("Failed locating workflow " + workflowid);
                 IWorkflowInstance instance = null;
                 Views.WFDesigner designer = null;
+                Exception innerError = null;
                 GenericTools.RunUI(() =>
                 {
-                    designer = RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(this.workflow.Get(context)) as Views.WFDesigner;
-                    if (designer != null)
+                    try
                     {
-                        designer.BreakpointLocations = null;
-                        instance = workflow.CreateInstance(param, null, null, designer.IdleOrComplete, designer.OnVisualTracking, null, Instance.SpanId);
+                        designer = RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(this.workflow.Get(context)) as Views.WFDesigner;
+                        if (designer != null)
+                        {
+                            designer.BreakpointLocations = null;
+                            instance = workflow.CreateInstance(param, null, null, designer.IdleOrComplete, designer.OnVisualTracking, null, Instance.SpanId);
+                        }
+                        else
+                        {
+                            instance = workflow.CreateInstance(param, null, null, RobotInstance.instance.Window.IdleOrComplete, null, null, Instance.SpanId);
+                        }
+                        instance.caller = WorkflowInstanceId;
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        instance = workflow.CreateInstance(param, null, null, RobotInstance.instance.Window.IdleOrComplete, null, null, Instance.SpanId);
+                        innerError = ex;
+                        Log.Error(ex.ToString());
                     }
-                    instance.caller = WorkflowInstanceId;
                 });
+                if (innerError != null)
+                {
+                    throw innerError;
+                }
                 Log.Verbose("InvokeOpenRPA: Run Instance ID " + instance._id);
                 if (waitforcompleted)
                 {

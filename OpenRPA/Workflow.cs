@@ -403,16 +403,24 @@ namespace OpenRPA
         {
             get
             {
-                if (string.IsNullOrEmpty(Xaml)) return null;
-                if (_activity != null) return _activity;
-                var activitySettings = new System.Activities.XamlIntegration.ActivityXamlServicesSettings
+                try
                 {
-                    CompileExpressions = true
-                };
-                var xamlReaderSettings = new System.Xaml.XamlXmlReaderSettings { LocalAssembly = typeof(Workflow).Assembly };
-                var xamlReader = new System.Xaml.XamlXmlReader(new System.IO.StringReader(Xaml), xamlReaderSettings);
-                _activity = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, activitySettings);
-                return _activity;
+                    if (string.IsNullOrEmpty(Xaml)) return null;
+                    if (_activity != null) return _activity;
+                    var activitySettings = new System.Activities.XamlIntegration.ActivityXamlServicesSettings
+                    {
+                        CompileExpressions = true
+                    };
+                    var xamlReaderSettings = new System.Xaml.XamlXmlReaderSettings { LocalAssembly = typeof(Workflow).Assembly };
+                    var xamlReader = new System.Xaml.XamlXmlReader(new System.IO.StringReader(Xaml), xamlReaderSettings);
+                    _activity = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, activitySettings);
+                    return _activity;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                    throw;
+                }
             }
         }
         public IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId,

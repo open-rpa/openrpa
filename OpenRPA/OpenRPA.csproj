@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.53</Version>
-    <PackageReleaseNotes>1.2.53 Invoke fix
+    <Version>1.2.54</Version>
+    <PackageReleaseNotes>1.2.54 Fix, potential stall of processing of network messages
+1.2.53 Invoke fix
 1.2.52 Fix memory leak
 1.2.51 Remove OpenTelemetry stuff, going to move this to an extension later
 1.2.50 Fix issue when parsing JObjects in Invoke Openflow

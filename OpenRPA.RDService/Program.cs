@@ -336,7 +336,7 @@ namespace OpenRPA.RDService
                     System.Diagnostics.Process ownerexplorer = RobotUserSession.GetOwnerExplorer(unattendedclient);
                     if (ownerexplorer != null)
                     {
-                        if (server.logoff)
+                        if (server.logoff || session.client.autosignout)
                         {
                             Log.Information("WTSLogoffSession " + ownerexplorer.SessionId);
                             NativeMethods.WTSLogoffSession(IntPtr.Zero, (int)ownerexplorer.SessionId, true);
@@ -361,7 +361,7 @@ namespace OpenRPA.RDService
                         {
                             if (explorer.SessionId != sessionid)
                             {
-                                if (server.logoff)
+                                if (server.logoff || session.client.autosignout)
                                 {
                                     Log.Information("WTSLogoffSession " + explorer.SessionId);
                                     NativeMethods.WTSLogoffSession(IntPtr.Zero, (int)explorer.SessionId, true);

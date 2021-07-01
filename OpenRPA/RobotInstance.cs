@@ -461,7 +461,10 @@ namespace OpenRPA
                             {
                                 Log.Information("LoadServerData::Updating local workflow " + wf.name);
                                 wf.isDirty = false;
+                                var isloading = Window.IsLoading;
+                                Window.IsLoading = false;
                                 UpdateWorkflow(wf, false);
+                                Window.IsLoading = isloading;
                             }
                             else
                             {

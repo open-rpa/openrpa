@@ -167,9 +167,9 @@ namespace OpenRPA.Net
 
                     if ((workingjson.StartsWith("{") && workingjson.EndsWith("}")) || (workingjson.StartsWith("[") && workingjson.EndsWith("]")))
                     {
-                        //int begincount = System.Text.RegularExpressions.Regex.Matches(workingjson, "{").Count;
-                        //int endcount = System.Text.RegularExpressions.Regex.Matches(workingjson, "}").Count;
-                        //if (begincount == endcount)
+                        int begincount = System.Text.RegularExpressions.Regex.Matches(workingjson, "{").Count;
+                        int endcount = System.Text.RegularExpressions.Regex.Matches(workingjson, "}").Count;
+                        if (begincount == endcount)
                             using (StringReader sr = new StringReader(workingjson))
                             using (JsonTextReader reader = new JsonTextReader(sr))
                             {
@@ -195,8 +195,7 @@ namespace OpenRPA.Net
                                     }
                                 }
                             }
-                        //}
-                        //else { tempbuffer += json; }
+                        else { tempbuffer += json; }
                     }
                     else { tempbuffer += json; }
                     if (foundone) await ProcessQueue();

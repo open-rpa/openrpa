@@ -198,6 +198,12 @@
   <data name="activity_drop_hint" xml:space="preserve">
     <value>Drop activity</value>
   </data>
+  <data name="activity_ExportWorkbook" xml:space="preserve">
+    <value>Export Workbook</value>
+  </data>
+  <data name="activity_ExportWorkbook_tooltip" xml:space="preserve">
+    <value>Export current open workbook as an pdf or xps format</value>
+  </data>
   <data name="activity_filename" xml:space="preserve">
     <value>Filename</value>
   </data>

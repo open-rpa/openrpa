@@ -304,6 +304,24 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export Workbook.
+        /// </summary>
+        public static string activity_ExportWorkbook {
+            get {
+                return ResourceManager.GetString("activity_ExportWorkbook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export current open workbook as an pdf or xps format.
+        /// </summary>
+        public static string activity_ExportWorkbook_tooltip {
+            get {
+                return ResourceManager.GetString("activity_ExportWorkbook_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Filename.
         /// </summary>
         public static string activity_filename {

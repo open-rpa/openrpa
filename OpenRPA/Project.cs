@@ -160,7 +160,7 @@ namespace OpenRPA
                     _version = result._version;
                 }
             }
-            foreach (var workflow in Workflows)
+            foreach (var workflow in Workflows.ToList())
             {
                 try
                 {

@@ -124,22 +124,23 @@
     <value>ファイル名</value>
   </data>
 	<data name="activity_addparagraph_filename_help" xml:space="preserve">
-    <value>Full path and filename of Microsoft Word document to work with</value>
+    <value>作業対象となるMicrosoft Wordドキュメントのフルパスとファイル名</value>
   </data>
 	<data name="activity_addparagraph_index" xml:space="preserve">
     <value>インデックス</value>
   </data>
 	<data name="activity_addparagraph_index_help" xml:space="preserve">
-    <value>Add the new paragraph at this index (zero indexed) Leave blank to add at the end of the document</value>
+    <value>新しい段落をこのインデックスで追加する。
+ドキュメントの最後に追加する場合は空白にする（ゼロインデックス） </value>
   </data>
 	<data name="activity_addparagraph_text" xml:space="preserve">
     <value>テキスト</value>
   </data>
 	<data name="activity_addparagraph_text_help" xml:space="preserve">
-    <value>The text to add</value>
+    <value>追加するテキスト</value>
   </data>
 	<data name="activity_addparagraph_tooltip" xml:space="preserve">
-    <value>Add a new Paragraph to a Microsoft Word document</value>
+    <value>Microsoft Wordドキュメントに新しい段落を追加する</value>
   </data>
 	<data name="activity_clearrange" xml:space="preserve">
     <value>範囲をクリア</value>
@@ -148,10 +149,11 @@
     <value>セル</value>
   </data>
 	<data name="activity_clearrange_cells_help" xml:space="preserve">
-    <value>Set what cells to clear, leave blank to clear all cells</value>
+    <value>どのセルをクリアするかを設定します。
+空白にするとすべてのセルがクリアされます。</value>
   </data>
 	<data name="activity_clearrange_tooltip" xml:space="preserve">
-    <value>Clears all data and formating from a range of cells</value>
+    <value>セル範囲内のデータとフォーマットを消去</value>
   </data>
 	<data name="activity_closedocument" xml:space="preserve">
     <value>ドキュメントをクローズ</value>
@@ -160,16 +162,16 @@
     <value>ファイル名</value>
   </data>
 	<data name="activity_closedocument_filename_help" xml:space="preserve">
-    <value>Full path and filename of Microsoft Word document to work with</value>
+    <value>作業対象となるMicrosoft Wordドキュメントのフルパスとファイル名</value>
   </data>
 	<data name="activity_closedocument_savechanges" xml:space="preserve">
     <value>変更を保存</value>
   </data>
 	<data name="activity_closedocument_savechanges_help" xml:space="preserve">
-    <value>Set to true, to save the word file, set to false to discard any changces made</value>
+    <value>Trueに設定するとワードファイルを保存し、Falseに設定すると変更内容を破棄します。</value>
   </data>
 	<data name="activity_closedocument_tooltip" xml:space="preserve">
-    <value>Close a Microsoft Word document if open, will also closes word if no more documents are open</value>
+    <value>Microsoft Wordのドキュメントが開いている場合はそれを閉じる。また、それ以外にドキュメントが開いていない場合、Wordを閉じる。</value>
   </data>
 	<data name="activity_closeworkbook" xml:space="preserve">
     <value>ワークブックを閉じる</value>
@@ -178,22 +180,22 @@
     <value>ファイル名</value>
   </data>
 	<data name="activity_closeworkbook_filename_help" xml:space="preserve">
-    <value>Full path and filename of Microsoft Excel workbook to work with</value>
+    <value>作業対象となるMicrosoft Excelワークブックのフルパスとファイル名</value>
   </data>
 	<data name="activity_closeworkbook_savechanges" xml:space="preserve">
     <value>変更を保存</value>
   </data>
 	<data name="activity_closeworkbook_savechanges_help" xml:space="preserve">
-    <value>Set to true, to save the excel file, set to false to discard any changces made</value>
+    <value>Trueに設定するとエクセルファイルが保存され、Falseに設定すると変更された内容が破棄されます。</value>
   </data>
 	<data name="activity_closeworkbook_tooltip" xml:space="preserve">
-    <value>Close a Workbook if open, will also closes excel if no more workbooks are open</value>
+    <value>ワークブックが開かれている場合、そのワークブックを閉じる。</value>
   </data>
 	<data name="activity_closeworkbook_workbook" xml:space="preserve">
     <value>ワークブック</value>
   </data>
 	<data name="activity_closeworkbook_workbook_help" xml:space="preserve">
-    <value>Use a Microsoft Excel workbook variable to work with</value>
+    <value>Microsoft Excelワークブックの変数を使う</value>
   </data>
 	<data name="activity_drop_hint" xml:space="preserve">
     <value>アクティビティをドロップ</value>
@@ -211,76 +213,77 @@
     <value>フィルター</value>
   </data>
 	<data name="activity_getmails_filter_hint" xml:space="preserve">
-    <value>Filter emails by query</value>
+    <value>クエリによるメールのフィルタリング</value>
   </data>
 	<data name="activity_getmails_tooltip" xml:space="preserve">
-    <value>Get all emails from a Microsoft Outlook folder</value>
+    <value>Microsoft Outlookのフォルダからすべてのメールを取得する</value>
   </data>
 	<data name="activity_getparagraph" xml:space="preserve">
-    <value>パラグラフを取得</value>
+    <value>段落を取得</value>
   </data>
 	<data name="activity_getparagraph_count" xml:space="preserve">
     <value>件数</value>
   </data>
 	<data name="activity_getparagraph_count_help" xml:space="preserve">
-    <value>Returns the number of paragraphs in the Microsoft Word document</value>
+    <value>Microsoft Word文書の段落数を返す</value>
   </data>
 	<data name="activity_getparagraph_filename" xml:space="preserve">
     <value>ファイル名</value>
   </data>
 	<data name="activity_getparagraph_filename_help" xml:space="preserve">
-    <value>Full path and filename of Microsoft Word document to work with</value>
+    <value>作業対象となるMicrosoft Wordドキュメントのフルパスとファイル名</value>
   </data>
 	<data name="activity_getparagraph_index" xml:space="preserve">
     <value>インデックス</value>
   </data>
 	<data name="activity_getparagraph_index_help" xml:space="preserve">
-    <value>Get all the content of the paragraph with this index and a MaxResults more. Leave this field blank to get the entire word document</value>
+    <value>このインデックスと「最大結果」を使用して、段落のすべてのコンテンツを取得します。 Word文書全体を取得するには、このフィールドを空白のままにします</value>
   </data>
 	<data name="activity_getparagraph_maxresults" xml:space="preserve">
     <value>最大結果</value>
   </data>
 	<data name="activity_getparagraph_maxresults_help" xml:space="preserve">
-    <value>Limit the amount of paragraphs to get, leave blank or at 0 to get all from Index and onward</value>
+    <value>取得する段落数を制限します。
+空白にするか0にすると、「インデックス」以降のすべての段落を取得します。</value>
   </data>
 	<data name="activity_getparagraph_text" xml:space="preserve">
     <value>テキスト</value>
   </data>
 	<data name="activity_getparagraph_text_help" xml:space="preserve">
-    <value>Save the read paragrahs to this variable</value>
+    <value>読み取った段落をこの変数に保存する</value>
   </data>
 	<data name="activity_getparagraph_tooltip" xml:space="preserve">
-    <value>Get one or more paragraphs from a Microsoft Word document</value>
+    <value>Microsoft Wordドキュメントから1つまたは複数の段落を取得する</value>
   </data>
 	<data name="activity_getselectedrange" xml:space="preserve">
     <value>選択範囲を取得</value>
   </data>
 	<data name="activity_getselectedrange_tooltip" xml:space="preserve">
-    <value>Get the currently selected cells in the specefied worksheet</value>
+    <value>ワークシートの選択されているセルを取得する。</value>
   </data>
 	<data name="activity_movemailitem" xml:space="preserve">
     <value>メールアイテムを移動</value>
   </data>
 	<data name="activity_movemailitem_tooltip" xml:space="preserve">
-    <value>Move a mail gotten with GetEmails to a different folder</value>
+    <value>「メールを取得」で取得したメールを別のフォルダに移動する</value>
   </data>
 	<data name="activity_movemail_mail" xml:space="preserve">
     <value>メール</value>
   </data>
 	<data name="activity_movemail_mail_hint" xml:space="preserve">
-    <value>Mail item to move</value>
+    <value>移動させるメールアイテム</value>
   </data>
 	<data name="activity_newmailitem" xml:space="preserve">
     <value>新規メールアイテム</value>
   </data>
 	<data name="activity_newmailitem_tooltip" xml:space="preserve">
-    <value>Create a new Microsoft Outlook Mailitem</value>
+    <value>Microsoft Outlookメールアイテムの新規作成</value>
   </data>
 	<data name="activity_readcell" xml:space="preserve">
     <value>セルを読込</value>
   </data>
 	<data name="activity_readcell_tooltip" xml:space="preserve">
-    <value>Read the content of a single cell in Microsoft Excel</value>
+    <value>Microsoft Excelで単一セルの内容を読み取る</value>
   </data>
 	<data name="activity_readrange" xml:space="preserve">
     <value>範囲を読込</value>
@@ -289,16 +292,16 @@
     <value>書式をクリア</value>
   </data>
 	<data name="activity_readrange_clearformats_help" xml:space="preserve">
-    <value>Set to true to remove all formatting from the select worksheet</value>
+    <value>選択したワークシートからすべてのフォーマットを削除するには、trueを設定します。</value>
   </data>
 	<data name="activity_readrange_tooltip" xml:space="preserve">
-    <value>Read a range from a Microsoft Excel sheet</value>
+    <value>Microsoft Excelシートから範囲を読み取る</value>
   </data>
 	<data name="activity_readrange_useheaderrow" xml:space="preserve">
     <value>ヘッダー行を使用</value>
   </data>
 	<data name="activity_readrange_useheaderrow_help" xml:space="preserve">
-    <value>If select range also contains a header row with column names, set this to true, else leave blank ( then all cloumns will have no name )</value>
+    <value>選択範囲に列名を含むヘッダー行が含まれている場合は、この値をtrueに設定し、そうでない場合は空白にします。（すべての列に名前がつきません）</value>
   </data>
 	<data name="activity_runexcelmacro" xml:space="preserve">
     <value>Excel マクロを実行</value>
@@ -307,19 +310,19 @@
     <value>マクロ名</value>
   </data>
 	<data name="activity_runexcelmacro_tooltip" xml:space="preserve">
-    <value>Run a Macro within a Excel workbook. The Workbook file needs to be enabled for Macros</value>
+    <value>Excelのワークブック内でマクロを実行する。ワークブックファイルがマクロに対応している必要があります。</value>
   </data>
 	<data name="activity_runslideshow" xml:space="preserve">
     <value>スライドショーを実行</value>
   </data>
 	<data name="activity_runslideshow_tooltip" xml:space="preserve">
-    <value>Open a Microsoft Powerpoint Presentation and start slide show</value>
+    <value>Microsoft Powerpointプレゼンテーションを開き、スライドショーを開始する。</value>
   </data>
 	<data name="activity_savemailitem" xml:space="preserve">
     <value>メールアイテムを保存</value>
   </data>
 	<data name="activity_savemailitem_tooltip" xml:space="preserve">
-    <value>Save a Microsoft Outlook Mail item as a file</value>
+    <value>Microsoft Outlookメールのアイテムをファイルとして保存する</value>
   </data>
 	<data name="activity_setparagraph" xml:space="preserve">
     <value>パラグラフを設定</value>
@@ -328,28 +331,29 @@
     <value>ファイル名</value>
   </data>
 	<data name="activity_setparagraph_filename_help" xml:space="preserve">
-    <value>Full path and filename of Microsoft Word document to work with</value>
+    <value>作業対象となるMicrosoft Wordドキュメントのフルパスとファイル名</value>
   </data>
 	<data name="activity_setparagraph_index" xml:space="preserve">
     <value>インデックス</value>
   </data>
 	<data name="activity_setparagraph_index_help" xml:space="preserve">
-    <value>Overwrite content in the paragraph with this index, set 0 to overwrite the entire word document</value>
+    <value>このインデックスを持つ段落のコンテンツを上書きします。
+0を設定すると、ワード文書全体を上書きします。</value>
   </data>
 	<data name="activity_setparagraph_text" xml:space="preserve">
     <value>テキスト</value>
   </data>
 	<data name="activity_setparagraph_text_help" xml:space="preserve">
-    <value>The text to set</value>
+    <value>セットするテキスト</value>
   </data>
 	<data name="activity_setparagraph_tooltip" xml:space="preserve">
-    <value>Set content of a paragraph in side a Microsoft Word document</value>
+    <value>Microsoft Wordドキュメントのサイドにある段落の内容を設定する</value>
   </data>
 	<data name="activity_writecell" xml:space="preserve">
     <value>セルを書込</value>
   </data>
 	<data name="activity_writecell_tooltip" xml:space="preserve">
-    <value>Set a value or formular to a single cell in Microsoft Excel</value>
+    <value>Microsoft Excelで単一のセルに値や関数を設定する</value>
   </data>
 	<data name="activity_writerange" xml:space="preserve">
     <value>範囲を書込</value>
@@ -358,21 +362,48 @@
     <value>セル</value>
   </data>
 	<data name="activity_writerange_cells_help" xml:space="preserve">
-    <value>Set the first cell to start writing from, leave blank to start at last empty row in column A</value>
+    <value>書き込みを開始する最初のセルを設定します。空白にすると、A列の最後の空の行から開始します。</value>
   </data>
 	<data name="activity_writerange_datatable" xml:space="preserve">
-    <value>DataTable</value>
+    <value>データテーブル</value>
   </data>
 	<data name="activity_writerange_datatable_help" xml:space="preserve">
-    <value>The datatable containing the data to add to Excel</value>
+    <value>Excelに追加するデータを格納したデータテーブル</value>
   </data>
 	<data name="activity_writerange_tooltip" xml:space="preserve">
-    <value>Write all data from a DataTable to at a range inside a Microsoft Excel sheet</value>
+    <value>Microsoft Excelシート内の範囲にデータテーブルの全データを書き込む</value>
   </data>
 	<data name="activity_writerange_useheaderrow" xml:space="preserve">
     <value>ヘッダー行を使用</value>
   </data>
 	<data name="activity_writerange_useheaderrow_help" xml:space="preserve">
-    <value>If set to true, will also add a header row with column names as the first row, set to false to only add the data</value>
+    <value>falseに設定すると、データのみが追加されます。</value>
   </data>
+	<data name="activity_ExportWorkbook" xml:space="preserve">
+		<value>ワークブックをエクスポート</value>
+	</data>
+	<data name="activity_ExportWorkbook_tooltip" xml:space="preserve">
+		<value>現在開いているワークブックをPDFやxps形式でエクスポートすることができます。</value>
+	</data>
+	<data name="activity_password" xml:space="preserve">
+		<value>パスワード</value>
+	</data>
+	<data name="activity_protectworksheet" xml:space="preserve">
+		<value>ワークシートの保護</value>
+	</data>
+	<data name="activity_protectworksheet_tooltip" xml:space="preserve">
+		<value>現在のワークシートを変更から保護する</value>
+	</data>
+	<data name="activity_replymailitem" xml:space="preserve">
+		<value>返信用メールアイテム</value>
+	</data>
+	<data name="activity_replymailitem_tooltip" xml:space="preserve">
+		<value>Microsoft Outlookメールアイテムへの返信の作成</value>
+	</data>
+	<data name="activity_unprotectworksheet" xml:space="preserve">
+		<value>ワークシート保護解除</value>
+	</data>
+	<data name="activity_unprotectworksheet_tooltip" xml:space="preserve">
+		<value>現在のワークシートの保護を解除する</value>
+	</data>
 </root>

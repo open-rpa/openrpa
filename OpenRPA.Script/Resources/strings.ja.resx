@@ -124,7 +124,7 @@
     <value>コードを実行</value>
   </data>
 	<data name="activity_invokecode_tooltip" xml:space="preserve">
-    <value>Invoke code written in one of several languages</value>
+    <value>複数の言語で書かれたコードを呼び出すことができます。</value>
   </data>
 	<data name="activity_open_editor" xml:space="preserve">
     <value>エディタを開く</value>
@@ -136,33 +136,42 @@
     <value>強行</value>
   </data>
 	<data name="activity_pipinstall_force_help" xml:space="preserve">
-    <value>Force reinstall of module if already exists</value>
+    <value>既にモジュールが存在する場合、強制的に再インストールする</value>
   </data>
 	<data name="activity_pipinstall_modules" xml:space="preserve">
     <value>モジュール</value>
   </data>
 	<data name="activity_pipinstall_modules_help" xml:space="preserve">
-    <value>List of python modules to install</value>
+    <value>インストールするpythonモジュールの一覧</value>
   </data>
 	<data name="activity_pipinstall_tooltip" xml:space="preserve">
-    <value>Install one or more python modules in the currently selected python envoriment</value>
+    <value>現在選択されているPython環境に、1つまたは複数のPythonモジュールをインストールします。</value>
   </data>
 	<data name="plugin_csharp_intellisense" xml:space="preserve">
     <value>C# IntelliSense</value>
   </data>
 	<data name="plugin_csharp_intellisense_help" xml:space="preserve">
-    <value>Enable intellisense for C# scripts</value>
+    <value>C#スクリプトのintellisenseの有効化</value>
   </data>
 	<data name="plugin_use_embedded_python" xml:space="preserve">
     <value>埋込 python を使用</value>
   </data>
 	<data name="plugin_use_embedded_python_help" xml:space="preserve">
-    <value>OpenRPA comes with python embedded, but will use the default system python if disabled</value>
+    <value>OpenRPAにはpythonが組み込まれていますが、無効にするとデフォルトのシステムpythonを使用します。</value>
   </data>
 	<data name="plugin_vb_intellisense" xml:space="preserve">
     <value>VB IntelliSense</value>
   </data>
 	<data name="plugin_vb_intellisense_help" xml:space="preserve">
-    <value>Enable intellisense for Visual Basic scripts</value>
+    <value>Visual Basicスクリプトのintellisenseの有効化</value>
   </data>
+	<data name="plugin_python_exe_path" xml:space="preserve">
+		<value>Pythonフォルダ</value>
+	</data>
+	<data name="plugin_python_exe_path_help" xml:space="preserve">
+		<value>python3.exeのあるフォルダへのパス、空欄にすると%PATH%または%PYTHON_PATH%を検索します。</value>
+	</data>
+	<data name="plugin_python_must_restart" xml:space="preserve">
+		<value>なお、これらの設定を変更する場合は、必ずOpenRPAを再起動してください。</value>
+	</data>
 </root>

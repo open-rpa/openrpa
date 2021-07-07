@@ -118,19 +118,19 @@
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
 	<data name="activity_adddatarow_datatable" xml:space="preserve">
-    <value>挿入 DataTable</value>
+    <value>挿入するデータテーブル</value>
   </data>
 	<data name="activity_converter_datatable" xml:space="preserve">
-    <value>DataTable</value>
+    <value>データテーブル</value>
   </data>
 	<data name="activity_converter_jarray" xml:space="preserve">
     <value>JArray</value>
   </data>
 	<data name="activity_datatable" xml:space="preserve">
-    <value>DataTable</value>
+    <value>データテーブル</value>
   </data>
 	<data name="activity_datatable_columnnames" xml:space="preserve">
-    <value>DataTable 列の配列</value>
+    <value>データテーブルの列の配列</value>
   </data>
 	<data name="activity_datatable_newcolumnname" xml:space="preserve">
     <value>新規列名</value>
@@ -172,10 +172,10 @@
     <value>選択したフォルダ</value>
   </data>
 	<data name="activity_startprocess_arguments_hint" xml:space="preserve">
-    <value>Arguments to be parsed the the executable</value>
+    <value>実行ファイルの解析対象となる引数</value>
   </data>
 	<data name="activity_startprocess_filename_hint" xml:space="preserve">
-    <value>The full filename and path to the executable to start</value>
+    <value>起動する実行ファイルの完全なファイル名とパス</value>
   </data>
 	<data name="activity_writecsv_hint" xml:space="preserve">
     <value>書込 CSV ファイルを選択</value>
@@ -183,4 +183,19 @@
 	<data name="activity_writeexcel_hint" xml:space="preserve">
     <value>書込 Excel ファイルを選択</value>
   </data>
+	<data name="activity_compressarchive_filename_hint" xml:space="preserve">
+		<value>zipファイルをこのファイル名で保存する</value>
+	</data>
+	<data name="activity_compressarchive_path_hint" xml:space="preserve">
+		<value>このフォルダ内のすべてのファイルを追加する</value>
+	</data>
+	<data name="activity_expandarchive_filename_hint" xml:space="preserve">
+		<value>展開するZIPファイルを選択</value>
+	</data>
+	<data name="activity_expandarchive_path_hint" xml:space="preserve">
+		<value>保存先フォルダの選択</value>
+	</data>
+	<data name="activity_selectfile_hint" xml:space="preserve">
+		<value>選択ファイル</value>
+	</data>
 </root>

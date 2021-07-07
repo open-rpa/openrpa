@@ -225,4 +225,7 @@
 	<data name="plugin_recording_mouse_move_time" xml:space="preserve">
 		<value>マウス移動時間</value>
 	</data>
+	<data name="plugin_recording_mouse_move_time_help" xml:space="preserve">
+		<value>録画中に、マウスを「X」ミリ秒遅延させてから画像を取得する。</value>
+	</data>
 </root>

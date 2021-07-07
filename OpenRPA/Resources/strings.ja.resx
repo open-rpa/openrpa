@@ -736,7 +736,7 @@
 		<value>含まれるワークフローを実行後、条件が満たされている間処理を繰り返す。（実行後に条件判断）</value>
 	</data>
 	<data name="activity_breakablewhile_tooltip" xml:space="preserve">
-		<value>条件が満たされている間、含まれているワークフローを実行する。（実行後に条件判断）</value>
+		<value>条件が満たされている間、含まれているワークフローを実行する。（実行前に条件判断）</value>
 	</data>
 	<data name="open_package_manager" xml:space="preserve">
 		<value>パッケージマネージャを開く</value>

@@ -159,4 +159,10 @@
 	<data name="plugin_windows_username" xml:space="preserve">
     <value>Windows ユーザ名</value>
   </data>
+	<data name="plugin_rdp_height" xml:space="preserve">
+		<value>スクリーンの高さ</value>
+	</data>
+	<data name="plugin_rdp_width" xml:space="preserve">
+		<value>スクリーンの幅</value>
+	</data>
 </root>

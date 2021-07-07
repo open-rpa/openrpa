@@ -130,7 +130,7 @@
     <value>セレクタを開く</value>
   </data>
 	<data name="activity_getelement_tooltip" xml:space="preserve">
-    <value>Find an Windows Java element based on selector</value>
+    <value>セレクタに基づいてWindows Java要素を検索</value>
   </data>
 	<data name="detector_highlight" xml:space="preserve">
     <value>強調</value>
@@ -151,7 +151,7 @@
     <value>自動起動</value>
   </data>
 	<data name="plugin_auto_launch_java_bridge_help" xml:space="preserve">
-    <value>Auto launch java bridge application when robot is running</value>
+    <value>ロボット動作時にJavaブリッジアプリケーションを自動起動</value>
   </data>
 	<data name="plugin_launch_java_bridge" xml:space="preserve">
     <value>Java ブリッジを起動</value>

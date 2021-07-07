@@ -121,7 +121,7 @@
     <value>OpenFlow を割当</value>
   </data>
 	<data name="activity_assignopenflow_tooltip" xml:space="preserve">
-    <value>Assign an OpenFlow workflow to a user or role</value>
+    <value>ユーザーやロールにOpenFlowワークフローを割り当てる</value>
   </data>
 	<data name="activity_click_to_view" xml:space="preserve">
     <value>ダブルクリックで表示</value>
@@ -130,13 +130,13 @@
     <value>ファイルを削除</value>
   </data>
 	<data name="activity_deletefile_tooltip" xml:space="preserve">
-    <value>Delete a file from the OpenFlow database</value>
+    <value>OpenFlowデータベースからファイルを削除する</value>
   </data>
 	<data name="activity_deleteone" xml:space="preserve">
     <value>1件削除</value>
   </data>
 	<data name="activity_deleteone_tooltip" xml:space="preserve">
-    <value>Delete one item in the OpenFlow database</value>
+    <value>OpenFlowデータベースの1つのアイテムを削除する</value>
   </data>
 	<data name="activity_filename" xml:space="preserve">
     <value>ファイル名</value>
@@ -148,37 +148,37 @@
     <value>資格情報を取得</value>
   </data>
 	<data name="activity_getcredentials_tooltip" xml:space="preserve">
-    <value>Get a set of encrypted credentials from OpenFlow</value>
+    <value>OpenFlowから暗号化された認証情報のセットを取得する。</value>
   </data>
 	<data name="activity_getfile" xml:space="preserve">
     <value>ファイルを取得</value>
   </data>
 	<data name="activity_getfile_tooltip" xml:space="preserve">
-    <value>Download a file saved inside the OpenFlow database</value>
+    <value>OpenFlowデータベース内に保存されたファイルのダウンロード</value>
   </data>
 	<data name="activity_grantpermission" xml:space="preserve">
     <value>許可を付与</value>
   </data>
 	<data name="activity_grantpermission_tooltip" xml:space="preserve">
-    <value>Add or update permissions for a user or role on the specified object, you must update the document in OpenFlow after</value>
+    <value>指定されたオブジェクトのユーザーまたはロールに対する権限を追加またはアップデートします。次の手順で、OpenFlowでドキュメントをアップデートする必要があります。</value>
   </data>
 	<data name="activity_insertone" xml:space="preserve">
     <value>1件挿入</value>
   </data>
 	<data name="activity_insertone_tooltip" xml:space="preserve">
-    <value>Inserts one item into the OpenFlow database</value>
+    <value>1つのアイテムをOpenFlowデータベースに挿入する</value>
   </data>
 	<data name="activity_insertorupdateone" xml:space="preserve">
     <value>1件挿入または更新</value>
   </data>
 	<data name="activity_insertorupdateone_tooltip" xml:space="preserve">
-    <value>Inserts one item into the OpenFlow database, update if already exists. checks on _id unless you specify Uniqueness then it will find existing items based on the fields mentioned in Uniqueness</value>
+    <value>OpenFlowデータベースに1つの項目を挿入し、すでに存在する場合は更新します。 「Uniqueness」を指定しない限り、「Uniqueness」に記載されたフィールドに基づいて既存の項目が検索されます。</value>
   </data>
 	<data name="activity_local_path" xml:space="preserve">
     <value>ローカルパス</value>
   </data>
 	<data name="activity_local_path_hint" xml:space="preserve">
-    <value>Save file into this folder</value>
+    <value>ファイルをこのフォルダーに保存する</value>
   </data>
 	<data name="activity_perm_delete" xml:space="preserve">
     <value>削除</value>
@@ -193,13 +193,13 @@
     <value>照会</value>
   </data>
 	<data name="activity_query_tooltip" xml:space="preserve">
-    <value>Query the OpenFlow database for one or more items</value>
+    <value>1つまたは複数の項目について、OpenFlowデータベースを照会する</value>
   </data>
 	<data name="activity_removepermission" xml:space="preserve">
     <value>許可を除去</value>
   </data>
 	<data name="activity_removepermission_tooltip" xml:space="preserve">
-    <value>Remove a permission from a user or role on the specified object, you must update the document in OpenFlow after</value>
+    <value>指定されたオブジェクトのユーザーまたはロールから権限を削除します。その後、OpenFlowでドキュメントを更新する必要があります</value>
   </data>
 	<data name="activity_savefile" xml:space="preserve">
     <value>ファイルを保存</value>
@@ -208,39 +208,39 @@
     <value>ファイル名</value>
   </data>
 	<data name="activity_savefile_filename_help" xml:space="preserve">
-    <value>The complete path and filename of the file to upload</value>
+    <value>アップロードするファイルの完全なパスとファイル名。</value>
   </data>
 	<data name="activity_savefile_path" xml:space="preserve">
     <value>パス</value>
   </data>
 	<data name="activity_savefile_path_help" xml:space="preserve">
-    <value>Save file in this subfolder on the server, this has relevans when getting the file again</value>
+    <value>ファイルをサーバー上のこのサブフォルダに保存します。これは、ファイルを再取得する際に関連します。</value>
   </data>
 	<data name="activity_savefile_result" xml:space="preserve">
     <value>結果</value>
   </data>
 	<data name="activity_savefile_result_help" xml:space="preserve">
-    <value>Returns the id of new uploaded file</value>
+    <value>新規アップロードされたファイルのIDを返す</value>
   </data>
 	<data name="activity_savefile_tooltip" xml:space="preserve">
-    <value>Upload and save a file into the OpenFlow database</value>
+    <value>OpenFlowデータベースへのファイルのアップロードと保存</value>
   </data>
 	<data name="activity_setcredentials" xml:space="preserve">
     <value>資格情報を設定</value>
   </data>
 	<data name="activity_setcredentials_tooltip" xml:space="preserve">
-    <value>Create or update a set of encrypted credentials in OpenFlow</value>
+    <value>OpenFlowで暗号化された認証情報を作成または更新することができます。</value>
   </data>
 	<data name="activity_updatefromdataTable" xml:space="preserve">
-    <value>DataTable から更新</value>
+    <value>データテーブルから更新</value>
   </data>
 	<data name="activity_updatefromdataTable_tooltip" xml:space="preserve">
-    <value>Commit changes made on a DataTable back to OpenFlow, returns list of inserted and updated rows</value>
+    <value>データテーブルで行われた変更をOpenFlowにコミットし、挿入および更新された行のリストを返します。</value>
   </data>
 	<data name="activity_waitforcompleted" xml:space="preserve">
     <value>完了まで待機</value>
   </data>
 	<data name="activity_waitforcompleted_help" xml:space="preserve">
-    <value>Wait for Completion before continuing with workflow</value>
+    <value>完了を待ってワークフローを続行する</value>
   </data>
 </root>

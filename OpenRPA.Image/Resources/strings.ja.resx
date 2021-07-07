@@ -127,13 +127,13 @@
     <value>要素</value>
   </data>
 	<data name="activity_element_help" xml:space="preserve">
-    <value>Work on this element, the return type of all GetElement activites and some others</value>
+    <value>この要素に対する作業、すべての「要素を取得」アクティビティの戻り値のタイプ、およびその他の要素。</value>
   </data>
 	<data name="activity_getcolor" xml:space="preserve">
     <value>色を取得</value>
   </data>
 	<data name="activity_getcolor_tooltip" xml:space="preserve">
-    <value>Get color at specefied cordinates. </value>
+    <value>指定した座標の色を取得する。</value>
   </data>
 	<data name="activity_getelement" xml:space="preserve">
     <value>要素を取得</value>
@@ -151,7 +151,7 @@
     <value>イメージを選択</value>
   </data>
 	<data name="activity_getelement_tooltip" xml:space="preserve">
-    <value>Find an image on the screen or inside a specific application window</value>
+    <value>画面上または特定のアプリケーションウィンドウ内の画像を検索する</value>
   </data>
 	<data name="activity_getimage" xml:space="preserve">
     <value>イメージを取得</value>
@@ -166,7 +166,7 @@
     <value>イメージを選択</value>
   </data>
 	<data name="activity_getimage_tooltip" xml:space="preserve">
-    <value>Get an image of the screen relative from another image or element found with GetElement</value>
+    <value>「要素を取得」で見つけた他の画像や要素から、画面の画像を相対的に取得する。</value>
   </data>
 	<data name="activity_gettext" xml:space="preserve">
     <value>テキストを取得</value>
@@ -178,10 +178,10 @@
     <value>制限</value>
   </data>
 	<data name="activity_gettext_limit_hint" xml:space="preserve">
-    <value>Search only for this word</value>
+    <value>この単語だけを検索する</value>
   </data>
 	<data name="activity_gettext_tooltip" xml:space="preserve">
-    <value>Using OCR get all text from a image, can be limited to a specific word or sentence</value>
+    <value>OCRを使用して、画像からすべてのテキストを取得します。</value>
   </data>
 	<data name="activity_loadfile_drop_hint" xml:space="preserve">
     <value>アクティビティをドロップ</value>
@@ -190,30 +190,39 @@
     <value>ファイル名</value>
   </data>
 	<data name="activity_loadfile_filename_hint" xml:space="preserve">
-    <value>Image file to load</value>
+    <value>ロードする画像ファイル</value>
   </data>
 	<data name="activity_loadfromfile" xml:space="preserve">
     <value>ファイルからロード</value>
   </data>
 	<data name="activity_loadfromfile_tooltip" xml:space="preserve">
-    <value>Load an image from a file and return an ImageElement</value>
+    <value>ファイルから画像を読み込み、ImageElementを返す。</value>
   </data>
 	<data name="activity_offsetx" xml:space="preserve">
     <value>X オフセット</value>
   </data>
 	<data name="activity_offsetx_help" xml:space="preserve">
-    <value>Click with this offset inside the element</value>
+    <value>要素内のこのオフセットでクリックする</value>
   </data>
 	<data name="activity_offsety" xml:space="preserve">
     <value>Y オフセット</value>
   </data>
 	<data name="activity_offsety_help" xml:space="preserve">
-    <value>Click with this offset inside the element</value>
+    <value>要素内のこのオフセットでクリックする</value>
   </data>
 	<data name="activity_takescreenshot" xml:space="preserve">
     <value>スクリーンショットを撮る</value>
   </data>
 	<data name="activity_takescreenshot_tooltip" xml:space="preserve">
-    <value>Take screenshot of the entire screen or a specific element found using Get Element</value>
+    <value>画面全体または「要素を取得」で見つけた特定の要素のスクリーンショットを撮る</value>
   </data>
+	<data name="activity_printwindow" xml:space="preserve">
+		<value>ウィンドウの印刷</value>
+	</data>
+	<data name="activity_printwindow_tooltip" xml:space="preserve">
+		<value>画面がロックされていても、指定したウィンドウ名でアプリケーションウィンドウを印刷する</value>
+	</data>
+	<data name="plugin_recording_mouse_move_time" xml:space="preserve">
+		<value>マウス移動時間</value>
+	</data>
 </root>

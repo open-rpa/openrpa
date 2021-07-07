@@ -159,4 +159,10 @@
 	<data name="enable_xpath_support_help" xml:space="preserve">
     <value>IE がサポートする実験的 XPath を有効化</value>
   </data>
+	<data name="open_browser_timeout" xml:space="preserve">
+		<value>オープンブラウザのタイムアウト</value>
+	</data>
+	<data name="open_browser_timeout_help" xml:space="preserve">
+		<value>ブラウザを開いてURLを開く際のタイムアウト</value>
+	</data>
 </root>

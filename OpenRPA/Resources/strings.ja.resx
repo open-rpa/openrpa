@@ -142,7 +142,7 @@
     <value>実行をチェック</value>
   </data>
 	<data name="activity_checkrunning_help" xml:space="preserve">
-    <value>Check if application is already running using the selector, if set to false, will launch a new application no matter what</value>
+    <value>セレクタを使ってすでにアプリケーションが起動しているかどうかをチェックします。falseに設定すると、何があっても新しいアプリケーションを起動します。</value>
   </data>
 	<data name="activity_clickdelay" xml:space="preserve">
     <value>クリック遅延</value>
@@ -163,13 +163,13 @@
     <value>アプリケーションをクローズ</value>
   </data>
 	<data name="activity_closeapplication_tooltip" xml:space="preserve">
-    <value>Find application based on a UI selector and then closes the Application</value>
+    <value>UIセレクタに基づいてアプリケーションを検索し、アプリケーションを終了する</value>
   </data>
 	<data name="activity_commentout" xml:space="preserve">
     <value>コメントアウト</value>
   </data>
 	<data name="activity_commentout_tooltip" xml:space="preserve">
-    <value>Ignore everything inside this Acitvity, handy for quickly remarking something out</value>
+    <value>このAcitvity内のすべてを無視します。コメントを記載するのに便利です。</value>
   </data>
 	<data name="activity_copyclipboard" xml:space="preserve">
     <value>クリックボードをコピー</value>
@@ -181,13 +181,13 @@
     <value>データテーブル</value>
   </data>
 	<data name="activity_datatable_help" xml:space="preserve">
-    <value>The DataTable to work with</value>
+    <value>使用するデータテーブル</value>
   </data>
 	<data name="activity_dataview" xml:space="preserve">
     <value>データビュー</value>
   </data>
 	<data name="activity_dataview_help" xml:space="preserve">
-    <value>The DateView to work with</value>
+    <value>使用するデータビュー</value>
   </data>
 	<data name="activity_detector" xml:space="preserve">
     <value>検知器</value>
@@ -223,7 +223,7 @@
     <value>要素</value>
   </data>
 	<data name="activity_element_help" xml:space="preserve">
-    <value>Click on this element, the return type of all GetElement activites and some others</value>
+    <value>この要素をクリックすると、すべてのGetElementアクティビティやその他のアクティビティの戻り値のタイプになります。</value>
   </data>
 	<data name="activity_focuselement" xml:space="preserve">
     <value>要素をフォーカス</value>
@@ -238,7 +238,7 @@
     <value>アクションを強制的に実施</value>
   </data>
 	<data name="activity_foreachdatarow" xml:space="preserve">
-    <value>Foreach DataRow</value>
+    <value>DataRowの各行に対して実行</value>
   </data>
 	<data name="activity_foreachdatarow_tooltip" xml:space="preserve">
     <value>DataTable 内の各行を列挙</value>
@@ -247,7 +247,7 @@
     <value>高さ</value>
   </data>
 	<data name="activity_height_help" xml:space="preserve">
-    <value>If set, will move the window to this location</value>
+    <value>設定されている場合、ウィンドウをこの位置に移動します。</value>
   </data>
 	<data name="activity_highlight" xml:space="preserve">
     <value>強調</value>
@@ -262,7 +262,7 @@
     <value>エラーを無視</value>
   </data>
 	<data name="activity_ignoreerrors_help" xml:space="preserve">
-    <value>If an error occurs, will ignore it an continue</value>
+    <value>エラーが発生しても、それを無視して続行する</value>
   </data>
 	<data name="activity_imageresult" xml:space="preserve">
     <value>イメージ結果</value>
@@ -280,7 +280,7 @@
     <value>OpenFlow を実行</value>
   </data>
 	<data name="activity_invokeopenflow_tooltip" xml:space="preserve">
-    <value>Invoke a workflow in node registered for RPA usage inside OpenFlow</value>
+    <value>OpenFlow内のRPA用に登録されたワークフローノードを呼び出す</value>
   </data>
 	<data name="activity_invokeopenrpa" xml:space="preserve">
     <value>OpenRPA を実行</value>
@@ -292,13 +292,13 @@
     <value>リモート OpenRPA を実行</value>
   </data>
 	<data name="activity_invokeremoteopenrpa_tooltip" xml:space="preserve">
-    <value>Invoke a OpenRPA Workflow on a remote Robot</value>
+    <value>リモートのロボットでOpenRPAワークフローを起動する</value>
   </data>
 	<data name="activity_keymodifiers" xml:space="preserve">
-    <value>Key Modifier</value>
+    <value>修飾キー</value>
   </data>
 	<data name="activity_keymodifiers_help" xml:space="preserve">
-    <value>Hold this key down, while clicking, only works if Virtual click is disabled</value>
+    <value>このキーを押しながらクリックすると、バーチャルクリックが無効になっている場合のみ動作します。</value>
   </data>
 	<data name="activity_map_variables" xml:space="preserve">
     <value>変数をマップ</value>
@@ -313,25 +313,25 @@
     <value>マウスを移動</value>
   </data>
 	<data name="activity_movemouse_tooltip" xml:space="preserve">
-    <value>Move mouse cursor to a location relative to an element found with GetElement (or desktop if no element supplied)</value>
+    <value>マウスカーソルを、GetElementで見つかった要素（要素が与えられていない場合はデスクトップ）からの相対位置に移動させる。</value>
   </data>
 	<data name="activity_offsetx" xml:space="preserve">
     <value>X オフセット</value>
   </data>
 	<data name="activity_offsetx_help" xml:space="preserve">
-    <value>Click with this offset inside the element</value>
+    <value>このオフセットで要素内をクリックする</value>
   </data>
 	<data name="activity_offsety" xml:space="preserve">
     <value>Y オフセット</value>
   </data>
 	<data name="activity_offsety_help" xml:space="preserve">
-    <value>Click with this offset inside the element</value>
+    <value>このオフセットで要素内をクリックする</value>
   </data>
 	<data name="activity_openapplication" xml:space="preserve">
     <value>アプリケーションを開く</value>
   </data>
 	<data name="activity_openapplication_tooltip" xml:space="preserve">
-    <value>Search for Windows element based on a selector, and give it focus, if not found start the application</value>
+    <value>セレクタに基づいてWindows要素を検索し、見つからなければアプリケーションを起動する。</value>
   </data>
 	<data name="activity_open_selector" xml:space="preserve">
     <value>セレクタを開く</value>
@@ -340,19 +340,19 @@
     <value>事後待機</value>
   </data>
 	<data name="activity_postwait_help" xml:space="preserve">
-    <value>Wait this amount of time, after doing the click, help full one applications that can be very slow to react on clicks</value>
+    <value>クリックをしてからこの時間待つことで、クリックの反応が非常に遅いアプリケーションをフル活用できます。</value>
   </data>
 	<data name="activity_result" xml:space="preserve">
     <value>結果</value>
   </data>
 	<data name="activity_result_help" xml:space="preserve">
-    <value>Save the result into this variable</value>
+    <value>結果をこの変数に保存する</value>
   </data>
 	<data name="activity_selector" xml:space="preserve">
     <value>セレクタ</value>
   </data>
 	<data name="activity_selector_help" xml:space="preserve">
-    <value>The selector used to find the element(s), supports mapping workflow variables by using {{variablename}}</value>
+    <value>要素の検索に使用されるセレクタは、{{variablename}}を使用したワークフロー変数のマッピングをサポートしています。</value>
   </data>
 	<data name="activity_select_element" xml:space="preserve">
     <value>要素を選択</value>
@@ -361,7 +361,7 @@
     <value>Ctrl+C を送信</value>
   </data>
 	<data name="activity_sendctrlc_help" xml:space="preserve">
-    <value>Send Ctrl+C before trying to copy the Clipboard Content</value>
+    <value>Ctrl+Cを押してクリップボードをコピーする。</value>
   </data>
 	<data name="activity_showballontop_message" xml:space="preserve">
     <value>メッセージ</value>
@@ -373,19 +373,19 @@
     <value>タイトル</value>
   </data>
 	<data name="activity_showballontop_title_hint" xml:space="preserve">
-    <value>Title on bollanmessage</value>
+    <value>バルーンメッセージタイトル</value>
   </data>
 	<data name="activity_showballoontip" xml:space="preserve">
     <value>バルーンチップを表示</value>
   </data>
 	<data name="activity_showballoontip_tooltip" xml:space="preserve">
-    <value>Show a small ballontip near the system tray, will respect OS message center settings</value>
+    <value>システムトレイの近くに小さなボールペンチップを表示する（OSのメッセージセンターの設定に従う</value>
   </data>
 	<data name="activity_stringresult" xml:space="preserve">
     <value>文字列結果</value>
   </data>
 	<data name="activity_stringresult_help" xml:space="preserve">
-    <value>Return the result as a string</value>
+    <value>結果を文字列として返す</value>
   </data>
 	<data name="activity_target" xml:space="preserve">
     <value>ターゲット</value>
@@ -400,31 +400,31 @@
     <value>タイムアウト</value>
   </data>
 	<data name="activity_timeout_help" xml:space="preserve">
-    <value>Wait this long before giving up and either failing or continuing depending on other settings</value>
+    <value>他の設定によって中断するか、続行するかを判断する際の待機時間を設定します。</value>
   </data>
 	<data name="activity_typetext" xml:space="preserve">
     <value>テキストをタイプ</value>
   </data>
 	<data name="activity_typetext_tooltip" xml:space="preserve">
-    <value>Send keyboard strokes to what ever that has focus, should only be used by recorder</value>
+    <value>フォーカスされている任意の場所にキーストロークを送信する</value>
   </data>
 	<data name="activity_virtualclick" xml:space="preserve">
     <value>仮想クリック</value>
   </data>
 	<data name="activity_virtualclick_help" xml:space="preserve">
-    <value>Try and do a Virtual click instead of using the mouse, not all elements supports this</value>
+    <value>マウスを使わず仮想クリックを行う。すべての要素がこれをサポートしているわけではありません。</value>
   </data>
 	<data name="activity_waitforcompleted" xml:space="preserve">
     <value>完了まで待機</value>
   </data>
 	<data name="activity_waitforcompleted_help" xml:space="preserve">
-    <value>Wait for Completion before continuing with workflow</value>
+    <value>完了を待ってワークフローを続行</value>
   </data>
 	<data name="activity_width" xml:space="preserve">
     <value>幅</value>
   </data>
 	<data name="activity_width_help" xml:space="preserve">
-    <value>If set, will move the window to this location</value>
+    <value>設定されている場合は、この位置にウィンドウを移動します。</value>
   </data>
 	<data name="activity_workflow" xml:space="preserve">
     <value>ワークフロー</value>
@@ -436,13 +436,13 @@
     <value>X</value>
   </data>
 	<data name="activity_x_help" xml:space="preserve">
-    <value>If set, will move the window to this location</value>
+    <value>設定されている場合は、この位置にウィンドウを移動します。</value>
   </data>
 	<data name="activity_y" xml:space="preserve">
     <value>Y</value>
   </data>
 	<data name="activity_y_help" xml:space="preserve">
-    <value>If set, will move the window to this location</value>
+    <value>設定されている場合は、この位置にウィンドウを移動します。</value>
   </data>
 	<data name="animatemouse" xml:space="preserve">
     <value>アニメーション化マウスを使用</value>
@@ -718,7 +718,7 @@
     <value>値</value>
   </data>
 	<data name="verbose" xml:space="preserve">
-    <value>Verbose</value>
+    <value>詳細</value>
   </data>
 	<data name="version" xml:space="preserve">
     <value>バージョン</value>
@@ -729,4 +729,61 @@
 	<data name="warning" xml:space="preserve">
     <value>警告</value>
   </data>
+	<data name="activity_break" xml:space="preserve">
+		<value>ブレイク</value>
+	</data>
+	<data name="activity_Breakabledowhile_tooltip" xml:space="preserve">
+		<value>含まれるワークフローを実行後、条件が満たされている間処理を繰り返す。（実行前に条件判断）</value>
+	</data>
+	<data name="activity_breakablewhile_tooltip" xml:space="preserve">
+		<value>条件が満たされている間、含まれているワークフローを実行する。（実行後に条件判断）</value>
+	</data>
+	<data name="open_package_manager" xml:space="preserve">
+		<value>パッケージマネージャを開く</value>
+	</data>
+	<data name="activity_Breakabledowhile" xml:space="preserve">
+		<value>Do While</value>
+	</data>
+	<data name="activity_breakablewhile" xml:space="preserve">
+		<value>While</value>
+	</data>
+	<data name="activity_break_tooltip" xml:space="preserve">
+		<value>ループを抜け出し、ループ後も実行を継続する</value>
+	</data>
+	<data name="activity_continue" xml:space="preserve">
+		<value>コンテニュー</value>
+	</data>
+	<data name="activity_continue_tooltip" xml:space="preserve">
+		<value>ループ本体の実行を停止し、次の項目に進む</value>
+	</data>
+	<data name="author" xml:space="preserve">
+		<value>作成者</value>
+	</data>
+	<data name="childsession" xml:space="preserve">
+		<value>チャイルドセッション</value>
+	</data>
+	<data name="include_prerelease" xml:space="preserve">
+		<value>プレリリースを含む</value>
+	</data>
+	<data name="install" xml:space="preserve">
+		<value>インストール</value>
+	</data>
+	<data name="installed" xml:space="preserve">
+		<value>インストール済</value>
+	</data>
+	<data name="main_settings_enable_child_sessions" xml:space="preserve">
+		<value>チャイルドセッションを有効にする</value>
+	</data>
+	<data name="playinchildsession" xml:space="preserve">
+		<value>チャイルドセッションを実行する</value>
+	</data>
+	<data name="selectornetwork" xml:space="preserve">
+		<value>ネットワーク</value>
+	</data>
+	<data name="uninstall" xml:space="preserve">
+		<value>アンインストール</value>
+	</data>
+	<data name="update" xml:space="preserve">
+		<value>アップデート</value>
+	</data>
 </root>

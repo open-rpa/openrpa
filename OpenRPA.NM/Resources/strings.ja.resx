@@ -124,13 +124,13 @@
     <value>タブを閉じる</value>
   </data>
 	<data name="activity_closetab_tooltip" xml:space="preserve">
-    <value>Close the current tab, or close all tabs</value>
+    <value>現在のタブを閉じる、もしくはすべてのタブを閉じる</value>
   </data>
 	<data name="activity_executescript" xml:space="preserve">
     <value>スクリプトを実行</value>
   </data>
 	<data name="activity_executescript_tooltip" xml:space="preserve">
-    <value>Execute script in the browser, targeting current tab and default frame</value>
+    <value>現在のタブとデフォルトフレームをターゲットに、ブラウザでスクリプトを実行する</value>
   </data>
 	<data name="activity_getelement" xml:space="preserve">
     <value>要素を取得</value>
@@ -145,13 +145,13 @@
     <value>アクションをループ</value>
   </data>
 	<data name="activity_getelement_loopaction_tooltop" xml:space="preserve">
-    <value>Do this, once done processing each result, then reruns the selector and looks for new items</value>
+    <value>このようにして、それぞれの結果の処理が終わったら、セレクタを再実行して新しいアイテムを探します。</value>
   </data>
 	<data name="activity_getelement_open_selector" xml:space="preserve">
     <value>セレクタを開く</value>
   </data>
 	<data name="activity_getelement_tooltip" xml:space="preserve">
-    <value>Find an browser element based on selector</value>
+    <value>セレクタに基づいてブラウザ要素を検索</value>
   </data>
 	<data name="activity_openurl" xml:space="preserve">
     <value>URL を開く</value>
@@ -160,7 +160,7 @@
     <value>カレントを取得</value>
   </data>
 	<data name="activity_openurl_tooltip" xml:space="preserve">
-    <value>Open the specefied url in the selected browser</value>
+    <value>選択したブラウザで指定のURLを開く</value>
   </data>
 	<data name="activity_open_editor" xml:space="preserve">
     <value>エディタを開く</value>
@@ -169,7 +169,7 @@
     <value>ダウンロードを待機</value>
   </data>
 	<data name="activity_waitfordownload_tooltip" xml:space="preserve">
-    <value>Waits for a download to complete in a nm supported browser</value>
+    <value>MM対応のブラウザでのダウンロード完了を待つ</value>
   </data>
 	<data name="activity_waitforready" xml:space="preserve">
     <value>準備状態を待機</value>
@@ -181,36 +181,45 @@
     <value>古い拡張を補う</value>
   </data>
 	<data name="compensate_for_old_addon_help" xml:space="preserve">
-    <value>Add pixel compensation for old add</value>
+    <value>古い画素補正を使う</value>
   </data>
 	<data name="debug_console_output" xml:space="preserve">
     <value>デバッグ・コンソール</value>
   </data>
 	<data name="debug_console_output_help" xml:space="preserve">
-    <value>Write debug informtation to browser console</value>
+    <value>ブラウザのコンソールにデバッグ情報を書き込む</value>
   </data>
 	<data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
     <value>値の設定後に待機</value>
   </data>
 	<data name="plugin_wait_for_tab_after_set_value_help" xml:space="preserve">
-    <value>Wait for tab status to be in ready state after setting a value</value>
+    <value>値を設定した後、タブの状態がレディになるのを待つ</value>
   </data>
 	<data name="register_old_portname" xml:space="preserve">
     <value>古いポート名を登録</value>
   </data>
 	<data name="register_old_portname_help" xml:space="preserve">
-    <value>Register old browser extension port names </value>
+    <value>古いブラウザ拡張機能のポート名を登録</value>
   </data>
 	<data name="unique_xpath_ids" xml:space="preserve">
     <value>ユニーク ids</value>
   </data>
 	<data name="unique_xpath_ids_help" xml:space="preserve">
-    <value>Use on of these attributes as unique id's when creating xpath selectors</value>
+    <value>xpathのセレクタを作成する際に、これらの属性のいずれかをユニークなIDとして使用します。</value>
   </data>
 	<data name="wait_for_tab_click" xml:space="preserve">
     <value>タブを待機</value>
   </data>
 	<data name="wait_for_tab_click_help" xml:space="preserve">
-    <value>Wait for tab status to be in ready state after clicking a button</value>
+    <value>ボタンをクリックした後、タブの状態がレディになるのを待つ</value>
   </data>
+	<data name="activity_getelement_async" xml:space="preserve">
+		<value>非同期で要素を取得</value>
+	</data>
+	<data name="activity_getelement_async_tooltip" xml:space="preserve">
+		<value>セレクタに基づいてブラウザ要素を検索</value>
+	</data>
+	<data name="activity_getelement_tooltip1" xml:space="preserve">
+		<value>セレクタに基づいてWindowsのユーザーインターフェース要素を探す</value>
+	</data>
 </root>

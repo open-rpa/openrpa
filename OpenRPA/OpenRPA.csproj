@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.56</Version>
-    <PackageReleaseNotes>1.2.56 Updated/add jp translation, credits: kazushi-eguchi
+    <Version>1.2.57</Version>
+    <PackageReleaseNotes>1.2.57 Add custom max lines in log windows
+1.2.56 Updated/add jp translation, credits: kazushi-eguchi
 1.2.55 Add Export Workbook
 1.2.54 Fix, potential stall of processing of network messages
 1.2.53 Invoke fix

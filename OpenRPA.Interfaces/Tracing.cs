@@ -10,7 +10,7 @@ namespace OpenRPA.Interfaces
 {
     public class Tracing : TraceListener, System.ComponentModel.INotifyPropertyChanged //, ILogEventSink
     {
-        private int maxLines = 20;
+        // private int maxLines = 20;
         private string _TraceMessages = "";
         public string TraceMessages
         {
@@ -20,15 +20,16 @@ namespace OpenRPA.Interfaces
                 result = _TraceMessages;
                 var lines = result.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                 int count = lines.Count();
-                if (count > maxLines)
+                if (count > Config.local.max_trace_lines)
                 {
                     var list = lines.ToList();
-                    list.RemoveRange((maxLines - 10), (count - maxLines) + 10);
-                    _TraceMessages = result;
+                    list.RemoveRange((Config.local.max_trace_lines - 10), (count - Config.local.max_trace_lines) + 10);
+                    _TraceMessages = string.Join(Environment.NewLine, list);
                 }
-                return result;
+                return _TraceMessages;
             }
-            set {
+            set
+            {
                 _TraceMessages = value;
                 OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Trace"));
                 OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("TraceMessages"));
@@ -55,15 +56,16 @@ namespace OpenRPA.Interfaces
                 result = _OutputMessages;
                 var lines = result.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                 int count = lines.Count();
-                if (count > maxLines)
+                if (count > Config.local.max_output_lines)
                 {
                     var list = lines.ToList();
-                    list.RemoveRange((maxLines - 10), (count - maxLines) + 10);
-                    _OutputMessages = result;
+                    list.RemoveRange((Config.local.max_output_lines - 10), (count - Config.local.max_output_lines) + 10);
+                    _OutputMessages = string.Join(Environment.NewLine, list);
                 }
-                return result;
+                return _OutputMessages;
             }
-            set {
+            set
+            {
                 _OutputMessages = value;
                 OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("OutputMessages"));
             }

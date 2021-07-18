@@ -167,9 +167,11 @@ namespace OpenRPA.Net
 
                     if ((workingjson.StartsWith("{") && workingjson.EndsWith("}")) || (workingjson.StartsWith("[") && workingjson.EndsWith("]")))
                     {
-                        int begincount = System.Text.RegularExpressions.Regex.Matches(workingjson, "{").Count;
-                        int endcount = System.Text.RegularExpressions.Regex.Matches(workingjson, "}").Count;
-                        if (begincount == endcount)
+                        //int begincount = System.Text.RegularExpressions.Regex.Matches(workingjson, "{").Count;
+                        //int endcount = System.Text.RegularExpressions.Regex.Matches(workingjson, "}").Count;
+                        //if (begincount == endcount)
+                        try
+                        {
                             using (StringReader sr = new StringReader(workingjson))
                             using (JsonTextReader reader = new JsonTextReader(sr))
                             {
@@ -195,28 +197,14 @@ namespace OpenRPA.Net
                                     }
                                 }
                             }
-                        else { tempbuffer += json; }
+                        }
+                        catch (Exception)
+                        {
+                            tempbuffer += json;
+                        }
                     }
                     else { tempbuffer += json; }
                     if (foundone) await ProcessQueue();
-
-
-                    //if (TryParseJSON(workingjson))
-                    //{
-                    //    var message = JsonConvert.DeserializeObject<SocketMessage>(workingjson);
-                    //    if (!string.IsNullOrEmpty(message.id) && !string.IsNullOrEmpty(message.command) && message != null)
-                    //    {
-                    //        lock (_receiveQueue)
-                    //        {
-                    //            tempbuffer = "";
-                    //            if (message.index % 100 == 99) Log.Network("Adding " + message.id + " to receiveQueue " + (message.index + 1) + " of " + message.count);
-                    //            _receiveQueue.Add(message);
-                    //        }
-                    //        await ProcessQueue();
-                    //    }
-                    //    else { tempbuffer += json; }
-                    //}
-                    //else { tempbuffer += json; }
                 }
                 catch (System.Net.WebSockets.WebSocketException ex)
                 {

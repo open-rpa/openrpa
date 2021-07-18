@@ -89,7 +89,14 @@ namespace OpenRPA
             }
             set
             {
-                SetProperty(value);
+                try
+                {
+                    SetProperty(value);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
             }
         }
         public bool hasError { get { return GetProperty<bool>(); } set { SetProperty(value); } }

@@ -50,22 +50,22 @@ namespace OpenRPA
         {
             try
             {
-            if (propertyName == null)
-            {
-                throw new ArgumentNullException(nameof(propertyName));
-            }
-            object value;
-            if (_backingFieldValues.TryGetValue(propertyName, out value))
-            {
-                return (T)value;
-            }
-            return default(T);
+                if (propertyName == null)
+                {
+                    throw new ArgumentNullException(nameof(propertyName));
+                }
+                object value;
+                if (_backingFieldValues.TryGetValue(propertyName, out value))
+                {
+                    return (T)value;
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
-                throw;
+                // throw;
             }
+            return default(T);
         }
         /// <summary>
         /// Saves a property value to the internal backing field
@@ -82,7 +82,7 @@ namespace OpenRPA
                 _backingFieldValues[propertyName] = newValue;
                 OnPropertyChanged(propertyName);
                 Type typeParameterType = typeof(T);
-                if(typeParameterType.Name.ToLower().Contains("readonly"))
+                if (typeParameterType.Name.ToLower().Contains("readonly"))
                 {
                     return true;
                 }

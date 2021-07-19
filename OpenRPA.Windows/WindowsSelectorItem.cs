@@ -23,7 +23,7 @@ namespace OpenRPA.Windows
         public int Ident { get; set; }
         public override string ToString()
         {
-            if(Result == null) return "[0] " + Conditions;
+            if (Result == null) return "[0] " + Conditions;
             return "[" + Result.Length + "] " + Conditions;
         }
     }
@@ -134,7 +134,7 @@ namespace OpenRPA.Windows
                     try
                     {
                         var c = element.Properties.ControlType.ValueOrDefault;
-                        if(c.ToString() != "Unknown") Properties.Add(new SelectorItemProperty("ControlType", c.ToString()));
+                        if (c.ToString() != "Unknown") Properties.Add(new SelectorItemProperty("ControlType", c.ToString()));
                     }
                     catch (Exception)
                     {
@@ -271,12 +271,12 @@ namespace OpenRPA.Windows
             lock (cache_lock) _list = MatchCache.ToArray();
             try
             {
-                for(var i = _list.Length-1; i >= 0; i--)
+                for (var i = _list.Length - 1; i >= 0; i--)
                 {
                     try
                     {
                         if (now - _list[i].Created > timeout) RemoveFromCache(_list[i]);
-                        if(_list[i].Conditions == Conditions && _list[i].Root.Equals(root) && _list[i].Ident == ident)
+                        if (_list[i].Conditions == Conditions && _list[i].Root.Equals(root) && _list[i].Ident == ident)
                         {
                             result = _list[i];
                         }
@@ -331,7 +331,7 @@ namespace OpenRPA.Windows
         {
             try
             {
-                lock(cache_lock)
+                lock (cache_lock)
                 {
                     var items = MatchCache.Where(x => x.Root.Equals(item.Root) && x.Ident >= item.Ident).ToList();
                     foreach (var e in items) MatchCache.Remove(e);
@@ -475,9 +475,19 @@ namespace OpenRPA.Windows
                 }
                 if (p.Name == "Name")
                 {
-                    if (m.Properties.Name.IsSupported)
+                    string v = null;
+                    try
                     {
-                        var v = m.Properties.Name.Value;
+                        if (m.Properties.Name.IsSupported)
+                        {
+                            v = m.Properties.Name.Value;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    if (!string.IsNullOrEmpty(v))
+                    {
                         if (!PatternMatcher.FitsMask(m.Properties.Name.Value, p.Value))
                         {
                             Log.SelectorVerbose(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
@@ -492,10 +502,20 @@ namespace OpenRPA.Windows
                 }
                 if (p.Name == "ClassName")
                 {
-
-                    if (m.Properties.ClassName.IsSupported)
+                    string v = null;
+                    try
                     {
-                        var v = m.Properties.ClassName.Value;
+                        if (m.Properties.ClassName.IsSupported)
+                        {
+                            v = m.Properties.ClassName.Value;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+                    if (!string.IsNullOrEmpty(v))
+                    {
                         if (!PatternMatcher.FitsMask(m.Properties.ClassName.Value, p.Value))
                         {
                             Log.SelectorVerbose(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
@@ -510,9 +530,20 @@ namespace OpenRPA.Windows
                 }
                 if (p.Name == "AutomationId")
                 {
-                    if (m.Properties.AutomationId.IsSupported)
+                    string v = null;
+                    try
                     {
-                        var v = m.Properties.AutomationId.Value;
+                        if (m.Properties.AutomationId.IsSupported)
+                        {
+                            v = m.Properties.AutomationId.Value;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+                    if (!string.IsNullOrEmpty(v))
+                    {
                         if (!PatternMatcher.FitsMask(m.Properties.AutomationId.Value, p.Value))
                         {
                             Log.SelectorVerbose(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
@@ -527,9 +558,20 @@ namespace OpenRPA.Windows
                 }
                 if (p.Name == "FrameworkId")
                 {
-                    if (m.Properties.FrameworkId.IsSupported)
+                    string v = null;
+                    try
                     {
-                        var v = m.Properties.FrameworkId.Value;
+                        if (m.Properties.FrameworkId.IsSupported)
+                        {
+                            v = m.Properties.FrameworkId.Value;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+                    if (!string.IsNullOrEmpty(v))
+                    {
                         if (!PatternMatcher.FitsMask(m.Properties.FrameworkId.Value, p.Value))
                         {
                             Log.SelectorVerbose(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");

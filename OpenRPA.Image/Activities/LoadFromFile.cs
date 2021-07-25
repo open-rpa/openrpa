@@ -34,6 +34,8 @@ namespace OpenRPA.Image
             var b = new Bitmap(filename);
             var v = new ImageElement(Rectangle.Empty, b);
             context.SetValue(Result, v);
+            IncIndex(context);
+            SetTotal(context, 1);
             context.ScheduleAction(Body, v, OnBodyComplete);
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
@@ -45,6 +47,7 @@ namespace OpenRPA.Image
             Interfaces.Extensions.AddCacheArgument(metadata, "Filename", Filename);
             metadata.AddImplementationVariable(elements);
             base.CacheMetadata(metadata);
+            AddIndexTotal(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)
         {

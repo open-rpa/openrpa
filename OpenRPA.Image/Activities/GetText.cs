@@ -125,6 +125,8 @@ namespace OpenRPA.Image
             bool more = _enum.MoveNext();
             if (more)
             {
+                IncIndex(context);
+                SetTotal(context, result.Length);
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
         }
@@ -134,6 +136,7 @@ namespace OpenRPA.Image
             bool more = _enum.MoveNext();
             if (more && !breakRequested)
             {
+                IncIndex(context);
                 context.ScheduleAction<ImageElement>(Body, _enum.Current, OnBodyComplete);
             }
         }
@@ -146,6 +149,7 @@ namespace OpenRPA.Image
 
             metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
+            AddIndexTotal(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)
         {

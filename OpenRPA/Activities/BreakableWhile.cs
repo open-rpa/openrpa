@@ -28,13 +28,14 @@ namespace OpenRPA.Activities
             {
                 if (!breakRequested && !context.IsCancellationRequested)
                 {
+                    IncIndex(context);
                     context.ScheduleActivity(Condition, OnConditionComplete, null);
                 }
             }
         }
         private void OnConditionComplete(NativeActivityContext context, ActivityInstance completedInstance, bool result)
         {
-            if(result) context.ScheduleActivity(Body, OnBodyComplete);
+            if (result) context.ScheduleActivity(Body, OnBodyComplete);
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
@@ -43,9 +44,10 @@ namespace OpenRPA.Activities
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {
             metadata.AddChild(Body);
-            metadata.AddChild(Condition);            
+            metadata.AddChild(Condition);
             metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
+            AddIndexTotal(metadata);
         }
         //public Activity Create(System.Windows.DependencyObject target)
         //{

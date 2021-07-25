@@ -164,6 +164,8 @@ namespace OpenRPA.NM
             if (more)
             {
                 context.SetValue(_elements, _enum);
+                IncIndex(context);
+                SetTotal(context, allelements.Length);
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
         }
@@ -174,13 +176,13 @@ namespace OpenRPA.NM
             bool more = _enum.MoveNext();
             if (more && !breakRequested)
             {
+                IncIndex(context);
                 context.ScheduleAction<NMElement>(Body, _enum.Current, OnBodyComplete);
             }
             else
             {
                 if (LoopAction != null && !breakRequested)
                 {
-                    var allelements = context.GetValue(_allelements);
                     context.ScheduleActivity(LoopAction, LoopActionComplete);
                 }
             }
@@ -210,6 +212,7 @@ namespace OpenRPA.NM
             metadata.AddImplementationVariable(_elements);
             metadata.AddImplementationVariable(_allelements);
             base.CacheMetadata(metadata);
+            AddIndexTotal(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)
         {

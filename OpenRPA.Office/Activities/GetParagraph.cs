@@ -22,7 +22,7 @@ namespace OpenRPA.Office.Activities
         public InArgument<string> Filename { get; set; }
         [Category("Input")]
         [LocalizedDisplayName("activity_getparagraph_index", typeof(Resources.strings)), LocalizedDescription("activity_getparagraph_index_help", typeof(Resources.strings))]
-        public InArgument<int> Index { get; set; }
+        public new InArgument<int> Index { get; set; }
         [Category("Output")]
         [LocalizedDisplayName("activity_getparagraph_text", typeof(Resources.strings)), LocalizedDescription("activity_getparagraph_text_help", typeof(Resources.strings))]
         public OutArgument<string> Text { get; set; }
@@ -97,6 +97,8 @@ namespace OpenRPA.Office.Activities
             bool more = _enum.MoveNext();
             if (more)
             {
+                IncIndex(context);
+                SetTotal(context, result.Count);
                 if (Body != null) context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
 
@@ -107,6 +109,7 @@ namespace OpenRPA.Office.Activities
             bool more = _enum.MoveNext();
             if (more && !breakRequested)
             {
+                IncIndex(context);
                 context.ScheduleAction<string>(Body, _enum.Current, OnBodyComplete);
             }
         }
@@ -121,6 +124,7 @@ namespace OpenRPA.Office.Activities
 
             metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
+            AddIndexTotal(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)
         {

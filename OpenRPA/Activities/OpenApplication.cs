@@ -81,7 +81,8 @@ namespace OpenRPA.Activities
             }
             if (element != null && Body != null)
             {
-                // element.Focus();
+                IncIndex(context);
+                SetTotal(context, 1);
                 context.ScheduleAction(Body, element, OnBodyComplete);
             }
         }
@@ -113,6 +114,7 @@ namespace OpenRPA.Activities
 
             metadata.AddImplementationVariable(_element);
             base.CacheMetadata(metadata);
+            AddIndexTotal(metadata);
         }
         public System.Activities.Activity Create(System.Windows.DependencyObject target)
         {

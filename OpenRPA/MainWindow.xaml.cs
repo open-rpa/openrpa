@@ -2476,7 +2476,7 @@ namespace OpenRPA
                 else if (!string.IsNullOrEmpty(errormessage))
                 {
                     GenericTools.Restore();
-                    MessageBox.Show("onPlay " + errormessage);
+                    // MessageBox.Show("onPlay " + errormessage);
                 }
                 Log.FunctionOutdent("MainWindow", "OnPlay");
                 return;

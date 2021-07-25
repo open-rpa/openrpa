@@ -47,26 +47,26 @@ namespace OpenRPA.Interfaces
             //Value++;
             //context.SetValue(Index, Value);
             var input = context.DataContext.GetProperties()[Variables[0].Name];
-            var value = input.GetValue(context.DataContext);
-            var _index = 0;
-            if (value != null)
+            if (input != null)
             {
-                _index = (int)value;
+                var _index = 0;
+                var value = input.GetValue(context.DataContext);
+                if (value != null) _index = (int)value;
+                _index++;
+                input.SetValue(context.DataContext, _index);
             }
-            _index++;
-            input.SetValue(context.DataContext, _index);
         }
         public void SetIndex(NativeActivityContext context, int Value)
         {
             //context.SetValue(Index, Value);
             var input = context.DataContext.GetProperties()[Variables[0].Name];
-            input.SetValue(context.DataContext, Value);
+            if (input != null) input.SetValue(context.DataContext, Value);
         }
         public void SetTotal(NativeActivityContext context, int Value)
         {
             //context.SetValue(Total, Value);
             var input = context.DataContext.GetProperties()[Variables[1].Name];
-            input.SetValue(context.DataContext, Value);
+            if (input != null) input.SetValue(context.DataContext, Value);
         }
         public void AddIndexTotal(NativeActivityMetadata metadata)
         {

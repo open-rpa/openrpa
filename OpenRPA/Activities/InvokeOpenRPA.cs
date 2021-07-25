@@ -88,8 +88,7 @@ namespace OpenRPA.Activities
                         //    param[a.Key] = a.Value;
                         //}
                         param[a.Key] = a.Value;
-                    }
-                    else
+                    } else
                     {
                         param[a.Key] = null;
                     }
@@ -106,6 +105,7 @@ namespace OpenRPA.Activities
                 if (workflow == null) throw new ArgumentException("Failed locating workflow " + workflowid);
                 IWorkflowInstance instance = null;
                 Views.WFDesigner designer = null;
+                Exception innerError = null;
                 GenericTools.RunUI(() =>
                 {
                     try

@@ -10,8 +10,22 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.3.8</Version>
-    <PackageReleaseNotes>1.2.39 Fix Map Variables issue for invoke openrpa
+    <Version>1.2.58</Version>
+    <PackageReleaseNotes>1.2.58 2 small hot fixes
+1.2.57 Add custom max lines in log windows
+1.2.56 Updated/add jp translation, credits: kazushi-eguchi
+1.2.55 Add Export Workbook
+1.2.54 Fix, potential stall of processing of network messages
+1.2.53 Invoke fix
+1.2.52 Fix memory leak
+1.2.51 Remove OpenTelemetry stuff, going to move this to an extension later
+1.2.50 Fix issue when parsing JObjects in Invoke Openflow
+1.2.49 Fix register queue issue on Windows XP/7
+1.2.48 Improve json parsing
+1.2.44 minor fixes, add basic nodered cmdlets to powershell
+1.2.41 Minor fix to workflow state saving and ui last state
+1.2.40 Add support for break and continue in most loops
+1.2.39 Fix Map Variables issue for invoke openrpa
 1.2.38 Add support for killing robot workflow remotely
 1.2.37 improve image recording, auto import namespaces on drop
 1.2.36 Better import handling and a few minor improvements

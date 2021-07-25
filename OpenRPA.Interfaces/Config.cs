@@ -77,6 +77,8 @@ namespace OpenRPA
         public int otel_metric_interval { get { return GetProperty(null, 2); } set { SetProperty(null, value); } }
         public int max_projects { get { return GetProperty(null, 100); } set { SetProperty(null, value); } }
         public int max_workflows { get { return GetProperty(null, 500); } set { SetProperty(null, value); } }
+        public int max_trace_lines { get { return GetProperty(null, 250); } set { SetProperty(null, value); } }
+        public int max_output_lines { get { return GetProperty(null, 250); } set { SetProperty(null, value); } }
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)
@@ -228,6 +230,9 @@ namespace OpenRPA
                 _ = notify_on_workflow_end;
                 _ = notify_on_workflow_remote_end;
                 _ = log_busy_warning;
+
+                _ = max_trace_lines;
+                _ = max_output_lines;
                 // settings
                 // _properties
                 var p = this.settings.OrderByDescending(kvp => kvp.Key);
@@ -328,10 +333,10 @@ namespace OpenRPA
                 string _propertyName = pluginname + "_" + propertyName;
                 if (string.IsNullOrEmpty(pluginname)) _propertyName = propertyName;
                 object value;
-                if(GetRegistryProperty(_propertyName, out value))
+                if (GetRegistryProperty(_propertyName, out value))
                 {
                 }
-                else if(propertyName != "properties")
+                else if (propertyName != "properties")
                 {
                     if (properties != null && !properties.TryGetValue(pluginname + "_" + propertyName, out value))
                     {
@@ -369,17 +374,19 @@ namespace OpenRPA
                         else if (value is byte[])
                         {
                             return (T)value;
-                        } else
+                        }
+                        else
                         {
                             return default(T);
                         }
                     }
                     if (typeof(T) == typeof(int) && value is long) value = int.Parse(value.ToString());
                     if (typeof(T) == typeof(bool)) value = bool.Parse(value.ToString());
-                    if (typeof(T) == typeof(System.Drawing.Rectangle)) {
+                    if (typeof(T) == typeof(System.Drawing.Rectangle))
+                    {
                         if (value.GetType() == typeof(System.Drawing.Rectangle))
                         {
-                        } 
+                        }
                         else
                         {
                             try

@@ -66,7 +66,7 @@
   &lt;property name="#LayoutVersion" /&gt;
   &lt;property name="#LayoutScaleFactor"&gt;@1,Width=1@1,Height=1&lt;/property&gt;
 &lt;/XtraSerializer&gt;</globalSetting>
-    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items /&gt;</globalSetting>
+    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="2" checksum="9287197116" /&gt;&lt;item type="2" checksum="7837670754" /&gt;&lt;item type="2" checksum="16133297020" /&gt;&lt;item type="2" checksum="11051330154" /&gt;&lt;item type="2" checksum="8830758947" /&gt;&lt;item type="2" checksum="14520070142" /&gt;&lt;item type="2" checksum="10553668910" /&gt;&lt;item type="2" checksum="8952262409" /&gt;&lt;item type="2" checksum="5995641952" /&gt;&lt;item type="2" checksum="10425234664" /&gt;&lt;item type="2" checksum="10851060478" /&gt;&lt;item type="2" checksum="9850344536" /&gt;&lt;item type="2" checksum="5915911415" /&gt;&lt;item type="2" checksum="9037166983" /&gt;&lt;item type="2" checksum="8141856705" /&gt;&lt;item type="2" checksum="11424516918" /&gt;&lt;item type="2" checksum="8555236391" /&gt;&lt;item type="2" checksum="8166761117" /&gt;&lt;/items&gt;</globalSetting>
     <globalSetting name="CreateNewFileForm.prefixTextBox.Text">####</globalSetting>
     <globalSetting name="CreateNewFileForm.prefixCheckBox.Checked">False</globalSetting>
     <globalSetting name="CreateNewFileForm.referenceLanguageComboBox.SelectedIndex">-1</globalSetting>
@@ -109,240 +109,243 @@ Kind regards</globalSetting>
     </userSetting>
     <userSetting name="Allan@DESKTOP-PK5A5U0.RecentFiles">
     </userSetting>
+    <userSetting name="sandw@PC.FindText">
+    </userSetting>
+    <userSetting name="sandw@PC.RecentFiles">C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.ja.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.zh.resx###***###C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.ja.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.zh.resx###***###C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.ja.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.zh.resx###***###C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.ja.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.zh.resx###***###C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.ja.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.zh.resx###***###C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.ja.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.zh.resx###***###C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.ja.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.zh.resx###***###C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.ja.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.zh.resx###***###C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.ja.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.zh.resx###***###C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.ja.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.zh.resx###***###C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.ja.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.zh.resx###***###C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.ja.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.zh.resx###***###C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.PDPlugin\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.PDPlugin\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.PDPlugin\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.PDPlugin\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.PDPlugin\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.PDPlugin\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.PDPlugin\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.PDPlugin\Resources\strings.zh.resx###***###C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.ja.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.zh.resx###***###C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.ja.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.zh.resx###***###C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.ja.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.zh.resx###***###C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.ja.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.zh.resx###***###C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.da.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.de.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.es.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.ja.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.pt.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.ro.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.ru.resx;C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.zh.resx</userSetting>
     <description>
     </description>
   </configuration>
   <fileGroups>
     <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="30bce610-1a71-4ab8-9ac4-add131f1468b">
-      <file filePath="OpenRPA.AviRecorder\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.AviRecorder\Resources\strings.resx" uniqueID="77b75242-f5ae-4d8d-8870-79a88588c51d" />
-      <file filePath="OpenRPA.AviRecorder\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.AviRecorder\Resources\strings.da.resx" uniqueID="24c4acb6-25fd-4310-bff5-6032c32e77d9" />
-      <file filePath="OpenRPA.AviRecorder\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.AviRecorder\Resources\strings.de.resx" uniqueID="d89051f0-cc9f-49a5-a63f-8ad7cb28b747" />
-      <file filePath="OpenRPA.AviRecorder\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.AviRecorder\Resources\strings.es.resx" uniqueID="fcc8937b-30cf-40ab-9ca0-72a7e2be1442" />
-      <file filePath="OpenRPA.AviRecorder\Resources\strings.ja.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.AviRecorder\Resources\strings.ja.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="OpenRPA.AviRecorder\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.AviRecorder\Resources\strings.pt.resx" uniqueID="729e3f9f-0ebd-4b5e-aa41-637f9b19fd4f" />
-      <file filePath="OpenRPA.AviRecorder\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.AviRecorder\Resources\strings.ro.resx" uniqueID="30446c2e-4f1c-4530-9375-f54176e9555d" />
-      <file filePath="OpenRPA.AviRecorder\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.AviRecorder\Resources\strings.ru.resx" uniqueID="a33a2704-ead0-44c5-a1ce-bb00d604112e" />
-      <file filePath="OpenRPA.AviRecorder\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.AviRecorder\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <remarks>
-      </remarks>
-    </fileGroup>
-    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="89c90263-eb0a-44b3-9eb2-bcb248006d63">
-      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Elis.Rossum\Resources\strings.resx" uniqueID="57a4c4fb-352d-4586-91b0-29fee3b773b0" />
-      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Elis.Rossum\Resources\strings.da.resx" uniqueID="82f25b1b-1619-415b-a0ce-7536b4f0b507" />
-      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Elis.Rossum\Resources\strings.de.resx" uniqueID="160dbe18-f6e5-4052-bf84-9b0893faa42f" />
-      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Elis.Rossum\Resources\strings.es.resx" uniqueID="973f2692-1356-43d6-ba5a-9aa1805d6eed" />
-      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.ja.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Elis.Rossum\Resources\strings.ja.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Elis.Rossum\Resources\strings.pt.resx" uniqueID="4b77c38e-1e2a-4a6a-a920-b662702f85c7" />
-      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Elis.Rossum\Resources\strings.ro.resx" uniqueID="dd375a58-5fe8-43ea-85cc-37ab628f9ae0" />
-      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Elis.Rossum\Resources\strings.ru.resx" uniqueID="994eca3b-9705-41db-bb16-6cade99936e9" />
-      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Elis.Rossum\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <remarks>
-      </remarks>
-    </fileGroup>
-    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="e0a9b55d-33c0-46c9-afaf-09a6d889306d">
-      <file filePath="OpenRPA.FileWatcher\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.FileWatcher\Resources\strings.resx" uniqueID="54643cbd-bebe-4cc3-a95f-733a971e5dd3" />
-      <file filePath="OpenRPA.FileWatcher\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.FileWatcher\Resources\strings.da.resx" uniqueID="919bd829-33f0-4026-8501-fe3e5116a8bb" />
-      <file filePath="OpenRPA.FileWatcher\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.FileWatcher\Resources\strings.de.resx" uniqueID="4b1a2692-b691-4bf3-b552-e4142d865c47" />
-      <file filePath="OpenRPA.FileWatcher\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.FileWatcher\Resources\strings.es.resx" uniqueID="98d88f03-46e6-4fe3-bc00-b3abc8827c05" />
-      <file filePath="OpenRPA.FileWatcher\Resources\strings.ja.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.FileWatcher\Resources\strings.ja.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="OpenRPA.FileWatcher\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.FileWatcher\Resources\strings.pt.resx" uniqueID="aa55014a-8c86-4888-8188-a75627f975da" />
-      <file filePath="OpenRPA.FileWatcher\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.FileWatcher\Resources\strings.ro.resx" uniqueID="5b27f44a-7de5-4339-806a-6df802374913" />
-      <file filePath="OpenRPA.FileWatcher\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.FileWatcher\Resources\strings.ru.resx" uniqueID="3393b80b-5ecb-4c88-a57c-6038998acf21" />
-      <file filePath="OpenRPA.FileWatcher\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.FileWatcher\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <remarks>
-      </remarks>
-    </fileGroup>
-    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="566baf62-2704-4712-bbc9-bf98766d7910">
-      <file filePath="OpenRPA.Forms\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Forms\Resources\strings.resx" uniqueID="038ccbc5-5833-4daf-9c47-da8ddf7915a0" />
-      <file filePath="OpenRPA.Forms\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Forms\Resources\strings.da.resx" uniqueID="5c92b926-7299-4b0f-aaef-b715362132ef" />
-      <file filePath="OpenRPA.Forms\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Forms\Resources\strings.de.resx" uniqueID="2ffe558d-c8ad-413c-a118-3cce4bfcd57d" />
-      <file filePath="OpenRPA.Forms\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Forms\Resources\strings.es.resx" uniqueID="b7a7eab7-9c07-41aa-9977-aceec2d3e9ef" />
-      <file filePath="OpenRPA.Forms\Resources\strings.ja.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Forms\Resources\strings.ja.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="OpenRPA.Forms\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Forms\Resources\strings.pt.resx" uniqueID="803856d8-daa3-4e15-ab19-a4f6cbb60c80" />
-      <file filePath="OpenRPA.Forms\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Forms\Resources\strings.ro.resx" uniqueID="6c49f4f5-2219-424c-8eb0-f937520c0034" />
-      <file filePath="OpenRPA.Forms\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Forms\Resources\strings.ru.resx" uniqueID="f501f459-2999-4301-8536-81612c33629b" />
-      <file filePath="OpenRPA.Forms\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Forms\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <remarks>
-      </remarks>
-    </fileGroup>
-    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="e55d03f4-c3e9-4d44-825e-72e5fc7cfc4b">
-      <file filePath="OpenRPA.IE\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.IE\Resources\strings.resx" uniqueID="a6554d0b-a056-4367-b527-77f20a543703" />
-      <file filePath="OpenRPA.IE\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.IE\Resources\strings.da.resx" uniqueID="661af296-fac6-4d2f-8145-57a3db9520f5" />
-      <file filePath="OpenRPA.IE\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.IE\Resources\strings.de.resx" uniqueID="7df49290-4d8b-4461-bb67-f71bc9022afa" />
-      <file filePath="OpenRPA.IE\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.IE\Resources\strings.es.resx" uniqueID="e4f01520-8c21-446d-8a71-29e54512791e" />
-      <file filePath="OpenRPA.IE\Resources\strings.ja.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.IE\Resources\strings.ja.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="OpenRPA.IE\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.IE\Resources\strings.pt.resx" uniqueID="1e4b871b-223d-49ec-9576-7e4d517ddfb9" />
-      <file filePath="OpenRPA.IE\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.IE\Resources\strings.ro.resx" uniqueID="fb8327b2-f630-4c15-bbaf-681847a993b5" />
-      <file filePath="OpenRPA.IE\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.IE\Resources\strings.ru.resx" uniqueID="9bfea443-3ead-4741-affc-24ff05471e3a" />
-      <file filePath="OpenRPA.IE\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.IE\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <remarks>
-      </remarks>
-    </fileGroup>
-    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="01537dc1-09fc-4d7b-8f1e-127f618dcdde">
-      <file filePath="OpenRPA.Image\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Image\Resources\strings.resx" uniqueID="801730e4-c37f-4b53-ad41-98049ac75d17" />
-      <file filePath="OpenRPA.Image\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Image\Resources\strings.da.resx" uniqueID="567f91a8-b9ef-40bc-965a-3e7e3e8620c7" />
-      <file filePath="OpenRPA.Image\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Image\Resources\strings.de.resx" uniqueID="e79b28a3-918c-4bd5-a46f-25a6ee4bb0f3" />
-      <file filePath="OpenRPA.Image\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Image\Resources\strings.es.resx" uniqueID="03cdaa33-45b0-444f-9ff8-d49618704520" />
-      <file filePath="OpenRPA.Image\Resources\strings.ja.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Image\Resources\strings.ja.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="OpenRPA.Image\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Image\Resources\strings.pt.resx" uniqueID="1991a566-c66f-428a-929a-9667e4eb3374" />
-      <file filePath="OpenRPA.Image\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Image\Resources\strings.ro.resx" uniqueID="02cca9c9-beeb-425d-ba04-60ed58d12958" />
-      <file filePath="OpenRPA.Image\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Image\Resources\strings.ru.resx" uniqueID="c4eaf36b-e3d8-44df-bd50-0a089b10359b" />
-      <file filePath="OpenRPA.Image\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Image\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <remarks>
-      </remarks>
-    </fileGroup>
-    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="da4648fb-1b4a-42b1-8afa-1bb44e685079">
-      <file filePath="OpenRPA.Interfaces\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Interfaces\Resources\strings.resx" uniqueID="90dd8559-d64d-4114-ba3c-87a94f01460c" />
-      <file filePath="OpenRPA.Interfaces\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Interfaces\Resources\strings.da.resx" uniqueID="7f724527-25c1-4ae1-a7ec-0d3add1302eb" />
-      <file filePath="OpenRPA.Interfaces\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Interfaces\Resources\strings.de.resx" uniqueID="618999cb-a48e-4620-b7ca-a8c467af5f10" />
-      <file filePath="OpenRPA.Interfaces\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Interfaces\Resources\strings.es.resx" uniqueID="1f43511b-e913-4edf-b957-f4bca7e8813d" />
-      <file filePath="OpenRPA.Interfaces\Resources\strings.ja.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Interfaces\Resources\strings.ja.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="OpenRPA.Interfaces\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Interfaces\Resources\strings.pt.resx" uniqueID="09b6cf89-a6b0-470a-8eb1-56ce9ae0c4d0" />
-      <file filePath="OpenRPA.Interfaces\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Interfaces\Resources\strings.ro.resx" uniqueID="6c229715-0a1b-47d9-bb74-df5e73c26506" />
-      <file filePath="OpenRPA.Interfaces\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Interfaces\Resources\strings.ru.resx" uniqueID="1aa0da2f-cbca-457a-a143-4bdd8a4e191a" />
-      <file filePath="OpenRPA.Interfaces\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Interfaces\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <remarks>
-      </remarks>
-    </fileGroup>
-    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="356cded5-ef7e-4b0d-afb9-0c61ea3b3bf7">
-      <file filePath="OpenRPA.Java\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Java\Resources\strings.resx" uniqueID="c9ca1199-dfca-45c7-85ea-97c7f9e5f74c" />
-      <file filePath="OpenRPA.Java\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Java\Resources\strings.da.resx" uniqueID="10acbe8e-f2af-45a4-a6c6-2253b30e2507" />
-      <file filePath="OpenRPA.Java\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Java\Resources\strings.de.resx" uniqueID="edb06a4c-4a5b-4176-8c5f-9a2a4f3fd6be" />
-      <file filePath="OpenRPA.Java\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Java\Resources\strings.es.resx" uniqueID="39c576bc-9c45-4183-a29f-155779d549ae" />
-      <file filePath="OpenRPA.Java\Resources\strings.ja.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Java\Resources\strings.ja.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="OpenRPA.Java\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Java\Resources\strings.pt.resx" uniqueID="f7c1a35f-b6e2-4cbb-8d25-11f54a54190c" />
-      <file filePath="OpenRPA.Java\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Java\Resources\strings.ro.resx" uniqueID="3a2cf438-da45-4e50-94c6-e856ea755b9e" />
-      <file filePath="OpenRPA.Java\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Java\Resources\strings.ru.resx" uniqueID="ab36bb7b-0d94-441e-86d2-eec0d7ee9c9f" />
-      <file filePath="OpenRPA.Java\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Java\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <remarks>
-      </remarks>
-    </fileGroup>
-    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="88dd8a60-f8ca-499b-90c0-7ca081cd92e3">
-      <file filePath="OpenRPA.NM\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.NM\Resources\strings.resx" uniqueID="700cb603-7b06-4a43-a333-491e1745a37b" />
-      <file filePath="OpenRPA.NM\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.NM\Resources\strings.da.resx" uniqueID="12dde718-577d-40eb-a28e-8a6d49aef871" />
-      <file filePath="OpenRPA.NM\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.NM\Resources\strings.de.resx" uniqueID="9d7a1c95-9669-4b9e-9252-61f8218d6bca" />
-      <file filePath="OpenRPA.NM\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.NM\Resources\strings.es.resx" uniqueID="d5121482-2c12-4b77-80b8-a95ea54a9554" />
-      <file filePath="OpenRPA.NM\Resources\strings.ja.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.NM\Resources\strings.ja.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="OpenRPA.NM\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.NM\Resources\strings.pt.resx" uniqueID="feb09d82-a07d-4953-b0f2-8b71c47827b5" />
-      <file filePath="OpenRPA.NM\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.NM\Resources\strings.ro.resx" uniqueID="1d30cf81-3808-4df9-84f6-abc767afa6ed" />
-      <file filePath="OpenRPA.NM\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.NM\Resources\strings.ru.resx" uniqueID="30fa6a86-ce07-4d83-886d-7bb41ac429bc" />
-      <file filePath="OpenRPA.NM\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.NM\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <remarks>
-      </remarks>
-    </fileGroup>
-    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="1523c404-6aa6-48a7-9040-debf603212dd">
-      <file filePath="OpenRPA.Office\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Office\Resources\strings.resx" uniqueID="f383412a-ce7e-4d96-9f5a-24a8108275be" />
-      <file filePath="OpenRPA.Office\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Office\Resources\strings.da.resx" uniqueID="a122000b-e408-4aa4-be38-6b25b1468b72" />
-      <file filePath="OpenRPA.Office\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Office\Resources\strings.de.resx" uniqueID="9611db85-f018-4db6-941a-c36de9c30715" />
-      <file filePath="OpenRPA.Office\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Office\Resources\strings.es.resx" uniqueID="c634374f-a2db-455d-a7ee-9d91ba6e305e" />
-      <file filePath="OpenRPA.Office\Resources\strings.ja.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Office\Resources\strings.ja.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="OpenRPA.Office\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Office\Resources\strings.pt.resx" uniqueID="77571dee-2473-4d0a-bb8e-99422d00df1c" />
-      <file filePath="OpenRPA.Office\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Office\Resources\strings.ro.resx" uniqueID="034b0795-002b-474a-be79-a6c8da800492" />
-      <file filePath="OpenRPA.Office\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Office\Resources\strings.ru.resx" uniqueID="26616f31-5ead-4bf7-8451-d1b68b21e86e" />
-      <file filePath="OpenRPA.Office\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Office\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <remarks>
-      </remarks>
-    </fileGroup>
-    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="b5a88d34-f67a-495e-ba0f-fcb999662c55">
-      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.OpenFlowDB\Resources\strings.resx" uniqueID="83f4da4e-6354-4176-ad8a-703245405c23" />
-      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.OpenFlowDB\Resources\strings.da.resx" uniqueID="493617aa-6e2e-4459-877f-7e4eab3d1fc0" />
-      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.OpenFlowDB\Resources\strings.de.resx" uniqueID="05723285-50b1-4b35-b28f-b4475ad90e81" />
-      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.OpenFlowDB\Resources\strings.es.resx" uniqueID="87c0b819-621b-4162-bd9d-31e0aeb98b72" />
-      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.ja.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.OpenFlowDB\Resources\strings.ja.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.OpenFlowDB\Resources\strings.pt.resx" uniqueID="ea3bb747-de0e-4916-a5ed-c953fd8bcea8" />
-      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.OpenFlowDB\Resources\strings.ro.resx" uniqueID="a9d52c2b-aa24-4692-9a69-2303b04bfaca" />
-      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.OpenFlowDB\Resources\strings.ru.resx" uniqueID="468172fb-1199-4db8-936e-98fc1886462d" />
-      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.OpenFlowDB\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <remarks>
-      </remarks>
-    </fileGroup>
-    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="f953fa05-3ceb-43e7-ba50-7282c8d16675">
-      <file filePath="OpenRPA.PDPlugin\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.PDPlugin\Resources\strings.resx" uniqueID="d4e07955-b560-424a-ac77-e0bebd3833b4" />
-      <file filePath="OpenRPA.PDPlugin\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.PDPlugin\Resources\strings.da.resx" uniqueID="94ad87ff-c162-4165-8b37-8f4c23c17fc5" />
-      <file filePath="OpenRPA.PDPlugin\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.PDPlugin\Resources\strings.de.resx" uniqueID="7e57f2e5-e832-43a1-8e41-1efada31566e" />
-      <file filePath="OpenRPA.PDPlugin\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.PDPlugin\Resources\strings.es.resx" uniqueID="08af9263-13a8-483d-8a50-22f04a10bd13" />
-      <file filePath="OpenRPA.PDPlugin\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.PDPlugin\Resources\strings.pt.resx" uniqueID="83b02380-4c82-4f55-9a1a-8cbbb54f3c8b" />
-      <file filePath="OpenRPA.PDPlugin\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.PDPlugin\Resources\strings.ro.resx" uniqueID="27e19a1f-93e5-492e-9573-248718ef730a" />
-      <file filePath="OpenRPA.PDPlugin\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.PDPlugin\Resources\strings.ru.resx" uniqueID="1bf85145-a6eb-4b1a-b749-438566f292f9" />
-      <file filePath="OpenRPA.PDPlugin\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.PDPlugin\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <remarks>
-      </remarks>
-    </fileGroup>
-    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="400a0418-77c2-4e5f-b544-96e7f267e49b">
-      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.RDServicePlugin\Resources\strings.resx" uniqueID="c373fc63-67ca-4c2b-a520-37c2f4a3fedf" />
-      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.RDServicePlugin\Resources\strings.da.resx" uniqueID="439358c3-a8ae-40cd-99c8-563d93515607" />
-      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.RDServicePlugin\Resources\strings.de.resx" uniqueID="f6dba7ba-2f75-427e-b605-46d37fd23b66" />
-      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.RDServicePlugin\Resources\strings.es.resx" uniqueID="34c0bae5-b7b9-4b22-be76-7ac43a5a96e8" />
-      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.ja.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.RDServicePlugin\Resources\strings.ja.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.RDServicePlugin\Resources\strings.pt.resx" uniqueID="c6e1ceed-9966-49e7-b6b0-4f1c1bee997d" />
-      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.RDServicePlugin\Resources\strings.ro.resx" uniqueID="0c4f1d53-af3a-4219-bb44-65d94473d41c" />
-      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.RDServicePlugin\Resources\strings.ru.resx" uniqueID="c280384f-ef91-41c2-9256-15b0ab6d8678" />
-      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.RDServicePlugin\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <remarks>
-      </remarks>
-    </fileGroup>
-    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="b38f5b34-d383-4579-a9c9-7a9c422ee723">
-      <file filePath="OpenRPA.Script\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Script\Resources\strings.resx" uniqueID="2ee8993f-cccb-4143-aadb-711d041c732f" />
-      <file filePath="OpenRPA.Script\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Script\Resources\strings.da.resx" uniqueID="283da8f6-90b8-471c-98cb-a75b5d93f9f9" />
-      <file filePath="OpenRPA.Script\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Script\Resources\strings.de.resx" uniqueID="4a992232-7dbd-43e2-abbd-8f2b159ae0d3" />
-      <file filePath="OpenRPA.Script\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Script\Resources\strings.es.resx" uniqueID="0057c6ec-c2b2-451e-8e7a-eff57c24513a" />
-      <file filePath="OpenRPA.Script\Resources\strings.ja.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Script\Resources\strings.ja.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="OpenRPA.Script\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Script\Resources\strings.pt.resx" uniqueID="884a26b7-3dde-4bf3-8d03-9c010b7f2c9a" />
-      <file filePath="OpenRPA.Script\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Script\Resources\strings.ro.resx" uniqueID="9d23a371-50d1-4b75-a81b-fa86dc98e079" />
-      <file filePath="OpenRPA.Script\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Script\Resources\strings.ru.resx" uniqueID="2508de50-889a-44ff-8b7d-075803a7c763" />
-      <file filePath="OpenRPA.Script\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Script\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <remarks>
-      </remarks>
-    </fileGroup>
-    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="09971b99-8431-414b-b232-6c3e2c69298f">
-      <file filePath="OpenRPA.Updater\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Updater\Resources\strings.resx" uniqueID="a7f4e908-87c9-474f-83b8-01041c2872ff" />
-      <file filePath="OpenRPA.Updater\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Updater\Resources\strings.da.resx" uniqueID="640f6d5b-3b68-4d53-9a72-c34a86ed1418" />
-      <file filePath="OpenRPA.Updater\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Updater\Resources\strings.de.resx" uniqueID="12f76bb7-a306-4e17-aaf4-c2b09e4541a6" />
-      <file filePath="OpenRPA.Updater\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Updater\Resources\strings.es.resx" uniqueID="3420544a-a22d-41e2-b43e-bd72256cb1c8" />
-      <file filePath="OpenRPA.Updater\Resources\strings.ja.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Updater\Resources\strings.ja.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="OpenRPA.Updater\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Updater\Resources\strings.pt.resx" uniqueID="f932a8a7-f8dd-4f09-be0b-1febead1482d" />
-      <file filePath="OpenRPA.Updater\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Updater\Resources\strings.ro.resx" uniqueID="db64c3ad-572f-4ad7-bedd-8f870f9087d8" />
-      <file filePath="OpenRPA.Updater\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Updater\Resources\strings.ru.resx" uniqueID="afac416e-697f-4118-b8b7-7bd6233bce0d" />
-      <file filePath="OpenRPA.Updater\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Updater\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
+      <file filePath="OpenRPA.AviRecorder\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.resx" uniqueID="77b75242-f5ae-4d8d-8870-79a88588c51d" />
+      <file filePath="OpenRPA.AviRecorder\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.da.resx" uniqueID="24c4acb6-25fd-4310-bff5-6032c32e77d9" />
+      <file filePath="OpenRPA.AviRecorder\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.de.resx" uniqueID="d89051f0-cc9f-49a5-a63f-8ad7cb28b747" />
+      <file filePath="OpenRPA.AviRecorder\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.es.resx" uniqueID="fcc8937b-30cf-40ab-9ca0-72a7e2be1442" />
+      <file filePath="OpenRPA.AviRecorder\Resources\strings.ja.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.ja.resx" uniqueID="c70ec230-929a-4a1b-9e9d-e6485b8eb5f8" />
+      <file filePath="OpenRPA.AviRecorder\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.pt.resx" uniqueID="729e3f9f-0ebd-4b5e-aa41-637f9b19fd4f" />
+      <file filePath="OpenRPA.AviRecorder\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.ro.resx" uniqueID="30446c2e-4f1c-4530-9375-f54176e9555d" />
+      <file filePath="OpenRPA.AviRecorder\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.ru.resx" uniqueID="a33a2704-ead0-44c5-a1ce-bb00d604112e" />
+      <file filePath="OpenRPA.AviRecorder\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.AviRecorder\Resources\strings.zh.resx" uniqueID="44097a58-da5e-49ae-9ef0-eb849eccece7" />
       <remarks>
       </remarks>
     </fileGroup>
     <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="9151cc7a-017d-4b13-834a-8d2d4d7ae1a9">
-      <file filePath="OpenRPA.Utilities\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Utilities\Resources\strings.resx" uniqueID="864de2dd-2c46-44fc-9b1b-cf835cd2842e" />
-      <file filePath="OpenRPA.Utilities\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Utilities\Resources\strings.da.resx" uniqueID="17902d0f-e84e-4e4b-a110-7c4878fa1bb6" />
-      <file filePath="OpenRPA.Utilities\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Utilities\Resources\strings.de.resx" uniqueID="ec527e33-6bb1-46e2-890f-2823ded6f555" />
-      <file filePath="OpenRPA.Utilities\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Utilities\Resources\strings.es.resx" uniqueID="bc916b03-31f5-4c02-9206-a005f08c6565" />
-      <file filePath="OpenRPA.Utilities\Resources\strings.ja.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Utilities\Resources\strings.ja.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="OpenRPA.Utilities\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Utilities\Resources\strings.pt.resx" uniqueID="10664076-6dd2-41ba-ac1a-677876d67af1" />
-      <file filePath="OpenRPA.Utilities\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Utilities\Resources\strings.ro.resx" uniqueID="bffd34f1-860a-476e-b894-a00461176039" />
-      <file filePath="OpenRPA.Utilities\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Utilities\Resources\strings.ru.resx" uniqueID="8a4a7820-e0d1-4cdd-a188-be34108b43f6" />
-      <file filePath="OpenRPA.Utilities\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Utilities\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
+      <file filePath="OpenRPA.Utilities\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.resx" uniqueID="864de2dd-2c46-44fc-9b1b-cf835cd2842e" />
+      <file filePath="OpenRPA.Utilities\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.da.resx" uniqueID="17902d0f-e84e-4e4b-a110-7c4878fa1bb6" />
+      <file filePath="OpenRPA.Utilities\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.de.resx" uniqueID="ec527e33-6bb1-46e2-890f-2823ded6f555" />
+      <file filePath="OpenRPA.Utilities\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.es.resx" uniqueID="bc916b03-31f5-4c02-9206-a005f08c6565" />
+      <file filePath="OpenRPA.Utilities\Resources\strings.ja.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.ja.resx" uniqueID="184a2080-d214-4e0c-be69-5dea38ae8305" />
+      <file filePath="OpenRPA.Utilities\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.pt.resx" uniqueID="10664076-6dd2-41ba-ac1a-677876d67af1" />
+      <file filePath="OpenRPA.Utilities\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.ro.resx" uniqueID="bffd34f1-860a-476e-b894-a00461176039" />
+      <file filePath="OpenRPA.Utilities\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.ru.resx" uniqueID="8a4a7820-e0d1-4cdd-a188-be34108b43f6" />
+      <file filePath="OpenRPA.Utilities\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Utilities\Resources\strings.zh.resx" uniqueID="e72b1882-fd51-4f9d-a183-49193ed279f0" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="09971b99-8431-414b-b232-6c3e2c69298f">
+      <file filePath="OpenRPA.Updater\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.resx" uniqueID="a7f4e908-87c9-474f-83b8-01041c2872ff" />
+      <file filePath="OpenRPA.Updater\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.da.resx" uniqueID="640f6d5b-3b68-4d53-9a72-c34a86ed1418" />
+      <file filePath="OpenRPA.Updater\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.de.resx" uniqueID="12f76bb7-a306-4e17-aaf4-c2b09e4541a6" />
+      <file filePath="OpenRPA.Updater\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.es.resx" uniqueID="3420544a-a22d-41e2-b43e-bd72256cb1c8" />
+      <file filePath="OpenRPA.Updater\Resources\strings.ja.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.ja.resx" uniqueID="ae08181c-3d20-40e6-8658-139f4249dc96" />
+      <file filePath="OpenRPA.Updater\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.pt.resx" uniqueID="f932a8a7-f8dd-4f09-be0b-1febead1482d" />
+      <file filePath="OpenRPA.Updater\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.ro.resx" uniqueID="db64c3ad-572f-4ad7-bedd-8f870f9087d8" />
+      <file filePath="OpenRPA.Updater\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.ru.resx" uniqueID="afac416e-697f-4118-b8b7-7bd6233bce0d" />
+      <file filePath="OpenRPA.Updater\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Updater\Resources\strings.zh.resx" uniqueID="7cca5672-6728-4760-b8bb-5d2fbcd8cd36" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="b38f5b34-d383-4579-a9c9-7a9c422ee723">
+      <file filePath="OpenRPA.Script\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.resx" uniqueID="2ee8993f-cccb-4143-aadb-711d041c732f" />
+      <file filePath="OpenRPA.Script\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.da.resx" uniqueID="283da8f6-90b8-471c-98cb-a75b5d93f9f9" />
+      <file filePath="OpenRPA.Script\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.de.resx" uniqueID="4a992232-7dbd-43e2-abbd-8f2b159ae0d3" />
+      <file filePath="OpenRPA.Script\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.es.resx" uniqueID="0057c6ec-c2b2-451e-8e7a-eff57c24513a" />
+      <file filePath="OpenRPA.Script\Resources\strings.ja.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.ja.resx" uniqueID="ec5b494d-f974-4ac4-a72d-6fe0350d315a" />
+      <file filePath="OpenRPA.Script\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.pt.resx" uniqueID="884a26b7-3dde-4bf3-8d03-9c010b7f2c9a" />
+      <file filePath="OpenRPA.Script\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.ro.resx" uniqueID="9d23a371-50d1-4b75-a81b-fa86dc98e079" />
+      <file filePath="OpenRPA.Script\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.ru.resx" uniqueID="2508de50-889a-44ff-8b7d-075803a7c763" />
+      <file filePath="OpenRPA.Script\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Script\Resources\strings.zh.resx" uniqueID="d90d7318-460d-4411-952d-31b94b42a0fe" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="400a0418-77c2-4e5f-b544-96e7f267e49b">
+      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.resx" uniqueID="c373fc63-67ca-4c2b-a520-37c2f4a3fedf" />
+      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.da.resx" uniqueID="439358c3-a8ae-40cd-99c8-563d93515607" />
+      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.de.resx" uniqueID="f6dba7ba-2f75-427e-b605-46d37fd23b66" />
+      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.es.resx" uniqueID="34c0bae5-b7b9-4b22-be76-7ac43a5a96e8" />
+      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.ja.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.ja.resx" uniqueID="ec30d6ea-c63e-4b78-bbce-805e6848e587" />
+      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.pt.resx" uniqueID="c6e1ceed-9966-49e7-b6b0-4f1c1bee997d" />
+      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.ro.resx" uniqueID="0c4f1d53-af3a-4219-bb44-65d94473d41c" />
+      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.ru.resx" uniqueID="c280384f-ef91-41c2-9256-15b0ab6d8678" />
+      <file filePath="OpenRPA.RDServicePlugin\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.RDServicePlugin\Resources\strings.zh.resx" uniqueID="d447693a-53d0-4b32-86ce-ff6f15d924bb" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="f953fa05-3ceb-43e7-ba50-7282c8d16675">
+      <file filePath="OpenRPA.PDPlugin\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.PDPlugin\Resources\strings.resx" uniqueID="d4e07955-b560-424a-ac77-e0bebd3833b4" />
+      <file filePath="OpenRPA.PDPlugin\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.PDPlugin\Resources\strings.da.resx" uniqueID="94ad87ff-c162-4165-8b37-8f4c23c17fc5" />
+      <file filePath="OpenRPA.PDPlugin\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.PDPlugin\Resources\strings.de.resx" uniqueID="7e57f2e5-e832-43a1-8e41-1efada31566e" />
+      <file filePath="OpenRPA.PDPlugin\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.PDPlugin\Resources\strings.es.resx" uniqueID="08af9263-13a8-483d-8a50-22f04a10bd13" />
+      <file filePath="OpenRPA.PDPlugin\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.PDPlugin\Resources\strings.pt.resx" uniqueID="83b02380-4c82-4f55-9a1a-8cbbb54f3c8b" />
+      <file filePath="OpenRPA.PDPlugin\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.PDPlugin\Resources\strings.ro.resx" uniqueID="27e19a1f-93e5-492e-9573-248718ef730a" />
+      <file filePath="OpenRPA.PDPlugin\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.PDPlugin\Resources\strings.ru.resx" uniqueID="1bf85145-a6eb-4b1a-b749-438566f292f9" />
+      <file filePath="OpenRPA.PDPlugin\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.PDPlugin\Resources\strings.zh.resx" uniqueID="a90ced88-8b24-4d7f-b00c-1e7e3e1fe32e" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="b5a88d34-f67a-495e-ba0f-fcb999662c55">
+      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.resx" uniqueID="83f4da4e-6354-4176-ad8a-703245405c23" />
+      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.da.resx" uniqueID="493617aa-6e2e-4459-877f-7e4eab3d1fc0" />
+      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.de.resx" uniqueID="05723285-50b1-4b35-b28f-b4475ad90e81" />
+      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.es.resx" uniqueID="87c0b819-621b-4162-bd9d-31e0aeb98b72" />
+      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.ja.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.ja.resx" uniqueID="981819db-8cf2-4c16-9ab0-dd3c98ac8fc0" />
+      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.pt.resx" uniqueID="ea3bb747-de0e-4916-a5ed-c953fd8bcea8" />
+      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.ro.resx" uniqueID="a9d52c2b-aa24-4692-9a69-2303b04bfaca" />
+      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.ru.resx" uniqueID="468172fb-1199-4db8-936e-98fc1886462d" />
+      <file filePath="OpenRPA.OpenFlowDB\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.OpenFlowDB\Resources\strings.zh.resx" uniqueID="02fe93ac-076a-4d31-b0a1-da270653101c" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="1523c404-6aa6-48a7-9040-debf603212dd">
+      <file filePath="OpenRPA.Office\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.resx" uniqueID="f383412a-ce7e-4d96-9f5a-24a8108275be" />
+      <file filePath="OpenRPA.Office\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.da.resx" uniqueID="a122000b-e408-4aa4-be38-6b25b1468b72" />
+      <file filePath="OpenRPA.Office\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.de.resx" uniqueID="9611db85-f018-4db6-941a-c36de9c30715" />
+      <file filePath="OpenRPA.Office\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.es.resx" uniqueID="c634374f-a2db-455d-a7ee-9d91ba6e305e" />
+      <file filePath="OpenRPA.Office\Resources\strings.ja.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.ja.resx" uniqueID="9f0fe9b5-4d00-4eb1-ab71-1adb3a0dca35" />
+      <file filePath="OpenRPA.Office\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.pt.resx" uniqueID="77571dee-2473-4d0a-bb8e-99422d00df1c" />
+      <file filePath="OpenRPA.Office\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.ro.resx" uniqueID="034b0795-002b-474a-be79-a6c8da800492" />
+      <file filePath="OpenRPA.Office\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.ru.resx" uniqueID="26616f31-5ead-4bf7-8451-d1b68b21e86e" />
+      <file filePath="OpenRPA.Office\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Office\Resources\strings.zh.resx" uniqueID="85aedb30-1a5e-4a8a-b896-50279f88e4e5" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="88dd8a60-f8ca-499b-90c0-7ca081cd92e3">
+      <file filePath="OpenRPA.NM\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.resx" uniqueID="700cb603-7b06-4a43-a333-491e1745a37b" />
+      <file filePath="OpenRPA.NM\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.da.resx" uniqueID="12dde718-577d-40eb-a28e-8a6d49aef871" />
+      <file filePath="OpenRPA.NM\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.de.resx" uniqueID="9d7a1c95-9669-4b9e-9252-61f8218d6bca" />
+      <file filePath="OpenRPA.NM\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.es.resx" uniqueID="d5121482-2c12-4b77-80b8-a95ea54a9554" />
+      <file filePath="OpenRPA.NM\Resources\strings.ja.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.ja.resx" uniqueID="65651e9f-e94f-44a6-9410-e14b7d7f2ad0" />
+      <file filePath="OpenRPA.NM\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.pt.resx" uniqueID="feb09d82-a07d-4953-b0f2-8b71c47827b5" />
+      <file filePath="OpenRPA.NM\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.ro.resx" uniqueID="1d30cf81-3808-4df9-84f6-abc767afa6ed" />
+      <file filePath="OpenRPA.NM\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.ru.resx" uniqueID="30fa6a86-ce07-4d83-886d-7bb41ac429bc" />
+      <file filePath="OpenRPA.NM\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.NM\Resources\strings.zh.resx" uniqueID="aadc5979-6fb4-45c4-b53e-26f2e85c6bc7" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="356cded5-ef7e-4b0d-afb9-0c61ea3b3bf7">
+      <file filePath="OpenRPA.Java\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.resx" uniqueID="c9ca1199-dfca-45c7-85ea-97c7f9e5f74c" />
+      <file filePath="OpenRPA.Java\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.da.resx" uniqueID="10acbe8e-f2af-45a4-a6c6-2253b30e2507" />
+      <file filePath="OpenRPA.Java\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.de.resx" uniqueID="edb06a4c-4a5b-4176-8c5f-9a2a4f3fd6be" />
+      <file filePath="OpenRPA.Java\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.es.resx" uniqueID="39c576bc-9c45-4183-a29f-155779d549ae" />
+      <file filePath="OpenRPA.Java\Resources\strings.ja.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.ja.resx" uniqueID="bf10e983-e619-481c-abf6-01e26fc048a3" />
+      <file filePath="OpenRPA.Java\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.pt.resx" uniqueID="f7c1a35f-b6e2-4cbb-8d25-11f54a54190c" />
+      <file filePath="OpenRPA.Java\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.ro.resx" uniqueID="3a2cf438-da45-4e50-94c6-e856ea755b9e" />
+      <file filePath="OpenRPA.Java\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.ru.resx" uniqueID="ab36bb7b-0d94-441e-86d2-eec0d7ee9c9f" />
+      <file filePath="OpenRPA.Java\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Java\Resources\strings.zh.resx" uniqueID="278d8fc7-138e-4d8d-ab69-ca2f6b98a2e0" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="da4648fb-1b4a-42b1-8afa-1bb44e685079">
+      <file filePath="OpenRPA.Interfaces\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.resx" uniqueID="90dd8559-d64d-4114-ba3c-87a94f01460c" />
+      <file filePath="OpenRPA.Interfaces\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.da.resx" uniqueID="7f724527-25c1-4ae1-a7ec-0d3add1302eb" />
+      <file filePath="OpenRPA.Interfaces\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.de.resx" uniqueID="618999cb-a48e-4620-b7ca-a8c467af5f10" />
+      <file filePath="OpenRPA.Interfaces\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.es.resx" uniqueID="1f43511b-e913-4edf-b957-f4bca7e8813d" />
+      <file filePath="OpenRPA.Interfaces\Resources\strings.ja.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.ja.resx" uniqueID="7fe662b8-8bff-4742-9d72-ecf9deecba90" />
+      <file filePath="OpenRPA.Interfaces\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.pt.resx" uniqueID="09b6cf89-a6b0-470a-8eb1-56ce9ae0c4d0" />
+      <file filePath="OpenRPA.Interfaces\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.ro.resx" uniqueID="6c229715-0a1b-47d9-bb74-df5e73c26506" />
+      <file filePath="OpenRPA.Interfaces\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.ru.resx" uniqueID="1aa0da2f-cbca-457a-a143-4bdd8a4e191a" />
+      <file filePath="OpenRPA.Interfaces\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Interfaces\Resources\strings.zh.resx" uniqueID="723ff95e-ab0f-4e77-88cb-c58ee4838b8e" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="01537dc1-09fc-4d7b-8f1e-127f618dcdde">
+      <file filePath="OpenRPA.Image\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.resx" uniqueID="801730e4-c37f-4b53-ad41-98049ac75d17" />
+      <file filePath="OpenRPA.Image\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.da.resx" uniqueID="567f91a8-b9ef-40bc-965a-3e7e3e8620c7" />
+      <file filePath="OpenRPA.Image\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.de.resx" uniqueID="e79b28a3-918c-4bd5-a46f-25a6ee4bb0f3" />
+      <file filePath="OpenRPA.Image\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.es.resx" uniqueID="03cdaa33-45b0-444f-9ff8-d49618704520" />
+      <file filePath="OpenRPA.Image\Resources\strings.ja.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.ja.resx" uniqueID="0b427915-8425-41b3-ab32-6a48c0afef08" />
+      <file filePath="OpenRPA.Image\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.pt.resx" uniqueID="1991a566-c66f-428a-929a-9667e4eb3374" />
+      <file filePath="OpenRPA.Image\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.ro.resx" uniqueID="02cca9c9-beeb-425d-ba04-60ed58d12958" />
+      <file filePath="OpenRPA.Image\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.ru.resx" uniqueID="c4eaf36b-e3d8-44df-bd50-0a089b10359b" />
+      <file filePath="OpenRPA.Image\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Image\Resources\strings.zh.resx" uniqueID="3554fa35-0594-4915-b4aa-8fab5b683b68" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="e55d03f4-c3e9-4d44-825e-72e5fc7cfc4b">
+      <file filePath="OpenRPA.IE\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.resx" uniqueID="a6554d0b-a056-4367-b527-77f20a543703" />
+      <file filePath="OpenRPA.IE\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.da.resx" uniqueID="661af296-fac6-4d2f-8145-57a3db9520f5" />
+      <file filePath="OpenRPA.IE\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.de.resx" uniqueID="7df49290-4d8b-4461-bb67-f71bc9022afa" />
+      <file filePath="OpenRPA.IE\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.es.resx" uniqueID="e4f01520-8c21-446d-8a71-29e54512791e" />
+      <file filePath="OpenRPA.IE\Resources\strings.ja.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.ja.resx" uniqueID="00e86682-3ad1-4a8f-ac4f-6bc7a21ee48b" />
+      <file filePath="OpenRPA.IE\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.pt.resx" uniqueID="1e4b871b-223d-49ec-9576-7e4d517ddfb9" />
+      <file filePath="OpenRPA.IE\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.ro.resx" uniqueID="fb8327b2-f630-4c15-bbaf-681847a993b5" />
+      <file filePath="OpenRPA.IE\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.ru.resx" uniqueID="9bfea443-3ead-4741-affc-24ff05471e3a" />
+      <file filePath="OpenRPA.IE\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.IE\Resources\strings.zh.resx" uniqueID="bc4771c9-4197-4393-b8d1-c6398f44fe04" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="566baf62-2704-4712-bbc9-bf98766d7910">
+      <file filePath="OpenRPA.Forms\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.resx" uniqueID="038ccbc5-5833-4daf-9c47-da8ddf7915a0" />
+      <file filePath="OpenRPA.Forms\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.da.resx" uniqueID="5c92b926-7299-4b0f-aaef-b715362132ef" />
+      <file filePath="OpenRPA.Forms\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.de.resx" uniqueID="2ffe558d-c8ad-413c-a118-3cce4bfcd57d" />
+      <file filePath="OpenRPA.Forms\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.es.resx" uniqueID="b7a7eab7-9c07-41aa-9977-aceec2d3e9ef" />
+      <file filePath="OpenRPA.Forms\Resources\strings.ja.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.ja.resx" uniqueID="8f7670bf-c925-45c4-84e8-026dee692b63" />
+      <file filePath="OpenRPA.Forms\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.pt.resx" uniqueID="803856d8-daa3-4e15-ab19-a4f6cbb60c80" />
+      <file filePath="OpenRPA.Forms\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.ro.resx" uniqueID="6c49f4f5-2219-424c-8eb0-f937520c0034" />
+      <file filePath="OpenRPA.Forms\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.ru.resx" uniqueID="f501f459-2999-4301-8536-81612c33629b" />
+      <file filePath="OpenRPA.Forms\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Forms\Resources\strings.zh.resx" uniqueID="469fbd4e-cfc0-42c9-9903-2b288fb6f551" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="e0a9b55d-33c0-46c9-afaf-09a6d889306d">
+      <file filePath="OpenRPA.FileWatcher\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.resx" uniqueID="54643cbd-bebe-4cc3-a95f-733a971e5dd3" />
+      <file filePath="OpenRPA.FileWatcher\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.da.resx" uniqueID="919bd829-33f0-4026-8501-fe3e5116a8bb" />
+      <file filePath="OpenRPA.FileWatcher\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.de.resx" uniqueID="4b1a2692-b691-4bf3-b552-e4142d865c47" />
+      <file filePath="OpenRPA.FileWatcher\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.es.resx" uniqueID="98d88f03-46e6-4fe3-bc00-b3abc8827c05" />
+      <file filePath="OpenRPA.FileWatcher\Resources\strings.ja.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.ja.resx" uniqueID="1bcba200-bc23-4519-8c43-3e3b30098c73" />
+      <file filePath="OpenRPA.FileWatcher\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.pt.resx" uniqueID="aa55014a-8c86-4888-8188-a75627f975da" />
+      <file filePath="OpenRPA.FileWatcher\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.ro.resx" uniqueID="5b27f44a-7de5-4339-806a-6df802374913" />
+      <file filePath="OpenRPA.FileWatcher\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.ru.resx" uniqueID="3393b80b-5ecb-4c88-a57c-6038998acf21" />
+      <file filePath="OpenRPA.FileWatcher\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.FileWatcher\Resources\strings.zh.resx" uniqueID="9ac9fa78-ffa3-4177-8c43-60c0f577809b" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="89c90263-eb0a-44b3-9eb2-bcb248006d63">
+      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.resx" uniqueID="57a4c4fb-352d-4586-91b0-29fee3b773b0" />
+      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.da.resx" uniqueID="82f25b1b-1619-415b-a0ce-7536b4f0b507" />
+      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.de.resx" uniqueID="160dbe18-f6e5-4052-bf84-9b0893faa42f" />
+      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.es.resx" uniqueID="973f2692-1356-43d6-ba5a-9aa1805d6eed" />
+      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.ja.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.ja.resx" uniqueID="72905dcc-f141-44af-bab9-ab513cbb44c6" />
+      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.pt.resx" uniqueID="4b77c38e-1e2a-4a6a-a920-b662702f85c7" />
+      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.ro.resx" uniqueID="dd375a58-5fe8-43ea-85cc-37ab628f9ae0" />
+      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.ru.resx" uniqueID="994eca3b-9705-41db-bb16-6cade99936e9" />
+      <file filePath="OpenRPA.Elis.Rossum\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Elis.Rossum\Resources\strings.zh.resx" uniqueID="6777d415-8571-446f-83a5-820ccd85631d" />
       <remarks>
       </remarks>
     </fileGroup>
     <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="42151882-e242-4e24-b944-4adb8c250e5b">
-      <file filePath="OpenRPA.Windows\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Windows\Resources\strings.resx" uniqueID="04d21e30-38fc-46cd-9204-2ce303e9a9ac" />
-      <file filePath="OpenRPA.Windows\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Windows\Resources\strings.da.resx" uniqueID="ec1eedaf-ee1b-404c-be65-3cde32388499" />
-      <file filePath="OpenRPA.Windows\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Windows\Resources\strings.de.resx" uniqueID="4d4e397c-381b-48fc-afd0-0352699b97f2" />
-      <file filePath="OpenRPA.Windows\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Windows\Resources\strings.es.resx" uniqueID="b6623472-87fb-4dc1-9fc6-9747d205469d" />
-      <file filePath="OpenRPA.Windows\Resources\strings.ja.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Windows\Resources\strings.ja.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="OpenRPA.Windows\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Windows\Resources\strings.pt.resx" uniqueID="a96539cf-4bab-46bd-bd01-5452f1e53d3b" />
-      <file filePath="OpenRPA.Windows\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Windows\Resources\strings.ro.resx" uniqueID="22f8935b-0050-4965-b85c-4ac4dfaf89ec" />
-      <file filePath="OpenRPA.Windows\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Windows\Resources\strings.ru.resx" uniqueID="35f8e956-0ecd-4489-8266-284d811580d4" />
-      <file filePath="OpenRPA.Windows\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA.Windows\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
+      <file filePath="OpenRPA.Windows\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.resx" uniqueID="04d21e30-38fc-46cd-9204-2ce303e9a9ac" />
+      <file filePath="OpenRPA.Windows\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.da.resx" uniqueID="ec1eedaf-ee1b-404c-be65-3cde32388499" />
+      <file filePath="OpenRPA.Windows\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.de.resx" uniqueID="4d4e397c-381b-48fc-afd0-0352699b97f2" />
+      <file filePath="OpenRPA.Windows\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.es.resx" uniqueID="b6623472-87fb-4dc1-9fc6-9747d205469d" />
+      <file filePath="OpenRPA.Windows\Resources\strings.ja.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.ja.resx" uniqueID="db2896b5-b62c-4ee0-bbf4-feb9a19314d1" />
+      <file filePath="OpenRPA.Windows\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.pt.resx" uniqueID="a96539cf-4bab-46bd-bd01-5452f1e53d3b" />
+      <file filePath="OpenRPA.Windows\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.ro.resx" uniqueID="22f8935b-0050-4965-b85c-4ac4dfaf89ec" />
+      <file filePath="OpenRPA.Windows\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.ru.resx" uniqueID="35f8e956-0ecd-4489-8266-284d811580d4" />
+      <file filePath="OpenRPA.Windows\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA.Windows\Resources\strings.zh.resx" uniqueID="9642e1ec-f7ce-407f-b44a-e3c541571584" />
       <remarks>
       </remarks>
     </fileGroup>
     <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="8afb22d9-056f-45de-8382-e726d16d57cc">
-      <file filePath="OpenRPA\Resources\strings.resx" absoluteFilePath="C:\code\openrpa\OpenRPA\Resources\strings.resx" uniqueID="87af8d25-5de2-4ea6-abf6-a0ddc8debbd6" />
-      <file filePath="OpenRPA\Resources\strings.da.resx" absoluteFilePath="C:\code\openrpa\OpenRPA\Resources\strings.da.resx" uniqueID="c71eb10b-bdbd-4520-926d-1d82c4093da6" />
-      <file filePath="OpenRPA\Resources\strings.de.resx" absoluteFilePath="C:\code\openrpa\OpenRPA\Resources\strings.de.resx" uniqueID="a96064d1-1bec-4215-88ff-dee71258fef4" />
-      <file filePath="OpenRPA\Resources\strings.es.resx" absoluteFilePath="C:\code\openrpa\OpenRPA\Resources\strings.es.resx" uniqueID="4064d243-8f2a-44ad-b02a-787f06f4d141" />
-      <file filePath="OpenRPA\Resources\strings.ja.resx" absoluteFilePath="C:\code\openrpa\OpenRPA\Resources\strings.ja.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="OpenRPA\Resources\strings.pt.resx" absoluteFilePath="C:\code\openrpa\OpenRPA\Resources\strings.pt.resx" uniqueID="f655fef9-7b4f-44bb-bf70-69a1b3f18ce6" />
-      <file filePath="OpenRPA\Resources\strings.ro.resx" absoluteFilePath="C:\code\openrpa\OpenRPA\Resources\strings.ro.resx" uniqueID="806ce675-ba7b-4954-b175-3b830e684e01" />
-      <file filePath="OpenRPA\Resources\strings.ru.resx" absoluteFilePath="C:\code\openrpa\OpenRPA\Resources\strings.ru.resx" uniqueID="0062e957-02f6-4824-b416-8afd9eac07f2" />
-      <file filePath="OpenRPA\Resources\strings.zh.resx" absoluteFilePath="C:\code\openrpa\OpenRPA\Resources\strings.zh.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
+      <file filePath="OpenRPA\Resources\strings.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.resx" uniqueID="87af8d25-5de2-4ea6-abf6-a0ddc8debbd6" />
+      <file filePath="OpenRPA\Resources\strings.da.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.da.resx" uniqueID="c71eb10b-bdbd-4520-926d-1d82c4093da6" />
+      <file filePath="OpenRPA\Resources\strings.de.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.de.resx" uniqueID="a96064d1-1bec-4215-88ff-dee71258fef4" />
+      <file filePath="OpenRPA\Resources\strings.es.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.es.resx" uniqueID="4064d243-8f2a-44ad-b02a-787f06f4d141" />
+      <file filePath="OpenRPA\Resources\strings.ja.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.ja.resx" uniqueID="675c942f-131d-4db4-98d8-39192e75ff09" />
+      <file filePath="OpenRPA\Resources\strings.pt.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.pt.resx" uniqueID="f655fef9-7b4f-44bb-bf70-69a1b3f18ce6" />
+      <file filePath="OpenRPA\Resources\strings.ro.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.ro.resx" uniqueID="806ce675-ba7b-4954-b175-3b830e684e01" />
+      <file filePath="OpenRPA\Resources\strings.ru.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.ru.resx" uniqueID="0062e957-02f6-4824-b416-8afd9eac07f2" />
+      <file filePath="OpenRPA\Resources\strings.zh.resx" absoluteFilePath="C:\Users\sandw\Desktop\Work\OpenRPA\openrpa-1\OpenRPA\Resources\strings.zh.resx" uniqueID="1fb9a6f9-6a35-495f-866f-9b1d53a0a8f2" />
       <remarks>
       </remarks>
     </fileGroup>

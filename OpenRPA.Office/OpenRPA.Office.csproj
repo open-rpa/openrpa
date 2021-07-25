@@ -7,8 +7,9 @@
     <Product>OpenRPA</Product>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Description>Collection of activities to work with office, and a recorder plugin for recording clicks in office, created for OpenRPA robot</Description>
-    <Version>1.0.33</Version>
-    <PackageReleaseNotes>1.0.33 Add ReplyMailItem
+    <Version>1.0.34</Version>
+    <PackageReleaseNotes>1.0.34 Add Export Workbook
+1.0.33 Add ReplyMailItem
 1.0.32 Fix creating missing worksheets in typed activities
 1.0.31 Fix Move Mail to support multiple accounts
 1.0.30 Fix GetMails to support multiple accounts
@@ -62,6 +63,7 @@
     <None Remove="Activities\ClearRangeDesigner.xaml" />
     <None Remove="Activities\CloseDocumentDesigner.xaml" />
     <None Remove="Activities\CloseWorkbookDesigner.xaml" />
+    <None Remove="Activities\ExportWorkbookDesigner.xaml" />
     <None Remove="Activities\GetMailsDesigner.xaml" />
     <None Remove="Activities\GetParagraphDesigner.xaml" />
     <None Remove="Activities\GetSelectedRangeDesigner.xaml" />
@@ -80,6 +82,7 @@
     <None Remove="Activities\WriteRangeDesigner.xaml" />
     <None Remove="Resources\designer\closeworkbook.png" />
     <None Remove="Resources\designer\commentout.png" />
+    <None Remove="Resources\designer\ExportWorkbook.png" />
     <None Remove="Resources\designer\newemail.png" />
     <None Remove="Resources\designer\outlook.png" />
     <None Remove="Resources\designer\protect.png" />
@@ -89,6 +92,7 @@
     <None Remove="Resources\designer\writeexcel.png" />
     <None Remove="Resources\toolbox\closeworkbook.png" />
     <None Remove="Resources\toolbox\commentout.png" />
+    <None Remove="Resources\toolbox\ExportWorkbook.png" />
     <None Remove="Resources\toolbox\newemail.png" />
     <None Remove="Resources\toolbox\outlook.png" />
     <None Remove="Resources\toolbox\protect.png" />
@@ -100,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\toolbox\closeworkbook.png" />
+    <EmbeddedResource Include="Resources\toolbox\ExportWorkbook.png" />
     <EmbeddedResource Include="Resources\toolbox\newemail.png" />
     <EmbeddedResource Include="Resources\toolbox\outlook.png" />
     <EmbeddedResource Include="Resources\toolbox\protect.png" />
@@ -108,6 +113,9 @@
     <EmbeddedResource Include="Resources\toolbox\writeexcel.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\ExportWorkbookDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\MoveMailItemDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -203,6 +211,7 @@
   <ItemGroup>
     <Resource Include="Resources\designer\closeworkbook.png" />
     <Resource Include="Resources\designer\commentout.png" />
+    <Resource Include="Resources\designer\ExportWorkbook.png" />
     <Resource Include="Resources\designer\newemail.png" />
     <Resource Include="Resources\designer\outlook.png" />
     <Resource Include="Resources\designer\protect.png" />

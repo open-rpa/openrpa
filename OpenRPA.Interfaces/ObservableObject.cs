@@ -59,13 +59,13 @@ namespace OpenRPA
                 {
                     return (T)value;
                 }
-                return default(T);
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
-                throw;
+                // throw;
             }
+            return default(T);
         }
         private static string[] isDirtyIgnored = { "isDirty", "isLocalOnly", "IsExpanded", "IsExpanded", "IsSelected", "_type", "_id" };
         /// <summary>

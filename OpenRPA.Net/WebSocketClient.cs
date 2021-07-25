@@ -596,6 +596,34 @@ namespace OpenRPA.Net
             }
             return signin.user;
         }
+        public async Task<string> Signin(bool validate_only, bool longtoken, string clientagent = "", string clientversion = "")
+        {
+            var asm = System.Reflection.Assembly.GetEntryAssembly();
+            if (asm == null) asm = System.Reflection.Assembly.GetExecutingAssembly();
+            SigninMessage signin = new SigninMessage(jwt, asm.GetName().Version.ToString());
+            signin.validate_only = validate_only;
+            signin.longtoken = longtoken;
+            if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
+            if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
+            signin = await signin.SendMessage<SigninMessage>(this);
+            if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
+            user = signin.user;
+            this.jwt = signin.jwt;
+            if (!string.IsNullOrEmpty(signin.openflow_uniqueid))
+            {
+                Config.local.openflow_uniqueid = signin.openflow_uniqueid;
+                Config.local.enable_analytics = signin.enable_analytics;
+            }
+            if (!string.IsNullOrEmpty(signin.otel_trace_url)) Config.local.otel_trace_url = signin.otel_trace_url;
+            if (!string.IsNullOrEmpty(signin.otel_metric_url)) Config.local.otel_metric_url = signin.otel_metric_url;
+            if (signin.otel_trace_interval > 0) Config.local.otel_trace_interval = signin.otel_trace_interval;
+            if (signin.otel_metric_interval > 0) Config.local.otel_metric_interval = signin.otel_metric_interval;
+            if (signin.websocket_package_size > 100)
+            {
+                this.websocket_package_size = signin.websocket_package_size;
+            }
+            return signin.jwt;
+        }
         public async Task RegisterUser(string name, string username, string password)
         {
             RegisterUserMessage RegisterQueue = new RegisterUserMessage(name, username, password);

@@ -31,9 +31,10 @@ namespace OpenRPA.Net
         {
             msg.command = "signin";
             this.clientversion = clientversion;
-            this.jwt = new System.Net.NetworkCredential(string.Empty, jwt).Password; 
+            this.jwt = new System.Net.NetworkCredential(string.Empty, jwt).Password;
         }
         public bool validate_only { get; set; }
+        public bool longtoken { get; set; }
         public string username { get; set; }
         public string password { get; set; }
         public TokenUser user { get; set; }

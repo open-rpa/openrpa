@@ -14,6 +14,7 @@ namespace OpenRPA.PS
         [Parameter()] public string Password { get; set; }
         [Parameter()] public string JWT { get; set; }
         [Parameter()] public string WSURL { get; set; }
+        [Parameter()] public SwitchParameter Save { get; set; }
         protected override async Task ProcessRecordAsync()
         {
             if (global.webSocketClient == null || !string.IsNullOrEmpty(WSURL))
@@ -43,7 +44,16 @@ namespace OpenRPA.PS
             {
                 await global.webSocketClient.Signin(Config.local.username, Config.local.UnprotectString(Config.local.password), "powershell");
             }
-
+            if (Save.IsPresent)
+            {
+                Config.local.wsurl = WSURL;
+                var longjwt = await global.webSocketClient.Signin(true, true, "powershell");
+                if (!string.IsNullOrEmpty(longjwt))
+                {
+                    Config.local.jwt = Config.local.ProtectString(longjwt);
+                    Config.Save();
+                }
+            }
         }
     }
 }

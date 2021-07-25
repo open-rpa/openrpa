@@ -97,6 +97,8 @@ namespace OpenRPA.Office.Activities
             bool more = _enum.MoveNext();
             if (more)
             {
+                IncIndex(context);
+                SetTotal(context, result.Count);
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
         }
@@ -106,6 +108,7 @@ namespace OpenRPA.Office.Activities
             bool more = _enum.MoveNext();
             if (more && !breakRequested)
             {
+                IncIndex(context);
                 context.ScheduleAction<email>(Body, _enum.Current, OnBodyComplete);
             }
             else
@@ -121,6 +124,7 @@ namespace OpenRPA.Office.Activities
 
             metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
+            AddIndexTotal(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)
         {

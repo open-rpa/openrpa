@@ -38,6 +38,8 @@ namespace OpenRPA.Database
 
             connection.Open();
             context.SetValue(Connection, connection);
+            IncIndex(context);
+            SetTotal(context, 1);
             context.ScheduleAction(Body, connection, OnBodyComplete);
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
@@ -57,6 +59,7 @@ namespace OpenRPA.Database
             Interfaces.Extensions.AddCacheArgument(metadata, "Timeout", Timeout);
             metadata.AddImplementationVariable(Connection);
             base.CacheMetadata(metadata);
+            AddIndexTotal(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)
         {

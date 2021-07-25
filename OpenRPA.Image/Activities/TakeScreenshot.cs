@@ -53,6 +53,8 @@ namespace OpenRPA.Image
             var b = Interfaces.Image.Util.Screenshot(match);
             var v = new ImageElement(match, b);
             context.SetValue(Result, v);
+            IncIndex(context);
+            SetTotal(context, 1);
             context.ScheduleAction(Body, v, OnBodyComplete);
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
@@ -71,6 +73,7 @@ namespace OpenRPA.Image
 
             metadata.AddImplementationVariable(elements);
             base.CacheMetadata(metadata);
+            AddIndexTotal(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)
         {

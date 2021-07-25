@@ -47,7 +47,12 @@ namespace OpenRPA.Interfaces
             //Value++;
             //context.SetValue(Index, Value);
             var input = context.DataContext.GetProperties()[Variables[0].Name];
-            var _index = (int)input.GetValue(context.DataContext);
+            var value = input.GetValue(context.DataContext);
+            var _index = 0;
+            if (value != null)
+            {
+                _index = (int)value;
+            }
             _index++;
             input.SetValue(context.DataContext, _index);
         }

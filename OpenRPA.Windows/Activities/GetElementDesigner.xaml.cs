@@ -20,6 +20,15 @@ namespace OpenRPA.Windows
         {
             InitializeComponent();
             HighlightImage = Interfaces.Extensions.GetImageSourceFromResource("search.png");
+            Loaded += (sender, e) =>
+            {
+                var Variables = ModelItem.Properties[nameof(GetElement.Variables)].Collection;
+                if (Variables != null && Variables.Count == 0)
+                {
+                    Variables.Add(new Variable<int>("Index", 0));
+                    Variables.Add(new Variable<int>("Total", 0));
+                }
+            };
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
@@ -35,7 +44,7 @@ namespace OpenRPA.Windows
             while (loadFrom.Parent != null)
             {
                 var p = loadFrom.Properties.Where(x => x.Name == "Selector").FirstOrDefault();
-                if(p != null)
+                if (p != null)
                 {
                     loadFromSelectorString = loadFrom.GetValue<string>("Selector");
                     anchor = new WindowsSelector(loadFromSelectorString);
@@ -46,10 +55,12 @@ namespace OpenRPA.Windows
             string SelectorString = ModelItem.GetValue<string>("Selector");
             int maxresults = ModelItem.GetValue<int>("MaxResults");
             Interfaces.Selector.SelectorWindow selectors;
-            if (!string.IsNullOrEmpty(SelectorString)) {
+            if (!string.IsNullOrEmpty(SelectorString))
+            {
                 var selector = new WindowsSelector(SelectorString);
                 selectors = new Interfaces.Selector.SelectorWindow("Windows", selector, anchor, maxresults);
-            } else
+            }
+            else
             {
                 var selector = new WindowsSelector("[{Selector: 'Windows'}]");
                 selectors = new Interfaces.Selector.SelectorWindow("Windows", selector, anchor, maxresults);
@@ -59,12 +70,12 @@ namespace OpenRPA.Windows
             {
                 ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(selectors.vm.json) });
                 var l = selectors.vm.Selector.Last();
-                if(l.Element != null)
+                if (l.Element != null)
                 {
                     ModelItem.Properties["Image"].SetValue(l.Element.ImageString());
                     NotifyPropertyChanged("Image");
                 }
-                if (anchor!=null)
+                if (anchor != null)
                 {
                     ModelItem.Properties["From"].SetValue(new InArgument<IElement>()
                     {
@@ -126,7 +137,8 @@ namespace OpenRPA.Windows
                 if (elements.Count() > 0)
                 {
                     HighlightImage = Interfaces.Extensions.GetImageSourceFromResource("check.png");
-                } else
+                }
+                else
                 {
                     HighlightImage = Interfaces.Extensions.GetImageSourceFromResource(".x.png");
                 }
@@ -148,7 +160,8 @@ namespace OpenRPA.Windows
             get
             {
                 var image = ImageString;
-                System.Drawing.Bitmap b = Task.Run(() => {
+                System.Drawing.Bitmap b = Task.Run(() =>
+                {
                     return Interfaces.Image.Util.LoadBitmap(image);
                 }).Result;
                 using (b)
@@ -168,7 +181,7 @@ namespace OpenRPA.Windows
         private void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
         {
             Activity loopaction = ModelItem.GetValue<Activity>("LoopAction");
-            if(loopaction != null)
+            if (loopaction != null)
             {
                 ShowLoopExpanded = true;
                 NotifyPropertyChanged("ShowLoopExpanded");

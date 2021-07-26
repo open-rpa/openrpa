@@ -143,13 +143,10 @@ namespace OpenRPA.Image
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {
             metadata.AddDelegate(Body);
-
             Interfaces.Extensions.AddCacheArgument(metadata, "Element", Element);
             Interfaces.Extensions.AddCacheArgument(metadata, "Result", Result);
-
             metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
-            AddIndexTotal(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)
         {

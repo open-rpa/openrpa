@@ -19,6 +19,15 @@ namespace OpenRPA.Utilities
         public MatchesDesigner()
         {
             InitializeComponent();
+            Loaded += (sender, e) =>
+            {
+                var Variables = ModelItem.Properties[nameof(Matches.Variables)].Collection;
+                if (Variables != null && Variables.Count == 0)
+                {
+                    Variables.Add(new Variable<int>("Index", 0));
+                    Variables.Add(new Variable<int>("Total", 0));
+                }
+            };
         }
     }
 }

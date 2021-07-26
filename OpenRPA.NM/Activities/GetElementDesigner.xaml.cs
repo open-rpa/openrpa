@@ -19,6 +19,15 @@ namespace OpenRPA.NM
         public GetElementDesigner()
         {
             InitializeComponent();
+            Loaded += (sender, e) =>
+            {
+                var Variables = ModelItem.Properties[nameof(GetElement.Variables)].Collection;
+                if (Variables != null && Variables.Count == 0)
+                {
+                    Variables.Add(new Variable<int>("Index", 0));
+                    Variables.Add(new Variable<int>("Total", 0));
+                }
+            };
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
@@ -139,7 +148,8 @@ namespace OpenRPA.NM
             get
             {
                 var image = ImageString;
-                System.Drawing.Bitmap b = Task.Run(() => {
+                System.Drawing.Bitmap b = Task.Run(() =>
+                {
                     return Interfaces.Image.Util.LoadBitmap(image);
                 }).Result;
                 using (b)

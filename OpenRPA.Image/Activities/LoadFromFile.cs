@@ -47,7 +47,6 @@ namespace OpenRPA.Image
             Interfaces.Extensions.AddCacheArgument(metadata, "Filename", Filename);
             metadata.AddImplementationVariable(elements);
             base.CacheMetadata(metadata);
-            AddIndexTotal(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)
         {

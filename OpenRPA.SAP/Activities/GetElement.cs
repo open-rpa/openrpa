@@ -113,7 +113,6 @@ namespace OpenRPA.SAP
             Interfaces.Extensions.AddCacheArgument(metadata, "MaxResults", MaxResults);
             metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
-            AddIndexTotal(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)
         {

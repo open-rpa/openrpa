@@ -20,6 +20,15 @@ namespace OpenRPA.SAP
         {
             InitializeComponent();
             HighlightImage = Interfaces.Extensions.GetImageSourceFromResource("search.png");
+            Loaded += (sender, e) =>
+            {
+                var Variables = ModelItem.Properties[nameof(GetElement.Variables)].Collection;
+                if (Variables != null && Variables.Count == 0)
+                {
+                    Variables.Add(new Variable<int>("Index", 0));
+                    Variables.Add(new Variable<int>("Total", 0));
+                }
+            };
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
@@ -119,7 +128,8 @@ namespace OpenRPA.SAP
             if (elements.Count() > 0)
             {
                 HighlightImage = Interfaces.Extensions.GetImageSourceFromResource("check.png");
-            } else
+            }
+            else
             {
                 HighlightImage = Interfaces.Extensions.GetImageSourceFromResource(".x.png");
             }
@@ -140,7 +150,8 @@ namespace OpenRPA.SAP
             get
             {
                 var image = ImageString;
-                System.Drawing.Bitmap b = Task.Run(() => {
+                System.Drawing.Bitmap b = Task.Run(() =>
+                {
                     return Interfaces.Image.Util.LoadBitmap(image);
                 }).Result;
                 using (b)

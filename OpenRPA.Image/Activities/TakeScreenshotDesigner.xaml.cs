@@ -21,6 +21,15 @@ namespace OpenRPA.Image
         {
             InitializeComponent();
             HighlightImage = Extensions.GetImageSourceFromResource("search.png");
+            Loaded += (sender, e) =>
+            {
+                var Variables = ModelItem.Properties[nameof(TakeScreenshot.Variables)].Collection;
+                if (Variables != null && Variables.Count == 0)
+                {
+                    Variables.Add(new Variable<int>("Index", 0));
+                    Variables.Add(new Variable<int>("Total", 0));
+                }
+            };
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
@@ -84,12 +93,13 @@ namespace OpenRPA.Image
                     tip = null;
                 }
             }
-            else if(match.IsEmpty)
+            else if (match.IsEmpty)
             {
                 var image = loadFrom.GetValue<string>("Image");
                 if (!string.IsNullOrEmpty(image))
                 {
-                    Bitmap b = Task.Run(() => {
+                    Bitmap b = Task.Run(() =>
+                    {
                         return Interfaces.Image.Util.LoadBitmap(image);
                     }).Result;
                     using (b)
@@ -147,7 +157,7 @@ namespace OpenRPA.Image
             var Width = ModelItem.GetValue<int>("Width");
             var Height = ModelItem.GetValue<int>("Height");
 
-            if(match.IsEmpty)
+            if (match.IsEmpty)
             {
                 match = new Rectangle(0, 0, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
             }

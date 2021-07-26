@@ -23,6 +23,15 @@ namespace OpenRPA.Image
         {
             InitializeComponent();
             HighlightImage = Extensions.GetImageSourceFromResource("search.png");
+            Loaded += (sender, e) =>
+            {
+                var Variables = ModelItem.Properties[nameof(GetElement.Variables)].Collection;
+                if (Variables != null && Variables.Count == 0)
+                {
+                    Variables.Add(new Variable<int>("Index", 0));
+                    Variables.Add(new Variable<int>("Total", 0));
+                }
+            };
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
@@ -56,7 +65,7 @@ namespace OpenRPA.Image
 
             if (limit != Rectangle.Empty)
             {
-                if(!limit.Contains(rect))
+                if (!limit.Contains(rect))
                 {
                     Log.Error(rect.ToString() + " is not within process limit of " + limit.ToString());
                     Interfaces.GenericTools.Restore();
@@ -82,7 +91,8 @@ namespace OpenRPA.Image
         private void Highlight_Click(object sender, RoutedEventArgs e)
         {
             var image = ImageString;
-            Bitmap b = Task.Run(() => {
+            Bitmap b = Task.Run(() =>
+            {
                 return Interfaces.Image.Util.LoadBitmap(image);
             }).Result;
             using (b)
@@ -154,7 +164,8 @@ namespace OpenRPA.Image
             get
             {
                 var image = ImageString;
-                System.Drawing.Bitmap b = Task.Run(() => {
+                System.Drawing.Bitmap b = Task.Run(() =>
+                {
                     return Interfaces.Image.Util.LoadBitmap(image);
                 }).Result;
                 using (b)

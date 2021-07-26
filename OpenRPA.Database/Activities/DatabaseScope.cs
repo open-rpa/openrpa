@@ -59,7 +59,6 @@ namespace OpenRPA.Database
             Interfaces.Extensions.AddCacheArgument(metadata, "Timeout", Timeout);
             metadata.AddImplementationVariable(Connection);
             base.CacheMetadata(metadata);
-            AddIndexTotal(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)
         {

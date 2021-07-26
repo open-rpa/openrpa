@@ -39,8 +39,6 @@ namespace OpenRPA.Interfaces
                 context.ResumeBookmark(_bookmark, value);
             }
         }
-        //protected Variable<int> Index { get; set; } = new Variable<int>("Index", 0);
-        //protected Variable<int> Total { get; set; } = new Variable<int>("Total", 0);
         public void IncIndex(NativeActivityContext context)
         {
             //var Value = Index.Get(context);
@@ -67,20 +65,6 @@ namespace OpenRPA.Interfaces
             //context.SetValue(Total, Value);
             var input = context.DataContext.GetProperties()[Variables[1].Name];
             if (input != null) input.SetValue(context.DataContext, Value);
-        }
-        public void AddIndexTotal(NativeActivityMetadata metadata)
-        {
-            //metadata.AddImplementationVariable(Index);
-            //metadata.AddImplementationVariable(Total);
-            if (Variables.Count != 0)
-            {
-                var b = true;
-            }
-            if (Variables.Count == 0)
-            {
-                Variables.Add(new Variable<int>("Index", 0));
-                Variables.Add(new Variable<int>("Total", 0));
-            }
         }
         private System.Collections.ObjectModel.Collection<Variable> variables;
         [System.ComponentModel.Browsable(false)]

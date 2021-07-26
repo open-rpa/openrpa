@@ -66,7 +66,6 @@ namespace OpenRPA.Activities
             Interfaces.Extensions.AddCacheArgument(metadata, "DataView", DataView);
             metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
-            AddIndexTotal(metadata);
         }
         public System.Activities.Activity Create(System.Windows.DependencyObject target)
         {

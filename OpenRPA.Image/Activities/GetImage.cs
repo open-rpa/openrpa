@@ -96,7 +96,6 @@ namespace OpenRPA.Image
 
             metadata.AddImplementationVariable(elements);
             base.CacheMetadata(metadata);
-            AddIndexTotal(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)
         {

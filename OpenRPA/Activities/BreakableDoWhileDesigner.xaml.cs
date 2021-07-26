@@ -4,6 +4,7 @@ using System.Activities;
 using System.Activities.Expressions;
 using System.Activities.Presentation.Model;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,6 +19,15 @@ namespace OpenRPA.Activities
         public BreakableDoWhileDesigner()
         {
             InitializeComponent();
+            Loaded += (sender, e) =>
+            {
+                var Variables = ModelItem.Properties[nameof(BreakableDoWhile.Variables)].Collection;
+                if (Variables != null && Variables.Count == 0)
+                {
+                    Variables.Add(new Variable<int>("Index", 0));
+                    Variables.Add(new Variable<int>("Total", 0));
+                }
+            };
         }
     }
 }

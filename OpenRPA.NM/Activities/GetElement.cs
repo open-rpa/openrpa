@@ -212,7 +212,6 @@ namespace OpenRPA.NM
             metadata.AddImplementationVariable(_elements);
             metadata.AddImplementationVariable(_allelements);
             base.CacheMetadata(metadata);
-            AddIndexTotal(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)
         {

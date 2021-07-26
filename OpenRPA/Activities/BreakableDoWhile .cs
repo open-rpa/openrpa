@@ -47,18 +47,7 @@ namespace OpenRPA.Activities
             metadata.AddChild(Condition);
             metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
-            AddIndexTotal(metadata);
         }
-        //public Activity Create(System.Windows.DependencyObject target)
-        //{
-        //    var fef = new BreakableDoWhile();
-        //    var aa = new ActivityAction();
-        //    var da = new DelegateInArgument();
-        //    da.Name = "row";
-        //    fef.Body = aa;
-        //    aa.Argument = da;
-        //    return fef;
-        //}
         [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
         public new string DisplayName
         {

@@ -20,6 +20,15 @@ namespace OpenRPA.Database
         public DatabaseScopeDesigner()
         {
             InitializeComponent();
+            Loaded += (sender, e) =>
+            {
+                var Variables = ModelItem.Properties[nameof(DatabaseScope.Variables)].Collection;
+                if (Variables != null && Variables.Count == 0)
+                {
+                    Variables.Add(new Variable<int>("Index", 0));
+                    Variables.Add(new Variable<int>("Total", 0));
+                }
+            };
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
@@ -32,7 +41,7 @@ namespace OpenRPA.Database
             string dataSource = ModelItem.GetValue<string>("DataSource");
             string connectionString = ModelItem.GetValue<string>("ConnectionString");
             var config = GetConnectionString(dataProvider, dataSource, connectionString);
-            if(config != null && !string.IsNullOrEmpty(config.ConnectionString))
+            if (config != null && !string.IsNullOrEmpty(config.ConnectionString))
             {
                 ModelItem.Properties["DataProvider"].SetValue(new InArgument<string>() { Expression = new Literal<string>(config.DataProvider) });
                 ModelItem.Properties["DataSource"].SetValue(new InArgument<string>() { Expression = new Literal<string>(config.DataSource) });

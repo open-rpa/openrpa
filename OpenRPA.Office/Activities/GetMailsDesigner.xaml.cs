@@ -20,8 +20,16 @@ namespace OpenRPA.Office.Activities
         public GetMailsDesigner()
         {
             folders = new ObservableCollection<outlookfolder>();
-            // folders.Add(new outlookfolder() { name = "", _id = "" });
             InitializeComponent();
+            Loaded += (sender, e) =>
+            {
+                var Variables = ModelItem.Properties[nameof(GetMails.Variables)].Collection;
+                if (Variables != null && Variables.Count == 0)
+                {
+                    Variables.Add(new System.Activities.Variable<int>("Index", 0));
+                    Variables.Add(new System.Activities.Variable<int>("Total", 0));
+                }
+            };
         }
         private Microsoft.Office.Interop.Outlook.Application CreateOutlookInstance()
         {

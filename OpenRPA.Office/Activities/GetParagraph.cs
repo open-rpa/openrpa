@@ -124,7 +124,6 @@ namespace OpenRPA.Office.Activities
 
             metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
-            AddIndexTotal(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)
         {

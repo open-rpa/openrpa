@@ -121,10 +121,8 @@ namespace OpenRPA.Office.Activities
             Interfaces.Extensions.AddCacheArgument(metadata, "UnreadOnly", UnreadOnly);
             Interfaces.Extensions.AddCacheArgument(metadata, "Folder", Folder);
             Interfaces.Extensions.AddCacheArgument(metadata, "Emails", Emails);
-
             metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
-            AddIndexTotal(metadata);
         }
         public Activity Create(System.Windows.DependencyObject target)
         {

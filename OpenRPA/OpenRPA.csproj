@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.60</Version>
-    <PackageReleaseNotes>1.2.60 Fix UI error after adding Index and Total variables on loops
+    <Version>1.2.61</Version>
+    <PackageReleaseNotes>1.2.61 
+1.2.60 Fix UI error after adding Index and Total variables on loops
 1.2.59 Add Index and Total variables on loops
 1.2.58 2 small hot fixes
 1.2.57 Add custom max lines in log windows

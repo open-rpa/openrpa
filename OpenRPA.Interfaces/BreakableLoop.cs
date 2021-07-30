@@ -44,6 +44,7 @@ namespace OpenRPA.Interfaces
             //var Value = Index.Get(context);
             //Value++;
             //context.SetValue(Index, Value);
+            if (Variables.Count < 1) return;
             var input = context.DataContext.GetProperties()[Variables[0].Name];
             if (input != null)
             {
@@ -57,12 +58,14 @@ namespace OpenRPA.Interfaces
         public void SetIndex(NativeActivityContext context, int Value)
         {
             //context.SetValue(Index, Value);
+            if (Variables.Count < 1) return;
             var input = context.DataContext.GetProperties()[Variables[0].Name];
             if (input != null) input.SetValue(context.DataContext, Value);
         }
         public void SetTotal(NativeActivityContext context, int Value)
         {
             //context.SetValue(Total, Value);
+            if (Variables.Count < 2) return;
             var input = context.DataContext.GetProperties()[Variables[1].Name];
             if (input != null) input.SetValue(context.DataContext, Value);
         }

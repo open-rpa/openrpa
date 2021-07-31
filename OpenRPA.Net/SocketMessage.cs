@@ -33,5 +33,17 @@ namespace OpenRPA.Net
         {
             ws.PushMessage(this);
         }
+        public override string ToString()
+        {
+            if (string.IsNullOrEmpty(id)) return base.ToString();
+            if (string.IsNullOrEmpty(command)) return id;
+            return id + ":" + command;
+
+        }
+        [Newtonsoft.Json.Serialization.OnError]
+        internal void OnError(System.Runtime.Serialization.StreamingContext context, Newtonsoft.Json.Serialization.ErrorContext errorContext)
+        {
+            errorContext.Handled = true;
+        }
     }
 }

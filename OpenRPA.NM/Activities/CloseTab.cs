@@ -30,7 +30,8 @@ namespace OpenRPA.NM
             if (closeall)
             {
                 NMHook.CloseAllTabs(browser);
-            } else
+            }
+            else
             {
                 if (browser == "chrome")
                 {

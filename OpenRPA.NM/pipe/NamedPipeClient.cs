@@ -20,13 +20,14 @@ namespace OpenRPA.NM.pipe
         public event Action<Exception> Error;
         public NamedPipeClient(string pipeName)
         {
-            lock(lockobj) replyqueue = new List<queuemsg<T>>();
+            lock (lockobj) replyqueue = new List<queuemsg<T>>();
             pipe = new NamedPipeWrapper.NamedPipeClient<T>(pipeName);
             pipe.AutoReconnect = true;
             pipe.Disconnected += (sender) => { Disconnected?.Invoke(); };
             pipe.Connected += (sender) => { Connected?.Invoke(); };
             pipe.Error += (e) => { Error?.Invoke(e); };
-            pipe.ServerMessage += (sender, message) => {
+            pipe.ServerMessage += (sender, message) =>
+            {
                 queuemsg<T> queue;
                 lock (lockobj) queue = replyqueue.Where(x => x != null && x.messageid == message.messageid).FirstOrDefault();
                 if (queue != null)
@@ -35,9 +36,9 @@ namespace OpenRPA.NM.pipe
                     if (queue.Received) return;
                     queue.result = message;
                     queue.Received = true;
-                    if(queue.autoReset!=null) queue.autoReset.Set();
+                    if (queue.autoReset != null) queue.autoReset.Set();
                     return;
-                } 
+                }
                 else
                 {
                     // Log.Information("received reply for unknown message id: " + message.messageid);
@@ -53,7 +54,7 @@ namespace OpenRPA.NM.pipe
         {
             pipe.PushMessage(message);
         }
-        public T Message(T message, bool throwError, TimeSpan timeout)
+        public T Message(T message, TimeSpan timeout)
         {
             T result = default(T);
             if (pipe == null || !pipe.isConnected) return result;
@@ -73,7 +74,7 @@ namespace OpenRPA.NM.pipe
             if (result != null && result.error != null)
             {
                 string s = result.error.ToString().Trim();
-                if(!string.IsNullOrEmpty(s) && s != "{}")
+                if (!string.IsNullOrEmpty(s) && s != "{}")
                 {
                     Log.Error(result.error.ToString());
                     throw new NamedPipeException(result.error.ToString());

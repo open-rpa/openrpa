@@ -14,7 +14,7 @@ namespace OpenRPA.NM.pipe
         public NamedPipeClientAsync(string pipeName) : base(pipeName)
         {
         }
-        async public Task<T> MessageAsync(T message, bool throwError)
+        async public Task<T> MessageAsync(T message, TimeSpan timeout)
         {
             T result = default(T);
             if (pipe == null || !pipe.isConnected) return result;
@@ -25,7 +25,7 @@ namespace OpenRPA.NM.pipe
             using (queue.autoReset = new AutoResetEvent(false))
             {
                 pipe.PushMessage(message);
-                await queue.autoReset.WaitOneAsync();
+                await queue.autoReset.WaitOneAsync(timeout);
                 queue.sw.Stop();
             }
             // Log.Debug("ASYNC received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));

@@ -147,6 +147,8 @@ namespace OpenRPA.Windows
                 context.SetValue(_elements, _enum);
                 context.SetValue(_sw, sw);
                 Log.Selector(string.Format("Windows.GetElement::end:: call ScheduleAction: {0:mm\\:ss\\.fff}", sw.Elapsed));
+                IncIndex(context);
+                SetTotal(context, elements.Length);
                 context.ScheduleAction<UIElement>(Body, _enum.Current, OnBodyComplete);
             }
             else
@@ -162,6 +164,7 @@ namespace OpenRPA.Windows
             bool more = _enum.MoveNext();
             if (more && !breakRequested)
             {
+                IncIndex(context);
                 Log.Selector(string.Format("Windows.GetElement:ScheduleAction {0:mm\\:ss\\.fff}", sw.Elapsed));
                 context.ScheduleAction<UIElement>(Body, _enum.Current, OnBodyComplete);
             }

@@ -28,8 +28,8 @@ namespace OpenRPA.Activities
             {
                 if (!breakRequested && !context.IsCancellationRequested)
                 {
+                    IncIndex(context);
                     context.ScheduleActivity(Body, OnBodyComplete);
-                    
                 }
             }
         }
@@ -44,20 +44,10 @@ namespace OpenRPA.Activities
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {
             metadata.AddChild(Body);
-            metadata.AddChild(Condition);            
+            metadata.AddChild(Condition);
             metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
         }
-        //public Activity Create(System.Windows.DependencyObject target)
-        //{
-        //    var fef = new BreakableDoWhile();
-        //    var aa = new ActivityAction();
-        //    var da = new DelegateInArgument();
-        //    da.Name = "row";
-        //    fef.Body = aa;
-        //    aa.Argument = da;
-        //    return fef;
-        //}
         [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
         public new string DisplayName
         {

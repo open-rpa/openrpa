@@ -105,42 +105,6 @@ namespace OpenRPA.Net
             }
             src.Cancel();
         }
-        private static bool TryParseJSON(string json, out JObject jObject)
-        {
-            try
-            {
-                jObject = JObject.Parse(json);
-                return true;
-            }
-            catch
-            {
-                jObject = null;
-                return false;
-            }
-        }
-        private static bool TryParseJSON(string json)
-        {
-            try
-            {
-                if ((json.StartsWith("{") && json.EndsWith("}")) ||
-                    (json.StartsWith("[") && json.EndsWith("]")))
-                {
-                    int begincount = System.Text.RegularExpressions.Regex.Matches(json, "{").Count; // json.TakeWhile(c => c == '{').Count();
-                    int endcount = System.Text.RegularExpressions.Regex.Matches(json, "}").Count; // json.TakeWhile(c => c == '}').Count();
-                    if (begincount == endcount)
-                    {
-                        var jObject = JObject.Parse(json);
-                        return true;
-                    }
-
-                }
-            }
-            catch
-            {
-                Log.Verbose(json);
-            }
-            return false;
-        }
         string tempbuffer = null;
         private async Task receiveLoop()
         {
@@ -160,7 +124,7 @@ namespace OpenRPA.Net
                     result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), src.Token);
                     json = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
 
-
+                    var serializer = new JsonSerializer();
                     var workingjson = tempbuffer + json;
                     bool foundone = false;
 
@@ -175,18 +139,18 @@ namespace OpenRPA.Net
                             using (JsonTextReader reader = new JsonTextReader(sr))
                             {
                                 reader.SupportMultipleContent = true;
-                                var serializer = new JsonSerializer();
                                 while (reader.Read())
                                 {
                                     if (reader.TokenType == JsonToken.StartObject)
                                     {
                                         var message = serializer.Deserialize<SocketMessage>(reader);
-                                        if (!string.IsNullOrEmpty(message.id) && !string.IsNullOrEmpty(message.command) && message != null)
+                                        if (message != null && !string.IsNullOrEmpty(message.id) && !string.IsNullOrEmpty(message.command) && message.data != null)
                                         {
                                             lock (_receiveQueue)
                                             {
                                                 foundone = true;
-                                                tempbuffer = "";
+                                                tempbuffer += json;
+                                                tempbuffer = tempbuffer.Substring(reader.LinePosition );
                                                 if (message.index % 100 == 99) Log.Network("Adding " + message.id + " to receiveQueue " + (message.index + 1) + " of " + message.count);
                                                 _receiveQueue.Add(message);
                                             }
@@ -203,6 +167,51 @@ namespace OpenRPA.Net
                         }
                     }
                     else { tempbuffer += json; }
+
+
+                    //if (tempbuffer.Length > 0 && (workingjson.StartsWith("{") && workingjson.EndsWith("}")) || (workingjson.StartsWith("[") && workingjson.EndsWith("]")))
+                    //{
+                    //    int start = -1;
+                    //    for (var i = 0; i < tempbuffer.Length; i++)
+                    //    {
+                    //        if (tempbuffer[i] == '{' && start == -1) start = i;
+                    //        if (tempbuffer[i] == '}' && start != -1)
+                    //        {
+
+                    //            try
+                    //            {
+                    //                var tempjson = tempbuffer.Substring(start, i + 1);
+                    //                bool hadError = false;
+                    //                var message = JsonConvert.DeserializeObject<SocketMessage>(tempjson, new JsonSerializerSettings
+                    //                {
+                    //                    Error = (sender, errorArgs) =>
+                    //                    {
+                    //                        errorArgs.ErrorContext.Handled = true;
+                    //                        hadError = true;
+                    //                        var currentError = errorArgs.ErrorContext.Error.Message;
+                    //                    }
+                    //                });
+                    //                if (!hadError && message != null && !string.IsNullOrEmpty(message.id) && !string.IsNullOrEmpty(message.command))
+                    //                {
+                    //                    tempbuffer = tempbuffer.Substring(i + 1);
+                    //                    i = -1;
+                    //                    lock (_receiveQueue)
+                    //                    {
+                    //                        foundone = true;
+                    //                        if (message.index % 100 == 99) Log.Network("Adding " + message.id + " to receiveQueue " + (message.index + 1) + " of " + message.count);
+                    //                        _receiveQueue.Add(message);
+                    //                    }
+                    //                }
+                    //                if (!hadError) start = -1;
+
+                    //            }
+                    //            catch (Exception ex)
+                    //            {
+                    //                Log.Error(ex.ToString());
+                    //            }
+                    //        }
+                    //    }
+                    //}
                     if (foundone) await ProcessQueue();
                 }
                 catch (System.Net.WebSockets.WebSocketException ex)
@@ -594,6 +603,34 @@ namespace OpenRPA.Net
                 this.websocket_package_size = signin.websocket_package_size;
             }
             return signin.user;
+        }
+        public async Task<string> Signin(bool validate_only, bool longtoken, string clientagent = "", string clientversion = "")
+        {
+            var asm = System.Reflection.Assembly.GetEntryAssembly();
+            if (asm == null) asm = System.Reflection.Assembly.GetExecutingAssembly();
+            SigninMessage signin = new SigninMessage(jwt, asm.GetName().Version.ToString());
+            signin.validate_only = validate_only;
+            signin.longtoken = longtoken;
+            if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
+            if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
+            signin = await signin.SendMessage<SigninMessage>(this);
+            if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
+            user = signin.user;
+            this.jwt = signin.jwt;
+            if (!string.IsNullOrEmpty(signin.openflow_uniqueid))
+            {
+                Config.local.openflow_uniqueid = signin.openflow_uniqueid;
+                Config.local.enable_analytics = signin.enable_analytics;
+            }
+            if (!string.IsNullOrEmpty(signin.otel_trace_url)) Config.local.otel_trace_url = signin.otel_trace_url;
+            if (!string.IsNullOrEmpty(signin.otel_metric_url)) Config.local.otel_metric_url = signin.otel_metric_url;
+            if (signin.otel_trace_interval > 0) Config.local.otel_trace_interval = signin.otel_trace_interval;
+            if (signin.otel_metric_interval > 0) Config.local.otel_metric_interval = signin.otel_metric_interval;
+            if (signin.websocket_package_size > 100)
+            {
+                this.websocket_package_size = signin.websocket_package_size;
+            }
+            return signin.jwt;
         }
         public async Task RegisterUser(string name, string username, string password)
         {

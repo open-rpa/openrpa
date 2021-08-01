@@ -38,6 +38,8 @@ namespace OpenRPA.Database
 
             connection.Open();
             context.SetValue(Connection, connection);
+            IncIndex(context);
+            SetTotal(context, 1);
             context.ScheduleAction(Body, connection, OnBodyComplete);
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)

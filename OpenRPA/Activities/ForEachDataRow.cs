@@ -17,7 +17,7 @@ namespace OpenRPA.Activities
     [LocalizedDisplayName("activity_foreachdatarow", typeof(Resources.strings))]
     public class ForEachDataRow : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
-        [RequiredArgument,Category("Input"),OverloadGroup("DataTable"), LocalizedDisplayName("activity_datatable", typeof(Resources.strings)), LocalizedDescription("activity_datatable_help", typeof(Resources.strings))]
+        [RequiredArgument, Category("Input"), OverloadGroup("DataTable"), LocalizedDisplayName("activity_datatable", typeof(Resources.strings)), LocalizedDescription("activity_datatable_help", typeof(Resources.strings))]
         public InArgument<System.Data.DataTable> DataTable { get; set; }
         [RequiredArgument, Category("Input"), OverloadGroup("DataView"), LocalizedDisplayName("activity_dataview", typeof(Resources.strings)), LocalizedDescription("activity_dataview_help", typeof(Resources.strings))]
         public InArgument<System.Data.DataView> DataView { get; set; }
@@ -28,21 +28,24 @@ namespace OpenRPA.Activities
         {
             System.Data.DataView dv;
             System.Data.DataTable dt = DataTable.Get(context);
-            if(dt!=null)
+            if (dt != null)
             {
                 dv = dt.DefaultView;
-            } else
+            }
+            else
             {
                 dv = DataView.Get(context);
             }
             if (dv == null) return;
-             
+
             var elements = (from row in dv.Cast<System.Data.DataRowView>() select row).ToList();
             IEnumerator<System.Data.DataRowView> _enum = elements.GetEnumerator();
             context.SetValue(_elements, _enum);
             bool more = _enum.MoveNext();
             if (more)
             {
+                IncIndex(context);
+                SetTotal(context, elements.Count);
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
         }
@@ -52,6 +55,7 @@ namespace OpenRPA.Activities
             bool more = _enum.MoveNext();
             if (!breakRequested && more)
             {
+                IncIndex(context);
                 context.ScheduleAction<System.Data.DataRowView>(Body, _enum.Current, OnBodyComplete);
             }
         }

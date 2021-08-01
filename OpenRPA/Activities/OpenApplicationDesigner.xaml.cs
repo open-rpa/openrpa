@@ -20,6 +20,15 @@ namespace OpenRPA.Activities
         {
             InitializeComponent();
             DataContext = this;
+            Loaded += (sender, e) =>
+            {
+                var Variables = ModelItem.Properties[nameof(OpenApplication.Variables)].Collection;
+                if (Variables != null && Variables.Count == 0)
+                {
+                    Variables.Add(new Variable<int>("Index", 0));
+                    Variables.Add(new Variable<int>("Total", 0));
+                }
+            };
         }
         private void Open_Selector(object sender, RoutedEventArgs e)
         {
@@ -38,14 +47,14 @@ namespace OpenRPA.Activities
                 var _base = Plugin.GetElementsWithSelector(selector, null, 10);
                 if (_base == null || _base.Length == 0) return;
                 var ele = _base[0];
-                if(ele != null && !(ele is UIElement))
+                if (ele != null && !(ele is UIElement))
                 {
                     var automation = AutomationUtil.getAutomation();
                     var p = new System.Drawing.Point(ele.Rectangle.X + 10, ele.Rectangle.Y + 10);
-                    if(p.X > 0 && p.Y > 0)
+                    if (p.X > 0 && p.Y > 0)
                     {
                         var _temp = automation.FromPoint(p);
-                        if(_temp != null)
+                        if (_temp != null)
                         {
                             ele = new UIElement(_temp);
                         }
@@ -59,7 +68,7 @@ namespace OpenRPA.Activities
                     {
                         ModelItem.Properties["DisplayName"].SetValue(window.Name);
                     }
-                    if(window.Properties.BoundingRectangle.IsSupported)
+                    if (window.Properties.BoundingRectangle.IsSupported)
                     {
                         var bound = window.BoundingRectangle;
                         ModelItem.Properties["X"].SetValue(new InArgument<int>() { Expression = new Literal<int>(bound.X) });
@@ -114,7 +123,7 @@ namespace OpenRPA.Activities
                     }
                 }
                 e.Selector.RemoveRange(2, e.Selector.Count - 2);
-                ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(e.Selector.ToString() ) });
+                ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(e.Selector.ToString()) });
                 var ele = e.Element;
                 if (ele != null && !(ele is UIElement))
                 {

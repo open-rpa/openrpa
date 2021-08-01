@@ -125,6 +125,8 @@ namespace OpenRPA.Image
             bool more = _enum.MoveNext();
             if (more)
             {
+                IncIndex(context);
+                SetTotal(context, result.Length);
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
         }
@@ -134,16 +136,15 @@ namespace OpenRPA.Image
             bool more = _enum.MoveNext();
             if (more && !breakRequested)
             {
+                IncIndex(context);
                 context.ScheduleAction<ImageElement>(Body, _enum.Current, OnBodyComplete);
             }
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {
             metadata.AddDelegate(Body);
-
             Interfaces.Extensions.AddCacheArgument(metadata, "Element", Element);
             Interfaces.Extensions.AddCacheArgument(metadata, "Result", Result);
-
             metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
         }

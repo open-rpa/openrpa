@@ -84,7 +84,7 @@ namespace OpenRPA.IE
             do
             {
                 elements = IESelector.GetElementsWithuiSelector(sel, from, maxresults);
-            } while (elements .Count() == 0 && sw.Elapsed < timeout);
+            } while (elements.Count() == 0 && sw.Elapsed < timeout);
             if (elements.Count() > maxresults) elements = elements.Take(maxresults).ToArray();
             if (elements.Length < minresults)
             {
@@ -98,15 +98,18 @@ namespace OpenRPA.IE
             bool more = _enum.MoveNext();
             if (more)
             {
+                IncIndex(context);
+                SetTotal(context, elements.Length);
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
-       }
+        }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)
         {
             IEnumerator<IEElement> _enum = _elements.Get(context);
             bool more = _enum.MoveNext();
             if (more && !breakRequested)
             {
+                IncIndex(context);
                 context.ScheduleAction<IEElement>(Body, _enum.Current, OnBodyComplete);
             }
             else

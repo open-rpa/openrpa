@@ -71,6 +71,8 @@ namespace OpenRPA.Utilities
             if (more)
             {
                 context.SetValue(_elements, _enum);
+                IncIndex(context);
+                SetTotal(context, result.Count);
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
         }
@@ -80,6 +82,7 @@ namespace OpenRPA.Utilities
             bool more = _enum.MoveNext();
             if (more && !breakRequested)
             {
+                IncIndex(context);
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
         }

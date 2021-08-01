@@ -67,6 +67,8 @@ namespace OpenRPA.Java
             bool more = _enum.MoveNext();
             if (more)
             {
+                IncIndex(context);
+                SetTotal(context, elements.Length);
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
         }
@@ -76,6 +78,7 @@ namespace OpenRPA.Java
             bool more = _enum.MoveNext();
             if (more && !breakRequested)
             {
+                IncIndex(context);
                 context.ScheduleAction<JavaElement>(Body, _enum.Current, OnBodyComplete);
             }
             else

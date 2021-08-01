@@ -39,6 +39,49 @@ namespace OpenRPA.Interfaces
                 context.ResumeBookmark(_bookmark, value);
             }
         }
+        public void IncIndex(NativeActivityContext context)
+        {
+            //var Value = Index.Get(context);
+            //Value++;
+            //context.SetValue(Index, Value);
+            if (Variables.Count < 1) return;
+            var input = context.DataContext.GetProperties()[Variables[0].Name];
+            if (input != null)
+            {
+                var _index = 0;
+                var value = input.GetValue(context.DataContext);
+                if (value != null) _index = (int)value;
+                _index++;
+                input.SetValue(context.DataContext, _index);
+            }
+        }
+        public void SetIndex(NativeActivityContext context, int Value)
+        {
+            //context.SetValue(Index, Value);
+            if (Variables.Count < 1) return;
+            var input = context.DataContext.GetProperties()[Variables[0].Name];
+            if (input != null) input.SetValue(context.DataContext, Value);
+        }
+        public void SetTotal(NativeActivityContext context, int Value)
+        {
+            //context.SetValue(Total, Value);
+            if (Variables.Count < 2) return;
+            var input = context.DataContext.GetProperties()[Variables[1].Name];
+            if (input != null) input.SetValue(context.DataContext, Value);
+        }
+        private System.Collections.ObjectModel.Collection<Variable> variables;
+        [System.ComponentModel.Browsable(false)]
+        public System.Collections.ObjectModel.Collection<Variable> Variables
+        {
+            get
+            {
+                if (variables == null)
+                {
+                    variables = new System.Collections.ObjectModel.Collection<Variable>();
+                }
+                return variables;
+            }
+        }
         protected override bool CanInduceIdle
         {
             get

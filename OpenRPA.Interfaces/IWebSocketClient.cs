@@ -65,6 +65,7 @@ namespace OpenRPA.Interfaces
         Task<TokenUser> Signin(string username, SecureString password, string clientagent = "", string clientversion = "");
         Task<TokenUser> Signin(string jwt, string clientagent = "", string clientversion = "");
         Task<TokenUser> Signin(SecureString jwt, string clientagent = "", string clientversion = "");
+        Task<string> Signin(bool validate_only, bool longtoken, string clientagent = "", string clientversion = "");
         Task RegisterUser(string name, string username, string password);
         Task<string> RegisterQueue(string queuename);
         Task<object> QueueMessage(string queuename, object data, string replyto, string correlationId, int expiration);

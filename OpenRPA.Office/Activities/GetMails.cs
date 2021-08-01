@@ -97,6 +97,8 @@ namespace OpenRPA.Office.Activities
             bool more = _enum.MoveNext();
             if (more)
             {
+                IncIndex(context);
+                SetTotal(context, result.Count);
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
         }
@@ -106,6 +108,7 @@ namespace OpenRPA.Office.Activities
             bool more = _enum.MoveNext();
             if (more && !breakRequested)
             {
+                IncIndex(context);
                 context.ScheduleAction<email>(Body, _enum.Current, OnBodyComplete);
             }
             else
@@ -118,7 +121,6 @@ namespace OpenRPA.Office.Activities
             Interfaces.Extensions.AddCacheArgument(metadata, "UnreadOnly", UnreadOnly);
             Interfaces.Extensions.AddCacheArgument(metadata, "Folder", Folder);
             Interfaces.Extensions.AddCacheArgument(metadata, "Emails", Emails);
-
             metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);
         }

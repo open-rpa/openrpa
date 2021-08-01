@@ -11,6 +11,15 @@ namespace OpenRPA.Office.Activities
         public GetParagraphDesigner()
         {
             InitializeComponent();
+            Loaded += (sender, e) =>
+            {
+                var Variables = ModelItem.Properties[nameof(GetParagraph.Variables)].Collection;
+                if (Variables != null && Variables.Count == 0)
+                {
+                    Variables.Add(new System.Activities.Variable<int>("Index", 0));
+                    Variables.Add(new System.Activities.Variable<int>("Total", 0));
+                }
+            };
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {

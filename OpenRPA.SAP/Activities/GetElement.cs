@@ -77,6 +77,8 @@ namespace OpenRPA.SAP
             bool more = _enum.MoveNext();
             if (more)
             {
+                IncIndex(context);
+                SetTotal(context, elements.Length);
                 context.ScheduleAction(Body, _enum.Current, OnBodyComplete);
             }
         }
@@ -86,6 +88,7 @@ namespace OpenRPA.SAP
             bool more = _enum.MoveNext();
             if (more && !breakRequested)
             {
+                IncIndex(context);
                 context.ScheduleAction<SAPElement>(Body, _enum.Current, OnBodyComplete);
             }
             else

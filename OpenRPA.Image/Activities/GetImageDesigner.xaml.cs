@@ -21,6 +21,15 @@ namespace OpenRPA.Image
         {
             InitializeComponent();
             HighlightImage = Extensions.GetImageSourceFromResource("search.png");
+            Loaded += (sender, e) =>
+            {
+                var Variables = ModelItem.Properties[nameof(GetImage.Variables)].Collection;
+                if (Variables != null && Variables.Count == 0)
+                {
+                    Variables.Add(new Variable<int>("Index", 0));
+                    Variables.Add(new Variable<int>("Total", 0));
+                }
+            };
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
@@ -89,7 +98,8 @@ namespace OpenRPA.Image
                 var image = loadFrom.GetValue<string>("Image");
                 if (!string.IsNullOrEmpty(image))
                 {
-                    Bitmap b = Task.Run(() => {
+                    Bitmap b = Task.Run(() =>
+                    {
                         return Interfaces.Image.Util.LoadBitmap(image);
                     }).Result;
                     using (b)

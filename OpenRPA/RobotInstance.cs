@@ -1304,7 +1304,7 @@ namespace OpenRPA
                                 }
                             }
                         }
-                        Log.Information("Create instance of " + workflow.name);
+                        Log.Information("[" + message.correlationId + "] Create instance of " + workflow.name);
                         Log.Function("RobotInstance", "WebSocketClient_OnQueueMessage", "Create instance and run workflow");
                         GenericTools.RunUI(() =>
                         {

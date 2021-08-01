@@ -169,11 +169,12 @@ namespace OpenRPA.Interfaces
             get
             {
                 var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                if(!string.IsNullOrEmpty(dir))
+                if (!string.IsNullOrEmpty(dir))
                 {
                     if (!System.IO.Directory.Exists(System.IO.Path.Combine(dir)))
                         System.IO.Directory.CreateDirectory(dir);
-                } else
+                }
+                else
                 {
                     string filename = "settings.json";
                     var fi = new System.IO.FileInfo(filename);
@@ -208,7 +209,7 @@ namespace OpenRPA.Interfaces
         {
             get
             {
-                if(string.IsNullOrEmpty(_ProjectsDirectory))
+                if (string.IsNullOrEmpty(_ProjectsDirectory))
                 {
                     //var asm = System.Reflection.Assembly.GetEntryAssembly();
                     //var filepath = asm.CodeBase.Replace("file:///", "");
@@ -366,11 +367,13 @@ namespace OpenRPA.Interfaces
 
             return filename;
         }
-        public static Task WaitOneAsync(this System.Threading.WaitHandle waitHandle)
+        public static Task WaitOneAsync(this System.Threading.WaitHandle waitHandle, TimeSpan timeout)
         {
             if (waitHandle == null) throw new ArgumentNullException("waitHandle");
+            var Milliseconds = timeout.TotalMilliseconds;
+            if (Milliseconds < 1) Milliseconds = -1;
             var tcs = new TaskCompletionSource<bool>();
-            var rwh = System.Threading.ThreadPool.RegisterWaitForSingleObject(waitHandle, delegate { tcs.TrySetResult(true); }, null, -1, true);
+            var rwh = System.Threading.ThreadPool.RegisterWaitForSingleObject(waitHandle, delegate { tcs.TrySetResult(true); }, null, (uint)Milliseconds, true);
             var t = tcs.Task;
             t.ContinueWith((antecedent) => rwh.Unregister(null));
             return t;
@@ -450,7 +453,7 @@ namespace OpenRPA.Interfaces
             bool _isImmersiveProcess = false;
             try
             {
-                if (handle != IntPtr.Zero) _isImmersiveProcess =  NativeMethods.IsImmersiveProcess(handle);
+                if (handle != IntPtr.Zero) _isImmersiveProcess = NativeMethods.IsImmersiveProcess(handle);
             }
             catch (Exception)
             {
@@ -560,38 +563,38 @@ namespace OpenRPA.Interfaces
             List<string> arguments = new List<string>();
             bool stringIsQuoted = false;
             string argString = "";
-            if(commandLine!=null)
+            if (commandLine != null)
             {
-            for (int c = 0; c < commandLine.Length; c++)  //process string one character at a tie
-            {
-                if (commandLine.Substring(c, 1) == "\"")
+                for (int c = 0; c < commandLine.Length; c++)  //process string one character at a tie
                 {
-                    if (stringIsQuoted)  //end quote so populate next element of list with constructed argument
+                    if (commandLine.Substring(c, 1) == "\"")
                     {
-                        arguments.Add(argString);
-                        argString = "";
+                        if (stringIsQuoted)  //end quote so populate next element of list with constructed argument
+                        {
+                            arguments.Add(argString);
+                            argString = "";
+                        }
+                        else
+                        {
+                            stringIsQuoted = true; //beginning quote so flag and scip
+                        }
+                    }
+                    else if (commandLine.Substring(c, 1) == "".PadRight(1))
+                    {
+                        if (stringIsQuoted)
+                        {
+                            argString += commandLine.Substring(c, 1); //blank is embedded in quotes, so preserve it
+                        }
+                        else if (argString.Length > 0)
+                        {
+                            arguments.Add(argString);  //non-quoted blank so add to list if the first consecutive blank
+                        }
                     }
                     else
                     {
-                        stringIsQuoted = true; //beginning quote so flag and scip
+                        argString += commandLine.Substring(c, 1);  //non-blan character:  add it to the element being constructed
                     }
                 }
-                else if (commandLine.Substring(c, 1) == "".PadRight(1))
-                {
-                    if (stringIsQuoted)
-                    {
-                        argString += commandLine.Substring(c, 1); //blank is embedded in quotes, so preserve it
-                    }
-                    else if (argString.Length > 0)
-                    {
-                        arguments.Add(argString);  //non-quoted blank so add to list if the first consecutive blank
-                    }
-                }
-                else
-                {
-                    argString += commandLine.Substring(c, 1);  //non-blan character:  add it to the element being constructed
-                }
-            }
             }
             return arguments.ToArray();
         }

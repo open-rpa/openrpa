@@ -82,10 +82,11 @@ namespace OpenRPA.Image
         }
         async public static Task<System.Drawing.Rectangle> GetitAsync()
         {
-            if(VersionHelper.IsWindows8OrGreater())
+            if (VersionHelper.IsWindows8OrGreater())
             {
                 _overlayWindow = new Interfaces.Overlay.OverlayWindow(true);
-            } else
+            }
+            else
             {
                 _overlayWindow = new Interfaces.Overlay.OverlayWindow(false);
 
@@ -106,7 +107,7 @@ namespace OpenRPA.Image
             OpenRPA.Input.InputDriver.Instance.CallNext = false;
 
             waitHandle = new System.Threading.AutoResetEvent(false);
-            await waitHandle.WaitOneAsync();
+            await waitHandle.WaitOneAsync(TimeSpan.FromSeconds(5));
             //System.Windows.Forms.Application.Exit();
 
             return rect;
@@ -153,7 +154,7 @@ namespace OpenRPA.Image
         private static void onMouseUp(InputEventArgs e)
         {
             if (rect.Width < 3 || rect.Height < 3) return;
-            if(_overlayWindow!=null) _overlayWindow.Dispose();
+            if (_overlayWindow != null) _overlayWindow.Dispose();
             _overlayWindow = null;
             OpenRPA.Input.InputDriver.Instance.OnMouseDown -= onMouseDown;
             OpenRPA.Input.InputDriver.Instance.OnMouseUp -= onMouseUp;

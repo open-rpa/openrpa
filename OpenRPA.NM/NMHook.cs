@@ -681,9 +681,10 @@ namespace OpenRPA.NM
                 else
                 {
                     // Log.Debug("WaitForTab, failed locating tab: " + tabid);
+                    Log.Output("enumtabs");
                     enumtabs();
                 }
-                System.Threading.Thread.Sleep(500);
+                System.Threading.Thread.Sleep(1);
                 tab = FindTabById(browser, tabid);
             } while (tab != null && tab.status != "ready" && tab.status != "complete" && sw.Elapsed < timeout);
             return;

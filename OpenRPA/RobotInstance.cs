@@ -1195,7 +1195,7 @@ namespace OpenRPA
                         {
                             if (!i.isCompleted)
                             {
-                                i.Abort("Killed remotly by killallworkflows command");
+                                i.Abort("Killed remotely by killallworkflows command");
                             }
                         }
                     }
@@ -1215,7 +1215,7 @@ namespace OpenRPA
                         {
                             if (!i.isCompleted && (i.Workflow._id == command.workflowid || i.Workflow.RelativeFilename == command.workflowid))
                             {
-                                i.Abort("Killed remotly by killworkflows command");
+                                i.Abort("Killed remotely by killworkflows command");
                             }
                         }
                     }

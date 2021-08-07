@@ -121,6 +121,7 @@ namespace OpenRPA
             set
             {
                 SetProperty(value);
+                if (Workflow != null) Workflow.SetLastState(value);
             }
         }
         [JsonIgnore]
@@ -317,6 +318,10 @@ namespace OpenRPA
             Save();
             if (runWatch != null) runWatch.Stop();
             OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
+            GenericTools.RunUI(() =>
+            {
+                Workflow.SetLastState("aborted");
+            });
         }
         public void ResumeBookmark(string bookmarkName, object value)
         {
@@ -898,7 +903,6 @@ namespace OpenRPA
             if (Workflow != null) Workflow.NotifyUIState();
             Task.Run(async () =>
             {
-                // System.Threading.Thread.Sleep(1000);
                 int retries = 0;
                 _modified = DateTime.Now;
                 bool hasError = false;

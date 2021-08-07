@@ -1186,6 +1186,46 @@ namespace OpenRPA
                 {
                     data = data.Value<JObject>("payload");
                 }
+                if (command.command == "killallworkflows")
+                {
+                    if (Config.local.remote_allowed_killing_any)
+                    {
+                        command.command = "killallworkflowssuccess";
+                        foreach (var i in WorkflowInstance.Instances.ToList())
+                        {
+                            if (!i.isCompleted)
+                            {
+                                i.Abort("Killed remotly by killallworkflows command");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        command.command = "error";
+                        command.data = JObject.FromObject(new Exception("kill all not allowed for " + global.webSocketClient.user + " running on " + System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower()));
+                    }
+                    if (data != null) command.data = JObject.FromObject(data);
+                }
+                if (command.command == "killworkflows")
+                {
+                    if (Config.local.remote_allowed_killing_any)
+                    {
+                        command.command = "killworkflowssuccess";
+                        foreach (var i in WorkflowInstance.Instances.ToList())
+                        {
+                            if (!i.isCompleted && (i.Workflow._id == command.workflowid || i.Workflow.RelativeFilename == command.workflowid))
+                            {
+                                i.Abort("Killed remotly by killworkflows command");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        command.command = "error";
+                        command.data = JObject.FromObject(new Exception("kill all not allowed for " + global.webSocketClient.user + " running on " + System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower()));
+                    }
+                    if (data != null) command.data = JObject.FromObject(data);
+                }
                 if (command.command == null) return;
                 if (command.command == "invoke" && !string.IsNullOrEmpty(command.workflowid))
                 {

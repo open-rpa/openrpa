@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.64</Version>
-    <PackageReleaseNotes>1.2.64 Faster nm.Open URL
+    <Version>1.2.65</Version>
+    <PackageReleaseNotes>1.2.65 By popular demand, add kill workflows functions
+1.2.64 Faster nm.Open URL
 1.2.63 Lower time on closetab, force timeout on pipe messages
 1.2.62 test fix: json parser work around
 1.2.61 Yet another fix UI error after adding Index and Total variables on loops
@@ -316,6 +317,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Activities\MoveMouseDesigner.xaml" />
     <None Remove="Activities\OpenApplicationDesigner.xaml" />
     <None Remove="Activities\ShowBalloonTipDesigner.xaml" />
+    <None Remove="Activities\StopOpenRPADesigner.xaml" />
     <None Remove="Activities\TypeTextDesigner.xaml" />
     <None Remove="AgentWindow.xaml" />
     <None Remove="App.xaml" />
@@ -556,6 +558,9 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\FocusElementDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\StopOpenRPADesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\ShowBalloonTipDesigner.xaml">

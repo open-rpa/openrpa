@@ -324,6 +324,24 @@
   <data name="activity_keymodifiers_help" xml:space="preserve">
     <value>Hold this key down, while clicking, only works if Virtual click is disabled</value>
   </data>
+  <data name="activity_killall" xml:space="preserve">
+    <value>Kill all</value>
+  </data>
+  <data name="activity_killall_help" xml:space="preserve">
+    <value>Kill all running workflows, if false will only kill selected workflow</value>
+  </data>
+  <data name="activity_killifrunning" xml:space="preserve">
+    <value>Kill if Running</value>
+  </data>
+  <data name="activity_killifrunning_help" xml:space="preserve">
+    <value>Kill any instance of the selected workflow that is already running</value>
+  </data>
+  <data name="activity_killself" xml:space="preserve">
+    <value>Kill self</value>
+  </data>
+  <data name="activity_killself_help" xml:space="preserve">
+    <value>Also kill the current workflow</value>
+  </data>
   <data name="activity_map_variables" xml:space="preserve">
     <value>Map Variables</value>
   </data>
@@ -404,6 +422,12 @@
   </data>
   <data name="activity_showballoontip_tooltip" xml:space="preserve">
     <value>Show a small ballontip near the system tray, will respect OS message center settings</value>
+  </data>
+  <data name="activity_stopopenrpa" xml:space="preserve">
+    <value>Stop OpenRPA</value>
+  </data>
+  <data name="activity_stopopenrpa_tooltip" xml:space="preserve">
+    <value>Used for stopping a running workflow, or kill all running workflows on the local robot</value>
   </data>
   <data name="activity_stringresult" xml:space="preserve">
     <value>String Result</value>

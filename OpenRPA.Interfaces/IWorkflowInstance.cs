@@ -37,6 +37,7 @@ namespace OpenRPA.Interfaces
         Dictionary<string, WorkflowInstanceValueType> Variables { get; set; }
         void ResumeBookmark(string bookmarkName, object value);
         void Run();
+        void Abort(string Reason);
     }
     public class WorkflowInstanceValueType
     {

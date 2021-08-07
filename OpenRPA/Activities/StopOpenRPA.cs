@@ -47,13 +47,13 @@ namespace OpenRPA.Activities
                             {
                                 if (i.Workflow._id == workflowid || i.Workflow.RelativeFilename == workflowid)
                                 {
-                                    i.Abort("Killed remotly by killworkflows command from " + Instance.Workflow.name);
+                                    i.Abort("Killed remotely by killworkflows command from " + Instance.Workflow.name);
                                     result++;
                                 }
                             }
                             else
                             {
-                                i.Abort("Killed remotly by killallworkflows command from " + Instance.Workflow.name);
+                                i.Abort("Killed remotely by killallworkflows command from " + Instance.Workflow.name);
                                 result++;
                             }
                         }

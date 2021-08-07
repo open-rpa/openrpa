@@ -280,7 +280,7 @@ namespace OpenRPA.Interfaces.IPCService
                 {
                     if (!i.isCompleted)
                     {
-                        i.Abort("Killed remotly by killallworkflows command");
+                        i.Abort("Killed remotely by killallworkflows command");
                         result++;
                     }
                 }
@@ -300,7 +300,7 @@ namespace OpenRPA.Interfaces.IPCService
                 {
                     if (!i.isCompleted && (i.Workflow._id == Id || i.Workflow.RelativeFilename == Id))
                     {
-                        i.Abort("Killed remotly by killworkflows command");
+                        i.Abort("Killed remotely by killworkflows command");
                         result++;
                     }
                 }

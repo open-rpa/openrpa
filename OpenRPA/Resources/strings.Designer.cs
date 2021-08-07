@@ -1843,11 +1843,29 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Activity.
+        /// </summary>
+        public static string selectoractivity {
+            get {
+                return ResourceManager.GetString("selectoractivity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Network.
         /// </summary>
         public static string selectornetwork {
             get {
                 return ResourceManager.GetString("selectornetwork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output.
+        /// </summary>
+        public static string selectoroutput {
+            get {
+                return ResourceManager.GetString("selectoroutput", resourceCulture);
             }
         }
         

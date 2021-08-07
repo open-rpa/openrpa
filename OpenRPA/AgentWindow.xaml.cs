@@ -69,7 +69,7 @@ namespace OpenRPA
             try
             {
                 OnOpen(null);
-                if(RobotInstance.instance.ProjectCount>0)
+                if (RobotInstance.instance.ProjectCount > 0)
                 {
                     RobotInstance.instance.Projects.First().IsExpanded = true;
                 }
@@ -609,7 +609,7 @@ namespace OpenRPA
                     workflow = wf;
                 }
             }
-            if(workflow  != null)
+            if (workflow != null)
             {
                 string errormessage = "";
                 try

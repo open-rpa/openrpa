@@ -112,6 +112,7 @@ namespace OpenRPA.Interfaces
                 _OutputMessages = _OutputMessages.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
                 OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("OutputMessages"));
             }
+            if (category == "Output" && !Config.local.log_output) return;
             _TraceMessages = _TraceMessages.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Trace"));
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("TraceMessages"));

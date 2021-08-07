@@ -676,6 +676,30 @@ namespace OpenRPA
                 NotifyPropertyChanged("Setting_log_network");
             }
         }
+        public bool Setting_log_activity
+        {
+            get
+            {
+                return Config.local.log_activity;
+            }
+            set
+            {
+                Config.local.log_activity = value;
+                NotifyPropertyChanged("Setting_log_activity");
+            }
+        }
+        public bool Setting_log_output
+        {
+            get
+            {
+                return Config.local.log_output;
+            }
+            set
+            {
+                Config.local.log_output = value;
+                NotifyPropertyChanged("Setting_log_output");
+            }
+        }
         public bool Setting_use_sendkeys
         {
             get
@@ -3307,7 +3331,7 @@ namespace OpenRPA
                         var sw = new System.Diagnostics.Stopwatch(); sw.Start();
                         while (sw.Elapsed < TimeSpan.FromSeconds(1))
                         {
-                            lock(WorkflowInstance.Instances)
+                            lock (WorkflowInstance.Instances)
                             {
                                 foreach (var wi in WorkflowInstance.Instances.ToList())
                                 {

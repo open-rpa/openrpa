@@ -256,6 +256,11 @@
                 </RibbonGroup>
                 <RibbonGroup Header="{x:Static or:strings.logging}">
                     <StackPanel Orientation="Horizontal">
+                        <RibbonCheckBox IsChecked="{Binding Setting_log_output}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
+                        <TextBlock Text="{x:Static or:strings.warning}"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding Setting_log_warning}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="{x:Static or:strings.warning}"></TextBlock>
@@ -284,6 +289,11 @@
                         <RibbonCheckBox IsChecked="{Binding Setting_log_network}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="{x:Static or:strings.selectornetwork}"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <RibbonCheckBox IsChecked="{Binding Setting_log_activity}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
+                        <TextBlock Text="{x:Static or:strings.selectoractivity}"></TextBlock>
                     </StackPanel>
                 </RibbonGroup>
             </RibbonTab>
@@ -363,6 +373,8 @@
                                 <DockPanel>
                                     <StackPanel HorizontalAlignment="Left">
                                         <Button DockPanel.Dock="Top" Height="20" Width="20" Click="clearTraceMessages_Click" >X</Button>
+                                        <RibbonCheckBox IsChecked="{Binding Setting_log_output}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.selectoroutput}" />
                                         <RibbonCheckBox IsChecked="{Binding Setting_log_warning}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.warning}" />
                                         <RibbonCheckBox IsChecked="{Binding Setting_log_debug}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
@@ -375,6 +387,8 @@
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.selectorverbose}" />
                                         <RibbonCheckBox IsChecked="{Binding Setting_log_network}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.selectornetwork}" />
+                                        <RibbonCheckBox IsChecked="{Binding Setting_log_activity}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
+                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.selectoractivity}" />
                                     </StackPanel>
                                     <TextBox DockPanel.Dock="Bottom" Text="{Binding Tracing.TraceMessages}" TextWrapping="Wrap" IsReadOnly="False" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto" />
                                 </DockPanel>
@@ -398,7 +412,7 @@
                     </avalonDock:LayoutAnchorSide>
                 </avalonDock:LayoutRoot.BottomSide>
 
-                
+
                 <avalonDock:LayoutRoot.RightSide>
                     <avalonDock:LayoutAnchorSide>
                         <avalonDock:LayoutAnchorGroup >

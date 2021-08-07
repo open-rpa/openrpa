@@ -22,6 +22,8 @@ namespace OpenRPA.Activities
         public InArgument<string> workflow { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_waitforcompleted", typeof(Resources.strings)), LocalizedDescription("activity_waitforcompleted_help", typeof(Resources.strings))]
         public InArgument<bool> WaitForCompleted { get; set; } = true;
+        [RequiredArgument, LocalizedDisplayName("activity_killifrunning", typeof(Resources.strings)), LocalizedDescription("activity_killifrunning_help", typeof(Resources.strings))]
+        public InArgument<bool> KillIfRunning { get; set; } = true;
         [Category("Input")]
         public Dictionary<string, Argument> Arguments { get; set; } = new Dictionary<string, Argument>();
         protected override void Execute(NativeActivityContext context)
@@ -30,6 +32,7 @@ namespace OpenRPA.Activities
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
             // IDictionary<string, object> _payload = new System.Dynamic.ExpandoObject();
             var param = new Dictionary<string, object>();
+            var killifrunning = KillIfRunning.Get(context);
             if (Arguments == null || Arguments.Count == 0)
             {
                 var vars = context.DataContext.GetProperties();
@@ -104,6 +107,15 @@ namespace OpenRPA.Activities
                 var workflowid = this.workflow.Get(context);
                 var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
                 if (workflow == null) throw new ArgumentException("Failed locating workflow " + workflowid);
+
+                if (killifrunning)
+                    foreach (var i in global.OpenRPAClient.WorkflowInstances.ToList())
+                    {
+                        if (!i.isCompleted && i.Workflow._id == workflow._id)
+                        {
+                            i.Abort("Killed by KillIfRunning from " + Instance.Workflow.name);
+                        }
+                    }
                 IWorkflowInstance instance = null;
                 Views.WFDesigner designer = null;
                 Exception innerError = null;

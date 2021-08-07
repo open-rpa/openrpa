@@ -715,9 +715,9 @@ namespace OpenRPA.Views
         {
             if (plugin != null)
             {
-                    WFHelper.AddVBNamespaceSettings(WorkflowDesigner, new Type[] { plugin.GetType() });
-                    Type t = plugin.GetType();
-                    WFHelper.DynamicAssemblyMonitor(WorkflowDesigner, t.Assembly.GetName().Name, t.Assembly, true);
+                WFHelper.AddVBNamespaceSettings(WorkflowDesigner, new Type[] { plugin.GetType() });
+                Type t = plugin.GetType();
+                WFHelper.DynamicAssemblyMonitor(WorkflowDesigner, t.Assembly.GetName().Name, t.Assembly, true);
             }
             //DynamicAssemblyMonitor(t.Assembly.GetName().Name, t.Assembly, true);
             if (Config.local.recording_add_to_designer)
@@ -1276,7 +1276,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     message += (instance.Workflow.name + " " + instance.state);
                 }
                 if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
-                Log.Output(message);
+                Log.Information(message);
                 if (instance.hasError || instance.isCompleted)
                 {
                     if ((Config.local.notify_on_workflow_end && !isRemote) || (Config.local.notify_on_workflow_remote_end && isRemote))

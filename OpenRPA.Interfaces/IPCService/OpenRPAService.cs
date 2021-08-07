@@ -271,6 +271,46 @@ namespace OpenRPA.Interfaces.IPCService
             if (_instance.Error != null) throw _instance.Error;
             return _instance.Result;
         }
+        public int KillAllWorkflows()
+        {
+            int result = 0;
+            if (Config.local.remote_allowed_killing_any)
+            {
+                foreach (var i in global.OpenRPAClient.WorkflowInstances.ToList())
+                {
+                    if (!i.isCompleted)
+                    {
+                        i.Abort("Killed remotly by killallworkflows command");
+                        result++;
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception("kill all not allowed for " + global.webSocketClient.user + " running on " + System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower());
+            }
+            return result;
+        }
+        public int KillWorkflows(string Id)
+        {
+            int result = 0;
+            if (Config.local.remote_allowed_killing_any)
+            {
+                foreach (var i in global.OpenRPAClient.WorkflowInstances.ToList())
+                {
+                    if (!i.isCompleted && (i.Workflow._id == Id || i.Workflow.RelativeFilename == Id))
+                    {
+                        i.Abort("Killed remotly by killworkflows command");
+                        result++;
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception("kill all not allowed for " + global.webSocketClient.user + " running on " + System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower());
+            }
+            return result;
+        }
         public void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
         {
             if (string.IsNullOrEmpty(instance.caller)) return;

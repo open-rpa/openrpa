@@ -68,6 +68,7 @@ namespace OpenRPA
 
                 if (workflowInstanceRecord != null)
                 {
+                    Log.Activity(workflowInstanceRecord.ActivityDefinitionId + " " + workflowInstanceRecord.State);
                     var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
                     if (Instance == null) return;
                     lock (Instance)
@@ -94,6 +95,7 @@ namespace OpenRPA
                     if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Id)) ActivityId = activityStateRecord.Activity.Id;
                     if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Name)) name = activityStateRecord.Activity.Name;
                     // var sw = new Stopwatch(); sw.Start();
+                    Log.Activity(name + " " + activityStateRecord.State);
                     if (timers.ContainsKey(InstanceId.ToString()) && !string.IsNullOrEmpty(ActivityId))
                     {
                         var timer = timers[InstanceId.ToString()];

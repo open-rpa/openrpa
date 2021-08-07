@@ -26,9 +26,12 @@ namespace OpenRPA.Activities
         public InArgument<bool> WaitForCompleted { get; set; } = true;
         public InArgument<int> Expiration { get; set; }
         public Dictionary<string, Argument> Arguments { get; set; } = new Dictionary<string, Argument>();
+        [RequiredArgument, LocalizedDisplayName("activity_killifrunning", typeof(Resources.strings)), LocalizedDescription("activity_killifrunning_help", typeof(Resources.strings))]
+        public InArgument<bool> KillIfRunning { get; set; } = true;
         protected override void Execute(NativeActivityContext context)
         {
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var killifrunning = KillIfRunning.Get(context);
             string bookmarkname = null;
             bool waitforcompleted = WaitForCompleted.Get(context);
             IDictionary<string, object> _payload = new System.Dynamic.ExpandoObject();
@@ -77,7 +80,7 @@ namespace OpenRPA.Activities
                 foreach (var a in arguments)
                 {
                     var value = a.Value;
-                    if(value != null)
+                    if (value != null)
                     {
                         if (value.GetType() == typeof(System.Data.DataView)) continue;
                         if (value.GetType() == typeof(System.Data.DataRowView)) continue;
@@ -90,7 +93,8 @@ namespace OpenRPA.Activities
                         {
                             _payload[a.Key] = a.Value;
                         }
-                    } else { _payload[a.Key] = null; }
+                    }
+                    else { _payload[a.Key] = null; }
                 }
             }
             try
@@ -110,11 +114,12 @@ namespace OpenRPA.Activities
                     int expiration = Expiration.Get(context);
                     IDictionary<string, object> _robotcommand = new System.Dynamic.ExpandoObject();
                     _robotcommand["workflowid"] = workflow.Get(context);
+                    _robotcommand["killexisting"] = killifrunning;
                     _robotcommand["command"] = "invoke";
                     _robotcommand.Add("data", _payload);
                     var result = global.webSocketClient.QueueMessage(target.Get(context), _robotcommand, RobotInstance.instance.robotqueue, bookmarkname, expiration);
                     result.Wait(5000);
-                } 
+                }
             }
             catch (Exception ex)
             {
@@ -135,7 +140,7 @@ namespace OpenRPA.Activities
             // context.RemoveBookmark(bookmark.Name);
             var command = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.mq.RobotCommand>(obj.ToString());
             if (command.data == null) return;
-            if(command.command == "invokefailed" || command.command == "error")
+            if (command.command == "invokefailed" || command.command == "error")
             {
                 if (string.IsNullOrEmpty(command.data.ToString())) throw new Exception("Invoke failed");
                 Exception ex = null;
@@ -149,7 +154,7 @@ namespace OpenRPA.Activities
                 if (ex != null) throw ex;
                 throw new Exception(command.data.ToString());
             }
-            if(command.command == "timeout")
+            if (command.command == "timeout")
             {
                 throw new Exception("request timed out, no robot picked up the message in a timely fashion");
             }
@@ -171,7 +176,7 @@ namespace OpenRPA.Activities
                             {
                                 var jarray = JArray.Parse(json);
                                 myVar.SetValue(context.DataContext, jarray.ToDataTable());
-                            } 
+                            }
                             else
                             {
                                 myVar.SetValue(context.DataContext, null);
@@ -214,7 +219,7 @@ namespace OpenRPA.Activities
                                 {
                                     var jarray = JArray.Parse(json);
                                     Arguments[a.Key].Set(context, jarray.ToDataTable());
-                                } 
+                                }
                                 else
                                 {
                                     Arguments[a.Key].Set(context, null);
@@ -231,7 +236,7 @@ namespace OpenRPA.Activities
                             var testtest = t.Value<string>();
                             System.Reflection.MethodInfo method = typeof(JToken).GetMethod(nameof(JToken.Value)); // typeof(JToken).GetMethod(nameof(JToken.Value));
                             System.Reflection.MethodInfo generic = method.MakeGenericMethod(Arguments[a.Key].ArgumentType);
-                            var value = generic.Invoke(t, new object[] {  });
+                            var value = generic.Invoke(t, new object[] { });
                             Arguments[a.Key].Set(context, value);
                         }
                     }

@@ -1190,14 +1190,17 @@ namespace OpenRPA
                 {
                     if (Config.local.remote_allowed_killing_any)
                     {
+                        var result = 0;
                         command.command = "killallworkflowssuccess";
                         foreach (var i in WorkflowInstance.Instances.ToList())
                         {
                             if (!i.isCompleted)
                             {
                                 i.Abort("Killed remotely by killallworkflows command");
+                                result++;
                             }
                         }
+                        command.data = JObject.Parse("{\"result\":" + result + "}");
                     }
                     else
                     {
@@ -1260,7 +1263,11 @@ namespace OpenRPA
                             }
                             else if (!i.isCompleted)
                             {
-                                if (command.killexisting && i.WorkflowId == workflow._id && Config.local.remote_allowed_killing_any)
+                                if (command.killexisting && i.WorkflowId == workflow._id && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
+                                {
+                                    i.Abort("Killed by nodered rpa node, due to killexisting");
+                                }
+                                else if (command.killallexisting && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
                                 {
                                     i.Abort("Killed by nodered rpa node, due to killexisting");
                                 }
@@ -1388,7 +1395,7 @@ namespace OpenRPA
                 };
             }
             // string data = Newtonsoft.Json.JsonConvert.SerializeObject(command);
-            if (command.command == "error" || ((command.command == "invoke" || command.command == "invokesuccess") && !string.IsNullOrEmpty(command.workflowid)))
+            if (command.command == "error" || command.command == "killallworkflowssuccess" || ((command.command == "invoke" || command.command == "invokesuccess") && !string.IsNullOrEmpty(command.workflowid)))
             {
                 if (!string.IsNullOrEmpty(message.replyto) && message.replyto != message.queuename)
                 {

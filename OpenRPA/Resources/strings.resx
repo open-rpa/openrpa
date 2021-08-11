@@ -675,6 +675,9 @@
   <data name="open_state" xml:space="preserve">
     <value>State</value>
   </data>
+  <data name="output" xml:space="preserve">
+    <value>Output</value>
+  </data>
   <data name="packages" xml:space="preserve">
     <value>Packages</value>
   </data>

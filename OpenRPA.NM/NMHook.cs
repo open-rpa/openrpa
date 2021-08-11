@@ -684,7 +684,7 @@ namespace OpenRPA.NM
                     Log.Output("enumtabs");
                     enumtabs();
                 }
-                System.Threading.Thread.Sleep(1);
+                System.Threading.Thread.Sleep(PluginConfig.wait_for_tab_timeout);
                 tab = FindTabById(browser, tabid);
             } while (tab != null && tab.status != "ready" && tab.status != "complete" && sw.Elapsed < timeout);
             return;

@@ -151,6 +151,8 @@ namespace OpenRPA.NM
             _ = PluginConfig.wait_for_tab_after_set_value;
             _ = PluginConfig.wait_for_tab_click;
             _ = PluginConfig.compensate_for_old_addon;
+            _ = PluginConfig.wait_for_tab_timeout;
+
         }
         private void OnConnected(string obj)
         {

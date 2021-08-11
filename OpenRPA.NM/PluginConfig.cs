@@ -27,5 +27,6 @@ namespace OpenRPA.NM
         public static bool debug_console_output { get { return globallocal.GetProperty(pluginname, false); } set { globallocal.SetProperty(pluginname, value); } }
         public static string[] unique_xpath_ids { get { return globallocal.GetProperty(pluginname, new string[] { "ng-model", "ng-reflect-name", "data-control-name" }); } set { globallocal.SetProperty(pluginname, value); } }
         public static TimeSpan protocol_timeout { get { return globallocal.GetProperty(pluginname, TimeSpan.FromSeconds(10)); } set { globallocal.SetProperty(pluginname, value); } }
+        public static TimeSpan wait_for_tab_timeout { get { return globallocal.GetProperty(pluginname, TimeSpan.FromMilliseconds(1)); } set { globallocal.SetProperty(pluginname, value); } }
     }
 }

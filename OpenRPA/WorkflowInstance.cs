@@ -160,7 +160,7 @@ namespace OpenRPA
             {
                 runner.onWorkflowIdle(ref _ref);
             }
-            NotifyState();
+            // NotifyState();
         }
         private void NotifyAborted()
         {

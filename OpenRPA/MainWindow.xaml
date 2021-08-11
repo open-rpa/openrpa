@@ -258,7 +258,7 @@
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding Setting_log_output}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="{x:Static or:strings.warning}"></TextBlock>
+                        <TextBlock Text="{x:Static or:strings.output}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding Setting_log_warning}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 

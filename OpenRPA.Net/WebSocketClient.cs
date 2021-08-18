@@ -133,6 +133,7 @@ namespace OpenRPA.Net
                         json = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
                         if (lastmessage.AddMinutes(1) > DateTime.Now)
                         {
+                            Log.Error("Recevied no ping/message for more than a minute, clearing local buffer!");
                             tempbuffer = "";
                         }
 

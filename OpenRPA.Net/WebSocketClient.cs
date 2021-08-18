@@ -80,6 +80,7 @@ namespace OpenRPA.Net
                 Log.Information("Connecting to " + url);
                 await ws.ConnectAsync(new Uri(url), src.Token);
                 Log.Information("Connected to " + url);
+                tempbuffer = "";
                 Task receiveTask = Task.Run(async () => await receiveLoop(), src.Token);
                 Task pingTask = Task.Run(async () => await PingLoop(), src.Token);
                 OnOpen?.Invoke();
@@ -107,8 +108,11 @@ namespace OpenRPA.Net
             src.Cancel();
         }
         string tempbuffer = null;
+        private static object lockobject = new object();
+        public static DateTime lastmessage = DateTime.Now;
         private async Task receiveLoop()
         {
+            var FileName = System.IO.Path.Combine(OpenRPA.Interfaces.Extensions.ProjectsDirectory, "network.txt");
             byte[] buffer = new byte[websocket_package_size];
             while (true)
             {
@@ -122,52 +126,64 @@ namespace OpenRPA.Net
                         OnClose?.Invoke("");
                         return;
                     }
-                    result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), src.Token);
-                    json = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
-
-                    var serializer = new JsonSerializer();
-                    var workingjson = tempbuffer + json;
+                    result = ws.ReceiveAsync(new ArraySegment<byte>(buffer), src.Token).Result;
                     bool foundone = false;
-
-                    if ((workingjson.StartsWith("{") && workingjson.EndsWith("}")) || (workingjson.StartsWith("[") && workingjson.EndsWith("]")))
+                    lock (lockobject)
                     {
-                        //int begincount = System.Text.RegularExpressions.Regex.Matches(workingjson, "{").Count;
-                        //int endcount = System.Text.RegularExpressions.Regex.Matches(workingjson, "}").Count;
-                        //if (begincount == endcount)
-                        try
+                        json = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
+                        if (lastmessage.AddMinutes(1) > DateTime.Now)
                         {
-                            using (StringReader sr = new StringReader(workingjson))
-                            using (JsonTextReader reader = new JsonTextReader(sr))
-                            {
-                                reader.SupportMultipleContent = true;
-                                while (reader.Read())
-                                {
-                                    if (reader.TokenType == JsonToken.StartObject)
-                                    {
-                                        var message = serializer.Deserialize<SocketMessage>(reader);
-                                        if (message != null && !string.IsNullOrEmpty(message.id) && !string.IsNullOrEmpty(message.command) && message.data != null)
-                                        {
-                                            lock (_receiveQueue)
-                                            {
-                                                foundone = true;
-                                                tempbuffer += json;
-                                                tempbuffer = tempbuffer.Substring(reader.LinePosition );
-                                                if (message.index % 100 == 99) Log.Network("Adding " + message.id + " to receiveQueue " + (message.index + 1) + " of " + message.count);
-                                                _receiveQueue.Add(message);
-                                            }
+                            Log.Error("Recevied no ping/message for more than a minute, clearing local buffer!");
+                            tempbuffer = "";
+                        }
 
+                        var serializer = new JsonSerializer();
+                        var workingjson = tempbuffer + json;
+                        // System.IO.File.AppendAllText(FileName, json + Environment.NewLine);
+
+
+                        if ((workingjson.StartsWith("{") && workingjson.EndsWith("}")) || (workingjson.StartsWith("[") && workingjson.EndsWith("]")))
+                        {
+                            //int begincount = System.Text.RegularExpressions.Regex.Matches(workingjson, "{").Count;
+                            //int endcount = System.Text.RegularExpressions.Regex.Matches(workingjson, "}").Count;
+                            //if (begincount == endcount)
+                            try
+                            {
+                                using (StringReader sr = new StringReader(workingjson))
+                                using (JsonTextReader reader = new JsonTextReader(sr))
+                                {
+                                    reader.SupportMultipleContent = true;
+                                    while (reader.Read())
+                                    {
+                                        if (reader.TokenType == JsonToken.StartObject)
+                                        {
+                                            var message = serializer.Deserialize<SocketMessage>(reader);
+                                            if (message != null && !string.IsNullOrEmpty(message.id) && !string.IsNullOrEmpty(message.command) && message.data != null)
+                                            {
+                                                lock (_receiveQueue)
+                                                {
+                                                    foundone = true;
+                                                    tempbuffer += json;
+                                                    tempbuffer = tempbuffer.Substring(reader.LinePosition);
+                                                    if (message.index % 100 == 99) Log.Network("Adding " + message.id + " to receiveQueue " + (message.index + 1) + " of " + message.count);
+                                                    _receiveQueue.Add(message);
+                                                    lastmessage = DateTime.Now;
+                                                }
+
+                                            }
+                                            else { tempbuffer += json; }
                                         }
-                                        else { tempbuffer += json; }
                                     }
                                 }
                             }
+                            catch (Exception)
+                            {
+                                tempbuffer += json;
+                            }
                         }
-                        catch (Exception)
-                        {
-                            tempbuffer += json;
-                        }
+                        else { tempbuffer += json; }
                     }
-                    else { tempbuffer += json; }
+
 
 
                     //if (tempbuffer.Length > 0 && (workingjson.StartsWith("{") && workingjson.EndsWith("}")) || (workingjson.StartsWith("[") && workingjson.EndsWith("]")))

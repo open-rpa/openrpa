@@ -143,20 +143,64 @@ namespace OpenRPA.NM
                 return result;
             }
         }
+        private async Task loadImage()
+        {
+            try
+            {
+                System.Drawing.Bitmap b = await Interfaces.Image.Util.LoadBitmap(ImageString);
+                b.Dispose();
+
+                var basepath = Interfaces.Extensions.ProjectsDirectory;
+                var imagepath = System.IO.Path.Combine(basepath, "images");
+                var imagefilepath = System.IO.Path.Combine(imagepath, ImageString + ".png");
+
+                if (System.IO.File.Exists(imagefilepath))
+                {
+                    GenericTools.RunUI(() =>
+                    {
+                        try
+                        {
+                            NotifyPropertyChanged("Image");
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+        }
         public BitmapImage Image
         {
             get
             {
-                var image = ImageString;
-                System.Drawing.Bitmap b = Task.Run(() =>
+                try
                 {
-                    return Interfaces.Image.Util.LoadBitmap(image);
-                }).Result;
-                using (b)
-                {
-                    if (b == null) return null;
-                    return Interfaces.Image.Util.BitmapToImageSource(b, Interfaces.Image.Util.ActivityPreviewImageWidth, Interfaces.Image.Util.ActivityPreviewImageHeight);
+                    var basepath = Interfaces.Extensions.ProjectsDirectory;
+                    var imagepath = System.IO.Path.Combine(basepath, "images");
+                    var imagefilepath = System.IO.Path.Combine(imagepath, ImageString + ".png");
+
+                    if (!System.IO.File.Exists(imagefilepath))
+                    {
+                        _ = loadImage();
+                        return null;
+                    }
+                    System.Drawing.Bitmap b = Interfaces.Image.Util.LoadBitmap(ImageString).Result;
+                    using (b)
+                    {
+                        if (b == null) return null;
+                        return Interfaces.Image.Util.BitmapToImageSource(b, Interfaces.Image.Util.ActivityPreviewImageWidth, Interfaces.Image.Util.ActivityPreviewImageHeight);
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+                return null;
             }
         }
         public bool ShowLoopExpanded { get; set; }

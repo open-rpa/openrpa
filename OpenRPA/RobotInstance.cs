@@ -660,7 +660,7 @@ namespace OpenRPA
             {
                 if (!string.IsNullOrEmpty(Config.local.wsurl))
                 {
-                    global.webSocketClient = new Net.WebSocketClient(Config.local.wsurl);
+                    global.webSocketClient = Net.WebSocketClient.Get(Config.local.wsurl);
                     global.webSocketClient.OnOpen += RobotInstance_WebSocketClient_OnOpen;
                     global.webSocketClient.OnClose += WebSocketClient_OnClose;
                     global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
@@ -1122,19 +1122,7 @@ namespace OpenRPA
                 try
                 {
                     autoReconnect = false;
-                    global.webSocketClient.OnOpen -= RobotInstance_WebSocketClient_OnOpen;
-                    global.webSocketClient.OnClose -= WebSocketClient_OnClose;
-                    global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
-                    global.webSocketClient.OnQueueClosed -= WebSocketClient_OnQueueClosed;
-                    global.webSocketClient = null;
-
-                    global.webSocketClient = new Net.WebSocketClient(Config.local.wsurl);
-                    global.webSocketClient.OnOpen += RobotInstance_WebSocketClient_OnOpen;
-                    global.webSocketClient.OnClose += WebSocketClient_OnClose;
-                    global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
-                    global.webSocketClient.OnQueueClosed += WebSocketClient_OnQueueClosed;
                     SetStatus("Connecting to " + Config.local.wsurl);
-
                     await global.webSocketClient.Connect();
                     autoReconnect = true;
                 }

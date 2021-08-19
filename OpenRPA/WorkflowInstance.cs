@@ -14,8 +14,15 @@ namespace OpenRPA
 {
     public class WorkflowInstance : apibase, IWorkflowInstance
     {
+        private static System.Timers.Timer unsavedTimer = null;
         public WorkflowInstance()
         {
+            if (unsavedTimer == null)
+            {
+                unsavedTimer = new System.Timers.Timer(1000);
+                unsavedTimer.Elapsed += UnsavedTimer_Elapsed;
+                unsavedTimer.Start();
+            }
             _id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
         }
         private WorkflowInstance(Workflow workflow)
@@ -744,6 +751,7 @@ namespace OpenRPA
                         Save();
                         NotifyAborted();
                         OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
+                        return;
                     }
                 }
                 else if (e.CompletionState == System.Activities.ActivityInstanceState.Canceled)
@@ -756,6 +764,7 @@ namespace OpenRPA
                     if (runWatch != null) runWatch.Stop();
                     NotifyCompleted();
                     OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
+
                 }
                 else if (e.CompletionState == System.Activities.ActivityInstanceState.Executing)
                 {
@@ -764,6 +773,7 @@ namespace OpenRPA
                 {
                     throw new Exception("Unknown completetion state!!!" + e.CompletionState);
                 }
+                Save();
             };
             wfApp.Aborted = delegate (System.Activities.WorkflowApplicationAbortedEventArgs e)
             {
@@ -903,47 +913,92 @@ namespace OpenRPA
             if (Workflow != null) Workflow.NotifyUIState();
             Task.Run(async () =>
             {
-                int retries = 0;
-                _modified = DateTime.Now;
-                bool hasError = false;
-                do
+                try
                 {
-                    hasError = false;
+                    var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, "InstanceId,WorkflowId", this);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                    lock (unsaved)
+                    {
+                        var exists = unsaved.Where(x => x.Instance._id == _id).FirstOrDefault();
+                        unsaved.Remove(exists);
+                        unsaved.Add(new UnsavedWorkflowInstance() { Instance = this });
+                    }
+                }
+                //int retries = 0;
+                //_modified = DateTime.Now;
+                //bool hasError = false;
+                //int retryinterval = 1000;
+                //do
+                //{
+                //    hasError = false;
+                //    try
+                //    {
+                //        if (string.IsNullOrEmpty(Config.local.wsurl)) return;
+                //        //if (!global.isConnected || global.webSocketClient == null || global.webSocketClient.user == null)
+                //        //{
+                //        //    retries = 0;
+                //        //    System.Threading.Thread.Sleep(retryinterval);
+                //        //    if (retryinterval < 60000) retryinterval = +1000;
+                //        //    continue;
+                //        //}
+                //        Log.Warning("Save instance id: " + _id + " state: " + state);
+                //        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, "InstanceId,WorkflowId", this);
+                //        if (result != null)
+                //        {
+                //            _id = result._id;
+                //            _acl = result._acl;
+                //            _created = result._created;
+                //            _createdby = result._createdby;
+                //            _createdbyid = result._createdbyid;
+                //            _modified = result._modified;
+                //            _modifiedby = result._modifiedby;
+                //            _modifiedbyid = result._modifiedbyid;
+                //        }
+                //        else
+                //        {
+                //            retries++;
+                //            hasError = true;
+                //        }
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        Log.Debug(ex.ToString());
+                //        retries++;
+                //        hasError = true;
+                //        // throw;
+                //    }
+                //} while (hasError && retries < 10);
+                //if (hasError)
+                //{
+                //    Log.Error("Failed saving workflowinstance " + _id);
+                //}
+            });
+        }
+        private static void UnsavedTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (global.webSocketClient == null || global.webSocketClient.ws == null || global.webSocketClient.ws.State != System.Net.WebSockets.WebSocketState.Open) return;
+            if (global.webSocketClient.user == null) return;
+            lock (unsaved)
+            {
+                foreach (var item in unsaved.ToList())
+                {
                     try
                     {
-                        if (!global.isConnected) return;
-                        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, "InstanceId,WorkflowId", this);
-                        if (result != null)
-                        {
-                            _id = result._id;
-                            _acl = result._acl;
-                            _created = result._created;
-                            _createdby = result._createdby;
-                            _createdbyid = result._createdbyid;
-                            _modified = result._modified;
-                            _modifiedby = result._modifiedby;
-                            _modifiedbyid = result._modifiedbyid;
-                        }
-                        else
-                        {
-                            retries++;
-                            hasError = true;
-                        }
+                        item.Instance.Save();
+                        unsaved.Remove(item);
                     }
                     catch (Exception ex)
                     {
-                        Log.Debug(ex.ToString());
-                        retries++;
-                        hasError = true;
-                        // throw;
+                        Log.Error(ex.ToString());
                     }
-                } while (hasError && retries < 10);
-                if (hasError)
-                {
-                    Log.Error("Failed saving workflowinstance " + _id);
                 }
-            });
+            }
         }
+
+        public static List<UnsavedWorkflowInstance> unsaved = new List<UnsavedWorkflowInstance>();
         public static async Task RunPendingInstances()
         {
             Log.FunctionIndent("RobotInstance", "RunPendingInstances");
@@ -1022,5 +1077,8 @@ namespace OpenRPA
             return state + " " + WorkflowId;
         }
     }
-
+    public class UnsavedWorkflowInstance
+    {
+        public WorkflowInstance Instance;
+    }
 }

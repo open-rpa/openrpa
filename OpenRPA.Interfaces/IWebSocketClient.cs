@@ -54,6 +54,7 @@ namespace OpenRPA.Interfaces
         event Action<string> OnClose;
         event QueueMessageDelegate OnQueueMessage;
         event QueueClosedDelegate OnQueueClosed;
+        System.Net.WebSockets.WebSocket ws { get; }
         TokenUser user { get; }
         string url { get; set; }
         string jwt { get; }

@@ -19,7 +19,7 @@ namespace OpenRPA.Net
     {
         static SemaphoreSlim ProcessingSemaphore = new SemaphoreSlim(1, 1);
         static SemaphoreSlim SendStringSemaphore = new SemaphoreSlim(1, 1);
-        private WebSocket ws = null;
+        public WebSocket ws { get; private set; } = null;
         public int websocket_package_size = 4096;
         public string url { get; set; }
         private CancellationTokenSource src = new CancellationTokenSource();
@@ -41,7 +41,15 @@ namespace OpenRPA.Net
                 return true;
             }
         }
-        public WebSocketClient(string url)
+        private WebSocketClient() { }
+        public string id = Guid.NewGuid().ToString();
+        private static WebSocketClient instance = null;
+        public static WebSocketClient Get(string url)
+        {
+            if (instance == null) instance = new WebSocketClient(url);
+            return instance;
+        }
+        private WebSocketClient(string url)
         {
             this.url = url;
         }
@@ -102,7 +110,13 @@ namespace OpenRPA.Net
                 catch (Exception)
                 {
                 }
-                //ws.Dispose();
+                try
+                {
+                    ws.Dispose();
+                }
+                catch (Exception)
+                {
+                }
                 //ws = null;
             }
             src.Cancel();
@@ -340,6 +354,10 @@ namespace OpenRPA.Net
                     {
                         _sendQueue.Remove(msg);
                     }
+                    else
+                    {
+                        var b = true;
+                    }
                 }
             }
             finally
@@ -350,7 +368,7 @@ namespace OpenRPA.Net
         private async Task<bool> SendString(string data, CancellationToken cancellation)
         {
             if (ws == null) { return false; }
-            if (ws.State != WebSocketState.Open) { return false; }
+            if (ws.State != WebSocketState.Open) return false;
             var encoded = Encoding.UTF8.GetBytes(data);
             var buffer = new ArraySegment<Byte>(encoded, 0, encoded.Length);
             try
@@ -378,7 +396,15 @@ namespace OpenRPA.Net
         {
             lock (_sendQueue)
             {
-                _sendQueue.Add(msg);
+                var exists = _sendQueue.Where(x => x.id == msg.id && x.index == msg.index);
+                if (exists.Count() == 0)
+                {
+                    _sendQueue.Add(msg);
+                }
+                else
+                {
+                    var b = true;
+                }
             }
             _ = ProcessQueue();
         }
@@ -530,16 +556,69 @@ namespace OpenRPA.Net
         }
         public async Task<Message> SendMessage(Message msg)
         {
+            int retries = 0;
             var qm = new QueuedMessage(msg);
             lock (_messageQueue)
             {
                 _messageQueue.Add(qm);
             }
-
-            using (qm.autoReset = new AutoResetEvent(false))
+            try
             {
-                msg.SendMessage(this);
-                await qm.autoReset.WaitOneAsync();
+
+                using (qm.autoReset = new AutoResetEvent(false))
+                {
+                    while (qm.reply == null)
+                    {
+                        if (retries > 0)
+                        {
+                            lock (_messageQueue)
+                            {
+                                _messageQueue.Remove(qm);
+                                _messageQueue.Add(qm);
+                            }
+
+                            // Log.Warning("Retrying " + qm.msg.id + " " + qm.msg.command);
+                            msg.SendMessage(this);
+                        }
+                        else
+                        {
+                            msg.SendMessage(this);
+
+                        }
+                        await qm.autoReset.WaitOneAsync(Config.local.network_message_timeout);
+                        if (qm.reply == null || (!string.IsNullOrEmpty(qm.reply.data) && qm.reply.data.Contains("\"error\":\"jwt must be provided\"")))
+                        {
+                            qm.autoReset.Reset();
+                            retries++;
+                            qm.reply = null;
+
+                            if (msg.command == "insertorupdateone")
+                            {
+                                var data = JObject.Parse(msg.data);
+                                var _id = data["item"].Value<string>("_id");
+                                var state = data["item"].Value<string>("state");
+                                if (state == "running" || state == "idle") throw new Exception("Failed updating object");
+                                Log.Warning("Message timed out " + qm.msg.id + " " + qm.msg.command + " id:" + _id + " state: " + state);
+                            }
+                            else
+                            {
+                                Log.Warning("Message timed out " + qm.msg.id + " " + qm.msg.command);
+                            }
+                        }
+                        else
+                        {
+                            retries = 0;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            if (retries > 0)
+            {
+                Log.Error("Gave up on " + qm.msg.id + " " + qm.msg.command);
             }
             return qm.reply as Message;
         }

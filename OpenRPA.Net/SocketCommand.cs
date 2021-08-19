@@ -23,20 +23,21 @@ namespace OpenRPA.Net
         {
             msg.data = JsonConvert.SerializeObject(this);
             var reply = await ws.SendMessage(msg);
+            if (reply == null) return new T();
             if (reply.command == "error")
             {
                 throw new Exception("server error: " + reply.data);
             }
             try
             {
-                if(string.IsNullOrEmpty(reply.data)) return new T();
+                if (string.IsNullOrEmpty(reply.data)) return new T();
                 if (reply.data == "{}") return new T();
 
                 var result = JsonConvert.DeserializeObject<T>(reply.data, new JsonSerializerSettings
                 {
                     DateTimeZoneHandling = DateTimeZoneHandling.Local
                 });
-                if(result == null)
+                if (result == null)
                 {
                     return result;
                 }
@@ -47,7 +48,7 @@ namespace OpenRPA.Net
                 Console.WriteLine(reply.data);
                 Console.WriteLine(ex.ToString());
                 throw;
-            }            
+            }
         }
     }
 }

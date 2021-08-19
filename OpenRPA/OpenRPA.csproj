@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.68</Version>
-    <PackageReleaseNotes>1.2.68 Add variable mapper to invoke form, to support custom bindings
+    <Version>1.2.69</Version>
+    <PackageReleaseNotes>1.2.69 Rework some network handling, to better handle disconnects
+1.2.68 Add variable mapper to invoke form, to support custom bindings
 1.2.67 Variouse UI and websocket fixes
 1.2.66 Add custom wait for tab timeout
 1.2.65 By popular demand, add kill workflows functions

@@ -146,15 +146,6 @@ namespace OpenRPA.RDService
                 autoReconnect = false;
                 try
                 {
-                    global.webSocketClient.OnOpen -= WebSocketClient_OnOpen;
-                    global.webSocketClient.OnClose -= WebSocketClient_OnClose;
-                    global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
-                    global.webSocketClient = null;
-
-                    global.webSocketClient = new WebSocketClient(PluginConfig.wsurl);
-                    global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
-                    global.webSocketClient.OnClose += WebSocketClient_OnClose;
-                    global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
                     await global.webSocketClient.Connect();
                     autoReconnect = true;
                 }
@@ -182,7 +173,7 @@ namespace OpenRPA.RDService
                 {
                     if (!string.IsNullOrEmpty(PluginConfig.tempjwt))
                     {
-                        user = await global.webSocketClient.Signin(PluginConfig.tempjwt, "RDService", System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString()); 
+                        user = await global.webSocketClient.Signin(PluginConfig.tempjwt, "RDService", System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
                         if (user != null)
                         {
                             if (isService)
@@ -196,7 +187,7 @@ namespace OpenRPA.RDService
                     }
                     else if (PluginConfig.jwt != null && PluginConfig.jwt.Length > 0)
                     {
-                        user = await global.webSocketClient.Signin(PluginConfig.UnprotectString(Base64Decode(PluginConfig.jwt)), "RDService", System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString()); 
+                        user = await global.webSocketClient.Signin(PluginConfig.UnprotectString(Base64Decode(PluginConfig.jwt)), "RDService", System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
                         if (user != null)
                         {
                             Log.Information("Signed in as " + user.username);
@@ -225,7 +216,7 @@ namespace OpenRPA.RDService
                 //foreach (var c in clients) sessions.Add(new RobotUserSession(c));
                 // Log.Information("Loaded " + sessions.Count + " sessions");
                 // Create listener for robots to connect too
-                if(pipe==null)
+                if (pipe == null)
                 {
                     PipeSecurity ps = new PipeSecurity();
                     ps.AddAccessRule(new PipeAccessRule("Users", PipeAccessRights.ReadWrite | PipeAccessRights.CreateNewInstance, System.Security.AccessControl.AccessControlType.Allow));
@@ -237,10 +228,10 @@ namespace OpenRPA.RDService
                     pipe.Start();
                 }
 
-                if (reloadTimer==null)
+                if (reloadTimer == null)
                 {
                     reloadTimer = new System.Timers.Timer(PluginConfig.reloadinterval.TotalMilliseconds);
-                    reloadTimer.Elapsed += async (o,e) =>
+                    reloadTimer.Elapsed += async (o, e) =>
                     {
                         reloadTimer.Stop();
                         try
@@ -273,11 +264,12 @@ namespace OpenRPA.RDService
                 unattendedserver server = servers.FirstOrDefault();
 
                 unattendedclient[] clients = new unattendedclient[] { };
-                if(server != null && server.enabled)
+                if (server != null && server.enabled)
                 {
                     disabledmessageshown = false;
                     clients = await global.webSocketClient.Query<unattendedclient>("openrpa", "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
-                } else if (disabledmessageshown == false)
+                }
+                else if (disabledmessageshown == false)
                 {
                     Log.Information("No server for " + computerfqdn + " found, or server is disabled");
                     disabledmessageshown = true;
@@ -288,7 +280,7 @@ namespace OpenRPA.RDService
                     var session = sessions.Where(x => x.client.windowsusername == c.windowsusername).FirstOrDefault();
                     if (session == null)
                     {
-                        if(c.enabled)
+                        if (c.enabled)
                         {
                             Log.Information("Adding session for " + c.windowsusername);
                             sessions.Add(new RobotUserSession(c));
@@ -306,11 +298,11 @@ namespace OpenRPA.RDService
                                 session = null;
                                 Log.Information("Adding session for " + c.windowsusername);
                                 sessions.Add(new RobotUserSession(c));
-                            } 
+                            }
                             else
                             {
                                 await session.SendSignout();
-                                if (session.rdp!=null || session.freerdp !=null)
+                                if (session.rdp != null || session.freerdp != null)
                                 {
                                     Log.Information("disconnecting session for " + session.client.windowsusername);
                                     try
@@ -508,7 +500,7 @@ namespace OpenRPA.RDService
                         Console.WriteLine("try uninstall or reauth ");
                         return;
                     }
-                    
+
                 }
 
 
@@ -523,12 +515,13 @@ namespace OpenRPA.RDService
                 log("ResetLogPath");
                 Log.ResetLogPath(logpath);
                 Console.WriteLine("****** BEGIN");
-                
-                Task.Run(async () => {
+
+                Task.Run(async () =>
+                {
                     try
                     {
                         Console.WriteLine("Connect to " + PluginConfig.wsurl);
-                        global.webSocketClient = new WebSocketClient(PluginConfig.wsurl);
+                        global.webSocketClient = WebSocketClient.Get(PluginConfig.wsurl);
                         global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
                         global.webSocketClient.OnClose += WebSocketClient_OnClose;
                         global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
@@ -573,13 +566,13 @@ namespace OpenRPA.RDService
                     {
                         System.Threading.Thread.Sleep(100);
                     }
-                    if(Monitormanager.IsServiceInstalled)
+                    if (Monitormanager.IsServiceInstalled)
                     {
                         // _ = Monitormanager.StopService();
                     }
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Log.Error(ex.ToString());
             }

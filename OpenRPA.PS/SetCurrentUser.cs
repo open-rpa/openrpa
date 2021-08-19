@@ -25,7 +25,7 @@ namespace OpenRPA.PS
                     global.webSocketClient = null;
                 }
                 if (string.IsNullOrEmpty(WSURL)) WSURL = Config.local.wsurl;
-                global.webSocketClient = new OpenRPA.Net.WebSocketClient(WSURL);
+                global.webSocketClient = OpenRPA.Net.WebSocketClient.Get(WSURL);
                 await global.webSocketClient.Connect();
             }
             if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))

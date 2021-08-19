@@ -24,7 +24,7 @@ namespace OpenRPA.PS
             {
                 if (global.webSocketClient == null)
                 {
-                    global.webSocketClient = new OpenRPA.Net.WebSocketClient(Config.local.wsurl);
+                    global.webSocketClient = OpenRPA.Net.WebSocketClient.Get(Config.local.wsurl);
                     global.webSocketClient.OnClose += WebSocketClient_OnClose;
                     await global.webSocketClient.Connect();
                 }
@@ -67,11 +67,11 @@ namespace OpenRPA.PS
         internal static string psqueue = null;
         internal async Task RegisterQueue()
         {
-            if(psqueue == null && global.webSocketClient != null)
+            if (psqueue == null && global.webSocketClient != null)
             {
                 psqueue = await global.webSocketClient.RegisterQueue(null);
             }
-            
+
         }
     }
 }

@@ -431,6 +431,7 @@
         <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="2" Height="25" Background="Gray">
             <StatusBar FocusManager.IsFocusScope="True" x:Name="StatusBar">
                 <StatusBarItem x:Name="LabelStatusBar" Content="{x:Static or:strings.status_disconnected}" />
+                <StatusBarItem x:Name="LabelStatusBar2" Content="{Binding Path=wsstate}" />
                 <StatusBarItem VerticalAlignment="Top" HorizontalContentAlignment="Center">
                     <ItemsControl x:Name="lvDataBinding">
                         <ItemsControl.ItemsPanel>

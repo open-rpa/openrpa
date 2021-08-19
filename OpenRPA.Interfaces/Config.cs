@@ -79,6 +79,7 @@ namespace OpenRPA
         public int max_workflows { get { return GetProperty(null, 500); } set { SetProperty(null, value); } }
         public int max_trace_lines { get { return GetProperty(null, 250); } set { SetProperty(null, value); } }
         public int max_output_lines { get { return GetProperty(null, 250); } set { SetProperty(null, value); } }
+        public TimeSpan network_message_timeout { get { return GetProperty(null, TimeSpan.FromSeconds(15)); } set { SetProperty(null, value); } }
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)

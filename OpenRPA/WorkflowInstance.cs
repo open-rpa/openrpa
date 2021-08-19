@@ -183,7 +183,7 @@ namespace OpenRPA
             {
                 if (!runner.onWorkflowStarting(ref _ref, false)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
             }
-            if (global.isConnected)
+            if (global.isConnected && global.webSocketClient.user != null)
             {
                 result.owner = global.webSocketClient.user.name;
                 result.ownerid = global.webSocketClient.user._id;

@@ -115,6 +115,15 @@ namespace OpenRPA.Forms.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Map variables.
+        /// </summary>
+        public static string activity_map_variables {
+            get {
+                return ResourceManager.GetString("activity_map_variables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Message.
         /// </summary>
         public static string activity_noti_message {

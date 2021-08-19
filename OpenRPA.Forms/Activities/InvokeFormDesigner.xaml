@@ -39,7 +39,7 @@
         <StackPanel>
             <Button Content="{x:Static or:strings.activity_invokeform_open}" Click="Button_Click" />
             <Button Content="{x:Static or:strings.activity_invokeform_create_var}" Click="Button_Click_1" />
-
+            <Button Click="Button_Click_2" Content="{x:Static or:strings.activity_map_variables}"></Button>
         </StackPanel>
     </Grid>
 

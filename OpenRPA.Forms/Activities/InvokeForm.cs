@@ -23,6 +23,7 @@ namespace OpenRPA.Forms.Activities
     {
         [RequiredArgument]
         public InArgument<string> Form { get; set; }
+        public Dictionary<string, Argument> Arguments { get; set; } = new Dictionary<string, Argument>();
         protected async override Task<FormResult> ExecuteAsync(AsyncCodeActivityContext context)
         {
             var xmlString = Form.Get(context);
@@ -41,35 +42,69 @@ namespace OpenRPA.Forms.Activities
                 return _fields;
             });
             var param = new Dictionary<string, object>();
+
             var vars = context.DataContext.GetProperties();
-            foreach (dynamic v in vars)
+            if (Arguments == null || Arguments.Count == 0)
             {
-                var value = v.GetValue(context.DataContext);
-                if (value != null)
+                foreach (dynamic v in vars)
                 {
-                    //_payload.Add(v.DisplayName, value);
-                    try
+                    var value = v.GetValue(context.DataContext);
+                    if (value != null)
                     {
-                        if(fields.Contains(v.DisplayName))
+                        //_payload.Add(v.DisplayName, value);
+                        try
                         {
-                            var test = new { value = value };
-                            if (value.GetType() == typeof(System.Data.DataTable)) continue;
-                            if (value.GetType() == typeof(System.Data.DataView)) continue;
-                            if (value.GetType() == typeof(System.Data.DataRowView)) continue;
-                            //
-                            var asjson = JObject.FromObject(test);
-                            param[v.DisplayName] = value;
+                            try
+                            {
+                                //if(fields.Contains(v.DisplayName))
+                                if (value.GetType() == typeof(System.Data.DataTable)) continue;
+                                if (value.GetType() == typeof(System.Data.DataView)) continue;
+                                if (value.GetType() == typeof(System.Data.DataRowView)) continue;
+                                param[v.DisplayName] = value;
+                            }
+                            catch (Exception)
+                            {
+
+                                throw;
+                            }
+                        }
+                        catch (Exception)
+                        {
                         }
                     }
-                    catch (Exception)
+                    else
                     {
+                        param[v.DisplayName] = value;
                     }
                 }
-                else
-                {
-                    param[v.DisplayName] = value;
-                }
             }
+            else
+            {
+                Dictionary<string, object> arguments = (from argument in Arguments
+                                                        where argument.Value.Direction != ArgumentDirection.Out
+                                                        select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));
+                foreach (var a in arguments)
+                {
+                    var value = a.Value;
+                    if (value != null)
+                    {
+                        if (value.GetType() == typeof(System.Data.DataView)) continue;
+                        if (value.GetType() == typeof(System.Data.DataRowView)) continue;
+
+                        if (value.GetType() == typeof(System.Data.DataTable))
+                        {
+                            if (value != null) param[a.Key] = ((System.Data.DataTable)value).ToJArray();
+                        }
+                        else
+                        {
+                            param[a.Key] = a.Value;
+                        }
+                    }
+                    else { param[a.Key] = null; }
+                }
+
+            }
+
 
             Exception LastError = null;
             var res = GenericTools.MainWindow.Dispatcher.Invoke<FormResult>(() =>
@@ -83,30 +118,111 @@ namespace OpenRPA.Forms.Activities
                     if (f.LastError != null) LastError = f.LastError;
                 }
                 var _res = new FormResult();
-                if(f.actionContext != null && f.actionContext.Action!=null) _res.Action = f.actionContext.Action.ToString();
+                if (f.actionContext != null && f.actionContext.Action != null) _res.Action = f.actionContext.Action.ToString();
                 _res.Model = f.CurrentModel;
                 return _res;
             });
             if (LastError != null) throw LastError;
             json = JsonConvert.SerializeObject(res, Formatting.Indented);
             result = JsonConvert.DeserializeObject<FormResult>(json);
-            if(result.Model!=null)
-                foreach (var prop in result.Model)
+            if (result.Model != null)
+                if (Arguments == null || Arguments.Count == 0)
                 {
-                    var myVar = context.DataContext.GetProperties().Find(prop.Key, true);
-                    if (myVar != null)
+                    foreach (var prop in result.Model)
                     {
-                        if(myVar.PropertyType == typeof(int))
+                        var myVar = context.DataContext.GetProperties().Find(prop.Key, true);
+                        if (myVar != null)
                         {
-                            if(prop.Value != null) myVar.SetValue(context.DataContext, int.Parse(prop.Value.ToString()));
-                        } else
+                            try
+                            {
+                                if (myVar.PropertyType == typeof(int))
+                                {
+                                    if (prop.Value != null) myVar.SetValue(context.DataContext, int.Parse(prop.Value.ToString()));
+                                }
+                                else
+                                {
+                                    if (prop.Value != null) myVar.SetValue(context.DataContext, prop.Value);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex.ToString());
+                            }
+                        }
+                        else
                         {
-                            if (prop.Value != null) myVar.SetValue(context.DataContext, prop.Value);
+                            Log.Debug("Recived property " + prop.Key + " but no variable exists to save the value in " + prop.Value);
                         }
                     }
-                    else
+                }
+                else
+                {
+                    Dictionary<string, object> arguments = (from argument in Arguments
+                                                            where argument.Value.Direction != ArgumentDirection.In
+                                                            select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));
+                    foreach (var a in arguments)
                     {
-                        Log.Debug("Recived property " + prop.Key + " but no variable exists to save the value in " + prop.Value);
+                        var prop = result.Model[a.Key];
+                        if (prop != null)
+                        {
+                            var myVar = context.DataContext.GetProperties().Find(a.Key, true);
+                            if (Arguments[a.Key].ArgumentType == typeof(System.Data.DataTable))
+                            {
+                                try
+                                {
+                                    var json2 = result.Model[a.Key].ToString();
+                                    if (!string.IsNullOrEmpty(json2))
+                                    {
+                                        var jarray = JArray.Parse(json2);
+                                        Arguments[a.Key].Set(context, jarray.ToDataTable());
+                                    }
+                                    else
+                                    {
+                                        Arguments[a.Key].Set(context, null);
+                                    }
+                                }
+                                catch (Exception)
+                                {
+                                    throw;
+                                }
+                            }
+                            else
+                            {
+                                if (result.Model[a.Key] is JToken t)
+                                {
+                                    System.Reflection.MethodInfo method = typeof(JToken).GetMethod(nameof(JToken.Value)); // typeof(JToken).GetMethod(nameof(JToken.Value));
+                                    System.Reflection.MethodInfo generic = method.MakeGenericMethod(Arguments[a.Key].ArgumentType);
+                                    var value = generic.Invoke(t, new object[] { });
+                                    Arguments[a.Key].Set(context, value);
+                                }
+                                else if (result.Model[a.Key] is JArray _a)
+                                {
+                                }
+                                else
+                                {
+                                    Arguments[a.Key].Set(context, result.Model[a.Key]);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                if (Arguments[a.Key].ArgumentType.IsValueType)
+                                {
+                                    Arguments[a.Key].Set(context, Activator.CreateInstance(Arguments[a.Key].ArgumentType));
+                                }
+                                else
+                                {
+                                    Arguments[a.Key].Set(context, null);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error("Error setting " + a.Key + ": " + ex.Message);
+                            }
+                        }
+
                     }
                 }
             await Task.Delay(1);

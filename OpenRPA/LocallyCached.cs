@@ -88,7 +88,7 @@ namespace OpenRPA
                                 }
                                 else
                                 {
-                                    Log.Output("Failed saving " + entity._type + " " + entity._id);
+                                    Log.Debug("Failed saving " + entity._type + " " + entity._id + " will be updated at next sync or save");
                                 }
                             }
                             catch (Exception ex)

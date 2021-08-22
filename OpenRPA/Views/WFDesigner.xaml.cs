@@ -496,7 +496,7 @@ namespace OpenRPA.Views
                 }
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

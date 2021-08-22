@@ -55,7 +55,6 @@ namespace OpenRPA
         }
         public static Dictionary<string, Dictionary<string, Stopwatch>> timers = new Dictionary<string, Dictionary<string, Stopwatch>>();
         public static object timerslock = new object();
-        private static string hostname = null;
         protected override void Track(TrackingRecord trackRecord, TimeSpan timeStamp)
         {
             try

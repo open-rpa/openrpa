@@ -354,10 +354,6 @@ namespace OpenRPA.Net
                     {
                         lock (_sendQueuelock) _sendQueue.Remove(msg);
                     }
-                    else
-                    {
-                        var b = true;
-                    }
                 }
             }
             finally
@@ -400,10 +396,6 @@ namespace OpenRPA.Net
                 if (exists == 0)
                 {
                     _sendQueue.Add(msg);
-                }
-                else
-                {
-                    var b = true;
                 }
             }
             _ = ProcessQueue();
@@ -556,7 +548,6 @@ namespace OpenRPA.Net
             }
             try
             {
-
                 using (qm.autoReset = new AutoResetEvent(false))
                 {
                     while (qm.reply == null)
@@ -568,8 +559,6 @@ namespace OpenRPA.Net
                                 _messageQueue.Remove(qm);
                                 _messageQueue.Add(qm);
                             }
-
-                            // Log.Warning("Retrying " + qm.msg.id + " " + qm.msg.command);
                             if (user == null && msg.command == "signin")
                             {
                                 Log.Network("(" + _messageQueue.Count + ") " + msg.command + " RSND: " + msg.id);
@@ -589,15 +578,12 @@ namespace OpenRPA.Net
                         {
                             Log.Network("(" + _messageQueue.Count + ") " + msg.command + " SEND: " + msg.id);
                             msg.SendMessage(this);
-
                         }
                         await qm.autoReset.WaitOneAsync(Config.local.network_message_timeout);
-                        qm.autoReset.Close();
                         if (qm.reply == null || (!string.IsNullOrEmpty(qm.reply.data) && qm.reply.data.Contains("\"error\":\"jwt must be provided\"")))
                         {
                             qm.autoReset.Reset();
                             retries++;
-
                             if (msg.command == "insertorupdateone")
                             {
                                 var data = JObject.Parse(msg.data);
@@ -605,7 +591,6 @@ namespace OpenRPA.Net
                                 var state = data["item"].Value<string>("state");
                                 if (state == "running" || state == "idle")
                                 {
-                                    //throw new Exception("Failed updating object");
                                     retries = 0;
                                     lock (_messageQueue)
                                     {
@@ -634,7 +619,15 @@ namespace OpenRPA.Net
             }
             if (retries > 0)
             {
-                Log.Error("Gave up on " + qm.msg.id + " " + qm.msg.command);
+                // Gave up on 56b5181f-c867-42f1-b250-411cee6f634a queuemessage
+                if (qm.msg.command == "queuemessage")
+                {
+                    Log.Error("Gave up on " + qm.msg.id + " " + qm.msg.command);
+                }
+                else
+                {
+                    Log.Error("Gave up on " + qm.msg.id + " " + qm.msg.command);
+                }
             }
             return qm.reply as Message;
         }
@@ -759,7 +752,7 @@ namespace OpenRPA.Net
                 if (!string.IsNullOrEmpty(RegisterQueue.error)) throw new SocketException(RegisterQueue.error);
                 return RegisterQueue.queuename;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -806,7 +799,7 @@ namespace OpenRPA.Net
                 } while (cont);
                 return result.ToArray();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

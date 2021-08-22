@@ -118,7 +118,6 @@ namespace OpenRPA.Activities
                     }
                 IWorkflowInstance instance = null;
                 Views.WFDesigner designer = null;
-                Exception innerError = null;
                 GenericTools.RunUI(() =>
                 {
                     try

@@ -592,31 +592,6 @@ namespace OpenRPA
                 //_instance.dbWorkflowInstances.EnsureIndex(x => x._id, true);
 
 
-                Log.Information("LoadServerData::query detector versions");
-                var host = Environment.MachineName.ToLower();
-                var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
-                var runninginstances = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "'}", top: 1000);
-                foreach (var i in runninginstances)
-                {
-                    var exists = dbWorkflowInstances.Find(x => x._id == i._id).FirstOrDefault();
-                    if (exists != null)
-                    {
-                        if (i._version > exists._version)
-                        {
-                            i.isDirty = false;
-                            await i.Save<WorkflowInstance>();
-                        }
-                        else if (i._version < exists._version)
-                        {
-                            await exists.Save<WorkflowInstance>();
-                        }
-                    }
-                    else
-                    {
-                        i.isDirty = false;
-                        await i.Save<WorkflowInstance>();
-                    }
-                }
                 if (Projects.Count() == 0 && first_connect)
                 {
                     string Name = "New Project";
@@ -645,6 +620,37 @@ namespace OpenRPA
                     {
                         Log.Error(ex.ToString());
                     }
+                }
+
+                Log.Information("LoadServerData::query pending workflow instances");
+                var host = Environment.MachineName.ToLower();
+                var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
+                var runninginstances = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "'}", top: 1000);
+                foreach (var i in runninginstances)
+                {
+                    var exists = dbWorkflowInstances.Find(x => x._id == i._id).FirstOrDefault();
+                    if (exists != null)
+                    {
+                        if (i._version > exists._version)
+                        {
+                            i.isDirty = false;
+                            await i.Save<WorkflowInstance>();
+                        }
+                        else if (i._version < exists._version)
+                        {
+                            await exists.Save<WorkflowInstance>();
+                        }
+                    }
+                    else
+                    {
+                        i.isDirty = false;
+                        await i.Save<WorkflowInstance>();
+                    }
+                }
+                var localInstances = dbWorkflowInstances.Find(x => x.isDirty || x.isLocalOnly).ToList();
+                foreach (var i in localInstances)
+                {
+                    await i.Save<WorkflowInstance>();
                 }
 
                 SetStatus("Run pending workflow instances");
@@ -1052,7 +1058,7 @@ namespace OpenRPA
             if (first_connect)
             {
                 first_connect = false;
-                GenericTools.RunUI(async () =>
+                GenericTools.RunUI(() =>
                 {
                     try
                     {

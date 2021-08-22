@@ -3308,6 +3308,7 @@ namespace OpenRPA
                     {
                         command.data = JObject.FromObject(instance.Exception);
                     }
+                    Log.Output("Send Instance state " + instance.state + " to " + instance.queuename);
                     try
                     {
                         await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId, 0);
@@ -3316,6 +3317,10 @@ namespace OpenRPA
                     {
                         Log.Debug(ex.Message);
                     }
+                }
+                else
+                {
+                    Log.Output("No queue name " + instance.queuename + " on instance, to notify about state " + instance.state);
                 }
                 if (instance.hasError || instance.isCompleted)
                 {

@@ -63,7 +63,7 @@ namespace OpenRPA.NM
                 chromepipe = new NamedPipeClientAsync<NativeMessagingMessage>(SessionId + "_" + PIPE_NAME + "_chrome");
                 chromepipe.ServerMessage += Client_OnReceivedMessage;
                 chromepipe.Disconnected += () => { onDisconnected?.Invoke("chrome"); };
-                chromepipe.Connected += () => {  Connected?.Invoke("chrome"); Task.Run(()=> enumwindowandtabs());  };
+                chromepipe.Connected += () => { Connected?.Invoke("chrome"); Task.Run(() => enumwindowandtabs()); };
                 chromepipe.Error += (e) => { Log.Debug(e.ToString()); };
                 chromepipe.Start();
             }
@@ -95,18 +95,18 @@ namespace OpenRPA.NM
             NativeMessagingMessageTab tab = null;
             if (browser != "chrome" && browser != "ff" && browser != "edge") browser = "chrome";
             if (tabid > -1) tab = FindTabById(browser, tabid);
-            if(tab==null)
+            if (tab == null)
             {
                 if (browser == "chrome") tab = CurrentChromeTab;
                 if (browser == "ff") tab = CurrentFFTab;
                 if (browser == "edge") tab = CurrentEdgeTab;
-            } 
+            }
             message.tab = tab;
             if (tab != null) { message.windowId = tab.windowId; message.tabid = tab.id; }
             message.browser = browser; message.frameId = frameid;
             message.script = script;
-            result = sendMessageResult(message, false, timeout);
-            if(result!=null)
+            result = sendMessageResult(message, timeout);
+            if (result != null)
             {
                 return result.result;
             }
@@ -262,7 +262,7 @@ namespace OpenRPA.NM
         }
         private static void tabactivated(NativeMessagingMessage msg)
         {
-            lock(tabs)
+            lock (tabs)
             {
                 foreach (var tab in tabs.Where(x => x.browser == msg.browser && x.windowId == msg.windowId))
                 {
@@ -279,9 +279,9 @@ namespace OpenRPA.NM
         {
             var json = msg.data;
             var download = JsonConvert.DeserializeObject<Download>(json);
-            foreach(var p in Plugins.detectorPlugins)
+            foreach (var p in Plugins.detectorPlugins)
             {
-                if(p is DownloadDetectorPlugin plugin)
+                if (p is DownloadDetectorPlugin plugin)
                 {
                     plugin.RaiseDetector(download);
                 }
@@ -317,7 +317,7 @@ namespace OpenRPA.NM
                 {
                     return;
                 }
-                if(msg.functionName != "mousemove")
+                if (msg.functionName != "mousemove")
                 {
                     Log.Verbose("[nmhook][resc][" + msg.browser + "]" + msg.functionName + " for tab " + msg.tabid + " - " + msg.messageid);
                     //Log.Output("[nmhook][resc][" + msg.browser + "]" + msg.functionName + " for tab " + msg.tabid + " - " + msg.messageid + " (" + msg.uix + "," + msg.uiy + "," + msg.uiwidth + "," + msg.uiheight + ")");
@@ -342,26 +342,26 @@ namespace OpenRPA.NM
                 Log.Error(ex.ToString());
             }
         }
-        async public static Task<NativeMessagingMessage> sendMessageResultAsync(NativeMessagingMessage message, bool throwError)
+        async public static Task<NativeMessagingMessage> sendMessageResultAsync(NativeMessagingMessage message, TimeSpan timeout)
         {
             NativeMessagingMessage result = null;
             if (message.browser == "ff")
             {
                 if (ffconnected)
                 {
-                    result = await ffpipe.MessageAsync(message, throwError);
+                    result = await ffpipe.MessageAsync(message, timeout);
                 }
             }
             else
             {
                 if (chromeconnected)
                 {
-                    result = await chromepipe.MessageAsync(message, throwError);
+                    result = await chromepipe.MessageAsync(message, timeout);
                 }
             }
             return result;
         }
-        public static NativeMessagingMessage sendMessageResult(NativeMessagingMessage message, bool throwError, TimeSpan timeout)
+        public static NativeMessagingMessage sendMessageResult(NativeMessagingMessage message, TimeSpan timeout)
         {
             NativeMessagingMessage result = null;
             if (message.browser == "ff")
@@ -369,7 +369,7 @@ namespace OpenRPA.NM
                 if (ffconnected)
                 {
                     // Log.Debug("Send and queue message " + message.functionName);
-                    result = ffpipe.Message(message, throwError, timeout);
+                    result = ffpipe.Message(message, timeout);
                 }
             }
             else if (message.browser == "edge")
@@ -377,7 +377,7 @@ namespace OpenRPA.NM
                 if (edgeconnected)
                 {
                     // Log.Debug("Send and queue message " + message.functionName);
-                    result = edgepipe.Message(message, throwError, timeout);
+                    result = edgepipe.Message(message, timeout);
                 }
             }
             else
@@ -385,7 +385,7 @@ namespace OpenRPA.NM
                 if (chromeconnected)
                 {
                     // Log.Debug("Send and queue message " + message.functionName);
-                    result = chromepipe.Message(message, throwError, timeout);
+                    result = chromepipe.Message(message, timeout);
                 }
             }
             return result;
@@ -396,8 +396,8 @@ namespace OpenRPA.NM
             NativeMessagingMessage message = new NativeMessagingMessage("enumwindows", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids);
             if (chromeconnected)
             {
-                var result = sendMessageChromeResult(message, true, TimeSpan.FromSeconds(3));
-                if(result != null && result.results != null)
+                var result = sendMessageChromeResult(message, TimeSpan.FromSeconds(3));
+                if (result != null && result.results != null)
                     foreach (var msg in result.results)
                     {
                         if (msg.functionName == "windowcreated") windowcreated(msg);
@@ -405,7 +405,7 @@ namespace OpenRPA.NM
             }
             if (ffconnected)
             {
-                var result = sendMessageFFResult(message, true, TimeSpan.FromSeconds(3));
+                var result = sendMessageFFResult(message, TimeSpan.FromSeconds(3));
                 if (result != null && result.results != null)
                     foreach (var msg in result.results)
                     {
@@ -414,7 +414,7 @@ namespace OpenRPA.NM
             }
             if (edgeconnected)
             {
-                var result = sendMessageEdgeResult(message, true, TimeSpan.FromSeconds(3));
+                var result = sendMessageEdgeResult(message, TimeSpan.FromSeconds(3));
                 if (result != null && result.results != null)
                     foreach (var msg in result.results)
                     {
@@ -424,12 +424,12 @@ namespace OpenRPA.NM
         }
         public static void enumtabs()
         {
-            lock(tabs) tabs.Clear();
+            lock (tabs) tabs.Clear();
             NativeMessagingMessage message = new NativeMessagingMessage("enumtabs", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids);
 
             if (chromeconnected)
             {
-                var result = sendMessageChromeResult(message, true, TimeSpan.FromSeconds(3));
+                var result = sendMessageChromeResult(message, TimeSpan.FromSeconds(3));
                 if (result != null && result.results != null)
                     foreach (var msg in result.results)
                     {
@@ -438,7 +438,7 @@ namespace OpenRPA.NM
             }
             if (ffconnected)
             {
-                var result = sendMessageFFResult(message, true, TimeSpan.FromSeconds(3));
+                var result = sendMessageFFResult(message, TimeSpan.FromSeconds(3));
                 if (result != null && result.results != null)
                     foreach (var msg in result.results)
                     {
@@ -447,7 +447,7 @@ namespace OpenRPA.NM
             }
             if (edgeconnected)
             {
-                var result = sendMessageEdgeResult(message, true, TimeSpan.FromSeconds(3));
+                var result = sendMessageEdgeResult(message, TimeSpan.FromSeconds(3));
                 if (result != null && result.results != null)
                     foreach (var msg in result.results)
                     {
@@ -468,7 +468,7 @@ namespace OpenRPA.NM
             message.windowId = tab.windowId;
             if (connected)
             {
-                result = sendMessageResult(message, true, PluginConfig.protocol_timeout);
+                result = sendMessageResult(message, PluginConfig.protocol_timeout);
             }
         }
         //public static void HighlightTab(NativeMessagingMessageTab tab)
@@ -484,17 +484,18 @@ namespace OpenRPA.NM
             if (browser == "chrome")
             {
                 int tabcount = 0;
-                if(chromeconnected) lock(tabs) tabcount = tabs.Where(x => x.browser == "chrome").Count();
+                if (chromeconnected) lock (tabs) tabcount = tabs.Where(x => x.browser == "chrome").Count();
                 if (!chromeconnected || tabcount == 0)
                 {
-                    if(string.IsNullOrEmpty(profilepath))
+                    if (string.IsNullOrEmpty(profilepath))
                     {
                         System.Diagnostics.Process.Start("chrome.exe", "\"" + url + "\"");
-                    } else
+                    }
+                    else
                     {
                         System.Diagnostics.Process.Start("chrome.exe", "--user-data-dir=\"" + profilepath + "\"  \"" + url + "\"");
                     }
-                    
+
                     var sw = new System.Diagnostics.Stopwatch();
                     sw.Start();
                     do
@@ -577,7 +578,7 @@ namespace OpenRPA.NM
             {
                 NativeMessagingMessage message = new NativeMessagingMessage("openurl", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { data = url };
                 message.xPath = forceNew.ToString().ToLower();
-                var result = ffpipe.Message(message, true, TimeSpan.FromSeconds(2));
+                var result = ffpipe.Message(message, TimeSpan.FromSeconds(2));
                 if (result != null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
             }
         }
@@ -587,8 +588,8 @@ namespace OpenRPA.NM
             {
                 NativeMessagingMessage message = new NativeMessagingMessage("openurl", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { data = url };
                 message.xPath = forceNew.ToString().ToLower();
-                var result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
-                if(result!=null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
+                var result = chromepipe.Message(message, TimeSpan.FromSeconds(2));
+                if (result != null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
 
                 //NativeMessagingMessage result = null;
                 //NativeMessagingMessage message = new NativeMessagingMessage("openurl") { data = url };
@@ -625,7 +626,7 @@ namespace OpenRPA.NM
             {
                 NativeMessagingMessage message = new NativeMessagingMessage("openurl", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { data = url };
                 message.xPath = forceNew.ToString().ToLower();
-                var result = edgepipe.Message(message, true, TimeSpan.FromSeconds(2));
+                var result = edgepipe.Message(message, TimeSpan.FromSeconds(2));
                 if (result != null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
             }
         }
@@ -640,7 +641,7 @@ namespace OpenRPA.NM
             NativeMessagingMessage result = null;
             try
             {
-                result = NMHook.sendMessageResult(getelement, true, timeout);
+                result = NMHook.sendMessageResult(getelement, timeout);
             }
             catch (Exception)
             {
@@ -680,37 +681,38 @@ namespace OpenRPA.NM
                 else
                 {
                     // Log.Debug("WaitForTab, failed locating tab: " + tabid);
+                    Log.Output("enumtabs");
                     enumtabs();
                 }
-                System.Threading.Thread.Sleep(500);
+                System.Threading.Thread.Sleep(PluginConfig.wait_for_tab_timeout);
                 tab = FindTabById(browser, tabid);
             } while (tab != null && tab.status != "ready" && tab.status != "complete" && sw.Elapsed < timeout);
             return;
         }
-        public static NativeMessagingMessage sendMessageChromeResult(NativeMessagingMessage message, bool throwError, TimeSpan timeout)
+        public static NativeMessagingMessage sendMessageChromeResult(NativeMessagingMessage message, TimeSpan timeout)
         {
             NativeMessagingMessage result = null;
             if (chromeconnected)
             {
-                result = chromepipe.Message(message, throwError, timeout);
+                result = chromepipe.Message(message, timeout);
             }
             return result;
         }
-        public static NativeMessagingMessage sendMessageFFResult(NativeMessagingMessage message, bool throwError, TimeSpan timeout)
+        public static NativeMessagingMessage sendMessageFFResult(NativeMessagingMessage message, TimeSpan timeout)
         {
             NativeMessagingMessage result = null;
             if (ffconnected)
             {
-                result = ffpipe.Message(message, throwError, timeout);
+                result = ffpipe.Message(message, timeout);
             }
             return result;
         }
-        public static NativeMessagingMessage sendMessageEdgeResult(NativeMessagingMessage message, bool throwError, TimeSpan timeout)
+        public static NativeMessagingMessage sendMessageEdgeResult(NativeMessagingMessage message, TimeSpan timeout)
         {
             NativeMessagingMessage result = null;
             if (edgeconnected)
             {
-                result = edgepipe.Message(message, throwError, timeout);
+                result = edgepipe.Message(message, timeout);
             }
             return result;
         }
@@ -895,21 +897,21 @@ namespace OpenRPA.NM
         internal static NativeMessagingMessageTab ffupdatetab(NativeMessagingMessageTab tab)
         {
             NativeMessagingMessage message = new NativeMessagingMessage("updatetab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tab.id, tab = tab };
-            NativeMessagingMessage result = ffpipe.Message(message, true, TimeSpan.FromSeconds(2));
+            NativeMessagingMessage result = ffpipe.Message(message, TimeSpan.FromSeconds(2));
             WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
             return FindTabById("ff", tab.id);
         }
         internal static NativeMessagingMessageTab chromeupdatetab(NativeMessagingMessageTab tab)
         {
             NativeMessagingMessage message = new NativeMessagingMessage("updatetab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tab.id, tab = tab };
-            NativeMessagingMessage result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
+            NativeMessagingMessage result = chromepipe.Message(message, TimeSpan.FromSeconds(2));
             WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
             return FindTabById("chrome", tab.id);
         }
         internal static NativeMessagingMessageTab edgeupdatetab(NativeMessagingMessageTab tab)
         {
             NativeMessagingMessage message = new NativeMessagingMessage("updatetab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tab.id, tab = tab };
-            NativeMessagingMessage result = edgepipe.Message(message, true, TimeSpan.FromSeconds(2));
+            NativeMessagingMessage result = edgepipe.Message(message, TimeSpan.FromSeconds(2));
             WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
             return FindTabById("edge", tab.id);
         }
@@ -941,21 +943,21 @@ namespace OpenRPA.NM
         internal static NativeMessagingMessageTab ffselecttab(int tabid)
         {
             NativeMessagingMessage message = new NativeMessagingMessage("selecttab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tabid };
-            NativeMessagingMessage result = ffpipe.Message(message, true, TimeSpan.FromSeconds(2));
+            NativeMessagingMessage result = ffpipe.Message(message, TimeSpan.FromSeconds(2));
             WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
             return FindTabById("ff", tabid);
         }
         internal static NativeMessagingMessageTab chromeselecttab(int tabid)
         {
             NativeMessagingMessage message = new NativeMessagingMessage("selecttab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tabid };
-            NativeMessagingMessage result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
+            NativeMessagingMessage result = chromepipe.Message(message, TimeSpan.FromSeconds(2));
             WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
             return FindTabById("chrome", tabid);
         }
         internal static NativeMessagingMessageTab edgeselecttab(int tabid)
         {
             NativeMessagingMessage message = new NativeMessagingMessage("selecttab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tabid };
-            NativeMessagingMessage result = edgepipe.Message(message, true, TimeSpan.FromSeconds(2));
+            NativeMessagingMessage result = edgepipe.Message(message, TimeSpan.FromSeconds(2));
             WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
             return FindTabById("edge", tabid);
         }
@@ -986,11 +988,12 @@ namespace OpenRPA.NM
         {
             lock (tabs)
             {
-                if(isSelectéd)
+                if (isSelectéd)
                 {
                     // (x.selected || x.highlighted) ?
                     return tabs.Where(x => x.browser == browser && x.windowId == windowId && x.selected).FirstOrDefault();
-                } else
+                }
+                else
                 {
                     return tabs.Where(x => x.browser == browser && x.windowId == windowId).FirstOrDefault();
                 }
@@ -1023,7 +1026,7 @@ namespace OpenRPA.NM
         public static void CloseAllTabs(string browser)
         {
             List<NativeMessagingMessageTab> _tabs;
-            lock(tabs)
+            lock (tabs)
             {
                 _tabs = tabs.Where(x => x.browser == browser).ToList();
             }
@@ -1035,20 +1038,20 @@ namespace OpenRPA.NM
         internal static void ffclosetab(int tabid)
         {
             NativeMessagingMessage message = new NativeMessagingMessage("closetab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tabid };
-            NativeMessagingMessage result = ffpipe.Message(message, true, TimeSpan.FromSeconds(2));
-            WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
+            NativeMessagingMessage result = ffpipe.Message(message, TimeSpan.FromSeconds(2));
+            // if (result != null) WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
         }
         internal static void chromeclosetab(int tabid)
         {
             NativeMessagingMessage message = new NativeMessagingMessage("closetab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tabid };
-            NativeMessagingMessage result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
-            WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
+            NativeMessagingMessage result = chromepipe.Message(message, TimeSpan.FromSeconds(2));
+            // if (result != null) WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(10));
         }
         internal static void edgeclosetab(int tabid)
         {
             NativeMessagingMessage message = new NativeMessagingMessage("closetab", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { tabid = tabid };
-            NativeMessagingMessage result = edgepipe.Message(message, true, TimeSpan.FromSeconds(2));
-            WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
+            NativeMessagingMessage result = edgepipe.Message(message, TimeSpan.FromSeconds(2));
+            // if (result != null) WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
         }
     }
 }

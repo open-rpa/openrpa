@@ -3,7 +3,7 @@
     "OpenRPA.PS": {
       "commandName": "Executable",
       "executablePath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-      "commandLineArgs": "-nologo -noexit -command Import-Module C:\\code\\openrpa\\OpenRPA.PS\\bin\\Debug\\net462\\OpenRPA\\openrpa.psd1"
+      "commandLineArgs": "-nologo -noexit -command Import-Module C:\\code\\openrpa\\OpenRPA.PS\\bin\\PrepInstaller\\net462\\OpenRPA\\openrpa.psd1"
     }
   }
 }

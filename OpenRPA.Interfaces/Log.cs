@@ -150,7 +150,7 @@ namespace OpenRPA.Interfaces
         }
         public static void Output(string message)
         {
-            if (Config.local.log_output) { System.Diagnostics.Trace.WriteLine(message, "Output"); }
+            System.Diagnostics.Trace.WriteLine(message, "Output");
             LogLine(message, "Output");
         }
         public static void Warning(string message)

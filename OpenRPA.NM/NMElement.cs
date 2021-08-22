@@ -17,8 +17,10 @@ namespace OpenRPA.NM
         public string Name { get; set; }
         public string id { get; set; }
         public string type { get; set; }
-        public NMElement[] Children {
-            get {
+        public NMElement[] Children
+        {
+            get
+            {
                 var result = new List<NMElement>();
                 if (Attributes.ContainsKey("content"))
                 {
@@ -53,20 +55,22 @@ namespace OpenRPA.NM
             set { }
         }
         public NMElement Parent { get; set; }
-        public bool SupportInput {
+        public bool SupportInput
+        {
             get
             {
                 if (tagname.ToLower() != "input" && tagname.ToLower() != "select") return false;
-                if(tagname.ToLower() == "input")
+                if (tagname.ToLower() == "input")
                 {
-                    if(type==null) return true;
+                    if (type == null) return true;
                     if (type.ToLower() == "text" || type.ToLower() == "password") return true;
                     return false;
-                } else
+                }
+                else
                 {
                     return true;
                 }
-                
+
             }
         }
         public Dictionary<string, object> Attributes { get; set; }
@@ -96,17 +100,18 @@ namespace OpenRPA.NM
                 {
                 }
                 Attributes = new Dictionary<string, object>();
-                if(c!=null)
-                    foreach (var kp in c )
+                if (c != null)
+                    foreach (var kp in c)
                     {
-                        if(Attributes.ContainsKey(kp.Key.ToLower()))
+                        if (Attributes.ContainsKey(kp.Key.ToLower()))
                         {
                             Attributes[kp.Key.ToLower()] = kp.Value;
-                        } else
+                        }
+                        else
                         {
                             Attributes.Add(kp.Key.ToLower(), kp.Value);
                         }
-                        
+
                     }
                 //if (chromeelement.ContainsKey("attributes"))
                 //{
@@ -144,7 +149,7 @@ namespace OpenRPA.NM
             _browser = message.browser;
             zn_id = message.zn_id;
             this.message = message;
-            if(string.IsNullOrEmpty(xpath)) xpath = message.xPath;
+            if (string.IsNullOrEmpty(xpath)) xpath = message.xPath;
             if (string.IsNullOrEmpty(cssselector)) cssselector = message.cssPath;
             X = message.uix;
             Y = message.uiy;
@@ -159,8 +164,10 @@ namespace OpenRPA.NM
         }
         [Newtonsoft.Json.JsonIgnore]
         private readonly string _browser = null;
-        public string browser {
-            get {
+        public string browser
+        {
+            get
+            {
                 return _browser;
             }
         }
@@ -169,14 +176,14 @@ namespace OpenRPA.NM
         {
             get
             {
-                if(!string.IsNullOrEmpty(tagname) && tagname.ToLower() == "select")
+                if (!string.IsNullOrEmpty(tagname) && tagname.ToLower() == "select")
                 {
                     if (Attributes.ContainsKey("text")) return Attributes["text"].ToString();
                     if (Attributes.ContainsKey("innertext")) return Attributes["innertext"].ToString();
                 }
                 if (Attributes.ContainsKey("text")) return Attributes["text"].ToString();
                 if (Attributes.ContainsKey("innertext")) return Attributes["innertext"].ToString();
-                if(!hasRefreshed)
+                if (!hasRefreshed)
                 {
                     Refresh();
                     if (Attributes.ContainsKey("text")) return Attributes["text"].ToString();
@@ -230,7 +237,7 @@ namespace OpenRPA.NM
                     };
                     var temp = Interfaces.Extensions.Base64Decode(updateelement.data);
                     if (value == null) updateelement.data = null;
-                    var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
+                    var subsubresult = NMHook.sendMessageResult(updateelement, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed setting html element value");
                     if (PluginConfig.wait_for_tab_after_set_value)
                     {
@@ -267,7 +274,7 @@ namespace OpenRPA.NM
                     };
                     var temp = Interfaces.Extensions.Base64Decode(updateelement.data);
                     if (value == null) updateelement.data = null;
-                    var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
+                    var subsubresult = NMHook.sendMessageResult(updateelement, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed setting html element value");
                     if (PluginConfig.wait_for_tab_after_set_value)
                     {
@@ -304,7 +311,7 @@ namespace OpenRPA.NM
                     };
                     var temp = Interfaces.Extensions.Base64Decode(updateelement.data);
                     if (value == null) updateelement.data = null;
-                    var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
+                    var subsubresult = NMHook.sendMessageResult(updateelement, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed setting html element value");
                     if (PluginConfig.wait_for_tab_after_set_value)
                     {
@@ -324,9 +331,9 @@ namespace OpenRPA.NM
                     var json = Attributes["values"].ToString();
                     result = JsonConvert.DeserializeObject<string[]>(json);
                 }
-                if(result==null|| result.Length==0)
+                if (result == null || result.Length == 0)
                 {
-                    if(!string.IsNullOrEmpty(Value))
+                    if (!string.IsNullOrEmpty(Value))
                     {
                         result = new string[] { Value };
                     }
@@ -354,7 +361,7 @@ namespace OpenRPA.NM
                         frameId = message.frameId,
                         data = Interfaces.Extensions.Base64Encode(JsonConvert.SerializeObject(value))
                     };
-                    var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
+                    var subsubresult = NMHook.sendMessageResult(updateelement, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed setting html element value");
                     //System.Threading.Thread.Sleep(500);
                     if (PluginConfig.wait_for_tab_after_set_value)
@@ -377,10 +384,10 @@ namespace OpenRPA.NM
                         browser = message.browser,
                         zn_id = zn_id,
                         tabid = message.tabid,
-                        frameId = message.frameId, 
+                        frameId = message.frameId,
                         data = "innerhtml"
                     };
-                    NativeMessagingMessage subsubresult = NMHook.sendMessageResult(getelement2, true, PluginConfig.protocol_timeout);
+                    NativeMessagingMessage subsubresult = NMHook.sendMessageResult(getelement2, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed clicking html element");
                     parseChromeString(subsubresult.result.ToString());
                     if (Attributes.ContainsKey("innerhtml"))
@@ -415,11 +422,12 @@ namespace OpenRPA.NM
                         zn_id = zn_id,
                         tabid = message.tabid,
                         frameId = message.frameId,
-                        data = Interfaces.Extensions.Base64Encode(value), result = "innerhtml"
+                        data = Interfaces.Extensions.Base64Encode(value),
+                        result = "innerhtml"
                     };
                     var temp = Interfaces.Extensions.Base64Decode(updateelement.data);
                     if (value == null) updateelement.data = null;
-                    var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
+                    var subsubresult = NMHook.sendMessageResult(updateelement, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed setting html element value");
                     //System.Threading.Thread.Sleep(500);
                     if (PluginConfig.wait_for_tab_after_set_value)
@@ -464,7 +472,7 @@ namespace OpenRPA.NM
                     };
                     var temp = Interfaces.Extensions.Base64Decode(updateelement.data);
                     if (value == null) updateelement.data = null;
-                    var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
+                    var subsubresult = NMHook.sendMessageResult(updateelement, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed setting html element value");
                     if (PluginConfig.wait_for_tab_after_set_value)
                     {
@@ -477,7 +485,7 @@ namespace OpenRPA.NM
         public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse)
         {
             if (Button != Input.MouseButton.Left) { VirtualClick = false; }
-            if(type== "file") { VirtualClick = false; }
+            if (type == "file") { VirtualClick = false; }
             if (!VirtualClick)
             {
                 if (AnimateMouse)
@@ -508,7 +516,7 @@ namespace OpenRPA.NM
                         tabid = message.tabid,
                         frameId = message.frameId
                     };
-                    NativeMessagingMessage subsubresult = NMHook.sendMessageResult(getelement2, true, PluginConfig.protocol_timeout);
+                    NativeMessagingMessage subsubresult = NMHook.sendMessageResult(getelement2, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed clicking html element");
                     //System.Threading.Thread.Sleep(500);
                     if (PluginConfig.wait_for_tab_click)
@@ -527,7 +535,7 @@ namespace OpenRPA.NM
                     tabid = message.tabid,
                     frameId = message.frameId
                 };
-                if (NMHook.connected) subresult = NMHook.sendMessageResult(getelement, true, PluginConfig.protocol_timeout);
+                if (NMHook.connected) subresult = NMHook.sendMessageResult(getelement, PluginConfig.protocol_timeout);
                 if (subresult == null) throw new Exception("Failed clicking html element, element not found");
                 int hitx = subresult.uix;
                 int hity = subresult.uiy;
@@ -573,7 +581,7 @@ namespace OpenRPA.NM
                     tabid = message.tabid,
                     frameId = message.frameId
                 };
-                NativeMessagingMessage subsubresult = NMHook.sendMessageResult(getelement2, true, PluginConfig.protocol_timeout);
+                NativeMessagingMessage subsubresult = NMHook.sendMessageResult(getelement2, PluginConfig.protocol_timeout);
                 if (subsubresult == null) throw new Exception("Failed clicking html element");
                 if (PluginConfig.wait_for_tab_click)
                 {
@@ -598,7 +606,7 @@ namespace OpenRPA.NM
                 };
                 NativeMessagingMessage message = null;
                 // getelement.data = "getdom";
-                if (NMHook.connected) message = NMHook.sendMessageResult(getelement, true, PluginConfig.protocol_timeout);
+                if (NMHook.connected) message = NMHook.sendMessageResult(getelement, PluginConfig.protocol_timeout);
                 if (message == null)
                 {
                     Log.Error("Failed getting html element");
@@ -644,7 +652,7 @@ namespace OpenRPA.NM
                 tabid = message.tabid,
                 frameId = message.frameId
             };
-            var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
+            var subsubresult = NMHook.sendMessageResult(updateelement, PluginConfig.protocol_timeout);
             if (subsubresult == null) throw new Exception("Failed setting html element value");
             //System.Threading.Thread.Sleep(500);
             if (PluginConfig.wait_for_tab_after_set_value)
@@ -749,7 +757,7 @@ namespace OpenRPA.NM
                 var result = new List<IElement>();
                 if (tagname.ToLower() == "select")
                 {
-                    foreach(var item in Children)
+                    foreach (var item in Children)
                     {
                         item.Refresh();
                         result.Add(item);
@@ -767,8 +775,8 @@ namespace OpenRPA.NM
             {
                 System.Threading.Thread.Sleep(100);
                 if (!Refresh()) return true;
-                if(IsVisible && !this.IsVisible) return true;
-                if(isVisibleOnScreen && !this.isVisibleOnScreen) return true;
+                if (IsVisible && !this.IsVisible) return true;
+                if (isVisibleOnScreen && !this.isVisibleOnScreen) return true;
             } while (sw.Elapsed < Timeout);
             return false;
         }
@@ -825,7 +833,7 @@ namespace OpenRPA.NM
                         data = Interfaces.Extensions.Base64Encode(value.ToString()),
                         result = "value"
                     };
-                    var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
+                    var subsubresult = NMHook.sendMessageResult(updateelement, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed setting html element value");
                     //System.Threading.Thread.Sleep(500);
                     if (PluginConfig.wait_for_tab_after_set_value)

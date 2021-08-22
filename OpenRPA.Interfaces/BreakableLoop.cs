@@ -48,11 +48,18 @@ namespace OpenRPA.Interfaces
             var input = context.DataContext.GetProperties()[Variables[0].Name];
             if (input != null)
             {
-                var _index = 0;
-                var value = input.GetValue(context.DataContext);
-                if (value != null) _index = (int)value;
-                _index++;
-                input.SetValue(context.DataContext, _index);
+                try
+                {
+                    var _index = 0;
+                    var value = input.GetValue(context.DataContext);
+                    if (value != null) _index = (int)value;
+                    _index++;
+                    input.SetValue(context.DataContext, _index);
+                }
+                catch (Exception ex)
+                {
+                    Log.Warning("Updating loop Index failed with " + ex.ToString());
+                }
             }
         }
         public void SetIndex(NativeActivityContext context, int Value)

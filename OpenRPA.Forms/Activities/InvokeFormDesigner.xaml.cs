@@ -1,8 +1,10 @@
 ﻿using Forge.Forms.FormBuilding;
+using Microsoft.VisualBasic.Activities;
 using OpenRPA.Interfaces;
 using System;
 using System.Activities;
 using System.Activities.Expressions;
+using System.Activities.Presentation.Model;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -22,7 +24,7 @@ namespace OpenRPA.Forms.Activities
             var f = new FormDesigner(form);
             f.Owner = GenericTools.MainWindow;
             f.ShowDialog();
-            if(form != f.XmlString)
+            if (form != f.XmlString)
             {
                 ModelItem.Properties["Form"].SetValue(new InArgument<string>() { Expression = new Literal<string>(f.XmlString) });
             }
@@ -58,6 +60,56 @@ namespace OpenRPA.Forms.Activities
             {
                 Log.Error(ex.ToString());
             }
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            ModelItemDictionary dictionary = base.ModelItem.Properties["Arguments"].Dictionary;
+            try
+            {
+                string form = ModelItem.GetValue<string>("Form");
+                var definition = Forge.Forms.FormBuilding.FormBuilder.Default.GetDefinition(form, freeze: false);
+                foreach (DataFormField f in definition.GetElements().Where(x => x is DataFormField))
+                {
+                    bool exists = false;
+                    foreach (var key in dictionary.Keys)
+                    {
+                        if (key.ToString() == f.Key) exists = true;
+                        if (key.GetValue<string>("AnnotationText") == f.Key) exists = true;
+                        if (key.GetValue<string>("Name") == f.Key) exists = true;
+                    }
+                    if (!exists)
+                    {
+
+                        Type t = f.PropertyType;
+                        Type atype = typeof(VisualBasicValue<>);
+                        Type constructed = atype.MakeGenericType(t);
+                        object o = Activator.CreateInstance(constructed, f.Key);
+
+                        Argument a = null;
+                        a = Argument.Create(t, ArgumentDirection.InOut);
+                        dictionary.Add(f.Key, a);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            var options = new System.Activities.Presentation.DynamicArgumentDesignerOptions() { Title = "Map Arguments" };
+            using (ModelEditingScope modelEditingScope = dictionary.BeginEdit())
+            {
+                if (System.Activities.Presentation.DynamicArgumentDialog.ShowDialog(base.ModelItem, dictionary, base.Context, base.ModelItem.View, options))
+                {
+                    modelEditingScope.Complete();
+                }
+                else
+                {
+                    modelEditingScope.Revert();
+                }
+            }
+
+
+
         }
     }
 }

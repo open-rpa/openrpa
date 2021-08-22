@@ -700,6 +700,60 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kill all.
+        /// </summary>
+        public static string activity_killall {
+            get {
+                return ResourceManager.GetString("activity_killall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kill all running workflows, if false will only kill selected workflow.
+        /// </summary>
+        public static string activity_killall_help {
+            get {
+                return ResourceManager.GetString("activity_killall_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kill if Running.
+        /// </summary>
+        public static string activity_killifrunning {
+            get {
+                return ResourceManager.GetString("activity_killifrunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kill any instance of the selected workflow that is already running.
+        /// </summary>
+        public static string activity_killifrunning_help {
+            get {
+                return ResourceManager.GetString("activity_killifrunning_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kill self.
+        /// </summary>
+        public static string activity_killself {
+            get {
+                return ResourceManager.GetString("activity_killself", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Also kill the current workflow.
+        /// </summary>
+        public static string activity_killself_help {
+            get {
+                return ResourceManager.GetString("activity_killself_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Map Variables.
         /// </summary>
         public static string activity_map_variables {
@@ -939,6 +993,24 @@ namespace OpenRPA.Resources {
         public static string activity_showballoontip_tooltip {
             get {
                 return ResourceManager.GetString("activity_showballoontip_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop OpenRPA.
+        /// </summary>
+        public static string activity_stopopenrpa {
+            get {
+                return ResourceManager.GetString("activity_stopopenrpa", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Used for stopping a running workflow, or kill all running workflows on the local robot.
+        /// </summary>
+        public static string activity_stopopenrpa_tooltip {
+            get {
+                return ResourceManager.GetString("activity_stopopenrpa_tooltip", resourceCulture);
             }
         }
         
@@ -1690,6 +1762,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Output.
+        /// </summary>
+        public static string output {
+            get {
+                return ResourceManager.GetString("output", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Packages.
         /// </summary>
         public static string packages {
@@ -1870,11 +1951,29 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Activity.
+        /// </summary>
+        public static string selectoractivity {
+            get {
+                return ResourceManager.GetString("selectoractivity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Network.
         /// </summary>
         public static string selectornetwork {
             get {
                 return ResourceManager.GetString("selectornetwork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output.
+        /// </summary>
+        public static string selectoroutput {
+            get {
+                return ResourceManager.GetString("selectoroutput", resourceCulture);
             }
         }
         

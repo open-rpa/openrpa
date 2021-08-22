@@ -14,8 +14,15 @@ namespace OpenRPA
 {
     public class WorkflowInstance : LocallyCached, IWorkflowInstance, IDisposable
     {
+        private static System.Timers.Timer unsavedTimer = null;
         public WorkflowInstance()
         {
+            if (unsavedTimer == null)
+            {
+                unsavedTimer = new System.Timers.Timer(1000);
+                unsavedTimer.Elapsed += UnsavedTimer_Elapsed;
+                unsavedTimer.Start();
+            }
             _id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
         }
         private WorkflowInstance(Workflow workflow)
@@ -118,6 +125,7 @@ namespace OpenRPA
             set
             {
                 SetProperty(value);
+                if (Workflow != null) Workflow.SetLastState(value);
             }
         }
         [JsonIgnore, LiteDB.BsonIgnore]
@@ -156,7 +164,7 @@ namespace OpenRPA
             {
                 runner.onWorkflowIdle(ref _ref);
             }
-            NotifyState();
+            // NotifyState();
         }
         private void NotifyAborted()
         {
@@ -179,7 +187,7 @@ namespace OpenRPA
             {
                 if (!runner.onWorkflowStarting(ref _ref, false)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
             }
-            if (global.isConnected)
+            if (global.isConnected && global.webSocketClient.user != null)
             {
                 result.owner = global.webSocketClient.user.name;
                 result.ownerid = global.webSocketClient.user._id;
@@ -315,6 +323,10 @@ namespace OpenRPA
             Save();
             if (runWatch != null) runWatch.Stop();
             OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
+            GenericTools.RunUI(() =>
+            {
+                Workflow.SetLastState("aborted");
+            });
         }
         public void ResumeBookmark(string bookmarkName, object value)
         {
@@ -723,59 +735,49 @@ namespace OpenRPA
         {
             wfApp.Completed = delegate (System.Activities.WorkflowApplicationCompletedEventArgs e)
             {
-                try
+                isCompleted = true;
+                _ = Workflow.State;
+                if (e.CompletionState == System.Activities.ActivityInstanceState.Faulted)
                 {
-                    isCompleted = true;
-                    _ = Workflow.State;
-                    if (e.CompletionState == System.Activities.ActivityInstanceState.Faulted)
+                    if (state == "running" || state == "idle" || state == "completed")
                     {
-                        if (state == "running" || state == "idle" || state == "completed")
+                        state = "faulted";
+                        state = "aborted";
+                        if (e.TerminationException != null)
                         {
-                            state = "faulted";
-                            state = "aborted";
-                            if (e.TerminationException != null)
-                            {
-                                Exception = e.TerminationException;
-                                errormessage = e.TerminationException.Message;
-                            }
-                            else
-                            {
-                                errormessage = "Faulted for unknown reason";
-                            }
-                            Save();
-                            NotifyCompleted();
-                            OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
+                            Exception = e.TerminationException;
+                            errormessage = e.TerminationException.Message;
                         }
-                    }
-                    else if (e.CompletionState == System.Activities.ActivityInstanceState.Canceled)
-                    {
-                        Save();
-                    }
-                    else if (e.CompletionState == System.Activities.ActivityInstanceState.Closed)
-                    {
-                        state = "completed";
-                        foreach (var o in e.Outputs) Parameters[o.Key] = o.Value;
-                        if (runWatch != null) runWatch.Stop();
+                        else
+                        {
+                            errormessage = "Faulted for unknown reason";
+                        }
                         Save();
                         NotifyAborted();
                         OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
-                    }
-                    else if (e.CompletionState == System.Activities.ActivityInstanceState.Executing)
-                    {
-                        Save();
-                    }
-                    else
-                    {
-                        throw new Exception("Unknown completetion state!!!" + e.CompletionState);
+                        return;
                     }
                 }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-                finally
+                else if (e.CompletionState == System.Activities.ActivityInstanceState.Canceled)
                 {
                 }
+                else if (e.CompletionState == System.Activities.ActivityInstanceState.Closed)
+                {
+                    state = "completed";
+                    foreach (var o in e.Outputs) Parameters[o.Key] = o.Value;
+                    if (runWatch != null) runWatch.Stop();
+                    NotifyCompleted();
+                    OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
+
+                }
+                else if (e.CompletionState == System.Activities.ActivityInstanceState.Executing)
+                {
+                }
+                else
+                {
+                    throw new Exception("Unknown completetion state!!!" + e.CompletionState);
+                }
+                Save();
             };
             wfApp.Aborted = delegate (System.Activities.WorkflowApplicationAbortedEventArgs e)
             {
@@ -888,11 +890,94 @@ namespace OpenRPA
             //return task.Result;
             _ = Save<WorkflowInstance>();
             if (Workflow != null) Workflow.NotifyUIState();
-            //Task.Run(async () =>
-            //{
-            //    await Save<WorkflowInstance>();
-            //});
+            Task.Run(async () =>
+            {
+                try
+                {
+                    var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, "InstanceId,WorkflowId", this);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                    lock (unsaved)
+                    {
+                        var exists = unsaved.Where(x => x.Instance._id == _id).FirstOrDefault();
+                        unsaved.Remove(exists);
+                        unsaved.Add(new UnsavedWorkflowInstance() { Instance = this });
+                    }
+                }
+                //int retries = 0;
+                //_modified = DateTime.Now;
+                //bool hasError = false;
+                //int retryinterval = 1000;
+                //do
+                //{
+                //    hasError = false;
+                //    try
+                //    {
+                //        if (string.IsNullOrEmpty(Config.local.wsurl)) return;
+                //        //if (!global.isConnected || global.webSocketClient == null || global.webSocketClient.user == null)
+                //        //{
+                //        //    retries = 0;
+                //        //    System.Threading.Thread.Sleep(retryinterval);
+                //        //    if (retryinterval < 60000) retryinterval = +1000;
+                //        //    continue;
+                //        //}
+                //        Log.Warning("Save instance id: " + _id + " state: " + state);
+                //        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, "InstanceId,WorkflowId", this);
+                //        if (result != null)
+                //        {
+                //            _id = result._id;
+                //            _acl = result._acl;
+                //            _created = result._created;
+                //            _createdby = result._createdby;
+                //            _createdbyid = result._createdbyid;
+                //            _modified = result._modified;
+                //            _modifiedby = result._modifiedby;
+                //            _modifiedbyid = result._modifiedbyid;
+                //        }
+                //        else
+                //        {
+                //            retries++;
+                //            hasError = true;
+                //        }
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        Log.Debug(ex.ToString());
+                //        retries++;
+                //        hasError = true;
+                //        // throw;
+                //    }
+                //} while (hasError && retries < 10);
+                //if (hasError)
+                //{
+                //    Log.Error("Failed saving workflowinstance " + _id);
+                //}
+            });
         }
+        private static void UnsavedTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (global.webSocketClient == null || global.webSocketClient.ws == null || global.webSocketClient.ws.State != System.Net.WebSockets.WebSocketState.Open) return;
+            if (global.webSocketClient.user == null) return;
+            lock (unsaved)
+            {
+                foreach (var item in unsaved.ToList())
+                {
+                    try
+                    {
+                        item.Instance.Save();
+                        unsaved.Remove(item);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                }
+            }
+        }
+
+        public static List<UnsavedWorkflowInstance> unsaved = new List<UnsavedWorkflowInstance>();
         public static async Task RunPendingInstances()
         {
             // var span = RobotInstance.instance.source.StartActivity("RunPendingInstances", System.Diagnostics.ActivityKind.Internal);
@@ -995,5 +1080,8 @@ namespace OpenRPA
             isDisposing = true;
         }
     }
-
+    public class UnsavedWorkflowInstance
+    {
+        public WorkflowInstance Instance;
+    }
 }

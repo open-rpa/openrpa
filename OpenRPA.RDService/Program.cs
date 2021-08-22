@@ -148,15 +148,6 @@ namespace OpenRPA.RDService
                 autoReconnect = false;
                 try
                 {
-                    global.webSocketClient.OnOpen -= WebSocketClient_OnOpen;
-                    global.webSocketClient.OnClose -= WebSocketClient_OnClose;
-                    global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
-                    global.webSocketClient = null;
-
-                    global.webSocketClient = new WebSocketClient(PluginConfig.wsurl);
-                    global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
-                    global.webSocketClient.OnClose += WebSocketClient_OnClose;
-                    global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
                     await global.webSocketClient.Connect();
                     autoReconnect = true;
                 }
@@ -606,7 +597,7 @@ namespace OpenRPA.RDService
                     try
                     {
                         Console.WriteLine("Connect to " + PluginConfig.wsurl);
-                        global.webSocketClient = new WebSocketClient(PluginConfig.wsurl);
+                        global.webSocketClient = WebSocketClient.Get(PluginConfig.wsurl);
                         global.webSocketClient.OnOpen += WebSocketClient_OnOpen;
                         global.webSocketClient.OnClose += WebSocketClient_OnClose;
                         global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;

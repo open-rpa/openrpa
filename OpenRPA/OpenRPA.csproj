@@ -314,6 +314,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Activities\MoveMouseDesigner.xaml" />
     <None Remove="Activities\OpenApplicationDesigner.xaml" />
     <None Remove="Activities\ShowBalloonTipDesigner.xaml" />
+    <None Remove="Activities\StopOpenRPADesigner.xaml" />
     <None Remove="Activities\TypeTextDesigner.xaml" />
     <None Remove="AgentWindow.xaml" />
     <None Remove="App.xaml" />

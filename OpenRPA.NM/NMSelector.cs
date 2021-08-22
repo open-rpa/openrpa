@@ -80,7 +80,8 @@ namespace OpenRPA.NM
             else if (fromElement == null)
             {
                 throw new ArgumentException("Invalid select with only 1 child and no anchor");
-            } else
+            }
+            else
             {
                 second = selector[0];
             }
@@ -125,7 +126,7 @@ namespace OpenRPA.NM
                 getelement.tabid = ((NMElement)fromElement).message.tabid;
                 getelement.frameId = ((NMElement)fromElement).message.frameId;
             }
-                subresult = NMHook.sendMessageResult(getelement, false, PluginConfig.protocol_timeout);
+            subresult = NMHook.sendMessageResult(getelement, PluginConfig.protocol_timeout);
             if (subresult != null)
                 if (subresult.results != null)
                     foreach (var b in subresult.results)

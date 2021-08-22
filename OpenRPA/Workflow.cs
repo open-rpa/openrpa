@@ -199,7 +199,11 @@ namespace OpenRPA
                 return state;
             }
         }
-        [JsonIgnore, BsonIgnore]
+        public void SetLastState(string State)
+        {
+            laststate = State;
+        }
+        [JsonIgnore]
         public string StateImage
         {
             get

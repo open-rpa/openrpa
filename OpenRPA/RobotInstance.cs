@@ -700,7 +700,7 @@ namespace OpenRPA
             {
                 if (!string.IsNullOrEmpty(Config.local.wsurl))
                 {
-                    global.webSocketClient = new Net.WebSocketClient(Config.local.wsurl);
+                    global.webSocketClient = Net.WebSocketClient.Get(Config.local.wsurl);
                     global.webSocketClient.OnOpen += RobotInstance_WebSocketClient_OnOpen;
                     global.webSocketClient.OnClose += WebSocketClient_OnClose;
                     global.webSocketClient.OnQueueClosed += WebSocketClient_OnQueueClosed;
@@ -1145,7 +1145,6 @@ namespace OpenRPA
                     global.webSocketClient.OnQueueClosed += WebSocketClient_OnQueueClosed;
                     global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
                     SetStatus("Connecting to " + Config.local.wsurl);
-
                     await global.webSocketClient.Connect();
                     autoReconnect = true;
                 }
@@ -1255,7 +1254,11 @@ namespace OpenRPA
                             }
                             else if (!i.isCompleted)
                             {
-                                if (command.killexisting && i.WorkflowId == workflow._id && Config.local.remote_allowed_killing_any)
+                                if (command.killexisting && i.WorkflowId == workflow._id && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
+                                {
+                                    i.Abort("Killed by nodered rpa node, due to killexisting");
+                                }
+                                else if (command.killallexisting && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
                                 {
                                     i.Abort("Killed by nodered rpa node, due to killexisting");
                                 }
@@ -1339,7 +1342,7 @@ namespace OpenRPA
                                 }
                             }
                         }
-                        Log.Information("Create instance of " + workflow.name);
+                        Log.Information("[" + message.correlationId + "] Create instance of " + workflow.name);
                         Log.Function("RobotInstance", "WebSocketClient_OnQueueMessage", "Create instance and run workflow");
                         if (Window == null) { e.isBusy = true; return; }
                         GenericTools.RunUI(() =>

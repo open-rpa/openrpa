@@ -35,8 +35,13 @@ namespace OpenRPA
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged, IMainWindow
     {
+        System.Timers.Timer statetimer = null;
         public MainWindow()
         {
+            statetimer = new System.Timers.Timer(200);
+            statetimer.Elapsed += Statetimer_Elapsed;
+            statetimer.Start();
+
             Log.FunctionIndent("MainWindow", "MainWindow");
             System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = false;
             System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.BelowNormal;
@@ -68,6 +73,12 @@ namespace OpenRPA
             Log.FunctionOutdent("MainWindow", "MainWindow");
             instance = this;
         }
+
+        private void Statetimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            NotifyPropertyChanged("wsstate");
+        }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Log.FunctionIndent("MainWindow", "Window_Loaded");
@@ -671,6 +682,30 @@ namespace OpenRPA
                 NotifyPropertyChanged("Setting_log_network");
             }
         }
+        public bool Setting_log_activity
+        {
+            get
+            {
+                return Config.local.log_activity;
+            }
+            set
+            {
+                Config.local.log_activity = value;
+                NotifyPropertyChanged("Setting_log_activity");
+            }
+        }
+        public bool Setting_log_output
+        {
+            get
+            {
+                return Config.local.log_output;
+            }
+            set
+            {
+                Config.local.log_output = value;
+                NotifyPropertyChanged("Setting_log_output");
+            }
+        }
         public bool Setting_use_sendkeys
         {
             get
@@ -799,6 +834,16 @@ namespace OpenRPA
                 //Config.local.recording_add_to_designer = value;
                 NotifyPropertyChanged("Setting_IsChildSessionsEnabled");
                 NotifyPropertyChanged("Setting_ShowChildSessions");
+            }
+        }
+        public string wsstate
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Config.local.wsurl)) return "";
+                if (global.webSocketClient == null) return "null";
+                if (global.webSocketClient.ws == null) return "ws null";
+                return global.webSocketClient.ws.State.ToString();
             }
         }
         public ICommand PlayInChildCommand { get { return new RelayCommand<object>(OnPlayInChild, CanPlayInChild); } }

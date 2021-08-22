@@ -23,6 +23,7 @@ namespace OpenRPA.Net
         public int websocket_package_size = 4096;
         public string url { get; set; }
         private CancellationTokenSource src = new CancellationTokenSource();
+        private static object _sendQueuelock = new object();
         private List<SocketMessage> _receiveQueue = new List<SocketMessage>();
         private List<SocketMessage> _sendQueue = new List<SocketMessage>();
         private List<QueuedMessage> _messageQueue = new List<QueuedMessage>();
@@ -343,7 +344,7 @@ namespace OpenRPA.Net
             try
             {
                 List<SocketMessage> templist;
-                lock (_sendQueue)
+                lock (_sendQueuelock)
                 {
                     templist = _sendQueue.ToList();
                 }
@@ -351,7 +352,7 @@ namespace OpenRPA.Net
                 {
                     if (await SendString(JsonConvert.SerializeObject(msg), src.Token))
                     {
-                        _sendQueue.Remove(msg);
+                        lock (_sendQueuelock) _sendQueue.Remove(msg);
                     }
                     else
                     {
@@ -393,10 +394,10 @@ namespace OpenRPA.Net
         }
         public void PushMessage(SocketMessage msg)
         {
-            lock (_sendQueue)
+            lock (_sendQueuelock)
             {
-                var exists = _sendQueue.Where(x => x.id == msg.id && x.index == msg.index);
-                if (exists.Count() == 0)
+                var exists = _sendQueue.Where(x => x.id == msg.id && x.index == msg.index).Count();
+                if (exists == 0)
                 {
                     _sendQueue.Add(msg);
                 }
@@ -411,24 +412,16 @@ namespace OpenRPA.Net
         {
             if (!string.IsNullOrEmpty(msg.replyto))
             {
-                if (msg.command != "pong") { Log.Network(msg.command + " / replyto: " + msg.replyto); }
+                if (msg.command != "pong") { Log.Network("(" + _messageQueue.Count + ") " + msg.command + " RESC: " + msg.replyto + "/" + msg.id); }
                 // else { Log.Network(msg.command + " / replyto: " + msg.replyto);  }
-
                 foreach (var qm in _messageQueue.ToList())
                 {
                     if (qm != null && qm.msg.id == msg.replyto)
                     {
-                        try
-                        {
-                            qm.reply = msg;
-                            qm.autoReset.Set();
-                            _messageQueue.Remove(qm);
-                            break;
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error(ex, "");
-                        }
+                        qm.reply = msg;
+                        qm.autoReset.Set();
+                        _messageQueue.Remove(qm);
+                        break;
                     }
                 }
             }
@@ -577,32 +570,56 @@ namespace OpenRPA.Net
                             }
 
                             // Log.Warning("Retrying " + qm.msg.id + " " + qm.msg.command);
-                            msg.SendMessage(this);
+                            if (user == null && msg.command == "signin")
+                            {
+                                Log.Network("(" + _messageQueue.Count + ") " + msg.command + " RSND: " + msg.id);
+                                msg.SendMessage(this);
+                            }
+                            else if (user != null)
+                            {
+                                Log.Network("(" + _messageQueue.Count + ") " + msg.command + " RSND: " + msg.id);
+                                msg.SendMessage(this);
+                            }
+                            else
+                            {
+                                Log.Warning("Message NOOP " + qm.msg.id + " " + qm.msg.command);
+                            }
                         }
                         else
                         {
+                            Log.Network("(" + _messageQueue.Count + ") " + msg.command + " SEND: " + msg.id);
                             msg.SendMessage(this);
 
                         }
                         await qm.autoReset.WaitOneAsync(Config.local.network_message_timeout);
+                        qm.autoReset.Close();
                         if (qm.reply == null || (!string.IsNullOrEmpty(qm.reply.data) && qm.reply.data.Contains("\"error\":\"jwt must be provided\"")))
                         {
                             qm.autoReset.Reset();
                             retries++;
-                            qm.reply = null;
 
                             if (msg.command == "insertorupdateone")
                             {
                                 var data = JObject.Parse(msg.data);
                                 var _id = data["item"].Value<string>("_id");
                                 var state = data["item"].Value<string>("state");
-                                if (state == "running" || state == "idle") throw new Exception("Failed updating object");
+                                if (state == "running" || state == "idle")
+                                {
+                                    //throw new Exception("Failed updating object");
+                                    retries = 0;
+                                    lock (_messageQueue)
+                                    {
+                                        _messageQueue.Remove(qm);
+                                    }
+                                    return null;
+                                }
                                 Log.Warning("Message timed out " + qm.msg.id + " " + qm.msg.command + " id:" + _id + " state: " + state);
                             }
                             else
                             {
                                 Log.Warning("Message timed out " + qm.msg.id + " " + qm.msg.command);
                             }
+                            qm.reply = null;
                         }
                         else
                         {

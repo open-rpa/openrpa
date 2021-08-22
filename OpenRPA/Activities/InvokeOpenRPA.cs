@@ -91,7 +91,8 @@ namespace OpenRPA.Activities
                         //    param[a.Key] = a.Value;
                         //}
                         param[a.Key] = a.Value;
-                    } else
+                    }
+                    else
                     {
                         param[a.Key] = null;
                     }
@@ -100,7 +101,7 @@ namespace OpenRPA.Activities
             Exception error = null;
             try
             {
-                var ThisInstance = WorkflowInstance.Instances.Where(x => x.InstanceId == context.WorkflowInstanceId.ToString()).FirstOrDefault();
+                var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == context.WorkflowInstanceId.ToString()).FirstOrDefault();
 
                 // , string SpanId, string ParentSpanId
                 var workflowid = this.workflow.Get(context);

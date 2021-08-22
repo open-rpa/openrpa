@@ -61,17 +61,40 @@ namespace OpenRPA
                     }
                     else
                     {
-                        if (entity.isDirty)
+                        bool doUpdate = true;
+                        if (entity is WorkflowInstance wi)
+                        {
+                            if (wi.state == "idle" || wi.state == "running")
+                            {
+                                doUpdate = false;
+                                if (DateTime.Now > entity._modified.AddSeconds(5)) doUpdate = true;
+                            }
+                        }
+                        if (entity.isDirty && doUpdate)
                         {
                             entity._version++; // Add one to avoid watch update
-                            var result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity);
-                            isDirty = false;
-                            _acl = result._acl;
-                            _modified = result._modified;
-                            _modifiedby = result._modifiedby;
-                            _modifiedbyid = result._modifiedbyid;
-                            _version = result._version;
-                            Log.Verbose("Updated in openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
+                            try
+                            {
+                                var result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity);
+                                if (result != null)
+                                {
+                                    isDirty = false;
+                                    _acl = result._acl;
+                                    _modified = result._modified;
+                                    _modifiedby = result._modifiedby;
+                                    _modifiedbyid = result._modifiedbyid;
+                                    _version = result._version;
+                                    Log.Verbose("Updated in openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
+                                }
+                                else
+                                {
+                                    Log.Output("Failed saving " + entity._type + " " + entity._id);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex.ToString());
+                            }
                         }
                     }
                 }

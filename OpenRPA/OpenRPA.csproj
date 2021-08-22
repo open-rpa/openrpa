@@ -608,6 +608,9 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <Page Include="Activities\OpenApplicationDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Activities\StopOpenRPADesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\TypeTextDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -936,6 +939,9 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <EmbeddedResource Include="Resources\toolbox\mouse.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Activities\StopOpenRPADesigner.xaml.cs">
+      <Generator></Generator>
+    </Compile>
     <Compile Update="Resources\strings.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

@@ -126,6 +126,7 @@ namespace OpenRPA
         public bool autoReconnect = true;
         public bool loginInProgress = false;
         private bool first_connect = true;
+        private int connect_attempts = 0;
         private bool? _isRunningInChildSession = null;
         public bool isRunningInChildSession
         {
@@ -591,6 +592,31 @@ namespace OpenRPA
                 //_instance.dbWorkflowInstances.EnsureIndex(x => x._id, true);
 
 
+                Log.Information("LoadServerData::query detector versions");
+                var host = Environment.MachineName.ToLower();
+                var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
+                var runninginstances = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "'}", top: 1000);
+                foreach (var i in runninginstances)
+                {
+                    var exists = dbWorkflowInstances.Find(x => x._id == i._id).FirstOrDefault();
+                    if (exists != null)
+                    {
+                        if (i._version > exists._version)
+                        {
+                            i.isDirty = false;
+                            await i.Save<WorkflowInstance>();
+                        }
+                        else if (i._version < exists._version)
+                        {
+                            await exists.Save<WorkflowInstance>();
+                        }
+                    }
+                    else
+                    {
+                        i.isDirty = false;
+                        await i.Save<WorkflowInstance>();
+                    }
+                }
                 if (Projects.Count() == 0 && first_connect)
                 {
                     string Name = "New Project";
@@ -620,6 +646,11 @@ namespace OpenRPA
                         Log.Error(ex.ToString());
                     }
                 }
+
+                SetStatus("Run pending workflow instances");
+                Log.Debug("RunPendingInstances::begin ");
+                await WorkflowInstance.RunPendingInstances();
+                Log.Debug("RunPendingInstances::end ");
 
             }
             catch (Exception ex)
@@ -714,18 +745,6 @@ namespace OpenRPA
                     System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = true;
                     System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.Normal;
                     System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Normal;
-                    if (first_connect)
-                    {
-                        SetStatus("Run pending workflow instances");
-                        Log.Debug("RunPendingInstances::begin ");
-                        var wfs = Workflows.FindAll();
-                        foreach (var workflow in wfs)
-                        {
-                            workflow.RunPendingInstances();
-                        }
-                        Log.Debug("RunPendingInstances::end ");
-                        // CreateMainWindow();
-                    }
                     GenericTools.RunUI(() =>
                     {
                         if (App.splash != null)
@@ -975,17 +994,6 @@ namespace OpenRPA
                     }
                 }
                 InitializeOTEL();
-                try
-                {
-                    SetStatus("Run pending workflow instances");
-                    Log.Debug("RunPendingInstances::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                    await WorkflowInstance.RunPendingInstances();
-                    Log.Debug("RunPendingInstances::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
                 Log.Debug("WebSocketClient_OnOpen::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
 
                 System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = true;
@@ -1060,15 +1068,6 @@ namespace OpenRPA
                     {
                         Log.Error(ex.ToString());
                     }
-                    try
-                    {
-                        SetStatus("Run pending workflow instances");
-                        await WorkflowInstance.RunPendingInstances();
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.ToString());
-                    }
                     SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
                 });
             }
@@ -1132,18 +1131,8 @@ namespace OpenRPA
             {
                 try
                 {
+                    connect_attempts++;
                     autoReconnect = false;
-                    global.webSocketClient.OnOpen -= RobotInstance_WebSocketClient_OnOpen;
-                    global.webSocketClient.OnClose -= WebSocketClient_OnClose;
-                    global.webSocketClient.OnQueueClosed -= WebSocketClient_OnQueueClosed;
-                    global.webSocketClient.OnQueueMessage -= WebSocketClient_OnQueueMessage;
-                    global.webSocketClient = null;
-
-                    global.webSocketClient = new Net.WebSocketClient(Config.local.wsurl);
-                    global.webSocketClient.OnOpen += RobotInstance_WebSocketClient_OnOpen;
-                    global.webSocketClient.OnClose += WebSocketClient_OnClose;
-                    global.webSocketClient.OnQueueClosed += WebSocketClient_OnQueueClosed;
-                    global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
                     SetStatus("Connecting to " + Config.local.wsurl);
                     await global.webSocketClient.Connect();
                     autoReconnect = true;
@@ -1152,6 +1141,20 @@ namespace OpenRPA
                 {
                     Log.Error(ex.ToString());
                 }
+            }
+            if (connect_attempts == 1)
+            {
+                try
+                {
+                    SetStatus("Run pending workflow instances");
+                    await WorkflowInstance.RunPendingInstances();
+                    SetStatus("Connecting to " + Config.local.wsurl);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+
             }
             Log.FunctionOutdent("RobotInstance", "WebSocketClient_OnClose");
         }

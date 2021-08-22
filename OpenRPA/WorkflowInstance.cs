@@ -19,7 +19,7 @@ namespace OpenRPA
         {
             if (unsavedTimer == null)
             {
-                unsavedTimer = new System.Timers.Timer(1000);
+                unsavedTimer = new System.Timers.Timer(5000);
                 unsavedTimer.Elapsed += UnsavedTimer_Elapsed;
                 unsavedTimer.Start();
             }
@@ -890,71 +890,13 @@ namespace OpenRPA
             //return task.Result;
             _ = Save<WorkflowInstance>();
             if (Workflow != null) Workflow.NotifyUIState();
-            Task.Run(async () =>
-            {
-                try
-                {
-                    var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, "InstanceId,WorkflowId", this);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                    lock (unsaved)
-                    {
-                        var exists = unsaved.Where(x => x.Instance._id == _id).FirstOrDefault();
-                        unsaved.Remove(exists);
-                        unsaved.Add(new UnsavedWorkflowInstance() { Instance = this });
-                    }
-                }
-                //int retries = 0;
-                //_modified = DateTime.Now;
-                //bool hasError = false;
-                //int retryinterval = 1000;
-                //do
-                //{
-                //    hasError = false;
-                //    try
-                //    {
-                //        if (string.IsNullOrEmpty(Config.local.wsurl)) return;
-                //        //if (!global.isConnected || global.webSocketClient == null || global.webSocketClient.user == null)
-                //        //{
-                //        //    retries = 0;
-                //        //    System.Threading.Thread.Sleep(retryinterval);
-                //        //    if (retryinterval < 60000) retryinterval = +1000;
-                //        //    continue;
-                //        //}
-                //        Log.Warning("Save instance id: " + _id + " state: " + state);
-                //        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, "InstanceId,WorkflowId", this);
-                //        if (result != null)
-                //        {
-                //            _id = result._id;
-                //            _acl = result._acl;
-                //            _created = result._created;
-                //            _createdby = result._createdby;
-                //            _createdbyid = result._createdbyid;
-                //            _modified = result._modified;
-                //            _modifiedby = result._modifiedby;
-                //            _modifiedbyid = result._modifiedbyid;
-                //        }
-                //        else
-                //        {
-                //            retries++;
-                //            hasError = true;
-                //        }
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        Log.Debug(ex.ToString());
-                //        retries++;
-                //        hasError = true;
-                //        // throw;
-                //    }
-                //} while (hasError && retries < 10);
-                //if (hasError)
-                //{
-                //    Log.Error("Failed saving workflowinstance " + _id);
-                //}
-            });
+            //lock (unsaved)
+            //{
+            //    var exists = unsaved.Where(x => x.Instance._id == _id).FirstOrDefault();
+            //    unsaved.Remove(exists);
+            //    unsaved.Add(new UnsavedWorkflowInstance() { Instance = this });
+            //    Log.Output("unsaved instances count is " + unsaved.Count);
+            //}
         }
         private static void UnsavedTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
@@ -973,13 +915,16 @@ namespace OpenRPA
                     {
                         Log.Error(ex.ToString());
                     }
+                    Log.Output("*unsaved instances count is " + unsaved.Count);
                 }
             }
         }
 
         public static List<UnsavedWorkflowInstance> unsaved = new List<UnsavedWorkflowInstance>();
+        private static bool hasRanPending = false;
         public static async Task RunPendingInstances()
         {
+            if (hasRanPending) return;
             // var span = RobotInstance.instance.source.StartActivity("RunPendingInstances", System.Diagnostics.ActivityKind.Internal);
             Log.FunctionIndent("RobotInstance", "RunPendingInstances");
             try
@@ -992,7 +937,8 @@ namespace OpenRPA
                 var host = Environment.MachineName.ToLower();
                 var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
                 //var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "'}", top: 1000);
-                var results = RobotInstance.instance.WorkflowInstances.FindAll(x => (x.state == "idle" || x.state == "running") && x.fqdn == fqdn);
+
+                var results = RobotInstance.instance.dbWorkflowInstances.Find(x => (x.state == "idle" || x.state == "running") && x.fqdn == fqdn);
                 foreach (WorkflowInstance i in results)
                 {
                     try
@@ -1015,7 +961,7 @@ namespace OpenRPA
                             continue;
                         }
                         i.Workflow = workflow;
-                        //if (idleOrComplete != null) i.OnIdleOrComplete += idleOrComplete;
+                        if (RobotInstance.instance.Window != null) i.OnIdleOrComplete += RobotInstance.instance.Window.IdleOrComplete;
                         //if (VisualTracking != null) i.OnVisualTracking += VisualTracking;
                         lock (Instances) Instances.Add(i);
                         var _ref = (i as IWorkflowInstance);
@@ -1042,6 +988,7 @@ namespace OpenRPA
                         Log.Error("RunPendingInstances: " + ex.ToString());
                     }
                 }
+                hasRanPending = true;
             }
             catch (Exception ex)
             {
@@ -1049,6 +996,7 @@ namespace OpenRPA
             }
             finally
             {
+                
             }
             Log.FunctionOutdent("RobotInstance", "RunPendingInstances");
         }

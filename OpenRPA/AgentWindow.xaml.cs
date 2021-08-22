@@ -468,9 +468,9 @@ namespace OpenRPA
                     var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
                     foreach (var document in ld)
                     {
-                        if (document.Content is Views.AgentViewProjects op) { document.IsSelected = true; return; }
+                        if (document.Content is Views.OpenProject op) { document.IsSelected = true; return; }
                     }
-                    var view = new Views.AgentViewProjects(this);
+                    var view = new Views.OpenProject(this);
                     view.onOpenWorkflow += OnOpenWorkflow;
 
                     LayoutDocument layoutDocument = new LayoutDocument { Title = "Open project" };
@@ -497,7 +497,7 @@ namespace OpenRPA
         {
             try
             {
-                if (SelectedContent is Views.AgentViewProjects view)
+                if (SelectedContent is Views.OpenProject view)
                 {
                     var val = view.listWorkflows.SelectedValue;
                     if (val == null) return false;
@@ -528,7 +528,7 @@ namespace OpenRPA
         {
             try
             {
-                if (SelectedContent is Views.AgentViewProjects view)
+                if (SelectedContent is Views.OpenProject view)
                 {
                     var val = view.listWorkflows.SelectedValue;
                     if (val == null) return;
@@ -563,7 +563,7 @@ namespace OpenRPA
         {
             try
             {
-                if (SelectedContent is Views.AgentViewProjects view)
+                if (SelectedContent is Views.OpenProject view)
                 {
                     var val = view.listWorkflows.SelectedValue;
                     if (val == null) return false;
@@ -600,7 +600,7 @@ namespace OpenRPA
         {
             Workflow workflow = null;
             if (_item != null && _item is Workflow) workflow = _item as Workflow;
-            if (SelectedContent is Views.AgentViewProjects view)
+            if (SelectedContent is Views.OpenProject view)
             {
                 if (view != null)
                 {

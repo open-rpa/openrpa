@@ -467,10 +467,9 @@ namespace OpenRPA
                     var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
                     foreach (var document in ld)
                     {
-                        if (document.Content is Views.OpenProject op) { document.IsSelected = true; return; }
+                        if (document.Content is Views.AgentViewProjects op) { document.IsSelected = true; return; }
                     }
                     var view = new Views.AgentViewProjects(this);
-                    // view.onOpenProject += OnOpenProject;
                     view.onOpenWorkflow += OnOpenWorkflow;
 
                     LayoutDocument layoutDocument = new LayoutDocument { Title = "Open project" };
@@ -496,7 +495,7 @@ namespace OpenRPA
         {
             try
             {
-                if (SelectedContent is Views.OpenProject view)
+                if (SelectedContent is Views.AgentViewProjects view)
                 {
                     var val = view.listWorkflows.SelectedValue;
                     if (val == null) return false;

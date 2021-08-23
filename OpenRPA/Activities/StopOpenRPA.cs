@@ -18,7 +18,7 @@ namespace OpenRPA.Activities
     [LocalizedDisplayName("activity_stopopenrpa", typeof(Resources.strings))]
     public class StopOpenRPA : NativeActivity
     {
-        [LocalizedDisplayName("activity_workflow", typeof(Resources.strings)), LocalizedDescription("activity_workflow_help", typeof(Resources.strings))]
+        [RequiredArgument, LocalizedDisplayName("activity_workflow", typeof(Resources.strings)), LocalizedDescription("activity_workflow_help", typeof(Resources.strings))]
         public InArgument<string> workflow { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_killall", typeof(Resources.strings)), LocalizedDescription("activity_killall_help", typeof(Resources.strings))]
         public InArgument<bool> KillAll { get; set; } = false;

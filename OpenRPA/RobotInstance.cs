@@ -665,7 +665,7 @@ namespace OpenRPA
             }
             finally
             {
-                if (global.webSocketClient.user != null && global.webSocketClient.isConnected)
+                if (global.webSocketClient != null && global.webSocketClient.user != null && global.webSocketClient.isConnected)
                 {
                     SetStatus("Connected to " + Config.local.wsurl + " as " + global.webSocketClient.user.name);
                 }
@@ -726,7 +726,7 @@ namespace OpenRPA
         {
             ParseCommandLineArgs(Environment.GetCommandLineArgs());
         }
-        public void init()
+        public async Task init()
         {
             Log.FunctionIndent("RobotInstance", "init");
             SetStatus("Checking for updates");
@@ -751,6 +751,7 @@ namespace OpenRPA
                     System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = true;
                     System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.Normal;
                     System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Normal;
+                    CreateMainWindow();
                     GenericTools.RunUI(() =>
                     {
                         if (App.splash != null)
@@ -761,6 +762,7 @@ namespace OpenRPA
                         if (!Config.local.isagent) Show();
                         ReadyForAction?.Invoke();
                     });
+                    await LoadServerData();
                     if (!isReadyForAction)
                     {
                         ParseCommandLineArgs();

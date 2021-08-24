@@ -102,9 +102,9 @@ namespace OpenRPA
                 NotifyPropertyChanged("Snippets");
                 // OnOpen(null);
                 AddHotKeys();
+                LoadLayout();
                 if (string.IsNullOrEmpty(Config.local.wsurl))
                 {
-                    LoadLayout();
                     try
                     {
                         ReadyForAction?.Invoke();
@@ -3320,7 +3320,7 @@ namespace OpenRPA
                 }
                 else
                 {
-                    Log.Output("No queue name " + instance.queuename + " on instance, to notify about state " + instance.state);
+                    Log.Verbose("No queue name " + instance.queuename + " on instance, to notify about state " + instance.state);
                 }
                 if (instance.hasError || instance.isCompleted)
                 {

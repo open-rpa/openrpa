@@ -62,7 +62,13 @@ namespace OpenRPA.Net
                 //if (ws != null && (ws.State == System.Net.WebSockets.WebSocketState.Aborted || ws.State == System.Net.WebSockets.WebSocketState.Closed))
                 if (ws != null && (ws.State != WebSocketState.Connecting))
                 {
-                    ws.Dispose();
+                    try
+                    {
+                        ws.Dispose();
+                    }
+                    catch (Exception)
+                    {
+                    }
                     ws = null;
                 }
                 if (ws == null)

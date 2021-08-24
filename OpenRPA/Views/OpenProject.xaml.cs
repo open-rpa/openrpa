@@ -105,7 +105,7 @@ namespace OpenRPA.Views
             try
             {
                 if (RobotInstance.instance.Window is AgentWindow) return false;
-                if (!global.webSocketClient.isConnected) return false;
+                if (global.webSocketClient == null || !global.webSocketClient.isConnected) return false;
                 if (main.SelectedContent is Views.OpenProject view)
                 {
                     var val = view.listWorkflows.SelectedValue;

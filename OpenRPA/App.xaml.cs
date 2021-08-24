@@ -35,10 +35,11 @@ namespace OpenRPA
                     if (options.ContainsKey("workingdir"))
                     {
                         var filepath = options["workingdir"].ToString();
-                        if(System.IO.Directory.Exists(filepath))
+                        if (System.IO.Directory.Exists(filepath))
                         {
                             Log.ResetLogPath(filepath);
-                        } else
+                        }
+                        else
                         {
                             MessageBox.Show("Path not found " + filepath);
                             return;
@@ -70,7 +71,7 @@ namespace OpenRPA
             {
             }
         }
-        public static System.Windows.Forms.NotifyIcon notifyIcon { get; set; }  = new System.Windows.Forms.NotifyIcon();
+        public static System.Windows.Forms.NotifyIcon notifyIcon { get; set; } = new System.Windows.Forms.NotifyIcon();
         public App()
         {
             if (!string.IsNullOrEmpty(Config.local.culture))
@@ -128,7 +129,7 @@ namespace OpenRPA
                 //Perform dependency check to make sure all relevant resources are in our output directory.
                 var settings = new CefSharp.Wpf.CefSettings();
                 settings.CachePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CefSharp\\Cache");
-                if(!System.IO.Directory.Exists(settings.CachePath))
+                if (!System.IO.Directory.Exists(settings.CachePath))
                 {
                     System.IO.Directory.CreateDirectory(settings.CachePath);
                 }
@@ -231,7 +232,7 @@ namespace OpenRPA
         public static Views.SplashScreen splash { get; set; }
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
-            if(Config.local.showloadingscreen)
+            if (Config.local.showloadingscreen)
             {
                 splash = new Views.SplashScreen();
                 splash.Topmost = false;
@@ -242,20 +243,20 @@ namespace OpenRPA
             System.Threading.Thread.CurrentThread.Name = "UIThread";
             if (!Config.local.isagent)
             {
-                if(!Config.local.showloadingscreen) notifyIcon.Visible = true;
+                if (!Config.local.showloadingscreen) notifyIcon.Visible = true;
             }
             else
             {
                 notifyIcon.Visible = true;
             }
-            if(Config.local.files_pending_deletion.Length > 0)
+            if (Config.local.files_pending_deletion.Length > 0)
             {
                 bool sucess = true;
-                foreach(var f in Config.local.files_pending_deletion)
+                foreach (var f in Config.local.files_pending_deletion)
                 {
                     try
                     {
-                        if(System.IO.File.Exists(f)) System.IO.File.Delete(f);
+                        if (System.IO.File.Exists(f)) System.IO.File.Delete(f);
                     }
                     catch (Exception ex)
                     {
@@ -263,7 +264,7 @@ namespace OpenRPA
                         Log.Error(ex.ToString());
                     }
                 }
-                if(sucess)
+                if (sucess)
                 {
                     Config.local.files_pending_deletion = new string[] { };
                     Config.Save();
@@ -271,7 +272,7 @@ namespace OpenRPA
             }
             RobotInstance.instance.Status += App_Status;
             Input.InputDriver.Instance.initCancelKey(Config.local.cancelkey);
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 try
                 {
@@ -279,7 +280,7 @@ namespace OpenRPA
                     // Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.ProjectsDirectory);
                     Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.PluginsDirectory, false);
                     if (Config.local.showloadingscreen) splash.BusyContent = "Initialize main window";
-                    RobotInstance.instance.init();
+                    await RobotInstance.instance.init();
                 }
                 catch (Exception ex)
                 {
@@ -294,7 +295,7 @@ namespace OpenRPA
             {
                 Log.Debug(message);
                 // notifyIcon.ShowBalloonTip(5000, "Title", message, System.Windows.Forms.ToolTipIcon.Info);
-                if (splash!=null) splash.BusyContent = message;
+                if (splash != null) splash.BusyContent = message;
             }
             catch (Exception)
             {

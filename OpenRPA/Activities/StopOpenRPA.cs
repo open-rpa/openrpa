@@ -31,37 +31,31 @@ namespace OpenRPA.Activities
             bool killself = KillSelf.Get(context);
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
             string workflowid = workflow.Get(context);
+            if (killall) workflowid = "";
             if (string.IsNullOrEmpty(workflowid) && !killall) throw new Exception("Kill all not enabled and no workflow selected");
             int result = 0;
             try
             {
-                if (Config.local.remote_allowed_killing_any)
+                var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == context.WorkflowInstanceId.ToString()).FirstOrDefault();
+                foreach (var i in global.OpenRPAClient.WorkflowInstances.ToList())
                 {
-                    var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == context.WorkflowInstanceId.ToString()).FirstOrDefault();
-                    foreach (var i in global.OpenRPAClient.WorkflowInstances.ToList())
+                    if (!killself && i.InstanceId == WorkflowInstanceId) continue;
+                    if (!i.isCompleted)
                     {
-                        if (!killself && i.InstanceId == WorkflowInstanceId) continue;
-                        if (!i.isCompleted)
+                        if (!string.IsNullOrEmpty(workflowid))
                         {
-                            if (!string.IsNullOrEmpty(workflowid))
+                            if (i.Workflow._id == workflowid || i.Workflow.RelativeFilename == workflowid)
                             {
-                                if (i.Workflow._id == workflowid || i.Workflow.RelativeFilename == workflowid)
-                                {
-                                    i.Abort("Killed remotely by killworkflows command from " + Instance.Workflow.name);
-                                    result++;
-                                }
-                            }
-                            else
-                            {
-                                i.Abort("Killed remotely by killallworkflows command from " + Instance.Workflow.name);
+                                i.Abort("Killed by StopOpenRPA activity from " + Instance.Workflow.name);
                                 result++;
                             }
                         }
+                        else
+                        {
+                            i.Abort("Killed by StopOpenRPA activity from " + Instance.Workflow.name);
+                            result++;
+                        }
                     }
-                }
-                else
-                {
-                    throw new Exception("kill all not allowed for " + global.webSocketClient.user + " running on " + System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower());
                 }
                 Result.Set(context, result);
             }

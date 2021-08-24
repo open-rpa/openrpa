@@ -915,7 +915,10 @@ namespace OpenRPA
             {
                 try
                 {
-                    var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, "InstanceId,WorkflowId", this);
+                    if(global.webSocketClient != null && global.webSocketClient.user != null)
+                    {
+                        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, "InstanceId,WorkflowId", this);
+                    }
                 }
                 catch (Exception ex)
                 {

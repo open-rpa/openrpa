@@ -742,7 +742,11 @@ namespace OpenRPA
                         if (e.TerminationException != null)
                         {
                             Exception = e.TerminationException;
-                            errormessage = e.TerminationException.Message;
+                            while (Exception is System.Reflection.TargetInvocationException ti && Exception.InnerException != null)
+                            {
+                                Exception = Exception.InnerException;
+                            }
+                            errormessage = Exception.Message;
                         }
                         else
                         {
@@ -832,7 +836,11 @@ namespace OpenRPA
                 isCompleted = true;
                 state = "failed";
                 Exception = e.UnhandledException;
-                errormessage = e.UnhandledException.Message;
+                while (Exception is System.Reflection.TargetInvocationException ti && Exception.InnerException != null)
+                {
+                    Exception = Exception.InnerException;
+                }
+                errormessage = Exception.Message;
                 if (e.ExceptionSource != null) errorsource = e.ExceptionSource.Id;
                 //exceptionsource = e.ExceptionSource.Id;
                 if (runWatch != null) runWatch.Stop();
@@ -915,7 +923,7 @@ namespace OpenRPA
             {
                 try
                 {
-                    if(global.webSocketClient != null && global.webSocketClient.user != null)
+                    if (global.webSocketClient != null && global.webSocketClient.user != null)
                     {
                         var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, "InstanceId,WorkflowId", this);
                     }

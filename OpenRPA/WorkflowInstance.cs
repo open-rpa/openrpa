@@ -828,7 +828,11 @@ namespace OpenRPA
                 isCompleted = true;
                 state = "failed";
                 Exception = e.UnhandledException;
-                errormessage = e.UnhandledException.Message;
+                while (Exception is System.Reflection.TargetInvocationException ti && Exception.InnerException != null)
+                {
+                    Exception = Exception.InnerException;
+                }
+                errormessage = Exception.Message;
                 if (e.ExceptionSource != null) errorsource = e.ExceptionSource.Id;
                 //exceptionsource = e.ExceptionSource.Id;
                 if (runWatch != null) runWatch.Stop();
@@ -996,7 +1000,7 @@ namespace OpenRPA
             }
             finally
             {
-                
+
             }
             Log.FunctionOutdent("RobotInstance", "RunPendingInstances");
         }

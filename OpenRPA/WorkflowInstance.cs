@@ -938,54 +938,6 @@ namespace OpenRPA
                         unsaved.Add(new UnsavedWorkflowInstance() { Instance = this });
                     }
                 }
-                //int retries = 0;
-                //_modified = DateTime.Now;
-                //bool hasError = false;
-                //int retryinterval = 1000;
-                //do
-                //{
-                //    hasError = false;
-                //    try
-                //    {
-                //        if (string.IsNullOrEmpty(Config.local.wsurl)) return;
-                //        //if (!global.isConnected || global.webSocketClient == null || global.webSocketClient.user == null)
-                //        //{
-                //        //    retries = 0;
-                //        //    System.Threading.Thread.Sleep(retryinterval);
-                //        //    if (retryinterval < 60000) retryinterval = +1000;
-                //        //    continue;
-                //        //}
-                //        Log.Warning("Save instance id: " + _id + " state: " + state);
-                //        var result = await global.webSocketClient.InsertOrUpdateOne("openrpa_instances", 1, false, "InstanceId,WorkflowId", this);
-                //        if (result != null)
-                //        {
-                //            _id = result._id;
-                //            _acl = result._acl;
-                //            _created = result._created;
-                //            _createdby = result._createdby;
-                //            _createdbyid = result._createdbyid;
-                //            _modified = result._modified;
-                //            _modifiedby = result._modifiedby;
-                //            _modifiedbyid = result._modifiedbyid;
-                //        }
-                //        else
-                //        {
-                //            retries++;
-                //            hasError = true;
-                //        }
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        Log.Debug(ex.ToString());
-                //        retries++;
-                //        hasError = true;
-                //        // throw;
-                //    }
-                //} while (hasError && retries < 10);
-                //if (hasError)
-                //{
-                //    Log.Error("Failed saving workflowinstance " + _id);
-                //}
             });
         }
         private static void UnsavedTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)

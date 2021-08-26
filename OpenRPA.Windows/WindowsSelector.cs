@@ -60,7 +60,7 @@ namespace OpenRPA.Windows
                     if (ct == FlaUI.Core.Definitions.ControlType.Window) win = _item;
                 }
             }
-            if (win != null)
+            if (win != null && PluginConfig.remove_fisrt_window)
             {
                 var indexof = pathToRoot.IndexOf(win) + 1;
                 pathToRoot.RemoveRange(indexof, pathToRoot.Count - indexof);

@@ -296,10 +296,11 @@ namespace OpenRPA.NM
             var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
             if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox" && p.ProcessName.ToLower() != "msedge") return false;
 
-            if (p.ProcessName.ToLower() == "chrome" && !NMHook.chromeconnected)
+            if (p.ProcessName.ToLower() == "chrome")
             {
-                System.Windows.MessageBox.Show("You clicked inside Chrome, but it looks like you dont have the OpenRPA plugin installed");
-                return false;
+                if (!NMHook.chromeconnected) { System.Windows.MessageBox.Show("You clicked inside Chrome, but it looks like you dont have the OpenRPA plugin installed"); return false; }
+                if(string.IsNullOrEmpty(e.UIElement.FrameworkId) || e.UIElement.FrameworkId.ToLower() != "chrome") return false;
+
             }
             if (p.ProcessName.ToLower() == "msedge" && !NMHook.edgeconnected)
             {

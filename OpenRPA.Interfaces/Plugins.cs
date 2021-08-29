@@ -279,6 +279,11 @@ namespace OpenRPA.Interfaces
                     if (dllFile.Contains("Interop.SAPFEWSELib")) continue;
                     if (dllFile.Contains("Interop.SapROTWr")) continue;
                     if (dllFile.Contains("grpc_csharp_ext")) continue;
+                    if (dllFile.Contains("chrome_elf.")) continue;
+                    if (dllFile.Contains("d3dcompiler_")) continue;
+                    if (dllFile.Contains("libcef.dll")) continue;
+                    if (dllFile.Contains("libEGL.dll")) continue;
+                    if (dllFile.Contains("libGLESv2.dll")) continue;
                     AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
                     Assembly assembly = Assembly.Load(an);
                     // assemblies.Add(assembly);

@@ -76,7 +76,7 @@
     <EmbeddedResource Include="Resources\toolbox\prompt.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Forge.Forms" Version="1.1.1" />
+    <PackageReference Include="Forge.Forms" Version="1.1.4" />
     <PackageReference Include="ToastNotifications" Version="2.5.1" />
     <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
   </ItemGroup>

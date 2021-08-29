@@ -97,7 +97,7 @@
     <EmbeddedResource Include="Resources\x.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.23" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.36" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Interop.MSHTML">

@@ -165,9 +165,9 @@
     <EmbeddedResource Include="Resources\toolbox\downloadfile.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.95.3" />
+    <PackageReference Include="ClosedXML" Version="0.95.4" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
-    <PackageReference Include="iTextSharp" Version="5.5.13.1" />
+    <PackageReference Include="iTextSharp" Version="5.5.13.2" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\AddDataColumnDesigner.xaml">

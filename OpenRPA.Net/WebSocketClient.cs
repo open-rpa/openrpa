@@ -560,24 +560,27 @@ namespace OpenRPA.Net
                     {
                         if (retries > 0)
                         {
-                            lock (_messageQueue)
+                            if (msg.command != "signin" && msg.command != "ping" && msg.command != "pong")
                             {
-                                _messageQueue.Remove(qm);
-                                _messageQueue.Add(qm);
-                            }
-                            if (user == null && msg.command == "signin")
-                            {
-                                Log.Network("(" + _messageQueue.Count + ") " + msg.command + " RSND: " + msg.id);
-                                msg.SendMessage(this);
-                            }
-                            else if (user != null)
-                            {
-                                Log.Network("(" + _messageQueue.Count + ") " + msg.command + " RSND: " + msg.id);
-                                msg.SendMessage(this);
-                            }
-                            else
-                            {
-                                Log.Warning("Message NOOP " + qm.msg.id + " " + qm.msg.command);
+                                lock (_messageQueue)
+                                {
+                                    _messageQueue.Remove(qm);
+                                    _messageQueue.Add(qm);
+                                }
+                                if (user == null && msg.command == "signin")
+                                {
+                                    Log.Network("(" + _messageQueue.Count + ") " + msg.command + " RSND: " + msg.id);
+                                    msg.SendMessage(this);
+                                }
+                                else if (user != null)
+                                {
+                                    Log.Network("(" + _messageQueue.Count + ") " + msg.command + " RSND: " + msg.id);
+                                    msg.SendMessage(this);
+                                }
+                                else
+                                {
+                                    Log.Warning("Message NOOP " + qm.msg.id + " " + qm.msg.command);
+                                }
                             }
                         }
                         else

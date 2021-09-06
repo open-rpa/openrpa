@@ -79,6 +79,7 @@ namespace OpenRPA
         public int max_workflows { get { return GetProperty(null, 500); } set { SetProperty(null, value); } }
         public int max_trace_lines { get { return GetProperty(null, 250); } set { SetProperty(null, value); } }
         public int max_output_lines { get { return GetProperty(null, 250); } set { SetProperty(null, value); } }
+        public bool allow_debug_nested_invokeopenrpa { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
         public TimeSpan network_message_timeout { get { return GetProperty(null, TimeSpan.FromSeconds(15)); } set { SetProperty(null, value); } }
         private void loadEntropy()
         {
@@ -149,18 +150,26 @@ namespace OpenRPA
             {
                 if (_local == null)
                 {
-                    string filename = SettingsFile;
-                    _local = new Config();
-                    if (System.IO.File.Exists(filename))
+                    try
                     {
-                        var json = System.IO.File.ReadAllText(filename);
-                        _local.settings = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+                        string filename = SettingsFile;
+                        _local = new Config();
+                        if (System.IO.File.Exists(filename))
+                        {
+                            var json = System.IO.File.ReadAllText(filename);
+                            _local.settings = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+                        }
+                        // _local = Load(filename);
+                        // Hack to force updating old clients for new domain names
+                        if (_local.wsurl == "wss://demo1.openrpa.dk/" || _local.wsurl == "wss://demo1.openrpa.dk")
+                        {
+                            _local.wsurl = "wss://app.openiap.io/";
+                        }
                     }
-                    // _local = Load(filename);
-                    // Hack to force updating old clients for new domain names
-                    if (_local.wsurl == "wss://demo1.openrpa.dk/" || _local.wsurl == "wss://demo1.openrpa.dk")
+                    catch (Exception ex)
                     {
-                        _local.wsurl = "wss://app.openiap.io/";
+                        Log.Error(ex.ToString());
+                        System.Windows.MessageBox.Show(ex.Message);
                     }
                 }
                 return _local;

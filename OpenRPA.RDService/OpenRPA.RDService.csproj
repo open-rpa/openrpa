@@ -77,7 +77,6 @@
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
     <ProjectReference Include="..\OpenRPA.NamedPipeWrapper\OpenRPA.NamedPipeWrapper.csproj" />
     <ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj" />
-    <ProjectReference Include="..\OpenRPA.RDServiceMonitor\OpenRPA.RDServiceMonitor.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AxInterop.MSTSCLib">

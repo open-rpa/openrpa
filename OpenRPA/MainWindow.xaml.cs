@@ -3279,20 +3279,17 @@ namespace OpenRPA
         {
             if (instance == null) return;
             Log.FunctionIndent("MainWindow", "IdleOrComplete");
-            GenericTools.RunUI(() =>
+            try
             {
-                try
+                if (string.IsNullOrEmpty(instance.queuename) && string.IsNullOrEmpty(instance.correlationId) && string.IsNullOrEmpty(instance.caller) && instance.isCompleted)
                 {
-                    if (string.IsNullOrEmpty(instance.queuename) && string.IsNullOrEmpty(instance.correlationId) && string.IsNullOrEmpty(instance.caller) && instance.isCompleted)
-                    {
-                        if (this.Minimize) GenericTools.Restore();
-                    }
+                    if (this.Minimize) GenericTools.Restore();
                 }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-            });
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
             try
             {
                 bool isRemote = false;

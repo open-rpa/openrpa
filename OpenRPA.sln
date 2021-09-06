@@ -59,8 +59,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.CodeEditor", "OpenR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.PDPlugin", "OpenRPA.PDPlugin\OpenRPA.PDPlugin.csproj", "{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.RDServiceMonitor", "OpenRPA.RDServiceMonitor\OpenRPA.RDServiceMonitor.csproj", "{B42506D3-469E-4283-95EF-95A580ADA86E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "installer", "installer", "{8CBC9129-7A79-483A-838B-2C6FF3762B35}"
 	ProjectSection(SolutionItems) = preProject
 		dowinget.bat = dowinget.bat
@@ -577,26 +575,6 @@ Global
 		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
 		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.ReleaseNuget|x86.ActiveCfg = ReleaseNuget|Any CPU
 		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.ReleaseNuget|x86.Build.0 = ReleaseNuget|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.All|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.All|Any CPU.Build.0 = ReleaseNuget|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.All|x86.ActiveCfg = ReleaseNuget|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.All|x86.Build.0 = ReleaseNuget|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.Debug|x86.ActiveCfg = Debug|x86
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.Debug|x86.Build.0 = Debug|x86
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.PrepInstaller|Any CPU.ActiveCfg = PrepInstaller|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.PrepInstaller|Any CPU.Build.0 = PrepInstaller|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.PrepInstaller|x86.ActiveCfg = PrepInstaller|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.PrepInstaller|x86.Build.0 = PrepInstaller|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.Release|x86.ActiveCfg = Release|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.Release|x86.Build.0 = Release|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.ReleaseNuget|x86.ActiveCfg = ReleaseNuget|Any CPU
-		{B42506D3-469E-4283-95EF-95A580ADA86E}.ReleaseNuget|x86.Build.0 = ReleaseNuget|Any CPU
 		{52AF10F7-DCF9-4E1D-B4DD-331456671118}.All|Any CPU.ActiveCfg = Release|x86
 		{52AF10F7-DCF9-4E1D-B4DD-331456671118}.All|Any CPU.Build.0 = Release|x86
 		{52AF10F7-DCF9-4E1D-B4DD-331456671118}.All|x86.ActiveCfg = Release|x86
@@ -762,7 +740,7 @@ Global
 		{70E2E351-AC0D-486D-B357-B890EF20D1C8} = {8CBC9129-7A79-483A-838B-2C6FF3762B35}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
 		BuildVersion_StartDate = 2000/1/1
+		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
 	EndGlobalSection
 EndGlobal

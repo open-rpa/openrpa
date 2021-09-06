@@ -54,12 +54,18 @@
         <File Id="fil5A46BE503A05AA31B5318277C4BB848F" Source="!(wix.MainSource)\NuGet.Resolver.dll" />
         <File Id="filFAE94905D72D8368BA8CE7A78C6DEA45" Source="!(wix.MainSource)\NuGet.Versioning.dll" />
         <File Id="fil6E894942E6ADFA63F3967E0A27F05784" Source="!(wix.MainSource)\OpenRPA.CodeEditor.dll" />
+        <File Id="fil6E894942E6ADFA63F3967E0A27F05785" Source="!(wix.MainSource)\OpenRPA.CodeEditor.pdb" />
         <File Id="filF0FF646DFA53CCC3ABA2E049427B7EBE" Source="!(wix.MainSource)\OpenRPA.CodeEditor.dll.config" />
         <File Id="fil57AE31DC28AB7B6FFDA5F69E89C07922" Source="!(wix.MainSource)\OpenRPA.exe.config" />
+        <File Id="fil57AE31DC28AB7B6FFDA5F69E89C07923" Source="!(wix.MainSource)\OpenRPA.pdb" />
         <File Id="filDE9EE88175C8A92C8C6EDAEEC002AF7A" Source="!(wix.MainSource)\OpenRPA.Interfaces.dll" />
+        <File Id="filDE9EE88175C8A92C8C6EDAEEC002AF7B" Source="!(wix.MainSource)\OpenRPA.Interfaces.pdb" />
         <File Id="filA3BCD5A3D7D25B0128DBA215D4662EC5" Source="!(wix.MainSource)\OpenRPA.NamedPipeWrapper.dll" />
+        <File Id="filA3BCD5A3D7D25B0128DBA215D4662EC6" Source="!(wix.MainSource)\OpenRPA.NamedPipeWrapper.pdb" />
         <File Id="filC6183D826FBAEDB32E8F9DBD1F7E15A4" Source="!(wix.MainSource)\OpenRPA.Net.dll" />
+        <File Id="filC6183D826FBAEDB32E8F9DBD1F7E15A5" Source="!(wix.MainSource)\OpenRPA.Net.pdb" />
         <File Id="filDB9CDEE3C08EDAA50BF126AEF358BCFC" Source="!(wix.MainSource)\OpenRPA.Windows.dll" />
+        <File Id="filDB9CDEE3C08EDAA50BF126AEF358BCFD" Source="!(wix.MainSource)\OpenRPA.Windows.pdb" />
         <File Id="filEDD81E77BF6933BF90C42AE0EFAA681B" Source="!(wix.MainSource)\System.Buffers.dll" />
         <File Id="fil5D4575804C3CE3ACC76FF53290806177" Source="!(wix.MainSource)\System.Collections.Immutable.dll" />
         <File Id="filB5FF2765E175A6C9AD05767B340DB194" Source="!(wix.MainSource)\System.Composition.AttributedModel.dll" />
@@ -178,6 +184,10 @@
         <File Id="AxInterop.MSTSCLib.dll" Source="!(wix.MainSource)\AxInterop.MSTSCLib.dll" />
         <File Id="MSTSCLib.dll" Source="!(wix.MainSource)\MSTSCLib.dll" />
         <File Id="LiteDB.dll" Source="!(wix.MainSource)\LiteDB.dll" />
+        <!-- OpenRPA.CodeEditor -->
+        <File Id="Microsoft.Bcl.AsyncInterfaces.dll" Source="!(wix.MainSource)\Microsoft.Bcl.AsyncInterfaces.dll" />
+        <File Id="Microsoft.VisualStudio.Debugger.Contracts.dll" Source="!(wix.MainSource)\Microsoft.VisualStudio.Debugger.Contracts.dll" />
+
         <RemoveFolder Id='RemoveLocalAppDataFolder' Directory='INSTALLDIR' On='uninstall' />
       </Component>
       <Component Id='mainComponentde' Win64='yes' Directory="mainde" Guid='{5B022629-6132-43BC-87EF-8777CD939585}'>

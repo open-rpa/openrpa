@@ -70,7 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
-    <ProjectReference Include="..\OpenRPA.RDServiceMonitor\OpenRPA.RDServiceMonitor.csproj" />
     <ProjectReference Include="..\OpenRPA.RDService\OpenRPA.RDService.csproj" />
   </ItemGroup>
   <ItemGroup>

@@ -309,6 +309,7 @@ namespace OpenRPA.RDService
                 {
                     if (session != null)
                     {
+                        session.client = unattendedclient;
                         if (session.rdp != null || session.freerdp != null)
                         {
                             Log.Information("disconnecting session for " + session.client.windowsusername);

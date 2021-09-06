@@ -5,6 +5,7 @@
     <ComponentGroup Id="PSComponents">
       <Component Id='PSComponent' Guid='{D263C0F0-494A-4600-874E-7D011069E4B5}' Win64='yes' Directory="INSTALLDIR">
         <File Id="OpenRPA.PS.dll" Source="!(wix.PSSource)\OpenRPA.PS.dll" />
+        <File Id="OpenRPA.PS.pdb" Source="!(wix.PSSource)\OpenRPA.PS.pdb" />
         <File Id="System.Management.Automation.dll" Source="!(wix.PSSource)\System.Management.Automation.dll" />
         <Environment
                   Id="PSModulePath"

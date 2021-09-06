@@ -161,7 +161,8 @@ namespace OpenRPA
             get
             {
                 var result = new List<IWorkflowInstance>();
-                foreach (var wi in WorkflowInstance.Instances) result.Add(wi);
+                lock (WorkflowInstance.Instances)
+                    foreach (var wi in WorkflowInstance.Instances) result.Add(wi);
                 return result;
             }
         }

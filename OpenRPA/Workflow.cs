@@ -229,7 +229,12 @@ namespace OpenRPA
         {
             get
             {
-                return WorkflowInstance.Instances.Where(x => (x.WorkflowId == _id && !string.IsNullOrEmpty(_id)) || (x.RelativeFilename.ToLower() == RelativeFilename.ToLower() && string.IsNullOrEmpty(_id))).ToList();
+                List<WorkflowInstance> result = null;
+                lock (WorkflowInstance.Instances)
+                {
+                    result = WorkflowInstance.Instances.Where(x => (x.WorkflowId == _id && !string.IsNullOrEmpty(_id)) || (x.RelativeFilename.ToLower() == RelativeFilename.ToLower() && string.IsNullOrEmpty(_id))).ToList();
+                }
+                return result;
             }
         }
         [JsonIgnore, BsonIgnore]

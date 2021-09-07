@@ -455,6 +455,7 @@
                 </StatusBarItem>
                 <StatusBarItem x:Name="LabelStatusBar" Content="{x:Static or:strings.status_disconnected}" />
                 <StatusBarItem x:Name="LabelStatusBar2" Content="{Binding Path=wsstate}" />
+                <StatusBarItem x:Name="LabelStatusBar3" Content="{Binding Path=wsmsgqueue}" />
                 <StatusBarItem VerticalAlignment="Top" HorizontalContentAlignment="Center">
                     <ItemsControl x:Name="lvDataBinding">
                         <ItemsControl.ItemsPanel>

@@ -140,7 +140,6 @@ namespace OpenRPA.Views
                 return _Projects;
             }
         }
-
         public System.Windows.Data.ListCollectionView FilteredSource;
         public System.ComponentModel.ICollectionView FilteredProjects
         {
@@ -166,8 +165,6 @@ namespace OpenRPA.Views
                 return FilteredSource;
             }
         }
-
-
         public static OpenProject Instance;
         public static bool isUpdating = false;
         public static void UpdateProjectsList()
@@ -234,7 +231,6 @@ namespace OpenRPA.Views
             if (e.PropertyName == "Projects") NotifyPropertyChanged("Projects");
             if (e.PropertyName == "Projects") NotifyPropertyChanged("FilteredProjects");
         }
-
         public static bool isFiltering = false;
         public static bool ReFilter = false;
         private string _FilterText = "";

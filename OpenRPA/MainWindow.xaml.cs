@@ -77,6 +77,7 @@ namespace OpenRPA
         private void Statetimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             NotifyPropertyChanged("wsstate");
+            NotifyPropertyChanged("wsmsgqueue");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -844,6 +845,17 @@ namespace OpenRPA
                 if (global.webSocketClient == null) return "null";
                 if (global.webSocketClient.ws == null) return "ws null";
                 return global.webSocketClient.ws.State.ToString();
+            }
+        }
+        public string wsmsgqueue
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Config.local.wsurl)) return "";
+                if (global.webSocketClient == null) return "";
+                if (global.webSocketClient.ws == null) return "";
+                if (global.webSocketClient.MessageQueueSize == 0) return "";
+                return "(" + global.webSocketClient.MessageQueueSize.ToString() + ")";
             }
         }
         public ICommand PlayInChildCommand { get { return new RelayCommand<object>(OnPlayInChild, CanPlayInChild); } }
@@ -3369,7 +3381,7 @@ namespace OpenRPA
                         }
                     });
                 }
-                RobotInstance.instance.NotifyPropertyChanged("Projects");
+                // RobotInstance.instance.NotifyPropertyChanged("Projects");
             }
             catch (Exception ex)
             {

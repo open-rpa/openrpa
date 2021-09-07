@@ -31,6 +31,7 @@ namespace OpenRPA.Net
         public event Action<string> OnClose;
         public event QueueMessageDelegate OnQueueMessage;
         public event QueueClosedDelegate OnQueueClosed;
+        public int MessageQueueSize { get { return _messageQueue.Count; } }
         public TokenUser user { get; private set; }
         public string jwt { get; private set; }
         public bool isConnected
@@ -560,7 +561,8 @@ namespace OpenRPA.Net
                     {
                         if (retries > 0)
                         {
-                            if (msg.command != "signin" && msg.command != "ping" && msg.command != "pong")
+                            if (msg.command == "signin") break;
+                            if (msg.command != "ping" && msg.command != "pong")
                             {
                                 lock (_messageQueue)
                                 {

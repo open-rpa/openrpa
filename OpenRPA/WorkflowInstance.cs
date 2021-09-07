@@ -14,15 +14,8 @@ namespace OpenRPA
 {
     public class WorkflowInstance : LocallyCached, IWorkflowInstance, IDisposable
     {
-        private static System.Timers.Timer unsavedTimer = null;
         public WorkflowInstance()
         {
-            if (unsavedTimer == null)
-            {
-                unsavedTimer = new System.Timers.Timer(5000);
-                unsavedTimer.Elapsed += UnsavedTimer_Elapsed;
-                unsavedTimer.Start();
-            }
             _id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "");
         }
         private WorkflowInstance(Workflow workflow)
@@ -136,17 +129,21 @@ namespace OpenRPA
         public WorkflowTrackingParticipant TrackingParticipant { get; set; }
         private void NotifyState()
         {
-            GenericTools.RunUI(() =>
+            if (Workflow != null)
             {
-                try
+                Log.Output("NotifyState " + Workflow.name + " " + state);
+                GenericTools.RunUI(() =>
                 {
-                    Workflow.NotifyPropertyChanged("State");
-                    Workflow.NotifyPropertyChanged("StateImage");
-                }
-                catch (Exception)
-                {
-                }
-            });
+                    try
+                    {
+                        Workflow.NotifyPropertyChanged("State");
+                        Workflow.NotifyPropertyChanged("StateImage");
+                    }
+                    catch (Exception)
+                    {
+                    }
+                });
+            }
         }
         private void NotifyCompleted()
         {
@@ -164,7 +161,7 @@ namespace OpenRPA
             {
                 runner.onWorkflowIdle(ref _ref);
             }
-            // NotifyState();
+            NotifyState();
         }
         private void NotifyAborted()
         {
@@ -890,17 +887,9 @@ namespace OpenRPA
             {
                 xml = null;
             }
-            //Task<LogEntity> task = Task.Run<LogEntity>(async () => await GetLogAsync());
-            //return task.Result;
-            _ = Save<WorkflowInstance>();
+            isDirty = true;
+            _ = Save<WorkflowInstance>(true);
             if (Workflow != null) Workflow.NotifyUIState();
-            //lock (unsaved)
-            //{
-            //    var exists = unsaved.Where(x => x.Instance._id == _id).FirstOrDefault();
-            //    unsaved.Remove(exists);
-            //    unsaved.Add(new UnsavedWorkflowInstance() { Instance = this });
-            //    Log.Output("unsaved instances count is " + unsaved.Count);
-            //}
         }
         private static void UnsavedTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
@@ -942,7 +931,8 @@ namespace OpenRPA
                 var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
                 //var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "'}", top: 1000);
 
-                var results = RobotInstance.instance.dbWorkflowInstances.Find(x => (x.state == "idle" || x.state == "running") && x.fqdn == fqdn);
+                var results = RobotInstance.instance.dbWorkflowInstances.Find(x => (x.state == "idle" || x.state == "running") && x.fqdn == fqdn).ToList();
+                if (results.Count > 0) Log.Information("Try running " + results.Count + " pending workflows");
                 foreach (WorkflowInstance i in results)
                 {
                     try

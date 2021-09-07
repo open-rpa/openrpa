@@ -15,6 +15,7 @@ namespace OpenRPA
     public class RobotInstance : IOpenRPAClient, System.ComponentModel.INotifyPropertyChanged
     {
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        private static System.Windows.Threading.DispatcherTimer unsavedTimer = null;
         public void NotifyPropertyChanged(string propertyName)
         {
             if (propertyName == "Projects")
@@ -28,6 +29,16 @@ namespace OpenRPA
             reloadTimer = new System.Timers.Timer(Config.local.reloadinterval.TotalMilliseconds);
             reloadTimer.Elapsed += ReloadTimer_Elapsed;
             reloadTimer.Stop();
+
+
+            unsavedTimer = new System.Windows.Threading.DispatcherTimer();
+            unsavedTimer.Interval = TimeSpan.FromMilliseconds(5000);
+
+            unsavedTimer.Tick += new EventHandler(delegate (object s, EventArgs a)
+            {
+                UnsavedTimer_Elapsed(s, null);
+            });
+            unsavedTimer.Start();
             if (InitializeOTEL())
             {
             }
@@ -228,6 +239,40 @@ namespace OpenRPA
             reloadTimer.Stop();
             _ = LoadServerData();
         }
+        private static async void UnsavedTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+                unsavedTimer.Stop();
+                if (global.webSocketClient == null || global.webSocketClient.ws == null || global.webSocketClient.ws.State != System.Net.WebSockets.WebSocketState.Open) return;
+                if (global.webSocketClient.user == null) return;
+                var wfinstances = instance.dbWorkflowInstances.Find(x => x.isDirty).ToList();
+                foreach (var entity in wfinstances)
+                {
+                    try
+                    {
+                        await entity.Save<WorkflowInstance>();
+                        if (entity.Workflow != null)
+                        {
+                            entity.Workflow.NotifyPropertyChanged("State");
+                            entity.Workflow.NotifyPropertyChanged("StateImage");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            finally
+            {
+                unsavedTimer.Start();
+            }
+        }
         public IDesigner GetWorkflowDesignerByIDOrRelativeFilename(string IDOrRelativeFilename)
         {
             Log.FunctionIndent("RobotInstance", "GetWorkflowDesignerByIDOrRelativeFilename");
@@ -243,9 +288,32 @@ namespace OpenRPA
         public IWorkflow GetWorkflowByIDOrRelativeFilename(string IDOrRelativeFilename)
         {
             Log.FunctionIndent("RobotInstance", "GetWorkflowByIDOrRelativeFilename");
-            var filename = IDOrRelativeFilename.ToLower().Replace("\\", "/");
-            var result = Workflows.Find(x => x.RelativeFilename.ToLower() == filename.ToLower() || x._id == IDOrRelativeFilename).FirstOrDefault();
-            Log.FunctionOutdent("RobotInstance", "GetWorkflowByIDOrRelativeFilename");
+            IWorkflow result = null;
+            try
+            {
+                var filename = IDOrRelativeFilename.ToLower().Replace("\\", "/");
+                if (Views.OpenProject.Instance != null && Views.OpenProject.Instance.Projects.Count > 0)
+                {
+                    foreach (var p in Views.OpenProject.Instance.Projects)
+                    {
+                        result = p.Workflows.Where(x => x.RelativeFilename.ToLower() == filename.ToLower() || x._id == IDOrRelativeFilename).FirstOrDefault();
+                        if (result != null) return result;
+                    }
+                }
+                else
+                {
+                    result = Workflows.Find(x => x.RelativeFilename.ToLower() == filename.ToLower() || x._id == IDOrRelativeFilename).FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                Log.FunctionOutdent("RobotInstance", "GetWorkflowByIDOrRelativeFilename");
+            }
             return result;
         }
         public IWorkflowInstance GetWorkflowInstanceByInstanceId(string InstanceId)
@@ -653,12 +721,45 @@ namespace OpenRPA
                 {
                     await i.Save<WorkflowInstance>();
                 }
+                _ = Task.Run(async () =>
+                  {
+                      try
+                      {
+                          while (true)
+                          {
+                              System.Threading.Thread.Sleep(200);
+                              if (Views.OpenProject.Instance != null && Views.OpenProject.Instance.Projects.Count > 0) break;
+                          }
+                          Log.Debug("RunPendingInstances::begin ");
+                          await WorkflowInstance.RunPendingInstances();
+                          Log.Debug("RunPendingInstances::end ");
+                          lock (WorkflowInstance.Instances)
+                          {
+                              foreach (var i in WorkflowInstance.Instances)
+                              {
+                                  if (i.Bookmarks != null && i.Bookmarks.Count > 0)
+                                  {
+                                      foreach (var b in i.Bookmarks)
+                                      {
+                                          var instance = this.dbWorkflowInstances.Find(x => x.correlationId == b.Key || x._id == b.Key).FirstOrDefault();
+                                          if (instance != null)
+                                          {
+                                              if (instance.isCompleted)
+                                              {
+                                                  i.ResumeBookmark(b.Key, instance);
+                                              }
+                                          }
+                                      }
 
-                SetStatus("Run pending workflow instances");
-                Log.Debug("RunPendingInstances::begin ");
-                await WorkflowInstance.RunPendingInstances();
-                Log.Debug("RunPendingInstances::end ");
-
+                                  }
+                              }
+                          }
+                      }
+                      catch (Exception ex)
+                      {
+                          Log.Error(ex.ToString());
+                      }
+                  });
             }
             catch (Exception ex)
             {
@@ -943,7 +1044,7 @@ namespace OpenRPA
                     }
                     if (user == null)
                     {
-                        if (loginInProgress == false)
+                        if (loginInProgress == false && first_connect)
                         {
                             loginInProgress = true;
                             string jwt = null;

@@ -11,7 +11,7 @@ namespace OpenRPA
     public class LocallyCached : apibase
     {
         private static object savelock = new object();
-        public async Task Save<T>() where T : apibase
+        public async Task Save<T>(bool skipOnline = false) where T : apibase
         {
             bool wasDisableWatch = RobotInstance.instance.DisableWatch;
             try
@@ -45,7 +45,7 @@ namespace OpenRPA
                 }
                 string collectionname = "openrpa";
                 if (_type == "workflowinstance") collectionname = "openrpa_instances";
-                if (global.isConnected)
+                if (global.isConnected && !skipOnline)
                 {
                     if (string.IsNullOrEmpty(_id) || isLocalOnly == true)
                     {

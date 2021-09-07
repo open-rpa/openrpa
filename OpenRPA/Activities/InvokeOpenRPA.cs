@@ -119,35 +119,27 @@ namespace OpenRPA.Activities
                 IWorkflowInstance instance = null;
                 Views.WFDesigner designer = null;
 
-                if (Config.local.allow_debug_nested_invokeopenrpa)
+                GenericTools.RunUI(() =>
                 {
-                    GenericTools.RunUI(() =>
+                    try
                     {
-                        try
+                        designer = RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(this.workflow.Get(context)) as Views.WFDesigner;
+                        if (designer != null)
                         {
-                            designer = RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(this.workflow.Get(context)) as Views.WFDesigner;
-                            if (designer != null)
-                            {
-                                designer.BreakpointLocations = null;
-                                instance = workflow.CreateInstance(param, null, null, designer.IdleOrComplete, designer.OnVisualTracking);
-                            }
-                            else
-                            {
-                                instance = workflow.CreateInstance(param, null, null, RobotInstance.instance.Window.IdleOrComplete, null);
-                            }
-                            instance.caller = WorkflowInstanceId;
+                            designer.BreakpointLocations = null;
+                            instance = workflow.CreateInstance(param, null, null, designer.IdleOrComplete, designer.OnVisualTracking);
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            error = ex;
+                            instance = workflow.CreateInstance(param, null, null, RobotInstance.instance.Window.IdleOrComplete, null);
                         }
-                    });
-                }
-                else
-                {
-                    instance = workflow.CreateInstance(param, null, null, RobotInstance.instance.Window.IdleOrComplete, null);
-                    instance.caller = WorkflowInstanceId;
-                }
+                        instance.caller = WorkflowInstanceId;
+                    }
+                    catch (Exception ex)
+                    {
+                        error = ex;
+                    }
+                });
                 if (error != null) throw error;
                 if (instance != null)
                 {

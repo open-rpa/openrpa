@@ -661,20 +661,23 @@ namespace OpenRPA
                 //_instance.dbWorkflowInstances.EnsureIndex(x => x._id, true);
 
 
-                if (Projects.Count() == 0 && first_connect)
+                if (Projects.Count() == 0)
                 {
-                    string Name = "New Project";
-                    try
+                    GenericTools.RunUI(async () =>
                     {
-                        Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name);
+                        string Name = "New Project";
+                        try
+                        {
+                            Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name);
 
-                        IWorkflow workflow = await project.AddDefaultWorkflow();
-                        Window.OnOpenWorkflow(workflow);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.ToString());
-                    }
+                            IWorkflow workflow = await project.AddDefaultWorkflow();
+                            Window.OnOpenWorkflow(workflow);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                        }
+                    });
                 }
                 NotifyPropertyChanged("Projects");
 
@@ -695,6 +698,7 @@ namespace OpenRPA
                 var host = Environment.MachineName.ToLower();
                 var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
                 var runninginstances = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "'}", top: 1000);
+                var runpending = false;
                 foreach (var i in runninginstances)
                 {
                     var exists = dbWorkflowInstances.Find(x => x._id == i._id).FirstOrDefault();
@@ -709,6 +713,17 @@ namespace OpenRPA
                         {
                             await exists.Save<WorkflowInstance>();
                         }
+                        else
+                        {
+                            if (exists.state == "idle" || exists.state == "running")
+                            {
+                                var e = WorkflowInstance.Instances.Where(x => x.InstanceId == exists.InstanceId).FirstOrDefault();
+                                if (e == null)
+                                {
+                                    runpending = true;
+                                }
+                            }
+                        }
                     }
                     else
                     {
@@ -716,6 +731,7 @@ namespace OpenRPA
                         await i.Save<WorkflowInstance>();
                     }
                 }
+                if (runpending) await WorkflowInstance.RunPendingInstances();
                 var localInstances = dbWorkflowInstances.Find(x => x.isDirty || x.isLocalOnly).ToList();
                 foreach (var i in localInstances)
                 {
@@ -725,7 +741,8 @@ namespace OpenRPA
                   {
                       try
                       {
-                          while (true)
+                          var sw = new System.Diagnostics.Stopwatch(); sw.Start();
+                          while (true && sw.Elapsed < TimeSpan.FromSeconds(10))
                           {
                               System.Threading.Thread.Sleep(200);
                               if (Views.OpenProject.Instance != null && Views.OpenProject.Instance.Projects.Count > 0) break;
@@ -741,12 +758,26 @@ namespace OpenRPA
                                   {
                                       foreach (var b in i.Bookmarks)
                                       {
-                                          var instance = this.dbWorkflowInstances.Find(x => x.correlationId == b.Key || x._id == b.Key).FirstOrDefault();
+                                          var instance = dbWorkflowInstances.Find(x => x.correlationId == b.Key || x._id == b.Key).FirstOrDefault();
                                           if (instance != null)
                                           {
                                               if (instance.isCompleted)
                                               {
-                                                  i.ResumeBookmark(b.Key, instance);
+                                                  try
+                                                  {
+                                                      i.ResumeBookmark(b.Key, instance);
+                                                  }
+                                                  catch (System.ArgumentException ex)
+                                                  {
+                                                      if (i.state == "idle" || i.state == "running")
+                                                      {
+                                                          i.Abort(ex.Message);
+                                                      }
+                                                  }
+                                                  catch (Exception ex)
+                                                  {
+                                                      Log.Error(ex.ToString());
+                                                  }
                                               }
                                           }
                                       }
@@ -1044,7 +1075,7 @@ namespace OpenRPA
                     }
                     if (user == null)
                     {
-                        if (loginInProgress == false && first_connect)
+                        if (loginInProgress == false && global.webSocketClient.user == null)
                         {
                             loginInProgress = true;
                             string jwt = null;

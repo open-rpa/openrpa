@@ -2099,25 +2099,42 @@ namespace OpenRPA
                     Log.Error(ex.ToString());
                 }
             });
-            try
+            Task.Run(() =>
             {
-                foreach (var wf in RobotInstance.instance.Workflows.FindAll())
+                var sw = new System.Diagnostics.Stopwatch(); sw.Start();
+                while (true && sw.Elapsed < TimeSpan.FromSeconds(10))
                 {
-                    if (Config.local.openworkflows.Contains(wf._id) && !string.IsNullOrEmpty(wf._id))
-                    {
-                        OnOpenWorkflow(wf);
-                    }
-                    else if (Config.local.openworkflows.Contains(wf.RelativeFilename) && !string.IsNullOrEmpty(wf.RelativeFilename))
-                    {
-                        OnOpenWorkflow(wf);
-                    }
+                    System.Threading.Thread.Sleep(200);
+                    if (Views.OpenProject.Instance != null && Views.OpenProject.Instance.Projects.Count > 0) break;
                 }
-                if (Snippets != null) Snippets.Reload();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-            }
+                foreach (var id in Config.local.openworkflows)
+                {
+                    var wf = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(id);
+                    if (wf != null) OnOpenWorkflow(wf);
+                }
+            });
+            //GenericTools.RunUI(() =>
+            //{
+            //    try
+            //    {
+            //        foreach (var wf in RobotInstance.instance.Workflows.FindAll())
+            //        {
+            //            if (Config.local.openworkflows.Contains(wf._id) && !string.IsNullOrEmpty(wf._id))
+            //            {
+            //                OnOpenWorkflow(wf);
+            //            }
+            //            else if (Config.local.openworkflows.Contains(wf.RelativeFilename) && !string.IsNullOrEmpty(wf.RelativeFilename))
+            //            {
+            //                OnOpenWorkflow(wf);
+            //            }
+            //        }
+            //        if (Snippets != null) Snippets.Reload();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Log.Error(ex.ToString());
+            //    }
+            //});
             Log.FunctionOutdent("MainWindow", "LoadLayout");
         }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
@@ -2180,7 +2197,7 @@ namespace OpenRPA
             {
                 try
                 {
-                    designer.tab.Title = (designer.HasChanged ? designer.Workflow.name + "*" : designer.Workflow.name);
+                    designer.tab.Title = designer.HasChanged ? designer.Workflow.name + "*" : designer.Workflow.name;
                     CommandManager.InvalidateRequerySuggested();
                 }
                 catch (Exception ex)

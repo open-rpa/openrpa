@@ -309,8 +309,14 @@ namespace OpenRPA
             var _state = typeof(System.Activities.WorkflowApplication).GetField("state", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(wfApp);
             if (_state.ToString() != "Aborted")
             {
-                wfApp.Abort(Reason);
-                return;
+                try
+                {
+                    wfApp.Abort(Reason);
+                    return;
+                }
+                catch (Exception)
+                {
+                }
             }
             hasError = true;
             isCompleted = true;

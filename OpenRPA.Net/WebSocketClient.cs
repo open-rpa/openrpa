@@ -126,6 +126,7 @@ namespace OpenRPA.Net
                 }
                 //ws = null;
             }
+            user = null;
             src.Cancel();
         }
         string tempbuffer = null;

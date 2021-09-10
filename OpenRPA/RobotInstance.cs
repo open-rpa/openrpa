@@ -246,17 +246,20 @@ namespace OpenRPA
                 unsavedTimer.Stop();
                 if (global.webSocketClient == null || global.webSocketClient.ws == null || global.webSocketClient.ws.State != System.Net.WebSockets.WebSocketState.Open) return;
                 if (global.webSocketClient.user == null) return;
-                var wfinstances = instance.dbWorkflowInstances.Find(x => x.isDirty).ToList();
+                List<WorkflowInstance> wfinstances = null;
+                lock (WorkflowInstance.Instances) wfinstances = instance.dbWorkflowInstances.Find(x => x.isDirty).ToList();
                 foreach (var entity in wfinstances)
                 {
                     try
                     {
-                        await entity.Save<WorkflowInstance>();
-                        if (entity.Workflow != null)
+                        var exists = WorkflowInstance.Instances.Where(x => x.InstanceId == entity.InstanceId && !string.IsNullOrEmpty(entity.InstanceId)).FirstOrDefault();
+                        if (exists != null)
                         {
-                            entity.Workflow.NotifyPropertyChanged("State");
-                            entity.Workflow.NotifyPropertyChanged("StateImage");
+                            // Log.Output(entity._id + " * " + entity.state + " " + exists.state);
+                            entity.state = exists.state;
                         }
+                        entity.isDirty = true;
+                        await entity.Save<WorkflowInstance>();
                     }
                     catch (Exception ex)
                     {
@@ -731,12 +734,12 @@ namespace OpenRPA
                         await i.Save<WorkflowInstance>();
                     }
                 }
-                if (runpending) await WorkflowInstance.RunPendingInstances();
                 var localInstances = dbWorkflowInstances.Find(x => x.isDirty || x.isLocalOnly).ToList();
                 foreach (var i in localInstances)
                 {
                     await i.Save<WorkflowInstance>();
                 }
+                if (runpending) await WorkflowInstance.RunPendingInstances();
                 _ = Task.Run(async () =>
                   {
                       try

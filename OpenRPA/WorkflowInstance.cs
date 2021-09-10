@@ -119,6 +119,7 @@ namespace OpenRPA
             {
                 SetProperty(value);
                 if (Workflow != null) Workflow.SetLastState(value);
+                isDirty = true;
             }
         }
         [JsonIgnore, LiteDB.BsonIgnore]
@@ -131,7 +132,6 @@ namespace OpenRPA
         {
             if (Workflow != null)
             {
-                Log.Output("NotifyState " + Workflow.name + " " + state);
                 GenericTools.RunUI(() =>
                 {
                     try
@@ -349,9 +349,15 @@ namespace OpenRPA
                 Task.Run(() =>
                 {
                     // System.Threading.Thread.Sleep(50);
+                    var sw = new System.Diagnostics.Stopwatch(); sw.Start();
+                    while (true && sw.Elapsed < TimeSpan.FromSeconds(10))
+                    {
+                        System.Threading.Thread.Sleep(200);
+                        if (wfApp != null && wfApp.OnUnhandledException != null) break;
+                    }
                     try
                     {
-                        wfApp.ResumeBookmark(bookmarkName, value);
+                        if (wfApp != null) wfApp.ResumeBookmark(bookmarkName, value);
                         Log.Information(name + " resumed in " + string.Format("{0:mm\\:ss\\.fff}", runWatch.Elapsed));
                     }
                     catch (Exception ex)
@@ -889,12 +895,15 @@ namespace OpenRPA
         }
         public void Save()
         {
-            if (isCompleted || hasError)
-            {
-                xml = null;
-            }
-            isDirty = true;
-            _ = Save<WorkflowInstance>(true);
+            _ = Task.Run(async () =>
+              {
+                  if (isCompleted || hasError)
+                  {
+                      xml = null;
+                  }
+                  isDirty = true;
+                  await Save<WorkflowInstance>(true);
+              });
             if (Workflow != null) Workflow.NotifyUIState();
         }
         private static void UnsavedTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)

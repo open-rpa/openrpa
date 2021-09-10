@@ -61,16 +61,7 @@ namespace OpenRPA
                     }
                     else
                     {
-                        bool doUpdate = true;
-                        if (entity is WorkflowInstance wi)
-                        {
-                            if (wi.state == "idle" || wi.state == "running")
-                            {
-                                doUpdate = false;
-                                if (DateTime.Now > entity._modified.AddSeconds(5)) doUpdate = true;
-                            }
-                        }
-                        if (entity.isDirty && doUpdate)
+                        if (entity.isDirty)
                         {
                             entity._version++; // Add one to avoid watch update
                             try

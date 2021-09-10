@@ -905,6 +905,20 @@ namespace OpenRPA
                   await Save<WorkflowInstance>(true);
               });
             if (Workflow != null) Workflow.NotifyUIState();
+            if (isCompleted || hasError)
+            {
+                _ = Task.Run(async () =>
+                {
+                    System.Threading.Thread.Sleep(2000);
+                    if (isCompleted || hasError)
+                    {
+                        xml = null;
+                    }
+                    isDirty = true;
+                    await Save<WorkflowInstance>(true);
+                });
+                if (Workflow != null) Workflow.NotifyUIState();
+            }
         }
         private static void UnsavedTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {

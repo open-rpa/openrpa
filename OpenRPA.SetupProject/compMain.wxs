@@ -23,6 +23,7 @@
         <File Id="filC88C7623422BE649CB1D8DE7EFDA2999" Source="!(wix.MainSource)\CefSharp.Core.dll" />
         <File Id="filF0CF59F24A01DAE00DEA461CE18C938A" Source="!(wix.MainSource)\CefSharp.dll" />
         <File Id="filB95C83CD1FA714D6B1FEAF7CC01A5BF6" Source="!(wix.MainSource)\CefSharp.Wpf.dll" />
+        <File Id="Microsoft.Bcl.HashCode" Source="!(wix.MainSource)\Microsoft.Bcl.HashCode" />
 
         <File Id="fil89D857203DD54ABCB0908F0A87409698" Source="!(wix.MainSource)\netstandard.dll" />
         <File Id="fil5A4BD987D2852D4ABC653BD9F45AC1F3" Source="!(wix.MainSource)\DotNetProjects.DataVisualization.Toolkit.dll" />

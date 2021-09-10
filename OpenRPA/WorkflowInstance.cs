@@ -38,6 +38,7 @@ namespace OpenRPA
         }
         public event VisualTrackingHandler OnVisualTracking;
         public event idleOrComplete OnIdleOrComplete;
+        [JsonIgnore, LiteDB.BsonIgnore]
         public Dictionary<string, object> Parameters { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
         public Dictionary<string, object> Bookmarks { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
         [JsonIgnore, LiteDB.BsonIgnore]

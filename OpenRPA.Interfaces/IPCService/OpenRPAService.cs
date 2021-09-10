@@ -216,6 +216,11 @@ namespace OpenRPA.Interfaces.IPCService
                     {
                         _instance.Value.Started = true;
                         var workflow = global.OpenRPAClient.GetWorkflowByIDOrRelativeFilename(_instance.Value.IDOrRelativeFilename);
+                        if(workflow == null)
+                        {
+                            Log.Error("Error failed, looking up worklow " + _instance.Value.IDOrRelativeFilename);
+                            continue;
+                        }
                         IWorkflowInstance instance = null;
                         IDesigner designer = null;
                         GenericTools.RunUI(() =>

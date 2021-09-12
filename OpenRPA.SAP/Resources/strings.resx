@@ -123,6 +123,30 @@
   <data name="activity_displayname_help" xml:space="preserve">
     <value>Displayname</value>
   </data>
+  <data name="activity_executetransaction" xml:space="preserve">
+    <value>Execute transaction</value>
+  </data>
+  <data name="activity_executetransaction_path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="activity_executetransaction_path_help" xml:space="preserve">
+    <value>Path to object [SAP id to se(ssion). eg.: "/app/con[0]/ses[0]"]</value>
+  </data>
+  <data name="activity_executetransaction_systemname" xml:space="preserve">
+    <value>System Name</value>
+  </data>
+  <data name="activity_executetransaction_systemname_help" xml:space="preserve">
+    <value>System name</value>
+  </data>
+  <data name="activity_executetransaction_tooltip" xml:space="preserve">
+    <value>Execute SAP transaction</value>
+  </data>
+  <data name="activity_executetransaction_transactioncode" xml:space="preserve">
+    <value>Transaction code</value>
+  </data>
+  <data name="activity_executetransaction_transactioncode_help" xml:space="preserve">
+    <value>Name of the transaction to eecute</value>
+  </data>
   <data name="activity_getelement" xml:space="preserve">
     <value>Get Element</value>
   </data>

@@ -27,6 +27,7 @@
     <OutputPath>..\dist</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Activities\ExecuteTransactionDesigner.xaml" />
     <None Remove="Activities\GetElementDesigner.xaml" />
     <None Remove="Activities\GetPropertyDesigner.xaml" />
     <None Remove="Activities\InvokeMethodDesigner.xaml" />
@@ -51,6 +52,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\GetPropertyDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\ExecuteTransactionDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -93,8 +98,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Resources\strings.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>strings.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

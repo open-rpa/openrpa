@@ -3319,6 +3319,14 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
+            if (instance.state != "idle")
+            {
+                GenericTools.RunUI(() =>
+                {
+                    CommandManager.InvalidateRequerySuggested();
+                });
+            }
+
             try
             {
                 bool isRemote = false;

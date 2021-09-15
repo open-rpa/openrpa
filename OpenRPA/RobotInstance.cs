@@ -15,7 +15,10 @@ namespace OpenRPA
     public class RobotInstance : IOpenRPAClient, System.ComponentModel.INotifyPropertyChanged
     {
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        private static System.Windows.Threading.DispatcherTimer unsavedTimer = null;
+        // private static System.Windows.Threading.DispatcherTimer unsavedTimer = null;
+        private static System.Timers.Timer unsavedTimer = null;
+        private readonly System.Timers.Timer reloadTimer = null;
+
         public void NotifyPropertyChanged(string propertyName)
         {
             if (propertyName == "Projects")
@@ -31,13 +34,15 @@ namespace OpenRPA
             reloadTimer.Stop();
 
 
-            unsavedTimer = new System.Windows.Threading.DispatcherTimer();
-            unsavedTimer.Interval = TimeSpan.FromMilliseconds(5000);
+            //unsavedTimer = new System.Windows.Threading.DispatcherTimer();
+            //unsavedTimer.Interval = TimeSpan.FromMilliseconds(5000);
+            //unsavedTimer.Tick += new EventHandler(delegate (object s, EventArgs a)
+            //{
+            //    UnsavedTimer_Elapsed(s, null);
+            //});
+            unsavedTimer = new System.Timers.Timer(5000);
+            unsavedTimer.Elapsed += UnsavedTimer_Elapsed;
 
-            unsavedTimer.Tick += new EventHandler(delegate (object s, EventArgs a)
-            {
-                UnsavedTimer_Elapsed(s, null);
-            });
             unsavedTimer.Start();
             if (InitializeOTEL())
             {
@@ -69,7 +74,6 @@ namespace OpenRPA
                 return result;
             }
         }
-        private readonly System.Timers.Timer reloadTimer = null;
         public bool isReadyForAction { get; set; } = false;
         public event StatusEventHandler Status;
         public event SignedinEventHandler Signedin;
@@ -248,22 +252,27 @@ namespace OpenRPA
                 if (global.webSocketClient.user == null) return;
                 List<WorkflowInstance> wfinstances = null;
                 lock (WorkflowInstance.Instances) wfinstances = instance.dbWorkflowInstances.Find(x => x.isDirty).ToList();
-                foreach (var entity in wfinstances)
+                if (wfinstances.Count > 0)
                 {
-                    try
+
+                    Log.Output("UnsavedTimer processing " + wfinstances.Count + " items");
+                    foreach (var entity in wfinstances)
                     {
-                        var exists = WorkflowInstance.Instances.Where(x => x.InstanceId == entity.InstanceId && !string.IsNullOrEmpty(entity.InstanceId)).FirstOrDefault();
-                        if (exists != null)
+                        try
                         {
-                            // Log.Output(entity._id + " * " + entity.state + " " + exists.state);
-                            entity.state = exists.state;
+                            var exists = WorkflowInstance.Instances.Where(x => x.InstanceId == entity.InstanceId && !string.IsNullOrEmpty(entity.InstanceId)).FirstOrDefault();
+                            if (exists != null)
+                            {
+                                // Log.Output(entity._id + " * " + entity.state + " " + exists.state);
+                                entity.state = exists.state;
+                            }
+                            entity.isDirty = true;
+                            await entity.Save<WorkflowInstance>();
                         }
-                        entity.isDirty = true;
-                        await entity.Save<WorkflowInstance>();
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.ToString());
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                        }
                     }
                 }
             }
@@ -961,14 +970,14 @@ namespace OpenRPA
                             Window.Status += MainWindowStatus;
                             GenericTools.MainWindow = win;
                         }
-                        // ExpressionEditor.EditorUtil.Init();
-                        _ = CodeEditor.init.Initialize();
                     }
                     catch (Exception ex)
                     {
                         Log.Error("RobotInstance.CreateMainWindow: " + ex.ToString());
                     }
                 }, null);
+                // ExpressionEditor.EditorUtil.Init();
+                _ = CodeEditor.init.Initialize();
                 SetStatus("loading detectors");
                 var _detectors = Detectors.FindAll();
                 foreach (var d in _detectors)

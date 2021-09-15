@@ -359,6 +359,15 @@ namespace OpenRPA
                     });
 
                 }
+
+                if (instance.state != "idle")
+                {
+                    GenericTools.RunUI(() =>
+                    {
+                        CommandManager.InvalidateRequerySuggested();
+                    });
+                }
+
                 if (instance.hasError || instance.isCompleted)
                 {
                     string message = "";

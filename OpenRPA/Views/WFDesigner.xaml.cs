@@ -1224,6 +1224,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                         {
                             ReadOnly = false;
                         }
+                        CommandManager.InvalidateRequerySuggested();
                     });
 
                     BreakPointhit = false; Singlestep = false;

@@ -255,7 +255,7 @@ namespace OpenRPA
                 if (wfinstances.Count > 0)
                 {
 
-                    Log.Output("UnsavedTimer processing " + wfinstances.Count + " items");
+                    Log.Debug("UnsavedTimer processing " + wfinstances.Count + " items");
                     foreach (var entity in wfinstances)
                     {
                         try

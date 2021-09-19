@@ -63,19 +63,21 @@ namespace OpenRPA.PS
                         if (tmpObject.ContainsKey("__pscollection"))
                         {
                             col = tmpObject.Value<string>("__pscollection");
-                        } else
+                        }
+                        else
                         {
                             col = "entities";
                         }
                     }
                     Id = tmpObject.Value<string>("_id");
                 }
-                if(string.IsNullOrEmpty(col))
+                if (string.IsNullOrEmpty(col))
                 {
                     Id = null;
                     WriteError(new ErrorRecord(new ArgumentException("Collection is mandatory when not using objects"), "", ErrorCategory.InvalidArgument, null));
                     return;
                 }
+                WriteVerbose("Removing " + Id + " from " + col);
                 await global.webSocketClient.DeleteOne(col, Id);
                 Id = null;
             }

@@ -26,6 +26,9 @@ namespace OpenRPA.PS
                 {
                     global.webSocketClient = OpenRPA.Net.WebSocketClient.Get(Config.local.wsurl);
                     global.webSocketClient.OnClose += WebSocketClient_OnClose;
+                }
+                if (!global.webSocketClient.isConnected)
+                {
                     await global.webSocketClient.Connect();
                 }
                 if (global.webSocketClient.isConnected && global.webSocketClient.user == null)
@@ -58,6 +61,7 @@ namespace OpenRPA.PS
         private void WebSocketClient_OnClose(string obj)
         {
             psqueue = null;
+            global.webSocketClient.Close();
         }
         protected async override Task BeginProcessingAsync()
         {

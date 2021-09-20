@@ -10,8 +10,9 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.72</Version>
-    <PackageReleaseNotes>1.2.72 Add ExecuteTransaction to sap
+    <Version>1.2.73</Version>
+    <PackageReleaseNotes>1.2.73 Fix OCR downloads
+1.2.72 Add ExecuteTransaction to sap
 1.2.71 Better handling of nested error messages
 1.2.70 Fix StopOpenRPA in offline mode
 1.2.69 Rework some network handling, to better handle disconnects

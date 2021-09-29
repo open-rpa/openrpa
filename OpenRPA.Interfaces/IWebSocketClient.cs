@@ -78,6 +78,8 @@ namespace OpenRPA.Interfaces
         Task<T> UpdateOne<T>(string collectionname, int w, bool j, T item);
         // Task UpdateOne(string collectionname, string query, int w, bool j, Newtonsoft.Json.Linq.JObject UpdateDoc);
         Task DeleteOne(string collectionname, string Id);
+        Task<int> DeleteMany(string collectionname, string[] Ids);
+        Task<int> DeleteMany(string collectionname, string query);
         Task<string> UploadFile(string filepath, string path, metadata metadata);
         Task DownloadFileAndSave(string filename, string id, string filepath, bool ignorepath);
         Task DownloadFileAndSaveAs(string filename, string id, string filepath, bool ignorepath);

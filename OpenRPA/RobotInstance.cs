@@ -312,7 +312,7 @@ namespace OpenRPA
                         if (result != null) return result;
                     }
                 }
-                else
+                if (result == null)
                 {
                     result = Workflows.Find(x => x.RelativeFilename.ToLower() == filename.ToLower() || x._id == IDOrRelativeFilename).FirstOrDefault();
                 }

@@ -14,11 +14,13 @@ namespace OpenRPA.PS
     public class RemoveEntity : OpenRPACmdlet, IDynamicParameters
     {
         [Parameter(ValueFromPipeline = true, Position = 1, Mandatory = true, ParameterSetName = "withObject")]
-        public PSObject Object { get; set; }
-        [Parameter(ValueFromPipeline = true, Position = 1, Mandatory = true, ParameterSetName = "withJson")]
+        public List<object> Objects { get; set; }
+        [Parameter(Position = 1, Mandatory = true, ParameterSetName = "withJson")]
         public string json { get; set; }
         [Parameter(Position = 1, Mandatory = true, ParameterSetName = "byid", ValueFromPipelineByPropertyName = false)]
         public string Id { get; set; }
+        [Parameter(Position = 1, Mandatory = true, ParameterSetName = "asquery")]
+        public string Query { get; set; }
         private static RuntimeDefinedParameterDictionary _staticStorage;
         public object GetDynamicParameters()
         {
@@ -50,13 +52,37 @@ namespace OpenRPA.PS
                 _staticStorage.TryGetValue("Collection", out CollectionRuntime);
                 string Collection = "";
                 if (CollectionRuntime.Value != null && !string.IsNullOrEmpty(CollectionRuntime.Value.ToString())) Collection = CollectionRuntime.Value.ToString();
+                if (string.IsNullOrEmpty(Collection)) Collection = "entities";
                 string col = Collection;
-                if (string.IsNullOrEmpty(Id))
+                if (!string.IsNullOrEmpty(Query))
                 {
-                    if (Object != null)
+                    var affectedrows = await global.webSocketClient.DeleteMany(col, Query);
+                    WriteVerbose("Removed " + affectedrows + " rows from " + col);
+                    return;
+                }
+                if (Objects != null && Objects.Count > 0)
+                {
+                    var colls = new Dictionary<string, List<string>>();
+                    foreach (PSObject obj in Objects)
                     {
-                        json = Object.toJson();
+                        col = Collection;
+                        if (obj.Properties["__pscollection"] != null && obj.Properties["__pscollection"].Value != null)
+                        {
+                            col = obj.Properties["__pscollection"].Value.ToString();
+                        }
+                        if (!colls.ContainsKey(col)) colls.Add(col, new List<string>());
+                        Id = obj.Properties["_id"].Value.ToString();
+                        colls[col].Add(Id);
                     }
+                    foreach (var kv in colls)
+                    {
+                        var affectedrows = await global.webSocketClient.DeleteMany(kv.Key, kv.Value.ToArray());
+                        WriteVerbose("Removed " + affectedrows + " rows from " + col);
+                    }
+                    return;
+                }
+                if (!string.IsNullOrEmpty(json))
+                {
                     JObject tmpObject = JObject.Parse(json);
                     if (string.IsNullOrEmpty(col)) // If not overwriten by param, then check for old collection
                     {

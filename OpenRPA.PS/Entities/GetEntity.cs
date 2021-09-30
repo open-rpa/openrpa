@@ -77,7 +77,7 @@ namespace OpenRPA.PS
                     json = q.ToString();
                 }
                 var entities = await global.webSocketClient.Query<JObject>(Collection, json, Projection, Top, Skip, Orderby, QueryAs);
-                // var results = new List<PSObject>();
+                var results = new List<PSObject>();
                 int index = 0;
                 foreach (var entity in entities)
                 {
@@ -89,12 +89,12 @@ namespace OpenRPA.PS
                     {
                         WriteVerbose("Parsing " + entity.Value<string>("_id"));
                     }
-                    // results.Add(obj);
-                    WriteObject(entity.toPSObjectWithTypeName(Collection));
+                    results.Add(entity.toPSObjectWithTypeName(Collection));
+                    // WriteObject(entity.toPSObjectWithTypeName(Collection));
                     index++;
                     if (index % 10 == 9) await Task.Delay(1);
                 }
-                // WriteObject(results, true);
+                WriteObject(results, false);
             }
             catch (Exception ex)
             {

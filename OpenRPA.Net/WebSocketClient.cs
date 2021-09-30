@@ -861,6 +861,24 @@ namespace OpenRPA.Net
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
         }
+        public async Task<int> DeleteMany(string collectionname, string[] Ids)
+        {
+            DeleteManyMessage q = new DeleteManyMessage();
+            q.collectionname = collectionname; q.ids = Ids;
+            q = await q.SendMessage<DeleteManyMessage>(this);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+            return q.affectedrows;
+        }
+        public async Task<int> DeleteMany(string collectionname, string query)
+        {
+            DeleteManyMessage q = new DeleteManyMessage();
+            q.collectionname = collectionname; q.query = query;
+            q = await q.SendMessage<DeleteManyMessage>(this);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+            return q.affectedrows;
+        }
         public async Task<string> UploadFile(string filepath, string path, metadata metadata)
         {
             if (string.IsNullOrEmpty(path)) path = "";

@@ -99,6 +99,7 @@ namespace OpenRPA.Windows
                     }
                     Properties.Add(new SelectorItemProperty("Selector", "Windows"));
                     Properties.Add(new SelectorItemProperty("search_descendants", PluginConfig.search_descendants.ToString()));
+                    Properties.Add(new SelectorItemProperty("mouse_over_search", PluginConfig.try_mouse_over_search.ToString()));                    
                 }
                 foreach (var p in Properties)
                 {
@@ -110,8 +111,20 @@ namespace OpenRPA.Windows
             {
                 try
                 {
-                    if (element.Properties.Name.IsSupported && !string.IsNullOrEmpty(element.Properties.Name.Value)) Properties.Add(new SelectorItemProperty("Name", element.Properties.Name.Value));
-                    if (element.Properties.ClassName.IsSupported && !string.IsNullOrEmpty(element.Properties.ClassName)) Properties.Add(new SelectorItemProperty("ClassName", element.Properties.ClassName.Value));
+                    var classname = "";
+                    //AxChildFrame
+                    if (element.Properties.ClassName.IsSupported && !string.IsNullOrEmpty(element.Properties.ClassName))
+                    {
+                        classname = element.Properties.ClassName.Value;
+                        Properties.Add(new SelectorItemProperty("ClassName", classname));
+                    }
+                    if (element.Properties.Name.IsSupported && !string.IsNullOrEmpty(element.Properties.Name.Value))
+                    {
+                        var name = element.Properties.Name.Value;
+                        if (classname == "AxChildFrame" || classname == "AxPopupFrame") name = name.Substring(0, 14) + "*";
+                        if (classname == "AxMainFrame" && name.IndexOf("‎‪Session ID‬") > 0) name = name.Substring(0, name.IndexOf("‎‪Session ID‬") + 10) + "*";
+                        Properties.Add(new SelectorItemProperty("Name", name));
+                    }
                     if (element.Properties.ControlType.IsSupported && !string.IsNullOrEmpty(element.Properties.ControlType.Value.ToString()))
                     {
 
@@ -608,7 +621,7 @@ namespace OpenRPA.Windows
         }
         public override string ToString()
         {
-            return "AutomationId:" + AutomationId + " Name:" + Name + " ClassName: " + ClassName + " ControlType: " + ControlType;
+            return "AutomationId:" + AutomationId + " Name: " + Name + " ClassName: " + ClassName + " ControlType: " + ControlType;
         }
     }
 }

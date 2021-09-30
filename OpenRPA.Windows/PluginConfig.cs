@@ -34,6 +34,7 @@ namespace OpenRPA.Windows
         public static bool search_descendants { get { return globallocal.GetProperty(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }
         public static bool enable_windows_detector { get { return globallocal.GetProperty(pluginname, true); } set { globallocal.SetProperty(pluginname, value); } }
         public static bool remove_fisrt_window { get { return globallocal.GetProperty(pluginname, false); } set { globallocal.SetProperty(pluginname, value); } }
+        public static bool try_mouse_over_search { get { return globallocal.GetProperty(pluginname, false); } set { globallocal.SetProperty(pluginname, value); } }
 
     }
 }

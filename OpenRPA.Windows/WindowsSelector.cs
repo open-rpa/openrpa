@@ -501,7 +501,44 @@ namespace OpenRPA.Windows
                     //_current = current.ToList();
                 }
                 _current = GetElementsWithuiSelectorItem(i, automation, sel, current, maxresults, i == (selectors.Count - 1), search_descendants).ToList();
-                if (i == 0 && _current.Count == 0) _current = current.ToList();
+                if (i == 0 && _current.Count == 0)
+                {
+                    _current = current.ToList();
+                } else if (i > 0 && _current.Count == 0 && current.Length > 0 && ( PluginConfig.try_mouse_over_search || selector.mouse_over_search()))
+                {
+                    for(var z=0; z < current.Length; z++)
+                    {
+                        current[z].Focus();
+                        var x = current[z].Rectangle.X + 5; var y = current[z].Rectangle.Y + 5;
+                        var screen = automation.FromPoint(new System.Drawing.Point(x, y));
+                        Log.Selector("mouse point lookup at " + x + "," + y + " for " + sel.ToString());
+                        var screenel = screen.Parent;
+                        while (screenel != null)
+                        {
+                            var uiscreenel = new UIElement(screenel);
+
+                            if (WindowsSelectorItem.Match(sel, screenel))
+                            {
+                                _current.Clear();
+                                _current.Add(new UIElement(screenel));
+                                Log.Selector("Mouse lookup found " + uiscreenel.ToString());
+                                break;
+                            }
+                            else { screenel = screenel.Parent; }
+                            // only allow direct parents, or search for match in all child elements found ? ( like searching for a button inside a pane )
+                            //else
+                            //{
+                            //    Log.Output("Lookup in " + uiscreenel.ToString());
+                            //    _current = GetElementsWithuiSelectorItem(i, automation, sel, new UIElement[] { uiscreenel }, maxresults, i == (selectors.Count - 1), search_descendants).ToList();
+                            //    if (_current.Count != 0) break;
+                            //    screenel = screenel.Parent;
+                            //}
+                        }
+                        if(_current.Count > 0) break;
+                    }
+
+                }
+                
             }
             Log.Debug(string.Format("GetElementsWithuiSelector::completed with " + _current.Count + " results {0:mm\\:ss\\.fff}", sw.Elapsed));
             if (_current.Count > 0)

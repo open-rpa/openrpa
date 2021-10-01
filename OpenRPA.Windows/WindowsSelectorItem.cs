@@ -72,7 +72,7 @@ namespace OpenRPA.Windows
                 return e.Value;
             }
         }
-        public WindowsSelectorItem(AutomationElement element, bool isRoot, int IndexInParent = -1)
+        public WindowsSelectorItem(AutomationElement element, bool isRoot, SelectorItem rootselectoritem, int IndexInParent = -1)
         {
             this.Element = new UIElement(element);
             Properties = new ObservableCollection<SelectorItemProperty>();
@@ -109,6 +109,16 @@ namespace OpenRPA.Windows
             }
             else
             {
+                bool isAx = false;
+                if(rootselectoritem != null)
+                {
+                    var processname = "";
+                    if(!string.IsNullOrEmpty(rootselectoritem.processname()))
+                    {
+                        processname = rootselectoritem.processname().ToLower();
+                    }
+                    if(processname == "ax32.exe" || processname == "ax32") isAx = true;
+                }
                 try
                 {
                     var classname = "";
@@ -133,7 +143,7 @@ namespace OpenRPA.Windows
                             Properties.Add(new SelectorItemProperty("ControlType", element.Properties.ControlType.Value.ToString()));
                         }
                     }
-                    if (element.Properties.AutomationId.IsSupported && !string.IsNullOrEmpty(element.Properties.AutomationId)) Properties.Add(new SelectorItemProperty("AutomationId", element.Properties.AutomationId.Value));
+                    if (element.Properties.AutomationId.IsSupported && !string.IsNullOrEmpty(element.Properties.AutomationId) && !isAx) Properties.Add(new SelectorItemProperty("AutomationId", element.Properties.AutomationId.Value));
                     if (element.Properties.FrameworkId.IsSupported && !string.IsNullOrEmpty(element.Properties.FrameworkId)) Properties.Add(new SelectorItemProperty("FrameworkId", element.Properties.FrameworkId.Value));
                     if (IndexInParent > -1) Properties.Add(new SelectorItemProperty("IndexInParent", IndexInParent.ToString()));
                 }

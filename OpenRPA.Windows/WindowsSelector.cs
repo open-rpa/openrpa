@@ -105,6 +105,7 @@ namespace OpenRPA.Windows
 
             }
             WindowsSelectorItem item;
+            WindowsSelectorItem rootselectoritem = new WindowsSelectorItem(pathToRoot.First(), true, null);
             if (PluginConfig.traverse_selector_both_ways)
             {
                 Log.Selector(string.Format("windowsselector::create traverse_selector_both_ways::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
@@ -124,7 +125,7 @@ namespace OpenRPA.Windows
                         count--;
                         var i = temppathToRoot.First();
                         temppathToRoot.Remove(i);
-                        item = new WindowsSelectorItem(i, false);
+                        item = new WindowsSelectorItem(i, false, rootselectoritem);
                         if (parent != null)
                         {
                             var m = item.matches(root, count, parent, 2, isDesktop, false);
@@ -172,7 +173,7 @@ namespace OpenRPA.Windows
             if (anchor == null)
             {
                 Log.Selector(string.Format("windowsselector::create root element::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
-                item = new WindowsSelectorItem(baseElement, true);
+                item = new WindowsSelectorItem(baseElement, true, rootselectoritem);
                 item.Enabled = true;
                 //item.canDisable = false;
                 Items.Add(item);
@@ -194,7 +195,7 @@ namespace OpenRPA.Windows
                     }
                 }
 
-                item = new WindowsSelectorItem(o, false, IndexInParent);
+                item = new WindowsSelectorItem(o, false, rootselectoritem, IndexInParent);
                 var _IndexInParent = item.Properties.Where(x => x.Name == "IndexInParent").FirstOrDefault();
                 if (_IndexInParent != null) _IndexInParent.Enabled = false;
                 if (i == 0 || i == (pathToRoot.Count() - 1)) item.canDisable = false;

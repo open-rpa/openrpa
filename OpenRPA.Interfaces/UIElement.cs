@@ -887,13 +887,16 @@ namespace OpenRPA
         {
             var table = new System.Data.DataTable();
             DataGridView view = null;
+            Grid grid = null;
             AutomationElement element = RawElement;
             do
             {
                 try
                 {
                     view = element.AsDataGridView();
-                    if((view.Header == null && view.Rows.Length == 0) || (element.ControlType == FlaUI.Core.Definitions.ControlType.DataItem)) { view = null; }
+                    grid = element.AsGrid();
+                    if(view.Header == null && view.Rows.Length == 0) { view = null; grid = null; }
+                    if(!element.Properties.ControlType.IsSupported) { view = null; grid = null; } else if (element.ControlType == FlaUI.Core.Definitions.ControlType.DataItem) { view = null; grid = null; }
                     if (view == null) element = element.Parent;
                 }
                 catch (Exception)
@@ -924,7 +927,21 @@ namespace OpenRPA
                 var objs = new List<object>();
                 foreach (var cell in _row.Cells)
                 {
-                    objs.Add(cell.Value);
+                    try
+                    {
+                        if(cell.Patterns.Value.IsSupported)
+                        {
+                            objs.Add(cell.Value);
+                        } else
+                        {
+                            objs.Add(null);
+                        }
+                        
+                    }
+                    catch (Exception)
+                    {
+                        objs.Add(null);
+                    }
                 }
                 table.Rows.Add(objs.ToArray());
             }

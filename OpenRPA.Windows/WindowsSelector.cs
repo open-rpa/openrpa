@@ -15,6 +15,7 @@ namespace OpenRPA.Windows
     public class WindowsSelector : Selector
     {
         UIElement element { get; set; }
+        private WindowsSelector() { }
         public WindowsSelector(string json) : base(json) { }
         public WindowsSelector(AutomationElement element, WindowsSelector anchor, bool doEnum)
         {
@@ -23,7 +24,6 @@ namespace OpenRPA.Windows
             Log.Selector(string.Format("windowsselector::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
 
             AutomationElement root = null;
-            AutomationElement baseElement = null;
             var pathToRoot = new List<AutomationElement>();
             while (element != null)
             {
@@ -105,7 +105,6 @@ namespace OpenRPA.Windows
 
             }
             WindowsSelectorItem item;
-            WindowsSelectorItem rootselectoritem = new WindowsSelectorItem(pathToRoot.First(), true, null);
             if (PluginConfig.traverse_selector_both_ways)
             {
                 Log.Selector(string.Format("windowsselector::create traverse_selector_both_ways::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
@@ -125,7 +124,7 @@ namespace OpenRPA.Windows
                         count--;
                         var i = temppathToRoot.First();
                         temppathToRoot.Remove(i);
-                        item = new WindowsSelectorItem(i, false, rootselectoritem);
+                        item = new WindowsSelectorItem(i, false, null);
                         if (parent != null)
                         {
                             var m = item.matches(root, count, parent, 2, isDesktop, false);
@@ -166,7 +165,49 @@ namespace OpenRPA.Windows
                 Log.Error("Element has not parent, or is same as annchor");
                 return;
             }
-            baseElement = pathToRoot.First();
+            AutomationElement baseElement = pathToRoot.First();
+            WindowsSelectorItem rootselectoritem = new WindowsSelectorItem(baseElement, true, null);
+            if (PluginConfig.search_descendants && PluginConfig.create_short_selector)
+            {
+                Log.Selector(string.Format("windowsselector::begin create short selector using 1 item {0:mm\\:ss\\.fff}", sw.Elapsed));
+
+                using (var automation = AutomationUtil.getAutomation())
+                {
+                    var subparent = pathToRoot[0];
+                    var subparentui = new UIElement(subparent);
+                    UIElement[] subparents = { subparentui  };
+
+
+                    item = new WindowsSelectorItem(pathToRoot.Last(), false, rootselectoritem);
+                    Log.Selector(string.Format("windowsselector::begin test short selector using 1 item {0:mm\\:ss\\.fff}", sw.Elapsed));
+
+                    var subelements2 = GetElementsWithuiSelectorItem(2, automation, item, subparents, 2, true, true).ToList();
+                    Log.Selector(string.Format("windowsselector::begin test found " + subelements2.Count + " {0:mm\\:ss\\.fff}", sw.Elapsed));
+                    if (subelements2.Count == 1)
+                    {
+                        if (anchor == null)
+                        {
+                            item = new WindowsSelectorItem(baseElement, true, rootselectoritem);
+                            item.Enabled = true;
+                            Items.Add(item);
+
+                            item = new WindowsSelectorItem(baseElement, false, rootselectoritem);
+                            item.Enabled = true;
+                            Items.Add(item);
+                        }
+                        item = new WindowsSelectorItem(pathToRoot.Last(), false, rootselectoritem);
+                        item.Enabled = true;
+                        Items.Add(item);
+                        Log.Selector(string.Format("windowsselector::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
+                        OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
+                        OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
+                        return;
+
+                    }
+                }
+            }
+
             element = pathToRoot.Last();
             Clear();
             Log.Selector(string.Format("windowsselector::remove anchor if needed::end {0:mm\\:ss\\.fff}", sw.Elapsed));

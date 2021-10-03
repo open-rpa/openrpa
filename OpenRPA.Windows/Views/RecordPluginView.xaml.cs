@@ -39,12 +39,16 @@ namespace OpenRPA.Windows.Views
             traverse_selector_both_ways.IsChecked = PluginConfig.traverse_selector_both_ways;
             enable_cache.IsChecked = PluginConfig.enable_cache;
             search_descendants.IsChecked = PluginConfig.search_descendants;
+            create_short_selector.IsChecked = PluginConfig.create_short_selector;
+            mouse_over_search.IsChecked = PluginConfig.try_mouse_over_search;
             init = false;
         }
         private void allow_multiple_hits_mid_selector_IsEnabledChanged(object sender, RoutedEventArgs e)
         {
             if (allow_multiple_hits_mid_selector.IsChecked == null) return;
             PluginConfig.allow_multiple_hits_mid_selector = allow_multiple_hits_mid_selector.IsChecked.Value;
+            PluginConfig.create_short_selector = create_short_selector.IsChecked.Value;
+            PluginConfig.try_mouse_over_search = mouse_over_search.IsChecked.Value;
             Config.Save();
         }
         private void enum_properties_IsEnabledChanged(object sender, RoutedEventArgs e)

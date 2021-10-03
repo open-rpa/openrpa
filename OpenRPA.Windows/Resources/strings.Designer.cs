@@ -196,6 +196,24 @@ namespace OpenRPA.Windows.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create short selector.
+        /// </summary>
+        public static string plugin_create_short_selector {
+            get {
+                return ResourceManager.GetString("plugin_create_short_selector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If Search descendants is also enabled, try too create a  short selector.
+        /// </summary>
+        public static string plugin_create_short_selector_help {
+            get {
+                return ResourceManager.GetString("plugin_create_short_selector_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enable caching.
         /// </summary>
         public static string plugin_enable_cache {
@@ -237,6 +255,24 @@ namespace OpenRPA.Windows.Resources {
         public static string plugin_get_elements_in_different_thread_help {
             get {
                 return ResourceManager.GetString("plugin_get_elements_in_different_thread_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mouse over search.
+        /// </summary>
+        public static string plugin_mouse_over_search {
+            get {
+                return ResourceManager.GetString("plugin_mouse_over_search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If tree to parent mapping is broken ( like in Dynamic AX ) allow mouse over searching.
+        /// </summary>
+        public static string plugin_mouse_over_search_help {
+            get {
+                return ResourceManager.GetString("plugin_mouse_over_search_help", resourceCulture);
             }
         }
         

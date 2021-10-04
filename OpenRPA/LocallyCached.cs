@@ -16,7 +16,6 @@ namespace OpenRPA
             bool wasDisableWatch = RobotInstance.instance.DisableWatch;
             try
             {
-                RobotInstance.instance.DisableWatch = true;
                 if (RobotInstance.instance.db == null) return;
                 var collection = RobotInstance.instance.db.GetCollection<T>(_type.ToLower() + "s");
                 var entity = (T)Convert.ChangeType(this, typeof(T));
@@ -49,6 +48,9 @@ namespace OpenRPA
                 {
                     if (string.IsNullOrEmpty(_id) || isLocalOnly == true)
                     {
+                        wasDisableWatch = RobotInstance.instance.DisableWatch;
+                        Log.Debug("Save::DisableWatch true");
+                        RobotInstance.instance.DisableWatch = true;
                         var result = await global.webSocketClient.InsertOne(collectionname, 0, false, entity);
                         isLocalOnly = false;
                         isDirty = false;
@@ -66,6 +68,9 @@ namespace OpenRPA
                             entity._version++; // Add one to avoid watch update
                             try
                             {
+                                wasDisableWatch = RobotInstance.instance.DisableWatch;
+                                Log.Debug("Save::DisableWatch true");
+                                RobotInstance.instance.DisableWatch = true;
                                 var result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity);
                                 if (result != null)
                                 {
@@ -102,6 +107,7 @@ namespace OpenRPA
             }
             finally
             {
+                Log.Debug("Save::DisableWatch " + wasDisableWatch);
                 RobotInstance.instance.DisableWatch = wasDisableWatch;
             }
         }

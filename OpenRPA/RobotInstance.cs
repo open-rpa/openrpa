@@ -390,7 +390,7 @@ namespace OpenRPA
         }
         public async Task LoadServerData()
         {
-            Log.Information("LoadServerData::begin");
+            Log.Debug("LoadServerData::begin");
             DisableWatch = true;
             Window.IsLoading = true;
             try
@@ -401,7 +401,7 @@ namespace OpenRPA
                     Log.FunctionOutdent("RobotInstance", "LoadServerData", "Not signed in");
                     return;
                 }
-                Log.Information("LoadServerData::query project versions");
+                Log.Debug("LoadServerData::query project versions");
                 var server_projects = await global.webSocketClient.Query<Project>("openrpa", "{\"_type\": 'project'}", "{\"_version\": 1}", top: Config.local.max_projects);
                 var local_projects = Projects.FindAll().ToList();
                 var reload_ids = new List<string>();
@@ -413,12 +413,12 @@ namespace OpenRPA
                     {
                         if (exists._version < p._version)
                         {
-                            Log.Information("LoadServerData::Adding project " + p.name);
+                            Log.Debug("LoadServerData::Adding project " + p.name);
                             reload_ids.Add(p._id);
                         }
                         if (exists._version > p._version && p.isDirty)
                         {
-                            Log.Information("LoadServerData::Updating project " + p.name);
+                            Log.Debug("LoadServerData::Updating project " + p.name);
                             await p.Save();
                         }
                     }
@@ -432,7 +432,7 @@ namespace OpenRPA
                     var exists = server_projects.Where(x => x._id == p._id).FirstOrDefault();
                     if (exists == null && !p.isDirty)
                     {
-                        Log.Information("LoadServerData::Removing local project " + p.name);
+                        Log.Debug("LoadServerData::Removing local project " + p.name);
                         Projects.Delete(p._id);
                     }
                     else if (p.isDirty)
@@ -444,7 +444,7 @@ namespace OpenRPA
                 if (reload_ids.Count > 0)
                 {
                     for (var i = 0; i < reload_ids.Count; i++) reload_ids[i] = "'" + reload_ids[i] + "'";
-                    Log.Information("LoadServerData::Featching fresh version of ´" + reload_ids.Count + " projects");
+                    Log.Debug("LoadServerData::Featching fresh version of ´" + reload_ids.Count + " projects");
                     var q = "{ _type: 'project', '_id': {'$in': [" + string.Join(",", reload_ids) + "]}}";
                     server_projects = await global.webSocketClient.Query<Project>("openrpa", q, orderby: "{\"name\":-1}", top: Config.local.max_projects);
                     foreach (var p in server_projects)
@@ -454,7 +454,7 @@ namespace OpenRPA
                             var exists = local_projects.Where(x => x._id == p._id).FirstOrDefault();
                             if (exists != null)
                             {
-                                Log.Information("LoadServerData::Updating local project " + p.name);
+                                Log.Debug("LoadServerData::Updating local project " + p.name);
                                 p.IsExpanded = exists.IsExpanded;
                                 p.IsSelected = exists.IsSelected;
                                 p.isDirty = false;
@@ -463,7 +463,7 @@ namespace OpenRPA
                             }
                             else
                             {
-                                Log.Information("LoadServerData::Adding local project " + p.name);
+                                Log.Debug("LoadServerData::Adding local project " + p.name);
                                 p.isDirty = false;
                                 await p.Save();
                                 updatePackages.Add(p._id);
@@ -479,12 +479,12 @@ namespace OpenRPA
                 var local_project_ids = new List<string>();
                 for (var i = 0; i < local_projects.Count; i++) local_project_ids.Add("'" + local_projects[i]._id + "'");
 
-                Log.Information("LoadServerData::query workflow versions");
+                Log.Debug("LoadServerData::query workflow versions");
                 var _q = "{ _type: 'workflow', 'projectid': {'$in': [" + string.Join(",", local_project_ids) + "]}}";
                 var server_workflows = await global.webSocketClient.Query<Workflow>("openrpa", _q, "{\"_version\": 1}", top: Config.local.max_workflows);
                 var local_workflows = Workflows.FindAll().ToList();
                 reload_ids = new List<string>();
-                Log.Information("LoadServerData::Loop " + server_workflows.Length + " server workflows");
+                Log.Debug("LoadServerData::Loop " + server_workflows.Length + " server workflows");
                 foreach (var wf in server_workflows)
                 {
                     var exists = local_workflows.Where(x => x._id == wf._id).FirstOrDefault();
@@ -505,7 +505,7 @@ namespace OpenRPA
                         reload_ids.Add(wf._id);
                     }
                 }
-                Log.Information("LoadServerData::Loop " + local_workflows.Count + " local workflows");
+                Log.Debug("LoadServerData::Loop " + local_workflows.Count + " local workflows");
                 foreach (var wf in local_workflows)
                 {
                     try
@@ -527,12 +527,12 @@ namespace OpenRPA
                         Log.Error(ex.ToString());
                     }
                 }
-                Log.Information("LoadServerData::reload_ids " + reload_ids.Count);
+                Log.Debug("LoadServerData::reload_ids " + reload_ids.Count);
                 if (reload_ids.Count > 0)
                 {
                     for (var i = 0; i < reload_ids.Count; i++) reload_ids[i] = "'" + reload_ids[i] + "'";
                     var q = "{ _type: 'workflow', '_id': {'$in': [" + string.Join(",", reload_ids) + "]}}";
-                    Log.Information("LoadServerData::Featching fresh version of ´" + reload_ids.Count + " workflows");
+                    Log.Debug("LoadServerData::Featching fresh version of ´" + reload_ids.Count + " workflows");
                     server_workflows = await global.webSocketClient.Query<Workflow>("openrpa", q, orderby: "{\"name\":-1}", top: Config.local.max_workflows);
                     foreach (var wf in server_workflows)
                     {
@@ -541,7 +541,7 @@ namespace OpenRPA
                         {
                             if (exists != null)
                             {
-                                Log.Information("LoadServerData::Updating local workflow " + wf.name);
+                                Log.Debug("LoadServerData::Updating local workflow " + wf.name);
                                 wf.isDirty = false;
                                 var isloading = Window.IsLoading;
                                 Window.IsLoading = false;
@@ -550,7 +550,7 @@ namespace OpenRPA
                             }
                             else
                             {
-                                Log.Information("LoadServerData::Adding local workflow " + wf.name);
+                                Log.Debug("LoadServerData::Adding local workflow " + wf.name);
                                 wf.isDirty = false;
                                 await wf.Save();
                             }
@@ -565,7 +565,7 @@ namespace OpenRPA
 
 
 
-                Log.Information("LoadServerData::query detector versions");
+                Log.Debug("LoadServerData::query detector versions");
                 var server_detectors = await global.webSocketClient.Query<Detector>("openrpa", "{\"_type\": 'detector'}", "{\"_version\": 1}");
                 var local_detectors = Detectors.FindAll().ToList();
                 reload_ids = new List<string>();
@@ -621,7 +621,7 @@ namespace OpenRPA
                 {
                     for (var i = 0; i < reload_ids.Count; i++) reload_ids[i] = "'" + reload_ids[i] + "'";
                     var q = "{ _type: 'detector', '_id': {'$in': [" + string.Join(",", reload_ids) + "]}}";
-                    Log.Information("LoadServerData::Featching fresh version of ´" + reload_ids.Count + " detectors");
+                    Log.Debug("LoadServerData::Featching fresh version of ´" + reload_ids.Count + " detectors");
                     server_detectors = await global.webSocketClient.Query<Detector>("openrpa", q, orderby: "{\"name\":-1}");
                     foreach (var detector in server_detectors)
                     {
@@ -631,7 +631,7 @@ namespace OpenRPA
                             IDetectorPlugin exists = Plugins.detectorPlugins.Where(x => x.Entity._id == detector._id).FirstOrDefault();
                             if (exists != null && detector._version != exists.Entity._version)
                             {
-                                Log.Information("LoadServerData::Updating detector " + detector.name);
+                                Log.Debug("LoadServerData::Updating detector " + detector.name);
                                 exists.Stop();
                                 exists.OnDetector -= Window.OnDetector;
                                 exists = Plugins.UpdateDetector(this, detector);
@@ -639,23 +639,23 @@ namespace OpenRPA
                             }
                             else if (exists == null)
                             {
-                                Log.Information("LoadServerData::Adding detector " + detector.name);
+                                Log.Debug("LoadServerData::Adding detector " + detector.name);
                                 exists = Plugins.AddDetector(this, detector);
                                 if (exists != null)
                                 {
                                     exists.OnDetector += Window.OnDetector;
                                 }
-                                else { Log.Information("Failed loading detector " + detector.name); }
+                                else { Log.Debug("Failed loading detector " + detector.name); }
                             }
                             var dexists = Detectors.FindById(detector._id);
                             if (dexists == null)
                             {
-                                Log.Information("LoadServerData::Adding detector " + detector.name);
+                                Log.Debug("LoadServerData::Adding detector " + detector.name);
                                 Detectors.Insert(detector);
                             }
                             if (dexists != null)
                             {
-                                Log.Information("LoadServerData::Updating detector " + detector.name);
+                                Log.Debug("LoadServerData::Updating detector " + detector.name);
                                 Detectors.Update(detector);
                             }
                         }
@@ -706,7 +706,7 @@ namespace OpenRPA
                     }
                 }
 
-                Log.Information("LoadServerData::query pending workflow instances");
+                Log.Debug("LoadServerData::query pending workflow instances");
                 var host = Environment.MachineName.ToLower();
                 var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
                 var runninginstances = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "'}", top: 1000);
@@ -819,10 +819,11 @@ namespace OpenRPA
                     SetStatus("Offline");
                 }
                 AutoReloading = true;
+                Log.Debug("LoadServerData::DisableWatch false");
                 DisableWatch = false;
                 Window.IsLoading = false;
                 Window.OnOpen(null);
-                Log.Information("LoadServerData::end");
+                Log.Debug("LoadServerData::end");
             }
         }
         private string openrpa_watchid = "";
@@ -982,7 +983,7 @@ namespace OpenRPA
                 var _detectors = Detectors.FindAll();
                 foreach (var d in _detectors)
                 {
-                    Log.Information("Loading detector " + d.name);
+                    Log.Debug("Loading detector " + d.name);
                     IDetectorPlugin dp = null;
                     dp = Plugins.AddDetector(this, d);
                     if (dp != null) dp.OnDetector += Window.OnDetector;
@@ -1701,9 +1702,13 @@ namespace OpenRPA
         {
             try
             {
-                if (DisableWatch) return;
                 string _type = data["fullDocument"].Value<string>("_type");
                 string _id = data["fullDocument"].Value<string>("_id");
+                if (DisableWatch)
+                {
+                    Log.Information("onWatchEvent: " + _type + " with id " + _id + " was updated, ignoring due to DisableWatch is true");
+                    return;
+                }
                 long _version = data["fullDocument"].Value<long>("_version");
                 string operationType = data.Value<string>("operationType");
                 if (operationType != "replace" && operationType != "insert" && operationType != "update") return; // we don't support delete right now

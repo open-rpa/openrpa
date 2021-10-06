@@ -385,7 +385,7 @@ namespace OpenRPA.Windows
                                 if (addit)
                                 {
                                     var uiele = new UIElement(win);
-                                    Log.Debug(string.Format("GetElementsWithuiSelector::Adding element " + uiele.ToString()));
+                                    Log.Debug("GetElementsWithuiSelector::Adding element " + uiele.ToString());
                                     _current.Add(uiele);
                                     if (win.Patterns.Window.TryGetPattern(out var winPattern))
                                     {
@@ -460,7 +460,7 @@ namespace OpenRPA.Windows
                             if (WindowsSelectorItem.Match(sel, ele))
                             {
                                 var uiele = new UIElement(ele);
-                                Log.Debug(string.Format("GetElementsWithuiSelector::Adding element " + uiele.ToString()));
+                                Log.Debug("GetElementsWithuiSelector::Adding element " + uiele.ToString());
                                 _current.Add(uiele);
                             }
 

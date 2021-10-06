@@ -776,7 +776,7 @@ namespace OpenRPA
             var mywinstation = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
             if (string.IsNullOrEmpty(mywinstation)) mywinstation = "";
             mywinstation = mywinstation.ToLower();
-            if (!mywinstation.Contains("rdp") && mywinstation != "console")
+            if (!mywinstation.Contains("rdp") && mywinstation != "console" && !mywinstation.Contains("#0"))
             {
                 return true;
             }

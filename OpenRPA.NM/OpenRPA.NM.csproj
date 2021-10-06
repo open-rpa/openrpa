@@ -78,6 +78,7 @@
     <None Remove="Activities\Editor.xaml" />
     <None Remove="Activities\ExecuteScriptDesigner.xaml" />
     <None Remove="Activities\GetElementDesigner.xaml" />
+    <None Remove="Activities\GetTabDesigner.xaml" />
     <None Remove="Activities\OpenURLDesigner.xaml" />
     <None Remove="Activities\WaitForDownloadDesigner.xaml" />
     <None Remove="Resources\designer\detector.png" />
@@ -98,6 +99,9 @@
     <PackageReference Include="AvalonEdit" Version="6.1.2.30" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\GetTabDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\WaitForDownloadDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -187,6 +187,24 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get Tab.
+        /// </summary>
+        public static string activity_gettab {
+            get {
+                return ResourceManager.GetString("activity_gettab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get current tab in chrome/edge or firefox, return nothing if browser not running.
+        /// </summary>
+        public static string activity_gettab_tooltip {
+            get {
+                return ResourceManager.GetString("activity_gettab_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Editor.
         /// </summary>
         public static string activity_open_editor {

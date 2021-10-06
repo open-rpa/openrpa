@@ -2155,9 +2155,9 @@ namespace OpenRPA
                 layoutDocument.ContentId = workflow._id;
                 if (isRunningInChildSession())
                 {
-                    //Log.Warning("Refuse loading workflow designer in ChildSession");
-                    //Log.FunctionOutdent("MainWindow", "_onOpenWorkflow");
-                    //return;
+                    Log.Warning("Refuse loading workflow designer in ChildSession");
+                    Log.FunctionOutdent("MainWindow", "_onOpenWorkflow");
+                    return;
                 }
                 Views.WFDesigner view = new Views.WFDesigner(layoutDocument, workflow as Workflow, types.ToArray())
                 {

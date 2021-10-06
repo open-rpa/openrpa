@@ -23,7 +23,7 @@ namespace OpenRPA.Windows
         public int Ident { get; set; }
         public override string ToString()
         {
-            if(Result == null) return "[0] " + Conditions;
+            if (Result == null) return "[0] " + Conditions;
             return "[" + Result.Length + "] " + Conditions;
         }
     }
@@ -134,7 +134,7 @@ namespace OpenRPA.Windows
                     try
                     {
                         var c = element.Properties.ControlType.ValueOrDefault;
-                        if(c.ToString() != "Unknown") Properties.Add(new SelectorItemProperty("ControlType", c.ToString()));
+                        if (c.ToString() != "Unknown") Properties.Add(new SelectorItemProperty("ControlType", c.ToString()));
                     }
                     catch (Exception)
                     {
@@ -271,12 +271,12 @@ namespace OpenRPA.Windows
             lock (cache_lock) _list = MatchCache.ToArray();
             try
             {
-                for(var i = _list.Length-1; i >= 0; i--)
+                for (var i = _list.Length - 1; i >= 0; i--)
                 {
                     try
                     {
                         if (now - _list[i].Created > timeout) RemoveFromCache(_list[i]);
-                        if(_list[i].Conditions == Conditions && _list[i].Root.Equals(root) && _list[i].Ident == ident)
+                        if (_list[i].Conditions == Conditions && _list[i].Root.Equals(root) && _list[i].Ident == ident)
                         {
                             result = _list[i];
                         }
@@ -331,7 +331,7 @@ namespace OpenRPA.Windows
         {
             try
             {
-                lock(cache_lock)
+                lock (cache_lock)
                 {
                     var items = MatchCache.Where(x => x.Root.Equals(item.Root) && x.Ident >= item.Ident).ToList();
                     foreach (var e in items) MatchCache.Remove(e);
@@ -411,7 +411,7 @@ namespace OpenRPA.Windows
             }
             else
             {
-                Log.SelectorVerbose(string.Format("AutomationElement.matches.FindAllChildren::begin"));
+                Log.SelectorVerbose("AutomationElement.matches.FindAllChildren::begin");
                 var elements = element.FindAllChildren(Conditions);
                 var manualcheck = Properties.Where(x => x.Enabled == true && x.Value != null && (x.Name == "IndexInParent" || x.Value.Contains("*"))).Count();
                 if (manualcheck > 0)

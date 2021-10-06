@@ -283,7 +283,7 @@ namespace OpenRPA.Windows
                         var ps = System.Diagnostics.Process.GetProcessesByName(sel.processname()).Where(_p => _p.SessionId == me.SessionId).ToArray();
                         if (ps.Length == 0)
                         {
-                            Log.Selector(string.Format("GetElementsWithuiSelector::Process " + sel.processname() + " not found, end with 0 results"));
+                            Log.Selector("GetElementsWithuiSelector::Process " + sel.processname() + " not found, end with 0 results");
                             return new UIElement[] { };
                         }
                         var psids = ps.Select(x => x.Id).ToArray();
@@ -310,7 +310,7 @@ namespace OpenRPA.Windows
 
                         if (_current.Count == 0)
                         {
-                            Log.Debug(string.Format("GetElementsWithuiSelector::Searchin for all " + con.ToString()));
+                            Log.Debug("GetElementsWithuiSelector::Searchin for all " + con.ToString());
                             // var ___treeWalker = automation.TreeWalkerFactory.GetCustomTreeWalker(con);
                             var ___treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
                             int retries = 0;
@@ -343,7 +343,7 @@ namespace OpenRPA.Windows
                                 if (addit)
                                 {
                                     var uiele = new UIElement(win);
-                                    Log.Debug(string.Format("GetElementsWithuiSelector::Adding element " + uiele.ToString() ));
+                                    Log.Debug("GetElementsWithuiSelector::Adding element " + uiele.ToString() );
                                     _current.Add(uiele);
                                     if (win.Patterns.Window.TryGetPattern(out var winPattern))
                                     {
@@ -418,7 +418,7 @@ namespace OpenRPA.Windows
                             if (WindowsSelectorItem.Match(sel, ele))
                             {
                                 var uiele = new UIElement(ele);
-                                Log.Debug(string.Format("GetElementsWithuiSelector::Adding element " + uiele.ToString()));
+                                Log.Debug("GetElementsWithuiSelector::Adding element " + uiele.ToString());
                                 _current.Add(uiele);
                             }
 

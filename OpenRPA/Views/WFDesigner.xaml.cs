@@ -821,7 +821,7 @@ namespace OpenRPA.Views
         {
             ModelItem parent = from;
 
-            while (parent != null && parent.Properties["Variables"] == null)
+            while (parent != null && (parent.Properties["Variables"] == null || parent.ItemType.IsSubclassOf(typeof(BreakableLoop))))
             {
                 parent = parent.Parent;
             }

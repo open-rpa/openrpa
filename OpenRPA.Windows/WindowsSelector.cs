@@ -171,19 +171,23 @@ namespace OpenRPA.Windows
             {
                 Log.Selector(string.Format("windowsselector::begin create short selector using 1 item {0:mm\\:ss\\.fff}", sw.Elapsed));
 
+                bool testSelector = false;
                 using (var automation = AutomationUtil.getAutomation())
                 {
                     var subparent = pathToRoot[0];
                     var subparentui = new UIElement(subparent);
-                    UIElement[] subparents = { subparentui  };
-
-
+                    UIElement[] subparents = { subparentui };
                     item = new WindowsSelectorItem(pathToRoot.Last(), false, rootselectoritem);
-                    Log.Selector(string.Format("windowsselector::begin test short selector using 1 item {0:mm\\:ss\\.fff}", sw.Elapsed));
 
-                    var subelements2 = GetElementsWithuiSelectorItem(2, automation, item, subparents, 2, true, true).ToList();
-                    Log.Selector(string.Format("windowsselector::begin test found " + subelements2.Count + " {0:mm\\:ss\\.fff}", sw.Elapsed));
-                    if (subelements2.Count == 1)
+                    bool worked = true;
+                    if (testSelector)
+                    {
+                        Log.Selector(string.Format("windowsselector::begin test short selector using 1 item {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        var subelements2 = GetElementsWithuiSelectorItem(2, automation, item, subparents, 2, true, true).ToList();
+                        Log.Selector(string.Format("windowsselector::begin test found " + subelements2.Count + " {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        worked = subelements2.Count == 1;
+                    }
+                    if (worked)
                     {
                         if (anchor == null)
                         {
@@ -546,9 +550,10 @@ namespace OpenRPA.Windows
                 if (i == 0 && _current.Count == 0)
                 {
                     _current = current.ToList();
-                } else if (i > 0 && _current.Count == 0 && current.Length > 0 && ( PluginConfig.try_mouse_over_search || selector.mouse_over_search()))
+                }
+                else if (i > 0 && _current.Count == 0 && current.Length > 0 && (PluginConfig.try_mouse_over_search || selector.mouse_over_search()))
                 {
-                    for(var z=0; z < current.Length; z++)
+                    for (var z = 0; z < current.Length; z++)
                     {
                         current[z].Focus();
                         var x = current[z].Rectangle.X + 5; var y = current[z].Rectangle.Y + 5;
@@ -576,11 +581,11 @@ namespace OpenRPA.Windows
                             //    screenel = screenel.Parent;
                             //}
                         }
-                        if(_current.Count > 0) break;
+                        if (_current.Count > 0) break;
                     }
 
                 }
-                
+
             }
             Log.Debug(string.Format("GetElementsWithuiSelector::completed with " + _current.Count + " results {0:mm\\:ss\\.fff}", sw.Elapsed));
             if (_current.Count > 0)

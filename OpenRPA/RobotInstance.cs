@@ -1031,7 +1031,7 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
-            Interfaces.entity.TokenUser user = null;
+            Interfaces.entity.TokenUser user = global.webSocketClient.user;
             try
             {
                 string url = "http";
@@ -1116,10 +1116,30 @@ namespace OpenRPA
                                                 SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
                                             }
                                         }
+                                        else if (Config.local.jwt != null && Config.local.jwt.Length > 0)
+                                        {
+                                            user = await global.webSocketClient.Signin(Config.local.UnprotectString(Config.local.jwt));
+                                            if (user != null)
+                                            {
+                                                Config.local.username = user.username;
+                                                Config.Save();
+                                                Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                                SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+                                            }
+                                        }
                                         else
                                         {
-                                            Log.Debug("Call close " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                                            Close();
+
+                                            if (global.webSocketClient.isConnected && global.webSocketClient.user != null)
+                                            {
+                                                user = global.webSocketClient.user;
+                                                Config.local.username = user.username;
+                                            }
+                                            else
+                                            {
+                                                Log.Debug("Call close " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                                Close();
+                                            }
                                         }
 
                                     }
@@ -1706,7 +1726,7 @@ namespace OpenRPA
                 string _id = data["fullDocument"].Value<string>("_id");
                 if (DisableWatch)
                 {
-                    Log.Information("onWatchEvent: " + _type + " with id " + _id + " was updated, ignoring due to DisableWatch is true");
+                    Log.Debug("onWatchEvent: " + _type + " with id " + _id + " was updated, ignoring due to DisableWatch is true");
                     return;
                 }
                 long _version = data["fullDocument"].Value<long>("_version");
@@ -1724,7 +1744,8 @@ namespace OpenRPA
                     else if (wfexists == null)
                     {
                         workflow.isDirty = false;
-                        await workflow.Save();
+                        await workflow.Save<Workflow>(true);
+                        UpdateWorkflow(workflow, false);
                         instance.NotifyPropertyChanged("Projects");
                     }
                 }

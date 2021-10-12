@@ -357,6 +357,12 @@
   <data name="activity_mousebutton_help" xml:space="preserve">
     <value>Mouse button to click with</value>
   </data>
+  <data name="activity_moveelement" xml:space="preserve">
+    <value>Move Element</value>
+  </data>
+  <data name="activity_moveelement_tooltip" xml:space="preserve">
+    <value>Move parent window of the element</value>
+  </data>
   <data name="activity_movemouse" xml:space="preserve">
     <value>Move Mouse</value>
   </data>
@@ -395,6 +401,12 @@
   </data>
   <data name="activity_result_help" xml:space="preserve">
     <value>Save the result into this variable</value>
+  </data>
+  <data name="activity_screen" xml:space="preserve">
+    <value>Screen</value>
+  </data>
+  <data name="activity_screen_help" xml:space="preserve">
+    <value>What screen/Monitor to use</value>
   </data>
   <data name="activity_selector" xml:space="preserve">
     <value>Selector</value>
@@ -479,6 +491,12 @@
   </data>
   <data name="activity_width_help" xml:space="preserve">
     <value>If set, will move the window to this location</value>
+  </data>
+  <data name="activity_windowstate" xml:space="preserve">
+    <value>Window State</value>
+  </data>
+  <data name="activity_windowstate_help" xml:space="preserve">
+    <value>Set's the current window state after moving the window to the desired location/monitor</value>
   </data>
   <data name="activity_workflow" xml:space="preserve">
     <value>Workflow</value>

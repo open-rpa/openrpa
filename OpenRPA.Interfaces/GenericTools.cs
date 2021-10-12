@@ -50,6 +50,17 @@ namespace OpenRPA.Interfaces
                 Log.Error(ex.ToString());
             }
         }
+        public static void Maximized(IntPtr hWnd)
+        {
+            try
+            {
+                NativeMethods.ShowWindow(hWnd, NativeMethods.SW_MAXIMIZE);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+        }
         public static void Restore()
         {
             RunUI(() =>

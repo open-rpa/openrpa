@@ -71,10 +71,26 @@ namespace OpenRPA.Activities
                     if (window.Properties.BoundingRectangle.IsSupported)
                     {
                         var bound = window.BoundingRectangle;
-                        ModelItem.Properties["X"].SetValue(new InArgument<int>() { Expression = new Literal<int>(bound.X) });
-                        ModelItem.Properties["Y"].SetValue(new InArgument<int>() { Expression = new Literal<int>(bound.Y) });
-                        ModelItem.Properties["Width"].SetValue(new InArgument<int>() { Expression = new Literal<int>(bound.Width) });
-                        ModelItem.Properties["Height"].SetValue(new InArgument<int>() { Expression = new Literal<int>(bound.Height) });
+                        var newbound = new System.Drawing.Rectangle(bound.X, bound.Y, bound.Width, bound.Height);
+                        var p = new System.Drawing.Point(bound.X, bound.Y);
+                        var allScreens = System.Windows.Forms.Screen.AllScreens.ToList();
+                        int screen = 0;
+                        for (var i = 0; i < allScreens.Count; i++)
+                        {
+                            var work = allScreens[i].WorkingArea;
+                            if (work.Contains(bound) || allScreens[i].WorkingArea.Contains(p))
+                            {
+                                screen = i;
+                                newbound.X = newbound.X - work.X;
+                                newbound.Y = newbound.Y - work.Y;
+                                break;
+                            }
+                        }
+                        ModelItem.Properties["Screen"].SetValue(new InArgument<int>() { Expression = new Literal<int>(screen) });
+                        ModelItem.Properties["X"].SetValue(new InArgument<int>() { Expression = new Literal<int>(newbound.X) });
+                        ModelItem.Properties["Y"].SetValue(new InArgument<int>() { Expression = new Literal<int>(newbound.Y) });
+                        ModelItem.Properties["Width"].SetValue(new InArgument<int>() { Expression = new Literal<int>(newbound.Width) });
+                        ModelItem.Properties["Height"].SetValue(new InArgument<int>() { Expression = new Literal<int>(newbound.Height) });
                     }
                 }
 
@@ -150,10 +166,26 @@ namespace OpenRPA.Activities
                     if (window.Properties.BoundingRectangle.IsSupported)
                     {
                         var bound = window.BoundingRectangle;
-                        ModelItem.Properties["X"].SetValue(new InArgument<int>() { Expression = new Literal<int>(bound.X) });
-                        ModelItem.Properties["Y"].SetValue(new InArgument<int>() { Expression = new Literal<int>(bound.Y) });
-                        ModelItem.Properties["Width"].SetValue(new InArgument<int>() { Expression = new Literal<int>(bound.Width) });
-                        ModelItem.Properties["Height"].SetValue(new InArgument<int>() { Expression = new Literal<int>(bound.Height) });
+                        var newbound = new System.Drawing.Rectangle(bound.X, bound.Y, bound.Width, bound.Height);
+                        var p = new System.Drawing.Point(bound.X, bound.Y);
+                        var allScreens = System.Windows.Forms.Screen.AllScreens.ToList();
+                        int screen = 0;
+                        for (var i = 0; i < allScreens.Count; i++)
+                        {
+                            var work = allScreens[i].WorkingArea;
+                            if (work.Contains(bound) || allScreens[i].WorkingArea.Contains(p))
+                            {
+                                screen = i;
+                                newbound.X = newbound.X - work.X;
+                                newbound.Y = newbound.Y - work.Y;
+                                break;
+                            }
+                        }
+                        ModelItem.Properties["Screen"].SetValue(new InArgument<int>() { Expression = new Literal<int>(screen) });
+                        ModelItem.Properties["X"].SetValue(new InArgument<int>() { Expression = new Literal<int>(newbound.X) });
+                        ModelItem.Properties["Y"].SetValue(new InArgument<int>() { Expression = new Literal<int>(newbound.Y) });
+                        ModelItem.Properties["Width"].SetValue(new InArgument<int>() { Expression = new Literal<int>(newbound.Width) });
+                        ModelItem.Properties["Height"].SetValue(new InArgument<int>() { Expression = new Literal<int>(newbound.Height) });
                     }
                 }
             }, null);

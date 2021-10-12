@@ -781,6 +781,24 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Move Element.
+        /// </summary>
+        public static string activity_moveelement {
+            get {
+                return ResourceManager.GetString("activity_moveelement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move parent window of the element.
+        /// </summary>
+        public static string activity_moveelement_tooltip {
+            get {
+                return ResourceManager.GetString("activity_moveelement_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Move Mouse.
         /// </summary>
         public static string activity_movemouse {
@@ -894,6 +912,24 @@ namespace OpenRPA.Resources {
         public static string activity_result_help {
             get {
                 return ResourceManager.GetString("activity_result_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Screen.
+        /// </summary>
+        public static string activity_screen {
+            get {
+                return ResourceManager.GetString("activity_screen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to What screen/Monitor to use.
+        /// </summary>
+        public static string activity_screen_help {
+            get {
+                return ResourceManager.GetString("activity_screen_help", resourceCulture);
             }
         }
         
@@ -1146,6 +1182,24 @@ namespace OpenRPA.Resources {
         public static string activity_width_help {
             get {
                 return ResourceManager.GetString("activity_width_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Window State.
+        /// </summary>
+        public static string activity_windowstate {
+            get {
+                return ResourceManager.GetString("activity_windowstate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set&apos;s the current window state after moving the window to the desired location/monitor.
+        /// </summary>
+        public static string activity_windowstate_help {
+            get {
+                return ResourceManager.GetString("activity_windowstate_help", resourceCulture);
             }
         }
         

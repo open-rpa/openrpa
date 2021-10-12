@@ -10,7 +10,7 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.3.21</Version>
+    <Version>1.3.22</Version>
     <PackageReleaseNotes>1.2.62 test fix: json parser work around
 1.2.61 Yet another fix UI error after adding Index and Total variables on loops
 1.2.60 Fix UI error after adding Index and Total variables on loops
@@ -311,6 +311,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Activities\InvokeOpenFlowDesigner.xaml" />
     <None Remove="Activities\InvokeOpenRPADesigner.xaml" />
     <None Remove="Activities\InvokeRemoteOpenRPADesigner.xaml" />
+    <None Remove="Activities\MoveElementDesigner.xaml" />
     <None Remove="Activities\MoveMouseDesigner.xaml" />
     <None Remove="Activities\OpenApplicationDesigner.xaml" />
     <None Remove="Activities\ShowBalloonTipDesigner.xaml" />
@@ -409,6 +410,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Resources\designer\log.png" />
     <None Remove="Resources\designer\messagebox.png" />
     <None Remove="Resources\designer\mouse.png" />
+    <None Remove="Resources\designer\moveelement.png" />
     <None Remove="Resources\designer\openurl.png" />
     <None Remove="Resources\designer\prompt.png" />
     <None Remove="Resources\designer\readexcel.png" />
@@ -513,6 +515,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Resources\toolbox\log.png" />
     <None Remove="Resources\toolbox\messagebox.png" />
     <None Remove="Resources\toolbox\mouse.png" />
+    <None Remove="Resources\toolbox\moveelement.png" />
     <None Remove="Resources\toolbox\openurl.png" />
     <None Remove="Resources\toolbox\prompt.png" />
     <None Remove="Resources\toolbox\readexcel.png" />
@@ -558,6 +561,9 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\BreakDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\MoveElementDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\FocusElementDesigner.xaml">
@@ -677,6 +683,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <Resource Include="Resources\designer\break.png" />
     <Resource Include="Resources\designer\continue.png" />
     <Resource Include="Resources\designer\mouse.png" />
+    <Resource Include="Resources\designer\moveelement.png" />
     <Resource Include="Resources\gears-1236578_1920.jpg" />
     <Resource Include="Resources\icons\activity.png" />
     <Resource Include="Resources\icons\activity.svg" />
@@ -729,6 +736,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <EmbeddedResource Include="Resources\toolbox\killapp.png" />
     <EmbeddedResource Include="Resources\toolbox\log.png" />
     <EmbeddedResource Include="Resources\toolbox\messagebox.png" />
+    <EmbeddedResource Include="Resources\toolbox\moveelement.png" />
     <EmbeddedResource Include="Resources\toolbox\openurl.png" />
     <EmbeddedResource Include="Resources\toolbox\prompt.png" />
     <EmbeddedResource Include="Resources\toolbox\readexcel.png" />

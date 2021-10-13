@@ -1587,7 +1587,7 @@ namespace OpenRPA
         }
         async private Task RegisterQueues()
         {
-            if (!global.isConnected)
+            if (!global.isConnected || global.webSocketClient.user == null)
             {
                 _ = Task.Run(async () =>
                 {

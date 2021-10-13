@@ -3358,14 +3358,14 @@ namespace OpenRPA
                 }
                 if (instance.hasError || instance.isCompleted)
                 {
-                    string message = "";
+                    string message = (instance.Workflow.name + " " + instance.state);
+                    if(!string.IsNullOrEmpty(instance.errorsource))
+                    {
+                        message += " at " + instance.errorsource;
+                    }
                     if (instance.runWatch != null)
                     {
-                        message += (instance.Workflow.name + " " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
-                    }
-                    else
-                    {
-                        message += (instance.Workflow.name + " " + instance.state);
+                        message += (" in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
                     }
                     if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
                     Log.Output(message);

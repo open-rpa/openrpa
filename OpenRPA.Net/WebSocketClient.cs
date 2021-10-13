@@ -410,6 +410,14 @@ namespace OpenRPA.Net
         }
         private void Process(Message msg)
         {
+            if (!string.IsNullOrEmpty(msg.data) && msg.data.Contains("\"error\":\"Not signed in, and missing jwt\""))
+            {
+                global.webSocketClient.Close();
+                return;
+            }
+            //if  (!string.IsNullOrEmpty(msg.data) && msg.data.Contains("\"error\":\"jwt must be provided\""))
+            //{
+            //}
             if (!string.IsNullOrEmpty(msg.replyto))
             {
                 if (msg.command != "pong") { Log.Network("(" + _messageQueue.Count + ") " + msg.command + " RESC: " + msg.replyto + "/" + msg.id); }
@@ -429,6 +437,7 @@ namespace OpenRPA.Net
             {
                 if (msg.command != "ping" && msg.command != "refreshtoken") { Log.Network(msg.command + " / " + msg.id); }
                 // else { Log.Network(msg.command + " / replyto: " + msg.replyto); }
+
                 switch (msg.command)
                 {
                     case "ping":
@@ -560,6 +569,16 @@ namespace OpenRPA.Net
                 {
                     while (qm.reply == null)
                     {
+                        if(ws.State != WebSocketState.Open)
+                        {
+                            System.Threading.Thread.Sleep(250);
+                            continue;
+                        }
+                        if(global.webSocketClient.user == null && msg.command != "signin")
+                        {
+                            System.Threading.Thread.Sleep(250);
+                            continue;
+                        }
                         if (retries > 0)
                         {
                             if (msg.command == "signin") break;
@@ -591,17 +610,24 @@ namespace OpenRPA.Net
                             Log.Network("(" + _messageQueue.Count + ") " + msg.command + " SEND: " + msg.id);
                             msg.SendMessage(this);
                         }
-                        await qm.autoReset.WaitOneAsync(Config.local.network_message_timeout);
+                        bool wasraised = await qm.autoReset.WaitOneAsync(Config.local.network_message_timeout, CancellationToken.None);
+                        if (qm.reply == null || (!string.IsNullOrEmpty(qm.reply.data) && qm.reply.data.Contains("\"error\":\"Not signed in, and missing jwt\"")))
+                        {
+                            global.webSocketClient.Close();
+                        }
                         if (qm.reply == null || (!string.IsNullOrEmpty(qm.reply.data) && qm.reply.data.Contains("\"error\":\"jwt must be provided\"")))
                         {
                             qm.autoReset.Reset();
+                            //qm.autoReset.Dispose();
+                            //qm.autoReset = null;
+                            //qm.autoReset = qm.autoReset = new AutoResetEvent(false);
                             retries++;
                             if (msg.command == "insertorupdateone")
                             {
                                 var data = JObject.Parse(msg.data);
                                 var _id = data["item"].Value<string>("_id");
                                 var state = data["item"].Value<string>("state");
-                                if (state == "running" || state == "idle")
+                                if (state == "running" || state == "idle" || retries > 50)
                                 {
                                     retries = 0;
                                     lock (_messageQueue)

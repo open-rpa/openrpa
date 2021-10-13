@@ -25,7 +25,7 @@ namespace OpenRPA.NM.pipe
             using (queue.autoReset = new AutoResetEvent(false))
             {
                 pipe.PushMessage(message);
-                await queue.autoReset.WaitOneAsync(timeout);
+                await queue.autoReset.WaitOneAsync(timeout, CancellationToken.None);
                 queue.sw.Stop();
             }
             // Log.Debug("ASYNC received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));

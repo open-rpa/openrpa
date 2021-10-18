@@ -52,6 +52,11 @@ namespace OpenRPA.Activities
                     }
                 }
                 var workflow = ModelItem.GetValue<string>("workflow");
+                var workflow2 = workflow.Replace("\\", "/");
+                if (workflow != workflow2)
+                {
+                    ModelItem.SetValueInArg("workflow", workflow2);
+                }
                 // result = result.OrderBy(x => x.name).OrderBy(x => x.Project.name).ToList();
                 result = result.OrderBy(x => x.name).OrderBy(x => x.projectid).ToList();
                 if (!string.IsNullOrEmpty(workflow))

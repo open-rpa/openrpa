@@ -99,6 +99,7 @@ namespace OpenRPA.Net
                 tempbuffer = "";
                 Task receiveTask = Task.Run(async () => await receiveLoop(), src.Token);
                 Task pingTask = Task.Run(async () => await PingLoop(), src.Token);
+                user = null;
                 OnOpen?.Invoke();
             }
             catch (Exception ex)
@@ -127,6 +128,7 @@ namespace OpenRPA.Net
                 //ws = null;
             }
             user = null;
+            lock (_sendQueuelock) _sendQueue.Clear();
             src.Cancel();
         }
         string tempbuffer = null;
@@ -410,11 +412,13 @@ namespace OpenRPA.Net
         }
         private void Process(Message msg)
         {
-            if (!string.IsNullOrEmpty(msg.data) && msg.data.Contains("\"error\":\"Not signed in, and missing jwt\""))
-            {
-                global.webSocketClient.Close();
-                return;
-            }
+            //if (!string.IsNullOrEmpty(msg.data) && msg.data.Contains("Not signed in, and missing jwt"))
+            //{
+            //    Log.Information("WebSocketClient.Process, data has Not signed in, and missing jwt, so closing connection " + msg.command);
+            //    global.webSocketClient.Close();
+
+            //    return;
+            //}
             //if  (!string.IsNullOrEmpty(msg.data) && msg.data.Contains("\"error\":\"jwt must be provided\""))
             //{
             //}
@@ -569,12 +573,12 @@ namespace OpenRPA.Net
                 {
                     while (qm.reply == null)
                     {
-                        if(ws.State != WebSocketState.Open)
+                        if (ws.State != WebSocketState.Open)
                         {
                             System.Threading.Thread.Sleep(250);
                             continue;
                         }
-                        if(global.webSocketClient.user == null && msg.command != "signin")
+                        if (global.webSocketClient.user == null && msg.command != "signin")
                         {
                             System.Threading.Thread.Sleep(250);
                             continue;
@@ -611,11 +615,14 @@ namespace OpenRPA.Net
                             msg.SendMessage(this);
                         }
                         bool wasraised = await qm.autoReset.WaitOneAsync(Config.local.network_message_timeout, CancellationToken.None);
-                        if (qm.reply == null || (!string.IsNullOrEmpty(qm.reply.data) && qm.reply.data.Contains("\"error\":\"Not signed in, and missing jwt\"")))
+                        // if (qm.reply == null || (!string.IsNullOrEmpty(qm.reply.data) && qm.reply.data.Contains("\"error\":\"Not signed in, and missing jwt\"")))
+                        if (qm.reply != null && !string.IsNullOrEmpty(qm.reply.data) && qm.reply.data.Contains("Not signed in, and missing jwt"))
                         {
-                            global.webSocketClient.Close();
+                            Log.Information("WebSocketClient.SendMessage.Reply.data has Not signed in, and missing jwt, so closing connection (" + msg.command + ")");
+                            // global.webSocketClient.Close();
+                            await Close();
                         }
-                        if (qm.reply == null || (!string.IsNullOrEmpty(qm.reply.data) && qm.reply.data.Contains("\"error\":\"jwt must be provided\"")))
+                        if (qm.reply == null || (!string.IsNullOrEmpty(qm.reply.data) && qm.reply.data.Contains("jwt must be provided")))
                         {
                             qm.autoReset.Reset();
                             //qm.autoReset.Dispose();

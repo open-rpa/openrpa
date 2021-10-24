@@ -205,12 +205,12 @@ namespace OpenRPA.NM
         }
         private static void windowremoved(NativeMessagingMessage msg)
         {
-            var win = windows.Where(x => x.id == msg.windowId).FirstOrDefault();
+            var win = windows.Where(x => x.id == msg.windowId && x.browser == msg.browser).FirstOrDefault();
             if (win != null) windows.Remove(win);
         }
         private static void windowfocus(NativeMessagingMessage msg)
         {
-            var win = windows.Where(x => x.id == msg.windowId).FirstOrDefault();
+            var win = windows.Where(x => x.id == msg.windowId && x.browser == msg.browser).FirstOrDefault();
             if (win != null)
             {
                 windows.ForEach(x => x.focused = false && x.browser == msg.browser);

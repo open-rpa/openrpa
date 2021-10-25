@@ -131,7 +131,7 @@ namespace OpenRPA
                 try
                 {
                     return RawElement.ControlType == FlaUI.Core.Definitions.ControlType.ComboBox;
-                        // || RawElement.ControlType == FlaUI.Core.Definitions.ControlType.RadioButton;
+                    // || RawElement.ControlType == FlaUI.Core.Definitions.ControlType.RadioButton;
                 }
                 catch (Exception)
                 {
@@ -139,7 +139,7 @@ namespace OpenRPA
                 return false;
             }
         }
-        
+
         [JsonIgnore]
         public UIElement Parent
         {
@@ -192,12 +192,12 @@ namespace OpenRPA
                 if (VirtualClick)
                 {
                     if (RawElement.Patterns.Invoke.IsSupported)
-                        if(RawElement.Patterns.Invoke.TryGetPattern(out var InvokePattern))
-                    {
-                            if(RawElement.IsEnabled)
+                        if (RawElement.Patterns.Invoke.TryGetPattern(out var InvokePattern))
+                        {
+                            if (RawElement.IsEnabled)
                             {
                                 InvokePattern.Invoke();
-                            } 
+                            }
                             else
                             {
                                 try
@@ -211,7 +211,7 @@ namespace OpenRPA
                             }
                             // Log.Selector(string.Format("UIElement.LegacyIAccessible.set::SetValue::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                             return;
-                    }
+                        }
                     VirtualClick = false;
                 }
                 if (!VirtualClick)
@@ -248,7 +248,8 @@ namespace OpenRPA
         }
         public Task Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration)
         {
-            if (!Blocking) {
+            if (!Blocking)
+            {
                 Task.Run(() => _Highlight(Color, Duration));
                 return Task.CompletedTask;
             }
@@ -300,7 +301,7 @@ namespace OpenRPA
                     if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
                     {
                         var combo = RawElement.AsListBox();
-                        if(combo.SelectedItem!=null)
+                        if (combo.SelectedItem != null)
                         {
                             return combo.SelectedItem.Name;
                         }
@@ -353,7 +354,8 @@ namespace OpenRPA
                     if (!string.IsNullOrEmpty(value) && value.ToLower() == "true")
                     {
                         combo.IsChecked = true;
-                    } else
+                    }
+                    else
                     {
                         combo.IsChecked = false;
                     }
@@ -399,13 +401,13 @@ namespace OpenRPA
             if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
             {
                 var combo = RawElement.AsListBox();
-                for(var i=0; i < combo.Items.Length; i ++)
+                for (var i = 0; i < combo.Items.Length; i++)
                 {
-                    if(combo.Items[i].Name == element.Value)
+                    if (combo.Items[i].Name == element.Value)
                     {
                         combo.AddToSelection(i);
                     }
-                    
+
                 }
             }
         }
@@ -581,16 +583,18 @@ namespace OpenRPA
                 return Interfaces.Image.Util.Bitmap2Base64(image);
             }
         }
-        public IElement[] Items { 
-            get 
+        public IElement[] Items
+        {
+            get
             {
-                
+
                 var result = new List<IElement>();
-                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.ComboBox )
+                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.ComboBox)
                 {
                     var combo = RawElement.AsComboBox();
                     foreach (var c in combo.Items) result.Add(new UIElement(c));
-                } else if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
+                }
+                else if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
                 {
                     var combo = RawElement.AsListBox();
                     foreach (var c in combo.Items)
@@ -600,7 +604,7 @@ namespace OpenRPA
                     }
                 }
                 return result.ToArray();
-            } 
+            }
         }
         public Window GetWindow()
         {
@@ -684,7 +688,7 @@ namespace OpenRPA
             //    }
             //}
             //window.Move(X, Y);
-            
+
             var size = WindowSize;
             NativeMethods.MoveWindow(window.Properties.NativeWindowHandle.Value, X, Y, size.Width, size.Height, true);
 
@@ -708,7 +712,7 @@ namespace OpenRPA
         {
             get
             {
-                if(_Position == System.Drawing.Point.Empty)
+                if (_Position == System.Drawing.Point.Empty)
                 {
                     _Position = new System.Drawing.Point(RawElement.BoundingRectangle.X, RawElement.BoundingRectangle.Y);
                 }
@@ -760,7 +764,7 @@ namespace OpenRPA
                     return System.Drawing.Rectangle.Empty;
                 }
             }
-            set 
+            set
             {
                 var window = GetWindow();
                 NativeMethods.MoveWindow(window.Properties.NativeWindowHandle.Value, value.X, value.Y, value.Width, value.Height, true);
@@ -786,7 +790,8 @@ namespace OpenRPA
             var steps = Math.Max(Convert.ToInt32(totalDistance / MovePixelsPerStep), 1); // Make sure to have et least one step
             var interval = TimeSpan.FromMilliseconds(duration.TotalMilliseconds / steps);
             // Execute the movement
-            FlaUI.Core.Input.Interpolation.Execute(point => {
+            FlaUI.Core.Input.Interpolation.Execute(point =>
+            {
                 WindowPosition = point;
             }, startPos, endPos, duration, interval, true);
         }
@@ -815,7 +820,7 @@ namespace OpenRPA
                 newPos.Height += hsteps;
                 Log.Verbose(newPos.ToString());
                 WindowRectangle = newPos;
-                System.Threading.Thread.Sleep((int)(runtime.TotalMilliseconds/steps));
+                System.Threading.Thread.Sleep((int)(runtime.TotalMilliseconds / steps));
             }
 
             WindowRectangle = endPos;
@@ -858,11 +863,12 @@ namespace OpenRPA
                 }
                 catch (Exception)
                 {
-                    
+
                 }
                 return System.Drawing.Size.Empty;
             }
-            set {
+            set
+            {
                 var window = GetWindow();
                 if (window == null) return;
                 if (window.Patterns.Transform.TryGetPattern(out var tranPattern))
@@ -895,8 +901,8 @@ namespace OpenRPA
                 {
                     view = element.AsDataGridView();
                     grid = element.AsGrid();
-                    if(view.Header == null && view.Rows.Length == 0) { view = null; grid = null; }
-                    if(!element.Properties.ControlType.IsSupported) { view = null; grid = null; } else if (element.ControlType == FlaUI.Core.Definitions.ControlType.DataItem) { view = null; grid = null; }
+                    if (view.Header == null && view.Rows.Length == 0) { view = null; grid = null; }
+                    if (!element.Properties.ControlType.IsSupported) { view = null; grid = null; } else if (element.ControlType == FlaUI.Core.Definitions.ControlType.DataItem) { view = null; grid = null; }
                     if (view == null) element = element.Parent;
                 }
                 catch (Exception)
@@ -905,20 +911,32 @@ namespace OpenRPA
                 }
             } while (view == null && element != null);
             if (view == null) return table;
-            if(view.Rows==null) return table;
+            if (view.Rows == null) return table;
             if (view.Header != null)
             {
                 foreach (var h in view.Header.Columns)
                 {
                     table.Columns.Add(h.Text, typeof(string));
                 }
-            } else
+            }
+            else
             {
                 if (view.Rows.Length == 0) return table;
                 DataGridViewRow row = view.Rows[0];
                 foreach (var cell in row.Cells)
                 {
-                    table.Columns.Add(cell.AutomationId, typeof(string));
+                    if (cell.Properties.AutomationId.IsSupported && !string.IsNullOrEmpty(cell.Properties.AutomationId.ToString()))
+                    {
+                        table.Columns.Add(cell.AutomationId, typeof(string));
+                    }
+                    else if (cell.Properties.Name.IsSupported && !string.IsNullOrEmpty(cell.Properties.Name.Value))
+                    {
+                        table.Columns.Add(cell.Name, typeof(string));
+                    }
+                    else
+                    {
+                        table.Columns.Add("", typeof(string));
+                    }
                 }
 
             }
@@ -929,14 +947,15 @@ namespace OpenRPA
                 {
                     try
                     {
-                        if(cell.Patterns.Value.IsSupported)
+                        if (cell.Patterns.Value.IsSupported)
                         {
                             objs.Add(cell.Value);
-                        } else
+                        }
+                        else
                         {
                             objs.Add(null);
                         }
-                        
+
                     }
                     catch (Exception)
                     {

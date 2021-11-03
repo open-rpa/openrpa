@@ -50,6 +50,16 @@ namespace OpenRPA.Activities
                 if (robots.Count() > 0) return;
                 originalworkflow = ModelItem.GetValue<string>("workflow");
                 originaltarget = ModelItem.GetValue<string>("target");
+
+                if (!string.IsNullOrEmpty(originalworkflow))
+                {
+                    var workflow2 = originalworkflow.Replace("\\", "/");
+                    if (originalworkflow != workflow2)
+                    {
+                        ModelItem.SetValueInArg("workflow", workflow2);
+                    }
+                }
+
                 //if (string.IsNullOrEmpty(originalworkflow)) throw new ArgumentException("ModelItem.workflow is null");
                 //if (string.IsNullOrEmpty(originaltarget)) throw new ArgumentException("ModelItem.target is null");
                 // loadLocalWorkflows();

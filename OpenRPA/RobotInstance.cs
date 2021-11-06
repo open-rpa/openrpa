@@ -1340,7 +1340,7 @@ namespace OpenRPA
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Log.Error(ex.ToString());
             }

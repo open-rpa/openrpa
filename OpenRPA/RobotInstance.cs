@@ -1265,70 +1265,84 @@ namespace OpenRPA
         int ReconnectDelay = 5000;
         private async void WebSocketClient_OnClose(string reason)
         {
-            Log.FunctionIndent("RobotInstance", "WebSocketClient_OnClose", reason);
-            if (global.webSocketClient.isConnected) Log.Information("Disconnected " + reason);
-            SetStatus("Disconnected from " + Config.local.wsurl + " reason " + reason);
-            openrpa_watchid = null;
             try
             {
-                Disconnected?.Invoke();
+                Log.FunctionIndent("RobotInstance", "WebSocketClient_OnClose", reason);
+                if (global.webSocketClient.isConnected) Log.Information("Disconnected " + reason);
+                SetStatus("Disconnected from " + Config.local.wsurl + " reason " + reason);
+                openrpa_watchid = null;
+                try
+                {
+                    Disconnected?.Invoke();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+                if (!isReadyForAction)
+                {
+                    ParseCommandLineArgs();
+                    isReadyForAction = true;
+                }
+                if (Window != null)
+                {
+                    Window.MainWindow_WebSocketClient_OnOpen();
+                }
+                CreateMainWindow();
+                GenericTools.RunUI(() =>
+                {
+                    if (App.splash != null)
+                    {
+                        App.splash.Close();
+                        App.splash = null;
+                    }
+                    if (!Config.local.isagent) Show();
+                    ReadyForAction?.Invoke();
+                });
+                if (connect_attempts == 1)
+                {
+                    try
+                    {
+                        SetStatus("Run pending workflow instances");
+                        await WorkflowInstance.RunPendingInstances();
+                        SetStatus("Connecting to " + Config.local.wsurl);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
             }
-            if (!isReadyForAction)
+            try
             {
-                ParseCommandLineArgs();
-                isReadyForAction = true;
-            }
-            if (Window != null)
-            {
-                Window.MainWindow_WebSocketClient_OnOpen();
-            }
-            CreateMainWindow();
-            GenericTools.RunUI(() =>
-            {
-                if (App.splash != null)
+                await Task.Delay(ReconnectDelay);
+                ReconnectDelay += 5000;
+                if (ReconnectDelay > 60000 * 2) ReconnectDelay = 60000 * 2;
+                if (autoReconnect)
                 {
-                    App.splash.Close();
-                    App.splash = null;
-                }
-                if (!Config.local.isagent) Show();
-                ReadyForAction?.Invoke();
-            });
-
-            await Task.Delay(ReconnectDelay);
-            ReconnectDelay += 5000;
-            if (ReconnectDelay > 60000 * 2) ReconnectDelay = 60000 * 2;
-            if (autoReconnect)
-            {
-                try
-                {
-                    connect_attempts++;
-                    autoReconnect = false;
-                    SetStatus("Connecting to " + Config.local.wsurl);
-                    await global.webSocketClient.Connect();
-                    autoReconnect = true;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-            }
-            if (connect_attempts == 1)
-            {
-                try
-                {
-                    SetStatus("Run pending workflow instances");
-                    await WorkflowInstance.RunPendingInstances();
-                    SetStatus("Connecting to " + Config.local.wsurl);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
+                    try
+                    {
+                        connect_attempts++;
+                        autoReconnect = false;
+                        SetStatus("Connecting to " + Config.local.wsurl);
+                        await global.webSocketClient.Connect();
+                        autoReconnect = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
                 }
 
+            }
+            catch (Exception)
+            {
+                Log.Error(ex.ToString());
             }
             Log.FunctionOutdent("RobotInstance", "WebSocketClient_OnClose");
         }

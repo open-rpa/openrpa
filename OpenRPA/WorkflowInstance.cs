@@ -747,6 +747,7 @@ namespace OpenRPA
             {
                 isCompleted = true;
                 _ = Workflow.State;
+                RobotInstance.unsavedTimer.Interval = 5000;
                 if (e.CompletionState == System.Activities.ActivityInstanceState.Faulted)
                 {
                     if (state == "running" || state == "idle" || state == "completed")
@@ -791,6 +792,7 @@ namespace OpenRPA
             };
             wfApp.Aborted = delegate (System.Activities.WorkflowApplicationAbortedEventArgs e)
             {
+                RobotInstance.unsavedTimer.Interval = 5000;
                 hasError = true;
                 isCompleted = true;
                 state = "aborted";
@@ -834,6 +836,7 @@ namespace OpenRPA
             };
             wfApp.OnUnhandledException = delegate (System.Activities.WorkflowApplicationUnhandledExceptionEventArgs e)
             {
+                RobotInstance.unsavedTimer.Interval = 5000;
                 hasError = true;
                 isCompleted = true;
                 state = "failed";
@@ -921,28 +924,6 @@ namespace OpenRPA
                 if (Workflow != null) Workflow.NotifyUIState();
             }
         }
-        private static void UnsavedTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            if (global.webSocketClient == null || global.webSocketClient.ws == null || global.webSocketClient.ws.State != System.Net.WebSockets.WebSocketState.Open) return;
-            if (global.webSocketClient.user == null) return;
-            lock (unsaved)
-            {
-                foreach (var item in unsaved.ToList())
-                {
-                    try
-                    {
-                        item.Instance.Save();
-                        unsaved.Remove(item);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.ToString());
-                    }
-                    Log.Output("*unsaved instances count is " + unsaved.Count);
-                }
-            }
-        }
-
         public static List<UnsavedWorkflowInstance> unsaved = new List<UnsavedWorkflowInstance>();
         private static bool hasRanPending = false;
         public static async Task RunPendingInstances()
@@ -1031,7 +1012,7 @@ namespace OpenRPA
                 foreach (var i in Instances.ToList())
                 {
                     // if (i.isCompleted && i._modified > DateTime.Now.AddMinutes(5))
-                    if (i.isCompleted && i._modified < DateTime.Now.AddMinutes(15))
+                    if (i.isCompleted && i._modified < DateTime.Now.AddMinutes(-15))
                     {
                         Log.Verbose("[workflow] Remove workflow with id '" + i.WorkflowId + "'");
                         lock (Instances) Instances.Remove(i);

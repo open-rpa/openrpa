@@ -16,7 +16,7 @@ namespace OpenRPA
     {
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         // private static System.Windows.Threading.DispatcherTimer unsavedTimer = null;
-        private static System.Timers.Timer unsavedTimer = null;
+        public static System.Timers.Timer unsavedTimer = null;
         private readonly System.Timers.Timer reloadTimer = null;
 
         public void NotifyPropertyChanged(string propertyName)
@@ -42,7 +42,6 @@ namespace OpenRPA
             //});
             unsavedTimer = new System.Timers.Timer(5000);
             unsavedTimer.Elapsed += UnsavedTimer_Elapsed;
-
             unsavedTimer.Start();
             if (InitializeOTEL())
             {
@@ -254,7 +253,6 @@ namespace OpenRPA
                 lock (WorkflowInstance.Instances) wfinstances = instance.dbWorkflowInstances.Find(x => x.isDirty).ToList();
                 if (wfinstances.Count > 0)
                 {
-
                     Log.Debug("UnsavedTimer processing " + wfinstances.Count + " items");
                     foreach (var entity in wfinstances)
                     {
@@ -274,6 +272,16 @@ namespace OpenRPA
                             Log.Error(ex.ToString());
                         }
                     }
+                    lock (WorkflowInstance.Instances)
+                    {
+                        int Deleted = instance.dbWorkflowInstances.DeleteMany(x => x.isDirty == false && x.isCompleted && x._modified < DateTime.Now.AddMinutes(-15));
+                        if (Deleted > 0) Log.Debug("UnsavedTimer_Elapsed::maintenance deleted " + Deleted + " workflow instances");
+                    }
+                }
+                else
+                {
+                    unsavedTimer.Interval += 5000;
+                    if (unsavedTimer.Interval > 60000 * 2) unsavedTimer.Interval = 60000 * 2;
                 }
             }
             catch (Exception ex)
@@ -1042,7 +1050,7 @@ namespace OpenRPA
                 // App.notifyIcon.ShowBalloonTip(5000, "tooltiptitle", "tipMessage", System.Windows.Forms.ToolTipIcon.Info);
                 var sw = new System.Diagnostics.Stopwatch();
                 sw.Start();
-                Log.Debug("WebSocketClient_OnOpen::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                Log.Debug("RobotInstance_WebSocketClient_OnOpen::begin " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                 SetStatus("Connected to " + Config.local.wsurl);
                 while (user == null)
                 {
@@ -1168,7 +1176,7 @@ namespace OpenRPA
                     }
                 }
                 InitializeOTEL();
-                Log.Debug("WebSocketClient_OnOpen::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                Log.Debug("RobotInstance_WebSocketClient_OnOpen::end " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
 
                 System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = true;
                 System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.Normal;

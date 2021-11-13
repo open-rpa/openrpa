@@ -5,7 +5,7 @@
     <Product>OpenRPA</Product>
     <Description>A few activites to handle recording the screen while a workflow is running, created for OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <Version>1.0.18</Version>
     <PackageReleaseNotes>1.0.18 Change target framework to 4.7.2

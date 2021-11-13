@@ -6,7 +6,7 @@
     <Description>A couple of activities and a Record plugin for handling Image recognition and doing basic OCR using OpenCV, created for OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Version>1.0.28</Version>
     <PackageReleaseNotes>
       1.0.28 Add custom time for mouse move doing recording
@@ -99,7 +99,7 @@
     <Page Include="Activities\GetElementDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Activities\PrintWindowDesigner.xaml" >
+    <Page Include="Activities\PrintWindowDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\TakeScreenshotDesigner.xaml">

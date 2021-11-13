@@ -6,7 +6,7 @@
     <Description>Detector plugin for monitoring local file changes, created for OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Version>1.0.16</Version>
     <PackageReleaseNotes>1.0.16 Add support for multiple file extensions in filter
 1.0.15 Change target framework to 4.7.2

@@ -6,7 +6,7 @@
     <Description>A couple of activities to allow executing scripts and various different languages</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
     <Version>1.0.30</Version>
     <PackageReleaseNotes>1.0.30 Expose instance as variable

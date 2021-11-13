@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
     <Description>Simple wrapper activites around https://elis.rossum.ai for Microsoft Workflow Foundation, specifically tested and created for OpenRPA robot</Description>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>

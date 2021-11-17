@@ -10,6 +10,9 @@
         <File Id="OpenRPA.JavaBridge.exe" Source="!(wix.JavaSource)\OpenRPA.JavaBridge.exe" />
         <File Id="OpenRPA.JavaBridge.exe.config" Source="!(wix.JavaSource)\OpenRPA.JavaBridge.exe.config" />
         <File Id="WindowsAccessBridgeInterop.dll" Source="!(wix.JavaSource)\WindowsAccessBridgeInterop.dll" />
+        <File Id="WindowsAccessBridge.dll" Source="!(wix.JavaSource)\WindowsAccessBridge.dll" />
+        <File Id="WindowsAccessBridge32.dll" Source="!(wix.JavaSource)\WindowsAccessBridge-32.dll" />
+        <File Id="WindowsAccessBridge64.dll" Source="!(wix.JavaSource)\WindowsAccessBridge-64.dll" />
       </Component>
 
       <Component Id='JavaComponentde' Win64='yes' Directory="Javade" Guid='{A845A769-AED7-4C2A-96D8-F54522588DD4}'>

@@ -284,6 +284,9 @@ namespace OpenRPA.Interfaces
                     if (dllFile.Contains("libcef.dll")) continue;
                     if (dllFile.Contains("libEGL.dll")) continue;
                     if (dllFile.Contains("libGLESv2.dll")) continue;
+                    if (dllFile.Contains("WindowsAccessBridge-32.dll")) continue;
+                    if (dllFile.Contains("WindowsAccessBridge-64.dll")) continue;
+                    if (dllFile.Contains("WindowsAccessBridge.dll")) continue;
                     AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
                     Assembly assembly = Assembly.Load(an);
                     // assemblies.Add(assembly);

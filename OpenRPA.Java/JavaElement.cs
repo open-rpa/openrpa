@@ -132,7 +132,6 @@ namespace OpenRPA.Java
                                     if (!actions.ContainsKey(a.name))
                                     {
                                         actions.Add(a.name, a);
-                                        Console.WriteLine(a.name);
                                     }
                                 }
                             }

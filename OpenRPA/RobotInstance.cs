@@ -18,7 +18,6 @@ namespace OpenRPA
         // private static System.Windows.Threading.DispatcherTimer unsavedTimer = null;
         public static System.Timers.Timer unsavedTimer = null;
         private readonly System.Timers.Timer reloadTimer = null;
-
         public void NotifyPropertyChanged(string propertyName)
         {
             if (propertyName == "Projects")
@@ -501,7 +500,11 @@ namespace OpenRPA
                         try
                         {
                             if (exists._version < wf._version) reload_ids.Add(wf._id);
-                            if (exists._version > wf._version && wf.isDirty) await wf.Save();
+                            if (exists._version > wf._version && wf.isDirty)
+                            {
+                                Log.Warning(wf.RelativeFilename + " has a newer version on the server!");
+                                // await wf.Save();
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -560,7 +563,7 @@ namespace OpenRPA
                             {
                                 Log.Debug("LoadServerData::Adding local workflow " + wf.name);
                                 wf.isDirty = false;
-                                await wf.Save();
+                                await wf.Save(true);
                             }
                         }
                         catch (Exception ex)

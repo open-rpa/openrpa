@@ -302,6 +302,10 @@ namespace OpenRPA
         }
         public async Task Save()
         {
+            await Save(false);
+        }
+        public async Task Save(bool skipOnline = false)
+        {
             if (string.IsNullOrEmpty(projectid)) throw new Exception("Cannot save workflow " + name + " with out a project/projectid");
             if (string.IsNullOrEmpty(Filename)) Filename = UniqueFilename();
             if (Project() == null)
@@ -315,7 +319,7 @@ namespace OpenRPA
                     await server_projects[0].Save();
                 }
             }
-            await Save<Workflow>();
+            await Save<Workflow>(skipOnline);
             RobotInstance.instance.UpdateWorkflow(this, false);
         }
         public async Task UpdateImagePermissions()

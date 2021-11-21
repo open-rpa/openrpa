@@ -1097,6 +1097,31 @@ namespace OpenRPA
                             errormessage = ex.Message;
                         }
                     }
+                    // Retry, if message timed out ... is this even possible ?
+                    if (user == null)
+                        if (Config.local.jwt != null && Config.local.jwt.Length > 0)
+                        {
+                            try
+                            {
+                                SetStatus("Sign in to " + Config.local.wsurl);
+                                Log.Debug("Signing in with token " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                user = await global.webSocketClient.Signin(Config.local.UnprotectString(Config.local.jwt));
+                                if (user != null)
+                                {
+                                    Config.local.username = user.username;
+                                    Config.local.password = new byte[] { };
+                                    // Config.Save();
+                                    Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                    SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Hide();
+                                Log.Error(ex, "");
+                                errormessage = ex.Message;
+                            }
+                        }
                     if (user == null)
                     {
                         if (loginInProgress == false && global.webSocketClient.user == null)

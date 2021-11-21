@@ -63,6 +63,7 @@ namespace OpenRPA.Java
         // public string Status => (hook!=null && hook.jvms.Count>0 ? "online":"offline");
         private string _Status = "";
         public string Status { get => _Status; }
+        public int Priority { get => 60; }
         private void SetStatus(string status)
         {
             _Status = status;

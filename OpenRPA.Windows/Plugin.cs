@@ -87,6 +87,7 @@ namespace OpenRPA.Windows
             return new WindowsSelector(windowsitem.RawElement, winanchor, PluginConfig.enum_selector_properties);
         }
         public string Name { get => "Windows"; }
+        public int Priority { get => 10; }
         public string Status => _status;
         private Views.RecordPluginView view;
         public System.Windows.Controls.UserControl editor

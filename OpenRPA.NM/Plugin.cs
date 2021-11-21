@@ -14,6 +14,7 @@ namespace OpenRPA.NM
         public NMElement LastElement { get; set; }
         public string Name => "NM";
         public string Status => (NMHook.connected ? "online" : "offline");
+        public int Priority { get => 30; }
         public event Action<IRecordPlugin, IRecordEvent> OnUserAction;
         public event Action<IRecordPlugin, IRecordEvent> OnMouseMove
         {
@@ -299,7 +300,7 @@ namespace OpenRPA.NM
             if (p.ProcessName.ToLower() == "chrome")
             {
                 if (!NMHook.chromeconnected) { System.Windows.MessageBox.Show("You clicked inside Chrome, but it looks like you dont have the OpenRPA plugin installed"); return false; }
-                if(string.IsNullOrEmpty(e.UIElement.FrameworkId) || e.UIElement.FrameworkId.ToLower() != "chrome") return false;
+                if (string.IsNullOrEmpty(e.UIElement.FrameworkId) || e.UIElement.FrameworkId.ToLower() != "chrome") return false;
 
             }
             if (p.ProcessName.ToLower() == "msedge" && !NMHook.edgeconnected)

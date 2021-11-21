@@ -52,6 +52,7 @@ namespace OpenRPA.SAP
             remove { }
         }
         public string Name { get => "SAP"; }
+        public int Priority { get => 50; }
         // public string Status => (hook!=null && hook.jvms.Count>0 ? "online":"offline");
         private string _Status = "Offline";
         public string Status { get => _Status; }

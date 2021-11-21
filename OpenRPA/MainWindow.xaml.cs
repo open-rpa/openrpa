@@ -2150,7 +2150,6 @@ namespace OpenRPA
             try
             {
                 var types = new List<Type>();
-                // foreach (var p in Plugins.recordPlugins) { types.Add(p.GetType()); }
                 LayoutDocument layoutDocument = new LayoutDocument { Title = workflow.name };
                 layoutDocument.ContentId = workflow._id;
                 if (isRunningInChildSession())
@@ -3056,15 +3055,13 @@ namespace OpenRPA
         public void OnMouseMove(IRecordPlugin sender, IRecordEvent e)
         {
             if (!Config.local.record_overlay) return;
-            foreach (var p in Plugins.recordPlugins)
+            foreach (var p in Plugins.recordPlugins.OrderBy(x => x.Priority))
             {
                 if (p.Name != sender.Name)
                 {
                     if (p.ParseMouseMoveAction(ref e)) break;
                 }
             }
-
-            // e.Element.Highlight(false, System.Drawing.Color.PaleGreen, TimeSpan.FromSeconds(1));
             if (e.Element != null && _overlayWindow != null)
             {
 
@@ -3108,8 +3105,7 @@ namespace OpenRPA
                 {
                     if (sender.Name == "Windows")
                     {
-                        // TODO: Add priotrity, we could create an ordered list in config ?
-                        foreach (var p in Plugins.recordPlugins)
+                        foreach (var p in Plugins.recordPlugins.OrderBy(x => x.Priority))
                         {
                             if (p.Name != sender.Name)
                             {
@@ -3359,7 +3355,7 @@ namespace OpenRPA
                 if (instance.hasError || instance.isCompleted)
                 {
                     string message = (instance.Workflow.name + " " + instance.state);
-                    if(!string.IsNullOrEmpty(instance.errorsource))
+                    if (!string.IsNullOrEmpty(instance.errorsource))
                     {
                         message += " at " + instance.errorsource;
                     }

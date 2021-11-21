@@ -15,6 +15,7 @@ namespace OpenRPA.Office
     {
         public string Name => "Office";
         public string Status => "";
+        public int Priority { get => 40; }
         public event Action<IRecordPlugin, IRecordEvent> OnUserAction
         {
             add { }

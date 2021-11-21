@@ -67,6 +67,7 @@ namespace OpenRPA.IE
         }
         public string Name { get => "IE"; }
         public string Status => "";
+        public int Priority { get => 50; }
         private Views.RecordPluginView view;
         public System.Windows.Controls.UserControl editor
         {

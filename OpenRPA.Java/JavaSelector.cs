@@ -27,7 +27,7 @@ namespace OpenRPA.Java
             {
                 // Break on circular relationship (should not happen?)
                 //if (pathToRoot.Contains(element) || element.Equals(_rootElement)) { break; }
-                if (pathToRoot.Contains(element)) { break; }
+                // if (pathToRoot.Contains(element)) { break; }
                 if (element.Parent != null) pathToRoot.Add(element);
                 if (element.Parent == null) root = element;
                 try
@@ -107,17 +107,9 @@ namespace OpenRPA.Java
             if (startfrom == null) startfrom = new JavaElement(jvm);
             current.Add(startfrom);
             var _children = jvm.GetChildren();
-            if (_children.Count() > 0)
+            foreach (var e in Plugin.EnumRoots(jvm))
             {
-                var firstac = _children.First() as WindowsAccessBridgeInterop.AccessibleContextNode;
-                var res = firstac.GetNodePathAtUsingAccessBridge(new System.Drawing.Point(400, 300));
-                if (res != null)
-                {
-                    var Root = new JavaElement(res.Root);
-                    var Parent = Root;
-                    while (Parent.Parent != null) Parent = Parent.Parent;
-                    current.Add(Parent);
-                }
+                current.Add(e);
             }
             for (var i = 0; i < selectors.Count; i++)
             {

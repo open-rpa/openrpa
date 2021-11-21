@@ -13,6 +13,61 @@ namespace OpenRPA.Java
 {
     public class Plugin : ObservableObject, IRecordPlugin
     {
+
+        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
+        [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
+        static extern bool GetWindowRect(IntPtr hWnd, ref RECT lpRect);
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+        private struct RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+
+        public static JavaElement[] EnumRoots(WindowsAccessBridgeInterop.AccessibleJvm jvm)
+        {
+            var results = new List<JavaElement>();
+            var children = jvm.GetChildren();
+            if (children != null && children.Count() > 0)
+            {
+                var firstac = children.First() as WindowsAccessBridgeInterop.AccessibleContextNode;
+                var hwnd = jvm.AccessBridge.Functions.GetHWNDFromAccessibleContext(jvm.JvmId, firstac.AccessibleContextHandle);
+                RECT rect = new RECT();
+                GetWindowRect(hwnd, ref rect);
+
+                int x = rect.Left + ((rect.Right - rect.Left) / 2);
+                int y = rect.Top + ((rect.Bottom - rect.Top) / 2);
+                var res = firstac.GetNodePathAtUsingAccessBridge(new System.Drawing.Point(x, y));
+                if (res != null)
+                {
+                    var Root = new JavaElement(res.Root);
+                    var Parent = Root;
+                    while (Parent.Parent != null) Parent = Parent.Parent;
+                    if (!results.Contains(Parent)) results.Add(Parent);
+                }
+
+
+                //for(var x= rect.Left; x < rect.Right; x += 10)
+                //{
+                //    for (var y = rect.Top; y < rect.Bottom; y += 10)
+                //    {
+                //        var res = firstac.GetNodePathAtUsingAccessBridge(new System.Drawing.Point(x, y));
+                //        if (res != null)
+                //        {
+                //            var Root = new JavaElement(res.Root);
+                //            var Parent = Root;
+                //            while (Parent.Parent != null) Parent = Parent.Parent;
+                //            if(!results.Contains(Parent)) results.Add(Parent);
+                //        }
+                //    }
+                //}
+            }
+
+
+            return results.ToArray();
+        }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         public static treeelement[] _GetRootElements(Selector anchor)
         {
@@ -34,7 +89,13 @@ namespace OpenRPA.Java
             {
                 foreach (var jvm in Javahook.Instance.jvms)
                 {
-                    result.Add(new JavaTreeElement(null, true, new JavaElement(jvm)));
+                    var item = new JavaTreeElement(null, true, new JavaElement(jvm));
+                    result.Add(item);
+                    foreach (var e in Plugin.EnumRoots(jvm))
+                    {
+                        item.Children.Add(new JavaTreeElement(item, true, e));
+                        // result.Add(new JavaTreeElement(item, true, e));
+                    }
                 }
             }
             return result.ToArray();
@@ -217,7 +278,11 @@ namespace OpenRPA.Java
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
-            var result = JavaSelector.GetElementsWithuiSelector(selector as JavaSelector, fromElement, maxresults);
+            if (!(selector is JavaSelector javaselector))
+            {
+                javaselector = new JavaSelector(selector.ToString());
+            }
+            var result = JavaSelector.GetElementsWithuiSelector(javaselector, fromElement, maxresults);
             return result;
         }
         public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)

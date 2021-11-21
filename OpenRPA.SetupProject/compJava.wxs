@@ -7,8 +7,8 @@
         <File Id="OpenRPA.Java.dll" Source="!(wix.JavaSource)\OpenRPA.Java.dll" />
         <File Id="OpenRPA.Java.pdb" Source="!(wix.JavaSource)\OpenRPA.Java.pdb" />
         <File Id="OpenRPA.Java.dll.config" Source="!(wix.JavaSource)\OpenRPA.Java.dll.config" />
-        <File Id="OpenRPA.JavaBridge.exe" Source="!(wix.JavaSource)\OpenRPA.JavaBridge.exe" />
-        <File Id="OpenRPA.JavaBridge.exe.config" Source="!(wix.JavaSource)\OpenRPA.JavaBridge.exe.config" />
+        <!--<File Id="OpenRPA.JavaBridge.exe" Source="!(wix.JavaSource)\OpenRPA.JavaBridge.exe" />
+        <File Id="OpenRPA.JavaBridge.exe.config" Source="!(wix.JavaSource)\OpenRPA.JavaBridge.exe.config" />-->
         <File Id="WindowsAccessBridgeInterop.dll" Source="!(wix.JavaSource)\WindowsAccessBridgeInterop.dll" />
         <File Id="WindowsAccessBridge.dll" Source="!(wix.JavaSource)\WindowsAccessBridge.dll" />
         <File Id="WindowsAccessBridge32.dll" Source="!(wix.JavaSource)\WindowsAccessBridge-32.dll" />

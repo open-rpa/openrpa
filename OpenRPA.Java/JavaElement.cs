@@ -31,7 +31,7 @@ namespace OpenRPA.Java
               PropertyOptions.AccessibleActions;
 
         private AccessBridge _accessBridge;
-        private AccessibleContextNode ac;
+        public AccessibleContextNode ac;
         private AccessibleNode c;
         object IElement.RawElement { get => c; set => c = value as AccessibleNode; }
         public AccessibleContextInfo info = null;
@@ -343,7 +343,7 @@ namespace OpenRPA.Java
                 Input.InputDriver.Click(Button);
                 if (DoubleClick) Input.InputDriver.Click(Button);
                 return;
-            } 
+            }
             AccessibleActions _actions;
             var actions = new Dictionary<string, object>();
             if (_accessBridge.Functions.GetAccessibleActions(ac.JvmId, _ac, out _actions))
@@ -435,9 +435,13 @@ namespace OpenRPA.Java
         {
             var e = obj as JavaElement;
             if (e == null) return false;
-
+            if (e.ac != null && ac != null && ac.AccessibleContextHandle != null)
+            {
+                if (e.ac.AccessibleContextHandle.Handle == ac.AccessibleContextHandle.Handle) return true;
+                if (e.ac.AccessibleContextHandle.Handle.Equals(ac.AccessibleContextHandle.Handle)) return true;
+            }
             if (e.JvmId != JvmId) return false;
-            if(!string.IsNullOrEmpty(path) && string.IsNullOrEmpty(e.path)) { e.SetPath(); }
+            if (!string.IsNullOrEmpty(path) && string.IsNullOrEmpty(e.path)) { e.SetPath(); }
             if (e.path != path) return false;
             if (e.id != id) return false;
             if (e.title != title) return false;

@@ -44,7 +44,7 @@ namespace OpenRPA.Java
         {
             get
             {
-                if(view==null)
+                if (view == null)
                 {
                     view = new Views.JavaClickDetectorView(this);
                     view.PropertyChanged += (s, e) =>
@@ -66,13 +66,40 @@ namespace OpenRPA.Java
         }
         public void Start()
         {
-            hook.OnMouseClicked += Hook_OnMouseClicked;
+            // hook.OnMouseClicked += Hook_OnMouseClicked;
+            InputDriver.Instance.OnMouseUp += OnMouseUp;
         }
         public void Stop()
         {
-            hook.OnMouseClicked -= Hook_OnMouseClicked;
+            // hook.OnMouseClicked -= Hook_OnMouseClicked;
+            InputDriver.Instance.OnMouseUp -= OnMouseUp;
         }
-        private void Hook_OnMouseClicked(int vmID, WindowsAccessBridgeInterop.AccessibleContextNode ac)
+        private void OnMouseUp(InputEventArgs e)
+        {
+            JavaElement foundElement = null;
+            foreach (var jvm in Javahook.Instance.jvms)
+            {
+                var _children = jvm.GetChildren();
+                if (_children.Count() > 0)
+                {
+                    var firstac = _children.First() as WindowsAccessBridgeInterop.AccessibleContextNode;
+                    var res = firstac.GetNodePathAtUsingAccessBridge(new System.Drawing.Point(e.X, e.Y));
+                    if (res != null)
+                    {
+                        var Root = new JavaElement(res.Root);
+                        var Parent = Root;
+                        while (Parent.Parent != null) Parent = Parent.Parent;
+                        if (res.Count > 0)
+                        {
+                            foundElement = new JavaElement(res.Last());
+                        }
+                    }
+                }
+            }
+            if (foundElement == null) return;
+            Hook_OnMouseClicked(foundElement.ac);
+        }
+        private void Hook_OnMouseClicked(WindowsAccessBridgeInterop.AccessibleContextNode ac)
         {
             if (string.IsNullOrEmpty(Selector)) return;
             var element = new JavaElement(ac);

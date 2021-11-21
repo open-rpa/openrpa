@@ -87,7 +87,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
-    <ProjectReference Include="..\OpenRPA.JavaBridge\OpenRPA.JavaBridge.csproj" />
     <ProjectReference Include="..\WindowsAccessBridgeInterop\WindowsAccessBridgeInterop.csproj" />
   </ItemGroup>
   <ItemGroup>

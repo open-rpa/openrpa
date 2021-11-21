@@ -21,8 +21,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Interfaces", "OpenR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Java", "OpenRPA.Java\OpenRPA.Java.csproj", "{89445C63-61F7-4664-A19E-E83488C9C28A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.JavaBridge", "OpenRPA.JavaBridge\OpenRPA.JavaBridge.csproj", "{5EE14A60-E944-4A66-BC06-20EF6C6AF704}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.NamedPipeWrapper", "OpenRPA.NamedPipeWrapper\OpenRPA.NamedPipeWrapper.csproj", "{9CBA778A-7C02-46E5-9317-BDCA2B8D1EB6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.NativeMessagingHost", "OpenRPA.NativeMessagingHost\OpenRPA.NativeMessagingHost.csproj", "{2E322CC8-173F-4806-A450-3DBE05430C5A}"
@@ -275,26 +273,6 @@ Global
 		{89445C63-61F7-4664-A19E-E83488C9C28A}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
 		{89445C63-61F7-4664-A19E-E83488C9C28A}.ReleaseNuget|x86.ActiveCfg = ReleaseNuget|Any CPU
 		{89445C63-61F7-4664-A19E-E83488C9C28A}.ReleaseNuget|x86.Build.0 = ReleaseNuget|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.All|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.All|Any CPU.Build.0 = ReleaseNuget|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.All|x86.ActiveCfg = ReleaseNuget|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.All|x86.Build.0 = ReleaseNuget|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.Debug|x86.ActiveCfg = Debug|x86
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.Debug|x86.Build.0 = Debug|x86
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.PrepInstaller|Any CPU.ActiveCfg = PrepInstaller|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.PrepInstaller|Any CPU.Build.0 = PrepInstaller|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.PrepInstaller|x86.ActiveCfg = PrepInstaller|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.PrepInstaller|x86.Build.0 = PrepInstaller|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.Release|x86.ActiveCfg = Release|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.Release|x86.Build.0 = Release|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.ReleaseNuget|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.ReleaseNuget|Any CPU.Build.0 = ReleaseNuget|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.ReleaseNuget|x86.ActiveCfg = ReleaseNuget|Any CPU
-		{5EE14A60-E944-4A66-BC06-20EF6C6AF704}.ReleaseNuget|x86.Build.0 = ReleaseNuget|Any CPU
 		{9CBA778A-7C02-46E5-9317-BDCA2B8D1EB6}.All|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
 		{9CBA778A-7C02-46E5-9317-BDCA2B8D1EB6}.All|Any CPU.Build.0 = ReleaseNuget|Any CPU
 		{9CBA778A-7C02-46E5-9317-BDCA2B8D1EB6}.All|x86.ActiveCfg = ReleaseNuget|Any CPU
@@ -740,7 +718,7 @@ Global
 		{70E2E351-AC0D-486D-B357-B890EF20D1C8} = {8CBC9129-7A79-483A-838B-2C6FF3762B35}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
+		BuildVersion_StartDate = 2000/1/1
 	EndGlobalSection
 EndGlobal

@@ -68,19 +68,20 @@ namespace OpenRPA.Views
                     {
                         try
                         {
-                            if (string.IsNullOrEmpty(Entity._id) || Entity.isLocalOnly)
-                            {
-                                var result = await global.webSocketClient.InsertOne("openrpa", 0, false, Entity);
-                                Entity._id = result._id;
-                                Entity._acl = result._acl;
-                                Entity.isLocalOnly = false;
-                                Entity.isDirty = false;
-                            }
-                            else
-                            {
-                                var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, p.Entity);
-                                if (result != null) Entity._acl = result._acl;
-                            }
+                            Entity.Save();
+                            //if (string.IsNullOrEmpty(Entity._id) || Entity.isLocalOnly)
+                            //{
+                            //    var result = await global.webSocketClient.InsertOne("openrpa", 0, false, Entity);
+                            //    Entity._id = result._id;
+                            //    Entity._acl = result._acl;
+                            //    Entity.isLocalOnly = false;
+                            //    Entity.isDirty = false;
+                            //}
+                            //else
+                            //{
+                            //    var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, p.Entity);
+                            //    if (result != null) Entity._acl = result._acl;
+                            //}
                         }
                         catch (Exception ex)
                         {
